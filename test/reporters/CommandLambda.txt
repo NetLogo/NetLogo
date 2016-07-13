@@ -1,11 +1,11 @@
 *ToString3
-  (word task [print ?]) => "(command task from: procedure __EVALUATOR: [print ?])"
+  (word [[x] -> print x]) => "(command task from: procedure __EVALUATOR: [print x])"
 
 *ToString4
-  (word task [print 5]) => "(command task from: procedure __EVALUATOR: [print 5])"
+  (word [[] -> print 5]) => "(command task from: procedure __EVALUATOR: [print 5])"
 
 *ToString5
-  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR: [(foreach [1 2] [3 4] task [ __ignore ? + ? ])])"
+  (word [[x] -> (foreach [1 2] [3 4] [[] -> __ignore x + x])]) => "(command task from: procedure __EVALUATOR: [(foreach [1 2] [3 4] [[] -> __ignore x + x])])"
 
 *ToString6
   to foo end
@@ -38,7 +38,7 @@ EasyForeach
 
 HarderForeach
   globals [ glob1 ]
-  O> foreach [1 2 3] [ set glob1 glob1 + ? ]
+  O> foreach [1 2 3] [[x] -> set glob1 glob1 + x ]
   glob1 => 6
 
 NestedForeach1
@@ -48,18 +48,22 @@ NestedForeach1
 
 NestedForeach2
   globals [ glob1 ]
-  O> foreach [1 2 3] [ foreach [10 20 30] [ set glob1 glob1 + ? ] ]
+  O> foreach [1 2 3] [ foreach [10 20 30] [[x] -> set glob1 glob1 + x ] ]
   glob1 => 180
 
 NestedForeach3
   globals [ glob1 ]
-  O> foreach [1 2 3] [ __let x ? foreach [10 20 30] [ set glob1 glob1 + x + ? ] ]
+  O> foreach [1 2 3] [[y] -> __let x y foreach [10 20 30] [[z] -> set glob1 glob1 + x + z ] ]
   glob1 => 198
+
+NestedForeach4
+  to-report nest let result [] foreach [true false] [[a] -> let a' a foreach [true false] [[b] -> let b' b set result lput (list a' b') result ]] report result end
+  nest => [[true true] [true false] [false true] [false false]]
 
 OutOfOrderArgsForeach
   globals [ glob1 ]
   O> set glob1 (list)
-  O> (foreach [1 2 3] [4 5 6] [ set glob1 (fput ?2 glob1) set glob1 (fput ?1 glob1) ])
+  O> (foreach [1 2 3] [4 5 6] [[x y] -> set glob1 (fput y glob1) set glob1 (fput x glob1) ])
   glob1 => [3 6 2 5 1 4]
 
 CloseOverUnoptimizedLet
@@ -87,14 +91,14 @@ WrongTypeOfTask2
   O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task: [ 5 ]) instead.
 
 NotEnoughInputs
-  O> run [__ignore ?] => ERROR task expected 1 input, but only got 0
+  O> run [[x] -> __ignore x] => ERROR task expected 1 input, but only got 0
 
 NotEnoughInputsForeach
-  O> foreach [1 2 3] [__ignore ?1 + ?2] => ERROR task expected 2 inputs, but only got 1
+  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR task expected 2 inputs, but only got 1
 
 command-and-reporter-tasks-close-over-same-let-variable
   globals [ glob1 glob2 glob3 ]
-  to-report make-account let balance 0 report list task [balance] task [ set balance balance + ? ] end
+  to-report make-account let balance 0 report list task [balance] [[x] -> set balance balance + x ] end
   O> set glob1 make-account
   O> set glob2 item 0 glob1
   O> set glob3 item 1 glob1
@@ -109,7 +113,7 @@ command-and-reporter-tasks-close-over-same-let-variable
 
 command-and-reporter-tasks-close-over-same-procedure-input
   globals [ glob1 glob2 glob3 ]
-  to-report make-account [balance] report list task [balance] task [ set balance balance + ? ] end
+  to-report make-account [balance] report list task [balance] [[x] -> set balance balance + x ] end
   O> set glob1 make-account 100
   O> set glob2 item 0 glob1
   O> set glob3 item 1 glob1
@@ -129,10 +133,10 @@ command-and-reporter-tasks-close-over-same-procedure-input
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
-  O> run task [run task [print __boom]] => STACKTRACE boom!\
+  O> run [run [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR: [print __boom])\
-    called by (command task from: procedure __EVALUATOR: [run task [print __boom]])\
+    called by (command task from: procedure __EVALUATOR: [run [print __boom]])\
     called by procedure __EVALUATOR
 
 turtle-executing-command-task
@@ -233,7 +237,7 @@ the-killing-task
 foreach-multiple-lists
   globals [glob1]
   O> set glob1 []
-  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  O> (foreach [1 2] [10 20] [100 200] [[x y z] -> set glob1 lput (list x y z) glob1 ])
   glob1 => [[1 10 100] [2 20 200]]
 
 foreach-multiple-lists-length-mismatch
@@ -264,7 +268,7 @@ command-task-closes-over-let-inside-task-of-different-agent
 
 foreach-plus-recursion
   turtles-own [tvar]
-  to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [ ask ? [ explore ] ] ] end
+  to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [[t] -> ask t [ explore ] ] ] end
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
@@ -272,5 +276,5 @@ foreach-plus-recursion
 allow-task-variable-access-inside-reporter-block
   globals [glob1]
   O> crt 10
-  O> foreach [7] [ set glob1 first [who] of turtles with [who = ?] ]
+  O> foreach [7] [[i] -> set glob1 first [who] of turtles with [who = i] ]
   glob1 => 7

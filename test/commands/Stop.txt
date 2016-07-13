@@ -1,6 +1,6 @@
 ReportFromForeach
   globals [ glob1 ]
-  to-report foo foreach (list 1 2 3) [ set glob1 glob1 + ? if (? = 2) [ report "done" ] ] end
+  to-report foo foreach (list 1 2 3) [[x] -> set glob1 glob1 + x if (x = 2) [ report "done" ]] end
   foo => "done"
   glob1 => 3
 
@@ -20,19 +20,19 @@ ReportFromDynamicallyNestedForeach
 
 StopFromForeach1
   globals [ glob1 ]
-  O> foreach [1 2 3 4] [ set glob1 glob1 + ?  if ? = 3 [ stop ] ] error "oops"
+  O> foreach [1 2 3 4] [[x] -> set glob1 glob1 + x  if x = 3 [ stop ] ] error "oops"
   glob1 => 6
 
 StopFromForeach2
   globals [ glob1 ]
-  to test foreach [1 2 3] [ if ? = 2 [ stop ] set glob1 glob1 + ? ] end
+  to test foreach [1 2 3] [[x] -> if x = 2 [ stop ] set glob1 glob1 + x ] end
   O> test
   glob1 => 1
 
 StopFromForeach3
   globals [ glob1 ]
   to test1 test2 test2 end
-  to test2 foreach [1 2 3 4 5] [ set glob1 glob1 + ? stop ] end
+  to test2 foreach [1 2 3 4 5] [[x] -> set glob1 glob1 + x stop ] end
   O> test1
   glob1 => 2
 
@@ -49,7 +49,7 @@ ReportFromNestedAsk
   COMPILE> COMPILER ERROR REPORT must be immediately inside a TO-REPORT.
 
 ReportFromForeachInsideProcedure
-  to foo foreach [1 2 3] [ report ? ] end
+  to foo foreach [1 2 3] report end
   COMPILE> COMPILER ERROR REPORT can only be used inside TO-REPORT.
 
 StopTask1

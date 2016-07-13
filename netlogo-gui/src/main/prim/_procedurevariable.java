@@ -16,8 +16,6 @@ public final strictfp class _procedurevariable
     this.name = name;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + name;

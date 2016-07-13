@@ -28,23 +28,26 @@ trait NetLogoParser {
 
   def parseProcedure(
     structureResults:  StructureResults,
-    globallyUsedNames: Map[String, SymbolType],
+    globallyUsedNames: SymbolTable,
     oldProcedures:     ProceduresMap,
     extensionManager:  ExtensionManager)(procedure: FrontEndProcedure): ProcedureDefinition = {
     val rawTokens = structureResults.procedureTokens(procedure.name)
-    val usedNames = globallyUsedNames ++ procedure.args.map(_ -> SymbolType.LocalVariable)
+    val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.LocalVariable)
     // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
     val namedTokens = {
-      val letNamedTokens = LetNamer(rawTokens.iterator)
+      val letNamedTokens = TransformableTokenStream(rawTokens.iterator, LetNamer)
       val namer =
         new Namer(structureResults.program,
           oldProcedures ++ structureResults.procedures,
-          extensionManager)
-      val namedTokens = namer.process(letNamedTokens, procedure)
-      val letScoper = new LetScoper(usedNames)
-      letScoper(namedTokens.buffered)
+          procedure, extensionManager)
+      namer.validateProcedure()
+      val namedTokens = TransformableTokenStream(letNamedTokens, namer)
+      val letScoper = new LetScoper(usedNames, namedTokens)
+      // we map unknown idents to symbols and ExpressionParser errors as appropriate
+      val letScopedStream = TransformableTokenStream(namedTokens, letScoper)
+      letScopedStream
     }
-    ExpressionParser(procedure, namedTokens)
+    ExpressionParser(procedure, namedTokens, usedNames)
   }
 
   def findProcedurePositions(source: String, dialectOption: Option[Dialect]): Map[String, ProcedureSyntax] = {

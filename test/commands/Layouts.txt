@@ -28,9 +28,9 @@ TestLayoutCircleIsRandom
   O> random-seed 8123
   O> crt 100
   O> layout-circle sort turtles max-pxcor
-  sort-by [[heading] of ?1 < [heading] of ?2] turtles = sort turtles => true
+  sort-by [[t1 t2] -> [heading] of t1 < [heading] of t2] turtles = sort turtles => true
   O> layout-circle turtles max-pxcor
-  sort-by [[heading] of ?1 < [heading] of ?2] turtles = sort turtles => false
+  sort-by [[t1 t2] -> [heading] of t1 < [heading] of t2] turtles = sort turtles => false
 
 TestLayoutSpringLeaveSomeTurtlesOut
  O> crt 2
@@ -46,9 +46,9 @@ LayoutAnchors
   globals [ glob1 ]
   O> crt 10 [ setxy random-xcor random-ycor ]
   T> ask other turtles [ if random-float 100 < 12 [ carefully [ create-link-with myself ] [] ] ]
-  O> set glob1 map [ [list xcor ycor] of ? ] sort turtles
+  O> set glob1 map [[t] -> [list xcor ycor] of t ] sort turtles
   O> layout-spring no-turtles links 0.2 5 0.2
-  glob1 = map [ [list xcor ycor] of ? ] sort turtles => true
+  glob1 = map [[t] -> [list xcor ycor] of t ] sort turtles => true
 
 CircleRandom_2D
   O> resize-world -10 10 -10 10

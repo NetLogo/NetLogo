@@ -1,0 +1,7 @@
+"BehaviorSpace results (NetLogo 6.0-M9)"
+"../models/test/other/BehaviorSpace Example.nlogo"
+"experiment2"
+"08/11/2016 16:58:14:559 -0500"
+"min-pxcor","max-pxcor","min-pycor","max-pycor"
+"1","0","1","-1"
+"[run number]","[step]","count patches with [living?]","count patches with [not living?]"

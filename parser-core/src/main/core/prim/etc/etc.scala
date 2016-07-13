@@ -318,7 +318,7 @@ case class _filewrite() extends Command {
 case class _filter() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.ListType),
       ret = Syntax.ListType)
 }
 case class _floor() extends Reporter with Pure {
@@ -337,7 +337,7 @@ case class _foreach() extends Command {
     Syntax.commandSyntax(
       right = List(
         Syntax.RepeatableType | Syntax.ListType,
-        Syntax.CommandTaskType),
+        Syntax.CommandType),
       defaultOption = Some(2))
 }
 case class _foreverbuttonend() extends Command {
@@ -552,7 +552,7 @@ case class _lput() extends Reporter with Pure {
 case class _map() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.RepeatableType | Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.RepeatableType | Syntax.ListType),
       ret = Syntax.ListType,
       defaultOption = Some(2))
 }
@@ -656,7 +656,7 @@ case class _noturtles() extends Reporter {
 case class _nvalues() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.NumberType, Syntax.ReporterTaskType),
+      right = List(Syntax.NumberType, Syntax.ReporterType),
       ret = Syntax.ListType)
 }
 case class _observercode() extends Command {
@@ -810,7 +810,7 @@ case class _readfromstring() extends Reporter {
 case class _reduce() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.ListType),
       ret = Syntax.WildcardType)
 }
 case class _reloadextensions() extends Command {
@@ -853,7 +853,7 @@ case class _runresult() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(
-        Syntax.StringType | Syntax.ReporterTaskType,
+        Syntax.StringType | Syntax.ReporterType,
         Syntax.RepeatableType | Syntax.WildcardType),
       ret = Syntax.WildcardType,
       defaultOption = Some(1))
@@ -908,7 +908,7 @@ case class _sin() extends Reporter with Pure {
 case class _sortby() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType | Syntax.AgentsetType),
+      right = List(Syntax.ReporterType, Syntax.ListType | Syntax.AgentsetType),
       ret = Syntax.ListType,
       blockAgentClassString = Option("?"))
 }

@@ -2,12 +2,11 @@
 
 package org.nlogo.parse
 
-import scala.collection.immutable.HashMap
+import org.nlogo.core.{ Fail, Token }, Fail.exception
 
 sealed trait SymbolType
 
 object SymbolType {
-  type SymbolTable = HashMap[String, SymbolType]
   trait Variable
   case object PrimitiveCommand extends SymbolType
   case object PrimitiveReporter extends SymbolType
@@ -46,12 +45,6 @@ object SymbolType {
       case LocalVariable        => "local variable here"
     }
 
-  implicit class RichHashMap(l: HashMap[String, SymbolType]) {
-    def addSymbols(symbols: Iterable[String], tpe: SymbolType): SymbolTable = {
-      l ++ symbols.map(_.toUpperCase -> tpe).toMap
-    }
-  }
-
   implicit object SymbolTypeOrdering extends Ordering[SymbolType] {
     // defines which symbols should be authoritative in saying "there is already an..."
     def relativeWeight(s: SymbolType): Int =
@@ -80,5 +73,7 @@ object SymbolType {
     }
   }
 
-  def emptySymbolTable = new HashMap[String, SymbolType]()
+  def alreadyDefinedException(symType: SymbolType, t: Token): Nothing = {
+    exception("There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase, t)
+  }
 }

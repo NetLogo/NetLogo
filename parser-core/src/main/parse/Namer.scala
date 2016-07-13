@@ -21,50 +21,54 @@ import org.nlogo.core,
 class Namer(
   program: Program,
   procedures: FrontEndInterface.ProceduresMap,
-  extensionManager: ExtensionManager) {
+  procedure: FrontEndProcedure,
+  extensionManager: ExtensionManager) extends TokenTransformer[Unit] {
 
-  def process(tokens: Iterator[Token], procedure: FrontEndProcedure): Iterator[Token] = {
-    // the handlers are mutually exclusive (only one applies), so the order the handlers
-    // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
-    // and CallHandler must come last - ST 5/14/13, 5/16/13
-    val handlers = Stream[Token => Option[(TokenType, core.Instruction)]](
-      new CommandHandler(program.dialect.tokenMapper),
-      new ReporterHandler(program.dialect.tokenMapper),
-      TaskVariableHandler,
-      new BreedHandler(program),
-      new AgentVariableReporterHandler(program),
-      new ExtensionPrimitiveHandler(extensionManager),
-      new ProcedureVariableHandler(procedure.args),
-      new CallHandler(procedures))
-    def processOne(token: Token): Option[Token] = {
-      handlers.flatMap(_(token))
-        .headOption
-        .map{case (tpe, instr) =>
-          val newToken = token.copy(tpe = tpe, value = instr)
-          instr.token = newToken
-          newToken
-        }
-    }
-    def checkName(token: Token) {
-      val newVal = processOne(token).map(_.value).get
-      val ok = newVal.isInstanceOf[core.prim._call] ||
-        newVal.isInstanceOf[core.prim._callreport] ||
-        newVal.isInstanceOf[core.prim._procedurevariable]
-      cAssert(ok, alreadyTaken(userFriendlyName(newVal), token.text.toUpperCase), token)
-    }
+  // the handlers are mutually exclusive (only one applies), so the order the handlers
+  // appear is arbitrary, except that for checkName to work, ProcedureVariableHandler
+  // and CallHandler must come last - ST 5/14/13, 5/16/13
+  lazy val handlers = Seq[Token => Option[(TokenType, core.Instruction)]](
+    new CommandHandler(program.dialect.tokenMapper),
+    new ReporterHandler(program.dialect.tokenMapper),
+    TaskVariableHandler,
+    new BreedHandler(program),
+    new AgentVariableReporterHandler(program),
+    new ExtensionPrimitiveHandler(extensionManager),
+    new ProcedureVariableHandler(procedure.args),
+    new CallHandler(procedures))
+
+  def validateProcedure(): Unit = {
     for (token <- procedure.nameToken +: procedure.argTokens)
       checkName(token)
-    // anything that we don't recognize, we just assume for now that it's
-    // a reference to a local variable established by _let. later, LetScoper
-    // will connect each _letvariable to the right _let - ST 9/3/14
-    tokens.map{token => token.tpe match {
+  }
+
+  override def initialState: Unit = ()
+
+  override def transform(t: Token, state: Unit): (Token, Unit) = {
+    t.tpe match {
       case TokenType.Ident =>
-        processOne(token).getOrElse(
-          token.refine(core.prim._unknownidentifier(), tpe = TokenType.Reporter)
-        )
-      case _ =>
-        token
-    }}
+        (processOne(t).getOrElse(
+          t.refine(core.prim._unknownidentifier(), tpe = TokenType.Reporter)), ())
+      case _ => (t, ())
+    }
+  }
+
+  private def checkName(token: Token) {
+    val newVal = processOne(token).map(_.value).get
+    val ok = newVal.isInstanceOf[core.prim._call] ||
+    newVal.isInstanceOf[core.prim._callreport] ||
+    newVal.isInstanceOf[core.prim._procedurevariable]
+    cAssert(ok, alreadyTaken(userFriendlyName(newVal), token.text.toUpperCase), token)
+  }
+
+  private def processOne(token: Token): Option[Token] = {
+    handlers.flatMap(_(token))
+      .headOption
+      .map{case (tpe, instr) =>
+        val newToken = token.copy(tpe = tpe, value = instr)
+        instr.token = newToken
+        newToken
+      }
   }
 
   private def alreadyTaken(theirs: String, ours: String) =

@@ -51,7 +51,7 @@ class _run extends Command {
         }
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
+          context, this, 0, Syntax.CommandType | Syntax.StringType, obj)
     }
   }
 

@@ -240,12 +240,12 @@ object Syntax {
   /**
    * Type constant for command tasks. *
    */
-  val CommandTaskType = 2048
+  val CommandType = 2048
 
   /**
    * Type constant for reporter tasks. *
    */
-  val ReporterTaskType = 4096
+  val ReporterType = 4096
 
   /**
    * Type constant for set of agents.
@@ -264,7 +264,7 @@ object Syntax {
    * this type is also used to identify extension types
    */
   val WildcardType = NumberType | BooleanType | StringType | ListType | AgentType |
-      AgentsetType | NobodyType | CommandTaskType | ReporterTaskType
+      AgentsetType | NobodyType | CommandType | ReporterType
 
   val ReferenceType = 8192
   /**

@@ -1,15 +1,15 @@
 Filter1
-  filter [?] [] => []
+  filter [[x] -> x] [] => []
 
 Filter2
-  filter [?] [true] => [true]
+  filter [[x] -> x] [true] => [true]
 
 Filter3
-  filter [?] [false] => []
+  filter [[x] -> x] [false] => []
 
 Filter4
-  filter [?] [false false] => []
+  filter [[x] -> x] [false false] => []
 
 Filter5
-  filter [?] [true true] => [true true]
+  filter [[x] -> x] [true true] => [true true]
 

@@ -1,8 +1,8 @@
 NValues1
-  n-values 5 [?] => [0 1 2 3 4]
+  n-values 5 [[x] -> x] => [0 1 2 3 4]
 
 NValuesExpr
-  n-values 5 [? + ?] => [0 2 4 6 8]
+  n-values 5 [[x] -> x + x] => [0 2 4 6 8]
 
 NValuesConst
   n-values 5 [1] => [1 1 1 1 1]

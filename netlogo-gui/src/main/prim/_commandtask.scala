@@ -12,10 +12,11 @@ class _commandtask(val argCount: Int) extends Reporter {
   override def toString =
     super.toString + ":" + proc.displayName
 
-  override def report(c: Context): AnyRef =
+  override def report(c: Context): AnyRef = {
     CommandTask(procedure = proc,
-                formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
-                lets = c.allLets,
-                locals = c.activation.args)
+                formals   = proc.taskFormals,
+                lets      = c.allLets,
+                locals    = c.activation.args)
+  }
 
 }

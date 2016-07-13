@@ -4,7 +4,7 @@ package org.nlogo.lex
 
 import java.io.{Reader => JReader, BufferedReader}
 
-import org.nlogo.core.{ NumberParser, StringEscaper, Token, TokenType }
+import org.nlogo.core.{ NumberParser, SourceLocation, StringEscaper, Token, TokenType }
 import TokenLexer.WrappedInput
 import LexOperations._
 
@@ -25,11 +25,12 @@ class TokenLexer {
     "]" -> TokenType.CloseBracket
   )
 
+  def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
+    Seq(extensionLiteral, punct, comment, numericLiteral, string, ident, illegalCharacter)
+
   def apply(input: WrappedInput): (Token, WrappedInput) = {
-    val (wsCount, remainder) = fastForwardWhitespace(input)
     if (input.hasNext) {
-      val r = Seq(extensionLiteral, punct, comment, numericLiteral, string, ident, illegalCharacter)
-        .foldLeft((Option.empty[Token], input)) {
+      val r = lexerOrdering.foldLeft((Option.empty[Token], input)) {
         case ((Some(token), remaining), (prefixDetector, tokenizer)) => (Some(token), remaining)
         case ((None,        remaining), (prefixDetector, tokenizer)) =>
           remaining.assembleToken(prefixDetector, tokenizer)
@@ -227,7 +228,7 @@ class TokenLexer {
       (prefix match {
         case "" => None
         case nonEmptyString => f(nonEmptyString).map {
-          case (text, tpe, tval) => (new Token(text, tpe, tval)(originalOffset, remainder.offset, filename), this)
+          case (text, tpe, tval) => (new Token(text, tpe, tval)(SourceLocation(originalOffset, remainder.offset, filename)), this)
         }
       }) orElse {
         buffReader.reset()
@@ -247,15 +248,29 @@ class TokenLexer {
   }
 }
 
-object StandardLexer extends TokenLexer {}
+trait StandardLexer extends TokenLexer {
+  override def apply(input: WrappedInput): (Token, WrappedInput) = {
+    val (wsCount, remainder) = fastForwardWhitespace(input)
+    super.apply(remainder)
+  }
+}
 
-object WhitespaceSkippingLexer extends TokenLexer {
+object StandardLexer extends StandardLexer
 
+object WhitespaceSkippingLexer extends StandardLexer {
   override def apply(input: WrappedInput): (Token, WrappedInput) = {
     val (t, endOfToken) = super.apply(input)
     val (_, beginningOfNextToken) = fastForwardWhitespace(endOfToken)
     (t, beginningOfNextToken)
   }
+}
+
+object WhitespaceTokenizingLexer extends TokenLexer {
+  override def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
+    whitespace +: super.lexerOrdering
+
+  def whitespace: (LexPredicate, TokenGenerator) =
+    (oneOrMore(Character.isWhitespace _), (s) => if (s.nonEmpty) Some((s, TokenType.Whitespace, s)) else None)
 }
 
 object TokenLexer {

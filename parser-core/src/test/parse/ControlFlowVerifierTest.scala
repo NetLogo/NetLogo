@@ -5,7 +5,7 @@ package org.nlogo.parse
 import
   org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression,
     Femto, FrontEndProcedure, prim, ProcedureDefinition,
-    Statement, Statements, StructureDeclarations, Token, TokenType },
+    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL, TokenType },
     prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop }
 
 import
@@ -51,7 +51,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   def stmt(prim: Command, args: Expression*) =
-    new Statement(prim, 0, 0, "foo.nlogo", args)
+    new Statement(prim, args, SourceLocation(0, 0, "foo.nlogo"))
 
   def cmd(name: String): Command =
     try {
@@ -85,7 +85,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
 
   def nestedStatements(ctxPrimGen: Gen[Command], nestedPrimGen: Gen[Command]): Gen[Statements] = {
     def commandBlock(stmts: Statements): CommandBlock =
-      new CommandBlock(stmts, 0, 0, "abc")
+      new CommandBlock(stmts, SourceLocation(0, 0, "abc"))
 
     def inBlockContext(ctxPrim: Command, block: Statements): Statements =
       statements(Seq(stmt(ctxPrim, commandBlock(block))))
@@ -105,7 +105,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
     def isReporter: Boolean = reporterProcedure
     def displayName: String = "foobar"
     def filename: String = "foo.nlogo"
-    def nameToken: Token = new Token("foobar", TokenType.Ident, null)(0, 0, "")
+    def nameToken: Token = TokenDSL.id("foobar")
     def argTokens: Seq[Token] = Seq()
     def dump: String = "TEST FRONTENDPROCEDURE"
   }

@@ -7,7 +7,7 @@ SortNonDestructive
 SortNonDestructiveOnAgentsets
   globals [g]
   O> crt 100
-  O> foreach reverse sort turtles [ ask ? [ move-to patch 1 0 ] ]
+  O> foreach reverse sort turtles [[x] -> ask x [ move-to patch 1 0 ] ]
   O> random-seed 3
   [who] of one-of turtles => 93
   O> set g [turtles-here] of patch 1 0
@@ -20,7 +20,7 @@ SortNonDestructiveOnAgentsets
 SortByNonDestructive
   globals [ glob1 glob2 ]
   O> set glob1 [5 4 3 2 1]
-  O> set glob2 sort-by [?1 < ?2] glob1
+  O> set glob2 sort-by [[x y] -> x < y] glob1
   glob1 => [5 4 3 2 1]
   glob2 => [1 2 3 4 5]
 
@@ -30,57 +30,57 @@ SortByDoesntExposeAgentsetOrder
 
 SortingListsOfAgents_2D
   O> crt 5
-  map [[who] of ?] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
-  map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1) (patch -1 1) (patch 1 -1) (patch -1 -1)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
+  map [[t] -> [who] of t] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
+  map [[p] -> list [pxcor] of p [pycor] of p] sort (list (patch 1 1) (patch -1 1) (patch 1 -1) (patch -1 -1)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
 
 SortingListsOfAgents_3D
   O> crt 5
-  map [[who] of ?] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
-  map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
+  map [[t] -> [who] of t] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
+  map [[p] -> list [pxcor] of p [pycor] of p] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
 
 SortingListsOfLinks
   directed-link-breed [directed-edges directed-edge]
   undirected-link-breed [undirected-edges undirected-edge]
   O> crt 5
   T> create-links-with turtles with [ who > [who] of myself ]
-  map [[(list [who] of end1 [who] of end2) ] of ?] sort (list (link 1 4) (link 2 3) (link 1 2) (link 0 3) (link 1 3)) => [[0 3] [1 2] [1 3] [1 4] [2 3]]
+  map [[l] -> [(list [who] of end1 [who] of end2) ] of l] sort (list (link 1 4) (link 2 3) (link 1 2) (link 0 3) (link 1 3)) => [[0 3] [1 2] [1 3] [1 4] [2 3]]
   O> ask links [ die ]
   T> create-directed-edges-to turtles with [ who > [who] of myself ]
-  map [[(list [who] of end1 [who] of end2) ] of ?] sort (list (directed-edge 2 3) (directed-edge 0 3) (directed-edge 1 3)) => [[0 3] [1 3] [2 3]]
+  map [[l] -> [(list [who] of end1 [who] of end2)] of l] sort (list (directed-edge 2 3) (directed-edge 0 3) (directed-edge 1 3)) => [[0 3] [1 3] [2 3]]
   T> create-undirected-edges-with turtles with [ who > [who] of myself ]
-  map [[(list [who] of end1 [who] of end2) ] of ?] sort (list (undirected-edge 1 4) (directed-edge 1 4) (undirected-edge 1 2) (directed-edge 0 3) (undirected-edge 1 3)) => [[0 3] [1 2] [1 3] [1 4] [1 4]]
-  map [ (word [breed] of ? )] sort (list (undirected-edge 1 4) (directed-edge 1 4) (undirected-edge 1 2) (directed-edge 0 3) (undirected-edge 1 3)) => ["directed-edges" "undirected-edges" "undirected-edges" "directed-edges" "undirected-edges"]
+  map [[l] -> [(list [who] of end1 [who] of end2) ] of l] sort (list (undirected-edge 1 4) (directed-edge 1 4) (undirected-edge 1 2) (directed-edge 0 3) (undirected-edge 1 3)) => [[0 3] [1 2] [1 3] [1 4] [1 4]]
+  map [[l] -> (word [breed] of l)] sort (list (undirected-edge 1 4) (directed-edge 1 4) (undirected-edge 1 2) (directed-edge 0 3) (undirected-edge 1 3)) => ["directed-edges" "undirected-edges" "undirected-edges" "directed-edges" "undirected-edges"]
 
 SortingAgentsets
   O> crt 5
-  sort turtles = sort-by [[who] of ?1 < [who] of ?2] turtles => true
-  reverse sort turtles = sort-by [[who] of ?1 > [who] of ?2] turtles => true
+  sort turtles = sort-by [[x y] -> [who] of x < [who] of y] turtles => true
+  reverse sort turtles = sort-by [[x y] -> [who] of x > [who] of y] turtles => true
 
 SortingLinkAgentsets
   O> crt 5 [ create-links-with turtles with [ who > [who] of myself  ] ]
-  sort links = sort-by [ [ [who] of end1 * 100 + [who] of end2 ] of ?1  < [ [who] of end1 * 100 + [who] of end2 ] of ?2 ] links => true
-  reverse sort links = sort-by [ [ [who] of end1 * 100 + [who] of end2 ] of ?1  > [ [who] of end1 * 100 + [who] of end2 ] of ?2 ] links => true
+  sort links = sort-by [[x y] -> [ [who] of end1 * 100 + [who] of end2 ] of x < [ [who] of end1 * 100 + [who] of end2 ] of y ] links => true
+  reverse sort links = sort-by [[x y] -> [ [who] of end1 * 100 + [who] of end2 ] of x  > [ [who] of end1 * 100 + [who] of end2 ] of y ] links => true
 
 SortingTypeErrors
  O> crt 10 [ create-links-with other turtles ]
  sort item 0 sort links => ERROR SORT expected input to be a list or agentset but got the link (link 0 1) instead.
- sort-by [[color] of ?] item 0 sort links => ERROR SORT-BY expected input to be a list or agentset but got the link (link 0 1) instead.
+ sort-by [[l] -> [color] of l] item 0 sort links => ERROR SORT-BY expected input to be a list or agentset but got the link (link 0 1) instead.
 
 sort-on-1
  O> crt 5
- map [[who] of ?] sort-on [who] turtles => [0 1 2 3 4]
+ map [[t] -> [who] of t] sort-on [who] turtles => [0 1 2 3 4]
 
 sort-on-2
  O> crt 5
- map [[who] of ?] sort-on [(- who)] turtles => [4 3 2 1 0]
+ map [[t] -> [who] of t] sort-on [(- who)] turtles => [4 3 2 1 0]
 
 sort-on-3
  O> crt 5
- map [[who] of ?] sort-on [(word (5 - who))] turtles => [4 3 2 1 0]
+ map [[t] -> [who] of t] sort-on [(word (5 - who))] turtles => [4 3 2 1 0]
 
 sort-on-4
  O> crt 5
- map [[who] of ?] sort-on [self] turtles => [0 1 2 3 4]
+ map [[t] -> [who] of t] sort-on [self] turtles => [0 1 2 3 4]
 
 sort-on-doesnt-expose-agentset-order
   O> crt 3
@@ -100,13 +100,13 @@ sort-on-respects-with-local-randomness
   globals [ glob1 glob2 ]
   O> random-seed 0
   O> crt 10
-  O> with-local-randomness [ set glob1 map [[who] of ?] sort-on [xcor] turtles ]
-  O> with-local-randomness [ set glob2 map [[who] of ?] sort-on [xcor] turtles ]
+  O> with-local-randomness [ set glob1 map [[t] -> [who] of t] sort-on [xcor] turtles ]
+  O> with-local-randomness [ set glob2 map [[t] -> [who] of t] sort-on [xcor] turtles ]
   glob1 = glob2 => true
 
 sort-by-catches-java-7-general-contract-violation-error
   globals [ glob1 ]
-  to test __ignore sort-by [?1 <= ?2] n-values 1000 [random 5] end
+  to test __ignore sort-by [[x y] -> x <= y] n-values 1000 [random 5] end
   O> carefully [ test set glob1 "success" ] [ set glob1 error-message ]
   glob1 = "success" or glob1 = "predicate is not a strictly-less-than or strictly-greater than relation" => true
   # should the above line be more strict?

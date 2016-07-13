@@ -44,6 +44,14 @@ object Tokenizer extends TokenizerInterface {
     }
   }
 
+  // Returns an Iterator[Token] which includes tokens with tpe == TokenType.Whitespace.
+  // The other tokenize methods will not include tokens of this type.
+  def tokenizeWithWhitespace(reader: java.io.Reader, filename: String): Iterator[Token] =
+    new TokenLexIterator(WhitespaceTokenizingLexer, reader, filename).map(_._1)
+
+  def tokenizeWithWhitespace(source: String, filename: String): Iterator[Token] =
+    new TokenLexIterator(WhitespaceTokenizingLexer, new java.io.StringReader(source), filename).map(_._1)
+
   private class TokenLexIterator(lexer: TokenLexer, reader: java.io.Reader, filename: String)
     extends Iterator[(Token, WrappedInput)] {
     private var lastToken = Option.empty[Token]

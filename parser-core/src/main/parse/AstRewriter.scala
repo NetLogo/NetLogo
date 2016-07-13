@@ -3,9 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, CompilationOperand,
-  Expression, FrontEndInterface, FrontEndProcedure, Instruction,
+  Expression, Femto, FrontEndInterface, FrontEndProcedure, Instruction,
   ProcedureDefinition, ProcedureSyntax, ReporterApp, ReporterBlock,
-  SourceRewriter, Statement, Statements, StructureResults,
+  SourceLocation, SourceRewriter, Statement, Statements, StructureResults,
   Token, TokenizerInterface, TokenType }
 
 import scala.util.matching.Regex
@@ -13,7 +13,6 @@ import scala.util.matching.Regex
 class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
   extends SourceRewriter
   with NetLogoParser {
-  type WhiteSpaceMap = Map[AstPath, String]
 
   def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String = header + procedures + footer
 
@@ -31,6 +30,14 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
   def replaceReporter(replaceReporter: (String, String)): String = {
     rewrite(new ReplaceReporterVisitor(replaceReporter), preserveBody _)
+  }
+
+  def customRewrite(className: String): String = {
+    rewrite(Femto.get(className), preserveBody _)
+  }
+
+  def runVisitor(folder: PositionalAstFolder[Map[AstPath, Formatter.Operation]]): String = {
+    rewrite(folder, preserveBody _)
   }
 
   def replaceToken(original: String, replacement:String): String = {
@@ -97,8 +104,8 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
     rewritten.lines.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
   }
 
-  def trackWhitespace(getSource: String => String, procs: Iterable[ProcedureDefinition]): (Map[AstPath, WhiteSpace], Map[String, String], Map[String, String]) = {
-    val ws = new WhiteSpace.Tracker(getSource)
+  def trackWhitespace(getSource: String => String, procs: Iterable[ProcedureDefinition]): (WhitespaceMap, Map[String, String], Map[String, String]) = {
+    val ws = new WhiteSpace.Tracker(getSource, tokenizer)
     var fileHeaders: Map[String, String] = Map()
     var fileFooters: Map[String, String] = Map()
     var procedurePositions: Map[String, Map[String, ProcedureSyntax]] = Map()
@@ -117,28 +124,26 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
     def addTrailingWhitespace(ctx: WhiteSpace.Context): Unit = {
       ctx.lastPosition.foreach {
-        case (lastFile, _, lastIndex) =>
+        case (_, SourceLocation(_, lastIndex, lastFile)) =>
           fileFooters = (fileFooters + (lastFile -> getSource(lastFile).drop(lastIndex)))
       }
     }
 
     val whiteSpaces =
-      procs.foldLeft(
-        (Map[AstPath, WhiteSpace](),
-          WhiteSpace.Context(Map(), None))) {
-      case ((wsMap, ctx), proc) =>
-        val procSyntax = procedurePosition(proc.file, proc.procedure.name)
+      procs.foldLeft((WhitespaceMap.empty, WhiteSpace.Context.empty)) {
+      case ((whitespaceLog, ctx), proc) =>
+        val procSyntax = procedurePosition(proc.filename, proc.procedure.name)
         val newContext =
-          if (ctx.lastFile.contains(proc.file)) {
+          if (ctx.lastPosition.map(_._2.filename).contains(proc.filename)) {
             addTrailingWhitespace(ctx)
-            WhiteSpace.Context(Map(), ctx.lastPosition)
+            WhiteSpace.Context.empty(ctx.lastPosition)
           } else {
             val procStart = procSyntax.declarationKeyword.start
-            fileHeaders = (fileHeaders + (proc.file -> getSource(proc.file).slice(0, procStart)))
-            WhiteSpace.Context(Map(), lastPosition = Some((proc.file, AstPath(), procStart)))
+            fileHeaders = (fileHeaders + (proc.filename -> getSource(proc.filename).slice(0, procStart)))
+            WhiteSpace.Context.empty(Some((AstPath(), SourceLocation(procStart, procStart, proc.filename))))
           }
         val r = ws.visitProcedureDefinition(proc)(newContext)
-        (wsMap ++ r.astWsMap, r)
+        (whitespaceLog ++ r.whitespaceLog, r)
     }
     addTrailingWhitespace(whiteSpaces._2)
     (whiteSpaces._1, fileHeaders, fileFooters)
@@ -146,7 +151,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
   def format(
     operations: Map[AstPath, Formatter.Operation],
-    wsMap: Map[AstPath, WhiteSpace],
+    wsMap: WhitespaceMap,
     procs: Iterable[ProcedureDefinition]): String = {
     val formatter = new Formatter
     val res = procs.filter(p => op.sources.contains(p.procedure.filename)).foldLeft(Formatter.Context("", operations)) {

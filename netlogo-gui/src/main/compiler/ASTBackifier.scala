@@ -24,30 +24,21 @@ class ASTBackifier(backifier: Backifier) {
       case ra: core.ReporterApp => backify(ra)
     }
 
-  def backify(stmts: core.Statements): Statements = {
-    val result = new Statements(stmts.file)
-    stmts.stmts.map(backify).foreach(result.addStatement)
-    result
-  }
+  def backify(stmts: core.Statements): Statements =
+    new Statements(stmts.stmts.map(backify), stmts.sourceLocation)
 
-  def backify(stmt: core.Statement): Statement = {
-    val result =
-      new Statement(stmt.command, backifier(stmt.command), stmt.start, stmt.end, stmt.file)
-    stmt.args.map(backify).foreach(result.addArgument)
-    result
-  }
+  def backify(stmt: core.Statement): Statement =
+    new Statement(stmt.command, backifier(stmt.command), stmt.args.map(backify), stmt.sourceLocation)
 
   def backify(cb: core.CommandBlock): CommandBlock =
-    new CommandBlock(backify(cb.statements),
-      cb.start, cb.end, cb.file)
+    new CommandBlock(backify(cb.statements), cb.sourceLocation)
 
   def backify(rb: core.ReporterBlock): ReporterBlock =
-    new ReporterBlock(backify(rb.app),
-      rb.start, rb.end, rb.file)
+    new ReporterBlock(backify(rb.app), rb.sourceLocation)
 
   def backify(ra: core.ReporterApp): ReporterApp = {
     val result =
-      new ReporterApp(ra.reporter, backifier(ra.reporter), ra.start, ra.end, ra.file)
+      new ReporterApp(ra.reporter, backifier(ra.reporter), ra.sourceLocation)
     ra.args.map(backify).foreach(result.addArgument)
     result
   }

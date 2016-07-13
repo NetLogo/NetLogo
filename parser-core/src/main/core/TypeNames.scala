@@ -66,11 +66,11 @@ object TypeNames {
       } else if (compatible(LinkType)) {
         subtract(LinkType | NobodyType)
         "link"
-      } else if (compatible(ReporterTaskType)) {
-        subtract(ReporterTaskType)
+      } else if (compatible(ReporterType)) {
+        subtract(ReporterType)
         "reporter task"
-      } else if (compatible(CommandTaskType)) {
-        subtract(CommandTaskType)
+      } else if (compatible(CommandType)) {
+        subtract(CommandType)
         "command task"
       } else if (compatible(NobodyType)) {
         subtract(NobodyType)

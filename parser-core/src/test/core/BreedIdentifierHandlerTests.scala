@@ -93,7 +93,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
     )(BreedIdentifierHandler.breedReporters(breed("CHAINS", "CHAIN", isLink = true, isDirected = true)))
   }
   private def breed(plural: String, singular: String, isLink: Boolean = false, isDirected: Boolean = false): StructureDeclarations.Breed = {
-    def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(1, 2, "")
+    def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(SourceLocation(1, 2, ""))
     def dummyIdent(s: String): Identifier = Identifier(s, dummyToken(s))
 
     StructureDeclarations.Breed(dummyIdent(plural), dummyIdent(singular), isLink, isDirected)

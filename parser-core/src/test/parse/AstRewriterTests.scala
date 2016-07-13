@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment,
+import org.nlogo.core.{ CompilationOperand, CompilerException, DummyCompilationEnvironment,
   DummyExtensionManager, Femto, NetLogoCore, Program, TokenizerInterface }
 
 class AstRewriterTests extends FunSuite {
@@ -57,7 +57,7 @@ class AstRewriterTests extends FunSuite {
     val rewrittenSource =
       trimmedRewriteCommand(source,
         r => r.rewrite(NoopFolder, r.preserveBody _), header, footer)
-    assert(source == rewrittenSource)
+    assert(source.trim == rewrittenSource)
   }
 
   def assertModifiesSource(source: String, expectedSource: String): Unit = {
@@ -76,6 +76,17 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("to foo end\n\nto baz end", "", "")
     assertPreservesSource("show reduce + [1 2 3]")
     assertPreservesSource("show reduce [?1 + ?2] [1 2 3]")
+    assertPreservesSource("show [pycor] of one-of patches")
+    assertPreservesSource("; comment with [\"a list\"] [1 2 3]\n")
+    assertPreservesSource("show [ 1 2 3 ]")
+    assertPreservesSource("show [ [1] [ 2] [ 3 ] ]")
+    assertPreservesSource("show [ blue green yellow ]")
+    assertPreservesSource("show (list 1 2 3) ; => [1 2 3]\n")
+    assertPreservesSource("show reduce [[x y] -> x + y] [1 2 3]")
+  }
+
+  test("trims loose line ends") {
+    assertPreservesSource("to foo end\n\nto baz end", "", "")
     assertModifiesSource("to foo  \nend", "to foo\nend")
   }
 
@@ -131,6 +142,26 @@ class AstRewriterTests extends FunSuite {
     // This test just documents that behavior.
     // Could be added, but I don't really see a need most of the time.
     assertResult("[4 2 3]")(replaceReporter("[4 2 3]", "4" -> "1"))
+  }
+
+  test("lambda-ize") {
+    def lambdaize(source: String) =
+      try {
+        val rw = rewriter(source)
+        rw.runVisitor(new Lambdaizer())
+      } catch {
+        case ex: CompilerException => fail(ex.getMessage + " " + source.slice(ex.start, ex.end))
+      }
+    def testLambda(changedBody: String, body: String, preamble: String = "TO FOO ", postamble: String = " END"): Unit = {
+      assertResult(preamble + changedBody + postamble)(lambdaize(preamble + body + postamble))
+    }
+    testLambda("__ignore reduce + [1 2 3]", "__ignore reduce + [1 2 3]")
+    testLambda("__ignore [[_1] -> print _1]", "__ignore task [print ?]")
+    testLambda("""foreach [1 2 3] [[_1] ->  crt _1 run "set glob1 glob1 + count turtles" ]""",
+      """foreach [1 2 3] [ crt ? run "set glob1 glob1 + count turtles" ]""")
+    testLambda("__ignore map [[_1] -> round _1] [1 2 3]", "__ignore map [round ?] [1 2 3]")
+    testLambda("__ignore (map [[_1 _2] -> _1 + _2] [1 2 3] [4 5 6])", "__ignore (map [?1 + ?2] [1 2 3] [4 5 6])")
+    testLambda("__ignore sort-by [[_1 _2] -> _1 < _2] [1 2 3]", "__ignore sort-by [?1 < ?2] [1 2 3]")
   }
 
   test("add extension") {

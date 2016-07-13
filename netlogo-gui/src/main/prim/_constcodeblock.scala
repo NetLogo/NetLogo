@@ -8,8 +8,6 @@ import scala.collection.JavaConverters._
 class _constcodeblock(value: List[Token]) extends Reporter with Pure {
   def this(value: Seq[Token]) = this(value.asJava)
 
-
-
   override def toString =
     s"${super.toString}: [${value.asScala.map((t: Token) => t.text).mkString(" ")}]"
 

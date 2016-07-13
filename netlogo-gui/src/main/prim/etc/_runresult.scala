@@ -45,7 +45,7 @@ class _runresult extends Reporter {
         task.report(context, actuals)
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.ReporterTaskType | Syntax.StringType, obj)
+          context, this, 0, Syntax.ReporterType | Syntax.StringType, obj)
     }
 
 }

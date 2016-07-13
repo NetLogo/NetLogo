@@ -3,7 +3,7 @@
 package org.nlogo.lex
 
 import org.scalatest.FunSuite
-import org.nlogo.core.{ Token, TokenType, TestUtils },
+import org.nlogo.core.{ SourceLocation, Token, TokenType, TestUtils },
   TestUtils.cleanJsNumbers
 
 class TokenizerTests extends FunSuite {
@@ -18,6 +18,12 @@ class TokenizerTests extends FunSuite {
     val result = Tokenizer.tokenizeSkippingTrailingWhitespace(
       new java.io.StringReader(s), "").toSeq
     assertResult(TokenType.Eof)(result.last._1.tpe)
+    result.dropRight(1)
+  }
+  def tokenizeWithWhitespace(s: String) = {
+    val result = Tokenizer.tokenizeWithWhitespace(
+      new java.io.StringReader(s), "").toSeq
+    assertResult(TokenType.Eof)(result.last.tpe)
     result.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
@@ -254,16 +260,23 @@ class TokenizerTests extends FunSuite {
   test("gets token at a given position") {
     assert(getTokenAtPosition("", -1)   == None)
     assert(getTokenAtPosition("", 10)   == None)
-    assert(getTokenAtPosition("t", 0)   == Some(Token("t", TokenType.Ident, "T")(0, 1, "")))
-    assert(getTokenAtPosition("t s", 2) == Some(Token("s", TokenType.Ident, "S")(2, 3, "")))
-    assert(getTokenAtPosition("abc def", 2) == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
-    assert(getTokenAtPosition("abc def", 4) == Some(Token("def", TokenType.Ident, "DEF")(4, 7, "")))
-    assert(getTokenAtPosition("abc def ghi", 10) == Some(Token("ghi", TokenType.Ident, "GHI")(8, 11, "")))
+    assert(getTokenAtPosition("t", 0)   == Some(Token("t", TokenType.Ident, "T")(SourceLocation(0, 1, ""))))
+    assert(getTokenAtPosition("t s", 2) == Some(Token("s", TokenType.Ident, "S")(SourceLocation(2, 3, ""))))
+    assert(getTokenAtPosition("abc def", 2) == Some(Token("abc", TokenType.Ident, "ABC")(SourceLocation(0, 3, ""))))
+    assert(getTokenAtPosition("abc def", 4) == Some(Token("def", TokenType.Ident, "DEF")(SourceLocation(4, 7, ""))))
+    assert(getTokenAtPosition("abc def ghi", 10) == Some(Token("ghi", TokenType.Ident, "GHI")(SourceLocation(8, 11, ""))))
   }
 
   test("prefers ident and keyword tokens to punctuation and literals") {
-    assert(getTokenAtPosition("abc]", 3)    == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
-    assert(getTokenAtPosition("abc 123", 3) == Some(Token("abc", TokenType.Ident, "ABC")(0, 3, "")))
-    assert(getTokenAtPosition("123 abc", 3) == Some(Token("abc", TokenType.Ident, "ABC")(4, 7, "")))
+    assert(getTokenAtPosition("abc]", 3)    == Some(Token("abc", TokenType.Ident, "ABC")(SourceLocation(0, 3, ""))))
+    assert(getTokenAtPosition("abc 123", 3) == Some(Token("abc", TokenType.Ident, "ABC")(SourceLocation(0, 3, ""))))
+    assert(getTokenAtPosition("123 abc", 3) == Some(Token("abc", TokenType.Ident, "ABC")(SourceLocation(4, 7, ""))))
+  }
+
+  test("TokenizeWithWhitespaceCapturesWhitespace") {
+    val tokens = tokenizeWithWhitespace("123   foo")
+    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head.toString))
+    assertResult("Token(   ,Whitespace,   )")(cleanJsNumbers(tokens(1).toString))
+    assertResult("Token(foo,Ident,FOO)")(cleanJsNumbers(tokens(2).toString))
   }
 }

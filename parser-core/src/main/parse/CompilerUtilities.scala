@@ -59,10 +59,11 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
       val sp =
         new StructureParser(None, true)
       val results = sp.parse(namedTokens, StructureResults(program, procedures))
-      val namer =
-        new Namer(program, procedures ++ results.procedures, extensionManager)
       val proc = results.procedures.values.head
-      val tokens = namer.process(results.procedureTokens(proc.name).iterator, proc)
+      val namer =
+        new Namer(program, procedures ++ results.procedures, proc, extensionManager)
+      namer.validateProcedure()
+      val tokens = TransformableTokenStream(results.procedureTokens(proc.name).iterator, namer)
       tokens.toStream
         .drop(1)  // skip _report
         .dropWhile(_.tpe == core.TokenType.OpenParen)

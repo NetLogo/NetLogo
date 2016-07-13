@@ -133,7 +133,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
       case t: api.ReporterTask => t
       case x =>
         throw new ExtensionException(
-          getExceptionMessage(Syntax.ReporterTaskType, x))
+          getExceptionMessage(Syntax.ReporterType, x))
     }
 
   @throws(classOf[ExtensionException])
@@ -142,7 +142,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
       case t: api.CommandTask => t
       case x =>
         throw new ExtensionException(
-          getExceptionMessage(Syntax.CommandTaskType, x))
+          getExceptionMessage(Syntax.CommandType, x))
     }
 
 

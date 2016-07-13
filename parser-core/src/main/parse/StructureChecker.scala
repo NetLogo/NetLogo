@@ -83,11 +83,11 @@ object StructureChecker {
     }
   }
 
-  def breedPrimitives(declarations: Seq[Declaration]): SymbolType.SymbolTable = {
+  def breedPrimitives(declarations: Seq[Declaration]): SymbolTable = {
     import BreedIdentifierHandler._
     import org.nlogo.core.StructureDeclarations.{ Breed => DeclBreed }
 
-    declarations.foldLeft(SymbolType.emptySymbolTable) {
+    declarations.foldLeft(SymbolTable.empty) {
       case (table, breed: DeclBreed) =>
         table.addSymbols(breedCommands(breed), SymbolType.BreedCommand)
              .addSymbols(breedReporters(breed), SymbolType.BreedReporter)

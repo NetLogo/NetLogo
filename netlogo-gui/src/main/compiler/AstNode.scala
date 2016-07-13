@@ -2,7 +2,8 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.{ core, nvm }
+import org.nlogo.{ core, nvm }, core.SourceLocation
+
 
 /**
  * An interface representing a node in the NetLogo abstract syntax tree (AKA parse tree, in
@@ -13,9 +14,6 @@ import org.nlogo.{ core, nvm }
  * always reasonable.
  */
 trait AstNode extends core.AstNode {
-  def start: Int
-  def end: Int
-  def file: String
   def accept(v: AstVisitor)
 }
 
@@ -48,6 +46,40 @@ class DefaultAstVisitor extends AstVisitor {
 }
 
 /**
+ * Transforms an AST to allow changes without mutation
+ */
+trait AstTransformer {
+  def visitProcedureDefinition(proc: ProcedureDefinition): ProcedureDefinition = {
+    proc.copy(statements = visitStatements(proc.statements))
+  }
+  def visitCommandBlock(block: CommandBlock): CommandBlock = {
+    block.copy(statements = visitStatements(block.statements))
+  }
+  def visitExpression(exp: Expression): Expression = {
+    exp match {
+      case app: ReporterApp =>
+        visitReporterApp(app)
+      case cb: CommandBlock =>
+        visitCommandBlock(cb)
+      case rb: ReporterBlock =>
+        visitReporterBlock(rb)
+    }
+  }
+  def visitReporterApp(app: ReporterApp): ReporterApp = {
+    app.copy(args = app.args.map(visitExpression))
+  }
+  def visitReporterBlock(block: ReporterBlock): ReporterBlock = {
+    block.copy(app = visitReporterApp(block.app))
+  }
+  def visitStatement(stmt: Statement): Statement = {
+    stmt.copy(args = stmt.args.map(visitExpression))
+  }
+  def visitStatements(statements: Statements): Statements = {
+    statements.copy(stmts = statements.stmts.map(visitStatement))
+  }
+}
+
+/**
  * represents a NetLogo expression. An expression is either a block or a
  * reporter application (variable references and constants (including lists),
  * are turned into reporter applications).
@@ -58,8 +90,10 @@ trait Expression extends AstNode {
    * types of subexpressions.
    */
   def reportedType(): Int
-  def start_=(start: Int)
-  def end_=(end: Int)
+  @deprecated("hexy", "mutability sucks")
+  def start_=(start: Int) = { }
+  @deprecated("hexy", "mutability sucks")
+  def end_=(end: Int) = { }
 }
 
 /**
@@ -71,8 +105,11 @@ trait Application extends AstNode {
   def args: Seq[Expression]
   def coreInstruction: core.Instruction
   def nvmInstruction: nvm.Instruction
-  def end_=(end: Int)
+  @deprecated("hexy", "mutability sucks")
+  def end_=(end: Int) = { }
+  @deprecated("hexy", "mutability sucks")
   def addArgument(arg: Expression)
+  @deprecated("hexy", "mutability sucks")
   def replaceArg(index: Int, expr: Expression)
 }
 
@@ -81,10 +118,10 @@ trait Application extends AstNode {
  * for the procedure body, which is a Statements object.
  */
 class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statements) extends AstNode {
-  def start = procedure.pos
-  def end = procedure.end
-  def file = procedure.filename
+  val sourceLocation = SourceLocation(procedure.pos, procedure.end, procedure.filename)
   def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
+  def copy(procedure: nvm.Procedure = procedure, statements: Statements = statements) =
+    new ProcedureDefinition(procedure, statements)
 }
 
 /**
@@ -93,43 +130,64 @@ class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statemen
  * (enclosed in [], in particular). This class is used to represent other
  * groups of statements as well, for instance procedure bodies.
  */
-class Statements(val file: String) extends AstNode {
-  var start: Int = _
-  var end: Int = _
+class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceLocation: SourceLocation) extends AstNode {
+  def this(stmts: Seq[Statement], sourceLocation: SourceLocation) =
+    this(scala.collection.mutable.Seq[Statement](stmts: _*), sourceLocation)
+
   /**
    * a List of the actual Statement objects.
    */
-  private val _stmts = collection.mutable.Buffer[Statement]()
-  def stmts: Seq[Statement] = _stmts
-  def body: Seq[Statement] = _stmts
+  def body: Seq[Statement] = stmts
+  @deprecated("hexy", "mutability sucks")
   def addStatement(stmt: Statement) {
-    _stmts.append(stmt)
+    stmts = stmts :+ stmt
     recomputeStartAndEnd()
   }
   private def recomputeStartAndEnd() {
-    if (stmts.isEmpty) { start = 0; end = 0 }
-    else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
+    if (stmts.isEmpty) { sourceLocation = sourceLocation.copy(start = 0, end = 0) }
+    else { sourceLocation = sourceLocation.copy(start = stmts(0).start, end = stmts(stmts.size - 1).end) }
   }
   override def toString = stmts.mkString(" ")
   def accept(v: AstVisitor) { v.visitStatements(this) }
+  def copy(stmts: Seq[Statement] = stmts, sourceLocation: SourceLocation = sourceLocation): Statements =
+    new Statements(scala.collection.mutable.Seq[Statement](stmts: _*), sourceLocation)
+
 }
 
 /**
  * represents a NetLogo statement. Statements only have one form: command
  * application.
  */
-class Statement(var coreCommand: core.Command, var command: nvm.Command, var start: Int, var end: Int, val file: String)
+class Statement(
+  val coreCommand: core.Command,
+  var command: nvm.Command,
+  _args: collection.mutable.Buffer[Expression],
+  val sourceLocation: SourceLocation)
     extends Application {
-  private val _args = collection.mutable.Buffer[Expression]()
-  override def args: Seq[Expression] = _args
+
+  def this(coreCommand: core.Command, command: nvm.Command, args: Seq[Expression], sourceLocation: SourceLocation) =
+    this(coreCommand, command, collection.mutable.Buffer[Expression](args: _*), sourceLocation)
+
+  def args: Seq[Expression] = _args.toSeq
   def nvmInstruction = command // for Application
   def coreInstruction = coreCommand // for Application
-  def addArgument(arg: Expression) { _args.append(arg) }
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
   def accept(v: AstVisitor) { v.visitStatement(this) }
-  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
 
-  def removeArgument(index: Int) { _args.remove(index) }
+  // should try to remove
+  def addArgument(arg: Expression) = {
+    _args += arg
+  }
+  def replaceArg(index: Int, expr: Expression) = {
+    _args(index) = expr
+  }
+  def removeArgument(index: Int): Unit = { _args.remove(index) }
+
+  def copy(coreCommand: core.Command = coreCommand,
+    command: nvm.Command = command,
+    args: Seq[Expression] = args,
+    sourceLocation: SourceLocation = sourceLocation): Statement =
+      new Statement(coreCommand, command, args, sourceLocation)
 }
 
 /**
@@ -138,10 +196,13 @@ class Statement(var coreCommand: core.Command, var command: nvm.Command, var sta
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation) extends Expression {
   def reportedType() = core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
+
+  def copy(statements: Statements = statements, sourceLocation: SourceLocation = sourceLocation): CommandBlock =
+    new CommandBlock(statements, sourceLocation)
 }
 
 /**
@@ -149,7 +210,7 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
  * and tokenized.  This is an expression, and can be used as an argument
  * to commands and reports.
  */
-class CodeBlock(val code: String, var start: Int, var end: Int, val file: String) extends Expression {
+class CodeBlock(val code: String, val sourceLocation: SourceLocation) extends Expression {
   def reportedType() = core.Syntax.CodeBlockType
   override def toString = "[" + code + "]"
   def accept(v: AstVisitor) {}
@@ -162,7 +223,7 @@ class CodeBlock(val code: String, var start: Int, var end: Int, val file: String
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file: String) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
   def accept(v: AstVisitor) { v.visitReporterBlock(this) }
   /**
@@ -183,6 +244,9 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
         else OtherBlockType
     }
   }
+
+  def copy(app: ReporterApp = app, sourceLocation: SourceLocation = sourceLocation): ReporterBlock =
+    new ReporterBlock(app, sourceLocation)
 }
 
 /**
@@ -191,20 +255,32 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * represents things like constants, which are converted into no-arg reporter
  * applications as they're parsed.
  */
-class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter, var start: Int, var end: Int, val file: String)
+class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter,
+  _args: collection.mutable.Buffer[Expression],
+  val sourceLocation: SourceLocation)
 extends Expression with Application {
+
+  def this(coreReporter: core.Reporter, reporter: nvm.Reporter, sourceLocation: SourceLocation) =
+    this(coreReporter, reporter, collection.mutable.Buffer[Expression](), sourceLocation)
+
   /**
    * the args for this application.
    */
-  private val _args = collection.mutable.Buffer[Expression]()
   override def args: Seq[Expression] = _args
   def coreInstruction = coreReporter // for Application
   def nvmInstruction = reporter // for Application
-  def addArgument(arg: Expression) { _args.append(arg) }
   def reportedType() = coreReporter.syntax.ret
   def accept(v: AstVisitor) { v.visitReporterApp(this) }
   def removeArgument(index: Int) { _args.remove(index) }
-  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+  override def addArgument(arg: Expression) { _args.append(arg) }
+  override def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
+  override def end_=(end: Int) = { }
   def clearArgs() { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
+
+  def copy(coreReporter: core.Reporter = coreReporter,
+    reporter: nvm.Reporter = reporter,
+    args: Seq[Expression] = args,
+    sourceLocation: SourceLocation = sourceLocation): ReporterApp =
+      new ReporterApp(coreReporter, reporter, scala.collection.mutable.Buffer[Expression](args: _*), sourceLocation)
 }

@@ -149,6 +149,15 @@ class ModelConverterTests extends FunSuite {
     assertResult(convertedSource)(converted.code)
   }
 
+  test("lambda-izes") {
+    val changes =
+      Seq[SourceRewriter => String](_.customRewrite("org.nlogo.parse.Lambdaizer"))
+    val targets = Seq("?1")
+    val model = Model(code = "to foo run task [ clear-all ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end")
+    val converted = convert(model, ConversionSet(changes, changes, targets))
+    assertResult("to foo run [ clear-all ] end to bar __ignore sort-by [[_1 _2] -> _1 > _2] [1 2 3] end")(converted.code)
+  }
+
   test("handles models with trailing comments properly") {
     val originalSource =
       """|to abort

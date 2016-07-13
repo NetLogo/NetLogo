@@ -261,6 +261,7 @@ R = _equal
 R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
+R -> _lambdaargs
 R __block etc._block
 R __boom etc._boom
 R __check-syntax etc._checksyntax

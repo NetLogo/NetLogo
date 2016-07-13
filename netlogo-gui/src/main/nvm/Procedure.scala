@@ -12,8 +12,9 @@ class Procedure(
   val name: String,
   _displayName: Option[String],
   val parent: Procedure,
-  val argTokens: Seq[Token] = Seq(),
-  initialArgs: Vector[String] = Vector[String]()) extends FrontEndProcedure {
+  val argTokens: Seq[Token]   = Seq(),
+  initialArgs: Vector[String] = Vector[String](),
+  val taskFormals: Array[Let] = Array[Let]()) extends FrontEndProcedure {
 
   args = initialArgs
   val fileName = nameToken.filename // used by cities include-file stuff
@@ -40,22 +41,19 @@ class Procedure(
   // cache args.size() for efficiency with making Activations
   var size = 0
 
-  // ExpressionParser doesn't know how many parameters the task is going to take;
-  // that's determined by TaskVisitor. so for now this is mutable - ST 2/4/11
-  val taskFormals = collection.mutable.Buffer[Let]()
-
-  def getTaskFormal(n: Int, token: Token): Let = {
-    while (taskFormals.size < n)
-      taskFormals += new Let("?" + (taskFormals.size + 1).toString)
-    taskFormals(n - 1)
-  }
+  def getTaskFormal(name: String): Option[Let] =
+    taskFormals.find(_.name == name) orElse Option(parent).flatMap(_.getTaskFormal(name))
 
   var code = Array[Command]()
 
-  private def buildDisplayName(displayName: Option[String]): String =
+  private def buildDisplayName(displayName: Option[String]): String = {
+    def topParent(p: Procedure): Procedure =
+      if (p.parent == null) p
+      else topParent(p.parent)
+
     if (isTask) {
       val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
-      "(command task from: " + parent.displayName + ": " + sourceCode + ")"
+      "(command task from: " + topParent(parent).displayName + ": " + sourceCode + ")"
     } else {
       def nameAndFile =
         Option(fileName)
@@ -64,6 +62,7 @@ class Procedure(
           .getOrElse(name)
       displayName.getOrElse("procedure " + nameAndFile)
     }
+  }
 
   override def syntax: Syntax = {
     val right = List.fill(args.size - localsCount)(Syntax.WildcardType)

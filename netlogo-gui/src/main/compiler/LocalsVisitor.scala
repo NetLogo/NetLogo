@@ -46,9 +46,8 @@ private class LocalsVisitor extends DefaultAstVisitor {
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
-        } else {
-          // the let referred to has already been replaced, so we replace it here
-          for (localIndex <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
+        } else if (procedure != null) {
+          for (localIndex <- lookupLet(l.let, procedure)) {
             convertSetToLocal(stmt, newProcedureVar(localIndex, l.let, None))
           }
         }
@@ -77,10 +76,32 @@ private class LocalsVisitor extends DefaultAstVisitor {
     }
   }
 
+  override def visitReporterApp(expr: ReporterApp) {
+    expr.reporter match {
+      case l: _letvariable =>
+        cAssert(currentLet == null || (currentLet.let ne l.let),
+                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text),
+                l.token)
+        for(index <- lookupLet(l.let, procedure)) {
+          val oldToken = expr.reporter.token
+          val newVar = new _procedurevariable(index.intValue, l.let.name)
+          newVar.copyMetadataFrom(expr.reporter)
+          expr.reporter = newVar
+        }
+      case _ =>
+    }
+    super.visitReporterApp(expr)
+  }
+
   private def convertSetToLocal(stmt: Statement, newVar: _procedurevariable): Unit = {
     val newSet = new _setprocedurevariable(newVar)
     newSet.copyMetadataFrom(stmt.command)
     stmt.command = newSet
+  }
+
+  private def lookupLet(let: Let, procedure: Procedure): Option[Int] = {
+    if (procedure == null) None
+    else procedure.alteredLets.get(let) orElse lookupLet(let, procedure.parent)
   }
 
   private def newProcedureVar(i: Int, l: Let, oldReporter: Option[Instruction]): _procedurevariable = {
@@ -88,20 +109,4 @@ private class LocalsVisitor extends DefaultAstVisitor {
     oldReporter.foreach(i => newProcVar.copyMetadataFrom(i))
     newProcVar
   }
-
-  override def visitReporterApp(expr: ReporterApp) {
-    expr.reporter match {
-      case l: _letvariable =>
-        cAssert(currentLet == null || (currentLet.let ne l.let),
-                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text),
-                l.token)
-        // it would be nice if the next line were easier to read - ST 2/6/11
-        for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
-          expr.reporter = newProcedureVar(index, l.let, Some(expr.reporter))
-        }
-      case _ =>
-    }
-    super.visitReporterApp(expr)
-  }
-
 }

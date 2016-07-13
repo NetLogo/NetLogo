@@ -511,7 +511,7 @@ NeighborsLots5_2D
 
 NeighborsWorldWidth2_2D
   to-report counts report sentence [count neighbors] of patches [count neighbors4] of patches end
-  to-report all-topologies let result [] foreach [true false] [ let wrapx ? foreach [true false] [ let wrapy ? __change-topology wrapx wrapy set result lput counts result ] ] report result end
+  to-report all-topologies let result [] foreach [true false] [[a] -> let wrapx a foreach [true false] [[b] -> let wrapy b __change-topology wrapx wrapy set result lput counts result ] ] report result end
   O> resize-world 0 1 0 1
   all-topologies => [[3 3 3 3 2 2 2 2] [3 3 3 3 2 2 2 2] [3 3 3 3 2 2 2 2] [3 3 3 3 2 2 2 2]]
 

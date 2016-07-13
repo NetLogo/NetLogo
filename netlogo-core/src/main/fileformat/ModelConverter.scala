@@ -13,9 +13,12 @@ import scala.util.matching.Regex
 
 object ModelConverter {
   def apply(extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment, dialect: Dialect): ((Model, Seq[AutoConvertable]) => Model) = {
-    val modelConversions = ((m: Model) => AutoConversionList.conversions.collect {
-      case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) => conversionSet
-    })
+    val modelConversions = {(m: Model) =>
+      AutoConversionList.conversions.collect {
+        case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) =>
+          conversionSet
+      }
+    }
     new ModelConverter(extensionManager, compilationEnvironment, dialect, modelConversions)
   }
 }
@@ -23,7 +26,6 @@ object ModelConverter {
 class ModelConverter(extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment, dialect: Dialect, applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
   extends ((Model, Seq[AutoConvertable]) => Model) {
   def apply(model: Model, components: Seq[AutoConvertable]): Model = {
-
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand =
       CompilationOperand(
         sources                = Map("" -> source),
@@ -44,9 +46,16 @@ class ModelConverter(extensionManager: ExtensionManager, compilationEnv: Compila
       rewriterOp(operand)
     }
 
+    def targetToRegexString(t: String): String = {
+      if (t.length > 0 && t.head.isLetter && t.last.isLetter)
+        "\\b" + Regex.quote(t) + "\\b"
+      else
+        Regex.quote(t)
+    }
+
     def containsAnyTargets(targets: Seq[String])(source: String): Boolean = {
       val anyTarget =
-        new Regex("(?i)" + targets.map(Regex.quote).map("\\b" + _ + "\\b").mkString("|"))
+        new Regex("(?i)" + targets.map(targetToRegexString).mkString("|"))
       anyTarget.findFirstIn(source).isDefined
     }
 

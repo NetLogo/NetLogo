@@ -194,7 +194,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
         t
       case x =>
         throw new ArgumentTypeException(
-          context, this, index, Syntax.ReporterTaskType, x)
+          context, this, index, Syntax.ReporterType, x)
     }
 
   def argEvalCommandTask(context: Context, index: Int): ApiCommandTask =
@@ -203,7 +203,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
         t
       case x =>
         throw new ArgumentTypeException(
-          context, this, index, Syntax.CommandTaskType, x)
+          context, this, index, Syntax.CommandType, x)
     }
 
   def argEvalSymbol(context: Context, argIndex: Int): Token = {

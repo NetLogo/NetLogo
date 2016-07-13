@@ -456,7 +456,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.api.ReporterTask) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterType(), obj);
     }
   }
 
@@ -465,7 +465,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.api.CommandTask) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandType(), obj);
     }
   }
 

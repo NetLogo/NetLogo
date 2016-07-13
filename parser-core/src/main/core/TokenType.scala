@@ -24,4 +24,5 @@ object TokenType {
   case object Bad extends TokenType        // characters the tokenizer couldn't digest
   // Formerly LITERAL
   case object Extension extends TokenType  // extension literals (for export-world of extension types)
+  case object Whitespace extends TokenType
 }

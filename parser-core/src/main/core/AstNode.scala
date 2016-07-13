@@ -13,11 +13,12 @@ package org.nlogo.core
  *  - "statement" is a syntactic form with no value and a command as head (e.g., show 5)
  *  - "expression" is a syntactic form which can occur as an argument to a command or to a
  *    reporter. expressions denote values. there are two basic kinds of expression:
- *     - reporter applications (infix or prefix). Note that this is reporter in the internal sense,
- *       which includes variables and literals. So these include, e.g., turtles with [ true ], 5 +
- *       10, 5, [1 2 3].
- *     - blocks. command and reporter blocks are expressions of this type.  a command block contains
- *       zero or more statements, while a reporter block contains exactly one expression.
+ *     - reporter applications (infix or prefix). Note that this is reporter in the internal
+ *       sense, which includes variables and literals. So these include, e.g.,
+ *       turtles with [ true ], 5 + 10, 5, [1 2 3].
+ *     - blocks. command and reporter blocks are expressions of this type.
+ *       A command block contains zero or more statements, while a reporter
+ *       block contains exactly one expression.
  */
 
 /**
@@ -28,11 +29,7 @@ package org.nlogo.core
  * indicated by the position and length. It's the compiler's job to make sure these values are
  * always reasonable.
  */
-trait AstNode {
-  def start: Int
-  def end: Int
-  def file: String
-}
+trait AstNode extends SourceLocatable
 
 /**
  * represents a NetLogo expression. An expression is either a block or a
@@ -45,8 +42,8 @@ trait Expression extends AstNode {
    * types of subexpressions.
    */
   def reportedType(): Int
-  def start_=(start: Int)
-  def end_=(end: Int)
+
+  def changeLocation(newLocation: SourceLocation): Expression
 }
 
 /**
@@ -57,25 +54,22 @@ trait Expression extends AstNode {
 trait Application extends AstNode {
   def args: Seq[Expression]
   def instruction: Instruction
-  def end_=(end: Int)
-  def addArgument(arg: Expression)
-  def replaceArg(index: Int, expr: Expression)
 }
 
 /**
  * represents a single procedure definition.  really just a container
  * for the procedure body, which is a Statements object.
  */
-class ProcedureDefinition(val procedure: FrontEndProcedure, val statements: Statements) extends AstNode {
-  var start = procedure.nameToken.start
-  var end   = statements.end
-  var file  = procedure.filename
+class ProcedureDefinition(val procedure: FrontEndProcedure, val statements: Statements, _end: Int) extends AstNode {
+  def this(procedure: FrontEndProcedure, stmts: Statements) = this(procedure, stmts, stmts.end)
+  val sourceLocation = SourceLocation(procedure.nameToken.start, _end, procedure.filename)
 
   def nonLocalExit = statements.nonLocalExit
 
   def copy(procedure:  FrontEndProcedure = procedure,
-           statements: Statements        = statements): ProcedureDefinition = {
-    new ProcedureDefinition(procedure, statements)
+           statements: Statements        = statements,
+           end:        Int               = _end): ProcedureDefinition = {
+    new ProcedureDefinition(procedure, statements, end)
   }
 }
 
@@ -87,62 +81,42 @@ class ProcedureDefinition(val procedure: FrontEndProcedure, val statements: Stat
  * nonLocalExit identifies that the statements contain one or more commands
  * (possibly nested) which may cause a non-local exit (like `stop` or `report`)
  */
-class Statements(val file: String, val nonLocalExit: Boolean) extends AstNode {
-  def this(file: String, stmts: Seq[Statement], nonLocalExit: Boolean) = {
-    this(file, nonLocalExit)
-    _stmts.appendAll(stmts)
-    recomputeStartAndEnd()
-  }
+class Statements(file: String, val stmts: Seq[Statement], val nonLocalExit: Boolean) extends AstNode {
+  def this(file: String)                        = this(file, Seq(), false)
+  def this(file: String, stmts: Seq[Statement]) = this(file, stmts, false)
+  def this(file: String, nonLocalExit: Boolean) = this(file, Seq(), nonLocalExit)
 
-  def this(file: String) = { this(file, Seq(), false) }
+  // def not val because `stmts` is mutable
+  def sourceLocation =
+    if (stmts.isEmpty) SourceLocation(0, 0, file)
+    else SourceLocation(stmts(0).start, stmts.last.end, file)
 
-  var start: Int = _
-  var end: Int = _
-  /**
-   * a List of the actual Statement objects.
-   */
-  private val _stmts = collection.mutable.Buffer[Statement]()
-  def stmts: Seq[Statement] = _stmts
-  def addStatement(stmt: Statement) {
-    _stmts.append(stmt)
-    recomputeStartAndEnd()
-  }
-  private def recomputeStartAndEnd() {
-    if (stmts.isEmpty) { start = 0; end = 0 }
-    else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
-  }
   override def toString = stmts.mkString(" ")
 
-  def copy(file: String = file, stmts: Seq[Statement] = stmts, nonLocalExit: Boolean = nonLocalExit): Statements = {
+  def copy(file: String = file, stmts: Seq[Statement] = stmts, nonLocalExit: Boolean = nonLocalExit) =
     new Statements(file, stmts, nonLocalExit)
-  }
 }
 
 /**
  * represents a NetLogo statement. Statements only have one form: command
  * application.
  */
-class Statement(var command: Command, var start: Int, var end: Int, val file: String)
-    extends Application {
-  def this(command: Command, start: Int, end: Int, file: String, args: Seq[Expression]) = {
-    this(command, start, end, file)
-    _args.appendAll(args)
-  }
+class Statement(var command: Command, val args: Seq[Expression], val sourceLocation: SourceLocation) extends Application {
+  def this(command: Command, sourceLocation: SourceLocation) =
+    this(command, Seq[Expression](), sourceLocation)
 
-  private val _args = collection.mutable.Buffer[Expression]()
-  override def args: Seq[Expression] = _args
   def instruction = command // for Application
-  def addArgument(arg: Expression) { _args.append(arg) }
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
-  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
-  def removeArgument(index: Int) { _args.remove(index) }
 
-  def copy(command: Command = command,
-           start: Int = start,
-           end: Int = end,
-           file: String = file,
-           args: Seq[Expression] = args): Statement = {
-    new Statement(command, start, end, file, args)
+  def withArguments(args: Seq[Expression]) = new Statement(
+    command, args, sourceLocation.copy(end = args.lastOption.map(_.end).getOrElse(sourceLocation.end)))
+
+  def changeLocation(newLocation: SourceLocation): Statement = copy(location = newLocation)
+
+  def copy(command:  Command        = command,
+           args:     Seq[Expression] = args,
+           location: SourceLocation = sourceLocation): Statement = {
+    new Statement(command, args, location)
   }
 }
 
@@ -152,15 +126,15 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String, val synthetic: Boolean = false) extends Expression {
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val synthetic: Boolean = false) extends Expression {
   def reportedType() = Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
 
-  def copy(statements: Statements = statements,
-           start: Int = start,
-           end: Int = end,
-           file: String = file): CommandBlock = {
-    new CommandBlock(statements, start, end, file, synthetic)
+  def changeLocation(newLocation: SourceLocation): CommandBlock = copy(location = newLocation)
+
+  def copy(statements: Statements     = statements,
+           location:   SourceLocation = sourceLocation): CommandBlock = {
+    new CommandBlock(statements, sourceLocation, synthetic)
   }
 }
 
@@ -171,8 +145,9 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file: String) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
+
   /**
    * computes the type of this block. Reporter block types are
    * determined in a somewhat complicated way. This is derived from
@@ -192,8 +167,10 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
     }
   }
 
-  def copy(app: ReporterApp = app, start: Int = start, end: Int = end, file: String = file): ReporterBlock = {
-    new ReporterBlock(app, start, end, file)
+  def changeLocation(newLocation: SourceLocation): ReporterBlock = copy(location = newLocation)
+
+  def copy(app: ReporterApp = app, location: SourceLocation = sourceLocation): ReporterBlock = {
+    new ReporterBlock(app, location)
   }
 }
 
@@ -203,31 +180,25 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * represents things like constants, which are converted into no-arg reporter
  * applications as they're parsed.
  */
-class ReporterApp(var reporter: Reporter, var start: Int, var end: Int, val file: String)
-extends Expression with Application {
+class ReporterApp(var reporter: Reporter, val args: Seq[Expression], val sourceLocation: SourceLocation) extends Application with Expression {
 
-  def this(reporter: Reporter, start: Int, end: Int, file: String, args: Seq[Expression]) = {
-    this(reporter, start, end, file)
-    _args.appendAll(args)
-  }
+  def this(reporter: Reporter, location: SourceLocation) = this(reporter, Seq[Expression](), location)
+
   /**
    * the args for this application.
    */
-  private val _args = collection.mutable.Buffer[Expression]()
-  override def args: Seq[Expression] = _args
   def instruction = reporter // for Application
-  def addArgument(arg: Expression) { _args.append(arg) }
   def reportedType() = reporter.syntax.ret
-  def removeArgument(index: Int) { _args.remove(index) }
-  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
-  def clearArgs() { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 
-  def copy(reporter: Reporter = reporter,
-           start: Int = start,
-           end: Int = end,
-           file: String = file,
-           args: Seq[Expression] = args): ReporterApp = {
-    new ReporterApp(reporter, start, end, file, args)
-  }
+  def withArguments(args: Seq[Expression]) =
+    new ReporterApp(
+      reporter,
+      args,
+      sourceLocation.copy(end = args.lastOption.map(_.end).getOrElse(sourceLocation.end)))
+
+  def changeLocation(newLocation: SourceLocation): ReporterApp = copy(location = newLocation)
+
+  def copy(reporter: Reporter = reporter, args: Seq[Expression] = args, location: SourceLocation = sourceLocation): ReporterApp =
+    new ReporterApp(reporter, args, location)
 }

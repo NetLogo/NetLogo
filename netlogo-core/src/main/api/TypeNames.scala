@@ -43,9 +43,9 @@ object TypeNames {
       case _: org.nlogo.api.Link =>
         core.TypeNames.name(LinkType)
       case _: ReporterTask =>
-        core.TypeNames.name(ReporterTaskType)
+        core.TypeNames.name(ReporterType)
       case _: CommandTask =>
-        core.TypeNames.name(CommandTaskType)
+        core.TypeNames.name(CommandType)
       case null =>
         "null"
       case _ =>
@@ -66,9 +66,9 @@ object TypeNames {
     else if (classOf[Link].isAssignableFrom(clazz))
       LinkType
     else if (classOf[ReporterTask].isAssignableFrom(clazz))
-      ReporterTaskType
+      ReporterType
     else if (classOf[CommandTask].isAssignableFrom(clazz))
-      CommandTaskType
+      CommandType
     else if (classOf[String].isAssignableFrom(clazz))
       StringType
     else if (classOf[java.lang.Double].isAssignableFrom(clazz) || clazz == java.lang.Double.TYPE)

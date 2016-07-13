@@ -84,9 +84,9 @@ object StructureParser {
       structureParser.parse(tokens, oldResults)
     }
 
-  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolType.SymbolTable = {
+  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
     val symTable =
-      SymbolType.emptySymbolTable
+      SymbolTable.empty
         .addSymbols(program.dialect.tokenMapper.allCommandNames, SymbolType.PrimitiveCommand)
         .addSymbols(program.dialect.tokenMapper.allReporterNames, SymbolType.PrimitiveReporter)
         .addSymbols(program.globals, SymbolType.GlobalVariable)

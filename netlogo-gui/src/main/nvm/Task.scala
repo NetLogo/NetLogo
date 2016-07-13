@@ -25,7 +25,7 @@ sealed trait Task {
     val pairs =
       Seq(
         (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
-        (AgentKind.Patch, 'P'), (AgentKind.Link, 'L'))
+        (AgentKind.Patch, 'P'),    (AgentKind.Link, 'L'))
     val allowedKinds =
       for {
         (thisKind, c) <- pairs

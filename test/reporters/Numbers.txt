@@ -23,10 +23,10 @@ Sqrt7
   sqrt 37.21 => 6.1
 
 Abs
-  map [abs ?] [-7 -3.7 0 0.0 0.4 1 1.0] => [7 3.7 0 0 0.4 1 1]
+  map abs [-7 -3.7 0 0.0 0.4 1 1.0] => [7 3.7 0 0 0.4 1 1]
 
 Round
-  map [round ?] [-1.5 -1 -0.5 0 0.5 1 1.5] => [-1 -1 0 0 1 1 2]
+  map round [-1.5 -1 -0.5 0 0.5 1 1.5] => [-1 -1 0 0 1 1 2]
 
 DivByZero1
   3 / 0 => ERROR Division by zero.
@@ -47,7 +47,7 @@ DivByZero6
   -1 / 0.0 => ERROR Division by zero.
 
 Acos1
-  map [acos ?] [0 1 -1] => [90 0 180]
+  map acos [0 1 -1] => [90 0 180]
 
 Acos2
   acos -1.00001 => ERROR math operation produced a non-number
@@ -56,7 +56,7 @@ Acos3
   acos 1.00001 => ERROR math operation produced a non-number
 
 Asin1
-  map [asin ?] [0 1 -1] => [0 90 -90]
+  map asin [0 1 -1] => [0 90 -90]
 
 Asin2
   asin -1.00001 => ERROR math operation produced a non-number

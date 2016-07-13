@@ -165,7 +165,7 @@ public strictfp class Argument
       return (org.nlogo.api.ReporterTask) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(Syntax.ReporterTaskType(), obj));
+        getExceptionMessage(Syntax.ReporterType(), obj));
     }
   }
 
@@ -176,7 +176,7 @@ public strictfp class Argument
       return (org.nlogo.api.CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(Syntax.CommandTaskType(), obj));
+        getExceptionMessage(Syntax.CommandType(), obj));
     }
   }
 

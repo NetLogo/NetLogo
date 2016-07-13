@@ -80,67 +80,67 @@ ListReplaceIt2
   replace-item 0 [] [] => ERROR Can't find element 0 of the list [], which is only of length 0.
 
 ReduceMinus
-  reduce [?1 - ?2] [1 2 3] => -4
+  reduce - [1 2 3] => -4
 
 ReducePlus
-  reduce [?1 + ?2] [1 2 3] => 6
+  reduce + [1 2 3] => 6
 
 ReduceIntReturn
-  (reduce [?1 + ?2] [1 2 3]) + 2 => 8
+  (reduce + [1 2 3]) + 2 => 8
 
 ReduceReverse
-  reduce [fput ?2 ?1] [[] 1 2 3] => [3 2 1]
+  reduce [[x y] -> fput y x] [[] 1 2 3] => [3 2 1]
 
 ReduceSingle
-  reduce [?1 + ?2] [1] => 1
+  reduce + [1] => 1
 
 ReduceEmpty
-  reduce [?1 + ?2] [] => ERROR The list argument to reduce must not be empty.
+  reduce + [] => ERROR The list argument to reduce must not be empty.
 
 MapEmpty
-  map [round ?] [] => []
+  map round [] => []
 
 MapSimple
-  map [?] [1 2 3] => [1 2 3]
+  map [[x] -> x] [1 2 3] => [1 2 3]
 
 MapVariadic
-  (map [?1 + ?2] [1 2 3] [4 5 6]) => [5 7 9]
+  (map + [1 2 3] [4 5 6]) => [5 7 9]
 
 MapNotEnoughInputs
   map + [1 2 3 4] => ERROR task expected 2 inputs, but only got 1
 
 SortBy1
-  sort-by [?1 < ?2] [4 1 3 2] => [1 2 3 4]
+  sort-by < [4 1 3 2] => [1 2 3 4]
 
 SortBy2
-  sort-by [?1 > ?2] [4 1 3 2] => [4 3 2 1]
+  sort-by > [4 1 3 2] => [4 3 2 1]
 
 SortBy3
-  sort-by [?1 > ?2] [] => []
+  sort-by > [] => []
 
 SortBy4
-  sort-by [?1 > ?2] [5] => [5]
+  sort-by > [5] => [5]
 
 SortBy5
-  sort-by [?1] [5 4] => ERROR SORT-BY expected input to be a TRUE/FALSE but got the number 5 instead.
+  sort-by [[x] -> x] [5 4] => ERROR SORT-BY expected input to be a TRUE/FALSE but got the number 5 instead.
 
 SortByStable1
-  sort-by [first ?1 < first ?2] [[1 2] [1 3]] => [[1 2] [1 3]]
+  sort-by [[x y] -> first x < first y] [[1 2] [1 3]] => [[1 2] [1 3]]
 
 SortByStable2
-  sort-by [first ?1 < first ?2] [[1 3] [1 2]] => [[1 3] [1 2]]
+  sort-by [[x y] -> first x < first y] [[1 3] [1 2]] => [[1 3] [1 2]]
 
 SortByStable3
-  sort-by [first ?1 > first ?2] [[1 2] [1 3]] => [[1 2] [1 3]]
+  sort-by [[x y] -> first x > first y] [[1 2] [1 3]] => [[1 2] [1 3]]
 
 SortByStable4
-  sort-by [first ?1 > first ?2] [[1 3] [1 2]] => [[1 3] [1 2]]
+  sort-by [[x y] -> first x > first y] [[1 3] [1 2]] => [[1 3] [1 2]]
 
 SortByStable5
-  sort-by [first ?1 < first ?2] [[1 3] [1 3] [1 2] [1 2] [1 4] [1 4]] => [[1 3] [1 3] [1 2] [1 2] [1 4] [1 4]]
+  sort-by [[x y] -> first x < first y] [[1 3] [1 3] [1 2] [1 2] [1 4] [1 4]] => [[1 3] [1 3] [1 2] [1 2] [1 4] [1 4]]
 
 SortByStable6
-  sort-by [first ?1 < first ?2] [[2 3] [2 2] [2 1] [1 6] [1 5] [1 4] [3 7] [3 8] [3 9]] => [[1 6] [1 5] [1 4] [2 3] [2 2] [2 1] [3 7] [3 8] [3 9]]
+  sort-by [[x y] -> first x < first y] [[2 3] [2 2] [2 1] [1 6] [1 5] [1 4] [3 7] [3 8] [3 9]] => [[1 6] [1 5] [1 4] [2 3] [2 2] [2 1] [3 7] [3 8] [3 9]]
 
 Sort1
   sort [3 1 3 4 2 5] => [1 2 3 3 4 5]
@@ -167,7 +167,7 @@ Sort8
   sort [3 2.0 1] => [1 2 3]
 
 ListEmpty
-  map [empty? ?] [[] [1]] => [true false]
+  map empty? [[] [1]] => [true false]
 
 ListItem1
   item 0 [] => ERROR Can't find element 0 of the list [], which is only of length 0.

@@ -37,13 +37,13 @@ LetWithWith_3D
 LetTwiceInDifferentBlocks
   globals [ glob1 ]
   O> set glob1 0
-  O> foreach [true false] [ ifelse ? [ let x 5 set glob1 glob1 + x ] [ let x 6 set glob1 glob1 + x ] ]
+  O> foreach [true false] [[b] -> ifelse b [ let x 5 set glob1 glob1 + x ] [ let x 6 set glob1 glob1 + x ] ]
   glob1 => 11
 
 LetInsideForeach1
   globals [ glob1 ]
   O> set glob1 0
-  O> foreach [1 2 3 4] [ let x ? set glob1 glob1 + x ]
+  O> foreach [1 2 3 4] [[n] -> let x n set glob1 glob1 + x ]
   glob1 => 10
 
 LetInsideForeach2
@@ -99,7 +99,7 @@ LetInsideRecursiveProcedure2
 LetAndTemplateVariables
   globals [ glob1 ]
   O> set glob1 0
-  O> let index 0 foreach [1 2 4] [ set glob1 glob1 + index * ? set index index + 1 ]
+  O> let index 0 foreach [1 2 4] [[n] -> set glob1 glob1 + index * n set index index + 1 ]
   glob1 => 10
 
 AllowDuplicateNamingOfLocalVariables

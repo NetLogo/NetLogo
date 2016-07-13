@@ -2,18 +2,21 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstNode, CommandBlock, ReporterApp, ReporterBlock, Statement, prim },
+import org.nlogo.core.{ AstFolder, AstNode, CommandBlock, ReporterApp, ReporterBlock, Statement, prim },
   prim._unknowncommand
+
+import Formatter.Operation
+import WhiteSpace._
 
 import scala.util.matching.Regex
 
-object NoopFolder extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {}
+object NoopFolder extends PositionalAstFolder[Map[AstPath, Operation]] {}
 
-class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {
+class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[Map[AstPath, Operation]] {
 
   def delete(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = ctx
 
-  override def visitStatement(stmt: Statement, position: AstPath)(implicit ops: Map[AstPath, Formatter.Operation]): Map[AstPath, Formatter.Operation] = {
+  override def visitStatement(stmt: Statement, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Operation] = {
     if (stmt.command.token.text.equalsIgnoreCase(droppedCommand))
       super.visitStatement(stmt, position)(ops + (position -> delete _))
     else
@@ -21,18 +24,18 @@ class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[Map[Ast
   }
 }
 
-class ReplaceReporterVisitor(alteration: (String, String)) extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {
+class ReplaceReporterVisitor(alteration: (String, String)) extends PositionalAstFolder[Map[AstPath, Operation]] {
   import Formatter._
 
   def replace(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Context): Context = {
     astNode match {
       case app: ReporterApp =>
-        ctx.copy(text = ctx.text + ctx.wsMap(path).leading + alteration._2)
+        ctx.copy(text = ctx.text + ctx.wsMap.leading(path) + alteration._2)
       case _ => ctx
     }
   }
 
-  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Formatter.Operation] = {
+  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Operation] = {
     if (app.reporter.token.text.equalsIgnoreCase(alteration._1))
       super.visitReporterApp(app, position)(ops + (position -> replace _))
     else
@@ -54,7 +57,7 @@ class AddVisitor(val addition: (String, String)) extends StatementManipulationVi
             operations = ctx.operations - position,
             wsMap = newWsMap(ctx, position, stmt)))
         formatter.visitStatement(stmt, position)(c1.copy(
-          text = c1.text + ctx.wsMap(position).trailing,
+          text = c1.text + ctx.wsMap.trailing(position),
           operations = ctx.operations - position,
           wsMap = ctx.wsMap))
       case _               => ctx
@@ -83,7 +86,7 @@ class ReplaceVisitor(val addition: (String, String)) extends StatementManipulati
 
 // handles argument transfer for 1 argument at the moment. Should be expanded if more arguments are needed
 trait StatementManipulationVisitor
-  extends PositionalAstFolder[Map[AstPath, Formatter.Operation]] {
+  extends PositionalAstFolder[Map[AstPath, Operation]] {
   import Formatter._
 
   def addition: (String, String)
@@ -99,16 +102,16 @@ trait StatementManipulationVisitor
     .map(_.drop(1).dropRight(1).toInt)
   val afterCommand = pattern.findFirstMatchIn(addition._2).map(_.group("afterCommand"))
 
-  def newWsMap(ctx: Context, position: AstPath, stmt: Statement): Map[AstPath, WhiteSpace] =
+  def newWsMap(ctx: Context, position: AstPath, stmt: Statement): WhitespaceMap =
     addedArgument.map { i =>
       val oldArgPosition = position / AstPath.Expression(stmt.args(i), i)
       val newArgPosition = position / AstPath.Expression(stmt.args(i), 0)
       ctx.wsMap.map {
-        case (k, v) =>
+        case ((k, p), v) =>
           if (oldArgPosition.isParentOf(k))
-            k.repath(oldArgPosition, newArgPosition) -> v
+            (k.repath(oldArgPosition, newArgPosition), p) -> v
           else
-            k -> v
+            (k, p) -> v
       }
     }.getOrElse(ctx.wsMap)
 
@@ -121,3 +124,62 @@ trait StatementManipulationVisitor
       super.visitStatement(stmt, position)
 }
   }
+
+class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
+  import prim.{ _commandlambda, _commandtask, _reporterlambda, _reportertask, _task, _taskvariable }
+
+  def replaceVar(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = {
+    astNode match {
+      case app: ReporterApp =>
+        app.reporter match {
+          case tv: _taskvariable => ctx.appendText(ctx.wsMap.leading(path) + s"_${tv.vn}")
+          case _ => ctx
+        }
+      case _ => ctx
+    }
+  }
+
+  def addVariables(maxVar: Option[Int])(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
+    astNode match {
+      case app: ReporterApp =>
+        val visitBody = formatter.visitExpression(app.args(0), path, 0)(ctx.copy(text = ""))
+        val bodyText = visitBody.text.replaceFirst("\\[", "").reverse.replaceFirst("\\]", "").reverse
+        app.reporter match {
+          case rl: _reporterlambda if rl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
+          case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
+          case _ =>
+            val vars = maxVar.map(1 to _).map(_.map(num => s"_$num")) getOrElse Seq()
+            val varString = if (vars.nonEmpty) vars.mkString("[", " ", "] -> ") else ""
+            ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + bodyText + "]")
+        }
+      case _ => ctx
+    }
+
+  def onlyFirstArg(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
+    astNode match {
+      case app: ReporterApp => formatter.visitExpression(app.args(0), path, 0)(ctx)
+      case _                => ctx
+    }
+
+  object MaxTaskVariable extends AstFolder[Option[Int]] {
+    override def visitReporterApp(app: ReporterApp)(implicit maxVariable: Option[Int]): Option[Int] =
+      app.reporter match {
+        case tv: _taskvariable =>
+          super.visitReporterApp(app)(maxVariable.map(_ max tv.vn) orElse Some(tv.vn))
+        // avoid crossing into another task
+        case (_: _commandtask | _: _reportertask | _: _commandlambda | _: _reporterlambda) => maxVariable
+        case _ => super.visitReporterApp(app)
+      }
+  }
+
+  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Operation] = {
+    app.reporter match {
+      case (_: _reporterlambda | _: _commandlambda) =>
+        val variables = MaxTaskVariable.visitExpression(app.args(0))(None)
+        super.visitReporterApp(app, position)(ops + (position -> addVariables(variables)))
+      case _: _task           => super.visitReporterApp(app, position)(ops + (position -> onlyFirstArg _))
+      case _: _taskvariable   => super.visitReporterApp(app, position)(ops + (position -> replaceVar _))
+      case _                  => super.visitReporterApp(app, position)
+    }
+  }
+}

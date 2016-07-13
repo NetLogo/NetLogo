@@ -8,6 +8,7 @@ import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment,
 import AstPath._
 
 import WhiteSpace.Context
+import WhiteSpace._
 
 import org.scalatest.FunSuite
 
@@ -24,8 +25,8 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
       Program.fromDialect(NetLogoCore),
       subprogram = false)
     val (procDefs, _) = basicParse(compilationOperand)
-    val tracker = new WhiteSpace.Tracker(sources)
-    procDefs.foldLeft(Context(lastPosition = Some(("", AstPath(), 0)))) {
+    val tracker = new WhiteSpace.Tracker(sources, tokenizer)
+    procDefs.foldLeft(Context.empty("")) {
       case (ctx, procDef) =>
         tracker.visitProcedureDefinition(procDef)(ctx)
     }
@@ -33,34 +34,39 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
 
   test("basic whitespace") {
     val result = trackWhiteSpace("to foo end")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).leading == "to foo")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).trailing == "end")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).backMargin == " ")
+    val proc = AstPath(Proc("FOO"))
+    assert(result.whitespaceMap(proc -> Leading) == "to foo")
+    assert(result.whitespaceMap(proc -> Trailing) == "end")
+  }
+
+  test("whitespace with comments") {
+    val result = trackWhiteSpace("to foo\n;comment [here]\nend")
+    val proc = AstPath(Proc("FOO"))
+    assert(result.whitespaceMap(proc -> Leading) == "to foo")
+    assert(result.whitespaceMap(proc -> Trailing) == "end")
+    assert(result.whitespaceMap(proc -> BackMargin) == "\n;comment [here]\n")
+  }
+
+  test("infix whitespace") {
+    val result = trackWhiteSpace("to foo __ignore 1 + 2 end")
+    val two = AstPath(Proc("FOO"), Stmt(0), RepArg(0), RepArg(1))
+    assert(result.whitespaceLog.leading(two) == " ")
   }
 
   test("two-procedure whitespace") {
     val result = trackWhiteSpace("to foo end to bar end")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).leading == "to foo")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).backMargin == " ")
-    assert(result.astWsMap(AstPath(Proc("FOO"))).trailing == "end")
-    assert(result.astWsMap(AstPath(Proc("BAR"))).leading == " to bar")
-    assert(result.astWsMap(AstPath(Proc("BAR"))).backMargin == " ")
-    assert(result.astWsMap(AstPath(Proc("BAR"))).trailing == "end")
+    val foo = AstPath(Proc("FOO"))
+    val bar = AstPath(Proc("BAR"))
+    assert(result.whitespaceLog.leading(foo) == "to foo")
+    assert(result.whitespaceLog.trailing(foo) == "end")
+    assert(result.whitespaceLog.leading(bar) == " to bar")
+    assert(result.whitespaceLog.trailing(bar) == "end")
   }
 
-  test("parenthesized WhiteSpace") {
-    val result = trackWhiteSpace("to z show (word \"a\" \"1\") end")
-    assert(result.astWsMap(AstPath(Proc("Z"), Stmt(0), RepArg(0))).leading == " (")
-    assert(result.astWsMap(AstPath(Proc("Z"), Stmt(0), RepArg(0), RepArg(1))).trailing == ") ")
-  }
-
-  test("parenthesized WhiteSpace in lone command tasks") {
-    val result = trackWhiteSpace("to z run [ show (word \"a\" \"1\") ] end")
-    val proc = AstPath(Proc("Z"))
-    val word = proc / Stmt(0) / RepArg(0) / CmdBlk(0) / Stmt(0) / RepArg(0)
-    assert(result.astWsMap(word).leading == " (")
-    assert(result.astWsMap(word / RepArg(1)).trailing == ") ")
-    assert(result.astWsMap(proc).backMargin == " ")
+  test("white space in blocks") {
+    val result = trackWhiteSpace("to z __ignore [pycor] of one-of patches end")
+    val pycor = AstPath(Proc("Z")) / Stmt(0) / RepArg(0) / RepBlk(0) / RepArg(0)
+    assert(result.whitespaceLog.leading(pycor) == "")
   }
 
   test("parenthesized WhiteSpace in blocks") {
@@ -68,36 +74,58 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
     val lastArg = AstPath(Proc("Z"), Stmt(0), RepArg(0), CmdBlk(0), Stmt(0), RepArg(0), RepArg(1))
     val word = AstPath(Proc("Z"), Stmt(0), RepArg(0), CmdBlk(0), Stmt(0), RepArg(0))
     val blk = AstPath(Proc("Z"), Stmt(0), RepArg(0), CmdBlk(0))
-    assert(result.astWsMap(word).leading == " (")
-    assert(result.astWsMap(lastArg).trailing == ") ")
-    assert(result.astWsMap(blk).backMargin == ") ")
+    assert(result.whitespaceLog.leading(word) == " (")
+    assert(result.whitespaceLog.trailing(lastArg) == ") ")
+    assert(result.whitespaceLog.backMargin(blk) == ") ")
+  }
+
+  test("parenthesized WhiteSpace in lone command tasks") {
+    val result = trackWhiteSpace("to z run [ show (word \"a\" \"1\") ] end")
+    val proc = AstPath(Proc("Z"))
+    val word = proc / Stmt(0) / RepArg(0) / CmdBlk(0) / Stmt(0) / RepArg(0)
+    assert(result.whitespaceLog.leading(word) == " (")
+    assert(result.whitespaceLog.trailing(word / RepArg(1)) == ") ")
+  }
+
+  test("parenthesized WhiteSpace at end of procedure") {
+    val result = trackWhiteSpace("to z show (word \"a\" \"1\") end")
+    assert(result.whitespaceLog.leading(AstPath(Proc("Z"), Stmt(0), RepArg(0))) == " (")
+    assert(result.whitespaceLog.trailing(AstPath(Proc("Z"), Stmt(0), RepArg(0), RepArg(1))) == ") ")
   }
 
   test("parenthesized WhiteSpace in reporter blocks") {
     val result = trackWhiteSpace("to z show [ (word \"a\" \"1\") ] of turtles fd 1 end")
     val blk = AstPath(Proc("Z"), Stmt(0), RepArg(0), RepBlk(0))
-    val lastArg = blk / RepArg(1)
-    assert(result.astWsMap(blk).leading == " (")
-    assert(result.astWsMap(lastArg).trailing == ") ")
-    assert(result.astWsMap(blk).backMargin == ") ")
+    val word = blk / RepArg(0)
+    assert(result.whitespaceMap(word -> Leading) == " (")
+    assert(result.whitespaceMap(blk -> BackMargin) == ") ")
+    assert(result.whitespaceMap(word / RepArg(1) -> Trailing) == ") ")
   }
 
   test("parenthesized WhiteSpace in lone reporter tasks") {
     val result = trackWhiteSpace("to-report z report runresult [ (word \"a\" \"1\") ] end")
     val proc = AstPath(Proc("Z"))
     val word = proc / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
-    assert(result.astWsMap(word).leading == " (")
-    assert(result.astWsMap(word / RepArg(1)).trailing == ") ")
-    assert(result.astWsMap(proc).backMargin == " ")
+    assert(result.whitespaceLog.leading(word) == " (")
+    assert(result.whitespaceLog.trailing(word / RepArg(1)) == ") ")
+  }
+
+  test("whitespace for lambdas") {
+    val result = trackWhiteSpace("to-report z report [[x y] -> x + y] end")
+    val proc = AstPath(Proc("Z"))
+    val lambda = proc / Stmt(0) / RepArg(0)
+    val x = proc / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
+    assert(result.whitespaceMap(x -> Leading) == " ")
+    assert(result.whitespaceMap(lambda -> FrontMargin) == "[x y] ->")
   }
 
   test("parenthesized WhiteSpace in reporter tasks with other commands") {
     val result = trackWhiteSpace("to-report z let foo runresult [ (word \"a\" \"1\") ] report foo end")
     val word = AstPath(Proc("Z"), Stmt(0), RepArg(1), RepArg(0), RepArg(0))
     val lastArg = word / RepArg(1)
-    assert(result.astWsMap(word).leading == " (")
-    assert(result.astWsMap(lastArg).trailing == ") ")
-    assert(result.astWsMap(word.`../`).backMargin == ") ")
-    assert(result.astWsMap(word.`../`).backMargin == ") ")
+    assert(result.whitespaceMap(word -> Leading) == " (")
+    assert(result.whitespaceMap(lastArg -> Trailing) == ") ")
+    assert(result.whitespaceMap(word.`../` -> BackMargin) == ") ")
+    assert(result.whitespaceMap(word.`../` -> BackMargin) == ") ")
   }
 }

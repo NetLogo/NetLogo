@@ -53,16 +53,16 @@ HSB1
   approximate-hsb 0 0 0 => 0
 
 HSB2
-  n-values 1400 [? / 10] = map [approximate-hsb (item 0 ?) (item 1 ?) (item 2 ?)] map [extract-hsb ?] n-values 1400 [? / 10] => true
+  n-values 1400 [[x] -> x / 10] = map [[l] -> approximate-hsb (item 0 l) (item 1 l) (item 2 l)] map extract-hsb n-values 1400 [[x] -> x / 10] => true
 
 HSB3
-  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ?] => 14
+  length remove-duplicates map [[y] -> map [[x] -> round (255 * x)] extract-rgb y] n-values 14 [[x] -> 10 * x] => 14
 
 HSB4
-  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ? + 9.9] => 14
+  length remove-duplicates map [[y] -> map [[x] -> round (255 * x)] extract-rgb y] n-values 14 [[x] -> 10 * x + 9.9] => 14
 
 HSB5
-  length remove-duplicates map [extract-hsb ?] n-values 1400 [? / 10] => 1400
+  length remove-duplicates map [[x] -> extract-hsb x] n-values 1400 [[x] -> x / 10] => 1400
 
 # Use blue for tests, but really testing reflexivity of things
 HSB6
@@ -78,19 +78,19 @@ RGB1
   approximate-rgb 0 0 0 => 0
 
 RGB2
-  n-values 1400 [? / 10] = map [approximate-rgb (item 0 ?) (item 1 ?) (item 2 ?)] map [extract-rgb ?] n-values 1400 [? / 10] => true
+  n-values 1400 [[x] -> x / 10] = map [[l] -> approximate-rgb (item 0 l) (item 1 l) (item 2 l)] map extract-rgb n-values 1400 [[x] -> x / 10] => true
 
 RGB3
-  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ?] => 14
+  length remove-duplicates map [[y] -> map [[x] -> round (255 * x)] extract-rgb y] n-values 14 [[x] -> 10 * x] => 14
 
 RGB4
-  length remove-duplicates map [map [round (255 * ?)] extract-rgb ?] n-values 14 [10 * ? + 9.9] => 14
+  length remove-duplicates map [[y] -> map [[x] -> round (255 * x)] extract-rgb y] n-values 14 [[x] -> 10 * x + 9.9] => 14
 
 RGB5
-  length remove-duplicates map [extract-rgb ?] n-values 1400 [? / 10] => 1400
+  length remove-duplicates map extract-rgb n-values 1400 [[x] -> x / 10] => 1400
 
 BaseColors
-  base-colors = n-values 14 [? * 10 + 5] => true
+  base-colors = n-values 14 [[x] -> x * 10 + 5] => true
 
 SimpleHSB
   hsb  -1 -83  -9 => [0 0 0]

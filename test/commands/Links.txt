@@ -392,24 +392,24 @@ LinksAllFromTo1
   sort [my-links ] of turtle 0 => []
   sort [my-links ] of turtle 1 => []
   O> ask turtle 0 [create-link-to turtle 1]
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 0 => [[0 1]]
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 1 => [[0 1]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-out-links ] of turtle 0 => [[0 1]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-in-links ] of turtle 1 => [[0 1]]
   sort [my-in-links] of turtle 0 => []
   sort [my-out-links ] of turtle 1 => []
 
 LinksAllFromTo2
   O> crt 2
   O> ask turtle 0 [create-link-from turtle 1]
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-in-links ] of turtle 0 => [[1 0]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-in-links ] of turtle 0 => [[1 0]]
   sort [my-out-links ] of turtle 0 => []
   sort [my-in-links] of turtle 1 => []
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-out-links ] of turtle 1 => [[1 0]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-out-links ] of turtle 1 => [[1 0]]
 
 LinksAllFromTo3
   O> crt 2
   O> ask turtle 0 [create-link-with turtle 1]
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 0 => [[0 1]]
-  map [ [ (list [who] of end1 [who] of end2 ) ] of ? ] sort [my-links ] of turtle 1 => [[0 1]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-links ] of turtle 0 => [[0 1]]
+  map [[l] -> [ (list [who] of end1 [who] of end2 ) ] of l ] sort [my-links ] of turtle 1 => [[0 1]]
 
 LinkKillsItself1
   breed [nodes node]

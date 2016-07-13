@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{ Link, Patch, Turtle }
-import org.nlogo.core.{ CompilerException, Reporter => CoreReporter }
+import org.nlogo.core.{ CompilerException, Reporter => CoreReporter, SourceLocation }
 import org.nlogo.core.{ prim => coreprim},
   coreprim.{ _set => _coreset, _const => _coreconst }
 import org.nlogo.nvm.{ Command, Reporter }
@@ -12,10 +12,10 @@ import org.nlogo.prim._
 
 class SetVisitorTests extends FunSuite {
   def tester(r: Reporter, cr: CoreReporter, spec: String, setterClass: Class[_ <: Command]) {
-    val stmt = new Statement(new _coreset(), new _set, 0, 0, "")
-    stmt.addArgument(new ReporterApp(cr, r, 0, 0, ""))
+    val stmt = new Statement(new _coreset(), new _set, Seq(), SourceLocation(0, 0, ""))
+    stmt.addArgument(new ReporterApp(cr, r, SourceLocation(0, 0, "")))
     stmt.addArgument(
-      new ReporterApp(new _coreconst(Double.box(5)), new _constdouble(Double.box(5)), 0, 0, ""))
+      new ReporterApp(new _coreconst(Double.box(5)), new _constdouble(Double.box(5)), SourceLocation(0, 0, "")))
     stmt.accept(new SetVisitor)
     assertResult(setterClass.getName.substring("org.nlogo.prim.".length) + ":" + spec + "[_constdouble:5.0[]]")(
       stmt.toString)

@@ -2,9 +2,9 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.CompilerException
 import org.scalatest.FunSuite
 import org.nlogo.core
+import org.nlogo.core.{ CompilerException, SourceLocation }
 import org.nlogo.core.TestUtils.cleanJsNumbers
 
 // This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
@@ -67,10 +67,19 @@ class FrontEndTests extends FunSuite {
     doFailure(input, message, start, end, preamble)
   }
   def doFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE) {
-    val e = intercept[CompilerException] { compile(input) }
+    val e = intercept[CompilerException] { compile(input, preamble = preamble) }
     assertResult(message)(e.getMessage)
-    assertResult(start)(e.start - PREAMBLE.length)
-    assertResult(end)(e.end - PREAMBLE.length)
+    val programText = preamble + input + POSTAMBLE
+    def programTextWithContext(s: Int, e: Int) = {
+      val beforeContext = programText.slice((s - 5) max 0, s)
+      val t = programText.slice(s, e)
+      val afterContext = programText.slice(e, (e + 5) min (programText.length - 1))
+      s"... $beforeContext|$t|$afterContext ..."
+    }
+    val expectedErrorSource = programTextWithContext(start + preamble.length, end + preamble.length)
+    val actualErrorSource = programTextWithContext(e.start, e.end)
+    assert(start == e.start - preamble.length, s"incorrect start, expected: $expectedErrorSource but was actually $actualErrorSource\n")
+    assert(end   == e.end   - preamble.length, s"incorrect end, expected: $expectedErrorSource but was actually $actualErrorSource")
   }
 
   /// now, the actual tests
@@ -112,6 +121,9 @@ class FrontEndTests extends FunSuite {
     // here the error is at TokenType.Eof - ST 9/29/14
     runFailure("let", "Expected variable name here", 4, 7)
   }
+  test("unknown reporter failure") {
+    runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)
+  }
   test("parseSymbolUnknownName") {
     runTest("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
   }
@@ -133,17 +145,73 @@ class FrontEndTests extends FunSuite {
   test("error-message used outside of carefully") {
     runFailure("let foo error-message", "error-message cannot be used outside of CAREFULLY.", 8, 21)
   }
+  test("lambda parse") {
+    runTest("__ignore [[x] -> x + x]",
+      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
+  }
+  test("nested lambda parse") {
+    runTest("__ignore [[x] -> [[y] ->  x / y ]]",
+      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
+  }
+  test("lambda parse with map") {
+    runTest("__ignore map [[x] -> x] [1 2 3]",
+      "_ignore()[_map()[_reporterlambda(X)[_lambdavariable(X)[]], _const([1, 2, 3])[]]]")
+  }
+  test("lambda parse with foreach") {
+    runTest("foreach [1 2 3] [[x] -> __ignore x]",
+      "_foreach()[_const([1, 2, 3])[], _commandlambda(X)[[_ignore()[_lambdavariable(X)[]]]]]")
+  }
+  test("lambda argument name is a literal") {
+    runFailure("__ignore [[2] -> 2]", "Expected a variable name here", 11, 12)
+  }
+  test("invalidLiteral") {
+    runFailure("__ignore [", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("invalidLambda1") {
+    runFailure("__ignore [->", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("invalidLambda2") {
+    runFailure("__ignore [[->", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("invalidLambda3") {
+    runFailure("__ignore [[]->", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("invalidLambda4") {
+    pending // decision on lambda
+    runFailure("__ignore [foo ->]", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("lambda argument shadows primitive name") {
+    runFailure("__ignore [[turtles] -> 2]", "There is already a primitive reporter called TURTLES", 11, 18)
+  }
+  test("lambda argument duplicate name") {
+    runFailure("__ignore [[bar bar] -> 2]", "There is already a local variable here called BAR", 15, 18)
+  }
+  test("lambda argument duplicate nested name") {
+    runFailure("__ignore [[bar] -> [[bar] -> 2]]", "There is already a local variable here called BAR", 21, 24)
+  }
+  test("lambda argument shadows local variable") {
+    runFailure("let baz 7 __ignore [[baz] -> 3]", "There is already a local variable here called BAZ", 21, 24)
+  }
+  test("lambda argument shadows lambda name variable") {
+    runFailure("let baz [[baz] -> 3]", "There is already a local variable here called BAZ", 10, 13)
+  }
+  test("lambda argument shadows procedure variable") {
+    runFailure("__ignore [[bar] -> 2]", "There is already a local variable here called BAR", 11, 14, "to foo [bar] ")
+  }
   test("DoParseMap") {
-    runTest("__ignore map [round ?] [1.2 1.7 3.2]",
-      "_ignore()[_map()[_reportertask(1)[_round()[_taskvariable(1)[]]], _const([1.2, 1.7, 3.2])[]]]")
+    runTest("__ignore map [[x] -> round x] [1.2 1.7 3.2]",
+      "_ignore()[_map()[_reporterlambda(X)[_round()[_lambdavariable(X)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("DoParseMapShortSyntax") {
     runTest("__ignore map round [1.2 1.7 3.2]",
-      "_ignore()[_map()[_reportertask(1)[_round()[_taskvariable(1)[]]], _const([1.2, 1.7, 3.2])[]]]")
+      "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("DoParseForeach") {
-    runTest("foreach [1 2 3] [__ignore ?]",
-      "_foreach()[_const([1.0, 2.0, 3.0])[], _commandtask(1)[[_ignore()[_taskvariable(1)[]]]]]")
+    runFailure("foreach [1 2 3] [__ignore ?]", "This special variable isn't defined here.", 26, 27)
+  }
+  test("DoParseForeachShortSyntax") {
+    runTest("foreach [1 2 3] print",
+      "_foreach()[_const([1.0, 2.0, 3.0])[], _commandlambda(_0)[[_print()[_lambdavariable(_0)[]]]]]")
   }
   test("DoParselet") {
     runTest("let x 5 __ignore x",
@@ -193,25 +261,25 @@ class FrontEndTests extends FunSuite {
   }
   test("ParseConstantListInsideTask1") {
     runTest("__ignore n-values 10 [[]]",
-      "_ignore()[_nvalues()[_const(10.0)[], _reportertask(0)[_const([])[]]]]")
+      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([])[]]]]")
   }
   test("ParseConstantListInsideTask2") {
     runTest("__ignore n-values 10 [[5]]",
-      "_ignore()[_nvalues()[_const(10.0)[], _reportertask(0)[_const([5.0])[]]]]")
+      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([5.0])[]]]]")
   }
   test("ParseCommandTask1") {
-    runTest("__ignore task [print ?]",
-      "_ignore()[_commandtask(1)[[_print()[_taskvariable(1)[]]]]]")
+    runTest("__ignore task [[x] -> print x]",
+      "_ignore()[_commandlambda(X)[[_print()[_lambdavariable(X)[]]]]]")
   }
   test("ParseCommandTask2") {
     runTest("__ignore task [print 5]",
-      "_ignore()[_commandtask(0)[[_print()[_const(5.0)[]]]]]")
+      "_ignore()[_commandlambda()[[_print()[_const(5.0)[]]]]]")
   }
   test("ParseCommandTask3") {
     // it would be nice if this resulted in a CompilerException instead
     // of failing at runtime - ST 2/6/11
     runTest("__ignore runresult task [__ignore 5]",
-      "_ignore()[_runresult()[_commandtask(0)[[_ignore()[_const(5.0)[]]]]]]")
+      "_ignore()[_runresult()[_commandlambda()[[_ignore()[_const(5.0)[]]]]]]")
   }
   test("ParseDiffuse") {
     runTest("diffuse pcolor 1",
@@ -243,12 +311,12 @@ class FrontEndTests extends FunSuite {
       "ReporterApp '5' ")
   }
   test("StartAndEndPositions2") {
-    testStartAndEnd("__ignore n-values 5 [world-width]",
-      "Statements '__ignore n-values 5 [world-width]' " +
-      "Statement '__ignore n-values 5 [world-width]' " +
-      "ReporterApp 'n-values 5 [world-width]' " +
+    testStartAndEnd("__ignore n-values 5 [[] -> world-width]",
+      "Statements '__ignore n-values 5 [[] -> world-width]' " +
+      "Statement '__ignore n-values 5 [[] -> world-width]' " +
+      "ReporterApp 'n-values 5 [[] -> world-width]' " +
       "ReporterApp '5' " +
-      "ReporterApp '[world-width]' " +
+      "ReporterApp '[[] -> world-width]' " +
       "ReporterApp 'world-width' ")
   }
   test("StartAndEndPositions8") {
@@ -400,9 +468,9 @@ class FrontEndTests extends FunSuite {
     import org.nlogo.core.{ Token, TokenType }
     val procedurePos = FrontEnd.findProcedurePositions("""to foo show "bar" end""", None).get("foo")
     assert(procedurePos.nonEmpty)
-    assert(procedurePos.get.declarationKeyword == Token("to", TokenType.Keyword, "TO")(0, 2, ""))
-    assert(procedurePos.get.identifier         == Token("foo", TokenType.Ident, "FOO")(3, 6, ""))
-    assert(procedurePos.get.endKeyword         == Token("end", TokenType.Keyword, "END")(18, 21, ""))
+    assert(procedurePos.get.declarationKeyword == Token("to", TokenType.Keyword, "TO")(SourceLocation(0, 2, "")))
+    assert(procedurePos.get.identifier         == Token("foo", TokenType.Ident, "FOO")(SourceLocation(3, 6, "")))
+    assert(procedurePos.get.endKeyword         == Token("end", TokenType.Keyword, "END")(SourceLocation(18, 21, "")))
 
     val procedurePos2 = FrontEnd.findProcedurePositions("""to foo end to bar show "foo" end""", None).get("bar")
     assert(procedurePos2.nonEmpty)
@@ -411,8 +479,8 @@ class FrontEndTests extends FunSuite {
   test("findProcedurePositions maps procedures to critical syntax tokens in a way that is tolerant of errors") {
     import org.nlogo.core.{ Token, TokenType }
     val procedurePos = FrontEnd.findProcedurePositions("""to foo show "bar" to bar show "foo" end""", None).get("foo")
-    assert(procedurePos.get.identifier == Token("foo", TokenType.Ident, "FOO")(3, 6, ""))
-    assert(procedurePos.get.endKeyword == Token("end", TokenType.Keyword, "END")(36, 39, ""))
+    assert(procedurePos.get.identifier == Token("foo", TokenType.Ident, "FOO")(SourceLocation(3, 6, "")))
+    assert(procedurePos.get.endKeyword == Token("end", TokenType.Keyword, "END")(SourceLocation(36, 39, "")))
     val unclosedProcedure = FrontEnd.findProcedurePositions("""to foo show""", None).get("foo")
     assert(unclosedProcedure.nonEmpty)
     assert(unclosedProcedure.get.identifier.text == "foo")

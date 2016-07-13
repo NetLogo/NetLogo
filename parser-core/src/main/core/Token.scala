@@ -12,14 +12,14 @@ package org.nlogo.core
 // makes test cases annoying to write.
 
 object Token {
-  val Eof = new Token("", TokenType.Eof, "")(Int.MaxValue, Int.MaxValue, "")
+  val Eof = new Token("", TokenType.Eof, "")(SourceLocation(Int.MaxValue, Int.MaxValue, ""))
 }
-case class Token(text: String, tpe: TokenType, value: AnyRef)
-                (val start: Int, val end: Int, val filename: String) {
+
+case class Token(text: String, tpe: TokenType, value: AnyRef)(val sourceLocation: SourceLocation) extends SourceLocatable {
 
   // the automatically generated `copy` method wouldn't copy the auxiliary fields
   def copy(text: String = text, tpe: TokenType = tpe, value: AnyRef = value): Token =
-    new Token(text, tpe, value)(start, end, filename)
+    new Token(text, tpe, value)(sourceLocation)
 
   def refine(newPrim: Instruction, text: String = text, tpe: TokenType = tpe): Token = {
     // usual ugliness here because prim instances and tokens
@@ -28,5 +28,4 @@ case class Token(text: String, tpe: TokenType, value: AnyRef)
     newPrim.token = result
     result
   }
-
 }

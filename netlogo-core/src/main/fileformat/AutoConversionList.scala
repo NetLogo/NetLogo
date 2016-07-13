@@ -53,6 +53,9 @@ object AutoConversionList {
     },
     "NetLogo 6.0-M9" -> {
       changeAllCode(Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
+    },
+    "NetLogo 6.0-RC1" -> {
+      changeAllCode(Seq(_.customRewrite("org.nlogo.parse.Lambdaizer")), Seq("task", "?", "?1", "?2", "?3", "?4", "?5", "?6", "?7", "?8", "?9"))
     }
     )
 }

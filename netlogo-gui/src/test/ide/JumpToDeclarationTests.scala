@@ -2,7 +2,7 @@
 
 package org.nlogo.ide
 
-import org.nlogo.core.{Token, TokenType}
+import org.nlogo.core.{SourceLocation, Token, TokenType}
 import org.scalatest.FunSuite
 
 class JumpToDeclarationTests extends FunSuite {
@@ -51,7 +51,7 @@ class JumpToDeclarationTests extends FunSuite {
       |  set scared 0
     """
 
-  def createToken(text: String, tokenType: TokenType, startPos: Int) = new Token(text, tokenType, null)(startPos, 0, null)
+  def createToken(text: String, tokenType: TokenType, startPos: Int) = new Token(text, tokenType, null)(SourceLocation(startPos, 0, null))
 
   def testTokenPosition(tokenToFindDeclaration: Token, startIndexOfDeclaration: Int): Unit = {
       val tokenOption = JumpToDeclaration.getDeclaration(tokenToFindDeclaration, source1)

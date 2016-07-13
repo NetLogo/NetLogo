@@ -6,12 +6,12 @@ ModesTurtles1
   modes (list 5 5 5 5 turtle 0 turtle 1 turtle 2 nobody) => [5 nobody]
 
 ForeachInsideRecursiveProcedure1
-  to-report foo [l] let ret [] foreach l [ ifelse is-list? ? [ let nlist foo ? set ret lput nlist ret ] [ set ret lput ? ret ] ] report ret end
+  to-report foo [l] let ret [] foreach l [[x] -> ifelse is-list? x [ let nlist foo x set ret lput nlist ret ] [ set ret lput x ret ] ] report ret end
   foo [[1 2] [[3 4] 5]] => [[1 2] [[3 4] 5]]
 
 NValuesComplex
   O> random-seed 478932
-  map [(list (first ? + 1))] n-values 10 [ifelse-value (random 2 = 0) [[1]] [[2]]] => [[2] [3] [3] [3] [2] [3] [2] [3] [2] [3]]
+  map [[x] -> (list (first x + 1))] n-values 10 [ifelse-value (random 2 = 0) [[1]] [[2]]] => [[2] [3] [3] [3] [2] [3] [2] [3] [2] [3]]
 
 RemoveBug997FirstArgMustBeStringIfSecondArgIsString
   remove [] "" => ERROR REMOVE expected input to be a string but got the list [] instead.
@@ -28,5 +28,5 @@ RemoveDuplicatesNegativeZero2
 
 FilterTypeError
   to-report foo [x] report 5 end
-  filter [foo ?] [] => []
-  filter [foo ?] [1] => ERROR FILTER expected input to be a TRUE/FALSE but got the number 5 instead.
+  filter [[x] -> foo x] [] => []
+  filter [[x] -> foo x] [1] => ERROR FILTER expected input to be a TRUE/FALSE but got the number 5 instead.

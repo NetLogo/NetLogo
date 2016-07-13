@@ -7,22 +7,15 @@ import org.nlogo.core,
 
 // What's this for? See long comment in LetScoper.
 
-object LetNamer {
-  def apply(xs: Iterator[Token]): Iterator[Token] = {
-    var lastTokenWasLet = false
-    xs.map{
+object LetNamer extends TokenTransformer[Boolean] {
+  def initialState = false
+
+  override def transform(token: Token, lastTokenWasLet: Boolean): (Token, Boolean) =
+    token match {
       case t @ Token(_, TokenType.Ident, _) if lastTokenWasLet =>
-        lastTokenWasLet = false
-        t.refine(core.prim._letname(), tpe = TokenType.Reporter)
-      case t @ Token(_, TokenType.Ident, "LET") =>
-        lastTokenWasLet = true
-        t
-      case t @ Token(_, TokenType.Ident, "__LET") =>
-        lastTokenWasLet = true
-        t
-      case t =>
-        lastTokenWasLet = false
-        t
+        (t.refine(core.prim._letname(), tpe = TokenType.Reporter), false)
+      case t @ (Token(_, TokenType.Ident, "LET") |  Token(_, TokenType.Ident, "__LET")) =>
+        (t, true)
+      case t => (t, false)
     }
-  }
 }

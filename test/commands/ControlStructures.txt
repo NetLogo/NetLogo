@@ -5,11 +5,11 @@ Loop1
   glob1 => 10
 
 Foreach1
-  O> foreach [1 2 3] [ crt ? ]
+  O> foreach [1 2 3] crt
   count turtles => 6
 
 Foreach2
-  O> (foreach [1 2 3] [4 5 6] [ crt (?1 + ?2) ])
+  O> (foreach [1 2 3] [4 5 6] [[x y] -> crt (x + y) ])
   count turtles => 21
 
 Run1
@@ -25,7 +25,7 @@ Run2
   [color] of turtle 0 = blue => true
 
 Run3
-  to foo [a] run "foreach [ 1 2 3 ] [ask turtles with [ who = ? ][ set color a ] ]" end
+  to foo [a] run "foreach [ 1 2 3 ] [[x] -> ask turtles with [ who = x ][ set color a ] ]" end
   O> crt 4 [ set color green ]
   O> foo blue
   count turtles with [ color = blue ] => 3
@@ -34,21 +34,21 @@ Run3
 Run4
   globals [ glob1 ]
   O> set glob1 0
-  O> foreach [1 2 3] [ crt ? set glob1 glob1 + runresult "count turtles" ]
+  O> foreach [1 2 3] [[x] -> crt x set glob1 glob1 + runresult "count turtles" ]
   glob1 => 10
   count turtles => 6
 
 Run5
   globals [ glob1 ]
   O> set glob1 0
-  O> foreach [1 2 3] [ crt ? run "set glob1 glob1 + count turtles" ]
+  O> foreach [1 2 3] [[x] -> crt x run "set glob1 glob1 + count turtles" ]
   glob1 => 10
   count turtles => 6
 
 Run6
   globals [ glob1 ]
   O> set glob1 0
-  O> run "(foreach [ 1 2 3 ] [ 2 4 6 ] [ set glob1 ( glob1 + ?1 + ?2 ) ])"
+  O> run "(foreach [ 1 2 3 ] [ 2 4 6 ] [[x y] -> set glob1 ( glob1 + x + y ) ])"
   glob1 => 18
 
 Run7

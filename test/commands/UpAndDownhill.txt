@@ -3,7 +3,7 @@ UpAndDownhill1
   patches-own [pvar]
  O> crt 1
  O> set glob1 1
- T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 + 1 ] ]
+ T> foreach sort neighbors [[x] -> ask x [ set pvar glob1 set glob1 glob1 + 1 ] ]
  T> set pvar 100
  T> home downhill pvar
  [heading] of turtle 0 => 315
@@ -59,7 +59,7 @@ Uphill3
   patches-own [pvar]
   O> crt 1 [ set glob2 patch-here ]
   O> set glob1 -1
-  T> foreach sort neighbors [ ask ? [ set pvar glob1 set glob1 glob1 - 1 ] ]
+  T> foreach sort neighbors [[x] -> ask x [ set pvar glob1 set glob1 glob1 - 1 ] ]
   T> set pvar -100
   T> uphill pvar
   [heading] of turtle 0 => 315

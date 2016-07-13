@@ -74,11 +74,25 @@ case class _carefully() extends Command {
 }
 case class _commandtask(minArgCount: Int = 0) extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.CommandTaskType)
+    Syntax.reporterSyntax(ret = Syntax.CommandType)
 
   def copy(minArgCount: Int = minArgCount): _commandtask = {
     val ct = new _commandtask(minArgCount)
+    copyInstruction(ct)
+  }
+}
+case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean) extends Reporter {
+  def this() = this(Seq(), false)
+  def this(arguments: Seq[String]) = this(arguments, false)
+  override def syntax =
+    Syntax.reporterSyntax(ret = Syntax.CommandType)
+
+  def minArgCount: Int = argumentNames.length
+  override def toString =
+    "_commandlambda" + argumentNames.mkString("(", ", ", ")")
+
+  def copy(argumentNames: Seq[String] = argumentNames): _commandlambda = {
+    val ct = new _commandlambda(argumentNames)
     copyInstruction(ct)
   }
 }
@@ -96,6 +110,7 @@ case class _const(value: AnyRef) extends Reporter with Pure {
 case class _constcodeblock(value: Seq[Token]) extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.CodeBlockType)
+  override def toString = value.map(_.text).mkString("`[ ", " ", " ]`")
 }
 case class _count() extends Reporter {
   override def syntax =
@@ -189,6 +204,22 @@ case class _jump() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.NumberType),
       agentClassString = "-T--")
+}
+// This is the `->` sigil used by lambda to separate arguments from body.
+// We want it treated like a primitive, but the parser ignores the value.
+case class _lambdaargs() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(),
+      ret = Syntax.VoidType,
+      precedence = Syntax.NormalPrecedence - 4)
+}
+case class _lambdavariable(name: String, synthetic: Boolean = false) extends Reporter {
+  def this(name: String) = this(name, false)
+  override def syntax =
+    Syntax.reporterSyntax(ret = Syntax.WildcardType)
+  override def toString =
+    s"_lambdavariable($name)"
 }
 case class _lessthan() extends Reporter with Pure {
   override def syntax =
@@ -351,10 +382,27 @@ case class _report() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType))
 }
+case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean) extends Reporter {
+  def this() = this(Seq(), false)
+  def this(arguments: Seq[String]) = this(arguments, false)
+  override def syntax = {
+    Syntax.reporterSyntax(
+      right = List(Syntax.CodeBlockType, Syntax.ReporterType),
+      ret = Syntax.ReporterType)
+  }
+
+  override def toString =
+    "_reporterlambda" + argumentNames.mkString("(", ", ", ")")
+
+  def copy(argumentNames: Seq[String] = argumentNames): _reporterlambda = {
+    val cr = new _reporterlambda(argumentNames, synthetic)
+    copyInstruction(cr)
+  }
+}
 case class _reportertask(minArgCount: Int = 0, val synthetic: Boolean = false) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      ret = Syntax.ReporterTaskType)
+      ret = Syntax.ReporterType)
 
   def copy(minArgCount: Int = minArgCount): _reportertask = {
     val rt = new _reportertask(minArgCount)
@@ -375,7 +423,7 @@ case class _run() extends Command {
   override def syntax =
     Syntax.commandSyntax(
       right = List(
-        Syntax.StringType | Syntax.CommandTaskType,
+        Syntax.StringType | Syntax.CommandType,
         Syntax.RepeatableType | Syntax.WildcardType),
       defaultOption = Some(1))
 }
@@ -416,7 +464,7 @@ case class _symbol() extends Reporter with Pure {
 // This is used only for parsing and removed from the AST before compilation
 case class _task() extends Reporter {
   override def syntax = {
-    val anyTask = Syntax.CommandTaskType | Syntax.ReporterTaskType
+    val anyTask = Syntax.CommandType | Syntax.ReporterType
     Syntax.reporterSyntax(
       right = List(anyTask),
       ret = anyTask)

@@ -74,7 +74,7 @@ trait PositionalAstFolder[A] {
   }
 
   def visitReporterBlock(block: ReporterBlock, position: AstPath)(implicit a: A): A = {
-    visitReporterApp(block.app, position)
+    visitReporterApp(block.app, position / RepArg(0))
   }
 
   def visitStatement(stmt: Statement, position: AstPath)(implicit a: A): A = {

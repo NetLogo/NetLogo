@@ -1,0 +1,206 @@
+CreateReporter1
+  runresult [[] -> 1] => 1
+
+CreateReporter2
+  runresult [[x] -> x + x] 2 => 4
+
+NestedLambdas1
+  (runresult (runresult [[x] -> [[y] -> x / y ]] 4) 2) => 2
+
+NestedLambdas2
+  (runresult (runresult [[x] -> [[] -> x]] 4)) => 4
+
+NestedLambdas3
+  (runresult [[a b] -> a + (runresult [[y z] -> y + z] 2 3) + b] 1 4) => 10
+
+Two-Args-To-Created-Reporter
+  runresult [[x y] -> x / y] 10 20 => 0.5
+
+Two-Args-To-Created-Reporter-In-Reverse-Order
+  runresult [[x y] -> y / x] 10 20 => 2
+
+Two-Args-To-Created-Reporter-Ignore-First
+  runresult [[x y] -> y * y] 10 20 => 400
+
+NoErrorWhenToManyArgs
+  runresult [[x] -> x + x] 2 3 4 => 4
+
+Three-Args-To-Created-Reporter
+  runresult [[x y z] -> x * y * z] 10 20 30 => 6000
+
+Three-Args-To-Created-Reporter-In-Reverse-Order
+  runresult [[x y z] -> z * y * x] 10 20 30 => 6000
+
+Three-Args-To-Created-Reporter-In-Random-Order
+  runresult [[x y z] -> y * x * z] 10 20 30 => 6000
+
+Three-Args-To-Created-Reporter-First-Arg-Ignored
+  runresult [[x y z] -> y * z] 10 20 30 => 600
+
+Three-Args-To-Created-Reporter-Second-Arg-Ignored
+  runresult [[x y z] -> x * z] 10 20 30 => 300
+
+Three-Args-To-Created-Reporter-First-And-Second-Args-Ignored
+  runresult [[x y z] -> z * z] 10 20 30 => 900
+
+N-Values-Id
+  n-values 5 [[x] -> x] => [0 1 2 3 4]
+
+N-Values-Constant
+  n-values 5 [[] -> 5] => [5 5 5 5 5]
+
+Map-Id
+  map [[x] -> x] [1 2 3] => [1 2 3]
+
+Map-Id-Plus-5
+  map [[x] -> x + 5] [1 2 3] => [6 7 8]
+
+Map-Two-Args
+  (map [[x y] -> x + y] [1 2 3] [10 20 30]) => [11 22 33]
+
+Map-Three-Args
+  (map [[x y z] -> x + y + z] [1 2 3] [10 20 30] [100 200 300]) => [111 222 333]
+
+Filter-Simple
+  filter [[x] -> x < 3] [1 3 2] => [1 2]
+
+Filter-Ignore-Args
+  filter [[] -> 1 < 3] [1 3 2] => [1 3 2]
+
+Reduce-Constant
+  reduce [[] -> 5] [1 2 3] => 5
+
+Reduce-First-Arg
+  reduce [[x y] -> x] [1 2 3] => 1
+
+Reduce-Second-Arg
+  reduce [[x y] -> y] [1 2 3] => 3
+
+Reduce-Plus
+  reduce [[x y] -> x + y] [1 2 3] => 6
+
+Sort-By-Less-Than
+  sort-by [[x y] -> x < y] [3 1 4 2] => [1 2 3 4]
+
+Sort-By-Greater-Than
+  sort-by [[x y] -> x > y] [3 1 4 2] => [4 3 2 1]
+
+Sort-By-Length
+  sort-by [[x y] -> length x < length y] ["Grumpy" "Doc" "Happy"] => ["Doc" "Happy" "Grumpy"]
+
+Sort-By-First-Arg
+  sort-by [[x] -> x > 2] [3 1 4 2] => [3 4 1 2]
+  sort-by [[x] -> x > 1] [3 1 4 2] => [3 4 2 1]
+
+Sort-By-Boolean
+  sort-by [[] -> true] [3 1 4 2] => [3 1 4 2]
+  sort-by [[] -> false] [3 1 4 2] => [3 1 4 2]
+
+Combo
+  map [[a] -> sort-by [[x y] -> x < y] a] [[2 1] [3 7 4]] => [[1 2] [3 4 7]]
+
+NotEnoughInputs
+  runresult [[x] -> x] => ERROR task expected 1 input, but only got 0
+
+Map-Id-With-Variable
+  globals [ glob1 ]
+  O> set glob1 [[x] -> x]
+  map glob1 [1 2 3] => [1 2 3]
+
+Map-Returned-Created-Reporter
+  to-report f [x] __let x2 x report [[a] -> x2 * a] end
+  map (f 5) [1 2 3] => [5 10 15]
+
+Change-Closed-Variable
+  globals [ glob1 glob2 ]
+  O> let x 10 let addx [[y] -> y + x] set glob1 (runresult addx 6) set x 100 set glob2 (runresult addx 6)
+  glob1 => 16
+  glob2 => 106
+
+As-Function-Argument
+  globals [ glob1 ]
+  to-report call [fn] report (runresult fn 10) end
+  O> set glob1 call [[x] -> x * x]
+  glob1 => 100
+
+As-Function-Return-1
+  to-report foo report [[] -> 5] end
+  runresult foo => 5
+
+As-Function-Return-2
+  to-report id report [[x] -> x] end
+  (runresult id 10) => 10
+
+As-Function-Return-3
+  to-report addx [x] __let x2 x report [[y] -> y + x2] end
+  (runresult addx 10 20) => 30
+
+As-Function-Return-4
+  globals [ glob1 ]
+  to-report foo __let x 5 report [[] -> x] end
+  O> set glob1 foo
+  runresult glob1 => 5
+
+Two-Args-To-Created-Reporter-And-Use-Closed-Over-Var
+  globals [glob1]
+  O> let x 5 set glob1 (runresult task [[a b] -> x * a * b] 10 20)
+  glob1 => 1000
+
+Two-Args-To-Task-And-Change-Closed-Over-Var
+  globals [ glob1 glob2 ]
+  O> let x 10 let f [[a b] -> x * a * b] set glob1 (runresult f 10 20) set x 100 set glob2 (runresult f 10 20)
+  glob1 => 2000
+  glob2 => 20000
+
+CloseOverLocal1
+  to-report const [x] report [[] -> x] end
+  runresult const 10 => 10
+
+CloseOverLocal2
+  to-report adder [x] report [[y] -> y + x] end
+  (runresult adder 10 5) => 15
+
+CloseOverLocalAndLet
+  to-report adder [x] let y 10 report [[z] -> z + x + y] end
+  (runresult (adder 100) 5) => 115
+
+ConciseSyntax1
+  map abs [1 -1 1 -1] => [1 1 1 1]
+
+ConciseSyntax2
+  to-report square [x] report x * x end
+  map square [1 2 3] => [1 4 9]
+
+ConciseSyntax3
+  reduce + [1 2 3] => 6
+
+ConciseSyntax4
+  (map + [1 2 3] [10 20 30]) => [11 22 33]
+
+ConciseSyntax5
+  globals [ glob1 ]
+  O> set glob1 task [[x] -> reduce + x]
+  (runresult glob1 [1 2 3]) => 6
+
+ConciseSyntax6
+  to-report plus1 [x] report x + 1 end
+  map plus1 map plus1 map plus1 [1 2 3] => [4 5 6]
+
+ConciseSyntax7
+  (runresult (task +) 1 2) => 3
+
+ConciseSyntax8
+  globals [ glob1 ]
+  O> set glob1 99
+  runresult task glob1 => 99
+
+ConciseSyntax9
+  globals [ glob1 glob2 ]
+  O> set glob1 99
+  O> set glob2 task glob1
+  runresult runresult task glob2 => 99
+
+ConciseSyntax10
+  to-report adder [n] report task [[x] -> n + x] end
+  map (adder 5) [10 20 30] => [15 25 35]
+  (map [[x y] -> (runresult x y)] map adder [10 20 30] [1 2 3]) => [11 22 33]
