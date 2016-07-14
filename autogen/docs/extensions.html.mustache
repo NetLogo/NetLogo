@@ -41,11 +41,16 @@ extensions [sound speech]
     </h3>
     <p>
       NetLogo will look for extensions in several places:
-    <ol>
-      <li>In the folder of the current model.
-      <!-- not turned on yet  <li>The directories specified in the <code>org.nlogo.userExtensionPath</code> system property.</li> -->
-      <li>The <code>extensions</code> folder in the same location as the
-      NetLogo application.
+      <ol>
+        <li>In the folder of the current model.</li>
+        <li>The extensions folder located with the NetLogo installation. For typical NetLogo installations:</li>
+          <ul>
+            <li>On Mac OS X: <code>/Applications/NetLogo {{version}}/extensions</code></li>
+            <li>On 64-bit Windows with 64-bit NetLogo or 32-bit Windows with 32-bit NetLogo: <code>C:\Program Files\NetLogo {{version}}\app\extensions</code></li>
+            <li>On 64-bit Windows with 32-bit NetLogo: <code>C:\Program Files (x86)\NetLogo {{version}}\app\extensions</code></li>
+            <li>On Linux: the <code>app/extensions</code> subdirectory of the NetLogo directory extracted from the installation <code>.tgz</code></li>
+          </ul>
+        </li>
       </ol>
     <p>
       Each NetLogo extension consists of a folder with the same name as the
@@ -55,8 +60,8 @@ extensions [sound speech]
       inside called <code>sound.jar</code>.
     <p>
       To install a NetLogo extension for use by any model, put the
-      extension's folder in the <code>extensions</code> directory in
-      the NetLogo directory. Or, you can just keep the extension's
+      extension's folder in the NetLogo extensions directory.
+      Or, you can just keep the extension's
       folder in the same folder as the model that uses it.
     <p>
       Some extensions depend on additional files. These files will be in
