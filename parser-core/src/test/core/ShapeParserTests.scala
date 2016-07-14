@@ -236,4 +236,17 @@ class ShapeParserTests extends FunSuite {
             Seq(LinkShape("default", 0.0, defaultLinkLines, defaultDirectionIndicator),
               LinkShape("default2", 0.0, defaultLinkLines, defaultDirectionIndicator)))))
   }
+
+  test("shapeParser formats non-default linkShapes correctly") {
+    val allLinkLines =
+      Seq(LinkLine(-0.2, true, Seq(1.0f, 0.0f)),
+        LinkLine(0.0, true, Seq(1.0f, 0.0f)),
+        LinkLine(0.2, true, Seq(1.0f, 0.0f)))
+    val formattedLines: Seq[String] = Seq("-0.2 1 1.0 0.0", "0.0 1 1.0 0.0", "0.2 1 1.0 0.0")
+    assertResult(
+      cleanJsNumbers(linkShapeString("default", formattedLines).mkString("\n")))(
+        cleanJsNumbers(
+          ShapeParser.formatLinkShapes(
+            Seq(LinkShape("default", 0.0, allLinkLines, defaultDirectionIndicator)))))
+  }
 }

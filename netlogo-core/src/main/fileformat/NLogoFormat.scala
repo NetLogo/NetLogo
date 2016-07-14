@@ -222,7 +222,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     override def deserialize(s: Array[String]) = { (m: Model) =>
       Try {
         if (s.isEmpty) addDefault(m)
-        else m.copy(linkShapes = ShapeParser.parseLinkShapes(s))
+        else {
+          val parsedShapes = ShapeParser.parseLinkShapes(s)
+          m.copy(linkShapes = parsedShapes)
+        }
       }
     }
   }
