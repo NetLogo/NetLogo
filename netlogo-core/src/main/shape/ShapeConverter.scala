@@ -22,6 +22,10 @@ object ShapeConverter {
     ls.name = name
     ls.curviness = curviness
     ls.directionIndicator = baseVectorShapeToVectorShape(indicator)
+    linkLines.zipWithIndex.foreach {
+      case (ll, i) =>
+        ls.add(i, new LinkLine(ll.xcor, ll.isVisible, ll.dashChoices.toArray))
+    }
     ls
   }
 

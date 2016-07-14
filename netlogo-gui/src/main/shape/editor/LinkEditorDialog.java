@@ -95,7 +95,7 @@ strictfp class LinkEditorDialog
     for (int i = 0; i < 3; i++) {
       javax.swing.JComboBox<float []> comboBox = new javax.swing.JComboBox<float []>(org.nlogo.shape.LinkLine$.MODULE$.dashChoices());
       comboBox.setRenderer(new DashCellRenderer());
-      comboBox.setSelectedItem(shape.getLine(i).dashes());
+      comboBox.setSelectedIndex(shape.getLine(i).dashIndex());
       dashes.add(comboBox);
     }
 
