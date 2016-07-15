@@ -5,7 +5,7 @@ package org.nlogo.gl.view
 
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ VectorShape, LinkShape }
-import org.nlogo.gl.render.{ GLViewSettings, JOGLException, JOGLLoader }
+import org.nlogo.gl.render.GLViewSettings
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
 import javax.swing.JFrame
 import java.awt.event.KeyListener
@@ -57,8 +57,6 @@ class ViewManager(val workspace: GUIWorkspace,
   }
 
   def init() {
-    var jvmex: JOGLException = null
-
     // if we have a frame already, dispose of it
     Option(observerView).foreach(_.dispose())
 
@@ -75,8 +73,6 @@ class ViewManager(val workspace: GUIWorkspace,
           "NetLogo could not load the JOGL native libraries on your computer.\n\n" +
             "Write bugs@ccl.northwestern.edu for assistance.", e)
     }
-    if (jvmex != null)
-      throw new JOGLVersionMismatchException(jvmex.getMessage)
   }
 
   def setFullscreen(fullscreen: Boolean) {
