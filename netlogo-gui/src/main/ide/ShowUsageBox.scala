@@ -101,14 +101,12 @@ class ShowUsageBox() {
     var iter = scala.collection.mutable.Seq[Token]()
     var prevLineNo = -1
     val tokenLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], token.start)
-    for(t <- iterator){
-      if( t.text.equalsIgnoreCase(token.text) &&
-        (editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)) != tokenLineNo &&
-        editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start) != prevLineNo) {
+    for(t <- iterator if t.text.equalsIgnoreCase(token.text) &&
+      (editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)) != tokenLineNo &&
+      editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start) != prevLineNo) {
 
-        iter :+= t
-        prevLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)
-      }
+      iter :+= t
+      prevLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)
     }
     iter
   }
@@ -151,7 +149,7 @@ class ShowUsageBox() {
   }
   class LineNumberRenderer extends DefaultTableCellRenderer {
     override def setValue(value: AnyRef) = {
-      setText(editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], value.asInstanceOf[Token].start).toString)
+      setText((editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], value.asInstanceOf[Token].start) + 1).toString)
       setHorizontalAlignment(SwingConstants.RIGHT)
       setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
     }

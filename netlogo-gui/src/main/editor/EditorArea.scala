@@ -114,7 +114,7 @@ class EditorArea(
   private var bracketMatcherEnabled: Boolean = true
 
   override def enableBracketMatcher(enabled: Boolean): Unit = {
-    if (bracketMatcherEnabled!= enabled) {
+    if (bracketMatcherEnabled != enabled) {
       if (enabled)
         addCaretListener(bracketMatcher)
       else
@@ -242,7 +242,7 @@ class EditorArea(
         val semicolonPos = text.indexOf(';')
         val allSpaces = (0 until semicolonPos)
           .forall(i => Character.isWhitespace(text.charAt(i)))
-        if ((allSpaces && semicolonPos != 0) || semicolonPos == -1) {
+        if (!allSpaces || semicolonPos == -1) {
           insertBeforeEachSelectedLine(";")
           return
         }
@@ -296,7 +296,7 @@ class EditorArea(
       val y = (0 max r.y - ((extentHeight - r.height) / 2)) min (viewHeight - extentHeight)
       viewport.setViewPosition(new Point(0, y))
     } catch {
-      case ex: BadLocationException => 
+      case ex: BadLocationException =>
     }
   }
 

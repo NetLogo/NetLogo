@@ -29,8 +29,8 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
     val showUsageBox = new ShowUsageBox()
     val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox))
     val actionMap = Map(
-      KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
-      -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+      KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK) ->
+        new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
     class MyCodeEditor
     extends org.nlogo.window.CodeEditor(rows, cols, font, enableFocusTraversal,
