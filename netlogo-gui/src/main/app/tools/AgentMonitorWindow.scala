@@ -180,8 +180,11 @@ with WindowEvents.LoadBeginEvent.Handler
       val linkVars = workspace.world.program.linksOwn
       val allVars: Seq[String] =
         Option(agent) match {
-          case Some(t: Turtle) if t.getBreed != workspace.world.links() =>
-            linkVars ++ workspace.world.program.linkBreeds.get(t.getBreed.printName).map(_.owns).getOrElse(Seq())
+          case Some(l: Link) if l.getBreed != workspace.world.links() =>
+            linkVars ++ workspace.world.program.linkBreeds
+              .get(l.getBreed.printName)
+              .map(_.owns)
+              .getOrElse(Seq())
           case _ => linkVars
         }
       allVars.asJava
