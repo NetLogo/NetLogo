@@ -3,9 +3,10 @@
 package org.nlogo.window
 
 import org.nlogo.agent.{ ConstantSliderConstraint, SliderConstraint }
+import org.nlogo.api.MultiErrorHandler
 import org.nlogo.api.Approximate.approximate
 
-class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: Double = 1) {
+class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var maximum:Double=100, var increment: Double = 1) {
 
   private var _value = 50d
   def value = _value
@@ -30,16 +31,36 @@ class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: 
   // slider widgets can handle them, because we don't know what to do here.
   def setSliderConstraint(con: SliderConstraint): Boolean = {
     this.constraint = con
-    // If the values change, coerce the value to the new range
-    val (newmin,newmax,newinc) = (con.minimum, con.maximum, con.increment)
-    if (newmin != minimum || newmax != maximum || newinc != increment) {
-      minimum = newmin
-      maximum = newmax
-      increment = newinc
-      // re-coerce the existing value, makes sure its within bounds
-      value = coerceValue(value)
-      true
-    } else false
+
+    def resetValues(newmin: Double, newmax: Double, newinc: Double): Boolean = {
+      // If the values change, coerce the value to the new range
+      if (newmin != minimum || newmax != maximum || newinc != increment) {
+        minimum = newmin
+        maximum = newmax
+        increment = newinc
+        // re-coerce the existing value, makes sure its within bounds
+        value = coerceValue(value)
+        true
+      } else
+        false
+    }
+
+    def setError(e: Throwable): Unit =
+      e match {
+        case ex: SliderConstraint.ConstraintRuntimeException =>
+          errorHandler.error(ex.spec.fieldName, ex)
+      }
+
+    (for {
+      min <- con.minimum
+      max <- con.maximum
+      inc <- con.increment
+    } yield resetValues(min, max, inc)).getOrElse {
+      con.minimum.failed.foreach(setError)
+      con.maximum.failed.foreach(setError)
+      con.increment.failed.foreach(setError)
+      false
+    }
   }
 
   /// calculations helpers

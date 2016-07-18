@@ -22,13 +22,13 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   // this sets the value in the current constraint and then ensures
   // cached values are updated -- CLB
-  def min( d: Double ){ if(setSliderConstraint(con.copy(minimum=d))) repaint() }
+  def min( d: Double ){ if(setSliderConstraint(con.copy(min=d))) repaint() }
   def min = minimum.doubleValue
 
-  def max( d: Double ){ if(setSliderConstraint(con.copy(maximum=d))) repaint() }
+  def max( d: Double ){ if(setSliderConstraint(con.copy(max=d))) repaint() }
   def max = maximum.doubleValue
 
-  def inc( d: Double ){ if(setSliderConstraint(con.copy(increment=d))) repaint() }
+  def inc( d: Double ){ if(setSliderConstraint(con.copy(inc=d))) repaint() }
   def inc = increment.doubleValue
 
   private def con = constraint.asInstanceOf[ConstantSliderConstraint]

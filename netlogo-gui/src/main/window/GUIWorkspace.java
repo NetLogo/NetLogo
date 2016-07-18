@@ -921,7 +921,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
              scala.collection.JavaConversions.asJavaIterable(ex.getErrors())) {
-        e.slider.setConstraintError(cce.spec().fieldName(), cce);
+        e.slider.error((Object) cce.spec().fieldName(), (java.lang.Exception) cce);
       }
     }
   }

@@ -17,7 +17,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
-  private val sliderData = new SliderData
+  private val sliderData = new SliderData(this)
 
   // The painter is used to draw the slider and handle interactions.
   // It comes in two flavors, horizontal and vertical.
@@ -176,33 +176,27 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   }
 
   override def setSliderConstraint(con: SliderConstraint): Boolean = {
-    if (!anyErrors) {
-      try if (super.setSliderConstraint(con)) {
-        revalidate()
-        repaint()
-        return true
-      }
-      catch {
-        case ex: SliderConstraint.ConstraintRuntimeException =>
-          setConstraintError(ex.spec.fieldName, ex)
-          org.nlogo.api.Exceptions.handle(ex)
-        case ex: LogoException => org.nlogo.api.Exceptions.handle(ex)
-        false
-      }
-    }
-    false
+    if (!anyErrors && super.setSliderConstraint(con)) {
+      revalidate()
+      repaint()
+      true
+    } else
+      false
   }
 
   override def updateConstraints() {
     new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
   }
 
-  def setConstraintError(constraintField: String, ex: SliderConstraintException) {
-    super.error(constraintField, ex)
+  override def error(key: Object, e: Exception): Unit = {
+    super.error(key, e)
     setForeground(java.awt.Color.RED)
   }
 
-  override def removeAllErrors() = { super.removeAllErrors(); setForeground(java.awt.Color.BLACK) }
+  override def removeAllErrors() = {
+    super.removeAllErrors()
+    setForeground(java.awt.Color.BLACK)
+  }
 
   // EVENT HANDLING
   def handle(e: AfterLoadEvent): Unit = {
