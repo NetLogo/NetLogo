@@ -215,7 +215,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
     "Chooser"  -> (() => new ChooserWidget(compiler)),
     "InputBox" -> (() => new InputBoxWidget(
-      editorFactory.newEditor(1, 20, false), editorFactory.newEditor(5, 20, true),
+      editorFactory.newEditor(1, 20, true), editorFactory.newEditor(5, 20, false),
       compiler, this)),
     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
     "Output"   -> (() => new OutputWidget()))

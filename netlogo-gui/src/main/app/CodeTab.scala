@@ -28,7 +28,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
       dirty()
     }
   }
-  val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
+  val text = new EditorFactory(workspace).newEditor(100, 100, false, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   override def zoomTarget = text
 

@@ -2,21 +2,23 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.{ BorderLayout, Dimension, Font }
-import java.awt.event.{ TextEvent, TextListener }
-import javax.swing.{ BorderFactory, JPanel, JScrollPane, ScrollPaneConstants }
-
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
-import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.editor.{ Colorizer, EditorArea }
+import org.nlogo.core.{ CompilerException, TokenType, I18N }
+import org.nlogo.editor.Colorizer
 import org.nlogo.window.EditorAreaErrorLabel
+import java.awt.event.TextListener
+import java.awt.event.TextEvent
+import java.awt.BorderLayout
+import javax.swing.BorderFactory
+import javax.swing.JScrollPane
+import javax.swing.ScrollPaneConstants
+import javax.swing.JPanel
 
-class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new BorderLayout) {
-
-  val text = new EditorArea(
-    75, 100,
-    new Font(platformMonospacedFont, Font.PLAIN, 12),
-    true,
+class AggregateProceduresTab(colorizer: Colorizer) extends javax.swing.JPanel {
+  val text = new org.nlogo.editor.EditorArea(
+    50, 75,
+    new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
+                      java.awt.Font.PLAIN, 12),
+    false,
     // Dummy listener since the editor is not editable
     new TextListener() { override def textValueChanged(e: TextEvent) { } },
     colorizer, I18N.gui.get _)

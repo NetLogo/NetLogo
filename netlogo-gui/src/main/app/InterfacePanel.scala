@@ -147,8 +147,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         }
       case i: CoreInputBox =>
         val font = Fonts.monospacedFont
-        val textArea = new CodeEditor(1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
-        val dialogTextArea = new CodeEditor(5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val textArea = new CodeEditor(1, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val dialogTextArea = new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)

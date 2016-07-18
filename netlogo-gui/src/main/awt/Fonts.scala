@@ -17,7 +17,7 @@ object Fonts {
 
   lazy val platformMonospacedFont =
     if (os("Mac"))
-      "Monaco"
+      "Menlo"
     else if (os("Windows"))
       GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
         .find(_.equalsIgnoreCase("Lucida Console")).getOrElse("Monospaced")

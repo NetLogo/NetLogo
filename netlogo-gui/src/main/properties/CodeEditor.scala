@@ -45,7 +45,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   extends PropertyEditor(accessor){
 
   lazy val editor = new EditorArea(rows, columns,
-    new Font(platformMonospacedFont, Font.PLAIN, 12), false,
+    new Font(platformMonospacedFont, Font.PLAIN, 12), true,
     new TextListener() {def textValueChanged(e: TextEvent) {changed()}}, colorizer,
     org.nlogo.core.I18N.gui.get _)
   lazy val scrollPane = new JScrollPane(editor, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
