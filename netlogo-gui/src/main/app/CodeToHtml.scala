@@ -24,7 +24,7 @@ object CodeToHtml {
   }
 }
 
-class CodeToHtml(compiler: CompilerInterface) extends CodeToHtmlInterface {
+class CodeToHtml(compiler: CompilerInterface) {
   def convert(source:String):String = {
     s"<pre>${compiler.compilerUtilities.colorizer.toHtml(source)}\n</pre>\n"
   }

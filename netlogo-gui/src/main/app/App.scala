@@ -2,6 +2,9 @@
 
 package org.nlogo.app
 
+import org.nlogo.app.common.{ EditorFactory, Events => AppEvents }
+import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
@@ -164,7 +167,7 @@ object App{
     pico.addComponent(classOf[GraphicsPreview])
     pico.add(
       classOf[PreviewCommandsEditorInterface],
-      "org.nlogo.app.previewcommands.PreviewCommandsEditor",
+      "org.nlogo.app.tools.PreviewCommandsEditor",
       new ComponentParameter(classOf[AppFrame]),
       new ComponentParameter(), new ComponentParameter())
     pico.addComponent(classOf[Tabs])
@@ -262,7 +265,7 @@ class App extends
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
-    Events.SwitchedTabsEvent.Handler with
+    AppEvents.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
     Controllable {
@@ -452,7 +455,7 @@ class App extends
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
-    org.nlogo.app.FindDialog.init(frame)
+    org.nlogo.app.common.FindDialog.init(frame)
 
     Splash.endSplash()
     frame.setVisible(true)
@@ -634,7 +637,7 @@ class App extends
   /**
    * Internal use only.
    */
-  final def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: AppEvents.SwitchedTabsEvent) {
     if(e.newTab == tabs.interfaceTab){ monitorManager.showAll(); frame.toFront() }
     else if(e.oldTab == tabs.interfaceTab) monitorManager.hideAll()
   }

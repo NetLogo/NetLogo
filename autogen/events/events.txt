@@ -1,8 +1,8 @@
 # org.nlogo.app package
 
-app.WidgetSelected - org.nlogo.window.Widget widget - boolean selected
-app.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
-app.IndenterChanged - boolean isSmart
+app.common.WidgetSelected - org.nlogo.window.Widget widget - boolean selected
+app.common.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
+app.common.IndenterChanged - boolean isSmart
 
 # org.nlogo.window package
 
