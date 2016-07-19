@@ -211,7 +211,11 @@ class LinkShape extends BaseLinkShape with Cloneable with java.io.Serializable w
     do {
       split(line, left, right)
       line = left
-    } while (!dest.contains(line.getP2))
+    } while (!dest.contains(line.getP2) &&
+      Math.abs(line.getP1.distance(line.getP2)) > 0.25) // do not split indefinitely.
+      // There are some strange conditions under which the split is on right on the
+      // edge of `dest`, but not actually contained inside it. So we bail at 0.25,
+      // which shouldn't be detectable at the whole-pixel level. RG 7/19/16
     right
   }
 
