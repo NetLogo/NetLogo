@@ -5,7 +5,7 @@ package org.nlogo.agent
 import org.nlogo.api.{ CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
 import org.nlogo.core.CompilerException
 
-import scala.util.{ Try, Failure }
+import scala.util.{ Failure, Success, Try }
 
 object SliderConstraint {
 
@@ -65,17 +65,21 @@ object SliderConstraint {
 }
 
 abstract class SliderConstraint extends ValueConstraint {
-  def minimum: Double
-  def increment: Double
-  def maximum: Double
+  def minimum: Try[Double]
+  def increment: Try[Double]
+  def maximum: Try[Double]
   var defaultValue = World.ZERO
   def assertConstraint(o: Object): Unit = {
-    if (!(o.isInstanceOf[Double])) {throw new ValueConstraint.Violation("Value must be a number.")}
+    if (!(o.isInstanceOf[Double])) { throw new ValueConstraint.Violation("Value must be a number.") }
   }
   def coerceValue(o: Object): Object = if (o.isInstanceOf[Double]) o else defaultValue
 }
 
-case class ConstantSliderConstraint(minimum: Double, maximum: Double, increment: Double) extends SliderConstraint
+case class ConstantSliderConstraint(min: Double, max: Double, inc: Double) extends SliderConstraint {
+  def minimum: Try[Double] = Success(min)
+  def increment: Try[Double] = Success(inc)
+  def maximum: Try[Double] = Success(max)
+}
 
 /**
  * Constraint suitable for Slider variables.  The various limits on the
@@ -88,12 +92,12 @@ class DynamicSliderConstraint(min: ReporterLogoThunk,
   override def minimum = get(Min, min)
   override def maximum = get(Max, max)
   override def increment = get(Inc, inc)
-  private def get(spec:Spec, thunk:ReporterLogoThunk): Double = {
+  private def get(spec:Spec, thunk:ReporterLogoThunk): Try[Double] = {
     thunk.call
       .flatMap(res => Try(res.asInstanceOf[Double]))
       .recoverWith {
         case ex: ClassCastException => Failure(new ConstraintRuntimeException(spec, s"Must be a number"))
         case ex: LogoException      => Failure(new ConstraintRuntimeException(spec, ex.getMessage))
-      }.get
+      }
   }
 }
