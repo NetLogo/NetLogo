@@ -48,3 +48,29 @@ BreedNoDupNames
   breed [as a]
   breed [bs a]
   COMPILE> COMPILER ERROR There is already a singular breed name called A
+
+HatchWithBreedsOwn
+  breed [rabbits rabbit]
+  rabbits-own [energy]
+  O> create-rabbits 1 [ set energy 10 ]
+  T> hatch 1
+  [energy] of turtle 0 => 10
+  [energy] of turtle 1 => 10
+
+SetBreedOfUnbreededTurtleWithVar
+  turtles-own [apples]
+  breed [wolves wolf]
+  O> crt 1 [ set apples 10 set breed wolves set apples 20 ]
+  [apples] of wolf 0 => 20
+
+DontPropagateGivenShapeOnHatch
+  breed [apples apple]
+  breed [grapes grape]
+  O> create-apples 1 [ set shape "car" hatch-grapes 1 ]
+  [shape] of grape 1 => "default"
+
+DropGivenShapeAfterSwitchingBreeds
+  breed [apples apple]
+  breed [grapes grape]
+  O> create-apples 1 [ set shape "car" set breed grapes ]
+  [shape] of grape 0 => "default"

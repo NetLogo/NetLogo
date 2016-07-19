@@ -37,3 +37,9 @@ MoveTo_3D
   [ycor] of turtle 0 => 3
   [zcor] of turtle 0 => 2
   sort [heading] of turtles => [0 180]
+
+HomewardBound_2D
+  O> crt 1 [ setxy random-xcor random-ycor ]
+  T> home
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => 0

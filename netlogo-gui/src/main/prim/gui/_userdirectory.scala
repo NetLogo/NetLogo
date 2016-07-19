@@ -27,7 +27,7 @@ class _userdirectory extends Reporter {
             override def run() =
               try {
                 gw.view.mouseDown(false)
-                FileDialog.setDirectory(workspace.fileManager.getPrefix)
+                FileDialog.setDirectory(workspace.fileManager.prefix)
                 FileDialog.show(gw.getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
                                 true) + // directories only please
                   java.io.File.separatorChar

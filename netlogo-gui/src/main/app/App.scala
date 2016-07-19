@@ -104,8 +104,11 @@ object App{
           container.getComponent(classOf[CompilerInterface])
         val compilerServices = new DefaultCompilerServices(compiler)
         val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+
+        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
+        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
         val loader =
-          fileformat.standardLoader(compilerServices, workspace.getExtensionManager, workspace.getCompilationEnvironment)
+          fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
         val additionalComponents =
           pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)

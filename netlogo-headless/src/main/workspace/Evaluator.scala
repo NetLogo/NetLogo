@@ -9,6 +9,8 @@ import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
 import org.nlogo.nvm.{ ExclusiveJob, Activation, CompilerFlags,
                        Context, ImportHandler, Procedure, Reporter }
 
+import scala.util.Try
+
 class Evaluator(workspace: AbstractWorkspace) {
 
   def evaluateCommands(owner: JobOwner,
@@ -69,29 +71,19 @@ class Evaluator(workspace: AbstractWorkspace) {
     def hasContext = context != null
     def report(reporter: Reporter, a: Agent = workspace.world.observer) =
       context.evaluateReporter(a, reporter)
-    def run(p: Procedure): Boolean = {
+    def run(p: Procedure): Try[Boolean] = {
       val oldActivation = context.activation
       val newActivation = new Activation(p, context.activation, 1)
       val oldRandom = context.job.random
       context.activation = newActivation
       context.job.random = workspace.world.mainRNG.clone
-      try {
+      val procedureResult = Try {
         context.runExclusiveJob(workspace.world.observers, 0)
         !workspace.completedActivations.getOrElse(newActivation, false)
       }
-      catch {
-        case ex @ (_: LogoException | _: RuntimeException) =>
-          // it would be nice if the pattern matcher would infer that ex is an Exception, not just a
-          // Throwable, since Exception is the common supertype of LogoException and
-          // RuntimeException, but it isn't that smart, so we have to cast - ST 7/1/10
-          if(!Thread.currentThread.isInterrupted)
-            context.runtimeError(ex.asInstanceOf[Exception])
-          throw ex
-      }
-      finally {
-        context.activation = oldActivation
-        context.job.random = oldRandom
-      }
+      context.activation = oldActivation
+      context.job.random = oldRandom
+      procedureResult
     }
   }
 
@@ -116,35 +108,26 @@ class Evaluator(workspace: AbstractWorkspace) {
     else {
       val proc = invokeCompiler(source, Some(owner.displayName), false, agent.kind)
       new MyLogoThunk(source, agent, owner, false, proc) with ReporterLogoThunk {
-        def call(): Object  = {
+        def call(): Try[AnyRef] = {
+          // This really ought to create a job and submit it through the job manager, instead of just
+          // calling the procedure directly.  This is temporary code that never got cleaned up.
+          // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
+          // is ever run. - ST 1/8/10
           val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random)
           val context = new Context(job, agent, 0, null)
-          try context.callReporterProcedure(new Activation(procedure, null, 0))
-          catch {
-            case ex @ (_: LogoException | _: RuntimeException) =>
-              // it would be nice if the pattern matcher would infer that ex is an Exception, not just a
-              // Throwable, since Exception is the common supertype of LogoException and
-              // RuntimeException, but it isn't that smart, so we have to cast - ST 7/1/10
-              if(!Thread.currentThread.isInterrupted)
-                context.runtimeError(ex.asInstanceOf[Exception])
-              throw ex
-          }
-          // this code was:
-          // workspace.jobManager.callReporterProcedure(owner, agentset, procedure)
-          // but i changed it so that we could have a context. this is all subject to change
-          // possibly in the near future. - JC 9/22/10
+          Try(context.callReporterProcedure(new Activation(procedure, null, 0)))
         }
       }
     }
 
   def makeCommandThunk(source: String, agent: Agent, owner: JobOwner): CommandLogoThunk =
     if(source.trim.isEmpty)
-      new CommandLogoThunk { def call() = false }
+      new CommandLogoThunk { def call() = Try(false) }
     else {
       val fullSource = source + "\n__thunk-did-finish"
       val proc = invokeCompiler(fullSource, Some(owner.displayName), true, agent.kind)
       new MyLogoThunk(fullSource, agent, owner, true, proc) with CommandLogoThunk {
-        def call(): Boolean = ProcedureRunner.run(procedure)
+        def call(): Try[Boolean] = ProcedureRunner.run(procedure)
       }
     }
 

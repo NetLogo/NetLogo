@@ -8,11 +8,12 @@ import java.nio.file.Paths
 import scala.sys.process.Process
 import scala.util.{ Success, Failure }
 
-import org.nlogo.api.Version
+import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.app.App
 import org.nlogo.workspace.{ OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
+import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary.getModelPaths
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.fileformat.NLogoFormat
@@ -49,8 +50,10 @@ object ModelResaver {
     var systemDynamicsModels: Seq[String] = Seq()
     for (path <- getModelPaths) {
       val ws = HeadlessWorkspace.newInstance
+      val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoLegacyDialect)
+      val threeDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoThreeDDialect)
       val modelLoader =
-        org.nlogo.fileformat.standardLoader(ws.compiler.compilerUtilities, ws.getExtensionManager, ws.getCompilationEnvironment)
+        fileformat.standardLoader(ws.compiler.utilities, twoDConverter, threeDConverter)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val uri = Paths.get(path).toUri
       val controller = new ResaveController(uri)

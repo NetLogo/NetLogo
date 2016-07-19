@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 2929" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:2929.0 "2929" => double
          L0
           LDC 2929.0
@@ -57,7 +57,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L4
           RETURN
 [1]_resettimer "reset-timer"
-[2]_asm_procedurebenchmark_call_1 "setup 0"
+[2]_asm_procedurebenchmark_call_1 "setup"
       _constdouble:0.0 "0" => Double
          L0
           NEW org/nlogo/nvm/Activation
@@ -84,7 +84,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:2000000.0 "2000000" => double
          L0
           LDC 2000000.0
@@ -156,7 +156,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -210,7 +210,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -265,8 +265,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetup_ifelse_1 "ifelse initial-magnetization = 0" boolean => void
-      _equal "initial-magnetization = 0" Object,double => boolean
+[3]_asm_proceduresetup_ifelse_1 "ifelse" boolean => void
+      _equal "=" Object,double => boolean
         _procedurevariable:INITIAL-MAGNETIZATION "initial-magnetization" => Object
         _constdouble:0.0 "0" => double
          L0
@@ -324,8 +324,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[4]_asm_proceduresetup_setpatchvariable_2 "set spin one-of [-1 1]" Object => void
-      _oneof "one-of [-1 1]" LogoList => Object
+[4]_asm_proceduresetup_setpatchvariable_2 "set" Object => void
+      _oneof "one-of" LogoList => Object
         _constlist:[-1 1] "[-1 1]" => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -400,7 +400,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_proceduresetup_setpatchvariable_4 "set spin initial-magnetization" Object => void
+[6]_asm_proceduresetup_setpatchvariable_4 "set" Object => void
       _procedurevariable:INITIAL-MAGNETIZATION "initial-magnetization" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -461,9 +461,9 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[9]_asm_proceduresetup_setobservervariable_7 "set sum-of-spins sum [spin] of patches" Object => void
-      _sum "sum [spin] of patches" LogoList => double
-        _patchvariableof:SPIN "of patches" AgentSet => LogoList
+[9]_asm_proceduresetup_setobservervariable_7 "set" Object => void
+      _sum "sum" LogoList => double
+        _patchvariableof:SPIN "of" AgentSet => LogoList
           _patches "patches" => AgentSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -633,8 +633,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask one-of patches" Object => void
-      _oneof "one-of patches" AgentSet => Object
+[0]_asm_procedurego_ask_0 "ask" Object => void
+      _oneof "one-of" AgentSet => Object
         _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -835,9 +835,9 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure UPDATE:[EDIFF]{-TP-}:
-[0]_asm_procedureupdate_setprocedurevariable_0 "" Object => void
-      _mult "2 * spin * sum" double,double => double
-        _mult "2 * spin" double,double => double
+[0]_asm_procedureupdate_setprocedurevariable_0 "let" Object => void
+      _mult "*" double,double => double
+        _mult "*" double,double => double
           _constdouble:2.0 "2" => double
           _patchvariable:SPIN "spin" => Object
         _nsum4:SPIN "sum" => double
@@ -1016,23 +1016,21 @@ procedure UPDATE:[EDIFF]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[1]_asm_procedureupdate_if_1 "if (Ediff <= 0) or
-     (temperature > 0 and (random-float 1.0 < exp ((- Ediff) / temperature" boolean => void
-      _or "Ediff <= 0) or
-     (temperature > 0 and (random-float 1.0 < exp ((- Ediff) / temperature"
-        _lessorequal "Ediff <= 0" Object,double => boolean
+[1]_asm_procedureupdate_if_1 "if" boolean => void
+      _or "or"
+        _lessorequal "<=" Object,double => boolean
           _procedurevariable:EDIFF "Ediff" => Object
           _constdouble:0.0 "0" => double
-        _and "temperature > 0 and (random-float 1.0 < exp ((- Ediff) / temperature"
-          _greaterthan "temperature > 0" Object,double => boolean
+        _and "and"
+          _greaterthan ">" Object,double => boolean
             _observervariable:TEMPERATURE "temperature" => Object
             _constdouble:0.0 "0" => double
-          _lessthan "random-float 1.0 < exp ((- Ediff) / temperature" double,double => boolean
-            _randomfloat "random-float 1.0" double => double
+          _lessthan "<" double,double => boolean
+            _randomfloat "random-float" double => double
               _constdouble:1.0 "1.0" => double
-            _exp "exp ((- Ediff) / temperature" double => double
-              _div "- Ediff) / temperature" double,double => double
-                _unaryminus "- Ediff" double => double
+            _exp "exp" double => double
+              _div "/" double,double => double
+                _unaryminus "-" double => double
                   _procedurevariable:EDIFF "Ediff" => Object
                 _observervariable:TEMPERATURE "temperature" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -1318,8 +1316,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           RETURN
 
 procedure FLIP:[]{-TP-}:
-[0]_asm_procedureflip_setpatchvariable_0 "set spin (- spin" Object => void
-      _unaryminus "- spin" double => double
+[0]_asm_procedureflip_setpatchvariable_0 "set" Object => void
+      _unaryminus "-" double => double
         _patchvariable:SPIN "spin" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -1399,10 +1397,10 @@ procedure FLIP:[]{-TP-}:
          L11
          FRAME SAME
           RETURN
-[1]_asm_procedureflip_setobservervariable_1 "set sum-of-spins sum-of-spins + 2 * spin" Object => void
-      _plus "sum-of-spins + 2 * spin" double,double => double
+[1]_asm_procedureflip_setobservervariable_1 "set" Object => void
+      _plus "+" double,double => double
         _observervariable:SUM-OF-SPINS "sum-of-spins" => Object
-        _mult "2 * spin" double,double => double
+        _mult "*" double,double => double
           _constdouble:2.0 "2" => double
           _patchvariable:SPIN "spin" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -1550,8 +1548,8 @@ procedure FLIP:[]{-TP-}:
           RETURN
 
 procedure RECOLOR:[]{-TP-}:
-[0]_asm_procedurerecolor_ifelse_0 "ifelse spin = 1" boolean => void
-      _equal "spin = 1" Object,double => boolean
+[0]_asm_procedurerecolor_ifelse_0 "ifelse" boolean => void
+      _equal "=" Object,double => boolean
         _patchvariable:SPIN "spin" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1623,7 +1621,7 @@ procedure RECOLOR:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_procedurerecolor_setpatchvariable_1 "set pcolor red" Object => void
+[1]_asm_procedurerecolor_setpatchvariable_1 "set" Object => void
       _constdouble:15.0 "red" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1663,7 +1661,7 @@ procedure RECOLOR:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurerecolor_setpatchvariable_3 "set pcolor blue" Object => void
+[3]_asm_procedurerecolor_setpatchvariable_3 "set" Object => void
       _constdouble:105.0 "blue" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1707,10 +1705,10 @@ procedure RECOLOR:[]{-TP-}:
           RETURN
 
 reporter procedure MAGNETIZATION:[]{OTPL}:
-[0]_asm_proceduremagnetization_report_0 "report sum-of-spins / count patches" Object => void
-      _div "sum-of-spins / count patches" double,double => double
+[0]_asm_proceduremagnetization_report_0 "report" Object => void
+      _div "/" double,double => double
         _observervariable:SUM-OF-SPINS "sum-of-spins" => Object
-        _count "count patches" AgentSet => double
+        _count "count" AgentSet => double
           _patches "patches" => AgentSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1855,20 +1853,20 @@ reporter procedure MAGNETIZATION:[]{OTPL}:
           ATHROW
 
 procedure SETUP-PLOT:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Magnetization""
+[0]_setcurrentplot "set-current-plot"
       _asm_proceduresetupplot_conststring_0 ""Magnetization"" => String
            L0
             LDC "Magnetization"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen "axis""
+[1]_setcurrentplotpen "set-current-plot-pen"
       _asm_proceduresetupplot_conststring_1 ""axis"" => String
            L0
             LDC "axis"
            L1
             ARETURN
 [2]_autoplotoff "auto-plot-off"
-[3]_plotxy "plotxy 0 0"
+[3]_plotxy "plotxy"
       _asm_proceduresetupplot_constdouble_2 "0" => Double
            L0
             ALOAD 0
@@ -1881,7 +1879,7 @@ procedure SETUP-PLOT:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupplot_constdouble_3.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[4]_plotxy "plotxy 1000000000 0"
+[4]_plotxy "plotxy"
       _asm_proceduresetupplot_constdouble_4 "1000000000" => Double
            L0
             ALOAD 0
@@ -1906,19 +1904,19 @@ procedure SETUP-PLOT:[]{OTPL}:
           RETURN
 
 procedure UPDATE-PLOT:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Magnetization""
+[0]_setcurrentplot "set-current-plot"
       _asm_procedureupdateplot_conststring_0 ""Magnetization"" => String
            L0
             LDC "Magnetization"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen "average spin""
+[1]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdateplot_conststring_1 ""average spin"" => String
            L0
             LDC "average spin"
            L1
             ARETURN
-[2]_plotxy "plotxy ticks magnetization"
+[2]_plotxy "plotxy"
       _asm_procedureupdateplot_ticks_2 "ticks" => double
            L0
             ALOAD 0

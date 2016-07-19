@@ -112,3 +112,18 @@ StrWord4
 StrWord5
   (word) => ""
 
+AgentSetStringRepresentations
+  breed [ woLVes wolf ]
+  (word wolves with [false]) => "(agentset, 0 turtles)"
+  (word (link-set))          => "(agentset, 0 links)"
+  (word (patch-set))         => "(agentset, 0 patches)"
+  (word (turtle-set))        => "(agentset, 0 turtles)"
+  (word links)               => "links"
+  (word patches)             => "patches"
+  (word turtles)             => "turtles"
+  (word lINKs)               => "links"
+  (word paTches)             => "patches"
+  (word turTLes)             => "turtles"
+  (word wolves)              => "wolves"
+  (word woLVes)              => "wolves"
+  (word Wolves)              => "wolves"

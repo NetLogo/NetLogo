@@ -18,15 +18,12 @@ class _linkneighbor(breedName: String) extends Reporter {
   def report_1(context: Context, target: Turtle): Boolean = {
     val parent = context.agent.asInstanceOf[Turtle]
     val breed =
-      if (breedName == null)
-        world.links
-      else
-        world.getLinkBreed(breedName)
+      if (breedName == null) world.links else world.getLinkBreed(breedName)
     val err = LinkManager.mustNotBeDirected(breed)
     if (err.isDefined)
       throw new EngineException(context, this, err.get)
-    world.linkManager.findLinkFrom(parent, target, breed, true) != null ||
-      world.linkManager.findLinkFrom(target, parent, breed, true) != null
+    val sharedLink = world.linkManager.findLinkEitherWay(parent, target, breed, true)
+    sharedLink != null && ! sharedLink.isDirectedLink
   }
 
   def getBreedName = breedName

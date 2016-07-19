@@ -20,6 +20,15 @@ object Instruction {
       case _ =>
         null
     }
+
+  def agentKindError(kind: AgentKind, allowedKinds: Seq[AgentKind]): String = {
+    val kindDescription = agentKindDescription(kind)
+    lazy val allowedDescription = agentKindDescription(allowedKinds.head)
+    if (allowedKinds.size == 1)
+      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.alternative", kindDescription, allowedDescription)
+    else
+      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.simple", kindDescription)
+  }
 }
 
 abstract class Instruction extends InstructionJ with TokenHolder {
@@ -197,6 +206,27 @@ abstract class Instruction extends InstructionJ with TokenHolder {
           context, this, index, Syntax.CommandTaskType, x)
     }
 
+  def argEvalSymbol(context: Context, argIndex: Int): Token = {
+    args(argIndex).report(context) match {
+      case t: Token => t
+      case x =>
+        throw new ArgumentTypeException(
+          context, this, argIndex, Syntax.SymbolType, x)
+    }
+  }
+
+  def argEvalCodeBlock(context: Context, argIndex: Int): List[Token] = {
+    args(argIndex).report(context) match {
+      case l: List[_] =>
+        l.collect {
+          case t: Token => t
+          case _ =>
+            throw new ArgumentTypeException(context, this, argIndex, Syntax.CodeBlockType, l)
+        }
+      case x =>
+        throw new ArgumentTypeException(context, this, argIndex, Syntax.CodeBlockType, x)
+    }
+  }
   ///
 
   def dump(indentLevel: Int = 3): String = {
@@ -341,6 +371,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
              "a number too large for NetLogo"
            else
              "a non-number"))
+
   def throwAgentClassException(context: Context, kind: AgentKind): Nothing = {
    val pairs =
      Seq(

@@ -18,7 +18,7 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
 
   val defaultDialect = dialect
 
-  val compilerUtilities =
+  val utilities =
     Femto.scalaSingleton[CompilerUtilitiesInterface]("org.nlogo.parse.CompilerUtilities")
 
   private val frontEnd =
@@ -94,26 +94,26 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
 
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
-    compilerUtilities.readFromString(source)
+    utilities.readFromString(source)
 
   // will probably need a way to determine the 3D-ness of the current language, not worried about that at the moment
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef = {
     val literalImportHandler = new ImportHandler(world, extensionManager)
-    compilerUtilities.readFromString(source, literalImportHandler)
+    utilities.readFromString(source, literalImportHandler)
   }
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): java.lang.Double = {
     val literalImportHandler = new ImportHandler(world, extensionManager)
-    compilerUtilities.readNumberFromString(source, literalImportHandler)
+    utilities.readNumberFromString(source, literalImportHandler)
   }
 
   @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.core.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val literalImportHandler = new ImportHandler(world, extensionManager)
-    compilerUtilities.readFromFile(currFile, literalImportHandler)
+    utilities.readFromFile(currFile, literalImportHandler)
   }
 
   // used for procedures menu
@@ -139,7 +139,7 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
     val proceduresListMap = ListMap[String, Procedure](procedures.toSeq: _*)
-    compilerUtilities.isReporter(s, program, proceduresListMap, extensionManager)
+    utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }
 
   private def resolvePath(filename: String, path: String): String = {

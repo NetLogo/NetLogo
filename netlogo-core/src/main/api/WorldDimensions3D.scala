@@ -10,6 +10,10 @@ import org.nlogo.core.WorldDimensions
  *  Headless *does not* support 3D at this time (and may never support 3D).
  */
 
+object WorldDimensions3D {
+  def box(n: Int) = new WorldDimensions3D(-n, n, -n, n, -n, n)
+}
+
 class WorldDimensions3D(minPxcor: Int, maxPxcor: Int,
                         minPycor: Int, maxPycor: Int,
                         var minPzcor: Int, var maxPzcor: Int,

@@ -649,24 +649,29 @@ LinksNotAllowed
   globals [ glob1 ]
  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
  [towards glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
  [distance glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
  [distance turtle 0] of glob1 => ERROR this code can't be run by a link
  [neighbors] of glob1 => ERROR this code can't be run by a link
- O> move-to glob1 => ERROR you can't move-to a link
+ T> move-to glob1 => ERROR you can't move-to a link
  O> follow glob1 => ERROR FOLLOW expected input to be a turtle but got the link (link 0 1) instead.
  O> ride glob1 => ERROR RIDE expected input to be a turtle but got the link (link 0 1) instead.
  T> face glob1 => ERROR Expected a turtle or a patch but got a link.
  O> ask glob1 [ facexy 0 1 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
  O> ask glob1 [ face turtle 0 ] => ERROR this code can't be run by a link, only a turtle
- O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
  O> ask glob1 [ follow-me ] => ERROR this code can't be run by a link, only a turtle
  O> set glob1 links
  [glob1 in-radius 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
- [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
  [glob1 in-cone 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+
+LinksNotAllowed_Legacy
+  globals [ glob1 ]
+ O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
+ [towards-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+ [distance-nowrap glob1] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
+ O> ask glob1 [ facexy-nowrap 0 1 ] => ERROR this code can't be run by a link, only a turtle
+ O> ask glob1 [ face-nowrap turtle 0 ] => ERROR this code can't be run by a link, only a turtle
+ O> set glob1 links
+ [glob1 in-radius-nowrap 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
  [glob1 in-cone-nowrap 5 5] of turtle 0 => ERROR Expected a turtle or a patch but got a link.
 
 LinkNotAllowed_2D
@@ -731,12 +736,20 @@ LinkNeighborIsUndirectedOnly1
 LinkNeighborIsUndirectedOnly2
   directed-link-breed [directed-edges directed-edge]
   O> crt 2 [ create-directed-edges-to other turtles ]
-  T> __ignore directed-link-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-LINK-NEIGHBOR? has been defined.
+  T> __ignore directed-edge-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-EDGE-NEIGHBOR? has been defined.
+
+LinkNeighborsIsUndirectedOnly1
+  directed-link-breed [directors director]
+  O> crt 1
+  O> crt 1 [ create-directors-from other turtles ]
+  count [link-neighbors] of turtle 0 => 0
+  count [link-neighbors] of turtle 1 => 0
 
 # https://github.com/NetLogo/NetLogo/issues/338
 LinkCreationTypeChecking_2D
   O> crt 1
   T> create-link-with patch-here => COMPILER ERROR CREATE-LINK-WITH expected this input to be a turtle, but got a patch instead
+  T> let x patch-here create-link-with x => ERROR CREATE-LINK-WITH expected input to be a turtle but got the patch (patch 0 0) instead.
   T> create-links-with neighbors => COMPILER ERROR CREATE-LINKS-WITH expected this input to be a turtle agentset, but got a patch agentset instead
   T> let x neighbors create-links-with x => ERROR CREATE-LINKS-WITH expected input to be a turtle agentset but got the agentset (agentset, 8 patches) instead.
 

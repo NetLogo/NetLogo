@@ -44,15 +44,14 @@ class _sortby extends Reporter {
     }
   }
 
-  class MyComparator(context: Context, task: ReporterTask)
-  extends java.util.Comparator[AnyRef] {
+  class MyComparator(context: Context, task: ReporterTask) extends java.util.Comparator[AnyRef] {
     def die(o: AnyRef) =
       throw new ArgumentTypeException(
         context, _sortby.this, 0, Syntax.BooleanType, o)
     override def compare(o1: AnyRef, o2: AnyRef) =
       try task.report(context, Array(o2, o1)) match {
             case b: java.lang.Boolean =>
-              if(b.booleanValue) 1
+              if (b.booleanValue) 1
               else task.report(context, Array(o1, o2)) match {
                 case b: java.lang.Boolean =>
                   if(b.booleanValue) -1

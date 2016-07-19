@@ -80,12 +80,12 @@ InconeLargeRadiusDuplicationCheck_3D
 
 InconeDontAskYourPatch
   O> crt 1
-  T> ask patches with [distance-nowrap myself > 0] in-cone 20 30 [set pcolor red]
+  T> ask patches with [distance myself > 0] in-cone 20 30 [set pcolor red]
   [pcolor] of [patch-here] of turtle 0 = black => true
 
 InconeDontAskSomeOtherPatches_2D
   O> cro 1
-  T> ask patches with [distance-nowrap myself > 3] in-cone 4 30 [set pcolor red]
+  T> ask patches with [distance myself > 3] in-cone 4 30 [set pcolor red]
   [pcolor] of patch 0 1 = black => true
   [pcolor] of patch 0 2 = black => true
   [pcolor] of patch 0 3 = black => true
@@ -102,7 +102,7 @@ InconeDontAskSomeOtherPatches_3D
 InconeDontAskTurtlesOnYou
   O> crt 2
   T> set color green
-  O> ask turtle 0 [ ask turtles with [distance-nowrap myself > 0] in-cone 20 30 [set color red] ]
+  O> ask turtle 0 [ ask turtles with [distance myself > 0] in-cone 20 30 [set color red] ]
   [color] of turtle 0 = green => true
   [color] of turtle 1 = green => true
 
@@ -111,7 +111,7 @@ InconeDontAskSomeOtherTurtles
   T> setxy 0 who
   T> set color green
   O> ask turtle 0 [set heading 0]
-  O> ask turtle 0 [ ask turtles with [distance-nowrap myself > 3] in-cone 4 30 [set color red] ]
+  O> ask turtle 0 [ ask turtles with [distance myself > 3] in-cone 4 30 [set color red] ]
   [color] of turtle 0 = green => true
   [color] of turtle 1 = green => true
   [color] of turtle 2 = green => true
@@ -183,7 +183,7 @@ InconeManyTurtlesCounting_2D
   length remove-duplicates [count patches in-cone 10 30] of turtles => 3
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 3
 
-InconeNowrap1
+InconeNowrap1_Legacy
   O> crt 2
   T> set color green set heading 45
   O> ask turtle 1 [setxy -3 -3]
@@ -557,3 +557,17 @@ InConeCornerOrigin5_3D
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> set pitch -90
   [count turtles in-cone 100 0] of turtle 0 => 6
+
+InConeBreeds_2D
+  breed [apples  apple]
+  breed [grapes  grape]
+  breed [carrots carrot]
+  O> crt 3 [ setxy 0 1 ]
+  O> ask turtle 0 [ setxy 0 0 facexy 0 1 ]
+  O> ask turtle 1 [ set breed apples ]
+  O> ask turtle 2 [ set breed grapes ]
+  count [apples  in-cone 1 0] of turtle 0 => 1
+  count [grapes  in-cone 1 0] of turtle 0 => 1
+  count [carrots in-cone 1 0] of turtle 0 => 0
+  count [turtles in-cone 1 0] of turtle 0 => 3
+  count [other turtles in-cone 1 0] of turtle 0 => 2

@@ -139,6 +139,10 @@ Interaction11_2D
   min [towards one-of turtles with [self != myself]] of turtles >= 0 => true
   max [towards one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
   min [towards one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
+
+Interaction11_Legacy_2D
+  O> random-seed 711
+  P> sprout 1
   max [towards-nowrap one-of turtles with [self != myself]] of turtles < 360 => true
   min [towards-nowrap one-of turtles with [self != myself]] of turtles >= 0 => true
   max [towards-nowrap one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
@@ -172,6 +176,9 @@ Interaction13
   [towards turtle 1] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towardsxy 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towards patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
+
+Interaction13_Legacy
+  O> crt 2
   [towards-nowrap turtle 1] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towardsxy-nowrap 0 0] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
   [towards-nowrap patch-here] of turtle 0 => ERROR No heading is defined from a point (0,0) to that same point.
@@ -323,3 +330,10 @@ BreedAt_3D
   patches-own [pvar]
   P> set pvar 1 + count frogs-at 0 0 0
   all? patches [pvar = 1] => true
+
+SingleQuotesInIdents
+  breed [ sheep sheep' ]
+  globals [ g' ]
+  g' => 0
+  O> create-sheep 10
+  [size] of sheep' 0 => 1

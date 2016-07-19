@@ -13,7 +13,7 @@ trait CompilerInterface {
 
   def defaultDialect: Dialect
 
-  def compilerUtilities: CompilerUtilitiesInterface
+  def utilities: CompilerUtilitiesInterface
 
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults

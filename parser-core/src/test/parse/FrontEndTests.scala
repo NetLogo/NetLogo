@@ -97,6 +97,9 @@ class FrontEndTests extends FunSuite {
   test("WrongArgumentType") {
     runFailure("__ignore count 0", "COUNT expected this input to be an agentset, but got a number instead", 15, 16)
   }
+  test("WrongArgumentTypeAgentVariable") {
+    runFailure("__ignore [not heading] of turtles", "NOT expected this input to be a TRUE/FALSE, but got a number instead", 14, 21)
+  }
   test("tooManyCloseBrackets") {
     runFailure("ask turtles [ fd 1 ] ] ]", "Expected command.", 21, 22)
   }

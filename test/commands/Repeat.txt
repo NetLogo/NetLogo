@@ -38,3 +38,13 @@ RepeatInsideAskConcurrent1
   [list xcor ycor] of turtle 1 => [4 0]
   [list xcor ycor] of turtle 2 => [0 -4]
   [list xcor ycor] of turtle 3 => [-4 0]
+
+NonIntegerCount
+  O> repeat 2.3 [ crt 1 ]
+  count turtles => 2
+  O> ca repeat 14.9 [ crt 1 ]
+  count turtles => 14
+
+RepeatWithReport
+  to-report three let i 0 repeat 20 [ set i i + 1 if i = 3 [report i] ] report i end
+  three => 3

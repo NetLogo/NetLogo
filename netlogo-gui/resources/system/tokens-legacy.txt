@@ -61,7 +61,6 @@ C movie-grab-view dead._moviegrabview
 C movie-set-frame-rate dead._moviesetframerate
 C movie-start dead._moviestart
 R __approximate-hsb-old etc._approximatehsbold
-R __block etc._block
 R __extract-hsb-old etc._extracthsbold
 R __hsb-old etc._hsbold
 R __hubnet-in-q-size hubnet._hubnetinqsize

@@ -38,6 +38,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_autoplot ,TRUE/FALSE,OTPL,None,10,0,0
                      |_basecolors ,list,OTPL,None,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,None,10,0,0
+                     |_block code block,string,OTPL,None,10,1,1
                      |_boom ,anything,OTPL,None,10,0,0
                      |_bothends ,agentset,---L,None,10,0,0
                      |_butfirst string or list,string or list,OTPL,None,10,1,1

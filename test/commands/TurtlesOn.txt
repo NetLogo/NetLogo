@@ -19,6 +19,11 @@ TurtlesOn1_2D
   count frogs-on one-of mice-on patch 0 0 => ERROR FROGS-ON expected input to be a turtle agentset or patch agentset or turtle or patch but got NOBODY instead.
   count mice-on one-of turtles-on patch 0 0 => 0
 
+SimpleCountAndString_2D
+  O> crt 10
+  count turtles-on patch 0 0 => 10
+  (word turtles-on patch 0 0) => "(agentset, 10 turtles)"
+
 TurtlesOn1_3D
   breed [mice mouse]
   breed [frogs frog]

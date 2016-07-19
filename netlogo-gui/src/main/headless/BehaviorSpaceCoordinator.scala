@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, Workspace }
+import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, NetLogoThreeDDialect, Workspace }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.fileformat
@@ -52,8 +52,9 @@ object BehaviorSpaceCoordinator {
   }
 
   private def modelAtPath(path: String, workspace: Workspace): Model = {
-    val loader =
-      fileformat.standardLoader(literalParser, workspace.getExtensionManager, workspace.getCompilationEnvironment)
+    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
+    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
+    val loader = fileformat.standardLoader(literalParser, twoDConverter, threeDConverter)
 
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m

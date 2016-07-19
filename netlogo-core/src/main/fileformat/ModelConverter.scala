@@ -6,10 +6,19 @@ import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, Ext
   FrontEndInterface, Model, Program, SourceRewriter, StructureResults, Widget },
   FrontEndInterface.ProceduresMap
 
-import org.nlogo.api.{ AutoConverter, AutoConvertable }
+import org.nlogo.api.{ AutoConverter, AutoConvertable, Version }
 
 import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
+
+object ModelConverter {
+  def apply(extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment, dialect: Dialect): ((Model, Seq[AutoConvertable]) => Model) = {
+    val modelConversions = ((m: Model) => AutoConversionList.conversions.collect {
+      case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) => conversionSet
+    })
+    new ModelConverter(extensionManager, compilationEnvironment, dialect, modelConversions)
+  }
+}
 
 class ModelConverter(extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment, dialect: Dialect, applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
   extends ((Model, Seq[AutoConvertable]) => Model) {

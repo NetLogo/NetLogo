@@ -19,11 +19,14 @@ class _inlinkneighbor(val breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new EngineException(context, this, err)
-    Boolean.box(null !=
-      world.linkManager.findLinkFrom(
-        target, context.agent.asInstanceOf[Turtle], breed, true))
+    if (breed.isUndirected)
+      Boolean.box(false)
+    else {
+      val link =
+        world.linkManager.findLinkFrom(target, context.agent.asInstanceOf[Turtle], breed, true)
+      if (link == null || link.getBreed.isUndirected) Boolean.box(false)
+      else Boolean.box(true)
+    }
   }
 
 }

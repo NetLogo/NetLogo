@@ -19,6 +19,7 @@ extends PlotPenInterface {
 
   var state = defaultState
   var points: Vector[PlotPoint] = Vector()
+  var runtimeError: Option[Exception] = None
 
   hardReset()
 

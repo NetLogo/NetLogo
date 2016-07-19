@@ -60,7 +60,7 @@ class Backifier(
       case core.prim._commandtask(argcount) =>
         new prim._commandtask(argcount, null)  // LambdaLifter will fill in
 
-      case core.prim._reportertask(argcount) =>
+      case core.prim._reportertask(argcount, _) =>
         new prim._reportertask(argcount)
 
       case core.prim._externreport(_) =>
@@ -75,7 +75,7 @@ class Backifier(
 
       case core.prim._procedurevariable(vn, name) =>
         new prim._procedurevariable(vn, name)
-      case core.prim._taskvariable(vn) =>
+      case core.prim._taskvariable(vn, _) =>
         new prim._taskvariable(vn)
 
       case core.prim._observervariable(vn, _) =>
@@ -96,6 +96,12 @@ class Backifier(
         new prim._errormessage(let)
       case core.prim._errormessage(None) =>
         throw new Exception("Parse error - errormessage not matched with carefully")
+
+      case core.prim._constcodeblock(toks) =>
+        new prim._constcodeblock(toks)
+
+      case s: core.prim._symbol =>
+        new prim._constsymbol(s.token)
 
       // diabolical special case: if we have e.g. `breed [fish]` with no singular,
       // then the singular defaults to `turtle`, which will cause BreedIdentifierHandler
