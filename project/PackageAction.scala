@@ -69,16 +69,21 @@ object PackageAction {
       { (platform: PlatformBuild, app: SubApplication, buildJDK: BuildJDK) =>
         Def.bind(jarAndDepFinder(platform, app)) { jarTask =>
           Def.task {
+            val cacheName = app.name + "-" + platform.shortName + "-" + buildJDK.arch
             val (mainJar, dependencies) = jarTask.value
-            val distDir         = baseDirectory.value
-            val netLogoDir      = netLogoRoot.value
-            val buildDirectory  = target.value / app.name / (platform.shortName + "-" + buildJDK.arch)
-            val variables       = buildVariables.value
-            buildSubApplication(
-              appMainClass, jvmOptions,
-              platform, bundledDirsInit.value(platform), app, buildJDK,
-              numericMarketingVersion.value, variables, buildDirectory, mainJar,
-              dependencies, distDir, netLogoDir)
+            val inputFiles: Set[File] = Set(mainJar) ++ bundledDirsInit.value(platform).flatMap(_.files).toSet
+            FileFunction.cached(streams.value.cacheDirectory / cacheName, inStyle = FilesInfo.exists, outStyle = FilesInfo.exists) {
+              (in: Set[File]) =>
+                val distDir         = baseDirectory.value
+                val netLogoDir      = netLogoRoot.value
+                val buildDirectory  = target.value / app.name / (platform.shortName + "-" + buildJDK.arch)
+                val variables       = buildVariables.value
+                Set(buildSubApplication(
+                  appMainClass, jvmOptions,
+                  platform, bundledDirsInit.value(platform), app, buildJDK,
+                  numericMarketingVersion.value, variables, buildDirectory, mainJar,
+                  dependencies, distDir, netLogoDir))
+            }(inputFiles).head
           }
         }
       }.tupled
