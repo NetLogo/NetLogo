@@ -17,6 +17,7 @@
     <Media Id='1' Cabinet='simple.cab' EmbedCab='yes' />
 
     <Icon Id='ProductIcon' SourceFile='NetLogo.ico' />
+    <Icon Id='ModelIcon'   SourceFile='model.ico' />
 
     <Directory Id="TARGETDIR" Name='SourceDir'>
       <Directory Id='{{targetDirectory}}' Name='PFiles'>
@@ -123,7 +124,7 @@
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     <Property Id="NETLOGO_STARTMENU_LOCATION" Value="STARTMENU_DIR" />
-    <Property Id="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" />
+    <Property Id="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" Secure="yes" />
     <Property Id='ARPPRODUCTICON' Value='ProductIcon' />
 
     <UIRef Id="NetLogoUI" />
