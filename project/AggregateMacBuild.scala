@@ -51,9 +51,7 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     src match {
       case f if f.isDirectory => IO.copyDirectory(src, dest)
       case f                  =>
-        IO.copyFile(src, dest)
-        if (f.canExecute)
-          dest.setExecutable(true)
+        Files.copy(src.getPath, dest.getPath, StandardCopyOptions.COPY_ATTRIBUTES)
     }
 
   private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
