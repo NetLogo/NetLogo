@@ -1,7 +1,7 @@
 import sbt._
 
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.{ attribute, Files, FileVisitResult, FileVisitor, Path, Paths, StandardCopyOption }, attribute.BasicFileAttributes
+import java.io.IOException
 
 import NetLogoPackaging.RunProcess
 
@@ -47,11 +47,36 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("natives")
 
+  class CopyVisitor(src: Path, dest: Path) extends FileVisitor[Path] {
+    def postVisitDirectory(p: Path, e: IOException): FileVisitResult = {
+      if (e != null)
+        throw e
+      else
+        FileVisitResult.CONTINUE
+    }
+    def preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      val relativePath = src.relativize(p)
+      try {
+        Files.createDirectory(dest.resolve(relativePath))
+      } catch {
+        case e: java.nio.file.FileAlreadyExistsException => // ignore
+      }
+      FileVisitResult.CONTINUE
+    }
+    def visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      val relativePath = src.relativize(p)
+      Files.copy(p, dest.resolve(relativePath), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING)
+      FileVisitResult.CONTINUE
+    }
+    def visitFileFailed(p: Path, e: IOException): FileVisitResult = { throw e }
+  }
+
   def copyAny(src: File, dest: File): Unit =
     src match {
-      case f if f.isDirectory => IO.copyDirectory(src, dest)
+      case f if f.isDirectory =>
+        Files.walkFileTree(src.toPath, new java.util.HashSet(), Int.MaxValue, new CopyVisitor(src.toPath, dest.toPath))
       case f                  =>
-        Files.copy(src.getPath, dest.getPath, StandardCopyOptions.COPY_ATTRIBUTES)
+        Files.copy(src.toPath, dest.toPath, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING)
     }
 
   private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
