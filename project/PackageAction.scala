@@ -3,6 +3,7 @@ import Keys._
 import Def.Initialize
 import NetLogoBuild.{ marketingVersion, numericMarketingVersion }
 import NetLogoPackaging.{ aggregateOnlyFiles, netLogoRoot, buildVariables, webTarget }
+import java.nio.file.{ FileAlreadyExistsException, Files, StandardCopyOption }
 
 object PackageAction {
   type JVMOptionFinder  = (PlatformBuild, SubApplication) => Seq[String]
@@ -50,7 +51,7 @@ object PackageAction {
 
       val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles ++ artifactCopies
 
-      IO.copy(allFileCopies)
+      FileActions.copyAll(allFileCopies)
 
       val allFiles: Seq[File] = allFileCopies.map(_._2)
 

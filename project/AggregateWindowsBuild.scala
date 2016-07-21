@@ -1,7 +1,6 @@
 import sbt._
 import java.nio.file.FileSystems
 import NetLogoPackaging.RunProcess
-import AggregateMacBuild.copyAny
 
 object AggregateWindowsBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
@@ -121,27 +120,27 @@ object AggregateWindowsBuild extends PackageAction.AggregateBuild {
     val aggregateWindowsDir = aggregateTarget / s"windows-full-${jdk.arch}"
     val packageResourceLocation = aggregateWindowsDir / "resources"
     val msiName = s"NetLogo-${jdk.arch}.msi"
-    IO.createDirectory(packageResourceLocation)
+    FileActions.createDirectory(packageResourceLocation)
     val baseImage = buildsMap.head._2
-    IO.copyDirectory(baseImage / "runtime", packageResourceLocation / "runtime")
-    (baseImage * "*.dll").get.foreach(f => IO.copyFile(f, packageResourceLocation / f.getName))
-    IO.createDirectory(packageResourceLocation / "app")
+    FileActions.copyDirectory(baseImage / "runtime", packageResourceLocation / "runtime")
+    (baseImage * "*.dll").get.foreach(f => FileActions.copyFile(f, packageResourceLocation / f.getName))
+    FileActions.createDirectory(packageResourceLocation / "app")
     buildsMap.foreach {
       case (app, image) =>
         import app.name
-        IO.copyFile(image / (name + ".exe"), packageResourceLocation / (name + ".exe"))
-        IO.copyFile(image / (name + ".ico"), packageResourceLocation / (name + ".ico"))
+        FileActions.copyFile(image / (name + ".exe"), packageResourceLocation / (name + ".exe"))
+        FileActions.copyFile(image / (name + ".ico"), packageResourceLocation / (name + ".ico"))
         val copies = Path.allSubpaths(image / "app").map {
           case (f, relPath) => (f, packageResourceLocation / "app" / relPath)
         }
-        IO.copy(copies)
+        FileActions.copyAll(copies)
     }
 
-    additionalFiles.foreach { f => copyAny(f, packageResourceLocation / f.getName) }
+    additionalFiles.foreach { f => FileActions.copyAny(f, packageResourceLocation / f.getName) }
 
     Mustache.betweenDirectories(configurationDirectory, aggregateWindowsDir, winVariables)
 
-    IO.copyFile(configurationDirectory / "model.ico", packageResourceLocation / "model.ico")
+    FileActions.copyFile(configurationDirectory / "model.ico", packageResourceLocation / "model.ico")
 
     val heatCommand =
       Seq(wixCommand("heat").getPath,

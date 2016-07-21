@@ -21,7 +21,7 @@ object Mustache {
 
     val (templatedFiles, copiedFiles) = pathMapping.partition(_._1.getName.endsWith(".mustache"))
 
-    IO.copy(copiedFiles)
+    FileActions.copyAll(copiedFiles)
 
     templatedFiles.foreach { case (src, dest) => Mustache(src, dest, variables, Some(source)) }
 
