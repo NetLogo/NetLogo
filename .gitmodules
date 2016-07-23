@@ -55,3 +55,4 @@
 [submodule "extensions/view2.5d"]
 	path = extensions/view2.5d
 	url = https://github.com/NetLogo/View2.5D.git
+	branch = hexy
