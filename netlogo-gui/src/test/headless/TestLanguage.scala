@@ -119,7 +119,10 @@ case object ExtensionTestsDotTxt extends TestFinder {
   def iterator = {
     def filesInDir(parent:File): Iterable[File] =
       parent.listFiles.flatMap{f => if(f.isDirectory && !Utils.isSymlink(f)) filesInDir(f) else List(f)}
-    filesInDir(new File("extensions")).filter(_.getName == "tests.txt").iterator
+    // We want to allow extenion roots to be symlinked in; we just want to
+    // avoid recursive symlinks inside extensions. -BCH 7/23/2016
+    val extensionFolders = new File("extensions").listFiles.filter(_.isDirectory)
+    extensionFolders.flatMap(filesInDir).filter(_.getName == "tests.txt").iterator
   }
 }
 
