@@ -176,7 +176,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (needsRecompile) {
       new CompileAllEvent().raise(this)
     }
-    loseFocusIfAppropriate()
   }
 
   override protected def removeWidget(wrapper: WidgetWrapper): Unit = {
@@ -330,16 +329,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
   }
 
-  def keyPressed(evt: KeyEvent): Unit = {
-    if ((evt.getKeyCode() == KeyEvent.VK_Z)
-      && ((evt.getModifiers | Toolkit.getDefaultToolkit.getMenuShortcutKeyMask()) == Toolkit.getDefaultToolkit.getMenuShortcutKeyMask())) {
-      WidgetActions.undoManager.undo()
-    }
-    if ((evt.getKeyCode() == KeyEvent.VK_Y)
-      && ((evt.getModifiers | Toolkit.getDefaultToolkit.getMenuShortcutKeyMask()) == Toolkit.getDefaultToolkit.getMenuShortcutKeyMask())) {
-      WidgetActions.undoManager.redo()
-    }
-  }
+  def keyPressed(evt: KeyEvent): Unit = { }
 
   def keyReleased(evt: KeyEvent): Unit = { }
 

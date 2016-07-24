@@ -26,6 +26,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   val commandCenter = new CommandCenter(workspace, new CommandCenterLocationToggleAction)
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
+  var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
   private val scrollPane = new JScrollPane(
     iP,
@@ -76,19 +77,19 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   override def requestFocus() {
     if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
-      iP.requestFocus()
+      iP.requestFocus
     }
     else {
-      if(iP.selectedWrappers.isEmpty){
-        if(commandCenter != null) commandCenter.requestFocus()
-      } else {
-        iP.requestFocus()
-      }
+      lastFocusedComponent.requestFocus
     }
   }
 
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
-    commandCenterAction.setEnabled(e.newTab == this)
+  final def handle(e: Events.SwitchedTabsEvent) {
+    if(e.newTab != this) {
+        lastFocusedComponent = if(iP.hasFocus) iP else commandCenter
+    } else {
+      commandCenterAction.setEnabled(e.newTab == this)
+    }
   }
 
   def handle(e: WindowEvents.LoadBeginEvent) {

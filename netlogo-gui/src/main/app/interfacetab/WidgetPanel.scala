@@ -475,10 +475,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       revalidate()
     }
     setForegroundWrapper()
-    // this doesn't do anything on the Mac, presumably because the focus doesn't never
-    // actually returns to us after the edit dialog closed because isFocusable() is
-    // already false, but just in case it's needed on some VM... - ST 8/6/04
-    loseFocusIfAppropriate()
   }
 
   def deleteSelectedWidgets(): Unit = {
@@ -498,7 +494,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     revalidate()
     repaint() // you wouldn't think this'd be necessary, but without it
     // the widget didn't visually disappear - ST 6/23/03
-    loseFocusIfAppropriate()
   }
 
   protected def removeWidget(wrapper: WidgetWrapper): Unit = {
@@ -631,14 +626,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (changed)
       component.setSize(size)
   }
-
-  /// buttons
-
-  protected def loseFocusIfAppropriate(): Unit = {
-//    if (_hasFocus && !isFocusable)
-//      transferFocus()
-  }
-
 
   /// dispatch WidgetContainer methods
 
