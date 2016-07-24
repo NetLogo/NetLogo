@@ -22,6 +22,8 @@ import javax.swing.JLayeredPane.DRAG_LAYER
 import java.awt.event.MouseEvent
 import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
 
+import org.nlogo.editor.UndoManager
+
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
 // there are a few things in here that are specific to the client editor behavior

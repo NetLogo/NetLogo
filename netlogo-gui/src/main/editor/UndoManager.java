@@ -144,6 +144,7 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
     }
 
     protected void updateUndoState() {
+//      System.out.println("Here " + currentManager);
       if (currentManager != null && currentManager.canUndo()) {
         setEnabled(true);
         putValue(NAME, currentManager.getUndoPresentationName());

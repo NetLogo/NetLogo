@@ -10,6 +10,8 @@ import org.nlogo.swing.Implicits.thunk2action
 import javax.swing._
 import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D}
 
+import org.nlogo.editor.UndoManager
+
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
@@ -73,7 +75,9 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getInterfacePanel = iP
 
   override def requestFocus() {
-    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) iP.requestFocus()
+    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
+      iP.requestFocus()
+    }
     else {
       if(iP.selectedWrappers.isEmpty){
         if(commandCenter != null) commandCenter.requestFocus()

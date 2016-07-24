@@ -12,6 +12,7 @@ import org.nlogo.window.{ButtonWidget, CodeEditor, EditorColorizer, GUIWorkspace
 import org.nlogo.api.{Editable, Exceptions, Version}
 import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
 import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
+import org.nlogo.editor.UndoManager
 import org.nlogo.log.Logger
 import org.nlogo.swing.{FileDialog => SwingFileDialog}
 import org.nlogo.swing.ModalProgressTask
@@ -37,6 +38,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override def focusGained(e: FocusEvent): Unit = {
+    UndoManager.setCurrentManager(WidgetActions.undoManager)
     _hasFocus = true
     enableButtonKeys(true)
   }
@@ -331,11 +333,11 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   def keyPressed(evt: KeyEvent): Unit = {
     if ((evt.getKeyCode() == KeyEvent.VK_Z)
       && ((evt.getModifiers | Toolkit.getDefaultToolkit.getMenuShortcutKeyMask()) == Toolkit.getDefaultToolkit.getMenuShortcutKeyMask())) {
-      WidgetActions.undoAction.actionPerformed(null)
+      WidgetActions.undoManager.undo()
     }
     if ((evt.getKeyCode() == KeyEvent.VK_Y)
       && ((evt.getModifiers | Toolkit.getDefaultToolkit.getMenuShortcutKeyMask()) == Toolkit.getDefaultToolkit.getMenuShortcutKeyMask())) {
-      WidgetActions.redoAction.actionPerformed(null)
+      WidgetActions.undoManager.redo()
     }
   }
 

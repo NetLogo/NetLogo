@@ -11,19 +11,14 @@ import org.nlogo.window.MouseMode
 
 object WidgetActions {
 
-  private val undoManager = new UndoManager() {
-    override def addEdit(anEdit: UndoableEdit): Boolean = {
-      super.addEdit(anEdit)
+  val undoManager = new org.nlogo.editor.UndoManager() {
+    // The default one doesn't work!
+    override def canRedo: Boolean = {
+      if(editToBeRedone() != null) {
+        return true
+      }
+      false
     }
-  }
-
-  var undoAction = new AbstractAction() {
-    override def actionPerformed(e: ActionEvent): Unit = {
-      undoManager.undo()
-    }
-  }
-  var redoAction = new AbstractAction() {
-    override def actionPerformed(e: ActionEvent): Unit = undoManager.redo()
   }
 
   def addWidget(widgetPanel: WidgetPanel, coreWidget: Widget, x: Int, y: Int): Unit ={
@@ -83,6 +78,7 @@ object WidgetActions {
     override def undo(): Unit = {
       widgetPanel.deleteWidget(widgetWrapper)
     }
+    override def getPresentationName: String = "Widget Addition"
   }
 
   class RemoveWidget(widgetPanel: WidgetPanel, ww: WidgetWrapper) extends AbstractUndoableEdit {
@@ -92,6 +88,7 @@ object WidgetActions {
     override def undo(): Unit = {
       widgetPanel.reAddWidget(ww)
     }
+    override def getPresentationName: String = "Widget Deletion"
   }
 
   class RemoveMultipleWidgets(widgetPanel: WidgetPanel, wws: Seq[WidgetWrapper]) extends AbstractUndoableEdit {
@@ -103,6 +100,7 @@ object WidgetActions {
         widgetPanel.reAddWidget(ww)
       }
     }
+    override def getPresentationName: String = "Widget(s) Deletion"
   }
 
   class MoveWidgets(widgetPanel: WidgetPanel, wws: Seq[WidgetWrapper], initialMap: Map[WidgetWrapper, Rectangle], finalMap: Map[WidgetWrapper, Rectangle]) extends AbstractUndoableEdit {
@@ -124,6 +122,7 @@ object WidgetActions {
         widgetWrapper.setBounds(initialBound)
       }
     }
+    override def getPresentationName: String = "Widget Movement"
   }
 
   class ResizeWidget(widgetWrapper: WidgetWrapper, initialBounds: Rectangle, finalBounds: Rectangle) extends AbstractUndoableEdit {
@@ -141,5 +140,6 @@ object WidgetActions {
       }
       widgetWrapper.setBounds(ib)
     }
+    override def getPresentationName: String = "Widget Resizing"
   }
 }
