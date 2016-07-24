@@ -3,17 +3,16 @@
 package org.nlogo.app.common
 
 import java.awt.Font
-import java.awt.event.{ FocusEvent, InputEvent, KeyEvent }
-import javax.swing.{ Action, KeyStroke }
+import java.awt.event.{FocusEvent, InputEvent, KeyEvent}
+import javax.swing.{Action, KeyStroke}
 import javax.swing.text.TextAction
 
 import scala.collection.JavaConversions._
-
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Fonts
 import org.nlogo.core.I18N
-import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, ShowUsageBox, ShowUsageBoxAction }
-import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory => WindowEditorFactory }
+import org.nlogo.ide._
+import org.nlogo.window.{CodeEditor, EditorColorizer, EditorFactory => WindowEditorFactory}
 
 class EditorFactory(compiler: CompilerServices) extends WindowEditorFactory {
   def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean): CodeEditor =
@@ -28,7 +27,7 @@ class EditorFactory(compiler: CompilerServices) extends WindowEditorFactory {
     val colorizer = new EditorColorizer(compiler)
     val codeCompletionPopup = new CodeCompletionPopup
     val showUsageBox = new ShowUsageBox
-    val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox))
+    val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox), new JumpToDeclarationAction())
     val actionMap = Map(
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK) ->
         new AutoSuggestAction("auto-suggest", codeCompletionPopup))
