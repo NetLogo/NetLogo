@@ -140,6 +140,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
+    RunProcess(Seq("codesign", "-s", "Developer ID Application") :+ (buildName + ".dmg"), aggregateTarget, "codesigning dmg")
+
     aggregateTarget / (buildName + ".dmg")
   }
 }
