@@ -17,7 +17,7 @@ import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
-    JobOwner, LogoException, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
+    JobOwner, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
   core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, Workspace },
@@ -113,6 +113,11 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
     clearDrawing()
     plotManager.clearAll()
     getExtensionManager.clearAll()
+  }
+
+  def seedRNGs(seed: Int): Unit = {
+    mainRNG.setSeed(seed)
+    auxRNG.setSeed(seed)
   }
 
   override def getCompilationEnvironment = {
@@ -313,8 +318,10 @@ object AbstractWorkspaceTraits {
       evaluator.makeReporterThunk(source, world.observer,
                                   new SimpleJobOwner(jobOwnerName, auxRNG))
     def makeCommandThunk(source: String, jobOwnerName: String): CommandLogoThunk =
+      makeCommandThunk(source, jobOwnerName, auxRNG)
+    def makeCommandThunk(source: String, jobOwnerName: String, rng: MersenneTwisterFast): CommandLogoThunk =
       evaluator.makeCommandThunk(source, world.observer,
-                                 new SimpleJobOwner(jobOwnerName, auxRNG))
+        new SimpleJobOwner(jobOwnerName, rng, AgentKind.Observer))
     def evaluateCommands(owner: JobOwner, source: String) {
       evaluator.evaluateCommands(owner, source)
     }

@@ -112,6 +112,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   // from RandomServices
   override def auxRNG = null
   override def mainRNG = null
+  override def seedRNGs(seed: Int): Unit = unsupported
 
   override def profilingEnabled = false
   override def profilingTracer = unsupported

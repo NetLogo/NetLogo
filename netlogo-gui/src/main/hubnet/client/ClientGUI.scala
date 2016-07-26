@@ -118,5 +118,6 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
   private class DummyRandomServices extends RandomServices {
     def auxRNG: MersenneTwisterFast = null
     def mainRNG: MersenneTwisterFast = null
+    def seedRNGs(seed: Int): Unit = {}
   }
 }

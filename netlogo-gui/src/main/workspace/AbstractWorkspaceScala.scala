@@ -81,6 +81,12 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     loader.load(view, worldInterface)
   }
 
+  def seedRNGs(seed: Int): Unit = {
+    mainRNG.setSeed(seed)
+    auxRNG.setSeed(seed)
+    plotRNG.setSeed(seed)
+  }
+
   override def getCompilationEnvironment = {
     import java.io.{ File => JFile }
     import java.net.MalformedURLException

@@ -3,14 +3,14 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{ LogoThunkFactory, CommandLogoThunk}
+import org.nlogo.api.{ CommandLogoThunk, LogoThunkFactory, MersenneTwisterFast }
 import org.nlogo.core.CompilerException
 
 import scala.util.{ Failure, Success, Try }
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
-class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
+class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extends PlotManagerInterface {
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()
@@ -83,7 +83,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
     // compile the given code, and return Right if ok, Left if bad.
     def compile(code: String, procName: String) =
-      try Right(factory.makeCommandThunk(code, procName))
+      try Right(factory.makeCommandThunk(code, procName, random))
       catch { case ce: CompilerException => Left(ce) }
 
     def procName(setup:Boolean, pen:Option[PlotPen] = None) = {
