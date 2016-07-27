@@ -4,7 +4,7 @@ package org.nlogo.properties
 
 import org.nlogo.core.I18N
 
-import java.awt.{ Color, Dimension }
+import java.awt.{ Color, Dimension, GridBagConstraints }
 import java.awt.event.{ ActionEvent, ActionListener }
 
 import javax.swing.{ ImageIcon, JButton, JLabel, JPanel }
@@ -43,9 +43,10 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
 
     override def getConstraints = {
       val c = super.getConstraints
-      c.fill = java.awt.GridBagConstraints.HORIZONTAL
+      c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1.0
-      c.weighty = if (dismissed) 0.0 else 1.0
+      c.weighty = 0
+      c.gridheight = if (dismissed) 0 else 1
       c
     }
   }
