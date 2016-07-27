@@ -66,3 +66,8 @@ AskAllPatches
   O> crt 1
   O> ask one-of patches [ ask patches [ sprout 1 ] ] => ERROR Only the observer can ASK the set of all patches.
   O> ask one-of turtles [ ask patches [ sprout 1 ] ] => ERROR Only the observer can ASK the set of all patches.
+
+AskWithCarefullyWithRunresult
+  globals [ zero ]
+  to careful-run [t] ask turtles [ carefully [ show runresult t ] [] ] end
+  O> crt 2 careful-run task [1 / zero]

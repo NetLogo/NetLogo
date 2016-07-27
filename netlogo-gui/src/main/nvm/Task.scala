@@ -82,10 +82,12 @@ extends Task with org.nlogo.api.ReporterTask {
     context.activation.args = locals
     context.letBindings = lets
     bindArgs(context, args)
-    val result = body.report(context)
-    context.letBindings = oldLets
-    context.activation.args = oldLocals
-    result
+    try {
+      body.report(context)
+    } finally {
+      context.letBindings = oldLets
+      context.activation.args = oldLocals
+    }
   }
 }
 
