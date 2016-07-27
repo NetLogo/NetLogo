@@ -149,6 +149,25 @@ class ModelConverterTests extends FunSuite {
     assertResult(convertedSource)(converted.code)
   }
 
+  test("handles models with trailing comments properly") {
+    val originalSource =
+      """|to abort
+         |  movie-cancel
+         |end
+         |; comment at end""".stripMargin
+    val expectedSource =
+      """|to abort
+         |  vid:reset-recorder
+         |end
+         |; comment at end""".stripMargin
+
+    val model = Model(code = originalSource)
+    val changes = Seq[SourceRewriter => String](_.replaceCommand("movie-cancel" -> "vid:reset-recorder"))
+    val targets = Seq("movie-cancel")
+    val converted = convert(model, ConversionSet(codeTabConversions = changes, targets = targets))
+    assertResult(expectedSource)(converted.code)
+  }
+
   test("handles models with includes properly") {
     val originalSource =
       """|__includes [ "foo.nls" ]
