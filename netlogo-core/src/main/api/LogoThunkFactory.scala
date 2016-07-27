@@ -9,4 +9,6 @@ trait LogoThunkFactory {
   def makeReporterThunk(code: String, jobOwnerName: String): ReporterLogoThunk
   @throws(classOf[CompilerException])
   def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk
+  @throws(classOf[CompilerException])
+  def makeCommandThunk(code: String, jobOwnerName: String, rng: MersenneTwisterFast): CommandLogoThunk
 }

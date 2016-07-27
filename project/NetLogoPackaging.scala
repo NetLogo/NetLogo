@@ -145,7 +145,7 @@ object NetLogoPackaging {
         mathematicaLinkDir / "NetLogo.m",
         mathematicaLinkDir / "target" / "mathematica-link.jar")
         .foreach { f =>
-          IO.copyFile(f, target.value / "Mathematica Link" / f.getName)
+          FileActions.copyFile(f, target.value / "Mathematica Link" / f.getName)
         }
       target.value / "Mathematica Link"
     },
@@ -224,9 +224,9 @@ object NetLogoPackaging {
     },
     localSiteTarget := target.value / marketingVersion.value,
     generateLocalWebsite := {
-      IO.copyDirectory(webTarget.value, localSiteTarget.value)
-      IO.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
-      IO.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
+      FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
+      FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
+      FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
       localSiteTarget.value
     },
     uploadWebsite := {

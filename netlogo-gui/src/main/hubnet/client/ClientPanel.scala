@@ -8,7 +8,7 @@ import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostEx
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, Dump, PlotInterface, DummyLogoThunkFactory, CompilerServices }
+import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory, CompilerServices }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
 import org.nlogo.plot.{ PlotExporter, Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
@@ -35,7 +35,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
-  private val plotManager = new PlotManager(new DummyLogoThunkFactory())
+  private val plotManager = new PlotManager(new DummyLogoThunkFactory(), new MersenneTwisterFast())
 
   locally {
     setBackground(java.awt.Color.white)

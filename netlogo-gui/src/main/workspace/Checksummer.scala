@@ -13,7 +13,7 @@ object Checksummer {
       case PreviewCommands.Custom(source) => source
       case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
     }
-    workspace.command("random-seed 0")
+    workspace.seedRNGs(0)
     workspace.command(source)
   }
   def calculateWorldChecksum(workspace: Workspace): String =

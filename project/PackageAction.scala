@@ -3,6 +3,7 @@ import Keys._
 import Def.Initialize
 import NetLogoBuild.{ marketingVersion, numericMarketingVersion }
 import NetLogoPackaging.{ aggregateOnlyFiles, netLogoRoot, buildVariables, webTarget }
+import java.nio.file.{ FileAlreadyExistsException, Files, StandardCopyOption }
 
 object PackageAction {
   type JVMOptionFinder  = (PlatformBuild, SubApplication) => Seq[String]
@@ -50,7 +51,7 @@ object PackageAction {
 
       val allFileCopies: Seq[(File, File)] = jarMap ++ copiedBundleFiles ++ artifactCopies
 
-      IO.copy(allFileCopies)
+      FileActions.copyAll(allFileCopies)
 
       val allFiles: Seq[File] = allFileCopies.map(_._2)
 
@@ -69,16 +70,21 @@ object PackageAction {
       { (platform: PlatformBuild, app: SubApplication, buildJDK: BuildJDK) =>
         Def.bind(jarAndDepFinder(platform, app)) { jarTask =>
           Def.task {
+            val cacheName = app.name + "-" + platform.shortName + "-" + buildJDK.arch
             val (mainJar, dependencies) = jarTask.value
-            val distDir         = baseDirectory.value
-            val netLogoDir      = netLogoRoot.value
-            val buildDirectory  = target.value / app.name / (platform.shortName + "-" + buildJDK.arch)
-            val variables       = buildVariables.value
-            buildSubApplication(
-              appMainClass, jvmOptions,
-              platform, bundledDirsInit.value(platform), app, buildJDK,
-              numericMarketingVersion.value, variables, buildDirectory, mainJar,
-              dependencies, distDir, netLogoDir)
+            val inputFiles: Set[File] = Set(mainJar) ++ bundledDirsInit.value(platform).flatMap(_.files).toSet
+            FileFunction.cached(streams.value.cacheDirectory / cacheName, inStyle = FilesInfo.exists, outStyle = FilesInfo.exists) {
+              (in: Set[File]) =>
+                val distDir         = baseDirectory.value
+                val netLogoDir      = netLogoRoot.value
+                val buildDirectory  = target.value / app.name / (platform.shortName + "-" + buildJDK.arch)
+                val variables       = buildVariables.value
+                Set(buildSubApplication(
+                  appMainClass, jvmOptions,
+                  platform, bundledDirsInit.value(platform), app, buildJDK,
+                  numericMarketingVersion.value, variables, buildDirectory, mainJar,
+                  dependencies, distDir, netLogoDir))
+            }(inputFiles).head
           }
         }
       }.tupled

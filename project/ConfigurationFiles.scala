@@ -22,7 +22,7 @@ object ConfigurationFiles {
         }
     }
 
-    IO.copy(
+    FileActions.copyAll(
       filesToCopy.map {
         case (relPath, srcFile) => (srcFile, buildImage / relPath)
       })
@@ -37,7 +37,7 @@ object ConfigurationFiles {
     if (f.getName.endsWith(".mustache"))
       Mustache(f, outputFile, variables)
     else
-      IO.copyFile(f, outputFile)
+      FileActions.copyFile(f, outputFile)
   }
 
   private def outputFileName(f: File, app: SubApplication): String =

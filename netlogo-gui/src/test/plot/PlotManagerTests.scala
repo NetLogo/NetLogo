@@ -2,14 +2,13 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.{ CommandLogoThunk, DummyLogoThunkFactory, LogoException }
+import org.nlogo.api.{ CommandLogoThunk, DummyLogoThunkFactory, MersenneTwisterFast, LogoException }
 
 import scala.util.{ Failure, Success, Try }
 
 class PlotManagerTests extends SimplePlotTest {
-
   def newPlotManager() =
-    new PlotManager(normalThunkFactory)
+    new PlotManager(normalThunkFactory, new MersenneTwisterFast())
 
   def normalThunkFactory = new DummyLogoThunkFactory() {
     override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
@@ -63,7 +62,7 @@ class PlotManagerTests extends SimplePlotTest {
   }
 
   test("plot runtime errors do not propagate out") {
-    val manager = new PlotManager(errorThunkFactory)
+    val manager = new PlotManager(errorThunkFactory, new MersenneTwisterFast())
     val plot = manager.newPlot("test")
     plot.setupCode = "histogram runresult [false]"
     manager.compileAllPlots()
@@ -73,7 +72,7 @@ class PlotManagerTests extends SimplePlotTest {
   }
 
   test("plot pen errors are saved for later display") {
-    val manager = new PlotManager(errorThunkFactory)
+    val manager = new PlotManager(errorThunkFactory, new MersenneTwisterFast())
     val plot = manager.newPlot("test")
     val penErroringAtRuntime =
       new PlotPen(plot, "error", false, "", "plot runresult [ false ]")

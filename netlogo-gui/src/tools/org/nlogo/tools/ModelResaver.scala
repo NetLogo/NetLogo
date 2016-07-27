@@ -3,7 +3,7 @@ package org.nlogo.tools
 import java.awt.EventQueue
 import java.io.File
 import java.net.URI
-import java.nio.file.Paths
+import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
 import scala.sys.process.Process
 import scala.util.{ Success, Failure }
@@ -14,7 +14,7 @@ import org.nlogo.workspace.{ OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
 import org.nlogo.fileformat
-import org.nlogo.workspace.ModelsLibrary.getModelPaths
+import org.nlogo.workspace.ModelsLibrary.{ getModelPaths, modelsRoot }
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.sdm.NLogoSDMFormat
@@ -46,28 +46,10 @@ object ModelResaver {
       })
   }
 
+  var systemDynamicsModels: Seq[Path] = Seq()
+
   def main(args: Array[String]): Unit = {
-    var systemDynamicsModels: Seq[String] = Seq()
-    for (path <- getModelPaths) {
-      val ws = HeadlessWorkspace.newInstance
-      val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoLegacyDialect)
-      val threeDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoThreeDDialect)
-      val modelLoader =
-        fileformat.standardLoader(ws.compiler.utilities, twoDConverter, threeDConverter)
-          .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
-      val uri = Paths.get(path).toUri
-      val controller = new ResaveController(uri)
-      OpenModel(uri, controller, modelLoader, Version).foreach { model =>
-        if (model.hasValueForOptionalSection("org.nlogo.modelsection.systemdynamics"))
-          systemDynamicsModels = systemDynamicsModels :+ path
-        else
-          SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
-            case Some(Success(u)) => println("resaved: " + u)
-            case Some(Failure(e)) => println("errored resaving: " + path + " " + e.toString)
-            case None => println("failed to resave: " + path)
-          }
-      }
-    }
+    traverseModels(Paths.get(modelsRoot), resaveModel _)
 
     val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)
 
@@ -75,15 +57,73 @@ object ModelResaver {
     println(failedModels.mkString("\n"))
   }
 
-  def resaveSystemDynamicsModels(paths: Seq[String]): Seq[(String, String)] = {
+  def resaveModel(modelURI: URI): Unit = {
+    val ws = HeadlessWorkspace.newInstance
+    val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoLegacyDialect)
+    val threeDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, NetLogoThreeDDialect)
+    val modelLoader =
+      fileformat.standardLoader(ws.compiler.utilities, twoDConverter, threeDConverter)
+        .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
+    val controller = new ResaveController(modelURI)
+    OpenModel(modelURI, controller, modelLoader, Version).foreach { model =>
+      val path = Paths.get(modelURI)
+      if (model.hasValueForOptionalSection("org.nlogo.modelsection.systemdynamics"))
+        systemDynamicsModels = systemDynamicsModels :+ path
+      else
+        SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
+          case Some(Success(u)) => println("resaved: " + u)
+          case Some(Failure(e)) => println("errored resaving: " + path.toString + " " + e.toString)
+          case None => println("failed to resave: " + path.toString)
+        }
+    }
+  }
+
+  def traverseModels(modelRoot: Path, resave: URI => Unit): Unit = {
+    import scala.collection.JavaConversions._
+
+    Files.walkFileTree(modelRoot, new java.util.HashSet(), Int.MaxValue, new ResaveVisitor(resave))
+  }
+
+  class ResaveVisitor(resave: URI => Unit) extends FileVisitor[Path] {
+    import java.nio.file.attribute.BasicFileAttributes
+
+    val excludeFolders = Seq("TEST", "BIN", "PROJECT", "SRC")
+
+    def postVisitDirectory(path: Path, error: java.io.IOException): FileVisitResult = {
+      if (error != null) throw error
+      FileVisitResult.CONTINUE
+    }
+
+    def preVisitDirectory(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      val dirName = path.getFileName.toString
+      if (excludeFolders.contains(dirName.toUpperCase))
+        FileVisitResult.SKIP_SUBTREE
+      else
+        FileVisitResult.CONTINUE
+    }
+
+    def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      val fileName = path.getFileName.toString
+      if (fileName.endsWith(".nlogo") || fileName.endsWith(".nlogo3d"))
+        resave(path.toUri)
+      FileVisitResult.CONTINUE
+    }
+
+    def visitFileFailed(path: Path, error: java.io.IOException): FileVisitResult = {
+      throw error
+      FileVisitResult.TERMINATE
+    }
+  }
+
+  def resaveSystemDynamicsModels(paths: Seq[Path]): Seq[(Path, String)] = {
     App.main(Array[String]())
 
-    var failedModels = List[(String, String)]()
+    var failedModels = List[(Path, String)]()
 
     for (path <- paths) {
       wait {
         try {
-          App.app.open(path)
+          App.app.open(path.toString)
           App.app.saveOpenModel()
         }
         catch {

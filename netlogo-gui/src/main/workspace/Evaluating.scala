@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, ReporterLogoThunk, SimpleJobOwner }
+import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
 import org.nlogo.nvm.Procedure
 
 trait Evaluating { this: AbstractWorkspace =>
@@ -18,8 +18,11 @@ trait Evaluating { this: AbstractWorkspace =>
       new SimpleJobOwner(jobOwnerName, auxRNG, AgentKind.Observer))
   @throws(classOf[CompilerException])
   def makeCommandThunk(source: String, jobOwnerName: String): CommandLogoThunk =
+    makeCommandThunk(source, jobOwnerName, auxRNG)
+  @throws(classOf[CompilerException])
+  def makeCommandThunk(source: String, jobOwnerName: String, rng: MersenneTwisterFast): CommandLogoThunk =
     evaluator.makeCommandThunk(source, world.observer,
-      new SimpleJobOwner(jobOwnerName, auxRNG, AgentKind.Observer))
+      new SimpleJobOwner(jobOwnerName, rng, AgentKind.Observer))
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner, source: String) {
     evaluator.evaluateCommands(owner, source)
