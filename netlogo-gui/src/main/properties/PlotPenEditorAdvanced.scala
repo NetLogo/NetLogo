@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Color, Dimension }
+import java.awt.{ BorderLayout, Color, Dimension, GridBagConstraints, GridBagLayout }
 
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
@@ -76,21 +76,21 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   }
 
   private def addWidgets() {
-    setLayout(new BorderLayout())
     val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("advanced"))
     title.setTitleJustification(TitledBorder.LEFT)
     setBorder(title)
     val topPanel = new JPanel(){
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(new JPanel(new BorderLayout){
+      val modePanel = new JPanel(new BorderLayout){
         add(new JLabel(I18N.gui("mode")), BorderLayout.WEST)
         add(penModes, BorderLayout.CENTER)
-      })
-      add(new JPanel(new BorderLayout){
+      }
+      val intervalPanel = new JPanel(new BorderLayout){
         add(new JLabel(I18N.gui("interval")), BorderLayout.WEST)
         add(intervalField, BorderLayout.CENTER)
-      })
-      add(new JPanel(new BorderLayout){ add(showPenInLegend, BorderLayout.WEST) })
+      }
+      val showPanel = new JPanel(new BorderLayout){ add(showPenInLegend, BorderLayout.WEST) }
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+      Seq(modePanel, intervalPanel, showPanel).foreach(add)
     }
     val codePanel = new JPanel(){
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
@@ -98,8 +98,25 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       add(setupCode)
       add(updateCode)
     }
-    add(topPanel, BorderLayout.NORTH)
-    runtimeErrorPanel.foreach(panel => add(panel, BorderLayout.CENTER))
-    add(codePanel, BorderLayout.SOUTH)
+    val gbLayout = new GridBagLayout()
+    setLayout(gbLayout)
+    val c = new GridBagConstraints()
+    c.anchor = GridBagConstraints.NORTH
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.gridheight = 3
+    c.gridx = 0
+    c.weightx = 1.0
+    c.weighty = 0
+    gbLayout.setConstraints(topPanel, c)
+    add(topPanel)
+    runtimeErrorPanel.foreach { panel =>
+      c.weighty = 0
+      gbLayout.setConstraints(panel, c)
+      add(panel)
+    }
+    c.weighty = 1.0
+    c.fill = GridBagConstraints.BOTH
+    gbLayout.setConstraints(codePanel, c)
+    add(codePanel)
   }
 }
