@@ -404,13 +404,8 @@ class FileMenu(app: App,
    * makes a guess as to what the user would like to save this model as.
    * This is the model name if there is one, "Untitled.nlogo" otherwise.
    */
-  private def guessFileName: String = {
-    val fileName = workspace.getModelFileName
-    if (fileName == null)
-      "Untitled." + modelSuffix
-    else
-      fileName
-  }
+  private def guessFileName: String =
+    workspace.modelNameForDisplay + "." + modelSuffix
 
   /// model, how shall I load thee?  let me count the ways
 
