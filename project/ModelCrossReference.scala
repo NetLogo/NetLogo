@@ -38,6 +38,7 @@ object ModelCrossReference {
   ( "Sample Models/Biology/Evolution",            "Altruism*",    "Curricular Models/EACH"),
   ( "Sample Models/Biology/Evolution",            "Cooperation*", "Curricular Models/EACH"),
   ( "Sample Models/Biology/Evolution/Unverified", "Divide*",      "Curricular Models/EACH/Unverified"),
+  ( "Code Examples/vid", "Video Camera Example*", "Code Examples/bitmap"),
 
   // BEAGLE curricular models
   ("Sample Models/Biology", "Wolf Sheep Predation*",                        "Curricular Models/BEAGLE Evolution"),
