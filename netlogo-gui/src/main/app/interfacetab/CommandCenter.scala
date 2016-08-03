@@ -25,7 +25,7 @@ class CommandCenter(workspace: AbstractWorkspace,
   with WindowEvents.ZoomedEvent.Handler {
 
   // true = echo commands to output
-  private val commandLine = new CommandLine(this, true, 12, workspace)
+  val commandLine = new CommandLine(this, true, 12, workspace)
   private val prompt = new LinePrompt(commandLine)
   private val northPanel = new JPanel
   private val southPanel = new JPanel

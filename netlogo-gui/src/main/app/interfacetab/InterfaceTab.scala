@@ -8,7 +8,7 @@ import org.nlogo.core.I18N
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, WidgetInfo}
 import org.nlogo.swing.Implicits.thunk2action
 import javax.swing._
-import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D}
+import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager}
 
 import org.nlogo.editor.UndoManager
 
@@ -77,18 +77,17 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   override def requestFocus() {
     if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
-      iP.requestFocus
-    }
-    else {
-      lastFocusedComponent.requestFocus
+      iP.requestFocusInWindow()
     }
   }
 
   final def handle(e: Events.SwitchedTabsEvent) {
     if(e.newTab != this) {
-        lastFocusedComponent = if(iP.hasFocus) iP else commandCenter
+      lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
+        commandCenter else iP
     } else {
       commandCenterAction.setEnabled(e.newTab == this)
+      lastFocusedComponent.requestFocus()
     }
   }
 

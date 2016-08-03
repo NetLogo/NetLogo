@@ -156,15 +156,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     for (wrapper <- hitList) {
       removeWidget(wrapper)
       wrapper.widget match {
-        // this ensures that the right thing happens if we delete
-        // a button or monitor that doesn't compile; we need to remove it
-        // from the errors tab - ST 12/17/04
-        case jobWidget: JobWidget =>
-          jobWidget.innerSource = ""
-          new CompileMoreSourceEvent(jobWidget).raise(this)
-        case _ =>
-      }
-      wrapper.widget match {
         case _: InterfaceGlobalWidget => needsRecompile = true
         case _ =>
       }
@@ -245,7 +236,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     else
       super.contains(w)
 
-  override def handle(e: WidgetRemovedEvent): Unit = {
+  override def handle(e: org.nlogo.window.Events.WidgetRemovedEvent): Unit = {
+    new CompileAllEvent().raise(this)
   }
 
   def handle(e: ExportInterfaceEvent): Unit = {

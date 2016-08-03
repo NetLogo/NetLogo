@@ -1,13 +1,9 @@
 package org.nlogo.app
 
 import java.awt.Rectangle
-import java.awt.event.ActionEvent
-import javax.swing.{AbstractAction, JComponent}
-import javax.swing.undo.{AbstractUndoableEdit, UndoManager, UndoableEdit}
+import javax.swing.undo.AbstractUndoableEdit
 
 import org.nlogo.core.Widget
-import org.nlogo.swing.ToolBarButton
-import org.nlogo.window.MouseMode
 
 object WidgetActions {
 
@@ -21,11 +17,11 @@ object WidgetActions {
     }
   }
 
-  def addWidget(widgetPanel: WidgetPanel, coreWidget: Widget, x: Int, y: Int): Unit ={
+  def addWidget(widgetPanel: WidgetPanel, coreWidget: Widget, x: Int, y: Int): Unit = {
     val ww: WidgetWrapper = widgetPanel.createWidget(coreWidget, x, y)
     undoManager.addEdit(new AddWidget(widgetPanel, ww))
   }
-  def addWidget(widgetPanel: WidgetPanel, widget: org.nlogo.window.Widget, x: Int, y: Int): Unit ={
+  def addWidget(widgetPanel: WidgetPanel, widget: org.nlogo.window.Widget, x: Int, y: Int): Unit = {
     val ww: WidgetWrapper = widgetPanel.addWidget(widget, x, y, true, false)
     undoManager.addEdit(new AddWidget(widgetPanel, ww))
   }
