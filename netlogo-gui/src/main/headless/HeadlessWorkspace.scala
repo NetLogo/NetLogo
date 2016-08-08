@@ -498,13 +498,12 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   override def open(path: String) {
-    setModelPath(path)
     try {
-      loader.readModel(Paths.get(path).toUri).foreach { m =>
-        setModelType(ModelType.Normal)
-        fileManager.handleModelChange()
-        openModel(m)
-      }
+      val m = loader.readModel(Paths.get(path).toUri).get
+      setModelPath(path)
+      setModelType(ModelType.Normal)
+      fileManager.handleModelChange()
+      openModel(m)
     }
     catch {
       case ex: CompilerException =>
