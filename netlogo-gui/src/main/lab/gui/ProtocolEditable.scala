@@ -81,7 +81,7 @@ class ProtocolEditable(protocol: LabProtocol,
       name.trim, setupCommands.trim, goCommands.trim,
       finalCommands.trim, repetitions, runMetricsEveryStep,
       timeLimit, exitCondition.trim,
-      metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
+      metrics.split("\n", 0).map(_.trim).filter(m => !m.isEmpty && !m.startsWith(";")).toList,
       {
         val list =
           try { worldLock.synchronized {
