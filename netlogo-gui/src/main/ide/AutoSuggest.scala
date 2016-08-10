@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.WeakHashMap
+import scala.collection.mutable.HashMap
 
 /**
   * Builds the trie from commands and reporters and provides fuctions to get suggestions.
@@ -29,7 +29,7 @@ class AutoSuggest {
   }
 
   def editDistance(s1: String, s2: String): Int = {
-    val memo = WeakHashMap[(List[Char],List[Char]),Int]()
+    val memo = HashMap[(List[Char],List[Char]),Int]()
     def min(a:Int, b:Int, c:Int) = a min b min c
     def stringDistance(s1: List[Char], s2: List[Char]): Int = {
       if (memo.contains((s1,s2)) == false)
