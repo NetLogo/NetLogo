@@ -41,6 +41,16 @@ class JumpToDeclarationTests extends FunSuite {
       |end
     """.stripMargin
 
+  val source3 =
+    """
+      |globals [
+      |
+      |me-own [scared
+      |
+      |to foo
+      |  set scared 0
+    """
+
   def createToken(text: String, tokenType: TokenType, startPos: Int) = new Token(text, tokenType, null)(startPos, 0, null)
 
   def testTokenPosition(tokenToFindDeclaration: Token, startIndexOfDeclaration: Int): Unit = {
@@ -86,12 +96,22 @@ class JumpToDeclarationTests extends FunSuite {
   }
 
   test("non-identifier") {
-    val token = createToken("scared", TokenType.Ident, source1.indexOf("set") + 1)
+    val token = createToken("set", TokenType.Ident, source1.indexOf("set") + 1)
     testTokenNotPresent(token)
   }
 
   test("ouside-scope") {
     val token = createToken("scared", TokenType.Ident, source2.indexOf("set scared 5") + 5)
+    testTokenNotPresent(token)
+  }
+
+  test("incomplete-global") {
+    val token = createToken("[", TokenType.Ident, source3.indexOf("["))
+    testTokenNotPresent(token)
+  }
+
+  test("incomplete-own") {
+    val token = createToken("scared", TokenType.Ident, source3.indexOf("set scared") + 4)
     testTokenNotPresent(token)
   }
 }
