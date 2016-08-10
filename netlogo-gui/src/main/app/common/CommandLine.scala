@@ -12,6 +12,8 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget =>
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer,
+  Events => WindowEvents, JobWidget, Widget }
 
 import scala.collection.immutable.List
 import java.awt.Dimension
@@ -19,7 +21,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 import javax.swing.text.TextAction
-
 import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 
 import scala.collection.JavaConversions._
@@ -59,8 +60,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var history: List[ExecutionString] = List()
 
   val codeCompletionPopup = new CodeCompletionPopup()
-  val actionMap = mapAsJavaMap(Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
-    -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))).asInstanceOf[java.util.Map[KeyStroke, TextAction]]
+  val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
+    -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
   val textField: EditorField =
     new org.nlogo.editor.EditorField(30,
