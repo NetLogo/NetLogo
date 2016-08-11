@@ -168,3 +168,7 @@ LetSameNameAsBreedVariable
   breed [mice mouse]
   mice-own [fur]
   O> let fur 5 => COMPILER ERROR There is already a MICE-OWN variable called FUR
+
+LetWithinIfNextToAsk
+  to-report test if true [ let x 1 ] let res 0 ask one-of patches [ let x 2 set res x ] report res end
+  test => 2
