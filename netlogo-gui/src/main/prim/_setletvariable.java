@@ -24,8 +24,6 @@ public final strictfp class _setletvariable
     context.ip = next;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + name;

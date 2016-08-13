@@ -1096,9 +1096,9 @@ ask turtle 4 [ rt 90 ]
       </h4>
       <p>
         Reports a subset of the given agentset that includes only the
-        agents on the patches the given distances away from this agent. The
-        distances are specified as a list of two-item lists, where the two
-        items are the x and y offsets.
+        agents on the patches at the given coordinates (relative to this
+        agent). The coordinates are specified as a list of two-item lists,
+        where the two items are the x and y offsets.
       <p>
         If the caller is the observer, then the points are measured
         relative to the origin, in other words, the points are taken as
@@ -1110,7 +1110,7 @@ ask turtle 4 [ rt 90 ]
       <pre>
 ask turtles at-points [[2 4] [1 2] [10 15]]
   [ fd 1 ]  ;; only the turtles on the patches at the
-            ;; distances (2,4), (1,2) and (10,15),
+            ;; coordinates (2,4), (1,2) and (10,15),
             ;; relative to the caller, move
 </pre>
     </div>
@@ -2090,12 +2090,12 @@ ask turtles [ show max-one-of turtles [distance myself] ]
         <a>distancexy<span class="since">1.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">distancexy <i>xcor</i> <i>ycor</i></span>
+        <span class="prim_example">distancexy <i>x</i> <i>y</i></span>
         <img alt="Turtle Command" src="images/turtle.gif"> <img alt="Patch Command" src="images/patch.gif">
       </h4>
       <p>
-        Reports the distance from this agent to the point (<i>xcor</i>,
-        <i>ycor</i>).
+        Reports the distance from this agent to the point (<i>x</i>,
+        <i>y</i>).
       <p>
         The distance from a patch is measured from the center of the patch.
         Turtles and patches use the wrapped distance (around the edges of
@@ -2484,7 +2484,7 @@ show extract-rgb cyan
         <a>facexy<span class="since">3.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">facexy <i>number</i> <i>number</i></span>
+        <span class="prim_example">facexy <i>x</i> <i>y</i></span>
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
@@ -4265,7 +4265,8 @@ if prey != nobody
         <a>link<span class="since">4.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">link <i>end1</i> <i>end2</i> &lt;breed&gt; <i>end1</i> <i>end2</i></span>
+        <span class="prim_example">link <i>end1</i> <i>end2</i></span>
+        <span class="prim_example">&lt;breed&gt; <i>end1</i> <i>end2</i></span>
       </h4>
       <p>
         Given the who numbers of the endpoints, reports the link connecting
@@ -6388,7 +6389,7 @@ set mylist remove-duplicates mylist
         For a list, reports a copy of <i>list</i> with the item at the
         given index removed.
       <p>
-        For strings, reports a copy of <i>string2</i> with the character at
+        For strings, reports a copy of <i>string</i> with the character at
         the given index removed.
       <p>
         Note that the indices begin from 0, not 1. (The first item is item
@@ -6483,7 +6484,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       <p>
         Normally <code>reset-ticks</code> goes at the end of a setup procedure.
       <p>
-        See also <a href="#clear-ticks">clear-ticks</a>, <a href="#tick">tick</a>, <a href="#ticks">ticks</a>, <a href="#tick-advance">tick-advance</a>, <a href="#setup-plots">setup-plots</a>. <a href="#update-plots">update-plots</a>.
+        See also <a href="#clear-ticks">clear-ticks</a>, <a href="#tick">tick</a>, <a href="#ticks">ticks</a>, <a href="#tick-advance">tick-advance</a>, <a href="#setup-plots">setup-plots</a>, <a href="#update-plots">update-plots</a>.
       </div>
     <div class="dict_entry" id="reset-timer">
       <h3>
@@ -7860,7 +7861,8 @@ set heading towards turtle 1
         <a>turtle<span class="since">1.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">turtle <i>number</i> &lt;breed&gt; <i>number</i></span>
+        <span class="prim_example">turtle <i>number</i></span>
+        <span class="prim_example">&lt;breed&gt; <i>number</i></span>
       </h4>
       <p>
         Reports the turtle with the given who number, or <a href="#nobody">nobody</a> if there is no such turtle. For breeded

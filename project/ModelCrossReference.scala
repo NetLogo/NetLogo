@@ -2,7 +2,7 @@ import sbt._
 
 object ModelCrossReference {
   def apply(modelsDir: File): Unit = {
-    directoriesToCreate.foreach(modelsDir / _)
+    directoriesToCreate.foreach(d => FileActions.createDirectories(modelsDir / d))
     modelDuplications.foreach {
       case (src, filter, dest) =>
         (modelsDir / src * filter).get.foreach { f =>

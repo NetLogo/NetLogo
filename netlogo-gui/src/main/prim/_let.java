@@ -16,8 +16,6 @@ public final strictfp class _let
     extends Command {
   public Let let;
 
-
-
   @Override
   public void perform(final Context context)
       throws LogoException {

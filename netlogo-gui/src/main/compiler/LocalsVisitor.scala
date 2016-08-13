@@ -3,8 +3,8 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.core.I18N
-import org.nlogo.nvm.Procedure
+import org.nlogo.core.{ I18N, Let }
+import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._
 
 /**
@@ -42,12 +42,15 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
         val exempt = l.token.text.equalsIgnoreCase("__LET")
         if (!procedure.isTask && askNestingLevel == 0 && !exempt) {
-          val newVar = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
-          newVar.copyMetadataFrom(stmt.command)
-          stmt.command = newVar
+          convertSetToLocal(stmt,  newProcedureVar(procedure.args.size, l.let, None))
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
+        } else {
+          // the let referred to has already been replaced, so we replace it here
+          for (localIndex <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
+            convertSetToLocal(stmt, newProcedureVar(localIndex, l.let, None))
+          }
         }
         super.visitStatement(stmt)
         currentLet = null
@@ -74,6 +77,18 @@ private class LocalsVisitor extends DefaultAstVisitor {
     }
   }
 
+  private def convertSetToLocal(stmt: Statement, newVar: _procedurevariable): Unit = {
+    val newSet = new _setprocedurevariable(newVar)
+    newSet.copyMetadataFrom(stmt.command)
+    stmt.command = newSet
+  }
+
+  private def newProcedureVar(i: Int, l: Let, oldReporter: Option[Instruction]): _procedurevariable = {
+    val newProcVar = new _procedurevariable(i, l.name)
+    oldReporter.foreach(i => newProcVar.copyMetadataFrom(i))
+    newProcVar
+  }
+
   override def visitReporterApp(expr: ReporterApp) {
     expr.reporter match {
       case l: _letvariable =>
@@ -82,10 +97,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
                 l.token)
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
-          val oldToken = expr.reporter.token
-          val newVar = new _procedurevariable(index.intValue, l.let.name)
-          newVar.copyMetadataFrom(expr.reporter)
-          expr.reporter = newVar
+          expr.reporter = newProcedureVar(index, l.let, Some(expr.reporter))
         }
       case _ =>
     }
