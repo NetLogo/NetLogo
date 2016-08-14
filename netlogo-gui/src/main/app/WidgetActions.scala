@@ -9,12 +9,7 @@ object WidgetActions {
 
   val undoManager = new org.nlogo.editor.UndoManager() {
     // The default one doesn't work!
-    override def canRedo: Boolean = {
-      if(editToBeRedone() != null) {
-        return true
-      }
-      false
-    }
+    override def canRedo = editToBeRedone() != null
   }
 
   def addWidget(widgetPanel: WidgetPanel, coreWidget: Widget, x: Int, y: Int): Unit = {
@@ -101,41 +96,43 @@ object WidgetActions {
 
   class MoveWidgets(widgetPanel: WidgetPanel, wws: Seq[WidgetWrapper], initialMap: Map[WidgetWrapper, Rectangle], finalMap: Map[WidgetWrapper, Rectangle]) extends AbstractUndoableEdit {
     override def redo:Unit = {
-      for(widgetWrapper <- wws){
-        val finalBound = new Rectangle(finalMap(widgetWrapper))
-        if(!widgetWrapper.selected()){
+      positionWidgets(finalMap)
+    }
+
+    override def undo(): Unit = {
+      positionWidgets(initialMap)
+    }
+
+    override def getPresentationName: String = "Widget Movement"
+
+    def positionWidgets(map: Map[WidgetWrapper, Rectangle]): Unit = {
+      for (widgetWrapper <- wws) {
+        val finalBound = new Rectangle(map(widgetWrapper))
+        if (!widgetWrapper.selected()) {
           removeSelectionMargin(finalBound)
         }
         widgetWrapper.setBounds(finalBound)
       }
     }
-    override def undo(): Unit = {
-      for(widgetWrapper <- wws){
-        val initialBound = new Rectangle(initialMap(widgetWrapper))
-        if(!widgetWrapper.selected()) {
-          removeSelectionMargin(initialBound)
-        }
-        widgetWrapper.setBounds(initialBound)
-      }
-    }
-    override def getPresentationName: String = "Widget Movement"
   }
 
   class ResizeWidget(widgetWrapper: WidgetWrapper, initialBounds: Rectangle, finalBounds: Rectangle) extends AbstractUndoableEdit {
     override def redo(): Unit = {
-      val fb = new Rectangle(finalBounds)
+      setWidgetSize(finalBounds)
+    }
+
+    override def undo(): Unit = {
+      setWidgetSize(initialBounds)
+    }
+
+    override def getPresentationName: String = "Widget Resizing"
+
+    def setWidgetSize(bounds: Rectangle): Unit = {
+      val fb = new Rectangle(bounds)
       if(!widgetWrapper.selected()){
         removeSelectionMargin(fb)
       }
       widgetWrapper.setBounds(fb)
     }
-    override def undo(): Unit = {
-      val ib = new Rectangle(initialBounds)
-      if(!widgetWrapper.selected()) {
-        removeSelectionMargin(ib)
-      }
-      widgetWrapper.setBounds(ib)
-    }
-    override def getPresentationName: String = "Widget Resizing"
   }
 }

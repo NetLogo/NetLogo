@@ -460,7 +460,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
-//    Logger.logAddWidget(widget.classDisplayName, widget.displayName)
+    Logger.logAddWidget(widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
   }
 
