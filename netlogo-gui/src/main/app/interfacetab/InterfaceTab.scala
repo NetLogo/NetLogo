@@ -2,15 +2,17 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.event.{InputEvent, KeyEvent}
-
-import org.nlogo.core.I18N
-import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, WidgetInfo}
-import org.nlogo.swing.Implicits.thunk2action
-import javax.swing._
 import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager}
+import java.awt.event.ActionEvent
+import java.awt.print.{PageFormat, Printable}
+import javax.swing._
 
-import org.nlogo.editor.UndoManager
+import org.nlogo.app.common.{Events => AppEvents}
+import org.nlogo.app.tools.AgentMonitorManager
+import org.nlogo.core.I18N
+import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable}
+import org.nlogo.swing.Implicits.thunk2action
+import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents}
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
@@ -81,7 +83,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  final def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: AppEvents.SwitchedTabsEvent) {
     if(e.newTab != this) {
       lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
         commandCenter else iP

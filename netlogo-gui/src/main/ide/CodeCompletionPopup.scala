@@ -2,7 +2,7 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component, Dimension}
+import java.awt.{Color, Component, Dimension, GraphicsEnvironment}
 import java.awt.event._
 import javax.swing._
 import javax.swing.event.DocumentEvent
@@ -23,7 +23,7 @@ case class CodeCompletionPopup() {
   val window = new JDialog()
   window.setUndecorated(true)
   window.add(scrollPane)
-  window.setSize(new Dimension(150, 200))
+  window.setMinimumSize(new Dimension(150, 210))
   var editorArea: Option[EditorArea] = None
 
   scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
@@ -108,9 +108,25 @@ case class CodeCompletionPopup() {
       isPopupEnabled = true
       val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
       val position = tokenOption.map(_.start).getOrElse(eA.getCaretPosition)
+      fireUpdatePopup(None)
+      placeWindowOnScreen(eA, position)
+    }
+  }
+
+  /**
+    * Sets the location at which the window will be displayed
+    * @param eA
+    * @param position
+    */
+  def placeWindowOnScreen(eA: EditorArea, position: Int): Unit = {
+    val screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode.getHeight
+    if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView(position).y +
+      eA.getFont.getSize > screenHeight) {
+      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
+        (eA.getLocationOnScreen.y + eA.modelToView(position).y - window.getSize.getHeight).toInt)
+    } else {
       window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
         eA.getLocationOnScreen.y + eA.modelToView(position).y + eA.getFont.getSize)
-      fireUpdatePopup(None)
     }
   }
 
@@ -138,6 +154,7 @@ case class CodeCompletionPopup() {
     */
   def updatePopup(position: Int): Unit = {
     for{eA <- editorArea} {
+      dlm.removeAllElements()
       if (isPopupEnabled ) {
         val tokenOption = getTokenTillPosition(eA.getText(), position)
         var list = Seq[String]()
@@ -148,12 +165,10 @@ case class CodeCompletionPopup() {
             // popup not to be diplayed after user hits the enter key
             if (!token.text.equals(lastSuggested)) {
               list = autoSuggest.getSuggestions(word)
-              dlm.removeAllElements()
               list.foreach(dlm.addElement(_))
               if (!list.isEmpty) {
                 lastSuggested = ""
                 window.validate()
-                window.setVisible(true)
                 // Required to keep the caret in the editorArea visible
                 eA.getCaret.setVisible(true)
                 suggestionDisplaylist.setSelectedIndex(0)
@@ -161,12 +176,10 @@ case class CodeCompletionPopup() {
                 isPopupEnabled = false
               }
             }
-            if (list.isEmpty || token == null) {
-              window.setVisible(false)
-            }
-          case None => window.setVisible(false)
+          case None => isPopupEnabled = false
         }
       }
+      window.setVisible(!dlm.isEmpty)
     }
   }
 

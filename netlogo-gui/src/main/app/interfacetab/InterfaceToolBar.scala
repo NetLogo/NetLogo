@@ -10,16 +10,12 @@ import javax.swing.{ JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton,
 
 import scala.collection.mutable
 
-import java.util.HashSet
-import javax.swing.{AbstractAction, Action, ButtonGroup, ImageIcon, JButton, JMenuItem, JPopupMenu, JToggleButton}
-
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
-
-import org.nlogo.window.{EditDialogFactoryInterface, Widget, WidgetInfo}
-import org.nlogo.swing.{ToolBarActionButton, ToolBarButton, ToolBarToggleButton}
+import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
+  GUIWorkspace, JobWidget, Widget, WidgetInfo }
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: GUIWorkspace,

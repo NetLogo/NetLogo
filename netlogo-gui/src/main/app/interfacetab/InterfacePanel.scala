@@ -2,22 +2,26 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{Cursor, Toolkit, FileDialog => AwtFileDialog}
-import java.awt.event._
+import java.awt.{Cursor, FileDialog => AwtFileDialog}
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, KeyEvent, KeyListener, MouseEvent}
 import java.io.IOException
+import java.util.{ArrayList, List => JList}
 import javax.imageio.ImageIO
-import javax.swing.{JMenuItem, JOptionPane, JPopupMenu, KeyStroke}
+import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
 
-import org.nlogo.window.{ButtonWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
-import org.nlogo.api.{Editable, Exceptions, Version}
+import org.nlogo.window.{ButtonWidget, ChooserWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
+import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
 import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
-import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
+import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.editor.UndoManager
 import org.nlogo.log.Logger
 import org.nlogo.swing.{FileDialog => SwingFileDialog}
 import org.nlogo.swing.ModalProgressTask
-import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent}
+import org.nlogo.window.ChooserWidget
+import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, ExportInterfaceEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
+
+import scala.collection.JavaConverters._
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)

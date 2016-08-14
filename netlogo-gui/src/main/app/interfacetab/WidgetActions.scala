@@ -1,4 +1,4 @@
-package org.nlogo.app
+package org.nlogo.app.interfacetab
 
 import java.awt.Rectangle
 import javax.swing.undo.AbstractUndoableEdit

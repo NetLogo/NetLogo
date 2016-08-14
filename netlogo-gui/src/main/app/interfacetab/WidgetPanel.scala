@@ -2,27 +2,20 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Rectangle, Point, Graphics }
-import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener,
-  MouseMotionListener, FocusListener, FocusEvent }
-import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
+import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
+import java.awt.event._
+import javax.swing.{JComponent, JLayeredPane, JMenuItem, JPopupMenu}
 
 import scala.collection.JavaConverters._
-
-import org.nlogo.api.Editable
-import org.nlogo.window.{AbstractWidgetPanel, ButtonWidget, CodeEditor, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, EditorColorizer, GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry}
-import org.nlogo.window.Events._
-import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
+import org.nlogo.api.{Editable, Version}
 import org.nlogo.awt.{Fonts => NlogoFonts, Mouse => NlogoMouse}
-import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
+import org.nlogo.core.model.WidgetReader
+import org.nlogo.fileformat
 import org.nlogo.log.Logger
-import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, MouseListener, MouseMotionListener}
-import javax.swing.{JComponent, JMenuItem, JPopupMenu}
-import javax.swing.JLayeredPane.DRAG_LAYER
-import java.awt.event.MouseEvent
-import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
-
-import org.nlogo.editor.UndoManager
+import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.window._
+import org.nlogo.window.Events._
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
