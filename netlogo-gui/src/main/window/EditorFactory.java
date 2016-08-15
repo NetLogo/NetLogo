@@ -3,5 +3,5 @@
 package org.nlogo.window;
 
 public interface EditorFactory {
-  org.nlogo.editor.AbstractEditorArea newEditor(int cols, int rows, boolean enableFocusTraversal);
+  org.nlogo.editor.AbstractEditorArea newEditor(int cols, int rows, boolean enableFocusTraversal, boolean enableHighlightCurrentLine);
 }

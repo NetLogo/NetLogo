@@ -16,11 +16,12 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, ShowUsageBox, Sho
 import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory => WindowEditorFactory }
 
 class EditorFactory(compiler: CompilerServices) extends WindowEditorFactory {
-  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean): CodeEditor =
-    newEditor(cols, rows, enableFocusTraversal, null, false)
+  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean, enableHighlightCurrentLine: Boolean = false): CodeEditor =
+    newEditor(cols, rows, enableFocusTraversal, enableHighlightCurrentLine, null, false)
   def newEditor(cols: Int,
                 rows: Int,
                 enableFocusTraversal: Boolean,
+                enableHighlightCurrentLine: Boolean,
                 listener: java.awt.event.TextListener,
                 isApp: Boolean): CodeEditor =
   {
@@ -35,7 +36,7 @@ class EditorFactory(compiler: CompilerServices) extends WindowEditorFactory {
 
     class MyCodeEditor
     extends CodeEditor(rows, cols, font, enableFocusTraversal,
-                       listener, colorizer, I18N.gui.get _, actionMap, actions)
+                       listener, colorizer, I18N.gui.get _, enableHighlightCurrentLine, actionMap, actions)
     {
       override def focusGained(fe: FocusEvent) {
         super.focusGained(fe)

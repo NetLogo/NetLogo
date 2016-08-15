@@ -19,6 +19,8 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.TextAction
 import javax.swing.text.PlainDocument
 import javax.swing.text.BadLocationException
+import javax.swing.text.JTextComponent
+import javax.swing.text.Highlighter
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.ActionEvent
 import java.awt.event.FocusListener
@@ -26,6 +28,7 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.awt._
+import javax.swing.event.{CaretEvent, CaretListener}
 
 
 object EditorArea {
@@ -44,6 +47,7 @@ class EditorArea(
   listener: java.awt.event.TextListener,
   val colorizer: Colorizer,
   i18n: String => String,
+  enableHighlightCurrentLine: Boolean = false,
   actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
   menuItems: Seq[Action] = Seq[Action]())
   extends AbstractEditorArea
@@ -53,8 +57,11 @@ class EditorArea(
   private var contextMenu: JPopupMenu = editorContextMenu(colorizer, i18n)
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
-  private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
+  if(enableHighlightCurrentLine) {
+    new LinePainter(this)
+  }
 
+  private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
   locally {
     import java.awt.event.{ KeyEvent => Key }
     import InputEvent.{ SHIFT_MASK => ShiftKey }
@@ -467,6 +474,50 @@ class EditorArea(
   protected class TransferFocusBackwardAction extends AbstractAction {
     def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
       transferFocusBackward()
+    }
+  }
+
+  class LinePainter(private var component: JTextComponent) extends Highlighter.HighlightPainter with CaretListener {
+
+    private var lastView: Rectangle = new Rectangle(0, 0, 0, 0)
+    private val color = new Color(255, 249, 228, 100)
+    component.addCaretListener(this)
+    try {
+      component.getHighlighter.addHighlight(0, 0, this)
+    } catch {
+      case ble: BadLocationException =>
+    }
+
+    def paint(g: Graphics,
+              p0: Int,
+              p1: Int,
+              bounds: Shape,
+              c: JTextComponent) {
+      try {
+        val r = c.modelToView(c.getCaretPosition)
+        g.setColor(color)
+        g.fillRect(0, r.y, c.getWidth, r.height)
+        if (lastView == null) lastView = r
+      } catch {
+        case ble: BadLocationException => println(ble)
+      }
+    }
+
+    private def resetHighlight() {
+      try {
+        val offset = component.getCaretPosition
+        val currentView = component.modelToView(offset)
+        if (lastView.y != currentView.y) {
+          component.repaint(0, lastView.y, component.getWidth, lastView.height)
+          lastView = currentView
+        }
+      } catch {
+        case ble: BadLocationException =>
+      }
+    }
+
+    def caretUpdate(e: CaretEvent) {
+      resetHighlight()
     }
   }
 
