@@ -21,8 +21,9 @@ object ModelCrossReference {
     "Code Examples/Extensions Examples/arduino")
 
   val foldersToCopy = Seq(
-    "Sample Models/Chemistry & Physics/GasLab"      -> "Curricular Models/GasLab",
-    "Sample Models/Chemistry & Physics/MaterialSim" -> "Curricular Models/MaterialSim")
+    "Sample Models/Chemistry & Physics/GasLab"       -> "Curricular Models/GasLab",
+    "Sample Models/Chemistry & Physics/MaterialSim"  -> "Curricular Models/MaterialSim",
+    "IABM Textbook/chapter 8/arduino-example-sketch" -> "Code Examples/Extensions Examples/arduino/arduino-example-sketch")
 
   val modelDuplications = Seq[(String, FileFilter, String)](
   // these need to fuzzy-find, since we may have pngs
@@ -71,7 +72,7 @@ object ModelCrossReference {
   // IABM Textbook models duplicated in Sample Models and Code Examples
   ("IABM Textbook/chapter 3/El Farol Extensions", "El Farol.nlogo",   "Sample Models/Social Science"),
   ("IABM Textbook/chapter 3/DLA extensions",      "DLA Simple.nlogo", "Sample Models/Chemistry & Physics/Diffusion Limited Aggregation"),
-  ("IABM Textbook/chapter 8",                     "Arduino*",         "Code Examples/Extensions Examples/arduino")
+  ("IABM Textbook/chapter 8",                     "Arduino*",       , "Code Examples/Extensions Examples/arduino"),
 )
 
 }
