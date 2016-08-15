@@ -49,6 +49,7 @@ object ModelResaver {
   var systemDynamicsModels: Seq[Path] = Seq()
 
   def main(args: Array[String]): Unit = {
+    System.setProperty("org.nlogo.preferHeadless", "true")
     traverseModels(Paths.get(modelsRoot), resaveModel _)
 
     val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)
