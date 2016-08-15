@@ -17,7 +17,8 @@ object ModelCrossReference {
 
   val directoriesToCreate = Seq(
     "Curricular Models/EACH/Unverified",
-    "Code Examples/Extensions Examples/bitmap")
+    "Code Examples/Extensions Examples/bitmap",
+    "Code Examples/Extensions Examples/arduino")
 
   val foldersToCopy = Seq(
     "Sample Models/Chemistry & Physics/GasLab"      -> "Curricular Models/GasLab",
@@ -37,10 +38,10 @@ object ModelCrossReference {
   ( "Sample Models/Mathematics/Probability/ProbLab", new SimpleFileFilter(_.isFile), "Curricular Models/ProbLab"), // copy the files, but not the Unverified folder
   ( "Sample Models/Mathematics/Probability/ProbLab/Unverified", "*",                 "Curricular Models/ProbLab"), // copy all of the files from the Unverified folder
 
-  ( "Sample Models/Biology/Evolution",            "Altruism*",    "Curricular Models/EACH"),
-  ( "Sample Models/Biology/Evolution",            "Cooperation*", "Curricular Models/EACH"),
-  ( "Sample Models/Biology/Evolution/Unverified", "Divide*",      "Curricular Models/EACH/Unverified"),
-  ( "Code Examples/Extensions Examples/vid", "Video Camera Example*", "Code Examples/Extensions Examples/bitmap"),
+  ( "Sample Models/Biology/Evolution",            "Altruism*",             "Curricular Models/EACH"),
+  ( "Sample Models/Biology/Evolution",            "Cooperation*",          "Curricular Models/EACH"),
+  ( "Sample Models/Biology/Evolution/Unverified", "Divide*",               "Curricular Models/EACH/Unverified"),
+  ( "Code Examples/Extensions Examples/vid",      "Video Camera Example*", "Code Examples/Extensions Examples/bitmap"),
 
   // BEAGLE curricular models
   ("Sample Models/Biology", "Wolf Sheep Predation*",                        "Curricular Models/BEAGLE Evolution"),
@@ -67,9 +68,10 @@ object ModelCrossReference {
   // Copy Oil Cartel HubNet to HubNet Activities
   ("Sample Models/Social Science",                         "Oil Cartel HubNet*",              "HubNet Activities"),
 
-  // IABM Textbook models duplicated in Sample Models
+  // IABM Textbook models duplicated in Sample Models and Code Examples
   ("IABM Textbook/chapter 3/El Farol Extensions", "El Farol.nlogo",   "Sample Models/Social Science"),
-  ("IABM Textbook/chapter 3/DLA extensions",      "DLA Simple.nlogo", "Sample Models/Chemistry & Physics/Diffusion Limited Aggregation")
+  ("IABM Textbook/chapter 3/DLA extensions",      "DLA Simple.nlogo", "Sample Models/Chemistry & Physics/Diffusion Limited Aggregation"),
+  ("IABM Textbook/chapter 8",                     "Arduino*",         "Code Examples/Extensions Examples/arduino")
 )
 
 }
