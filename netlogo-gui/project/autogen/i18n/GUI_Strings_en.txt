@@ -164,6 +164,7 @@ tabs.info.edit = Edit
 tabs.info.help = Help
 
 tabs.code = Code
+tabs.code.rightclick.jumptodeclaration = Jump To Declaration
 tabs.code.rightclick.quickhelp = Quick Help
 tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo Dictionary.\n \
    Would you like to open the full NetLogo Dictionary?

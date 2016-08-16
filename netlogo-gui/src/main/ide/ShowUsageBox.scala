@@ -75,7 +75,7 @@ class ShowUsageBox() {
   usageTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
 
   def showBox(popupLocation: Point, cursorPosition: Int): Unit = {
-    val tokenOption = findTokenContainingPosition(editorArea.getText(), cursorPosition)
+    val tokenOption = JumpToDeclaration.findTokenContainingPosition(editorArea.getText(), cursorPosition)
     for {token <- tokenOption} {
       if(token.tpe == TokenType.Ident || token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
         val tokens = getUsage(editorArea.getText(), token)
@@ -109,11 +109,6 @@ class ShowUsageBox() {
       prevLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)
     }
     iter
-  }
-
-  def findTokenContainingPosition(source: String, position: Int): Option[Token] = {
-    val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
-    iterator.find(p => p.start < position && p.end >= position)
   }
 
   class LineRenderer(boldedString: Option[String]) extends TableCellRenderer {
