@@ -61,7 +61,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
+  def clearTicks {
     world.tickCounter.clear()
   }
 
@@ -81,8 +81,11 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     loader.load(view, worldInterface)
   }
 
-  def autoConvert(modelVersion: String)(source: String): String =
-    compiler.autoConvert(modelVersion)(source)
+  def seedRNGs(seed: Int): Unit = {
+    mainRNG.setSeed(seed)
+    auxRNG.setSeed(seed)
+    plotRNG.setSeed(seed)
+  }
 
   override def getCompilationEnvironment = {
     import java.io.{ File => JFile }

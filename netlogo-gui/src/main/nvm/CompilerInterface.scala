@@ -13,7 +13,7 @@ trait CompilerInterface {
 
   def defaultDialect: Dialect
 
-  def compilerUtilities: CompilerUtilitiesInterface
+  def utilities: CompilerUtilitiesInterface
 
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults
@@ -32,8 +32,6 @@ trait CompilerInterface {
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: java.util.Map[String, Procedure],
                           extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
-
-  def autoConvert(version: String)(source: String): String
 
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef

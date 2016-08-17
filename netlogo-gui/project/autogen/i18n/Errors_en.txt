@@ -176,8 +176,16 @@ org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.
 
 org.nlogo.prim.etc._foreach.listsMustBeSameLength = All the list arguments to FOREACH must be the same length.
 org.nlogo.prim.$common.noSumOfListWithNonNumbers =  Can''t find the sum of a list that contains non-numbers {0} is a {1}.
+org.nlogo.prim.task.missingInput = task expected 1 input, but only got 0
+org.nlogo.prim.task.missingInputs = task expected {0} inputs, but only got {1}
 org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of reporter procedure without REPORT being called.
 org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.
+org.nlogo.prim.$common.invalidAgentKind.simple = this code can''t be run by {0}
+org.nlogo.prim.$common.invalidAgentKind.alternative = this code can''t be run by {0}, only {1}
+org.nlogo.prim.$common.agentKind.observer = the observer
+org.nlogo.prim.$common.agentKind.turtle = a turtle
+org.nlogo.prim.$common.agentKind.patch = a patch
+org.nlogo.prim.$common.agentKind.link = a link
 
 org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
 
@@ -186,5 +194,8 @@ compiler.SetVisitor.notSettable = This isn''t something you can use "set" on.
 compiler.TaskVisitor.notDefined = This special variable isn''t defined here.
 compiler.LocalsVisitor.notDefined = Nothing named {0} has been defined.
 compiler.LetVariable.notDefined = Nothing named {0} has been defined.
+compiler.Backifier.replaced = {0} is no longer a primitive, use {1} instead.
 compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
+
+fileformat.invalidversion = Invalid NetLogo file. Expected "{0}" formatted model to have version compatible with {1}, but this model had version {2}

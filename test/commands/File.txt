@@ -271,7 +271,7 @@ FileReadNumberThenLetter
   O> file-close
   O> file-open glob2
   O> __ignore file-read
-  O> __ignore file-read => ERROR Expected a literal value. (line number 1, character 5)
+  O> __ignore file-read => ERROR Expected a literal value. (line number 1, character 3)
 
 FileReadBadToken
   globals [ glob2 ]

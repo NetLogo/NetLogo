@@ -2,11 +2,11 @@
 
 package org.nlogo.compiler.prim
 
+import org.nlogo.compiler.ReplacedPrim
 import org.nlogo.core.{ Command, Reporter, Syntax },
   Syntax.{ AgentType, AgentsetType, BooleanType, CodeBlockType, ListType, NumberType,
   NumberBlockType, PatchType, PatchsetType, StringType, SymbolType,
   TurtleType, ReporterBlockType, ReporterTaskType, WildcardType }
-
 
 case class _patchcol() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, right = List(NumberType))
@@ -33,16 +33,8 @@ package etc {
     def syntax = Syntax.reporterSyntax(ret = NumberType)
   }
 
-  case class _block() extends Reporter {
-    def syntax = Syntax.reporterSyntax(right = List(CodeBlockType), ret = StringType)
-  }
-
   case class _butfirst() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = ListType | StringType, right = List(ListType | StringType))
-  }
-
-  case class _changelanguage() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
   case class _clearallandresetticks() extends Command {
@@ -155,34 +147,6 @@ package gui {
     def syntax = Syntax.commandSyntax(right = List(AgentType, NumberType))
   }
 
-  case class _moviecancel() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _movieclose() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _moviegrabinterface() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _moviegrabview() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _moviesetframerate() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(NumberType))
-  }
-
-  case class _moviestart() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
-  }
-
-  case class _moviestatus() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = StringType)
-  }
-
   case class _reload() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
@@ -201,8 +165,46 @@ package dead {
     def syntax = Syntax.commandSyntax(right = List(AgentsetType, NumberBlockType))
   }
 
+  case class _hubnetsetclientinterface() extends Command {
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType, ListType))
+  }
+
   case class _randomorrandomfloat() extends Reporter {
     def syntax = Syntax.reporterSyntax(ret = NumberType, right = List(NumberType))
+  }
+
+  case class _moviecancel() extends Command with ReplacedPrim {
+    def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:reset-recording"
+  }
+
+  case class _movieclose() extends Command with ReplacedPrim {
+    def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:save-recording"
+  }
+
+  case class _moviegrabinterface() extends Command with ReplacedPrim {
+    def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:record-interface"
+  }
+
+  case class _moviegrabview() extends Command with ReplacedPrim {
+    def syntax = Syntax.commandSyntax()
+    def recommendedReplacement = "vid:record-view"
+  }
+
+  case class _moviesetframerate() extends Command {
+    def syntax = Syntax.commandSyntax(right = List(NumberType))
+  }
+
+  case class _moviestart() extends Command with ReplacedPrim {
+    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def recommendedReplacement = "vid:start-recorder"
+  }
+
+  case class _moviestatus() extends Reporter with ReplacedPrim {
+    def syntax = Syntax.reporterSyntax(ret = StringType)
+    def recommendedReplacement = "vid:recorder-status"
   }
 }
 
@@ -349,10 +351,6 @@ package hubnet {
 
   case class _hubnetsendwatch() extends Command {
     def syntax = Syntax.commandSyntax(right = List(StringType, AgentType))
-  }
-
-  case class _hubnetsetclientinterface() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType, ListType))
   }
 
   case class _hubnetsethistogramnumbars() extends Command {

@@ -2,12 +2,32 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.api.{ CommandLogoThunk, DummyLogoThunkFactory, MersenneTwisterFast, LogoException }
+
+import scala.util.{ Failure, Success, Try }
 
 class PlotManagerTests extends SimplePlotTest {
-
   def newPlotManager() =
-    new PlotManager(new DummyLogoThunkFactory())
+    new PlotManager(normalThunkFactory, new MersenneTwisterFast())
+
+  def normalThunkFactory = new DummyLogoThunkFactory() {
+    override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
+      return new CommandLogoThunk {
+        def call: Try[Boolean] = {
+          Success(false)
+        }
+      }
+    }
+  }
+  def errorThunkFactory = new DummyLogoThunkFactory() {
+    override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
+      return new CommandLogoThunk {
+        def call: Try[Boolean] = {
+          Failure(new LogoException("runtime error!") {})
+        }
+      }
+    }
+  }
 
   test("Constructor") {
     assertResult(0)(newPlotManager().getPlotNames.length)
@@ -41,4 +61,37 @@ class PlotManagerTests extends SimplePlotTest {
     assertResult(List("test2"))(manager.getPlotNames.toList)
   }
 
+  test("plot runtime errors do not propagate out") {
+    val manager = new PlotManager(errorThunkFactory, new MersenneTwisterFast())
+    val plot = manager.newPlot("test")
+    plot.setupCode = "histogram runresult [false]"
+    manager.compileAllPlots()
+    manager.setupPlots()
+    assert(plot.runtimeError.isDefined)
+    assert(manager.hasErrors(plot))
+  }
+
+  test("plot pen errors are saved for later display") {
+    val manager = new PlotManager(errorThunkFactory, new MersenneTwisterFast())
+    val plot = manager.newPlot("test")
+    val penErroringAtRuntime =
+      new PlotPen(plot, "error", false, "", "plot runresult [ false ]")
+    plot.addPen(penErroringAtRuntime)
+    manager.compileAllPlots()
+    manager.updatePlots()
+    assert(plot.runtimeError.isDefined)
+    assert(manager.hasErrors(plot))
+    assert(manager.hasErrors(penErroringAtRuntime))
+  }
+
+  test("returns no setup error or update error for pens which haven't been compiled") {
+    val manager = newPlotManager()
+    val plot = manager.newPlot("text")
+    manager.compileAllPlots()
+    manager.updatePlots()
+    val pen = new PlotPen(plot, "error", false, "", "plot runresult [ false ]")
+    plot.addPen(pen)
+    assert(! manager.hasErrors(plot))
+    assert(! manager.hasErrors(pen))
+  }
 }

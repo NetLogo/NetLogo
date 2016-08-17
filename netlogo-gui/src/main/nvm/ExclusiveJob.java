@@ -14,8 +14,9 @@ public strictfp class ExclusiveJob
                       Procedure topLevelProcedure,
                       int address,
                       Context parentContext,
+                      Workspace workspace,
                       org.nlogo.api.MersenneTwisterFast random) {
-    super(owner, agentset, topLevelProcedure, address, parentContext, random);
+    super(owner, agentset, topLevelProcedure, address, parentContext, workspace, random);
   }
 
   @Override
@@ -39,7 +40,7 @@ public strictfp class ExclusiveJob
     // turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
     AgentSet.Iterator it = agentset.shufflerator(random);
-    Context context = new Context(this, null, 0, null);
+    Context context = new Context(this, null, 0, null, workspace);
     context.agentBit = agentset.getAgentBit();
     while (it.hasNext()) {
       context.agent = it.next();
@@ -62,7 +63,7 @@ public strictfp class ExclusiveJob
   // used by Evaluator.MyThunk
   public Object callReporterProcedure()
       throws LogoException {
-    return new Context(this, agentset.iterator().next(), 0, null)
+    return new Context(this, agentset.iterator().next(), 0, null, workspace)
         .callReporterProcedure(new Activation(topLevelProcedure, null, 0));
   }
 

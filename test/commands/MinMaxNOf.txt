@@ -31,3 +31,55 @@ MaxNOf
   T> create-links-with other turtles
   count max-n-of 5 links [[who] of end1] => 5
   max-n-of -1 links [color] => ERROR First input to MAX-N-OF can't be negative.
+
+MinNOfRespectsRNGState
+  O> random-seed 0
+  random 1000 => 983
+  O> crt 5
+  O> random-seed 0
+  O> __ignore min-n-of 0 no-turtles [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore min-n-of 0 (turtle-set turtle 0) [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore min-n-of 1 (turtle-set turtle 0) [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore min-n-of 0 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore min-n-of 1 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore min-n-of 2 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore min-n-of 2 turtles [who]
+  random 1000 => 565
+
+MaxNOfRespectsRNGState
+  O> random-seed 0
+  random 1000 => 983
+  O> crt 5
+  O> random-seed 0
+  O> __ignore max-n-of 0 no-turtles [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore max-n-of 0 (turtle-set turtle 0) [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore max-n-of 1 (turtle-set turtle 0) [who]
+  random 1000 => 983
+  O> random-seed 0
+  O> __ignore max-n-of 0 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore max-n-of 1 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore max-n-of 2 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
+  random 1000 => 565
+  O> random-seed 0
+  O> __ignore max-n-of 2 turtles [who]
+  random 1000 => 565

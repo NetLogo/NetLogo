@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 22" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:22.0 "22" => double
          L0
           LDC 22.0
@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:500.0 "500" => double
          L0
           LDC 500.0
@@ -147,7 +147,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP-RANDOM:[]{O---}:
 [0]_clearall "clear-all"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetuprandom_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetuprandom_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -256,9 +256,9 @@ procedure SETUP-RANDOM:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetuprandom_ifelse_1 "ifelse random-float 1.0 < initial-density" boolean => void
-      _lessthan "random-float 1.0 < initial-density" double,Object => boolean
-        _randomfloat "random-float 1.0" double => double
+[3]_asm_proceduresetuprandom_ifelse_1 "ifelse" boolean => void
+      _lessthan "<" double,Object => boolean
+        _randomfloat "random-float" double => double
           _constdouble:1.0 "1.0" => double
         _observervariable:INITIAL-DENSITY "initial-density" => Object
          L0
@@ -409,7 +409,7 @@ procedure SETUP-RANDOM:[]{O---}:
           RETURN
 
 procedure CELL-BIRTH:[]{-TP-}:
-[0]_asm_procedurecellbirth_setpatchvariable_0 "set living? true" Object => void
+[0]_asm_procedurecellbirth_setpatchvariable_0 "set" Object => void
       _constboolean:true "true" => Boolean
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -442,7 +442,7 @@ procedure CELL-BIRTH:[]{-TP-}:
          L5
          FRAME SAME
           RETURN
-[1]_asm_procedurecellbirth_setpatchvariable_1 "set pcolor fgcolor" Object => void
+[1]_asm_procedurecellbirth_setpatchvariable_1 "set" Object => void
       _observervariable:FGCOLOR "fgcolor" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -489,7 +489,7 @@ procedure CELL-BIRTH:[]{-TP-}:
           RETURN
 
 procedure CELL-DEATH:[]{-TP-}:
-[0]_asm_procedurecelldeath_setpatchvariable_0 "set living? false" Object => void
+[0]_asm_procedurecelldeath_setpatchvariable_0 "set" Object => void
       _constboolean:false "false" => Boolean
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -522,7 +522,7 @@ procedure CELL-DEATH:[]{-TP-}:
          L5
          FRAME SAME
           RETURN
-[1]_asm_procedurecelldeath_setpatchvariable_1 "set pcolor bgcolor" Object => void
+[1]_asm_procedurecelldeath_setpatchvariable_1 "set" Object => void
       _observervariable:BGCOLOR "bgcolor" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -569,7 +569,7 @@ procedure CELL-DEATH:[]{-TP-}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask patches" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -624,8 +624,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_setpatchvariable_1 "set live-neighbors count neighbors with [living?" Object => void
-      _countwith "count neighbors with [living?" AgentSet,Reporter => double
+[1]_asm_procedurego_setpatchvariable_1 "set" Object => void
+      _countwith "count" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurego_patchvariable_2 "living?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -818,7 +818,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_4 "ask patches" AgentSet => void
+[3]_asm_procedurego_ask_4 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -873,8 +873,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedurego_ifelse_5 "ifelse live-neighbors = 3" boolean => void
-      _equal "live-neighbors = 3" Object,double => boolean
+[4]_asm_procedurego_ifelse_5 "ifelse" boolean => void
+      _equal "=" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:3.0 "3" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -971,8 +971,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_procedurego_if_8 "if live-neighbors != 2" boolean => void
-      _notequal "live-neighbors != 2" Object,double => boolean
+[7]_asm_procedurego_if_8 "if" boolean => void
+      _notequal "!=" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:2.0 "2" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException

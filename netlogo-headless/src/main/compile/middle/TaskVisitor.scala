@@ -29,16 +29,13 @@ class TaskVisitor extends DefaultAstVisitor {
         super.visitReporterApp(expr)
         task = old
       case lv: prim._taskvariable =>
-        task match {
-          case None =>
-            val formal: core.Let = procedure.get.getTaskFormal(lv.varNumber)
-            expr.reporter = new prim._letvariable(formal)
-            expr.reporter.token = lv.token
-          case Some(l: prim._reportertask) =>
-            val formal: core.Let = l.getFormal(lv.varNumber)
-            expr.reporter = new prim._letvariable(formal)
-            expr.reporter.token = lv.token
+        val formal = task match {
+          case None => procedure.get.getTaskFormal(lv.varNumber)
+          case Some(l: prim._reportertask) => l.getFormal(lv.varNumber)
         }
+        val newLet = new prim._letvariable(formal)
+        newLet.copyMetadataFrom(expr.reporter)
+        expr.reporter = newLet
       case _ =>
         super.visitReporterApp(expr)
     }

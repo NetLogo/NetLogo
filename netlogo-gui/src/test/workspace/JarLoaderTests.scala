@@ -30,12 +30,12 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
   val emptyJarFile        = new File("tmp/empty/empty.jar")
 
   val dummyExtensionData =
-    new ExtensionData("dummy", dummyJarURL, "dummy", "org.nlogo.workspace.DummyClassManager", Some("5.0"), 0)
+    new ExtensionData("dummy", dummyJarURL, "dummy", "org.nlogo.workspace.DummyClassManager", Some("6.0"), 0)
 
   val dummyManifest = {
     val m = new JarManifest
     val attrs = m.getMainAttributes
-    attrs.putValue("NetLogo-Extension-API-Version", "5.0")
+    attrs.putValue("NetLogo-Extension-API-Version", "6.0")
     attrs.putValue("Extension-Name", dummyExtensionData.prefix)
     attrs.putValue("Class-Manager", dummyExtensionData.classManagerName)
     m
@@ -101,7 +101,7 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
     assert(extensionData.fileURL == arrayJarURL)
     assert(extensionData.prefix == "array")
     assert(extensionData.classManagerName == "org.nlogo.extensions.array.ArrayExtension")
-    assert(extensionData.version == Some("5.0"))
+    assert(extensionData.version == Some("6.0"))
     assert(extensionData.modified == modified)
   }
 

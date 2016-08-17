@@ -7,9 +7,9 @@ breeds
 link-breeds 
 
 reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
-[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs (h1 - h2) <= 180" boolean => void
-      _lessorequal "abs (h1 - h2) <= 180" double,double => boolean
-        _abs "abs (h1 - h2" double => double
+[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs h1 - h2 <= 180 [ report h1 - h2 ] [ ifelse h1 > h2 [ report h1 - h2 - 360 ] [ report h1 - h2 + 360 ] ]" boolean => void
+      _lessorequal "abs h1 - h2 <= 180" double,double => boolean
+        _abs "abs h1 - h2" double => double
           _minus "h1 - h2" double,double => double
             _procedurevariable:H1 "h1" => Object
             _procedurevariable:H2 "h2" => Object
@@ -261,7 +261,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse h1 > h2" boolean => void
+[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse h1 > h2 [ report h1 - h2 - 360 ] [ report h1 - h2 + 360 ]" boolean => void
       _greaterthan "h1 > h2" Object,Object => boolean
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
@@ -711,7 +711,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ATHROW
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles [ flock ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -801,13 +801,11 @@ procedure GO:[]{O---}:
           RETURN
 
 reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
-[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [sin (towards myself + 180)] of flockmates
-              mean [cos (towards myself + 180)] of flockmates" Object => void
-      _atan "atan mean [sin (towards myself + 180)] of flockmates
-              mean [cos (towards myself + 180)] of flockmates" double,double => double
-        _mean "mean [sin (towards myself + 180)] of flockmates" LogoList => double
-          _of "sin (towards myself + 180)] of flockmates"
-            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin (towards myself + 180" double => double
+[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [ sin towards myself + 180 ] of flockmates mean [ cos towards myself + 180 ] of flockmates" Object => void
+      _atan "atan mean [ sin towards myself + 180 ] of flockmates mean [ cos towards myself + 180 ] of flockmates" double,double => double
+        _mean "mean [ sin towards myself + 180 ] of flockmates" LogoList => double
+          _of "[ sin towards myself + 180 ] of flockmates"
+            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin towards myself + 180" double => double
               _plus "towards myself + 180" double,double => double
                 _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_2 "myself" => Agent
@@ -907,9 +905,9 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean [cos (towards myself + 180)] of flockmates" LogoList => double
-          _of "cos (towards myself + 180)] of flockmates"
-            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos (towards myself + 180" double => double
+        _mean "mean [ cos towards myself + 180 ] of flockmates" LogoList => double
+          _of "[ cos towards myself + 180 ] of flockmates"
+            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos towards myself + 180" double => double
               _plus "towards myself + 180" double,double => double
                 _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_5 "myself" => Agent
@@ -1422,7 +1420,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 700 [ go ]" double => void
       _constdouble:700.0 "700" => double
          L0
           LDC 700.0
@@ -1614,8 +1612,8 @@ procedure ALIGN:[]{-T--}:
           RETURN
 
 procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
-[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set nearest-neighbor min-one-of flockmates [distance myself" Object => void
-      _minoneof "min-one-of flockmates [distance myself"
+[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set nearest-neighbor min-one-of flockmates [ distance myself ]" Object => void
+      _minoneof "min-one-of flockmates [ distance myself ]"
         _asm_procedurefindnearestneighbor_turtlevariable_1 "flockmates" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
@@ -1762,7 +1760,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
           RETURN
 
 procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturnaway_call_0 "turn-at-most (my-subtract-headings heading new-heading) max-turn"
+[0]_asm_procedureturnaway_call_0 "turn-at-most my-subtract-headings heading new-heading max-turn"
       _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings heading new-heading"
         _turtlevariabledouble:HEADING "heading" => Double
         _procedurevariable:NEW-HEADING "new-heading" => Object
@@ -1872,7 +1870,7 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+7 "cro population"
+[2]_createorderedturtles:,+7 "cro population set color yellow - 2 + random 7 setxy random-float world-width random-float world-height [ rt random-float 360 ]"
       _asm_proceduresetup_observervariable_0 "population" => Object
            L0
             ALOAD 1
@@ -1881,10 +1879,10 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set color yellow - 2 + random" Object => void
-      _plus "+ random" double,double => double
+[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set color yellow - 2 + random 7" Object => void
+      _plus "yellow - 2 + random 7" double,double => double
         _constdouble:43.0 "yellow - 2" => double
-        _randomconst:7 "random" => double
+        _randomconst:7 "random 7" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC 43.0
@@ -1936,8 +1934,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[4]_asm_proceduresetup_setxy_2 "setxy (random-float world-width)
-            (random-float world-height" double,double => void
+[4]_asm_proceduresetup_setxy_2 "setxy random-float world-width random-float world-height" double,double => void
       _randomfloat "random-float world-width" double => double
         _worldwidth "world-width" => double
       _randomfloat "random-float world-height" double => double
@@ -2067,7 +2064,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
-[0]_asm_procedureturnatmost_ifelse_0 "ifelse abs turn > max-turn" boolean => void
+[0]_asm_procedureturnatmost_ifelse_0 "ifelse abs turn > max-turn [ ifelse turn > 0 [ rt max-turn ] [ lt max-turn ] ] [ rt turn ]" boolean => void
       _greaterthan "abs turn > max-turn" double,Object => boolean
         _abs "abs turn" double => double
           _procedurevariable:TURN "turn" => Object
@@ -2178,7 +2175,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[1]_asm_procedureturnatmost_ifelse_1 "ifelse turn > 0" boolean => void
+[1]_asm_procedureturnatmost_ifelse_1 "ifelse turn > 0 [ rt max-turn ] [ lt max-turn ]" boolean => void
       _greaterthan "turn > 0" Object,double => boolean
         _procedurevariable:TURN "turn" => Object
         _constdouble:0.0 "0" => double
@@ -2467,8 +2464,8 @@ procedure COHERE:[]{-T--}:
           RETURN
 
 procedure SEPARATE:[]{-T--}:
-[0]_asm_procedureseparate_call_0 "turn-away ([heading] of nearest-neighbor) max-separate-turn"
-      _turtlevariableof:HEADING "of nearest-neighbor" Object => Object
+[0]_asm_procedureseparate_call_0 "turn-away [ heading ] of nearest-neighbor max-separate-turn"
+      _turtlevariableof:HEADING "[ heading ] of nearest-neighbor" Object => Object
         _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
       _observervariable:MAX-SEPARATE-TURN "max-separate-turn" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -2647,12 +2644,10 @@ procedure SEPARATE:[]{-T--}:
           RETURN
 
 reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
-[0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [sin heading] of flockmates
-              mean [cos heading] of flockmates" Object => void
-      _atan "atan mean [sin heading] of flockmates
-              mean [cos heading] of flockmates" double,double => double
-        _mean "mean [sin heading] of flockmates" LogoList => double
-          _of "sin heading] of flockmates"
+[0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [ sin heading ] of flockmates mean [ cos heading ] of flockmates" Object => void
+      _atan "atan mean [ sin heading ] of flockmates mean [ cos heading ] of flockmates" double,double => double
+        _mean "mean [ sin heading ] of flockmates" LogoList => double
+          _of "[ sin heading ] of flockmates"
             _asm_procedureaverageflockmateheading_sin_1 "sin heading" double => double
               _turtlevariabledouble:HEADING "heading" => double
                  L0
@@ -2696,8 +2691,8 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean [cos heading] of flockmates" LogoList => double
-          _of "cos heading] of flockmates"
+        _mean "mean [ cos heading ] of flockmates" LogoList => double
+          _of "[ cos heading ] of flockmates"
             _asm_procedureaverageflockmateheading_cos_3 "cos heading" double => double
               _turtlevariabledouble:HEADING "heading" => double
                  L0
@@ -3104,7 +3099,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflock_if_1 "if any? flockmates" boolean => void
+[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ] ]" boolean => void
       _any "any? flockmates" AgentSet => boolean
         _turtlevariable:FLOCKMATES "flockmates" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3191,7 +3186,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation" boolean => void
+[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]" boolean => void
       _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
         _distance "distance nearest-neighbor" Agent => double
           _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
@@ -3409,7 +3404,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedureflock_fd1_8 "fd" => void
+[8]_asm_procedureflock_fd1_8 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3440,7 +3435,7 @@ procedure FLOCK:[]{-T--}:
           RETURN
 
 procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturntowards_call_0 "turn-at-most (my-subtract-headings new-heading heading) max-turn"
+[0]_asm_procedureturntowards_call_0 "turn-at-most my-subtract-headings new-heading heading max-turn"
       _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings new-heading heading"
         _procedurevariable:NEW-HEADING "new-heading" => Object
         _turtlevariabledouble:HEADING "heading" => Double

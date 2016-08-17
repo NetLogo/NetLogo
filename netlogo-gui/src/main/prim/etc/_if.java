@@ -16,8 +16,6 @@ public final strictfp class _if
     perform_1(context, argEvalBooleanValue(context, 0));
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":+" + offset;

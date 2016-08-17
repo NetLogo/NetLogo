@@ -1,5 +1,6 @@
 BehaviorSpaceRunNumber
   behaviorspace-run-number => 0
 
-BehaviorSpaceExperimentName
+# this isn't yet available in NetLogo-Headless
+BehaviorSpaceExperimentName_Legacy
   behaviorspace-experiment-name => ""

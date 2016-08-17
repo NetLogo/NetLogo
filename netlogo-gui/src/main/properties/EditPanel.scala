@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ CompilerException, I18N, LogoList, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody, TokenType }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}
@@ -170,6 +170,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.Double =>
         new DoubleEditor(accessor) with Changed
+      case Property.Error =>
+        new RuntimeErrorDisplay(accessor) with Changed
       case Property.StrictlyPositiveDouble =>
         new DoubleEditor(accessor) with Changed
         { override def get = super.get.filter(_ > 0) }
@@ -183,10 +185,18 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       case Property.Key =>
         new KeyEditor(accessor) with Changed
       case Property.LogoListString =>
-        new CodeEditor(accessor, colorizer, false, false) with Changed
-        { override def get = super.get.filter{x =>
+        new CodeEditor(accessor, colorizer, false, false) with Changed {
+          private def nobodyFree(a: AnyRef): Boolean = {
+            a match {
+              case Nobody       => false
+              case ll: LogoList => ll.forall(nobodyFree)
+              case _            => true
+            }
+          }
+
+          override def get = super.get.filter{x =>
             try compiler.readFromString("[ " + x + " ]") match {
-              case list: LogoList => !list.isEmpty
+              case list: LogoList => !list.isEmpty && list.forall(nobodyFree)
               case _ => false
             }
             catch { case _: CompilerException => false }

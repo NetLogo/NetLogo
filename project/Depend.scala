@@ -41,7 +41,12 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("core", "core/model", "util"),
-      "app" -> List("ide", "window"),
+      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools"),
+      "app/codetab" -> List("app/common"),
+      "app/infotab" -> List("app/common"),
+      "app/interfacetab" -> List("app/common", "app/tools"),
+      "app/tools" -> List("app/common"),
+      "app/common" -> List("ide", "window"),
       "awt" -> Nil,
       "compiler" -> List("core/prim","prim","prim/dead","prim/threed"),
       "core" -> Nil,
@@ -148,10 +153,6 @@ check org.nlogo.* independentOf com.wolfram.*
 
 [JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
-
-[JMF-free-zone] = org.nlogo.* excluding org.nlogo.awt.JMFMovieEncoder org.nlogo.awt.JMFMovieEncoderDataStream org.nlogo.awt.JMFMovieEncoderDataSource
-[JMF] = javax.media.* excluding com.jogamp.opengl.*
-check [JMF-free-zone] directlyIndependentOf [JMF]
 
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
 check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*

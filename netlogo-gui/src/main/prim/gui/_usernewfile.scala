@@ -12,8 +12,6 @@ import org.nlogo.swing.FileDialog
 
 class _usernewfile extends Reporter {
 
-
-
   override def report(context: Context) = {
     if (isApplet)
       throw new EngineException(
@@ -27,7 +25,7 @@ class _usernewfile extends Reporter {
             override def run() =
               try {
                 gw.view.mouseDown(false)
-                FileDialog.setDirectory(workspace.fileManager.getPrefix)
+                FileDialog.setDirectory(workspace.fileManager.prefix)
                 FileDialog.show(gw.getFrame, "Choose File", java.awt.FileDialog.SAVE)
               }
               catch {

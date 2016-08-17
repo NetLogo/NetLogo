@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import ca.weblite.objc.Client;
+import ca.weblite.objc.Proxy;
+
 import com.apple.eawt.Application;
 
 // for those of you wondering why this song and dance is necessary
@@ -32,6 +35,12 @@ public class MacApplication {
     System.setProperty("apple.awt.graphics.UseQuartz", "true");
     System.setProperty("apple.awt.showGrowBox", "true");
     System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+    long userInitiatedAllowingIdleSleep = 0x00FFFFFFL;
+
+    Client c = Client.getInstance();
+    Proxy processInfo = c.sendProxy("NSProcessInfo", "processInfo");
+    processInfo.sendProxy("beginActivityWithOptions:reason:", userInitiatedAllowingIdleSleep, "Running NetLogo simulation");
 
     try {
       String mainApplicationClassName = System.getProperty("org.nlogo.mac.appClassName", "org.nlogo.app.App$");

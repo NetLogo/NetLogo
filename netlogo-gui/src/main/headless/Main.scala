@@ -20,7 +20,13 @@ object Main {
       w.open(settings.modelPath)
       w
     }
-    BehaviorSpaceCoordinator.selectProtocol(settings) match {
+    val openWs = newWorkspace
+    val proto = try {
+      BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
+    } finally {
+      openWs.dispose()
+    }
+    proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
         lab.run(settings, protocol, newWorkspace _)

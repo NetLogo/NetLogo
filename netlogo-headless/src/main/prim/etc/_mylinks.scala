@@ -17,11 +17,7 @@ class _mylinks(val breedName: String) extends Reporter {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeDirected(breed))
-      throw new EngineException(context, this, err)
     AgentSet.fromIterator(AgentKind.Link,
-      world.linkManager.findLinksWith(
-        context.agent.asInstanceOf[Turtle], breed))
+      world.linkManager.findLinksWith(context.agent.asInstanceOf[Turtle], breed))
   }
-
 }

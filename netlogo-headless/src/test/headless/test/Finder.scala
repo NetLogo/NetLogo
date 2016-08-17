@@ -86,7 +86,7 @@ trait Finder extends FunSuite  {
     throw new RuntimeException("PROBLEMS!")
 
   // parse tests first, then run them
-  for (t <- files.flatMap(Function.tupled(parseFile)))
+  for (t <- files.flatMap(Function.tupled(parseFile)) if isHeadlessTest(t))
     // by tagging each test with both its suite name and its full name,
     // we support both e.g. `tc Lists` and `tc Lists::Remove`
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
@@ -94,6 +94,9 @@ trait Finder extends FunSuite  {
         if (shouldRun(t, mode))
           runTest(t, mode)
     }
+
+  def isHeadlessTest(t: LanguageTest): Boolean =
+    ! (t.fullName.contains("HubNet") || t.fullName.endsWith("_3D") || t.fullName.endsWith("_Legacy_2D") || t.fullName.endsWith("_Legacy"))
 
   def withFixture[T](name: String)(body: AbstractFixture => T): T
 

@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask patches" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask patches [ set live-neighbors count neighbors with [ living? ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -60,8 +60,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_setpatchvariable_1 "set live-neighbors count neighbors with [living?" Object => void
-      _countwith "count neighbors with [living?" AgentSet,Reporter => double
+[1]_asm_procedurego_setpatchvariable_1 "set live-neighbors count neighbors with [ living? ]" Object => void
+      _countwith "count neighbors with [ living? ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurego_patchvariable_2 "living?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -220,7 +220,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_4 "ask patches" AgentSet => void
+[3]_asm_procedurego_ask_4 "ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -273,7 +273,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedurego_ifelse_5 "ifelse live-neighbors = 3" boolean => void
+[4]_asm_procedurego_ifelse_5 "ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ]" boolean => void
       _equal "live-neighbors = 3" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:3.0 "3" => double
@@ -357,7 +357,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_procedurego_if_8 "if live-neighbors != 2" boolean => void
+[7]_asm_procedurego_if_8 "if live-neighbors != 2 [ cell-death ]" boolean => void
       _notequal "live-neighbors != 2" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:2.0 "2" => double
@@ -523,7 +523,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 500 [ go ]" double => void
       _constdouble:500.0 "500" => double
          L0
           LDC 500.0
@@ -649,7 +649,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP-RANDOM:[]{O---}:
 [0]_clearall "clear-all"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetuprandom_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetuprandom_ask_0 "ask patches [ ifelse random-float 1.0 < initial-density [ cell-birth ] [ cell-death ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -702,7 +702,7 @@ procedure SETUP-RANDOM:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetuprandom_ifelse_1 "ifelse random-float 1.0 < initial-density" boolean => void
+[3]_asm_proceduresetuprandom_ifelse_1 "ifelse random-float 1.0 < initial-density [ cell-birth ] [ cell-death ]" boolean => void
       _lessthan "random-float 1.0 < initial-density" double,Object => boolean
         _randomfloat "random-float 1.0" double => double
           _constdouble:1.0 "1.0" => double

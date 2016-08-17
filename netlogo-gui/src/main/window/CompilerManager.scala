@@ -112,7 +112,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
         // Only set the global if the value has changed.  This prevents
         // us from firing our constraint code all the time.
-        if (widgetValue != workspace.world.getObserverVariableByName(widget.name)) {
+        if (widgetValue ne workspace.world.getObserverVariableByName(widget.name)) {
           // so that we do not interrupt without-interruption
           workspace.world.synchronized {
             workspace.world.setObserverVariableByName(widget.name, widgetValue)

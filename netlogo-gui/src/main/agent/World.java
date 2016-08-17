@@ -1174,10 +1174,7 @@ public strictfp class World
   }
 
   public int observerOwnsIndexOf(String name) {
-    int index = _program.globals().indexOf(name);
-    if (_observer.variables().length > index)
-      return index;
-    return -1;
+    return _observer.variableIndex(name.toUpperCase());
   }
 
   /// breeds & shapes
@@ -1381,9 +1378,9 @@ public strictfp class World
     return emptyProgram.copy(
         interfaceGlobals,
         emptyProgram.userGlobals(),
-        emptyProgram.turtlesOwn(),
-        emptyProgram.patchesOwn(),
-        emptyProgram.linksOwn(),
+        emptyProgram.turtleVars(),
+        emptyProgram.patchVars(),
+        emptyProgram.linkVars(),
         emptyProgram.breeds(),
         emptyProgram.linkBreeds(),
         emptyProgram.dialect());
@@ -1409,27 +1406,23 @@ public strictfp class World
 
   /// accessing observer variables by name;
 
-  public Object getObserverVariableByName(String var) {
-    int index = _program.globals().indexOf(var.toUpperCase());
-    if (index >= 0 && index < _observer.variables.length) {
+  public Object getObserverVariableByName(final String var) {
+    int index = _observer.variableIndex(var.toUpperCase());
+    if (index >= 0) {
       return _observer.variables[index];
     }
     throw new IllegalArgumentException
         ("\"" + var + "\" not found");
   }
 
-  public void setObserverVariableByName(String var, Object value)
+  public void setObserverVariableByName(final String var, Object value)
       throws AgentException, LogoException {
-    var = var.toUpperCase();
-    if (_program.globals().contains(var)) {
-      int index = _program.globals().indexOf(var);
-      if (-1 != index && index < _observer.variables.length) {
-        _observer.setObserverVariable(index, value);
-        return;
-      }
+    int index = _observer.variableIndex(var.toUpperCase());
+    if (index != -1) {
+      _observer.setObserverVariable(index, value);
+      return;
     }
-    throw new IllegalArgumentException
-        ("\"" + var + "\" not found");
+    throw new IllegalArgumentException("\"" + var + "\" not found");
   }
 
   private CompilerServices _compiler;

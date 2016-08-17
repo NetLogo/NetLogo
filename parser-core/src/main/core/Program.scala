@@ -9,9 +9,9 @@ object Program {
 
   def fromDialect(dialect: Dialect) =
     Program(
-      turtlesOwn = dialect.agentVariables.getImplicitTurtleVariables,
-      patchesOwn = dialect.agentVariables.getImplicitPatchVariables,
-      linksOwn   = dialect.agentVariables.getImplicitLinkVariables,
+      turtleVars = dialect.agentVariables.implicitTurtleVariableTypeMap,
+      patchVars  = dialect.agentVariables.implicitPatchVariableTypeMap,
+      linkVars   = dialect.agentVariables.implicitLinkVariableTypeMap,
       dialect    = dialect)
 }
 
@@ -21,29 +21,23 @@ object Program {
 case class Program private(
   interfaceGlobals: Seq[String] = Seq(),
   userGlobals: Seq[String] = Seq(),
-  turtlesOwn: Seq[String] = Seq(),
-  patchesOwn: Seq[String] = Seq(),
-  linksOwn: Seq[String] = Seq(),
+  turtleVars: ListMap[String, Int] = ListMap(),
+  patchVars: ListMap[String, Int] = ListMap(),
+  linkVars: ListMap[String, Int] = ListMap(),
   breeds: ListMap[String, Breed] = ListMap(),
   linkBreeds: ListMap[String, Breed] = ListMap(),
   dialect: Dialect = NetLogoCore) {
 
-  def globals: Seq[String] =
-    AgentVariables.getImplicitObserverVariables ++
-      interfaceGlobals.map(_.toUpperCase) ++ userGlobals
+  val observerVars = dialect.agentVariables.implicitObserverVariableTypeMap
 
-  def usedNames: Map[String, String] = {
-    Map() ++
-      globals.map(_ -> "global variable") ++
-      turtlesOwn.map(_ -> "turtle variable") ++
-      patchesOwn.map(_ -> "patch variable") ++
-      (linksOwn.filterNot(turtlesOwn.contains)).map(_ -> "link variable") ++
-      breeds.keys.map(_ -> "breed") ++
-      breeds.values.map(_.singular).map(_ -> "singular breed name") ++
-      linkBreeds.keys.map(_ -> "link breed") ++
-      (for(breed <- breeds.values ++ linkBreeds.values; own <- breed.owns)
-       yield own -> (breed.name + " variable"))
-  }
+  val globals: Seq[String] =
+    observerVars.keys.toSeq ++ interfaceGlobals.map(_.toUpperCase) ++ userGlobals
+
+  val turtlesOwn = turtleVars.keys.toSeq
+
+  val patchesOwn = patchVars.keys.toSeq
+
+  val linksOwn   = linkVars.keys.toSeq
 
   // for testing/debugging
   def dump = {

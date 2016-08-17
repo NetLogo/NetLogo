@@ -51,7 +51,8 @@ public abstract strictfp class Instruction
 
   // the bytecode generator uses these to store text for dump() to print
   public java.lang.reflect.Method chosenMethod = null;
-  public String source;
+  public String source;     // contains the source of this instruction only
+  public String fullSource; // contains the source of this instruction and all arguments
   public Thunk<String> disassembly =
       new Thunk<String>() {
         @Override
@@ -189,7 +190,7 @@ public abstract strictfp class Instruction
     StringBuilder buf = new StringBuilder(toString());
     if (source != null) {
       buf.append(" \"");
-      buf.append(source);
+      buf.append(fullSource);
       buf.append('"');
     }
     if (chosenMethod != null) {
@@ -450,19 +451,19 @@ public abstract strictfp class Instruction
     }
   }
 
-  public ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
+  public org.nlogo.api.ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (ReporterTask) obj;
+      return (org.nlogo.api.ReporterTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
     }
   }
 
-  public CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
+  public org.nlogo.api.CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (CommandTask) obj;
+      return (org.nlogo.api.CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }
@@ -511,4 +512,12 @@ public abstract strictfp class Instruction
     return this;
   }
 
+  public void copyMetadataFrom(Instruction srcInstr) {
+    this.token_$eq(srcInstr.token());
+    this.agentClassString = srcInstr.agentClassString;
+    this.source = srcInstr.source;
+    this.fullSource = srcInstr.fullSource;
+    this.storedSourceStartPosition = srcInstr.storedSourceStartPosition;
+    this.storedSourceEndPosition = srcInstr.storedSourceEndPosition;
+  }
 }

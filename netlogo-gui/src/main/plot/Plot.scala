@@ -47,6 +47,8 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   var setupCode: String = ""
   var updateCode: String = ""
 
+  var runtimeError: Option[Exception] = None
+
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
 
@@ -163,6 +165,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
     state = PlotState(defaultAutoPlotOn, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
+    runtimeError = None
     makeDirty()
     plotListener.foreach(_.clear)
     pensDirty = true

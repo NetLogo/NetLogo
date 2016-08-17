@@ -10,10 +10,13 @@ import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
 class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
-
   implicit val i18nName = I18N.Prefix("menu.tools")
 
   setMnemonic('T')
+  if (!System.getProperty("os.name").startsWith("Mac")) {
+    addMenuItem(I18N.gui("preferences"), app.showPreferencesDialog _)
+    addSeparator()
+  }
   addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("halt"), app.workspace, _.halt))
   addSeparator()
   addMenuItem(new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), app.workspace, _.inspectAgent(AgentKind.Observer)))
@@ -40,7 +43,7 @@ class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I
   addMenuItem(I18N.gui("hubNetClientEditor"), openHubNetClientEditor _)
   addMenuItem('H', true, app.workspace.hubNetControlCenterAction)
 
-  def openColorDialog() {
+  def openColorDialog(): Unit = {
     if(app.colorDialog == null) {
       app.colorDialog =
         new org.nlogo.window.ColorDialog(app.frame, false)
@@ -53,7 +56,7 @@ class ToolsMenu(app: App, modelSaver: ModelSaver) extends org.nlogo.swing.Menu(I
     }
   }
 
-  def openHubNetClientEditor() {
+  def openHubNetClientEditor(): Unit = {
     app.workspace.getHubNetManager.foreach { mgr =>
       mgr.openClientEditor()
       app.frame.addLinkComponent(mgr.clientEditor)
@@ -72,7 +75,7 @@ class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends Abstract
   }
 }
 
-class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction("3DView", workspace) {
+class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction(I18N.gui.get("menu.tools.3DView.switch"), workspace) {
   override def performAction(workspace: GUIWorkspace): Unit = {
     try {
       workspace.glView.open()

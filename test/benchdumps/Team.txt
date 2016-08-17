@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles set incumbent? true set color gray - 1.5 [ set size 0.9 ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -94,7 +94,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurego_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_procedurego_setturtleorlinkvariable_2 "set color gray - 1.5" Object => void
       _constdouble:3.5 "gray - 1.5" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -169,7 +169,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_procedurego_ask_5 "ask links" AgentSet => void
+[5]_asm_procedurego_ask_5 "ask links [ set new-collaboration? false ]" AgentSet => void
       _links "links" => AgentSet
          L0
           ALOAD 0
@@ -317,7 +317,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedurego_ask_11 "ask turtles" AgentSet => void
+[11]_asm_procedurego_ask_11 "ask turtles if downtime > max-downtime [ die ] set in-team? false [ set downtime downtime + 1 ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -370,7 +370,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[12]_asm_procedurego_if_12 "if downtime > max-downtime" boolean => void
+[12]_asm_procedurego_if_12 "if downtime > max-downtime [ die ]" boolean => void
       _greaterthan "downtime > max-downtime" Object,Object => boolean
         _turtlevariable:DOWNTIME "downtime" => Object
         _observervariable:MAX-DOWNTIME "max-downtime" => Object
@@ -670,7 +670,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[17]_asm_procedurego_if_17 "if layout?" boolean => void
+[17]_asm_procedurego_if_17 "if layout? [ layout ]" boolean => void
       _observervariable:LAYOUT? "layout?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -731,7 +731,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[19]_asm_procedurego_if_19 "if plot?" boolean => void
+[19]_asm_procedurego_if_19 "if plot? [ do-plot ]" boolean => void
       _observervariable:PLOT? "plot?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -872,7 +872,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 7000 [ go ]" double => void
       _constdouble:7000.0 "7000" => double
          L0
           LDC 7000.0
@@ -996,7 +996,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure LAYOUT:[_repeatlocal:0]{OTPL}:
-[0]_asm_procedurelayout_repeatlocal_0 double => void
+[0]_asm_procedurelayout_repeatlocal_0 "repeat 12 layout-spring turtles links 0.18 0.01 1.2 [ display ]" double => void
       _constdouble:12.0 "12" => double
          L0
           LDC 12.0
@@ -1095,13 +1095,13 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           RETURN
 
 procedure COLOR-COLLABORATIONS:[]{OTPL}:
-[0]_asm_procedurecolorcollaborations_ask_0 "ask links with [[in-team?] of end1 and [in-team?] of end2" AgentSet => void
-      _with "links with [[in-team?] of end1 and [in-team?] of end2" AgentSet,Reporter => AgentSet
+[0]_asm_procedurecolorcollaborations_ask_0 "ask links with [ [ in-team? ] of end1 and [ in-team? ] of end2 ] [ ifelse new-collaboration? [ ifelse [ incumbent? ] of end1 and [ incumbent? ] of end2 [ set color yellow ] [ ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ] ] ] [ set color red ] ]" AgentSet => void
+      _with "links with [ [ in-team? ] of end1 and [ in-team? ] of end2 ]" AgentSet,Reporter => AgentSet
         _links "links" => AgentSet
-        _asm_procedurecolorcollaborations_and_1 "of end1 and [in-team?] of end2"
-          _turtlevariableof:IN-TEAM? "of end1" Object => Object
+        _asm_procedurecolorcollaborations_and_1 "[ in-team? ] of end1 and [ in-team? ] of end2"
+          _turtlevariableof:IN-TEAM? "[ in-team? ] of end1" Object => Object
             _linkvariable:END1 "end1" => Object
-          _turtlevariableof:IN-TEAM? "of end2" Object => Object
+          _turtlevariableof:IN-TEAM? "[ in-team? ] of end2" Object => Object
             _linkvariable:END2 "end2" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -1569,7 +1569,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurecolorcollaborations_ifelse_2 "ifelse new-collaboration?" boolean => void
+[1]_asm_procedurecolorcollaborations_ifelse_2 "ifelse new-collaboration? [ ifelse [ incumbent? ] of end1 and [ incumbent? ] of end2 [ set color yellow ] [ ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ] ] ] [ set color red ]" boolean => void
       _linkvariable:NEW-COLLABORATION? "new-collaboration?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -1627,11 +1627,11 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_procedurecolorcollaborations_ifelse_3 "ifelse ([incumbent?] of end1) and ([incumbent?] of end2" boolean => void
-      _and "of end1) and ([incumbent?] of end2"
-        _turtlevariableof:INCUMBENT? "of end1" Object => Object
+[2]_asm_procedurecolorcollaborations_ifelse_3 "ifelse [ incumbent? ] of end1 and [ incumbent? ] of end2 [ set color yellow ] [ ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ] ]" boolean => void
+      _and "[ incumbent? ] of end1 and [ incumbent? ] of end2"
+        _turtlevariableof:INCUMBENT? "[ incumbent? ] of end1" Object => Object
           _linkvariable:END1 "end1" => Object
-        _turtlevariableof:INCUMBENT? "of end2" Object => Object
+        _turtlevariableof:INCUMBENT? "[ incumbent? ] of end2" Object => Object
           _linkvariable:END2 "end2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -2005,11 +2005,11 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurecolorcollaborations_ifelse_6 "ifelse ([incumbent?] of end1) or ([incumbent?] of end2" boolean => void
-      _or "of end1) or ([incumbent?] of end2"
-        _turtlevariableof:INCUMBENT? "of end1" Object => Object
+[5]_asm_procedurecolorcollaborations_ifelse_6 "ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ]" boolean => void
+      _or "[ incumbent? ] of end1 or [ incumbent? ] of end2"
+        _turtlevariableof:INCUMBENT? "[ incumbent? ] of end1" Object => Object
           _linkvariable:END1 "end1" => Object
-        _turtlevariableof:INCUMBENT? "of end2" Object => Object
+        _turtlevariableof:INCUMBENT? "[ incumbent? ] of end2" Object => Object
           _linkvariable:END2 "end2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -2476,7 +2476,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           RETURN
 
 procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
-[0]_asm_procedurepickteammembers_setprocedurevariable_0 Object => void
+[0]_asm_procedurepickteammembers_setprocedurevariable_0 "let nobody" Object => void
       _nobody "nobody" => Nobody$
          L0
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
@@ -2493,7 +2493,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurepickteammembers_repeatlocal_1 double => void
+[1]_asm_procedurepickteammembers_repeatlocal_1 "repeat team-size ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ] [ ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ] ]" double => void
       _observervariable:TEAM-SIZE "team-size" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2539,7 +2539,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[2]_asm_procedurepickteammembers_ifelse_2 "ifelse random-float 100.0 >= p" boolean => void
+[2]_asm_procedurepickteammembers_ifelse_2 "ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ]" boolean => void
       _greaterorequal "random-float 100.0 >= p" double,Object => boolean
         _randomfloat "random-float 100.0" double => double
           _constdouble:100.0 "100.0" => double
@@ -2666,17 +2666,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_procedurepickteammembers_ifelse_6 "ifelse random-float 100.0 < q and any? (turtles with [in-team? and (any? link-neighbors with [not in-team?" boolean => void
-      _and "random-float 100.0 < q and any? (turtles with [in-team? and (any? link-neighbors with [not in-team?"
+[6]_asm_procedurepickteammembers_ifelse_6 "ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ]" boolean => void
+      _and "random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ]"
         _lessthan "random-float 100.0 < q" double,Object => boolean
           _randomfloat "random-float 100.0" double => double
             _constdouble:100.0 "100.0" => double
           _observervariable:Q "q" => Object
-        _anywith "any? (turtles with [in-team? and (any? link-neighbors with [not in-team?" AgentSet,Reporter => boolean
+        _anywith "any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ]" AgentSet,Reporter => boolean
           _turtles "turtles" => AgentSet
-          _asm_procedurepickteammembers_and_7 "in-team? and (any? link-neighbors with [not in-team?"
+          _asm_procedurepickteammembers_and_7 "in-team? and any? link-neighbors with [ not in-team? ]"
             _turtlevariable:IN-TEAM? "in-team?" => Object
-            _anywith "any? link-neighbors with [not in-team?" AgentSet,Reporter => boolean
+            _anywith "any? link-neighbors with [ not in-team? ]" AgentSet,Reporter => boolean
               _linkneighbors:null "link-neighbors" => AgentSet
               _asm_procedurepickteammembers_not_8 "not in-team?" boolean => boolean
                 _turtlevariable:IN-TEAM? "in-team?" => Object
@@ -3059,13 +3059,13 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[7]_asm_procedurepickteammembers_setprocedurevariable_9 "set new-team-member one-of turtles with [not in-team? and (any? link-neighbors with [in-team?" Object => void
-      _oneofwith "one-of turtles with [not in-team? and (any? link-neighbors with [in-team?" AgentSet,Reporter => Object
+[7]_asm_procedurepickteammembers_setprocedurevariable_9 "set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ]" Object => void
+      _oneofwith "one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ]" AgentSet,Reporter => Object
         _turtles "turtles" => AgentSet
-        _asm_procedurepickteammembers_and_10 "not in-team? and (any? link-neighbors with [in-team?"
+        _asm_procedurepickteammembers_and_10 "not in-team? and any? link-neighbors with [ in-team? ]"
           _not "not in-team?" boolean => boolean
             _turtlevariable:IN-TEAM? "in-team?" => Object
-          _anywith "any? link-neighbors with [in-team?" AgentSet,Reporter => boolean
+          _anywith "any? link-neighbors with [ in-team? ]" AgentSet,Reporter => boolean
             _linkneighbors:null "link-neighbors" => AgentSet
             _asm_procedurepickteammembers_turtlevariable_11 "in-team?" => Object
                   TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -3356,8 +3356,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurepickteammembers_setprocedurevariable_13 "set new-team-member one-of turtles with [not in-team?" Object => void
-      _oneofwith "one-of turtles with [not in-team?" AgentSet,Reporter => Object
+[9]_asm_procedurepickteammembers_setprocedurevariable_13 "set new-team-member one-of turtles with [ not in-team? ]" Object => void
+      _oneofwith "one-of turtles with [ not in-team? ]" AgentSet,Reporter => Object
         _turtles "turtles" => AgentSet
         _asm_procedurepickteammembers_not_14 "not in-team?" boolean => boolean
           _turtlevariable:IN-TEAM? "in-team?" => Object
@@ -3512,7 +3512,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[10]_asm_procedurepickteammembers_ask_15 "ask new-team-member" Object => void
+[10]_asm_procedurepickteammembers_ask_15 "ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ]" Object => void
       _procedurevariable:NEW-TEAM-MEMBER "new-team-member" => Object
          L0
           ALOAD 1
@@ -3731,8 +3731,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[14]_asm_procedurepickteammembers_setturtleorlinkvariable_19 "set color ifelse-value incumbent?" Object => void
-      _ifelsevalue "ifelse-value incumbent?"
+[14]_asm_procedurepickteammembers_setturtleorlinkvariable_19 "set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ]" Object => void
+      _ifelsevalue "ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ]"
         _asm_procedurepickteammembers_turtlevariable_20 "incumbent?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
@@ -3851,14 +3851,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           RETURN
 
 procedure MAKE-NEWCOMER:[]{O---}:
-[0]_createturtles:,+9 "create-turtles 1"
+[0]_createturtles:,+9 "create-turtles 1 set color blue + 1 set size 1.8 set incumbent? false set in-team? false set newcomer self set downtime 0 [ set explored? false ]"
       _asm_proceduremakenewcomer_constdouble_0 "1" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduremakenewcomer_constdouble_0.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[1]_asm_proceduremakenewcomer_setturtleorlinkvariable_1 "set" Object => void
+[1]_asm_proceduremakenewcomer_setturtleorlinkvariable_1 "set color blue + 1" Object => void
       _constdouble:106.0 "blue + 1" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -4129,7 +4129,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
             LDC "circle"
            L1
             ARETURN
-[3]_asm_proceduresetup_repeatlocal_2 double => void
+[3]_asm_proceduresetup_repeatlocal_2 "repeat team-size [ make-newcomer ]" double => void
       _observervariable:TEAM-SIZE "team-size" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -4225,7 +4225,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_proceduresetup_ask_5 "ask turtles" AgentSet => void
+[6]_asm_proceduresetup_ask_5 "ask turtles set in-team? true [ set incumbent? true ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -4389,7 +4389,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[12]_asm_proceduresetup_ask_11 "ask turtles" AgentSet => void
+[12]_asm_proceduresetup_ask_11 "ask turtles set heading 360 / team-size * who fd 1.75 [ set in-team? false ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -4442,8 +4442,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[13]_asm_proceduresetup_setturtlevariable_12 "set heading (360 / team-size) * who" Object => void
-      _mult "360 / team-size) * who" double,double => double
+[13]_asm_proceduresetup_setturtlevariable_12 "set heading 360 / team-size * who" Object => void
+      _mult "360 / team-size * who" double,double => double
         _div "360 / team-size" double,double => double
           _constdouble:360.0 "360" => double
           _observervariable:TEAM-SIZE "team-size" => Object
@@ -4704,7 +4704,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure EXPLORE:[]{-T--}:
-[0]_asm_procedureexplore_if_0 "if explored?" boolean => void
+[0]_asm_procedureexplore_if_0 "if explored? [ stop ]" boolean => void
       _turtlevariable:EXPLORED? "explored?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -4921,7 +4921,7 @@ procedure EXPLORE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[4]_asm_procedureexplore_ask_4 "ask link-neighbors" AgentSet => void
+[4]_asm_procedureexplore_ask_4 "ask link-neighbors [ explore ]" AgentSet => void
       _linkneighbors:null "link-neighbors" => AgentSet
          L0
           ALOAD 0
@@ -5042,7 +5042,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             LDC "Link counts"
            L1
             ARETURN
-[1]_asm_proceduredoplot_setprocedurevariable_1 Object => void
+[1]_asm_proceduredoplot_setprocedurevariable_1 "let 0" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -5106,10 +5106,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             AALOAD
            L1
             ARETURN
-[5]_asm_proceduredoplot_setprocedurevariable_5 "set total total + count links with [color = red" Object => void
-      _plus "total + count links with [color = red" double,double => double
+[5]_asm_proceduredoplot_setprocedurevariable_5 "set total total + count links with [ color = red ]" Object => void
+      _plus "total + count links with [ color = red ]" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _countwith "count links with [color = red" AgentSet,Reporter => double
+        _countwith "count links with [ color = red ]" AgentSet,Reporter => double
           _links "links" => AgentSet
           _asm_proceduredoplot_equal_6 "color = red" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -5382,10 +5382,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             AALOAD
            L1
             ARETURN
-[11]_asm_proceduredoplot_setprocedurevariable_12 "set total total + count links with [color = yellow" Object => void
-      _plus "total + count links with [color = yellow" double,double => double
+[11]_asm_proceduredoplot_setprocedurevariable_12 "set total total + count links with [ color = yellow ]" Object => void
+      _plus "total + count links with [ color = yellow ]" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _countwith "count links with [color = yellow" AgentSet,Reporter => double
+        _countwith "count links with [ color = yellow ]" AgentSet,Reporter => double
           _links "links" => AgentSet
           _asm_proceduredoplot_equal_13 "color = yellow" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -5658,10 +5658,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             AALOAD
            L1
             ARETURN
-[17]_asm_proceduredoplot_setprocedurevariable_19 "set total total + count links with [color = green" Object => void
-      _plus "total + count links with [color = green" double,double => double
+[17]_asm_proceduredoplot_setprocedurevariable_19 "set total total + count links with [ color = green ]" Object => void
+      _plus "total + count links with [ color = green ]" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _countwith "count links with [color = green" AgentSet,Reporter => double
+        _countwith "count links with [ color = green ]" AgentSet,Reporter => double
           _links "links" => AgentSet
           _asm_proceduredoplot_equal_20 "color = green" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -5934,10 +5934,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             AALOAD
            L1
             ARETURN
-[23]_asm_proceduredoplot_setprocedurevariable_26 "set total total + count links with [color = blue" Object => void
-      _plus "total + count links with [color = blue" double,double => double
+[23]_asm_proceduredoplot_setprocedurevariable_26 "set total total + count links with [ color = blue ]" Object => void
+      _plus "total + count links with [ color = blue ]" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _countwith "count links with [color = blue" AgentSet,Reporter => double
+        _countwith "count links with [ color = blue ]" AgentSet,Reporter => double
           _links "links" => AgentSet
           _asm_proceduredoplot_equal_27 "color = blue" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -6188,7 +6188,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             LDC "% of agents in the giant component"
            L1
             ARETURN
-[28]_plotxy "plotxy ticks (giant-component-size / (count turtles"
+[28]_plotxy "plotxy ticks giant-component-size / count turtles"
       _asm_proceduredoplot_ticks_32 "ticks" => double
            L0
             ALOAD 0
@@ -6218,7 +6218,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-      _asm_proceduredoplot_div_33 "giant-component-size / (count turtles" double,double => double
+      _asm_proceduredoplot_div_33 "giant-component-size / count turtles" double,double => double
         _observervariable:GIANT-COMPONENT-SIZE "giant-component-size" => Object
         _count "count turtles" AgentSet => double
           _turtles "turtles" => AgentSet
@@ -6293,7 +6293,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             LDC "Average component size"
            L1
             ARETURN
-[30]_plotxy "plotxy ticks (mean components"
+[30]_plotxy "plotxy ticks mean components"
       _asm_proceduredoplot_ticks_35 "ticks" => double
            L0
             ALOAD 0
@@ -6439,8 +6439,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           RETURN
 
 procedure TIE-COLLABORATORS:[]{OTPL}:
-[0]_asm_proceduretiecollaborators_ask_0 "ask turtles with [in-team?" AgentSet => void
-      _with "turtles with [in-team?" AgentSet,Reporter => AgentSet
+[0]_asm_proceduretiecollaborators_ask_0 "ask turtles with [ in-team? ] [ create-links-with other turtles with [ in-team? ] set new-collaboration? true [ set thickness 0.3 ] ]" AgentSet => void
+      _with "turtles with [ in-team? ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_proceduretiecollaborators_turtlevariable_1 "in-team?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6605,8 +6605,8 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_createlinkswith:null,+5 "create-links-with other turtles with [in-team?"
-      _asm_proceduretiecollaborators_otherwith_2 "other turtles with [in-team?" AgentSet,Reporter => AgentSet
+[1]_createlinkswith:null,+5 "create-links-with other turtles with [ in-team? ] set new-collaboration? true [ set thickness 0.3 ]"
+      _asm_proceduretiecollaborators_otherwith_2 "other turtles with [ in-team? ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_proceduretiecollaborators_turtlevariable_3 "in-team?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6894,7 +6894,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurefindallcomponents_ask_2 "ask turtles" AgentSet => void
+[2]_asm_procedurefindallcomponents_ask_2 "ask turtles [ set explored? false ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -6988,8 +6988,8 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_procedurefindallcomponents_setprocedurevariable_5 Object => void
-      _oneofwith "one-of turtles with [ not explored?" AgentSet,Reporter => Object
+[5]_asm_procedurefindallcomponents_setprocedurevariable_5 "let one-of turtles with [ not explored? ]" Object => void
+      _oneofwith "one-of turtles with [ not explored? ]" AgentSet,Reporter => Object
         _turtles "turtles" => AgentSet
         _asm_procedurefindallcomponents_not_6 "not explored?" boolean => boolean
           _turtlevariable:EXPLORED? "explored?" => Object
@@ -7144,7 +7144,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[6]_asm_procedurefindallcomponents_if_7 "if start = nobody" boolean => void
+[6]_asm_procedurefindallcomponents_if_7 "if start = nobody [ stop ]" boolean => void
       _equal "start = nobody" Object,Object => boolean
         _procedurevariable:START "start" => Object
         _nobody "nobody" => Nobody$
@@ -7262,7 +7262,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[9]_asm_procedurefindallcomponents_ask_10 "ask start" Object => void
+[9]_asm_procedurefindallcomponents_ask_10 "ask start [ explore ]" Object => void
       _procedurevariable:START "start" => Object
          L0
           ALOAD 1
@@ -7404,7 +7404,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[12]_asm_procedurefindallcomponents_if_13 "if component-size > giant-component-size" boolean => void
+[12]_asm_procedurefindallcomponents_if_13 "if component-size > giant-component-size [ set giant-component-size component-size ]" boolean => void
       _greaterthan "component-size > giant-component-size" Object,Object => boolean
         _observervariable:COMPONENT-SIZE "component-size" => Object
         _observervariable:GIANT-COMPONENT-SIZE "giant-component-size" => Object

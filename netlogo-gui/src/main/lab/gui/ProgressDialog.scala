@@ -72,7 +72,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     c.weightx = 1.0
     c.weighty = 0.0
     c.insets = new java.awt.Insets(6, 6, 0, 6)
-    val ticksPanel = new ViewUpdatePanel(workspace, new DisplaySwitch(workspace), false)
+    val ticksPanel = new ViewUpdatePanel(workspace, new DisplaySwitch(workspace), false, workspace.viewWidget.tickCounter)
     layout.setConstraints(ticksPanel, c)
     getContentPane.add(ticksPanel)
     c.weighty = 1.0

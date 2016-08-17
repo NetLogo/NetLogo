@@ -9,8 +9,8 @@ import org.nlogo.window.Events.RemoveAllJobsEvent
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.awt.Hierarchy
 
-class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget)
-  extends WorldViewSettings(workspace, gw) {
+class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: TickCounterLabel)
+  extends WorldViewSettings(workspace, gw, tickCounter) {
 
   protected val world: World3D = workspace.world.asInstanceOf[World3D]
 

@@ -130,7 +130,7 @@ class TestGenerator extends FunSuite {
     test("Correctly generates custom code for or") {
       Compiler.compileProgram(
         """
-          |breed [agents agent]
+          |breed [agents an-agent]
           |
           |to-report move
           |  report all? agents-here [true] or all? agents-here [false]

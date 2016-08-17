@@ -64,3 +64,127 @@ Tie3
   O> ask turtle 0 [ rt 180 ]
   [heading] of turtle 0 => 180
   [heading] of turtle 1 => 180
+
+Tie4
+  O> cro 2 [ fd 1 ]
+  O> ask turtle 1 [ create-link-to turtle 0 [ tie ] ]
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 270
+
+  [xcor] of turtle 0 => 2
+  [ycor] of turtle 0 => -1
+  [heading] of turtle 0 => 90
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 0
+
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => -3
+  [heading] of turtle 0 => 180
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 90
+
+  [xcor] of turtle 0 => -2
+  [ycor] of turtle 0 => -1
+  [heading] of turtle 0 => 270
+
+  O> ask turtle 1 [ rt 90 ]
+
+  [xcor] of turtle 1 => 0
+  [ycor] of turtle 1 => -1
+  [heading] of turtle 1 => 180
+
+  [xcor] of turtle 0 => 0
+  [ycor] of turtle 0 => 1
+  [heading] of turtle 0 => 0
+
+TieMultipleWithSameTurtle_2D
+  directed-link-breed [ l1s l1 ]
+  directed-link-breed [ l2s l2 ]
+  O> crt 1 [ setxy 0 1 ]
+  O> crt 1 [ setxy 0 0 create-l1-to turtle 0 [ set tie-mode "fixed" ] create-l2s-to other turtles [ set tie-mode "fixed" ] right 90 ]
+  [(word xcor ", " ycor)] of turtle 0 => "1, 0"
+
+
+TieRotationAtWrappedEdge
+  O> resize-world -5 5 -5 5
+  O> crt 2
+  O> ask turtle 0 [ setxy 1 0 set heading 90 ]
+  O> ask turtle 1 [ setxy 0 0 set heading 0 create-link-with turtle 0 [ tie ] ]
+  O> ask turtle 0 [ fd 1 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => 0
+  [heading] of turtle 0 => 90
+  [xcor]    of turtle 1 => 1
+  [ycor]    of turtle 1 => 0
+  [heading] of turtle 1 => 0
+  O> ask turtle 0 [ set heading 0 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => 0
+  [heading] of turtle 0 => 0
+  [xcor]    of turtle 1 => 2
+  [ycor]    of turtle 1 => -1
+  [heading] of turtle 1 => 270
+  O> ask turtle 0 [ fd 5 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => 5
+  [heading] of turtle 0 => 0
+  [xcor]    of turtle 1 => 2
+  [ycor]    of turtle 1 => 4
+  [heading] of turtle 1 => 270
+  O> ask turtle 0 [ fd 1 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => -5
+  [heading] of turtle 0 => 0
+  [xcor]    of turtle 1 => 2
+  [ycor]    of turtle 1 => 5
+  [heading] of turtle 1 => 270
+  O> ask turtle 0 [ rt 90 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => -5
+  [heading] of turtle 0 => 90
+  [xcor]    of turtle 1 => 1
+  [ycor]    of turtle 1 => -5
+  [heading] of turtle 1 => 0
+  O> ask turtle 0 [ rt 90 ]
+  [xcor]    of turtle 0 => 2
+  [ycor]    of turtle 0 => -5
+  [heading] of turtle 0 => 180
+  [xcor]    of turtle 1 => 2
+  [ycor]    of turtle 1 => -4
+  [heading] of turtle 1 => 90
+
+MovingStrangely
+  O> resize-world -14 14 -14 14
+  O> crt 1
+  O> ask turtle 0 [ setxy 2.5088750128719646 -13.91688134099136 ]
+  O> ask turtle 0 [ set heading 173 ]
+  O> ask turtle 0 [ hatch 1 [ create-link-from turtle 0 [ tie ] ] ]
+  O> ask turtle 0 [ fd 1 ]
+  [xcor] of turtle 0 => 2.6307443562771122
+  [xcor] of turtle 1 => 2.6307443562771122
+  [ycor] of turtle 0 => 14.090572507367318
+  [ycor] of turtle 1 => 14.090572507367318
+  [link-length] of link 0 1 => 0
+
+TransitiveTieMovement
+  O> random-seed 0
+  O> crt 3 [fd 2]
+  O> ask turtle 0 [create-link-with turtle 1 [tie]]
+  O> ask turtle 2 [create-link-with turtle 1 [tie] rt 2]
+  [xcor] of turtle 0 => -1.3273898427723043
+  [ycor] of turtle 0 =>  1.5421696086189924
+  [xcor] of turtle 1 =>  1.6273471316402237
+  [ycor] of turtle 1 => -1.0719608427613574
+  [xcor] of turtle 2 => -0.38161799075308933
+  [ycor] of turtle 2 =>  1.963254366895328

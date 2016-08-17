@@ -44,7 +44,8 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
       "nw"      -> "Networks Extension",
       "cf"      -> "Control Flow Extension",
       "csv"     -> "CSV Extension",
-      "palette" -> "Palette Extension").foreach {
+      "palette" -> "Palette Extension",
+      "vid"     -> "Vid Extension").foreach {
         case (ext, title) =>
           pandoc(extensionsDirectory / ext / "README.md",
             htmlFileRoot / (ext + ".html"),
@@ -80,7 +81,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     IO.createDirectory(targetDir)
     Mustache.betweenDirectories(docsSource, targetDir, variables)
     generateExtensionDocs(targetDir)
-    IO.copyFile(netLogoRoot / "models" / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
+    FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
   def generatePDF(buildVariables: Map[String, Object]): File = {

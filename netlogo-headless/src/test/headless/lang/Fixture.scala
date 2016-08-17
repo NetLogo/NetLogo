@@ -84,6 +84,8 @@ class Fixture(name: String) extends AbstractFixture {
       reporter.result match {
         case Success(expectedResult) =>
           checkResult(mode, reporter.reporter, expectedResult, actualResult)
+        case CompileError(message) =>
+          fail(s"""failed to cause compilation error: "${reporter.reporter}"""")
         case _ =>
           fail(s"""failed to cause runtime error: "${reporter.reporter}"""")
       }

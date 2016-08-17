@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 48281" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:48281.0 "48281" => double
          L0
           LDC 48281.0
@@ -75,7 +75,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:2400.0 "2400" => double
          L0
           LDC 2400.0
@@ -147,7 +147,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -201,7 +201,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_setobservervariable_0 "set max-grain 50" Object => void
+[2]_asm_proceduresetup_setobservervariable_0 "set" Object => void
       _constdouble:50.0 "50" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -318,7 +318,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
-[0]_asm_proceduresetuppatches_ask_0 "ask patches" AgentSet => void
+[0]_asm_proceduresetuppatches_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -373,7 +373,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_proceduresetuppatches_setpatchvariable_1 "set max-grain-here 0" Object => void
+[1]_asm_proceduresetuppatches_setpatchvariable_1 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -406,9 +406,9 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L5
          FRAME SAME
           RETURN
-[2]_asm_proceduresetuppatches_if_2 "if (random-float 100.0) <= percent-best-land" boolean => void
-      _lessorequal "random-float 100.0) <= percent-best-land" double,Object => boolean
-        _randomfloat "random-float 100.0" double => double
+[2]_asm_proceduresetuppatches_if_2 "if" boolean => void
+      _lessorequal "<=" double,Object => boolean
+        _randomfloat "random-float" double => double
           _constdouble:100.0 "100.0" => double
         _observervariable:PERCENT-BEST-LAND "percent-best-land" => Object
          L0
@@ -487,7 +487,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[3]_asm_proceduresetuppatches_setpatchvariable_3 "set max-grain-here max-grain" Object => void
+[3]_asm_proceduresetuppatches_setpatchvariable_3 "set" Object => void
       _observervariable:MAX-GRAIN "max-grain" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -523,7 +523,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L5
          FRAME SAME
           RETURN
-[4]_asm_proceduresetuppatches_setpatchvariable_4 "set grain-here max-grain-here" Object => void
+[4]_asm_proceduresetuppatches_setpatchvariable_4 "set" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -580,7 +580,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_proceduresetuppatches_repeatlocal_6 "" double => void
+[6]_asm_proceduresetuppatches_repeatlocal_6 "repeat" double => void
       _constdouble:5.0 "5" => double
          L0
           LDC 5.0
@@ -602,10 +602,10 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_proceduresetuppatches_ask_7 "ask patches with [max-grain-here != 0" AgentSet => void
-      _with "patches with [max-grain-here != 0" AgentSet,Reporter => AgentSet
+[7]_asm_proceduresetuppatches_ask_7 "ask" AgentSet => void
+      _with "with" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_proceduresetuppatches_notequal_8 "max-grain-here != 0" Object,double => boolean
+        _asm_proceduresetuppatches_notequal_8 "!=" Object,double => boolean
           _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           _constdouble:0.0 "0" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -827,7 +827,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[8]_asm_proceduresetuppatches_setpatchvariable_9 "set grain-here max-grain-here" Object => void
+[8]_asm_proceduresetuppatches_setpatchvariable_9 "set" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -884,7 +884,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[10]_diffuse:GRAIN-HERE "diffuse grain-here 0.25"
+[10]_diffuse:GRAIN-HERE "diffuse"
       _asm_proceduresetuppatches_constdouble_11 "0.25" => Double
            L0
             ALOAD 0
@@ -923,7 +923,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L2
          FRAME SAME
           RETURN
-[12]_asm_proceduresetuppatches_repeatlocal_13 "" double => void
+[12]_asm_proceduresetuppatches_repeatlocal_13 "repeat" double => void
       _constdouble:10.0 "10" => double
          L0
           LDC 10.0
@@ -945,7 +945,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[13]_diffuse:GRAIN-HERE "diffuse grain-here 0.25"
+[13]_diffuse:GRAIN-HERE "diffuse"
       _asm_proceduresetuppatches_constdouble_14 "0.25" => Double
            L0
             ALOAD 0
@@ -984,7 +984,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L2
          FRAME SAME
           RETURN
-[15]_asm_proceduresetuppatches_ask_16 "ask patches" AgentSet => void
+[15]_asm_proceduresetuppatches_ask_16 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1039,8 +1039,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[16]_asm_proceduresetuppatches_setpatchvariable_17 "set grain-here floor grain-here" Object => void
-      _floor "floor grain-here" double => double
+[16]_asm_proceduresetuppatches_setpatchvariable_17 "set" Object => void
+      _floor "floor" double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -1120,7 +1120,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L11
          FRAME SAME
           RETURN
-[17]_asm_proceduresetuppatches_setpatchvariable_18 "set max-grain-here grain-here" Object => void
+[17]_asm_proceduresetuppatches_setpatchvariable_18 "set" Object => void
       _patchvariable:GRAIN-HERE "grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -1206,8 +1206,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 
 procedure RECOLOR-PATCH:[]{-TP-}:
-[0]_asm_procedurerecolorpatch_setpatchvariable_0 "set pcolor scale-color yellow grain-here 0 max-grain" Object => void
-      _scalecolor "scale-color yellow grain-here 0 max-grain" double,double,double,double => double
+[0]_asm_procedurerecolorpatch_setpatchvariable_0 "set" Object => void
+      _scalecolor "scale-color" double,double,double,double => double
         _constdouble:45.0 "yellow" => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _constdouble:0.0 "0" => double
@@ -1435,7 +1435,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
           RETURN
 
 procedure SETUP-TURTLES:[]{O---}:
-[0]_setdefaultshape "set-default-shape turtles "person""
+[0]_setdefaultshape "set-default-shape"
       _asm_proceduresetupturtles_turtles_0 "turtles" => AgentSet
            L0
             ALOAD 0
@@ -1448,7 +1448,7 @@ procedure SETUP-TURTLES:[]{O---}:
             LDC "person"
            L1
             ARETURN
-[1]_createorderedturtles:,+7 "cro num-people"
+[1]_createorderedturtles:,+7 "cro"
       _asm_proceduresetupturtles_observervariable_2 "num-people" => Object
            L0
             ALOAD 0
@@ -1458,7 +1458,7 @@ procedure SETUP-TURTLES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_asm_proceduresetupturtles_setxy_3 "setxy random-pxcor random-pycor" double,double => void
+[2]_asm_proceduresetupturtles_setxy_3 "setxy" double,double => void
       _randompxcor "random-pxcor" => double
       _randompycor "random-pycor" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1553,7 +1553,7 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_proceduresetupturtles_setturtlevariable_4 "set size 1.5" Object => void
+[3]_asm_proceduresetupturtles_setturtlevariable_4 "set" Object => void
       _constdouble:1.5 "1.5" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1604,8 +1604,8 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduresetupturtles_setturtlevariable_6 "set age random life-expectancy" Object => void
-      _random "random life-expectancy" double => double
+[5]_asm_proceduresetupturtles_setturtlevariable_6 "set" Object => void
+      _random "random" double => double
         _turtlevariable:LIFE-EXPECTANCY "life-expectancy" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -1776,7 +1776,7 @@ procedure SETUP-TURTLES:[]{O---}:
           RETURN
 
 procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
-[0]_asm_proceduresetinitialturtlevars_setturtlevariable_0 "set age 0" Object => void
+[0]_asm_proceduresetinitialturtlevars_setturtlevariable_0 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -1809,8 +1809,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L5
          FRAME SAME
           RETURN
-[1]_asm_proceduresetinitialturtlevars_setturtlevariable_1 "set heading 90 * random" Object => void
-      _mult "90 * random" double,double => double
+[1]_asm_proceduresetinitialturtlevars_setturtlevariable_1 "set" Object => void
+      _mult "*" double,double => double
         _constdouble:90.0 "90" => double
         _randomconst:4 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1861,14 +1861,12 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L7
          FRAME SAME
           RETURN
-[2]_asm_proceduresetinitialturtlevars_setturtlevariable_2 "set life-expectancy life-expectancy-min +
-                        random (life-expectancy-max - life-expectancy-min + 1" Object => void
-      _plus "life-expectancy-min +
-                        random (life-expectancy-max - life-expectancy-min + 1" double,double => double
+[2]_asm_proceduresetinitialturtlevars_setturtlevariable_2 "set" Object => void
+      _plus "+" double,double => double
         _observervariable:LIFE-EXPECTANCY-MIN "life-expectancy-min" => Object
-        _random "random (life-expectancy-max - life-expectancy-min + 1" double => double
-          _plus "life-expectancy-max - life-expectancy-min + 1" double,double => double
-            _minus "life-expectancy-max - life-expectancy-min" double,double => double
+        _random "random" double => double
+          _plus "+" double,double => double
+            _minus "-" double,double => double
               _observervariable:LIFE-EXPECTANCY-MAX "life-expectancy-max" => Object
               _observervariable:LIFE-EXPECTANCY-MIN "life-expectancy-min" => Object
             _constdouble:1.0 "1" => double
@@ -2065,10 +2063,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L26
          FRAME SAME
           RETURN
-[3]_asm_proceduresetinitialturtlevars_setturtlevariable_3 "set metabolism 1 + random metabolism-max" Object => void
-      _plus "1 + random metabolism-max" double,double => double
+[3]_asm_proceduresetinitialturtlevars_setturtlevariable_3 "set" Object => void
+      _plus "+" double,double => double
         _constdouble:1.0 "1" => double
-        _random "random metabolism-max" double => double
+        _random "random" double => double
           _observervariable:METABOLISM-MAX "metabolism-max" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
@@ -2197,8 +2195,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L16
          FRAME SAME
           RETURN
-[4]_asm_proceduresetinitialturtlevars_setturtlevariable_4 "set wealth metabolism + random" Object => void
-      _plus "metabolism + random" double,double => double
+[4]_asm_proceduresetinitialturtlevars_setturtlevariable_4 "set" Object => void
+      _plus "+" double,double => double
         _turtlevariable:METABOLISM "metabolism" => Object
         _randomconst:50 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -2288,10 +2286,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
          L12
          FRAME SAME
           RETURN
-[5]_asm_proceduresetinitialturtlevars_setturtlevariable_5 "set vision 1 + random max-vision" Object => void
-      _plus "1 + random max-vision" double,double => double
+[5]_asm_proceduresetinitialturtlevars_setturtlevariable_5 "set" Object => void
+      _plus "+" double,double => double
         _constdouble:1.0 "1" => double
-        _random "random max-vision" double => double
+        _random "random" double => double
           _observervariable:MAX-VISION "max-vision" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
@@ -2431,9 +2429,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           RETURN
 
 procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
-[0]_asm_procedurerecolorturtles_setprocedurevariable_0 "" Object => void
-      _max "max [wealth] of turtles"
-        _asm_procedurerecolorturtles_turtlevariableof_1 "of turtles" Object => Object
+[0]_asm_procedurerecolorturtles_setprocedurevariable_0 "let" Object => void
+      _max "max"
+        _asm_procedurerecolorturtles_turtlevariableof_1 "of" Object => Object
           _turtles "turtles" => AgentSet
               TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
               TRYCATCHBLOCK L2 L3 L1 org/nlogo/api/AgentException
@@ -2569,7 +2567,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurerecolorturtles_ask_2 "ask turtles" AgentSet => void
+[1]_asm_procedurerecolorturtles_ask_2 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -2624,10 +2622,10 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurerecolorturtles_ifelse_3 "ifelse (wealth <= max-wealth / 3" boolean => void
-      _lessorequal "wealth <= max-wealth / 3" Object,double => boolean
+[2]_asm_procedurerecolorturtles_ifelse_3 "ifelse" boolean => void
+      _lessorequal "<=" Object,double => boolean
         _turtlevariable:WEALTH "wealth" => Object
-        _div "max-wealth / 3" double,double => double
+        _div "/" double,double => double
           _procedurevariable:MAX-WEALTH "max-wealth" => Object
           _constdouble:3.0 "3" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -2760,7 +2758,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[3]_asm_procedurerecolorturtles_setturtleorlinkvariable_4 "set color red" Object => void
+[3]_asm_procedurerecolorturtles_setturtleorlinkvariable_4 "set" Object => void
       _constdouble:15.0 "red" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -2800,11 +2798,11 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurerecolorturtles_ifelse_6 "ifelse (wealth <= (max-wealth * 2 / 3" boolean => void
-      _lessorequal "wealth <= (max-wealth * 2 / 3" Object,double => boolean
+[5]_asm_procedurerecolorturtles_ifelse_6 "ifelse" boolean => void
+      _lessorequal "<=" Object,double => boolean
         _turtlevariable:WEALTH "wealth" => Object
-        _div "max-wealth * 2 / 3" double,double => double
-          _mult "max-wealth * 2" double,double => double
+        _div "/" double,double => double
+          _mult "*" double,double => double
             _procedurevariable:MAX-WEALTH "max-wealth" => Object
             _constdouble:2.0 "2" => double
           _constdouble:3.0 "3" => double
@@ -2946,7 +2944,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[6]_asm_procedurerecolorturtles_setturtleorlinkvariable_7 "set color green" Object => void
+[6]_asm_procedurerecolorturtles_setturtleorlinkvariable_7 "set" Object => void
       _constdouble:55.0 "green" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -2986,7 +2984,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurerecolorturtles_setturtleorlinkvariable_9 "set color blue" Object => void
+[8]_asm_procedurerecolorturtles_setturtleorlinkvariable_9 "set" Object => void
       _constdouble:105.0 "blue" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -3038,7 +3036,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
 
 procedure GO:[]{O---}:
 [0]_tick "tick"
-[1]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[1]_asm_procedurego_ask_0 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -3118,9 +3116,9 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[4]_asm_procedurego_if_3 "if ticks mod grain-growth-interval = 0" boolean => void
-      _equal "ticks mod grain-growth-interval = 0" double,double => boolean
-        _mod "ticks mod grain-growth-interval" double,double => double
+[4]_asm_procedurego_if_3 "if" boolean => void
+      _equal "=" double,double => boolean
+        _mod "mod" double,double => double
           _ticks "ticks" => double
           _observervariable:GRAIN-GROWTH-INTERVAL "grain-growth-interval" => Object
         _constdouble:0.0 "0" => double
@@ -3230,7 +3228,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[5]_asm_procedurego_ask_4 "ask patches" AgentSet => void
+[5]_asm_procedurego_ask_4 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -3328,7 +3326,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurego_ask_8 "ask turtles" AgentSet => void
+[9]_asm_procedurego_ask_8 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -3455,7 +3453,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
-[0]_asm_procedureturntowardsgrain_setturtlevariable_0 "set heading 0" Object => void
+[0]_asm_procedureturntowardsgrain_setturtlevariable_0 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -3488,7 +3486,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L5
          FRAME SAME
           RETURN
-[1]_asm_procedureturntowardsgrain_setprocedurevariable_1 "" Object => void
+[1]_asm_procedureturntowardsgrain_setprocedurevariable_1 "let" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -3506,7 +3504,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_procedureturntowardsgrain_setprocedurevariable_2 "" Object => void
+[2]_asm_procedureturntowardsgrain_setprocedurevariable_2 "let" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
          L0
           NEW org/nlogo/nvm/Activation
@@ -3543,7 +3541,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[3]_asm_procedureturntowardsgrain_setturtlevariable_3 "set heading 90" Object => void
+[3]_asm_procedureturntowardsgrain_setturtlevariable_3 "set" Object => void
       _constdouble:90.0 "90" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -3576,8 +3574,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L5
          FRAME SAME
           RETURN
-[4]_asm_procedureturntowardsgrain_if_4 "if (grain-ahead > best-amount" boolean => void
-      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
+[4]_asm_procedureturntowardsgrain_if_4 "if" boolean => void
+      _greaterthan ">" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
          L0
@@ -3732,7 +3730,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[5]_asm_procedureturntowardsgrain_setprocedurevariable_5 "set best-direction 90" Object => void
+[5]_asm_procedureturntowardsgrain_setprocedurevariable_5 "set" Object => void
       _constdouble:90.0 "90" => Double
          L0
           ALOAD 0
@@ -3750,7 +3748,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[6]_asm_procedureturntowardsgrain_setprocedurevariable_6 "set best-amount grain-ahead" Object => void
+[6]_asm_procedureturntowardsgrain_setprocedurevariable_6 "set" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
          L0
           NEW org/nlogo/nvm/Activation
@@ -3787,7 +3785,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_procedureturntowardsgrain_setturtlevariable_7 "set heading 180" Object => void
+[7]_asm_procedureturntowardsgrain_setturtlevariable_7 "set" Object => void
       _constdouble:180.0 "180" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -3820,8 +3818,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L5
          FRAME SAME
           RETURN
-[8]_asm_procedureturntowardsgrain_if_8 "if (grain-ahead > best-amount" boolean => void
-      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
+[8]_asm_procedureturntowardsgrain_if_8 "if" boolean => void
+      _greaterthan ">" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
          L0
@@ -3976,7 +3974,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[9]_asm_procedureturntowardsgrain_setprocedurevariable_9 "set best-direction 180" Object => void
+[9]_asm_procedureturntowardsgrain_setprocedurevariable_9 "set" Object => void
       _constdouble:180.0 "180" => Double
          L0
           ALOAD 0
@@ -3994,7 +3992,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_asm_procedureturntowardsgrain_setprocedurevariable_10 "set best-amount grain-ahead" Object => void
+[10]_asm_procedureturntowardsgrain_setprocedurevariable_10 "set" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
          L0
           NEW org/nlogo/nvm/Activation
@@ -4031,7 +4029,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[11]_asm_procedureturntowardsgrain_setturtlevariable_11 "set heading 270" Object => void
+[11]_asm_procedureturntowardsgrain_setturtlevariable_11 "set" Object => void
       _constdouble:270.0 "270" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -4064,8 +4062,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L5
          FRAME SAME
           RETURN
-[12]_asm_procedureturntowardsgrain_if_12 "if (grain-ahead > best-amount" boolean => void
-      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
+[12]_asm_procedureturntowardsgrain_if_12 "if" boolean => void
+      _greaterthan ">" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
          L0
@@ -4220,7 +4218,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[13]_asm_procedureturntowardsgrain_setprocedurevariable_13 "set best-direction 270" Object => void
+[13]_asm_procedureturntowardsgrain_setprocedurevariable_13 "set" Object => void
       _constdouble:270.0 "270" => Double
          L0
           ALOAD 0
@@ -4238,7 +4236,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[14]_asm_procedureturntowardsgrain_setprocedurevariable_14 "set best-amount grain-ahead" Object => void
+[14]_asm_procedureturntowardsgrain_setprocedurevariable_14 "set" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
          L0
           NEW org/nlogo/nvm/Activation
@@ -4275,7 +4273,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[15]_asm_procedureturntowardsgrain_setturtlevariable_15 "set heading best-direction" Object => void
+[15]_asm_procedureturntowardsgrain_setturtlevariable_15 "set" Object => void
       _procedurevariable:BEST-DIRECTION "best-direction" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -4322,7 +4320,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           RETURN
 
 reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
-[0]_asm_proceduregrainahead_setprocedurevariable_0 "" Object => void
+[0]_asm_proceduregrainahead_setprocedurevariable_0 "let" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -4340,7 +4338,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_proceduregrainahead_setprocedurevariable_1 "" Object => void
+[1]_asm_proceduregrainahead_setprocedurevariable_1 "let" Object => void
       _constdouble:1.0 "1" => Double
          L0
           ALOAD 0
@@ -4358,7 +4356,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_proceduregrainahead_repeatlocal_2 "" double => void
+[2]_asm_proceduregrainahead_repeatlocal_2 "repeat" double => void
       _turtlevariable:VISION "vision" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -4419,11 +4417,11 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_proceduregrainahead_setprocedurevariable_3 "set total total + [grain-here] of patch-ahead how-far" Object => void
-      _plus "total + [grain-here] of patch-ahead how-far" double,double => double
+[3]_asm_proceduregrainahead_setprocedurevariable_3 "set" Object => void
+      _plus "+" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _patchvariableof:GRAIN-HERE "of patch-ahead how-far" Object => Object
-          _patchahead "patch-ahead how-far"
+        _patchvariableof:GRAIN-HERE "of" Object => Object
+          _patchahead "patch-ahead"
             _asm_proceduregrainahead_procedurevariable_4 "how-far" => Object
                  L0
                   ALOAD 1
@@ -4627,8 +4625,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[4]_asm_proceduregrainahead_setprocedurevariable_5 "set how-far how-far + 1" Object => void
-      _plus "how-far + 1" double,double => double
+[4]_asm_proceduregrainahead_setprocedurevariable_5 "set" Object => void
+      _plus "+" double,double => double
         _procedurevariable:HOW-FAR "how-far" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4716,7 +4714,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_proceduregrainahead_report_7 "report total" Object => void
+[6]_asm_proceduregrainahead_report_7 "report" Object => void
       _procedurevariable:TOTAL "total" => Object
          L0
           ALOAD 1
@@ -4805,8 +4803,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ATHROW
 
 procedure GROW-GRAIN:[]{-TP-}:
-[0]_asm_proceduregrowgrain_if_0 "if (grain-here < max-grain-here" boolean => void
-      _lessthan "grain-here < max-grain-here" Object,Object => boolean
+[0]_asm_proceduregrowgrain_if_0 "if" boolean => void
+      _lessthan "<" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -4973,8 +4971,8 @@ procedure GROW-GRAIN:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[1]_asm_proceduregrowgrain_setpatchvariable_1 "set grain-here grain-here + num-grain-grown" Object => void
-      _plus "grain-here + num-grain-grown" double,double => double
+[1]_asm_proceduregrowgrain_setpatchvariable_1 "set" Object => void
+      _plus "+" double,double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _observervariable:NUM-GRAIN-GROWN "num-grain-grown" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -5084,8 +5082,8 @@ procedure GROW-GRAIN:[]{-TP-}:
          L15
          FRAME SAME
           RETURN
-[2]_asm_proceduregrowgrain_if_2 "if (grain-here > max-grain-here" boolean => void
-      _greaterthan "grain-here > max-grain-here" Object,Object => boolean
+[2]_asm_proceduregrowgrain_if_2 "if" boolean => void
+      _greaterthan ">" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -5252,7 +5250,7 @@ procedure GROW-GRAIN:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[3]_asm_proceduregrowgrain_setpatchvariable_3 "set grain-here max-grain-here" Object => void
+[3]_asm_proceduregrowgrain_setpatchvariable_3 "set" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -5331,7 +5329,7 @@ procedure GROW-GRAIN:[]{-TP-}:
           RETURN
 
 procedure HARVEST:[]{OTPL}:
-[0]_asm_procedureharvest_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedureharvest_ask_0 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -5386,13 +5384,13 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedureharvest_setturtlevariable_1 "set wealth floor (wealth + (grain-here / (count turtles-here" Object => void
-      _floor "floor (wealth + (grain-here / (count turtles-here" double => double
-        _plus "wealth + (grain-here / (count turtles-here" double,double => double
+[1]_asm_procedureharvest_setturtlevariable_1 "set" Object => void
+      _floor "floor" double => double
+        _plus "+" double,double => double
           _turtlevariable:WEALTH "wealth" => Object
-          _div "grain-here / (count turtles-here" double,double => double
+          _div "/" double,double => double
             _patchvariable:GRAIN-HERE "grain-here" => Object
-            _count "count turtles-here" AgentSet => double
+            _count "count" AgentSet => double
               _turtleshere "turtles-here" => AgentSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -5573,7 +5571,7 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedureharvest_ask_3 "ask turtles" AgentSet => void
+[3]_asm_procedureharvest_ask_3 "ask" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -5628,7 +5626,7 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureharvest_setpatchvariable_4 "set grain-here 0" Object => void
+[4]_asm_procedureharvest_setpatchvariable_4 "set" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -5716,8 +5714,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[1]_asm_proceduremoveeatagedie_setturtlevariable_1 "set wealth (wealth - metabolism" Object => void
-      _minus "wealth - metabolism" double,double => double
+[1]_asm_proceduremoveeatagedie_setturtlevariable_1 "set" Object => void
+      _minus "-" double,double => double
         _turtlevariable:WEALTH "wealth" => Object
         _turtlevariable:METABOLISM "metabolism" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -5841,8 +5839,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
          L17
          FRAME SAME
           RETURN
-[2]_asm_proceduremoveeatagedie_setturtlevariable_2 "set age (age + 1" Object => void
-      _plus "age + 1" double,double => double
+[2]_asm_proceduremoveeatagedie_setturtlevariable_2 "set" Object => void
+      _plus "+" double,double => double
         _turtlevariable:AGE "age" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -5927,12 +5925,12 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
          L12
          FRAME SAME
           RETURN
-[3]_asm_proceduremoveeatagedie_if_3 "if (wealth < 0) or (age >= life-expectancy" boolean => void
-      _or "wealth < 0) or (age >= life-expectancy"
-        _lessthan "wealth < 0" Object,double => boolean
+[3]_asm_proceduremoveeatagedie_if_3 "if" boolean => void
+      _or "or"
+        _lessthan "<" Object,double => boolean
           _turtlevariable:WEALTH "wealth" => Object
           _constdouble:0.0 "0" => double
-        _greaterorequal "age >= life-expectancy" Object,Object => boolean
+        _greaterorequal ">=" Object,Object => boolean
           _turtlevariable:AGE "age" => Object
           _turtlevariable:LIFE-EXPECTANCY "life-expectancy" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6207,13 +6205,13 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           RETURN
 
 procedure SETUP-PLOTZ:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Class Plot""
+[0]_setcurrentplot "set-current-plot"
       _asm_proceduresetupplotz_conststring_0 ""Class Plot"" => String
            L0
             LDC "Class Plot"
            L1
             ARETURN
-[1]_setplotyrange "set-plot-y-range 0 num-people"
+[1]_setplotyrange "set-plot-y-range"
       _asm_proceduresetupplotz_constdouble_1 "0" => Double
            L0
             ALOAD 0
@@ -6229,13 +6227,13 @@ procedure SETUP-PLOTZ:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_setcurrentplot "set-current-plot "Class Histogram""
+[2]_setcurrentplot "set-current-plot"
       _asm_proceduresetupplotz_conststring_3 ""Class Histogram"" => String
            L0
             LDC "Class Histogram"
            L1
             ARETURN
-[3]_setplotyrange "set-plot-y-range 0 num-people"
+[3]_setplotyrange "set-plot-y-range"
       _asm_proceduresetupplotz_constdouble_4 "0" => Double
            L0
             ALOAD 0
@@ -6327,22 +6325,22 @@ procedure UPDATE-PLOTZ:[]{OTPL}:
           RETURN
 
 procedure UPDATE-CLASS-PLOT:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Class Plot""
+[0]_setcurrentplot "set-current-plot"
       _asm_procedureupdateclassplot_conststring_0 ""Class Plot"" => String
            L0
             LDC "Class Plot"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen "low""
+[1]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdateclassplot_conststring_1 ""low"" => String
            L0
             LDC "low"
            L1
             ARETURN
-[2]_plot "plot count turtles with [color = red"
-      _asm_procedureupdateclassplot_countwith_2 "count turtles with [color = red" AgentSet,Reporter => double
+[2]_plot "plot"
+      _asm_procedureupdateclassplot_countwith_2 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_3 "color = red" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_3 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:15.0 "red" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6511,16 +6509,16 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen "mid""
+[3]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdateclassplot_conststring_4 ""mid"" => String
            L0
             LDC "mid"
            L1
             ARETURN
-[4]_plot "plot count turtles with [color = green"
-      _asm_procedureupdateclassplot_countwith_5 "count turtles with [color = green" AgentSet,Reporter => double
+[4]_plot "plot"
+      _asm_procedureupdateclassplot_countwith_5 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_6 "color = green" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_6 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:55.0 "green" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6689,16 +6687,16 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen "up""
+[5]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdateclassplot_conststring_7 ""up"" => String
            L0
             LDC "up"
            L1
             ARETURN
-[6]_plot "plot count turtles with [color = blue"
-      _asm_procedureupdateclassplot_countwith_8 "count turtles with [color = blue" AgentSet,Reporter => double
+[6]_plot "plot"
+      _asm_procedureupdateclassplot_countwith_8 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_9 "color = blue" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_9 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:105.0 "blue" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6878,24 +6876,24 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
           RETURN
 
 procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Class Histogram""
+[0]_setcurrentplot "set-current-plot"
       _asm_procedureupdateclasshistogram_conststring_0 ""Class Histogram"" => String
            L0
             LDC "Class Histogram"
            L1
             ARETURN
 [1]_plotpenreset "plot-pen-reset"
-[2]_setplotpencolor "set-plot-pen-color red"
+[2]_setplotpencolor "set-plot-pen-color"
       _asm_procedureupdateclasshistogram_constdouble_1 "red" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_1.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_plot "plot count turtles with [color = red"
-      _asm_procedureupdateclasshistogram_countwith_2 "count turtles with [color = red" AgentSet,Reporter => double
+[3]_plot "plot"
+      _asm_procedureupdateclasshistogram_countwith_2 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_3 "color = red" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_3 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:15.0 "red" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -7064,17 +7062,17 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_setplotpencolor "set-plot-pen-color green"
+[4]_setplotpencolor "set-plot-pen-color"
       _asm_procedureupdateclasshistogram_constdouble_4 "green" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_4.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_plot "plot count turtles with [color = green"
-      _asm_procedureupdateclasshistogram_countwith_5 "count turtles with [color = green" AgentSet,Reporter => double
+[5]_plot "plot"
+      _asm_procedureupdateclasshistogram_countwith_5 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_6 "color = green" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_6 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:55.0 "green" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -7243,17 +7241,17 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[6]_setplotpencolor "set-plot-pen-color blue"
+[6]_setplotpencolor "set-plot-pen-color"
       _asm_procedureupdateclasshistogram_constdouble_7 "blue" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_7.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[7]_plot "plot count turtles with [color = blue"
-      _asm_procedureupdateclasshistogram_countwith_8 "count turtles with [color = blue" AgentSet,Reporter => double
+[7]_plot "plot"
+      _asm_procedureupdateclasshistogram_countwith_8 "count" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_9 "color = blue" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_9 "=" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:105.0 "blue" => double
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -7433,41 +7431,41 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
           RETURN
 
 procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-SO-FAR INDEX GINI-INDEX-RESERVE _repeatlocal:5]{OTPL}:
-[0]_setcurrentplot "set-current-plot "Lorenz Curve""
+[0]_setcurrentplot "set-current-plot"
       _asm_procedureupdatelorenzandginiplots_conststring_0 ""Lorenz Curve"" => String
            L0
             LDC "Lorenz Curve"
            L1
             ARETURN
 [1]_clearplot "clear-plot"
-[2]_setcurrentplotpen "set-current-plot-pen "equal""
+[2]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdatelorenzandginiplots_conststring_1 ""equal"" => String
            L0
             LDC "equal"
            L1
             ARETURN
-[3]_plot "plot 0"
+[3]_plot "plot"
       _asm_procedureupdatelorenzandginiplots_constdouble_2 "0" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_2.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[4]_plot "plot 100"
+[4]_plot "plot"
       _asm_procedureupdatelorenzandginiplots_constdouble_3 "100" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_3.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen "lorenz""
+[5]_setcurrentplotpen "set-current-plot-pen"
       _asm_procedureupdatelorenzandginiplots_conststring_4 ""lorenz"" => String
            L0
             LDC "lorenz"
            L1
             ARETURN
-[6]_setplotpeninterval "set-plot-pen-interval 100 / num-people"
-      _asm_procedureupdatelorenzandginiplots_div_5 "100 / num-people" double,double => double
+[6]_setplotpeninterval "set-plot-pen-interval"
+      _asm_procedureupdatelorenzandginiplots_div_5 "/" double,double => double
         _constdouble:100.0 "100" => double
         _observervariable:NUM-PEOPLE "num-people" => Object
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -7527,16 +7525,16 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[7]_plot "plot 0"
+[7]_plot "plot"
       _asm_procedureupdatelorenzandginiplots_constdouble_6 "0" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_6.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[8]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 "" Object => void
-      _sort "sort [wealth] of turtles" Object => Object
-        _turtlevariableof:WEALTH "of turtles" Object => Object
+[8]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 "let" Object => void
+      _sort "sort" Object => Object
+        _turtlevariableof:WEALTH "of" Object => Object
           _turtles "turtles" => AgentSet
           TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
           TRYCATCHBLOCK L2 L3 L1 org/nlogo/api/AgentException
@@ -7781,8 +7779,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[9]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 "" Object => void
-      _sum "sum sorted-wealths" LogoList => double
+[9]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 "let" Object => void
+      _sum "sum" LogoList => double
         _procedurevariable:SORTED-WEALTHS "sorted-wealths" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -7867,7 +7865,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[10]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_9 "" Object => void
+[10]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_9 "let" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -7885,7 +7883,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[11]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_10 "" Object => void
+[11]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_10 "let" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -7903,7 +7901,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[12]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_11 "" Object => void
+[12]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_11 "let" Object => void
       _constdouble:0.0 "0" => Double
          L0
           ALOAD 0
@@ -7921,7 +7919,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[13]_asm_procedureupdatelorenzandginiplots_repeatlocal_12 "" double => void
+[13]_asm_procedureupdatelorenzandginiplots_repeatlocal_12 "repeat" double => void
       _observervariable:NUM-PEOPLE "num-people" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -7968,10 +7966,10 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[14]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13 "set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths" Object => void
-      _plus "wealth-sum-so-far + item index sorted-wealths" double,double => double
+[14]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13 "set" Object => void
+      _plus "+" double,double => double
         _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
-        _item "item index sorted-wealths"
+        _item "item"
           _asm_procedureupdatelorenzandginiplots_procedurevariable_14 "index" => Object
                L0
                 ALOAD 1
@@ -8066,9 +8064,9 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[15]_plot "plot (wealth-sum-so-far / total-wealth) * 100"
-      _asm_procedureupdatelorenzandginiplots_mult_16 "wealth-sum-so-far / total-wealth) * 100" double,double => double
-        _div "wealth-sum-so-far / total-wealth" double,double => double
+[15]_plot "plot"
+      _asm_procedureupdatelorenzandginiplots_mult_16 "*" double,double => double
+        _div "/" double,double => double
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
         _constdouble:100.0 "100" => double
@@ -8162,8 +8160,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[16]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17 "set index (index + 1" Object => void
-      _plus "index + 1" double,double => double
+[16]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17 "set" Object => void
+      _plus "+" double,double => double
         _procedurevariable:INDEX "index" => Object
         _constdouble:1.0 "1" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -8219,20 +8217,14 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[17]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18 "set gini-index-reserve
-      gini-index-reserve +
-      (index / num-people) -
-      (wealth-sum-so-far / total-wealth" Object => void
-      _minus "gini-index-reserve +
-      (index / num-people) -
-      (wealth-sum-so-far / total-wealth" double,double => double
-        _plus "gini-index-reserve +
-      (index / num-people" double,double => double
+[17]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18 "set" Object => void
+      _minus "-" double,double => double
+        _plus "+" double,double => double
           _procedurevariable:GINI-INDEX-RESERVE "gini-index-reserve" => Object
-          _div "index / num-people" double,double => double
+          _div "/" double,double => double
             _procedurevariable:INDEX "index" => Object
             _observervariable:NUM-PEOPLE "num-people" => Object
-        _div "wealth-sum-so-far / total-wealth" double,double => double
+        _div "/" double,double => double
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -8474,15 +8466,15 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L2
          FRAME SAME
           RETURN
-[19]_setcurrentplot "set-current-plot "Gini-Index v. Time""
+[19]_setcurrentplot "set-current-plot"
       _asm_procedureupdatelorenzandginiplots_conststring_20 ""Gini-Index v. Time"" => String
            L0
             LDC "Gini-Index v. Time"
            L1
             ARETURN
-[20]_plot "plot (gini-index-reserve / num-people) / area-of-equality-triangle"
-      _asm_procedureupdatelorenzandginiplots_div_21 "gini-index-reserve / num-people) / area-of-equality-triangle" double,double => double
-        _div "gini-index-reserve / num-people" double,double => double
+[20]_plot "plot"
+      _asm_procedureupdatelorenzandginiplots_div_21 "/" double,double => double
+        _div "/" double,double => double
           _procedurevariable:GINI-INDEX-RESERVE "gini-index-reserve" => Object
           _observervariable:NUM-PEOPLE "num-people" => Object
         _callreport:AREA-OF-EQUALITY-TRIANGLE "area-of-equality-triangle"
@@ -8643,16 +8635,16 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           RETURN
 
 reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
-[0]_asm_procedureareaofequalitytriangle_report_0 "report (num-people * (num-people - 1) / 2) / (num-people ^ 2" Object => void
-      _div "num-people * (num-people - 1) / 2) / (num-people ^ 2" double,double => double
-        _div "num-people * (num-people - 1) / 2" double,double => double
-          _mult "num-people * (num-people - 1" double,double => double
+[0]_asm_procedureareaofequalitytriangle_report_0 "report" Object => void
+      _div "/" double,double => double
+        _div "/" double,double => double
+          _mult "*" double,double => double
             _observervariable:NUM-PEOPLE "num-people" => Object
-            _minus "num-people - 1" double,double => double
+            _minus "-" double,double => double
               _observervariable:NUM-PEOPLE "num-people" => Object
               _constdouble:1.0 "1" => double
           _constdouble:2.0 "2" => double
-        _pow "num-people ^ 2" double,double => double
+        _pow "^" double,double => double
           _observervariable:NUM-PEOPLE "num-people" => Object
           _constdouble:2.0 "2" => double
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException

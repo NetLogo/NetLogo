@@ -2,17 +2,17 @@
 
 package org.nlogo.editor;
 
-strictfp class HighlightEditorKit
+public class HighlightEditorKit
     extends javax.swing.text.DefaultEditorKit
     implements
     javax.swing.text.ViewFactory,
     javax.swing.event.DocumentListener {
 
   private final java.awt.event.TextListener listener; // allowed to be null
-  private javax.swing.JEditorPane pane;
-  private final Colorizer colorizer;
+  protected javax.swing.JEditorPane pane;
+  protected final Colorizer colorizer;
 
-  HighlightEditorKit(java.awt.event.TextListener listener,
+  public HighlightEditorKit(java.awt.event.TextListener listener,
                      Colorizer colorizer) {
     this.listener = listener;
     this.colorizer = colorizer;

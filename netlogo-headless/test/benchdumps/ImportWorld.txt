@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[NAME SALT]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:362.0 "362" => double
          L0
           LDC 362.0
@@ -56,7 +56,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurebenchmark_ask_1 "ask patches" AgentSet => void
+[1]_asm_procedurebenchmark_ask_1 "ask" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -111,7 +111,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurebenchmark_setpatchvariable_2 "set p1 random" Object => void
+[2]_asm_procedurebenchmark_setpatchvariable_2 "set" Object => void
       _randomconst:100 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -153,7 +153,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
          L5
          FRAME SAME
           RETURN
-[3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random" Object => void
+[3]_asm_procedurebenchmark_setpatchvariable_3 "set" Object => void
       _randomconst:100 "random" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -195,8 +195,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
          L5
          FRAME SAME
           RETURN
-[4]_asm_procedurebenchmark_setpatchvariable_4 "set pcolor one-of base-colors" Object => void
-      _oneof "one-of base-colors" LogoList => Object
+[4]_asm_procedurebenchmark_setpatchvariable_4 "set" Object => void
+      _oneof "one-of" LogoList => Object
         _basecolors "base-colors" => LogoList
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -271,7 +271,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurebenchmark_setprocedurevariable_6 "" Object => void
+[6]_asm_procedurebenchmark_setprocedurevariable_6 "let" Object => void
       _conststring:"" """" => String
          L0
           LDC ""
@@ -318,7 +318,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurebenchmark_randomseed_8 "random-seed new-seed" double => void
+[8]_asm_procedurebenchmark_randomseed_8 "random-seed" double => void
       _newseed "new-seed" => double
          L0
           ALOAD 0
@@ -369,7 +369,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[9]_asm_procedurebenchmark_setprocedurevariable_9 "" Object => void
+[9]_asm_procedurebenchmark_setprocedurevariable_9 "let" Object => void
       _randomconst:10000000 "random" => double
          L0
           ALOAD 1
@@ -396,8 +396,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_asm_procedurebenchmark_setprocedurevariable_10 "set name (word "firebig-" salt ".csv"" Object => void
-      _word "word "firebig-" salt ".csv""
+[10]_asm_procedurebenchmark_setprocedurevariable_10 "set" Object => void
+      _word "word"
         _conststring:"firebig-" ""firebig-"" => String
         _procedurevariable:SALT "salt" => Object
         _conststring:".csv" "".csv"" => String
@@ -445,7 +445,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[12]_exportworld "export-world name"
+[12]_exportworld "export-world"
       _asm_procedurebenchmark_procedurevariable_12 "name" => Object
            L0
             ALOAD 1
@@ -456,7 +456,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
            L1
             ARETURN
 [13]_resettimer "reset-timer"
-[14]_importworld "import-world name"
+[14]_importworld "import-world"
       _asm_procedurebenchmark_procedurevariable_13 "name" => Object
            L0
             ALOAD 1
@@ -466,7 +466,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
             AALOAD
            L1
             ARETURN
-[15]_asm_procedurebenchmark_setobservervariable_14 "set result timer" Object => void
+[15]_asm_procedurebenchmark_setobservervariable_14 "set" Object => void
       _timer "timer" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3

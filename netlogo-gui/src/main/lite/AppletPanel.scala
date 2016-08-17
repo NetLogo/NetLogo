@@ -4,7 +4,7 @@ package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
 
-import org.nlogo.api.{ LogoException, ModelType, Version, SimpleJobOwner }
+import org.nlogo.api.{ LogoException, ModelType, NetLogoLegacyDialect, Version, SimpleJobOwner }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, LinkRoot,
@@ -107,7 +107,7 @@ with LinkRoot {
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
           override def run() {
-            RuntimeErrorDialog.show("Runtime Error", null, null, thread, throwable)
+            RuntimeErrorDialog.show(null, null, thread, throwable)
           }})
     }
     catch {
@@ -207,7 +207,9 @@ with LinkRoot {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
-    val loader = fileformat.standardLoader(workspace.compiler.compilerUtilities, workspace.autoConvert _)
+    val loader =
+      fileformat.standardLoader(workspace.compiler.utilities,
+        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect))
     val modelOpt = OpenModel(uri, controller, loader, Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }

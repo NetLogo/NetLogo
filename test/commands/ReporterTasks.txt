@@ -1,15 +1,15 @@
 ToString1
-  (word task [?]) => "(reporter task)"
+  (word task [?]) => "(reporter task: [ ? ])"
 
 ToString2
-  (word task [5]) => "(reporter task)"
+  (word task [5]) => "(reporter task: [ 5 ])"
 
 ToString3
-  (word task [(list 1 2 3)]) => "(reporter task)"
+  (word task [(list 1 2 3)]) => "(reporter task: [ (list 1 2 3) ])"
 
 ToString4
   to-report foo report 0 end
-  (word task [foo]) => "(reporter task)"
+  (word task [foo]) => "(reporter task: [ foo ])"
 
 FunCall-Simple
   runresult [5] => 5
@@ -338,3 +338,11 @@ reporter-task-closes-over-let-inside-task-of-different-agent
   globals [ glob1 ]
   O> __let z 9 crt 1 [ set glob1 task [ z ] ]
   runresult glob1 => 9
+
+type-check-runresult
+  O> show runresult task [self] => ERROR this code can't be run by the observer
+  O> ask one-of patches [ show runresult task [patch-ahead 1]] => ERROR this code can't be run by a patch, only a turtle
+
+allow-reporter-task-variable-access-inside-reporter-block
+  O> crt 10
+  map [[who] of turtles with [who = ?]] [7] => [[7]]

@@ -13,6 +13,7 @@ object Property {
   case object Color extends Type
   case object Commands extends Type
   case object Double extends Type
+  case object Error extends Type
   case object Identifier extends Type
   case object InputBoxOptions extends Type
   case object Integer extends Type

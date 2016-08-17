@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
@@ -35,10 +36,15 @@ public final strictfp class _inlinkneighbor
         breedName == null
             ? world.links()
             : world.getLinkBreed(breedName);
-    mustNotBeUndirected(breed, context);
-    return null == world.linkManager.findLinkFrom(target, (Turtle) context.agent,
-        breed, true)
-        ? Boolean.FALSE
-        : Boolean.TRUE;
+    if (breed.isUndirected())
+      return Boolean.FALSE;
+    else {
+      Link link = world.linkManager.findLinkFrom(target, (Turtle) context.agent,
+        breed, true);
+      if (link == null || link.getBreed().isUndirected())
+        return Boolean.FALSE;
+      else
+        return Boolean.TRUE;
+    }
   }
 }

@@ -8,7 +8,7 @@ WOLVES = Breed(WOLVES, WOLF, , false)
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask sheep" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask sheep move if grass? set energy energy - 1 [ eat-grass ] reproduce-sheep [ death ]" AgentSet => void
       _breed:SHEEP "sheep" => AgentSet
          L0
           ALOAD 0
@@ -80,7 +80,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurego_if_2 "if grass?" boolean => void
+[2]_asm_procedurego_if_2 "if grass? set energy energy - 1 [ eat-grass ]" boolean => void
       _observervariable:GRASS? "grass?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -273,7 +273,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_procedurego_ask_8 "ask wolves" AgentSet => void
+[8]_asm_procedurego_ask_8 "ask wolves move set energy energy - 1 catch-sheep reproduce-wolves [ death ]" AgentSet => void
       _breed:WOLVES "wolves" => AgentSet
          L0
           ALOAD 0
@@ -495,7 +495,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[15]_asm_procedurego_if_15 "if grass?" boolean => void
+[15]_asm_procedurego_if_15 "if grass? [ ask patches [ grow-grass ] ]" boolean => void
       _observervariable:GRASS? "grass?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -538,7 +538,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[16]_asm_procedurego_ask_16 "ask patches" AgentSet => void
+[16]_asm_procedurego_ask_16 "ask patches [ grow-grass ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -616,7 +616,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[19]_asm_procedurego_if_19 "if plot?" boolean => void
+[19]_asm_procedurego_if_19 "if plot? [ graph ]" boolean => void
       _observervariable:PLOT? "plot?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -678,7 +678,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [21]_tick "tick"
-[22]_asm_procedurego_if_21 "if (count turtles = 0" boolean => void
+[22]_asm_procedurego_if_21 "if count turtles = 0 [ stop ]" boolean => void
       _equal "count turtles = 0" double,double => boolean
         _count "count turtles" AgentSet => double
           _turtles "turtles" => AgentSet
@@ -852,7 +852,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 10000 [ go ]" double => void
       _constdouble:10000.0 "10000" => double
          L0
           LDC 10000.0
@@ -976,7 +976,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure REPRODUCE-WOLVES:[]{-T--}:
-[0]_asm_procedurereproducewolves_if_0 "if random-float 100 < wolf-reproduce" boolean => void
+[0]_asm_procedurereproducewolves_if_0 "if random-float 100 < wolf-reproduce set energy round energy / 2 [ hatch 1 rt random 360 [ fd 1 ] ]" boolean => void
       _lessthan "random-float 100 < wolf-reproduce" double,Object => boolean
         _randomfloat "random-float 100" double => double
           _constdouble:100.0 "100" => double
@@ -1058,8 +1058,8 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[1]_asm_procedurereproducewolves_setturtlevariable_1 "set energy round (energy / 2" Object => void
-      _round "round (energy / 2" double => double
+[1]_asm_procedurereproducewolves_setturtlevariable_1 "set energy round energy / 2" Object => void
+      _round "round energy / 2" double => double
         _div "energy / 2" double,double => double
           _turtlevariable:ENERGY "energy" => Object
           _constdouble:2.0 "2" => double
@@ -1170,15 +1170,15 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[2]_hatch:,+6 "hatch 1"
+[2]_hatch:,+6 "hatch 1 rt random 360 [ fd 1 ]"
       _asm_procedurereproducewolves_constdouble_2 "1" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurereproducewolves_constdouble_2.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_asm_procedurereproducewolves_right_3 "rt random" double => void
-      _randomconst:360 "random" => double
+[3]_asm_procedurereproducewolves_right_3 "rt random 360" double => void
+      _randomconst:360 "random 360" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1198,7 +1198,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[4]_asm_procedurereproducewolves_fd1_4 "fd" => void
+[4]_asm_procedurereproducewolves_fd1_4 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1236,7 +1236,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           RETURN
 
 procedure REPRODUCE-SHEEP:[]{-T--}:
-[0]_asm_procedurereproducesheep_if_0 "if random-float 100 < sheep-reproduce" boolean => void
+[0]_asm_procedurereproducesheep_if_0 "if random-float 100 < sheep-reproduce set energy round energy / 2 [ hatch 1 rt random 360 [ fd 1 ] ]" boolean => void
       _lessthan "random-float 100 < sheep-reproduce" double,Object => boolean
         _randomfloat "random-float 100" double => double
           _constdouble:100.0 "100" => double
@@ -1318,8 +1318,8 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[1]_asm_procedurereproducesheep_setturtlevariable_1 "set energy round (energy / 2" Object => void
-      _round "round (energy / 2" double => double
+[1]_asm_procedurereproducesheep_setturtlevariable_1 "set energy round energy / 2" Object => void
+      _round "round energy / 2" double => double
         _div "energy / 2" double,double => double
           _turtlevariable:ENERGY "energy" => Object
           _constdouble:2.0 "2" => double
@@ -1430,15 +1430,15 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[2]_hatch:,+6 "hatch 1"
+[2]_hatch:,+6 "hatch 1 rt random 360 [ fd 1 ]"
       _asm_procedurereproducesheep_constdouble_2 "1" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurereproducesheep_constdouble_2.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_asm_procedurereproducesheep_right_3 "rt random" double => void
-      _randomconst:360 "random" => double
+[3]_asm_procedurereproducesheep_right_3 "rt random 360" double => void
+      _randomconst:360 "random 360" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1458,7 +1458,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[4]_asm_procedurereproducesheep_fd1_4 "fd" => void
+[4]_asm_procedurereproducesheep_fd1_4 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1496,7 +1496,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           RETURN
 
 procedure DEATH:[]{-T--}:
-[0]_asm_proceduredeath_if_0 "if energy < 0" boolean => void
+[0]_asm_proceduredeath_if_0 "if energy < 0 [ die ]" boolean => void
       _lessthan "energy < 0" Object,double => boolean
         _turtlevariable:ENERGY "energy" => Object
         _constdouble:0.0 "0" => double
@@ -1669,7 +1669,7 @@ procedure GRAPH:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_asm_proceduregraph_if_4 "if grass?" boolean => void
+[4]_asm_proceduregraph_if_4 "if grass? set-current-plot-pen "grass / 4" [ plot count patches with [ pcolor = green ] / 4 ]" boolean => void
       _observervariable:GRASS? "grass?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -1720,7 +1720,7 @@ procedure GRAPH:[]{OTPL}:
             ARETURN
 [6]_plot "plot count patches with [ pcolor = green ] / 4"
       _asm_proceduregraph_div_6 "count patches with [ pcolor = green ] / 4" double,double => double
-        _countwith "count patches with [ pcolor = green" AgentSet,Reporter => double
+        _countwith "count patches with [ pcolor = green ]" AgentSet,Reporter => double
           _patches "patches" => AgentSet
           _asm_proceduregraph_equal_7 "pcolor = green" Object,double => boolean
             _patchvariable:PCOLOR "pcolor" => Object
@@ -1898,7 +1898,7 @@ procedure GRAPH:[]{OTPL}:
           RETURN
 
 procedure GROW-GRASS:[]{-TP-}:
-[0]_asm_proceduregrowgrass_if_0 "if pcolor = brown" boolean => void
+[0]_asm_proceduregrowgrass_if_0 "if pcolor = brown [ ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ] ]" boolean => void
       _equal "pcolor = brown" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:35.0 "brown" => double
@@ -1957,7 +1957,7 @@ procedure GROW-GRASS:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_proceduregrowgrass_ifelse_1 "ifelse countdown <= 0" boolean => void
+[1]_asm_proceduregrowgrass_ifelse_1 "ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ]" boolean => void
       _lessorequal "countdown <= 0" Object,double => boolean
         _patchvariable:COUNTDOWN "countdown" => Object
         _constdouble:0.0 "0" => double
@@ -2120,7 +2120,7 @@ procedure GROW-GRASS:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduregrowgrass_setpatchvariable_5 "set countdown (countdown - 1" Object => void
+[5]_asm_proceduregrowgrass_setpatchvariable_5 "set countdown countdown - 1" Object => void
       _minus "countdown - 1" double,double => double
         _patchvariable:COUNTDOWN "countdown" => Object
         _constdouble:1.0 "1" => double
@@ -2222,7 +2222,7 @@ procedure GROW-GRASS:[]{-TP-}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask patches" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask patches [ set pcolor green ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -2316,7 +2316,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_asm_proceduresetup_if_3 "if grass?" boolean => void
+[5]_asm_proceduresetup_if_3 "if grass? [ ask patches set countdown random grass-delay [ if random 2 = 0 [ set pcolor brown ] ] ]" boolean => void
       _observervariable:GRASS? "grass?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -2359,7 +2359,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[6]_asm_proceduresetup_ask_4 "ask patches" AgentSet => void
+[6]_asm_proceduresetup_ask_4 "ask patches set countdown random grass-delay [ if random 2 = 0 [ set pcolor brown ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -2532,9 +2532,9 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[8]_asm_proceduresetup_if_6 "if (random 2) = 0" boolean => void
-      _equal "random 2) = 0" double,double => boolean
-        _randomconst:2 "random" => double
+[8]_asm_proceduresetup_if_6 "if random 2 = 0 [ set pcolor brown ]" boolean => void
+      _equal "random 2 = 0" double,double => boolean
+        _randomconst:2 "random 2" => double
         _constdouble:0.0 "0" => double
          L0
           ALOAD 1
@@ -2614,7 +2614,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[11]_fastcreateorderedturtles:SHEEP "create-ordered-sheep init-sheep"
+[11]_fastcreateorderedturtles:SHEEP "create-ordered-sheep [ init-sheep ]"
       _asm_proceduresetup_observervariable_9 "init-sheep" => Object
            L0
             ALOAD 1
@@ -2623,7 +2623,7 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[12]_asm_proceduresetup_ask_10 "ask sheep" AgentSet => void
+[12]_asm_proceduresetup_ask_10 "ask sheep set color white set energy random-float 2 * sheep-metabolism set shape "sheep" [ setxy random world-width random world-height ]" AgentSet => void
       _breed:SHEEP "sheep" => AgentSet
          L0
           ALOAD 0
@@ -2711,8 +2711,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[14]_asm_proceduresetup_setturtlevariable_12 "set energy random-float (2 * sheep-metabolism" Object => void
-      _randomfloat "random-float (2 * sheep-metabolism" double => double
+[14]_asm_proceduresetup_setturtlevariable_12 "set energy random-float 2 * sheep-metabolism" Object => void
+      _randomfloat "random-float 2 * sheep-metabolism" double => double
         _mult "2 * sheep-metabolism" double,double => double
           _constdouble:2.0 "2" => double
           _observervariable:SHEEP-METABOLISM "sheep-metabolism" => Object
@@ -3015,7 +3015,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[18]_fastcreateorderedturtles:WOLVES "create-ordered-wolves init-wolves"
+[18]_fastcreateorderedturtles:WOLVES "create-ordered-wolves [ init-wolves ]"
       _asm_proceduresetup_observervariable_16 "init-wolves" => Object
            L0
             ALOAD 1
@@ -3024,7 +3024,7 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[19]_asm_proceduresetup_ask_17 "ask wolves" AgentSet => void
+[19]_asm_proceduresetup_ask_17 "ask wolves set color black set energy random-float 2 * wolf-metabolism set shape "wolf" [ setxy random world-width random world-height ]" AgentSet => void
       _breed:WOLVES "wolves" => AgentSet
          L0
           ALOAD 0
@@ -3112,8 +3112,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[21]_asm_proceduresetup_setturtlevariable_19 "set energy random-float (2 * wolf-metabolism" Object => void
-      _randomfloat "random-float (2 * wolf-metabolism" double => double
+[21]_asm_proceduresetup_setturtlevariable_19 "set energy random-float 2 * wolf-metabolism" Object => void
+      _randomfloat "random-float 2 * wolf-metabolism" double => double
         _mult "2 * wolf-metabolism" double,double => double
           _constdouble:2.0 "2" => double
           _observervariable:WOLF-METABOLISM "wolf-metabolism" => Object
@@ -3416,7 +3416,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[25]_asm_proceduresetup_if_23 "if plot?" boolean => void
+[25]_asm_proceduresetup_if_23 "if plot? [ graph ]" boolean => void
       _observervariable:PLOT? "plot?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3488,10 +3488,10 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure MOVE:[]{-T--}:
-[0]_asm_proceduremove_right_0 "rt random 50 - random" double => void
-      _minus "random 50 - random" double,double => double
-        _randomconst:50 "random" => double
-        _randomconst:50 "random" => double
+[0]_asm_proceduremove_right_0 "rt random 50 - random 50" double => void
+      _minus "random 50 - random 50" double,double => double
+        _randomconst:50 "random 50" => double
+        _randomconst:50 "random 50" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -3526,7 +3526,7 @@ procedure MOVE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_proceduremove_fd1_1 "fd" => void
+[1]_asm_proceduremove_fd1_1 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3696,7 +3696,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[1]_asm_procedurecatchsheep_if_1 "if (prey != nobody" boolean => void
+[1]_asm_procedurecatchsheep_if_1 "if prey != nobody ask prey [ set energy -1 ] [ set energy energy + wolf-metabolism ]" boolean => void
       _notequal "prey != nobody" Object,Object => boolean
         _turtlevariable:PREY "prey" => Object
         _nobody "nobody" => Nobody$
@@ -3750,7 +3750,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_procedurecatchsheep_ask_2 "ask prey" Object => void
+[2]_asm_procedurecatchsheep_ask_2 "ask prey [ set energy -1 ]" Object => void
       _turtlevariable:PREY "prey" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -4046,7 +4046,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           RETURN
 
 procedure EAT-GRASS:[]{-T--}:
-[0]_asm_procedureeatgrass_if_0 "if pcolor = green" boolean => void
+[0]_asm_procedureeatgrass_if_0 "if pcolor = green set pcolor brown [ set energy energy + sheep-metabolism ]" boolean => void
       _equal "pcolor = green" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double

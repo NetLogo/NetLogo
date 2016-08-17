@@ -20,9 +20,9 @@ public strictfp class ViewUpdatePanel
 
   private int speed;
 
-  public ViewUpdatePanel(GUIWorkspace workspace, final javax.swing.JCheckBox displaySwitch, boolean editable) {
+  public ViewUpdatePanel(GUIWorkspace workspace, final javax.swing.JCheckBox displaySwitch, boolean editable, TickCounterLabel tickCounter) {
     this.workspace = workspace;
-    speedSlider = new SpeedSliderPanel(workspace, true);
+    speedSlider = new SpeedSliderPanel(workspace, tickCounter);
     displaySwitch.addChangeListener
         (new javax.swing.event.ChangeListener() {
           public void stateChanged(javax.swing.event.ChangeEvent e) {

@@ -8,17 +8,17 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.ComponentSerialization
-
-import org.nlogo.core.{ Model, Shape, Widget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, NetLogoLegacyDialect, Version }
+import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser, Model, Shape, Widget },
+  Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConversions._
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
-  def autoConvert(v: String)(c: String): String =
-    c.replaceAllLiterally("z", "zz")
+  val extensionManager = new DummyExtensionManager()
+  val compilationEnvironment = new DummyCompilationEnvironment()
 
-  def nlogoFormat = new NLogoFormat(autoConvert _)
+  def nlogoFormat = new NLogoFormat((m, _) => m)
 
   override def compareSerialized(a: Array[String], otherA: Array[String]): Boolean = {
     Arrays.deepEquals(a.asInstanceOf[Array[Object]], otherA.asInstanceOf[Array[Object]])
@@ -31,7 +31,10 @@ abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoF
 class NLogoFormatIOTest extends FunSuite {
   lazy val modelsLibrary = System.getProperty("netlogo.models.dir", "models")
 
-  val format = new NLogoFormat(_ => identity)
+  val extensionManager = new DummyExtensionManager()
+  val compilationEnvironment = new DummyCompilationEnvironment()
+
+  val format = new NLogoFormat((m , _) => m)
 
   lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
   // sanity checking, if these fail NetLogo will be pretty unusable
@@ -50,6 +53,65 @@ class NLogoFormatIOTest extends FunSuite {
     assert(Paths.get(result.get).toAbsolutePath == pathToWrite.toAbsolutePath)
     assert(Files.readAllLines(Paths.get(result.get)).mkString("\n") == Files.readAllLines(antsBenchmarkPath).mkString("\n"))
   }
+
+  test("Invalid NetLogo file gives an error about section count") {
+    val xmlResult = format.sectionsFromSource("to foo end")
+    assert(xmlResult.isFailure)
+    assert(xmlResult.failed.get.getMessage.contains("sections"))
+  }
+
+  test("XML file gives an error suggesting invalid format") {
+    val xmlResult = format.sectionsFromSource("""<?xml version="1.0">""")
+    assert(xmlResult.isFailure)
+    assert(xmlResult.failed.get.getMessage.contains("nlogo"))
+  }
+}
+
+class NLogoFormatConversionTest extends FunSuite {
+  val extensionManager = VidExtensionManager
+  val compilationEnvironment = FooCompilationEnvironment
+
+  import AutoConversionList.ConversionList
+
+  def nlogoFormat(conversions: Seq[ConversionSet]): NLogoFormat = {
+    new NLogoFormat(new ModelConverter(extensionManager, compilationEnvironment, NetLogoLegacyDialect, _ => conversions))
+  }
+
+  def testLoader(conversions: Seq[ConversionSet]): ModelLoader = {
+    val literalParser =
+      Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+    val format = nlogoFormat(conversions)
+    new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](format)
+      .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
+  }
+
+  test("performs listed autoconversions") {
+    val m = Model(code = "to foo fd 1 end")
+    val conversions = Seq(ConversionSet(Seq(_.replaceCommand("fd" -> "forward {0}")), Seq(), Seq("fd")))
+    val loader = testLoader(conversions)
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("to foo forward 1 end")(rereadModel.code)
+  }
+
+  test("carries out conversions on behaviorspace operations") {
+    import org.nlogo.api.LabProtocol
+    val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, false, 0, "", List(), List())
+    val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
+      .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
+
+    val loader = testLoader(AutoConversionList.conversions.map(_._2))
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult("vid:record-view")(
+      rereadModel.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").get.head.goCommands)
+    assert(rereadModel.code.contains("extensions [vid]"))
+  }
+
+  test("returns the unconverted version of a model needing conversion which doesn't compile") {
+    val m = Model(code = "to foo hsb")
+    val loader = testLoader(AutoConversionList.conversions.map(_._2))
+    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    assertResult(m.code)(rereadModel.code)
+  }
 }
 
 class CodeComponentTest extends NLogoFormatTest[String] {
@@ -61,7 +123,6 @@ class CodeComponentTest extends NLogoFormatTest[String] {
   def attachComponent(b: String): Model = Model(code = b)
 
   testDeserializes("empty code section to empty string", Array[String](), "")
-  testDeserializes("code section and performs auto conversion", Array[String]("to foo ask zs [fd 1] end"), "to foo ask zzs [fd 1] end")
   testRoundTripsSerialForm("single line of code", Array[String]("breed [foos foo]"))
   testRoundTripsObjectForm("empty line code", "")
   testRoundTripsObjectForm("single line of code", "breed [ foos foo ]")
@@ -82,8 +143,15 @@ class VersionComponentTest extends NLogoFormatTest[String] {
   def modelComponent(model: Model): String = model.version
   def attachComponent(b: String): Model = Model(version = b)
 
-  testDeserializes("empty version section to empty version", Array[String](), "")
-  testDeserializes("multiple version lines to correct version", Array[String]("", "NetLogo 6.0", ""), "NetLogo 6.0")
+  // this test assumes the 2D Format
+  val correctArityFormat = Version.version.replaceAll(" 3D", "")
+  val wrongArityVersion = Version.version.replaceAll("NetLogo", "NetLogo 3D")
+
+  testErrorsOnDeserialization("wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
+  testErrorsOnDeserialization("empty version section to empty version", Array[String](), "")
+  // up to the other components to error if they detect a problem
+  testDeserializes("unknown version", Array[String]("NetLogo 4D 8.9"), "NetLogo 4D 8.9")
+  testDeserializes("multiple version lines to correct version", Array[String]("", correctArityFormat), correctArityFormat)
 }
 
 class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
@@ -96,8 +164,7 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
   def sampleWidgetSection(filename: String): Array[String] =
     scala.io.Source.fromFile(s"test/fileformat/$filename").mkString.lines.toArray
 
-  testDeserializationError[Model.InvalidModelError]("empty widgets section", Array[String]())
-  testDeserializes("button and auto converts source", sampleWidgetSection("WidgetSection.txt"), Seq(View(), Button(source = Some("setupzz"), 0, 0, 0, 0)))
+  testErrorsOnDeserialization("empty widgets section", Array[String](), "Every model must have at least a view...")
   testRoundTripsObjectForm("default view", Seq(View()))
   testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0)))
 }

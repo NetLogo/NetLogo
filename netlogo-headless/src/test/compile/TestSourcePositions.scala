@@ -13,11 +13,11 @@ class TestSourcePositions extends FunSuite {
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
       NoProcedures,
-      new DummyExtensionManager, new DummyCompilationEnvironment).head.code.head.args.head.source
+      new DummyExtensionManager, new DummyCompilationEnvironment).head.code.head.args.head.fullSource
   def compileCommand(source: String) =
     Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
       NoProcedures,
-      new DummyExtensionManager, new DummyCompilationEnvironment).head.code.head.source
+      new DummyExtensionManager, new DummyCompilationEnvironment).head.code.head.fullSource
   def reporter(s: String) { assertResult(s)(compileReporter(s)) }
   def command(s: String) { assertResult(s)(compileCommand(s)) }
   def command(expected: String, s: String) { assertResult(expected)(compileCommand(s)) }
@@ -30,10 +30,10 @@ class TestSourcePositions extends FunSuite {
     test("string") { reporter("\"foo\"") }
     test("constantFolding") { reporter("2 + 2") }
     /// commands
-    test("iffy") { command("if timer < 10", "if timer < 10 [ print timer ]") }
-    // TODO fails, probably because of custom assembly. would be nice to fix - ST 2/12/09
-    // @Test def repeat { command("repeat 3","repeat 3 [ ca ]") }
-    // TODO fails, gives "fd (3" instead. fixing seems hard - ST 2/12/09
-    // @Test def parens { command("fd (3)") }
+    test("iffy") { command("if timer < 10 [ print timer ]", "if timer < 10 [ print timer ]") }
+    test("tasks") { command("run task [ fd 1 ]") }
+    test("repeat") { command("repeat 3 [ ca ]") }
+    // parens are omitted. fixing this seems hard - ST 2/12/09, RG 5/31/16
+    test("parens") { command("fd 3", "fd (3)") }
   }
 }

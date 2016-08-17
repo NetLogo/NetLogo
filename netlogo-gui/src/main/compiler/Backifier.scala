@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import scala.collection.immutable.ListMap
-import org.nlogo.core.{ Instantiator, Program, BreedIdentifierHandler }
+import org.nlogo.core.{ CompilerException, Fail, I18N, Instantiator, Program, BreedIdentifierHandler }, Fail.exception
 import org.nlogo.{ api, core, nvm, prim => nvmprim }
 
 class Backifier(program: Program,
@@ -124,8 +124,18 @@ class Backifier(program: Program,
   private def fallback[T1 <: core.Instruction, T2 <: nvm.Instruction](i: T1): T2 =
     BreedIdentifierHandler.process(i.token.copy(value = i.token.text.toUpperCase), program) match {
       case None =>
-        Instantiator.newInstance[T2](
-          Class.forName(backifyName(i.getClass.getName)))
+        try {
+          val klass = Class.forName(backifyName(i.getClass.getName))
+          Instantiator.newInstance[T2](klass)
+        } catch {
+          case e: ClassNotFoundException =>
+            i match {
+              case replaced: ReplacedPrim =>
+                exception(I18N.errors.getN("compiler.Backifier.replaced", i.token.text, replaced.recommendedReplacement), i.token)
+              case _ =>
+                exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", i.token.text), i.token)
+            }
+        }
       case Some((className, breedName, _)) =>
         val name = "org.nlogo.prim." + className
         val primName = if (replacements.contains(name)) replacements(name) else name
@@ -178,7 +188,7 @@ class Backifier(program: Program,
       case core.prim._commandtask(argcount) =>
         new nvmprim._commandtask(argcount)  // LambdaLifter will fill in
 
-      case core.prim._reportertask(argcount) =>
+      case core.prim._reportertask(argcount, _) =>
         new nvmprim._reportertask()
 
       case core.prim._externreport(_) =>
@@ -193,18 +203,18 @@ class Backifier(program: Program,
 
       case core.prim._procedurevariable(vn, name) =>
         new nvmprim._procedurevariable(vn, name)
-      case core.prim._taskvariable(vn) =>
+      case core.prim._taskvariable(vn, _) =>
         new nvmprim._taskvariable(vn)
 
-      case core.prim._observervariable(vn) =>
+      case core.prim._observervariable(vn, _) =>
         new nvmprim._observervariable(vn)
-      case core.prim._turtlevariable(vn) =>
+      case core.prim._turtlevariable(vn, _) =>
         new nvmprim._turtlevariable(vn)
-      case core.prim._linkvariable(vn) =>
+      case core.prim._linkvariable(vn, _) =>
         new nvmprim._linkvariable(vn)
-      case core.prim._patchvariable(vn) =>
+      case core.prim._patchvariable(vn, _) =>
         new nvmprim._patchvariable(vn)
-      case core.prim._turtleorlinkvariable(varName) =>
+      case core.prim._turtleorlinkvariable(varName, _) =>
         new nvmprim._turtleorlinkvariable(varName)
 
       case core.prim._callreport(proc) =>

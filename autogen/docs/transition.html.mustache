@@ -39,6 +39,83 @@
       <a>Changes for NetLogo 6.0</a>
     </h2>
     <h3>
+      Nobody Not Permitted as a Chooser Value
+    </h3>
+    <p>
+    In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
+    Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
+    <code>nobody</code> refers to a non-literal value which
+    isn't supported in choosers. As part of this transition, choosers
+    containing <code>nobody</code> (or <code>nobody</code> within a nested list)
+    will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
+    opened in NetLogo 6.0.
+    <h3>
+      Breeds must have singular and plural names
+    </h3>
+    <p>
+      In NetLogo 6.0, you must specify both plural and singular breed names.
+      In prior versions, declarations like <code>breed [ mice ]</code> were legal,
+      but this support has been removed in 6.0. If you have models which use only
+      plural breed names, it is recommended that you convert them to specify both
+      names before opening in 6.0 since doing so will permit the NetLogo converter
+      to work most effectively on any other code in your model which needs conversion.
+    <h3>
+      Removal of "Movie" Prims
+    </h3>
+    <p id="movie-to-vid">
+      The NetLogo movie prims hadn't been updated in quite some time and
+      generated invalid quicktime movie files. They have been replaced by
+      prims in the new <code>vid</code> extension. The full documentation
+      for the <code>vid</code> extension is available in the <a href="vid.html">
+        Vid Extension</a> section of the manual. As with all extensions,
+      users will need to include <code>vid</code> in the <code>extensions</code>
+      section of their NetLogo model.
+    <p>
+      Many of the movie primitives have direct parallels in the <code>vid</code>
+      extension which can be found in the following table:
+      <table>
+        <tr>
+          <td>movie prim</td>
+          <td>vid prim</td>
+        </tr>
+        <tr>
+          <td><code>movie-cancel</code></td>
+          <td><code>vid:reset-recorder</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-close</code></td>
+          <td><code>vid:save-recording <em>file-name</em></code></td>
+        </tr>
+        <tr>
+          <td><code>movie-grab-view</code></td>
+          <td><code>vid:record-view</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-grab-interface</code></td>
+          <td><code>vid:record-interface</code></td>
+        </tr>
+        <tr>
+          <td><code>movie-start <em>file-name</em></code></td>
+          <td><code>vid:start-recorder <em>optional-width</em> <em>optional-height</em></code></td>
+        </tr>
+        <tr>
+          <td><code>movie-status</code></td>
+          <td><code>vid:recorder-status</code></td>
+        </tr>
+      </table>
+      When you first open a file in NetLogo 6.0, your file will be
+      automatically converted to use the new primitives. This will include adding
+      a new global variable - <code>_recording-save-file-name</code> to track the name of the active
+      recording, as well as adding the <code>vid</code> extension
+      to the model. You should verify that the conversion took place correctly.
+      There is no replacement for <code>movie-set-frame-rate</code>.
+      The vid extension records frames at 25 per second, slightly more
+      than the default 15 frames-per-second of the movie prims.
+      If your recording is sensitive to framerate, consider recording
+      each existing frame twice (2/25 is fairly close to 1/15)
+      or consider using a postprocessing tool (like gstreamer or ffmpeg)
+      to adjust the video playback speed.
+    <h3>
       Improved Name Collision Detection
     </h3>
     <p>
@@ -67,6 +144,46 @@
       If you used it to check link directedness leaving it as-is should keep the current behavior of the model.
       Otherwise, it can simply be replaced by <code>is-&lt;breed&gt;?</code>.
     </div>
+    <h3>
+      Removal of <code>hubnet-set-client-interface</code>
+    </h3>
+    <p id="remove-hubnet-set-client-interface">
+      The <code>hubnet-set-client-interface</code> primitive was rendered obsolete
+      by the introduction of the HubNet client editor and end of support for calculator HubNet.
+      We have found it used in very few models and
+      have decided to remove it from the language.
+      On opening an existing model in 6.0, the autoconverter should remove all uses of
+      <code>hubnet-set-client-interface</code> from your code.
+    <h3>
+      Improved &amp; Updated Extensions API
+    </h3>
+    <p id="extensions60">
+      One of our goals in NetLogo 6.0 has been to make it easier to develop
+      extensions and easy to develop more <em>powerful</em> extensions.
+      To that end, we've bumped the extension API from 5.0 to 6.0.
+      Existing extensions will need to recompile changing the "NetLogo-Extension-API-Version"
+      in their jar's MANIFEST.MF from 5.0 to 6.0.
+    <p>
+      Some of the changes we've made to the extensions API include:
+      <ul>
+        <li><code>org.nlogo.api.Context</code> now allows access to the current world and workspace objects
+        without requiring a cast to an <code>org.nlogo.nvm.ExtensionContext</code>.</li>
+        <li><code>org.nlogo.api.Workspace</code> has been introduced as a stable API for extensions to depend on.</li>
+        <li>A NetLogo jar is now available from BinTray.</li>
+      </ul>
+      For a full list of changes between 5.0 and 6.0, please visit our
+      <a href="https://github.com/NetLogo/NetLogo/wiki/Hexy-Extension-Transition-Guide">Extension Transition Guide</a>
+      on GitHub.
+    <p>
+      In service of making it easier to build extensions, we've expanded and improved
+      the <a href="https://github.com/NetLogo/NetLogo-Extension-Plugin">NetLogo Extension Plugin</a>
+      for <a href="http://www.scala-sbt.org/"><code>sbt</code></a>, the Scala Build Tool.
+      Sbt is a powerful tool for building JVM projects and can be used in projects that
+      use Scala, Java, or a combination of the two. We're now using the Extension Plugin to build
+      all of the bundled extensions and we strongly recommend extension authors take advantage
+      of the plugin as it makes configuring a NetLogo extension build extremely straightforward.
+      The plugin handles fetching the NetLogo jar which extensions compile against as
+      well as generation of a jar for the extension containing the appropriate metadata.
     <div id="v52">
     <h2>
       <a>Changes for NetLogo 5.2</a>

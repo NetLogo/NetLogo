@@ -8,7 +8,6 @@ trait CompilerServices extends LiteralParser {
   def isConstant(s: String): Boolean
   @throws(classOf[CompilerException])
   def readFromString(s: String): AnyRef
-  def autoConvert(source: String)(modelVersion: String): String
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String): AnyRef
   @throws(classOf[CompilerException])

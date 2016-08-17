@@ -1,15 +1,15 @@
 *ToString3
-  (word task [print ?]) => "(command task from: procedure __EVALUATOR)"
+  (word task [print ?]) => "(command task from: procedure __EVALUATOR: [print ?])"
 
 *ToString4
-  (word task [print 5]) => "(command task from: procedure __EVALUATOR)"
+  (word task [print 5]) => "(command task from: procedure __EVALUATOR: [print 5])"
 
 *ToString5
-  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR)"
+  (word task [(foreach [1 2] [3 4] [ __ignore ? + ? ])]) => "(command task from: procedure __EVALUATOR: [(foreach [1 2] [3 4] task [ __ignore ? + ? ])])"
 
 *ToString6
   to foo end
-  (word task [foo]) => "(command task from: procedure __EVALUATOR)"
+  (word task [foo]) => "(command task from: procedure __EVALUATOR: [foo])"
 
 CallTask
   globals [ glob1 ]
@@ -81,10 +81,10 @@ CloseOverProcedureVariable
   glob1 => 10
 
 *WrongTypeOfTask1
-  O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR) instead.
+  O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR: [__ignore 5]) instead.
 
 WrongTypeOfTask2
-  O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task) instead.
+  O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task: [ 5 ]) instead.
 
 NotEnoughInputs
   O> run [__ignore ?] => ERROR task expected 1 input, but only got 0
@@ -125,14 +125,14 @@ command-and-reporter-tasks-close-over-same-procedure-input
 *command-task-stack-trace
   O> run task [print __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
+    called by (command task from: procedure __EVALUATOR: [print __boom])\
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
   O> run task [run task [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
-    called by (command task from: procedure __EVALUATOR)\
+    called by (command task from: procedure __EVALUATOR: [print __boom])\
+    called by (command task from: procedure __EVALUATOR: [run task [print __boom]])\
     called by procedure __EVALUATOR
 
 turtle-executing-command-task
@@ -230,6 +230,17 @@ the-killing-task
   O> crt 1
   T> run glob1  __stdout who  error "oops"
 
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [ set glob1 lput (list ?1 ?2 ?3) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+
 empty-command-task-1
   globals [ glob1 ]
   O> set glob1 task [ ]
@@ -257,3 +268,9 @@ foreach-plus-recursion
   O> ask patches [ sprout 1 ]
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
+
+allow-task-variable-access-inside-reporter-block
+  globals [glob1]
+  O> crt 10
+  O> foreach [7] [ set glob1 first [who] of turtles with [who = ?] ]
+  glob1 => 7

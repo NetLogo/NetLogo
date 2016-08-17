@@ -22,30 +22,32 @@ object I18N {
     if(available(loc)) Some(loc)
     else None
 
+  // loads the locale data from the users preferences
+  // but only if that locale is available.
+  def localeFromPreferences: Option[Locale] = {
+    import java.util.prefs.Preferences
+    def getPref(p: String): Option[String] =
+      try {
+        val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+        Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
+      }
+      catch {
+        // security manager might say no
+        case _: java.security.AccessControlException =>
+          None
+      }
+    (getPref("user.language"), getPref("user.country")) match {
+      case (Some(l), Some(r)) => localeIfAvailable(new Locale(l, r))
+      case (Some(l), _) => localeIfAvailable(new Locale(l))
+      case _ => None
+    }
+  }
+
   case class Prefix(name: String)
 
   class BundleKind(name: String) extends I18NJava {
 
     val defaultLocale = {
-      import java.util.prefs._
-      def getPref(p: String): Option[String] =
-        try {
-          val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-          Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
-        }
-        catch {
-          // security manager might say no
-          case _: java.security.AccessControlException =>
-            None
-        }
-      // loads the locale data from the users preferences
-      // but only if that locale is available.
-      val localeFromPreferences: Option[Locale] =
-        (getPref("user.language"), getPref("user.region")) match {
-          case (Some(l), Some(r)) => localeIfAvailable(new Locale(l, r))
-          case (Some(l), _) => localeIfAvailable(new Locale(l))
-          case _ => None
-        }
       // if the users locale from the preferences is available, use it.
       localeFromPreferences.getOrElse(
         // if not, see if the default (from the OS or JVM) is available. if so, use it.

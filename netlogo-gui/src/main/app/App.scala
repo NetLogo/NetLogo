@@ -2,6 +2,9 @@
 
 package org.nlogo.app
 
+import org.nlogo.app.common.{ EditorFactory, Events => AppEvents }
+import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
@@ -99,9 +102,13 @@ object App{
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
         val compiler =
           container.getComponent(classOf[CompilerInterface])
-        val autoConvert = compiler.autoConvert _
         val compilerServices = new DefaultCompilerServices(compiler)
-        val loader = fileformat.standardLoader(compilerServices, autoConvert)
+        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+
+        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
+        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
+        val loader =
+          fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
         val additionalComponents =
           pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)
@@ -116,7 +123,7 @@ object App{
 
     pico.addAdapter(new ModelLoaderComponent())
 
-    pico.addComponent(classOf[ProceduresToHtml])
+    pico.addComponent(classOf[CodeToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
@@ -163,7 +170,7 @@ object App{
     pico.addComponent(classOf[GraphicsPreview])
     pico.add(
       classOf[PreviewCommandsEditorInterface],
-      "org.nlogo.app.previewcommands.PreviewCommandsEditor",
+      "org.nlogo.app.tools.PreviewCommandsEditor",
       new ComponentParameter(classOf[AppFrame]),
       new ComponentParameter(), new ComponentParameter())
     pico.addComponent(classOf[Tabs])
@@ -261,7 +268,7 @@ class App extends
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
-    Events.SwitchedTabsEvent.Handler with
+    AppEvents.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
     Controllable {
@@ -276,6 +283,7 @@ class App extends
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
   def tabs = _tabs
+  lazy val preferencesDialog = new PreferencesDialog(frame, Preference.Language)
   var helpMenu:HelpMenu = null
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
@@ -318,7 +326,7 @@ class App extends
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter(), new ComponentParameter()))
+            new ComponentParameter()))
     pico.addComponent(interfaceFactory)
     pico.addComponent(new EditorFactory(pico.getComponent(classOf[CompilerServices])))
     pico.addComponent(new MenuBarFactory())
@@ -450,7 +458,7 @@ class App extends
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
-    org.nlogo.app.FindDialog.init(frame)
+    org.nlogo.app.common.FindDialog.init(frame)
 
     Splash.endSplash()
     frame.setVisible(true)
@@ -597,7 +605,6 @@ class App extends
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
         else
           logger.deleteSessionFiles()
-      case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
   }
@@ -628,27 +635,12 @@ class App extends
     }
   }
 
-  def changeLanguage() {
-    val locales = I18N.availableLocales
-    val languages = locales.map{l => l.getDisplayName(l) }
-    val index = org.nlogo.swing.OptionDialog.showAsList(frame,
-      "Change Language", "Choose a new language.", languages.asInstanceOf[Array[Object]])
-    if(index > -1) {
-      val chosenLocale = locales(index)
-      val netLogoPrefs = java.util.prefs.Preferences.userRoot.node("/org/nlogo/NetLogo")
-      netLogoPrefs.put("user.language", chosenLocale.getLanguage)
-      netLogoPrefs.put("user.country", chosenLocale.getCountry)
-    }
-    val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
-    org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
-  }
-
   ///
 
   /**
    * Internal use only.
    */
-  final def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: AppEvents.SwitchedTabsEvent) {
     if(e.newTab == tabs.interfaceTab){ monitorManager.showAll(); frame.toFront() }
     else if(e.oldTab == tabs.interfaceTab) monitorManager.hideAll()
   }
@@ -755,37 +747,29 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(t:Throwable){
+  def handle(t:Throwable): Unit = {
     try {
       val logo = t.isInstanceOf[LogoException]
-      if (logo) {
-        // The PeriodicUpdate thread may throw errors over and
-        // over if a dynamic slider or other code snippet
-        // generates errors.  For this reason we don't want to
-        // pop up the error dialog if it is already up.
-        //  -- CLB 8/15/2006
-        // else we ignore it, craig originally wanted to print to stdout
-        // though, the code he wrote really printed to stderr.
-        // Because we redirect stderr to a file in releases this was a
-        // problem.  We could write our own stack trace printer (easily)
-        // that actually prints to stdout but I'm not really sure that's
-        // important. ev 2/25/08
-        if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
-          org.nlogo.awt.EventQueue.invokeLater(() =>
-            RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
-      }
-      else {
+      if (! logo) {
         t.printStackTrace(System.err)
-        if(! org.nlogo.window.RuntimeErrorDialog.suppressJavaExceptionDialogs &&
-          // Not entirely clear what to do if a second exception
-          // comes in while the window is still up and showing a
-          // previous one... for now, let's spit it to stdout but
-          // otherwise ignore it - ST 6/10/02
-          ! org.nlogo.window.RuntimeErrorDialog.alreadyVisible) {
-          org.nlogo.awt.EventQueue.invokeLater(() =>
-            RuntimeErrorDialog.show("Internal Error", null, null, Thread.currentThread, t))
+        if (org.nlogo.window.RuntimeErrorDialog.suppressJavaExceptionDialogs) {
+          return
         }
       }
+      // The PeriodicUpdate thread may throw errors over and
+      // over if a dynamic slider or other code snippet
+      // generates errors.  For this reason we don't want to
+      // pop up the error dialog if it is already up.
+      //  -- CLB 8/15/2006
+      // else we ignore it, craig originally wanted to print to stdout
+      // though, the code he wrote really printed to stderr.
+      // Because we redirect stderr to a file in releases this was a
+      // problem.  We could write our own stack trace printer (easily)
+      // that actually prints to stdout but I'm not really sure that's
+      // important. ev 2/25/08
+      if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
+        org.nlogo.awt.EventQueue.invokeLater(() =>
+            RuntimeErrorDialog.show(null, null, Thread.currentThread, t))
     }
     catch {
       case e2: RuntimeException => e2.printStackTrace(System.err)
@@ -844,6 +828,13 @@ class App extends
    */
   def handleShowAbout(): Unit = {
     showAboutWindow()
+  }
+
+  /**
+   * This is called reflectively by the mac app wrapper.
+   */
+  def handleShowPreferences(): Unit = {
+    showPreferencesDialog()
   }
 
   @throws(classOf[java.io.IOException])
@@ -1044,7 +1035,16 @@ class App extends
    * Internal use only.
    */
   // used both from HelpMenu and MacHandlers - ST 2/2/09
-  def showAboutWindow() { new AboutWindow(frame).setVisible(true) }
+  def showAboutWindow(): Unit = {
+    new AboutWindow(frame).setVisible(true)
+  }
+
+  /**
+   * Internal use only.
+   */
+  def showPreferencesDialog(): Unit = {
+    preferencesDialog.setVisible(true)
+  }
 
   /**
    * Internal use only.

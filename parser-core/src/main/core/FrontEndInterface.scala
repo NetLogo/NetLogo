@@ -11,9 +11,11 @@ object FrontEndInterface {
   type ProceduresMap = ListMap[String, FrontEndProcedure]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
+
 }
 
 case class ProcedureSyntax(declarationKeyword: Token, identifier: Token, endKeyword: Token)
+
 case class CompilationOperand(
   sources: Map[String, String],
   extensionManager: ExtensionManager,

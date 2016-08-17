@@ -73,7 +73,7 @@
         <li>Type the text shown here:
         </ul>
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image001.gif">
+        <img alt="screen shot" src="images/tutorial2/cc-set-patches-yellow.gif">
       <ul>
         <li>Press the return key.
         </ul>
@@ -101,14 +101,14 @@
         <li>Type in the bottom of the Command Center the text shown below:
         </ul>
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image002.gif">
+        <img alt="screen shot" src="images/tutorial2/cc-set-turtles-brown.gif">
       <p class="question">
         Was the result what you expected?
       <p>
         The view should have a yellow background with a line of brown cars
         in the middle:
       <p class="screenshot">
-        <img alt="screen shot" width="90%" src="images/tutorial2/image003.gif">
+        <img alt="screen shot" width="90%" src="images/tutorial2/export-view-brown-cars-on-yellow.gif">
       </div>
     <p>
       The NetLogo world is a two dimensional world that is made up of
@@ -127,7 +127,7 @@
         the bottom left corner:
         </ul>
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image004.gif">
+        <img alt="screen shot" src="images/tutorial2/cc-context-menu.gif">
       <ul>
         <li>Choose &quot;turtles&quot; from the popup menu.
         <li>Type <code>set color pink</code> and press return.
@@ -191,7 +191,7 @@
         If you try to ask the patches to <code>set color red</code>, an error
         message occurs:
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image005.gif">
+        <img alt="screen shot" src="images/tutorial2/cc-error-patch-color.gif">
       <ul>
         <li>Type <code>set pcolor red</code> instead and press return.
         </ul>
@@ -254,76 +254,8 @@ a pale pink color?</h2>
       <p>
         By adding to red, you make it lighter.
       </div>
-      <!--<p>The charts above contains 14 different colors each
-correlating with a number.  There are variations or shades of each of those
-colors that are not listed in the chart.  Take a color like blue and experience
-the color variations by increasing it's color number by one.
-
-<p>&nbsp;
-
-<p style='margin-left:1.0in;text-indent:-.25in;tab-stops:list 58.5pt'>
-****Example, &amp;&amp;&amp;&amp;P&gt;
-set pcolor 105
-
-<p style='margin-left:1.0in;text-indent:-.25in;tab-stops:list 58.5pt'>
-****
-&amp;&amp;&amp;&amp;P&gt;set pcolor 106
-
-<p style='margin-left:1.0in;text-indent:-.25in;tab-stops:list 58.5pt'>
-****
-&amp;&amp;&amp;&amp;P&gt;set pcolor 107
-
-<p style='margin-left:1.0in;text-indent:-.25in;tab-stops:list 58.5pt'>
-****
-&amp;&amp;&amp;&amp;P&gt;set pcolor 108 and so forth.
-
--->
     <p>
       You can use this technique on any of the colors listed in the chart.
-      <!--
-And for more interesting and creative things you can do with
-colors, see the section on color in the <A HREF="programming.html">Programming Guide</A>.
--->
-       <!--
-
-<div class="blockquote"><B>Challenge:</B>
-
-<p>Before starting this challenge, press "clear" and "clear history"
-in the Command Center and press the "setup" button.
-
-<p class="question">Can you alter the Traffic Basic model to have an
-all green background and all black cars?
-
-<p>Use the picture below as a reference.
-
-<p class=MsoBodyText3 align=center style='text-align:center'><img alt="screen shot" src="images/tutorial2/image007.gif">
-
-<p class=MsoBodyText3 align=center style='text-align:center'>&nbsp;
-
-<p class=MsoBodyText3 style='text-align:justify'>You
-will notice that by changing all the cars to black we have lost our red
-"marker" car.  If you recall, this car has a monitor on the screen that shows
-its speed to you.
-
-<p class=MsoBodyText3 style='text-align:justify'>&nbsp;
-
-<p class=MsoBodyText3 style='margin-left:1.0in;text-align:justify;text-indent:-.25in;tab-stops:list 1.0in'>
-****Press "drive"
-
-<p class=MsoBodyText3 style='text-align:justify'>&nbsp;
-
-<p class=MsoBodyText3 style='text-align:justify'>The
-monitor is still displaying the red car's speed even though the car is not
-present. Or is it?
-
-<p class=MsoBodyText3 style='text-align:justify'>&nbsp;
-
-<p class=MsoBodyText3 style='margin-left:1.0in;text-align:justify'><i>++++Is the red car still present in the Traffic
-Basic model?</i>
-
-<p class=MsoBodyText3 style='text-align:justify'>&nbsp;
-
--->
     <h2>
       Agent Monitors and Agent Commanders
     </h2>
@@ -346,7 +278,7 @@ Basic model?</i>
       <p>
         A turtle monitor for that car will appear:
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image009.gif">
+        <img alt="screen shot" src="images/tutorial2/car-inspector.gif">
       </div>
     <p>
       The mini-view at the top of the agent monitor will always stay
@@ -436,7 +368,7 @@ Basic model?</i>
       If you try to have the observer <code>ask patch 0 [set pcolor
       blue]</code>, you'll get an error message:
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial2/image010.gif">
+      <img alt="screen shot" src="images/tutorial2/cc-error-expected-number.gif">
     <p>
       To ask an individual turtle to do something, we use its who number.
       But patches don't have who numbers, therefore we need to refer to
@@ -451,7 +383,7 @@ Basic model?</i>
         <li>Open a patch monitor for any patch.
         </ul>
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial2/image011.gif">
+        <img alt="screen shot" src="images/tutorial2/patch-inspector.gif">
       <p>
         The monitor shows that for the patch in the picture, its <a href="dictionary.html#pcor"><code>pxcor</code></a> variable is -19 and its
         <a href="dictionary.html#pcor"><code>pycor</code></a> variable is 0.
@@ -473,145 +405,7 @@ Basic model?</i>
         <li>In the Command Center, enter <code>ask patch -19 0 [set pcolor
         green]</code> and press return.
         </ul>
-    </div><!--
-
-<h3>!!!!!Challenge</h3>
-
-<p><b>!!!!Using the Traffic Basic model, alter the background
-to be green with a white street, black cars while still keeping the red "pace"
-car. Use the picture below as a reference.</b>
-
-<p><b>&nbsp;</b>
-
-<p align=center style='text-align:center'><b><img alt="screen shot" src="images/tutorial2/image012.gif"></b>
-
-<p align=center style='text-align:center'><b>&nbsp;</b>
-
-<p class=MsoBodyText3>There are many ways you
-can go about solving this challenge, some of them are a little laborious then
-others.  In the next section, we will look at procedures that and commands,
-that simplify this activity.
-
-<p>&nbsp;
-
--->
-    <!--
-<h2>Changing Shapes</h2>
-
-<p>Another part of customizing models is altering or changing the
-shapes of the turtles.  The commands for changing shapes are very
-similar to those for changing colors.
-
-<p>amp;&amp;&amp;&amp;T&gt;set shape "default"
-
-<p>&nbsp;
-
-<h4 style='margin-left:1.0in'>++++Try changing the patches to the "default"
-shape.</h4>
-
-<p>&nbsp;
-
-<p>If you tried &amp;&amp;&amp;&amp;P&gt;set shape "default", an error message was probably
-expressed like the one below.  This is because patches have only one
-shape-square.  The shape primitive is only for turtles.
-
-<p align=center style='text-align:center'><img alt="screen shot" src="images/tutorial2/image013.gif">
-
-<p align=center style='text-align:center'>&nbsp;
-
-<p style='margin-left:1.0in'><i>++++How would you change a
-shape of a turtle using the observer?</i>
-
-<p align=center style='margin-left:1.0in;text-align:center'><i>&nbsp;</i>
-
-<p style='margin-left:1.0in'><i>++++How do you know which
-shapes are usable within each model? </i>
-
-<p>&nbsp;
-
-<p>
-****Open "Shapes Editor" , found under "Tools" in the menu bar.
-
-<p>&nbsp;
-
-<p>The Shapes Editor is a feature that can change the shape of
-the turtles, edit or alter existing shapes or import a shape from a
-previous model.  When you open the Traffic Basic model's Shapes Editor you will
-see three shapes displayed: the default shape, a car and truck-right.  In order
-to change the shape within the model, you have to write a command within the
-Command Center that sets the shape primitive to one of the three shapes found
-in the shape editor.  Just highlighting one of the shapes in the Shapes Editor
-does not change the shape.
-
-<p>&nbsp;
-
-<p align=center style='text-align:center'><img alt="screen shot" src="images/tutorial2/image014.gif">
-
-<p>&nbsp;
-
-<p>If there is a shape that is not displayed here that you
-want, you can do one of two things.  You can either create your own shape
-within the edit function of this window; or you can import a pre-existing shape
-from another model.  For more information on creating and designing shapes see
-the %%%%Shapes Editor in the Advanced Features Section of the manual.
-
-<p>&nbsp;
-
-<p>To import a shape into the Traffic Basic model:
-
-<p>&nbsp;
-
-<p>
-****Select "import" in the Shapes Editor window.
-
-<p>
-****A new window will open and select the "models" folder.
-
-<p>
-****Go to "Sample Models" and open the "Sheep Wolf
-Predation.nlogo" model in the "Biology" folder.
-
-<p>&nbsp;
-
-<p align=center style='text-align:center'><img alt="screen shot" src="images/tutorial2/image015.gif">
-
-<p align=center style='text-align:center'>&nbsp;
-
-<p>
-****Pick one of these shapes and press "import".
-
-<p>&nbsp;
-
-<p>You will notice the new shape will appear in Shapes Editor
-window for the Traffic Basic model.  It may be used in the Command Center in
-the same manor as "truck-right".  Make sure to save when prompted to ensure
-that the new shape will be available for that model.
-
-<p>&nbsp;
-
-<p>When creating new models, there is a wider selection of
-shapes to chose from within the Shapes Editor.  The newer models will contain
-all of these shapes, while older models tend to be sparse.  If you are looking
-to see all of the shapes already stored in the Shapes Editor, open a new model
-under file and then open the Shapes Editor.
-
-<p><b>&nbsp;</b>
-
--->
-    <!--
-
-<h3>!!!!Ultimate Challenge</h3>
-
-<p>&nbsp;
-
-<p class=MsoBodyText3>!!!!Using the Traffic Basic model, change the background
-to "green" grass, include a white one lane street down the middle of the
-View.  On this street include four houses each with their own street
-light; two on one side of the street and two on the other side of the street.
-The traffic flow can contain a mixture of black cars and trucks making sure to
-keep the "red" pace car.  If you would like to add a person you may do so.
-
--->
+      </div>
     <h2>
       What's Next?
     </h2>

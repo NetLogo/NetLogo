@@ -1,6 +1,0 @@
-ReadPatchSize
-  patch-size => 12
-
-SetPatchSize
-  O> set-patch-size 5.2
-  patch-size => 5.2

@@ -97,6 +97,9 @@ class FrontEndTests extends FunSuite {
   test("WrongArgumentType") {
     runFailure("__ignore count 0", "COUNT expected this input to be an agentset, but got a number instead", 15, 16)
   }
+  test("WrongArgumentTypeAgentVariable") {
+    runFailure("__ignore [not heading] of turtles", "NOT expected this input to be a TRUE/FALSE, but got a number instead", 14, 21)
+  }
   test("tooManyCloseBrackets") {
     runFailure("ask turtles [ fd 1 ] ] ]", "Expected command.", 21, 22)
   }
@@ -107,9 +110,7 @@ class FrontEndTests extends FunSuite {
   }
   test("missing name after let") {
     // here the error is at TokenType.Eof - ST 9/29/14
-    runFailure("let", "Expected variable name here",
-      core.Token.Eof.start - PREAMBLE.size,
-      core.Token.Eof.end - PREAMBLE.size)
+    runFailure("let", "Expected variable name here", 4, 7)
   }
   test("parseSymbolUnknownName") {
     runTest("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
@@ -336,6 +337,18 @@ class FrontEndTests extends FunSuite {
   test("LetNameSameAsBreedVariableName") {
     duplicateName("breed [mice mouse] mice-own [fur] to foo let fur 5 end",
       "There is already a MICE-OWN variable called FUR")
+  }
+  test("BreedDuplicateName") {
+    duplicateName("breed [xs xs]",
+      "There is already a breed called XS")
+  }
+  test("BreedOnlyOneName") {
+    duplicateName("breed [xs]",
+      "Breed declarations must have plural and singular. BREED [XS] has only one name.")
+  }
+  test("LinkBreedOnlyOneName") {
+    duplicateName("directed-link-breed [xs]",
+      "Breed declarations must have plural and singular. DIRECTED-LINK-BREED [XS] has only one name.")
   }
   test("BreedPrimSameNameAsBuiltInPrim") {
     duplicateName("breed [strings string]",

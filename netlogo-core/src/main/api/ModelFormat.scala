@@ -6,14 +6,14 @@ import java.net.URI
 
 import org.nlogo.core.Model
 
-import scala.util.Try
+import scala.util.{ Success, Try }
 
-trait ComponentSerialization[A, B <: ModelFormat[A, _]] {
+trait ComponentSerialization[A, B <: ModelFormat[A, _]] extends AutoConvertable {
   def componentName: String
   def addDefault: Model => Model = identity
   def serialize(m: Model): A
   def validationErrors(m: Model): Option[String]
-  def deserialize(s: A): Model => Model = identity
+  def deserialize(s: A): Model => Try[Model] = (m: Model) => Success(m)
 }
 
 trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
@@ -36,18 +36,27 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
   def defaultComponents =
     Seq(version, codeComponent, infoComponent, interfaceComponent, shapesComponent, linkShapesComponent)
 
+  def emptyModel(optionalComponents: Seq[ComponentSerialization[Section, Format]]): Model =
+    (defaultComponents ++ optionalComponents).foldLeft(baseModel) {
+      case (m, comp) => comp.addDefault(m)
+    }
+
   def load(source: String, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
     for {
       loadedSections <- sectionsFromSource(source)
-    } yield
-      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addModelSection(loadedSections))
+      model <- constructModel(defaultComponents ++ optionalComponents, loadedSections)
+    } yield model
   }
 
   def load(location: URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[Model] = {
     for {
       loadedSections <- sections(location)
-    } yield
-      (defaultComponents ++ optionalComponents).foldLeft(baseModel)(addModelSection(loadedSections))
+      model <- constructModel(defaultComponents ++ optionalComponents, loadedSections)
+    } yield model
+  }
+
+  def constructModel(components: Seq[ComponentSerialization[Section, Format]], sections: Map[String, Section]): Try[Model] = {
+    components.foldLeft(Try(baseModel))(addModelSection(sections))
   }
 
   def save(model: Model, uri: URI, optionalComponents: Seq[ComponentSerialization[Section, Format]]): Try[URI] = {
@@ -67,14 +76,13 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
   }
 
   private def addModelSection(sections: Map[String, Section])(
-    model: Model, component: ComponentSerialization[Section, Format]): Model = {
+    modelTry: Try[Model], component: ComponentSerialization[Section, Format]): Try[Model] = {
       val addComponent = sections
         .get(component.componentName)
         .map(component.deserialize _)
-        .getOrElse(component.addDefault)
-      addComponent(model)
+        .getOrElse((m: Model) => Success(component.addDefault(m)))
+      modelTry.flatMap(addComponent)
   }
-
 }
 
 case class ModelSettings(snapToGrid: Boolean)

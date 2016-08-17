@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask links" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask links [ set color gray ]" AgentSet => void
       _links "links" => AgentSet
          L0
           ALOAD 0
@@ -227,7 +227,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 3000 [ go ]" double => void
       _constdouble:3000.0 "3000" => double
          L0
           LDC 3000.0
@@ -351,7 +351,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure MAKE-NODE:[OLD-NODE]{O---}:
-[0]_createorderedturtles:,+11 "cro 1"
+[0]_createorderedturtles:,+11 "cro 1 set color red [ if old-node != nobody create-link-with old-node [ set color green ] move-to old-node rt random 360 [ fd 8 ] ]"
       _asm_proceduremakenode_constdouble_0 "1" => Double
            L0
             ALOAD 0
@@ -392,7 +392,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduremakenode_if_2 "if old-node != nobody" boolean => void
+[2]_asm_proceduremakenode_if_2 "if old-node != nobody create-link-with old-node [ set color green ] move-to old-node rt random 360 [ fd 8 ]" boolean => void
       _notequal "old-node != nobody" Object,Object => boolean
         _procedurevariable:OLD-NODE "old-node" => Object
         _nobody "nobody" => Nobody$
@@ -432,7 +432,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_createlinkwith:null,+6 "create-link-with old-node"
+[3]_createlinkwith:null,+6 "create-link-with old-node [ set color green ]"
       _asm_proceduremakenode_procedurevariable_3 "old-node" => Object
            L0
             ALOAD 1
@@ -493,8 +493,8 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
             AALOAD
            L1
             ARETURN
-[7]_asm_proceduremakenode_right_7 "rt random" double => void
-      _randomconst:360 "random" => double
+[7]_asm_proceduremakenode_right_7 "rt random 360" double => void
+      _randomconst:360 "random 360" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -637,7 +637,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           RETURN
 
 procedure LAYOUT:[_repeatlocal:0]{OTPL}:
-[0]_asm_procedurelayout_repeatlocal_0 double => void
+[0]_asm_procedurelayout_repeatlocal_0 "repeat 3 layout-spring turtles links 0.5 1.0 0.4 [ display ]" double => void
       _constdouble:3.0 "3" => double
          L0
           LDC 3.0
@@ -855,10 +855,10 @@ procedure SETUP:[]{O---}:
           RETURN
 
 reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
-[0]_asm_procedurefindpartner_setprocedurevariable_0 Object => void
-      _randomfloat "random-float sum [count link-neighbors] of turtles" double => double
-        _sum "sum [count link-neighbors] of turtles" LogoList => double
-          _of "count link-neighbors] of turtles"
+[0]_asm_procedurefindpartner_setprocedurevariable_0 "let random-float sum [ count link-neighbors ] of turtles" Object => void
+      _randomfloat "random-float sum [ count link-neighbors ] of turtles" double => double
+        _sum "sum [ count link-neighbors ] of turtles" LogoList => double
+          _of "[ count link-neighbors ] of turtles"
             _asm_procedurefindpartner_count_1 "count link-neighbors" AgentSet => double
               _linkneighbors:null "link-neighbors" => AgentSet
                  L0
@@ -994,7 +994,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurefindpartner_setprocedurevariable_3 Object => void
+[1]_asm_procedurefindpartner_setprocedurevariable_3 "let nobody" Object => void
       _nobody "nobody" => Nobody$
          L0
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
@@ -1011,7 +1011,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_procedurefindpartner_ask_4 "ask turtles" AgentSet => void
+[2]_asm_procedurefindpartner_ask_4 "ask turtles let count link-neighbors [ if partner = nobody [ ifelse nc > total [ set partner self ] [ set total total - nc ] ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -1064,7 +1064,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_let "let nc count link-neighbors"
+[3]_let "let count link-neighbors"
       _asm_procedurefindpartner_count_5 "count link-neighbors" AgentSet => double
         _linkneighbors:null "link-neighbors" => AgentSet
            L0
@@ -1109,7 +1109,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_asm_procedurefindpartner_if_6 "if partner = nobody" boolean => void
+[4]_asm_procedurefindpartner_if_6 "if partner = nobody [ ifelse nc > total [ set partner self ] [ set total total - nc ] ]" boolean => void
       _equal "partner = nobody" Object,Object => boolean
         _procedurevariable:PARTNER "partner" => Object
         _nobody "nobody" => Nobody$
@@ -1142,7 +1142,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_procedurefindpartner_ifelse_7 "ifelse nc > total" boolean => void
+[5]_asm_procedurefindpartner_ifelse_7 "ifelse nc > total [ set partner self ] [ set total total - nc ]" boolean => void
       _greaterthan "nc > total" Object,Object => boolean
         _letvariable(NC) "nc" => Object
         _procedurevariable:TOTAL "total" => Object

@@ -1,4 +1,5 @@
-UserReporters
+# these aren't legacy, we just don't run them in headless
+UserReporters_Legacy
  O> __ignore "avoid compiler warning"
  O> print user-yes-or-no? "blarg" => ERROR You can't get user input headless.
  O> print user-one-of "blarg" [ 1 2 3 ] => ERROR You can't get user input headless.
@@ -6,3 +7,12 @@ UserReporters
  O> print user-file => ERROR You can't get user input headless.
  O> print user-new-file => ERROR You can't get user input headless.
  O> print user-directory => ERROR You can't get user input headless.
+
+UserReporters_Headless
+  O> __ignore "avoid compiler warning"
+  O> print user-yes-or-no? "blarg" => ERROR model halted by user
+  O> print user-one-of "blarg" [ 1 2 3 ] => ERROR model halted by user
+  O> print user-input "blarg" => ERROR model halted by user
+  user-file => false
+  user-new-file => false
+  user-directory => false

@@ -18,6 +18,35 @@
     <h2>
       Version 6.0 (Mid-2016)
     </h2>
+    <h3>Feature Changes</h3>
+      <ul>
+        <li>NetLogo and its extensions are now compiled against Java 8 and Scala 2.11.</li>
+        <li>NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode</li>
+        <li>The look and feel of NetLogo on Mac OS X has changed significantly. NetLogo is now using the Oracle-supplied Java look and feel as opposed to a third-party look and feel used in prior versions.</li>
+        <li>Plot pen colors can be set to an RGB list, just a other color-related variables in NetLogo</li>
+        <li>Line numbering can be toggled in the NetLogo Editor by choosing "Edit" &gt; "Show Line Numbers".</li>
+        <li>Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu.</li>
+        <li>NetLogo can export code to HTML with code-colorization by choosing "Export Code" in the "Export" section of the "File" menu.</li>
+        <li>The NetLogo editor now offers autocompletion support. Simply press the Control Key and the Spacebar at the same time while typing a word and you will see a list of similar NetLogo primitives as suggestions.</li>
+      </ul>
+    <h3>Language Changes</h3>
+      <ul>
+        <li>Compiler support for plural-only breed names (e.g. <code>breed [ mice ]</code>) has been removed.</li>
+        <li>The compiler detects a greater number of type errors, for instance <code>not pxcor</code> now raises a compiler error instead of erroring at runtime.</li>
+        <li>The <code>hubnet-set-client-interface</code> primitive has been removed.</li>
+        <li>The various prims starting with <code>movie-</code> have been removed, as has the movie encoder. <a href="transition.html#movie-to-vie">The transition guide</a> provides more details and information.</li>
+        <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms).</li>
+        <li>The string representation of a task displays the body of the task</li>
+      </ul>
+    <h3>Extension Changes</h3>
+      <ul>
+        <li>The Extensions API has been updated from 5.0 to 6.0. See <a href="transition.html#extensions60">the transition guide</a>
+        for more information.</li>
+        <li>The <code>qtj</code> extension is no longer bundled with NetLogo. Users are encouraged to make use of the new <a href="vid.html">vid extension</a>.</li>
+        <li>The new <code>vid</code> extension is now bundled with NetLogo, combining features of the late <code>qtj</code> extension and the movie prims</li>
+        <li>The <code>network</code> extension is no longer bundled with NetLogo. Users are encouraged to use the <a href="nw.html">nw extension</a>, which has been bundled with NetLogo for some time.</li>
+        <li>The <code>gogo-serial</code> extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer <code>gogo</code> extension, which uses HID to communicate with the gogo board.</li>
+      </ul>
     <h3>Internationalization Changes</h3>
       <ul>
         <li>A Japanese translation for NetLogo is now available and included with the standard download.</li>

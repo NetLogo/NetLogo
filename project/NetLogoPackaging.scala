@@ -44,7 +44,7 @@ object NetLogoPackaging {
     case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
   }
 
-  def bundledDirs(netlogo: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
+  def bundledDirs(netlogo: Project, macApp: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
     Def.setting {
       { (platform: PlatformBuild) =>
         val nlDir = (baseDirectory in netlogo).value
@@ -55,7 +55,10 @@ object NetLogoPackaging {
         ) ++ (platform.shortName match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
-          case "macosx"  => Seq(new NativesDir(nlDir / "natives", "macosx-universal"))
+          case "macosx"  => Seq(
+            new NativesDir(nlDir / "natives", "macosx-universal"),
+            new NativesDir((baseDirectory in macApp).value / "natives", "macosx-universal")
+          )
         })
       }
     }
@@ -142,13 +145,13 @@ object NetLogoPackaging {
         mathematicaLinkDir / "NetLogo.m",
         mathematicaLinkDir / "target" / "mathematica-link.jar")
         .foreach { f =>
-          IO.copyFile(f, target.value / "Mathematica Link" / f.getName)
+          FileActions.copyFile(f, target.value / "Mathematica Link" / f.getName)
         }
       target.value / "Mathematica Link"
     },
     aggregateOnlyFiles := {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
-      Seq(target.value / "readme.md", netLogoRoot.value.getParentFile / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     aggregateOnlyFiles in packageLinuxAggregate += {
       val targetFile = target.value / "netlogo-headless.sh"
@@ -185,7 +188,7 @@ object NetLogoPackaging {
     },
     packageApp            <<=
       InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass,
-        mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo), jvmOptions)),
+        mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo, macApp), jvmOptions)),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
         PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
@@ -221,9 +224,9 @@ object NetLogoPackaging {
     },
     localSiteTarget := target.value / marketingVersion.value,
     generateLocalWebsite := {
-      IO.copyDirectory(webTarget.value, localSiteTarget.value)
-      IO.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
-      IO.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
+      FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
+      FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
+      FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
       localSiteTarget.value
     },
     uploadWebsite := {

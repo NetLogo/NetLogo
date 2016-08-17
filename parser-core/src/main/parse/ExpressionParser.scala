@@ -26,9 +26,14 @@ object ExpressionParser {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token]): core.ProcedureDefinition = {
     val buffered = tokens.buffered
     val stmts = new core.Statements(buffered.head.filename)
-    while (buffered.head.tpe != TokenType.Eof)
+    while (buffered.head.tpe != TokenType.Eof) {
       stmts.addStatement(parseStatement(buffered, false))
-    new core.ProcedureDefinition(procedureDeclaration, stmts)
+    }
+    val pd = new core.ProcedureDefinition(procedureDeclaration, stmts)
+    if (buffered.head.end < Int.MaxValue) {
+      pd.end = buffered.head.start
+    }
+    pd
   }
 
   /**
@@ -90,7 +95,7 @@ object ExpressionParser {
         // synthesize an empty block so that later phases of compilation will be dealing with a
         // consistent number of arguments - ST 3/4/08
         val file = tokens.head.filename
-        app.addArgument(new core.CommandBlock(new core.Statements(file), app.end, app.end, file))
+        app.addArgument(new core.CommandBlock(new core.Statements(file), app.end, app.end, file, true))
       }
     // check all types
     resolveTypes(syntax, app)
@@ -236,9 +241,18 @@ object ExpressionParser {
       case block: DelayedBlock => parseDelayedBlock(block, goalType)
       case _ => originalArg
     }
-    cAssert(compatible(goalType, arg.reportedType),
-      s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(arg.reportedType)} instead",
-      arg)
+    cAssert(compatible(goalType, arg.reportedType), {
+      // remove reference type from message unless it's part of the goalType, confusing to see
+      // "expected a variable or a number"
+      val displayedReportedType =
+        if ((goalType & Syntax.ReferenceType) == 0 &&
+          ((arg.reportedType & ~Syntax.ReferenceType) != 0))
+          arg.reportedType & ~Syntax.ReferenceType
+        else
+          arg.reportedType
+      s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
+    },
+    arg)
     arg
   }
 
@@ -406,14 +420,14 @@ object ExpressionParser {
     *  take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).
     */
   private def expandConciseReporterTask(rApp: core.ReporterApp, reporter: core.Reporter): core.ReporterApp = {
-    val task = new core.prim._reportertask
+    val task = new core.prim._reportertask(synthetic = true)
     task.token = reporter.token
     val taskApp =
       new core.ReporterApp(task,
         reporter.token.start, reporter.token.end, reporter.token.filename)
     taskApp.addArgument(rApp)
     for(argNumber <- 1 to reporter.syntax.totalDefault) {
-      val lv = new core.prim._taskvariable(argNumber)
+      val lv = new core.prim._taskvariable(argNumber, synthetic = true)
       lv.token = reporter.token
       rApp.addArgument(
         new core.ReporterApp(lv,
@@ -430,7 +444,7 @@ object ExpressionParser {
     val task = new core.prim._commandtask
     task.token = token
     for(argNumber <- 1 to coreCommand.syntax.totalDefault) {
-      val lv = new core.prim._taskvariable(argNumber)
+      val lv = new core.prim._taskvariable(argNumber, synthetic = true)
       lv.token = token
       stmt.addArgument(new core.ReporterApp(lv,
         token.start, token.end, token.filename))
@@ -441,7 +455,7 @@ object ExpressionParser {
       stmt.addArgument(
         new core.CommandBlock(
           new core.Statements(token.filename),
-          token.start, token.end, token.filename))
+          token.start, token.end, token.filename, synthetic = true))
     val stmts = new core.Statements(token.filename)
     stmts.addStatement(stmt)
     val rapp =
@@ -449,7 +463,7 @@ object ExpressionParser {
         token.start, token.end, token.filename)
     rapp.addArgument(
       new core.CommandBlock(stmts,
-        token.start, token.end, token.filename))
+        token.start, token.end, token.filename, synthetic = true))
     rapp
   }
 

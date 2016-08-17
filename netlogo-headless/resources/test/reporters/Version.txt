@@ -1,2 +1,0 @@
-Version
-  substring netlogo-version 0 3 => "6.0"

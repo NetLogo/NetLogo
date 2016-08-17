@@ -5,6 +5,8 @@ package org.nlogo.fileformat
 import org.nlogo.core.Model
 import org.nlogo.api.{ ComponentSerialization, ModelSettings, ModelFormat }
 
+import scala.util.Try
+
 trait ModelSettingsComponent[A <: ModelFormat[Array[String], A]] extends ComponentSerialization[Array[String], A] {
   val componentName = "org.nlogo.modelsection.modelsettings"
   override def addDefault = { (m: Model) =>
@@ -19,9 +21,11 @@ trait ModelSettingsComponent[A <: ModelFormat[Array[String], A]] extends Compone
   }
   def validationErrors(m: Model): Option[String] = None
   override def deserialize(s: Array[String]) = {(m: Model) =>
-    val foundValue =
-      ModelSettings(s.headOption.map(_.toInt != 0).getOrElse(false))
-    m.withOptionalSection(componentName, Some(foundValue), ModelSettings(false))
+    Try {
+      val foundValue =
+        ModelSettings(s.headOption.map(_.toInt != 0).getOrElse(false))
+      m.withOptionalSection(componentName, Some(foundValue), ModelSettings(false))
+    }
   }
 }
 

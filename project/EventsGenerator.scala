@@ -12,7 +12,7 @@ object EventsGenerator {
     Def.task {
         val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
           (in: Set[File]) =>
-            Set("window", "app").map { pkg =>
+            Set("window", "app.common").map { pkg =>
               events(streams.value.log.info(_), autogenRoot.value, (sourceManaged in Compile).value, pkg)
             }
         }
@@ -22,7 +22,7 @@ object EventsGenerator {
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
-    val file = dir / "org" / "nlogo" / ppackage / "Events.java"
+    val file = ppackage.split('.').foldLeft( dir / "org" / "nlogo")(_ / _) / "Events.java"
     log("creating: " + file)
 
     var codeString = ""
@@ -30,7 +30,7 @@ object EventsGenerator {
 
     val (access, qualify) = ppackage match {
       case "window" => ("public ", "")
-      case "app" => ("", "org.nlogo.window.")
+      case "app.common" => ("public ", "org.nlogo.window.")
     }
 
     append(IO.read(base / "events" / "warning.txt"))
@@ -49,7 +49,7 @@ object EventsGenerator {
         if line.startsWith(ppackage)} // skip unless in right package
       {
         val splitt = line.split("-").filter(!_.isEmpty)
-        val shortName = splitt(0).split('.')(1).trim
+        val shortName = splitt(0).split('.').last.trim
         val fieldString = splitt.drop(1).mkString("-")
 
         val name = shortName + "Event"

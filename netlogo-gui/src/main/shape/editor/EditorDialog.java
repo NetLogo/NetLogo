@@ -2,6 +2,13 @@
 
 package org.nlogo.shape.editor;
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
+
 import org.nlogo.core.I18N;
 import org.nlogo.core.Shape;
 import org.nlogo.shape.Circle;
@@ -10,10 +17,6 @@ import org.nlogo.shape.Line;
 import org.nlogo.shape.Polygon;
 import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 
 strictfp class EditorDialog
     extends javax.swing.JDialog
@@ -66,31 +69,27 @@ strictfp class EditorDialog
     shapeView = new ShapeView(this, shape);
     shape.addObserver(shapeView);
     setResizable(false);
+    AbstractAction closingAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        if (!originalShape.toString().equals(getCurrentShape().toString()) &&
+            0 != JOptionPane.showConfirmDialog(EditorDialog.this,
+                "You may lose changes made to this shape. Do you want to cancel anyway?",
+                "Confirm Cancel", javax.swing.JOptionPane.YES_NO_OPTION)) {
+          return;
+        }
+        dispose();
+      }
+    };
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
     addWindowListener(
         new java.awt.event.WindowAdapter() {
           @Override
           public void windowClosing(java.awt.event.WindowEvent e) {
-            saveShape();
-            setVisible(false);
-            dispose();
+            closingAction.actionPerformed(null);
           }
         });
 
-    org.nlogo.swing.Utils.addEscKeyAction
-        (this,
-            new javax.swing.AbstractAction() {
-              public void actionPerformed(java.awt.event.ActionEvent e) {
-                if (!originalShape.toString().equals(getCurrentShape().toString())
-                    && 0 != javax.swing.JOptionPane.showConfirmDialog
-                    (EditorDialog.this,
-                        "You may lose changes made to this shape. Do you want to cancel anyway?",
-                        "Confirm Cancel", javax.swing.JOptionPane.YES_NO_OPTION)) {
-                  return;
-                }
-                dispose();
-              }
-            });
+    org.nlogo.swing.Utils.addEscKeyAction(this, closingAction);
 
     javax.swing.JPanel leftPanel = new javax.swing.JPanel();
     leftPanel.setLayout(new org.nlogo.awt.ColumnLayout

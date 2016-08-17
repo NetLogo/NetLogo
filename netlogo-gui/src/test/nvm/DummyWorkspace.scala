@@ -72,7 +72,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def patchSize = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def magicOpen(name: String) = unsupported
-  override def changeLanguage() = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles() = unsupported
@@ -113,6 +112,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   // from RandomServices
   override def auxRNG = null
   override def mainRNG = null
+  override def seedRNGs(seed: Int): Unit = unsupported
 
   override def profilingEnabled = false
   override def profilingTracer = unsupported

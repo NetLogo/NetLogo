@@ -56,7 +56,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurebenchmark_ask_1 "ask patches" AgentSet => void
+[1]_asm_procedurebenchmark_ask_1 "ask patches set p1 random 100 set p2 random 100 [ set pcolor one-of base-colors ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -109,8 +109,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurebenchmark_setpatchvariable_2 "set p1 random" Object => void
-      _randomconst:100 "random" => double
+[2]_asm_procedurebenchmark_setpatchvariable_2 "set p1 random 100" Object => void
+      _randomconst:100 "random 100" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -152,8 +152,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random" Object => void
-      _randomconst:100 "random" => double
+[3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random 100" Object => void
+      _randomconst:100 "random 100" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -267,7 +267,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurebenchmark_setprocedurevariable_6 Object => void
+[6]_asm_procedurebenchmark_setprocedurevariable_6 "let """ Object => void
       _conststring:"" """" => String
          L0
           LDC ""
@@ -284,7 +284,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_procedurebenchmark_withlocalrandomness_7 "with-local-randomness" => void
+[7]_asm_procedurebenchmark_withlocalrandomness_7 "with-local-randomness random-seed new-seed let random 10000000 [ set name (word "firebig-" salt ".csv") ]" => void
          L0
           NEW org/nlogo/agent/ArrayAgentSet
           DUP
@@ -374,8 +374,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[9]_asm_procedurebenchmark_setprocedurevariable_9 Object => void
-      _randomconst:10000000 "random" => double
+[9]_asm_procedurebenchmark_setprocedurevariable_9 "let random 10000000" Object => void
+      _randomconst:10000000 "random 10000000" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -401,8 +401,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_asm_procedurebenchmark_setprocedurevariable_10 "set name (word "firebig-" salt ".csv"" Object => void
-      _word "word "firebig-" salt ".csv""
+[10]_asm_procedurebenchmark_setprocedurevariable_10 "set name (word "firebig-" salt ".csv")" Object => void
+      _word "(word "firebig-" salt ".csv")"
         _conststring:"firebig-" ""firebig-"" => String
         _procedurevariable:SALT "salt" => Object
         _conststring:".csv" "".csv"" => String

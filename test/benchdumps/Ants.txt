@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles [ go-turtles ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -85,7 +85,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_diffuse:CHEMICAL "diffuse chemical (diffusion-rate / 100"
+[3]_diffuse:CHEMICAL "diffuse diffusion-rate / 100"
       _asm_procedurego_div_3 "diffusion-rate / 100" double,double => double
         _observervariable:DIFFUSION-RATE "diffusion-rate" => Object
         _constdouble:100.0 "100" => double
@@ -147,7 +147,7 @@ procedure GO:[]{O---}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_asm_procedurego_ask_4 "ask patches" AgentSet => void
+[4]_asm_procedurego_ask_4 "ask patches [ go-patches ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -255,7 +255,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure DO-PLOTTING:[]{OTPL}:
-[0]_asm_proceduredoplotting_if_0 "if not plot?" boolean => void
+[0]_asm_proceduredoplotting_if_0 "if not plot? [ stop ]" boolean => void
       _not "not plot?" boolean => boolean
         _observervariable:PLOT? "plot?" => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -372,8 +372,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             LDC "food-in-pile1"
            L1
             ARETURN
-[4]_plot "plot count patches with [pcolor = cyan"
-      _asm_proceduredoplotting_countwith_4 "count patches with [pcolor = cyan" AgentSet,Reporter => double
+[4]_plot "plot count patches with [ pcolor = cyan ]"
+      _asm_proceduredoplotting_countwith_4 "count patches with [ pcolor = cyan ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
         _asm_proceduredoplotting_equal_5 "pcolor = cyan" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
@@ -520,8 +520,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             LDC "food-in-pile2"
            L1
             ARETURN
-[6]_plot "plot count patches with [pcolor = sky"
-      _asm_proceduredoplotting_countwith_7 "count patches with [pcolor = sky" AgentSet,Reporter => double
+[6]_plot "plot count patches with [ pcolor = sky ]"
+      _asm_proceduredoplotting_countwith_7 "count patches with [ pcolor = sky ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
         _asm_proceduredoplotting_equal_8 "pcolor = sky" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
@@ -668,8 +668,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             LDC "food-in-pile3"
            L1
             ARETURN
-[8]_plot "plot count patches with [pcolor = blue"
-      _asm_proceduredoplotting_countwith_10 "count patches with [pcolor = blue" AgentSet,Reporter => double
+[8]_plot "plot count patches with [ pcolor = blue ]"
+      _asm_proceduredoplotting_countwith_10 "count patches with [ pcolor = blue ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
         _asm_proceduredoplotting_equal_11 "pcolor = blue" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
@@ -821,7 +821,7 @@ procedure DO-PLOTTING:[]{OTPL}:
           RETURN
 
 procedure LOOK-FOR-FOOD:[]{-T--}:
-[0]_asm_procedurelookforfood_if_0 "if (food > 0" boolean => void
+[0]_asm_procedurelookforfood_if_0 "if food > 0 set carrying-food? true set food food - 1 set drop-size 60 rt 180 [ stop ]" boolean => void
       _greaterthan "food > 0" Object,double => boolean
         _patchvariable:FOOD "food" => Object
         _constdouble:0.0 "0" => double
@@ -941,7 +941,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurelookforfood_setpatchvariable_2 "set food (food - 1" Object => void
+[2]_asm_procedurelookforfood_setpatchvariable_2 "set food food - 1" Object => void
       _minus "food - 1" double,double => double
         _patchvariable:FOOD "food" => Object
         _constdouble:1.0 "1" => double
@@ -1131,7 +1131,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurelookforfood_ifelse_6 "ifelse (chemical > 2" boolean => void
+[6]_asm_procedurelookforfood_ifelse_6 "ifelse chemical > 2 [ fd 1 ] [ ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ] ]" boolean => void
       _greaterthan "chemical > 2" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:2.0 "2" => double
@@ -1217,7 +1217,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[7]_asm_procedurelookforfood_fd1_7 "fd" => void
+[7]_asm_procedurelookforfood_fd1_7 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1244,7 +1244,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurelookforfood_ifelse_9 "ifelse (chemical < 0.05" boolean => void
+[9]_asm_procedurelookforfood_ifelse_9 "ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ]" boolean => void
       _lessthan "chemical < 0.05" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:0.05 "0.05" => double
@@ -1348,7 +1348,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedurelookforfood_fd1_11 "fd" => void
+[11]_asm_procedurelookforfood_fd1_11 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1393,7 +1393,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[14]_asm_procedurelookforfood_fd1_14 "fd" => void
+[14]_asm_procedurelookforfood_fd1_14 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1424,7 +1424,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           RETURN
 
 procedure SETUP-PATCHES:[]{OTPL}:
-[0]_asm_proceduresetuppatches_ask_0 "ask patches" AgentSet => void
+[0]_asm_proceduresetuppatches_ask_0 "ask patches set chemical 0 set food 0 set food-source-number -1 setup-nest setup-food [ update-display ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -1719,7 +1719,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 800 [ go ]" double => void
       _constdouble:800.0 "800" => double
          L0
           LDC 800.0
@@ -1861,8 +1861,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureuphillnestscent_setprocedurevariable_1 Object => void
-      _patchvariableof:NEST-SCENT "of patch-ahead 1" Object => Object
+[1]_asm_procedureuphillnestscent_setprocedurevariable_1 "let [ nest-scent ] of patch-ahead 1" Object => void
+      _patchvariableof:NEST-SCENT "[ nest-scent ] of patch-ahead 1" Object => Object
         _patchahead "patch-ahead 1"
           _asm_procedureuphillnestscent_constdouble_2 "1" => Double
                L0
@@ -2015,7 +2015,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[2]_asm_procedureuphillnestscent_setprocedurevariable_3 Object => void
+[2]_asm_procedureuphillnestscent_setprocedurevariable_3 "let get-nest-scent 45" Object => void
       _callreport:GET-NEST-SCENT "get-nest-scent 45"
         _constdouble:45.0 "45" => Double
          L0
@@ -2061,7 +2061,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedureuphillnestscent_setprocedurevariable_4 Object => void
+[3]_asm_procedureuphillnestscent_setprocedurevariable_4 "let get-nest-scent -45" Object => void
       _callreport:GET-NEST-SCENT "get-nest-scent -45"
         _constdouble:-45.0 "-45" => Double
          L0
@@ -2107,8 +2107,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureuphillnestscent_if_5 "if ((scent-right > scent-ahead) or (scent-left > scent-ahead" boolean => void
-      _or "scent-right > scent-ahead) or (scent-left > scent-ahead"
+[4]_asm_procedureuphillnestscent_if_5 "if scent-right > scent-ahead or scent-left > scent-ahead [ ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ] ]" boolean => void
+      _or "scent-right > scent-ahead or scent-left > scent-ahead"
         _greaterthan "scent-right > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-RIGHT "scent-right" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
@@ -2366,7 +2366,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L30
           RETURN
-[5]_asm_procedureuphillnestscent_ifelse_6 "ifelse (scent-right > scent-left" boolean => void
+[5]_asm_procedureuphillnestscent_ifelse_6 "ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ]" boolean => void
       _greaterthan "scent-right > scent-left" Object,Object => boolean
         _procedurevariable:SCENT-RIGHT "scent-right" => Object
         _procedurevariable:SCENT-LEFT "scent-left" => Object
@@ -2568,8 +2568,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureuphillchemical_setprocedurevariable_1 Object => void
-      _patchvariableof:CHEMICAL "of patch-ahead 1" Object => Object
+[1]_asm_procedureuphillchemical_setprocedurevariable_1 "let [ chemical ] of patch-ahead 1" Object => void
+      _patchvariableof:CHEMICAL "[ chemical ] of patch-ahead 1" Object => Object
         _patchahead "patch-ahead 1"
           _asm_procedureuphillchemical_constdouble_2 "1" => Double
                L0
@@ -2722,7 +2722,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[2]_asm_procedureuphillchemical_setprocedurevariable_3 Object => void
+[2]_asm_procedureuphillchemical_setprocedurevariable_3 "let chemical-scent 45" Object => void
       _callreport:CHEMICAL-SCENT "chemical-scent 45"
         _constdouble:45.0 "45" => Double
          L0
@@ -2768,7 +2768,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedureuphillchemical_setprocedurevariable_4 Object => void
+[3]_asm_procedureuphillchemical_setprocedurevariable_4 "let chemical-scent -45" Object => void
       _callreport:CHEMICAL-SCENT "chemical-scent -45"
         _constdouble:-45.0 "-45" => Double
          L0
@@ -2814,8 +2814,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureuphillchemical_if_5 "if ((scent-right > scent-ahead) or (scent-left > scent-ahead" boolean => void
-      _or "scent-right > scent-ahead) or (scent-left > scent-ahead"
+[4]_asm_procedureuphillchemical_if_5 "if scent-right > scent-ahead or scent-left > scent-ahead [ ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ] ]" boolean => void
+      _or "scent-right > scent-ahead or scent-left > scent-ahead"
         _greaterthan "scent-right > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-RIGHT "scent-right" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
@@ -3073,7 +3073,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L30
           RETURN
-[5]_asm_procedureuphillchemical_ifelse_6 "ifelse (scent-right > scent-left" boolean => void
+[5]_asm_procedureuphillchemical_ifelse_6 "ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ]" boolean => void
       _greaterthan "scent-right > scent-left" Object,Object => boolean
         _procedurevariable:SCENT-RIGHT "scent-right" => Object
         _procedurevariable:SCENT-LEFT "scent-left" => Object
@@ -3257,9 +3257,9 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           RETURN
 
 procedure GO-PATCHES:[]{-TP-}:
-[0]_asm_proceduregopatches_setpatchvariable_0 "set chemical (chemical * (100 - evaporation-rate) / 100" Object => void
-      _div "chemical * (100 - evaporation-rate) / 100" double,double => double
-        _mult "chemical * (100 - evaporation-rate" double,double => double
+[0]_asm_proceduregopatches_setpatchvariable_0 "set chemical chemical * 100 - evaporation-rate / 100" Object => void
+      _div "chemical * 100 - evaporation-rate / 100" double,double => double
+        _mult "chemical * 100 - evaporation-rate" double,double => double
           _patchvariable:CHEMICAL "chemical" => Object
           _minus "100 - evaporation-rate" double,double => double
             _constdouble:100.0 "100" => double
@@ -3438,7 +3438,7 @@ procedure GO-PATCHES:[]{-TP-}:
           RETURN
 
 reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
-[0]_asm_procedurechemicalscent_setprocedurevariable_0 Object => void
+[0]_asm_procedurechemicalscent_setprocedurevariable_0 "let patch-right-and-ahead angle 1" Object => void
       _patchrightandahead "patch-right-and-ahead angle 1"
         _asm_procedurechemicalscent_procedurevariable_1 "angle" => Object
              L0
@@ -3472,7 +3472,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurechemicalscent_if_3 "if p != nobody" boolean => void
+[1]_asm_procedurechemicalscent_if_3 "if p != nobody [ report [ chemical ] of p ]" boolean => void
       _notequal "p != nobody" Object,Object => boolean
         _procedurevariable:P "p" => Object
         _nobody "nobody" => Nobody$
@@ -3512,8 +3512,8 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[2]_asm_procedurechemicalscent_report_4 "report [chemical] of p" Object => void
-      _patchvariableof:CHEMICAL "of p" Object => Object
+[2]_asm_procedurechemicalscent_report_4 "report [ chemical ] of p" Object => void
+      _patchvariableof:CHEMICAL "[ chemical ] of p" Object => Object
         _procedurevariable:P "p" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -3865,7 +3865,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure RETURN-TO-NEST:[]{-T--}:
-[0]_asm_procedurereturntonest_ifelse_0 "ifelse nest?" boolean => void
+[0]_asm_procedurereturntonest_ifelse_0 "ifelse nest? set carrying-food? false rt 180 [ fd 1 ] set chemical chemical + drop-size set drop-size drop-size - 1.5 if drop-size < 1 [ set drop-size 1 ] uphill-nest-scent wiggle [ fd 1 ]" boolean => void
       _patchvariable:NEST? "nest?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -3973,7 +3973,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[3]_asm_procedurereturntonest_fd1_3 "fd" => void
+[3]_asm_procedurereturntonest_fd1_3 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -4000,7 +4000,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurereturntonest_setpatchvariable_5 "set chemical (chemical + drop-size" Object => void
+[5]_asm_procedurereturntonest_setpatchvariable_5 "set chemical chemical + drop-size" Object => void
       _plus "chemical + drop-size" double,double => double
         _patchvariable:CHEMICAL "chemical" => Object
         _turtlevariable:DROP-SIZE "drop-size" => Object
@@ -4128,7 +4128,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L18
           RETURN
-[6]_asm_procedurereturntonest_setturtlevariable_6 "set drop-size (drop-size - 1.5" Object => void
+[6]_asm_procedurereturntonest_setturtlevariable_6 "set drop-size drop-size - 1.5" Object => void
       _minus "drop-size - 1.5" double,double => double
         _turtlevariable:DROP-SIZE "drop-size" => Object
         _constdouble:1.5 "1.5" => double
@@ -4217,7 +4217,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[7]_asm_procedurereturntonest_if_7 "if (drop-size < 1" boolean => void
+[7]_asm_procedurereturntonest_if_7 "if drop-size < 1 [ set drop-size 1 ]" boolean => void
       _lessthan "drop-size < 1" Object,double => boolean
         _turtlevariable:DROP-SIZE "drop-size" => Object
         _constdouble:1.0 "1" => double
@@ -4373,7 +4373,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedurereturntonest_fd1_11 "fd" => void
+[11]_asm_procedurereturntonest_fd1_11 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -4404,7 +4404,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           RETURN
 
 procedure UPDATE-DISPLAY:[]{-TP-}:
-[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse nest?" boolean => void
+[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse nest? [ set pcolor violet ] [ ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ] ]" boolean => void
       _patchvariable:NEST? "nest?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -4503,7 +4503,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureupdatedisplay_ifelse_3 "ifelse (food > 0" boolean => void
+[3]_asm_procedureupdatedisplay_ifelse_3 "ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ]" boolean => void
       _greaterthan "food > 0" Object,double => boolean
         _patchvariable:FOOD "food" => Object
         _constdouble:0.0 "0" => double
@@ -4589,7 +4589,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[4]_asm_procedureupdatedisplay_if_4 "if (food-source-number = 1" boolean => void
+[4]_asm_procedureupdatedisplay_if_4 "if food-source-number = 1 [ set pcolor cyan ]" boolean => void
       _equal "food-source-number = 1" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:1.0 "1" => double
@@ -4682,7 +4682,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_procedureupdatedisplay_if_6 "if (food-source-number = 2" boolean => void
+[6]_asm_procedureupdatedisplay_if_6 "if food-source-number = 2 [ set pcolor sky ]" boolean => void
       _equal "food-source-number = 2" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:2.0 "2" => double
@@ -4775,7 +4775,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[8]_asm_procedureupdatedisplay_if_8 "if (food-source-number = 3" boolean => void
+[8]_asm_procedureupdatedisplay_if_8 "if food-source-number = 3 [ set pcolor blue ]" boolean => void
       _equal "food-source-number = 3" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:3.0 "3" => double
@@ -5093,7 +5093,7 @@ procedure SETUP-TURTLES:[]{O---}:
             LDC "bug"
            L1
             ARETURN
-[1]_createorderedturtles:,+7 "cro ants"
+[1]_createorderedturtles:,+7 "cro ants set size 2 rt random-float 360 set color red [ set carrying-food? false ]"
       _asm_proceduresetupturtles_observervariable_2 "ants" => Object
            L0
             ALOAD 1
@@ -5249,10 +5249,10 @@ procedure SETUP-TURTLES:[]{O---}:
           RETURN
 
 procedure WIGGLE:[]{-T--}:
-[0]_asm_procedurewiggle_right_0 "rt random 40 - random" double => void
-      _minus "random 40 - random" double,double => double
-        _randomconst:40 "random" => double
-        _randomconst:40 "random" => double
+[0]_asm_procedurewiggle_right_0 "rt random 40 - random 40" double => void
+      _minus "random 40 - random 40" double,double => double
+        _randomconst:40 "random 40" => double
+        _randomconst:40 "random 40" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -5287,7 +5287,7 @@ procedure WIGGLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurewiggle_if_1 "if not can-move? 1" boolean => void
+[1]_asm_procedurewiggle_if_1 "if not can-move? 1 [ rt 180 ]" boolean => void
       _not "not can-move? 1" boolean => boolean
         _canmove "can-move? 1"
           _asm_procedurewiggle_constdouble_2 "1" => Double
@@ -5373,7 +5373,7 @@ procedure WIGGLE:[]{-T--}:
           RETURN
 
 reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
-[0]_asm_proceduregetnestscent_setprocedurevariable_0 Object => void
+[0]_asm_proceduregetnestscent_setprocedurevariable_0 "let patch-right-and-ahead angle 1" Object => void
       _patchrightandahead "patch-right-and-ahead angle 1"
         _asm_proceduregetnestscent_procedurevariable_1 "angle" => Object
              L0
@@ -5407,7 +5407,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_proceduregetnestscent_if_3 "if p != nobody" boolean => void
+[1]_asm_proceduregetnestscent_if_3 "if p != nobody [ report [ nest-scent ] of p ]" boolean => void
       _notequal "p != nobody" Object,Object => boolean
         _procedurevariable:P "p" => Object
         _nobody "nobody" => Nobody$
@@ -5447,8 +5447,8 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[2]_asm_proceduregetnestscent_report_4 "report [nest-scent] of p" Object => void
-      _patchvariableof:NEST-SCENT "of p" Object => Object
+[2]_asm_proceduregetnestscent_report_4 "report [ nest-scent ] of p" Object => void
+      _patchvariableof:NEST-SCENT "[ nest-scent ] of p" Object => Object
         _procedurevariable:P "p" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -5733,7 +5733,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ATHROW
 
 procedure GO-TURTLES:[]{-T--}:
-[0]_asm_proceduregoturtles_if_0 "if (who < ticks" boolean => void
+[0]_asm_proceduregoturtles_if_0 "if who < ticks [ ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ] ]" boolean => void
       _lessthan "who < ticks" double,double => boolean
         _turtlevariabledouble:WHO "who" => double
         _ticks "ticks" => double
@@ -5792,7 +5792,7 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduregoturtles_ifelse_1 "ifelse carrying-food?" boolean => void
+[1]_asm_proceduregoturtles_ifelse_1 "ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ]" boolean => void
       _turtlevariable:CARRYING-FOOD? "carrying-food?" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -5850,7 +5850,7 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_proceduregoturtles_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_proceduregoturtles_setturtleorlinkvariable_2 "set color orange + 1" Object => void
       _constdouble:26.0 "orange + 1" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -5972,8 +5972,8 @@ procedure GO-TURTLES:[]{-T--}:
           RETURN
 
 procedure SETUP-NEST:[]{-TP-}:
-[0]_asm_proceduresetupnest_setpatchvariable_0 "set nest? ((distancexy 0 0) < 5" Object => void
-      _lessthan "distancexy 0 0) < 5" double,double => boolean
+[0]_asm_proceduresetupnest_setpatchvariable_0 "set nest? distancexy 0 0 < 5" Object => void
+      _lessthan "distancexy 0 0 < 5" double,double => boolean
         _distancexy "distancexy 0 0" double,double => double
           _constdouble:0.0 "0" => double
           _constdouble:0.0 "0" => double
@@ -6048,8 +6048,8 @@ procedure SETUP-NEST:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[1]_asm_proceduresetupnest_setpatchvariable_1 "set nest-scent (200 - (distancexy 0 0" Object => void
-      _minus "200 - (distancexy 0 0" double,double => double
+[1]_asm_proceduresetupnest_setpatchvariable_1 "set nest-scent 200 - distancexy 0 0" Object => void
+      _minus "200 - distancexy 0 0" double,double => double
         _constdouble:200.0 "200" => double
         _distancexy "distancexy 0 0" double,double => double
           _constdouble:0.0 "0" => double
@@ -6127,9 +6127,9 @@ procedure SETUP-NEST:[]{-TP-}:
           RETURN
 
 procedure SETUP-FOOD:[]{-TP-}:
-[0]_asm_proceduresetupfood_if_0 "if ((distancexy (0.6 * max-pxcor) 0) < 5" boolean => void
-      _lessthan "distancexy (0.6 * max-pxcor) 0) < 5" double,double => boolean
-        _distancexy "distancexy (0.6 * max-pxcor) 0" double,double => double
+[0]_asm_proceduresetupfood_if_0 "if distancexy 0.6 * max-pxcor 0 < 5 [ set food-source-number 1 ]" boolean => void
+      _lessthan "distancexy 0.6 * max-pxcor 0 < 5" double,double => boolean
+        _distancexy "distancexy 0.6 * max-pxcor 0" double,double => double
           _mult "0.6 * max-pxcor" double,double => double
             _constdouble:0.6 "0.6" => double
             _maxpxcor "max-pxcor" => double
@@ -6230,9 +6230,9 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresetupfood_if_2 "if ((distancexy (-0.6 * max-pxcor) (-0.6 * max-pycor)) < 5" boolean => void
-      _lessthan "distancexy (-0.6 * max-pxcor) (-0.6 * max-pycor)) < 5" double,double => boolean
-        _distancexy "distancexy (-0.6 * max-pxcor) (-0.6 * max-pycor" double,double => double
+[2]_asm_proceduresetupfood_if_2 "if distancexy -0.6 * max-pxcor -0.6 * max-pycor < 5 [ set food-source-number 2 ]" boolean => void
+      _lessthan "distancexy -0.6 * max-pxcor -0.6 * max-pycor < 5" double,double => boolean
+        _distancexy "distancexy -0.6 * max-pxcor -0.6 * max-pycor" double,double => double
           _mult "-0.6 * max-pxcor" double,double => double
             _constdouble:-0.6 "-0.6" => double
             _maxpxcor "max-pxcor" => double
@@ -6348,9 +6348,9 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresetupfood_if_4 "if ((distancexy (-0.8 * max-pxcor) (0.8 * max-pycor)) < 5" boolean => void
-      _lessthan "distancexy (-0.8 * max-pxcor) (0.8 * max-pycor)) < 5" double,double => boolean
-        _distancexy "distancexy (-0.8 * max-pxcor) (0.8 * max-pycor" double,double => double
+[4]_asm_proceduresetupfood_if_4 "if distancexy -0.8 * max-pxcor 0.8 * max-pycor < 5 [ set food-source-number 3 ]" boolean => void
+      _lessthan "distancexy -0.8 * max-pxcor 0.8 * max-pycor < 5" double,double => boolean
+        _distancexy "distancexy -0.8 * max-pxcor 0.8 * max-pycor" double,double => double
           _mult "-0.8 * max-pxcor" double,double => double
             _constdouble:-0.8 "-0.8" => double
             _maxpxcor "max-pxcor" => double
@@ -6466,7 +6466,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_proceduresetupfood_if_6 "if (food-source-number > 0" boolean => void
+[6]_asm_proceduresetupfood_if_6 "if food-source-number > 0 [ set food 1 + random 2 ]" boolean => void
       _greaterthan "food-source-number > 0" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:0.0 "0" => double
@@ -6552,10 +6552,10 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[7]_asm_proceduresetupfood_setpatchvariable_7 "set food (1 + random" Object => void
-      _plus "1 + random" double,double => double
+[7]_asm_proceduresetupfood_setpatchvariable_7 "set food 1 + random 2" Object => void
+      _plus "1 + random 2" double,double => double
         _constdouble:1.0 "1" => double
-        _randomconst:2 "random" => double
+        _randomconst:2 "random 2" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           DCONST_1

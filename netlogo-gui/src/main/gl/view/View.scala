@@ -125,5 +125,6 @@ with org.nlogo.window.Event.LinkChild {
 
   override def dispose(): Unit = {
     renderer.cleanUp()
+    super.dispose()
   }
 }

@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Token}
+  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
 
 /// Stage #3 of StructureParser
 
@@ -43,7 +43,8 @@ object StructureConverter {
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
     val proc = new RawProcedure(p, displayName)
-    (proc, p.tokens.drop(2).init :+ Token.Eof)
+    (proc, p.tokens.drop(2).init :+
+      new Token("", TokenType.Eof, "")(p.tokens.last.start, p.tokens.last.end, p.tokens.last.filename))
   }
 
   def updateProgram(program: Program, declarations: Seq[Declaration]): Program = {
@@ -52,11 +53,11 @@ object StructureConverter {
         case (program, Variables(Identifier("GLOBALS", _), identifiers)) =>
           program.copy(userGlobals = program.userGlobals ++ identifiers.map(_.name))
         case (program, Variables(Identifier("TURTLES-OWN", _), identifiers)) =>
-          program.copy(turtlesOwn = program.turtlesOwn ++ identifiers.map(_.name))
+          program.copy(turtleVars = program.turtleVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("PATCHES-OWN", _), identifiers)) =>
-          program.copy(patchesOwn = program.patchesOwn ++ identifiers.map(_.name))
+          program.copy(patchVars = program.patchVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
-          program.copy(linksOwn = program.linksOwn ++ identifiers.map(_.name))
+          program.copy(linkVars = program.linkVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
           updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name), tok)
         case (program, _) =>
@@ -65,8 +66,7 @@ object StructureConverter {
     def updateBreeds(program: Program): Program =
       declarations.foldLeft(program) {
         case (program, Breed(plural, singular, isLinkBreed, isDirected)) =>
-          val breed = core.Breed(plural.name, singular.map(_.name).getOrElse("TURTLE"),
-            isLinkBreed = isLinkBreed, isDirected = isDirected)
+          val breed = core.Breed(plural.name, singular.name, isLinkBreed = isLinkBreed, isDirected = isDirected)
           if (isLinkBreed)
             program.copy(
               linkBreeds = program.linkBreeds.updated(breed.name, breed))

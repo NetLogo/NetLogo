@@ -1,6 +1,5 @@
 import sbt._
 import NetLogoPackaging.RunProcess
-import AggregateMacBuild.copyAny
 
 object AggregateLinuxBuild extends PackageAction.AggregateBuild {
   // each application maps to the root of the build product
@@ -30,25 +29,25 @@ object AggregateLinuxBuild extends PackageAction.AggregateBuild {
     IO.delete(aggregateLinuxDir)
     IO.createDirectory(imageDir)
     val baseImage = buildsMap.head._2
-    IO.copyDirectory(baseImage / "runtime", imageDir / "runtime")
-    IO.copyFile(baseImage / "libpackager.so", imageDir / "libpackager.so")
+    FileActions.copyDirectory(baseImage / "runtime", imageDir / "runtime")
+    FileActions.copyFile(baseImage / "libpackager.so", imageDir / "libpackager.so")
     IO.createDirectory(imageDir / "app")
 
     buildsMap.foreach {
       case (app, image) =>
         val name = app.name.replaceAllLiterally(" ", "")
-        IO.copyFile(image / name, imageDir / name)
+        FileActions.copyFile(image / name, imageDir / name)
         val copies = Path.allSubpaths(image / "app").map {
           case (f, relPath) => (f, imageDir / "app" / relPath)
         }
-        IO.copy(copies)
+        FileActions.copyAll(copies)
     }
 
     buildsMap.map(_._1.name.replaceAllLiterally(" ", "")).foreach { executableName =>
       (imageDir / executableName).setExecutable(true)
     }
 
-    additionalFiles.foreach { f => copyAny(f, imageDir / f.getName) }
+    additionalFiles.foreach { f => FileActions.copyAny(f, imageDir / f.getName) }
 
     RunProcess(Seq("tar", "-zcf", archiveName, imageDir.getName), aggregateLinuxDir, "tar linux aggregate")
 

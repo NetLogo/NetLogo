@@ -465,7 +465,11 @@ public strictfp class View
     });
     menu.add(exportItem);
 
+    JMenuItem open3DView = new JMenuItem(workspace.switchTo3DViewAction);
+    menu.add(open3DView);
+
     menu.add(new JPopupMenu.Separator());
+
     JMenuItem inspectGlobalsItem = new JMenuItem("inspect globals");
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {

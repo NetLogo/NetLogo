@@ -125,7 +125,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     }
 
     var path = FileDialog.show(
-      owner, I18N.gui.get("menu.file.saveAs.dialog"), AWTFileDialog.SAVE,
+      owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName)
     if(! path.endsWith("." + modelSuffix)) {
       path += "." + modelSuffix
@@ -137,9 +137,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
    * makes a guess as to what the user would like to save this model as.
    * This is the model name if there is one, "Untitled.nlogo" otherwise.
    */
-  private def guessFileName: String = {
-    Option(modelTracker.getModelFileName).getOrElse(s"Untitled.$modelSuffix")
-  }
+  private def guessFileName: String =
+    modelTracker.modelNameForDisplay + "." + modelSuffix
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
     Version.compatibleVersion(version) || {

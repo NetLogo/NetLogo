@@ -16,7 +16,7 @@ trait ExtensionManager {
    *
    * See the top of org.nlogo.workspace.ExtensionManager for full details.
    */
-  def startFullCompilation()
+  def startFullCompilation(): Unit
 
   /**
    * Instructs any extensions which haven't been re-imported during the
@@ -25,7 +25,7 @@ trait ExtensionManager {
    *
    * See the top of org.nlogo.workspace.ExtensionManager for full details.
    */
-  def finishFullCompilation()
+  def finishFullCompilation(): Unit
 
   /** Returns true if any extensions have been imported in the current model. */
   def anyExtensionsLoaded: Boolean
@@ -41,7 +41,7 @@ trait ExtensionManager {
    * @param errors  the ErrorSource to use when a CompilerException needs
    *                to be thrown.
    */
-  def importExtension(jarPath: String, errors: ErrorSource)
+  def importExtension(jarPath: String, errors: ErrorSource): Unit
 
   def readExtensionObject(extensionName: String, typeName: String, value: String): ExtensionObject
 }

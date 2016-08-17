@@ -2,8 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api
-import org.nlogo.core.Let
+import org.nlogo.api, api.{ Task => ApiTask }
+import org.nlogo.core.{ AgentKind, Let, I18N, Syntax }
 
 // tasks are created by the _task prim, which may appear in user code, or may be inserted by
 // ExpressionParser during parsing, when a task is known to be expected.
@@ -21,6 +21,25 @@ sealed trait Task {
   val formals: Array[Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
+  def checkAgentClass(context: Context, agentClassString: String): Unit = {
+    val pairs =
+      Seq(
+        (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
+        (AgentKind.Patch, 'P'), (AgentKind.Link, 'L'))
+    val allowedKinds =
+      for {
+        (thisKind, c) <- pairs
+        if agentClassString.contains(c)
+      }
+      yield thisKind
+
+    if (! allowedKinds.contains(context.agent.kind)) {
+      val instruction = context.activation.procedure.code(context.ip)
+      throw new EngineException(context, instruction,
+        AbstractScalaInstruction.agentKindError(context.agent.kind, allowedKinds))
+    }
+  }
+
   def bindArgs(c: Context, args: Array[AnyRef]) {
     var i = 0
     var n = formals.size
@@ -29,12 +48,14 @@ sealed trait Task {
       i += 1
     }
   }
-  def missingInputs(n: Int) = {
-    val plural =
-      if(formals.size == 1) ""
-      else "s"
-    "task expected " + formals.size + " input" + plural + ", but only got " + n
-  }
+}
+
+object Task {
+  def missingInputs(task: ApiTask, argCount: Int): String =
+    if (task.syntax.minimum == 1)
+      I18N.errors.get("org.nlogo.prim.task.missingInput")
+    else
+      I18N.errors.getN("org.nlogo.prim.task.missingInputs", task.syntax.minimum.toString, argCount.toString)
 }
 
 // Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
@@ -42,19 +63,31 @@ sealed trait Task {
 
 case class ReporterTask(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.ReporterTask {
-  override def toString = "(reporter task)"
+  // tasks are allowed to take more than the number of arguments (hence repeatable-type)
+  def syntax =
+    Syntax.reporterSyntax(
+      ret = Syntax.WildcardType,
+      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      agentClassString = body.agentClassString)
+  override def toString = "(reporter task: [ " + body.fullSource + " ])"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
-    report(context.asInstanceOf[ExtensionContext].nvmContext, args)
+    context match {
+      case e: ExtensionContext => report(e.nvmContext, args)
+      case c: Context          => report(c, args)
+    }
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
+    checkAgentClass(context, syntax.agentClassString)
     val oldLets = context.letBindings
     val oldLocals = context.activation.args
     context.activation.args = locals
     context.letBindings = lets
     bindArgs(context, args)
-    val result = body.report(context)
-    context.letBindings = oldLets
-    context.activation.args = oldLocals
-    result
+    try {
+      body.report(context)
+    } finally {
+      context.letBindings = oldLets
+      context.activation.args = oldLocals
+    }
   }
 }
 
@@ -65,11 +98,20 @@ extends Task with org.nlogo.api.ReporterTask {
 
 case class CommandTask(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
+  def syntax =
+    Syntax.commandSyntax(
+      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      agentClassString = procedure.agentClassString)
   override def toString = procedure.displayName
+  // tasks are allowed to take more than the number of arguments (hence repeatable-type)
   def perform(context: api.Context, args: Array[AnyRef]) {
-    perform(context.asInstanceOf[ExtensionContext].nvmContext, args)
+    context match {
+      case e: ExtensionContext => perform(e.nvmContext, args)
+      case c: Context          => perform(c, args)
+    }
   }
   def perform(context: Context, args: Array[AnyRef]) {
+    checkAgentClass(context, syntax.agentClassString)
     val oldLets = context.letBindings
     context.letBindings = lets
     bindArgs(context, args)

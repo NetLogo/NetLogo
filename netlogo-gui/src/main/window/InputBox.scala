@@ -72,11 +72,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     if (text != textArea.getText) textArea.setText(text)
   }
 
-  protected def toAnyRef(value: Any): AnyRef =
+  protected def toAnyRef(value: Any): AnyRef = {
     value match {
-      case a: AnyRef => a
       case d: Double => Double.box(d)
+      case a: AnyRef => a
     }
+  }
 
   protected def inputText(input: Object) {
     if (input != null) valueObject(input, true)
@@ -323,12 +324,20 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
       changeButton.setVisible(this.inputType.changeVisible)
     }
+
+    def setValue(i: BoxedValue): Unit = {
+      i match {
+        case NumericInput(value, _) => valueObject(value, true)
+        case StringInput(value, _, _) => valueObject(value, true)
+      }
+    }
+
     setType(model.boxedValue)
 
-    try valueObject(model.boxedValue.asString, true)
+    try setValue(model.boxedValue)
     catch{
       case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
-        valueObject(model.boxedValue.defaultString, true)
+        setValue(model.boxedValue.default)
     }
     setSize(model.right - model.left, model.bottom - model.top)
     this
@@ -359,7 +368,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
   }
 
-  // based on MoreButton in ViewControlStrip.java
   protected class NLButton(title:String) extends JButton(title) {
     setFont(new Font(platformFont,Font.PLAIN, 10))
     setBackground(InterfaceColors.GRAPHICS_BACKGROUND)

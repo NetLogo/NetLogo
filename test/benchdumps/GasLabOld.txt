@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles [ bounce ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -85,7 +85,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_3 "ask turtles" AgentSet => void
+[3]_asm_procedurego_ask_3 "ask turtles [ move ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -163,7 +163,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurego_setobservervariable_6 "set vclock (vclock + 1" Object => void
+[6]_asm_procedurego_setobservervariable_6 "set vclock vclock + 1" Object => void
       _plus "vclock + 1" double,double => double
         _observervariable:VCLOCK "vclock" => Object
         _constdouble:1.0 "1" => double
@@ -237,7 +237,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[7]_asm_procedurego_if_7 "if (vclock = vsplit" boolean => void
+[7]_asm_procedurego_if_7 "if vclock = vsplit tick set vclock 0 update-variables do-plotting do-histograms [ ask patches [ fade ] ]" boolean => void
       _equal "vclock = vsplit" Object,Object => boolean
         _observervariable:VCLOCK "vclock" => Object
         _observervariable:VSPLIT "vsplit" => Object
@@ -273,7 +273,7 @@ procedure GO:[]{O---}:
          L6
           RETURN
 [8]_tick "tick"
-[9]_asm_procedurego_setobservervariable_8 "set vclock  0" Object => void
+[9]_asm_procedurego_setobservervariable_8 "set vclock 0" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -361,7 +361,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[13]_asm_procedurego_ask_12 "ask patches" AgentSet => void
+[13]_asm_procedurego_ask_12 "ask patches [ fade ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -580,7 +580,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20000 [ go ]" double => void
       _constdouble:20000.0 "20000" => double
          L0
           LDC 20000.0
@@ -710,7 +710,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             LDC "Speed Histogram"
            L1
             ARETURN
-[1]_setplotxrange "set-plot-x-range 0 (initspeed * 2"
+[1]_setplotxrange "set-plot-x-range 0 initspeed * 2"
       _asm_proceduresetuphistograms_constdouble_1 "0" => Double
            L0
             ALOAD 0
@@ -763,14 +763,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[2]_setplotyrange "set-plot-y-range 0 round (number / 6"
+[2]_setplotyrange "set-plot-y-range 0 round number / 6"
       _asm_proceduresetuphistograms_constdouble_3 "0" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_3.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_round_4 "round (number / 6" double => double
+      _asm_proceduresetuphistograms_round_4 "round number / 6" double => double
         _div "number / 6" double,double => double
           _observervariable:NUMBER "number" => Object
           _constdouble:6.0 "6" => double
@@ -884,16 +884,16 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             LDC "Energy Histogram"
            L1
             ARETURN
-[10]_setplotxrange "set-plot-x-range 0 (0.5 * (initspeed * 2) * (initspeed * 2) * initmass"
+[10]_setplotxrange "set-plot-x-range 0 0.5 * initspeed * 2 * initspeed * 2 * initmass"
       _asm_proceduresetuphistograms_constdouble_12 "0" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_12.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_mult_13 "0.5 * (initspeed * 2) * (initspeed * 2) * initmass" double,double => double
-        _mult "0.5 * (initspeed * 2) * (initspeed * 2" double,double => double
-          _mult "0.5 * (initspeed * 2" double,double => double
+      _asm_proceduresetuphistograms_mult_13 "0.5 * initspeed * 2 * initspeed * 2 * initmass" double,double => double
+        _mult "0.5 * initspeed * 2 * initspeed * 2" double,double => double
+          _mult "0.5 * initspeed * 2" double,double => double
             _constdouble:0.5 "0.5" => double
             _mult "initspeed * 2" double,double => double
               _observervariable:INITSPEED "initspeed" => Object
@@ -1033,14 +1033,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[11]_setplotyrange "set-plot-y-range 0 round (number / 6"
+[11]_setplotyrange "set-plot-y-range 0 round number / 6"
       _asm_proceduresetuphistograms_constdouble_14 "0" => Double
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_14.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_round_15 "round (number / 6" double => double
+      _asm_proceduresetuphistograms_round_15 "round number / 6" double => double
         _div "number / 6" double,double => double
           _observervariable:NUMBER "number" => Object
           _constdouble:6.0 "6" => double
@@ -1159,8 +1159,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           RETURN
 
 procedure CHECK-FOR-COLLISION:[]{-T--}:
-[0]_asm_procedurecheckforcollision_if_0 "if not box? and (count other turtles-here = 1" boolean => void
-      _and "not box? and (count other turtles-here = 1"
+[0]_asm_procedurecheckforcollision_if_0 "if not box? and count other turtles-here = 1 set tmp-turtle one-of other turtles-here [ if who > [ who ] of tmp-turtle and turtle2 != tmp-turtle collide [ recolor-turtle turtle who ] ]" boolean => void
+      _and "not box? and count other turtles-here = 1"
         _not "not box?" boolean => boolean
           _patchvariable:BOX? "box?" => Object
         _equal "count other turtles-here = 1" double,double => boolean
@@ -1409,11 +1409,11 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[2]_asm_procedurecheckforcollision_if_2 "if ((who > [who] of tmp-turtle) and (turtle2 != tmp-turtle" boolean => void
-      _and "who > [who] of tmp-turtle) and (turtle2 != tmp-turtle"
-        _greaterthan "who > [who] of tmp-turtle" double,Object => boolean
+[2]_asm_procedurecheckforcollision_if_2 "if who > [ who ] of tmp-turtle and turtle2 != tmp-turtle collide [ recolor-turtle turtle who ]" boolean => void
+      _and "who > [ who ] of tmp-turtle and turtle2 != tmp-turtle"
+        _greaterthan "who > [ who ] of tmp-turtle" double,Object => boolean
           _turtlevariabledouble:WHO "who" => double
-          _turtlevariableof:WHO "of tmp-turtle" Object => Object
+          _turtlevariableof:WHO "[ who ] of tmp-turtle" Object => Object
             _turtlevariable:TMP-TURTLE "tmp-turtle" => Object
         _notequal "turtle2 != tmp-turtle" Object,Object => boolean
           _turtlevariable:TURTLE2 "turtle2" => Object
@@ -1778,9 +1778,9 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           RETURN
 
 procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
-[0]_asm_procedurerecolorturtle_ifelse_0 "ifelse [new-speed] of the-turtle < (0.5 * initspeed" boolean => void
-      _lessthan "of the-turtle < (0.5 * initspeed" Object,double => boolean
-        _turtlevariableof:NEW-SPEED "of the-turtle" Object => Object
+[0]_asm_procedurerecolorturtle_ifelse_0 "ifelse [ new-speed ] of the-turtle < 0.5 * initspeed [ ask the-turtle [ set color blue ] ] [ ifelse [ new-speed ] of the-turtle > 1.5 * initspeed [ ask the-turtle [ set color red ] ] [ ask the-turtle [ set color green ] ] ]" boolean => void
+      _lessthan "[ new-speed ] of the-turtle < 0.5 * initspeed" Object,double => boolean
+        _turtlevariableof:NEW-SPEED "[ new-speed ] of the-turtle" Object => Object
           _procedurevariable:THE-TURTLE "the-turtle" => Object
         _mult "0.5 * initspeed" double,double => double
           _constdouble:0.5 "0.5" => double
@@ -2000,7 +2000,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L25
           RETURN
-[1]_asm_procedurerecolorturtle_ask_1 "ask the-turtle" Object => void
+[1]_asm_procedurerecolorturtle_ask_1 "ask the-turtle [ set color blue ]" Object => void
       _procedurevariable:THE-TURTLE "the-turtle" => Object
          L0
           ALOAD 1
@@ -2165,9 +2165,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurerecolorturtle_ifelse_5 "ifelse [new-speed] of the-turtle > (1.5 * initspeed" boolean => void
-      _greaterthan "of the-turtle > (1.5 * initspeed" Object,double => boolean
-        _turtlevariableof:NEW-SPEED "of the-turtle" Object => Object
+[5]_asm_procedurerecolorturtle_ifelse_5 "ifelse [ new-speed ] of the-turtle > 1.5 * initspeed [ ask the-turtle [ set color red ] ] [ ask the-turtle [ set color green ] ]" boolean => void
+      _greaterthan "[ new-speed ] of the-turtle > 1.5 * initspeed" Object,double => boolean
+        _turtlevariableof:NEW-SPEED "[ new-speed ] of the-turtle" Object => Object
           _procedurevariable:THE-TURTLE "the-turtle" => Object
         _mult "1.5 * initspeed" double,double => double
           _constdouble:1.5 "1.5" => double
@@ -2387,7 +2387,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L25
           RETURN
-[6]_asm_procedurerecolorturtle_ask_6 "ask the-turtle" Object => void
+[6]_asm_procedurerecolorturtle_ask_6 "ask the-turtle [ set color red ]" Object => void
       _procedurevariable:THE-TURTLE "the-turtle" => Object
          L0
           ALOAD 1
@@ -2552,7 +2552,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[10]_asm_procedurerecolorturtle_ask_10 "ask the-turtle" Object => void
+[10]_asm_procedurerecolorturtle_ask_10 "ask the-turtle [ set color green ]" Object => void
       _procedurevariable:THE-TURTLE "the-turtle" => Object
          L0
           ALOAD 1
@@ -2721,24 +2721,23 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           RETURN
 
 procedure RANDOM-POSITION:[]{-T--}:
-[0]_asm_procedurerandomposition_setxy_0 "setxy ((1 - box-edge) + random ((2 * box-edge) - 2))
-        ((1 - box-edge) + random ((2 * box-edge) - 2" double,double => void
-      _plus "1 - box-edge) + random ((2 * box-edge) - 2" double,double => double
+[0]_asm_procedurerandomposition_setxy_0 "setxy 1 - box-edge + random 2 * box-edge - 2 1 - box-edge + random 2 * box-edge - 2" double,double => void
+      _plus "1 - box-edge + random 2 * box-edge - 2" double,double => double
         _minus "1 - box-edge" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:BOX-EDGE "box-edge" => Object
-        _random "random ((2 * box-edge) - 2" double => double
-          _minus "2 * box-edge) - 2" double,double => double
+        _random "random 2 * box-edge - 2" double => double
+          _minus "2 * box-edge - 2" double,double => double
             _mult "2 * box-edge" double,double => double
               _constdouble:2.0 "2" => double
               _observervariable:BOX-EDGE "box-edge" => Object
             _constdouble:2.0 "2" => double
-      _plus "1 - box-edge) + random ((2 * box-edge) - 2" double,double => double
+      _plus "1 - box-edge + random 2 * box-edge - 2" double,double => double
         _minus "1 - box-edge" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:BOX-EDGE "box-edge" => Object
-        _random "random ((2 * box-edge) - 2" double => double
-          _minus "2 * box-edge) - 2" double,double => double
+        _random "random 2 * box-edge - 2" double => double
+          _minus "2 * box-edge - 2" double,double => double
             _mult "2 * box-edge" double,double => double
               _constdouble:2.0 "2" => double
               _observervariable:BOX-EDGE "box-edge" => Object
@@ -3098,8 +3097,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           RETURN
 
 procedure FADE:[]{-TP-}:
-[0]_asm_procedurefade_if_0 "if (not box?) and (pcolor != black" boolean => void
-      _and "not box?) and (pcolor != black"
+[0]_asm_procedurefade_if_0 "if not box? and pcolor != black set pcolor pcolor - 0.4 [ if round pcolor = 40 [ set pcolor black ] ]" boolean => void
+      _and "not box? and pcolor != black"
         _not "not box?" boolean => boolean
           _patchvariable:BOX? "box?" => Object
         _notequal "pcolor != black" Object,double => boolean
@@ -3221,7 +3220,7 @@ procedure FADE:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L21
           RETURN
-[1]_asm_procedurefade_setpatchvariable_1 "set pcolor ( pcolor - 0.4" Object => void
+[1]_asm_procedurefade_setpatchvariable_1 "set pcolor pcolor - 0.4" Object => void
       _minus "pcolor - 0.4" double,double => double
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.4 "0.4" => double
@@ -3310,7 +3309,7 @@ procedure FADE:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[2]_asm_procedurefade_if_2 "if (round pcolor = 40" boolean => void
+[2]_asm_procedurefade_if_2 "if round pcolor = 40 [ set pcolor black ]" boolean => void
       _equal "round pcolor = 40" double,double => boolean
         _round "round pcolor" double => double
           _patchvariable:PCOLOR "pcolor" => Object
@@ -3438,7 +3437,7 @@ procedure FADE:[]{-TP-}:
           RETURN
 
 procedure UPDATE-VARIABLES:[]{OTPL}:
-[0]_asm_procedureupdatevariables_ask_0 "ask turtles" AgentSet => void
+[0]_asm_procedureupdatevariables_ask_0 "ask turtles set speed new-speed [ set energy 0.5 * speed * speed * mass ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -3542,7 +3541,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[2]_asm_procedureupdatevariables_setturtlevariable_2 "set energy (0.5 * speed * speed * mass" Object => void
+[2]_asm_procedureupdatevariables_setturtlevariable_2 "set energy 0.5 * speed * speed * mass" Object => void
       _mult "0.5 * speed * speed * mass" double,double => double
         _mult "0.5 * speed * speed" double,double => double
           _mult "0.5 * speed" double,double => double
@@ -3740,8 +3739,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[4]_asm_procedureupdatevariables_setobservervariable_4 "set average  count turtles with [color = green" Object => void
-      _countwith "count turtles with [color = green" AgentSet,Reporter => double
+[4]_asm_procedureupdatevariables_setobservervariable_4 "set average count turtles with [ color = green ]" Object => void
+      _countwith "count turtles with [ color = green ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
         _asm_procedureupdatevariables_equal_5 "color = green" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
@@ -3909,8 +3908,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[5]_asm_procedureupdatevariables_setobservervariable_6 "set slow     count turtles with [color = blue" Object => void
-      _countwith "count turtles with [color = blue" AgentSet,Reporter => double
+[5]_asm_procedureupdatevariables_setobservervariable_6 "set slow count turtles with [ color = blue ]" Object => void
+      _countwith "count turtles with [ color = blue ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
         _asm_procedureupdatevariables_equal_7 "color = blue" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
@@ -4078,8 +4077,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[6]_asm_procedureupdatevariables_setobservervariable_8 "set fast     count turtles with [color = red" Object => void
-      _countwith "count turtles with [color = red" AgentSet,Reporter => double
+[6]_asm_procedureupdatevariables_setobservervariable_8 "set fast count turtles with [ color = red ]" Object => void
+      _countwith "count turtles with [ color = red ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
         _asm_procedureupdatevariables_equal_9 "color = red" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
@@ -4247,9 +4246,9 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[7]_asm_procedureupdatevariables_setobservervariable_10 "set avg-speed mean [speed ] of turtles" Object => void
-      _mean "mean [speed ] of turtles" LogoList => double
-        _turtlevariableof:SPEED "of turtles" AgentSet => LogoList
+[7]_asm_procedureupdatevariables_setobservervariable_10 "set avg-speed mean [ speed ] of turtles" Object => void
+      _mean "mean [ speed ] of turtles" LogoList => double
+        _turtlevariableof:SPEED "[ speed ] of turtles" AgentSet => LogoList
           _turtles "turtles" => AgentSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -4404,9 +4403,9 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[8]_asm_procedureupdatevariables_setobservervariable_11 "set avg-energy mean [energy] of turtles" Object => void
-      _mean "mean [energy] of turtles" LogoList => double
-        _turtlevariableof:ENERGY "of turtles" AgentSet => LogoList
+[8]_asm_procedureupdatevariables_setobservervariable_11 "set avg-energy mean [ energy ] of turtles" Object => void
+      _mean "mean [ energy ] of turtles" LogoList => double
+        _turtlevariableof:ENERGY "[ energy ] of turtles" AgentSet => LogoList
           _turtles "turtles" => AgentSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -4561,11 +4560,11 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[9]_asm_procedureupdatevariables_setobservervariable_12 "set vsplit (round ((max [speed] of turtles) * 1.2" Object => void
-      _round "round ((max [speed] of turtles) * 1.2" double => double
-        _mult "max [speed] of turtles) * 1.2" double,double => double
-          _max "max [speed] of turtles"
-            _asm_procedureupdatevariables_turtlevariableof_13 "of turtles" Object => Object
+[9]_asm_procedureupdatevariables_setobservervariable_12 "set vsplit round max [ speed ] of turtles * 1.2" Object => void
+      _round "round max [ speed ] of turtles * 1.2" double => double
+        _mult "max [ speed ] of turtles * 1.2" double,double => double
+          _max "max [ speed ] of turtles"
+            _asm_procedureupdatevariables_turtlevariableof_13 "[ speed ] of turtles" Object => Object
               _turtles "turtles" => AgentSet
                   TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                   TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -4774,28 +4773,26 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           RETURN
 
 procedure BOUNCE:[]{-T--}:
-[0]_asm_procedurebounce_if_0 "if ((pycor = box-edge)       and ((heading > 270) or (heading < 90))) or
-     ((pycor = (0 - box-edge)) and ((heading > 90) and (heading < 270" boolean => void
-      _or "pycor = box-edge)       and ((heading > 270) or (heading < 90))) or
-     ((pycor = (0 - box-edge)) and ((heading > 90) and (heading < 270"
-        _and "pycor = box-edge)       and ((heading > 270) or (heading < 90"
+[0]_asm_procedurebounce_if_0 "if pycor = box-edge and heading > 270 or heading < 90 or pycor = 0 - box-edge and heading > 90 and heading < 270 [ set heading 180 - heading ]" boolean => void
+      _or "pycor = box-edge and heading > 270 or heading < 90 or pycor = 0 - box-edge and heading > 90 and heading < 270"
+        _and "pycor = box-edge and heading > 270 or heading < 90"
           _equal "pycor = box-edge" double,Object => boolean
             _patchvariabledouble:PYCOR "pycor" => double
             _observervariable:BOX-EDGE "box-edge" => Object
-          _or "heading > 270) or (heading < 90"
+          _or "heading > 270 or heading < 90"
             _greaterthan "heading > 270" double,double => boolean
               _turtlevariabledouble:HEADING "heading" => double
               _constdouble:270.0 "270" => double
             _lessthan "heading < 90" double,double => boolean
               _turtlevariabledouble:HEADING "heading" => double
               _constdouble:90.0 "90" => double
-        _and "pycor = (0 - box-edge)) and ((heading > 90) and (heading < 270"
-          _equal "pycor = (0 - box-edge" double,double => boolean
+        _and "pycor = 0 - box-edge and heading > 90 and heading < 270"
+          _equal "pycor = 0 - box-edge" double,double => boolean
             _patchvariabledouble:PYCOR "pycor" => double
             _minus "0 - box-edge" double,double => double
               _constdouble:0.0 "0" => double
               _observervariable:BOX-EDGE "box-edge" => Object
-          _and "heading > 90) and (heading < 270"
+          _and "heading > 90 and heading < 270"
             _greaterthan "heading > 90" double,double => boolean
               _turtlevariabledouble:HEADING "heading" => double
               _constdouble:90.0 "90" => double
@@ -5065,7 +5062,7 @@ procedure BOUNCE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L51
           RETURN
-[1]_asm_procedurebounce_setturtlevariable_1 "set heading (180 - heading" Object => void
+[1]_asm_procedurebounce_setturtlevariable_1 "set heading 180 - heading" Object => void
       _minus "180 - heading" double,double => double
         _constdouble:180.0 "180" => double
         _turtlevariabledouble:HEADING "heading" => double
@@ -5119,23 +5116,21 @@ procedure BOUNCE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[2]_asm_procedurebounce_if_2 "if ((pxcor = box-edge)       and ((heading > 0) and (heading < 180))) or
-     ((pxcor = (0 - box-edge)) and ((heading > 180" boolean => void
-      _or "pxcor = box-edge)       and ((heading > 0) and (heading < 180))) or
-     ((pxcor = (0 - box-edge)) and ((heading > 180"
-        _and "pxcor = box-edge)       and ((heading > 0) and (heading < 180"
+[2]_asm_procedurebounce_if_2 "if pxcor = box-edge and heading > 0 and heading < 180 or pxcor = 0 - box-edge and heading > 180 [ set heading 0 - heading ]" boolean => void
+      _or "pxcor = box-edge and heading > 0 and heading < 180 or pxcor = 0 - box-edge and heading > 180"
+        _and "pxcor = box-edge and heading > 0 and heading < 180"
           _equal "pxcor = box-edge" double,Object => boolean
             _patchvariabledouble:PXCOR "pxcor" => double
             _observervariable:BOX-EDGE "box-edge" => Object
-          _and "heading > 0) and (heading < 180"
+          _and "heading > 0 and heading < 180"
             _greaterthan "heading > 0" double,double => boolean
               _turtlevariabledouble:HEADING "heading" => double
               _constdouble:0.0 "0" => double
             _lessthan "heading < 180" double,double => boolean
               _turtlevariabledouble:HEADING "heading" => double
               _constdouble:180.0 "180" => double
-        _and "pxcor = (0 - box-edge)) and ((heading > 180"
-          _equal "pxcor = (0 - box-edge" double,double => boolean
+        _and "pxcor = 0 - box-edge and heading > 180"
+          _equal "pxcor = 0 - box-edge" double,double => boolean
             _patchvariabledouble:PXCOR "pxcor" => double
             _minus "0 - box-edge" double,double => double
               _constdouble:0.0 "0" => double
@@ -5377,7 +5372,7 @@ procedure BOUNCE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L44
           RETURN
-[3]_asm_procedurebounce_setturtlevariable_3 "set heading (0 - heading" Object => void
+[3]_asm_procedurebounce_setturtlevariable_3 "set heading 0 - heading" Object => void
       _minus "0 - heading" double,double => double
         _constdouble:0.0 "0" => double
         _turtlevariabledouble:HEADING "heading" => double
@@ -5444,8 +5439,8 @@ procedure BOUNCE:[]{-T--}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_setobservervariable_0 "set box-edge (round (max-pxcor * box-size-percent / 100" Object => void
-      _round "round (max-pxcor * box-size-percent / 100" double => double
+[2]_asm_proceduresetup_setobservervariable_0 "set box-edge round max-pxcor * box-size-percent / 100" Object => void
+      _round "round max-pxcor * box-size-percent / 100" double => double
         _div "max-pxcor * box-size-percent / 100" double,double => double
           _mult "max-pxcor * box-size-percent" double,double => double
             _maxpxcor "max-pxcor" => double
@@ -5574,7 +5569,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetup_setobservervariable_2 "set vclock  0" Object => void
+[4]_asm_proceduresetup_setobservervariable_2 "set vclock 0" Object => void
       _constdouble:0.0 "0" => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -5608,7 +5603,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_fastcreateorderedturtles: "cro number"
+[5]_fastcreateorderedturtles: "cro [ number ]"
       _asm_proceduresetup_observervariable_3 "number" => Object
            L0
             ALOAD 1
@@ -5617,7 +5612,7 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[6]_asm_proceduresetup_ask_4 "ask turtles" AgentSet => void
+[6]_asm_proceduresetup_ask_4 "ask turtles set new-speed initspeed set mass initmass if who != 0 [ random-position ] rt random 360 [ recolor-turtle turtle who ]" AgentSet => void
       _turtles "turtles" => AgentSet
          L0
           ALOAD 0
@@ -5742,7 +5737,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[9]_asm_proceduresetup_if_7 "if who != 0" boolean => void
+[9]_asm_proceduresetup_if_7 "if who != 0 [ random-position ]" boolean => void
       _notequal "who != 0" double,double => boolean
         _turtlevariabledouble:WHO "who" => double
         _constdouble:0.0 "0" => double
@@ -5800,8 +5795,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_proceduresetup_right_9 "rt random" double => void
-      _randomconst:360 "random" => double
+[11]_asm_proceduresetup_right_9 "rt random 360" double => void
+      _randomconst:360 "random 360" => double
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -6072,7 +6067,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure MAKE-BOX:[]{OTPL}:
-[0]_asm_proceduremakebox_ask_0 "ask patches" AgentSet => void
+[0]_asm_proceduremakebox_ask_0 "ask patches set box? false [ if abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge set pcolor red [ set box? true ] ]" AgentSet => void
       _patches "patches" => AgentSet
          L0
           ALOAD 0
@@ -6159,11 +6154,9 @@ procedure MAKE-BOX:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduremakebox_if_2 "if ((abs pxcor = box-edge) and (abs pycor <= box-edge)) or
-         ((abs pycor = box-edge) and (abs pxcor <= box-edge" boolean => void
-      _or "abs pxcor = box-edge) and (abs pycor <= box-edge)) or
-         ((abs pycor = box-edge) and (abs pxcor <= box-edge"
-        _and "abs pxcor = box-edge) and (abs pycor <= box-edge"
+[2]_asm_proceduremakebox_if_2 "if abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge set pcolor red [ set box? true ]" boolean => void
+      _or "abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge"
+        _and "abs pxcor = box-edge and abs pycor <= box-edge"
           _equal "abs pxcor = box-edge" double,Object => boolean
             _abs "abs pxcor" double => double
               _patchvariabledouble:PXCOR "pxcor" => double
@@ -6172,7 +6165,7 @@ procedure MAKE-BOX:[]{OTPL}:
             _abs "abs pycor" double => double
               _patchvariabledouble:PYCOR "pycor" => double
             _observervariable:BOX-EDGE "box-edge" => Object
-        _and "abs pycor = box-edge) and (abs pxcor <= box-edge"
+        _and "abs pycor = box-edge and abs pxcor <= box-edge"
           _equal "abs pycor = box-edge" double,Object => boolean
             _abs "abs pycor" double => double
               _patchvariabledouble:PYCOR "pycor" => double
@@ -6620,9 +6613,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "average"
            L1
             ARETURN
-[2]_histogram "histogram [ speed ] of turtles with [ color = green"
-      _asm_proceduredohistograms_turtlevariableof_2 "of turtles with [ color = green" Object => Object
-        _with "turtles with [ color = green" AgentSet,Reporter => AgentSet
+[2]_histogram "histogram [ speed ] of turtles with [ color = green ]"
+      _asm_proceduredohistograms_turtlevariableof_2 "[ speed ] of turtles with [ color = green ]" Object => Object
+        _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_3 "color = green" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -6891,9 +6884,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[4]_histogram "histogram [ speed ] of turtles with [ color = blue"
-      _asm_proceduredohistograms_turtlevariableof_5 "of turtles with [ color = blue" Object => Object
-        _with "turtles with [ color = blue" AgentSet,Reporter => AgentSet
+[4]_histogram "histogram [ speed ] of turtles with [ color = blue ]"
+      _asm_proceduredohistograms_turtlevariableof_5 "[ speed ] of turtles with [ color = blue ]" Object => Object
+        _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_6 "color = blue" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -7162,9 +7155,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[6]_histogram "histogram [ speed ] of turtles with [ color = red"
-      _asm_proceduredohistograms_turtlevariableof_8 "of turtles with [ color = red" Object => Object
-        _with "turtles with [ color = red" AgentSet,Reporter => AgentSet
+[6]_histogram "histogram [ speed ] of turtles with [ color = red ]"
+      _asm_proceduredohistograms_turtlevariableof_8 "[ speed ] of turtles with [ color = red ]" Object => Object
+        _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_9 "color = red" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -7522,9 +7515,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "average"
            L1
             ARETURN
-[13]_histogram "histogram [ energy ] of turtles with [ color = green"
-      _asm_proceduredohistograms_turtlevariableof_15 "of turtles with [ color = green" Object => Object
-        _with "turtles with [ color = green" AgentSet,Reporter => AgentSet
+[13]_histogram "histogram [ energy ] of turtles with [ color = green ]"
+      _asm_proceduredohistograms_turtlevariableof_15 "[ energy ] of turtles with [ color = green ]" Object => Object
+        _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_16 "color = green" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -7793,9 +7786,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[15]_histogram "histogram [ energy ] of turtles with [ color = blue"
-      _asm_proceduredohistograms_turtlevariableof_18 "of turtles with [ color = blue" Object => Object
-        _with "turtles with [ color = blue" AgentSet,Reporter => AgentSet
+[15]_histogram "histogram [ energy ] of turtles with [ color = blue ]"
+      _asm_proceduredohistograms_turtlevariableof_18 "[ energy ] of turtles with [ color = blue ]" Object => Object
+        _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_19 "color = blue" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -8064,9 +8057,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[17]_histogram "histogram [ energy ] of turtles with [ color = red"
-      _asm_proceduredohistograms_turtlevariableof_21 "of turtles with [ color = red" Object => Object
-        _with "turtles with [ color = red" AgentSet,Reporter => AgentSet
+[17]_histogram "histogram [ energy ] of turtles with [ color = red ]"
+      _asm_proceduredohistograms_turtlevariableof_21 "[ energy ] of turtles with [ color = red ]" Object => Object
+        _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
           _asm_proceduredohistograms_equal_22 "color = red" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
@@ -8488,7 +8481,7 @@ procedure COLLIDE:[]{-T--}:
           RETURN
 
 procedure MOVE:[]{-T--}:
-[0]_asm_proceduremove_jump_0 "jump ( speed / vsplit" double => void
+[0]_asm_proceduremove_jump_0 "jump speed / vsplit" double => void
       _div "speed / vsplit" double,double => double
         _turtlevariable:SPEED "speed" => Object
         _observervariable:VSPLIT "vsplit" => Object
@@ -8621,9 +8614,9 @@ procedure MOVE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_proceduremove_if_2 "if trace? and ( who = 0 ) and not box?" boolean => void
-      _and "trace? and ( who = 0 ) and not box?"
-        _and "trace? and ( who = 0"
+[2]_asm_proceduremove_if_2 "if trace? and who = 0 and not box? [ set pcolor yellow ]" boolean => void
+      _and "trace? and who = 0 and not box?"
+        _and "trace? and who = 0"
           _observervariable:TRACE? "trace?" => Object
           _equal "who = 0" double,double => boolean
             _turtlevariabledouble:WHO "who" => double
@@ -8855,8 +8848,8 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduregetturtle2info_setturtlevariable_1 "set mass2 [mass] of turtle2" Object => void
-      _turtlevariableof:MASS "of turtle2" Object => Object
+[1]_asm_proceduregetturtle2info_setturtlevariable_1 "set mass2 [ mass ] of turtle2" Object => void
+      _turtlevariableof:MASS "[ mass ] of turtle2" Object => Object
         _turtlevariable:TURTLE2 "turtle2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -9020,8 +9013,8 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[2]_asm_proceduregetturtle2info_setturtlevariable_2 "set speed2 [new-speed] of turtle2" Object => void
-      _turtlevariableof:NEW-SPEED "of turtle2" Object => Object
+[2]_asm_proceduregetturtle2info_setturtlevariable_2 "set speed2 [ new-speed ] of turtle2" Object => void
+      _turtlevariableof:NEW-SPEED "[ new-speed ] of turtle2" Object => Object
         _turtlevariable:TURTLE2 "turtle2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -9185,8 +9178,8 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[3]_asm_proceduregetturtle2info_setturtlevariable_3 "set heading2 [heading] of turtle2" Object => void
-      _turtlevariableof:HEADING "of turtle2" Object => Object
+[3]_asm_proceduregetturtle2info_setturtlevariable_3 "set heading2 [ heading ] of turtle2" Object => void
+      _turtlevariableof:HEADING "[ heading ] of turtle2" Object => Object
         _turtlevariable:TURTLE2 "turtle2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
@@ -9361,8 +9354,8 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           RETURN
 
 procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
-[0]_asm_procedurecalculatevelocitycomponents_setturtlevariable_0 "set theta ( random" Object => void
-      _randomconst:360 "random" => double
+[0]_asm_procedurecalculatevelocitycomponents_setturtlevariable_0 "set theta random 360" Object => void
+      _randomconst:360 "random 360" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -9404,10 +9397,10 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurecalculatevelocitycomponents_setturtlevariable_1 "set v1l ( new-speed * ( sin ( theta - heading" Object => void
-      _mult "new-speed * ( sin ( theta - heading" double,double => double
+[1]_asm_procedurecalculatevelocitycomponents_setturtlevariable_1 "set v1l new-speed * sin theta - heading" Object => void
+      _mult "new-speed * sin theta - heading" double,double => double
         _turtlevariable:NEW-SPEED "new-speed" => Object
-        _sin "sin ( theta - heading" double => double
+        _sin "sin theta - heading" double => double
           _minus "theta - heading" double,double => double
             _turtlevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
@@ -9554,10 +9547,10 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L21
           RETURN
-[2]_asm_procedurecalculatevelocitycomponents_setturtlevariable_2 "set v1t ( new-speed * ( cos ( theta - heading" Object => void
-      _mult "new-speed * ( cos ( theta - heading" double,double => double
+[2]_asm_procedurecalculatevelocitycomponents_setturtlevariable_2 "set v1t new-speed * cos theta - heading" Object => void
+      _mult "new-speed * cos theta - heading" double,double => double
         _turtlevariable:NEW-SPEED "new-speed" => Object
-        _cos "cos ( theta - heading" double => double
+        _cos "cos theta - heading" double => double
           _minus "theta - heading" double,double => double
             _turtlevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
@@ -9704,10 +9697,10 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L21
           RETURN
-[3]_asm_procedurecalculatevelocitycomponents_setturtlevariable_3 "set v2l ( speed2 * ( sin ( theta - heading2" Object => void
-      _mult "speed2 * ( sin ( theta - heading2" double,double => double
+[3]_asm_procedurecalculatevelocitycomponents_setturtlevariable_3 "set v2l speed2 * sin theta - heading2" Object => void
+      _mult "speed2 * sin theta - heading2" double,double => double
         _turtlevariable:SPEED2 "speed2" => Object
-        _sin "sin ( theta - heading2" double => double
+        _sin "sin theta - heading2" double => double
           _minus "theta - heading2" double,double => double
             _turtlevariable:THETA "theta" => Object
             _turtlevariable:HEADING2 "heading2" => Object
@@ -9889,10 +9882,10 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L26
           RETURN
-[4]_asm_procedurecalculatevelocitycomponents_setturtlevariable_4 "set v2t ( speed2 * ( cos ( theta - heading2" Object => void
-      _mult "speed2 * ( cos ( theta - heading2" double,double => double
+[4]_asm_procedurecalculatevelocitycomponents_setturtlevariable_4 "set v2t speed2 * cos theta - heading2" Object => void
+      _mult "speed2 * cos theta - heading2" double,double => double
         _turtlevariable:SPEED2 "speed2" => Object
-        _cos "cos ( theta - heading2" double => double
+        _cos "cos theta - heading2" double => double
           _minus "theta - heading2" double,double => double
             _turtlevariable:THETA "theta" => Object
             _turtlevariable:HEADING2 "heading2" => Object
@@ -10074,9 +10067,9 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L26
           RETURN
-[5]_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5 Object => void
-      _div "mass * v1t ) + ( mass2 * v2t ) ) / ( mass + mass2" double,double => double
-        _plus "mass * v1t ) + ( mass2 * v2t" double,double => double
+[5]_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5 "let mass * v1t + mass2 * v2t / mass + mass2" Object => void
+      _div "mass * v1t + mass2 * v2t / mass + mass2" double,double => double
+        _plus "mass * v1t + mass2 * v2t" double,double => double
           _mult "mass * v1t" double,double => double
             _turtlevariable:MASS "mass" => Object
             _turtlevariable:V1T "v1t" => Object
@@ -10405,7 +10398,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L43
           RETURN
-[6]_asm_procedurecalculatevelocitycomponents_setturtlevariable_6 "set v1t ( vcm + vcm - v1t" Object => void
+[6]_asm_procedurecalculatevelocitycomponents_setturtlevariable_6 "set v1t vcm + vcm - v1t" Object => void
       _minus "vcm + vcm - v1t" double,double => double
         _plus "vcm + vcm" double,double => double
           _procedurevariable:VCM "vcm" => Object
@@ -10556,7 +10549,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L21
           RETURN
-[7]_asm_procedurecalculatevelocitycomponents_setturtlevariable_7 "set v2t ( vcm + vcm - v2t" Object => void
+[7]_asm_procedurecalculatevelocitycomponents_setturtlevariable_7 "set v2t vcm + vcm - v2t" Object => void
       _minus "vcm + vcm - v2t" double,double => double
         _plus "vcm + vcm" double,double => double
           _procedurevariable:VCM "vcm" => Object
@@ -10718,9 +10711,9 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           RETURN
 
 procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
-[0]_asm_proceduresetnewspeedandheadings_setturtlevariable_0 "set new-speed  sqrt (( v1t * v1t ) + ( v1l * v1l" Object => void
-      _sqrt "sqrt (( v1t * v1t ) + ( v1l * v1l" double => double
-        _plus "v1t * v1t ) + ( v1l * v1l" double,double => double
+[0]_asm_proceduresetnewspeedandheadings_setturtlevariable_0 "set new-speed sqrt v1t * v1t + v1l * v1l" Object => void
+      _sqrt "sqrt v1t * v1t + v1l * v1l" double => double
+        _plus "v1t * v1t + v1l * v1l" double,double => double
           _mult "v1t * v1t" double,double => double
             _turtlevariable:V1T "v1t" => Object
             _turtlevariable:V1T "v1t" => Object
@@ -10975,8 +10968,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L34
           RETURN
-[1]_asm_proceduresetnewspeedandheadings_ifelse_1 "ifelse ( ( v1l >= 0 ) and ( v1t >= 0" boolean => void
-      _and "v1l >= 0 ) and ( v1t >= 0"
+[1]_asm_proceduresetnewspeedandheadings_ifelse_1 "ifelse v1l >= 0 and v1t >= 0 [ set heading theta - atan v1l v1t ] [ ifelse v1l < 0 and v1t < 0 [ set heading theta + 180 - atan v1l v1t ] [ ifelse v1l >= 0 and v1t < 0 [ set heading theta + 180 - atan v1l v1t ] [ if v1l < 0 and v1t >= 0 [ set heading theta - atan v1l v1t ] ] ] ]" boolean => void
+      _and "v1l >= 0 and v1t >= 0"
         _greaterorequal "v1l >= 0" Object,double => boolean
           _turtlevariable:V1L "v1l" => Object
           _constdouble:0.0 "0" => double
@@ -11140,8 +11133,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[2]_asm_proceduresetnewspeedandheadings_setturtlevariable_2 "set heading ( theta - ( atan v1l v1t" Object => void
-      _minus "theta - ( atan v1l v1t" double,double => double
+[2]_asm_proceduresetnewspeedandheadings_setturtlevariable_2 "set heading theta - atan v1l v1t" Object => void
+      _minus "theta - atan v1l v1t" double,double => double
         _turtlevariable:THETA "theta" => Object
         _atan "atan v1l v1t" double,double => double
           _turtlevariable:V1L "v1l" => Object
@@ -11387,8 +11380,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetnewspeedandheadings_ifelse_4 "ifelse ( ( v1l < 0 ) and ( v1t < 0" boolean => void
-      _and "v1l < 0 ) and ( v1t < 0"
+[4]_asm_proceduresetnewspeedandheadings_ifelse_4 "ifelse v1l < 0 and v1t < 0 [ set heading theta + 180 - atan v1l v1t ] [ ifelse v1l >= 0 and v1t < 0 [ set heading theta + 180 - atan v1l v1t ] [ if v1l < 0 and v1t >= 0 [ set heading theta - atan v1l v1t ] ] ]" boolean => void
+      _and "v1l < 0 and v1t < 0"
         _lessthan "v1l < 0" Object,double => boolean
           _turtlevariable:V1L "v1l" => Object
           _constdouble:0.0 "0" => double
@@ -11552,8 +11545,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[5]_asm_proceduresetnewspeedandheadings_setturtlevariable_5 "set heading ( ( theta + 180 ) - ( atan v1l v1t" Object => void
-      _minus "theta + 180 ) - ( atan v1l v1t" double,double => double
+[5]_asm_proceduresetnewspeedandheadings_setturtlevariable_5 "set heading theta + 180 - atan v1l v1t" Object => void
+      _minus "theta + 180 - atan v1l v1t" double,double => double
         _plus "theta + 180" double,double => double
           _turtlevariable:THETA "theta" => Object
           _constdouble:180.0 "180" => double
@@ -11811,8 +11804,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_proceduresetnewspeedandheadings_ifelse_7 "ifelse ( ( v1l >= 0 ) and ( v1t < 0" boolean => void
-      _and "v1l >= 0 ) and ( v1t < 0"
+[7]_asm_proceduresetnewspeedandheadings_ifelse_7 "ifelse v1l >= 0 and v1t < 0 [ set heading theta + 180 - atan v1l v1t ] [ if v1l < 0 and v1t >= 0 [ set heading theta - atan v1l v1t ] ]" boolean => void
+      _and "v1l >= 0 and v1t < 0"
         _greaterorequal "v1l >= 0" Object,double => boolean
           _turtlevariable:V1L "v1l" => Object
           _constdouble:0.0 "0" => double
@@ -11976,8 +11969,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[8]_asm_proceduresetnewspeedandheadings_setturtlevariable_8 "set heading ( ( theta + 180 ) - ( atan v1l v1t" Object => void
-      _minus "theta + 180 ) - ( atan v1l v1t" double,double => double
+[8]_asm_proceduresetnewspeedandheadings_setturtlevariable_8 "set heading theta + 180 - atan v1l v1t" Object => void
+      _minus "theta + 180 - atan v1l v1t" double,double => double
         _plus "theta + 180" double,double => double
           _turtlevariable:THETA "theta" => Object
           _constdouble:180.0 "180" => double
@@ -12235,8 +12228,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[10]_asm_proceduresetnewspeedandheadings_if_10 "if ( ( v1l < 0 ) and ( v1t >= 0" boolean => void
-      _and "v1l < 0 ) and ( v1t >= 0"
+[10]_asm_proceduresetnewspeedandheadings_if_10 "if v1l < 0 and v1t >= 0 [ set heading theta - atan v1l v1t ]" boolean => void
+      _and "v1l < 0 and v1t >= 0"
         _lessthan "v1l < 0" Object,double => boolean
           _turtlevariable:V1L "v1l" => Object
           _constdouble:0.0 "0" => double
@@ -12400,8 +12393,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[11]_asm_proceduresetnewspeedandheadings_setturtlevariable_11 "set heading ( theta - ( atan v1l v1t" Object => void
-      _minus "theta - ( atan v1l v1t" double,double => double
+[11]_asm_proceduresetnewspeedandheadings_setturtlevariable_11 "set heading theta - atan v1l v1t" Object => void
+      _minus "theta - atan v1l v1t" double,double => double
         _turtlevariable:THETA "theta" => Object
         _atan "atan v1l v1t" double,double => double
           _turtlevariable:V1L "v1l" => Object
@@ -12640,13 +12633,13 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L32
           RETURN
-[12]_asm_proceduresetnewspeedandheadings_setprocedurevariable_12 Object => void
-      _sqrt "sqrt (( v2t * v2t) + ( v2l *  v2l" double => double
-        _plus "v2t * v2t) + ( v2l *  v2l" double,double => double
+[12]_asm_proceduresetnewspeedandheadings_setprocedurevariable_12 "let sqrt v2t * v2t + v2l * v2l" Object => void
+      _sqrt "sqrt v2t * v2t + v2l * v2l" double => double
+        _plus "v2t * v2t + v2l * v2l" double,double => double
           _mult "v2t * v2t" double,double => double
             _turtlevariable:V2T "v2t" => Object
             _turtlevariable:V2T "v2t" => Object
-          _mult "v2l *  v2l" double,double => double
+          _mult "v2l * v2l" double,double => double
             _turtlevariable:V2L "v2l" => Object
             _turtlevariable:V2L "v2l" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -12881,7 +12874,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L30
           RETURN
-[13]_asm_proceduresetnewspeedandheadings_ask_13 "ask turtle2" Object => void
+[13]_asm_proceduresetnewspeedandheadings_ask_13 "ask turtle2 [ set new-speed new-new-speed ]" Object => void
       _turtlevariable:TURTLE2 "turtle2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -13056,8 +13049,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[16]_asm_proceduresetnewspeedandheadings_ifelse_16 "ifelse ( ( v2l >= 0 ) and ( v2t >= 0" boolean => void
-      _and "v2l >= 0 ) and ( v2t >= 0"
+[16]_asm_proceduresetnewspeedandheadings_ifelse_16 "ifelse v2l >= 0 and v2t >= 0 [ set heading2 theta - atan v2l v2t ] [ ifelse v2l < 0 and v2t < 0 [ set heading2 theta + 180 - atan v2l v2t ] [ ifelse v2l >= 0 and v2t < 0 [ set heading2 theta + 180 - atan v2l v2t ] [ if v2l < 0 and v2t >= 0 [ set heading2 theta - atan v2l v2t ] ] ] ]" boolean => void
+      _and "v2l >= 0 and v2t >= 0"
         _greaterorequal "v2l >= 0" Object,double => boolean
           _turtlevariable:V2L "v2l" => Object
           _constdouble:0.0 "0" => double
@@ -13221,8 +13214,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[17]_asm_proceduresetnewspeedandheadings_setturtlevariable_17 "set heading2 ( theta - ( atan v2l v2t" Object => void
-      _minus "theta - ( atan v2l v2t" double,double => double
+[17]_asm_proceduresetnewspeedandheadings_setturtlevariable_17 "set heading2 theta - atan v2l v2t" Object => void
+      _minus "theta - atan v2l v2t" double,double => double
         _turtlevariable:THETA "theta" => Object
         _atan "atan v2l v2t" double,double => double
           _turtlevariable:V2L "v2l" => Object
@@ -13468,8 +13461,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[19]_asm_proceduresetnewspeedandheadings_ifelse_19 "ifelse ( ( v2l < 0 ) and ( v2t < 0" boolean => void
-      _and "v2l < 0 ) and ( v2t < 0"
+[19]_asm_proceduresetnewspeedandheadings_ifelse_19 "ifelse v2l < 0 and v2t < 0 [ set heading2 theta + 180 - atan v2l v2t ] [ ifelse v2l >= 0 and v2t < 0 [ set heading2 theta + 180 - atan v2l v2t ] [ if v2l < 0 and v2t >= 0 [ set heading2 theta - atan v2l v2t ] ] ]" boolean => void
+      _and "v2l < 0 and v2t < 0"
         _lessthan "v2l < 0" Object,double => boolean
           _turtlevariable:V2L "v2l" => Object
           _constdouble:0.0 "0" => double
@@ -13633,8 +13626,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[20]_asm_proceduresetnewspeedandheadings_setturtlevariable_20 "set heading2 ( ( theta + 180 ) - ( atan v2l v2t" Object => void
-      _minus "theta + 180 ) - ( atan v2l v2t" double,double => double
+[20]_asm_proceduresetnewspeedandheadings_setturtlevariable_20 "set heading2 theta + 180 - atan v2l v2t" Object => void
+      _minus "theta + 180 - atan v2l v2t" double,double => double
         _plus "theta + 180" double,double => double
           _turtlevariable:THETA "theta" => Object
           _constdouble:180.0 "180" => double
@@ -13892,8 +13885,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[22]_asm_proceduresetnewspeedandheadings_ifelse_22 "ifelse ( ( v2l >= 0 ) and ( v2t < 0" boolean => void
-      _and "v2l >= 0 ) and ( v2t < 0"
+[22]_asm_proceduresetnewspeedandheadings_ifelse_22 "ifelse v2l >= 0 and v2t < 0 [ set heading2 theta + 180 - atan v2l v2t ] [ if v2l < 0 and v2t >= 0 [ set heading2 theta - atan v2l v2t ] ]" boolean => void
+      _and "v2l >= 0 and v2t < 0"
         _greaterorequal "v2l >= 0" Object,double => boolean
           _turtlevariable:V2L "v2l" => Object
           _constdouble:0.0 "0" => double
@@ -14057,8 +14050,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[23]_asm_proceduresetnewspeedandheadings_setturtlevariable_23 "set heading2 ( ( theta + 180 ) - ( atan v2l v2t" Object => void
-      _minus "theta + 180 ) - ( atan v2l v2t" double,double => double
+[23]_asm_proceduresetnewspeedandheadings_setturtlevariable_23 "set heading2 theta + 180 - atan v2l v2t" Object => void
+      _minus "theta + 180 - atan v2l v2t" double,double => double
         _plus "theta + 180" double,double => double
           _turtlevariable:THETA "theta" => Object
           _constdouble:180.0 "180" => double
@@ -14316,8 +14309,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[25]_asm_proceduresetnewspeedandheadings_if_25 "if ( ( v2l < 0 ) and ( v2t >= 0" boolean => void
-      _and "v2l < 0 ) and ( v2t >= 0"
+[25]_asm_proceduresetnewspeedandheadings_if_25 "if v2l < 0 and v2t >= 0 [ set heading2 theta - atan v2l v2t ]" boolean => void
+      _and "v2l < 0 and v2t >= 0"
         _lessthan "v2l < 0" Object,double => boolean
           _turtlevariable:V2L "v2l" => Object
           _constdouble:0.0 "0" => double
@@ -14481,8 +14474,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[26]_asm_proceduresetnewspeedandheadings_setturtlevariable_26 "set heading2 ( theta - ( atan v2l v2t" Object => void
-      _minus "theta - ( atan v2l v2t" double,double => double
+[26]_asm_proceduresetnewspeedandheadings_setturtlevariable_26 "set heading2 theta - atan v2l v2t" Object => void
+      _minus "theta - atan v2l v2t" double,double => double
         _turtlevariable:THETA "theta" => Object
         _atan "atan v2l v2t" double,double => double
           _turtlevariable:V2L "v2l" => Object
@@ -14721,7 +14714,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L32
           RETURN
-[27]_asm_proceduresetnewspeedandheadings_setprocedurevariable_27 Object => void
+[27]_asm_proceduresetnewspeedandheadings_setprocedurevariable_27 "let heading2" Object => void
       _turtlevariable:HEADING2 "heading2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -14756,7 +14749,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[28]_asm_proceduresetnewspeedandheadings_ask_28 "ask turtle2" Object => void
+[28]_asm_proceduresetnewspeedandheadings_ask_28 "ask turtle2 [ set heading new-heading ]" Object => void
       _turtlevariable:TURTLE2 "turtle2" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0

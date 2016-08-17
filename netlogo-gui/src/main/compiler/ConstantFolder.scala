@@ -39,9 +39,7 @@ private class ConstantFolder extends DefaultAstVisitor {
     super.visitReporterApp(app)
     if(app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
       val newReporter = makeConstantReporter(applyReporter(app))
-      newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
-      newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
-      newReporter.storedFilename = app.reporter.getFilename
+      newReporter.copyMetadataFrom(app.reporter)
       app.reporter = newReporter
       app.clearArgs
     }

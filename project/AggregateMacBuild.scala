@@ -1,7 +1,7 @@
 import sbt._
 
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.{ Files, Path }
+import java.io.IOException
 
 import NetLogoPackaging.RunProcess
 
@@ -47,15 +47,6 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("natives")
 
-  def copyAny(src: File, dest: File): Unit =
-    src match {
-      case f if f.isDirectory => IO.copyDirectory(src, dest)
-      case f                  =>
-        IO.copyFile(src, dest)
-        if (f.canExecute)
-          dest.setExecutable(true)
-    }
-
   private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
     val name = image.getName.split('.')
     val aggregatedAppDir = aggregateMacDir / (name(0) + " " + version + ".app")
@@ -65,7 +56,7 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     def copyToNewPath(fileName: String) = {
       val sourceFile = image / "Contents" / fileName
       val destFile = aggregatedAppDir / "Contents" / fileName
-      copyAny(sourceFile, destFile)
+      FileActions.copyAny(sourceFile.toPath, destFile.toPath)
     }
 
     def createRelativeSymlink(linkLocation: File, linkTarget: File): Unit = {
@@ -99,7 +90,7 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
 
     libraryDirs.foreach(d => copyToNewPath(s"Java/$d"))
 
-    (image / "Contents" / "Java" * (- ("*.jar" || DirectoryFilter))).get.foreach(f => IO.copyFile(f, javaDir / f.getName))
+    (image / "Contents" / "Java" * (- ("*.jar" || DirectoryFilter))).get.foreach(f => FileActions.copyFile(f, javaDir / f.getName))
     val cfgFile = image / "Contents" / "Java" / (app.name + ".cfg")
     IO.writeLines(javaDir / (app.name + ".cfg"), alterCfgContents(cfgFile, app))
   }
@@ -119,17 +110,17 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
     val sharedJars = aggregateMacDir / "Java"
     val buildName = s"NetLogo-$version"
     IO.createDirectory(sharedJars)
-    IO.copyDirectory(baseImage / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
+    FileActions.copyDirectory(baseImage / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
 
-    additionalFiles.foreach { f => copyAny(f, aggregateMacDir / f.getName) }
+    additionalFiles.foreach { f => FileActions.copyAny(f, aggregateMacDir / f.getName) }
 
     contentDirs.foreach { subdir =>
-      IO.copyDirectory(baseImage / "Contents" / "Java" / subdir, aggregateMacDir / subdir)
+      FileActions.copyDirectory(baseImage / "Contents" / "Java" / subdir, aggregateMacDir / subdir)
     }
 
     buildsMap.foreach {
       case (app, image) =>
-        (image / "Contents" / "Java" * "*.jar").get.foreach(f => IO.copyFile(f, sharedJars / f.getName))
+        (image / "Contents" / "Java" * "*.jar").get.foreach(f => FileActions.copyFile(f, sharedJars / f.getName))
     }
 
     buildsMap.foreach {
@@ -148,6 +139,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
         "-size", "380m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
+
+    RunProcess(Seq("codesign", "-s", "Developer ID Application") :+ (buildName + ".dmg"), aggregateTarget, "codesigning dmg")
 
     aggregateTarget / (buildName + ".dmg")
   }

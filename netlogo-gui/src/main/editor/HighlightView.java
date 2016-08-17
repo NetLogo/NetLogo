@@ -2,13 +2,13 @@
 
 package org.nlogo.editor;
 
-strictfp class HighlightView
+public strictfp class HighlightView
     extends javax.swing.text.PlainView {
 
   private final javax.swing.JEditorPane pane;
   private final Colorizer colorizer;
 
-  HighlightView(javax.swing.JEditorPane pane,
+  public HighlightView(javax.swing.JEditorPane pane,
                 javax.swing.text.Element element, Colorizer colorizer) {
     super(element);
     this.pane = pane;
@@ -33,7 +33,7 @@ strictfp class HighlightView
   private int lineStart;
   private java.awt.Color charColors[];
 
-  private void studyLine(int lineIndex)
+  protected void studyLine(int lineIndex)
       throws javax.swing.text.BadLocationException {
     javax.swing.text.Element element = getElement().getElement(lineIndex);
     javax.swing.text.PlainDocument doc =
@@ -73,7 +73,7 @@ strictfp class HighlightView
   private static final boolean LEAVE_COLORS_ALONE =
       System.getProperty("os.name").startsWith("Mac");
 
-  private int drawText(java.awt.Graphics g,
+  protected int drawText(java.awt.Graphics g,
                        int x, int y,
                        int p0, int p1,
                        boolean isSelected)

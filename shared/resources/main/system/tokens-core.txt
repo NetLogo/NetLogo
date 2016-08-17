@@ -190,6 +190,7 @@ R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
 R __boom etc._boom
+R __block etc._block
 R __check-syntax etc._checksyntax
 R __checksum etc._checksum
 R __dump etc._dump

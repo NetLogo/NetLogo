@@ -17,8 +17,6 @@ public final strictfp class _repeatlocal
     this.vn = vn;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + vn + ",+" + offset;

@@ -28,7 +28,7 @@ object Docs {
       new NetLogoDocs(
         autogenRoot.value / "docs",
         docsRoot.value.getAbsoluteFile,
-        netLogoRoot.value,
+        baseDirectory.value,
         modelsDirectory.value,
         extensionRoot.value)
     },

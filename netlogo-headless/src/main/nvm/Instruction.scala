@@ -2,9 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, Syntax, Token, TokenHolder }
-import org.nlogo.core.I18N
-import org.nlogo.core.LogoList
+import org.nlogo.api.{ CommandTask => ApiCommandTask, ReporterTask => ApiReporterTask }
+import org.nlogo.core.{ AgentKind, I18N, LogoList, Syntax, Token, TokenHolder }
 import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link, World }
 
 object Instruction {
@@ -21,6 +20,15 @@ object Instruction {
       case _ =>
         null
     }
+
+  def agentKindError(kind: AgentKind, allowedKinds: Seq[AgentKind]): String = {
+    val kindDescription = agentKindDescription(kind)
+    lazy val allowedDescription = agentKindDescription(allowedKinds.head)
+    if (allowedKinds.size == 1)
+      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.alternative", kindDescription, allowedDescription)
+    else
+      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.simple", kindDescription)
+  }
 }
 
 abstract class Instruction extends InstructionJ with TokenHolder {
@@ -30,7 +38,8 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   /// the bytecode generator uses these to store text for dump() to print
 
   var chosenMethod: java.lang.reflect.Method = null
-  var source: String = null
+  var source: String = null     // contains the source of this instruction only
+  var fullSource: String = null // contains the source of this instruction and all arguments
   var disassembly = new Thunk[String]() {
     override def compute = ""
   }
@@ -53,6 +62,15 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     this.workspace = sourceInstr.workspace
     this.world = sourceInstr.world
     token = sourceInstr.token
+  }
+
+  def copyMetadataFrom(srcInstr: Instruction): Unit = {
+    token = srcInstr.token
+    this.agentClassString = srcInstr.agentClassString
+    this.source = srcInstr.source
+    this.fullSource = srcInstr.fullSource
+    this.storedSourceStartPosition = srcInstr.storedSourceStartPosition
+    this.storedSourceEndPosition = srcInstr.storedSourceEndPosition
   }
 
   // overridden by GeneratedInstruction
@@ -170,24 +188,45 @@ abstract class Instruction extends InstructionJ with TokenHolder {
           context, this, index, Syntax.AgentsetType, x)
     }
 
-  def argEvalReporterTask(context: Context, index: Int): ReporterTask =
+  def argEvalReporterTask(context: Context, index: Int): ApiReporterTask =
     args(index).report(context) match {
-      case t: ReporterTask =>
+      case t: ApiReporterTask =>
         t
       case x =>
         throw new ArgumentTypeException(
           context, this, index, Syntax.ReporterTaskType, x)
     }
 
-  def argEvalCommandTask(context: Context, index: Int): CommandTask =
+  def argEvalCommandTask(context: Context, index: Int): ApiCommandTask =
     args(index).report(context) match {
-      case t: CommandTask =>
+      case t: ApiCommandTask =>
         t
       case x =>
         throw new ArgumentTypeException(
           context, this, index, Syntax.CommandTaskType, x)
     }
 
+  def argEvalSymbol(context: Context, argIndex: Int): Token = {
+    args(argIndex).report(context) match {
+      case t: Token => t
+      case x =>
+        throw new ArgumentTypeException(
+          context, this, argIndex, Syntax.SymbolType, x)
+    }
+  }
+
+  def argEvalCodeBlock(context: Context, argIndex: Int): List[Token] = {
+    args(argIndex).report(context) match {
+      case l: List[_] =>
+        l.collect {
+          case t: Token => t
+          case _ =>
+            throw new ArgumentTypeException(context, this, argIndex, Syntax.CodeBlockType, l)
+        }
+      case x =>
+        throw new ArgumentTypeException(context, this, argIndex, Syntax.CodeBlockType, x)
+    }
+  }
   ///
 
   def dump(indentLevel: Int = 3): String = {
@@ -332,6 +371,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
              "a number too large for NetLogo"
            else
              "a non-number"))
+
   def throwAgentClassException(context: Context, kind: AgentKind): Nothing = {
    val pairs =
      Seq(

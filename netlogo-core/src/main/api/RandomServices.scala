@@ -5,4 +5,5 @@ package org.nlogo.api
 trait RandomServices {
   def mainRNG: MersenneTwisterFast
   def auxRNG: MersenneTwisterFast
+  def seedRNGs(seed: Int): Unit
 }

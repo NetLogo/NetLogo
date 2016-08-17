@@ -70,8 +70,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GLViewManagerInterface glView = null;
   public ViewManager viewManager = new ViewManager();
   private final ExternalFileManager externalFileManager;
-  // for movie capture
-  public org.nlogo.awt.MovieEncoder movieEncoder = null;
   public final NetLogoListenerManager listenerManager;
 
   // for grid snap
@@ -442,13 +440,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         (AppEventType.MAGIC_OPEN, new Object[]{name})
         .raiseLater(this);
   }
-
-  // called from the job thread
-  @Override
-  public void changeLanguage() {
-    new org.nlogo.window.Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
-  }
-
 
   // called from the job thread
   public void startLogging(String properties) {
@@ -858,12 +849,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     if (owner.ownsPrimaryJobs()) {
       if (e.procedure != null) {
-        jobManager.addJob(owner, agents, e.procedure);
+        jobManager.addJob(owner, agents, this, e.procedure);
       } else {
         new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
-      jobManager.addSecondaryJob(owner, agents, e.procedure);
+      jobManager.addSecondaryJob(owner, agents, this, e.procedure);
     }
   }
 
@@ -930,7 +921,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
              scala.collection.JavaConversions.asJavaIterable(ex.getErrors())) {
-        e.slider.setConstraintError(cce.spec().fieldName(), cce);
+        e.slider.error((Object) cce.spec().fieldName(), (java.lang.Exception) cce);
       }
     }
   }
@@ -1224,7 +1215,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
             public void run() {
-              RuntimeErrorDialog.show("Runtime Error", context, instruction, thread, ex);
+              RuntimeErrorDialog$.MODULE$.show(context, instruction, thread, ex);
             }
           });
     }
@@ -1301,7 +1292,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       };
 
   public final javax.swing.Action switchTo3DViewAction =
-      new javax.swing.AbstractAction("3D View") {
+      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.3DView.switch")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           open3DView();
         }

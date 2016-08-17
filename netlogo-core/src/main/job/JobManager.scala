@@ -2,7 +2,7 @@
 
 package org.nlogo.job
 
-import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
+import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner, Workspace}
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{JobOwner, LogoException}
 import org.nlogo.agent.{Agent, Turtle, Link, AgentSet, World}
@@ -31,33 +31,33 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     else add(job, thread.primaryJobs)
   }
 
-  def makeConcurrentJob(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Job =
-    new ConcurrentJob(owner, agentSet, procedure, 0, null, owner.random)
+  def makeConcurrentJob(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Job =
+    new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random)
 
   @throws(classOf[LogoException])
-  def callReporterProcedure(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Object =
-    new ExclusiveJob(owner, agentSet, procedure, 0, null, owner.random).callReporterProcedure()
+  def callReporterProcedure(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Object =
+    new ExclusiveJob(owner, agentSet, procedure, 0, null, workspace, owner.random).callReporterProcedure()
 
-  def addReporterJobAndWait(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Object = {
-    val job = new ConcurrentJob(owner, agentSet, procedure, 0, null, owner.random)
+  def addReporterJobAndWait(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Object = {
+    val job = new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random)
     add(job, thread.primaryJobs)
     waitFor(job, false)
     job.result
   }
 
   def addJobFromJobThread(job: Job) {thread.primaryJobs.add(job)}
-  def addJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) {
-    add(new ConcurrentJob(owner, agents, procedure, 0, null, owner.random),
+  def addJob(owner: JobOwner, agents: AgentSet, workspace: Workspace, procedure: Procedure) {
+    add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random),
         thread.primaryJobs)
   }
-  def addSecondaryJob(owner: JobOwner, agents: AgentSet, procedure: Procedure) {
+  def addSecondaryJob(owner: JobOwner, agents: AgentSet, workspace: Workspace, procedure: Procedure) {
     // we only allow one secondary job per owner -- this is so MonitorWidgets
     // don't wind up with multiple jobs -- it's a bit of a kludge - ST 9/19/01
     val found = thread.secondaryJobs.synchronized {
       thread.secondaryJobs.asScala.exists{ s => s != null && s.owner == owner && s.state == Job.RUNNING }
     }
     if(!found)
-      add(new ConcurrentJob(owner, agents, procedure, 0, null, owner.random),
+      add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random),
           thread.secondaryJobs)
   }
 

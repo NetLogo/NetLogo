@@ -10,11 +10,12 @@ import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, JCheckBoxMenuItem }
 
 import org.nlogo.api.ModelSettings
+import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.editor.Actions
 import org.nlogo.core.I18N
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
-with Events.SwitchedTabsEvent.Handler
+with AppEvents.SwitchedTabsEvent.Handler
 with org.nlogo.window.Events.LoadModelEvent.Handler
 with org.nlogo.window.Events.AboutToQuitEvent.Handler
 {
@@ -28,7 +29,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   }
   val lineNumbersAction = new AbstractAction(I18N.gui("showLineNumbers")) {
     def actionPerformed(e: ActionEvent) =
-      app.tabs.forAllCodeTabs (tab => tab.lineNumbersVisible = !tab.lineNumbersVisible)
+      app.tabs.lineNumbersVisible = !app.tabs.lineNumbersVisible
   }
 
   //TODO i18n - do we need to change the shortcut keys too?
@@ -43,8 +44,8 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   addSeparator()
   addMenuItem(I18N.gui("selectAll"), 'A', Actions.SELECT_ALL_ACTION)
   addSeparator()
-  addMenuItem(I18N.gui("find"), 'F', org.nlogo.app.FindDialog.FIND_ACTION)
-  addMenuItem(I18N.gui("findNext"), 'G', org.nlogo.app.FindDialog.FIND_NEXT_ACTION)
+  addMenuItem(I18N.gui("find"), 'F', org.nlogo.app.common.FindDialog.FIND_ACTION)
+  addMenuItem(I18N.gui("findNext"), 'G', org.nlogo.app.common.FindDialog.FIND_NEXT_ACTION)
   addSeparator()
   private val lineNumbersItem = addCheckBoxMenuItem(I18N.gui("showLineNumbers"),
     prefs.get(lineNumbersKey, "false").toBoolean, lineNumbersAction)
@@ -53,8 +54,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)
   addMenuItem(I18N.gui("format"), (java.awt.event.KeyEvent.VK_TAB).toChar, org.nlogo.editor.Actions.tabKeyAction, false)
   addSeparator()
-  addMenuItem(I18N.gui("comment"), ';', org.nlogo.editor.Actions.commentAction)
-  addMenuItem(I18N.gui("uncomment"), ';', true, org.nlogo.editor.Actions.uncommentAction)
+  addMenuItem(I18N.gui("comment") + " / " + I18N.gui("uncomment"), ';', org.nlogo.editor.Actions.commentToggleAction)
   addSeparator()
   private val snapper = addCheckBoxMenuItem(I18N.gui("snapToGrid"), app.workspace.snapOn, snapAction)
 
@@ -76,7 +76,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     }
   })
 
-  final def handle(e: Events.SwitchedTabsEvent) {
+  final def handle(e: AppEvents.SwitchedTabsEvent) {
     snapAction.setEnabled(e.newTab == app.tabs.interfaceTab)
     lineNumbersAction.setEnabled(e.newTab != app.tabs.interfaceTab && e.newTab != app.tabs.infoTab)
   }
