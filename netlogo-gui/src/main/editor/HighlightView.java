@@ -2,17 +2,21 @@
 
 package org.nlogo.editor;
 
+import java.awt.Rectangle;
+
 public strictfp class HighlightView
     extends javax.swing.text.PlainView {
 
   private final javax.swing.JEditorPane pane;
   private final Colorizer colorizer;
+  private Rectangle lastView;
 
   public HighlightView(javax.swing.JEditorPane pane,
                 javax.swing.text.Element element, Colorizer colorizer) {
     super(element);
     this.pane = pane;
     this.colorizer = colorizer;
+    lastView = new Rectangle(0, 0, 0, 0);
   }
 
   @Override
@@ -78,6 +82,12 @@ public strictfp class HighlightView
                        int p0, int p1,
                        boolean isSelected)
       throws javax.swing.text.BadLocationException {
+    int offset = pane.getCaretPosition();
+    Rectangle currentView = pane.modelToView(offset);
+    if (lastView.y != currentView.y) {
+      pane.repaint(0, lastView.y, pane.getWidth(), lastView.height);
+      lastView = currentView;
+    }
     javax.swing.text.PlainDocument doc =
         (javax.swing.text.PlainDocument) getDocument();
     javax.swing.text.Segment text = getLineBuffer();
