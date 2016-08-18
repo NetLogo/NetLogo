@@ -209,7 +209,7 @@ with LinkRoot {
     val controller = new FileController(this, workspace)
     val loader =
       fileformat.standardLoader(workspace.compiler.utilities,
-        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect))
+        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect))
     val modelOpt = OpenModel(uri, controller, loader, Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }

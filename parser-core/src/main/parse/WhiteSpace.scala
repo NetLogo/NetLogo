@@ -59,13 +59,29 @@ object WhiteSpace {
     import AstPath._
 
     override def visitProcedureDefinition(proc: ProcedureDefinition)(c: Context): Context = {
-      val functionHeaderLocation =
-        proc.procedure.argTokens.lastOption.getOrElse(proc.procedure.nameToken).sourceLocation
-
       val path = AstPath(Proc(proc.procedure.name))
 
+      def tagFunctionHeader(c: Context): Context = {
+        proc.procedure.argTokens.lastOption match {
+          case None =>
+            val loc = proc.procedure.nameToken.sourceLocation
+            tagLeadingWhitespace(path, loc.copy(start = loc.end))(c)
+          case Some(lastArg) =>
+            val (toks, c1) = tokensToPoint(lastArg.filename, lastArg.end)(c)
+            val iter = c1.tokenIterators(proc.filename)
+            val tokBuffer = toks.toBuffer
+            while (iter.head.tpe != TokenType.CloseBracket && iter.head.tpe != TokenType.Eof) {
+              tokBuffer += iter.next()
+            }
+            if (iter.head.tpe == TokenType.CloseBracket)
+              tokBuffer += iter.next()
+            val allToks = tokBuffer.toSeq
+            c1.addLeadingWhitespace(path, allToks.map(_.text).mkString(""), allToks.last.sourceLocation)
+        }
+      }
+
       c.seq(
-        tagLeadingWhitespace(path, functionHeaderLocation.copy(start = functionHeaderLocation.end)),
+        tagFunctionHeader _,
         super.visitProcedureDefinition(proc)(_)
       ).through(
           sourceToPoint(proc.filename, proc.end),
@@ -142,8 +158,15 @@ object WhiteSpace {
     def visitBlock(blk: AstNode, path: AstPath, superCall: Context => Context)(implicit c: Context): Context =
       c.seq(
         tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename)),
+        removeOpenBracket(blk) _,
         superCall,
         tagTrailingWhitespace(blk, path)(_))
+
+    private def removeOpenBracket(blk: SourceLocatable)(c: Context): Context = {
+      if (c.tokenIterators(blk.filename).head.tpe == TokenType.OpenBracket)
+        c.tokenIterators(blk.filename).next()
+      c
+    }
 
     private def tagTrailingWhitespace(locatable: SourceLocatable, path: AstPath)(c: Context): Context =
       c.lastPosition.map { p =>

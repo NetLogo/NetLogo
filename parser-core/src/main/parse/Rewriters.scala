@@ -128,37 +128,70 @@ trait StatementManipulationVisitor
 class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
   import prim.{ _commandlambda, _commandtask, _reporterlambda, _reportertask, _task, _taskvariable }
 
-  def replaceVar(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = {
+  def varName(nestingDepth: Int, vn: Int): String = {
+    val prefix = if (nestingDepth == 0) "_"
+    else ("_" + ("?" * nestingDepth))
+    s"$prefix$vn"
+  }
+
+  class ReplaceVar(nestingDepth: Int) extends Formatter.Operation {
+    def apply(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
+      astNode match {
+        case app: ReporterApp =>
+          app.reporter match {
+            case tv: _taskvariable =>
+              ctx.appendText(ctx.wsMap.leading(path) + varName(nestingDepth, tv.vn))
+            case _ => ctx
+          }
+            case _ => ctx
+      }
+  }
+
+  class AddVariables(maxVar: Option[Int], nestingDepth: Int) extends Formatter.Operation {
+    def apply(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
     astNode match {
       case app: ReporterApp =>
+        val visitBody = formatter.visitExpression(app.args(0), path, 0)(ctx.copy(text = ""))
+        val bodyText =
+          if (app.reporter.isInstanceOf[_commandlambda])
+            visitBody.text.replaceFirst("\\[", "").reverse.replaceFirst("\\]", "").reverse
+          else
+            visitBody.text
         app.reporter match {
-          case tv: _taskvariable => ctx.appendText(ctx.wsMap.leading(path) + s"_${tv.vn}")
-          case _ => ctx
+          case rl: _reporterlambda if rl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
+          case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
+          case _ =>
+            val vars = maxVar.map(1 to _).map(_.map(num => varName(nestingDepth, num))) getOrElse Seq()
+            val varString = if (vars.nonEmpty) vars.mkString("[", " ", "] -> ") else ""
+            val backMargin = ctx.wsMap.backMargin(path)
+            val actualBackMargin = if (backMargin.trim == "") "" else backMargin
+            ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + bodyText + actualBackMargin + "]")
         }
       case _ => ctx
     }
   }
 
-  def addVariables(maxVar: Option[Int])(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
-    astNode match {
-      case app: ReporterApp =>
-        val visitBody = formatter.visitExpression(app.args(0), path, 0)(ctx.copy(text = ""))
-        val bodyText = visitBody.text.replaceFirst("\\[", "").reverse.replaceFirst("\\]", "").reverse
-        app.reporter match {
-          case rl: _reporterlambda if rl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
-          case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
-          case _ =>
-            val vars = maxVar.map(1 to _).map(_.map(num => s"_$num")) getOrElse Seq()
-            val varString = if (vars.nonEmpty) vars.mkString("[", " ", "] -> ") else ""
-            ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + bodyText + "]")
-        }
-      case _ => ctx
-    }
-
   def onlyFirstArg(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
     astNode match {
       case app: ReporterApp => formatter.visitExpression(app.args(0), path, 0)(ctx)
       case _                => ctx
+    }
+
+  def wrapConciseForClarity(taskPosition: AstPath)(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
+    astNode match {
+      case app: ReporterApp =>
+        val leading = ctx.appendText(ctx.wsMap.leading(taskPosition) + "[[] ->")
+        formatter.visitExpression(app.args(0), path, 0)(leading).appendText("]")
+      case _                => ctx
+    }
+
+  def wrapAmbiguousBlock(taskPosition: AstPath)(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
+    astNode match {
+      case app: ReporterApp =>
+        val visitBody = formatter.visitExpression(app.args(0), path, 0)(ctx.copy(text = ""))
+        val bodyText = visitBody.text.replaceFirst("\\[", "").reverse.replaceFirst("\\]", "").reverse
+        ctx.appendText(ctx.wsMap.leading(taskPosition) + "[[] ->" + bodyText + "]")
+      case _ => ctx
     }
 
   object MaxTaskVariable extends AstFolder[Option[Int]] {
@@ -173,12 +206,37 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
   }
 
   override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Operation] = {
+    def wrapTaskBlockArgument(lambdaApp: ReporterApp): Operation = {
+      val variables = MaxTaskVariable.visitExpression(lambdaApp.args(0))(None)
+      if (variables.headOption.exists(_ > 0))
+        onlyFirstArg _
+      else
+        wrapAmbiguousBlock(position)
+    }
+
     app.reporter match {
       case (_: _reporterlambda | _: _commandlambda) =>
         val variables = MaxTaskVariable.visitExpression(app.args(0))(None)
-        super.visitReporterApp(app, position)(ops + (position -> addVariables(variables)))
-      case _: _task           => super.visitReporterApp(app, position)(ops + (position -> onlyFirstArg _))
-      case _: _taskvariable   => super.visitReporterApp(app, position)(ops + (position -> replaceVar _))
+        val nestingDepth = ops.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size
+        super.visitReporterApp(app, position)(ops + (position -> new AddVariables(variables, nestingDepth)))
+      case _: _task           =>
+        // need to check if arg0 is synthetic. If it is synthetic, we need to make it an actual block
+        app.args(0) match {
+          case ReporterApp(_reporterlambda(_, true) | _commandlambda(_, true), _, _) =>
+            // this case makes sure `let foo task pi` doesn't get converted to `let foo pi`
+            super.visitReporterApp(app, position)(ops + (position -> wrapConciseForClarity(position)))
+          case lambdaApp@ReporterApp(_reporterlambda(args, _), _, _) if args.isEmpty =>
+            // This case makes sure `let foo task [pi]` doesn't get converted to `let foo [pi]`
+            super.visitReporterApp(app, position)(ops + (position -> wrapTaskBlockArgument(lambdaApp)))
+          case lambdaApp@ReporterApp(_commandlambda(args, false), _, _) if args.isEmpty =>
+            // This case makes sure `let foo task [tick]` doesn't get converted to `let foo [tick]`
+            super.visitReporterApp(app, position)(ops + (position -> wrapTaskBlockArgument(lambdaApp)))
+          case _ =>
+            super.visitReporterApp(app, position)(ops + (position -> onlyFirstArg _))
+        }
+      case _: _taskvariable   =>
+        val nestingDepth = ops.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size
+        super.visitReporterApp(app, position)(ops + (position -> new ReplaceVar(nestingDepth - 1)))
       case _                  => super.visitReporterApp(app, position)
     }
   }

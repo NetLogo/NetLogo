@@ -8,67 +8,11 @@ import org.nlogo.core.{ CompilationOperand, CompilerException, DummyCompilationE
   DummyExtensionManager, Femto, NetLogoCore, Program, TokenizerInterface }
 
 class AstRewriterTests extends FunSuite {
-  val tokenizer: TokenizerInterface =
-    Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
-
-  def rewriter(source: String): AstRewriter = {
-    val op = new CompilationOperand(Map("" -> source),
-      new DummyExtensionManager() {
-        override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
-      },
-      new DummyCompilationEnvironment(),
-      Program.fromDialect(NetLogoCore),
-      subprogram = false)
-    new AstRewriter(tokenizer, op)
-  }
-
-  def addExtension(source: String, extension: String): String = {
-    val added = rewriter(source).addExtension(extension)
-    added.trim
-  }
-
-  def addGlobal(source: String, global: String): String = {
-    val added = rewriter(source).addGlobal(global)
-    added.trim
-  }
-
-  def trimmedRewriteCommand(source: String, f: AstRewriter => String, preamble: String = "TO FOO ", postamble: String = " END"): String = {
-    val src = preamble + source + postamble
-    val rewritten = f(rewriter(src))
-    rewritten.stripPrefix(preamble.trim).stripSuffix(postamble.trim).trim
-  }
-
-  def addCommand(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.addCommand(target))
-
-  def replaceReporterToken(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.replaceToken(target._1, target._2), "TO-REPORT FOO REPORT ")
-
-  def replaceCommand(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.replaceCommand(target))
-
-  def remove(source: String, removeCommand: String): String =
-    trimmedRewriteCommand(source, _.remove(removeCommand))
-
-  def replaceReporter(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.replaceReporter(target), "TO-REPORT FOO REPORT ")
-
-  def assertPreservesSource(source: String, header: String = "TO FOO ", footer: String = " END"): Unit = {
-    val rewrittenSource =
-      trimmedRewriteCommand(source,
-        r => r.rewrite(NoopFolder, r.preserveBody _), header, footer)
-    assert(source.trim == rewrittenSource)
-  }
-
-  def assertModifiesSource(source: String, expectedSource: String): Unit = {
-    val rewrittenSource =
-      trimmedRewriteCommand(source, r => r.rewrite(NoopFolder, r.preserveBody _), "", "")
-    assert(expectedSource == rewrittenSource)
-  }
-
   // these are basic checks that various AST structures can be rewritten when unaltered
   test("preserves source") {
+    assertPreservesSource("""__ignore ifelse-value true [""] [ [] ]""")
     assertPreservesSource("fd 1")
+    assertPreservesSource("let baz []")
     assertPreservesSource("create-turtles 10 [ fd 1 ]")
     assertPreservesSource("create-turtles 10 [ ]")
     assertPreservesSource("create-turtles 10")
@@ -78,6 +22,8 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("show reduce [?1 + ?2] [1 2 3]")
     assertPreservesSource("show [pycor] of one-of patches")
     assertPreservesSource("; comment with [\"a list\"] [1 2 3]\n")
+    assertPreservesSource("__ignore (list (1 + 1) (2 - 1))")
+    assertPreservesSource("__ignore [[x] -> list (1 + 1) (2 - 1)]")
     assertPreservesSource("show [ 1 2 3 ]")
     assertPreservesSource("show [ [1] [ 2] [ 3 ] ]")
     assertPreservesSource("show [ blue green yellow ]")
@@ -85,9 +31,20 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("show reduce [[x y] -> x + y] [1 2 3]")
   }
 
-  test("trims loose line ends") {
+  test("preserves complex source") {
     assertPreservesSource("to foo end\n\nto baz end", "", "")
+    assertPreservesSource("to foo end\nto baz end", "", "")
+    assertPreservesSource("to-report foo [bar] end\n\nto baz [qux] end", "", "")
+    assertPreservesSource("breed [as a] breed [bs b] globals [glob1] to foo if is-a? glob1 [ create-bs (100 - (count as)) ] end", "", "")
     assertModifiesSource("to foo  \nend", "to foo\nend")
+  }
+
+  test("multi-source compilation") {
+    val singleFileOp = compilationOp("to foo bar end\nto baz tick end")
+    val multiFileOp = singleFileOp.copy(sources = singleFileOp.sources + ("other" -> "to bar tick end"))
+    val rw = new AstRewriter(tokenizer, multiFileOp)
+    val rewrittenSource = rw.rewrite(NoopFolder, rw.preserveBody _)
+    assertResult("to foo bar end\nto baz tick end")(rewrittenSource)
   }
 
   test("replace token") {
@@ -145,23 +102,25 @@ class AstRewriterTests extends FunSuite {
   }
 
   test("lambda-ize") {
-    def lambdaize(source: String) =
-      try {
-        val rw = rewriter(source)
-        rw.runVisitor(new Lambdaizer())
-      } catch {
-        case ex: CompilerException => fail(ex.getMessage + " " + source.slice(ex.start, ex.end))
-      }
-    def testLambda(changedBody: String, body: String, preamble: String = "TO FOO ", postamble: String = " END"): Unit = {
-      assertResult(preamble + changedBody + postamble)(lambdaize(preamble + body + postamble))
-    }
-    testLambda("__ignore reduce + [1 2 3]", "__ignore reduce + [1 2 3]")
+    testLambda("let baz []", "let baz []")
+    testLambda("__ignore map [[_1] -> [size] of _1] (list turtle 0)", "__ignore map [[size] of ?] (list turtle 0)")
     testLambda("__ignore [[_1] -> print _1]", "__ignore task [print ?]")
+    testLambda("__ignore reduce + [1 2 3]", "__ignore reduce + [1 2 3]")
     testLambda("""foreach [1 2 3] [[_1] ->  crt _1 run "set glob1 glob1 + count turtles" ]""",
       """foreach [1 2 3] [ crt ? run "set glob1 glob1 + count turtles" ]""")
     testLambda("__ignore map [[_1] -> round _1] [1 2 3]", "__ignore map [round ?] [1 2 3]")
     testLambda("__ignore (map [[_1 _2] -> _1 + _2] [1 2 3] [4 5 6])", "__ignore (map [?1 + ?2] [1 2 3] [4 5 6])")
     testLambda("__ignore sort-by [[_1 _2] -> _1 < _2] [1 2 3]", "__ignore sort-by [?1 < ?2] [1 2 3]")
+    testLambda("foreach [] [[_1] -> foreach _1 [[_?1] -> set xcor _?1]]", "foreach [] [foreach ? [set xcor ?]]")
+    testLambda("foreach n-values 4 [[_1] ->  _1] []", "foreach n-values 4 [ ? ] []")
+    testLambda("let x 0 foreach [1 2 3] [[_1] -> set x _1]", "let x 0 foreach [1 2 3] [set x ?]")
+    testLambda("foreach sort-by [[_1 _2] -> [size] of _1 > [size] of _2] turtles [[_1] -> ask _1 []]",
+      "foreach sort-by [[size] of ?1 > [size] of ?2] turtles [ask ? []]")
+    testLambda("__ignore (map [[_1 _2] -> list (_1 + 1) (_2 - 1)] (list 2 1))",
+      "__ignore (map [list (?1 + 1) (?2 - 1)] (list 2 1))")
+    testLambda("let a-task [[] -> tick]", "let a-task task tick")
+    testLambda("let a-task [[] -> tick]", "let a-task task [tick]")
+    testLambda("let a-value 1 let a-task [[] -> a-value]", "let a-value 1 let a-task task [a-value]")
   }
 
   test("add extension") {
@@ -177,5 +136,77 @@ class AstRewriterTests extends FunSuite {
     assertResult("globals [foo]\nto bar end")(addGlobal("to bar end", "foo"))
     assertResult("globals [foo baz] to bar end")(addGlobal("GLOBALS [foo] to bar end", "baz"))
     assertResult("globals [foo qux baz] to bar end")(addGlobal("GLOBALS [foo qux] to bar end", "baz"))
+  }
+
+  val tokenizer: TokenizerInterface =
+    Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
+
+  def compilationOp(source: String): CompilationOperand =
+    new CompilationOperand(Map("" -> source),
+      new DummyExtensionManager() {
+        override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
+      },
+      new DummyCompilationEnvironment(),
+      Program.fromDialect(NetLogoCore),
+      subprogram = false)
+
+  def rewriter(source: String): AstRewriter =
+    new AstRewriter(tokenizer, compilationOp(source))
+
+  def addExtension(source: String, extension: String): String = {
+    val added = rewriter(source).addExtension(extension)
+    added.trim
+  }
+
+  def addGlobal(source: String, global: String): String = {
+    val added = rewriter(source).addGlobal(global)
+    added.trim
+  }
+
+  def trimmedRewriteCommand(source: String, f: AstRewriter => String, preamble: String = "TO FOO ", postamble: String = " END"): String = {
+    val src = preamble + source + postamble
+    val rewritten = f(rewriter(src))
+    rewritten.stripPrefix(preamble.trim).stripSuffix(postamble.trim).trim
+  }
+
+  def addCommand(source: String, target: (String, String)): String =
+    trimmedRewriteCommand(source, _.addCommand(target))
+
+  def replaceReporterToken(source: String, target: (String, String)): String =
+    trimmedRewriteCommand(source, _.replaceToken(target._1, target._2), "TO-REPORT FOO REPORT ")
+
+  def replaceCommand(source: String, target: (String, String)): String =
+    trimmedRewriteCommand(source, _.replaceCommand(target))
+
+  def remove(source: String, removeCommand: String): String =
+    trimmedRewriteCommand(source, _.remove(removeCommand))
+
+  def replaceReporter(source: String, target: (String, String)): String =
+    trimmedRewriteCommand(source, _.replaceReporter(target), "TO-REPORT FOO REPORT ")
+
+  def assertPreservesSource(source: String, header: String = "TO FOO ", footer: String = " END"): Unit = {
+    val rewrittenSource =
+      trimmedRewriteCommand(source,
+        r => r.rewrite(NoopFolder, r.preserveBody _), header, footer)
+    assert(source.trim == rewrittenSource, s"""expected: "${source.trim}", got: "${rewrittenSource}"""")
+  }
+
+  def assertModifiesSource(source: String, expectedSource: String): Unit = {
+    val rewrittenSource =
+      trimmedRewriteCommand(source, r => r.rewrite(NoopFolder, r.preserveBody _), "", "")
+    assert(expectedSource == rewrittenSource, s"""expected: "${expectedSource}", got: "$rewrittenSource"""")
+  }
+
+  def lambdaize(source: String) =
+    try {
+      val rw = rewriter(source)
+      rw.runVisitor(new Lambdaizer())
+    } catch {
+      case ex: CompilerException => fail(ex.getMessage + " " + source.slice(ex.start, ex.end))
+    }
+
+  def testLambda(changedBody: String, body: String, preamble: String = "TO FOO ", postamble: String = " END"): Unit = {
+    val lambdaized = lambdaize(preamble + body + postamble)
+    assertResult(preamble + changedBody + postamble, s"""expected: "$changedBody", got: "$lambdaized"""")(lambdaized)
   }
 }

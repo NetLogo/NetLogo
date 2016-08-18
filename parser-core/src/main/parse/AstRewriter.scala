@@ -14,7 +14,8 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
   extends SourceRewriter
   with NetLogoParser {
 
-  def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String = header + procedures + footer
+  def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String =
+    header + procedures + footer
 
   def remove(dropCommand: String): String = {
     rewrite(new RemovalVisitor(dropCommand), preserveBody _)
@@ -81,7 +82,8 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
   def rewrite(
     visitor: PositionalAstFolder[Map[AstPath, Formatter.Operation]],
-    wholeFile: (StructureResults, String, String, String) => String): String = {
+    wholeFile: (StructureResults, String, String, String) => String,
+    sourceName: String = ""): String = {
 
     val (procs, structureResults) = basicParse(op)
 
@@ -91,7 +93,9 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
     val (wsMap, fileHeaders, fileFooters) = trackWhitespace(getSource _, procs)
 
-    val operations = procs.foldLeft(Map[AstPath, Formatter.Operation]()) {
+    val procsToRewrite = procs.filter(_.filename == sourceName)
+
+    val operations = procsToRewrite.foldLeft(Map[AstPath, Formatter.Operation]()) {
       case (dels, proc) => visitor.visitProcedureDefinition(proc)(dels)
     }
 
@@ -99,8 +103,9 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
     val footer = fileFooters.getOrElse("", "")
 
     val eolWhitespace = new Regex("\\s+$")
+    val rewrittenProcedures = format(operations, wsMap, procsToRewrite)
     val rewritten =
-      wholeFile(structureResults, headers, format(operations, wsMap, procs), footer)
+      wholeFile(structureResults, headers, format(operations, wsMap, procsToRewrite), footer)
     rewritten.lines.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
   }
 
@@ -135,7 +140,6 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
         val procSyntax = procedurePosition(proc.filename, proc.procedure.name)
         val newContext =
           if (ctx.lastPosition.map(_._2.filename).contains(proc.filename)) {
-            addTrailingWhitespace(ctx)
             WhiteSpace.Context.empty(ctx.lastPosition)
           } else {
             val procStart = procSyntax.declarationKeyword.start
@@ -143,6 +147,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
             WhiteSpace.Context.empty(Some((AstPath(), SourceLocation(procStart, procStart, proc.filename))))
           }
         val r = ws.visitProcedureDefinition(proc)(newContext)
+        addTrailingWhitespace(r)
         (whitespaceLog ++ r.whitespaceLog, r)
     }
     addTrailingWhitespace(whiteSpaces._2)

@@ -74,12 +74,13 @@ class NLogoFormatConversionTest extends FunSuite {
   import AutoConversionList.ConversionList
 
   def nlogoFormat(conversions: Seq[ConversionSet]): NLogoFormat = {
-    new NLogoFormat(new ModelConverter(extensionManager, compilationEnvironment, NetLogoLegacyDialect, _ => conversions))
+    new NLogoFormat(new ModelConverter(extensionManager, compilationEnvironment, literalParser, NetLogoLegacyDialect, _ => conversions))
   }
 
+  val literalParser =
+    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+
   def testLoader(conversions: Seq[ConversionSet]): ModelLoader = {
-    val literalParser =
-      Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
     val format = nlogoFormat(conversions)
     new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](format)
       .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))

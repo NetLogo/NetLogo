@@ -23,8 +23,8 @@ class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoa
       container.getComponent(classOf[CompilerInterface])
     val workspace = container.getComponent(classOf[Workspace])
     val compilerServices = new DefaultCompilerServices(compiler)
-    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
-    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
+    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect)
+    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoThreeDDialect)
     val loader = fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
     val additionalComponents =
       container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])

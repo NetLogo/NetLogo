@@ -21,9 +21,7 @@ object Formatter {
 
   def instructionString(i: Instruction): String =
     i match {
-      case _const(value) if value.isInstanceOf[LogoList] =>
-        println(i.token + ": "+ value)
-        Dump.logoObject(value, true, false)
+      case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
       case r: _const        => r.token.text
       case r: _reportertask => ""
       case r: _commandtask  => ""
@@ -53,7 +51,7 @@ class Formatter
     def closeSyntheticBlock(ws: WhitespaceMap)(p: AstPath): String = ws.backMargin(p)
 
     if (block.synthetic && block.statements.stmts.isEmpty)
-      c
+      c.appendText(c.wsMap.leading(position))
     else if (block.synthetic)
       visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1),
         beginSyntheticBlock _, closeSyntheticBlock _)
@@ -90,8 +88,6 @@ class Formatter
   }
 
   override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit c: Context): Context = {
-    import org.nlogo.core.prim.{ _reportertask, _reporterlambda }
-
     c.operations.get(position)
       .map(op => op(this, app, position, c))
       .getOrElse {
@@ -108,19 +104,11 @@ class Formatter
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
           case (false, r: _reporterlambda) if r.synthetic =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
-          case (false, _: _reportertask) =>
-            val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
-            if (c.text.last == ' ')
-              c.appendText("[" + c2.text + "]")
-            else
-              c.appendText(" [" + c2.text + "]")
           case (false, r: _reporterlambda) =>
             val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
             val args = c.wsMap.frontMargin(position)
-            if (c.text.last == ' ')
-              c.appendText("[" + args + c2.text + "]")
-            else
-              c.appendText(" [" + args + c2.text + "]")
+            val frontPadding = if (c.text.last == ' ') "" else " "
+            c.appendText(frontPadding + "[" + args + c2.text + c2.wsMap.backMargin(position) + "]")
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)

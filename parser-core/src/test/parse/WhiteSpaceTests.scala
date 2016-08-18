@@ -32,30 +32,35 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
     }
   }
 
+  val foo = AstPath(Proc("FOO"))
+  val z = AstPath(Proc("Z"))
+
   test("basic whitespace") {
     val result = trackWhiteSpace("to foo end")
-    val proc = AstPath(Proc("FOO"))
-    assert(result.whitespaceMap(proc -> Leading) == "to foo")
-    assert(result.whitespaceMap(proc -> Trailing) == "end")
+    assert(result.whitespaceMap(foo -> Leading) == "to foo")
+    assert(result.whitespaceMap(foo -> Trailing) == "end")
+  }
+
+  test("procedure arguments") {
+    val result = trackWhiteSpace("to foo [bar baz]\nend")
+    assert(result.whitespaceMap(foo -> Leading) == "to foo [bar baz]")
   }
 
   test("whitespace with comments") {
     val result = trackWhiteSpace("to foo\n;comment [here]\nend")
-    val proc = AstPath(Proc("FOO"))
-    assert(result.whitespaceMap(proc -> Leading) == "to foo")
-    assert(result.whitespaceMap(proc -> Trailing) == "end")
-    assert(result.whitespaceMap(proc -> BackMargin) == "\n;comment [here]\n")
+    assert(result.whitespaceMap(foo -> Leading) == "to foo")
+    assert(result.whitespaceMap(foo -> Trailing) == "end")
+    assert(result.whitespaceMap(foo -> BackMargin) == "\n;comment [here]\n")
   }
 
   test("infix whitespace") {
     val result = trackWhiteSpace("to foo __ignore 1 + 2 end")
-    val two = AstPath(Proc("FOO"), Stmt(0), RepArg(0), RepArg(1))
+    val two = foo / Stmt(0) / RepArg(0) / RepArg(1)
     assert(result.whitespaceLog.leading(two) == " ")
   }
 
   test("two-procedure whitespace") {
     val result = trackWhiteSpace("to foo end to bar end")
-    val foo = AstPath(Proc("FOO"))
     val bar = AstPath(Proc("BAR"))
     assert(result.whitespaceLog.leading(foo) == "to foo")
     assert(result.whitespaceLog.trailing(foo) == "end")
@@ -65,7 +70,7 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
 
   test("white space in blocks") {
     val result = trackWhiteSpace("to z __ignore [pycor] of one-of patches end")
-    val pycor = AstPath(Proc("Z")) / Stmt(0) / RepArg(0) / RepBlk(0) / RepArg(0)
+    val pycor = z / Stmt(0) / RepArg(0) / RepBlk(0) / RepArg(0)
     assert(result.whitespaceLog.leading(pycor) == "")
   }
 
@@ -81,8 +86,7 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
 
   test("parenthesized WhiteSpace in lone command tasks") {
     val result = trackWhiteSpace("to z run [ show (word \"a\" \"1\") ] end")
-    val proc = AstPath(Proc("Z"))
-    val word = proc / Stmt(0) / RepArg(0) / CmdBlk(0) / Stmt(0) / RepArg(0)
+    val word = z / Stmt(0) / RepArg(0) / CmdBlk(0) / Stmt(0) / RepArg(0)
     assert(result.whitespaceLog.leading(word) == " (")
     assert(result.whitespaceLog.trailing(word / RepArg(1)) == ") ")
   }
@@ -104,24 +108,22 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
 
   test("parenthesized WhiteSpace in lone reporter tasks") {
     val result = trackWhiteSpace("to-report z report runresult [ (word \"a\" \"1\") ] end")
-    val proc = AstPath(Proc("Z"))
-    val word = proc / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
+    val word = z / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
     assert(result.whitespaceLog.leading(word) == " (")
     assert(result.whitespaceLog.trailing(word / RepArg(1)) == ") ")
   }
 
   test("whitespace for lambdas") {
     val result = trackWhiteSpace("to-report z report [[x y] -> x + y] end")
-    val proc = AstPath(Proc("Z"))
-    val lambda = proc / Stmt(0) / RepArg(0)
-    val x = proc / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
+    val lambda = z / Stmt(0) / RepArg(0)
+    val x = z / Stmt(0) / RepArg(0) / RepArg(0) / RepArg(0)
     assert(result.whitespaceMap(x -> Leading) == " ")
     assert(result.whitespaceMap(lambda -> FrontMargin) == "[x y] ->")
   }
 
   test("parenthesized WhiteSpace in reporter tasks with other commands") {
     val result = trackWhiteSpace("to-report z let foo runresult [ (word \"a\" \"1\") ] report foo end")
-    val word = AstPath(Proc("Z"), Stmt(0), RepArg(1), RepArg(0), RepArg(0))
+    val word = z / Stmt(0) / RepArg(1) / RepArg(0) / RepArg(0)
     val lastArg = word / RepArg(1)
     assert(result.whitespaceMap(word -> Leading) == " (")
     assert(result.whitespaceMap(lastArg -> Trailing) == ") ")

@@ -414,7 +414,7 @@ public abstract strictfp class AbstractWorkspace
     return _world.mainRNG();
   }
 
-  public Object readNumberFromString(String source)
+  public Double readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString(source, _world, getExtensionManager());
   }

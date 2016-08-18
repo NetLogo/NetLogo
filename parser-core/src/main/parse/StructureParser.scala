@@ -32,6 +32,7 @@ object StructureParser {
   def parseSources(tokenizer: core.TokenizerInterface, compilationData: CompilationOperand,
     includeFile: (CompilationEnvironment, String) => Option[(String, String)] = IncludeFile.apply _): StructureResults = {
       import compilationData.{ compilationEnvironment, displayName, oldProcedures, subprogram, sources, containingProgram => program }
+      // println(sources.keys.mkString("sources: ", ", ", ""))
       parsingWithExtensions(compilationData) {
         val structureParser = new StructureParser(displayName, subprogram)
         val firstResults =

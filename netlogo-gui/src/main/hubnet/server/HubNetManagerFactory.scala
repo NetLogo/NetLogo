@@ -10,5 +10,5 @@ class HeadlessHubNetManagerFactory extends HubNetManagerFactory {
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface =
     new HeadlessHubNetManager(workspace,
       fileformat.standardLoader(workspace,
-        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)))
+        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect)))
 }

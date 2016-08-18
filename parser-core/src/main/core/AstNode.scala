@@ -174,6 +174,11 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
   }
 }
 
+object ReporterApp {
+  def unapply(app: ReporterApp): Option[(Reporter, Seq[Expression], SourceLocation)] =
+    Some((app.reporter, app.args, app.sourceLocation))
+}
+
 /**
  * represents a reporter application. This is the typical kind of NetLogo
  * expression, things like "round 5" and "3 + 4". However, this class also

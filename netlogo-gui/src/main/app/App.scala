@@ -105,8 +105,8 @@ object App{
         val compilerServices = new DefaultCompilerServices(compiler)
         val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
 
-        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
-        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
+        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect)
+        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoThreeDDialect)
         val loader =
           fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
         val additionalComponents =

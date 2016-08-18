@@ -40,7 +40,7 @@ trait CompilerInterface {
   def readFromString(source: String, world: World, extensionManager: ApiExtensionManager): AnyRef
 
   @throws(classOf[CompilerException])
-  def readNumberFromString(source: String, world: World, extensionManager: ApiExtensionManager): AnyRef
+  def readNumberFromString(source: String, world: World, extensionManager: ApiExtensionManager): java.lang.Double
 
   @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])

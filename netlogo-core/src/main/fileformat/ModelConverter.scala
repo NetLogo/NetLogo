@@ -3,7 +3,7 @@
 package org.nlogo.fileformat
 
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
-  FrontEndInterface, Model, Program, SourceRewriter, StructureResults, Widget },
+  FrontEndInterface, LiteralParser, Model, Program, SourceRewriter, StructureResults, Widget },
   FrontEndInterface.ProceduresMap
 
 import org.nlogo.api.{ AutoConverter, AutoConvertable, Version }
@@ -12,30 +12,43 @@ import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
 
 object ModelConverter {
-  def apply(extensionManager: ExtensionManager, compilationEnvironment: CompilationEnvironment, dialect: Dialect): ((Model, Seq[AutoConvertable]) => Model) = {
+  def apply(
+    extensionManager:       ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    literalParser:          LiteralParser,
+    dialect:                Dialect,
+    warnOnError:            Exception => Unit = { _ => }): ((Model, Seq[AutoConvertable]) => Model) = {
     val modelConversions = {(m: Model) =>
       AutoConversionList.conversions.collect {
         case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) =>
           conversionSet
       }
     }
-    new ModelConverter(extensionManager, compilationEnvironment, dialect, modelConversions)
+    new ModelConverter(extensionManager, compilationEnvironment, literalParser, dialect, modelConversions, warnOnError)
   }
 }
 
-class ModelConverter(extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment, dialect: Dialect, applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
+class ModelConverter(
+  extensionManager:      ExtensionManager,
+  compilationEnv:        CompilationEnvironment,
+  literalParser:         LiteralParser,
+  dialect:               Dialect,
+  applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() },
+  warnOnError:           Exception => Unit = { _ => })
   extends ((Model, Seq[AutoConvertable]) => Model) {
   def apply(model: Model, components: Seq[AutoConvertable]): Model = {
-    def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand =
+    def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand = {
       CompilationOperand(
-        sources                = Map("" -> source),
+        sources                = Map("" -> source) ++ components.flatMap(_.conversionSource(model, literalParser)).toMap,
         extensionManager       = extensionManager,
         compilationEnvironment = compilationEnv,
         oldProcedures          = procedures,
         containingProgram      = program.copy(dialect = dialect),
         subprogram             = false)
+    }
 
-    val tokenizer = Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
+    val tokenizer =
+      Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
     def rewriterOp(operand: CompilationOperand): SourceRewriter = {
       Femto.get[SourceRewriter]("org.nlogo.parse.AstRewriter", tokenizer, operand)
@@ -43,7 +56,8 @@ class ModelConverter(extensionManager: ExtensionManager, compilationEnv: Compila
 
     def rewriter(source: String, program: Program): SourceRewriter = {
       val operand = compilationOperand(source, program, FrontEndInterface.NoProcedures)
-      rewriterOp(operand)
+      val operandWithAuxSources = operand.copy(sources = operand.sources)
+      rewriterOp(operandWithAuxSources)
     }
 
     def targetToRegexString(t: String): String = {
@@ -66,37 +80,48 @@ class ModelConverter(extensionManager: ExtensionManager, compilationEnv: Compila
     def runConversion(conversionSet: ConversionSet, model: Model): Try[Model] = {
       import conversionSet._
       Try {
-        if (targets.nonEmpty &&
-          (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _)))) {
+        if (targets.nonEmpty && (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _))))
+          applyConversion(conversionSet, model)
+        else model
+      }
+    }
 
-            val code = codeTabConversions.foldLeft(model.code) {
-              case (src, conversion) =>
-                conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
-            }
+    def applyConversion(conversionSet: ConversionSet, model: Model): Model = {
+      import conversionSet._
 
-            val newCompilation = compilationOperand(code,
-              Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
-              FrontEndInterface.NoProcedures)
+      val code = codeTabConversions.foldLeft(model.code) {
+        case (src, conversion) =>
+          conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+      }
 
-            val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
-            val (_, results) = fe.frontEnd(newCompilation)
+      val newCompilation = compilationOperand(code,
+        Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
+        FrontEndInterface.NoProcedures)
 
+      val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
+      val (_, results) = fe.frontEnd(newCompilation)
 
-            val converter = new ModelConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, results, extensionManager, compilationEnv)
+      val converter = new ModelConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, results, extensionManager, compilationEnv)
 
-            // need to run optionalConversions even when no other code is changed...
-            val convertedModel = model.copy(code = code)
-            components.foldLeft(convertedModel) {
-              case (m, component) => component.autoConvert(m, converter)
-            }
-          }
-          else
-            model
+      // need to run optionalConversions even when no other code is changed...
+      val convertedModel = model.copy(code = code)
+      components.foldLeft(convertedModel) {
+        case (m, component) => component.autoConvert(m, converter)
       }
     }
 
     applicableConversions(model).foldLeft(model) {
-      case (m, conversion) => runConversion(conversion, m).getOrElse(m)
+      case (m, conversion) =>
+        val converted = runConversion(conversion, m)
+        converted match {
+          case f: Failure[_] =>
+            f.exception match {
+              case e: Exception => warnOnError(e)
+              case other        => throw other
+            }
+          case _ =>
+        }
+        converted.getOrElse(m)
     }
   }
 
@@ -123,11 +148,11 @@ class ModelConverter(extensionManager: ExtensionManager, compilationEnv: Compila
     def appliesToSource(source: String): Boolean =
       containsAnyTargets(source)
 
-    private def rep(s: String): String = "to-report +++++ report " + s + " end"
-    private def cmd(s: String): String = "to ------ " + s + " end"
+    private def rep(s: String): String = "to-report +++++ report " + s + " \nend"
+    private def cmd(s: String): String = "to ------ " + s + " \nend"
 
-    private def uncmd(s: String): String = s.stripPrefix("to ------").stripSuffix("end").trim
-    private def unrep(s: String): String = s.stripPrefix("to-report +++++ report").stripSuffix("end").trim
+    private def uncmd(s: String): String = s.stripPrefix("to ------").stripSuffix("\nend").trim
+    private def unrep(s: String): String = s.stripPrefix("to-report +++++ report").stripSuffix("\nend").trim
 
     private def compilationOp(source: String): CompilationOperand =
       CompilationOperand(

@@ -6,7 +6,8 @@ import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, St
 
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
-import org.nlogo.core.{ Model => CoreModel }
+import org.nlogo.sdm.Translator
+import org.nlogo.core.{ LiteralParser, Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization
 
@@ -19,6 +20,14 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
     m.optionalSectionValue[AggregateDrawing](componentName)
       .map(drawingStrings)
       .getOrElse(Array[String]())
+  }
+
+  override def conversionSource(m: CoreModel, literalParser: LiteralParser): Option[(String, String)] = {
+    m.optionalSectionValue[AggregateDrawing](componentName)
+      .map { drawing =>
+        val sdmModel = drawing.getModel
+        "aggregate" -> new Translator(sdmModel, literalParser).source
+      }
   }
 
   override def validationErrors(m: CoreModel): Option[String] =

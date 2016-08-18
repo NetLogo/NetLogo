@@ -52,8 +52,8 @@ object BehaviorSpaceCoordinator {
   }
 
   private def modelAtPath(path: String, workspace: Workspace): Model = {
-    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
-    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
+    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, literalParser, NetLogoLegacyDialect)
+    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, literalParser, NetLogoThreeDDialect)
     val loader = fileformat.standardLoader(literalParser, twoDConverter, threeDConverter)
 
     loader.readModel(Paths.get(path).toUri) match {

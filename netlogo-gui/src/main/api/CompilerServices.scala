@@ -9,7 +9,7 @@ trait CompilerServices extends LiteralParser {
   @throws(classOf[CompilerException])
   def readFromString(s: String): AnyRef
   @throws(classOf[CompilerException])
-  def readNumberFromString(source: String): AnyRef
+  def readNumberFromString(source: String): java.lang.Double
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String)
   @throws(classOf[CompilerException])

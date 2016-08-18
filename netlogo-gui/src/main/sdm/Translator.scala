@@ -2,15 +2,14 @@
 
 package org.nlogo.sdm
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, LiteralParser }
 
 /**
  * Turns an Model into a NetLogo source fragment
  * Parse from stocks out, calculating only the dependencies.  Build a
  * concise textual explanation of the execution model as a comment in
  * Code tab. */
-class Translator(model: Model, compiler: CompilerServices) {
+class Translator(model: Model, compiler: LiteralParser) {
   val stocks = new collection.mutable.ListBuffer[Stock]
   val rates = new collection.mutable.ListBuffer[Rate]
   val converters = new collection.mutable.ListBuffer[Converter]

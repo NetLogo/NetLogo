@@ -481,8 +481,8 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    val twodConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoLegacyDialect)
-    val threedConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoThreeDDialect)
+    val twodConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, this, NetLogoLegacyDialect)
+    val threedConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, this, NetLogoThreeDDialect)
     fileformat.standardLoader(compiler.utilities, twodConverter, threedConverter)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))

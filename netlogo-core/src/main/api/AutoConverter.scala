@@ -2,11 +2,16 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.Model
+import org.nlogo.core.{ LiteralParser, Model }
 
 trait AutoConvertable {
   def requiresAutoConversion(original: Model, needsConversion: String => Boolean): Boolean = false
   def autoConvert(original: Model, autoConverter: AutoConverter): Model = original
+
+  // ConversionSource should return any source needed to compile the entire model
+  // Only used at the moment by System Dynamics, but could be used by other components
+  // in the future.
+  def conversionSource(m: Model, literalParser: LiteralParser): Option[(String, String)] = None
 }
 
 trait AutoConverter {

@@ -4,15 +4,18 @@ package org.nlogo.fileformat
 
 import org.nlogo.api.NetLogoLegacyDialect
 
-import org.nlogo.core.{ CompilationOperand, FrontEndInterface, Model, Program, SourceRewriter }, FrontEndInterface.ProceduresMap
+import org.nlogo.core.{ CompilationOperand, Femto, FrontEndInterface, LiteralParser,
+  Model, Program, SourceRewriter }, FrontEndInterface.ProceduresMap
 import org.nlogo.core.{ Button, Monitor, Pen, Plot, Slider, Switch, View }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
 
 import org.scalatest.FunSuite
 
 class ModelConverterTests extends FunSuite {
-  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) =
-    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, NetLogoLegacyDialect, conversions)
+  def literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.core.CompilerUtilitiesInterface")
+  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) = {
+    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, conversions)
+  }
 
   val componentConverters = Seq(new WidgetConverter() {})
 

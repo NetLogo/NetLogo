@@ -20,7 +20,12 @@ class DummyCompilerServices extends CompilerServices {
         }
     }
   def autoConvert(modelVersion: String)(source: String) = source
-  def readNumberFromString(source: String) = source
+  def readNumberFromString(source: String) =
+    try { source.toDouble: java.lang.Double }
+    catch {
+      case e: Exception => throw new CompilerException(
+        "not a constant recognized by DummyCompilerServices", 0, source.size, "")
+    }
   def checkReporterSyntax(source: String) { }
   def checkCommandSyntax(source: String) { }
   def isConstant(s: String): Boolean = unsupported

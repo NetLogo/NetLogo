@@ -9,7 +9,7 @@ import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureEnumer
 
 import org.jhotdraw.util.{ CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LiteralParser, TokenType }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.{ Model, Translator }
@@ -29,7 +29,7 @@ class AggregateModelEditor(
   colorizer: Colorizer,
   menuBarFactory: MenuBarFactory,
   val drawing: AggregateDrawing,
-  compiler: CompilerServices,
+  compiler: LiteralParser,
   dialogFactory: EditDialogFactoryInterface) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
