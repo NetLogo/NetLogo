@@ -1,5 +1,6 @@
+NetLogo 6.0-RC1
+August 18, 2016
 NetLogo 6.0-M9
-July 20, 2016
 NetLogo 6.0-M8
 NetLogo 6.0-M7
 NetLogo 6.0-M6

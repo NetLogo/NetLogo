@@ -108,7 +108,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-M9",
+    version := "6.0.0-RC1",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
