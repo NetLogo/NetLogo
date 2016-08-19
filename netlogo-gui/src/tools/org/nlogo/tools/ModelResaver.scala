@@ -50,6 +50,19 @@ object ModelResaver {
 
   def main(args: Array[String]): Unit = {
     System.setProperty("org.nlogo.preferHeadless", "true")
+
+    if (args.length > 0) resaveModels(args.toSeq)
+    else                 resaveAllModels()
+  }
+
+  def resaveModels(paths: Seq[String]): Unit = {
+    val (systemDynamicsModels, otherModels) = paths.map((s: String) => Paths.get(s)).partition(_.toString.contains("System Dynamics"))
+
+    otherModels.foreach(p => resaveModel(p.toUri))
+    resaveSystemDynamicsModels(systemDynamicsModels)
+  }
+
+  def resaveAllModels(): Unit = {
     traverseModels(Paths.get(modelsRoot), resaveModel _)
 
     val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)

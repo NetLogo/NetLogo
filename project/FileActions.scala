@@ -3,6 +3,28 @@ import java.io.IOException
 import java.io.File
 
 object FileActions {
+  class ListVisitor extends FileVisitor[Path] {
+    val pathBuffer = scala.collection.mutable.Buffer[Path]()
+    def pathsFound: Seq[Path] = pathBuffer.toSeq
+
+    def postVisitDirectory(p: Path, e: IOException): FileVisitResult =
+      if (e != null)
+        throw e
+      else {
+        pathBuffer += p
+        FileVisitResult.CONTINUE
+      }
+
+    def preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult =
+      FileVisitResult.CONTINUE
+
+    def visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      pathBuffer += p
+      FileVisitResult.CONTINUE
+    }
+    def visitFileFailed(p: Path, e: IOException): FileVisitResult = { throw e }
+  }
+
   class CopyVisitor(src: Path, dest: Path) extends FileVisitor[Path] {
     def postVisitDirectory(p: Path, e: IOException): FileVisitResult = {
       if (e != null)
@@ -77,5 +99,11 @@ object FileActions {
 
   def copyDirectory(src: Path, dest: Path): Unit = {
     Files.walkFileTree(src, new java.util.HashSet(), Int.MaxValue, new CopyVisitor(src, dest))
+  }
+
+  def enumerateFiles(path: Path): Seq[Path] = {
+    val listVisitor = new ListVisitor()
+    Files.walkFileTree(path, new java.util.HashSet(), Int.MaxValue, listVisitor)
+    listVisitor.pathsFound
   }
 }

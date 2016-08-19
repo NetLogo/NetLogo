@@ -1,14 +1,38 @@
 import java.io.File
+import java.nio.file.Path
 import java.util.regex.Pattern
 import sbt._
 import Keys._
+import Def.Initialize
+import sbt.complete.{ Parser, DefaultParsers }, DefaultParsers.Space
 
 object ModelsLibrary {
 
   val modelsDirectory = settingKey[File]("models directory")
 
+  val resaveModel = InputKey[Unit]("resaveModel", "resave a single model")
+
+  val resaveModels = TaskKey[Unit]("resaveModels", "resave all library models")
+
   val modelIndex = TaskKey[Seq[File]](
     "modelIndex", "builds models/index.txt for use in Models Library dialog")
+
+  val modelParser: Initialize[Parser[Path]] = {
+    import Parser._
+    Def.setting {
+      val modelDir = modelsDirectory.value
+      (Space ~>
+        modelFiles(modelDir)
+          .map(d => (modelDir.getName + File.separator + modelDir.toPath.relativize(d).toString ^^^ d))
+          .reduce(_ | _))
+    }
+  }
+
+  def modelFiles(directory: File): Seq[Path] = {
+    val dirPath = directory.toPath
+    FileActions.enumerateFiles(dirPath)
+      .filter(p => p.getFileName.toString.endsWith(".nlogo") || p.getFileName.toString.endsWith(".nlogo3d"))
+  }
 
   lazy val settings = Seq(
     modelIndex := {
@@ -17,7 +41,18 @@ object ModelsLibrary {
       IO.write(path, generateIndex(modelsDirectory.value))
       Seq(path)
     },
-    javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString
+    javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString,
+    resaveModels := {
+      (runMain in Test).toTask(" org.nlogo.tools.ModelResaver").value
+    },
+    resaveModel := {
+      val model = modelParser.parsed
+      val runner = new ForkRun(ForkOptions(
+        workingDirectory = Some(baseDirectory.value.getParentFile),
+        runJVMOptions = Seq("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
+      runner.run("org.nlogo.tools.ModelResaver",
+        (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
+    }
   )
 
   private def generateIndex(modelsPath: File): String = {
