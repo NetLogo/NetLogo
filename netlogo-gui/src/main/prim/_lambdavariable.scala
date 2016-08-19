@@ -9,6 +9,7 @@ class _lambdavariable(val varName: String) extends Reporter {
 
   override def toString =
     super.toString + ":" + varName
+
   override def report(context: Context) = {
     val let = context.allLets.find(_.let.name == varName).get
     let.value

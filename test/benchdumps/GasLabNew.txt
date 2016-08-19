@@ -174,12 +174,12 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[2]_asm_procedurecalculatepressure_setobservervariable_5 "set zero-pressure-count length filter task [? = 0] pressure-history" Object => void
-      _length "length filter task [? = 0] pressure-history" LogoList => double
-        _filter "filter task [? = 0] pressure-history"
-          _reportertask "task [? = 0]"
-            _asm_procedurecalculatepressure_equal_6 "? = 0" Object,double => boolean
-              _letvariable(null) "?" => Object
+[2]_asm_procedurecalculatepressure_setobservervariable_5 "set zero-pressure-count length filter [[_1] -> _1 = 0] pressure-history" Object => void
+      _length "length filter [[_1] -> _1 = 0] pressure-history" LogoList => double
+        _filter "filter [[_1] -> _1 = 0] pressure-history"
+          _reporterlambda "[[_1] -> _1 = 0]"
+            _asm_procedurecalculatepressure_equal_6 "_1 = 0" Object,double => boolean
+              _letvariable(_1) "_1" => Object
               _constdouble:0.0 "0" => double
                  L0
                   ALOAD 1

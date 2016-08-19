@@ -130,11 +130,11 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
          L2
          FRAME SAME
           RETURN
-[3]_asm_proceduresetupcontinue_setprocedurevariable_3 "set on?-list map task [[on?] of ?] sort patches with [ pycor = row ]" Object => void
-      _map "map task [[on?] of ?] sort patches with [ pycor = row ]"
-        _reportertask "task [[on?] of ?]"
-          _asm_proceduresetupcontinue_patchvariableof_4 "[ on? ] of ?" Object => Object
-            _letvariable(null) "?" => Object
+[3]_asm_proceduresetupcontinue_setprocedurevariable_3 "set on?-list map [[_1] -> [on?] of _1] sort patches with [ pycor = row ]" Object => void
+      _map "map [[_1] -> [on?] of _1] sort patches with [ pycor = row ]"
+        _reporterlambda "[[_1] -> [on?] of _1]"
+          _asm_proceduresetupcontinue_patchvariableof_4 "[ on? ] of _1" Object => Object
+            _letvariable(_1) "_1" => Object
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                 TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
                L6

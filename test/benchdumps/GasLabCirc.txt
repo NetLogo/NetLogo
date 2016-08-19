@@ -7,11 +7,11 @@ breeds PARTICLES = Breed(PARTICLES, PARTICLE, SPEED MASS, false)
 link-breeds 
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2 set colliding-particles filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2] colliding-particles ask colliding-particle-2 [ check-for-wall-collision ] [ ask colliding-particle-2 [ check-for-particle-collision ] ] [ set colliding-particles filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1] colliding-particles ]" boolean => void
+[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2 set colliding-particles filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1 and
+                                    item 1 _1 != colliding-particle-2 and
+                                    item 2 _1 != colliding-particle-2] colliding-particles ask colliding-particle-2 [ check-for-wall-collision ] [ ask colliding-particle-2 [ check-for-particle-collision ] ] [ set colliding-particles filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1] colliding-particles ]" boolean => void
       _isturtle "is-turtle? colliding-particle-2"
         _asm_procedurego_observervariable_1 "colliding-particle-2" => Object
              L0
@@ -61,30 +61,30 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurego_setobservervariable_2 "set colliding-particles filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2] colliding-particles" Object => void
-      _filter "filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2] colliding-particles"
-        _reportertask "task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2]"
-          _asm_procedurego_and_3 "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1 and item 1 ? != colliding-particle-2 and item 2 ? != colliding-particle-2"
-            _and "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1 and item 1 ? != colliding-particle-2"
-              _and "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1"
-                _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
-                  _item "item 1 ?"
+[1]_asm_procedurego_setobservervariable_2 "set colliding-particles filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1 and
+                                    item 1 _1 != colliding-particle-2 and
+                                    item 2 _1 != colliding-particle-2] colliding-particles" Object => void
+      _filter "filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1 and
+                                    item 1 _1 != colliding-particle-2 and
+                                    item 2 _1 != colliding-particle-2] colliding-particles"
+        _reporterlambda "[[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1 and
+                                    item 1 _1 != colliding-particle-2 and
+                                    item 2 _1 != colliding-particle-2]"
+          _asm_procedurego_and_3 "item 1 _1 != colliding-particle-1 and item 2 _1 != colliding-particle-1 and item 1 _1 != colliding-particle-2 and item 2 _1 != colliding-particle-2"
+            _and "item 1 _1 != colliding-particle-1 and item 2 _1 != colliding-particle-1 and item 1 _1 != colliding-particle-2"
+              _and "item 1 _1 != colliding-particle-1 and item 2 _1 != colliding-particle-1"
+                _notequal "item 1 _1 != colliding-particle-1" Object,Object => boolean
+                  _item "item 1 _1"
                     _asm_procedurego_constdouble_4 "1" => Double
                          L0
                           ALOAD 0
                           GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_4.kept1_value : Ljava/lang/Double;
                          L1
                           ARETURN
-                    _asm_procedurego_letvariable_5 "?" => Object
+                    _asm_procedurego_letvariable_5 "_1" => Object
                          L0
                           ALOAD 1
                           ALOAD 0
@@ -93,15 +93,15 @@ procedure GO:[]{O---}:
                          L1
                           ARETURN
                   _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
-                _notequal "item 2 ? != colliding-particle-1" Object,Object => boolean
-                  _item "item 2 ?"
+                _notequal "item 2 _1 != colliding-particle-1" Object,Object => boolean
+                  _item "item 2 _1"
                     _asm_procedurego_constdouble_6 "2" => Double
                          L0
                           ALOAD 0
                           GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_6.kept1_value : Ljava/lang/Double;
                          L1
                           ARETURN
-                    _asm_procedurego_letvariable_7 "?" => Object
+                    _asm_procedurego_letvariable_7 "_1" => Object
                          L0
                           ALOAD 1
                           ALOAD 0
@@ -110,15 +110,15 @@ procedure GO:[]{O---}:
                          L1
                           ARETURN
                   _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
-              _notequal "item 1 ? != colliding-particle-2" Object,Object => boolean
-                _item "item 1 ?"
+              _notequal "item 1 _1 != colliding-particle-2" Object,Object => boolean
+                _item "item 1 _1"
                   _asm_procedurego_constdouble_8 "1" => Double
                        L0
                         ALOAD 0
                         GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_8.kept1_value : Ljava/lang/Double;
                        L1
                         ARETURN
-                  _asm_procedurego_letvariable_9 "?" => Object
+                  _asm_procedurego_letvariable_9 "_1" => Object
                        L0
                         ALOAD 1
                         ALOAD 0
@@ -127,15 +127,15 @@ procedure GO:[]{O---}:
                        L1
                         ARETURN
                 _observervariable:COLLIDING-PARTICLE-2 "colliding-particle-2" => Object
-            _notequal "item 2 ? != colliding-particle-2" Object,Object => boolean
-              _item "item 2 ?"
+            _notequal "item 2 _1 != colliding-particle-2" Object,Object => boolean
+              _item "item 2 _1"
                 _asm_procedurego_constdouble_10 "2" => Double
                      L0
                       ALOAD 0
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_10.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_11 "?" => Object
+                _asm_procedurego_letvariable_11 "_1" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -597,22 +597,22 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurego_setobservervariable_20 "set colliding-particles filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1] colliding-particles" Object => void
-      _filter "filter task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1] colliding-particles"
-        _reportertask "task [item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1]"
-          _asm_procedurego_and_21 "item 1 ? != colliding-particle-1 and item 2 ? != colliding-particle-1"
-            _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
-              _item "item 1 ?"
+[9]_asm_procedurego_setobservervariable_20 "set colliding-particles filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1] colliding-particles" Object => void
+      _filter "filter [[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1] colliding-particles"
+        _reporterlambda "[[_1] -> item 1 _1 != colliding-particle-1 and
+                                    item 2 _1 != colliding-particle-1]"
+          _asm_procedurego_and_21 "item 1 _1 != colliding-particle-1 and item 2 _1 != colliding-particle-1"
+            _notequal "item 1 _1 != colliding-particle-1" Object,Object => boolean
+              _item "item 1 _1"
                 _asm_procedurego_constdouble_22 "1" => Double
                      L0
                       ALOAD 0
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_22.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_23 "?" => Object
+                _asm_procedurego_letvariable_23 "_1" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -621,15 +621,15 @@ procedure GO:[]{O---}:
                      L1
                       ARETURN
               _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
-            _notequal "item 2 ? != colliding-particle-1" Object,Object => boolean
-              _item "item 2 ?"
+            _notequal "item 2 _1 != colliding-particle-1" Object,Object => boolean
+              _item "item 2 _1"
                 _asm_procedurego_constdouble_24 "2" => Double
                      L0
                       ALOAD 0
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_24.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_25 "?" => Object
+                _asm_procedurego_letvariable_25 "_1" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -2030,22 +2030,22 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           RETURN
 
 procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
-[0]_asm_proceduresortcollisions_setobservervariable_0 "set colliding-particles filter task [item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2] colliding-particles" Object => void
-      _filter "filter task [item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2] colliding-particles"
-        _reportertask "task [item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2]"
-          _asm_proceduresortcollisions_or_1 "item 1 ? != colliding-particle-1 or item 2 ? != colliding-particle-2"
-            _notequal "item 1 ? != colliding-particle-1" Object,Object => boolean
-              _item "item 1 ?"
+[0]_asm_proceduresortcollisions_setobservervariable_0 "set colliding-particles filter [[_1] -> item 1 _1 != colliding-particle-1 or
+                                  item 2 _1 != colliding-particle-2] colliding-particles" Object => void
+      _filter "filter [[_1] -> item 1 _1 != colliding-particle-1 or
+                                  item 2 _1 != colliding-particle-2] colliding-particles"
+        _reporterlambda "[[_1] -> item 1 _1 != colliding-particle-1 or
+                                  item 2 _1 != colliding-particle-2]"
+          _asm_proceduresortcollisions_or_1 "item 1 _1 != colliding-particle-1 or item 2 _1 != colliding-particle-2"
+            _notequal "item 1 _1 != colliding-particle-1" Object,Object => boolean
+              _item "item 1 _1"
                 _asm_proceduresortcollisions_constdouble_2 "1" => Double
                      L0
                       ALOAD 0
                       GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_2.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_proceduresortcollisions_letvariable_3 "?" => Object
+                _asm_proceduresortcollisions_letvariable_3 "_1" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -2054,15 +2054,15 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                      L1
                       ARETURN
               _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
-            _notequal "item 2 ? != colliding-particle-2" Object,Object => boolean
-              _item "item 2 ?"
+            _notequal "item 2 _1 != colliding-particle-2" Object,Object => boolean
+              _item "item 2 _1"
                 _asm_proceduresortcollisions_constdouble_4 "2" => Double
                      L0
                       ALOAD 0
                       GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_4.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_proceduresortcollisions_letvariable_5 "?" => Object
+                _asm_proceduresortcollisions_letvariable_5 "_1" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -2448,7 +2448,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[7]_foreach "foreach colliding-particles task [if first ? < first winner [set winner ?]]"
+[7]_foreach "foreach colliding-particles [[_1] -> if first _1 < first winner [set winner _1]]"
       _asm_proceduresortcollisions_observervariable_13 "colliding-particles" => Object
            L0
             ALOAD 1
@@ -2457,7 +2457,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-      _commandtask:(command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]) "task [if first ? < first winner [set winner ?]]"
+      _commandlambda "[[_1] -> if first _1 < first winner [set winner _1]]"
 [8]_asm_proceduresortcollisions_setprocedurevariable_14 "let item 0 winner" Object => void
       _item "item 0 winner"
         _asm_proceduresortcollisions_constdouble_15 "0" => Double
@@ -2901,17 +2901,17 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L1
           RETURN
 
-   (command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]):procedure SORT-COLLISIONS:[]{OTPL}:
-   [0]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 "if first ? < first winner [ set winner ? ]" boolean => void
-            _lessthan "first ? < first winner" Object,Object => boolean
-              _first "first ?" Object => Object
-                _letvariable(?1) "?" => Object
+   (command task from: procedure SORT-COLLISIONS: [if first _1 < first winner [ set winner _1 ] set winner _1]):procedure SORT-COLLISIONS:[]{OTPL}:
+   [0]_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 "if first _1 < first winner [ set winner _1 ]" boolean => void
+            _lessthan "first _1 < first winner" Object,Object => boolean
+              _first "first _1" Object => Object
+                _letvariable(_1) "_1" => Object
               _first "first winner" Object => Object
                 _procedurevariable:WINNER "winner" => Object
                L0
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0.kept4_let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0.kept4_let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -2979,7 +2979,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L4
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
@@ -3006,12 +3006,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L9
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/core/LogoList.first ()Ljava/lang/Object;
                 GOTO L10
                L8
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 2
                 INSTANCEOF java/lang/String
                 IFEQ L11
@@ -3031,14 +3031,14 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L12
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
                 ALOAD 3
                 ICONST_0
                 ICONST_1
                 INVOKEVIRTUAL java/lang/String.substring (II)Ljava/lang/String;
                 GOTO L10
                L11
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
                 ALOAD 1
@@ -3051,7 +3051,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L10
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
                 ASTORE 3
                 ASTORE 2
                 ALOAD 2
@@ -3161,19 +3161,19 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 ICONST_1
                 GOTO L24
                L23
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
                 ICONST_2
                L24
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
+               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L25
                 RETURN
-   [1]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1 "set winner ?" Object => void
-            _letvariable(?1) "?" => Object
+   [1]_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_setprocedurevariable_1 "set winner _1" Object => void
+            _letvariable(_1) "_1" => Object
                L0
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1.kept2_let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_setprocedurevariable_1.kept2_let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -3188,7 +3188,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L2
                 RETURN
-   [2]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_done_2 => void
+   [2]_asm_commandtaskfromproceduresortcollisionsiffirst1firstwinnersetwinner1setwinner1_done_2 => void
                L0
                 ALOAD 1
                 ICONST_1
