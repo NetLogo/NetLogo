@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandtask, _commandlambda, _const, _lambdavariable, _reporterlambda, _reportertask, _taskvariable }
+  prim.{ _commandlambda, _const, _lambdavariable, _reporterlambda }
 
 import WhiteSpace._
 
@@ -23,10 +23,7 @@ object Formatter {
     i match {
       case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
       case r: _const        => r.token.text
-      case r: _reportertask => ""
-      case r: _commandtask  => ""
       case r: _commandlambda => ""
-      case v: _taskvariable   if v.synthetic => ""
       case v: _lambdavariable if v.synthetic => ""
       case r                => r.token.text
     }
@@ -100,8 +97,6 @@ class Formatter
             }
           case (false, con: _const) if con.value.isInstanceOf[LogoList] =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
-          case (false, r: _reportertask) if r.synthetic =>
-            super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
           case (false, r: _reporterlambda) if r.synthetic =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
           case (false, r: _reporterlambda) =>

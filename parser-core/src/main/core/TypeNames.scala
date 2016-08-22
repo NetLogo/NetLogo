@@ -68,10 +68,10 @@ object TypeNames {
         "link"
       } else if (compatible(ReporterType)) {
         subtract(ReporterType)
-        "reporter task"
+        "anonymous reporter"
       } else if (compatible(CommandType)) {
         subtract(CommandType)
-        "command task"
+        "anonymous command"
       } else if (compatible(NobodyType)) {
         subtract(NobodyType)
         "NOBODY"

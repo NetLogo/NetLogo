@@ -35,9 +35,6 @@ trait FrontEndMain extends NetLogoParser {
 
     new AgentTypeChecker(topLevelDefs).check()  // catch agent type inconsistencies
 
-    val verifier = new TaskVariableVerifier
-    topLevelDefs.foreach(verifier.visitProcedureDefinition)
-
     val cfVerifier = new ControlFlowVerifier
     val verifiedDefs = topLevelDefs.map(cfVerifier.visitProcedureDefinition)
 
@@ -45,12 +42,7 @@ trait FrontEndMain extends NetLogoParser {
   }
 
   private def transformers: Seq[AstTransformer] = {
-    Seq(
-      new TaskSpecializer,
-      new TaskVariableVerifier,
-      new LetReducer,
-      new CarefullyVisitor
-    )
+    Seq(new LetReducer, new CarefullyVisitor)
   }
 
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {

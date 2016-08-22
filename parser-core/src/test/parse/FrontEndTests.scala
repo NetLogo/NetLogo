@@ -137,10 +137,8 @@ class FrontEndTests extends FunSuite {
     runFailure("report __symbol turtle 0", "Expected command.", 23, 24, preamble = "to-report sym ")
   }
   // https://github.com/NetLogo/NetLogo/issues/348
-  test("let of task variable") {
-    runFailure("foreach [1] [ let ? 0 ]",
-      "Names beginning with ? are reserved for use as task inputs",
-      18, 19)
+  test("let of lambda variable") {
+    runFailure("foreach [1] [[x] -> let x 0 ]", "", 21, 22)
   }
   test("error-message used outside of carefully") {
     runFailure("let foo error-message", "error-message cannot be used outside of CAREFULLY.", 8, 21)
@@ -207,7 +205,7 @@ class FrontEndTests extends FunSuite {
       "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("DoParseForeach") {
-    runFailure("foreach [1 2 3] [__ignore ?]", "This special variable isn't defined here.", 26, 27)
+    runFailure("foreach [1 2 3] [__ignore ?]", "Nothing named ? has been defined.", 26, 27)
   }
   test("DoParseForeachShortSyntax") {
     runTest("foreach [1 2 3] print",
@@ -266,20 +264,6 @@ class FrontEndTests extends FunSuite {
   test("ParseConstantListInsideTask2") {
     runTest("__ignore n-values 10 [[5]]",
       "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([5.0])[]]]]")
-  }
-  test("ParseCommandTask1") {
-    runTest("__ignore task [[x] -> print x]",
-      "_ignore()[_commandlambda(X)[[_print()[_lambdavariable(X)[]]]]]")
-  }
-  test("ParseCommandTask2") {
-    runTest("__ignore task [print 5]",
-      "_ignore()[_commandlambda()[[_print()[_const(5.0)[]]]]]")
-  }
-  test("ParseCommandTask3") {
-    // it would be nice if this resulted in a CompilerException instead
-    // of failing at runtime - ST 2/6/11
-    runTest("__ignore runresult task [__ignore 5]",
-      "_ignore()[_runresult()[_commandlambda()[[_ignore()[_const(5.0)[]]]]]]")
   }
   test("ParseDiffuse") {
     runTest("diffuse pcolor 1",

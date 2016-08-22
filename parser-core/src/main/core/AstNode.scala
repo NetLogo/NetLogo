@@ -186,7 +186,6 @@ object ReporterApp {
  * applications as they're parsed.
  */
 class ReporterApp(var reporter: Reporter, val args: Seq[Expression], val sourceLocation: SourceLocation) extends Application with Expression {
-
   def this(reporter: Reporter, location: SourceLocation) = this(reporter, Seq[Expression](), location)
 
   /**

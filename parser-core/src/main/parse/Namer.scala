@@ -30,7 +30,6 @@ class Namer(
   lazy val handlers = Seq[Token => Option[(TokenType, core.Instruction)]](
     new CommandHandler(program.dialect.tokenMapper),
     new ReporterHandler(program.dialect.tokenMapper),
-    TaskVariableHandler,
     new BreedHandler(program),
     new AgentVariableReporterHandler(program),
     new ExtensionPrimitiveHandler(extensionManager),

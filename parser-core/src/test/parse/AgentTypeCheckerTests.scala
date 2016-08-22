@@ -119,7 +119,7 @@ class AgentTypeCheckerTests extends FunSuite {
   }
 
   test("tasks type-check properly") {
-    val foo = compile("to foo ask turtles [ let bar task [ print 1 ] ] end").head
+    val foo = compile("to foo ask turtles [ let bar [[] -> print 1] ] end").head
     assertResult(foo.procedure.agentClassString)("OTPL")
     val barTask =
       foo.statements.stmts.head.args(1).asInstanceOf[CommandBlock]

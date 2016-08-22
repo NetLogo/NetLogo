@@ -70,7 +70,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_fileread ,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,0,0
                      |_filereadchars number,string,OTPL,None,10,1,1
                      |_filereadline ,string,OTPL,None,10,0,0
-                     |_filter reporter task/list,list,OTPL,None,10,2,2
+                     |_filter anonymous reporter/list,list,OTPL,None,10,2,2
                      |_first string or list,anything,OTPL,None,10,1,1
                      |_floor number,number,OTPL,None,10,1,1
                      |_fput anything/list,list,OTPL,None,10,2,2
@@ -86,8 +86,9 @@ class TestAllSyntaxes extends FunSuite {
                      |_int number,number,OTPL,None,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,None,10,1,1
+                     |_isanonymouscommand anything,TRUE/FALSE,OTPL,None,10,1,1
+                     |_isanonymousreporter anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isboolean anything,TRUE/FALSE,OTPL,None,10,1,1
-                     |_iscommandtask anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isdirectedlink anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_islink anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_islinkset anything,TRUE/FALSE,OTPL,None,10,1,1
@@ -95,7 +96,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_isnumber anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_ispatch anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_ispatchset anything,TRUE/FALSE,OTPL,None,10,1,1
-                     |_isreportertask anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isstring anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isturtle anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isturtleset anything,TRUE/FALSE,OTPL,None,10,1,1
@@ -118,7 +118,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_ln number,number,OTPL,None,10,1,1
                      |_log number/number,number,OTPL,None,10,2,2
                      |_lput anything/list,list,OTPL,None,10,2,2
-                     |_map reporter task/list,list,OTPL,None,10,2,2
+                     |_map anonymous reporter/list,list,OTPL,None,10,2,2
                      |_max list,number,OTPL,None,10,1,1
                      |_maxnof number/agentset/number block,agentset,OTPL,Some(?),10,3,3
                      |_maxoneof agentset/number block,agent,OTPL,Some(?),10,2,2
@@ -157,7 +157,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_not TRUE/FALSE,TRUE/FALSE,OTPL,None,10,1,1
                      |_notequal anything,anything,TRUE/FALSE,OTPL,None,5,1,1
                      |_noturtles ,turtle agentset,OTPL,None,10,0,0
-                     |_nvalues number/reporter task,list,OTPL,None,10,2,2
+                     |_nvalues number/anonymous reporter,list,OTPL,None,10,2,2
                      |_of reporter block,agent or agentset,anything,OTPL,Some(?),11,1,1 [RIGHT ASSOCIATIVE]
                      |_oneof list or agentset,anything,OTPL,None,10,1,1
                      |_or TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
@@ -199,7 +199,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_randomxcor ,number,OTPL,None,10,0,0
                      |_randomycor ,number,OTPL,None,10,0,0
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
-                     |_reduce reporter task/list,anything,OTPL,None,10,2,2
+                     |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
                      |_remainder number/number,number,OTPL,None,10,2,2
                      |_remove anything/string or list,string or list,OTPL,None,10,2,2
                      |_removeduplicates list,list,OTPL,None,10,1,1
@@ -208,7 +208,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_reverse string or list,string or list,OTPL,None,10,1,1
                      |_rgb number/number/number,list,OTPL,None,10,3,3
                      |_round number,number,OTPL,None,10,1,1
-                     |_runresult string or reporter task/anything,anything,OTPL,None,10,1,1
+                     |_runresult string or anonymous reporter/anything,anything,OTPL,None,10,1,1
                      |_scalecolor number/number/number/number,number,OTPL,None,10,4,4
                      |_self ,agent,-TPL,None,10,0,0
                      |_sentence anything,list,OTPL,None,10,2,0
@@ -217,7 +217,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_shuffle list,list,OTPL,None,10,1,1
                      |_sin number,number,OTPL,None,10,1,1
                      |_sort list or agentset,list,OTPL,None,10,1,1
-                     |_sortby reporter task/list or agentset,list,OTPL,Some(?),10,2,2
+                     |_sortby anonymous reporter/list or agentset,list,OTPL,Some(?),10,2,2
                      |_sorton reporter block/agentset,list,OTPL,Some(?),10,2,2
                      |_sqrt number,number,OTPL,None,10,1,1
                      |_stacktrace ,string,OTPL,None,10,0,0
@@ -229,7 +229,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_sum list,number,OTPL,None,10,1,1
                      |_symbolstring symbol,string,OTPL,None,10,1,1
                      |_tan number,number,OTPL,None,10,1,1
-                     |_task reporter task or command task,reporter task or command task,OTPL,None,10,1,1
                      |_ticks ,number,OTPL,None,10,0,0
                      |_timer ,number,OTPL,None,10,0,0
                      |_tostring anything,string,OTPL,None,10,1,1
@@ -315,7 +314,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_filewrite number or TRUE/FALSE or string or list or NOBODY,OTPL,None,0,1,1
                     |_follow turtle,O---,None,0,1,1
                     |_followme ,-T--,None,0,0,0
-                    |_foreach list/command task,OTPL,None,0,2,2
+                    |_foreach list/anonymous command,OTPL,None,0,2,2
                     |_foreverbuttonend ,OTPL,None,0,0,0
                     |_hatch number/command block (optional),-T--,Some(-T--),0,2,2
                     |_hidelink ,---L,None,0,0,0
@@ -371,7 +370,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_ride turtle,O---,None,0,1,1
                     |_rideme ,-T--,None,0,0,0
                     |_right number,-T--,None,0,1,1
-                    |_run string or command task/anything,OTPL,None,0,1,1
+                    |_run string or anonymous command/anything,OTPL,None,0,1,1
                     |_set anything/anything,OTPL,None,0,2,2
                     |_setcurdir string,OTPL,None,0,1,1
                     |_setcurrentplot string,OTPL,None,0,1,1

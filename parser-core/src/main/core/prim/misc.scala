@@ -72,15 +72,6 @@ case class _carefully() extends Command {
       right = List(Syntax.CommandBlockType, Syntax.CommandBlockType),
       introducesContext = true)
 }
-case class _commandtask(minArgCount: Int = 0) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(ret = Syntax.CommandType)
-
-  def copy(minArgCount: Int = minArgCount): _commandtask = {
-    val ct = new _commandtask(minArgCount)
-    copyInstruction(ct)
-  }
-}
 case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean) extends Reporter {
   def this() = this(Seq(), false)
   def this(arguments: Seq[String]) = this(arguments, false)
@@ -399,19 +390,6 @@ case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean) exten
     copyInstruction(cr)
   }
 }
-case class _reportertask(minArgCount: Int = 0, val synthetic: Boolean = false) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.ReporterType)
-
-  def copy(minArgCount: Int = minArgCount): _reportertask = {
-    val rt = new _reportertask(minArgCount)
-    copyInstruction(rt)
-  }
-
-  override def toString =
-    s"_reportertask($minArgCount)"
-}
 case class _return() extends Command {
   override def syntax =
     Syntax.commandSyntax()
@@ -460,23 +438,6 @@ case class _sum() extends Reporter with Pure {
 }
 case class _symbol() extends Reporter with Pure {
   override def syntax = Syntax.reporterSyntax(ret = Syntax.SymbolType)
-}
-// This is used only for parsing and removed from the AST before compilation
-case class _task() extends Reporter {
-  override def syntax = {
-    val anyTask = Syntax.CommandType | Syntax.ReporterType
-    Syntax.reporterSyntax(
-      right = List(anyTask),
-      ret = anyTask)
-  }
-}
-// synthetic means that it was created by the compiler while expanding a concise task
-case class _taskvariable(vn: Int, synthetic: Boolean = false) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType)
-  override def toString =
-    s"_taskvariable($vn)"
 }
 case class _turtle() extends Reporter {
   override def syntax =

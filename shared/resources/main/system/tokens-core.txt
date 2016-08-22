@@ -256,8 +256,9 @@ R in-radius _inradius
 R int etc._int
 R is-agent? etc._isagent
 R is-agentset? etc._isagentset
+R is-anonymous-command? etc._isanonymouscommand
+R is-anonymous-reporter? etc._isanonymousreporter
 R is-boolean? etc._isboolean
-R is-command-task? etc._iscommandtask
 R is-directed-link? etc._isdirectedlink
 R is-link-set? etc._islinkset
 R is-link? etc._islink
@@ -265,7 +266,6 @@ R is-list? etc._islist
 R is-number? etc._isnumber
 R is-patch-set? etc._ispatchset
 R is-patch? etc._ispatch
-R is-reporter-task? etc._isreportertask
 R is-string? etc._isstring
 R is-turtle-set? etc._isturtleset
 R is-turtle? etc._isturtle
@@ -389,7 +389,6 @@ R substring etc._substring
 R subtract-headings etc._subtractheadings
 R sum _sum
 R tan etc._tan
-R task _task
 R ticks etc._ticks
 R timer etc._timer
 R towards etc._towards

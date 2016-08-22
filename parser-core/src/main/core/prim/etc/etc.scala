@@ -427,7 +427,7 @@ case class _isboolean() extends Reporter with Pure {
       right = List(Syntax.WildcardType),
       ret = Syntax.BooleanType)
 }
-case class _iscommandtask() extends Reporter with Pure {
+case class _isanonymouscommand() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(Syntax.WildcardType),
@@ -475,7 +475,7 @@ case class _ispatchset() extends Reporter with Pure {
       right = List(Syntax.WildcardType),
       ret = Syntax.BooleanType)
 }
-case class _isreportertask() extends Reporter with Pure {
+case class _isanonymousreporter() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(Syntax.WildcardType),

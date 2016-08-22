@@ -238,12 +238,12 @@ object Syntax {
   val LinkType = 1024
 
   /**
-   * Type constant for command tasks. *
+   * Type constant for anonymous commands / "command lambdas". *
    */
   val CommandType = 2048
 
   /**
-   * Type constant for reporter tasks. *
+   * Type constant for anonymous reporters / "reporter lambdas". *
    */
   val ReporterType = 4096
 

@@ -398,10 +398,9 @@ object ExpressionParser {
               }
               // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
-              if (!coreReporter.syntax.isInfix || wantReporterTask)
-                (coreReporter.syntax,
-                  new core.ReporterApp(coreReporter, token.sourceLocation))
-              else {
+              if (!coreReporter.syntax.isInfix || wantReporterTask) {
+                (coreReporter.syntax, new core.ReporterApp(coreReporter, token.sourceLocation))
+              } else {
                 // this is a bit of a hack, but it's not terrible.  _minus is allowed to be unary
                 // (negation) but only if it's missing a left argument and is in a possibly variadic
                 // context (the first thing in a set of parens, basically).

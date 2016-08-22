@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ prim, AstNode, CommandBlock, ProcedureDefinition,
   ReporterApp, ReporterBlock, SourceLocatable, SourceLocation, Statement, Token, TokenType, TokenizerInterface },
-  prim.{ _const, _reporterlambda, _reportertask }
+  prim.{ _const, _reporterlambda }
 
 object WhiteSpace {
   sealed trait Placement { def default: String }
@@ -43,6 +43,11 @@ object WhiteSpace {
         copy(lastPosition = lastPosition.map(t => (path, location)))
 
       def lastPath: Option[AstPath] = lastPosition.map(_._1)
+
+      def debugPrint(s: String): Context = {
+        println(s + ":\n" + whitespaceLog.toMap.mkString(s"\n"))
+        this
+      }
 
       def seq(fs: Context => Context*): Context =
         fs.foldLeft(this) { case (c, f) => f(c) }
