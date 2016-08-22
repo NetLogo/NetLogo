@@ -37,7 +37,7 @@ object StructureChecker {
       Procedure(_, _, inputs, _) <- declarations
       input                      <- inputs
     } {
-      checkNotTaskVariable(input)
+      checkNotArrow(input)
       cAssert(
         inputs.count(_.name == input.name) == 1,
         duplicateVariableIdentifier(input), input.token)
@@ -68,7 +68,7 @@ object StructureChecker {
     val usedNamesAndBreedNames = usedNames ++ breedPrimitives(declarations)
 
     for { usage <- occurrences.iterator } {
-      checkNotTaskVariable(usage.identifier)
+      checkNotArrow(usage.identifier)
 
       for ((identifier, typeName) <- usedNamesAndBreedNames) {
         checkForInconsistentIDs(identifier, typeName, usage)
@@ -129,7 +129,7 @@ object StructureChecker {
         }
         occs ++ vars
       case (occs , decl@Procedure(name, _, inputs, _)) =>
-        (Occurrence(decl, name, ProcedureSymbol) +: inputs.map(Occurrence(decl, _, LocalVariable, isGlobal = false))) ++ occs
+        (Occurrence(decl, name, ProcedureSymbol) +: inputs.map(Occurrence(decl, _, ProcedureVariable, isGlobal = false))) ++ occs
       case (occs, decl@Breed(plural, singular, _, _)) =>
         val (symType, singularSymType) =
           if (decl.isLinkBreed) (LinkBreed, LinkBreedSingular)
@@ -173,10 +173,8 @@ object StructureChecker {
     s"Defining a breed [${breed.plural.name} ${breed.singular.name}] redefines $duplicatedName, a $typeName"
   }
 
-  private def checkNotTaskVariable(ident: Identifier) {
-    cAssert(!ident.name.startsWith("?"),
-      "Names beginning with ? are reserved for use as task inputs",
-      ident.token)
+  private def checkNotArrow(ident: Identifier) {
+    cAssert(ident.name != "->", "-> can only be used to create anonymous procedures", ident.token)
   }
 
   private def redeclarationOf(kind: String) =

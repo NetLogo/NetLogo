@@ -95,7 +95,7 @@ object TypeNames {
         "code block"
       } else if (compatible(SymbolType)) {
         subtract(SymbolType)
-        "symbol"
+        "variable"
       } else
         "(none)"
     remainingMask match {

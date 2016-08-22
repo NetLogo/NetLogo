@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Fail, Token }, Fail.exception
+import org.nlogo.core.{ Fail, Let, Token }, Fail.exception
 
 sealed trait SymbolType
 
@@ -11,7 +11,8 @@ object SymbolType {
   case object PrimitiveCommand extends SymbolType
   case object PrimitiveReporter extends SymbolType
   case object GlobalVariable extends SymbolType with Variable
-  case object LocalVariable extends SymbolType with Variable
+  case class LocalVariable(let: Let) extends SymbolType with Variable
+  case object LambdaVariable extends SymbolType with Variable
   case object TurtleBreed extends SymbolType
   case object TurtleBreedSingular extends SymbolType
   case object LinkBreed extends SymbolType
@@ -22,6 +23,7 @@ object SymbolType {
   case object BreedCommand extends SymbolType
   case object BreedReporter extends SymbolType
   case object ProcedureSymbol extends SymbolType
+  case object ProcedureVariable extends SymbolType with Variable
   case class BreedVariable(breedName: String) extends SymbolType with Variable
   case class LinkBreedVariable(breedName: String) extends SymbolType with Variable
 
@@ -42,7 +44,9 @@ object SymbolType {
       case PrimitiveReporter    => "primitive reporter"
       case BreedCommand         => "breed command"
       case BreedReporter        => "breed reporter"
-      case LocalVariable        => "local variable here"
+      case LocalVariable(_)     => "local variable here"
+      case LambdaVariable       => "local variable here"
+      case ProcedureVariable    => "local variable here"
     }
 
   implicit object SymbolTypeOrdering extends Ordering[SymbolType] {
@@ -62,7 +66,9 @@ object SymbolType {
         case BreedVariable(n)     => 7
         case LinkBreedVariable(n) => 7
         case ProcedureSymbol      => 9
-        case LocalVariable        => 10
+        case LocalVariable(_)     => 10
+        case LambdaVariable       => 10
+        case ProcedureVariable    => 10
       }
 
     override def compare(s1: SymbolType, s2: SymbolType): Int = {

@@ -15,7 +15,7 @@ class LetVerifier extends AstVisitor {
   override def visitStatement(stmt: Statement): Unit = {
     stmt.command match {
       case l: _let =>
-        currentLet = Some(l.let)
+        currentLet = l.let
         super.visitStatement(stmt)
         currentLet = None
       case _ => super.visitStatement(stmt)

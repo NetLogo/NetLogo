@@ -14,7 +14,8 @@ class ArrowLambdaScoperTests extends FunSuite {
     "MEAN" -> SymbolType.PrimitiveReporter,
     "BAR"  -> SymbolType.GlobalVariable)
 
-  def scope(ts: Seq[Token]): Option[(Seq[String], Seq[Token], SymbolTable)] = ArrowLambdaScoper(ts, testSymbols)
+  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Seq[String], Seq[Token], SymbolTable)] =
+    ArrowLambdaScoper(ts, testSymbols ++ otherSymbols)
 
   def testScopes(toks: Seq[Token], expectedArgs: Seq[String], expectedBody: Seq[Token], expectedSymbols: SymbolTable = SymbolTable.empty) = {
     val res = scope(toks)
@@ -48,23 +49,23 @@ class ArrowLambdaScoperTests extends FunSuite {
     assert(scope(Seq(`[`, id("baz"), `[`, `[`, id("qux"), `]`, `->`, id("qux"), `]`, `]`)).isEmpty)
   }
 
-  /*
-  //TODO: This case under discussion
-  test("a block with only an arrow has empty arguments and body") {
-    testScopes(Seq(`[`, `->`, `]`), Seq(), Seq())
+  test("a block with no arguments before the arrow is illegal") {
+    pending
+    intercept[CompilerException]  {
+      testScopes(Seq(`[`, `->`, `]`), Seq(), Seq())
+    }
   }
-  */
 
   test("a block with arguments returns its arguments") {
     testScopes(Seq(`[`, `[`, unid("foo"), unid("baz"),`]`, `->`, `]`),
       Seq("FOO", "BAZ"), Seq(),
-      SymbolTable("FOO" -> SymbolType.LocalVariable, "BAZ" -> SymbolType.LocalVariable))
+      SymbolTable("FOO" -> SymbolType.LambdaVariable, "BAZ" -> SymbolType.LambdaVariable))
   }
 
   test("a block binds the bound id in each occurence in the body") {
     testScopes(Seq(`[`, `[`, unid("foo"), `]`, `->`, unid("foo"), `]`),
       Seq("FOO"), Seq(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test"))),
-      SymbolTable("FOO" -> SymbolType.LocalVariable))
+      SymbolTable("FOO" -> SymbolType.LambdaVariable))
   }
 
   test("a block with body returns its body") {
@@ -75,15 +76,9 @@ class ArrowLambdaScoperTests extends FunSuite {
     intercept[CompilerException] { scope(Seq(`[`, `[`, `->`, `]`, `]`)) }
   }
 
-  test("a block with a bound id in the argument list errors") {
-    val boundToken = Token("foo", TokenType.Reporter, new _procedurevariable(0, "foo"))(SourceLocation(0, 0, "test"))
-    intercept[CompilerException] {
-      scope(Seq(`[`, `[`, boundToken, `]`, `->`, `]`))
-    }
-  }
-
-  def testArgError(args: Seq[Token], expectedError: String): Unit = {
-    val ex = intercept[CompilerException] { scope(Seq(`[`, `[`) ++ args ++ Seq(`]`, `->`, `]`)) }
+  def testArgError(args: Seq[Token], expectedError: String, bindings: (String, SymbolType)*): Unit = {
+    val symTable = SymbolTable(bindings: _*)
+    val ex = intercept[CompilerException] { scope(Seq(`[`, `[`) ++ args ++ Seq(`]`, `->`, `]`), symTable) }
     assert(ex.getMessage.contains(expectedError))
   }
 
@@ -91,7 +86,7 @@ class ArrowLambdaScoperTests extends FunSuite {
     testArgError(Seq(lit(2)), "Expected a variable name here")
   }
 
-  test("errors when lambda variable shadows enclosing lambda variable") {
-    testArgError(Seq(lamvar("bar")), "There is already a global variable called BAR")
+  test("errors when lambda variable shadows existing local variable") {
+    testArgError(Seq(unid("qux")), "There is already a local variable here called QUX", "QUX" -> SymbolType.ProcedureVariable)
   }
 }

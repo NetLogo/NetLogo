@@ -33,10 +33,10 @@ object ArrowLambdaScoper {
         (acc, toks.tail, usedNames)
       else if (usedNames.contains(tok.text.toUpperCase))
         SymbolType.alreadyDefinedException(usedNames(tok.text.toUpperCase), tok)
-      else if (! tok.value.isInstanceOf[_unknownidentifier])
+      else if (tok.text == "->" || tok.tpe != TokenType.Reporter)
         exception(s"Expected a variable name here", tok)
       else
-        gatherArgument(acc :+ tok.text.toUpperCase, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase), SymbolType.LocalVariable))
+        gatherArgument(acc :+ tok.text.toUpperCase, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase), SymbolType.LambdaVariable))
     }
     if (toks.head.tpe == TokenType.OpenBracket)
       Some(gatherArgument(Seq(), toks.tail, usedNames))

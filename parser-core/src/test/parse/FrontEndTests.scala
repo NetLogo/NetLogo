@@ -119,7 +119,7 @@ class FrontEndTests extends FunSuite {
   }
   test("missing name after let") {
     // here the error is at TokenType.Eof - ST 9/29/14
-    runFailure("let", "Expected variable name here", 4, 7)
+    runFailure("let", "LET expected 2 inputs.", 0, 3)
   }
   test("unknown reporter failure") {
     runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)
@@ -138,7 +138,7 @@ class FrontEndTests extends FunSuite {
   }
   // https://github.com/NetLogo/NetLogo/issues/348
   test("let of lambda variable") {
-    runFailure("foreach [1] [[x] -> let x 0 ]", "", 21, 22)
+    runFailure("foreach [1] [[x] -> let x 0 ]", "There is already a local variable here called X", 24, 25)
   }
   test("error-message used outside of carefully") {
     runFailure("let foo error-message", "error-message cannot be used outside of CAREFULLY.", 8, 21)
@@ -175,8 +175,12 @@ class FrontEndTests extends FunSuite {
     runFailure("__ignore [[]->", "No closing bracket for this open bracket.", 9, 10)
   }
   test("invalidLambda4") {
-    pending // decision on lambda
+    pending
     runFailure("__ignore [foo ->]", "No closing bracket for this open bracket.", 9, 10)
+  }
+  test("invalidLambda5") {
+    pending
+    runFailure("__ignore [->]", "an anonymous procedure must have a list of arguments.", 9, 10)
   }
   test("lambda argument shadows primitive name") {
     runFailure("__ignore [[turtles] -> 2]", "There is already a primitive reporter called TURTLES", 11, 18)
@@ -190,7 +194,7 @@ class FrontEndTests extends FunSuite {
   test("lambda argument shadows local variable") {
     runFailure("let baz 7 __ignore [[baz] -> 3]", "There is already a local variable here called BAZ", 21, 24)
   }
-  test("lambda argument shadows lambda name variable") {
+  test("lambda argument shadows its own name") {
     runFailure("let baz [[baz] -> 3]", "There is already a local variable here called BAZ", 10, 13)
   }
   test("lambda argument shadows procedure variable") {
@@ -257,11 +261,11 @@ class FrontEndTests extends FunSuite {
     runTest("__ignore [[1] [2]]",
       "_ignore()[_const([[1.0], [2.0]])[]]")
   }
-  test("ParseConstantListInsideTask1") {
+  test("ParseConstantListInsideLambda1") {
     runTest("__ignore n-values 10 [[]]",
       "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([])[]]]]")
   }
-  test("ParseConstantListInsideTask2") {
+  test("ParseConstantListInsideLambda2") {
     runTest("__ignore n-values 10 [[5]]",
       "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([5.0])[]]]]")
   }

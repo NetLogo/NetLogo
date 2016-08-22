@@ -32,8 +32,7 @@ trait NetLogoParser {
     oldProcedures:     ProceduresMap,
     extensionManager:  ExtensionManager)(procedure: FrontEndProcedure): ProcedureDefinition = {
     val rawTokens = structureResults.procedureTokens(procedure.name)
-    val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.LocalVariable)
-    // on LetNamer vs. Namer vs. LetScoper, see comments in LetScoper
+    val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.ProcedureVariable)
     val namedTokens = {
       val letNamedTokens = TransformableTokenStream(rawTokens.iterator, LetNamer)
       val namer =
@@ -41,11 +40,7 @@ trait NetLogoParser {
           oldProcedures ++ structureResults.procedures,
           procedure, extensionManager)
       namer.validateProcedure()
-      val namedTokens = TransformableTokenStream(letNamedTokens, namer)
-      val letScoper = new LetScoper(usedNames, namedTokens)
-      // we map unknown idents to symbols and ExpressionParser errors as appropriate
-      val letScopedStream = TransformableTokenStream(namedTokens, letScoper)
-      letScopedStream
+      TransformableTokenStream(letNamedTokens, namer)
     }
     ExpressionParser(procedure, namedTokens, usedNames)
   }

@@ -108,7 +108,7 @@ class AgentTypeCheckerTests extends FunSuite {
     testError("to foo crt 1 [ crt 1 ] end",
       "You can't use CRT in a turtle context, because CRT is observer-only.") }
 
-  // the next tests check correctness of task type-checking
+  // the next tests check correctness of lambda type-checking
   test("map") {
     val foo = compile("to foo print map [ my-links ] [ 1 2 3 ] end").head
     val rt = foo.statements.stmts.head
@@ -118,12 +118,12 @@ class AgentTypeCheckerTests extends FunSuite {
     assertResult(Some("-T--"))(rt.reporter.blockAgentClassString)
   }
 
-  test("tasks type-check properly") {
+  test("lambdas type-check properly") {
     val foo = compile("to foo ask turtles [ let bar [[] -> print 1] ] end").head
     assertResult(foo.procedure.agentClassString)("OTPL")
-    val barTask =
+    val barLambda =
       foo.statements.stmts.head.args(1).asInstanceOf[CommandBlock]
          .statements.stmts.head.args(0).asInstanceOf[ReporterApp]
-    assertResult("OTPL")(barTask.reporter.agentClassString)
+    assertResult("OTPL")(barLambda.reporter.agentClassString)
   }
 }

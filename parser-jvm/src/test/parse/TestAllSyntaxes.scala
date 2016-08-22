@@ -227,7 +227,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_substring string/number/number,string,OTPL,None,10,3,3
                      |_subtractheadings number/number,number,OTPL,None,10,2,2
                      |_sum list,number,OTPL,None,10,1,1
-                     |_symbolstring symbol,string,OTPL,None,10,1,1
+                     |_symbolstring variable,string,OTPL,None,10,1,1
                      |_tan number,number,OTPL,None,10,1,1
                      |_ticks ,number,OTPL,None,10,0,0
                      |_timer ,number,OTPL,None,10,0,0
