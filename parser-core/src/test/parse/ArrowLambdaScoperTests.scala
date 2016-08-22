@@ -50,10 +50,7 @@ class ArrowLambdaScoperTests extends FunSuite {
   }
 
   test("a block with no arguments before the arrow is illegal") {
-    pending
-    intercept[CompilerException]  {
-      testScopes(Seq(`[`, `->`, `]`), Seq(), Seq())
-    }
+    intercept[CompilerException]  { testScopes(Seq(`[`, `->`, `]`), Seq(), Seq()) }
   }
 
   test("a block with arguments returns its arguments") {

@@ -40,7 +40,9 @@ object ArrowLambdaScoper {
     }
     if (toks.head.tpe == TokenType.OpenBracket)
       Some(gatherArgument(Seq(), toks.tail, usedNames))
+    else if (toks.head.text == "->")
+      exception("An anonymous procedure must start with a list of arguments", toks.head)
     else
-      None // if we decide to allow [x -> ...] as opposed to only [[x] -> ...], this branch will become relevant
+      None
   }
 }

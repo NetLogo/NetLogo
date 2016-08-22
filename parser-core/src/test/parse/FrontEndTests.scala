@@ -175,12 +175,10 @@ class FrontEndTests extends FunSuite {
     runFailure("__ignore [[]->", "No closing bracket for this open bracket.", 9, 10)
   }
   test("invalidLambda4") {
-    pending
-    runFailure("__ignore [foo ->]", "No closing bracket for this open bracket.", 9, 10)
+    runFailure("__ignore [foo ->]", "Expected a literal value.", 10, 13)
   }
   test("invalidLambda5") {
-    pending
-    runFailure("__ignore [->]", "an anonymous procedure must have a list of arguments.", 9, 10)
+    runFailure("__ignore [->]", "An anonymous procedure must start with a list of arguments", 10, 12)
   }
   test("lambda argument shadows primitive name") {
     runFailure("__ignore [[turtles] -> 2]", "There is already a primitive reporter called TURTLES", 11, 18)
