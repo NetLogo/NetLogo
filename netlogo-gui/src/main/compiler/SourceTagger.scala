@@ -34,8 +34,6 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
   override def visitReporterApp(app:ReporterApp) {
     val capturedSources = captureInternalSources(() => super.visitReporterApp(app))
     val ((start, end), prefix, argSources) = app.reporter match {
-      case ct: org.nlogo.prim._commandtask  => ((ct.proc.pos, ct.proc.end), "task ", capturedSources)
-      case ct: org.nlogo.prim._reportertask => ((app.start, app.end), "task ", Seq())
       case ct: org.nlogo.prim._reporterlambda => ((app.start, app.end), "", Seq())
       case cl: org.nlogo.prim._commandlambda =>
         ((cl.proc.pos, cl.proc.end), "", capturedSources)

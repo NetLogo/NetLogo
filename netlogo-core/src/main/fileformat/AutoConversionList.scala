@@ -2,12 +2,13 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.core.SourceRewriter
+import org.nlogo.core.{ Dialect, Femto, SourceRewriter }
 
 case class ConversionSet(
   codeTabConversions:   Seq[SourceRewriter => String] = Seq(),
   otherCodeConversions: Seq[SourceRewriter => String] = Seq(),
-  targets:              Seq[String] = Seq())
+  targets:              Seq[String] = Seq(),
+  conversionDialect:    Dialect => Dialect = identity)
 
 
 object AutoConversionList {
@@ -55,7 +56,9 @@ object AutoConversionList {
       changeAllCode(Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
     },
     "NetLogo 6.0-RC1" -> {
-      changeAllCode(Seq(_.customRewrite("org.nlogo.parse.Lambdaizer")), Seq("task", "?", "?1", "?2", "?3", "?4", "?5", "?6", "?7", "?8", "?9"))
+      val targets = Seq("task", "?", "?1", "?2", "?3", "?4", "?5", "?6", "?7", "?8", "?9")
+      val conversions = Seq[SourceRewriter => String](_.customRewrite("org.nlogo.parse.Lambdaizer"))
+      ConversionSet(conversions, conversions, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d))
     }
     )
 }

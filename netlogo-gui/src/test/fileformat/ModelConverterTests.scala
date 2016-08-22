@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import org.nlogo.api.NetLogoLegacyDialect
 
-import org.nlogo.core.{ CompilationOperand, Femto, FrontEndInterface, LiteralParser,
+import org.nlogo.core.{ CompilationOperand, Dialect, Femto, FrontEndInterface, LiteralParser,
   Model, Program, SourceRewriter }, FrontEndInterface.ProceduresMap
 import org.nlogo.core.{ Button, Monitor, Pen, Plot, Slider, Switch, View }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
@@ -12,9 +12,10 @@ import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
 import org.scalatest.FunSuite
 
 class ModelConverterTests extends FunSuite {
-  def literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.core.CompilerUtilitiesInterface")
-  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) = {
-    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, conversions)
+  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq()),
+    onError: Exception => Unit = { (e: Exception) => throw e }) = {
+    def literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, conversions, onError)
   }
 
   val componentConverters = Seq(new WidgetConverter() {})
@@ -40,7 +41,9 @@ class ModelConverterTests extends FunSuite {
 
   test("if the model code tab doesn't compile, returns the model as-is") {
     val model = Model(code = "fd 1")
-    assert(convert(model, ConversionSet(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))) == model)
+    val convertedModel =
+      converter(_ => Seq(ConversionSet(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))), { _ => })(model, componentConverters)
+    assert(convertedModel == model)
   }
 
   test("applies multiple conversions when supplied") {
@@ -156,9 +159,9 @@ class ModelConverterTests extends FunSuite {
     val changes =
       Seq[SourceRewriter => String](_.customRewrite("org.nlogo.parse.Lambdaizer"))
     val targets = Seq("?1")
-    val model = Model(code = "to foo run task [ clear-all ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end")
-    val converted = convert(model, ConversionSet(changes, changes, targets))
-    assertResult("to foo run [ clear-all ] end to bar __ignore sort-by [[_1 _2] -> _1 > _2] [1 2 3] end")(converted.code)
+    val model = Model(code = "to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end")
+    val converted = convert(model, ConversionSet(changes, changes, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d)))
+    assertResult("to foo run [[] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [[_1 _2] -> _1 > _2] [1 2 3] end")(converted.code)
   }
 
   test("handles models with trailing comments properly") {

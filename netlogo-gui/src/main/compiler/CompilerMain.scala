@@ -50,7 +50,7 @@ private object CompilerMain {
       new SourceTagger(sources),
       new ConstantFolder, // en.wikipedia.org/wiki/Constant_folding
       new SimpleOfVisitor, // convert _of(_*variable) => _*variableof
-      new TaskVisitor, // handle _reportertask
+      new LambdaVariableVisitor, // handle _lambdavariable
       new LocalsVisitor, // convert _let/_repeat to _locals
       new SetVisitor,  // convert _set to specific setters
       new Optimizer(program.dialect.is3D),  // do various code-improving rewrites

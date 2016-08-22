@@ -152,7 +152,7 @@ class Backifier(program: Program,
             .asInstanceOf[api.Command])
       case core.prim._call(proc) =>
         new nvmprim._call(procedures(proc.name))
-      case core.prim._let(let) =>
+      case core.prim._let(Some(let)) =>
         val l = new nvmprim._let()
         l.let = let
         l
@@ -189,14 +189,8 @@ class Backifier(program: Program,
       case core.prim._commandlambda(argNames, _) =>
         new nvmprim._commandlambda(argNames)
 
-      case core.prim._commandtask(argcount) =>
-        new nvmprim._commandtask(argcount)  // LambdaLifter will fill in
-
       case core.prim._reporterlambda(argNames, _) =>
         new nvmprim._reporterlambda(argNames)
-
-      case core.prim._reportertask(argcount, _) =>
-        new nvmprim._reportertask()
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(
@@ -210,8 +204,6 @@ class Backifier(program: Program,
 
       case core.prim._procedurevariable(vn, name) =>
         new nvmprim._procedurevariable(vn, name)
-      case core.prim._taskvariable(vn, _) =>
-        new nvmprim._taskvariable(vn)
       case core.prim._lambdavariable(name, _) =>
         new nvmprim._lambdavariable(name)
 

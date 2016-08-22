@@ -32,7 +32,7 @@ class ModelConverter(
   extensionManager:      ExtensionManager,
   compilationEnv:        CompilationEnvironment,
   literalParser:         LiteralParser,
-  dialect:               Dialect,
+  baseDialect:           Dialect,
   applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() },
   warnOnError:           Exception => Unit = { _ => })
   extends ((Model, Seq[AutoConvertable]) => Model) {
@@ -43,7 +43,7 @@ class ModelConverter(
         extensionManager       = extensionManager,
         compilationEnvironment = compilationEnv,
         oldProcedures          = procedures,
-        containingProgram      = program.copy(dialect = dialect),
+        containingProgram      = program,
         subprogram             = false)
     }
 
@@ -88,6 +88,8 @@ class ModelConverter(
 
     def applyConversion(conversionSet: ConversionSet, model: Model): Model = {
       import conversionSet._
+
+      val dialect = conversionSet.conversionDialect(baseDialect)
 
       val code = codeTabConversions.foldLeft(model.code) {
         case (src, conversion) =>

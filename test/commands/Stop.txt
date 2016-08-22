@@ -52,9 +52,9 @@ ReportFromForeachInsideProcedure
   to foo foreach [1 2 3] report end
   COMPILE> COMPILER ERROR REPORT can only be used inside TO-REPORT.
 
-StopTask1
+StopLambda1
   globals [ glob1 glob2 ]
-  O> set glob1 task [ stop ]
+  O> set glob1 [[] -> stop ]
   to foo foreach [1 2] [ foreach [3 4] [ set glob2 5 run glob1 error "1" ] error "2" ] error "3" end
   O> foo
   glob2 => 5
@@ -86,9 +86,9 @@ StopInsideAsk2
   to-report foo crt 1 ask turtles [ stop hatch 10 ] report count turtles end
   foo => 1
 
-StopInsideRunOfCommandTask
+StopInsideRunOfCommandLambda
   globals [ glob1 ]
-  to test let x task [ set glob1 1 stop ] run x set glob1 2 end
+  to test let x [[] -> set glob1 1 stop ] run x set glob1 2 end
   O> test set glob1 glob1 * 10
   glob1 => 10
 

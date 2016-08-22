@@ -59,6 +59,3 @@ carefully-with-error-and-message
 
 NotSettable
   O> set timer 5 => COMPILER ERROR This isn't something you can use "set" on.
-
-task-variable-not-in-task
-  O> __ignore ?1 => COMPILER ERROR This special variable isn't defined here.

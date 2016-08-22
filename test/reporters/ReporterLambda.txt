@@ -143,7 +143,7 @@ As-Function-Return-4
 
 Two-Args-To-Created-Reporter-And-Use-Closed-Over-Var
   globals [glob1]
-  O> let x 5 set glob1 (runresult task [[a b] -> x * a * b] 10 20)
+  O> let x 5 set glob1 (runresult [[a b] -> x * a * b] 10 20)
   glob1 => 1000
 
 Two-Args-To-Task-And-Change-Closed-Over-Var
@@ -179,28 +179,20 @@ ConciseSyntax4
 
 ConciseSyntax5
   globals [ glob1 ]
-  O> set glob1 task [[x] -> reduce + x]
+  O> set glob1 [[x] -> reduce + x]
   (runresult glob1 [1 2 3]) => 6
 
 ConciseSyntax6
   to-report plus1 [x] report x + 1 end
   map plus1 map plus1 map plus1 [1 2 3] => [4 5 6]
 
-ConciseSyntax7
-  (runresult (task +) 1 2) => 3
-
-ConciseSyntax8
-  globals [ glob1 ]
-  O> set glob1 99
-  runresult task glob1 => 99
-
 ConciseSyntax9
   globals [ glob1 glob2 ]
   O> set glob1 99
-  O> set glob2 task glob1
-  runresult runresult task glob2 => 99
+  O> set glob2 [[] -> glob1]
+  runresult runresult [[] -> glob2] => 99
 
 ConciseSyntax10
-  to-report adder [n] report task [[x] -> n + x] end
+  to-report adder [n] report [[x] -> n + x] end
   map (adder 5) [10 20 30] => [15 25 35]
   (map [[x y] -> (runresult x y)] map adder [10 20 30] [1 2 3]) => [11 22 33]

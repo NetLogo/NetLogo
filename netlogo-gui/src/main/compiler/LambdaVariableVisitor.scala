@@ -6,11 +6,11 @@ import org.nlogo.core.{ I18N, Let }
 import CompilerExceptionThrowers.cAssert
 
 import org.nlogo.nvm.Procedure
-import org.nlogo.prim.{ _commandlambda, _reporterlambda, _reportertask, _lambdavariable, _letvariable, _procedurevariable, _taskvariable }
+import org.nlogo.prim.{ _commandlambda, _reporterlambda, _lambdavariable, _letvariable, _procedurevariable }
 
 import scala.collection.immutable.Stack
 
-private object TaskVisitor {
+private object LambdaVariableVisitor {
   sealed trait FormalProvider {
     def letForName(varName: String): Option[Let]
   }
@@ -28,10 +28,9 @@ private object TaskVisitor {
   }
 }
 
-import TaskVisitor._
+import LambdaVariableVisitor._
 
-private class TaskVisitor extends DefaultAstVisitor {
-  private var task = Option.empty[_reportertask]
+private class LambdaVariableVisitor extends DefaultAstVisitor {
   private var lambdaStack = Stack[FormalProvider]()
   private var procedure = Option.empty[Procedure]
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
@@ -48,11 +47,6 @@ private class TaskVisitor extends DefaultAstVisitor {
 
   override def visitReporterApp(expr: ReporterApp) {
     expr.reporter match {
-      case l: _reportertask =>
-        val old = task
-        task = Some(l)
-        super.visitReporterApp(expr)
-        task = old
       case l: _reporterlambda =>
         lambdaStack = lambdaStack.push(ReporterLambda(l))
         super.visitReporterApp(expr)
@@ -61,15 +55,6 @@ private class TaskVisitor extends DefaultAstVisitor {
         lambdaStack = lambdaStack.push(CommandLambda(c))
         super.visitReporterApp(expr)
         lambdaStack = lambdaStack.pop
-      case lv: _taskvariable =>
-        val formal = task match {
-          case None                   =>
-            cAssert(procedure.get.isTask, I18N.errors.get("compiler.TaskVisitor.notDefined"), expr)
-            procedure.get.getTaskFormal(s"?${lv.varNumber}").get
-          case Some(l: _reportertask) => l.getFormal(lv.varNumber)
-        }
-        expr.reporter = new _letvariable(formal, formal.name)
-        expr.reporter.copyMetadataFrom(lv)
       case lv: _lambdavariable =>
         val letsForVariable = lambdaStack.flatMap(_.letForName(lv.varName))
         letsForVariable.headOption match {
