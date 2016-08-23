@@ -15,8 +15,7 @@ import LambdaTokenMapper._
 class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
 
   def varName(nestingDepth: Int, vn: Int): String = {
-    val prefix = if (nestingDepth == 0) "_"
-    else ("_" + ("?" * nestingDepth))
+    val prefix = "?" * (nestingDepth + 1)
     s"$prefix$vn"
   }
 

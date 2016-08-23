@@ -101,20 +101,20 @@ class AstRewriterTests extends FunSuite {
   }
 
   testLambda("let baz []", "let baz []")
-  testLambda("__ignore map [[_1] -> [size] of _1] (list turtle 0)", "__ignore map [[size] of ?] (list turtle 0)")
-  testLambda("__ignore [[_1] -> print _1]", "__ignore task [print ?]")
+  testLambda("__ignore map [[?1] -> [size] of ?1] (list turtle 0)", "__ignore map [[size] of ?] (list turtle 0)")
+  testLambda("__ignore [[?1] -> print ?1]", "__ignore task [print ?]")
   testLambda("__ignore reduce + [1 2 3]", "__ignore reduce + [1 2 3]")
-  testLambda("""foreach [1 2 3] [[_1] ->  crt _1 run "set glob1 glob1 + count turtles" ]""",
+  testLambda("""foreach [1 2 3] [[?1] ->  crt ?1 run "set glob1 glob1 + count turtles" ]""",
     """foreach [1 2 3] [ crt ? run "set glob1 glob1 + count turtles" ]""")
-  testLambda("__ignore map [[_1] -> round _1] [1 2 3]", "__ignore map [round ?] [1 2 3]")
-  testLambda("__ignore (map [[_1 _2] -> _1 + _2] [1 2 3] [4 5 6])", "__ignore (map [?1 + ?2] [1 2 3] [4 5 6])")
-  testLambda("__ignore sort-by [[_1 _2] -> _1 < _2] [1 2 3]", "__ignore sort-by [?1 < ?2] [1 2 3]")
-  testLambda("foreach [] [[_1] -> foreach _1 [[_?1] -> set xcor _?1]]", "foreach [] [foreach ? [set xcor ?]]")
-  testLambda("foreach n-values 4 [[_1] ->  _1] []", "foreach n-values 4 [ ? ] []")
-  testLambda("let x 0 foreach [1 2 3] [[_1] -> set x _1]", "let x 0 foreach [1 2 3] [set x ?]")
-  testLambda("foreach sort-by [[_1 _2] -> [size] of _1 > [size] of _2] turtles [[_1] -> ask _1 []]",
+  testLambda("__ignore map [[?1] -> round ?1] [1 2 3]", "__ignore map [round ?] [1 2 3]")
+  testLambda("__ignore (map [[?1 ?2] -> ?1 + ?2] [1 2 3] [4 5 6])", "__ignore (map [?1 + ?2] [1 2 3] [4 5 6])")
+  testLambda("__ignore sort-by [[?1 ?2] -> ?1 < ?2] [1 2 3]", "__ignore sort-by [?1 < ?2] [1 2 3]")
+  testLambda("foreach [] [[?1] -> foreach ?1 [[??1] -> set xcor ??1]]", "foreach [] [foreach ? [set xcor ?]]")
+  testLambda("foreach n-values 4 [[?1] ->  ?1] []", "foreach n-values 4 [ ? ] []")
+  testLambda("let x 0 foreach [1 2 3] [[?1] -> set x ?1]", "let x 0 foreach [1 2 3] [set x ?]")
+  testLambda("foreach sort-by [[?1 ?2] -> [size] of ?1 > [size] of ?2] turtles [[?1] -> ask ?1 []]",
     "foreach sort-by [[size] of ?1 > [size] of ?2] turtles [ask ? []]")
-  testLambda("__ignore (map [[_1 _2] -> list (_1 + 1) (_2 - 1)] (list 2 1))",
+  testLambda("__ignore (map [[?1 ?2] -> list (?1 + 1) (?2 - 1)] (list 2 1))",
     "__ignore (map [list (?1 + 1) (?2 - 1)] (list 2 1))")
   testLambda("let a-task [[] -> tick]", "let a-task task tick")
   testLambda("let a-task [[] -> tick]", "let a-task task [tick]")
