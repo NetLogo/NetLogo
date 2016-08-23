@@ -202,6 +202,14 @@ public strictfp class Argument
     }
   }
 
+  /**
+   * Used by the GIS extension. Other extensions should use
+   * getSymbol where possible.
+   */
+  public Reporter getReference() {
+    return arg;
+  }
+
   // if you're looking for the cities extension's <code>getReporter</code>
   // method, that has been removed. Change the extension and use
   // <code>getSymbol</code> instead.
