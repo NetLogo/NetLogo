@@ -100,7 +100,7 @@ Combo
   map [[a] -> sort-by [[x y] -> x < y] a] [[2 1] [3 7 4]] => [[1 2] [3 4 7]]
 
 NotEnoughInputs
-  runresult [[x] -> x] => ERROR task expected 1 input, but only got 0
+  runresult [[x] -> x] => ERROR anonymous procedure expected 1 input, but only got 0
 
 Map-Id-With-Variable
   globals [ glob1 ]

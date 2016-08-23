@@ -16,10 +16,10 @@ class _map extends Reporter {
   // case. - ST 3/20/08
   override def report(context: Context) = {
 
-    val task = argEvalReporter(context, 0)
+    val rep = argEvalReporter(context, 0)
     val n = args.length - 1
-    if (n < task.syntax.minimum)
-      throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
+    if (n < rep.syntax.minimum)
+      throw new EngineException(context, this, AnonymousProcedure.missingInputs(rep, n))
 
     // get all of the list args, if any.
     var size = 0
@@ -41,7 +41,7 @@ class _map extends Reporter {
         actuals(j) = iters(j).next()
         j += 1
       }
-      result.add(task.report(context, actuals))
+      result.add(rep.report(context, actuals))
       i += 1
     }
     result.toLogoList

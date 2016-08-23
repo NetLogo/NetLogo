@@ -13,7 +13,7 @@ class _commandlambda(val argumentNames: Seq[String]) extends Reporter {
 
   override def report(c: Context): AnyRef =
     AnonymousCommand(procedure = proc,
-                formals   = proc.taskFormals,
+                formals   = proc.lambdaFormals,
                 lets      = c.allLets,
                 locals    = c.activation.args)
 }

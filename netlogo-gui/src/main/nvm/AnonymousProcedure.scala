@@ -9,7 +9,7 @@ import org.nlogo.core.{ AgentKind, Let, I18N, Syntax }
 // which may appear in user code, or may be inserted by
 // ExpressionParser during parsing, when a command / reporter is known to be expected.
 //
-// tasks take inputs: <code>[[_1 _2 etc ] -> ... </code> these are passed using Lets.
+// anonymous procedure take inputs: <code>[[_1 _2 etc ] -> ... </code> these are passed using Lets.
 //
 // bindArgs binds formal inputs to actual inputs at runtime.  note that it's the caller's
 // responsibility to ensure in advance that there will be enough actuals.  if there are extra
@@ -53,11 +53,11 @@ sealed trait AnonymousProcedure {
 }
 
 object AnonymousProcedure {
-  def missingInputs(task: ApiLambda, argCount: Int): String =
-    if (task.syntax.minimum == 1)
-      I18N.errors.get("org.nlogo.prim.task.missingInput")
+  def missingInputs(lambda: ApiLambda, argCount: Int): String =
+    if (lambda.syntax.minimum == 1)
+      I18N.errors.get("org.nlogo.prim.lambda.missingInput")
     else
-      I18N.errors.getN("org.nlogo.prim.task.missingInputs", task.syntax.minimum.toString, argCount.toString)
+      I18N.errors.getN("org.nlogo.prim.lambda.missingInputs", lambda.syntax.minimum.toString, argCount.toString)
 }
 
 // anonymous reporters are pretty simple.  The body is simply a Reporter.
@@ -72,7 +72,7 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
       ret = Syntax.WildcardType,
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = body.agentClassString)
-  override def toString = "(reporter task: [ " + body.fullSource + " ])"
+  override def toString = "(anonymous reporter: [ " + body.fullSource + " ])"
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
     context match {
       case e: ExtensionContext => report(e.nvmContext, args)

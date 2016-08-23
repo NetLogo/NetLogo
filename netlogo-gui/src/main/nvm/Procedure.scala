@@ -14,7 +14,7 @@ class Procedure(
   val parent: Procedure,
   val argTokens: Seq[Token]   = Seq(),
   initialArgs: Vector[String] = Vector[String](),
-  val taskFormals: Array[Let] = Array[Let]()) extends FrontEndProcedure {
+  val lambdaFormals: Array[Let] = Array[Let]()) extends FrontEndProcedure {
 
   args = initialArgs
   val fileName = nameToken.filename // used by cities include-file stuff
@@ -41,8 +41,8 @@ class Procedure(
   // cache args.size() for efficiency with making Activations
   var size = 0
 
-  def getTaskFormal(name: String): Option[Let] =
-    taskFormals.find(_.name == name) orElse Option(parent).flatMap(_.getTaskFormal(name))
+  def getLambdaFormal(name: String): Option[Let] =
+    lambdaFormals.find(_.name == name) orElse Option(parent).flatMap(_.getLambdaFormal(name))
 
   var code = Array[Command]()
 
@@ -53,7 +53,7 @@ class Procedure(
 
     if (isLambda) {
       val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
-      "(command task from: " + topParent(parent).displayName + ": " + sourceCode + ")"
+      "(anonymous command from: " + topParent(parent).displayName + ": " + sourceCode + ")"
     } else {
       def nameAndFile =
         Option(fileName)

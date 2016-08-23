@@ -28,9 +28,9 @@ object CompilerBridge {
       val procedures = procedureMap.map((astBackifier.backifyProcedure _).tupled).toSeq
       // lambda-lift
       val allDefs = {
-        val taskNumbers = Iterator.from(1)
+        val lambdaNumbers = Iterator.from(1)
         procedures.flatMap { procdef =>
-          val lifter = new LambdaLifter(taskNumbers)
+          val lifter = new LambdaLifter(lambdaNumbers)
           procdef.accept(lifter)
           procdef +: lifter.children
         }

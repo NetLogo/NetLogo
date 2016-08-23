@@ -28,10 +28,10 @@ class _run extends Command {
           case error: CompilerException =>
             throw new EngineException(context, this, error.getMessage)
         }
-      case task: AnonymousCommand =>
+      case cmd: AnonymousCommand =>
         val n = args.size - 1
-        if (n < task.syntax.minimum)
-          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
+        if (n < cmd.syntax.minimum)
+          throw new EngineException(context, this, AnonymousProcedure.missingInputs(cmd, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {
@@ -39,7 +39,7 @@ class _run extends Command {
           i += 1
         }
         try {
-          task.perform(context, actuals)
+          cmd.perform(context, actuals)
           context.ip = next
         }
         catch {

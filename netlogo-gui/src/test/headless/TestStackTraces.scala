@@ -9,10 +9,11 @@ Don't add any more tests here; add them there instead.
 
 Here is an example from CommandTasks:
 
+
 *command-task-stack-trace
-   O> run task [print __boom] => STACKTRACE boom!\
+  O> run [[] -> print __boom] => STACKTRACE boom!\
    error while observer running __BOOM\
-     called by (command task from: procedure __EVALUATOR)\
+     called by (anonymous command from: procedure __EVALUATOR)\
      called by procedure __EVALUATOR
 
 notice the * at the start of the test name. this is to prevent it from

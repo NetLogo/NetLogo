@@ -16,7 +16,7 @@ private object LambdaVariableVisitor {
   }
 
   case class CommandLambda(lambda: _commandlambda) extends FormalProvider {
-    def letForName(varName: String): Option[Let] = lambda.proc.getTaskFormal(varName)
+    def letForName(varName: String): Option[Let] = lambda.proc.getLambdaFormal(varName)
   }
 
   case class ReporterLambda(lambda: _reporterlambda) extends FormalProvider {
@@ -24,7 +24,7 @@ private object LambdaVariableVisitor {
   }
 
   case class LiftedLambda(procdef: ProcedureDefinition) extends FormalProvider {
-    def letForName(varName: String): Option[Let] = procdef.procedure.getTaskFormal(varName)
+    def letForName(varName: String): Option[Let] = procdef.procedure.getLambdaFormal(varName)
   }
 }
 

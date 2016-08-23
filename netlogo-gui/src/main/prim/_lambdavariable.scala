@@ -12,7 +12,6 @@ class _lambdavariable(val varName: String) extends Reporter {
 
   override def report(context: Context) = {
     val let = context.allLets.find(_.let.name == varName).get
-    let.value
-    // TaskVisitor compiles us out of existence -- ?
+    let.value // LambdaVariableVisitor compiles us out of existence
   }
 }

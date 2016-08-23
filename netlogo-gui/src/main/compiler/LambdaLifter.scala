@@ -11,7 +11,7 @@ import scala.collection.immutable.Stack
  * Removes the bodies of command lambdas and makes them into separate "child" procedures.
  */
 
-class LambdaLifter(taskNumbers: Iterator[Int]) extends DefaultAstVisitor {
+class LambdaLifter(lambdaNumbers: Iterator[Int]) extends DefaultAstVisitor {
   val children = collection.mutable.Buffer[ProcedureDefinition]()
   private var procedures = Stack.empty[nvm.Procedure]
 
@@ -28,9 +28,9 @@ class LambdaLifter(taskNumbers: Iterator[Int]) extends DefaultAstVisitor {
       case c: coreprim._commandlambda =>
         for (p <- procedure) {
           val formals = c.argumentNames.map(n => Let(n)).toArray
-          val name = "__lambda-" + taskNumbers.next()
+          val name = "__lambda-" + lambdaNumbers.next()
           val newProc =
-            new nvm.Procedure(false, c.token, name, None, parent = procedures.head, taskFormals = formals)
+            new nvm.Procedure(false, c.token, name, None, parent = procedures.head, lambdaFormals = formals)
           c.proc     = newProc
           c.proc.pos = expr.start
           c.proc.end = expr.end

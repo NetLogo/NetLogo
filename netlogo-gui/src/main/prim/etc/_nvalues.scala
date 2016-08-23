@@ -17,11 +17,11 @@ class _nvalues extends Reporter {
         I18N.errors.getN("org.nlogo.prim.etc.$common.noNegativeNumber", displayName))
     // make the result list.
     val result = new LogoListBuilder
-    val task = argEvalReporter(context, 1)
-    if (task.syntax.minimum > 1)
-      throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, 1))
+    val rep = argEvalReporter(context, 1)
+    if (rep.syntax.minimum > 1)
+      throw new EngineException(context, this, AnonymousProcedure.missingInputs(rep, 1))
     for (i <- 0 until n)
-      result.add(task.report(context, Array[AnyRef](Double.box(i))))
+      result.add(rep.report(context, Array[AnyRef](Double.box(i))))
     result.toLogoList
   }
 

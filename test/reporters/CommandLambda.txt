@@ -1,15 +1,15 @@
 *ToString3
-  (word [[x] -> print x]) => "(command task from: procedure __EVALUATOR: [print x])"
+  (word [[x] -> print x]) => "(anonymous command from: procedure __EVALUATOR: [print x])"
 
 *ToString4
-  (word [[] -> print 5]) => "(command task from: procedure __EVALUATOR: [print 5])"
+  (word [[] -> print 5]) => "(anonymous command from: procedure __EVALUATOR: [print 5])"
 
 *ToString5
-  (word [[x] -> (foreach [1 2] [3 4] [[] -> __ignore x + x])]) => "(command task from: procedure __EVALUATOR: [(foreach [1 2] [3 4] [[] -> __ignore x + x])])"
+  (word [[x] -> (foreach [1 2] [3 4] [[] -> __ignore x + x])]) => "(anonymous command from: procedure __EVALUATOR: [(foreach [1 2] [3 4] [[] -> __ignore x + x])])"
 
 *ToString6
   to foo end
-  (word [[] -> foo]) => "(command task from: procedure __EVALUATOR: [foo])"
+  (word [[] -> foo]) => "(anonymous command from: procedure __EVALUATOR: [foo])"
 
 CallTask
   globals [ glob1 ]
@@ -91,10 +91,10 @@ WrongTypeOfTask2
   O> run [[] -> 5] => COMPILER ERROR RUN expected this input to be a string or anonymous command, but got an anonymous reporter instead
 
 NotEnoughInputs
-  O> run [[x] -> __ignore x] => ERROR task expected 1 input, but only got 0
+  O> run [[x] -> __ignore x] => ERROR anonymous procedure expected 1 input, but only got 0
 
 NotEnoughInputsForeach
-  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR task expected 2 inputs, but only got 1
+  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR anonymous procedure expected 2 inputs, but only got 1
 
 command-and-reporter-tasks-close-over-same-let-variable
   globals [ glob1 glob2 glob3 ]
@@ -129,14 +129,14 @@ command-and-reporter-tasks-close-over-same-procedure-input
 *command-task-stack-trace
   O> run [[] -> print __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR: [print __boom])\
+    called by (anonymous command from: procedure __EVALUATOR: [print __boom])\
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
   O> run [run [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR: [print __boom])\
-    called by (command task from: procedure __EVALUATOR: [run [print __boom]])\
+    called by (anonymous command from: procedure __EVALUATOR: [print __boom])\
+    called by (anonymous command from: procedure __EVALUATOR: [run [print __boom]])\
     called by procedure __EVALUATOR
 
 turtle-executing-command-task
@@ -221,7 +221,7 @@ concise-syntax-7
   O> (foreach [1 2 3] [9 9 9] crt)
   count turtles => 6
 
-concise-syntax 8
+concise-syntax-8
   globals [ glob1 ]
   to foo [x] ask x [ set glob1 glob1 + who ] end
   O> crt 5

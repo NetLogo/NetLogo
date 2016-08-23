@@ -38,7 +38,7 @@ private object CompilerMain {
       .filterNot(_.isLambda) ++ oldProcedures.values
 
     // only return top level procedures.
-    // task procedures can be reached via the children field on Procedure.
+    // anonymous procedures can be reached via the children field on Procedure.
     (returnedProcedures, feStructureResults.program)
   }
 
