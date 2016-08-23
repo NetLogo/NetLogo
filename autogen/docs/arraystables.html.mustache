@@ -95,7 +95,7 @@ print a
 =&gt; {{array: 0 0 0 0 0}}
 print array:length a
 =&gt; 5
-foreach n-values 5 [ [x] -&gt; x ] [ [i] -&gt; array:set a i i * i ]
+foreach n-values 5 [ [i] -&gt; i ] [ [i] -&gt; array:set a i i * i ]
 print a
 =&gt; {{array: 0 1 4 9 16}}
 print array:item a 0

@@ -1272,9 +1272,9 @@ show map round [1.2 2.2 2.7]
     <p>
       Here are a couple more examples of <a href="dictionary.html#map"><code>map</code></a>:
     <pre>
-show map [ [i] -&gt; i &lt; 0 ] [1 -1 3 4 -2 -10]
+show map [ [x] -&gt; x &lt; 0 ] [1 -1 3 4 -2 -10]
 ;; prints [false true false false true true]
-show map [ [i] -&gt; i * i ] [1 2 3]
+show map [ [x] -&gt; x * x ] [1 2 3]
 ;; prints [1 4 9]
 </pre>
     <p>
@@ -1372,8 +1372,8 @@ sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles
       something. To do this, use the <a href="dictionary.html#foreach"><code>foreach</code></a> and <a href="dictionary.html#ask"><code>ask</code></a> commands in combination, like
       this:
     <pre>
-foreach sort turtles [ [a-turtle] -&gt;
-  ask a-turtle [
+foreach sort turtles [ [the-turtle] -&gt;
+  ask the-turtle [
     ...
   ]
 ]
@@ -2865,7 +2865,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       to an anonymous procedure. As with all primitives
       accepting varying number of inputs, the whole call must be surrounded with
       parentheses, so for example <code>(run my-anonymous-command 5)</code>
-      or <code>(runresult my-reporter &quot;foo&quot; 2)</code>.
+      or <code>(runresult my-anonymous-reporter &quot;foo&quot; 2)</code>.
       When not passing input, no parentheses are required.
     <h3>
       Anonymous Procedure inputs

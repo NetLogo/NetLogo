@@ -439,7 +439,7 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
       </h4>
       <p>
         Reports a new matrix which results from applying <i>reporter</i>
-        (the name of a reporter or an anonymous reporter)
+        (an anonymous reporter or the name of a reporter)
         to each of the elements of the given matrix. For example,
         <pre>matrix:map sqrt matrix</pre>
       <p>
@@ -872,7 +872,7 @@ print matrix:forecast-continuous-growth [20 25 28 32 35 39]
       <pre>
 ;; this is equivalent to what the matrix:forecast-linear-growth does
 let data-list [20 25 28 32 35 39]
-let indep-var (n-values length data-list [[x] -&gt; x]) ; 0,1,2...,5
+let indep-var (n-values length data-list [ [x] -&gt; x ]) ; 0,1,2...,5
 let lin-output matrix:regress matrix:from-column-list (list data-list indep-var)
 let lincnst item 0 (item 0 lin-output)
 let linslpe item 1 (item 0 lin-output)
@@ -882,7 +882,7 @@ print (list (lincnst + linslpe * 6) (lincnst) (linslpe) (linR2))
 
 ;; this is equivalent to what the matrix:forecast-compound-growth does
 let com-log-data-list  (map ln [20 25 28 32 35 39])
-let com-indep-var2 (n-values length com-log-data-list [[x] -&gt; x]) ; 0,1,2...,5
+let com-indep-var2 (n-values length com-log-data-list [ [x] -&gt; x ]) ; 0,1,2...,5
 let com-output matrix:regress matrix:from-column-list (list com-log-data-list com-indep-var2)
 let comcnst exp item 0 (item 0 com-output)
 let comprop exp item 1 (item 0 com-output)
@@ -892,7 +892,7 @@ print (list (comcnst * comprop ^ 6) (comcnst) (comprop) (comR2))
 
 ;; this is equivalent to what the matrix:forecast-continuous-growth does
 let con-log-data-list  (map ln [20 25 28 32 35 39])
-let con-indep-var2 (n-values length con-log-data-list [[x] -&gt; x]) ; 0,1,2...,5
+let con-indep-var2 (n-values length con-log-data-list [ [x] -&gt; x ]) ; 0,1,2...,5
 let con-output matrix:regress matrix:from-column-list (list con-log-data-list con-indep-var2)
 let concnst exp item 0 (item 0 con-output)
 let conrate     item 1 (item 0 con-output)

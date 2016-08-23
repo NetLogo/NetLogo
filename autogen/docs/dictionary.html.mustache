@@ -2833,14 +2833,14 @@ ask turtles
       <p>
         Reports a list containing only those items of <i>list</i> for which
         the reporter reports true -- in other words, the items satisfying the
-        given condition. <i>reporter</i> may be the name of a reporter or
-        an anonymous reporter.
+        given condition. <i>reporter</i> may be an anonymous reporter or the
+        name of a reporter.
       <pre>
 show filter is-number? [1 &quot;2&quot; 3]
 =&gt; [1 3]
-show filter [ [i] -&gt; i &lt; 3] [1 3 2]
+show filter [ [i] -&gt; i &lt; 3 ] [1 3 2]
 =&gt; [1 2]
-show filter [ [s] -&gt; first s != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
+show filter [ [s] -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
 =&gt; [&quot;hi&quot; &quot;everyone&quot;]
 </pre>
       <p>
@@ -2923,7 +2923,7 @@ foreach [1.1 2.2 2.6] show
 =&gt; 1.1
 =&gt; 2.2
 =&gt; 2.6
-foreach [1.1 2.2 2.6] [ [i] -&gt; show (word i &quot; -&gt; &quot; round i) ]
+foreach [1.1 2.2 2.6] [ [x] -&gt; show (word x &quot; -&gt; &quot; round i) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
 =&gt; 2.6 -&gt; 3
@@ -2942,7 +2942,7 @@ foreach [1.1 2.2 2.6] [ [i] -&gt; show (word i &quot; -&gt; &quot; round i) ]
 =&gt; &quot;the sum is: 6&quot;
 =&gt; &quot;the sum is: 9&quot;
 (foreach list (turtle 1) (turtle 2) [3 4]
-  [ [the-turtle num-steps] -&gt; ask the-turtles [ fd num-steps ] ])
+  [ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
 ;; turtle 1 moves forward 3 patches
 ;; turtle 2 moves forward 4 patches
 </pre>
@@ -4502,11 +4502,11 @@ set mylist lput 42 mylist
         <p>
           With a single <i>list</i>, the given reporter is run for each item in
           the list, and a list of the results is collected and reported.
-          <i>reporter</i> may be the name of a reporter or an anonymous reporter.
+          <i>reporter</i> may be an anonymous reporter or the name of a reporter.
         <pre>
 show map round [1.1 2.2 2.7]
 =&gt; [1 2 3]
-show map [ [i] -&gt; i * i] [1 2 3]
+show map [ [i] -&gt; i * i ] [1 2 3]
 =&gt; [1 4 9]
 </pre>
         <p>
@@ -4519,7 +4519,7 @@ show map [ [i] -&gt; i * i] [1 2 3]
         <pre>
 show (map + [1 2 3] [2 4 6])
 =&gt; [3 6 9]
-show (map [ [a b c] -&gt; a + b = c] [1 2 3] [2 4 6] [3 5 9])
+show (map [ [a b c] -&gt; a + b = c ] [1 2 3] [2 4 6] [3 5 9])
 =&gt; [true false true]
 </pre>
         <p>
@@ -5066,19 +5066,19 @@ ask n-of 50 patches [ set pcolor green ]
         </h4>
         <p>
           Reports a list of length <i>size</i> containing values computed
-          by repeatedly running the reporter. <i>reporter</i> may be the name of a
-          reporter or an anonymous reporter.
+          by repeatedly running the reporter. <i>reporter</i> may be an anonymous
+          reporter or the name of a reporter.
         <p>
           If the reporter accepts inputs, the input will be the number of the
           item currently being computed, starting from zero.
         <pre>
 show n-values 5 [1]
 =&gt; [1 1 1 1 1]
-show n-values 5 [ [i] -&gt; i]
+show n-values 5 [ [i] -&gt; i ]
 =&gt; [0 1 2 3 4]
 show n-values 3 turtle
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show n-values 5 [ [i] -&gt; i * i]
+show n-values 5 [ [x] -&gt; x * x ]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
@@ -6266,8 +6266,8 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
           [ [a b] -&gt; a + b] [1 2 3 4]</code>
         is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
         <i>list</i> has a single item, that item is reported. It is an
-        error to reduce an empty list. <i>reporter</i> may be the name of a reporter
-        or an anonymous reporter.
+        error to reduce an empty list. <i>reporter</i> may be an anonymous
+        reporter or the name of a reporter.
       <p>
         The first input passed to the reporter is the result so far, and the
         second input is the next item in the list.
@@ -6281,15 +6281,15 @@ show reduce + [1 2 3]
 =&gt; 6
 show reduce - [1 2 3]
 =&gt; -4
-show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far] [1 2 3]
+show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far ] [1 2 3]
 =&gt; 2
-show reduce [ [result-so-far ignored-item] -&gt; result-so-far] [1 2 3]
+show reduce [ [result-so-far ignored-item] -&gt; result-so-far ] [1 2 3]
 =&gt; 1
-show reduce [ [ignored next-item] -&gt; next-item] [1 2 3]
+show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
 =&gt; 3
 show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
-show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item] (fput [] [1 2 3 4 5])
+show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item ] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
 </pre>
       <p>
@@ -6298,7 +6298,7 @@ show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item] (fpu
 ;; find the longest string in a list
 to-report longest-string [strings]
   report reduce
-    [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string]]
+    [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
     strings
 end
 
@@ -6308,7 +6308,7 @@ show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
 ;; count the number of occurrences of an item in a list
 to-report occurrences [x the-list]
   report reduce
-    [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count]] (fput 0 the-list)
+    [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
 end
 
 show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
@@ -6316,7 +6316,7 @@ show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
 
 ;; evaluate the polynomial, with given coefficients, at x
 to-report evaluate-polynomial [coefficients x]
-  report reduce [ [value a] -&gt; (x * value) + a] coefficients
+  report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
 end
 
 ;; evaluate 3x^2 + 2x + 1 at x = 4
@@ -7264,8 +7264,8 @@ show sin 270
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
 let n 0
-foreach sort patches [ [a-patch] -&gt;
-  ask a-patch [
+foreach sort patches [ [the-patch] -&gt;
+  ask the-patch [
     set plabel n
     set n n + 1
   ]
@@ -7287,10 +7287,10 @@ foreach sort patches [ [a-patch] -&gt;
       <p>
         If the input is a list, reports a new list containing the same
         items as the input list, in a sorted order defined by the boolean
-        reporter. <i>reporter</i> may be the name of a reporter or an
-        anonymous reporter.
+        reporter. <i>reporter</i> may be an anonymous reporter or
+        the name of a reporter.
       <p>
-        The two inputs to the anonymous procedure are the values being compared.
+      The two inputs to <i>reporter</i> are the values being compared.
         The reporter should report true if the first argument comes strictly before
         the second in the desired sort order, and false otherwise.
       <p>
@@ -7305,7 +7305,7 @@ show sort-by &lt; [3 1 4 2]
 =&gt; [1 2 3 4]
 show sort-by &gt; [3 1 4 2]
 =&gt; [4 3 2 1]
-show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
+show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2 ] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
 </pre>
       <p>
@@ -7331,7 +7331,7 @@ show sort-on [who] turtles
 show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
-  [ [a-turtle] -&gt; ask a-turtle [ do-something ] ]
+  [ [the-turtle] -&gt; ask the-turtle [ do-something ] ]
 ;; turtles run &quot;do-something&quot; one at a time, in
 ;; ascending order by size
 </pre>
