@@ -36,12 +36,12 @@ private class LambdaVariableVisitor extends DefaultAstVisitor {
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
     procedure = Some(procdef.procedure)
 
-    if (procdef.procedure.isTask)
+    if (procdef.procedure.isLambda)
       lambdaStack = lambdaStack.push(LiftedLambda(procdef))
 
     super.visitProcedureDefinition(procdef)
 
-    if (procdef.procedure.isTask)
+    if (procdef.procedure.isLambda)
       lambdaStack = lambdaStack.pop
   }
 
@@ -62,7 +62,7 @@ private class LambdaVariableVisitor extends DefaultAstVisitor {
             expr.reporter = new _letvariable(let, lv.varName)
             expr.reporter.copyMetadataFrom(lv)
           case None =>
-            cAssert(procedure.get.isTask, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), expr)
+            cAssert(procedure.get.isLambda, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), expr)
         }
       case _ =>
         super.visitReporterApp(expr)

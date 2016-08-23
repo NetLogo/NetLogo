@@ -180,7 +180,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public void stop() {
-    if (activation.procedure.isTask()) {
+    if (activation.procedure.isLambda()) {
       throw NonLocalExit$.MODULE$;
     }
     if (activation.procedure.topLevel()) {

@@ -24,7 +24,7 @@ public final strictfp class _report
     context.job.result = arg0;
     context.stopping = false;
     context.ip = next;
-    if (context.activation.procedure.isTask()) {
+    if (context.activation.procedure.isLambda()) {
       throw NonLocalExit$.MODULE$;
     } else if (! context.activation.procedure.isReporter()) {
       throw new EngineException(context, this,

@@ -21,7 +21,7 @@ private class Assembler {
     val ret =
       if (proc.isReporter)
         new _returnreport
-      else if (proc.isTask)
+      else if (proc.isLambda)
         new _done
       else
         new _return

@@ -28,7 +28,7 @@ class Procedure(
   var localsCount = 0
   private var _owner: SourceOwner = null
   val children = collection.mutable.Buffer[Procedure]()
-  def isTask = parent != null
+  def isLambda = parent != null
   var lets = Vector[Let]()
 
   def addLet(l: Let) = {
@@ -51,7 +51,7 @@ class Procedure(
       if (p.parent == null) p
       else topParent(p.parent)
 
-    if (isTask) {
+    if (isLambda) {
       val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
       "(command task from: " + topParent(parent).displayName + ": " + sourceCode + ")"
     } else {
@@ -78,7 +78,7 @@ class Procedure(
 
   def dump: String = {
     val buf = new StringBuilder
-    val indent = isTask
+    val indent = isLambda
     if (indent)
       buf ++= "   "
     if (isReporter)

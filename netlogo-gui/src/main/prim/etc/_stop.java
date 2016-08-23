@@ -29,7 +29,7 @@ public final strictfp class _stop
       // immediately.  first we must check that it's a command procedure
       // and not a reporter procedure.
       if (context.activation.procedure.isReporter() ||
-          context.activation.procedure.isTask() && context.activation.procedure.parent().isReporter()) {
+          context.activation.procedure.isLambda() && context.activation.procedure.parent().isReporter()) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
@@ -43,7 +43,7 @@ public final strictfp class _stop
       context.finished = true;
     } else {
       if (context.activation.procedure.isReporter() ||
-          context.activation.procedure.isTask() && context.activation.procedure.parent().isReporter()) {
+          context.activation.procedure.isLambda() && context.activation.procedure.parent().isReporter()) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }

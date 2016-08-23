@@ -35,7 +35,7 @@ private object CompilerMain {
 
     val returnedProcedures =
       defs.map(assembleProcedure(_, feStructureResults.program, allSources, compilationEnv))
-      .filterNot(_.isTask) ++ oldProcedures.values
+      .filterNot(_.isLambda) ++ oldProcedures.values
 
     // only return top level procedures.
     // task procedures can be reached via the children field on Procedure.

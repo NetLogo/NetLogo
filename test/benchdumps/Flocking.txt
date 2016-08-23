@@ -205,7 +205,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L10
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -492,7 +492,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L12
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -646,7 +646,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L12
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -1287,7 +1287,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L26
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -3016,7 +3016,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L26
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW

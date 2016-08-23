@@ -1412,7 +1412,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L2
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW

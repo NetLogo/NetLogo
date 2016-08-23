@@ -1762,7 +1762,7 @@ reporter procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -2329,7 +2329,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3894,7 +3894,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L22
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -11231,7 +11231,7 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -11347,7 +11347,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -11625,7 +11625,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -11910,7 +11910,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12581,7 +12581,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
