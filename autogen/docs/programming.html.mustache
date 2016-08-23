@@ -63,7 +63,7 @@
       <li>
         <a href="#links">Links</a>
       <li>
-        <a href="#tasks">Tasks</a>
+        <a href="#anonymous-procedures">Anonymous Procedures</a>
       <li>
         <a href="#ask-concurrent">Ask-Concurrent</a>
       <li>
@@ -1272,9 +1272,9 @@ show map round [1.2 2.2 2.7]
     <p>
       Here are a couple more examples of <a href="dictionary.html#map"><code>map</code></a>:
     <pre>
-show map [? &lt; 0] [1 -1 3 4 -2 -10]
+show map [ [i] -&gt; i &lt; 0 ] [1 -1 3 4 -2 -10]
 ;; prints [false true false false true true]
-show map [? * ?] [1 2 3]
+show map [ [i] -&gt; i * i ] [1 2 3]
 ;; prints [1 4 9]
 </pre>
     <p>
@@ -1287,8 +1287,8 @@ show map [? * ?] [1 2 3]
       <a href="dictionary.html#repeat"><code>repeat</code></a> or <a href="dictionary.html#while"><code>while</code></a>, or a recursive procedure.
     <p>
       The blocks of code we're giving to <code>map</code> and
-      <code>foreach</code> in these examples are actually <b>tasks</b>. Tasks
-      are explained in more detail in <a href="#tasks">Tasks</a>, below.
+      <code>foreach</code> in these examples are actually <b>anonymous procedures</b>.
+      Anonymous procedures are explained in more detail in <a href="#anonymous-procedures">Anonymous Procedures</a>, below.
     <p>
       <a><b>Varying number of inputs</b></a>
     <p id="variadic">
@@ -1350,7 +1350,7 @@ show (list)
     <p>
       Here's an example:
     <pre>
-sort-by [[size] of ?1 &lt; [size] of ?2] turtles
+sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles
 </pre>
     <p>
       This returns a list of turtles sorted in ascending order by their
@@ -1372,8 +1372,8 @@ sort-by [[size] of ?1 &lt; [size] of ?2] turtles
       something. To do this, use the <a href="dictionary.html#foreach"><code>foreach</code></a> and <a href="dictionary.html#ask"><code>ask</code></a> commands in combination, like
       this:
     <pre>
-foreach sort turtles [
-  ask ? [
+foreach sort turtles [ [a-turtle] -&gt;
+  ask a-turtle [
     ...
   ]
 ]
@@ -2819,70 +2819,71 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
         Component, Small Worlds, Preferential Attachment
       </div>
     <h2>
-      <a>Tasks</a>
+      <a>Anonymous Procedures</a>
     </h2>
-    <p id="tasks">
-      Tasks let you store code to be run later. There are two kinds,
-      command tasks and reporter tasks.
+    <p id="anonymous-procedures">
+      Anonymous procedures let you store code to be run later.
+      Just like regular NetLogo procedures, an anonymous procedures can be either
+      a command (anonymous command) or a reporter (anonymous reporter).
     <p>
-      Tasks are values, which means that a task may be passed as input,
+      Anonymous procedures are values, which means they may be passed as input,
       reported as a result, or stored in a variable.
     <p>
-      A given task might be run once, multiple times, or not at all.
+      An anonymous procedure might be run once, multiple times, or not at all.
     <p>
-      In other programming languages tasks are known as first-class
+      In other programming languages anonymous procedures are known as first-class
       functions, closures, or lambda.
     <h3>
-      Task primitives
+      Anonymous Procedure primitives
     </h3>
     <p>
-      Primitives specific to tasks are <code>task</code>,
-      <code>is-command-task?</code>, and <code>is-reporter-task?</code>.
+      Primitives specific to anonymous procedures are <code>-&gt;</code>,
+      <code>is-anonymous-command?</code>, and <code>is-anonymous-reporter?</code>.
     <p>
-      The <code>task</code> primitive creates a task. The task it reports might
-      be a command task or a reporter task, depending on what kind of block
-      you pass it. For example <code>task [ fd 1 ]</code> reports a command
-      task, because <code>fd</code> is a command, while <code>task [ count
-      turtles ]</code> reports a reporter task, because <code>count</code> is a
-      reporter.
+      The <code>-&gt;</code> creates an anonymous procedure.
+      The anonymous procedure it reports might be a command or a reporter,
+      depending on what kind of block you pass it.
+      For example <code>[ [] -&gt; fd 1 ]</code> reports an anonymous command,
+      because <code>fd</code> is a command, while
+      <code>[ [] -&gt; count turtles ]</code> reports an anonymous reporter,
+      because <code>count</code> is a reporter.
     <p>
-      These primitives require tasks as input: <code>foreach</code>,
+      These primitives require anonymous procedures as input: <code>foreach</code>,
       <code>map</code>, <code>reduce</code>, <code>filter</code>, <code>n-values</code>,
-      <code>sort-by</code>. When calling these primitives, the <code>task</code>
-      primitive is optional, so for example one may write simply
-      <code>foreach mylist [ print ? ]</code> instead of <code>foreach mylist
-      task [ print ? ]</code>, though the latter is also accepted. (Because
-      <code>task</code> is optional, the syntax for these primitives is
-      backward-compatible with existing code from previous NetLogo
-      versions.)
+      <code>sort-by</code>. When calling these primitives, using an <code>-&gt;</code> is optional
+      if your anonymous procedure takes no arguments.
+      For example one may write simply <code>foreach mylist [ print ]</code>
+      instead of <code>foreach mylist [ [x] -&gt; print x ]</code>, though the latter
+      is also accepted.
     <p>
-      The <code>run</code> command accepts command tasks as well as strings.
+      The <code>run</code> command accepts anonymous commands as well as strings.
     <p>
-      The <code>runresult</code> reporter accepts reporter tasks as well as
+      The <code>runresult</code> reporter accepts anonymous reporters as well as
       strings.
     <p>
       <code>run</code> and <code>runresult</code> allow passing inputs
-      to a task. As with all primitives accepting varying number of inputs,
-      the whole call must be surrounded with parentheses, so for example
-      <code>(run my-command-task 5)</code> or <code>(runresult my-reporter-task
-      &quot;foo&quot; 2)</code>.  When not passing input, no parentheses are
-      required.
+      to an anonymous procedure. As with all primitives
+      accepting varying number of inputs, the whole call must be surrounded with
+      parentheses, so for example <code>(run my-anonymous-command 5)</code>
+      or <code>(runresult my-reporter &quot;foo&quot; 2)</code>.
+      When not passing input, no parentheses are required.
     <h3>
-      Task inputs
+      Anonymous Procedure inputs
     </h3>
     <p>
-      A task may take zero or more inputs. The inputs are referenced using
-      the special variables <code>?</code> (aka <code>?1</code>), <code>?2</code>,
-      <code>?3</code>, etc. Any extra inputs are ignored.
+      An anonymous procedure may take zero or more inputs.
+      The inputs are referenced the variables declared before the arrow.
+      For instance, in the anonymous reporter <code>[ [a b] -&gt; a + b ]</code>,
+      <code>a</code> and <code>b</code> are inputs.
     <h3>
-      Tasks and strings
+      Anonymous procedures and strings
     </h3>
     <p>
-      Creating and running tasks is fast. To use <code>run</code> or
+      Creating and running anonymous procedures is fast. To use <code>run</code> or
       <code>runresult</code> on a new string for the first time is about 100x
-      slower than running a task. Modelers should normally use tasks
-      instead of running strings, except when running strings entered by
-      the user.
+      slower than running an anonymous procedure. Modelers should normally use
+      anonymous procedures instead of running strings,
+      except when running strings entered by the user.
     <h3>
       Concise syntax
     </h3>
@@ -2897,25 +2898,18 @@ filter is-number? [1 &quot;x&quot; 3] =&gt; [1 3]
 foreach [1 2 3 4] print
 </pre>
     <p>
-      In older NetLogo versions, these had to be written:
+      In older NetLogo versions (4 and earlier), these had to be written:
     <pre>
 map [abs ?] [1 -2 3 -4] =&gt; [1 2 3 4]
 reduce [?1 + ?2] [1 2 3 4] =&gt; 10
 filter [is-number? ?] [1 &quot;x&quot; 3] =&gt; [1 3]
 foreach [1 2 3 4] [ print ? ]
 </pre>
-    <p>
-      The old syntax remains valid.
-    <p>
-      The concise syntax can also be used with the <code>task</code> primitive.
-      So for example <code>task die</code> is short for <code>task [ die ]</code>,
-      <code>task fd</code> is short for <code>task [fd ?]</code>, and <code>task
-      +</code> is short for <code>task [?1 + ?2]</code>.
     <h3>
-      Tasks as closures
+      Anonymous Procedures as closures
     </h3>
     <p>
-      Tasks are &quot;closures&quot;; that means they capture or
+      Anonymous procedures are &quot;closures&quot;; that means they capture or
       &quot;close over&quot; the bindings (not just the current values) of
       local variables and procedure inputs. They do not capture agent
       variables and do not capture the identity (or even the agent type)
@@ -2925,14 +2919,14 @@ foreach [1 2 3 4] [ print ? ]
     </h3>
     <p>
       The <code>stop</code> and <code>report</code> commands exit from the
-      dynamically enclosing procedure, not the enclosing task. (This is
-      backward-compatible with older NetLogo versions.)
+      dynamically enclosing procedure, not the enclosing anonymous procedure.
+      (This is backward-compatible with older NetLogo versions.)
     <h3>
-      Tasks and extensions
+      Anonymous Procedures and extensions
     </h3>
     <p>
-      The extensions API supports writing primitives that accept tasks as
-      input. Write us for sample code.
+      The extensions API supports writing primitives that accept anonymous procedures
+      as input. Write us for sample code.
     <h3>
       Limitations
     </h3>
@@ -2940,31 +2934,30 @@ foreach [1 2 3 4] [ print ? ]
       We hope to address at least some of the following limitations in
       future NetLogo versions:
     <ul>
-      <li>
-        <code>import-world</code> does not support tasks.
-      <li>Task inputs can't be given names. This can make nesting
-      reporter tasks difficult. (Command tasks can use <code>let</code> to give
-      their inputs names, if needed.)
-      <li>Tasks can't be variadic (accept a varying number of inputs).
-      <li>Reporter tasks can't contain commands, only a single reporter
-      expression. So for example you must use <code>ifelse-value</code> not
-      <code>if</code>, and you don't use <code>report</code> at all. If your
-      code is too complex to be written as one reporter, you'll need to
-      move the code to a separate reporter procedure, and then call that
-      procedure from your task, passing it any needed inputs.
-      <li>Tasks are not interchangeable with command blocks and reporter
-      blocks. Only the primitives listed above accept tasks as input.
-      Control primitives such as <code>ifelse</code> and <code>while</code> and
-      agent primitives such as <code>of</code> and <code>with</code> don't
-      accept tasks. So for example if I have a reporter task <code>r</code> and
-      two command tasks <code>c1</code> and <code>c2</code>, I can't write <code>
-        ifelse r c1 c2</code>, I must write <code>ifelse runresult r [ run c1 ]
-        [ run c2 ]</code>.
-      <li>The concise syntax where <code>task</code> may be omitted is only
-      available to primitives and extension primitives, not ordinary
-      procedures. So for example if I have a procedure <code>p</code> that
-      accepts a task as input, it must be called as e.g. <code>p task [ ...
-      ]</code> not <code>p [ ... ]</code>.
+        <li><code>import-world</code> does not support anonymous procedures.</li>
+        <li>Anonymous procedures can't be variadic (accept a varying number of inputs).</li>
+        <li>Anonymous reporters can't contain commands, only a single reporter
+          expression. So for example you must use <code>ifelse-value</code> not
+          <code>if</code>, and you don't use <code>report</code> at all. If your
+          code is too complex to be written as one reporter, you'll need to
+          move the code to a separate reporter procedure, and then call that
+          procedure from your anonymous reporter, passing it any needed inputs.</li>
+        <li>Anonymous procedures are not interchangeable with
+          command blocks and reporter blocks.
+          Only the primitives listed above accept anonymous procedures as input.
+          Control primitives such as <code>ifelse</code> and <code>while</code> and
+          agent primitives such as <code>of</code> and <code>with</code> don't
+          accept anonymous procedures.
+          So for example if I have an anonymous reporter <code>let r [ [] -&gt; if random 2 == 0 ]</code> and
+          two anonymous commands <code>let c1 [ [] -&gt; tick ]</code> and
+          <code>let c2 [ [] -&gt; stop ]</code>, I can't write <code>
+          ifelse r c1 c2</code>, I must write <code>ifelse runresult r [ run c1 ]
+          [ run c2 ]</code>.</li>
+        <li>The concise syntax where <code>-&gt;</code> may be omitted is only
+          available to primitives and extension primitives, not ordinary
+          procedures. So for example if I have a procedure <code>p</code> that
+          accepts an anonymous procedure as input, it must be called as e.g.
+          <code>p [ [] -&gt; ...  ]</code> not <code>p [ ... ]</code>.</li>
       </ul>
     <h3>
       Code example
@@ -3343,18 +3336,18 @@ end
       run&quot;</code> (a string) or <code>[&quot;see&quot; &quot;spot&quot;
       &quot;run&quot;]</code> (a list of strings) instead.
       <li>NetLogo's <a href="dictionary.html#run"><code>run</code></a>
-      command works on tasks and strings, not lists (since we have no
-      &quot;word&quot; data type), and does not permit the definition or
-      redefinition of procedures.
+      command works on anonymous procedures and strings, not lists
+      (since we have no &quot;word&quot; data type), and does not
+      permit the definition or redefinition of procedures.
       <li>Control structures such as <a href="dictionary.html#if"><code>if</code></a> and <a href="dictionary.html#while"><code>while</code></a> are special forms, not
       ordinary functions. You can't define your own special forms, so
       you can't define your own control structures. (You can do
-      something similar using tasks, but you must use the <code>task</code>,
+      something similar using anonymous procedures, but you must use the <code>-&gt;</code>,
       <code>run</code>, and <code>runresult</code> primitives for that, you cannot
       make them implicit.)
-      <li>Tasks (aka function values or lambda) are true lexically-scoped
-      closures. This feature is available in NetLogo and in modern Lisps,
-      but not in standard Logo.
+      <li>Anonymous procedures (aka function values or lambda) are true
+      lexically-scoped closures. This feature is available in NetLogo
+      and in modern Lisps, but not in standard Logo.
       </ul>
     <p>
       Of course, the NetLogo language also contains other features not

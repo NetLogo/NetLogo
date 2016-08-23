@@ -44,7 +44,7 @@
             <a href="#X">X</a>
             <a href="#Y">Y</a>
             <!--<a href="#Z">Z</a>-->
-            <a href="#ops">?</a>
+            <a href="#ops">-></a>
           </span>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <div class="smallfont centertext tocborder inlineblock">
           Categories: <a href="#turtlegroup">Turtle</a> -
           <a href="#patchgroup">Patch</a> - <a href="#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
-          - <a href="#taskgroup">Task</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a> - <a href="#perspectivegroup">Perspective</a>
+          - <a href="#anonproceduresgroup">Anonymous Procedures</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a> - <a href="#perspectivegroup">Perspective</a>
           <br>
           <a href="#iogroup">Input/Output</a> - <a href="#fileiogroup">File</a> - <a href="#listsgroup">List</a> -
           <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a> - <a href="#linkgroup">Links</a>
@@ -308,20 +308,20 @@ Go figure! - ST 12/2/04
       <a href="#xor">xor</a>
       <!-- ======================================== -->
     <h3>
-      Task
+      Anonymous Procedures
     </h3>
-    <p id="taskgroup">
+    <p id="anonproceduresgroup">
+      <a href="#arrow">-&gt; (anonymous procedure)</a>
       <a href="#filter">filter</a>
       <a href="#foreach">foreach</a>
-      <a href="#is-of-type">is-command-task?</a>
-      <a href="#is-of-type">is-reporter-task?</a>
+      <a href="#is-of-type">is-anonymous-command?</a>
+      <a href="#is-of-type">is-anonymous-reporter?</a>
       <a href="#map">map</a>
       <a href="#n-values">n-values</a>
       <a href="#reduce">reduce</a>
       <a href="#run">run</a>
       <a href="#run">runresult</a>
       <a href="#sort-by">sort-by</a>
-      <a href="#task">task</a>
       <!-- ======================================== -->
     <h3>
       World
@@ -2828,23 +2828,24 @@ ask turtles
         <a>filter<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">filter <i>reporter-task</i> <i>list</i></span>
+        <span class="prim_example">filter <i>reporter</i> <i>list</i></span>
       </h4>
       <p>
         Reports a list containing only those items of <i>list</i> for which
-        the task reports true -- in other words, the items satisfying the
-        given condition.
+        the reporter reports true -- in other words, the items satisfying the
+        given condition. <i>reporter</i> may be the name of a reporter or
+        an anonymous reporter.
       <pre>
 show filter is-number? [1 &quot;2&quot; 3]
 =&gt; [1 3]
-show filter [? &lt; 3] [1 3 2]
+show filter [ [i] -&gt; i &lt; 3] [1 3 2]
 =&gt; [1 2]
-show filter [first ? != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
+show filter [ [s] -&gt; first s != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
 =&gt; [&quot;hi&quot; &quot;everyone&quot;]
 </pre>
       <p>
         See also <a href="#map">map</a>, <a href="#reduce">reduce</a>,
-        <a href="#ques">?</a>.
+        <a href="#arrow">-> (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="first">
       <h3>
@@ -2910,40 +2911,43 @@ show floor -4.5
         <a>foreach<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">foreach <i>list</i> <i>command-task</i></span>
-        <span class="prim_example">(foreach <i>list1</i> ... <i>command-task</i>)</span>
+        <span class="prim_example">foreach <i>list</i> <i>command</i></span>
+        <span class="prim_example">(foreach <i>list1</i> ... <i>command</i>)</span>
       </h4>
       <p>
-        With a single list, runs the task for each item of <i>list</i>.
+        With a single list, runs the command for each item of <i>list</i>.
+        <i>command</i> may be the name of a command, or an anonymous command
+        created with <a href="#arrow">-&;gt;</a>.
       <pre>
 foreach [1.1 2.2 2.6] show
 =&gt; 1.1
 =&gt; 2.2
 =&gt; 2.6
-foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
+foreach [1.1 2.2 2.6] [ [i] -&gt; show (word i &quot; -&gt; &quot; round i) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
 =&gt; 2.6 -&gt; 3
 </pre>
       <p>
-        With multiple lists, runs <i>command-task</i> for each group of items
-        from each list. So, they are run once for the first items, once for
+        With multiple lists, runs <i>command</i> for each group of items
+        from each list.
+        So, they are run once for the first items, once for
         the second items, and so on. All the lists must be the same length.
       <p>
         Some examples make this clearer:
       <pre>
 (foreach [1 2 3] [2 4 6]
-   [ show word &quot;the sum is: &quot; (?1 + ?2) ])
+   [ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
 =&gt; &quot;the sum is: 3&quot;
 =&gt; &quot;the sum is: 6&quot;
 =&gt; &quot;the sum is: 9&quot;
 (foreach list (turtle 1) (turtle 2) [3 4]
-  [ ask ?1 [ fd ?2 ] ])
+  [ [the-turtle num-steps] -&gt; ask the-turtles [ fd num-steps ] ])
 ;; turtle 1 moves forward 3 patches
 ;; turtle 2 moves forward 4 patches
 </pre>
       <p>
-        See also <a href="#map">map</a>, <a href="#ques">?</a>.
+        See also <a href="#map">map</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="forward">
       <h3>
@@ -3610,7 +3614,7 @@ ask patches [
 ;; the right half turns blue
 show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
 =&gt; [0 0 0 0 0 1 1 1 1 1]
-show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
+show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
   [1 3 2 5 3 8 3 2 1]
 =&gt; 8
 </pre>
@@ -3896,8 +3900,9 @@ show int -3.5
       <h3>
         <a>is-agent?<span class="since">1.2.1</span></a>
         <a>is-agentset?<span class="since">1.2.1</span></a>
+        <a>is-anonymous-command?<span class="since">5.0</span></a>
+        <a>is-anonymous-reporter?<span class="since">5.0</span></a>
         <a>is-boolean?<span class="since">1.2.1</span></a>
-        <a>is-command-task?<span class="since">5.0</span></a>
         <a>is-directed-link?<span class="since">4.0</span></a>
         <a>is-link?<span class="since">4.0</span></a>
         <a>is-link-set?<span class="since">4.0</span></a>
@@ -3905,7 +3910,6 @@ show int -3.5
         <a>is-number?<span class="since">1.2.1</span></a>
         <a>is-patch?<span class="since">1.2.1</span></a>
         <a>is-patch-set?<span class="since">4.0</span></a>
-        <a>is-reporter-task?<span class="since">5.0</span></a>
         <a>is-string?<span class="since">1.0</span></a>
         <a>is-turtle?<span class="since">1.2.1</span></a>
         <a>is-turtle-set?<span class="since">4.0</span></a>
@@ -3914,9 +3918,10 @@ show int -3.5
       <h4>
         <span class="prim_example">is-agent? <i>value</i></span>
         <span class="prim_example">is-agentset? <i>value</i></span>
+        <span class="prim_example">is-anonymous-command? <i>value</i></span>
+        <span class="prim_example">is-anonymous-reporter? <i>value</i></span>
         <span class="prim_example">is-boolean? <i>value</i></span>
         <span class="prim_example">is-<i>&lt;breed&gt;</i>? <i>value</i></span>
-        <span class="prim_example">is-command-task? <i>value</i></span>
         <span class="prim_example">is-directed-link? <i>value</i></span>
         <span class="prim_example">is-link? <i>value</i></span>
         <span class="prim_example">is-link-set? <i>value</i></span>
@@ -3924,7 +3929,6 @@ show int -3.5
         <span class="prim_example">is-number? <i>value</i></span>
         <span class="prim_example">is-patch? <i>value</i></span>
         <span class="prim_example">is-patch-set? <i>value</i></span>
-        <span class="prim_example">is-reporter-task? <i>value</i></span>
         <span class="prim_example">is-string? <i>value</i></span>
         <span class="prim_example">is-turtle? <i>value</i></span>
         <span class="prim_example">is-turtle-set? <i>value</i></span>
@@ -4074,7 +4078,7 @@ layout-circle turtles 10
 ;; in order by who number
 layout-circle sort turtles 10
 ;; in order by size
-layout-circle sort-by [[size] of ?1 &lt; [size] of ?2] turtles 10
+layout-circle sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles 10
 </pre>
     </div>
     <div class="dict_entry" id="layout-radial">
@@ -4492,16 +4496,17 @@ set mylist lput 42 mylist
           <a>map<span class="since">1.3</span></a>
         </h3>
         <h4>
-          <span class="prim_example">map <i>reporter-task</i> <i>list</i></span>
-          <span class="prim_example">(map <i>reporter-task</i> <i>list1</i> ...)</span>
+          <span class="prim_example">map <i>reporter</i> <i>list</i></span>
+          <span class="prim_example">(map <i>reporter</i> <i>list1</i> ...)</span>
         </h4>
         <p>
-          With a single <i>list</i>, the given task is run for each item in
+          With a single <i>list</i>, the given reporter is run for each item in
           the list, and a list of the results is collected and reported.
+          <i>reporter</i> may be the name of a reporter or an anonymous reporter.
         <pre>
 show map round [1.1 2.2 2.7]
 =&gt; [1 2 3]
-show map [? * ?] [1 2 3]
+show map [ [i] -&gt; i * i] [1 2 3]
 =&gt; [1 4 9]
 </pre>
         <p>
@@ -4514,11 +4519,11 @@ show map [? * ?] [1 2 3]
         <pre>
 show (map + [1 2 3] [2 4 6])
 =&gt; [3 6 9]
-show (map [?1 + ?2 = ?3] [1 2 3] [2 4 6] [3 5 9])
+show (map [ [a b c] -&gt; a + b = c] [1 2 3] [2 4 6] [3 5 9])
 =&gt; [true false true]
 </pre>
         <p>
-          See also <a href="#foreach">foreach</a>, <a href="#ques">?</a>.
+        See also <a href="#foreach">foreach</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
         </div>
       <div class="dict_entry" id="max">
         <h3>
@@ -5057,26 +5062,27 @@ ask n-of 50 patches [ set pcolor green ]
           <a>n-values<span class="since">2.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">n-values <i>size</i> <i>reporter-task</i></span>
+          <span class="prim_example">n-values <i>size</i> <i>reporter</i></span>
         </h4>
         <p>
           Reports a list of length <i>size</i> containing values computed
-          by repeatedly running the task.
+          by repeatedly running the reporter. <i>reporter</i> may be the name of a
+          reporter or an anonymous reporter.
         <p>
-          If the task accepts inputs, the input will be the number of the
+          If the reporter accepts inputs, the input will be the number of the
           item currently being computed, starting from zero.
         <pre>
 show n-values 5 [1]
 =&gt; [1 1 1 1 1]
-show n-values 5 [?]
+show n-values 5 [ [i] -&gt; i]
 =&gt; [0 1 2 3 4]
 show n-values 3 turtle
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show n-values 5 [? * ?]
+show n-values 5 [ [i] -&gt; i * i]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
-          See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">?</a>.
+        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>.
         </div>
       <div class="dict_entry" id="neighbors">
         <h3>
@@ -6252,16 +6258,18 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
         <a>reduce<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">reduce <i>reporter-task</i> <i>list</i></span>
+        <span class="prim_example">reduce <i>reporter</i> <i>list</i></span>
       </h4>
       <p>
-        Reduces a list from left to right using the given task, resulting
-        in a single value. This means, for example, that <code>reduce [?1 +
-        ?2] [1 2 3 4]</code> is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
+        Reduces a list from left to right using the given reporter, resulting
+        in a single value. This means, for example, that <code>reduce
+          [ [a b] -&gt; a + b] [1 2 3 4]</code>
+        is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
         <i>list</i> has a single item, that item is reported. It is an
-        error to reduce an empty list.
+        error to reduce an empty list. <i>reporter</i> may be the name of a reporter
+        or an anonymous reporter.
       <p>
-        The first input passed to the task is the result so far, and the
+        The first input passed to the reporter is the result so far, and the
         second input is the next item in the list.
       <p>
         Since it can be difficult to develop an intuition about what
@@ -6273,15 +6281,15 @@ show reduce + [1 2 3]
 =&gt; 6
 show reduce - [1 2 3]
 =&gt; -4
-show reduce [?2 - ?1] [1 2 3]
+show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far] [1 2 3]
 =&gt; 2
-show reduce [?1] [1 2 3]
+show reduce [ [result-so-far ignored-item] -&gt; result-so-far] [1 2 3]
 =&gt; 1
-show reduce [?2] [1 2 3]
+show reduce [ [ignored next-item] -&gt; next-item] [1 2 3]
 =&gt; 3
 show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
-show reduce [fput ?2 ?1] (fput [] [1 2 3 4 5])
+show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
 </pre>
       <p>
@@ -6290,7 +6298,7 @@ show reduce [fput ?2 ?1] (fput [] [1 2 3 4 5])
 ;; find the longest string in a list
 to-report longest-string [strings]
   report reduce
-    [ifelse-value (length ?1 &gt;= length ?2) [?1] [?2]]
+    [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string]]
     strings
 end
 
@@ -6300,7 +6308,7 @@ show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
 ;; count the number of occurrences of an item in a list
 to-report occurrences [x the-list]
   report reduce
-    [ifelse-value (?2 = x) [?1 + 1] [?1]] (fput 0 the-list)
+    [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count]] (fput 0 the-list)
 end
 
 show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
@@ -6308,13 +6316,15 @@ show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
 
 ;; evaluate the polynomial, with given coefficients, at x
 to-report evaluate-polynomial [coefficients x]
-  report reduce [(x * ?1) + ?2] coefficients
+  report reduce [ [value a] -&gt; (x * value) + a] coefficients
 end
 
 ;; evaluate 3x^2 + 2x + 1 at x = 4
 show evaluate-polynomial [3 2 1] 4
 =&gt; 57
 </pre>
+      <p>
+      See also <a href="#filter">filter</a>, <a href="#arrow">-&gt; (anonymous procedure</a>.
     </div>
     <div class="dict_entry" id="remainder">
       <h3>
@@ -6638,19 +6648,19 @@ show round -4.5
         <a>runresult<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">run <i>command-task</i></span>
-        <span class="prim_example">(run <i>command-task</i> <i>input1</i> ...)</span>
+        <span class="prim_example">run <i>command</i></span>
+        <span class="prim_example">(run <i>command</i> <i>input1</i> ...)</span>
         <span class="prim_example">run <i>string</i></span>
-        <span class="prim_example">runresult <i>reporter-task</i></span>
-        <span class="prim_example">(runresult <i>reporter-task</i> <i>input1</i> ...)</span>
+        <span class="prim_example">runresult <i>reporter</i></span>
+        <span class="prim_example">(runresult <i>reporter</i> <i>input1</i> ...)</span>
         <span class="prim_example">runresult <i>string</i></span>
       </h4>
       <p>
-        The <code>run</code> form expects a command task or a string containing
-        commands. This agent then runs them.
+        The <code>run</code> form expects the name of a command, an anonymous command,
+        or a string containing commands. This agent then runs them.
       <p>
-        The <code>runresult</code> form expects a reporter task or a string
-        containing a reporter. This agent runs it and reports the result.
+        The <code>runresult</code> form expects the name of a reporter, an anonymous reporter,
+        or a string containing a reporter. This agent runs it and reports the result.
       <p>
         Note that you can't use <code>run</code> to define or redefine
         procedures. If you care about performance, note that the code must
@@ -6658,25 +6668,27 @@ show round -4.5
         are cached by NetLogo and thus using <code>run</code> on the same
         string over and over is much faster than running different strings.
         The first run, though, will be many times slower than
-        running the same code directly, or in a command task.
+        running the same code directly, or in an anonymous command.
       <p>
-        Tasks are recommended over strings whenever possible. (An example
-        of when you must use strings is if you accept pieces of code from
-        the user of your model.)
+        Anonymous procedures are recommended over strings whenever possible.
+        (An example of when you must use strings is if you accept pieces
+        of code from the user of your model.)
       <p>
-        Tasks may freely read and/or set local variables and procedure
-        inputs. Trying to do the same with strings may or may not work and
-        should not be relied on.
+        Anonymous procedures may freely read and/or set local variables
+        and procedure inputs. Trying to do the same with strings may
+        or may not work and should not be relied on.
       <p>
-        When using tasks, you can provide them with inputs, if you surround
-        the entire call with parentheses. For example:
+        When using anonymous procedures, you can provide them with inputs,
+        if you surround the entire call with parentheses. For example:
       <pre>
-(run task [ crt ?1 [ fd ?2 ] ] 10 5)
+(run [ [turtle-count step-count] -&gt; crt turtle-count [ fd step-count ] ] 10 5)
 ;; creates 10 turtles and move them forward 5 steps
-show (runresult task [ ?1 + ?2 ] 10 5)
+show (runresult [ [a b] -&gt; a + b ] 10 5)
 =&gt; 15
 ;; adds 10 and 5
 </pre>
+        <p>
+        See also <a href="foreach">foreach</a>, <a href="arrow">-> (anonymous procedure)</a>.
       </div><!-- ======================================== -->
     </div>
     <h2>
@@ -7252,8 +7264,8 @@ show sin 270
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
 let n 0
-foreach sort patches [
-  ask ? [
+foreach sort patches [ [a-patch] -&gt;
+  ask a-patch [
     set plabel n
     set n n + 1
   ]
@@ -7269,17 +7281,18 @@ foreach sort patches [
         <a>sort-by<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">sort-by <i>reporter-task</i> <i>list</i></span>
-        <span class="prim_example">sort-by <i>reporter-task</i> <i>agentset</i></span>
+        <span class="prim_example">sort-by <i>reporter</i> <i>list</i></span>
+        <span class="prim_example">sort-by <i>reporter</i> <i>agentset</i></span>
       </h4>
       <p>
         If the input is a list, reports a new list containing the same
         items as the input list, in a sorted order defined by the boolean
-        reporter task.
+        reporter. <i>reporter</i> may be the name of a reporter or an
+        anonymous reporter.
       <p>
-        The two inputs to the reporter task are the values being compared.
-        The task should report true if <code>?1</code> comes strictly before
-        <code>?2</code> in the desired sort order, and false otherwise.
+        The two inputs to the anonymous procedure are the values being compared.
+        The reporter should report true if the first argument comes strictly before
+        the second in the desired sort order, and false otherwise.
       <p>
         If the input is an agentset or a list of agents, reports a list
         (never an agentset) of agents.
@@ -7292,11 +7305,11 @@ show sort-by &lt; [3 1 4 2]
 =&gt; [1 2 3 4]
 show sort-by &gt; [3 1 4 2]
 =&gt; [4 3 2 1]
-show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
+show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
 </pre>
       <p>
-        See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>.
+      See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>, <a href="arrow">-> (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="sort-on">
       <h3>
@@ -7318,7 +7331,7 @@ show sort-on [who] turtles
 show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
-  [ ask ? [ do-something ] ]
+  [ [a-turtle] -&gt; ask a-turtle [ do-something ] ]
 ;; turtles run &quot;do-something&quot; one at a time, in
 ;; ascending order by size
 </pre>
@@ -7589,23 +7602,6 @@ show sum [energy] of turtles
       <p>
         Reports the tangent of the given angle. Assumes the angle is given
         in degrees.
-      </div>
-    <div class="dict_entry" id="task">
-      <h3>
-        <a>task<span class="since">5.0</span></a>
-      </h3>
-      <h4>
-        <span class="prim_example">task [ <i>commands</i> ]</span>
-        <span class="prim_example">task [ <i>reporter</i> ]</span>
-        <span class="prim_example">task <i>command-name</i></span>
-        <span class="prim_example">task <i>reporter-name</i></span>
-      </h4>
-      <p>
-        Creates and reports a task, either a command task or a reporter
-        task, depending on the input.
-      <p>
-        See the <a href="programming.html#tasks">Tasks section</a> of the
-        Programming Guide for details.
       </div>
     <div class="dict_entry" id="thickness">
       <h3>
@@ -8750,29 +8746,28 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
       <a>?</a>
     </h2><!-- ======================================== -->
     <div id="ops">
-    <div class="dict_entry" id="ques">
-      <h3>
-        <a>?</a>
-        <a>?1</a>
-        <a>?2</a>
-        <a>?3</a>
-      </h3>
-      <h4>
-        <span class="prim_example">?, ?1, ?2, ?3, ...</span>
-      </h4>
-      <p>
-        These special variable names refer to the inputs to a task, in
-        order by number.
-      <p>
-        <code>?</code> is always equivalent to <code>?1</code>.
-      <p>
-        You may not set these variables, and you may not use them except in
-        the context of a task.
-      <p>
-        Tasks are commonly used with the primitives <a href="#foreach">foreach</a>, <a href="#map">map</a>, <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#sort-by">sort-by</a>, and <a href="#n-values">n-values</a>. See
+      <div class="dict_entry" id="arrow">
+        <h3>
+          <a>-><span class="since">6.0</span></a>
+        </h3>
+        <h4>
+          <span class="prim_example">[ [<i>args</i>] -> <i>commands</i> ]</span>
+          <span class="prim_example">[ [<i>args</i>] -> <i>reporter</i> ]</span>
+        </h4>
+        <p>
+        Creates and reports an anonymous procedure - a command or reporter
+        - depending on the input. Within <i>commands</i> or <i>reporter</i> the listed
+        <i>args</i> may be used just as you would use <code>let</code> or procedure variables.
+        The variable names in <i>args</i> have the same restrictions
+        as variable names of commands and reporters. In addition, they must not match the name of
+        any let or procedure variable in their procedure.
+        <p>
+        Anonymous procedures are commonly used with the primitives
+        <a href="#foreach">foreach</a>, <a href="#map">map</a>, <a href="#reduce">reduce</a>,
+        <a href="#filter">filter</a>, <a href="#sort-by">sort-by</a>, and <a href="#n-values">n-values</a>. See
         those entries for example usage.
-      <p>
-        See the <a href="programming.html#tasks">Tasks section</a> of the
-        Programming Guide for more details.
+        <p>
+        See the <a href="programming.html#anonymous-procedures">Anonymous Procedures section</a> of the
+        Programming Guide for details.
       </div>
-
+    </div>
