@@ -45,8 +45,8 @@ object Dump extends CDump {
         agentset(a, exporting)
       case (a: Agent, _, exporting: Boolean) =>
         agent(a, exporting)
-      case (task: Task, _, _) =>
-        task.toString
+      case (anonProcedure: AnonymousProcedure, _, _) =>
+        anonProcedure.toString
       case (null, _, _) =>
         "<null>"
       case (obj, _, _) =>

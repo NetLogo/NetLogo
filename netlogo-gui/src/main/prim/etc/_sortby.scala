@@ -3,10 +3,10 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, ReporterTask }
+import org.nlogo.api.{ AnonymousReporter, LogoException }
 import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Task }
+import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
 
 class _sortby extends Reporter {
   // see issue #172
@@ -14,9 +14,9 @@ class _sortby extends Reporter {
     "Comparison method violates its general contract!"
 
   override def report(context: Context) = {
-    val task = argEvalReporterTask(context, 0)
-    if (task.syntax.minimum > 2)
-      throw new EngineException(context, this, Task.missingInputs(task, 2))
+    val reporter = argEvalReporter(context, 0)
+    if (reporter.syntax.minimum > 2)
+      throw new EngineException(context, this, AnonymousProcedure.missingInputs(reporter, 2))
     val obj = args(1).report(context)
     val input = obj match {
       case list: LogoList =>
@@ -33,7 +33,7 @@ class _sortby extends Reporter {
           context, this, 0, Syntax.ListType | Syntax.AgentsetType, obj)
     }
     try {
-      java.util.Collections.sort(input, new MyComparator(context, task))
+      java.util.Collections.sort(input, new MyComparator(context, reporter))
       LogoList.fromJava(input)
     }
     catch {
@@ -44,15 +44,15 @@ class _sortby extends Reporter {
     }
   }
 
-  class MyComparator(context: Context, task: ReporterTask) extends java.util.Comparator[AnyRef] {
+  class MyComparator(context: Context, reporter: AnonymousReporter) extends java.util.Comparator[AnyRef] {
     def die(o: AnyRef) =
       throw new ArgumentTypeException(
         context, _sortby.this, 0, Syntax.BooleanType, o)
     override def compare(o1: AnyRef, o2: AnyRef) =
-      try task.report(context, Array(o2, o1)) match {
+      try reporter.report(context, Array(o2, o1)) match {
             case b: java.lang.Boolean =>
               if (b.booleanValue) 1
-              else task.report(context, Array(o1, o2)) match {
+              else reporter.report(context, Array(o1, o2)) match {
                 case b: java.lang.Boolean =>
                   if(b.booleanValue) -1
                   else 0

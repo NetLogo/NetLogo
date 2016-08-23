@@ -3,14 +3,11 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.core.{ CompilerException, I18N, Syntax }
-import org.nlogo.api.CommandTask
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, Context,
-                       EngineException, NonLocalExit, Procedure, Task }
+import org.nlogo.api.AnonymousCommand
+import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException,
+  Command, Context, EngineException, NonLocalExit, Procedure }
 
 class _run extends Command {
-
-
-
   override def perform(context: Context) {
     args(0).report(context) match {
       case s: String =>
@@ -31,10 +28,10 @@ class _run extends Command {
           case error: CompilerException =>
             throw new EngineException(context, this, error.getMessage)
         }
-      case task: CommandTask =>
+      case task: AnonymousCommand =>
         val n = args.size - 1
         if (n < task.syntax.minimum)
-          throw new EngineException(context, this, Task.missingInputs(task, n))
+          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {

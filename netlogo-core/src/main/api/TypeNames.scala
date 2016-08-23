@@ -42,9 +42,9 @@ object TypeNames {
         core.TypeNames.name(PatchType)
       case _: org.nlogo.api.Link =>
         core.TypeNames.name(LinkType)
-      case _: ReporterTask =>
+      case _: AnonymousReporter =>
         core.TypeNames.name(ReporterType)
-      case _: CommandTask =>
+      case _: AnonymousCommand =>
         core.TypeNames.name(CommandType)
       case null =>
         "null"
@@ -65,9 +65,9 @@ object TypeNames {
       PatchType
     else if (classOf[Link].isAssignableFrom(clazz))
       LinkType
-    else if (classOf[ReporterTask].isAssignableFrom(clazz))
+    else if (classOf[AnonymousReporter].isAssignableFrom(clazz))
       ReporterType
-    else if (classOf[CommandTask].isAssignableFrom(clazz))
+    else if (classOf[AnonymousCommand].isAssignableFrom(clazz))
       CommandType
     else if (classOf[String].isAssignableFrom(clazz))
       StringType

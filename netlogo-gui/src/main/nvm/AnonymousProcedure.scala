@@ -2,22 +2,24 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api, api.{ Task => ApiTask }
+import org.nlogo.api, api.{ AnonymousProcedure => ApiLambda }
 import org.nlogo.core.{ AgentKind, Let, I18N, Syntax }
 
-// tasks are created by the _task prim, which may appear in user code, or may be inserted by
-// ExpressionParser during parsing, when a task is known to be expected.
+// anonymous procedures are created by the compiler via the `->` prim,
+// which may appear in user code, or may be inserted by
+// ExpressionParser during parsing, when a command / reporter is known to be expected.
 //
-// tasks take inputs: ?1, ?2, etc. these are passed using Lets.
+// tasks take inputs: <code>[[_1 _2 etc ] -> ... </code> these are passed using Lets.
 //
 // bindArgs binds formal inputs to actual inputs at runtime.  note that it's the caller's
 // responsibility to ensure in advance that there will be enough actuals.  if there are extra
 // actuals, they are ignored. - JC, ST 11/4/10, 2/6/11
 //
-// tasks may close over two kinds of variables, let variables and procedure parameters (aka
-// "locals"), so we have storage for both of those in the task.
+// anonymous procedures may close over two kinds of variables,
+// let variables and procedure parameters (aka "locals"),
+// so we have storage for both of those in the anonymous procedure.
 
-sealed trait Task {
+sealed trait AnonymousProcedure {
   val formals: Array[Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
@@ -50,20 +52,21 @@ sealed trait Task {
   }
 }
 
-object Task {
-  def missingInputs(task: ApiTask, argCount: Int): String =
+object AnonymousProcedure {
+  def missingInputs(task: ApiLambda, argCount: Int): String =
     if (task.syntax.minimum == 1)
       I18N.errors.get("org.nlogo.prim.task.missingInput")
     else
       I18N.errors.getN("org.nlogo.prim.task.missingInputs", task.syntax.minimum.toString, argCount.toString)
 }
 
-// Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
-// variables into the context, bind actuals to formals, call report(), then unswap.
+// anonymous reporters are pretty simple.  The body is simply a Reporter.
+// To run it, we swap closed-over variables into the context,
+// bind actuals to formals, call report(), then unswap.
 
-case class ReporterTask(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
-extends Task with org.nlogo.api.ReporterTask {
-  // tasks are allowed to take more than the number of arguments (hence repeatable-type)
+case class AnonymousReporter(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
+extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
+  // anonymous reporters are allowed to take more than the number of arguments (hence repeatable-type)
   def syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
@@ -91,19 +94,19 @@ extends Task with org.nlogo.api.ReporterTask {
   }
 }
 
-// Command tasks are a little more complicated.  The body is a Procedure.  To run it, we have to
-// make a new Activation, then call runExclusive() on the context, finally restoring some state on
-// the way out (including a dead-agent check).  We may throw NonLocalExit if _report or _stop is
-// called.
+// Anonymous commands are a little more complicated.  The body is a Procedure.
+// To run it, we have to make a new Activation, then call runExclusive()
+// on the context, finally restoring some state on the way out (including a dead-agent check).
+// We may throw NonLocalExit if _report or _stop is called.
 
-case class CommandTask(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
-extends Task with org.nlogo.api.CommandTask {
+case class AnonymousCommand(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
+extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
   def syntax =
     Syntax.commandSyntax(
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = procedure.agentClassString)
   override def toString = procedure.displayName
-  // tasks are allowed to take more than the number of arguments (hence repeatable-type)
+  // anonymous commands are allowed to take more than the number of arguments (hence repeatable-type)
   def perform(context: api.Context, args: Array[AnyRef]) {
     context match {
       case e: ExtensionContext => perform(e.nvmContext, args)
@@ -140,7 +143,7 @@ extends Task with org.nlogo.api.CommandTask {
     // it, especially not without changing the signature of this method which we can't do until 5.1
     // without breaking extensions.  currently the only call site in the main source tree is in
     // _foreach, so it might not seem so bad to put a little extra burden on the caller, but the
-    // call sites may multiply in the future, and any extensions that use command tasks are call
-    // sites too. Sigh. - ST 3/26/12)
+    // call sites may multiply in the future, and any extensions that use anonymous procedures
+    // are call sites too. Sigh. - ST 3/26/12)
   }
 }

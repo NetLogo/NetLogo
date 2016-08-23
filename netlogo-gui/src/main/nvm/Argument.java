@@ -158,22 +158,22 @@ public strictfp class Argument
     }
   }
 
-  public org.nlogo.api.ReporterTask getReporterTask()
+  public org.nlogo.api.AnonymousReporter getReporter()
       throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
     Object obj = get();
     try {
-      return (org.nlogo.api.ReporterTask) obj;
+      return (org.nlogo.api.AnonymousReporter) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
         getExceptionMessage(Syntax.ReporterType(), obj));
     }
   }
 
-  public org.nlogo.api.CommandTask getCommandTask()
+  public org.nlogo.api.AnonymousCommand getCommand()
       throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
     Object obj = get();
     try {
-      return (org.nlogo.api.CommandTask) obj;
+      return (org.nlogo.api.AnonymousCommand) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
         getExceptionMessage(Syntax.CommandType(), obj));
@@ -202,14 +202,9 @@ public strictfp class Argument
     }
   }
 
-  /**
-   * <i>Special (undocumented) method for the cities extension. </i>
-   * Returns the argument reporter without evaluating.
-   */
-  public Reporter getReporter() {
-    return arg;
-  }
-
+  // if you're looking for the cities extension's <code>getReporter</code>
+  // method, that has been removed. Change the extension and use
+  // <code>getSymbol</code> instead.
 
   private String getExceptionMessage(int wantedType, Object badValue) {
     String result = "Expected this input to be "

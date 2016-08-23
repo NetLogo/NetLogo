@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.core.Syntax
 import org.nlogo.core.Let
-import org.nlogo.nvm.{ ReporterTask, Context, Reporter }
+import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
 
 import scala.collection.JavaConversions._
 
@@ -13,6 +13,6 @@ class _reporterlambda(argumentNames: Seq[String]) extends Reporter {
   def formalsArray: Array[Let] = formals.toArray
 
   override def report(c: Context): AnyRef = {
-    ReporterTask(body = args(0), formals = formalsArray, lets = c.allLets, locals = c.activation.args)
+    AnonymousReporter(body = args(0), formals = formalsArray, lets = c.allLets, locals = c.activation.args)
   }
 }
