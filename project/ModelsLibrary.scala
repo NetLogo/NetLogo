@@ -4,7 +4,7 @@ import java.util.regex.Pattern
 import sbt._
 import Keys._
 import Def.Initialize
-import sbt.complete.{ Parser, DefaultParsers }, DefaultParsers.Space
+import sbt.complete.{ Parser, DefaultParsers }, DefaultParsers.{ EOF, Space }
 
 object ModelsLibrary {
 
@@ -17,14 +17,18 @@ object ModelsLibrary {
   val modelIndex = TaskKey[Seq[File]](
     "modelIndex", "builds models/index.txt for use in Models Library dialog")
 
-  val modelParser: Initialize[Parser[Path]] = {
+  val modelParser: Initialize[Parser[Option[Path]]] = {
     import Parser._
     Def.setting {
       val modelDir = modelsDirectory.value
-      (Space ~>
-        modelFiles(modelDir)
-          .map(d => (modelDir.getName + File.separator + modelDir.toPath.relativize(d).toString ^^^ d))
-          .reduce(_ | _))
+      val allModels = modelFiles(modelDir)
+      if (allModels.isEmpty)
+        EOF ^^^ None
+      else
+        (Space ~>
+          allModels
+            .map(d => (modelDir.getName + File.separator + modelDir.toPath.relativize(d).toString ^^^ Some(d)))
+            .reduce(_ | _))
     }
   }
 
@@ -46,12 +50,13 @@ object ModelsLibrary {
       (runMain in Test).toTask(" org.nlogo.tools.ModelResaver").value
     },
     resaveModel := {
-      val model = modelParser.parsed
-      val runner = new ForkRun(ForkOptions(
-        workingDirectory = Some(baseDirectory.value.getParentFile),
-        runJVMOptions = Seq("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
-      runner.run("org.nlogo.tools.ModelResaver",
-        (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
+      modelParser.parsed.foreach { model =>
+        val runner = new ForkRun(ForkOptions(
+          workingDirectory = Some(baseDirectory.value.getParentFile),
+          runJVMOptions = Seq("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
+        runner.run("org.nlogo.tools.ModelResaver",
+          (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
+      }
     }
   )
 
