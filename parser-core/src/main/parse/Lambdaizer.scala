@@ -48,10 +48,10 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
           case _ =>
             val vars = maxVar.map(1 to _).map(_.map(num => varName(nestingDepth, num))) getOrElse Seq()
             val varString = if (vars.nonEmpty) vars.mkString(" [", " ", "] ->") else ""
-            val frontMargin = if (bodyText.startsWith(" ")) "" else " "
+            val frontMargin = if (varString.isEmpty || bodyText.startsWith(" ")) "" else " "
             val backMargin = {
               val wsMargin = ctx.wsMap.backMargin(path)
-              if (wsMargin.trim == "" && bodyText.endsWith(" ")) ""
+              if (varString.isEmpty || (wsMargin.trim == "" && bodyText.endsWith(" "))) ""
               else if (wsMargin.trim == "") " "
               else if (wsMargin.endsWith(" ")) wsMargin
               else wsMargin + " "
