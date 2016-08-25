@@ -2,20 +2,17 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Graphics2D, Graphics, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, BorderLayout }
+import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager}
 import java.awt.event.ActionEvent
-import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ BorderFactory, JScrollPane, ScrollPaneConstants, Action,
-  ImageIcon, AbstractAction, JSplitPane, JPanel}
+import java.awt.print.{PageFormat, Printable}
+import javax.swing._
 
-import org.nlogo.app.common.{ Events => AppEvents }
+import org.nlogo.app.common.{Events => AppEvents}
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar }
+import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable}
 import org.nlogo.swing.Implicits.thunk2action
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
- GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo }
+import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents}
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
@@ -31,6 +28,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   val commandCenter = new CommandCenter(workspace, new CommandCenterLocationToggleAction)
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
+  var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
   private val scrollPane = new JScrollPane(
     iP,
@@ -65,6 +63,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }, BorderLayout.NORTH)
   }
+
   org.nlogo.swing.Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
@@ -79,12 +78,19 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getInterfacePanel = iP
 
   override def requestFocus() {
-    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) iP.requestFocus()
-    else if(commandCenter != null) commandCenter.requestFocus()
+    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
+      iP.requestFocusInWindow()
+    }
   }
 
   final def handle(e: AppEvents.SwitchedTabsEvent) {
-    commandCenterAction.setEnabled(e.newTab == this)
+    if(e.newTab != this) {
+      lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
+        commandCenter else iP
+    } else {
+      commandCenterAction.setEnabled(e.newTab == this)
+      lastFocusedComponent.requestFocus()
+    }
   }
 
   def handle(e: WindowEvents.LoadBeginEvent) {

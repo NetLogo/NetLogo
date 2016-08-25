@@ -584,12 +584,12 @@ public strictfp class WidgetWrapper
       return;
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
-        interfacePanel().dropSelectedWidgets();
+        WidgetActions.moveWidgets(interfacePanel);
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW
           || mouseMode() == MouseMode.SE || mouseMode() == MouseMode.SW
           || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W
           || mouseMode() == MouseMode.E || mouseMode() == MouseMode.N) {
-        doDrop();
+        WidgetActions.resizeWidget(this);
       }
       mouseMode(MouseMode.IDLE);
     }
@@ -917,7 +917,7 @@ public strictfp class WidgetWrapper
       deleteItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              interfacePanel().deleteWidget(WidgetWrapper.this);
+              WidgetActions.removeWidget(interfacePanel(), WidgetWrapper.this);
             }
           });
       menu.add(new javax.swing.JPopupMenu.Separator());

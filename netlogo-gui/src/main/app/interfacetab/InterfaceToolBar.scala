@@ -48,6 +48,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(true)
     setBackground(SystemColor.window)
   }
+
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
