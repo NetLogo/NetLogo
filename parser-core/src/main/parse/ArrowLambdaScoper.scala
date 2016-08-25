@@ -31,7 +31,7 @@ object ArrowLambdaScoper {
       val tok = toks.head
       if (tok.tpe == TokenType.CloseBracket)
         (acc, toks.tail, usedNames)
-      else if (usedNames.contains(tok.text.toUpperCase))
+      else if (usedNames.contains(tok.text.toUpperCase) && ! tok.value.isInstanceOf[LambdaTokenMapper._taskvariable])
         SymbolType.alreadyDefinedException(usedNames(tok.text.toUpperCase), tok)
       else if (tok.text == "->" || tok.tpe != TokenType.Reporter)
         exception(s"Expected a variable name here", tok)

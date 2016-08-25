@@ -47,10 +47,16 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
           case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
           case _ =>
             val vars = maxVar.map(1 to _).map(_.map(num => varName(nestingDepth, num))) getOrElse Seq()
-            val varString = if (vars.nonEmpty) vars.mkString("[", " ", "] -> ") else ""
-            val backMargin = ctx.wsMap.backMargin(path)
-            val actualBackMargin = if (backMargin.trim == "") "" else backMargin
-            ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + bodyText + actualBackMargin + "]")
+            val varString = if (vars.nonEmpty) vars.mkString(" [", " ", "] ->") else ""
+            val frontMargin = if (bodyText.startsWith(" ")) "" else " "
+            val backMargin = {
+              val wsMargin = ctx.wsMap.backMargin(path)
+              if (wsMargin.trim == "" && bodyText.endsWith(" ")) ""
+              else if (wsMargin.trim == "") " "
+              else if (wsMargin.endsWith(" ")) wsMargin
+              else wsMargin + " "
+            }
+            ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + frontMargin + bodyText + backMargin + "]")
         }
       case _ => ctx
     }
@@ -65,8 +71,12 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
   def wrapConciseForClarity(taskPosition: AstPath)(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
     astNode match {
       case app: ReporterApp =>
-        val leading = ctx.appendText(ctx.wsMap.leading(taskPosition) + "[[] ->")
-        formatter.visitExpression(app.args(0), path, 0)(leading).appendText("]")
+        val leading = ctx.appendText(ctx.wsMap.leading(taskPosition) + "[ [] ->")
+        val body = formatter.visitExpression(app.args(0), path, 0)(leading)
+        if (body.text.endsWith(" "))
+          body.appendText("]")
+        else
+          body.appendText(" ]")
       case _                => ctx
     }
 
@@ -75,7 +85,9 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
       case app: ReporterApp =>
         val visitBody = formatter.visitExpression(app.args(0), path, 0)(ctx.copy(text = ""))
         val bodyText = visitBody.text.replaceFirst("\\[", "").reverse.replaceFirst("\\]", "").reverse
-        ctx.appendText(ctx.wsMap.leading(taskPosition) + "[[] ->" + bodyText + "]")
+        val frontMargin = if (bodyText.startsWith(" ")) "" else " "
+        val backMargin = if (bodyText.endsWith(" ")) "" else " "
+        ctx.appendText(ctx.wsMap.leading(taskPosition) + "[ [] ->" + frontMargin + bodyText + backMargin + "]")
       case _ => ctx
     }
 

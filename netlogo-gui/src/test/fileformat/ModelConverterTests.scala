@@ -161,7 +161,7 @@ class ModelConverterTests extends FunSuite {
     val targets = Seq("?1")
     val model = Model(code = "to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end")
     val converted = convert(model, ConversionSet(changes, changes, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d)))
-    assertResult("to foo run [[] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [[_1 _2] -> _1 > _2] [1 2 3] end")(converted.code)
+    assertResult("to foo run [[] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [[?1 ?2] -> ?1 > ?2] [1 2 3] end")(converted.code)
   }
 
   test("handles models with trailing comments properly") {
