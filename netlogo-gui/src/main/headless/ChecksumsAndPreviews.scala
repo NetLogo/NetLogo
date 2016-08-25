@@ -87,7 +87,9 @@ object ChecksumsAndPreviews {
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
-          "/CODE EXAMPLES/SOUND/"))
+          "/EXTENSIONS EXAMPLES/SOUND/"),
+        Some("it uses the vid extension") -> List(
+          "/EXTENSIONS EXAMPLES/VID/"))
       slice <- slices
       if path.toUpperCase.containsSlice(slice)
     } yield {
