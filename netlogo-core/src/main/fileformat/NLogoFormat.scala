@@ -13,28 +13,32 @@ import AutoConversionList.ConversionList
 import scala.util.{ Failure, Success, Try }
 import scala.io.Source
 
-class NLogoFormat(modelConverter: (Model, Seq[AutoConvertable]) => Model)
+// THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
+class NLogoFormat(val modelConverter: (Model, Seq[AutoConvertable]) => Model)
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
     val is3DFormat = false
     def name: String = "nlogo"
     def widgetReaders: Map[String, WidgetReader] = Map()
-
-    override def constructModel(components: Seq[ComponentSerialization[Array[String], NLogoFormat]],
-      sections: Map[String, Array[String]]) = {
-      super.constructModel(components, sections).map(modelConverter(_, components))
-    }
-  }
+}
 
 class NLogoFormatException(m: String) extends RuntimeException(m)
 
-trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
+trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelFormat[Array[String], A] {
   def is3DFormat: Boolean
   def name: String
   val Separator = "@#$#@#$#@"
   val SeparatorRegex = "@#\\$#@#\\$#@"
 
   def widgetReaders: Map[String, WidgetReader]
+
+  def modelConverter: (Model, Seq[AutoConvertable]) => Model
+
+  override def constructModel(
+    components: Seq[ComponentSerialization[Array[String], A]],
+    sections:   Map[String, Array[String]]) = {
+      super.constructModel(components, sections).map(modelConverter(_, components))
+  }
 
   def sections(location: URI) =
     Try {

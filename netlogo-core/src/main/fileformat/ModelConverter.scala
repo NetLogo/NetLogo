@@ -36,6 +36,7 @@ class ModelConverter(
   applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() },
   warnOnError:           Exception => Unit = { _ => })
   extends ((Model, Seq[AutoConvertable]) => Model) {
+
   def apply(model: Model, components: Seq[AutoConvertable]): Model = {
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand = {
       CompilationOperand(
