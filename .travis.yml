@@ -42,7 +42,7 @@ deploy:
   local-dir: upload
   acl: public_read
   on:
-    branch: hexy
+    branch: wip-lambda-prep
 
 notifications:
   hipchat:
