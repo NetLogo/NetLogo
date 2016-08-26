@@ -119,6 +119,7 @@ class AstRewriterTests extends FunSuite {
   testLambda("let a-task [ [] -> tick ]", "let a-task task tick")
   testLambda("let a-task [ [] -> tick ]", "let a-task task [tick]")
   testLambda("let a-value 1 let a-task [ [] -> a-value ]", "let a-value 1 let a-task task [a-value]")
+  testLambda("baz ([ [] ->  fd 1 ]) ([ [?1 ?2] -> bk ?2 ])", "baz (task [ fd 1 ]) (task [ bk ?2 ])", preamble = "TO baz [a b] END TO FOO ")
 
   test("add extension") {
     assertResult("extensions [foo]")(addExtension("", "foo"))

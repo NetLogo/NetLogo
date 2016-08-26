@@ -64,7 +64,10 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
 
   def onlyFirstArg(formatter: Formatter, astNode: org.nlogo.core.AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context =
     astNode match {
-      case app: ReporterApp => formatter.visitExpression(app.args(0), path, 0)(ctx)
+      case app: ReporterApp =>
+        val leadingWhitespace = ctx.wsMap.leading(path)
+        formatter.visitExpression(app.args(0), path, 0)(
+          ctx.copy(wsMap = ctx.wsMap.updated(path / AstPath.RepArg(0),  WhiteSpace.Leading, leadingWhitespace)))
       case _                => ctx
     }
 
