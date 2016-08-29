@@ -13,7 +13,7 @@ import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.awt.{ Hierarchy => NLogoHierarchy, UserCancelException }
 import org.nlogo.window.{ LinkRoot, FileController, GUIWorkspace, PlotWidgetExportType, Events => WindowEvents, ReconfigureWorkspaceUI },
-  WindowEvents.{ AboutToQuitEvent, ExportOutputEvent, ExportPlotEvent, ModelSavedEvent, OpenModelEvent }
+  WindowEvents.{ AboutToQuitEvent, ExportOutputEvent, ExportPlotEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ OpenModel, SaveModel, SaveModelAs }
 import org.nlogo.swing.{ Menu => SwingMenu }
 import org.nlogo.fileformat.{ NLogoFormat, NLogoModelSettings, NLogoHubNetFormat, NLogoPreviewCommandsFormat }
@@ -30,7 +30,9 @@ import scala.util.Try
 class FileMenu(app: App,
   modelSaver: ModelSaver,
   modelLoader: ModelLoader)
-  extends SwingMenu(I18N.gui.get("menu.file")) with OpenModelEvent.Handler {
+  extends SwingMenu(I18N.gui.get("menu.file"))
+    with OpenModelEvent.Handler
+    with LoadModelEvent.Handler {
 
   val ellipsis = '\u2026'
   implicit val i18nPrefix = I18N.Prefix("menu.file")
@@ -458,6 +460,10 @@ class FileMenu(app: App,
 
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library)
+  }
+
+  def handle(e: LoadModelEvent): Unit = {
+    modelSaver.setCurrentModel(e.model)
   }
 
   def currentModel: Model = modelSaver.currentModel
