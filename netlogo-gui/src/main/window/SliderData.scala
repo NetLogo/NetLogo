@@ -49,6 +49,11 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
       e match {
         case ex: SliderConstraint.ConstraintRuntimeException =>
           errorHandler.error(ex.spec.fieldName, ex)
+        case otherEx =>
+          // If there's a non-constraint error, don't blow up.
+          // Typically, this error is generated when a slider reporter depends on the value
+          // of another slider or a compiled procedure and compilation hasn't quite caught up
+          // with where this event is.
       }
 
     (for {
