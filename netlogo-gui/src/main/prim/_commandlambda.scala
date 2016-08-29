@@ -2,8 +2,6 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
-import org.nlogo.core.Let
 import org.nlogo.nvm.{ AnonymousCommand, Context, Procedure, Reporter }
 
 import scala.collection.JavaConversions._

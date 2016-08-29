@@ -90,10 +90,6 @@ trait Expression extends AstNode {
    * types of subexpressions.
    */
   def reportedType(): Int
-  @deprecated("hexy", "mutability sucks")
-  def start_=(start: Int) = { }
-  @deprecated("hexy", "mutability sucks")
-  def end_=(end: Int) = { }
 }
 
 /**
@@ -105,12 +101,6 @@ trait Application extends AstNode {
   def args: Seq[Expression]
   def coreInstruction: core.Instruction
   def nvmInstruction: nvm.Instruction
-  @deprecated("hexy", "mutability sucks")
-  def end_=(end: Int) = { }
-  @deprecated("hexy", "mutability sucks")
-  def addArgument(arg: Expression)
-  @deprecated("hexy", "mutability sucks")
-  def replaceArg(index: Int, expr: Expression)
 }
 
 /**
@@ -138,11 +128,6 @@ class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceL
    * a List of the actual Statement objects.
    */
   def body: Seq[Statement] = stmts
-  @deprecated("hexy", "mutability sucks")
-  def addStatement(stmt: Statement) {
-    stmts = stmts :+ stmt
-    recomputeStartAndEnd()
-  }
   private def recomputeStartAndEnd() {
     if (stmts.isEmpty) { sourceLocation = sourceLocation.copy(start = 0, end = 0) }
     else { sourceLocation = sourceLocation.copy(start = stmts(0).start, end = stmts(stmts.size - 1).end) }
@@ -272,9 +257,8 @@ extends Expression with Application {
   def reportedType() = coreReporter.syntax.ret
   def accept(v: AstVisitor) { v.visitReporterApp(this) }
   def removeArgument(index: Int) { _args.remove(index) }
-  override def addArgument(arg: Expression) { _args.append(arg) }
-  override def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
-  override def end_=(end: Int) = { }
+  def addArgument(arg: Expression) { _args.append(arg) }
+  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
   def clearArgs() { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 
