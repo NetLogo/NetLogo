@@ -30,6 +30,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_all agentset/TRUE/FALSE block,TRUE/FALSE,OTPL,Some(?),10,2,2
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
                      |_any agentset,TRUE/FALSE,OTPL,None,10,1,1
+                     |_applyresult anonymous reporter/list,anything,OTPL,None,10,2,2
                      |_approximatehsb number/number/number,number,OTPL,None,10,3,3
                      |_approximatergb number/number/number,number,OTPL,None,10,3,3
                      |_asin number,number,OTPL,None,10,1,1
@@ -255,7 +256,8 @@ class TestAllSyntaxes extends FunSuite {
                      |_worldwidth ,number,OTPL,None,10,0,0
                      |_wrapcolor number,number,OTPL,None,10,1,1
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
-  val COMMANDS = """|_ask agent or agentset/command block,OTPL,Some(?),0,2,2
+  val COMMANDS = """|_apply anonymous command/list,OTPL,None,0,2,2
+                    |_ask agent or agentset/command block,OTPL,Some(?),0,2,2
                     |_askconcurrent agentset/command block,OTPL,Some(?),0,2,2
                     |_autoplotoff ,OTPL,None,0,0,0
                     |_autoploton ,OTPL,None,0,0,0
