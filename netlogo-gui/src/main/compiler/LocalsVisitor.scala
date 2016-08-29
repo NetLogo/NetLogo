@@ -20,14 +20,14 @@ import org.nlogo.prim._
 
 private class LocalsVisitor extends DefaultAstVisitor {
 
-  private var procedure: Procedure = null
-  private var currentLet: _let = null  // for forbidding "let x x" and the like
+  private var procedure: Option[Procedure] = Option.empty[Procedure]
   private var askNestingLevel = 0
   private var vn = 0   // used when converting _repeat to _repeatlocal
 
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
-    procedure = procdef.procedure
+    procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
+    procedure = None
   }
 
   override def visitStatement(stmt: Statement) {
@@ -37,31 +37,34 @@ private class LocalsVisitor extends DefaultAstVisitor {
         super.visitStatement(stmt)
         askNestingLevel -= 1
       case l: _let =>
-        currentLet = l
         // Using "__let" instead of "let" to indicates that this is a let we don't want converted
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
         val exempt = l.token.text.equalsIgnoreCase("__LET")
-        if (!procedure.isLambda && askNestingLevel == 0 && !exempt) {
-          convertSetToLocal(stmt,  newProcedureVar(procedure.args.size, l.let, None))
-          procedure.alteredLets.put(l.let, procedure.args.size)
-          procedure.localsCount += 1
-          procedure.args :+= l.let.name
-        } else if (procedure != null) {
-          for (localIndex <- lookupLet(l.let, procedure)) {
+        if (! procedure.exists(_.isLambda) && askNestingLevel == 0 && !exempt) {
+          procedure.foreach { proc =>
+            convertSetToLocal(stmt,  newProcedureVar(proc.args.size, l.let, None))
+            proc.alteredLets.put(l.let, proc.args.size)
+            proc.localsCount += 1
+            proc.args :+= l.let.name
+          }
+        } else for {
+          proc <- procedure
+          localIndex <- lookupLet(l.let, proc)
+          } {
             convertSetToLocal(stmt, newProcedureVar(localIndex, l.let, None))
           }
-        }
         super.visitStatement(stmt)
-        currentLet = null
       case r: _repeat =>
-        if(!procedure.isLambda && askNestingLevel == 0) {
-          vn = procedure.args.size
-          val newrepeat = new _repeatlocal(vn)
-          newrepeat.copyMetadataFrom(stmt.command)
-          stmt.command = newrepeat
-          procedure.localsCount += 1
-          // actual name here doesn't really matter, I don't think - ST 11/10/05
-          procedure.args :+= "_repeatlocal:" + vn
+        if (! procedure.exists(_.isLambda) && askNestingLevel == 0) {
+          procedure.foreach { proc =>
+            vn = proc.args.size
+            val newrepeat = new _repeatlocal(vn)
+            newrepeat.copyMetadataFrom(stmt.command)
+            stmt.command = newrepeat
+            proc.localsCount += 1
+            // actual name here doesn't really matter, I don't think - ST 11/10/05
+            proc.args :+= "_repeatlocal:" + vn
+          }
         }
         super.visitStatement(stmt)
       case ri: _repeatinternal =>
@@ -79,11 +82,10 @@ private class LocalsVisitor extends DefaultAstVisitor {
   override def visitReporterApp(expr: ReporterApp) {
     expr.reporter match {
       case l: _letvariable =>
-        cAssert(currentLet == null || (currentLet.let ne l.let),
-                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.text),
-                l.token)
-        for(index <- lookupLet(l.let, procedure)) {
-          val oldToken = expr.reporter.token
+        for {
+          proc <- procedure
+          index <- lookupLet(l.let, proc)
+        } {
           val newVar = new _procedurevariable(index.intValue, l.let.name)
           newVar.copyMetadataFrom(expr.reporter)
           expr.reporter = newVar

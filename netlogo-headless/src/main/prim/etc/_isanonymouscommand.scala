@@ -3,10 +3,10 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.core.Pure
-import org.nlogo.nvm.{ Context, Reporter, AnonymousReporter }
+import org.nlogo.nvm.{ AnonymousCommand, Context, Reporter }
 
-class _isreportertask extends Reporter with Pure {
+class _isanonymouscommand extends Reporter with Pure {
   override def report(context: Context): java.lang.Boolean =
     Boolean.box(
-      args(0).report(context).isInstanceOf[AnonymousReporter])
+      args(0).report(context).isInstanceOf[AnonymousCommand])
 }

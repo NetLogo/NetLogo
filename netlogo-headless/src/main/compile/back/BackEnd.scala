@@ -24,7 +24,7 @@ object BackEnd extends BackEndInterface {
     // only return top level procedures.
     // task procedures can be reached via the children field on Procedure.
     nvm.CompilerResults(
-      defs.map(_.procedure).filterNot(_.isTask),
+      defs.map(_.procedure).filterNot(_.isLambda),
       program)
   }
 

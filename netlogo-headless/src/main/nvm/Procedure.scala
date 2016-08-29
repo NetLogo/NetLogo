@@ -24,7 +24,7 @@ class Procedure(
   var localsCount = 0
   private var _owner: api.SourceOwner = null
   val children = collection.mutable.Buffer[Procedure]()
-  def isTask = parent != null
+  def isLambda = parent != null
 
   // cache args.size() for efficiency with making Activations
   var size = 0
@@ -35,9 +35,9 @@ class Procedure(
   var code = Array[Command]()
 
   private def buildDisplayName(displayName: Option[String]): String =
-    if (isTask) {
+    if (isLambda) {
       val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
-      "(command task from: " + parent.displayName + ": " + sourceCode + ")"
+      "(anonymous command from: " + parent.displayName + ": " + sourceCode + ")"
     } else {
       def nameAndFile =
         Option(filename)
@@ -53,7 +53,7 @@ class Procedure(
 
   def dump: String = {
     val buf = new StringBuilder
-    val indent = isTask
+    val indent = isLambda
     if (indent)
       buf ++= "   "
     if (isReporter)

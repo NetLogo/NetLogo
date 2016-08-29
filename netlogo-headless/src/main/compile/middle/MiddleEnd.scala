@@ -8,7 +8,7 @@ import org.nlogo.{ core, nvm }
 object MiddleEnd extends MiddleEndInterface {
 
   // StructureParser found the top level Procedures for us.  ExpressionParser
-  // finds command tasks and makes Procedures out of them, too.  the remaining
+  // finds anonymous commands and makes Procedures out of them, too.  the remaining
   // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
   def middleEnd(defs: Seq[ProcedureDefinition], source: String, flags: nvm.CompilerFlags): Seq[ProcedureDefinition] = {
     // lambda-lift
@@ -30,7 +30,7 @@ object MiddleEnd extends MiddleEndInterface {
       procdef.accept(new SourceTagger(source))
       // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
-      procdef.accept(new TaskVisitor)  // handle _taskvariable
+      procdef.accept(new LambdaVariableVisitor)  // handle _lambdavariable
       procdef.accept(new LocalsVisitor(alteredLets)) // convert _let/_repeat to _locals
       procdef.accept(new SetVisitor)   // convert _set to specific setters
     }
