@@ -156,12 +156,14 @@ class ModelConverterTests extends FunSuite {
   }
 
   test("lambda-izes") {
-    val changes =
-      Seq[SourceRewriter => String](_.customRewrite("org.nlogo.parse.Lambdaizer"))
+    val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head
     val targets = Seq("?1")
-    val model = Model(code = "to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end")
-    val converted = convert(model, ConversionSet(changes, changes, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d)))
-    assertResult("to foo run [ [] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [ [?1 ?2] -> ?1 > ?2 ] [1 2 3] end")(converted.code)
+    val model = Model(code = """|to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end
+                                |to baz show is-reporter-task? 1 show is-command-task? task tick end""".stripMargin)
+    val converted = convert(model, conversionSet)
+    val expectedResult = """|to foo run [ [] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [ [?1 ?2] -> ?1 > ?2 ] [1 2 3] end
+                            |to baz show is-anonymous-reporter? 1 show is-anonymous-command? [ [] -> tick ] end""".stripMargin
+    assertResult(expectedResult)(converted.code)
   }
 
   test("handles models with trailing comments properly") {

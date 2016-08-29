@@ -57,7 +57,10 @@ object AutoConversionList {
     },
     "NetLogo 6.0-RC1" -> {
       val targets = Seq("task", "?", "?1", "?2", "?3", "?4", "?5", "?6", "?7", "?8", "?9")
-      val conversions = Seq[SourceRewriter => String](_.customRewrite("org.nlogo.parse.Lambdaizer"))
+      val conversions = Seq[SourceRewriter => String](
+        _.replaceToken("is-reporter-task?", "is-anonymous-reporter?"),
+        _.replaceToken("is-command-task?",  "is-anonymous-command?"),
+        _.customRewrite("org.nlogo.parse.Lambdaizer"))
       ConversionSet(conversions, conversions, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d))
     }
     )
