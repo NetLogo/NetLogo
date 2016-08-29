@@ -379,7 +379,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_sethistogramnumbars number,OTPL,None,0,1,1
                     |_setlinethickness number,-T--,None,0,1,1
                     |_setpatchsize number,O---,None,0,1,1
-                    |_setplotpencolor number,OTPL,None,0,1,1
+                    |_setplotpencolor number or list,OTPL,None,0,1,1
                     |_setplotpeninterval number,OTPL,None,0,1,1
                     |_setplotpenmode number,OTPL,None,0,1,1
                     |_setplotxrange number/number,OTPL,None,0,2,2
