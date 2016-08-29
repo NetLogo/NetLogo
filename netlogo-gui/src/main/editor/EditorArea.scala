@@ -507,7 +507,7 @@ class EditorArea(
       try {
         val offset = component.getCaretPosition
         val currentView = component.modelToView(offset)
-        if (lastView.y != currentView.y) {
+        if (currentView != null && lastView.y != currentView.y) {
           component.repaint(0, lastView.y, component.getWidth, lastView.height)
           lastView = currentView
         }
