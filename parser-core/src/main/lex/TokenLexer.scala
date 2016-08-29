@@ -82,10 +82,11 @@ class TokenLexer {
 
   def stringLexer: LexPredicate =
     withFeedback[Option[Char]](Some('"')) {
-      case (Some('\\'), '"') => (Some('"'), Accept)
-      case (Some('\\'), '\\') => (None, Accept)
-      case (_, '"') => (Some('"'), Finished)
-      case (_, c) => (Some(c), Accept)
+      case (Some('\\'), '"')  => (Some('"'), Accept)
+      case (Some('\\'), '\\') => (None,      Accept)
+      case (_, '"')           => (Some('"'), Finished)
+      case (_, '\n')          => (None,      Error)
+      case (_, c)             => (Some(c),   Accept)
     }
 
   def comment: (LexPredicate, TokenGenerator) =
