@@ -197,6 +197,7 @@ lazy val macApp = project.in(file("mac-app")).
   settings(NativeLibs.cocoaLibsTask).
   settings(Running.settings).
   settings(
+    mainClass in Compile in run           := Some("org.nlogo.app.MacApplication"),
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
     compile in Compile                    <<= (compile in Compile) dependsOn (packageBin in Compile in netlogo),
