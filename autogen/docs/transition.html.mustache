@@ -39,16 +39,57 @@
       <a>Changes for NetLogo 6.0</a>
     </h2>
     <h3>
+      Tasks replaced by Anonymous Procedures
+    </h3>
+    <p>
+      In NetLogo 6.0, tasks have been replaced by anonymous procedures.
+      This means that <code>task</code> is no longer a primitive, it's been replaced
+      by the new <a href="dictionary.html#arrow">arrow syntax</a> for creating
+      anonymous procedures. Similarly, question mark variables like <code>?</code>,
+      <code>?1</code>, and <code>?2</code> are now just ordinary names in NetLogo and can
+      be used to name procedure variables, let variables, or anonymous procedure variables.
+      Finally, <code>is-reporter-task?</code> and <code>is-command-task?</code>
+      have been replaced by <code>is-anonymous-reporter?</code> and
+      <code>is-anonymous-command?</code>.
+    <p>
+      To make this transition easier, we've added an automatic conversion step which
+      should allow most models saved in NetLogo 5 to be converted to use the new syntax
+      automatically. The autoconverter has been a substantial piece of effort and we've
+      tested it on all the models in the models library.
+      To use it, ensure the model compiles and run properly in NetLogo 5 or later,
+      then save it from NetLogo 5 or later.
+      Then, simply open the model in NetLogo 6. If all goes well, you'll see the converter
+      has changed code like <code>task [?1 + ?2]</code> to
+      <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>.
+      If you open a model with tasks and it has <i>not</i> been converted,
+      the autoconverter wasn't able to convert your model. Rather than attempt to
+      autoconvert your model and break something, the model will open, you will be
+      shown the appropriate errors and given a chance to edit your model.
+    <p>
+      While we have tested the autoconverter thoroughly, we expect there to be some cases it
+      doesn't cover.
+      <ul>
+        <li>If you make use of extensions that aren't yet compiled for NetLogo 6,
+        the autoconverter will not work until those extensions have been updated.</li>
+        <li>If your code uses <code>run</code> or <code>runresult</code> to evaluate
+        strings containing tasks, the strings passed to <code>run</code>/<code>runresult</code>
+        will not be changed and will likely error when running the model.</code>
+      </ul>
+      If your model doesn't fall into the above categories and doesn't convert or
+      converts incorrectly, please email our
+      <a href="mailto:ccl-feedback@ccl.northwestern.edu"</a>feedback address</a> and we'll
+      be happy to offer whatever assistance we can.
+    <h3>
       Nobody Not Permitted as a Chooser Value
     </h3>
     <p>
-    In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
-    Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
-    <code>nobody</code> refers to a non-literal value which
-    isn't supported in choosers. As part of this transition, choosers
-    containing <code>nobody</code> (or <code>nobody</code> within a nested list)
-    will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
-    opened in NetLogo 6.0.
+      In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
+      Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
+      <code>nobody</code> refers to a non-literal value which
+      isn't supported in choosers. As part of this transition, choosers
+      containing <code>nobody</code> (or <code>nobody</code> within a nested list)
+      will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
+      opened in NetLogo 6.0.
     <h3>
       Breeds must have singular and plural names
     </h3>

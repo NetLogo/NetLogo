@@ -54,7 +54,7 @@
 
     <ul>
       <li>Support for plural-only breed names (e.g., <code>breed [ mice ]</code>) has been removed. Write <code>breed [mice mouse]</code> instead.</li>
-      <li>Tasks have been replaced by anonymous procedures. Tasks made use of <code>?</code> variables which were confusing for novices and difficult to read for experts. Additionally, tasks could not refer to the task variables of a containing task. Anonymous procedures may have named arguments which can be accessed by inner anonymous tasks. Upon first opening a NetLogo 5 model in NetLogo 6, tasks like <code>task [ ?1 + ?2 ]</code> will be automatically converted to <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. See the transition guide for more information (<a href="https://ccl.northwestern.edu/netlogo/docs/transition.html">https://ccl.northwestern.edu/netlogo/docs/transition.html</a>).</li>
+      <li>Tasks have been replaced by anonymous procedures. Tasks made use of <code>?</code> variables which were confusing for novices and difficult to read for experts. Additionally, tasks could not refer to the task variables of a containing task. Anonymous procedures may have named arguments which can be accessed by inner anonymous tasks. Upon first opening a NetLogo 5 model in NetLogo 6, tasks like <code>task [ ?1 + ?2 ]</code> will be automatically converted to <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. See the <a href="transition.html">the transition guide</a> for more information.</li>
       <li>The <code>task</code> primitive is no longer supported.</li>
       <li>Breed names that conflict with language primitives are now disallowed. For instance, <code>breed [strings string]</code> is now disallowed since it makes <code>is-string?</code> ambiguous.</li>
       <li>The compiler errors on duplicated breed singular names. </li>
@@ -62,7 +62,7 @@
       <li>
       <code>set-plot-pen-color</code> now accepts RGB lists as arguments.</li>
       <li>The <code>hubnet-set-client-interface</code> primitive has been removed. </li>
-      <li>The various primitives starting with <code>movie-</code> have been removed, as has the movie encoder. They have been replaced with the new <code>vid</code> extension. The transition guide provides more details and information (<a href="https://ccl.northwestern.edu/netlogo/docs/transition.html">https://ccl.northwestern.edu/netlogo/docs/transition.html</a>).</li>
+      <li>The various primitives starting with <code>movie-</code> have been removed, as has the movie encoder. They have been replaced with the new <code>vid</code> extension. <a href="transition.html">The transition guide</a> provides more details and information.</li>
       <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms). </li>
       <li>The string representation of anonymous procedures displays the body of the anonymous procedure.</li>
     </ul>
@@ -87,7 +87,7 @@
       </li>
       <li>The <code>qtj</code> extension is no longer bundled with NetLogo. Users are encouraged to make use of the <a href="vid.html">new <code>vid</code> extension</a>.</li>
       <li>The new <code>vid</code> extension is now bundled with NetLogo, combining features of the late <code>qtj</code> extension and the movie primitives.</li>
-      <li>The network extension is no longer bundled with NetLogo. Users are encouraged to use the <code>nw</code> extension (<a href="https://ccl.northwestern.edu/netlogo/docs/nw.html">https://ccl.northwestern.edu/netlogo/docs/nw.html</a>), which has been bundled with NetLogo for some time.</li>
+      <li>The network extension is no longer bundled with NetLogo. Users are encouraged to use the <code>nw</code> extension (<a href="nw.html">https://ccl.northwestern.edu/netlogo/docs/nw.html</a>), which has been bundled with NetLogo for some time.</li>
       <li>The <code>gogo-serial</code> extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer <code>gogo</code> extension, which uses HID to communicate with the GoGo board. </li>
     </ul>
 
