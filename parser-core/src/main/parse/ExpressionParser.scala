@@ -603,7 +603,9 @@ object ExpressionParser {
       new core.ReporterApp(lambda, Seq(blockArg), SourceLocation(block.openBracket.start, closeBracket.end, block.filename))
     }
 
-    if (block.isArrowLambda && ! block.isCommand)
+    if (compatible(goalType, Syntax.CodeBlockType))
+      parseCodeBlock(block, tokens)
+    else if (block.isArrowLambda && ! block.isCommand)
       buildReporterLambda(block.asInstanceOf[ArrowLambdaBlock].argNames)
     else if (block.isArrowLambda && block.isCommand)
       buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].argNames)
@@ -618,19 +620,39 @@ object ExpressionParser {
       buildReporterLambda(Seq())
     else if (compatible(goalType, Syntax.CommandType) && block.isCommand && listNotWanted)
       buildCommandLambda(Seq())
-    else if (compatible(goalType, Syntax.CodeBlockType)) {
-      // Because we don't parse the inside of the code block, precisely because we don't want to define
-      // legality of code in terms of the standard NetLogo requirements, we have to do a little sanity
-      // checking here to make sure that at the very least, parenthesis and brackets are matched up
-      // without being mixed and matched.  FD 8/19/2015
-      @tailrec
-      def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
-        if(remaining.isEmpty) {
-          if(!stack.isEmpty) {
-            if(stack.head.tpe == TokenType.OpenParen) {
-              exception("Expected close paren here", block.tokens.last)
-            }
+    else if (compatible(goalType, Syntax.ListType)) {
+      // It's OK to pass the NullImportHandler here because this code is only used when
+      // parsing literal lists while compiling code.
+      // When reading lists from export files and such LiteralParser is used
+      // via Compiler.readFromString. ev 3/20/08, RG 08/09/16
+
+      val (list, closeBracket) =
+        new LiteralParser(NullImportHandler).parseLiteralList(block.openBracket, tokens)
+      val tmp = new core.prim._const(list)
+      tmp.token = new Token("", TokenType.Literal, null)(
+        SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
+      new core.ReporterApp(tmp, SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
+    }
+    // we weren't actually expecting a block at all!
+    else
+      exception(
+        s"Expected ${core.TypeNames.aName(goalType)} here, rather than a list or block.",
+        block)
+  }
+
+  private def parseCodeBlock(block: DelayedBlock, tokens: BufferedIterator[Token]): core.ReporterApp = {
+    // Because we don't parse the inside of the code block, precisely because we don't want to define
+    // legality of code in terms of the standard NetLogo requirements, we have to do a little sanity
+    // checking here to make sure that at the very least, parenthesis and brackets are matched up
+    // without being mixed and matched.  FD 8/19/2015
+    @tailrec
+    def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
+      if(remaining.isEmpty) {
+        if(!stack.isEmpty) {
+          if(stack.head.tpe == TokenType.OpenParen) {
+            exception("Expected close paren here", block.tokens.last)
           }
+        }
         } else if (remaining.head.tpe == TokenType.OpenBracket) {
           check(remaining.tail, remaining.head +: stack)
         } else if (remaining.head.tpe == TokenType.OpenParen) {
@@ -654,30 +676,15 @@ object ExpressionParser {
         } else {
           check(remaining.tail, stack)
         }
-      }
-
-      check(block.tokens.dropRight(2)) // Drops two because of the EOF
-      val tmp = new core.prim._constcodeblock(block.tokens.tail.dropRight(2))
-      new core.ReporterApp(tmp, SourceLocation(tokens.head.start, block.tokens.last.end, tokens.head.filename))
     }
-    else if (compatible(goalType, Syntax.ListType)) {
-      // It's OK to pass the NullImportHandler here because this code is only used when
-      // parsing literal lists while compiling code.
-      // When reading lists from export files and such LiteralParser is used
-      // via Compiler.readFromString. ev 3/20/08, RG 08/09/16
-
-      val (list, closeBracket) =
-        new LiteralParser(NullImportHandler).parseLiteralList(block.openBracket, tokens)
-      val tmp = new core.prim._const(list)
-      tmp.token = new Token("", TokenType.Literal, null)(
-        SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
-      new core.ReporterApp(tmp, SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
+    val tokens = block match {
+      case alb: ArrowLambdaBlock => alb.allTokens
+      case adl: AmbiguousDelayedBlock => adl.tokens
     }
-    // we weren't actually expecting a block at all!
-    else
-      exception(
-        s"Expected ${core.TypeNames.aName(goalType)} here, rather than a list or block.",
-        block)
+
+    check(tokens.dropRight(2)) // Drops two because of the EOF
+    val tmp = new core.prim._constcodeblock(tokens.tail.dropRight(2))
+    new core.ReporterApp(tmp, SourceLocation(tokens.head.start, block.tokens.last.end, tokens.head.filename))
   }
 
   private class MissingPrefixException(val token: Token) extends Exception
