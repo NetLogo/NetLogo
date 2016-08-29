@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException, NonLocalExit, Task }
+import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, EngineException, NonLocalExit }
 
 class _foreach extends Command {
   override def perform(context: Context) {
@@ -17,10 +17,10 @@ class _foreach extends Command {
           I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.javaIterator
     }
-    val task = argEvalCommandTask(context, n)
+    val task = argEvalAnonymousCommand(context, n)
     if (n < task.syntax.minimum)
       throw new EngineException(
-        context, this, Task.missingInputs(task, n))
+        context, this, AnonymousProcedure.missingInputs(task, n))
     var i = 0
     val actuals = new Array[AnyRef](n)
     try {

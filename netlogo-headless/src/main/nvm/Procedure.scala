@@ -15,7 +15,7 @@ class Procedure(
   _displayName: Option[String] = None,
   val parent: Procedure = null,
   val procedureDeclaration: core.StructureDeclarations.Procedure = null,
-  val taskFormals: Array[Let] = Array()) extends FrontEndProcedure {
+  val lambdaFormals: Array[Let] = Array()) extends FrontEndProcedure {
 
   val filename = nameToken.filename; // used by cities include-file stuff
   lazy val displayName = buildDisplayName(_displayName)
@@ -29,7 +29,8 @@ class Procedure(
   // cache args.size() for efficiency with making Activations
   var size = 0
 
-  def getTaskFormal(n: Int): Let = taskFormals(n - 1)
+  def getLambdaFormal(name: String): Option[Let] =
+    lambdaFormals.find(_.name == name) orElse Option(parent).flatMap(_.getLambdaFormal(name))
 
   var code = Array[Command]()
 

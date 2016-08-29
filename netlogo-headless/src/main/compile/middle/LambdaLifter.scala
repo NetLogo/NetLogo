@@ -7,10 +7,10 @@ import org.nlogo.{ core, nvm, prim },
   core.Let
 
 /**
- * Removes the bodies of command tasks and makes them into separate "child" procedures.
+ * Removes the bodies of command lambdas and makes them into separate "child" procedures.
  */
 
-class LambdaLifter(taskNumbers: Iterator[Int]) extends DefaultAstVisitor {
+class LambdaLifter(lambdaNumbers: Iterator[Int]) extends DefaultAstVisitor {
   val children = collection.mutable.Buffer[ProcedureDefinition]()
   private var procedure = Option.empty[nvm.Procedure]
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
@@ -19,11 +19,11 @@ class LambdaLifter(taskNumbers: Iterator[Int]) extends DefaultAstVisitor {
   }
   override def visitReporterApp(expr: ReporterApp) {
     expr.reporter match {
-      case c: prim._commandtask =>
+      case c: prim._commandlambda =>
         for(p <- procedure) {
-          val formals = Array.range(1, c.argCount + 1).map(i => Let(s"?$i"))
+          val formals = c.argumentNames.map(n => Let(n)).toArray
           c.proc = new nvm.Procedure(
-            false, "__task-" + taskNumbers.next(), c.token, Seq(), parent = p, taskFormals = formals)
+            false, "__lambda-" + lambdaNumbers.next(), c.token, Seq(), parent = p, lambdaFormals = formals)
           c.proc.pos = expr.start
           c.proc.end = expr.end
           p.children += c.proc

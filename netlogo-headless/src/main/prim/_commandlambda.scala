@@ -2,9 +2,9 @@
 
 package org.nlogo.prim
 
-import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
+import org.nlogo.nvm.{ AnonymousCommand, Context, Procedure, Reporter }
 
-class _commandtask(val argCount: Int, var proc: Procedure) extends Reporter {
+class _commandlambda(val argumentNames: Seq[String], var proc: Procedure) extends Reporter {
 
   override def toString =
     super.toString +
@@ -14,9 +14,9 @@ class _commandtask(val argCount: Int, var proc: Procedure) extends Reporter {
         .getOrElse("")
 
   override def report(c: Context): AnyRef =
-    CommandTask(
+    AnonymousCommand(
       procedure = proc,
-      formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
+      formals = proc.lambdaFormals,
       lets = c.allLets,
       locals = c.activation.args)
 

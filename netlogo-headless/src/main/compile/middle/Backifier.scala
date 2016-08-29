@@ -36,7 +36,7 @@ class Backifier(
             .asInstanceOf[api.Command])
       case core.prim._call(proc) =>
         new prim._call(procedures(proc.name))
-      case core.prim._let(let) =>
+      case core.prim._let(Some(let)) =>
         new prim._let(let)
       case cc: core.prim._carefully =>
         new prim._carefully(cc.let)
@@ -57,11 +57,11 @@ class Backifier(
       case core.prim._const(value) =>
         new prim._const(value)
 
-      case core.prim._commandtask(argcount) =>
-        new prim._commandtask(argcount, null)  // LambdaLifter will fill in
+      case core.prim._commandlambda(args, _) =>
+        new prim._commandlambda(args, null)  // LambdaLifter will fill in
 
-      case core.prim._reportertask(argcount, _) =>
-        new prim._reportertask(argcount)
+      case core.prim._reporterlambda(args, _) =>
+        new prim._reporterlambda(args)
 
       case core.prim._externreport(_) =>
         new prim._externreport(
@@ -75,8 +75,8 @@ class Backifier(
 
       case core.prim._procedurevariable(vn, name) =>
         new prim._procedurevariable(vn, name)
-      case core.prim._taskvariable(vn, _) =>
-        new prim._taskvariable(vn)
+      case core.prim._lambdavariable(name, _) =>
+        new prim._lambdavariable(name)
 
       case core.prim._observervariable(vn, _) =>
         new prim._observervariable(vn)

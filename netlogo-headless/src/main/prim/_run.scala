@@ -2,10 +2,10 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.CommandTask
+import org.nlogo.api.AnonymousCommand
 import org.nlogo.core.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command,
-                       Context, EngineException, NonLocalExit, Task }
+import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Command,
+                       Context, EngineException, NonLocalExit }
 
 class _run extends Command {
 
@@ -29,10 +29,10 @@ class _run extends Command {
           case error: CompilerException =>
             throw new EngineException(context, this, error.getMessage)
         }
-      case task: CommandTask =>
+      case task: AnonymousCommand =>
         val n = args.size - 1
         if (n < task.syntax.minimum)
-          throw new EngineException(context, this, Task.missingInputs(task, n))
+          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {

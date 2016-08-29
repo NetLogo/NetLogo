@@ -2,9 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoException, ReporterTask }
+import org.nlogo.api.{ LogoException, AnonymousReporter }
 import org.nlogo.core.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, Task }
+import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
 
 class _runresult extends Reporter {
 
@@ -33,10 +33,10 @@ class _runresult extends Reporter {
           case ex: LogoException =>
             throw new EngineException(context, this, ex.getMessage)
         }
-      case task: ReporterTask =>
+      case task: AnonymousReporter =>
         val n = args.size - 1
         if (n < task.syntax.minimum)
-          throw new EngineException(context, this, Task.missingInputs(task, n))
+          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {

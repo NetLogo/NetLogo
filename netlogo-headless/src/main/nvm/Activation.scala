@@ -13,7 +13,7 @@ class Activation(val procedure: Procedure, _parent: Activation, val returnAddres
   def parent: Option[Activation] =
     Option(_parent)
 
-  // "var" so ReporterTask can swap in the definition-site args - ST 2/5/11
+  // "var" so AnonymousReporter can swap in the definition-site args - ST 2/5/11
   private[nlogo] var args: Array[AnyRef] = {
     val size = procedure.size
     if (size > 0)

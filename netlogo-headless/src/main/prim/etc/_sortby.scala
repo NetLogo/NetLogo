@@ -5,9 +5,9 @@ package org.nlogo.prim.etc
 import scala.collection.mutable
 import scala.math.Ordering
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, ReporterTask }
+import org.nlogo.api.{ LogoException, AnonymousReporter }
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Task }
+import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
 
 class _sortby extends Reporter {
 
@@ -16,10 +16,10 @@ class _sortby extends Reporter {
     "Comparison method violates its general contract!"
 
   override def report(context: Context): LogoList = {
-    val task = argEvalReporterTask(context, 0)
+    val task = argEvalAnonymousReporter(context, 0)
     if (task.syntax.minimum > 2)
       throw new EngineException(
-        context, this, Task.missingInputs(task, 2))
+        context, this, AnonymousProcedure.missingInputs(task, 2))
     val obj = args(1).report(context)
     val input = obj match {
       case list: LogoList => list
@@ -45,7 +45,7 @@ class _sortby extends Reporter {
     }
   }
 
-  class SortOrdering(context: Context, task: ReporterTask) extends Ordering[AnyRef] {
+  class SortOrdering(context: Context, task: AnonymousReporter) extends Ordering[AnyRef] {
     def die(o: AnyRef) =
       throw new ArgumentTypeException(
         context, _sortby.this, 0, Syntax.BooleanType, o)

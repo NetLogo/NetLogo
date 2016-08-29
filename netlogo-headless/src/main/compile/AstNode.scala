@@ -2,7 +2,8 @@
 
 package org.nlogo.compile
 
-import org.nlogo.{ core, nvm }
+import org.nlogo.{ core, nvm },
+  core.SourceLocation
 
 /**
  * An interface representing a node in the NetLogo abstract syntax tree (AKA parse tree, in
@@ -13,9 +14,6 @@ import org.nlogo.{ core, nvm }
  * always reasonable.
  */
 trait AstNode extends core.AstNode {
-  def start: Int
-  def end: Int
-  def file: String
   def accept(v: AstVisitor)
 }
 
@@ -58,8 +56,6 @@ trait Expression extends AstNode {
    * types of subexpressions.
    */
   def reportedType(): Int
-  def start_=(start: Int)
-  def end_=(end: Int)
 }
 
 /**
@@ -71,7 +67,6 @@ trait Application extends AstNode {
   def args: Seq[Expression]
   def coreInstruction: core.Instruction
   def nvmInstruction: nvm.Instruction
-  def end_=(end: Int)
   def addArgument(arg: Expression)
   def replaceArg(index: Int, expr: Expression)
 }
@@ -81,9 +76,7 @@ trait Application extends AstNode {
  * for the procedure body, which is a Statements object.
  */
 class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statements) extends AstNode {
-  def start = procedure.pos
-  def end = procedure.end
-  def file = procedure.filename
+  val sourceLocation = SourceLocation(procedure.pos, procedure.end, procedure.filename)
   def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
 }
 
@@ -93,9 +86,7 @@ class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statemen
  * (enclosed in [], in particular). This class is used to represent other
  * groups of statements as well, for instance procedure bodies.
  */
-class Statements(val file: String) extends AstNode {
-  var start: Int = _
-  var end: Int = _
+class Statements(val file: String, var sourceLocation: SourceLocation) extends AstNode {
   /**
    * a List of the actual Statement objects.
    */
@@ -106,8 +97,10 @@ class Statements(val file: String) extends AstNode {
     recomputeStartAndEnd()
   }
   private def recomputeStartAndEnd() {
+  /*
     if (stmts.isEmpty) { start = 0; end = 0 }
     else { start = stmts(0).start; end = stmts(stmts.size - 1).end }
+  */
   }
   override def toString = stmts.mkString(" ")
   def accept(v: AstVisitor) { v.visitStatements(this) }
@@ -117,7 +110,7 @@ class Statements(val file: String) extends AstNode {
  * represents a NetLogo statement. Statements only have one form: command
  * application.
  */
-class Statement(var coreCommand: core.Command, var command: nvm.Command, var start: Int, var end: Int, val file: String)
+class Statement(var coreCommand: core.Command, var command: nvm.Command, val sourceLocation: SourceLocation)
     extends Application {
   private val _args = collection.mutable.Buffer[Expression]()
   override def args: Seq[Expression] = _args
@@ -137,7 +130,7 @@ class Statement(var coreCommand: core.Command, var command: nvm.Command, var sta
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation) extends Expression {
   def reportedType() = core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
@@ -150,7 +143,7 @@ class CommandBlock(val statements: Statements, var start: Int, var end: Int, val
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file: String) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
   def accept(v: AstVisitor) { v.visitReporterBlock(this) }
   /**
@@ -179,7 +172,7 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
  * represents things like constants, which are converted into no-arg reporter
  * applications as they're parsed.
  */
-class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter, var start: Int, var end: Int, val file: String)
+class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter, val sourceLocation: SourceLocation)
 extends Expression with Application {
   /**
    * the args for this application.

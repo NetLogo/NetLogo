@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ CommandTask => ApiCommandTask, ReporterTask => ApiReporterTask }
+import org.nlogo.api.{ AnonymousCommand => ApiAnonymousCommand, AnonymousReporter => ApiAnonymousReporter }
 import org.nlogo.core.{ AgentKind, I18N, LogoList, Syntax, Token, TokenHolder }
 import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link, World }
 
@@ -188,18 +188,18 @@ abstract class Instruction extends InstructionJ with TokenHolder {
           context, this, index, Syntax.AgentsetType, x)
     }
 
-  def argEvalReporterTask(context: Context, index: Int): ApiReporterTask =
+  def argEvalAnonymousReporter(context: Context, index: Int): ApiAnonymousReporter =
     args(index).report(context) match {
-      case t: ApiReporterTask =>
+      case t: ApiAnonymousReporter =>
         t
       case x =>
         throw new ArgumentTypeException(
           context, this, index, Syntax.ReporterType, x)
     }
 
-  def argEvalCommandTask(context: Context, index: Int): ApiCommandTask =
+  def argEvalAnonymousCommand(context: Context, index: Int): ApiAnonymousCommand =
     args(index).report(context) match {
-      case t: ApiCommandTask =>
+      case t: ApiAnonymousCommand =>
         t
       case x =>
         throw new ArgumentTypeException(

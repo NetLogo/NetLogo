@@ -128,18 +128,18 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
     }
 
   @throws(classOf[ExtensionException])
-  def getReporterTask: api.ReporterTask =
+  def getReporter: api.AnonymousReporter =
     get match {
-      case t: api.ReporterTask => t
+      case t: api.AnonymousReporter => t
       case x =>
         throw new ExtensionException(
           getExceptionMessage(Syntax.ReporterType, x))
     }
 
   @throws(classOf[ExtensionException])
-  def getCommandTask: api.CommandTask =
+  def getCommand: api.AnonymousCommand =
     get match {
-      case t: api.CommandTask => t
+      case t: api.AnonymousCommand => t
       case x =>
         throw new ExtensionException(
           getExceptionMessage(Syntax.CommandType, x))
@@ -165,10 +165,11 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
     }
 
   /**
-   * <i>Special (undocumented) method for the cities extension.</i>
-   * Returns the argument reporter without evaluating it.
+   * (formerly `getArgument`).
+   * Used by the GIS extension.
+   * Other extensions should use getSymbol where possible.
    */
-  def getReporter: Reporter = arg
+  def getReference: Reporter = arg
 
   def getExceptionMessage(wantedType: Int, badValue: AnyRef) =
     "Expected this input to be " +
