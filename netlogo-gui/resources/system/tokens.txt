@@ -1,3 +1,4 @@
+C __apply etc._apply
 C __bench gui._bench
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
@@ -262,6 +263,7 @@ R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
 R -> _lambdaargs
+R __apply-result etc._applyresult
 R __block etc._block
 R __boom etc._boom
 R __check-syntax etc._checksyntax

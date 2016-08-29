@@ -1,0 +1,5 @@
+apply-result-distributes-list-items-in-order
+  __apply-result [ [x y] -> x ^ y ] [3 2] => 9
+
+__apply-result-takes-empty-list
+  __apply-result [ 5 ] [] => 5

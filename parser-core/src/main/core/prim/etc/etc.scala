@@ -19,6 +19,17 @@ case class _acos() extends Reporter with Pure {
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
 }
+case class _apply() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(Syntax.CommandType, Syntax.ListType))
+}
+case class _applyresult() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.ReporterType, Syntax.ListType),
+      ret = Syntax.WildcardType)
+}
 case class _asin() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(

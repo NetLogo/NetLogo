@@ -1,3 +1,4 @@
+C __apply etc._apply
 C __bench etc._bench
 C __change-topology etc._changetopology
 C __done _done
@@ -189,6 +190,7 @@ R = _equal
 R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
+R __apply-result etc._applyresult
 R __boom etc._boom
 R __block etc._block
 R __check-syntax etc._checksyntax

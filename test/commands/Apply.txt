@@ -1,0 +1,9 @@
+apply-distributes-list-items-in-order
+# the use of a command block is deliberate here as it checks that the ip is updated correctly.
+  O> __apply [ [num col] -> crt num [ set color col ] ] [ 10 5 ]
+  count turtles => 10
+  [ color ] of one-of turtles => 5
+
+apply-takes-empty-list
+  O> __apply [ crt 1 ] []
+  count turtles => 1
