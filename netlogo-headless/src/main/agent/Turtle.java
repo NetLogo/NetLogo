@@ -12,7 +12,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 
-import java.util.Set;
+import scala.collection.immutable.Set;
 
 public strictfp class Turtle
     extends Agent
@@ -609,7 +609,7 @@ public strictfp class Turtle
   public void heading(double heading) {
     double originalHeading = this.heading;
     headingHelper(heading);
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleTurned(this, heading, originalHeading);
     }
   }
@@ -619,7 +619,7 @@ public strictfp class Turtle
   public void heading(double heading, Set<Turtle> seenTurtles) {
     double originalHeading = this.heading;
     headingHelper(heading);
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleTurned(this, heading, originalHeading, seenTurtles);
     }
   }
@@ -647,7 +647,7 @@ public strictfp class Turtle
     } else {
       variables()[VAR_HEADING] = null;
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleTurned(this, h, originalHeading);
     }
   }
@@ -784,7 +784,7 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved
           (this, xcor, ycor, oldX, ycor);
     }
@@ -812,7 +812,7 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved
           (this, x, ycor, oldX, ycor);
     }
@@ -841,7 +841,7 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved(this, xcor, ycor, xcor, oldY);
     }
   }
@@ -867,7 +867,7 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved(this, xcor, y, xcor, oldY);
     }
   }
@@ -882,7 +882,7 @@ public strictfp class Turtle
     double oldX = this.xcor;
     double oldY = this.ycor;
     xandycorHelper(xcor, ycor, isJumping);
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved(this, xcor, ycor, oldX, oldY);
     }
   }
@@ -894,7 +894,7 @@ public strictfp class Turtle
     double oldX = this.xcor;
     double oldY = this.ycor;
     xandycorHelper(xcor, ycor, false);
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
     }
   }
@@ -947,7 +947,7 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world().tieManager.tieCount > 0) {
+    if (world().tieManager.hasTies()) {
       world().tieManager.turtleMoved(this, x, y, oldX, oldY);
     }
   }
@@ -964,7 +964,7 @@ public strictfp class Turtle
       this.ycor = y;
       variables()[VAR_XCOR] = p.variables()[Patch.VAR_PXCOR];
       variables()[VAR_YCOR] = p.variables()[Patch.VAR_PYCOR];
-      if (world().tieManager.tieCount > 0) {
+      if (world().tieManager.hasTies()) {
         world().tieManager.turtleMoved(this, x, y, oldX, oldY);
       }
     }
