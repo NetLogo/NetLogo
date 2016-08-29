@@ -12,3 +12,6 @@ __block-can-wrap-known-and-unknown-things
 
 __block-can-nest-blocks
   __block [ crt [ setxy foo bar ] ] => "crt [ setxy foo bar ]"
+
+__block-can-contain-anonymous-procedures
+  __block [ [foo] -> foo ] => "[ foo ] -> foo"

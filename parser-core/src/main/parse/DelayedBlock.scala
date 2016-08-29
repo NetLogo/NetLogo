@@ -8,7 +8,7 @@ object DelayedBlock {
   def apply(openBracket: Token, unterminatedTokens: Seq[Token], scope: SymbolTable): DelayedBlock = {
     ArrowLambdaScoper(openBracket +: unterminatedTokens, scope) match {
       case Some((args, body, symbols)) =>
-        new ArrowLambdaBlock(openBracket, args, body, unterminatedTokens.last, symbols)
+        new ArrowLambdaBlock(openBracket, args, body, unterminatedTokens.last, openBracket +: unterminatedTokens :+ Token.Eof, symbols)
       case None =>
         new AmbiguousDelayedBlock(openBracket, unterminatedTokens, scope)
     }
@@ -29,12 +29,13 @@ class ArrowLambdaBlock(
   val argNames: Seq[String],
   val bodyTokens: Seq[Token],
   closingBracket: Token,
+  val allTokens: Seq[Token],
   val internalScope: SymbolTable,
   val sourceLocation: SourceLocation) extends DelayedBlock {
 
-  def this(openBracket: Token, argNames: Seq[String], bodyTokens: Seq[Token], closingBracket: Token, internalScope: SymbolTable) =
+  def this(openBracket: Token, argNames: Seq[String], bodyTokens: Seq[Token], closingBracket: Token, allTokens: Seq[Token], internalScope: SymbolTable) =
       this(openBracket, argNames, bodyTokens, closingBracket,
-        internalScope,openBracket.sourceLocation.copy(end = closingBracket.end))
+        allTokens, internalScope,openBracket.sourceLocation.copy(end = closingBracket.end))
 
   val isArrowLambda = true
 
@@ -45,7 +46,7 @@ class ArrowLambdaBlock(
     .map(_.tpe == TokenType.Command).getOrElse(true)
 
   override def changeLocation(newLocation: SourceLocation): ArrowLambdaBlock =
-    new ArrowLambdaBlock(openBracket, argNames, bodyTokens, closingBracket, internalScope, newLocation)
+    new ArrowLambdaBlock(openBracket, argNames, bodyTokens, closingBracket, allTokens, internalScope, newLocation)
 }
 
 /**
