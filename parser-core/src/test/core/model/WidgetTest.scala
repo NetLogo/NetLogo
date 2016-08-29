@@ -506,6 +506,21 @@ class WidgetTest extends FunSuite {
     runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
   }
 
+  test("inputbox empty str") {
+    val inputBox = """|INPUTBOX
+                      |5
+                      |330
+                      |255
+                      |390
+                      |user-created-code
+                      |NIL
+                      |1
+                      |0
+                      |String""".stripMargin.split("\n").toList
+    val inputBoxWidget = InputBox(Some("user-created-code"), 5, 330, 255, 390, StringInput("", StringInput.StringLabel, false))
+    runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
+  }
+
   test("inputbox str") {
     val inputBox = """|INPUTBOX
                       |5
