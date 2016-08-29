@@ -76,7 +76,7 @@ object I18N {
         println(s"unable to find translation for: $key in $name for locale: ${defaultBundle.getLocale}")
         getFromBundle(englishBundle)
           .getOrElse(
-            throw new IllegalArgumentException(s"coding error, bad translation key: $key for $name"))
+            throw new IllegalArgumentException(s"internal error, bad translation key: $key for $name"))
       }
       java.text.MessageFormat.format(preformattedText, args: _*)
     }

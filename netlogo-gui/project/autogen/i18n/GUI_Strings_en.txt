@@ -188,7 +188,8 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
-file.open.error.invalidmodel = The file is not a valid NetLogo model file.
+file.open.error.invalidmodel = This file is not a valid NetLogo model file.
+file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
 file.save.warn.savingInNewerVersion = This model was made with {0}. If you save it in {1} it may not work in the old version anymore.

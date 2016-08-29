@@ -2,6 +2,10 @@
 
 package org.nlogo.window
 
+import java.awt.{ Component, FileDialog => AWTFileDialog }
+import java.nio.file.Paths
+import java.net.URI
+
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, OptionDialog }
 import org.nlogo.workspace.ModelTracker
 import org.nlogo.workspace.OpenModel.{ Controller => OpenModelController }
@@ -10,10 +14,7 @@ import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffi
 import org.nlogo.core.I18N
 import org.nlogo.awt.UserCancelException
 
-import java.awt.{ FileDialog => AWTFileDialog }
-import java.nio.file.Paths
-import java.net.URI
-import java.awt.Component
+import scala.util.Try
 
 class FileController(owner: Component, modelTracker: ModelTracker) extends OpenModelController with SaveModelController {
   // OpenModel.Controller methods
@@ -30,11 +31,11 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   @throws(classOf[IllegalStateException])
   def invalidModel(uri: URI): Unit = {
-    throw new IllegalStateException(s"couldn't open: '${uri.toString}'")
+    notifyUserNotValidFile(uri)
   }
 
   def invalidModelVersion(uri: URI, version: String): Unit = {
-    notifyUserNotValidFile()
+    notifyUserNotValidFile(uri)
   }
 
   def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean = {
@@ -91,9 +92,13 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 
   @throws(classOf[UserCancelException])
-  def notifyUserNotValidFile(): Unit = {
+  def notifyUserNotValidFile(uri: URI): Unit = {
+    val warningText = Try(Paths.get(uri))
+      .toOption
+      .map(path => I18N.gui.getN("file.open.error.invalidmodel.withPath", path.toString))
+      .getOrElse(I18N.gui.get("file.open.error.invalidmodel"))
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
-    OptionDialog.show(owner, "NetLogo", I18N.gui.get("file.open.error.invalidmodel"), options)
+    OptionDialog.show(owner, "NetLogo", warningText, options)
     throw new UserCancelException()
   }
 
