@@ -58,11 +58,6 @@ class TokenizerTests extends FunSuite {
         "Token(0.5,Literal,0.5)"
     assertResult(expected)(tokens.mkString)
   }
-  test("TokenizeIdent") {
-    val tokens = tokenize("foo")
-    val expected = "Token(foo,Ident,FOO)"
-    assertResult(expected)(tokens.mkString)
-  }
   test("TokenizeQuestionMark") {
     val tokens = tokenize("round ?")
     val expected =
@@ -70,67 +65,6 @@ class TokenizerTests extends FunSuite {
         "Token(?,Ident,?)"
     assertResult(expected)(tokens.mkString)
   }
-  test("TokenizeString") {
-    val tokens = tokenize("\"foo\"")
-    val expected = "Token(\"foo\",Literal,foo)"
-    assertResult(expected)(tokens.mkString)
-  }
-  test("TokenizeEmptyString") {
-    val tokens = tokenize("""""""")
-    val expected = "Token(\"\",Literal,)"
-    assertResult(expected)(tokens.mkString)
-  }
-  test("TokenizeStringOfEmptyString") {
-    val tokens = tokenize(""""\"\""""")
-    val expected = "Token(\"\\\"\\\"\",Literal,\"\")"
-    assertResult(expected)(tokens.mkString)
-  }
-  test("TokenizeUnknownEscape") {
-    val tokens = tokenizeRobustly("\"\\b\"")
-    assertResult(0)(firstBadToken(tokens).get.start)
-    assertResult(4)(firstBadToken(tokens).get.end)
-    assertResult("Illegal character after backslash")(
-      firstBadToken(tokens).get.value)
-  }
-  test("TokenizeWeirdCaseWithBackSlash") {
-    val tokens = tokenizeRobustly("\"\\\"")
-    assertResult(0)(firstBadToken(tokens).get.start)
-    assertResult(3)(firstBadToken(tokens).get.end)
-    assertResult("Closing double quote is missing")(
-      firstBadToken(tokens).get.value)
-  }
-  test("TokenizeEscapedBackslash") {
-    val tokens = tokenize("\"\\\\\"")
-    assertResult("Token(\"\\\\\",Literal,\\)")(tokens.mkString)
-  }
-  test("TokenizeBadNumberFormat1") {
-    val tokens = tokenizeRobustly("1.2.3")
-    assertResult(0)(firstBadToken(tokens).get.start)
-    assertResult(5)(firstBadToken(tokens).get.end)
-    assertResult("Illegal number format")(
-      firstBadToken(tokens).get.value)
-  }
-
-  test("TokenizeBadNumberFormat2") {
-    val tokens = tokenizeRobustly("__ignore 3__ignore 4")
-    assertResult(9)(firstBadToken(tokens).get.start)
-    assertResult(18)(firstBadToken(tokens).get.end)
-    assertResult("Illegal number format")(
-      firstBadToken(tokens).get.value)
-  }
-
-  test("TokenizeIdentStartingWithDash") {
-    val tokens   = tokenizeRobustly("-WOLF-SHAPE-00013")
-    val expected = "Token(-WOLF-SHAPE-00013,Ident,-WOLF-SHAPE-00013)"
-    assertResult(expected)(tokens.mkString)
-  }
-
-  test("TokenizeLooksLikePotentialNumber") {
-    val tokens = tokenize("-.")
-    val expected = "Token(-.,Ident,-.)"
-    assertResult(expected)(tokens.mkString)
-  }
-
   test("ListOfLiterals") {
     val tokens = tokenize("[123 -456 \"a\"]")
     val expected = """|Token([,OpenBracket,null)
@@ -146,14 +80,12 @@ class TokenizerTests extends FunSuite {
     val tokens = tokenize("")
     assertResult("")(tokens.mkString)
   }
+
   test("Empty2") {
     val tokens = tokenize("\n")
     assertResult("")(tokens.mkString)
   }
-  test("underscore") {
-    val tokens = tokenize("_")
-    assertResult("Token(_,Ident,_)")(tokens.mkString)
-  }
+
   test("ListOfArrays") {
     val tokens = tokenize("[{{array: 0}} {{array: 1}}]")
     assertResult("Token([,OpenBracket,null)" +
@@ -174,27 +106,38 @@ class TokenizerTests extends FunSuite {
     assertResult(expected)(tokens.mkString)
   }
 
-  test("UnclosedExtensionLiteral1") {
-    val tokens = tokenizeRobustly("{{array: 1: ")
-    assertResult("Token(,Bad,End of file reached unexpectedly)")(
-      tokens.mkString)
-  }
-  test("UnclosedExtensionLiteral2") {
-    val tokens = tokenizeRobustly("{{")
-    assertResult("Token(,Bad,End of file reached unexpectedly)")(
-      tokens.mkString)
-  }
-  test("UnclosedExtensionLiteral3") {
-    val tokens = tokenizeRobustly("{{\n")
-    assertResult("Token(,Bad,End of line reached unexpectedly)")(
-      tokens.mkString)
-  }
+  testLexFailure("\"\\b\"",      0, 4,  "Illegal character after backslash")
+  testLexFailure("\"\\\"",       0, 3,  "Closing double quote is missing")
+  testLexFailure(""""abc""",     0, 4,  "Closing double quote is missing")
+   // check that parser errors when string contains newline
+  testLexFailure("\"abc\n\"",    0, 4,  "Closing double quote is missing")
+  testLexFailure("1.2.3",        0, 5,  "Illegal number format")
+  testLexFailure("{{array: 1: ", 0, 12, "End of file reached unexpectedly")
+  testLexFailure("{{",           0, 2,  "End of file reached unexpectedly")
+  testLexFailure("{{\n",         0, 3,  "End of line reached unexpectedly")
+  testLexFailure("{{ {{ }}",     0, 8,  "End of file reached unexpectedly")
+  // 216C is a Unicode character I chose pretty much at random.  it's a Roman numeral
+  // for fifty, and *looks* just like an L, but is not a letter according to Unicode.
+  testLexFailure("foo\u216Cbar", 3, 4,  "This non-standard character is not allowed.")
+  testLexFailure("__ignore 3__ignore 4", 9, 18, "Illegal number format")
 
   test("carriageReturnsAreWhitespace") {
     val tokens = tokenize("a\rb")
     assertResult("Token(a,Ident,A)" + "Token(b,Ident,B)")(
       tokens.mkString)
   }
+
+  testLexesSingleToken(".5",         ".5", TokenType.Literal, Double.box(0.5))
+  testLexesSingleToken("-1",         "-1", TokenType.Literal, Double.box(-1.0))
+  testLexesSingleToken("-.75",       "-.75", TokenType.Literal, Double.box(-0.75))
+  testLexesSingleToken("foo",        "foo", TokenType.Ident, "FOO")
+  testLexesSingleToken("_",          "_", TokenType.Ident, "_")
+  testLexesSingleToken("\"foo\"",    "\"foo\"", TokenType.Literal, "foo")
+  testLexesSingleToken("""""""",     "\"\"",TokenType.Literal,"")
+  testLexesSingleToken(""""\"\""""", "\"\\\"\\\"\"",TokenType.Literal,"\"\"")
+  testLexesSingleToken("\"\\\\\"",   "\"\\\\\"",TokenType.Literal,"\\")
+  testLexesSingleToken("-.",         "-.", TokenType.Ident, "-.")
+  testLexesSingleToken("-WOLF-SHAPE-00013", "-WOLF-SHAPE-00013", TokenType.Ident, "-WOLF-SHAPE-00013")
 
   /// Unicode
   test("unicode") {
@@ -203,51 +146,45 @@ class TokenizerTests extends FunSuite {
     assertResult("Token(" + o + ",Ident," + o.toUpperCase + ")")(
       tokens.mkString)
   }
-  test("TokenizeBadCharactersInIdent") {
-    // 216C is a Unicode character I chose pretty much at random.  it's a Roman numeral
-    // for fifty, and *looks* just like an L, but is not a letter according to Unicode.
-    val tokens = tokenizeRobustly("foo\u216Cbar")
-    assertResult(3)(firstBadToken(tokens).get.start)
-    assertResult(4)(firstBadToken(tokens).get.end)
-    assertResult("This non-standard character is not allowed.")(
-      firstBadToken(tokens).get.value)
-  }
   test("TokenizeOddCharactersInString") {
     val tokens = tokenize("\"foo\u216C\"")
     val expected = "Token(\"foo\u216C\",Literal,foo\u216C)"
     assertResult(expected)(tokens.mkString)
   }
 
-  test("TokenizeWithSkipWhitespaceSkipsBeginningWhitespace") {
-    val tokens = tokenizeSkippingWhitespace("    123")
-    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
-    assertResult(4)(tokens.head._2)
-  }
-  test("TokenizeWithSkipWhitespaceSkipsNoWhitespace") {
-    val tokens = tokenizeSkippingWhitespace("123")
-    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
-    assertResult(0)(tokens.head._2)
+  testWhitespace("no whitespace", "123", Seq("123"), Seq(0))
+  testWhitespace("skips beginning whitespace", "    123", Seq("123"), Seq(4))
+  testWhitespace("skips ending whitespcae", "123   ", Seq("123"), Seq(3))
+  testWhitespace("skips beginning and end whitespace", "  123   ", Seq("123"), Seq(5))
+  testWhitespace("skips whitespace on multiple tokens", "  123  456 ", Seq("123", "456"), Seq(4, 1))
+
+  def testWhitespace(condition: String, text: String, expectedTexts: Seq[String], expectedSkips: Seq[Int]) {
+    test(s"Tokenize with skip whitespace $condition") {
+        val tokens = tokenizeSkippingWhitespace(text)
+        assert(tokens.map(_._1.text) == expectedTexts)
+        assert(tokens.map(_._2)      == expectedSkips)
+    }
   }
 
-  test("TokenizeWithSkipWhitespaceSkipsEndingWhitespace") {
-    val tokens = tokenizeSkippingWhitespace("123   ")
-    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
-    assertResult(3)(tokens.head._2)
+
+  def testLexesSingleToken(tokenString: String, text: String, tpe: TokenType, value: AnyRef): Unit = {
+    test(s"properly lexes $tokenString") {
+      val token = tokenize(tokenString).head
+      assertResult(text)(token.text)
+      assertResult(tpe)(token.tpe)
+      assertResult(cleanJsNumbers(value.toString))(token.value.toString)
+    }
   }
 
-  test("TokenizeWithSkipWhitespaceSkipsBeginningAndEndWhitespace") {
-    val tokens = tokenizeSkippingWhitespace("  123   ")
-    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens.head._1.toString))
-    assertResult(5)(tokens.head._2)
-  }
-
-  test("TokenizeWithSkipWhitespaceOnMultipleTokens") {
-    val tokens = tokenizeSkippingWhitespace("  123  456 ")
-    assertResult(cleanJsNumbers("Token(123,Literal,123.0)"))(cleanJsNumbers(tokens(0)._1.toString))
-    assertResult(4)(tokens(0)._2)
-    assertResult(cleanJsNumbers("Token(456,Literal,456.0)"))(cleanJsNumbers(tokens(1)._1.toString))
-    assertResult(1)(tokens(1)._2)
-  }
+  def testLexFailure(text: String, start: Int, end: Int, error: String): Unit =
+    test(s"properly fails $text with message $error") {
+      val tokens = tokenizeRobustly(text)
+      val badToken = firstBadToken(tokens).getOrElse(
+        throw new Exception(s"Expected bad token, got ${tokens.mkString}"))
+      assert(start == badToken.start)
+      assert(end   == badToken.end)
+      assert(error == badToken.value)
+    }
 
   test("checks valid identifiers") {
     Seq("abc", "a42", "------''''-------").foreach(ident => assert(isValidIdentifier(ident)))
