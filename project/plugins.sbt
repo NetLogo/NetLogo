@@ -53,7 +53,7 @@ resolvers += Resolver.url(
   url("http://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
     Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.6")
+addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.6.1")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler" % "0.9.3",

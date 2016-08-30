@@ -18,6 +18,8 @@ object Docs {
 
   lazy val documentedExtensions = settingKey[Seq[(String, String)]]("list of extensions setup to use the documenter")
 
+  lazy val extensionDocConfigFile = settingKey[File]("extension documentation config file")
+
   lazy val extensionDocs = taskKey[Seq[File]]("generate extension documentation")
 
   lazy val settings = Seq(
@@ -34,7 +36,8 @@ object Docs {
         docsRoot.value.getAbsoluteFile,
         baseDirectory.value,
         modelsDirectory.value,
-        extensionRoot.value)
+        extensionRoot.value,
+        extensionDocConfigFile.value)
     },
     allDocs := {
       htmlDocs.value :+ manualPDF.value
@@ -43,7 +46,10 @@ object Docs {
       netLogoDocs.value.generateHTML(buildVariables.value, documentedExtensions.value)
     },
     manualPDF := {
-      netLogoDocs.value.generatePDF(buildVariables.value)
+      netLogoDocs.value.generatePDF(buildVariables.value, documentedExtensions.value)
+    },
+    extensionDocConfigFile := {
+      baseDirectory.value.getParentFile / "project" / "documentation.conf"
     },
     // keys are page name / extension name, values are title in sidebar
     documentedExtensions := {
@@ -66,7 +72,7 @@ object Docs {
       documentedExtensions.value.map(_._1).map(extensionName =>
           netLogoDocs.value.generateHTMLPageForExtension(
             extensionName,
-            (baseDirectory.value.getParentFile / "project" / "documentation.conf").toPath,
+            (docsRoot.value / (extensionName + ".html").toLowerCase).toPath,
             buildVariables.value).toFile)
     }
   )
