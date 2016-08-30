@@ -8,15 +8,19 @@ import scala.collection.JavaConverters._
 class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File, extensionsDirectory: File, extensionDocConfigFile: File) {
   val dictTarget = docsTarget / "dict"
 
-  def manualComponents(base: File): Seq[File] = Seq(
+  def manualComponents(base: File, extensions: Seq[String]): Seq[File] = {
+    val allComponents = Seq(
     "whatis", "copyright", "versions", "requirements", "contact",
     "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
     "infotab", "programming", "transition", "shapes",
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
     "modelingcommons", "logging", "controlling", "mathematica", "3d",
-    "extensions", "arraystables", "matrix", "sound",
-    "netlogolab", "profiler", "gis", "nw", "cf", "csv", "palette",
-    "faq", "dictionary").map(n => (base / s"$n.html"))
+    "extensions") ++
+      extensions ++
+      Seq("netlogolab", "faq", "dictionary")
+
+    allComponents.map(n => (base / s"$n.html"))
+  }
 
   private def pandoc(input: File, targetFile: File, title: String): Unit = {
     val args = Seq("pandoc", input.getAbsolutePath,
@@ -54,7 +58,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
 
     val tmp = IO.createTemporaryDirectory
     generateDocs(tmp, documentedExtensions, mustacheVars)
-    generateManualPDF(tmp)
+    generateManualPDF(tmp, documentedExtensions.map(_._1))
   }
 
   def generateHTML(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): Seq[File] = {
@@ -135,14 +139,14 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     }
   }
 
-  private def generateManualPDF(htmlFileRoot: File): File = {
+  private def generateManualPDF(htmlFileRoot: File, extensions: Seq[String]): File = {
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
 
     val htmldocArgs =
       Seq("wkhtmltopdf",
         "cover", (htmlFileRoot / "title.html").getAbsolutePath,
         "toc", "--xsl-style-sheet", (htmlFileRoot / "toc.xsl").getAbsolutePath) ++
-        manualComponents(htmlFileRoot).map(_.getAbsolutePath) ++
+        manualComponents(htmlFileRoot, extensions).map(_.getAbsolutePath) ++
         Seq(pdfFile.getAbsolutePath)
 
     println(htmldocArgs.mkString(" "))
