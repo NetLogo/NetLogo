@@ -63,7 +63,7 @@
       <li>
         <a href="#links">Links</a>
       <li>
-        <a href="#anonymous-procedures">Anonymous Procedures</a>
+        <a href="#anonymous-procedures">Anonymous procedures</a>
       <li>
         <a href="#ask-concurrent">Ask-Concurrent</a>
       <li>
@@ -1288,7 +1288,7 @@ show map [ [x] -&gt; x * x ] [1 2 3]
     <p>
       The blocks of code we're giving to <code>map</code> and
       <code>foreach</code> in these examples are actually <b>anonymous procedures</b>.
-      Anonymous procedures are explained in more detail in <a href="#anonymous-procedures">Anonymous Procedures</a>, below.
+      Anonymous procedures are explained in more detail in <a href="#anonymous-procedures">Anonymous procedures</a>, below.
     <p>
       <a><b>Varying number of inputs</b></a>
     <p id="variadic">
@@ -1364,7 +1364,7 @@ sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles
     <pre>
 [self] of my-agentset
 </pre>
-      
+
     <p>
       <b>Asking a list of agents</b>
     <p>
@@ -2819,7 +2819,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
         Component, Small Worlds, Preferential Attachment
       </div>
     <h2>
-      <a>Anonymous Procedures</a>
+      <a>Anonymous procedures</a>
     </h2>
     <p id="anonymous-procedures">
       Anonymous procedures let you store code to be run later.
@@ -2834,7 +2834,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       In other programming languages anonymous procedures are known as first-class
       functions, closures, or lambda.
     <h3>
-      Anonymous Procedure primitives
+      Anonymous procedure primitives
     </h3>
     <p>
       Primitives specific to anonymous procedures are <code>-&gt;</code>,
@@ -2868,7 +2868,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       or <code>(runresult my-anonymous-reporter &quot;foo&quot; 2)</code>.
       When not passing input, no parentheses are required.
     <h3>
-      Anonymous Procedure inputs
+      Anonymous procedure inputs
     </h3>
     <p>
       An anonymous procedure may take zero or more inputs.
@@ -2906,7 +2906,7 @@ filter [is-number? ?] [1 &quot;x&quot; 3] =&gt; [1 3]
 foreach [1 2 3 4] [ print ? ]
 </pre>
     <h3>
-      Anonymous Procedures as closures
+      Anonymous procedures as closures
     </h3>
     <p>
       Anonymous procedures are &quot;closures&quot;; that means they capture or
@@ -2922,7 +2922,7 @@ foreach [1 2 3 4] [ print ? ]
       dynamically enclosing procedure, not the enclosing anonymous procedure.
       (This is backward-compatible with older NetLogo versions.)
     <h3>
-      Anonymous Procedures and extensions
+      Anonymous procedures and extensions
     </h3>
     <p>
       The extensions API supports writing primitives that accept anonymous procedures
