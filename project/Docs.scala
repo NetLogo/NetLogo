@@ -16,6 +16,10 @@ object Docs {
 
   lazy val docsRoot = settingKey[File]("location to which docs are generated")
 
+  lazy val documentedExtensions = settingKey[Seq[(String, String)]]("list of extensions setup to use the documenter")
+
+  lazy val extensionDocs = taskKey[Seq[File]]("generate extension documentation")
+
   lazy val settings = Seq(
     javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
     docsRoot       := baseDirectory.value / "docs",
@@ -36,10 +40,34 @@ object Docs {
       htmlDocs.value :+ manualPDF.value
     },
     htmlDocs := {
-      netLogoDocs.value.generateHTML(buildVariables.value)
+      netLogoDocs.value.generateHTML(buildVariables.value, documentedExtensions.value)
     },
     manualPDF := {
       netLogoDocs.value.generatePDF(buildVariables.value)
+    },
+    // keys are page name / extension name, values are title in sidebar
+    documentedExtensions := {
+      Seq(
+        "arduino"  -> "Arduino",
+        "array"    -> "Array",
+        "bitmap"   -> "Bitmap",
+        "gis"      -> "GIS",
+        "gogo"     -> "GoGo",
+        "matrix"   -> "Matrix",
+        "palette"  -> "Palette",
+        "profiler" -> "Matrices",
+        "sound"    -> "Sound",
+        "table"    -> "Table",
+        "vid"      -> "Vid",
+        "view2.5d" -> "View2.5D"
+      )
+    },
+    extensionDocs := {
+      documentedExtensions.value.map(_._1).map(extensionName =>
+          netLogoDocs.value.generateHTMLPageForExtension(
+            extensionName,
+            (baseDirectory.value.getParentFile / "project" / "documentation.conf").toPath,
+            buildVariables.value).toFile)
     }
   )
 }

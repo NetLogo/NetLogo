@@ -1,5 +1,10 @@
 import sbt._
 
+import java.nio.file.{ Files, Path => NioPath }
+import org.nlogo.build.{ DocumentationConfig, Documenter, HoconParser }
+import org.pegdown.{ PegDownProcessor, Extensions => PegdownExtensions }
+import scala.collection.JavaConverters._
+
 class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File, extensionsDirectory: File) {
   val dictTarget = docsTarget / "dict"
 
@@ -57,7 +62,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogo")
   }
 
-  private def generateManualPDF(htmlFileRoot: File): File = {
+  private def generateManualPDF(htmlFileRoot: File, documentedExtensions: Seq[(String, String)]): File = {
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
 
     val htmldocArgs =
@@ -93,13 +98,15 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     generateManualPDF(tmp)
   }
 
-  def generateHTML(buildVariables: Map[String, Object]): Seq[File] = {
+  def generateHTML(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): Seq[File] = {
     import scala.collection.JavaConverters._
 
     IO.delete(docsTarget)
 
     val mustacheVars =
-      buildVariables + ("infoTabModelHTML" -> infoTabHTML)
+      buildVariables + (
+        "infoTabModelHTML" -> infoTabHTML,
+        "documentedExtensions" -> documentedExtensions.asJava)
 
     val standaloneVars =
       mustacheVars + ("sectionHeader" ->
@@ -112,5 +119,47 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     supportFiles.foreach(IO.delete)
 
     Path.allSubpaths(docsTarget).map(_._1).toSeq
+  }
+
+  def renderMarkdown(str: String): String = {
+    new PegDownProcessor(PegdownExtensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
+                         PegdownExtensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
+                         PegdownExtensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
+      .markdownToHtml(str)
+  }
+
+  def renderMarkdown(p: NioPath): String =
+    renderMarkdown(new String(Files.readAllBytes(p), "UTF-8"))
+
+  def generateHTMLPageForExtension(extensionName: String, netLogoConfFile: NioPath, buildVariables: Map[String, Object]): NioPath = {
+    val targetFile = (docsTarget / (extensionName + ".html").toLowerCase).toPath
+    val documentationConf = (extensionsDirectory / extensionName / "documentation.conf").toPath
+    val configDocument = HoconParser.parseConfigFile(documentationConf.toFile)
+    val netLogoConfig = HoconParser.parseConfig(HoconParser.parseConfigFile(netLogoConfFile.toFile))
+    val docConfig = HoconParser.parseConfig(configDocument)
+    val primResult = HoconParser.parsePrimitives(configDocument)
+    val renderedPrimitives = primResult.primitives.map(p => p.copy(description = renderMarkdown(p.description)))
+    val filesToIncludeInManual: Seq[String] = configDocument.getStringList("filesToIncludeInManual").asScala
+    val prePrimFiles =
+      filesToIncludeInManual.takeWhile(_ != "primitives").map(documentationConf.resolveSibling).map(renderMarkdown)
+    val postPrimFiles =
+      filesToIncludeInManual.dropWhile(_ != "primitives").tail.map(documentationConf.resolveSibling).map(renderMarkdown)
+    val additionalConfig = Map(
+      "extensionName"         -> renderedPrimitives.head.extensionName.capitalize,
+      "prePrimitiveSections"  -> prePrimFiles.asJava,
+      "postPrimitiveSections" -> postPrimFiles.asJava
+    )
+    val newTableOfContents =
+      if (docConfig.tableOfContents.keys == Seq("")) Map("" -> "Primitives")
+      else docConfig.tableOfContents
+    val finalConfig = DocumentationConfig(
+      markdownTemplate = netLogoConfig.markdownTemplate,
+      primTemplate     = netLogoConfig.primTemplate,
+      tableOfContents  = newTableOfContents,
+      additionalConfig = docConfig.additionalConfig ++ additionalConfig ++ buildVariables
+    )
+
+    val renderedPage = Documenter.documentAll(finalConfig, renderedPrimitives, documentationConf.getParent)
+    Files.write(targetFile, renderedPage.getBytes("UTF-8"))
   }
 }
