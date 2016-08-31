@@ -50,11 +50,15 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
             val varString = if (vars.nonEmpty) vars.mkString(" [", " ", "] ->") else ""
             val frontMargin = if (varString.isEmpty || bodyText.startsWith(" ")) "" else " "
             val backMargin = {
-              val wsMargin = ctx.wsMap.backMargin(path)
-              if (varString.isEmpty || (wsMargin.trim == "" && bodyText.endsWith(" "))) ""
-              else if (wsMargin.trim == "") " "
-              else if (wsMargin.endsWith(" ")) wsMargin
-              else wsMargin + " "
+              val storedMargin = ctx.wsMap.get(path, WhiteSpace.BackMargin)
+              val hasVars = varString.nonEmpty
+              storedMargin match {
+                case None if ! hasVars || bodyText.endsWith(" ") => ""
+                case Some(margin) if ! hasVars                   => margin
+                case Some(margin) if ! margin.endsWith(" ")      => margin + " "
+                case None                                        => " "
+                case Some(margin)                                => margin
+              }
             }
             ctx.appendText(ctx.wsMap.leading(path) + "[" + varString + frontMargin + bodyText + backMargin + "]")
         }
@@ -115,6 +119,8 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
     }
 
     app.reporter match {
+      case r: _reporterlambda if r.argumentNames.nonEmpty => super.visitReporterApp(app, position)
+      case c: _commandlambda  if c.argumentNames.nonEmpty => super.visitReporterApp(app, position)
       case (_: _reporterlambda | _: _commandlambda) =>
         val variables = MaxTaskVariable.visitExpression(app.args(0))(None)
         val nestingDepth = ops.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size

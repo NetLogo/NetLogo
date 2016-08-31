@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ prim, AstNode, CommandBlock, ProcedureDefinition,
   ReporterApp, ReporterBlock, SourceLocatable, SourceLocation, Statement, Token, TokenType, TokenizerInterface },
-  prim.{ _const, _reporterlambda }
+  prim.{ _commandlambda, _const, _constcodeblock, _reporterlambda }
 
 object WhiteSpace {
   sealed trait Placement { def default: String }
@@ -104,6 +104,7 @@ object WhiteSpace {
     override def visitReporterApp(app: ReporterApp, path: AstPath)(implicit c: Context): Context = {
       def reporterSourceLocation(a: ReporterApp) =
         SourceLocation(a.start max a.reporter.token.start, a.reporter.token.end, a.filename)
+
       if (app.reporter.syntax.isInfix) {
         c.seq(
           visitExpression(app.args.head, path, 0)(_),
@@ -112,24 +113,15 @@ object WhiteSpace {
             case (ctx, (arg, i)) => visitExpression(arg, path, i)(ctx)
           })
       } else if (app.reporter.isInstanceOf[_reporterlambda]) {
-        def arrowFrontMargin(app: ReporterApp)(c: Context): Context = {
-          val endOfPotentialArrowRange = app.args.lift(0).map(_.start).getOrElse(app.end)
-          val (ts, c1) = tokensToPoint(app.filename, endOfPotentialArrowRange)(c)
-          ts.find(_.text == "->") match {
-            case Some(arrowToken) =>
-              val (frontMargin, rest) = ts.span(_.text != "->")
-              val afterArrow = rest.tail
-              c1.addWhitespace(path, FrontMargin, (frontMargin :+ arrowToken).map(_.text).mkString(""))
-                .updatePosition(path, arrowToken.sourceLocation)
-                .copy(tokenIterators = c1.tokenIterators.updated(app.filename, (afterArrow.toIterator ++ c1.tokenIterators(app.filename)).buffered))
-            case None =>
-              c1.copy(tokenIterators = c1.tokenIterators.updated(app.filename, (ts.toIterator ++ c1.tokenIterators(app.filename)).buffered))
-          }
-        }
-
         c.seq(
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
-          arrowFrontMargin(app),
+          arrowFrontMargin(app, path),
+          super.visitReporterApp(app, path)(_),
+          tagTrailingWhitespace(app, path))
+      } else if (app.reporter.isInstanceOf[_commandlambda] && app.reporter.asInstanceOf[_commandlambda].argumentNames.nonEmpty) {
+        c.seq(
+          tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
+          arrowFrontMargin(app, path),
           super.visitReporterApp(app, path)(_),
           tagTrailingWhitespace(app, path))
       } else if (app.reporter.isInstanceOf[_const]) {
@@ -138,8 +130,14 @@ object WhiteSpace {
           (leading: String) => _.addLeadingWhitespace(path, leading, app.sourceLocation)
         ).through(
           sourceToPoint(app.filename, app.end, _ => true),
-          { (content: String) => _.addWhitespace(path, Content, content) }
-        )
+          (content: String) => _.addWhitespace(path, Content, content))
+      } else if (app.reporter.isInstanceOf[_constcodeblock]) {
+        c.through(
+          sourceToPoint(app.filename, app.start, _ => true),
+          (leading: String) => _.addLeadingWhitespace(path, leading, app.sourceLocation)
+        ).through(
+          sourceToPoint(app.filename, app.end, _ => true),
+          (content: String) => _.addWhitespace(path, Content, content))
       } else {
         c.seq(
           tagLeadingWhitespace(path, reporterSourceLocation(app)),
@@ -147,6 +145,19 @@ object WhiteSpace {
       }
     }
 
+    private def arrowFrontMargin(app: ReporterApp, path: AstPath)(c: Context): Context = {
+      val (ts, c1) = tokensToPoint(app.filename, app.end)(c)
+      ts.find(_.text == "->") match {
+        case Some(arrowToken) =>
+          val (frontMargin, rest) = ts.span(_.text != "->")
+          val afterArrow = rest.tail
+          c1.addWhitespace(path, FrontMargin, (frontMargin :+ arrowToken).map(_.text).mkString(""))
+            .updatePosition(path, arrowToken.sourceLocation)
+            .copy(tokenIterators = c1.tokenIterators.updated(app.filename, (afterArrow.toIterator ++ c1.tokenIterators(app.filename)).buffered))
+        case None =>
+          c1.copy(tokenIterators = c1.tokenIterators.updated(app.filename, (ts.toIterator ++ c1.tokenIterators(app.filename)).buffered))
+      }
+    }
     override def visitStatement(stmt: Statement, path: AstPath)(implicit c: Context): Context = {
       def statementStart(s: Statement) = s.start max s.command.token.start
       c.seq(

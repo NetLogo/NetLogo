@@ -28,6 +28,7 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("show [ blue green yellow ]")
     assertPreservesSource("show (list 1 2 3) ; => [1 2 3]\n")
     assertPreservesSource("show reduce [[x y] -> x + y] [1 2 3]")
+    assertPreservesSource("show __block [foo bar baz]")
   }
 
   test("preserves complex source") {
@@ -121,6 +122,9 @@ class AstRewriterTests extends FunSuite {
   testLambda("show is-list? [ [] -> tick ]", "show is-list? task [tick]")
   testLambda("let a-value 1 let a-task [ [] -> a-value ]", "let a-value 1 let a-task task [a-value]")
   testLambda("baz ([ [] ->  fd 1 ]) ([ [?1 ?2] -> bk ?2 ])", "baz (task [ fd 1 ]) (task [ bk ?2 ])", preamble = "TO baz [a b] END TO FOO ")
+  testLambda("show reduce [[x y] -> x + y] [1 2 3]", "show reduce [[x y] -> x + y] [1 2 3]")
+  testLambda("foreach [1 2 3] [ [x] -> show x ]", "foreach [1 2 3] [ [x] -> show x ]")
+  testLambda("__ignore runresult [2 < (3 + pi)]", "__ignore runresult [2 < (3 + pi)]")
 
   test("add extension") {
     assertResult("extensions [foo]")(addExtension("", "foo"))

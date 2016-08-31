@@ -684,7 +684,8 @@ object ExpressionParser {
 
     check(tokens.dropRight(2)) // Drops two because of the EOF
     val tmp = new core.prim._constcodeblock(tokens.tail.dropRight(2))
-    new core.ReporterApp(tmp, SourceLocation(tokens.head.start, block.tokens.last.end, tokens.head.filename))
+    tmp.token = tokens.head
+    new core.ReporterApp(tmp, SourceLocation(tokens.head.start, block.end, tokens.head.filename))
   }
 
   private class MissingPrefixException(val token: Token) extends Exception

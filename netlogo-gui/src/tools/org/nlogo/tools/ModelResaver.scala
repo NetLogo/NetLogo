@@ -89,7 +89,14 @@ object ModelResaver {
     else {
       val reportError: Exception => Unit = {
         (e: Exception) =>
-          System.err.println("Error converting: " + modelPath.toString + " " + e.getMessage)
+          System.err.println(s"Error converting: ${modelPath.toString} " +
+            Option(e.getMessage).getOrElse(e.getClass.toString))
+          e.printStackTrace()
+          e match {
+            case e: org.nlogo.core.CompilerException =>
+              println(s"start: ${e.start}, end: ${e.end}")
+            case _ =>
+          }
       }
       val ws = HeadlessWorkspace.newInstance
       val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, literalParser, NetLogoLegacyDialect, reportError)

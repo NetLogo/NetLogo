@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandlambda, _const, _lambdavariable, _reporterlambda }
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _reporterlambda }
 
 import WhiteSpace._
 
@@ -95,6 +95,9 @@ class Formatter
             app.args.zipWithIndex.tail.foldLeft(c2.appendText(ws + c.instructionToString(i))) {
               case (ctx, (arg, i)) => visitExpression(arg, position, i)(ctx)
             }
+          case (_, b: _constcodeblock) =>
+            super.visitReporterApp(app, position)(
+              c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
           case (false, con: _const) if con.value.isInstanceOf[LogoList] =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
           case (false, r: _reporterlambda) if r.synthetic =>
@@ -104,6 +107,11 @@ class Formatter
             val args = c.wsMap.frontMargin(position)
             val frontPadding = if (c.text.last == ' ') "" else " "
             c.appendText(frontPadding + "[" + args + c2.text + c2.wsMap.backMargin(position) + "]")
+          case (false, cl: _commandlambda) if cl.argumentNames.nonEmpty && ! cl.synthetic =>
+            val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
+            val args = c.wsMap.frontMargin(position)
+            val frontPadding = if (c.text.last == ' ') "" else " "
+            c.appendText(frontPadding + "[" + args + c2.text.stripPrefix("[") + c2.wsMap.backMargin(position))
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)
