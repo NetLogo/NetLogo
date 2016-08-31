@@ -56,10 +56,10 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
       display = savedName,
       left = b._1, top = b._2, right = b._3, bottom = b._4,
       variable = savedName,
-      min = constraint.minimum.toString,
-      max = constraint.maximum.toString,
+      min = min.toString,
+      max = max.toString,
       default = constraint.defaultValue,
-      step = constraint.increment.toString,
+      step = inc.toString,
       units = units.potentiallyEmptyStringToOption,
       direction = if (vertical) Vertical else Horizontal)
   }
