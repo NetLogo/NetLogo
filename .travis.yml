@@ -20,6 +20,7 @@ script:
   - ./sbt depend
   - travis_wait ./sbt all
   - ./sbt netlogo/test:fast
+  - ./sbt parserJS/test
   - ./sbt nogen netlogo/test:fast
   - ./sbt threed netlogo/test:fast
   - ./sbt netlogo/test:slow
@@ -42,7 +43,7 @@ deploy:
   local-dir: upload
   acl: public_read
   on:
-    branch: wip-lambda-prep
+    branch: hexy
 
 notifications:
   hipchat:

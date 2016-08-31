@@ -7,6 +7,7 @@ import org.scalatest.FunSuite
 import org.nlogo.core.{ CompilerException, SourceLocation, Token, TokenType }
 import org.nlogo.core.prim.{ _procedurevariable, _lambdavariable }
 import org.nlogo.core.TokenDSL._
+import PrimDSL._
 
 class ArrowLambdaScoperTests extends FunSuite {
   val testSymbols = SymbolTable(

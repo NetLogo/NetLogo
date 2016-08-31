@@ -4,7 +4,8 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.core.{ SourceLocation, Token, TokenType, TokenDSL },
-  TokenDSL.{ `(`, `)`, `[`, `]`, `->`, id, lamvar, lit, unid }
+  TokenDSL.{ `(`, `)`, `[`, `]`, id, lit }
+import PrimDSL._
 
 class DelayedBlockTests extends FunSuite {
   val openBracket  = new Token("[", TokenType.OpenBracket, null)(SourceLocation(5, 6, "file.nlogo"))

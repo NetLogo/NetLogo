@@ -47,8 +47,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
     val buf = new StringBuilder(source)
     var offset = 0
     for (token <- tokens if token.text.equalsIgnoreCase(original)) {
-      buf.delete(token.start + offset, token.end + offset)
-      buf.insert(token.start + offset, replacement)
+      buf.replace(token.start + offset, token.end + offset, replacement)
       offset += replacement.length - token.text.length
     }
     buf.toString

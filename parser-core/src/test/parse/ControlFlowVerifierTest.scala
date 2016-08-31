@@ -43,7 +43,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   test("reporter procedures are non-local exit") {
-    forAll(generateProcedure(genNestingPrim, Gen.const(cmd("report")), true)) { pd =>
+    forAll(generateProcedure(genNestingPrim, Gen.const(_report()), true)) { pd =>
       val newPd = (new ControlFlowVerifier).visitProcedureDefinition(pd)
       assert(newPd.nonLocalExit)
       assert(newPd.statements.nonLocalExit)
@@ -53,26 +53,30 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   def stmt(prim: Command, args: Expression*) =
     new Statement(prim, args, SourceLocation(0, 0, "foo.nlogo"))
 
-  def cmd(name: String): Command =
-    try {
-      Femto.get[Command](s"org.nlogo.core.prim._$name")
-    } catch {
-      case e: ClassNotFoundException =>
-        Femto.get[Command](s"org.nlogo.core.prim.etc._$name")
-    }
+  def _if: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._if")
+
+  def _ifelse: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._ifelse")
+
+  def _foreach: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._foreach")
+
+  def _die: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._die")
 
   val genNestingPrim: Gen[Command] =
-    Gen.oneOf(cmd("if"), cmd("ifelse"), cmd("foreach"))
+    Gen.oneOf(_if, _ifelse, _foreach)
 
   val genContextPrim: Gen[Command] =
     Gen.oneOf(_ask(), _carefully())
 
   //prims that are none of nesting, non-local-exit, nor context-creating
   val genericPrim: Gen[Command] =
-    Gen.oneOf(cmd("die"), _crt("TURTLE"), _fd())
+    Gen.oneOf(_die, _crt("TURTLE"), _fd())
 
   val commandNonLocalExits =
-    Gen.oneOf(cmd("stop"), cmd("run"))
+    Gen.oneOf(_stop(), _run())
 
   def statements(stmts: Seq[Statement]): Statements =
     new Statements("abc").copy(stmts = stmts)
