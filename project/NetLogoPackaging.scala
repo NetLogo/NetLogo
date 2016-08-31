@@ -122,9 +122,7 @@ object NetLogoPackaging {
     Def.task {
       System.setProperty("netlogo.extensions.gogo.javaexecutable",
         (file(System.getProperty("java.home")) / "bin" / "java").getAbsolutePath)
-      (resaveModels dependsOn (all in netlogo)).value
-      (crossReference dependsOn generatePreviews).value
-      (indexTask dependsOn crossReference).value
+      (indexTask dependsOn crossReference dependsOn generatePreviews dependsOn resaveModels dependsOn (all in netlogo)).value
     }
   }
 
