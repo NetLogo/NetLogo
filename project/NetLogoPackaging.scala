@@ -8,7 +8,6 @@ import ModelsLibrary.modelsDirectory
 import ChecksumsAndPreviews.allPreviews
 import ModelsLibrary.modelIndex
 import NativeLibs.nativeLibs
-import Scaladoc.apiScaladoc
 
 object NetLogoPackaging {
 

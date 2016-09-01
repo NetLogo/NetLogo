@@ -64,8 +64,6 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
   def generateHTML(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): Seq[File] = {
     import scala.collection.JavaConverters._
 
-    IO.delete(docsTarget)
-
     val mustacheVars =
       buildVariables + (
         "infoTabModelHTML" -> infoTabHTML,
