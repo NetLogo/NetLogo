@@ -2,8 +2,9 @@ import sbt._
 
 import java.nio.file.{ Files, Path => NioPath }
 import org.nlogo.build.{ DocumentationConfig, Documenter, HoconParser }
-import org.pegdown.{ PegDownProcessor, Extensions => PegdownExtensions }
+import org.pegdown.{ ast, LinkRenderer, PegDownProcessor, Extensions => PegdownExtensions }, LinkRenderer.Rendering, ast.{ AutoLinkNode, ExpLinkNode, MailLinkNode, RefLinkNode, WikiLinkNode }
 import scala.collection.JavaConverters._
+import scala.util.matching.Regex
 
 class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File, extensionsDirectory: File, extensionDocConfigFile: File) {
   val dictTarget = docsTarget / "dict"
@@ -16,8 +17,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
     "modelingcommons", "logging", "controlling", "mathematica", "3d",
     "extensions") ++
-      extensions ++
-      Seq("netlogolab", "faq", "dictionary")
+      extensions ++ Seq("faq", "dictionary")
 
     allComponents.map(n => (base / s"$n.html"))
   }
@@ -95,12 +95,12 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     val netLogoConfig = HoconParser.parseConfig(HoconParser.parseConfigFile(netLogoConfFile.toFile))
     val docConfig = HoconParser.parseConfig(configDocument)
     val primResult = HoconParser.parsePrimitives(configDocument)
-    val renderedPrimitives = primResult.primitives.map(p => p.copy(description = renderMarkdown(p.description)))
+    val renderedPrimitives = primResult.primitives.map(p => p.copy(description = renderMarkdown(extensionName)(p.description)))
     val filesToIncludeInManual: Seq[String] = configDocument.getStringList("filesToIncludeInManual").asScala
     val prePrimFiles =
-      filesToIncludeInManual.takeWhile(_ != "primitives").map(documentationConf.resolveSibling).map(renderMarkdown)
+      filesToIncludeInManual.takeWhile(_ != "primitives").map(documentationConf.resolveSibling).map(renderMarkdownPath(extensionName))
     val postPrimFiles =
-      filesToIncludeInManual.dropWhile(_ != "primitives").tail.map(documentationConf.resolveSibling).map(renderMarkdown)
+      filesToIncludeInManual.dropWhile(_ != "primitives").tail.map(documentationConf.resolveSibling).map(renderMarkdownPath(extensionName))
     val emptyToC =
       docConfig.tableOfContents.isEmpty ||
         (docConfig.tableOfContents.size == 1 && docConfig.tableOfContents.isDefinedAt(""))
@@ -159,13 +159,60 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     pdfFile
   }
 
-  private def renderMarkdown(str: String): String = {
+  private def renderMarkdown(extensionName: String)(str: String): String = {
+    val defaultLinkRenderer = new LinkRenderer()
+    val customRenderer = new FakeGitHubLinkRenderer(extensionName, new ManualLinkRenderer(defaultLinkRenderer))
     new PegDownProcessor(PegdownExtensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
                          PegdownExtensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
                          PegdownExtensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
-      .markdownToHtml(str)
+      .markdownToHtml(str, customRenderer)
   }
 
-  private def renderMarkdown(p: NioPath): String =
-    renderMarkdown(new String(Files.readAllBytes(p), "UTF-8"))
+  private def renderMarkdownPath(extensionName: String)(p: NioPath): String =
+    renderMarkdown(extensionName)(new String(Files.readAllBytes(p), "UTF-8"))
+}
+
+class FakeGitHubLinkRenderer(extensionName: String, parent: LinkRenderer) extends LinkRenderer {
+  val hashPrefix = s"#$extensionName"
+
+  override def render(node: AutoLinkNode): Rendering = parent.render(node)
+  override def render(node: ExpLinkNode, text: String): Rendering = {
+    if (node.url.startsWith(hashPrefix)) {
+      val newNode = new ExpLinkNode(node.title, s"${hashPrefix}:" + node.url.stripPrefix(hashPrefix), node.getChildren.get(0))
+      parent.render(newNode, text)
+    } else
+      parent.render(node, text)
+  }
+  override def render(node: MailLinkNode): Rendering = parent.render(node)
+  override def render(node: RefLinkNode, url: String, title: String, text: String): Rendering = {
+    if (url.startsWith(hashPrefix))
+      parent.render(node, s"${hashPrefix}:" + url.stripPrefix(hashPrefix), title, text)
+    else
+      parent.render(node, url, title, text)
+  }
+  override def render(node: WikiLinkNode): Rendering = parent.render(node)
+}
+
+class ManualLinkRenderer(parent: LinkRenderer) extends LinkRenderer {
+  val nlDocURL = new Regex("(?:http://)ccl.northwestern.edu/netlogo/docs/")
+  override def render(node: AutoLinkNode): Rendering = parent.render(node)
+  override def render(node: ExpLinkNode, text: String): Rendering = {
+    if (nlDocURL.findPrefixMatchOf(node.url).nonEmpty) {
+      val newNode = new ExpLinkNode(node.title, nlDocURL.replaceFirstIn(node.url, ""), node.getChildren.get(0))
+      parent.render(newNode, text)
+    } else if (! node.url.startsWith("#"))
+      parent.render(node, text).withAttribute(new LinkRenderer.Attribute("target", "_blank"))
+    else
+      parent.render(node, text)
+  }
+  override def render(node: MailLinkNode): Rendering = parent.render(node)
+  override def render(node: RefLinkNode, url: String, title: String, text: String): Rendering = {
+    if (nlDocURL.findPrefixMatchOf(url).nonEmpty)
+      parent.render(node, nlDocURL.replaceFirstIn(url, ""), title, text)
+    else if (! url.startsWith("#"))
+      parent.render(node, url, title, text).withAttribute(new LinkRenderer.Attribute("target", "_blank"))
+    else
+      parent.render(node, url, title, text)
+  }
+  override def render(node: WikiLinkNode): Rendering = parent.render(node)
 }
