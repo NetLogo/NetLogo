@@ -72,7 +72,7 @@ object ModelCrossReference {
   // IABM Textbook models duplicated in Sample Models and Code Examples
   ("IABM Textbook/chapter 3/El Farol Extensions", "El Farol.nlogo",   "Sample Models/Social Science"),
   ("IABM Textbook/chapter 3/DLA extensions",      "DLA Simple.nlogo", "Sample Models/Chemistry & Physics/Diffusion Limited Aggregation"),
-  ("IABM Textbook/chapter 8",                     "Arduino*",       , "Code Examples/Extensions Examples/arduino"),
+  ("IABM Textbook/chapter 8",                     "Arduino*",         "Code Examples/Extensions Examples/arduino")
 )
 
 }
