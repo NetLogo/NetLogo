@@ -34,6 +34,7 @@ div.version {
   margin-left: -4%;
   margin-top: 0em;
   margin-bottom: 0em;
+  padding-right: 1em;
   font-size: 75%;
   font-weight: bold;
   text-align: right ;
@@ -176,12 +177,6 @@ table.interfacetable > tr > td {
   color: #E8E8E8;
 }
 
-div.headerbanner {
-  background-color: #2D002D;
-  text-align: center;
-  padding-top: 2em;
-  padding-bottom: 2em;
-}
 
 blockquote {
   border: solid;
@@ -229,5 +224,16 @@ p.question {
   font-family: courier; font-size: 80%;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 td.rightalign {vertical-align: top; text-align: right;}
 td.centeralign {vertical-align: top; text-align: center;}
+
+h5.minor-section-header {
+  font-size: 105% ;
+  font-weight: bold;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
