@@ -4,7 +4,7 @@ package org.nlogo.app.infotab
 
 import java.io.InputStream
 
-import org.pegdown.{ PegDownProcessor, Extensions }
+import org.pegdown.{ Extensions, PegDownProcessor }
 
 import org.nlogo.api.FileIO
 
@@ -17,6 +17,12 @@ object InfoFormatter {
   type CSS = String
 
   val MaxParsingTimeMillis = 4000 // set high for Travis, won't take that long on most computers
+
+  val pegDown = new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
+                                     Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
+                                     Extensions.HARDWRAPS |         // GitHub flavored newlines
+                                     Extensions.FENCED_CODE_BLOCKS, // delimit code blocks with ```
+                                     MaxParsingTimeMillis)
 
   /**
    * for standalone use, for example on a web server
@@ -34,22 +40,15 @@ object InfoFormatter {
             replace("{BODY-FONT-SIZE}", fontSize.toString).
             replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
-            replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
+            replace("{H3-FONT-SIZE}", fontSize.toString).
+            replace("{BULLET-IMAGE}", getClass.getResource("/system/bullet.png").toString) + "\n-->\n</style>"
 
-  def toInnerHtml(str: MarkDownString): HTML =
-    new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         Extensions.HARDWRAPS |         // GitHub flavored newlines
-                         Extensions.FENCED_CODE_BLOCKS, // delimit code blocks with ```
-                         MaxParsingTimeMillis)
-      .markdownToHtml(str)
+  def toInnerHtml(str: MarkDownString): HTML = pegDown.markdownToHtml(str)
 
-  def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML = {
+  def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML =
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
-  }
 
-  def apply(content: String, fontSize: Int = defaultFontSize, attachModelDir: String => String = identity) = {
+  def apply(content: String, fontSize: Int = defaultFontSize) =
     wrapHtml(toInnerHtml(content), fontSize)
-  }
 
 }
