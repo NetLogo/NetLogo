@@ -60,7 +60,10 @@
       then save it from NetLogo 5 or later.
       Then, simply open the model in NetLogo 6. If all goes well, you'll see the converter
       has changed code like <code>task [?1 + ?2]</code> to
-      <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>.
+      <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. The question marks are meant to serve
+      as temporary placeholders for conversion.
+      They enable your model to run, but you can (and should) replace these
+      variables with meaningful names.
       If you open a model with tasks and it has <i>not</i> been converted,
       the autoconverter wasn't able to convert your model. Rather than attempt to
       autoconvert your model and break something, the model will open, you will be
@@ -72,8 +75,10 @@
         <li>If you make use of extensions that aren't yet compiled for NetLogo 6,
         the autoconverter will not work until those extensions have been updated.</li>
         <li>If your code uses <code>run</code> or <code>runresult</code> to evaluate
-        strings containing tasks, the strings passed to <code>run</code>/<code>runresult</code>
-        will not be changed and will likely error when running the model.</code>
+        strings containing tasks, the autoconverter will not change those strings to
+        be anonymous procedures. To make <code>run</code> and <code>runresult</code> work
+        as expected, look at strings in your model and change any which rely on <code>task</code>
+        or <code>?</code>-variables to instead rely on anonymous procedures</li>
       </ul>
       If your model doesn't fall into the above categories and doesn't convert or
       converts incorrectly, please email our
