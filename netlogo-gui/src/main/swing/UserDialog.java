@@ -53,6 +53,7 @@ public strictfp class UserDialog
     c.anchor = GridBagConstraints.EAST;
     layout.setConstraints(buttons, c);
     add(buttons);
+    buttons.getRootPane().setDefaultButton((javax.swing.JButton)buttons.getComponent(1));
     javax.swing.ImageIcon icon = new javax.swing.ImageIcon
         (UserDialog.class.getResource("/images/arrowhead.gif"));
     javax.swing.JLabel label = new javax.swing.JLabel(icon);
