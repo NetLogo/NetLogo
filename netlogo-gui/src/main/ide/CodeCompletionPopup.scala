@@ -176,7 +176,11 @@ case class CodeCompletionPopup() {
                 isPopupEnabled = false
               }
             }
-          case None => isPopupEnabled = false
+            if (list.isEmpty || token == null) {
+              window.setVisible(false)
+            }
+          case None => window.setVisible(false)
+            isPopupEnabled = false
         }
       }
       window.setVisible(!dlm.isEmpty)
