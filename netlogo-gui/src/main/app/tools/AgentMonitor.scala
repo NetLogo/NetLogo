@@ -119,6 +119,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
   def refresh() {
     viewPanel.foreach(_.refresh())
     if (agent != null && agent.id == -1) {
+      viewPanel.foreach(_.setEnabled(false))
       commandLine.setEnabled(false)
       historyPrompt.setEnabled(false)
     }

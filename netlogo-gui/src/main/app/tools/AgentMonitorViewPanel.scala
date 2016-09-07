@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Font, GridBagConstraints, GridBagLayout }
+import java.awt.{ BorderLayout, Color => AwtColor, Font, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ ActionEvent, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ AbstractAction, JButton, JPanel }
 
@@ -48,6 +48,17 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
 
   def radius(radius: Double) {
     zoomer.setValue(StrictMath.round(radius * 100).toInt)
+  }
+
+  override def setEnabled(enablement: Boolean): Unit = {
+    val wasEnabled = isEnabled
+    super.setEnabled(enablement)
+    if (! enablement && wasEnabled) {
+      val grayPanel = new JPanel()
+      grayPanel.setPreferredSize(view.getPreferredSize)
+      remove(view)
+      add(grayPanel, BorderLayout.CENTER)
+    }
   }
 
   def refresh(): Unit = {
