@@ -189,4 +189,7 @@ extends Event.LinkChild with Event.LinkParent
       emptyLinkMonitorWindow.setVisible(show)
   }
 
+  def refresh() {
+    monitorWindows.values.foreach(_.refresh())
+  }
 }

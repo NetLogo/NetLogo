@@ -50,6 +50,15 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
     zoomer.setValue(StrictMath.round(radius * 100).toInt)
   }
 
+  def refresh(): Unit = {
+    repaint()
+    revalidate()
+  }
+
+  def close(): Unit = {
+    view.close()
+  }
+
   private class WatchMeAction extends AbstractAction("watch-me") {
     override def actionPerformed(e: ActionEvent) {
       workspace.world.observer().setPerspective(Perspective.Watch(view.agent))

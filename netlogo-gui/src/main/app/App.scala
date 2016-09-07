@@ -1091,7 +1091,11 @@ class AppFrame extends JFrame with LinkParent with LinkRoot {
       try App.app.fileMenu.quit()
       catch {case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)}
     }
-    override def windowIconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, true).raise(App.app)}
-    override def windowDeiconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, false).raise(App.app)}
+    override def windowIconified(e: WindowEvent) {
+      new IconifiedEvent(AppFrame.this, true).raise(App.app)
+    }
+    override def windowDeiconified(e: WindowEvent) {
+      new IconifiedEvent(AppFrame.this, false).raise(App.app)
+    }
   })
 }

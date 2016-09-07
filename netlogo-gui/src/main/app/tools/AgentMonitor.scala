@@ -31,8 +31,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
         .orNull.asInstanceOf[AgentMonitorWindow]
       if(window != null)
         window.agentChangeNotify(oldAgent)
-      if(hasView)
-        viewPanel.agent(agent, radius)
+      viewPanel.foreach(_.agent(agent, radius))
     }
   }
 
@@ -60,11 +59,11 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
         new Dimension(sup.width, StrictMath.min(sup.height, 350))
       }
     }
-  val viewPanel =
+  val viewPanel: Option[AgentMonitorViewPanel] =
     if(agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, BorderLayout.CENTER)
-      null
+      None
     }
     else {
       val panel = new AgentMonitorViewPanel(workspace)
@@ -93,7 +92,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
       gridBag.setConstraints(historyPrompt, c)
       commandPanel.add(historyPrompt)
       add(commandPanel, BorderLayout.SOUTH)
-      panel
+      Some(panel)
     }
 
   // confusing method name, should be "tabKeyPressed" or something - ST 8/16/03
@@ -106,9 +105,8 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
       commandLine.transferFocusBackward()
   }
 
-  def radius(radius: Double) {
-    if(hasView)
-      viewPanel.radius(radius)
+  def radius(radius: Double): Unit = {
+    viewPanel.foreach(_.radius(radius))
   }
 
   override def requestFocus() {
@@ -119,7 +117,8 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
   }
 
   def refresh() {
-    if(agent != null && agent.id == -1) {
+    viewPanel.foreach(_.refresh())
+    if (agent != null && agent.id == -1) {
       commandLine.setEnabled(false)
       historyPrompt.setEnabled(false)
     }
@@ -137,11 +136,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
     vars1.size == vars2.size &&
     (0 until vars1.size).forall(i => vars1.get(i) == vars2.get(i))
 
-  def close() {
-    if(hasView)
-      workspace.viewManager.remove(viewPanel.view)
+  def close(): Unit = {
+    viewPanel.foreach(_.close())
   }
-
-  def hasView = viewPanel != null
-
 }

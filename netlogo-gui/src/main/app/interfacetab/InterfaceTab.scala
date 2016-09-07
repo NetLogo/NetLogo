@@ -84,9 +84,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   }
 
   final def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(e.newTab != this) {
+    if (e.newTab != this) {
       lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
         commandCenter else iP
+
+      monitorManager.refresh()
     } else {
       commandCenterAction.setEnabled(e.newTab == this)
       lastFocusedComponent.requestFocus()
