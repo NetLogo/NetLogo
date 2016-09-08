@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{DisplaySwitch, PlotWidget, ViewUpdatePanel}
+import org.nlogo.window.{DisplaySwitch, PlotWidget, SpeedSliderPanel}
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
@@ -67,26 +67,26 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     val layout = new java.awt.GridBagLayout
     getContentPane.setLayout(layout)
     val c = new java.awt.GridBagConstraints
+
     c.gridwidth = java.awt.GridBagConstraints.REMAINDER
     c.fill = java.awt.GridBagConstraints.BOTH
-    c.weightx = 1.0
-    c.weighty = 0.0
+    c.weightx = 1
+    c.weighty = 1
     c.insets = new java.awt.Insets(6, 6, 0, 6)
-    val ticksPanel = new ViewUpdatePanel(workspace, new DisplaySwitch(workspace), false, workspace.viewWidget.tickCounter)
-    layout.setConstraints(ticksPanel, c)
-    getContentPane.add(ticksPanel)
+
+    val speedSlider = new SpeedSliderPanel(workspace)
+    getContentPane.add(speedSlider, c)
+
     c.weighty = 1.0
 
     plotWidgetOption.foreach{ plotWidget =>
-      layout.setConstraints(plotWidget, c)
-      getContentPane.add(plotWidget)
+      getContentPane.add(plotWidget, c)
     }
 
     progressArea.setEditable(false)
     progressArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     val scrollPane = new JScrollPane(progressArea, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
-    layout.setConstraints(scrollPane, c)
-    getContentPane.add(scrollPane)
+    getContentPane.add(scrollPane, c)
     updateProgressArea(true)
     scrollPane.setMinimumSize(scrollPane.getPreferredSize())
 
@@ -95,21 +95,18 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     displaySwitch.setSelected(true)
     workspace.displaySwitchOn(true)
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    layout.setConstraints(displaySwitch, c)
-    getContentPane.add(displaySwitch)
+    getContentPane.add(displaySwitch, c)
 
     val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
     plotsAndMonitorsSwitch.setSelected(true)
     c.insets = new java.awt.Insets(0, 6, 0, 6)
-    layout.setConstraints(plotsAndMonitorsSwitch, c)
-    getContentPane.add(plotsAndMonitorsSwitch)
+    getContentPane.add(plotsAndMonitorsSwitch, c)
 
     val abortButton = new JButton(abortAction)
     c.fill = java.awt.GridBagConstraints.NONE
     c.anchor = java.awt.GridBagConstraints.EAST
     c.insets = new java.awt.Insets(6, 6, 6, 6)
-    layout.setConstraints(abortButton, c)
-    getContentPane.add(abortButton)
+    getContentPane.add(abortButton, c)
 
     timer.start()
 
