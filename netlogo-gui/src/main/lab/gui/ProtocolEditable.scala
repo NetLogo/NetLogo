@@ -103,6 +103,7 @@ class ProtocolEditable(protocol: LabProtocol,
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
+              if(more.isEmpty) {complain("Expected a value for variable " + variableName); return None}
               new EnumeratedValueSet(variableName, more.toList)
             case _ =>
               complain("Invalid format"); return None
