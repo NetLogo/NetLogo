@@ -38,8 +38,7 @@ object PackageAction {
       ConfigurationFiles.writeConfiguration(platform.shortName, app, distDir / "configuration", buildDirectory, configurationVariables)
 
       val copiedBundleFiles: Seq[(File, File)] =
-        bundledDirs.flatMap(_.fileMappings.map(
-            t => (t._1, new java.io.File(artifactsDir, t._2))))
+        bundledDirs.flatMap(_.fileMappings.map(t => (t._1, new java.io.File(artifactsDir, t._2))))
 
       val jarMap = {
         val allJars = (mainJar +: dependencies)
