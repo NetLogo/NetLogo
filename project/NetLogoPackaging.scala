@@ -1,6 +1,6 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, target }
+import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, streams, target }
 import Docs.{ allDocs, docsRoot, manualPDF }
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import Extensions.extensionRoot
@@ -64,19 +64,20 @@ object NetLogoPackaging {
       Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
         .exists(f.getName.contains)
 
-    def repackageJar(app: SubApplication): Def.Initialize[Task[File]] =
+    def repackageJar(app: SubApplication): Def.Initialize[Task[File]] = {
       Def.task {
-        val netLogoJar = (packageBin in Compile in netlogo).value
         val platformBuildDir = target.value / s"${platform.shortName}-build"
-        IO.createDirectory(platformBuildDir)
-        val newJarLocation = platformBuildDir / s"${app.jarName}.jar"
-        if (app.name.contains("HubNet"))
-          JavaPackager.packageJar(netLogoJar, newJarLocation,
-            Some("org.nlogo.hubnet.client.App"))
-        else
-          JavaPackager.packageJar(netLogoJar, newJarLocation, None)
-        newJarLocation
+        def repackage(jar: File): File = {
+          val newJarLocation = platformBuildDir / s"${app.jarName}.jar"
+          JavaPackager.packageJar(jar, newJarLocation, None)
+          newJarLocation
+        }
+        FileFunction.cached(streams.value.cacheDirectory, FilesInfo.lastModified, FilesInfo.lastModified)({ jars =>
+          IO.createDirectory(platformBuildDir)
+          jars.map(repackage)
+        })(Set((packageBin in Compile in netlogo).value)).head
       }
+    }
 
     if (platform.shortName == "macosx")
       Def.task {
@@ -181,8 +182,13 @@ object NetLogoPackaging {
         }
     },
     packageApp            <<=
-      InputTask.createDyn(packageAppParser)(PackageAction.subApplication(appMainClass,
-        mainJarAndDependencies(netlogo, macApp), bundledDirs(netlogo, macApp), jvmOptions)),
+      InputTask.createDyn(packageAppParser)(
+        PackageAction.subApplication(
+          appMainClass,
+          mainJarAndDependencies(netlogo, macApp),
+          bundledDirs(netlogo, macApp),
+          jvmOptions)
+        ),
     packageLinuxAggregate <<=
       InputTask.createDyn(aggregateJDKParser)(Def.task(
         PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
