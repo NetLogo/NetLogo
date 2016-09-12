@@ -14,7 +14,7 @@ class EditorField(
   colorizer: Colorizer,
   i18n: String => String,
   actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
-  menuItems: Seq[Action] = Seq[Action]()) extends EditorArea(1, columns, font, false, null, colorizer, i18n, false, actionMap, menuItems) {
+  menuItems: Seq[Action] = Seq[Action]()) extends EditorArea(1, columns, font, enableFocusTraversalKeys, null, colorizer, i18n, false, actionMap, menuItems) {
 
   // shut off the default actions for some keystrokes... let
   // someone add a KeyListener if they want - ST 7/30/03
