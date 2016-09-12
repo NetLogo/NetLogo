@@ -278,3 +278,21 @@ allow-task-variable-access-inside-reporter-block
   O> crt 10
   O> foreach [7] [[i] -> set glob1 first [who] of turtles with [who = i] ]
   glob1 => 7
+
+LoopBindings1
+  globals [glob1 lambdas]
+  O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput [ [] -> set bar bar + 1 set glob1 bar ] lambdas ]
+  O> foreach lambdas [ [l] -> run l ]
+  glob1 => 1
+
+LoopBindings2
+  globals [glob1 lambdas]
+  O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput (runresult [ [bar'] -> [ [] -> set glob1 bar' + 1 ] ] bar) lambdas set bar 4 ]
+  O> foreach lambdas [ [l] -> run l ]
+  glob1 => 1
+
+LoopBindings3
+  globals [glob1 lambdas]
+  O> set lambdas [] let bar 0 repeat 5 [ set lambdas lput [ [] -> set bar bar + 1 set glob1 bar ] lambdas ]
+  O> foreach lambdas [ [l] -> run l ]
+  glob1 => 5
