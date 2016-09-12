@@ -26,7 +26,6 @@ private class SetVisitor extends DefaultAstVisitor {
         .getOrElse(exception(INVALID_SET,stmt))
       val newCommand = Instantiator.newInstance[Command](newCommandClass,rApp.reporter)
       newCommand.copyMetadataFrom(stmt.command)
-      newCommand.tokenLimitingType(rApp.coreReporter.token)
       stmt.command = newCommand
       stmt.removeArgument(0)
     }

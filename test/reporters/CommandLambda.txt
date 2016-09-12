@@ -273,6 +273,10 @@ foreach-plus-recursion
   O> ask one-of turtles [ explore ]
   any? turtles with [tvar = 0] => false
 
+ForeachWithRecursionAndLet
+  to-report add [l] let ret 0 foreach l [ [x] -> ifelse is-list? x [ set ret ret + add x ] [ set ret ret + x ] ] report ret end
+  add [[1 2] [[3 4] 5]] => 15
+
 allow-task-variable-access-inside-reporter-block
   globals [glob1]
   O> crt 10

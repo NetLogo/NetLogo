@@ -153,9 +153,7 @@ class Backifier(program: Program,
       case core.prim._call(proc) =>
         new nvmprim._call(procedures(proc.name))
       case core.prim._let(Some(let)) =>
-        val l = new nvmprim._let()
-        l.let = let
-        l
+        new nvmprim._let(let)
       case api.NetLogoLegacyDialect._magicopen(name) =>
         new nvmprim._magicopen(name)
       case cc: core.prim._carefully =>
@@ -186,11 +184,11 @@ class Backifier(program: Program,
       case core.prim._constcodeblock(toks) =>
         new nvmprim._constcodeblock(toks)
 
-      case core.prim._commandlambda(argNames, _) =>
-        new nvmprim._commandlambda(argNames)
+      case core.prim._commandlambda(argNames, _, closedLets) =>
+        new nvmprim._commandlambda(argNames, closedLets)
 
-      case core.prim._reporterlambda(argNames, _) =>
-        new nvmprim._reporterlambda(argNames)
+      case core.prim._reporterlambda(argNames, _, closedLets) =>
+        new nvmprim._reporterlambda(argNames, closedLets)
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(

@@ -5,45 +5,41 @@ package org.nlogo.compiler
 import org.nlogo.{ core, nvm, prim => coreprim },
   core.Let
 
-import scala.collection.immutable.Stack
-
 /**
  * Removes the bodies of command lambdas and makes them into separate "child" procedures.
  */
 
-class LambdaLifter(lambdaNumbers: Iterator[Int]) extends DefaultAstVisitor {
+class LambdaLifter(lambdaNumbers: Iterator[Int]) extends AstTransformer {
   val children = collection.mutable.Buffer[ProcedureDefinition]()
-  private var procedures = Stack.empty[nvm.Procedure]
+  private var procedures = List.empty[nvm.Procedure]
 
-  private var procedure = Option.empty[nvm.Procedure]
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
-    procedure = Some(procdef.procedure)
-    procedures = procedures.push(procdef.procedure)
-    super.visitProcedureDefinition(procdef)
-    procedures = procedures.pop
+  override def visitProcedureDefinition(procdef: ProcedureDefinition): ProcedureDefinition = {
+    procedures = procdef.procedure::procedures
+    val newProcedure = super.visitProcedureDefinition(procdef)
+    procedures = procedures.tail
+    newProcedure
   }
 
-  override def visitReporterApp(expr: ReporterApp) {
+  override def visitReporterApp(expr: ReporterApp): ReporterApp = {
     expr.reporter match {
       case c: coreprim._commandlambda =>
-        for (p <- procedure) {
+        procedures.lastOption.map { p =>
           val formals = c.argumentNames.map(n => Let(n)).toArray
           val name = "__lambda-" + lambdaNumbers.next()
-          val newProc =
+          c.proc =
             new nvm.Procedure(false, c.token, name, None, parent = procedures.head, lambdaFormals = formals)
-          c.proc     = newProc
           c.proc.pos = expr.start
           c.proc.end = expr.end
           p.children += c.proc
 
-          children +=
-            new ProcedureDefinition(c.proc, expr.args(0).asInstanceOf[CommandBlock].statements)
+          val commandBlock = expr.args(0).asInstanceOf[CommandBlock]
+          children += new ProcedureDefinition(c.proc, commandBlock.statements)
 
-          procedures = procedures.push(newProc)
-          super.visitReporterApp(expr)
-          procedures = procedures.pop
-          expr.removeArgument(0)
-        }
+          procedures = c.proc::procedures
+          val newExpr = super.visitReporterApp(expr)
+          procedures = procedures.tail
+          newExpr.copy(args = newExpr.args.tail)
+        }.get
       case _ =>
         super.visitReporterApp(expr)
     }

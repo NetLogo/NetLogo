@@ -23,7 +23,7 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
   override def visitStatement(stmt:Statement) {
     val argSources = captureInternalSources(() => super.visitStatement(stmt))
     addInstructionPositions(stmt.command, stmt.command.token.start, stmt.command.token.end)
-    instructionsOwnSource(stmt.command).foreach { src =>
+    instructionsOwnSource(stmt.command, stmt.command.token.start, stmt.command.token.end).foreach { src =>
       val fullSource = applicationSource(src, argSources, stmt.coreInstruction.syntax)
       internalSources = internalSources :+ fullSource
       stmt.command.source = src
@@ -35,14 +35,13 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
     val capturedSources = captureInternalSources(() => super.visitReporterApp(app))
     val ((start, end), prefix, argSources) = app.reporter match {
       case ct: org.nlogo.prim._reporterlambda => ((app.start, app.end), "", Seq())
-      case cl: org.nlogo.prim._commandlambda =>
-        ((cl.proc.pos, cl.proc.end), "", capturedSources)
-      case _                                =>
+      case cl: org.nlogo.prim._commandlambda  => ((cl.proc.pos, cl.proc.end), "", Seq())
+      case _                                  =>
         val positions = Option(app.reporter.token).map(token => (token.start, token.end)).getOrElse((app.start, app.end))
         (positions, "", capturedSources)
     }
     addInstructionPositions(app.reporter, start, end)
-    instructionsOwnSource(app.reporter).foreach { src =>
+    instructionsOwnSource(app.reporter, start, end).foreach { src =>
       val fullSource = prefix + applicationSource(src, argSources, app.coreInstruction.syntax)
       internalSources = internalSources :+ fullSource
       app.reporter.source = src
@@ -65,10 +64,8 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
     i.storedSourceEndPosition = end
   }
 
-  private def instructionsOwnSource(i: Instruction): Option[String] = {
+  private def instructionsOwnSource(i: Instruction, start: Int, end: Int): Option[String] = {
     val filename = i.getFilename
-    val start = i.getSourceStartPosition
-    val end   = i.getSourceEndPosition
     val validStartAndEnd = (start > 0 || start < end)
     if (validStartAndEnd) {
       Option(filename).map(sources.apply).flatMap { source =>

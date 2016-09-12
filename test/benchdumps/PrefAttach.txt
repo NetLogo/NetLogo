@@ -1064,51 +1064,61 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_let "let count link-neighbors"
-      _asm_procedurefindpartner_count_5 "count link-neighbors" AgentSet => double
+[3]_asm_procedurefindpartner_let_5 "let count link-neighbors" Object => void
+      _count "count link-neighbors" AgentSet => double
         _linkneighbors:null "link-neighbors" => AgentSet
-           L0
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.kept2_breedName : Ljava/lang/String;
-            IFNONNULL L1
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.world : Lorg/nlogo/agent/World;
-            INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
-            GOTO L2
-           L1
-           FRAME SAME
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.world : Lorg/nlogo/agent/World;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.kept2_breedName : Ljava/lang/String;
-            INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
-           L2
-           FRAME SAME1 org/nlogo/agent/AgentSet
-            ASTORE 2
-            ALOAD 0
-            ALOAD 2
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_count_5.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_5.world : Lorg/nlogo/agent/World;
-            GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-            CHECKCAST org/nlogo/agent/Turtle
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
-           L3
-            ASTORE 2
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-            I2D
-           L4
-            DSTORE 2
-            NEW java/lang/Double
-            DUP
-            DLOAD 2
-            INVOKESPECIAL java/lang/Double.<init> (D)V
-            ARETURN
+         L0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.kept3_breedName : Ljava/lang/String;
+          IFNONNULL L1
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
+          GOTO L2
+         L1
+         FRAME SAME
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.world : Lorg/nlogo/agent/World;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.kept3_breedName : Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/agent/World.getLinkBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
+         L2
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
+          ALOAD 0
+          ALOAD 2
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_let_5.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          CHECKCAST org/nlogo/agent/Turtle
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/LinkManager.findLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Lorg/nlogo/agent/AgentSet;
+         L3
+          ASTORE 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
+          I2D
+         L4
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+          ALOAD 1
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.kept1__let : Lorg/nlogo/core/Let;
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L5
+          RETURN
 [4]_asm_procedurefindpartner_if_6 "if partner = nobody [ ifelse nc > total [ set partner self ] [ set total total - nc ] ]" boolean => void
       _equal "partner = nobody" Object,Object => boolean
         _procedurevariable:PARTNER "partner" => Object
@@ -1149,7 +1159,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L0
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_ifelse_7.kept3_let : Lorg/nlogo/core/Let;
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_ifelse_7.kept3__let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
          L1
           ALOAD 1
@@ -1334,7 +1344,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_10.kept4_let : Lorg/nlogo/core/Let;
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_10.kept4__let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
          L7
           ASTORE 2

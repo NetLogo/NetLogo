@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
 
 import scala.collection.JavaConversions._
 
-class _reporterlambda(argumentNames: Seq[String]) extends Reporter {
+class _reporterlambda(argumentNames: Seq[String], val closedLets: Seq[Let]) extends Reporter {
   val formals: Seq[Let] = argumentNames.map(name => new Let(name))
   def formalsArray: Array[Let] = formals.toArray
 

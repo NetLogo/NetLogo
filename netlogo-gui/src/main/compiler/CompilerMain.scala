@@ -34,7 +34,9 @@ private object CompilerMain {
           (i -> compilationEnv.getSource(compilationEnv.resolvePath(i))))
 
     val returnedProcedures =
-      defs.map(assembleProcedure(_, feStructureResults.program, allSources, compilationEnv))
+      defs
+        .map(transformProcedure(_, allSources))
+        .map(assembleProcedure(_, feStructureResults.program, allSources, compilationEnv))
       .filterNot(_.isLambda) ++ oldProcedures.values
 
     // only return top level procedures.
@@ -42,16 +44,21 @@ private object CompilerMain {
     (returnedProcedures, feStructureResults.program)
   }
 
+  def transformProcedure(procdef: ProcedureDefinition, sources: Map[String, String]): ProcedureDefinition = {
+    val transformer = new ReferenceVisitor // handle ReferenceType
+    transformer.visitProcedureDefinition(procdef)
+  }
+
   // These phases optimize and tweak the ProcedureDefinitions given by frontEnd/CompilerBridge. - RG 10/29/15
   // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
   def assembleProcedure(procdef: ProcedureDefinition, program: Program, sources: Map[String, String], compilationEnv: CompilationEnvironment): Procedure = {
     val optimizers: Seq[DefaultAstVisitor] = Seq(
-      new ReferenceVisitor, // handle ReferenceType
       new SourceTagger(sources),
       new ConstantFolder, // en.wikipedia.org/wiki/Constant_folding
       new SimpleOfVisitor, // convert _of(_*variable) => _*variableof
       new LambdaVariableVisitor, // handle _lambdavariable
       new LocalsVisitor, // convert _let/_repeat to _locals
+      new RepeatVisitor, // convert repeat to use local variable
       new SetVisitor,  // convert _set to specific setters
       new Optimizer(program.dialect.is3D),  // do various code-improving rewrites
       new ArgumentStuffer // fill args arrays in Commands & Reporters

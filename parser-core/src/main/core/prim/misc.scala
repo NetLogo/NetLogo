@@ -72,9 +72,10 @@ case class _carefully() extends Command {
       right = List(Syntax.CommandBlockType, Syntax.CommandBlockType),
       introducesContext = true)
 }
-case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean) extends Reporter {
-  def this() = this(Seq(), false)
-  def this(arguments: Seq[String]) = this(arguments, false)
+case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean, closedLets: Seq[Let]) extends Reporter {
+  def this() = this(Seq(), false, Seq())
+  def this(arguments: Seq[String]) = this(arguments, false, Seq())
+  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Seq())
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.CommandType)
 
@@ -82,8 +83,8 @@ case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean) extend
   override def toString =
     "_commandlambda" + argumentNames.mkString("(", ", ", ")")
 
-  def copy(argumentNames: Seq[String] = argumentNames): _commandlambda = {
-    val ct = new _commandlambda(argumentNames)
+  def copy(argumentNames: Seq[String] = argumentNames, closedLets: Seq[Let] = closedLets): _commandlambda = {
+    val ct = new _commandlambda(argumentNames, synthetic, closedLets)
     copyInstruction(ct)
   }
 }
@@ -379,9 +380,10 @@ case class _report() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType))
 }
-case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean) extends Reporter {
-  def this() = this(Seq(), false)
-  def this(arguments: Seq[String]) = this(arguments, false)
+case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, closedLets: Seq[Let]) extends Reporter {
+  def this() = this(Seq(), false, Seq())
+  def this(arguments: Seq[String]) = this(arguments, false, Seq())
+  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Seq())
   override def syntax = {
     Syntax.reporterSyntax(
       right = List(Syntax.CodeBlockType, Syntax.ReporterType),
@@ -391,8 +393,8 @@ case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean) exten
   override def toString =
     "_reporterlambda" + argumentNames.mkString("(", ", ", ")")
 
-  def copy(argumentNames: Seq[String] = argumentNames): _reporterlambda = {
-    val cr = new _reporterlambda(argumentNames, synthetic)
+  def copy(argumentNames: Seq[String] = argumentNames, closedLets: Seq[Let] = closedLets): _reporterlambda = {
+    val cr = new _reporterlambda(argumentNames, synthetic, closedLets)
     copyInstruction(cr)
   }
 }

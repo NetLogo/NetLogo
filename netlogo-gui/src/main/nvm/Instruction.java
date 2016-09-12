@@ -32,37 +32,17 @@ public abstract strictfp class Instruction
   public int agentBits = 0;
   public Reporter[] args = new Reporter[0];
 
-  // When we convert this to scala, this can use accessor methods
-
-  // for some instructions two tokens are relevant for example
-  // _setturtlevariable, the SET is what we want to report
-  // for runtime errors since it's expecting a command
-  // however, the type is actually limited by the variable
-  // name not the set and we want to compiler to report that ev 7/13/07
-  private org.nlogo.core.Token token2 = null;
-
-  public org.nlogo.core.Token tokenLimitingType() {
-    return token2 == null ? token() : token2;
-  }
-
-  public void tokenLimitingType(org.nlogo.core.Token token) {
-    this.token2 = token;
-  }
-
   // the bytecode generator uses these to store text for dump() to print
   public java.lang.reflect.Method chosenMethod = null;
   public String source;     // contains the source of this instruction only
   public String fullSource; // contains the source of this instruction and all arguments
   public Thunk<String> disassembly =
-      new Thunk<String>() {
-        @Override
+    new Thunk<String>() {
+      @Override
         public String compute() {
           return "";
         }
-      };
-
-  // for primitives which use ReferenceType
-  public Reference reference = null;
+    };
 
   /// store frequently used stuff where it's fast to get at
 
@@ -99,62 +79,21 @@ public abstract strictfp class Instruction
   // ~Forrest (10/12/2006)
   public int storedSourceStartPosition = -1;
   public int storedSourceEndPosition = -1;
-  public String storedFilename = null;
 
-  public int getSourceStartPosition() {
-    if (storedSourceStartPosition > -1) {
-      return storedSourceStartPosition;
-    }
-    if (token() == null) {
-      return -1;
-    }
-    int begin = token().start();
-    for (int i = 0; i < args.length; i++) {
-      if (args[i].token() != null) {
-        int argBegin = args[i].getSourceStartPosition();
-        begin = StrictMath.min(begin, argBegin);
-      }
-    }
-    storedSourceStartPosition = begin;
-    return begin;
+  int getSourceStartPosition() {
+    return storedSourceStartPosition;
   }
 
-  public int getSourceEndPosition() {
-    if (storedSourceEndPosition > -1) {
-      return storedSourceEndPosition;
-    }
-    if (token() == null) {
-      return -1;
-    }
-    int end = token().end();
-    for (int i = 0; i < args.length; i++) {
-      if (args[i].token() != null) {
-        int argEnd = args[i].getSourceEndPosition();
-        end = StrictMath.max(end, argEnd);
-      }
-    }
-    storedSourceEndPosition = end;
-    return end;
+  int getSourceEndPosition() {
+    return storedSourceEndPosition;
   }
 
   public String getFilename() {
     if (token() != null) {
       return token().filename();
     } else {
-      return storedFilename;
+      return null;
     }
-  }
-
-  // We want this information for creating some error messages
-  // (particularly ArgumentTypeExceptions) ~Forrest (11/10/2006)
-  private String storedSourceSnippet = "";
-
-  public void setSourceSnippet(String s) {
-    storedSourceSnippet = s;
-  }
-
-  public String getSourceSnippet() {
-    return storedSourceSnippet;
   }
 
   /*

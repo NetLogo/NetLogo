@@ -31,8 +31,8 @@ object CompilerBridge {
         val lambdaNumbers = Iterator.from(1)
         procedures.flatMap { procdef =>
           val lifter = new LambdaLifter(lambdaNumbers)
-          procdef.accept(lifter)
-          procdef +: lifter.children
+          val newProc = lifter.visitProcedureDefinition(procdef)
+          newProc +: lifter.children
         }
       }
       allDefs
