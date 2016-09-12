@@ -93,11 +93,12 @@ blockquote {
     padding-top: 0px;
     padding-bottom: 7px;
     margin-top: 7px;
-    margin-bottom:1px;
+    margin-bottom: 1px;
 }
 ol {
-   margin-bottom:1px;
+    margin-bottom: 1px;
 }
 ul {
-   margin-bottom:1px;
+    list-style-image: url('{BULLET-IMAGE}');
+    margin-bottom: 1px;
 }
