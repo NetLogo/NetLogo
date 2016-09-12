@@ -135,8 +135,9 @@ tabs.run.viewUpdates.dropdown.continuous = continuous
 tabs.run.viewUpdates.dropdown.tooltip = change view update mode
 
 tabs.run.speedslider.normalspeed = normal speed
-tabs.run.speedslider.faster = faster
-tabs.run.speedslider.slower = slower
+tabs.run.speedslider.faster      = faster
+tabs.run.speedslider.slower      = slower
+tabs.run.speedslider.tooltip     = Adjust speed of model
 
 tabs.run.widgets.button = Button
 tabs.run.widgets.slider = Slider
