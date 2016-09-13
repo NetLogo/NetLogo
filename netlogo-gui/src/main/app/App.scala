@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.app.common.{ EditorFactory, Events => AppEvents }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,

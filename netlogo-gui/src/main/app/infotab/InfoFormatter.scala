@@ -4,15 +4,18 @@ package org.nlogo.app.infotab
 
 import java.io.InputStream
 
-import org.pegdown.{ Extensions, PegDownProcessor }
+import scala.collection.JavaConverters._
+
+import org.pegdown.{ DefaultVerbatimSerializer, Extensions, LinkRenderer, PegDownProcessor, Printer, ToHtmlSerializer, VerbatimSerializer }
+import org.pegdown.ast.{ CodeNode, VerbatimNode }
 
 import org.nlogo.api.FileIO
+import org.nlogo.app.common.CodeToHtml
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
 object InfoFormatter {
-
-  type MarkDownString = String
+  type Markdown = String
   type HTML = String
   type CSS = String
 
@@ -43,7 +46,8 @@ object InfoFormatter {
             replace("{H3-FONT-SIZE}", fontSize.toString).
             replace("{BULLET-IMAGE}", getClass.getResource("/system/bullet.png").toString) + "\n-->\n</style>"
 
-  def toInnerHtml(str: MarkDownString): HTML = pegDown.markdownToHtml(str)
+  def toInnerHtml(str: Markdown): HTML =
+    new NLogoSerializer().toHtml(pegDown.parseMarkdown(str.toCharArray))
 
   def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML =
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
@@ -51,4 +55,24 @@ object InfoFormatter {
   def apply(content: String, fontSize: Int = defaultFontSize) =
     wrapHtml(toInnerHtml(content), fontSize)
 
+  private val verbatimSerializers = Map(
+    VerbatimSerializer.DEFAULT -> CodeBlockSerializer,
+    "text" -> DefaultVerbatimSerializer.INSTANCE).asJava
+
+  private val converter = CodeToHtml.newInstance
+  private def codeToHtml(code: String) =
+    converter.convert(code, wrapped = false).replace("\n", "<br/>")
+
+  private class NLogoSerializer extends ToHtmlSerializer(new LinkRenderer, verbatimSerializers) {
+    override def visit(node: CodeNode) =
+      printer print "<code>" print codeToHtml(node.getText) print "</code>"
+  }
+
+  private object CodeBlockSerializer extends VerbatimSerializer {
+    def serialize(node: VerbatimNode, printer: Printer) = {
+      printer print "<pre><code>" println()
+      printer print codeToHtml(node.getText)
+      printer print "</code></pre>" println()
+    }
+  }
 }

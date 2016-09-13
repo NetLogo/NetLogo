@@ -13,9 +13,10 @@ class InfoFormatterTests extends FunSuite {
                               |    # Hello
                               |    World
                               |    """.stripMargin.replaceAll("\r\n", "\n")
-  val helloWorldInnerHtml = """|<pre><code># Hello
-                               |World
-                               |</code></pre>""".stripMargin.replaceAll("\r\n", "\n")
+  val helloWorldInnerHtml =
+    """|<pre><code>
+       |<font color="#000000"># Hello<br/>World<br/></font></code></pre>
+       |""".stripMargin.replaceAll("\r\n", "\n")
 
   test("hello world (smoke test)") {
     assertResult(helloWorldInnerHtml) {
@@ -87,13 +88,13 @@ class InfoFormatterTests extends FunSuite {
   // here we get a <pre> block because we have a blank line before the fence
   test("fenced code blocks 1") {
     assertResult("""|<p>foo</p>
-              |<pre><code>   bar
+              |<pre><code class="text">   bar
               |  baz
               |qux
               |</code></pre><p>oof</p>""".stripMargin.replaceAll("\r\n", "\n")) {
       toInnerHtml("""|foo
                      |
-                     |```
+                     |```text
                      |   bar
                      |  baz
                      |qux
@@ -102,20 +103,14 @@ class InfoFormatterTests extends FunSuite {
     }
   }
 
-  // in contrast, here no <pre> because no blank line
-  test("fenced code blocks 2") {
-    assertResult("""|<p>foo<br/><code>
-              |   bar
-              |  baz
-              |qux
-              |</code><br/>oof</p>""".stripMargin) {
-      toInnerHtml("""|foo
-                     |```
-                     |   bar
-                     |  baz
-                     |qux
-                     |```
-                     |oof""".stripMargin)
+  test("colrized code blocks") {
+    assertResult("""|<pre><code>
+                    |<font color="#007f69">to</font><font color="#000000"> setup<br/>  </font><font color="#0000aa">ca</font><font color="#000000"><br/>  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000"><br/></font><font color="#007f69">end</font><font color="#000000"><br/></font></code></pre>
+                    |""".stripMargin) {
+      toInnerHtml("""|    to setup
+                     |      ca
+                     |      crt 10
+                     |    end""".stripMargin)
     }
   }
 
