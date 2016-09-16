@@ -5,7 +5,7 @@ package org.nlogo.compiler
 import org.nlogo.core.{ ExtensionManager, FrontEndProcedure, StructureResults }
 import scala.collection.immutable.ListMap
 import org.nlogo.{ core, api, nvm },
-  nvm.Procedure
+  nvm.{ LiftedLambda, Procedure }
 
 import scala.collection.JavaConverters._
 
@@ -44,7 +44,6 @@ object CompilerBridge {
       nameToken = p.nameToken,
       name = p.name,
       _displayName = if (p.displayName == "") None else Some(p.displayName),
-      parent = null,
       argTokens = p.argTokens,
       initialArgs = p.args)
     proc.usableBy = p.agentClassString

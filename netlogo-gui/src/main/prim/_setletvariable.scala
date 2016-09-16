@@ -6,9 +6,9 @@ import org.nlogo.core.Let
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Context }
 
-class _setletvariable(original: _letvariable) extends Command {
-  private[this] val _let = original.let
-  private[this] val name = original.name
+class _setletvariable(private[this] val _let: Let, private[this] val name: String) extends Command {
+  def this(original: _letvariable) = this(original.let, original.name)
+
   def let = _let
 
   @throws(classOf[LogoException])

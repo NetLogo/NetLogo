@@ -72,19 +72,20 @@ case class _carefully() extends Command {
       right = List(Syntax.CommandBlockType, Syntax.CommandBlockType),
       introducesContext = true)
 }
-case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean, closedLets: Seq[Let]) extends Reporter {
-  def this() = this(Seq(), false, Seq())
-  def this(arguments: Seq[String]) = this(arguments, false, Seq())
-  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Seq())
+case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Reporter {
+  def this() = this(Seq(), false, Set())
+  def this(arguments: Seq[String]) = this(arguments, false, Set())
+  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Set())
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.CommandType)
 
-  def minArgCount: Int = argumentNames.length
   override def toString =
     "_commandlambda" + argumentNames.mkString("(", ", ", ")")
 
-  def copy(argumentNames: Seq[String] = argumentNames, closedLets: Seq[Let] = closedLets): _commandlambda = {
-    val ct = new _commandlambda(argumentNames, synthetic, closedLets)
+  def minArgCount: Int = argumentNames.length
+
+  def copy(argumentNames: Seq[String] = argumentNames, closedVariables: Set[ClosedVariable] = closedVariables): _commandlambda = {
+    val ct = new _commandlambda(argumentNames, synthetic, closedVariables)
     copyInstruction(ct)
   }
 }
@@ -380,10 +381,10 @@ case class _report() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType))
 }
-case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, closedLets: Seq[Let]) extends Reporter {
-  def this() = this(Seq(), false, Seq())
-  def this(arguments: Seq[String]) = this(arguments, false, Seq())
-  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Seq())
+case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Reporter {
+  def this() = this(Seq(), false, Set())
+  def this(arguments: Seq[String]) = this(arguments, false, Set())
+  def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Set())
   override def syntax = {
     Syntax.reporterSyntax(
       right = List(Syntax.CodeBlockType, Syntax.ReporterType),
@@ -393,8 +394,8 @@ case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, close
   override def toString =
     "_reporterlambda" + argumentNames.mkString("(", ", ", ")")
 
-  def copy(argumentNames: Seq[String] = argumentNames, closedLets: Seq[Let] = closedLets): _reporterlambda = {
-    val cr = new _reporterlambda(argumentNames, synthetic, closedLets)
+  def copy(argumentNames: Seq[String] = argumentNames, closedVariables: Set[ClosedVariable] = closedVariables): _reporterlambda = {
+    val cr = new _reporterlambda(argumentNames, synthetic, closedVariables)
     copyInstruction(cr)
   }
 }

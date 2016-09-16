@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.core.{ I18N, Let }
+import org.nlogo.core.{ ClosedLet, ClosedVariable, I18N, Let }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._
 
@@ -70,16 +70,18 @@ private class LocalsVisitor extends DefaultAstVisitor {
 
     override def visitReporterApp(app: ReporterApp)(implicit eligibility: Eligibility): Eligibility = {
       val (askNestingLevel, eligibilityMap) = eligibility
-      def addLets(m: Map[Let, Boolean], ls: Seq[Let]): Map[Let, Boolean] = {
-        ls.foldLeft(m) {
+      def addLets(m: Map[Let, Boolean], ls: Set[ClosedVariable]): Map[Let, Boolean] = {
+        ls.collect {
+          case ClosedLet(let) => let
+        }.foldLeft(m) {
           case (acc, let) => acc + (let -> false)
         }
       }
       app.reporter match {
         case cl: _commandlambda =>
-          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, cl.closedLets)))
+          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, cl.closedVariables)))
         case rl: _reporterlambda =>
-          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, rl.closedLets)))
+          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, rl.closedVariables)))
         case _ =>
           super.visitReporterApp(app)
       }
@@ -131,7 +133,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
 
   private def lookupLet(let: Let, procedure: Procedure): Option[Int] = {
     if (procedure == null) None
-    else procedure.alteredLets.get(let) orElse lookupLet(let, procedure.parent)
+    else procedure.alteredLets.get(let)
   }
 
   private def newProcedureVar(i: Int, l: Let, oldReporter: Option[Instruction]): _procedurevariable = {

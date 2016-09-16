@@ -11,12 +11,11 @@ class Procedure(
   val nameToken: Token,
   val name: String,
   _displayName: Option[String],
-  val parent: Procedure,
   val argTokens: Seq[Token]   = Seq(),
-  initialArgs: Vector[String] = Vector[String](),
-  val lambdaFormals: Array[Let] = Array[Let]()) extends FrontEndProcedure {
+  initialArgs: Vector[String] = Vector[String]()) extends FrontEndProcedure {
 
   args = initialArgs
+
   val fileName = nameToken.filename // used by cities include-file stuff
   val filename = fileName // alias, may not be needed
   override def procedureDeclaration = null
@@ -28,7 +27,7 @@ class Procedure(
   var localsCount = 0
   private var _owner: SourceOwner = null
   val children = collection.mutable.Buffer[Procedure]()
-  def isLambda = parent != null
+  def isLambda = false
   var lets = Vector[Let]()
 
   def addLet(l: Let) = {
@@ -41,27 +40,18 @@ class Procedure(
   // cache args.size() for efficiency with making Activations
   var size = 0
 
-  def getLambdaFormal(name: String): Option[Let] =
-    lambdaFormals.find(_.name == name) orElse Option(parent).flatMap(_.getLambdaFormal(name))
-
   var code = Array[Command]()
 
-  private def buildDisplayName(displayName: Option[String]): String = {
-    def topParent(p: Procedure): Procedure =
-      if (p.parent == null) p
-      else topParent(p.parent)
+  def parent: Procedure = null
 
-    if (isLambda) {
-      val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
-      "(anonymous command from: " + topParent(parent).displayName + ": " + sourceCode + ")"
-    } else {
-      def nameAndFile =
-        Option(fileName)
-          .filter(_.nonEmpty)
-          .map(name + " (" + _ + ")")
-          .getOrElse(name)
-      displayName.getOrElse("procedure " + nameAndFile)
-    }
+  protected def buildDisplayName(displayName: Option[String]): String = {
+    val nameAndFile =
+      Option(fileName)
+        .filter(_.nonEmpty)
+        .map(name + " (" + _ + ")")
+        .getOrElse(name)
+
+    displayName.getOrElse("procedure " + nameAndFile)
   }
 
   override def syntax: Syntax = {
@@ -78,23 +68,16 @@ class Procedure(
 
   def dump: String = {
     val buf = new StringBuilder
-    val indent = isLambda
-    if (indent)
-      buf ++= "   "
     if (isReporter)
       buf ++= "reporter "
     buf ++= displayName
-    if (parent != null)
-      buf ++= ":" + parent.displayName
     buf ++= ":"
     buf ++= args.mkString("[", " ", "]")
     buf ++= "{" + usableBy + "}:\n"
     for (i <- code.indices) {
-      if (indent)
-        buf ++= "   "
       val command = code(i)
       buf ++= "[" + i + "]"
-      buf ++= command.dump(if (indent) 6 else 3)
+      buf ++= command.dump(3)
       buf ++= "\n"
     }
     for (p <- children) {

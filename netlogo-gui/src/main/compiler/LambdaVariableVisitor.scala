@@ -2,11 +2,11 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.core.{ I18N, Let }
+import org.nlogo.core.{ ClosedLet, ClosedLambdaVariable, I18N, Let }
 import CompilerExceptionThrowers.cAssert
 
-import org.nlogo.nvm.Procedure
-import org.nlogo.prim.{ _commandlambda, _reporterlambda, _lambdavariable, _letvariable, _procedurevariable }
+import org.nlogo.nvm.{ LiftedLambda => NvmLiftedLambda, Procedure }
+import org.nlogo.prim.{ _commandlambda, _reporterlambda, _lambdavariable, _letvariable, _procedurevariable, _set, _setletvariable }
 
 import scala.collection.immutable.Stack
 
@@ -24,7 +24,11 @@ private object LambdaVariableVisitor {
   }
 
   case class LiftedLambda(procdef: ProcedureDefinition) extends FormalProvider {
-    def letForName(varName: String): Option[Let] = procdef.procedure.getLambdaFormal(varName)
+    def letForName(varName: String): Option[Let] = procdef.procedure match {
+      case ll: NvmLiftedLambda =>
+        ll.getLambdaFormal(varName) orElse ll.closedLets.find(_.name.equalsIgnoreCase(varName))
+      case _ => None
+    }
   }
 }
 
@@ -43,6 +47,27 @@ private class LambdaVariableVisitor extends DefaultAstVisitor {
 
     if (procdef.procedure.isLambda)
       lambdaStack = lambdaStack.pop
+  }
+
+  override def visitStatement(stmt: Statement): Unit = {
+    stmt.command match {
+      case s: _set =>
+        stmt.args(0) match {
+          case ReporterApp(_, lv: _lambdavariable, _, _) =>
+            val letsForVariable = lambdaStack.flatMap(_.letForName(lv.varName))
+            val newStmt = letsForVariable.headOption match {
+              case Some(let) =>
+                val newCommand = new _setletvariable(let, lv.varName)
+                newCommand.copyMetadataFrom(s)
+                super.visitStatement(stmt.copy(command = newCommand, args = stmt.args.tail))
+              case None =>
+                cAssert(procedure.get.isLambda, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), stmt)
+            }
+            super.visitStatement(stmt)
+          case _ => super.visitStatement(stmt)
+        }
+      case _ => super.visitStatement(stmt)
+    }
   }
 
   override def visitReporterApp(expr: ReporterApp) {

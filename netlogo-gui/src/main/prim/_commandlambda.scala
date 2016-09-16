@@ -2,13 +2,13 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Let
-import org.nlogo.nvm.{ AnonymousCommand, Context, Procedure, Reporter }
+import org.nlogo.core.ClosedVariable
+import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter }
 
 import scala.collection.JavaConversions._
 
-class _commandlambda(val argumentNames: Seq[String], val closedLets: Seq[Let]) extends Reporter {
-  var proc: Procedure = null
+class _commandlambda(val argumentNames: Seq[String], val closedVariables: Set[ClosedVariable]) extends Reporter {
+  var proc: LiftedLambda = null
 
   override def report(c: Context): AnyRef = {
     AnonymousCommand(procedure = proc,

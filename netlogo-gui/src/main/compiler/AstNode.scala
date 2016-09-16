@@ -206,3 +206,8 @@ extends Expression with Application {
     sourceLocation: SourceLocation = sourceLocation): ReporterApp =
       new ReporterApp(coreReporter, reporter, scala.collection.mutable.Buffer[Expression](args: _*), sourceLocation)
 }
+
+object ReporterApp {
+  def unapply(app: ReporterApp): Option[(core.Reporter, nvm.Reporter, Seq[Expression], SourceLocation)] =
+    Some((app.coreReporter, app.reporter, app.args, app.sourceLocation))
+}
