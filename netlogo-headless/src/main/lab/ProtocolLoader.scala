@@ -100,6 +100,9 @@ class ProtocolLoader(services: CompilerUtilitiesInterface)
         readOptional("go"),
         readOptional("final"),
         element.getAttribute("repetitions").toInt,
+        { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
+          if(defaultOrder == "") true else defaultOrder == "true"  
+        },
         element.getAttribute("runMetricsEveryStep") == "true",
         if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
         if(!exists("exitCondition")) "" else readOptional("exitCondition"),

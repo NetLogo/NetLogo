@@ -41,7 +41,7 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
       converter.convertStatement(setupCommands),
       converter.convertStatement(goCommands),
       converter.convertStatement(finalCommands),
-      repetitions, runMetricsEveryStep, timeLimit,
+      repetitions, sequentialRunOrder, runMetricsEveryStep, timeLimit,
       if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
       metrics.map(converter.convertReporterExpression),
       valueSets)
