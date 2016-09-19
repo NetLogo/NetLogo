@@ -23,8 +23,12 @@ script:
   - ./sbt parserJS/test
   - ./sbt nogen netlogo/test:fast
   - ./sbt threed netlogo/test:fast
+  - ./sbt headless/test:fast
+  - ./sbt netlogo/test:medium
+  - ./sbt nogen netlogo/test:medium
+  - ./sbt headless/test:medium
+  - ./sbt nogen headless/test:medium
   - ./sbt netlogo/test:slow
-  - ./sbt nogen netlogo/test:slow
   - ./sbt threed netlogo/test:slow
   - ./sbt netlogo/test:extensionTests
 
