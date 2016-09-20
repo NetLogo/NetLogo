@@ -10,6 +10,7 @@ package back
 import org.nlogo.core.{ SourceLocation, Token, TokenType }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
+import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
 
 /**
  * fills the code array of the Procedure object with Commands.

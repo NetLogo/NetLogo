@@ -53,7 +53,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
-    ws.setProcedures(results.proceduresMap)
+    ws.procedures = results.proceduresMap
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.

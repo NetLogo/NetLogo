@@ -7,7 +7,7 @@ import org.nlogo.core.{ Button, Chooser, Chooseable, Femto, Horizontal,
   LiteralParser, LogoList, Monitor, Slider, Switch, Vertical, View, Widget,
   WorldDimensions }
 
-import org.nlogo.compiler.Compiler
+import org.nlogo.compile.Compiler
 
 import org.nlogo.core.model.{ SimpleLiteralParser, WidgetReader }
 

@@ -19,7 +19,7 @@ object CodeToHtml {
         Femto.scalaSingleton[Dialect]("org.nlogo.api.NetLogoThreeDDialect")
       else
         Femto.scalaSingleton[Dialect]("org.nlogo.api.NetLogoLegacyDialect")
-    val compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", dialect)
+    val compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", dialect)
     new CodeToHtml(compiler)
   }
 }

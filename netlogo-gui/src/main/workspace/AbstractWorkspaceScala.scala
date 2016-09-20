@@ -28,6 +28,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with APIConformant with Benchmarking
   with Checksums with Evaluating
   with ModelTracker
+  with Procedures
+  with Compiling
   with BehaviorSpaceInformation
   with Traceable with HubNetManager
   with ExtendableWorkspaceMethods with Exporting
@@ -139,6 +141,21 @@ object AbstractWorkspaceTraits {
       Checksummer.calculateGraphicsChecksum(this)
   }
 
+  trait Compiling { this: AbstractWorkspace =>
+    @throws(classOf[CompilerException])
+    def checkReporterSyntax(source: String): Unit = {
+      compiler.checkReporterSyntax(source, _world.program, procedures, getExtensionManager, false, getCompilationEnvironment)
+    }
+
+    @throws(classOf[CompilerException])
+    def checkCommandSyntax(source: String): Unit = {
+      compiler.checkCommandSyntax(source, _world.program, procedures, getExtensionManager, false, getCompilationEnvironment)
+    }
+
+    def isReporter(s: String): Boolean =
+      compiler.isReporter(s, _world.program, procedures, getExtensionManager, getCompilationEnvironment);
+  }
+
   trait APIConformant { this: AbstractWorkspace =>
     // Members declared in org.nlogo.api.ViewSettings
     def drawSpotlight: Boolean = true
@@ -202,6 +219,24 @@ object AbstractWorkspaceTraits {
 
         attachedPath.toAbsolutePath.toString
       }
+    }
+  }
+
+  trait Procedures { this: AbstractWorkspace =>
+    private var _procedures: Procedure.ProceduresMap = Procedure.NoProcedures
+
+    override def procedures: Procedure.ProceduresMap = _procedures
+
+    def procedures_=(procs: Procedure.ProceduresMap): Unit = {
+      _procedures = procs
+    }
+
+    override def setProcedures(procs: Procedure.ProceduresMap): Unit = {
+      _procedures = procs
+    }
+
+    override def init(): Unit = {
+      procedures.values.foreach(_.init(this))
     }
   }
 

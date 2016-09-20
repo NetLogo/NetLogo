@@ -34,7 +34,7 @@ class Procedure(
 
   var code = Array[Command]()
 
-  private def buildDisplayName(displayName: Option[String]): String =
+  protected def buildDisplayName(displayName: Option[String]): String =
     if (isLambda) {
       val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
       "(anonymous command from: " + parent.displayName + ": " + sourceCode + ")"

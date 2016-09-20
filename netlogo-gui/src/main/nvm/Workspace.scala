@@ -32,7 +32,7 @@ trait Workspace extends org.nlogo.api.Workspace
 
   def compiler: CompilerInterface
   def getCompilationEnvironment: CompilationEnvironment
-  def getProcedures: java.util.Map[String, Procedure]
+  def procedures: Procedure.ProceduresMap
 
   @throws(classOf[CompilerException])
   def compileCommands(source: String): Procedure

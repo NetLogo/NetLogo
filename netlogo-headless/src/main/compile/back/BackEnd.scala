@@ -5,6 +5,7 @@ package back
 
 import org.nlogo.core.{Femto, Program}
 import org.nlogo.{ api, nvm }
+import org.nlogo.compile.api.{ BackEndInterface, ProcedureDefinition }
 
 object BackEnd extends BackEndInterface {
 

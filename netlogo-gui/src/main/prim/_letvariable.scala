@@ -5,10 +5,10 @@ package org.nlogo.prim
 import org.nlogo.core.{ Let, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
-class _letvariable(private[this] val _let: Let, val name: String) extends Reporter {
+class _letvariable(private[this] val _let: Let) extends Reporter {
   val let: Let = _let
 
-  override def toString(): String = s"${super.toString}($name)"
+  override def toString(): String = s"${super.toString}(${let.name})"
 
   override def report(context: Context): AnyRef = report_1(context)
 
@@ -16,6 +16,6 @@ class _letvariable(private[this] val _let: Let, val name: String) extends Report
 }
 
 object _letvariable {
-  def unapply(l: _letvariable): Option[(Let, String)] =
-    Some((l.let, l.name))
+  def unapply(l: _letvariable): Option[Let] =
+    Some(l.let)
 }

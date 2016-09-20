@@ -41,7 +41,7 @@ class SmartIndenterTests extends FunSuite {
   }
 
   val compiler = new DefaultCompilerServices(
-    Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoLegacyDialect else NetLogoThreeDDialect))
+    Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoLegacyDialect else NetLogoThreeDDialect))
 
   // call FunSuite's test method for each test read
   for(Array(name, in, out) <- data) {

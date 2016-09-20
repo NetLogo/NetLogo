@@ -17,8 +17,9 @@ install:
 # we run extension tests separately because some extensions leak resources which
 # are only claimed on process exit
 script:
-  - ./sbt depend
   - travis_wait ./sbt all
+  - ./sbt depend
+  - ./sbt headless/depend
   - ./sbt netlogo/test:fast
   - ./sbt parserJS/test
   - ./sbt nogen netlogo/test:fast

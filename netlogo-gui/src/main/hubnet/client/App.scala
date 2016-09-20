@@ -24,7 +24,7 @@ object App {
     AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
     val compiler = new org.nlogo.nvm.DefaultCompilerServices(
-      Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
+      Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
     ClientApp.mainHelper(args, new EditorFactory(compiler), compiler)
   }
 }

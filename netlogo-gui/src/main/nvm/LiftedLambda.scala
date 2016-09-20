@@ -40,7 +40,7 @@ class LiftedLambda(
     val buf = new StringBuilder
     var displayArgs = args.mkString("[", " ", "]")
     val titleMargin = if (isReporter) "   reporter " else "   "
-    buf ++= s"$titleMargin$displayName:${parent.displayName}${displayArgs}{$usableBy}:\n"
+    buf ++= s"$titleMargin$displayName:${parent.displayName}${displayArgs}{$agentClassString}:\n"
     for (i <- code.indices) {
       buf ++= s"   [$i]${code(i).dump(6)}\n"
     }

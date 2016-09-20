@@ -10,7 +10,7 @@ class ModelTrackerTest extends FunSuite {
   class Subject(modelType: ModelType, modelName: String) extends ModelTracker {
     _modelFileName = modelName
     setModelType(modelType)
-    def compiler = Femto.get("org.nlogo.compiler.Compiler", NetLogoLegacyDialect)
+    def compiler = Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
     def getExtensionManager = null
   }
 

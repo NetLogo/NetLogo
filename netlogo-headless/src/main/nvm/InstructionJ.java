@@ -16,5 +16,4 @@ public abstract class InstructionJ {
   public Reporter[] args = new Reporter[0];
   public String agentClassString = "OTPL";
   public int agentBits = 0;
-  public Reference reference = null;
 }

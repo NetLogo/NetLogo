@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.Reference
 import org.nlogo.agent.{ AgentSet, Patch, Turtle }
 import org.nlogo.nvm
 
@@ -14,9 +15,17 @@ class _downhill extends HillCommand(sign = -1) {
 class _downhill4 extends HillCommand(sign = -1) {
   override def neighbors(p: Patch) = p.getNeighbors4 }
 
-abstract class HillCommand(sign: Int) extends nvm.Command {
-
+abstract class HillCommand(sign: Int) extends nvm.Command with nvm.Referencer {
   switches = true
+
+  override def referenceIndex: Int = 0
+
+  private[this] var reference: Reference = null
+
+  override def applyReference(ref: Reference): nvm.Command = {
+    reference = ref
+    this
+  }
 
   override def toString =
     super.toString +
@@ -27,7 +36,7 @@ abstract class HillCommand(sign: Int) extends nvm.Command {
 
   def neighbors(patch: Patch): AgentSet // abstract
 
-  override def perform(context: nvm.Context) {
+  override def perform(context: nvm.Context): Unit = {
     val turtle = context.agent.asInstanceOf[Turtle]
     turtle.moveToPatchCenter()
     val patch = turtle.getPatchHere()

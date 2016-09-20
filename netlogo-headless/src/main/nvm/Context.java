@@ -233,6 +233,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job
     activation = newActivation;
+    // let bindings can "leak" out of a reporter procedure. This should be fixed in a more sizable overhaul of NVM. RG 9/15/16
+    scala.collection.immutable.List<LetBinding> priorLetBindings = letBindings;
     ip = 0;
     try {
       do {
@@ -255,6 +257,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
     }
     ip = activation.returnAddress();
     activation = activation.parent().get();
+    letBindings = priorLetBindings;
     Object result = job.result;
     job.result = null;
     return result;

@@ -145,23 +145,10 @@ public abstract strictfp class AbstractWorkspace
     return file.toURL();
   }
 
-  /// procedures
+  public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
+  public abstract void setProcedures(scala.collection.immutable.ListMap<String, Procedure> procedures);
 
-  private Map<String, Procedure> procedures = new HashMap<String, Procedure>();
-
-  public Map<String, Procedure> getProcedures() {
-    return procedures;
-  }
-
-  public void setProcedures(Map<String, Procedure> procedures) {
-    this.procedures = procedures;
-  }
-
-  public void init() {
-    for (Procedure procedure : procedures.values()) {
-      procedure.init(this);
-    }
-  }
+  public abstract void init();
 
   /// methods that may be called from the job thread by prims
 
@@ -419,18 +406,6 @@ public abstract strictfp class AbstractWorkspace
     return compiler().readNumberFromString(source, _world, getExtensionManager());
   }
 
-  public void checkReporterSyntax(String source)
-      throws CompilerException {
-    compiler().checkReporterSyntax
-        (source, _world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
-  }
-
-  public void checkCommandSyntax(String source)
-      throws CompilerException {
-    compiler().checkCommandSyntax
-        (source, _world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
-  }
-
   public boolean isConstant(String s) {
     try {
       compiler().readFromString(s);
@@ -443,10 +418,6 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isValidIdentifier(String s) {
     return compiler().isValidIdentifier(s);
-  }
-
-  public boolean isReporter(String s) {
-    return compiler().isReporter(s, _world.program(), getProcedures(), getExtensionManager(), getCompilationEnvironment());
   }
 
   public Token[] tokenizeForColorization(String s) {

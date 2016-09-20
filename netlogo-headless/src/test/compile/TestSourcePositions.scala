@@ -29,6 +29,7 @@ class TestSourcePositions extends FunSuite {
     test("int") { reporter("3") }
     test("string") { reporter("\"foo\"") }
     test("constantFolding") { reporter("2 + 2") }
+    test("reporterlambda") { reporter("[[] -> 2 + 2 ]") }
     /// commands
     test("iffy") { command("if timer < 10 [ print timer ]", "if timer < 10 [ print timer ]") }
     test("lambdas") { command("run [[] -> fd 1 ]") }

@@ -32,8 +32,6 @@ class TestDuplicateNames extends FixtureSuite  {
     "There is already a primitive command called FD")
   testBadName("turtles",
     "There is already a primitive reporter called TURTLES")
-  testBadName("???",
-    "Names beginning with ? are reserved for use as task inputs")
   testBadName("kitten",
     "There is already a singular breed name called KITTEN", "breed [kittens kitten]")
   testBadName("kittens",

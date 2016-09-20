@@ -6,8 +6,8 @@ import org.nlogo.core.Let
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Context }
 
-class _setletvariable(private[this] val _let: Let, private[this] val name: String) extends Command {
-  def this(original: _letvariable) = this(original.let, original.name)
+class _setletvariable(private[this] val _let: Let) extends Command {
+  def this(original: _letvariable) = this(original.let)
 
   def let = _let
 
@@ -22,5 +22,5 @@ class _setletvariable(private[this] val _let: Let, private[this] val name: Strin
   }
 
   override def toString: String =
-    super.toString + ":" + name
+    s"${super.toString}:${let.name}"
 }

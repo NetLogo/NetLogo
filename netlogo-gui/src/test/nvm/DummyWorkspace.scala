@@ -7,11 +7,12 @@ import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.api.{ DummyCompilerServices, JobOwner,
                       DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 import org.nlogo.core.WorldDimensions
+import scala.collection.immutable.ListMap
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World
-  override def getProcedures:java.util.Map[String,Procedure] = java.util.Collections.emptyMap()
+  override def procedures: ListMap[String,Procedure] = ListMap.empty[String, Procedure]
   override def aggregateManager = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe() = unsupported

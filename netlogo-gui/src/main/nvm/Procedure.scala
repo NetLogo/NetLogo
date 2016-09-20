@@ -4,7 +4,9 @@ package org.nlogo.nvm
 
 import org.nlogo.api
 import api.{ SourceOwner }
-import org.nlogo.core.{ Let, FrontEndProcedure, Token, Syntax }
+import org.nlogo.core.{ Let, FrontEndProcedure, Token, StructureDeclarations, Syntax }
+
+import scala.collection.immutable.ListMap
 
 class Procedure(
   val isReporter: Boolean,
@@ -12,18 +14,17 @@ class Procedure(
   val name: String,
   _displayName: Option[String],
   val argTokens: Seq[Token]   = Seq(),
-  initialArgs: Vector[String] = Vector[String]()) extends FrontEndProcedure {
+  initialArgs: Vector[String] = Vector[String](),
+  val procedureDeclaration: StructureDeclarations.Procedure = null) extends FrontEndProcedure {
 
   args = initialArgs
 
   val fileName = nameToken.filename // used by cities include-file stuff
   val filename = fileName // alias, may not be needed
-  override def procedureDeclaration = null
 
   lazy val displayName = buildDisplayName(_displayName)
   var pos: Int = 0
   var end: Int = 0
-  var usableBy = "OTPL"
   var localsCount = 0
   private var _owner: SourceOwner = null
   val children = collection.mutable.Buffer[Procedure]()
@@ -64,7 +65,7 @@ class Procedure(
 
   override def toString =
     super.toString + "[" + name + ":" + args.mkString("[", " ", "]") +
-      ":" + usableBy + "]"
+      ":" + agentClassString + "]"
 
   def dump: String = {
     val buf = new StringBuilder
@@ -73,7 +74,7 @@ class Procedure(
     buf ++= displayName
     buf ++= ":"
     buf ++= args.mkString("[", " ", "]")
-    buf ++= "{" + usableBy + "}:\n"
+    buf ++= "{" + agentClassString + "}:\n"
     for (i <- code.indices) {
       val command = code(i)
       buf ++= "[" + i + "]"
@@ -99,4 +100,9 @@ class Procedure(
     children.foreach(_.owner = owner)
   }
 
+}
+
+object Procedure {
+  type ProceduresMap = ListMap[String, Procedure]
+  val NoProcedures = ListMap[String, Procedure]()
 }
