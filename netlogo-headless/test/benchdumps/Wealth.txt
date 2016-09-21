@@ -4736,18 +4736,10 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L2
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L2
-         FRAME APPEND [java/lang/Object]
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
+          IFNE L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -4762,6 +4754,15 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+         FRAME APPEND [java/lang/Object]
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L3
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L3
          FRAME SAME
@@ -8815,18 +8816,10 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L23
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L23
-         FRAME FULL [org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L24
+          IFNE L23
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -8841,6 +8834,15 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L23
+         FRAME FULL [org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L24
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L24
          FRAME SAME

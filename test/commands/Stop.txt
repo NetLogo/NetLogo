@@ -38,11 +38,11 @@ StopFromForeach3
 
 StopFromForeachInsideReporterProcedure
   to-report foo foreach [1 2 3] [ stop ] end
-  COMPILE> COMPILER ERROR STOP is not allowed inside TO-REPORT.
+  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
 
 StopFromNestedForeachInsideReporterProcedure
   to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] end
-  COMPILE> COMPILER ERROR STOP is not allowed inside TO-REPORT.
+  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
 
 ReportFromNestedAsk
   to-report foo ask turtles [ report who ] end
@@ -50,7 +50,7 @@ ReportFromNestedAsk
 
 ReportFromForeachInsideProcedure
   to foo foreach [1 2 3] report end
-  COMPILE> COMPILER ERROR REPORT can only be used inside TO-REPORT.
+  O> foo => ERROR REPORT can only be used inside TO-REPORT.
 
 StopLambda1
   globals [ glob1 glob2 ]

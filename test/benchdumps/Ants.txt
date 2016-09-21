@@ -424,18 +424,10 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L13
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L13
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L14
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -450,6 +442,15 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L13
+         FRAME SAME
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L14
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L14
          FRAME SAME
@@ -493,18 +494,10 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L2
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L2
-         FRAME APPEND [java/lang/Double]
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
+          IFNE L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -519,6 +512,15 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+         FRAME APPEND [java/lang/Double]
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L3
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L3
          FRAME SAME
@@ -626,22 +628,10 @@ procedure DO-PLOTTING:[]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -657,12 +647,11 @@ procedure DO-PLOTTING:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [2]_setcurrentplot "set-current-plot "Food in each pile""
       _asm_proceduredoplotting_conststring_2 ""Food in each pile"" => String
@@ -1350,18 +1339,10 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L13
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L13
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L14
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1376,6 +1357,15 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L13
+         FRAME SAME
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L14
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L14
          FRAME SAME
@@ -1419,18 +1409,10 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L2
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L2
-         FRAME APPEND [java/lang/Double]
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
+          IFNE L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1445,6 +1427,15 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+         FRAME APPEND [java/lang/Double]
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L3
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L3
          FRAME SAME
@@ -2425,22 +2416,10 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2456,12 +2435,11 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [6]_asm_procedurelookforfood_ifelse_6 "ifelse chemical > 2 [ fd 1 ] [ ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ] ]" boolean => void
       _greaterthan "chemical > 2" Object,double => boolean

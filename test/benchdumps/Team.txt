@@ -3054,22 +3054,10 @@ procedure EXPLORE:[]{-T--}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3085,12 +3073,11 @@ procedure EXPLORE:[]{-T--}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [2]_asm_procedureexplore_setturtlevariable_2 "set explored? true" Object => void
       _constboolean:true "true" => Boolean
@@ -3679,22 +3666,10 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3710,12 +3685,11 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [8]_asm_procedurefindallcomponents_setobservervariable_9 "set component-size 0" Object => void
       _constdouble:0.0 "0" => Double

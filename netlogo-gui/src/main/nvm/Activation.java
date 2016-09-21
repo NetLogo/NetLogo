@@ -49,4 +49,10 @@ public final strictfp class Activation implements org.nlogo.api.Activation {
     return result;
   }
 
+  public Activation nonLambdaActivation() {
+    if (procedure.isLambda())
+      return parent.nonLambdaActivation();
+    else
+      return this;
+  }
 }

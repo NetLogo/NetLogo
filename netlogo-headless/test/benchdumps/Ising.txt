@@ -1786,18 +1786,10 @@ reporter procedure MAGNETIZATION:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L9
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_proceduremagnetization_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L10
+          IFNE L9
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1812,6 +1804,15 @@ reporter procedure MAGNETIZATION:[]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_proceduremagnetization_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L10
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L10
          FRAME SAME

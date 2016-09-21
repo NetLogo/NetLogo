@@ -1730,18 +1730,10 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L24
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L24
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L25
+          IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1756,6 +1748,15 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L24
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L25
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L25
          FRAME SAME
@@ -2352,18 +2353,10 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L24
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L24
-         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L25
+          IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2378,6 +2371,15 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L24
+         FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L25
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L25
          FRAME SAME
@@ -3184,18 +3186,10 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L10
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_1 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L11
+          IFNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3210,6 +3204,15 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L10
+         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_1 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L11
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L11
          FRAME SAME
@@ -3474,18 +3477,10 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L12
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L12
-         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_4 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L13
+          IFNE L12
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3500,6 +3495,15 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L12
+         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_4 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L13
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L13
          FRAME SAME
@@ -3624,18 +3628,10 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L12
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L12
-         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_6 org/nlogo/nvm/Context java/lang/Double T D] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L13
+          IFNE L12
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3650,6 +3646,15 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L12
+         FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_6 org/nlogo/nvm/Context java/lang/Double T D] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L13
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L13
          FRAME SAME

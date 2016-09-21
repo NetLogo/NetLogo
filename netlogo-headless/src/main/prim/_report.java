@@ -20,11 +20,11 @@ public final strictfp class _report
     context.job.result = arg0;
     context.stopping = false;
     context.ip = next;
-    if (context.activation.procedure().isLambda()) {
-      throw NonLocalExit$.MODULE$;
-    } else if (!context.activation.procedure().isReporter()) {
+    if (! context.activation.nonLambdaActivation().procedure().isReporter()) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim._report.canOnlyUseInToReport", displayName()));
+    } else if (context.activation.procedure().isLambda()) {
+      throw NonLocalExit$.MODULE$;
     } else if (!context.atTopActivation()) {
       // you can't report from inside an ask.  you can't write code like
       //   to-report foo ask turtle 0 [ report 5 ] end
