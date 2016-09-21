@@ -19,7 +19,6 @@ object DrawingAction {
   // I've added some fields that match up to with how NetLogo Web will handle these stamping events.
   // --JAB (3/18/15)
   case class StampImage(imageBytes: Array[Byte], stamp: AgentStamp)      extends DrawingAction
-  case class EraseStampImage(imageBytes: Array[Byte], stamp: AgentStamp) extends DrawingAction
   case class SetColors(colors: Array[Int])                               extends DrawingAction
   case class SendPixels(dirty: Boolean)                                  extends DrawingAction
   case class ReadImage(imageBytes: Array[Byte])                          extends DrawingAction
