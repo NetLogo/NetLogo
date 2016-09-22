@@ -32,7 +32,8 @@ class InfoFormatterTests extends FunSuite {
   }
 
   test("github flavored newlines 2") {
-    assertResult("""<p>hi</p><p>there</p>""") {
+    assertResult("""|<p>hi</p>
+                    |<p>there</p>""".stripMargin) {
       toInnerHtml("""|hi
                      |
                      |there""".stripMargin)
@@ -91,7 +92,8 @@ class InfoFormatterTests extends FunSuite {
               |<pre><code class="text">   bar
               |  baz
               |qux
-              |</code></pre><p>oof</p>""".stripMargin.replaceAll("\r\n", "\n")) {
+              |</code></pre>
+              |<p>oof</p>""".stripMargin.replaceAll("\r\n", "\n")) {
       toInnerHtml("""|foo
                      |
                      |```text
