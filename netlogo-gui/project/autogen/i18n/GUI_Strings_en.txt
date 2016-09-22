@@ -417,6 +417,14 @@ You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
 
 tools.behaviorSpace.repetitions = Repetitions
 tools.behaviorSpace.repetitions.info = run each combination this many times
+tools.behaviorSpace.sequentialRunOrder = Run combinations in sequential order
+
+# this property extends across several lines, and has HTML breaks in it.
+tools.behaviorSpace.sequentialRunOrder.info = For example, having ["var" 1 2 3] with 2 repetitions, \
+the experiments'' "var" values will be:<br>\
+sequential order: 1, 1, 2, 2, 3, 3<br>\
+alternating order: 1, 2, 3, 1, 2, 3
+
 tools.behaviorSpace.metrics = Measure runs using these reporters:
 # this property has an HTML break in it.
 tools.behaviorSpace.metrics.info = one reporter per line; you may not split a reporter<br>across multiple lines

@@ -39,7 +39,8 @@ object LabSaver {
   }
   def attributes(specs: (String,String)*) = {
     val result = new AttributesImpl
-    for((name,value) <- specs)
+    for((name,value) <- specs if name != "sequentialRunOrder" || 
+        (name == "sequentialRunOrder" && value == "false"))
       result.addAttribute("", "", name, "CDATA", value)
     result
   }
@@ -56,6 +57,7 @@ object LabSaver {
     hd.startElement("", "", "experiment",
                     attributes(("name", protocol.name),
                                ("repetitions", protocol.repetitions.toString),
+                               ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
                                ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
     if(protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)

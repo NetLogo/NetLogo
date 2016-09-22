@@ -7,6 +7,7 @@ case class LabProtocol(name: String,
                     goCommands: String,
                     finalCommands: String,
                     repetitions: Int,
+                    sequentialRunOrder: Boolean,
                     runMetricsEveryStep: Boolean,
                     timeLimit: Int,
                     exitCondition: String,
@@ -28,9 +29,14 @@ case class LabProtocol(name: String,
         case set::sets =>
           set.iterator.flatMap(v =>
             combinations(sets).map(m =>
-              (set.variableName,v) :: m))
+              if(sequentialRunOrder) (set.variableName,v) :: m
+              else m :+ set.variableName -> v))
       }
-    combinations(valueSets)
+    if(sequentialRunOrder) combinations(valueSets)
       .flatMap(Iterator.fill(repetitions)(_))
+    else {
+      val runners = combinations(valueSets.reverse).toList
+      (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+    }
   }
 }
