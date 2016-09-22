@@ -86,22 +86,10 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -117,12 +105,11 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [2]_asm_procedurearrange_ask_2 "ask particle-set [ random-position ]" Object => void
       _procedurevariable:PARTICLE-SET "particle-set" => Object
@@ -5668,22 +5655,10 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -5699,12 +5674,11 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [2]_asm_procedurecollidewinners_if_2 "if colliding-particle-2 = "plane-xpos" or colliding-particle-2 = "plane-xneg" ask colliding-particle-1 [ set heading - heading ] [ stop ]" boolean => void
       _or "colliding-particle-2 = "plane-xpos" or colliding-particle-2 = "plane-xneg""
@@ -5946,22 +5920,10 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -5977,12 +5939,11 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [7]_asm_procedurecollidewinners_if_7 "if colliding-particle-2 = "plane-ypos" or colliding-particle-2 = "plane-yneg" ask colliding-particle-1 [ set heading 180 - heading ] [ stop ]" boolean => void
       _or "colliding-particle-2 = "plane-ypos" or colliding-particle-2 = "plane-yneg""
@@ -6231,22 +6192,10 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -6262,12 +6211,11 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [12]_asm_procedurecollidewinners_ask_12 "ask colliding-particle-1 [ collide-with colliding-particle-2 ]" Object => void
       _observervariable:COLLIDING-PARTICLE-1 "colliding-particle-1" => Object
@@ -9003,18 +8951,10 @@ reporter procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L6
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedureconvertheadingx_report_0 org/nlogo/nvm/Context java/lang/Double] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L7
+          IFNE L6
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -9029,6 +8969,15 @@ reporter procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_procedureconvertheadingx_report_0 org/nlogo/nvm/Context java/lang/Double] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L7
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L7
          FRAME SAME
@@ -9123,18 +9072,10 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L6
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedureconvertheadingy_report_0 org/nlogo/nvm/Context java/lang/Double] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L7
+          IFNE L6
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -9149,6 +9090,15 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_procedureconvertheadingy_report_0 org/nlogo/nvm/Context java/lang/Double] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L7
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L7
          FRAME SAME
@@ -12062,18 +12012,10 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L22
-          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
-          ATHROW
-         L22
-         FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context java/lang/Boolean org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/agent/AgentSet$Iterator] []
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L23
+          IFNE L22
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -12088,6 +12030,15 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           AASTORE
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L22
+         FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context java/lang/Boolean org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/agent/AgentSet$Iterator] []
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          IFEQ L23
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L23
          FRAME SAME
@@ -14495,22 +14446,10 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFEQ L4
-         L3
-         FRAME SAME
+          IFEQ L2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -14526,12 +14465,11 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L2
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
-         L2
-         FRAME SAME
+         L3
           RETURN
 [6]_asm_proceduresortcollisions_let_12 "let first colliding-particles" Object => void
       _first "first colliding-particles" Object => Object

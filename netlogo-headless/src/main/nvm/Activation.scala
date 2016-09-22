@@ -34,4 +34,10 @@ class Activation(val procedure: Procedure, _parent: Activation, val returnAddres
         .map{case (a, i) => "  arg " + i + " = " + a}
         .mkString("\n")
 
+  def nonLambdaActivation: Activation = {
+    if (procedure.isLambda)
+      parent.map(_.nonLambdaActivation).getOrElse(this)
+    else
+      this
+  }
 }

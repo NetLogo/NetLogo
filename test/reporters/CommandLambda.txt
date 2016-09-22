@@ -300,3 +300,25 @@ LoopBindings3
   O> set lambdas [] let bar 0 repeat 5 [ set lambdas lput [ [] -> set bar bar + 1 set glob1 bar ] lambdas ]
   O> foreach lambdas [ [l] -> run l ]
   glob1 => 5
+
+StopFromLambda1
+  to-report stopper report [[] -> stop] end
+  to foo (run stopper) end
+  O> foo
+
+StopFromLambda2
+  globals [globstop]
+  to make-stop-glob set globstop [[] -> stop] end
+  to-report baz make-stop-glob run globstop report 5 end
+  O> show baz => ERROR STOP is not allowed inside TO-REPORT.
+
+ReportFromLambda1
+  to-report stopper report [[] -> report 5] end
+  to-report foo (run stopper) end
+  foo => 5
+
+ReportFromLambda2
+  globals [globrep]
+  to make-rep-glob set globrep [[] -> report 5] end
+  to baz make-rep-glob run globrep end
+  O> baz => ERROR REPORT can only be used inside TO-REPORT.
