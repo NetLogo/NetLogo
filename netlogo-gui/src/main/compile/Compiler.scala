@@ -124,9 +124,11 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
   def findIncludes(sourceFileName: String, source: String,
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
-    if (includes.isEmpty)
-      None
-    else
+    if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
+      parserTokenizer.tokenizeString(source)
+        .find(t => t.text.equalsIgnoreCase("__includes"))
+        .map(_ => Map.empty[String, String])
+    } else
       Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
   }
 
