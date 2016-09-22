@@ -5,7 +5,7 @@ package org.nlogo.window
 import javax.swing.{JMenuItem, JPopupMenu}
 import org.nlogo.awt.ImageSelection
 import org.nlogo.window.Events.{ExportPlotEvent, PeriodicUpdateEvent}
-import java.awt.{Component, Point}
+import java.awt.{Component, Frame, Point}
 import java.awt.image.BufferedImage
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.plot.{PlotManagerInterface, Plot}
@@ -39,10 +39,6 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
     val image = new BufferedImage(getWidth, getHeight, BufferedImage.TYPE_INT_ARGB)
     paint(image.getGraphics)
     image
-  }
-
-  override def export(exportPath: String): Unit = {
-    new ExportPlotEvent(PlotWidgetExportType.ARGUMENT, plot, exportPath).raise(this)
   }
 
   override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {

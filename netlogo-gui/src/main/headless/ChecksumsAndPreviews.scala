@@ -5,11 +5,9 @@ package org.nlogo.headless
 import java.io.File
 import java.io.IOException
 
-import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.api.{ FileIO, LogoException, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
-
-import javax.imageio.ImageIO
 
 object ChecksumsAndPreviews {
 
@@ -58,7 +56,7 @@ object ChecksumsAndPreviews {
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
         println("making preview for: " + path)
-        ImageIO.write(runner.previewImage.get, "PNG", new File(previewPath))
+        FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
       } catch {
         case _: PreviewCommandsRunner.NonCompilableCommandsException =>
           println("skipping: " + path + "\n  (non-compilable preview commands)")

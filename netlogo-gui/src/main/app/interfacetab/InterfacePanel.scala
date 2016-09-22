@@ -3,14 +3,15 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{Cursor, FileDialog => AwtFileDialog}
+import java.awt.image.BufferedImage
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, KeyEvent, KeyListener, MouseEvent}
-import java.io.IOException
+import java.io.{ File, FileOutputStream, IOException }
 import java.util.{ArrayList, List => JList}
-import javax.imageio.ImageIO
 import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
 
 import org.nlogo.window.{ButtonWidget, ChooserWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
 import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
+import org.nlogo.app.common.ExportInterfaceAction
 import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
 import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.editor.UndoManager
@@ -18,7 +19,7 @@ import org.nlogo.log.Logger
 import org.nlogo.swing.{FileDialog => SwingFileDialog}
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.ChooserWidget
-import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, ExportInterfaceEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
+import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
 
 import scala.collection.JavaConverters._
@@ -26,8 +27,7 @@ import scala.collection.JavaConverters._
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
   with KeyListener
-  with LoadWidgetsEvent.Handler
-  with ExportInterfaceEvent.Handler {
+  with LoadWidgetsEvent.Handler {
 
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
@@ -88,21 +88,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   val exportItem: JMenuItem = {
-    val exportAction = new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        try {
-          exportInterface()
-        } catch  {
-          case ex: IOException =>
-            JOptionPane.showMessageDialog(InterfacePanel.this, ex.getMessage(),
-              I18N.gui.get("common.messages.error"), JOptionPane.ERROR_MESSAGE)
-        }
-      }
-    }
-    val exportItem = new JMenuItem(
-      I18N.gui.get("menu.file.export.interface"))
-    exportItem.addActionListener(exportAction)
-    exportItem
+    val exportAction =
+      new ExportInterfaceAction(Hierarchy.getFrame(this), workspace)
+    new JMenuItem(exportAction)
   }
 
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget, x: Int, y: Int)
@@ -244,35 +232,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     new CompileAllEvent().raise(this)
   }
 
-  def handle(e: ExportInterfaceEvent): Unit = {
-    try ImageIO.write(Images.paintToImage(this), "png", e.stream)
-    catch {
-      case ex: IOException =>
-        e.exceptionBox(0) = ex
-    }
-  }
-
-  @throws(classOf[java.io.IOException])
-  private def exportInterface(): Unit = {
-    try {
-      val exportPath = SwingFileDialog.show(this,
-        I18N.gui.get("dialog.interface.export.file"),
-        AwtFileDialog.SAVE,
-        workspace.guessExportName("interface.png"))
-      var exception = Option.empty[IOException]
-      val runExport = new Runnable() {
-        def run(): Unit = {
-          try workspace.exportInterface(exportPath)
-          catch {
-            case ex: IOException => exception = Some(ex)
-          }}}
-      ModalProgressTask(Hierarchy.getFrame(this),
-        I18N.gui.get("dialog.interface.export.task"), runExport)
-      exception.foreach(e => throw e)
-    } catch {
-      case ex: UserCancelException => Exceptions.ignore(ex)
-    }
-  }
+  def interfaceImage: BufferedImage =
+    Images.paintToImage(this)
 
   def handle(e: LoadWidgetsEvent): Unit = {
     loadWidgets(e.widgets)

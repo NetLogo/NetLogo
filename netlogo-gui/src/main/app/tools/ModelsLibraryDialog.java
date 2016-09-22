@@ -138,7 +138,7 @@ strictfp public class ModelsLibraryDialog
 
     final SearchableModelTree[] smt = new SearchableModelTree[1];
     if (ModelsLibrary.needsModelScan() || smt[0] == null) {
-      org.nlogo.swing.ModalProgressTask.apply(
+      org.nlogo.swing.ModalProgressTask.onUIThread(
         parent, I18N.guiJ().get("modelsLibrary.loading"),
         new Runnable() {
           public void run() {

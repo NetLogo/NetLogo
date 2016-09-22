@@ -36,7 +36,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def zoomSubcomponents = true
   override def exportable = true
   override def getDefaultExportName = "output.txt"
-  override def export(exportPath:String) = outputArea.export(exportPath)
+  def valueText: String = outputArea.text.getText
   override def hasContextMenu = true
   override def copyable = false
 

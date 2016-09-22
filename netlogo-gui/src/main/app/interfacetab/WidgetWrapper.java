@@ -932,16 +932,7 @@ public strictfp class WidgetWrapper
         exportItem.addActionListener
             (new java.awt.event.ActionListener() {
               public void actionPerformed(java.awt.event.ActionEvent e) {
-                try {
-                  String exportPath = org.nlogo.swing.FileDialog.show
-                      (widget(), "Export",
-                          java.awt.FileDialog.SAVE,
-                          interfacePanel.workspace().guessExportName
-                              (widget.getDefaultExportName()));
-                  widget().export(exportPath);
-                } catch (org.nlogo.awt.UserCancelException uce) {
-                  org.nlogo.api.Exceptions.ignore(uce);
-                }
+                new org.nlogo.window.Events.ExportWidgetEvent(widget()).raise(WidgetWrapper.this);
               }
             });
         menu.add(exportItem);

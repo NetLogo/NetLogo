@@ -23,6 +23,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   def timeToRunSecondaryJobs() { thread.isTimeToRunSecondaryJobs = true }
   def maybeRunSecondaryJobs() { thread.maybeRunSecondaryJobs() }
   def anyPrimaryJobs = !thread.primaryJobs.isEmpty
+  def onJobThread = Thread.currentThread == thread
 
   /// public methods for adding jobs
 

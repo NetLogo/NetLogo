@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, List=>AWTList, Point, Rectangle, event },
+import java.awt.{ Component, Container, Dimension, Font, Frame, Graphics, Graphics2D, List=>AWTList, Point, Rectangle, event },
   event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
@@ -58,7 +58,6 @@ abstract class Widget extends JPanel {
   def exportable = false
   def zoomSubcomponents = false
   def getDefaultExportName = "output.txt"
-  def export(exportPath: String): Unit = {}
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
   def addExtraMenuItems(menu:JPopupMenu): Unit = {

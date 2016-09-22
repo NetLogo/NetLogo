@@ -18,21 +18,11 @@ public final strictfp class _exportoutput
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
     }
     final org.nlogo.nvm.Command comm = this;
-    workspace.waitFor
-        (new org.nlogo.api.CommandRunnable() {
-          public void run()
-              throws RuntimePrimitiveException {
-            try {
-              workspace
-                  .exportOutput
-                      (workspace.fileManager().attachPrefix
-                          (filename));
-            } catch (java.io.IOException ex) {
-              throw new RuntimePrimitiveException(context, comm, ex.getMessage());
-            }
-          }
-        }
-        );
+    try {
+      workspace.exportOutput(workspace.fileManager().attachPrefix(filename));
+    } catch (java.io.IOException ex) {
+      throw new RuntimePrimitiveException(context, comm, ex.getMessage());
+    }
     context.ip = next;
   }
 

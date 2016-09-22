@@ -19,7 +19,6 @@ class InterfaceTab(workspace: GUIWorkspace,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.OutputEvent.Handler
-  with WindowEvents.ExportOutputEvent.Handler
   with WindowEvents.Enable2DEvent.Handler
   with AppEvents.SwitchedTabsEvent.Handler
   with NlogoPrintable {
@@ -103,8 +102,6 @@ class InterfaceTab(workspace: GUIWorkspace,
   /// output
 
   def getOutputArea = Option(iP.getOutputWidget).map(_.outputArea).getOrElse(commandCenter.output)
-
-  def handle(e: WindowEvents.ExportOutputEvent) { getOutputArea.export(e.filename) }
 
   def handle(e: WindowEvents.OutputEvent) {
     val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea

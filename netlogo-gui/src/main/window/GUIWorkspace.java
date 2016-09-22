@@ -19,6 +19,8 @@ import org.nlogo.core.UpdateMode;
 import org.nlogo.core.UpdateModeJ;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.CommandRunnable;
+import org.nlogo.api.ControlSet;
+import org.nlogo.api.FileIO$;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.ModelTypeJ;
@@ -36,14 +38,13 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public abstract strictfp class GUIWorkspace // can't be both abstract and strictfp
-    extends org.nlogo.workspace.AbstractWorkspaceScala
+    extends GUIWorkspaceScala
     implements
     org.nlogo.window.Event.LinkChild,
     org.nlogo.window.Events.AboutToQuitEvent.Handler,
     org.nlogo.window.Events.AddJobEvent.Handler,
     org.nlogo.window.Events.AfterLoadEvent.Handler,
     org.nlogo.window.Events.BeforeLoadEvent.Handler,
-    org.nlogo.window.Events.ExportPlotEvent.Handler,
     org.nlogo.window.Events.JobStoppingEvent.Handler,
     org.nlogo.window.Events.LoadModelEvent.Handler,
     org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
@@ -62,13 +63,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public final KioskLevel kioskLevel;
 
-  private final java.awt.Frame frame;
   private final java.awt.Component linkParent;
   public final ViewWidget viewWidget;
-  public final View view;
+  private final View view;
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
-  public ViewManager viewManager = new ViewManager();
   private final ExternalFileManager externalFileManager;
   public final NetLogoListenerManager listenerManager;
 
@@ -84,10 +83,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                       java.awt.Component linkParent,
                       org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,
-                      NetLogoListenerManager listenerManager) {
-    super(world, hubNetManagerFactory);
+                      NetLogoListenerManager listenerManager,
+                      ControlSet controlSet) {
+    super(world, hubNetManagerFactory, frame, controlSet);
     this.kioskLevel = kioskLevel;
-    this.frame = frame;
     this.linkParent = linkParent;
     this.externalFileManager = externalFileManager;
     this.listenerManager = listenerManager;
@@ -95,7 +94,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
     viewWidget = new ViewWidget(this);
     view = viewWidget.view();
-    viewManager.setPrimary(view);
+    viewManager().setPrimary(view);
 
     periodicUpdater = new PeriodicUpdater(jobManager);
     periodicUpdater.start();
@@ -106,7 +105,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         new javax.swing.AbstractAction() {
           public void actionPerformed(java.awt.event.ActionEvent e) {
             if (world.displayOn() && displaySwitchOn() && !jobManager.anyPrimaryJobs()) {
-              viewManager.paintImmediately(world.observer().updatePosition());
+              viewManager().paintImmediately(world.observer().updatePosition());
             }
           }
         };
@@ -116,6 +115,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
     lifeguard = new Lifeguard();
     lifeguard.start();
+  }
+
+  public View view() {
+    return view;
   }
 
   // Lifeguard ensures the engine comes up for air every so often.
@@ -206,11 +209,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void exportDrawing(String filename, String format)
       throws java.io.IOException {
-    java.io.FileOutputStream stream =
-        new java.io.FileOutputStream(new java.io.File(filename));
-    javax.imageio.ImageIO.write
-        (view.renderer.trailDrawer().getAndCreateDrawing(true), format, stream);
-    stream.close();
+      FileIO$.MODULE$.writeImageFile(view.renderer.trailDrawer().getAndCreateDrawing(true), filename, format);
   }
 
   public java.awt.image.BufferedImage getAndCreateDrawing() {
@@ -373,9 +372,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     new org.nlogo.window.Events.PatchesCreatedEvent().raise(this);
   }
 
-  public java.awt.Frame getFrame() {
-    return frame;
-  }
 
   public boolean compilerTestingMode() {
     return false;
@@ -474,19 +470,19 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// painting
 
   public boolean displaySwitchOn() {
-    return viewManager.getPrimary().displaySwitch();
+    return viewManager().getPrimary().displaySwitch();
   }
 
   public void displaySwitchOn(boolean on) {
-    viewManager.getPrimary().displaySwitch(on);
+    viewManager().getPrimary().displaySwitch(on);
   }
 
   public void set2DViewEnabled(boolean enabled) {
     if (enabled) {
       displaySwitchOn(glView.displayOn());
 
-      viewManager.setPrimary(view);
-      viewManager.remove(glView);
+      viewManager().setPrimary(view);
+      viewManager().remove(glView);
 
       view.dirty();
       if (glView.displayOn()) {
@@ -502,10 +498,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         org.nlogo.api.Exceptions.ignore(e);
       }
     } else {
-      viewManager.setPrimary(glView);
+      viewManager().setPrimary(glView);
 
       if (!dualView) {
-        viewManager.remove(view);
+        viewManager().remove(view);
         view.freeze();
       }
       glView.displaySwitch(viewWidget.displaySwitch().isSelected());
@@ -527,10 +523,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       dualView = on;
       if (dualView) {
         view.thaw();
-        viewManager.setSecondary(view);
+        viewManager().setSecondary(view);
       } else {
         view.freeze();
-        viewManager.remove(view);
+        viewManager().remove(view);
       }
       viewWidget.setVisible(on);
     }
@@ -545,7 +541,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // we must first make sure the event thread has had the
     // opportunity to detect any recent mouse clicks - ST 5/3/04
     waitForQueuedEvents();
-    return viewManager.mouseDown();
+    return viewManager().mouseDown();
   }
 
   public boolean mouseInside()
@@ -553,7 +549,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // we must first make sure the event thread has had the
     // opportunity to detect any recent mouse movement - ST 5/3/04
     waitForQueuedEvents();
-    return viewManager.mouseInside();
+    return viewManager().mouseInside();
   }
 
   public double mouseXCor()
@@ -561,7 +557,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // we must first make sure the event thread has had the
     // opportunity to detect any recent mouse movement - ST 5/3/04
     waitForQueuedEvents();
-    return viewManager.mouseXCor();
+    return viewManager().mouseXCor();
   }
 
   public double mouseYCor()
@@ -569,7 +565,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // we must first make sure the event thread has had the
     // opportunity to detect any recent mouse movement - ST 5/3/04
     waitForQueuedEvents();
-    return viewManager.mouseYCor();
+    return viewManager().mouseYCor();
   }
 
   // shouldn't have to fully qualify UpdateMode here, but we were having
@@ -606,7 +602,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       return;
     }
     if (!updateManager().shouldUpdateNow()) {
-      viewManager.framesSkipped();
+      viewManager().framesSkipped();
       return;
     }
     if (!displaySwitchOn()) {
@@ -617,7 +613,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         waitFor
             (new org.nlogo.api.CommandRunnable() {
               public void run() {
-                viewManager.incrementalUpdateFromEventThread();
+                viewManager().incrementalUpdateFromEventThread();
               }
             });
         // don't block the event thread during a smoothing pause
@@ -631,7 +627,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         throw new IllegalStateException(ex);
       }
     } else {
-      viewManager.incrementalUpdateFromJobThread();
+      viewManager().incrementalUpdateFromJobThread();
     }
     updateManager().pause();
   }
@@ -710,7 +706,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void halt() {
     jobManager.interrupt();
-    org.nlogo.swing.ModalProgressTask.apply(
+    org.nlogo.swing.ModalProgressTask.onUIThread(
       getFrame(), "Halting...",
       new Runnable() {
         public void run() {
@@ -722,7 +718,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   // for notification of a changed shape
   public void shapeChanged(org.nlogo.core.Shape shape) {
-    viewManager.shapeChanged(shape);
+    viewManager().shapeChanged(shape);
   }
 
   public void handle(org.nlogo.window.Events.AfterLoadEvent e) {
@@ -1006,155 +1002,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     };
   }
 
-  /// exporting
-
-  public java.awt.Component getExportWindowFrame() {
-    return viewManager.getPrimary().getExportWindowFrame();
-  }
-
-  public java.awt.image.BufferedImage exportView() {
-    return viewManager.getPrimary().exportView();
-  }
-
-  public void exportView(String filename, String format)
-      throws java.io.IOException {
-    exportView(viewManager.getPrimary(), filename, format);
-  }
-
-  public void exportView(LocalViewInterface display, String filename, String format)
-      throws java.io.IOException {
-    java.io.FileOutputStream stream =
-        new java.io.FileOutputStream(new java.io.File(filename));
-    javax.imageio.ImageIO.write(display.exportView(), format, stream);
-    stream.close();
-  }
-
-  public void doExportView(final LocalViewInterface exportee) {
-    try {
-      final String exportPath =
-          org.nlogo.swing.FileDialog.show
-              (getExportWindowFrame(), "Export View",
-                  java.awt.FileDialog.SAVE,
-                  guessExportName("view.png"));
-      final java.io.IOException[] exception =
-          new java.io.IOException[]{null};
-      org.nlogo.swing.ModalProgressTask.apply(
-        getFrame(),
-        "Exporting...",
-        new Runnable() {
-          public void run() {
-            try {
-              exportView(exportee, exportPath, "png");
-            } catch (java.io.IOException ex) {
-              exception[0] = ex;
-            }}});
-      if (exception[0] != null) {
-        throw exception[0];
-      }
-    } catch (org.nlogo.awt.UserCancelException ex) {
-      org.nlogo.api.Exceptions.ignore(ex);
-    } catch (java.io.IOException ex) {
-      javax.swing.JOptionPane.showMessageDialog
-          (getExportWindowFrame(), ex.getMessage(),
-              I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-  }
-
-  public void exportInterface(String filename)
-      throws java.io.IOException {
-    // there's a form of ImageIO.write that just takes a filename, but
-    // if we use that when the filename is invalid (e.g. refers to
-    // a directory that doesn't exist), we get an IllegalArgumentException
-    // instead of an IOException, so we make our own OutputStream
-    // so we get the proper exceptions. - ST 8/19/03, 11/26/03
-    java.io.FileOutputStream stream =
-        new java.io.FileOutputStream(new java.io.File(filename));
-    java.io.IOException[] exceptionBox = new java.io.IOException[1];
-    new org.nlogo.window.Events.ExportInterfaceEvent(stream, exceptionBox)
-        .raise(this);
-    stream.close();
-    if (exceptionBox[0] != null) {
-      throw exceptionBox[0];
-    }
-  }
-
-
-  public void exportOutput(String filename) {
-    new org.nlogo.window.Events.ExportOutputEvent(filename)
-        .raise(this);
-  }
-
-  @Override
-  public void exportDrawingToCSV(java.io.PrintWriter writer) {
-    view.renderer.trailDrawer().exportDrawingToCSV(writer);
-  }
-
-  @Override
-  public void exportOutputAreaToCSV(java.io.PrintWriter writer) {
-    new org.nlogo.window.Events.ExportWorldEvent(writer)
-        .raise(GUIWorkspace.this);
-  }
-
-  public void exportPlot(PlotWidgetExportType whichPlots, org.nlogo.plot.Plot plot,
-                         String filename) {
-    new org.nlogo.window.Events.ExportPlotEvent
-        (whichPlots, plot, filename)
-        .raise(this);
-  }
-
-
-  public void handle(org.nlogo.window.Events.ExportPlotEvent e) {
-    if (e.whichPlots == PlotWidgetExportType.ALL) {
-      if (plotManager().getPlotNames().length == 0) {
-        org.nlogo.swing.OptionDialog.show
-            (getFrame(), "Export Plot", "There are no plots to export.",
-                new String[]{I18N.guiJ().get("common.buttons.ok")});
-        return;
-      }
-      try {
-        super.exportAllPlots(e.filename);
-      } catch (java.io.IOException ex) {
-        String message = "Export of all plots to" + e.filename + " failed: " + ex.getMessage();
-        String[] options = {I18N.guiJ().get("common.buttons.ok")};
-        org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
-      }
-    } else {
-      org.nlogo.plot.Plot plot = e.plot;
-      if (plot == null) {
-        plot = choosePlot(getFrame());
-      }
-      if (plot != null) {
-        try {
-          super.exportPlot(plot.name(), e.filename);
-        } catch (java.io.IOException ex) {
-          String message = "Export of " + plot.name() + " plot to " + e.filename + " failed: " + ex.getMessage();
-          String[] options = {I18N.guiJ().get("common.buttons.ok")};
-          org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
-        }
-      }
-    }
-  }
-
-  /// exporting helpers
-
-  org.nlogo.plot.Plot choosePlot(java.awt.Frame frame) {
-    String[] plotNames = plotManager().getPlotNames();
-    if (plotNames.length == 0) {
-      String message = "There are no plots to export.";
-      String[] options = {I18N.guiJ().get("common.buttons.ok")};
-      org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options);
-      return null;
-    }
-    String message = "Which plot would you like to export?";
-    int plotnum = org.nlogo.swing.OptionDialog.showAsList
-        (frame, "Export Plot",
-            message, plotNames);
-    if (plotnum < 0) {
-      return null;
-    } else {
-      return plotManager().getPlot(plotNames[plotnum]);
-    }
-  }
 
   /// runtime error handling
 
@@ -1246,7 +1093,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     fileManager().handleModelChange();
     previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
-    viewManager.resetMouseCors();
+    viewManager().resetMouseCors();
     displaySwitchOn(true);
     setProcedures(new scala.collection.immutable.ListMap<String, Procedure>());
     lastTicksListenersHeard = -1.0;
@@ -1274,9 +1121,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void hubNetRunning_$eq(boolean running) {
     if (this.hubNetRunning() != running) {
       if (running) {
-        viewManager.add(hubNetManager().get());
+        viewManager().add(hubNetManager().get());
       } else {
-        viewManager.remove(hubNetManager().get());
+        viewManager().remove(hubNetManager().get());
       }
     }
 

@@ -159,7 +159,7 @@ public strictfp class AgentMonitorView
       };
 
   public void close() {
-    workspace.viewManager.remove(this);
+    workspace.viewManager().remove(this);
   }
 
   private void doPopup(java.awt.event.MouseEvent e) {

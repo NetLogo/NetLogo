@@ -303,10 +303,8 @@ with org.nlogo.api.ViewSettings {
     renderer.trailDrawer.clearDrawing()
   }
   override def exportDrawing(filename: String, format: String) {
-    val stream = new java.io.FileOutputStream(new java.io.File(filename))
-    javax.imageio.ImageIO.write(
-      renderer.trailDrawer.getAndCreateDrawing(true), format, stream)
-    stream.close()
+    FileIO.writeImageFile(
+      renderer.trailDrawer.getAndCreateDrawing(true), filename, format)
   }
   override def exportDrawingToCSV(writer: java.io.PrintWriter) {
     renderer.trailDrawer.exportDrawingToCSV(writer)
@@ -378,14 +376,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   override def exportView(filename: String, format: String) {
-    // there's a form of ImageIO.write that just takes a filename, but if we use that when the
-    // filename is invalid (e.g. refers to a directory that doesn't exist), we get an
-    // IllegalArgumentException instead of an IOException, so we make our own OutputStream so we get
-    // the proper exceptions. - ST 8/19/03
-    val image = renderer.exportView(this)
-    val stream = new java.io.FileOutputStream(new java.io.File(filename))
-    javax.imageio.ImageIO.write(image, format, stream)
-    stream.close()
+    FileIO.writeImageFile(renderer.exportView(this), filename, format)
   }
 
   /**

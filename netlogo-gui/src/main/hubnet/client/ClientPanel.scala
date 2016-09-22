@@ -18,8 +18,10 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.OptionDialog
 import org.nlogo.swing.Implicits._
-import org.nlogo.window.{ PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
 import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
+
+import scala.concurrent.Future
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -85,16 +87,22 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   def handle(e: org.nlogo.window.Events.ExportPlotEvent) {
-    e.whichPlots match {
-      case PlotWidgetExportType.ALL => throw new UnsupportedOperationException("can't export all plots yet.")
-      case _ =>
-        if (e.plot != null) {
-          try new AbstractExporter(e.filename) {
-            override def export(writer: PrintWriter) {
-              new PlotExporter(e.plot, Dump.csv).export(writer)
-            }
-          }.export("plot", "HubNet Client", "")
-          catch {case ex: IOException => org.nlogo.api.Exceptions.handle(ex)}
+    e.plotExport match {
+      case PlotWidgetExport.ExportAllPlots =>
+        throw new UnsupportedOperationException("can't export all plots yet.")
+      case PlotWidgetExport.ExportSinglePlot(plot) =>
+        if (plot != null) {
+          Future.successful(e.exportFilename)
+           .foreach({ filename =>
+             try new AbstractExporter(filename) {
+               override def export(writer: PrintWriter) {
+                 new PlotExporter(plot, Dump.csv).export(writer)
+               }
+             }.export("plot", "HubNet Client", "")
+             catch {
+               case ex: IOException => org.nlogo.api.Exceptions.handle(ex)
+             }
+           })(NetLogoExecutionContext.backgroundExecutionContext)
         }
     }
   }

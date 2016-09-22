@@ -45,9 +45,15 @@ menu.file.nlw.prompt.message.fromSave = Export model from last save or from open
 menu.file.nlw.prompt.message.fromLibrary = Export model from Models Library or open copy?
 menu.file.print = Print…
 menu.file.export = Export
+menu.file.export.failed = Export Failed
 menu.file.export.world = Export World
+menu.file.export.noPlots = There are no plots to export.
 menu.file.export.plot = Export Plot
+menu.file.export.plot.exportFailed = Export of {0} plot to {1} failed: {2}
+menu.file.export.plot.failed = Export Plot Failed
+menu.file.export.plot.whichPlot = Which plot would you like to export?
 menu.file.export.allPlots = Export All Plots
+menu.file.export.allPlots.exportFailed = Export of all plots to {0} failed: {1}
 menu.file.export.view = Export View
 menu.file.export.interface = Export Interface
 menu.file.export.output = Export Output
@@ -159,6 +165,8 @@ tabs.run.commandcenter.exporting = Exporting
 tabs.run.commandcenter.history = History
 tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
 tabs.run.commandcenter.clearHistory = Clear History
+
+tabs.input.export.error = Export failed.  Error:\n{0}
 
 tabs.info = Info
 tabs.info.edit = Edit
