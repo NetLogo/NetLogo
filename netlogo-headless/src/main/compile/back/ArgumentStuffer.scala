@@ -4,6 +4,7 @@ package org.nlogo.compile
 package back
 
 import org.nlogo.nvm
+import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, ReporterBlock, ReporterApp, Statement }
 
 /**
  * Fills the args arrays, in all of the Instructions anywhere in

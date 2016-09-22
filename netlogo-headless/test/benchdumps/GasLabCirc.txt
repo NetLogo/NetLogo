@@ -897,10 +897,11 @@ procedure GO:[]{O---}:
           RETURN
 [1]_asm_procedurego_setobservervariable_2 "set" Object => void
       _filter "filter"
-        _reportertask "[item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1 and
-                                    item 1 ? != colliding-particle-2 and
-                                    item 2 ? != colliding-particle-2]"
+        _reporterlambda "[ [collision] ->
+      item 1 collision != colliding-particle-1 and
+      item 2 collision != colliding-particle-1 and
+      item 1 collision != colliding-particle-2 and
+      item 2 collision != colliding-particle-2]"
           _asm_procedurego_and_3 "and"
             _and "and"
               _and "and"
@@ -912,7 +913,7 @@ procedure GO:[]{O---}:
                           GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_4.kept1_value : Ljava/lang/Double;
                          L1
                           ARETURN
-                    _asm_procedurego_letvariable_5 "?" => Object
+                    _asm_procedurego_letvariable_5 "collision" => Object
                          L0
                           ALOAD 1
                           ALOAD 0
@@ -929,7 +930,7 @@ procedure GO:[]{O---}:
                           GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_6.kept1_value : Ljava/lang/Double;
                          L1
                           ARETURN
-                    _asm_procedurego_letvariable_7 "?" => Object
+                    _asm_procedurego_letvariable_7 "collision" => Object
                          L0
                           ALOAD 1
                           ALOAD 0
@@ -946,7 +947,7 @@ procedure GO:[]{O---}:
                         GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_8.kept1_value : Ljava/lang/Double;
                        L1
                         ARETURN
-                  _asm_procedurego_letvariable_9 "?" => Object
+                  _asm_procedurego_letvariable_9 "collision" => Object
                        L0
                         ALOAD 1
                         ALOAD 0
@@ -963,7 +964,7 @@ procedure GO:[]{O---}:
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_10.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_11 "?" => Object
+                _asm_procedurego_letvariable_11 "collision" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -1458,8 +1459,9 @@ procedure GO:[]{O---}:
           RETURN
 [9]_asm_procedurego_setobservervariable_20 "set" Object => void
       _filter "filter"
-        _reportertask "[item 1 ? != colliding-particle-1 and
-                                    item 2 ? != colliding-particle-1]"
+        _reporterlambda "[ [collision] ->
+      item 1 collision != colliding-particle-1 and
+      item 2 collision != colliding-particle-1]"
           _asm_procedurego_and_21 "and"
             _notequal "!=" Object,Object => boolean
               _item "item"
@@ -1469,7 +1471,7 @@ procedure GO:[]{O---}:
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_22.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_23 "?" => Object
+                _asm_procedurego_letvariable_23 "collision" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -1486,7 +1488,7 @@ procedure GO:[]{O---}:
                       GETFIELD org/nlogo/prim/_asm_procedurego_constdouble_24.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_procedurego_letvariable_25 "?" => Object
+                _asm_procedurego_letvariable_25 "collision" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -2502,7 +2504,7 @@ reporter procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -2623,7 +2625,7 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -7642,11 +7644,12 @@ procedure ASSIGN-COLLIDING-WALL:[TIME-TO-COLLISION WALL COLLIDING-PAIR]{-TPL}:
          L1
           RETURN
 
-procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
+procedure SORT-COLLISIONS:[DT]{OTPL}:
 [0]_asm_proceduresortcollisions_setobservervariable_0 "set" Object => void
       _filter "filter"
-        _reportertask "[item 1 ? != colliding-particle-1 or
-                                  item 2 ? != colliding-particle-2]"
+        _reporterlambda "[ [collision] ->
+    item 1 collision != colliding-particle-1 or
+    item 2 collision != colliding-particle-2]"
           _asm_proceduresortcollisions_or_1 "or"
             _notequal "!=" Object,Object => boolean
               _item "item"
@@ -7656,7 +7659,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                       GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_2.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_proceduresortcollisions_letvariable_3 "?" => Object
+                _asm_proceduresortcollisions_letvariable_3 "collision" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -7673,7 +7676,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                       GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_4.kept1_value : Ljava/lang/Double;
                      L1
                       ARETURN
-                _asm_proceduresortcollisions_letvariable_5 "?" => Object
+                _asm_proceduresortcollisions_letvariable_5 "collision" => Object
                      L0
                       ALOAD 1
                       ALOAD 0
@@ -7948,7 +7951,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7980,12 +7983,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_proceduresortcollisions_setprocedurevariable_12 "let" Object => void
+[6]_asm_proceduresortcollisions_let_12 "let" Object => void
       _first "first" Object => Object
         _observervariable:COLLIDING-PARTICLES "colliding-particles" => Object
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_setprocedurevariable_12.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_let_12.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           BIPUSH 7
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
@@ -8055,14 +8058,13 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresortcollisions_setprocedurevariable_12 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_proceduresortcollisions_let_12 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
           ASTORE 2
           ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_let_12.kept1__let : Lorg/nlogo/core/Let;
           ALOAD 2
-          AASTORE
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
           ALOAD 1
           BIPUSH 7
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -8078,7 +8080,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-      _commandtask:(command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]) "[if first ? < first winner [set winner ?]]"
+      _commandlambda:(anonymous command from: procedure SORT-COLLISIONS: [if first collision < first winner [ set winner collision ] set winner collision]) "[ [collision] -> if first collision < first winner [set winner collision]]"
 [8]_asm_proceduresortcollisions_setprocedurevariable_14 "let" Object => void
       _item "item"
         _asm_proceduresortcollisions_constdouble_15 "0" => Double
@@ -8087,13 +8089,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
               GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_15.kept1_value : Ljava/lang/Double;
              L1
               ARETURN
-        _asm_proceduresortcollisions_procedurevariable_16 "winner" => Object
+        _asm_proceduresortcollisions_letvariable_16 "winner" => Object
              L0
               ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-              ICONST_0
-              AALOAD
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_letvariable_16.kept1__let : Lorg/nlogo/core/Let;
+              INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
              L1
               ARETURN
           ALOAD 0
@@ -8105,7 +8106,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_1
+          ICONST_0
           ALOAD 2
           AASTORE
           ALOAD 1
@@ -8121,7 +8122,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_1
+          ICONST_0
           AALOAD
          L1
           DCONST_0
@@ -8207,7 +8208,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_1
+          ICONST_0
           AALOAD
          L3
           ASTORE 2
@@ -8296,7 +8297,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_1
+          ICONST_0
           AALOAD
          L6
           ASTORE 2
@@ -8386,13 +8387,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
               GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_21.kept1_value : Ljava/lang/Double;
              L1
               ARETURN
-        _asm_proceduresortcollisions_procedurevariable_22 "winner" => Object
+        _asm_proceduresortcollisions_letvariable_22 "winner" => Object
              L0
               ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-              ICONST_0
-              AALOAD
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_letvariable_22.kept1__let : Lorg/nlogo/core/Let;
+              INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
              L1
               ARETURN
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -8436,13 +8436,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
               GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_constdouble_24.kept1_value : Ljava/lang/Double;
              L1
               ARETURN
-        _asm_proceduresortcollisions_procedurevariable_25 "winner" => Object
+        _asm_proceduresortcollisions_letvariable_25 "winner" => Object
              L0
               ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-              ICONST_0
-              AALOAD
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduresortcollisions_letvariable_25.kept1__let : Lorg/nlogo/core/Let;
+              INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
              L1
               ARETURN
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -8529,17 +8528,17 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L1
           RETURN
 
-   (command task from: procedure SORT-COLLISIONS: [if first ? < first winner [ set winner ? ] set winner ?]):procedure SORT-COLLISIONS:[]{OTPL}:
-   [0]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 "if" boolean => void
+   (anonymous command from: procedure SORT-COLLISIONS: [if first collision < first winner [ set winner collision ] set winner collision]):procedure SORT-COLLISIONS[]{OTPL}:
+   [0]_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 "if" boolean => void
             _lessthan "<" Object,Object => boolean
               _first "first" Object => Object
-                _letvariable(Let(?1)) "?" => Object
+                _letvariable(Let(COLLISION)) "collision" => Object
               _first "first" Object => Object
-                _procedurevariable:WINNER "winner" => Object
+                _letvariable(Let(WINNER)) "winner" => Object
                L0
                 ALOAD 1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0.kept4__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0.kept4__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -8607,12 +8606,11 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L4
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-                ICONST_0
-                AALOAD
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0.kept6__let : Lorg/nlogo/core/Let;
+                INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L7
                 ASTORE 2
                 ALOAD 2
@@ -8634,12 +8632,12 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L9
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [java/lang/Object]
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/core/LogoList.first ()Ljava/lang/Object;
                 GOTO L10
                L8
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 ALOAD 2
                 INSTANCEOF java/lang/String
                 IFEQ L11
@@ -8659,14 +8657,14 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L12
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/String] [java/lang/Object]
                 ALOAD 3
                 ICONST_0
                 ICONST_1
                 INVOKEVIRTUAL java/lang/String.substring (II)Ljava/lang/String;
                 GOTO L10
                L11
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
                 ALOAD 1
@@ -8679,7 +8677,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L10
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object java/lang/Object]
                 ASTORE 3
                 ASTORE 2
                 ALOAD 2
@@ -8796,34 +8794,23 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                 ICONST_1
                 GOTO L24
                L23
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context]
                 ICONST_2
                L24
-               FRAME FULL [org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
+               FRAME FULL [org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_if_0 org/nlogo/nvm/Context I java/lang/Object] [org/nlogo/nvm/Context I]
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L25
                 RETURN
-   [1]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1 "set" Object => void
-            _letvariable(Let(?1)) "?" => Object
-               L0
-                ALOAD 1
-                ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_setprocedurevariable_1.kept2__let : Lorg/nlogo/core/Let;
-                INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
-               L1
-                ASTORE 2
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-                ICONST_0
-                ALOAD 2
-                AASTORE
-                ALOAD 1
-                ICONST_2
-                PUTFIELD org/nlogo/nvm/Context.ip : I
-               L2
-                RETURN
-   [2]_asm_commandtaskfromproceduresortcollisionsiffirstfirstwinnersetwinnersetwinner_done_2 => void
+   [1]_setletvariable:WINNER "set"
+            _asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_letvariable_1 "collision" => Object
+                 L0
+                  ALOAD 1
+                  ALOAD 0
+                  GETFIELD org/nlogo/prim/_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_letvariable_1.kept1__let : Lorg/nlogo/core/Let;
+                  INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
+                 L1
+                  ARETURN
+   [2]_asm_anonymouscommandfromproceduresortcollisionsiffirstcollisionfirstwinnersetwinnercollisionsetwinnercollision_done_2 => void
                L0
                 ALOAD 1
                 ICONST_1
@@ -8885,7 +8872,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -9213,7 +9200,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -9546,7 +9533,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -14367,7 +14354,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -15187,7 +15174,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L11
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW

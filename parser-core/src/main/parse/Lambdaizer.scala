@@ -128,13 +128,13 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
       case _: _task           =>
         // need to check if arg0 is synthetic. If it is synthetic, we need to make it an actual block
         app.args(0) match {
-          case ReporterApp(_reporterlambda(_, true) | _commandlambda(_, true), _, _) =>
+          case ReporterApp(_reporterlambda(_, true, _) | _commandlambda(_, true, _), _, _) =>
             // this case makes sure `let foo task pi` doesn't get converted to `let foo pi`
             super.visitReporterApp(app, position)(ops + (position -> wrapConciseForClarity(position)))
-          case lambdaApp@ReporterApp(_reporterlambda(args, _), _, _) if args.isEmpty =>
+          case lambdaApp@ReporterApp(_reporterlambda(args, _, _), _, _) if args.isEmpty =>
             // This case makes sure `let foo task [pi]` doesn't get converted to `let foo [pi]`
             super.visitReporterApp(app, position)(ops + (position -> wrapTaskBlockArgument(lambdaApp)))
-          case lambdaApp@ReporterApp(_commandlambda(args, false), _, _) if args.isEmpty =>
+          case lambdaApp@ReporterApp(_commandlambda(args, false, _), _, _) if args.isEmpty =>
             // This case makes sure `let foo task [tick]` doesn't get converted to `let foo [tick]`
             super.visitReporterApp(app, position)(ops + (position -> wrapTaskBlockArgument(lambdaApp)))
           case _ =>

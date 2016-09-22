@@ -3,9 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.Program
-import collection.JavaConverters._
+import scala.collection.immutable.ListMap
 
-case class CompilerResults(procedures: Seq[Procedure], program: Program) {
-  def proceduresMap = procedures.map(proc => (proc.name, proc)).toMap.asJava
-  def head = procedures.head
+case class CompilerResults(proceduresMap: ListMap[String, Procedure], program: Program) {
+  def head = proceduresMap.values.head
 }

@@ -20,13 +20,13 @@ object NetLogoThreeDDialect extends Dialect {
 object ThreeDTokenMapper extends DelegatingMapper {
   val defaultMapper = NetLogoLegacyDialectTokenMapper
   val path = "/system/tokens-threed.txt"
-  val pkgName = "org.nlogo.compiler.prim"
+  val pkgName = "org.nlogo.compile.prim"
   override def overrideBreedInstruction(primName: String, breedName: String): Option[Instruction] =
     primName match {
       case "etc._breedat" =>
         try {
           Some(Instantiator.newInstance[Instruction](
-            Class.forName("org.nlogo.compiler.prim.threed._breedat"), breedName))
+            Class.forName("org.nlogo.compile.prim.threed._breedat"), breedName))
         } catch {
           case e: ClassNotFoundException => None
         }

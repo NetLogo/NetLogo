@@ -74,5 +74,5 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
 object NetLogoLegacyDialectTokenMapper extends DelegatingMapper {
   val defaultMapper = DefaultTokenMapper
   val path = "/system/tokens-legacy.txt"
-  val pkgName = "org.nlogo.compiler.prim"
+  val pkgName = "org.nlogo.compile.prim"
 }

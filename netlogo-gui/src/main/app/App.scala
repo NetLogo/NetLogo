@@ -83,7 +83,7 @@ object App{
     Logger.beQuiet()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
-    pico.add("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
@@ -411,8 +411,8 @@ class App extends
             new ComponentParameter(classOf[AppFrame]),
             new ConstantParameter(() => workspace.exportView()),
             new ConstantParameter(() => Boolean.box(
-              workspace.getProcedures.get("SETUP") != null &&
-                workspace.getProcedures.get("GO") != null)),
+              workspace.procedures.get("SETUP") != null &&
+                workspace.procedures.get("GO") != null)),
             new ComponentParameter()))
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)

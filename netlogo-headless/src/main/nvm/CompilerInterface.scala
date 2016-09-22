@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
-  api.ExtensionManager,
-  core.{CompilationEnvironment, CompilerUtilitiesInterface, FrontEndInterface, Program}
+  api.{ ExtensionManager, Version },
+  core.{ CompilationEnvironment, CompilerUtilitiesInterface, FrontEndInterface, Program }
 
 // ought to be in the api package, except oops, it depends on nvm.Procedure - ST 2/23/09
 
@@ -22,8 +22,9 @@ trait CompilerInterface {
 
 case class CompilerFlags(
   foldConstants: Boolean = true,
-  useGenerator: Boolean = api.Version.useGenerator,
-  useOptimizer: Boolean = api.Version.useOptimizer)
+  useGenerator: Boolean = Version.useGenerator,
+  useOptimizer: Boolean = Version.useOptimizer,
+  optimizations: Seq[String] = Seq.empty[String])
 
 case class CompilerResults(procedures: Seq[Procedure], program: Program) {
   import collection.immutable.ListMap

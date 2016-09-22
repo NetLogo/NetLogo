@@ -77,6 +77,9 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   def extractErrorInstruction(ex: EngineException): Instruction =
     this
 
+  def getFilename: String =
+    Option(token).map(_.filename).orNull
+
   // These methods are for evaluating arguments --
   // they serve the same sort of purpose that the "reportX()" methods
   // in Reporter used to serve.  ~Forrest(11/10/2006)

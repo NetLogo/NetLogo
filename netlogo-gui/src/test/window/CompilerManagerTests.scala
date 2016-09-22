@@ -25,7 +25,7 @@ class CompilerManagerTests extends FunSuite {
 
   def newWorkspace = new DummyAbstractWorkspace {
     override def aggregateManager = null
-    override def compiler = Femto.get[CompilerInterface]("org.nlogo.compiler.Compiler", NetLogoLegacyDialect)
+    override def compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
   }
 
   def testCompilerManager(run: (CompilerManager) => Unit)(
@@ -51,8 +51,8 @@ class CompilerManagerTests extends FunSuite {
   test("given no widgets, the compiler manager emits one CompiledEvent for empty widgets, one CompiledEvent for code tab") {
     testCompilerManager(run = loadWidgets(Seq())) { (workspace, compilerManager, events) =>
         assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
-        assert(workspace.getProcedures.get("FOO") != null)
-        assert(workspace.getProcedures.get("FOO").owner == compilerManager.proceduresInterface)
+        assert(workspace.procedures.get("FOO").nonEmpty)
+        assert(workspace.procedures.apply("FOO").owner == compilerManager.proceduresInterface)
         assert(events.length == 3)
         assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
         assert(events(1).isInstanceOf[Events.CompiledEvent])

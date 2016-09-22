@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
-import org.nlogo.core.Nobody
+import org.nlogo.core.{ Nobody, Reference }
 import org.nlogo.{ api, core, nvm }
 
 class _diffuse extends DiffuseCommand {
@@ -15,9 +15,17 @@ class _diffuse4 extends DiffuseCommand {
     world.diffuse4(amount, reference.vn)
 }
 
-abstract class DiffuseCommand extends nvm.Command {
-
+abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
   switches = true
+
+  override def referenceIndex: Int = 0
+
+  override def applyReference(ref: Reference): nvm.Command = {
+    reference = ref
+    this
+  }
+
+  protected var reference: Reference = null
 
   override def toString =
     super.toString +

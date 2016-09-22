@@ -3859,9 +3859,9 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
 [2]_asm_procedurecalculatepressure_setobservervariable_5 "set" Object => void
       _length "length" LogoList => double
         _filter "filter"
-          _reportertask "[? = 0]"
+          _reporterlambda "[ [p] -> p = 0]"
             _asm_procedurecalculatepressure_equal_6 "=" Object,double => boolean
-              _letvariable(Let(null)) "?" => Object
+              _letvariable(Let(P)) "p" => Object
               _constdouble:0.0 "0" => double
                  L0
                   ALOAD 1
@@ -4155,7 +4155,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4695,7 +4695,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4937,7 +4937,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -15048,7 +15048,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L2
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -15247,7 +15247,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L11
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW

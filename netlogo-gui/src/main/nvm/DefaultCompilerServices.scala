@@ -5,6 +5,7 @@ package org.nlogo.nvm
 import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
 import org.nlogo.api.{ CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect , Version }
 import org.nlogo.core.Program
+import scala.collection.immutable.ListMap
 
 // We use this in contexts where we want to do compiler stuff (not full compilation) like
 // colorization but it's OK to assume that we are 2D not 3D and no extensions are loaded.  The
@@ -18,11 +19,11 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
     compiler.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =
     compiler.checkReporterSyntax(source, emptyProgram,
-                                 new java.util.HashMap[String,Procedure],
+                                 new ListMap[String,Procedure],
                                  null, false, new DummyCompilationEnvironment())
   def checkCommandSyntax(source: String) =
     compiler.checkCommandSyntax(source, emptyProgram,
-                                new java.util.HashMap[String,Procedure],
+                                new ListMap[String,Procedure],
                                 null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
     compiler.readFromString(source)
@@ -31,7 +32,7 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s)
   def isReporter(s: String) =
-    compiler.isReporter(s, emptyProgram, new java.util.HashMap[String, Procedure],
+    compiler.isReporter(s, emptyProgram, new ListMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(

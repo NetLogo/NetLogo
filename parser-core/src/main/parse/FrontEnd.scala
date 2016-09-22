@@ -30,6 +30,7 @@ trait FrontEndMain extends NetLogoParser {
       case (defs, transform) => defs.map(transform.visitProcedureDefinition)
     }
 
+
     val letVerifier = new LetVerifier
     topLevelDefs.foreach(letVerifier.visitProcedureDefinition)
 
@@ -42,7 +43,7 @@ trait FrontEndMain extends NetLogoParser {
   }
 
   private def transformers: Seq[AstTransformer] = {
-    Seq(new LetReducer, new CarefullyVisitor)
+    Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger)
   }
 
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {

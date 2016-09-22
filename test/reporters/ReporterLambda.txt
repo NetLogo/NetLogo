@@ -196,3 +196,15 @@ ConciseSyntax10
   to-report adder [n] report [[x] -> n + x] end
   map (adder 5) [10 20 30] => [15 25 35]
   (map [[x y] -> (runresult x y)] map adder [10 20 30] [1 2 3]) => [11 22 33]
+
+SettableVariables1
+  globals [glob1]
+  to foo run (runresult [ [bar] -> [ [] -> set bar 1 set glob1 bar] ] 0) end
+  O> foo
+  glob1 => 1
+
+SettableVariables2
+  globals [glob1 lambdas]
+  O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput [ [bar'] -> [ [] -> set bar' bar' + 1 set glob1 bar' ] ] lambdas ]
+  O> foreach lambdas [ [l] -> run (runresult l 0) ]
+  glob1 => 1

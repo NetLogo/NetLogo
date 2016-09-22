@@ -17,7 +17,10 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _nsum extends Reporter {
   public int vn;
 
-
+  public _nsum(int vn) {
+    super();
+    this.vn = vn;
+  }
 
   @Override
   public String toString() {

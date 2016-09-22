@@ -9,7 +9,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _patchvariableof(private[this] val _vn: Int) extends Reporter {
-
+  def vn = _vn
 
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"
@@ -88,6 +88,4 @@ class _patchvariableof(private[this] val _vn: Int) extends Reporter {
       case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
     }
   }
-
-  def vn = _vn
 }

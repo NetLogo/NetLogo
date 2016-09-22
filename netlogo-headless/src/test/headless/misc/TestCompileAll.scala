@@ -37,6 +37,7 @@ object TestCompileAll {
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
+      path.endsWith("5.x.nlogo") || // explicitly 5.x models
       path.endsWith(".nlogo3d")
   }
 
@@ -71,7 +72,7 @@ class TestCompileAll extends FunSuite  {
       }
     }
 
-  for(path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+  for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTestTag) {
       val workspace = HeadlessWorkspace.newInstance
       val version = ModelReader.parseModel(FileIO.file2String(path), workspace.parser, Map()).version

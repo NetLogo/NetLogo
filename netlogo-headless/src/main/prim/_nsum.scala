@@ -8,7 +8,6 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _nsum(vn: Int) extends Reporter {
-
   override def toString =
     super.toString + ":" +
       Option(world).map(_.patchesOwnNameAt(vn)).getOrElse(vn.toString)

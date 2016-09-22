@@ -31,7 +31,7 @@ object Scaladoc {
       val out = baseDirectory.value / "docs" / "scaladoc"
       IO.createDirectory(out)
       val excludedePackages = Seq("org.nlogo.app.previewcommands", "org.nlogo.awt",
-        "org.nlogo.compiler", "org.nlogo.core.prim",
+        "org.nlogo.compile", "org.nlogo.core.prim",
         "org.nlogo.gl", "org.nlogo.hubnet", "org.nlogo.job",
         "org.nlogo.lex", "org.nlogo.log", "org.nlogo.mc",
         "org.nlogo.parse", "org.nlogo.plot", "org.nlogo.properties",

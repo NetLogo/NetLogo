@@ -10,7 +10,6 @@ import org.nlogo.core.{ AgentKind, Reference, Referenceable }
 
 class _patchvariable(private[this] val _vn: Int) extends Reporter with Referenceable {
 
-
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"
 

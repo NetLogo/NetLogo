@@ -6,31 +6,62 @@ links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-M
 breeds 
 link-breeds 
 
-procedure GO:[]{-T--}:
-[0]_asm_procedurego_call_0 "search-for-chip"
+procedure BENCHMARK:[]{O---}:
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 471" double => void
+      _constdouble:471.0 "471" => double
          L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+          LDC 471.0
          L1
+          DSTORE 2
+          DLOAD 2
+          D2L
+          LSTORE 4
+          LLOAD 4
+          LDC -2147483648
+          LCMP
+          IFLT L2
+          LLOAD 4
+          LDC 2147483647
+          LCMP
+          IFLE L3
+         L2
+         FRAME APPEND [D J]
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          NEW scala/collection/mutable/StringBuilder
+          DUP
+          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+         FRAME SAME
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          LLOAD 4
+          L2I
+          I2L
+          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
           RETURN
-[1]_asm_procedurego_call_1 "find-new-pile"
+[1]_asm_procedurebenchmark_call_1 "setup"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_2
@@ -43,15 +74,45 @@ procedure GO:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurego_call_2 "find-empty-spot"
+[2]_resettimer "reset-timer"
+[3]_askconcurrent:+8 "ask-concurrent turtles [ repeat 350 [ go ] ]"
+      _asm_procedurebenchmark_turtles_2 "turtles" => AgentSet
+           L0
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_procedurebenchmark_turtles_2.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+           L1
+            ARETURN
+[4]_asm_procedurebenchmark_repeat_3 "repeat 350 [ go ]" double => void
+      _constdouble:350.0 "350" => double
+         L0
+          LDC 350.0
+         L1
+          DSTORE 2
+          ALOAD 1
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeat_3.kept1__let : Lorg/nlogo/core/Let;
+          NEW org/nlogo/nvm/MutableLong
+          DUP
+          ALOAD 0
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeat_3.validLong (D)J
+          INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
+          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
+          ALOAD 1
+          BIPUSH 6
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+          RETURN
+[5]_asm_procedurebenchmark_call_4 "go"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_3
+          BIPUSH 6
           INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
           ALOAD 1
           SWAP
@@ -61,7 +122,86 @@ procedure GO:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurego_return_3 => void
+[6]_asm_procedurebenchmark_repeatinternal_5 => void
+         L0
+          ALOAD 1
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeatinternal_5.kept1__let : Lorg/nlogo/core/Let;
+          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
+          CHECKCAST org/nlogo/nvm/MutableLong
+          ASTORE 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_0
+          LCMP
+          IFGT L1
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L2
+         L1
+         FRAME APPEND [org/nlogo/nvm/MutableLong]
+          ALOAD 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_1
+          LSUB
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
+          ALOAD 1
+          ICONST_5
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+         FRAME SAME
+          RETURN
+[7]_asm_procedurebenchmark_done_6 => void
+         L0
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.finished : Z
+         L1
+          RETURN
+[8]_asm_procedurebenchmark_setobservervariable_7 "set result timer" Object => void
+      _timer "timer" => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_7.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
+          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
+         L4
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+         L1
+          GOTO L5
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_7 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+         FRAME SAME
+          ALOAD 1
+          BIPUSH 9
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
+          RETURN
+[9]_asm_procedurebenchmark_return_8 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -315,202 +455,105 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
          L1
           RETURN
 
-procedure BENCHMARK:[]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed 471" double => void
-      _constdouble:471.0 "471" => double
-         L0
-          LDC 471.0
-         L1
-          DSTORE 2
-          DLOAD 2
-          D2L
-          LSTORE 4
-          LLOAD 4
-          LDC -2147483648
-          LCMP
-          IFLT L2
-          LLOAD 4
-          LDC 2147483647
-          LCMP
-          IFLE L3
-         L2
-         FRAME APPEND [D J]
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
-          DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
-          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
-          DLOAD 2
-          INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L3
-         FRAME SAME
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LLOAD 4
-          L2I
-          I2L
-          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L4
-          RETURN
-[1]_asm_procedurebenchmark_call_1 "setup"
-         L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[2]_resettimer "reset-timer"
-[3]_askconcurrent:+8 "ask-concurrent turtles [ repeat 350 [ go ] ]"
-      _asm_procedurebenchmark_turtles_2 "turtles" => AgentSet
-           L0
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_procedurebenchmark_turtles_2.world : Lorg/nlogo/agent/World;
-            INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
-           L1
-            ARETURN
-[4]_asm_procedurebenchmark_repeat_3 "repeat 350 [ go ]" double => void
-      _constdouble:350.0 "350" => double
-         L0
-          LDC 350.0
-         L1
-          DSTORE 2
-          ALOAD 1
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeat_3.kept1_let : Lorg/nlogo/core/Let;
-          NEW org/nlogo/nvm/MutableLong
-          DUP
-          ALOAD 0
-          DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeat_3.validLong (D)J
-          INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
-          INVOKEVIRTUAL org/nlogo/nvm/Context.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
-          ALOAD 1
-          BIPUSH 6
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L2
-          RETURN
-[5]_asm_procedurebenchmark_call_4 "go"
-         L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[6]_asm_procedurebenchmark_repeatinternal_5 => void
-         L0
-          ALOAD 1
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeatinternal_5.kept1_let : Lorg/nlogo/core/Let;
-          INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
-          CHECKCAST org/nlogo/nvm/MutableLong
-          ASTORE 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
-          LCONST_0
-          LCMP
-          IFGT L1
-          ALOAD 1
-          BIPUSH 7
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L2
-         L1
-         FRAME APPEND [org/nlogo/nvm/MutableLong]
-          ALOAD 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
-          LCONST_1
-          LSUB
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
-          ALOAD 1
-          ICONST_5
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L2
-         FRAME SAME
-          RETURN
-[7]_asm_procedurebenchmark_done_6 => void
-         L0
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.finished : Z
-         L1
-          RETURN
-[8]_asm_procedurebenchmark_setobservervariable_7 "set result timer" Object => void
-      _timer "timer" => double
+procedure FIND-NEW-PILE:[]{-T--}:
+[0]_asm_procedurefindnewpile_if_0 "if pcolor != yellow wiggle [ find-new-pile ]" boolean => void
+      _notequal "pcolor != yellow" Object,double => boolean
+        _patchvariable:PCOLOR "pcolor" => Object
+        _constdouble:45.0 "yellow" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_7.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
-          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
-         L4
-          DSTORE 2
-          NEW java/lang/Double
-          DUP
-          DLOAD 2
-          INVOKESPECIAL java/lang/Double.<init> (D)V
-          ASTORE 2
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L1
-          GOTO L5
+          GOTO L3
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_7 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 2
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L3
+         FRAME SAME1 java/lang/Object
+          LDC 45.0
+         L4
+          DSTORE 3
+          ASTORE 2
+          ALOAD 2
+          INSTANCEOF java/lang/Double
+          IFEQ L5
+          DLOAD 3
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          DCMPL
+          IFEQ L6
          L5
-         FRAME SAME
-          ALOAD 1
-          BIPUSH 9
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+         FRAME APPEND [java/lang/Object D]
+          ICONST_1
+          GOTO L7
          L6
+         FRAME SAME
+          ICONST_0
+         L7
+         FRAME SAME1 I
+          ISTORE 2
+          ALOAD 1
+          ILOAD 2
+          IFEQ L8
+          ICONST_1
+          GOTO L9
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindnewpile_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
+          ICONST_3
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindnewpile_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L10
           RETURN
-[9]_asm_procedurebenchmark_return_8 => void
+[1]_asm_procedurefindnewpile_call_1 "wiggle"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindnewpile_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_2
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[2]_asm_procedurefindnewpile_fastrecurse_2 => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
+          IFEQ L1
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L2
+         L1
+         FRAME SAME
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurefindnewpile_fastrecurse_2.kept1_original : Lorg/nlogo/prim/_call;
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_call.perform (Lorg/nlogo/nvm/Context;)V
+         L2
+         FRAME SAME
+          RETURN
+[3]_asm_procedurefindnewpile_return_3 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -669,6 +712,277 @@ procedure GET-AWAY:[]{-T--}:
          FRAME SAME
           RETURN
 [4]_asm_proceduregetaway_return_4 => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure GO:[]{-T--}:
+[0]_asm_procedurego_call_0 "search-for-chip"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[1]_asm_procedurego_call_1 "find-new-pile"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_2
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[2]_asm_procedurego_call_2 "find-empty-spot"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[3]_asm_procedurego_return_3 => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure SEARCH-FOR-CHIP:[]{-T--}:
+[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ]" boolean => void
+      _equal "pcolor = yellow" Object,double => boolean
+        _patchvariable:PCOLOR "pcolor" => Object
+        _constdouble:45.0 "yellow" => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+         L1
+          GOTO L3
+         L2
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+         FRAME SAME1 java/lang/Object
+          LDC 45.0
+         L4
+          DSTORE 3
+          ASTORE 2
+          ALOAD 2
+          INSTANCEOF java/lang/Double
+          IFEQ L5
+          DLOAD 3
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          DCMPL
+          IFNE L5
+          ICONST_1
+          GOTO L6
+         L5
+         FRAME APPEND [java/lang/Object D]
+          ICONST_0
+         L6
+         FRAME SAME1 I
+          ISTORE 2
+          ALOAD 1
+          ILOAD 2
+          IFEQ L7
+          ICONST_1
+          GOTO L8
+         L7
+         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
+          ICONST_5
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L9
+          RETURN
+[1]_asm_proceduresearchforchip_setpatchvariable_1 "set pcolor black" Object => void
+      _constdouble:0.0 "black" => Double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_setpatchvariable_1.kept2_value : Ljava/lang/Double;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          GOTO L5
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+         FRAME SAME
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
+          RETURN
+[2]_asm_proceduresearchforchip_setturtleorlinkvariable_2 "set color orange" Object => void
+      _constdouble:25.0 "orange" => Double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_setturtleorlinkvariable_2.kept2_value : Ljava/lang/Double;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          LDC "COLOR"
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
+         L1
+          GOTO L5
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+         FRAME SAME
+          ALOAD 1
+          ICONST_3
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
+          RETURN
+[3]_asm_proceduresearchforchip_jump_3 "jump 20" double => void
+      _constdouble:20.0 "20" => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          LDC 20.0
+         L4
+          DSTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          CHECKCAST org/nlogo/agent/Turtle
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
+         L1
+          GOTO L5
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_jump_3 org/nlogo/nvm/Context D] [org/nlogo/api/AgentException]
+          ASTORE 4
+         L5
+         FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
+          RETURN
+[4]_asm_proceduresearchforchip_goto_4 => void
+         L0
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[5]_asm_proceduresearchforchip_call_5 "wiggle"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          BIPUSH 6
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[6]_asm_proceduresearchforchip_fastrecurse_6 => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
+          IFEQ L1
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L2
+         L1
+         FRAME SAME
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_fastrecurse_6.kept1_original : Lorg/nlogo/prim/_call;
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_call.perform (Lorg/nlogo/nvm/Context;)V
+         L2
+         FRAME SAME
+          RETURN
+[7]_asm_proceduresearchforchip_return_7 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -850,7 +1164,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_fastcreateorderedturtles: "create-ordered-turtles [ number ]"
+[5]_crofast: "create-ordered-turtles [ number ]"
       _asm_proceduresetup_observervariable_4 "number" => Object
            L0
             ALOAD 1
@@ -1142,212 +1456,6 @@ procedure SETUP:[]{O---}:
          L1
           RETURN
 
-procedure SEARCH-FOR-CHIP:[]{-T--}:
-[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ]" boolean => void
-      _equal "pcolor = yellow" Object,double => boolean
-        _patchvariable:PCOLOR "pcolor" => Object
-        _constdouble:45.0 "yellow" => double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ICONST_2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L1
-          GOTO L3
-         L2
-         FRAME SAME1 org/nlogo/api/AgentException
-          ASTORE 2
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 45.0
-         L4
-          DSTORE 3
-          ASTORE 2
-          ALOAD 2
-          INSTANCEOF java/lang/Double
-          IFEQ L5
-          DLOAD 3
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          DCMPL
-          IFNE L5
-          ICONST_1
-          GOTO L6
-         L5
-         FRAME APPEND [java/lang/Object D]
-          ICONST_0
-         L6
-         FRAME SAME1 I
-          ISTORE 2
-          ALOAD 1
-          ILOAD 2
-          IFEQ L7
-          ICONST_1
-          GOTO L8
-         L7
-         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
-          ICONST_5
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
-          RETURN
-[1]_asm_proceduresearchforchip_setpatchvariable_1 "set pcolor black" Object => void
-      _constdouble:0.0 "black" => Double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_setpatchvariable_1.kept2_value : Ljava/lang/Double;
-         L4
-          ASTORE 2
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ICONST_2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
-         L1
-          GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L5
-         FRAME SAME
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
-          RETURN
-[2]_asm_proceduresearchforchip_setturtleorlinkvariable_2 "set color orange" Object => void
-      _constdouble:25.0 "orange" => Double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_setturtleorlinkvariable_2.kept2_value : Ljava/lang/Double;
-         L4
-          ASTORE 2
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          LDC "COLOR"
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-         L1
-          GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L5
-         FRAME SAME
-          ALOAD 1
-          ICONST_3
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
-          RETURN
-[3]_asm_proceduresearchforchip_jump_3 "jump 20" double => void
-      _constdouble:20.0 "20" => double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
-          LDC 20.0
-         L4
-          DSTORE 2
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          CHECKCAST org/nlogo/agent/Turtle
-          DLOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
-         L1
-          GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresearchforchip_jump_3 org/nlogo/nvm/Context D] [org/nlogo/api/AgentException]
-          ASTORE 4
-         L5
-         FRAME SAME
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
-          RETURN
-[4]_asm_proceduresearchforchip_goto_4 => void
-         L0
-          ALOAD 1
-          BIPUSH 7
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[5]_asm_proceduresearchforchip_call_5 "wiggle"
-         L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[6]_asm_proceduresearchforchip_fastrecurse_6 => void
-         L0
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
-          IFEQ L1
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L2
-         L1
-         FRAME SAME
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresearchforchip_fastrecurse_6.kept1_original : Lorg/nlogo/prim/_call;
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_call.perform (Lorg/nlogo/nvm/Context;)V
-         L2
-         FRAME SAME
-          RETURN
-[7]_asm_proceduresearchforchip_return_7 => void
-         L0
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.stopping : Z
-         L1
-          RETURN
-
 procedure WIGGLE:[]{-T--}:
 [0]_asm_procedurewiggle_fd1_0 "fd 1" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1446,114 +1554,6 @@ procedure WIGGLE:[]{-T--}:
          L10
           RETURN
 [2]_asm_procedurewiggle_return_2 => void
-         L0
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.stopping : Z
-         L1
-          RETURN
-
-procedure FIND-NEW-PILE:[]{-T--}:
-[0]_asm_procedurefindnewpile_if_0 "if pcolor != yellow wiggle [ find-new-pile ]" boolean => void
-      _notequal "pcolor != yellow" Object,double => boolean
-        _patchvariable:PCOLOR "pcolor" => Object
-        _constdouble:45.0 "yellow" => double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ICONST_2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L1
-          GOTO L3
-         L2
-         FRAME SAME1 org/nlogo/api/AgentException
-          ASTORE 2
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 45.0
-         L4
-          DSTORE 3
-          ASTORE 2
-          ALOAD 2
-          INSTANCEOF java/lang/Double
-          IFEQ L5
-          DLOAD 3
-          ALOAD 2
-          CHECKCAST java/lang/Double
-          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          DCMPL
-          IFEQ L6
-         L5
-         FRAME APPEND [java/lang/Object D]
-          ICONST_1
-          GOTO L7
-         L6
-         FRAME SAME
-          ICONST_0
-         L7
-         FRAME SAME1 I
-          ISTORE 2
-          ALOAD 1
-          ILOAD 2
-          IFEQ L8
-          ICONST_1
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindnewpile_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
-          ICONST_3
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindnewpile_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
-          RETURN
-[1]_asm_procedurefindnewpile_call_1 "wiggle"
-         L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindnewpile_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[2]_asm_procedurefindnewpile_fastrecurse_2 => void
-         L0
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
-          IFEQ L1
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L2
-         L1
-         FRAME SAME
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindnewpile_fastrecurse_2.kept1_original : Lorg/nlogo/prim/_call;
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_call.perform (Lorg/nlogo/nvm/Context;)V
-         L2
-         FRAME SAME
-          RETURN
-[3]_asm_procedurefindnewpile_return_3 => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V

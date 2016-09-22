@@ -109,6 +109,10 @@ public strictfp class Turtle
   }
 
   public Turtle hatch() {
+    return hatch(getBreed());
+  }
+
+  public Turtle hatch(AgentSet breed) {
     Turtle child = new Turtle(world);
     child.heading = heading;
     child.xcor = xcor;
@@ -116,8 +120,11 @@ public strictfp class Turtle
     child.variables = variables.clone();
     child.id(world.newTurtleId());
     world.turtles().add(child);
-    if (getBreed() != world.turtles()) {
-      getBreed().add(child);
+    if (breed != getBreed()) {
+      child.setBreed(breed);
+    }
+    if (breed != world.turtles()) {
+      breed.add(child);
     }
     child.getPatchHere().addTurtle(child);
     return child;

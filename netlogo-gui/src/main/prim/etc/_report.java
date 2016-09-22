@@ -11,9 +11,7 @@ import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.NonLocalExit$;
 import org.nlogo.nvm.Procedure;
 
-public final strictfp class _report
-    extends Command {
-
+public final strictfp class _report extends Command {
 
   @Override
   public void perform(Context context) throws LogoException {

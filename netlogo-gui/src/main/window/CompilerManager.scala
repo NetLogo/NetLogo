@@ -82,7 +82,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         val results =
           workspace.compiler.compileMoreCode(owner.source,
             displayName, workspace.world.program,
-            workspace.getProcedures, workspace.getExtensionManager,
+            workspace.procedures, workspace.getExtensionManager,
             workspace.getCompilationEnvironment);
         results.head.init(workspace)
         results.head.owner = owner
@@ -206,7 +206,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
           proceduresInterface.innerSource, owners, program,
           workspace.getExtensionManager, workspace.getCompilationEnvironment)
       workspace.setProcedures(results.proceduresMap)
-      workspace.getProcedures.values.foreach { procedure =>
+      workspace.procedures.values.foreach { procedure =>
         val owner = procedure.filename match {
           case ""          => proceduresInterface
           case "aggregate" => workspace.aggregateManager
@@ -252,10 +252,10 @@ class CompilerManager(val workspace: AbstractWorkspace,
         Some(s"${owner.classDisplayName} '${owner.displayName}'")
       val results: CompilerResults =
         workspace.compiler.compileMoreCode(owner.source, displayName,
-          workspace.world.program, workspace.getProcedures,
+          workspace.world.program, workspace.procedures,
           workspace.getExtensionManager, workspace.getCompilationEnvironment)
 
-      if (!results.procedures.isEmpty) {
+      if (!results.proceduresMap.isEmpty) {
         results.head.init(workspace)
         results.head.owner = owner
         raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))

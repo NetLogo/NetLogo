@@ -39,7 +39,7 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
-    pico.add("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
@@ -54,7 +54,7 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.add("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
@@ -193,7 +193,7 @@ with org.nlogo.api.ViewSettings {
     val results = compiler.compileProgram(
       source, world.newProgram(Seq[String]()),
       getExtensionManager, getCompilationEnvironment)
-    setProcedures(results.proceduresMap)
+    procedures = results.proceduresMap
     codeBits.clear()
     init()
     world.program(results.program)
