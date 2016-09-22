@@ -126,7 +126,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.picocontainer" % "picocontainer" % "2.13.6",
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
-      "org.pegdown" % "pegdown" % "1.5.0",
+      "org.pegdown" % "pegdown" % "1.6.0",
       "org.parboiled" %% "parboiled-scala" % "1.1.7",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
