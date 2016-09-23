@@ -119,6 +119,8 @@ class AstRewriterTests extends FunSuite {
     "__ignore (map [list (?1 + 1) (?2 - 1)] (list 2 1))")
   testLambda("let a-task [ [] -> tick ]", "let a-task task tick")
   testLambda("let a-task [ [] -> tick ]", "let a-task task [tick]")
+  testLambda("foreach [1 2 3] [ [?1] -> crt ?1 ]", "foreach [1 2 3] task crt")
+  testLambda("show (map ([ [?1 ?2] -> ?1 + ?2 ]) [1 2 3] [1 2 3])", "show (map (task +) [1 2 3] [1 2 3])")
   testLambda("show is-list? [ [] -> tick ]", "show is-list? task [tick]")
   testLambda("let a-value 1 let a-task [ [] -> a-value ]", "let a-value 1 let a-task task [a-value]")
   testLambda("baz ([ [] ->  fd 1 ]) ([ [?1 ?2] -> bk ?2 ])", "baz (task [ fd 1 ]) (task [ bk ?2 ])", preamble = "TO baz [a b] END TO FOO ")
@@ -219,7 +221,7 @@ class AstRewriterTests extends FunSuite {
 
     test("lambda-izes " + body + " to " + changedBody) {
       val lambdaized = lambdaize(preamble + body + postamble)
-      assertResult(preamble + changedBody + postamble, s"""expected: "$changedBody", got: "$lambdaized"""")(lambdaized)
+      assertResult(preamble + changedBody + postamble, s"""expected: "$preamble$changedBody$postamble", got: "$lambdaized"""")(lambdaized)
     }
   }
 }
