@@ -45,13 +45,15 @@ extends {
   // to figure out what token the error happened on.
   require(Version.useGenerator || instruction != null)
 
+  resolveErrorInstruction()
+
   // GeneratedInstructions have multiple Instructions stored inside them and we need to resolve
   // which instruction was actually executing when the error occurred.  ~Forrest (10/24/2006)
   private def resolveErrorInstruction() {
-    require(!hasBeenResolved,
-            "An EngineException must only be 'resolved' once")
-    hasBeenResolved = true
-    instruction = instruction.extractErrorInstruction(this)
+    if (!hasBeenResolved) {
+      hasBeenResolved = true
+      instruction = instruction.extractErrorInstruction(this)
+    }
   }
 
   override def fillInStackTrace = {

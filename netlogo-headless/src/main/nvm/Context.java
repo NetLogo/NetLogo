@@ -74,6 +74,14 @@ public final strictfp class Context implements org.nlogo.api.Context {
     agentBit = agent.agentBit();
   }
 
+  // Used to produce an exact duplicate context for inspection
+  // by error-reporting tools, while allowing the context in
+  // which the error occured to be reverted to an error-free
+  // state.
+  public Context copy() {
+    return new Context(job, agent, ip, activation);
+  }
+
   public boolean makeChildrenExclusive() {
     return inReporterProcedure || job.exclusive();
   }
@@ -97,11 +105,12 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {
-      throw new EngineException
-          (this, "stack overflow (recursion too deep)");
+      throw new EngineException(this, "stack overflow (recursion too deep)");
     }
   }
 
@@ -124,8 +133,10 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     }
   }
 
@@ -250,14 +261,16 @@ public final strictfp class Context implements org.nlogo.api.Context {
       while (!finished && job.result == null);
     } catch (NonLocalExit$ e) {
       // do nothing
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     } finally {
       inReporterProcedure = oldInReporterProcedure;
+      ip                  = activation.returnAddress();
+      activation          = activation.parent().get();
+      letBindings         = priorLetBindings;
     }
-    ip = activation.returnAddress();
-    activation = activation.parent().get();
-    letBindings = priorLetBindings;
     Object result = job.result;
     job.result = null;
     return result;

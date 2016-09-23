@@ -6,6 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
+import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
@@ -19,8 +20,6 @@ public final strictfp class _carefully
   public _carefully(Let let) {
     this.let = let;
   }
-
-
 
   @Override
   public String toString() {

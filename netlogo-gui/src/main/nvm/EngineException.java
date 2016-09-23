@@ -11,6 +11,7 @@ public strictfp class EngineException
 
   public Context context = null;
   public Instruction instruction = null;
+  scala.Option<String> cachedRuntimeErrorMessage = scala.Option.apply(null);
 
   public EngineException(Context context, Instruction instruction,
                          String message, Exception cause) {
@@ -20,6 +21,8 @@ public strictfp class EngineException
     }
     this.context = context;
     this.instruction = instruction;
+    resolveErrorInstruction();
+    buildNetLogoErrorMessage(context);
   }
 
   // force caller to provide a context, in theory it got
@@ -59,9 +62,7 @@ public strictfp class EngineException
     } else if (ex instanceof HaltException) {
       throw ex;
     } else {
-      EngineException newEx = new EngineException
-          (context, instruction, ex.getMessage());
-      newEx.resolveErrorInstruction();
+      EngineException newEx = new EngineException(context, instruction, ex.getMessage());
       throw newEx;
     }
   }
@@ -70,24 +71,17 @@ public strictfp class EngineException
   // and we need to resolve which instruction was actually executing
   // when the error occurred.  ~Forrest (10/24/2006)
   protected void resolveErrorInstruction() {
-    if (hasBeenResolved) {
-      throw new IllegalStateException("An EngineException must only be 'resolved' once!");
+    if (! hasBeenResolved) {
+      hasBeenResolved = true;
+      instruction = instruction.extractErrorInstruction(this);
     }
-    hasBeenResolved = true;
-    instruction = instruction.extractErrorInstruction(this);
   }
 
-  scala.Option<String> cachedRuntimeErrorMessage = scala.Option.apply(null);
-
-  @Override
-  public Throwable fillInStackTrace() {
-    super.fillInStackTrace();
-    if(context != null && !cachedRuntimeErrorMessage.isDefined()) {
-      cachedRuntimeErrorMessage = scala.Option.apply(
-        context.buildRuntimeErrorMessage(
-          instruction, this));
+  // this *used to be* in fillInStackTrace, but that is called during init, so context was
+  // always null. It *must* be called in the Constructor - RG 9/23/16
+  private void buildNetLogoErrorMessage(Context context) {
+    if (context != null && !cachedRuntimeErrorMessage.isDefined()) {
+      cachedRuntimeErrorMessage = scala.Option.apply(context.buildRuntimeErrorMessage(instruction, this));
     }
-    return this;
   }
-
 }
