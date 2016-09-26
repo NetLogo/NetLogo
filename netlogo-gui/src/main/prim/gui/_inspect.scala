@@ -4,14 +4,15 @@ package org.nlogo.prim.gui
 
 import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _inspect extends Command {
 
   override def perform(context: Context) {
     val agent = argEvalAgent(context, 0)
     if (agent.id == -1)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {

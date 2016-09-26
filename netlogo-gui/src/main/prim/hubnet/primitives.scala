@@ -6,7 +6,8 @@ import org.nlogo.agent.Observer
 import org.nlogo.api.{ CommandRunnable, Dump, HubNetInterface }
 import org.nlogo.core.Syntax
 import org.nlogo.core.{ AgentKind, LogoList }
-import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
+import org.nlogo.nvm.{ Command, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 import Syntax._
 
 class _hubnetmessage extends Reporter {
@@ -113,7 +114,7 @@ class _hubnetwaitforclients extends Command {
     val (ok, numConnected) =
       workspace.getHubNetManager.map(_.waitForClients(numClients, timeout)).get
     if(! ok)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "waited " + timeout + "ms for " + numClients +
                 " clients, but only got " + numConnected)
     context.ip = next
@@ -131,7 +132,7 @@ class _hubnetwaitformessages extends Command {
     val (ok, numReceived) =
       workspace.getHubNetManager.map(_.waitForMessages(numMessages, timeout)).get
     if(! ok)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "waited " + timeout + "ms for " + numMessages +
                 " messages, but only got " + numReceived)
     context.ip = next
@@ -266,7 +267,7 @@ class _hubnetclearoverride extends Command {
         set
     }
     if(!workspace.getHubNetManager.exists(_.isOverridable(set.kind, varName)))
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
     val iter = set.iterator

@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Nobody$;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtle extends Reporter {
@@ -22,7 +22,7 @@ public final strictfp class _turtle extends Reporter {
       throws LogoException {
     long id = validLong(idDouble);
     if (id != idDouble) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, idDouble + " is not an integer");
     }
     Turtle turtle = world.getTurtle(id);

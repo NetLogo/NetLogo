@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.ReporterRunnable
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _userdirectory extends Reporter {
 
@@ -20,7 +21,7 @@ class _userdirectory extends Reporter {
         java.lang.Boolean.FALSE
       case Some(path) =>
         if(!new java.io.File(path).exists)
-          throw new EngineException(
+          throw new RuntimePrimitiveException(
             context, this, "This directory doesn't exist")
         path
     }

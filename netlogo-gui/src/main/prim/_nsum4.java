@@ -11,7 +11,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _nsum4 extends Reporter {
@@ -46,7 +46,7 @@ public final strictfp class _nsum4 extends Reporter {
     for (AgentSet.Iterator it = patch.getNeighbors4().iterator(); it.hasNext();) {
       Object value = ((Patch) it.next()).getPatchVariable(vn);
       if (!(value instanceof Double)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
                 Dump.logoObject(value).toString(), TypeNames.name(value)));
       }

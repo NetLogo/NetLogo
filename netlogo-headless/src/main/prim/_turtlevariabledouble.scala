@@ -4,7 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.agent.Turtle
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _turtlevariabledouble(private[this] var _vn: Int) extends Reporter {
 
@@ -28,6 +29,6 @@ class _turtlevariabledouble(private[this] var _vn: Int) extends Reporter {
   def report_2(context: Context): java.lang.Double =
     try context.agent.getTurtleVariable(_vn).asInstanceOf[java.lang.Double]
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
 }

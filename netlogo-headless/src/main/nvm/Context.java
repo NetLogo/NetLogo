@@ -110,7 +110,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
     } catch (LogoException ex) {
       EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {
-      throw new EngineException(this, "stack overflow (recursion too deep)");
+      throw new NetLogoStackOverflow(copy(), activation.procedure().code()[ip], ex);
     }
   }
 
@@ -194,7 +194,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public void stop() {
     if (activation.procedure().isLambda()) {
-      throw NonLocalExit$.MODULE$;
+      throw new NonLocalExit();
     }
     if (activation.procedure().topLevel()) {
       // In the BehaviorSpace case, there are two cases: stop
@@ -259,12 +259,14 @@ public final strictfp class Context implements org.nlogo.api.Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) {
+    } catch (NonLocalExit e) {
       // do nothing
     } catch (EngineException ex) {
       throw ex;
     } catch (LogoException ex) {
       EngineException.rethrow(ex, copy(), command);
+    } catch (StackOverflowError ex) {
+      throw new NetLogoStackOverflow(copy(), activation.procedure().code()[ip], ex);
     } finally {
       inReporterProcedure = oldInReporterProcedure;
       ip                  = activation.returnAddress();
@@ -338,8 +340,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
       Instruction instruction = null;
       Context context = null;
       if (ex instanceof EngineException) {
-        instruction = ((EngineException) ex).instruction();
-        context = ((EngineException) ex).context();
+        instruction = ((EngineException) ex).responsibleInstructionOrNull();
+        context = (Context) ((EngineException) ex).context();
       }
       if (instruction == null) {
         instruction = activation.procedure().code()[ip];
@@ -362,9 +364,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable, String message) {
-    if(throwable instanceof EngineException &&
-       ((EngineException) throwable).cachedRuntimeErrorMessage().isDefined()) {
-      return ((EngineException) throwable).cachedRuntimeErrorMessage().get();
+    if (throwable instanceof EngineException) {
+      return ((EngineException) throwable).runtimeErrorMessage();
     }
     return StackTraceBuilder.build(
       activation, agent, instruction, scala.Option.apply(throwable), message);

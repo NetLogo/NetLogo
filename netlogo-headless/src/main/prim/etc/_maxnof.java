@@ -7,7 +7,7 @@ import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.I18N;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.Comparator;
@@ -22,13 +22,13 @@ public final strictfp class _maxnof
   public Object report(final org.nlogo.nvm.Context context) {
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     AgentSet sourceSet = argEvalAgentSet(context, 1);
     int count = sourceSet.count();
     if (n > count) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
     }
     args[2].checkAgentSetClass(sourceSet, context);

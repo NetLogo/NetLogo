@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _myself
@@ -19,7 +19,7 @@ public final strictfp class _myself
   public Object report(final Context context) throws LogoException {
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;
@@ -28,7 +28,7 @@ public final strictfp class _myself
   public Agent report_1(Context context) throws LogoException {
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;

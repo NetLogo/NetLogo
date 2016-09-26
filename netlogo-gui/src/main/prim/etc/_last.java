@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _last
@@ -21,13 +21,13 @@ public final strictfp class _last
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.size() == 0) {
-        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
+        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
       }
       return list.get(list.size() - 1);
     } else if (obj instanceof String) {
       String string = (String) obj;
       if (string.length() == 0) {
-        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
+        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
       }
       return string.substring(string.length() - 1);
     } else {

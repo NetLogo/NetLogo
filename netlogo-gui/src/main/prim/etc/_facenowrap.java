@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _facenowrap
     extends Command {
@@ -23,7 +23,7 @@ public final strictfp class _facenowrap
       throws LogoException {
     org.nlogo.agent.Agent agentToFace = argEvalAgent(context, 0);
     if (agentToFace.id == -1) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agentToFace.classDisplayName()));
     }
     org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) context.agent;

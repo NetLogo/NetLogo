@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _git
     extends Command {
@@ -17,18 +17,18 @@ public final strictfp class _git
       throws LogoException {
     String command = argEvalString(context, 0);
     if (!System.getProperty("os.name").startsWith("Mac")) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, "at present, only works on Macs");
     }
     String dir = workspace.getModelDir();
     if (dir == null) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, "must save model first");
     }
     try {
       java.io.File git = new java.io.File(".git");
       if (!git.exists() || !git.isDirectory()) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, "no .git directory found");
       }
       Runtime.getRuntime().exec
@@ -41,7 +41,7 @@ public final strictfp class _git
                   "git " + command + " \\\"" + workspace.getModelFileName() + "\\\" ; exit\"",
                   "-e", "end tell"});
     } catch (java.io.IOException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }

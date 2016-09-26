@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ AgentSet, LinkManager, Turtle }
 import org.nlogo.core.AgentKind
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _mylinks(val breedName: String) extends Reporter {
 

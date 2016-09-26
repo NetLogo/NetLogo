@@ -19,7 +19,7 @@ class _extracthsb extends Reporter with Pure {
           Color.getHSBListByRGBList(rgbList)
         catch {
           case e: ClassCastException =>
-            throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+            throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
         }
       case color: java.lang.Double =>
         Color.getHSBListByColor(color)
@@ -31,7 +31,7 @@ class _extracthsb extends Reporter with Pure {
       Color.getHSBListByRGBList(rgbList)
     catch {
       case e: ClassCastException =>
-        throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+        throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
     }
 
   def report_3(context: Context, color: java.lang.Double): LogoList =
@@ -50,7 +50,7 @@ class _extracthsbold extends Reporter with Pure {
           convertGoodHSBListToDumbOldHSBFormat(Color.getHSBListByRGBList(rgbList))
         catch {
           case e: ClassCastException =>
-            throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+            throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
         }
       case color: java.lang.Double =>
         convertGoodHSBListToDumbOldHSBFormat(Color.getHSBListByColor(color))
@@ -62,7 +62,7 @@ class _extracthsbold extends Reporter with Pure {
       convertGoodHSBListToDumbOldHSBFormat(Color.getHSBListByRGBList(rgbList))
     catch {
       case e: ClassCastException =>
-        throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+        throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
     }
 
   def report_3(context: Context, color: java.lang.Double): LogoList =

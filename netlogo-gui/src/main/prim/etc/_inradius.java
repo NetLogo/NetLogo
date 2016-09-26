@@ -9,7 +9,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.List;
@@ -24,11 +24,11 @@ public final strictfp class _inradius extends Reporter {
   public AgentSet report_1(final Context context, AgentSet sourceSet, double radius)
       throws LogoException {
     if (sourceSet.type() == org.nlogo.agent.Link.class) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (radius < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
     }
     List<Agent> result =

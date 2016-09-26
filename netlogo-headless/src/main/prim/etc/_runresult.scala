@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.{ LogoException, AnonymousReporter }
 import org.nlogo.core.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _runresult extends Reporter {
 
@@ -12,7 +13,7 @@ class _runresult extends Reporter {
     args(0).report(context) match {
       case s: String =>
         if(args.size > 1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             token.text + " doesn't accept further inputs if the first is a string")
         try {
           val procedure = workspace.compileForRun(
@@ -22,20 +23,20 @@ class _runresult extends Reporter {
           newActivation.setUpArgsForRunOrRunresult()
           val result = context.callReporterProcedure(newActivation)
           if (result == null)
-            throw new EngineException(context, this, "failed to report a result")
+            throw new RuntimePrimitiveException(context, this, "failed to report a result")
           result
         } catch {
           case ex: CompilerException =>
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, this, ex.getMessage)
-          case ex: EngineException => throw ex
+          case ex: RuntimePrimitiveException => throw ex
           case ex: LogoException =>
-            throw new EngineException(context, this, ex.getMessage)
+            throw new RuntimePrimitiveException(context, this, ex.getMessage)
         }
       case task: AnonymousReporter =>
         val n = args.size - 1
         if (n < task.syntax.minimum)
-          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
+          throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {

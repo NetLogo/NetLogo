@@ -6,7 +6,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _setxy
     extends Command {
@@ -33,7 +33,7 @@ public final strictfp class _setxy
       }
       turtle.xandycor(newx, newy);
     } catch (org.nlogo.api.AgentException e) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld",
               newx.doubleValue(), newy.doubleValue()));
     }
@@ -46,7 +46,7 @@ public final strictfp class _setxy
       turtle.xandycor(turtle.shortestPathX(xvalue),
           turtle.shortestPathY(yvalue));
     } catch (org.nlogo.api.AgentException e) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld", xvalue, yvalue));
     }
     context.ip = next;

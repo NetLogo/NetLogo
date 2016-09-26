@@ -11,7 +11,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _createlinkto
     extends Command
@@ -49,7 +49,7 @@ public final strictfp class _createlinkto
     // to be random! - ST 3/15/06
     if (world.linkManager.findLinkFrom(src, dest, breed, false) == null) {
       if (src == dest) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this,
                 I18N.errorsJ().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
       }

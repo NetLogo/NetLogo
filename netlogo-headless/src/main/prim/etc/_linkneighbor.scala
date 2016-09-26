@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ LinkManager, Turtle }
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _linkneighbor(breedName: String) extends Reporter {
 
@@ -21,7 +22,7 @@ class _linkneighbor(breedName: String) extends Reporter {
       if (breedName == null) world.links else world.getLinkBreed(breedName)
     val err = LinkManager.mustNotBeDirected(breed)
     if (err.isDefined)
-      throw new EngineException(context, this, err.get)
+      throw new RuntimePrimitiveException(context, this, err.get)
     val sharedLink = world.linkManager.findLinkEitherWay(parent, target, breed, true)
     sharedLink != null && ! sharedLink.isDirectedLink
   }

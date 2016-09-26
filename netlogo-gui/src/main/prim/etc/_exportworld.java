@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _exportworld
     extends org.nlogo.nvm.Command {
@@ -24,12 +24,12 @@ public final strictfp class _exportworld
                   (workspace.fileManager()
                       .attachPrefix(filePath));
             } catch (java.net.MalformedURLException ex) {
-              throw new EngineException
+              throw new RuntimePrimitiveException
                   (context, _exportworld.this,
                       token().text() +
                           ": " + ex.getMessage());
             } catch (java.io.IOException ex) {
-              throw new EngineException
+              throw new RuntimePrimitiveException
                   (context, _exportworld.this,
                       token().text() +
                           ": " + ex.getMessage());
@@ -37,7 +37,7 @@ public final strictfp class _exportworld
                 // This exception is thrown when `DefaultFileManager.relativeToAbsolute` takes an `IOException` and wraps it up on failure.
                 // It's hard to judge what ramifications it would have to avoid wrapping that exception, so we'll just catch it here.
                 // --JAB (1/9/13)
-                throw new EngineException
+                throw new RuntimePrimitiveException
                     (context, _exportworld.this,
                         token().text() +
                             ": " + ex.getMessage());

@@ -5,7 +5,8 @@ package org.nlogo.prim
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.api.TypeNames
 import org.nlogo.core.{ I18N, Pure }
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _greaterthan extends Reporter with Pure {
 
@@ -27,7 +28,7 @@ class _greaterthan extends Reporter with Pure {
       if (a1.agentBit == a2.agentBit)
         return a1.compareTo(a2) > 0
     }
-    throw new EngineException(
+    throw new RuntimePrimitiveException(
       context, this, I18N.errors.getN(
         "org.nlogo.prim._greaterthan.cannotCompareParameters",
         TypeNames.aName(o1), TypeNames.aName(o2)))
@@ -53,7 +54,7 @@ class _greaterthan extends Reporter with Pure {
       case d: java.lang.Double =>
         arg0 > d.doubleValue
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.getN(
             "org.nlogo.prim._greaterthan.cannotCompareParameters",
             TypeNames.aName(Double.box(arg0)), TypeNames.aName(arg1)))
@@ -64,7 +65,7 @@ class _greaterthan extends Reporter with Pure {
       case d: java.lang.Double =>
         d.doubleValue > arg1
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.getN(
             "org.nlogo.prim._greaterthan.cannotCompareParameters",
             TypeNames.aName(arg0), TypeNames.aName(Double.box(arg1))))

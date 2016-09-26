@@ -5,7 +5,8 @@ package org.nlogo.prim.etc
 import org.nlogo.api.{ LogoListBuilder}
 import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ AnonymousProcedure, EngineException, Context, Reporter }
+import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _map extends Reporter {
 
@@ -19,7 +20,7 @@ class _map extends Reporter {
     val rep = argEvalReporter(context, 0)
     val n = args.length - 1
     if (n < rep.syntax.minimum)
-      throw new EngineException(context, this, AnonymousProcedure.missingInputs(rep, n))
+      throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(rep, n))
 
     // get all of the list args, if any.
     var size = 0
@@ -27,7 +28,7 @@ class _map extends Reporter {
       val list = argEvalList(context, i)
       if (i == 1) size = list.size
       else if (size != list.size)
-        throw new EngineException(context, this, "All the list arguments to MAP must be the same length.")
+        throw new RuntimePrimitiveException(context, this, "All the list arguments to MAP must be the same length.")
       list.iterator
     }
 

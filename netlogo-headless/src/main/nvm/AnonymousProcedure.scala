@@ -37,7 +37,7 @@ sealed trait AnonymousProcedure {
 
     if (! allowedKinds.contains(context.agent.kind)) {
       val instruction = context.activation.procedure.code(context.ip)
-      throw new EngineException(context, instruction,
+      throw new RuntimePrimitiveException(context, instruction,
         Instruction.agentKindError(context.agent.kind, allowedKinds))
     }
   }

@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _setpatchvariable(_vn: Int) extends Command {
 
@@ -26,7 +27,7 @@ class _setpatchvariable(_vn: Int) extends Command {
   def perform_1(context: Context, arg0: AnyRef) {
     try context.agent.setPatchVariable(_vn, arg0)
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
     context.ip = next
   }
 

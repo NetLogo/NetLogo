@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _setlinkbreedvariable(name: String) extends Command {
 
@@ -18,7 +19,7 @@ class _setlinkbreedvariable(name: String) extends Command {
     val value = args(0).report(context)
     try context.agent.setLinkBreedVariable(name, value)
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
     context.ip = next
   }
 

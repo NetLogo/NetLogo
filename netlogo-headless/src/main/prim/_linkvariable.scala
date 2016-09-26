@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _linkvariable(_vn: Int) extends Reporter {
 
@@ -21,6 +22,6 @@ class _linkvariable(_vn: Int) extends Reporter {
   def report_1(context: Context): AnyRef =
     try context.agent.getLinkVariable(_vn)
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
 }

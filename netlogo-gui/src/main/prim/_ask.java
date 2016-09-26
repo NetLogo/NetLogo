@@ -12,7 +12,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _ask
     extends Command
@@ -41,18 +41,18 @@ public final strictfp class _ask
       agentset = (AgentSet) target;
       if (!(context.agent instanceof Observer)) {
         if (agentset == world.turtles()) {
-          throw new EngineException
+          throw new RuntimePrimitiveException
               (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
         }
         if (agentset == world.patches()) {
-          throw new EngineException
+          throw new RuntimePrimitiveException
               (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
         }
       }
     } else if (target instanceof Agent) {
       Agent agent = (Agent) target;
       if (agent.id == -1) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       agentset = new ArrayAgentSet(agent.kind(), 1, false);
@@ -68,11 +68,11 @@ public final strictfp class _ask
       throws LogoException {
     if (!(context.agent instanceof Observer)) {
       if (agentset == world.turtles()) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
       }
       if (agentset == world.patches()) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
       }
     }
@@ -83,7 +83,7 @@ public final strictfp class _ask
   public void perform_3(Context context, Agent agent)
       throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     AgentSet agentset = new ArrayAgentSet(agent.kind(), 1, false);

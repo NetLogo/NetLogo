@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _importdrawing
     extends org.nlogo.nvm.Command {
@@ -18,12 +18,12 @@ public final strictfp class _importdrawing
           (workspace.fileManager().attachPrefix
               (argEvalString(context, 0)));
     } catch (java.io.IOException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, _importdrawing.this,
               token().text() +
                   ": " + ex.getMessage());
     } catch (RuntimeException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, _importdrawing.this,
               token().text() +
                   ": " + ex.getMessage());

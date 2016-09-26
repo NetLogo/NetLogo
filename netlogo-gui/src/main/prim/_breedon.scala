@@ -7,7 +7,8 @@ import scala.collection.mutable
 
 import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet, Patch, Turtle }
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _breedon(breedName: String) extends Reporter {
 
@@ -22,7 +23,7 @@ class _breedon(breedName: String) extends Reporter {
     agentOrSet match {
       case turtle: Turtle =>
         if (turtle.id == -1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
         val itr = turtle.getPatchHere.turtlesHere.iterator
         while (itr.hasNext) {
@@ -109,7 +110,7 @@ class _breedon(breedName: String) extends Reporter {
     agent match {
       case turtle: Turtle =>
         if (turtle.id == -1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
         val itr = turtle.getPatchHere.turtlesHere.iterator
         while (itr.hasNext) {
@@ -138,7 +139,7 @@ class _breedon(breedName: String) extends Reporter {
     val resultList = new mutable.ArrayBuffer[Turtle]
     val breed = world.getBreed(breedName)
     if (turtle.id == -1)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
     val itr = turtle.getPatchHere.turtlesHere.iterator
     while (itr.hasNext) {

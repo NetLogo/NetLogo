@@ -35,7 +35,7 @@ object Shell extends workspace.Shell {
         println("COMPILER ERROR: " + ex.getMessage)
         ex.printStackTrace()
       case ex: org.nlogo.nvm.EngineException =>
-        val msg = ex.context.buildRuntimeErrorMessage(ex.instruction, ex)
+        val msg = ex.runtimeErrorMessage
         println("RUNTIME ERROR: " + msg)
         ex.printStackTrace()
       case ex: org.nlogo.api.LogoException =>

@@ -18,7 +18,7 @@ public final strictfp class _linkheading extends Reporter {
       Link link = (Link) context.agent;
       return world.protractor().towards(link.end1(), link.end2(), true);
     } catch (org.nlogo.api.AgentException e) {
-      throw new org.nlogo.nvm.EngineException
+      throw new org.nlogo.nvm.RuntimePrimitiveException
           (context, this,
               "there is no heading of a link whose endpoints are in the same position");
     }

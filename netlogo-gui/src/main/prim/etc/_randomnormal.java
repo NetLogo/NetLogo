@@ -6,7 +6,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _randomnormal extends Reporter {
@@ -21,7 +21,7 @@ public final strictfp class _randomnormal extends Reporter {
 
   public double report_1(Context context, double mean, double sdev) throws LogoException {
     if (sdev < 0) {
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
           context, this, I18N.errorsJ().get("org.nlogo.prim.etc._randomNormal.secondInputNotNegative"));
 
     }

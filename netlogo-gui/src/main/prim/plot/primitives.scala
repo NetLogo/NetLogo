@@ -5,7 +5,8 @@ package org.nlogo.prim.plot
 import org.nlogo.api.{ CommandRunnable}
 import org.nlogo.core.Syntax
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
+import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.plot.PlotManager
 
 //
@@ -17,13 +18,13 @@ trait Helpers extends Instruction {
     workspace.plotManager.asInstanceOf[PlotManager]
   def currentPlot(context: Context) =
     plotManager.currentPlot.getOrElse(
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this,
         I18N.errors.get("org.nlogo.plot.noPlotSelected")))
   def currentPen(context: Context) = {
     val plot = currentPlot(context)
     plot.currentPen.getOrElse(
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, "Plot '" + plot.name + "' has no pens!"))
   }
 }
@@ -65,7 +66,7 @@ class _setcurrentplot extends PlotCommand(Syntax.StringType) {
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
     if (plot == null)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "no such plot: \"" + name + "\"")
     plotManager.currentPlot = Some(plot)
     context.ip = next
@@ -117,7 +118,7 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
     if (min >= max)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
     plot.state = plot.state.copy(xMin = min, xMax = max)
@@ -131,7 +132,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
     if (min >= max)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
     plot.state = plot.state.copy(yMin = min, yMax = max)
@@ -156,7 +157,7 @@ class _histogram extends PlotCommand(Syntax.ListType) {
     val pen = currentPen(context)
     pen.plotListenerReset(false)
     if(pen.interval <= 0)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
     val plot = currentPlot(context)
     plot.beginHistogram(pen)
@@ -172,7 +173,7 @@ class _sethistogramnumbars extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
     val numBars = argEvalIntValue(context, 0)
     if (numBars < 1)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "You cannot make a histogram with " + numBars + " bars.")
     currentPlot(context).setHistogramNumBars(currentPen(context), numBars)
     context.ip = next
@@ -184,7 +185,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
     if (plotManager.getPlot(name) == null) {
-      throw new EngineException(context, this, "no such plot: \"" + name + "\"")
+      throw new RuntimePrimitiveException(context, this, "no such plot: \"" + name + "\"")
     }
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new CommandRunnable {
@@ -192,7 +193,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
         try workspace.exportPlot(name, workspace.fileManager.attachPrefix(path))
         catch {
           case ex: java.io.IOException =>
-            throw new EngineException(context, _exportplot.this, token.text + ": " + ex.getMessage)
+            throw new RuntimePrimitiveException(context, _exportplot.this, token.text + ": " + ex.getMessage)
         }
       }
     })
@@ -205,14 +206,14 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
     val path = argEvalString(context, 0)
     if (plotManager.getPlotNames.length == 0)
-      throw new EngineException(context, this, "there are no plots to export")
+      throw new RuntimePrimitiveException(context, this, "there are no plots to export")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new CommandRunnable {
       def run() {
         try workspace.exportAllPlots(workspace.fileManager.attachPrefix(path))
         catch {
           case ex: java.io.IOException =>
-            throw new EngineException(context, _exportplots.this,
+            throw new RuntimePrimitiveException(context, _exportplots.this,
               token.text + ": " + ex.getMessage)
         }
       }
@@ -303,7 +304,7 @@ final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
     val mode = argEvalIntValue(context, 0)
     if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
     currentPen(context).mode = mode
@@ -321,7 +322,7 @@ final class _setplotpencolor extends PlotCommand(Syntax.NumberType | Syntax.List
           currentPen(context).color = Color.getARGBIntByRGBAList(rgbList)
         catch {
           case e: ClassCastException =>
-            throw new org.nlogo.nvm.EngineException(context, this, displayName + " an rgb list must contain only numbers")
+            throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
         }
       case c: java.lang.Double =>
         currentPen(context).color =
@@ -338,7 +339,7 @@ final class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
     val penName = argEvalString(context, 0)
     val plot = currentPlot(context)
     plot.currentPen = plot.getPen(penName).getOrElse(
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, "There is no pen named \"" + penName + "\" in the current plot"))
     context.ip = next
   }

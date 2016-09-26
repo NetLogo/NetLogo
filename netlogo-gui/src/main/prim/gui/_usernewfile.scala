@@ -5,7 +5,8 @@ package org.nlogo.prim.gui
 import org.nlogo.api.{ ReporterRunnable}
 import org.nlogo.core.Syntax
 import org.nlogo.awt.UserCancelException
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspace.isApplet
 import org.nlogo.swing.FileDialog
@@ -14,7 +15,7 @@ class _usernewfile extends Reporter {
 
   override def report(context: Context) = {
     if (isApplet)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, "You cannot choose a file from an applet.")
     var result: AnyRef = null
     workspace match {
@@ -33,7 +34,7 @@ class _usernewfile extends Reporter {
                   java.lang.Boolean.FALSE
               }})
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
     result match {

@@ -6,8 +6,8 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.ExtensionContext;
+import org.nlogo.nvm.WrappedExtensionException;
 
 public final strictfp class _extern
     extends Command
@@ -17,8 +17,6 @@ public final strictfp class _extern
   public _extern(org.nlogo.api.Command command) {
     this.command = command;
   }
-
-
 
   @Override
   public String toString() {
@@ -39,8 +37,7 @@ public final strictfp class _extern
               new ExtensionContext(workspace, context));
     } catch (org.nlogo.api.ExtensionException ex) {
       LogoException le =
-          new EngineException
-              (context, this, "Extension exception: " + ex.getMessage(), ex);
+          new WrappedExtensionException(context, this, "Extension exception: " + ex.getMessage(), ex);
       throw le;
     }
     context.ip = offset;

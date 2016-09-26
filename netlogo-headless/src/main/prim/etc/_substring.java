@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.core.Pure;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _substring
@@ -17,13 +17,13 @@ public final strictfp class _substring
     int start = argEvalIntValue(context, 1);
     int stop = argEvalIntValue(context, 2);
     if (start < 0) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.startIsLessThanZero", start));
     } else if (start > stop) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.endIsLessThanStart", stop, start));
     } else if (stop > string.length()) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._substring.endIsGreaterThanListSize",
               stop, Dump.logoObject(string), string.length()));
     }

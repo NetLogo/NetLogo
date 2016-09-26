@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _importworld
     extends org.nlogo.nvm.Command {
@@ -24,7 +24,7 @@ public final strictfp class _importworld
                   (workspace.fileManager().attachPrefix
                       (filePath));
             } catch (java.io.IOException ex) {
-              throw new EngineException
+              throw new RuntimePrimitiveException
                   (context, _importworld.this,
                       token().text() +
                           ": " + ex.getMessage());

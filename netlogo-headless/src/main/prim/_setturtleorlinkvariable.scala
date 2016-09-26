@@ -3,7 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _setturtleorlinkvariable(_varName: String) extends Command {
 
@@ -25,7 +26,7 @@ class _setturtleorlinkvariable(_varName: String) extends Command {
   def perform_1(context: Context, value: AnyRef) {
     try context.agent.setTurtleOrLinkVariable(_varName, value)
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
     context.ip = next
   }
 

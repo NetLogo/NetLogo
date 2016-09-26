@@ -31,7 +31,7 @@ public final strictfp class _setobservervariable
     try {
       context.agent.setObserverVariable(vn, args[0].report(context));
     } catch (org.nlogo.api.AgentException ex) {
-      throw new org.nlogo.nvm.EngineException
+      throw new org.nlogo.nvm.RuntimePrimitiveException
           (context, this, ex.getMessage());
     }
     context.ip = next;
@@ -41,7 +41,7 @@ public final strictfp class _setobservervariable
     try {
       context.agent.setObserverVariable(vn, arg0);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new org.nlogo.nvm.EngineException
+      throw new org.nlogo.nvm.RuntimePrimitiveException
           (context, this, ex.getMessage());
     }
 

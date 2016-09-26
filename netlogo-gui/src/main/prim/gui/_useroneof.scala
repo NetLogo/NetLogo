@@ -5,7 +5,8 @@ package org.nlogo.prim.gui
 import org.nlogo.api.{ Dump, ReporterRunnable}
 import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
+import org.nlogo.nvm.{ Context, HaltException, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.window.GUIWorkspace
 
 class _useroneof extends Reporter {
@@ -18,7 +19,7 @@ class _useroneof extends Reporter {
     workspace match {
       case gw: GUIWorkspace =>
         if(list.isEmpty)
-          throw new EngineException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
+          throw new RuntimePrimitiveException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
         val items = list.map(Dump.logoObject).toArray[AnyRef]
         gw.updateUI()
         val choice = workspace.waitForResult(
@@ -35,7 +36,7 @@ class _useroneof extends Reporter {
             throw new HaltException(true))
         list.get(index)
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
   }

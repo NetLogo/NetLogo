@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Reporter;
 
@@ -47,7 +47,7 @@ public final strictfp class _callreport
     }
     Object result = context.callReporterProcedure(newActivation);
     if (result == null) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, "the " + procedure.name() + " procedure failed to report a result");
     }
     return result;

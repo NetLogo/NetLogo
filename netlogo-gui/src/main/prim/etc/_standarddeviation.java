@@ -8,7 +8,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
@@ -34,7 +34,7 @@ public final strictfp class _standarddeviation extends Reporter implements Pure 
       }
     }
     if (listSize - badElts < 2) {
-      throw new EngineException(context, this, I18N.errorsJ().getN(
+      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().getN(
           "org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem", Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);

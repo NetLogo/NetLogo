@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api, api.{ LogoListBuilder, Color }
 import org.nlogo.core.{ LogoList, Pure, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _extracthsb extends Reporter with Pure {
 
@@ -18,7 +19,7 @@ class _extracthsb extends Reporter with Pure {
           Color.getHSBListByRGBList(rgbList)
         catch {
           case e: ClassCastException =>
-            throw new EngineException(context, this, displayName + " an rgb list must contain only numbers")
+            throw new RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
         }
       case color: java.lang.Double =>
         Color.getHSBListByColor(color)
@@ -31,7 +32,7 @@ class _extracthsb extends Reporter with Pure {
       Color.getHSBListByRGBList(rgbList)
     catch {
       case e: ClassCastException =>
-        throw new EngineException(context, this, displayName + " an rgb list must contain only numbers")
+        throw new RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
     }
 
   def report_3(context: Context, color: java.lang.Double): LogoList =

@@ -4,7 +4,8 @@ package org.nlogo.prim.threed
 
 import org.nlogo.api.{ AgentException}
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _towardspitchxyz extends Reporter {
 
@@ -18,6 +19,6 @@ class _towardspitchxyz extends Reporter {
         true)) // true = wrap
     catch {
       case ex: AgentException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 }

@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.AnonymousCommand
 import org.nlogo.core.{ CompilerException, Syntax }
 import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Command,
-                       Context, EngineException, NonLocalExit }
+                       Context, RuntimePrimitiveException, NonLocalExit }
 
 class _run extends Command {
 
@@ -13,7 +13,7 @@ class _run extends Command {
     args(0).report(context) match {
       case s: String =>
         if(args.size > 1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             token.text + " doesn't accept further inputs if the first is a string")
         try {
           val procedure = workspace.compileForRun(s, context, false)
@@ -27,12 +27,12 @@ class _run extends Command {
           context.ip = 0
         } catch {
           case error: CompilerException =>
-            throw new EngineException(context, this, error.getMessage)
+            throw new RuntimePrimitiveException(context, this, error.getMessage)
         }
       case task: AnonymousCommand =>
         val n = args.size - 1
         if (n < task.syntax.minimum)
-          throw new EngineException(context, this, AnonymousProcedure.missingInputs(task, n))
+          throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(task, n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {
@@ -44,8 +44,7 @@ class _run extends Command {
           context.ip = next
         }
         catch {
-          case NonLocalExit
-              if !context.activation.procedure.isReporter =>
+          case _: NonLocalExit if !context.activation.procedure.isReporter =>
             context.stop()
         }
       case obj =>

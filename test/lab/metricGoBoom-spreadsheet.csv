@@ -1,12 +1,12 @@
 "[run number]","1","2"
 "[reporter]","__boom","__boom"
-"[final]","<EngineException>","<EngineException>"
+"[final]","<RuntimePrimitiveException>","<RuntimePrimitiveException>"
 "[min]",,
 "[max]",,
 "[mean]",,
 "[steps]","2","2"
 
 "[all run data]","__boom","__boom"
-,"<EngineException>","<EngineException>"
-,"<EngineException>","<EngineException>"
-,"<EngineException>","<EngineException>"
+,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"
+,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"
+,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"

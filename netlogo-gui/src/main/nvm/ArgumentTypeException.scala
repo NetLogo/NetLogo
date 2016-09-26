@@ -2,9 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.{ core, api },
-  core.{Nobody, TypeNames},
-  api.{ Context => ApiContext, Dump }
+import org.nlogo.core.Nobody
+import org.nlogo.api.{ Context => ApiContext, Dump, TypeNames }
 
 object ArgumentTypeException {
   def buildMessage(instruction: Instruction, wantedType: Int, argumentValue: Object): String = {
@@ -28,13 +27,13 @@ object ArgumentTypeException {
       // if badValue is a Class object, then it's not REALLY a value at all -- it's just something
       // to tell us what kind of bad value was returned.
       case c: Class[_] =>
-        Some(TypeNames.aName(api.TypeNames.getTypeConstant(c)))
+        Some(TypeNames.aName(TypeNames.getTypeConstant(c)))
       case Nobody =>
         Some("NOBODY")
       case null =>
         None
       case _ =>
-        Some("the " + api.TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
+        Some("the " + TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
     }
 }
 

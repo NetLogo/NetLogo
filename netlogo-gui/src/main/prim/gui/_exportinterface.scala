@@ -4,7 +4,8 @@ package org.nlogo.prim.gui
 
 import org.nlogo.api.{ CommandRunnable}
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.window.GUIWorkspace
 
 class _exportinterface extends Command {
@@ -23,11 +24,11 @@ class _exportinterface extends Command {
                 workspace.fileManager.attachPrefix(filePath))
               catch {
                 case e: java.io.IOException =>
-                  throw new EngineException(
+                  throw new RuntimePrimitiveException(
                     context, _exportinterface.this, token.text + ": " + e.getMessage)
               }}})
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, token.text + " can only be used in the GUI")
     }
     context.ip = next

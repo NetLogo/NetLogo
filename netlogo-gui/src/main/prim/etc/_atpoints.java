@@ -14,7 +14,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public final strictfp class _atpoints
     LogoList points = argEvalList(context, 1);
     for (Object point : points.javaIterable()) {
       if (!validateListEntry(point)) {
-        throw new EngineException(context, this, I18N.errorsJ().getN(
+        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().getN(
             "org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
     }
@@ -128,20 +128,20 @@ public final strictfp class _atpoints
             break;
           case 2:
             if (!is3D) {
-              throw new EngineException(context, this,
+              throw new RuntimePrimitiveException(context, this,
                   I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
 
             }
             z = (Double) it2.next();
             break;
           default:
-            throw new EngineException(context, this,
+            throw new RuntimePrimitiveException(context, this,
                 I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
         }
         j++;
       }
       if (x == null || y == null) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
       try {

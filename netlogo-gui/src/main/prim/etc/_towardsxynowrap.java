@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _towardsxynowrap extends Reporter {
@@ -21,7 +21,7 @@ public final strictfp class _towardsxynowrap extends Reporter {
                   argEvalDoubleValue(context, 1),
                   false)); // true = don't wrap
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, ex.getMessage());
     }
   }

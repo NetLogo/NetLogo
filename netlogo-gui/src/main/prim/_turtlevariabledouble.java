@@ -7,7 +7,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtlevariabledouble extends Reporter {
@@ -28,7 +28,7 @@ public final strictfp class _turtlevariabledouble extends Reporter {
     try {
       return context.agent.getTurtleVariable(vn);
     } catch (AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
   }
 
@@ -40,7 +40,7 @@ public final strictfp class _turtlevariabledouble extends Reporter {
     try {
       return (Double) context.agent.getTurtleVariable(vn);
     } catch (AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
   }
 }

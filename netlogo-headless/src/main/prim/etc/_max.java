@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _max extends Reporter implements Pure {
@@ -27,7 +27,7 @@ public final strictfp class _max extends Reporter implements Pure {
       }
     }
     if (boxedWinner == null) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers", Dump.logoObject(list)));
     }
     return boxedWinner;

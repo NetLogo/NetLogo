@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 import java.util.Iterator;
 
@@ -25,7 +25,7 @@ public final strictfp class _hubnetsendclearoutput
            nodesIter.hasNext();) {
         Object node = nodesIter.next();
         if (!(node instanceof String)) {
-          throw new EngineException
+          throw new RuntimePrimitiveException
               (context, this, "HUBNET-SEND expected "
                   + TypeNames.aName(Syntax.StringType() | Syntax.ListType())
                   + " of strings as the first input, but one item is the "

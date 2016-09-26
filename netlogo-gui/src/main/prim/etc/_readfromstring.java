@@ -6,7 +6,7 @@ import org.nlogo.core.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _readfromstring
@@ -19,7 +19,7 @@ public final strictfp class _readfromstring
     try {
       return workspace.readFromString(argEvalString(context, 0));
     } catch (CompilerException error) {
-      throw new EngineException(context, this, error.getMessage());
+      throw new RuntimePrimitiveException(context, this, error.getMessage());
     }
   }
 }

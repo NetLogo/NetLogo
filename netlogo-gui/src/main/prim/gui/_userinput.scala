@@ -5,7 +5,8 @@ package org.nlogo.prim.gui
 import org.nlogo.api.{ Dump, ReporterRunnable}
 import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.window.GUIWorkspace
 
 class _userinput extends Reporter {
@@ -28,7 +29,7 @@ class _userinput extends Reporter {
         Option(result).getOrElse(
           throw new org.nlogo.nvm.HaltException(true))
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
   }

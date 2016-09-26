@@ -5,7 +5,8 @@ package org.nlogo.prim
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.Dump
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _countwith extends Reporter {
 
@@ -25,7 +26,7 @@ class _countwith extends Reporter {
           if (b.booleanValue)
             result += 1
         case x =>
-          throw new EngineException(
+          throw new RuntimePrimitiveException(
             context, this, I18N.errors.getN(
               "org.nlogo.prim.$common.expectedBooleanValue",
               displayName, Dump.logoObject(tester), Dump.logoObject(x)))

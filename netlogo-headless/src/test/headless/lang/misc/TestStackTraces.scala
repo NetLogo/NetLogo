@@ -35,8 +35,11 @@ class TestStackTraces extends FixtureSuite {
   /// run/runresult tests
 
   val code =
-    "to-report foo report bar end " +
-    "to-report bar report __boom end"
+    """|to-report foo report bar end
+       |to-report bar report __boom end
+       |to-report overflow report runresult "runresult \"overflow\"" end
+       |to overflow-run run [ [] -> run [ [] -> overflow-run ] ] end
+       |to overflow-foreach foreach [1 2 3] [ [i] -> overflow-foreach ] end""".stripMargin
 
   test("error inside run") { implicit fixture =>
     import fixture._
@@ -67,4 +70,40 @@ class TestStackTraces extends FixtureSuite {
     assertResult(expected)(trace)
   }
 
+  test("stack overflow - command") { implicit fixture =>
+    import fixture._
+    open(Model(code))
+    intercept[LogoException] {testCommand("overflow-run")}
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running RUN""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by run" ||
+          l === "  called by procedure OVERFLOW-RUN"))
+  }
+
+  test("stack overflow - reporter") { implicit fixture =>
+    import fixture._
+    open(Model(code))
+    intercept[LogoException] {testCommand("show overflow")}
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |error while observer running RUNRESULT""".stripMargin))
+    trace.lines.drop(2).take(100).foreach(l =>
+        assert(l === "  called by runresult" ||
+          l === "  called by procedure OVERFLOW"))
+  }
+
+
+  test("stack overflow - foreach") { implicit fixture =>
+    import fixture._
+    open(Model(code))
+    intercept[LogoException] {testCommand("overflow-foreach")}
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running FOREACH""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by foreach" ||
+          l === "  called by procedure OVERFLOW-FOREACH"))
+  }
 }

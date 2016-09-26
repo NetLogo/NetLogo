@@ -53,6 +53,6 @@ private class ConstantFolder extends DefaultAstVisitor {
     app.accept(new ArgumentStuffer) // fill args array
     r.init(null)  // copy args array to arg0, arg1, etc.
     try { r.report(null) }
-    catch { case ex:LogoException => exception(CompilerException.RuntimeErrorAtCompileTimePrefix + ex.getMessage,app) }
+    catch { case ex: LogoException => exception(CompilerException.RuntimeErrorAtCompileTimePrefix + ex.getMessage,app) }
   }
 }

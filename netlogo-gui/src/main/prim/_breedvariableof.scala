@@ -6,7 +6,8 @@ import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ AgentException, LogoListBuilder }
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _breedvariableof(name: String) extends Reporter {
 
@@ -16,12 +17,12 @@ class _breedvariableof(name: String) extends Reporter {
   override def report(context: Context): AnyRef = args(0).report(context) match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
         try {
           agent.getBreedVariable(name)
         } catch {
-          case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+          case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
         }
       case sourceSet: AgentSet =>
         val result = new LogoListBuilder
@@ -30,7 +31,7 @@ class _breedvariableof(name: String) extends Reporter {
           while (itr.hasNext)
             result.add(itr.next().getBreedVariable(name))
         } catch {
-          case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+          case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
         }
         result.toLogoList
       case agentOrSet =>
