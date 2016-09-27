@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _setlinkbreedvariable
     extends Command {
@@ -31,7 +31,7 @@ public final strictfp class _setlinkbreedvariable
     try {
       context.agent.setLinkBreedVariable(name, value);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }

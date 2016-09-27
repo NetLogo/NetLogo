@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _importdrawing
     extends org.nlogo.nvm.Command {
@@ -18,7 +18,7 @@ public final strictfp class _importdrawing
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     if (world.program().dialect().is3D()) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D"));
     }
     try {
@@ -26,12 +26,12 @@ public final strictfp class _importdrawing
           (workspace.fileManager().attachPrefix
               (argEvalString(context, 0)));
     } catch (java.io.IOException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, _importdrawing.this,
               token().text() +
                   ": " + ex.getMessage());
     } catch (RuntimeException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, _importdrawing.this,
               token().text() +
                   ": " + ex.getMessage());

@@ -4,7 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _stop
     extends Command {
@@ -24,7 +24,7 @@ public final strictfp class _stop
       // if we're not in an ask, then "stop" means to exit this procedure
       // immediately.  first we must check that it's a command procedure
       // and not a reporter procedure.
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
     }
     context.stop();
@@ -35,7 +35,7 @@ public final strictfp class _stop
     if (!context.atTopActivation()) {
       context.finished = true;
     } else if (context.activation.nonLambdaActivation().procedure().isReporter()) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
     }
     workspace.profilingTracer().closeCallRecord(context, context.activation);

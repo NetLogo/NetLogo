@@ -8,7 +8,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.List;
@@ -26,19 +26,19 @@ public final strictfp class _incone
   public AgentSet report_1(final Context context, AgentSet sourceSet,
                            double radius, double angle) {
     if (sourceSet.kind() == AgentKindJ.Link()) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (radius < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
     }
     if (angle < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeAngle", displayName()));
     }
     if (angle > 360) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noAngleGreaterThan360", displayName()));
 
     }

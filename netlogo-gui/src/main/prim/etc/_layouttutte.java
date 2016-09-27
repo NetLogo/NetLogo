@@ -11,7 +11,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _layouttutte
     extends Command {
@@ -31,7 +31,7 @@ public final strictfp class _layouttutte
       org.nlogo.agent.Layouts.tutte(world, nodeset, linkset, radius,
           context.job.random);
     } catch (AgentException e) {
-      throw new EngineException(context, this, e.getMessage());
+      throw new RuntimePrimitiveException(context, this, e.getMessage());
     }
     context.ip = next;
   }

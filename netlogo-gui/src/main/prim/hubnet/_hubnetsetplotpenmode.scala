@@ -5,7 +5,8 @@ package org.nlogo.prim.hubnet
 import org.nlogo.api.{ CommandRunnable}
 import org.nlogo.core.Syntax
 import org.nlogo.core.PlotPenInterface
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _hubnetsetplotpenmode extends Command {
 
@@ -16,7 +17,7 @@ class _hubnetsetplotpenmode extends Command {
       new CommandRunnable {
         override def run() {
           if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode)
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, _hubnetsetplotpenmode.this,
               mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
           workspace.getHubNetManager.foreach(_.setPlotPenMode(name, mode))

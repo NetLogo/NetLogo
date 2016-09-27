@@ -3,11 +3,12 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.Dump
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _error extends Command {
   override def perform(context: Context) {
-    throw new EngineException(context, this,
+    throw new RuntimePrimitiveException(context, this,
       Dump.logoObject(args(0).report(context)))
   }
 }

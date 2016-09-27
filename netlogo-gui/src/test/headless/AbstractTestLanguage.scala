@@ -59,7 +59,7 @@ trait AbstractTestLanguage extends Assertions {
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
     workspace.lastLogoException = null
     val actualResult = workspace.evaluateReporter(owner,
-      if(mode == NormalMode) reporter
+      if (mode == NormalMode) reporter
       else ("runresult \"" + org.nlogo.api.StringUtils.escapeString(reporter) + "\""),
       workspace.world.observer())
     if(workspace.lastLogoException != null)

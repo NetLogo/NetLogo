@@ -39,13 +39,13 @@ abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
   override def perform(context: nvm.Context) {
     val amount = argEvalDoubleValue(context, 0)
     if (amount < 0.0 || amount > 1.0)
-      throw new nvm.EngineException(
+      throw new nvm.RuntimePrimitiveException(
         context, this, core.I18N.errors.getN(
           "org.nlogo.prim.$common.paramOutOfBounds", Double.box(amount)))
     try diffuse(amount)
     catch {
       case ex: api.AgentException =>
-        throw new nvm.EngineException(context, this, ex.getMessage)
+        throw new nvm.RuntimePrimitiveException(context, this, ex.getMessage)
       case ex: PatchException =>
         val value: AnyRef = ex.patch.getPatchVariable(reference.vn)
         val bad =
@@ -53,7 +53,7 @@ abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
             "NOBODY"
           else
             "the " + api.TypeNames.name(value) + " " + api.Dump.logoObject(value)
-        throw new nvm.EngineException(
+        throw new nvm.RuntimePrimitiveException(
           context, this,
           s"${ex.patch} should contain a number in the ${world.patchesOwnNameAt(reference.vn)} " +
             s" variable, but contains $bad instead"

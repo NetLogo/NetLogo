@@ -73,6 +73,14 @@ public final strictfp class Context implements org.nlogo.api.Context {
     this.workspace = context.workspace;
   }
 
+  // Used to produce an exact duplicate context for inspection
+  // by error-reporting tools, while allowing the context in
+  // which the error occured to be reverted to an error-free
+  // state.
+  public Context copy() {
+    return new Context(job, agent, ip, activation, workspace);
+  }
+
   // this method runs only until a command switches
   void stepConcurrent()
       throws LogoException {
@@ -93,11 +101,12 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {
-      throw new EngineException
-          (this, "stack overflow (recursion too deep)");
+      throw new NetLogoStackOverflow(copy(), activation.procedure.code()[ip], ex);
     }
   }
 
@@ -121,8 +130,10 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     }
   }
 
@@ -181,7 +192,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public void stop() {
     if (activation.procedure.isLambda()) {
-      throw NonLocalExit$.MODULE$;
+      throw new NonLocalExit();
     }
     if (activation.procedure.topLevel()) {
       // In the BehaviorSpace case, there are two cases: stop
@@ -232,9 +243,9 @@ public final strictfp class Context implements org.nlogo.api.Context {
     boolean oldInReporterProcedure = inReporterProcedure;
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job
-    activation = newActivation;
-    // let bindings can "leak" out of a reporter procedure. This should be fixed in a more sizable overhaul of NVM. RG 9/15/16
+    // keep track of letBindings and activation so we can "reset" those after the call
     scala.collection.immutable.List<LetBinding> priorLetBindings = letBindings;
+    activation = newActivation;
     ip = 0;
     try {
       do {
@@ -248,19 +259,22 @@ public final strictfp class Context implements org.nlogo.api.Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) // NOPMD empty catch block
-    {
+    } catch (NonLocalExit e) { // NOPMD empty catch block
       // do nothing
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
+    } catch (StackOverflowError ex) {
+      throw new NetLogoStackOverflow(copy(), activation.procedure.code()[ip], ex);
     } finally {
       inReporterProcedure = oldInReporterProcedure;
+      letBindings         = priorLetBindings;
+      ip                  = activation.returnAddress;
+      activation          = activation.parent;
     }
-    ip = activation.returnAddress;
-    activation = activation.parent;
-    letBindings = priorLetBindings;
     Object result = job.result;
-    job.result = null;
+    job.result    = null;
     return result;
   }
 
@@ -327,8 +341,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
       Instruction instruction = null;
       Context context = null;
       if (ex instanceof EngineException) {
-        instruction = ((EngineException) ex).instruction;
-        context = ((EngineException) ex).context;
+        instruction = ((EngineException) ex).responsibleInstructionOrNull();
+        context = ((Context) ((EngineException) ex).context());
       }
       if (instruction == null) {
         instruction = activation.procedure.code()[ip];
@@ -336,8 +350,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
       if (context == null) {
         context = this;
       }
-      activation.procedure.code()[ip].workspace
-          .runtimeError(job.owner, context, instruction, ex);
+      activation.procedure.code()[ip].workspace.runtimeError(job.owner, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,
       // but a new exception happened. so we'll report the original
@@ -347,12 +360,15 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
-    if(throwable instanceof EngineException &&
-       ((EngineException) throwable).cachedRuntimeErrorMessage.isDefined()) {
-      return ((EngineException) throwable).cachedRuntimeErrorMessage.get();
+    return buildRuntimeErrorMessage(instruction, throwable, null);
+  }
+
+  public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable, String message) {
+    if (throwable instanceof EngineException) {
+      return ((EngineException) throwable).runtimeErrorMessage();
     }
     return StackTraceBuilder.build(
-      activation, agent, instruction, scala.Option.apply(throwable));
+      activation, agent, instruction, scala.Option.apply(throwable), message);
   }
 
   /// coming up for air

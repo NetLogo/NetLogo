@@ -43,6 +43,7 @@ abstract class AbstractScalaInstruction extends TokenHolder { this: Instruction 
         if agentClassString.contains(c)
       } yield thisKind
 
-    throw new EngineException(context, this, AbstractScalaInstruction.agentKindError(kind, allowedKinds))
+    throw new RuntimePrimitiveException(
+      context, this, AbstractScalaInstruction.agentKindError(kind, allowedKinds))
   }
 }

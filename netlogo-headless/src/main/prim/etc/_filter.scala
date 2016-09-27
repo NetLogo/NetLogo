@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _filter extends Reporter {
 
@@ -12,7 +13,7 @@ class _filter extends Reporter {
     val task = argEvalAnonymousReporter(context, 0)
     val list = argEvalList(context, 1)
     if (task.syntax.minimum > 1)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, AnonymousProcedure.missingInputs(task, 1))
     val builder = new LogoListBuilder
     for (item <- list)

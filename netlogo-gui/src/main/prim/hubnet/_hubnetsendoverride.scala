@@ -5,7 +5,8 @@ package org.nlogo.prim.hubnet
 import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
 import org.nlogo.api.{ CommandRunnable, Dump}
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _hubnetsendoverride extends Command {
 
@@ -26,7 +27,7 @@ class _hubnetsendoverride extends Command {
     }
 
     if(!workspace.getHubNetManager.get.isOverridable(set.kind, varName))
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         "you cannot override " + varName)
 
     val freshContext = new Context(context, set)

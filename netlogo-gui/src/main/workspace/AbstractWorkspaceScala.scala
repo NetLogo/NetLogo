@@ -7,7 +7,8 @@ import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, L
   ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
 import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, Widget => CoreWidget, WorldDimensions }
-import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, EngineException, Context, Procedure, Tracer }
+import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, Context, Procedure, Tracer }
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import java.util.WeakHashMap
@@ -49,7 +50,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   // JC 5/19/10
   def tick(context: Context, originalInstruction: Instruction) {
     if(world.tickCounter.ticks == -1)
-      throw new EngineException(context, originalInstruction,
+      throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)

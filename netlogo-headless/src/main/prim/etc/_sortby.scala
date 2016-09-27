@@ -7,7 +7,8 @@ import scala.math.Ordering
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.{ LogoException, AnonymousReporter }
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _sortby extends Reporter {
 
@@ -18,7 +19,7 @@ class _sortby extends Reporter {
   override def report(context: Context): LogoList = {
     val task = argEvalAnonymousReporter(context, 0)
     if (task.syntax.minimum > 2)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, AnonymousProcedure.missingInputs(task, 2))
     val obj = args(1).report(context)
     val input = obj match {
@@ -39,7 +40,7 @@ class _sortby extends Reporter {
     }
     catch {
       case e: IllegalArgumentException if e.getMessage == Java7SoPicky =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "predicate is not a strictly-less-than or strictly-greater than relation")
       case e: WrappedLogoException => throw e.ex
     }

@@ -9,7 +9,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _anyotherwith extends Reporter {
@@ -30,7 +30,7 @@ public final strictfp class _anyotherwith extends Reporter {
       }
       Object value = freshContext.evaluateReporter(tester, reporterBlock);
       if (!(value instanceof Boolean)) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.expectedBooleanValue",
                 displayName(), Dump.logoObject(tester), Dump.logoObject(value)));
       }

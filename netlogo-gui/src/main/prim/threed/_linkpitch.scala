@@ -13,7 +13,7 @@ class _linkpitch extends Reporter {
     try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true))
     catch {
       case e: org.nlogo.api.AgentException =>
-        throw new org.nlogo.nvm.EngineException(
+        throw new org.nlogo.nvm.RuntimePrimitiveException(
           context, this,
           "there is no pitch of a link whose endpoints are in the same position")
     }

@@ -36,7 +36,7 @@ class Lab(loader: ProtocolLoader)
             if (!suppressErrors)
               t match {
                 case ee: EngineException =>
-                  val msg = ee.context.buildRuntimeErrorMessage(ee.instruction, ee)
+                  val msg = ee.runtimeErrorMessage
                   System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
                   ee.printStackTrace(System.err)
                 case _: LogoException =>

@@ -74,6 +74,14 @@ public final strictfp class Context implements org.nlogo.api.Context {
     agentBit = agent.agentBit();
   }
 
+  // Used to produce an exact duplicate context for inspection
+  // by error-reporting tools, while allowing the context in
+  // which the error occured to be reverted to an error-free
+  // state.
+  public Context copy() {
+    return new Context(job, agent, ip, activation);
+  }
+
   public boolean makeChildrenExclusive() {
     return inReporterProcedure || job.exclusive();
   }
@@ -97,11 +105,12 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {
-      throw new EngineException
-          (this, "stack overflow (recursion too deep)");
+      throw new NetLogoStackOverflow(copy(), activation.procedure().code()[ip], ex);
     }
   }
 
@@ -124,8 +133,10 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!finished);
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
     }
   }
 
@@ -183,7 +194,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public void stop() {
     if (activation.procedure().isLambda()) {
-      throw NonLocalExit$.MODULE$;
+      throw new NonLocalExit();
     }
     if (activation.procedure().topLevel()) {
       // In the BehaviorSpace case, there are two cases: stop
@@ -248,16 +259,20 @@ public final strictfp class Context implements org.nlogo.api.Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) {
+    } catch (NonLocalExit e) {
       // do nothing
+    } catch (EngineException ex) {
+      throw ex;
     } catch (LogoException ex) {
-      EngineException.rethrow(ex, this, command);
+      EngineException.rethrow(ex, copy(), command);
+    } catch (StackOverflowError ex) {
+      throw new NetLogoStackOverflow(copy(), activation.procedure().code()[ip], ex);
     } finally {
       inReporterProcedure = oldInReporterProcedure;
+      ip                  = activation.returnAddress();
+      activation          = activation.parent().get();
+      letBindings         = priorLetBindings;
     }
-    ip = activation.returnAddress();
-    activation = activation.parent().get();
-    letBindings = priorLetBindings;
     Object result = job.result;
     job.result = null;
     return result;
@@ -325,8 +340,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
       Instruction instruction = null;
       Context context = null;
       if (ex instanceof EngineException) {
-        instruction = ((EngineException) ex).instruction();
-        context = ((EngineException) ex).context();
+        instruction = ((EngineException) ex).responsibleInstructionOrNull();
+        context = (Context) ((EngineException) ex).context();
       }
       if (instruction == null) {
         instruction = activation.procedure().code()[ip];
@@ -349,9 +364,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable, String message) {
-    if(throwable instanceof EngineException &&
-       ((EngineException) throwable).cachedRuntimeErrorMessage().isDefined()) {
-      return ((EngineException) throwable).cachedRuntimeErrorMessage().get();
+    if (throwable instanceof EngineException) {
+      return ((EngineException) throwable).runtimeErrorMessage();
     }
     return StackTraceBuilder.build(
       activation, agent, instruction, scala.Option.apply(throwable), message);

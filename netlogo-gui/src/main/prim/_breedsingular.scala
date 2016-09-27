@@ -5,7 +5,8 @@ package org.nlogo.prim
 import org.nlogo.agent.{ AgentSet, Turtle }
 import org.nlogo.core.Syntax
 import org.nlogo.core.Nobody
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _breedsingular(breedName: String) extends Reporter {
 
@@ -17,12 +18,12 @@ class _breedsingular(breedName: String) extends Reporter {
   def report_1(context: Context, idDouble: Double): AnyRef = {
     val id = validLong(idDouble)
     if (id != idDouble)
-      throw new EngineException(context, this, s"$idDouble is not an integer")
+      throw new RuntimePrimitiveException(context, this, s"$idDouble is not an integer")
     val turtle = world.getTurtle(id)
     if (turtle == null) return Nobody
     val breed = world.getBreed(breedName)
     if (!breed.contains(turtle))
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, s"$turtle is not a ${world.getBreedSingular(breed)}")
     turtle
   }

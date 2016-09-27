@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _layoutcircle
     extends Command {
@@ -28,14 +28,14 @@ public final strictfp class _layoutcircle
       } else {
         AgentSet set = (AgentSet) nodes;
         if (set.kind() != AgentKindJ.Turtle()) {
-          throw new EngineException
+          throw new RuntimePrimitiveException
               (context, this,
                   I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
         }
         org.nlogo.agent.Layouts.circle(world, set, radius, context.job.random);
       }
     } catch (org.nlogo.api.AgentException e) {
-      throw new EngineException(context, this, e.getMessage());
+      throw new RuntimePrimitiveException(context, this, e.getMessage());
     }
     context.ip = next;
   }

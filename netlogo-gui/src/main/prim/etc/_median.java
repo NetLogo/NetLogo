@@ -8,7 +8,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public final strictfp class _median
     }
     int listSize = list.size();
     if (listSize == badElts) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers", Dump.logoObject(list)));
     }
     Collections.sort(nums);

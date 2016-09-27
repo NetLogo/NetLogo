@@ -2,7 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.nvm.{ Activation, Context, CustomGenerated, EngineException, Procedure, Reporter }
+import org.nlogo.nvm.{ Activation, Context, CustomGenerated, Procedure, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 // Note that _callreport is "CustomGenerated".  That means that the bytecode generator generates
 // custom bytecode for _callreport, instead of using the report() method below.  The body of the
@@ -27,7 +28,7 @@ class _callreport(val procedure: Procedure) extends Reporter with CustomGenerate
     }
     val result = context.callReporterProcedure(newActivation)
     if (result == null)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, "the " + procedure.name + " procedure failed to report a result")
     result
   }

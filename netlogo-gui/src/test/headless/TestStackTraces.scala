@@ -36,8 +36,11 @@ class TestStackTraces extends AbstractTestModels {
   /// run/runresult tests
 
   val code =
-    "to-report foo report bar end " +
-    "to-report bar report __boom end"
+    """|to-report foo report bar end
+       |to-report bar report __boom end
+       |to-report overflow report runresult "runresult \"overflow\"" end
+       |to overflow-run run [ [] -> run [ [] -> overflow-run ] ] end
+       |to overflow-foreach foreach [1 2 3] [ [i] -> overflow-foreach ] end""".stripMargin
 
   testModel("error inside run", Model(code)) {
     intercept[LogoException] { observer >> "__ignore runresult \"foo\"" }
@@ -60,6 +63,36 @@ error while observer running __BOOM
   called by procedure __EVALUATOR""")
   }
 
+  testModel("stack overflow - command", Model(code)) {
+    intercept[LogoException] { observer >> "overflow-run" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running RUN""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by run" ||
+          l === "  called by procedure OVERFLOW-RUN"))
+  }
+
+  testModel("stack overflow - reporter", Model(code)) {
+    intercept[LogoException] { observer >> "show overflow" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running REPORT""".stripMargin))
+    trace.lines.drop(2).take(100).foreach(l =>
+        assert(l === "  called by runresult" ||
+          l === "  called by procedure OVERFLOW"))
+  }
+
+
+  testModel("stack overflow - foreach", Model(code)) {
+    intercept[LogoException] { observer >> "overflow-foreach" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running FOREACH""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by foreach" ||
+          l === "  called by procedure OVERFLOW-FOREACH"))
+  }
 }
 
 class TestExtensionStackTraces extends FunSuite {

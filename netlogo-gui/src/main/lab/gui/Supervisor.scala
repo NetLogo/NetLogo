@@ -34,7 +34,7 @@ class Supervisor(dialog: java.awt.Dialog,
       override def runtimeError(w: Workspace, runNumber: Int, e: Throwable) {
         e match {
           case ee: EngineException =>
-            val msg = ee.context.buildRuntimeErrorMessage(ee.instruction,ee)
+            val msg = ee.runtimeErrorMessage
             System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
             ee.printStackTrace(System.err)
           case le: LogoException =>

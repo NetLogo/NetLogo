@@ -30,7 +30,7 @@ class TestErrorMessages extends FixtureSuite {
     }
     assertResult("That frog is dead.")(ex.getMessage)
     // frog 2 is dead, but frog 1 actually encountered the error
-    assertResult("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.getAgent.toString)
   }
 
   // Here we're checking that when a runtime error is reported, the right
@@ -45,7 +45,7 @@ class TestErrorMessages extends FixtureSuite {
     val message =
       "POSITION expected input to be a string or list but got the number 1.4 instead."
     assertResult(message)(ex.getMessage)
-    assertResult("POSITION")(ex.instruction.token.text.toUpperCase)
+    assertResult("POSITION")(ex.responsibleInstruction.get.token.text.toUpperCase)
   }
 
 }

@@ -36,7 +36,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
     assertResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    assertResult("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.getAgent.toString)
   }
   test("argumentTypeException") {
     testCommand("set glob1 [1.4]")
@@ -44,7 +44,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
     assertResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    assertResult("POSITION")(ex.instruction.token.text.toUpperCase)
+    assertResult("POSITION")(ex.responsibleInstruction.get.token.text.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {

@@ -59,3 +59,15 @@ carefully-with-error-and-message
 
 NotSettable
   O> set timer 5 => COMPILER ERROR This isn't something you can use "set" on.
+
+CarefullyWithLambda1
+  to guarded-runresult-error runresult-carefully [ [] -> errant-runresult ] 0 end
+  to-report errant-runresult report runresult "not-a-reporter" end
+  to runresult-carefully [ lambda r ] carefully [ __ignore runresult lambda ] [ set r error-message ] end
+  O> guarded-runresult-error
+
+CarefullyWithLambda2
+  to-report guarded-runresult-error report runresult-carefully [ [] -> errant-runresult ] end
+  to-report errant-runresult report runresult "not-a-reporter" end
+  to-report runresult-carefully [ lambda ] let r 0 carefully [ set r runresult lambda ] [ set r error-message ] report r end
+  guarded-runresult-error => "Nothing named NOT-A-REPORTER has been defined."

@@ -227,13 +227,13 @@ class CustomGenerator(profilingEnabled: Boolean) {
     mv.visitInsn(DUP)
     val lSkip = new Label
     mv.visitJumpInsn(IFNONNULL, lSkip)
-    mv.visitTypeInsn(NEW, "org/nlogo/nvm/EngineException")
+    mv.visitTypeInsn(NEW, "org/nlogo/nvm/RuntimePrimitiveException")
     mv.visitInsn(DUP)
     mv.visitVarInsn(ALOAD, 1)
     mv.visitVarInsn(ALOAD, 0)
     mv.visitLdcInsn("the " + instr.procedure.name + " procedure failed to report a result")
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/EngineException", "<init>",
-      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V", false)
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/RuntimePrimitiveException", "<init>",
+      "(Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V", false)
     mv.visitInsn(ATHROW)
     mv.visitLabel(lSkip)
     // operand stack: resultObj

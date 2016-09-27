@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _exportview
     extends org.nlogo.nvm.Command {
@@ -18,7 +18,7 @@ public final strictfp class _exportview
                       (filePath),
                       "png");
             } catch (java.io.IOException ex) {
-              throw new EngineException
+              throw new RuntimePrimitiveException
                   (context, _exportview.this,
                       token().text() +
                           ": " + ex.getMessage());

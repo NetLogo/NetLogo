@@ -8,7 +8,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _all
@@ -28,7 +28,7 @@ public final strictfp class _all
       Agent tester = iter.next();
       Object value = freshContext.evaluateReporter(tester, reporterBlock);
       if (!(value instanceof Boolean)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.$common.expectedBooleanValue",
                 displayName(), Dump.logoObject(tester), Dump.logoObject(value)));
       }

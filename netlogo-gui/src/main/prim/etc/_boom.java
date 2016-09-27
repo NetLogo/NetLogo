@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 // In testing I sometimes use this as an example of an unrejiggered
@@ -19,6 +19,6 @@ public final strictfp class _boom
   @Override
   public Object report(Context context)
       throws LogoException {
-    throw new EngineException(context, this, "boom!");
+    throw new RuntimePrimitiveException(context, this, "boom!");
   }
 }

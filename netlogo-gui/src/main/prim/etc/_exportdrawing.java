@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _exportdrawing
     extends org.nlogo.nvm.Command {
@@ -20,7 +20,7 @@ public final strictfp class _exportdrawing
                       (filePath),
                       "png");
             } catch (java.io.IOException ex) {
-              throw new EngineException
+              throw new RuntimePrimitiveException
                   (context, _exportdrawing.this,
                       token().text() +
                           ": " + ex.getMessage());

@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _variance extends Reporter implements Pure {
@@ -28,7 +28,7 @@ public final strictfp class _variance extends Reporter implements Pure {
       sum += ((Double) elt).doubleValue();
     }
     if (listSize - badElts < 2) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber", Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);

@@ -135,7 +135,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     args(index).report(context) match {
       case a: Agent =>
         if (a.id == -1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", a.classDisplayName))
         a
       case x =>
@@ -341,7 +341,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     // 9007199254740992 is the largest/smallest integer
     // exactly representable in a double - ST 1/29/08
     if (d > 9007199254740992L || d < -9007199254740992L)
-      throw new EngineException(null, this,
+      throw new RuntimePrimitiveException(null, this,
         s"$d is too large to be represented exactly as an integer in NetLogo")
     d.toLong
   }
@@ -368,7 +368,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   private def invalidDouble(d: Double): Nothing =
     // it's hard to get a context here in some situations because
     // of optimizations. the context will get set later.
-    throw new EngineException(null, this,
+    throw new RuntimePrimitiveException(null, this,
       "math operation produced "
         + (if (java.lang.Double.isInfinite(d))
              "a number too large for NetLogo"
@@ -386,7 +386,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
        if agentClassString.contains(c)
      }
      yield kind
-   throw new EngineException(context, this,
+   throw new RuntimePrimitiveException(context, this,
      "this code can't be run by " + Instruction.agentKindDescription(kind) +
      (if (allowedKinds.size == 1)
         ", only " + Instruction.agentKindDescription(allowedKinds.head)

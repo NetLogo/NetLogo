@@ -34,8 +34,7 @@ public final strictfp class Activation implements org.nlogo.api.Activation {
   public void setUpArgsForRunOrRunresult() {
     // if there's a reason we make a copy rather than just using the
     // original, I no longer remember it - ST 2/6/11
-    System.arraycopy(parent.args, 0, args, 0,
-        parent.procedure.args().size());
+    System.arraycopy(parent.args, 0, args, 0, parent.procedure.args().size());
   }
 
   @Override

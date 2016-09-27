@@ -10,7 +10,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public final strictfp class _turtleson
     if (agentOrSet instanceof Turtle) {
       Turtle turtle = (Turtle) agentOrSet;
       if (turtle.id == -1) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
       }
       addAll(resultList, turtle.getPatchHere().turtlesHere());

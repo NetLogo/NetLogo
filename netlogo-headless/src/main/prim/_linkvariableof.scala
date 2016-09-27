@@ -5,7 +5,8 @@ package org.nlogo.prim
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ AgentException, LogoListBuilder }
 import org.nlogo.core.{ I18N, LogoList, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _linkvariableof(_vn: Int) extends Reporter {
 
@@ -24,7 +25,7 @@ class _linkvariableof(_vn: Int) extends Reporter {
     try agentOrSet match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
                              agent.classDisplayName))
         agent.getLinkVariable(_vn)
@@ -41,18 +42,18 @@ class _linkvariableof(_vn: Int) extends Reporter {
         agentOrSet)
     }
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
   def report_2(context: Context, agent: Agent): AnyRef =
     try {
       if (agent.id == -1)
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
                            agent.classDisplayName))
       agent.getLinkVariable(_vn)
     }
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
   def report_3(context: Context, sourceSet: AgentSet): LogoList =
     try {
@@ -63,6 +64,6 @@ class _linkvariableof(_vn: Int) extends Reporter {
       result.toLogoList
     }
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
 }

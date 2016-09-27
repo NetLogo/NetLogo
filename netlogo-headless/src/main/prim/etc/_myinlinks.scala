@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ AgentSet, LinkManager, Turtle }
 import org.nlogo.core.AgentKind
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _myinlinks(val breedName: String) extends Reporter {
 
@@ -18,7 +19,7 @@ class _myinlinks(val breedName: String) extends Reporter {
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
     for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new EngineException(context, this, err)
+      throw new RuntimePrimitiveException(context, this, err)
     AgentSet.fromIterator(AgentKind.Link,
       world.linkManager.findLinksTo(
         context.agent.asInstanceOf[Turtle], breed))

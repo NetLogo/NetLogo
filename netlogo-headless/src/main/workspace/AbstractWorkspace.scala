@@ -20,7 +20,7 @@ import
     JobOwner, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
   core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
-    Instruction, Job, MutableLong, Procedure, Workspace },
+    Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
   plot.{ PlotExporter, PlotManager }
 
@@ -89,7 +89,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
   // JC 5/19/10
   def tick(context: Context, originalInstruction: Instruction) {
     if(world.tickCounter.ticks == -1)
-      throw new EngineException(context, originalInstruction,
+      throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)

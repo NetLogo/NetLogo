@@ -17,6 +17,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.core.Token;
 import org.nlogo.nvm.Thunk;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +179,7 @@ public abstract strictfp class Instruction
   protected void mustNotBeDirected(AgentSet breed, Context context)
       throws EngineException {
     if (breed.isDirected()) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this,
               breed.printName() + " is a directed breed.");
     }
@@ -187,7 +188,7 @@ public abstract strictfp class Instruction
   protected void mustNotBeUndirected(AgentSet breed, Context context)
       throws EngineException {
     if (breed.isUndirected()) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this,
               breed.printName() + " is an undirected breed.");
     }
@@ -196,7 +197,7 @@ public abstract strictfp class Instruction
   protected void checkForBreedCompatibility(AgentSet breed, Context context)
       throws EngineException {
     if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
     }
   }
@@ -207,7 +208,7 @@ public abstract strictfp class Instruction
     // 9007199254740992 is the largest/smallest integer
     // exactly representable in a double - ST 1/29/08
     if (d > 9007199254740992L || d < -9007199254740992L) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (null, this,
               d + " is too large to be represented exactly as an integer in NetLogo");
     }
@@ -244,7 +245,7 @@ public abstract strictfp class Instruction
   private void invalidDouble(double d) throws LogoException {
     // it's hard to get a context here in some situations because
     // of optimizations. the context will get set later.
-    throw new EngineException
+    throw new RuntimePrimitiveException
         (null, this,
             "math operation produced "
                 + (Double.isInfinite(d)
@@ -276,7 +277,7 @@ public abstract strictfp class Instruction
     try {
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
       if (agent.id == -1) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       return agent;

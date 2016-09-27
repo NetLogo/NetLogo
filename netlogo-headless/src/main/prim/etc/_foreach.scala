@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, EngineException, NonLocalExit }
+import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, NonLocalExit }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _foreach extends Command {
   override def perform(context: Context) {
@@ -13,13 +14,13 @@ class _foreach extends Command {
       val list = argEvalList(context, i)
       if (i == 0) size = list.size
       else if (size != list.size)
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.javaIterator
     }
     val task = argEvalAnonymousCommand(context, n)
     if (n < task.syntax.minimum)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, AnonymousProcedure.missingInputs(task, n))
     var i = 0
     val actuals = new Array[AnyRef](n)
@@ -36,8 +37,7 @@ class _foreach extends Command {
       context.ip = next
     }
     catch {
-      case NonLocalExit
-          if !context.activation.procedure.isReporter =>
+      case _: NonLocalExit if !context.activation.procedure.isReporter =>
         context.stop()
     }
   }

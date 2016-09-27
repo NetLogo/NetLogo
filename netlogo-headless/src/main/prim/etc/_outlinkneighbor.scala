@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ LinkManager, Turtle }
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _outlinkneighbor(val breedName: String) extends Reporter {
 

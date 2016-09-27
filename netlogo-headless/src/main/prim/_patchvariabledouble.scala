@@ -4,7 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Patch, Turtle }
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _patchvariabledouble(private[this] var _vn: Int) extends Reporter {
 
@@ -25,7 +26,7 @@ class _patchvariabledouble(private[this] var _vn: Int) extends Reporter {
   def report_1(context: Context): java.lang.Double =
     try context.agent.getPatchVariable(_vn).asInstanceOf[java.lang.Double]
     catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+      throw new RuntimePrimitiveException(context, this, ex.getMessage) }
 
   def report_2(context: Context): Double = {
     val patch = context.agent match {

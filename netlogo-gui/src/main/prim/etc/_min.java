@@ -8,7 +8,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 
@@ -34,7 +34,7 @@ public final strictfp class _min extends Reporter implements Pure {
       }
     }
     if (boxedWinner == null) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.prim._min.cantFindMinOfListWithNoNumbers", Dump.logoObject(list)));
     }
     return boxedWinner;

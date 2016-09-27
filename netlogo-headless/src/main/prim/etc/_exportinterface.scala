@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.CommandRunnable
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _exportinterface extends Command {
   override def perform(context: Context) {
@@ -17,7 +18,7 @@ class _exportinterface extends Command {
           try workspace.exportInterface(path)
           catch {
             case e: java.io.IOException =>
-              throw new EngineException(
+              throw new RuntimePrimitiveException(
                 context, _exportinterface.this, token.text + ": " + e.getMessage)
           }}})
     context.ip = next

@@ -10,7 +10,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtlevariableof
@@ -27,13 +27,13 @@ public final strictfp class _turtlevariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getTurtleVariable(vn);
       } catch (org.nlogo.api.AgentException ex) {
-        throw new EngineException(context, this, ex.getMessage());
+        throw new RuntimePrimitiveException(context, this, ex.getMessage());
       }
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
@@ -44,7 +44,7 @@ public final strictfp class _turtlevariableof
           result.add(iter.next().getTurtleVariable(vn));
         }
       } catch (org.nlogo.api.AgentException ex) {
-        throw new EngineException(context, this, ex.getMessage());
+        throw new RuntimePrimitiveException(context, this, ex.getMessage());
       }
       return result.toLogoList();
     } else {
@@ -70,13 +70,13 @@ public final strictfp class _turtlevariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getTurtleVariable(vn);
       } catch (org.nlogo.api.AgentException ex) {
-        throw new EngineException(context, this, ex.getMessage());
+        throw new RuntimePrimitiveException(context, this, ex.getMessage());
       }
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
@@ -87,7 +87,7 @@ public final strictfp class _turtlevariableof
           result.add(iter.next().getTurtleVariable(vn));
         }
       } catch (org.nlogo.api.AgentException ex) {
-        throw new EngineException(context, this, ex.getMessage());
+        throw new RuntimePrimitiveException(context, this, ex.getMessage());
       }
       return result.toLogoList();
     } else {
@@ -101,13 +101,13 @@ public final strictfp class _turtlevariableof
   public Object report_2(final Context context, Agent agent)
       throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     try {
       return agent.getTurtleVariable(vn);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
   }
 
@@ -120,7 +120,7 @@ public final strictfp class _turtlevariableof
         result.add(iter.next().getTurtleVariable(vn));
       }
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     return result.toLogoList();
   }

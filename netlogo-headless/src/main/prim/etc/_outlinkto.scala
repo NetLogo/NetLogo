@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ LinkManager, Turtle }
 import org.nlogo.core.Nobody
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _outlinkto(val breedName: String) extends Reporter {
 
@@ -20,7 +21,7 @@ class _outlinkto(val breedName: String) extends Reporter {
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
     for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new EngineException(context, this, err)
+      throw new RuntimePrimitiveException(context, this, err)
     val link = world.linkManager.findLinkFrom(parent, target, breed, true)
     if (link == null)
       Nobody

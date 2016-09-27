@@ -12,7 +12,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
@@ -63,7 +63,7 @@ public final strictfp class _patchset
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.type() != org.nlogo.agent.Patch.class) {
-          throw new EngineException(context, this,
+          throw new RuntimePrimitiveException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
@@ -74,7 +74,7 @@ public final strictfp class _patchset
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
       } else if (obj != org.nlogo.core.Nobody$.MODULE$) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatch",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }

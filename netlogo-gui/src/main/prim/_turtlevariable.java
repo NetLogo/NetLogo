@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtlevariable
@@ -36,7 +36,7 @@ public final strictfp class _turtlevariable
     try {
       return context.agent.getTurtleVariable(vn);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
   }
 

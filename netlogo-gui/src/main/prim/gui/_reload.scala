@@ -3,7 +3,8 @@
 package org.nlogo.prim.gui
 
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Command, EngineException }
+import org.nlogo.nvm.{ Context, Command}
+import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.window.GUIWorkspace
 
 class _reload extends Command {
@@ -16,7 +17,7 @@ class _reload extends Command {
         gw.reload()
         context.ip = next
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, token.text + " can only be used in the GUI")
     }
   }

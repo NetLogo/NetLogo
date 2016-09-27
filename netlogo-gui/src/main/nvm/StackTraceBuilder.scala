@@ -2,8 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.LogoException
-import org.nlogo.agent.Agent
+import org.nlogo.api.{ Activation => ApiActivation, Agent, LogoException }
 
 /**
  * A stack trace is displayed to the user when an error occurs in running code.
@@ -29,28 +28,41 @@ import org.nlogo.agent.Agent
  */
 object StackTraceBuilder {
 
-  def build(act: Activation, agent: Agent, instruction: Instruction, cause: Option[Throwable]): String = {
-    val errorMessage = cause map {
+  def build(act: ApiActivation, agent: Agent, instruction: Instruction, exception: Option[Throwable]): String =
+    build(act, agent, instruction, exception, null)
+
+  def build(act: ApiActivation, agent: Agent, instruction: Instruction, exception: Option[Throwable], message: String): String = {
+    val errorMessage = exception map {
       case l: LogoException =>
-        l.getMessage + "\nerror while "
+        Option(l.getMessage).getOrElse(message) + "\nerror while "
+      case soe: StackOverflowError =>
+        s"error while "
       case e =>
-        "error (" + e.getClass.getSimpleName + ")\n while "
+        s"error (${e.getClass.getSimpleName})\n while "
     }
     val instructionName = Option(instruction).map(_.displayName).getOrElse("")
-    errorMessage.getOrElse("") + agent + " running " + instructionName + "\n" +
-      entries(act).map("  called by " + _).mkString("\n")
+    errorMessage.getOrElse("") + agent + " running " + instructionName + "\n" + buildTrace(act)
   }
 
-  private def entries(act: Activation): List[String] = {
-    val activations = Iterator.iterate(act)(_.parent).takeWhile(_ != null).toList
+  def buildTrace(act: ApiActivation): String = {
+    entries(act).map("  called by " + _).mkString("\n")
+  }
+
+  private def entries(act: ApiActivation): List[String] = {
+    val activations = Iterator.iterate(act)(_.parent.orNull).takeWhile(_ != null).toList
     // flatMap because each activation can result in 1 or 2 entries
     activations.flatMap{a => a.procedure.displayName :: commandName(a).toList }
   }
 
-  private def commandName(act: Activation): Option[String] =
-    for{p <- Option(act.parent)
-        if(p.procedure.code.isDefinedAt(act.returnAddress - 1))
-        c = p.procedure.code(act.returnAddress - 1)
-        if c.callsOtherCode}
-    yield c.displayName
+  private def commandName(act: ApiActivation): Option[String] =
+    act match {
+      case nvmActivation: Activation =>
+        for {
+          p <- Option(nvmActivation.parent)
+            if (p.procedure.code.isDefinedAt(nvmActivation.returnAddress - 1))
+          c = p.procedure.code(nvmActivation.returnAddress - 1)
+            if c.callsOtherCode
+        } yield c.displayName
+      case _ => None
+    }
 }

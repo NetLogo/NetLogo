@@ -5,7 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _setturtlevariable
     extends Command {
@@ -33,7 +33,7 @@ public final strictfp class _setturtlevariable
     try {
       context.agent.setTurtleVariable(vn, value);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }
@@ -42,7 +42,7 @@ public final strictfp class _setturtlevariable
     try {
       context.agent.setTurtleVariable(vn, value);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }

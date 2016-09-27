@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.{ Dump, LogoException}
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _randomseed extends Command {
 
@@ -17,7 +18,7 @@ class _randomseed extends Command {
   def perform_1(context: Context, arg0: Double) {
     val l = arg0.toLong
     if (l < -2147483648 || l > 2147483647)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this,
         Dump.number(arg0) + " is not in the allowable range for random seeds (-2147483648 to 2147483647)")
     context.job.random.setSeed(l.toInt)

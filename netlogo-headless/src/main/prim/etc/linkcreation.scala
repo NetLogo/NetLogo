@@ -6,7 +6,7 @@ import
   org.nlogo.{ agent, core, nvm },
     core.Syntax,
     agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
-    nvm.{ Command, Context, EngineException }
+    nvm.{ Command, Context, RuntimePrimitiveException }
 
 trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   // abstract
@@ -42,13 +42,13 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled {
   // helpers
   def checkForBreedCompatibility(context: Context, breed: AgentSet) {
     if (!world.linkManager.checkBreededCompatibility(breed eq world.links))
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, core.I18N.errors.get(
           "org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"))
   }
   def newLink(context: Context, src: Turtle, dest: Turtle, breed: AgentSet): Option[Link] =
     if (src eq dest)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, core.I18N.errors.get(
           "org.nlogo.prim.$common.turtleCantLinkToSelf"))
     else if (src.id == -1 || dest.id == -1 || linkAlreadyExists(src, dest, breed))
@@ -95,7 +95,7 @@ trait Multiple extends LinkCreationCommand {
 trait Directed extends LinkCreationCommand {
   override def checkDirectedness(context: Context, breed: AgentSet) {
     for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new EngineException(context, this, err)
+      throw new RuntimePrimitiveException(context, this, err)
     checkForBreedCompatibility(context, breed)
     if (breed eq world.links)
       breed.setDirected(true)
@@ -114,7 +114,7 @@ trait DirectedFrom extends Directed {
 trait Undirected extends LinkCreationCommand {
   override def checkDirectedness(context: Context, breed: AgentSet) {
     for(err <- LinkManager.mustNotBeDirected(breed))
-      throw new EngineException(context, this, err)
+      throw new RuntimePrimitiveException(context, this, err)
     checkForBreedCompatibility(context, breed)
     if (breed eq world.links)
       breed.setDirected(false)
