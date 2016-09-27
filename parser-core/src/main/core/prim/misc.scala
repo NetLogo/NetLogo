@@ -72,7 +72,7 @@ case class _carefully() extends Command {
       right = List(Syntax.CommandBlockType, Syntax.CommandBlockType),
       introducesContext = true)
 }
-case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Reporter {
+case class _commandlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Lambda with Reporter {
   def this() = this(Seq(), false, Set())
   def this(arguments: Seq[String]) = this(arguments, false, Set())
   def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Set())
@@ -381,7 +381,7 @@ case class _report() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType))
 }
-case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Reporter {
+case class _reporterlambda(argumentNames: Seq[String], synthetic: Boolean, closedVariables: Set[ClosedVariable]) extends Lambda with Reporter {
   def this() = this(Seq(), false, Set())
   def this(arguments: Seq[String]) = this(arguments, false, Set())
   def this(arguments: Seq[String], synthetic: Boolean) = this(arguments, synthetic, Set())

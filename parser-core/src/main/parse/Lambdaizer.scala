@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ AstFolder, AstNode, Command, CommandBlock, Dialect, Instruction, Reporter, ReporterApp, ReporterBlock, Statement, Syntax, TokenMapperInterface, prim },
-  prim.{ _commandlambda, _reporterlambda }
+  prim.{ _commandlambda, _lambdavariable, _reporterlambda, Lambda }
 
 import Formatter.Operation
 import WhiteSpace._
@@ -128,7 +128,13 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
       case _: _task           =>
         // need to check if arg0 is synthetic. If it is synthetic, we need to make it an actual block
         app.args(0) match {
-          case ReporterApp(_reporterlambda(_, true, _) | _commandlambda(_, true, _), _, _) =>
+          case ra@ReporterApp(l@Lambda(args, true, _), _, _) if ! args.isEmpty =>
+            // this case makes sure `let foo task crt` get converted to `let foo [[?1] -> foo ?1]`
+            val nestingDepth = ops.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size
+            val printLambdaVars = new ConvertConciseVariables(nestingDepth)
+            val printOps = printLambdaVars.visitExpression(ra.args(0), position / AstPath.RepArg(0), 0)(ops)
+            super.visitReporterApp(app, position)(printOps + (position -> new AddVariables(Some(args.length), nestingDepth)))
+          case ReporterApp(Lambda(_, true, _), _, _) =>
             // this case makes sure `let foo task pi` doesn't get converted to `let foo pi`
             super.visitReporterApp(app, position)(ops + (position -> wrapConciseForClarity(position)))
           case lambdaApp@ReporterApp(_reporterlambda(args, _, _), _, _) if args.isEmpty =>
@@ -144,6 +150,30 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
         val nestingDepth = ops.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size
         super.visitReporterApp(app, position)(ops + (position -> new ReplaceVar(nestingDepth - 1)))
       case _                  => super.visitReporterApp(app, position)
+    }
+  }
+}
+
+class ConvertConciseVariables(nesting: Int) extends PositionalAstFolder[Map[AstPath, Operation]] {
+  def varName(nestingDepth: Int, vn: Int): String = {
+    val prefix = "?" * (nestingDepth + 1)
+    s"$prefix${vn + 1}"
+  }
+
+  def showConciseVariable(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: Formatter.Context): Formatter.Context = {
+    astNode match {
+      case ReporterApp(_lambdavariable(name, true), _, _) =>
+        val convertedTaskVariableName = varName(nesting, name.tail.toInt)
+        val leadingSpace = if (ctx.text.endsWith(" ")) "" else " "
+        ctx.appendText(leadingSpace + convertedTaskVariableName + " ")
+    }
+  }
+
+  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit ops: Map[AstPath, Operation]): Map[AstPath, Operation] = {
+    app.reporter match {
+      case _lambdavariable(name, true) => ops + (position -> showConciseVariable _)
+      case (_: _reporterlambda | _: _commandlambda) => ops // don't go further down
+      case _ => super.visitReporterApp(app, position)(ops)
     }
   }
 }
