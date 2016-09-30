@@ -5,8 +5,11 @@ package org.nlogo.window
 import java.awt.{ Component, FileDialog => AWTFileDialog }
 import java.nio.file.Paths
 import java.net.URI
+import javax.swing.JDialog
 
+import org.nlogo.awt.EventQueue
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, OptionDialog }
+import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.workspace.ModelTracker
 import org.nlogo.workspace.OpenModel.{ Controller => OpenModelController }
 import org.nlogo.workspace.SaveModel.{ Controller => SaveModelController }
@@ -15,6 +18,52 @@ import org.nlogo.core.I18N
 import org.nlogo.awt.UserCancelException
 
 import scala.util.Try
+
+class BackgroundFileController(dialog: JDialog, foregroundController: FileController) extends OpenModelController with SaveModelController {
+
+  def runOnUIThread[A](f: () => Unit) = {
+    EventQueue.invokeLater { () =>
+      dialog.setVisible(false)
+      f()
+      dialog.setVisible(true)
+    }
+  }
+
+  def runOnUIThreadForResult[A](f: () => A): A = {
+    import scala.concurrent.{ Await, Promise }
+    import scala.concurrent.duration.{ Duration, MILLISECONDS }
+    val promise = Promise[A]()
+
+    runOnUIThread(() => promise.success(f()))
+
+    Await.result(promise.future, Duration.Inf)
+  }
+
+  // Members declared in org.nlogo.workspace.SaveModel.Controller
+  def chooseFilePath(modelType: ModelType): Option[URI] =
+    runOnUIThreadForResult(() => foregroundController.chooseFilePath(modelType))
+
+  def shouldSaveModelOfDifferingVersion(version: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldSaveModelOfDifferingVersion(version))
+
+  def warnInvalidFileFormat(format: String): Unit =
+    runOnUIThread(() => foregroundController.warnInvalidFileFormat(format))
+
+  // Members declared in org.nlogo.workspace.OpenModel.Controller
+  def errorOpeningURI(uri: java.net.URI,exception: Exception): Unit =
+    runOnUIThread(() => foregroundController.errorOpeningURI(uri, exception))
+
+  def invalidModel(uri: java.net.URI): Unit =
+    runOnUIThread(() => foregroundController.invalidModel(uri))
+  def invalidModelVersion(uri: java.net.URI,version: String): Unit =
+    runOnUIThread(() => foregroundController.invalidModelVersion(uri, version))
+  def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfDifferingArity(arity, version))
+  def shouldOpenModelOfLegacyVersion(version: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfLegacyVersion(version))
+  def shouldOpenModelOfUnknownVersion(version: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfUnknownVersion(version))
+}
 
 class FileController(owner: Component, modelTracker: ModelTracker) extends OpenModelController with SaveModelController {
   // OpenModel.Controller methods

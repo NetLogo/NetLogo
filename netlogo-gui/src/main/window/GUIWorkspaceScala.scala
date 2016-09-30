@@ -106,7 +106,7 @@ abstract class GUIWorkspaceScala(world: World,
       case PlotWidgetExport.ExportSinglePlot(plot) =>
         Future {
           runAndComplete(
-            super.exportPlot(plot.name, e.exportFilename),
+            () => super.exportPlot(plot.name, e.exportFilename),
             (ex) => plotExportControls.singlePlotExportFailed(getFrame, e.exportFilename, plot, ex))
         } (new LockedBackgroundExecutionContext(world))
     }
@@ -172,7 +172,7 @@ abstract class GUIWorkspaceScala(world: World,
                 case ex: IOException =>
                   ExportControls.displayExportError(getExportWindowFrame, ex.getMessage)
               }
-        } }, true)
+        } })
     }
   }
 

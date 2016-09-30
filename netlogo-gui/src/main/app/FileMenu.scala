@@ -21,8 +21,8 @@ import org.nlogo.awt.{ Hierarchy => NLogoHierarchy, UserCancelException }
 import org.nlogo.window.{ BackgroundFileController, FileController, Events => WindowEvents, GUIWorkspace,
   LinkRoot, PlotWidgetExport, ReconfigureWorkspaceUI },
   WindowEvents.{ AboutToQuitEvent, ExportPlotEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.plot.Plot
 import org.nlogo.workspace.{ OpenModel, SaveModel, SaveModelAs }
+import org.nlogo.plot.Plot
 import org.nlogo.swing.{ Implicits, Menu => SwingMenu }, Implicits.thunk2runnable
 import org.nlogo.fileformat.{ NLogoFormat, NLogoModelSettings, NLogoHubNetFormat, NLogoPreviewCommandsFormat }
 
