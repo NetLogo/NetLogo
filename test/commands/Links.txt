@@ -805,3 +805,127 @@ LinkNeighborsBreeded
   [out-directed-edge-neighbor? turtle 0] of turtle 1 => false
   [out-directed-edge-neighbor? turtle 2] of turtle 1 => false
   [out-directed-edge-neighbor? turtle 1] of turtle 2 => true
+
+UndirectedUnbreededLink
+  globals [ source dest l ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-link-with dest [ set l self ] ]
+  # unspecified
+  [ member? l my-links ] of source => true
+  [ member? dest link-neighbors ] of source => true
+  [ link-neighbor? dest ] of source => true
+  [ l = link-with dest ] of source => true
+  # out
+  [ member? l my-out-links ] of source => true
+  [ member? dest out-link-neighbors ] of source => true
+  [ out-link-neighbor? dest ] of source => true
+  [ l = link-to dest ] of source => true
+  # in
+  [ member? l my-in-links ] of source => true
+  [ member? dest in-link-neighbors ] of source => true
+  [ in-link-neighbor? dest ] of source => true
+  [ l = link-from dest ] of source => true
+
+DirectedUnbreededLink
+  globals [ source dest l ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-link-to dest [ set l self ] ]
+  # Test source node
+  # unspecified
+  [ member? l my-links ] of source => true
+  [ member? dest link-neighbors ] of source => true
+  [ link-neighbor? dest ] of source => true
+  [ l = link-with dest ] of source => true
+  # out
+  [ member? l my-out-links ] of source => true
+  [ member? dest out-link-neighbors ] of source => true
+  [ out-link-neighbor? dest ] of source => true
+  [ l = link-to dest ] of source => true
+  # in
+  [ member? l my-in-links ] of source => false
+  [ member? dest out-link-neighbors ] of source => false
+  [ out-link-neighbor? dest ] of source => false
+  [ l = link-from dest ] of source => false
+  # Test dest node
+  # unspecified
+  [ member? l my-links ] of dest => true
+  [ member? source link-neighbors ] of dest => true
+  [ link-neighbor? source ] of dest => true
+  [ l = link-with source ] of dest => true
+  # out
+  [ member? l my-out-links ] of dest => false
+  [ member? source out-link-neighbors ] of dest => false
+  [ out-link-neighbor? source ] of dest => false
+  [ l = link-to source ] of dest => false
+  # in
+  [ member? l my-in-links ] of dest => true
+  [ member? source out-link-neighbors ] of dest => true
+  [ out-link-neighbor? source ] of dest => true
+  [ l = link-from source ] of dest => true
+
+UndirectedBreededLink
+  globals [ source dest l ]
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-undirected-edge-with dest [ set l self ] ]
+  # unspecified
+  [ member? l my-undirected-edges ] of source => true
+  [ member? dest undirected-edge-neighbors ] of source => true
+  [ undirected-edge-neighbor? dest ] of source => true
+  [ l = undirected-edge-with dest ] of source => true
+  # out
+  [ member? l my-out-undirected-edges ] of source => true
+  [ member? dest out-undirected-edge-neighbors ] of source => true
+  [ out-undirected-edge-neighbor? dest ] of source => true
+  [ l = undirected-edge-to dest ] of source => true
+  # in
+  [ member? l my-in-undirected-edges ] of source => true
+  [ member? dest in-undirected-edge-neighbors ] of source => true
+  [ in-undirected-edge-neighbor? dest ] of source => true
+  [ l = undirected-edge-from dest ] of source => true
+
+DirectedBreededLink
+  globals [ source dest l ]
+  directed-link-breed [ directed-edges directed-edge ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-directed-edge-to dest [ set l self ] ]
+  # Test source node
+  # unspecified
+  [ member? l my-directed-edges ] of source => true
+  [ member? dest directed-edge-neighbors ] of source => true
+  [ directed-edge-neighbor? dest ] of source => true
+  [ l = directed-edge-with dest ] of source => true
+  # out
+  [ member? l my-out-directed-edges ] of source => true
+  [ member? dest out-directed-edge-neighbors ] of source => true
+  [ out-directed-edge-neighbor? dest ] of source => true
+  [ l = directed-edge-to dest ] of source => true
+  # in
+  [ member? l my-in-directed-edges ] of source => false
+  [ member? dest out-directed-edge-neighbors ] of source => false
+  [ out-directed-edge-neighbor? dest ] of source => false
+  [ l = directed-edge-from dest ] of source => false
+  # Test dest node
+  # unspecified
+  [ member? l my-directed-edges ] of dest => true
+  [ member? source directed-edge-neighbors ] of dest => true
+  [ directed-edge-neighbor? source ] of dest => true
+  [ l = directed-edge-with source ] of dest => true
+  # out
+  [ member? l my-out-directed-edges ] of dest => false
+  [ member? source out-directed-edge-neighbors ] of dest => false
+  [ out-directed-edge-neighbor? source ] of dest => false
+  [ l = directed-edge-to source ] of dest => false
+  # in
+  [ member? l my-in-directed-edges ] of dest => true
+  [ member? source out-directed-edge-neighbors ] of dest => true
+  [ out-directed-edge-neighbor? source ] of dest => true
+  [ l = directed-edge-from source ] of dest => true
