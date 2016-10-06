@@ -117,3 +117,13 @@ SimpleRGB
   rgb 255   0   0 => [255 0 0]
   rgb 201  45  34 => [201 45 34]
   rgb 157  59  64 => [157 59 64]
+
+AutowrapColorNumbers
+  shade-of? -130 10                                   => true
+  shade-of?  150 10                                   => true
+  (extract-rgb -139)        = (extract-rgb 1)         => true
+  (extract-rgb  141)        = (extract-rgb 1)         => true
+  (extract-hsb 9001)        = (extract-hsb 41)        => true
+  (extract-hsb  -11)        = (extract-hsb 129)       => true
+  (scale-color 1776 2 0 10) = (scale-color 96 2 0 10) => true
+  (scale-color -200 2 0 10) = (scale-color 80 2 0 10) => true

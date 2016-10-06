@@ -31,4 +31,7 @@ class TokenMapperTests extends FunSuite {
   test("command2") { assert(isCommand("forward")) }
   test("command3") { assert(!isCommand("random")) }
   test("command4") { assert(!isCommand("kjhgkfjg")) }
+
+  test("breed") { assertResult(Some("_breed(SHEEP)"))(breedInstruction("_breed", "SHEEP").map(_.toString)) }
+
 }

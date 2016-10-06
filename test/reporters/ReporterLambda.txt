@@ -208,3 +208,6 @@ SettableVariables2
   O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput [ [bar'] -> [ [] -> set bar' bar' + 1 set glob1 bar' ] ] lambdas ]
   O> foreach lambdas [ [l] -> run (runresult l 0) ]
   glob1 => 1
+
+LambdaVarNames
+  run-result [[apples orangeMen banana-boys GRAPES] -> apples + orangeMen + banana-boys + GRAPES] 2 9 6 4 => 21

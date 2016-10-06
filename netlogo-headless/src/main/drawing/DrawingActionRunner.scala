@@ -20,8 +20,6 @@ class DrawingActionRunner(
       readBytes(imageBytes)
     case StampImage(imageBytes, _) =>
       readBytes(imageBytes)
-    case EraseStampImage(imageBytes, _) =>
-      readBytes(imageBytes)
     case CreateDrawing(dirty: Boolean) =>
       trailDrawer.getAndCreateDrawing(dirty)
     case ImportDrawing(filePath: String) =>

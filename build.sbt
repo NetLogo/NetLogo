@@ -153,6 +153,7 @@ lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 
 lazy val headless = (project in file ("netlogo-headless")).
   dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
+  settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
   settings(jvmSettings: _*).

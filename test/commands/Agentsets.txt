@@ -340,3 +340,8 @@ TurtleDiesWhileIteratingOverFilteredAgentset
   O> create-turtles 10 [ __ignore 3 ]
   O> ask turtles with [true] [ let t (turtle random 10) if (t != nobody) [ ask t [die] ] ]
   [who] of turtles => [1 5 9 2 0]
+
+SelfUpdatesCorrectlyAfterException
+  to-report selfish-self let my-who who carefully [ ask other turtles [ error "Derp" ] ] [ ] report who end
+  O> crt 2
+  [selfish-self] of turtle 0 => 0

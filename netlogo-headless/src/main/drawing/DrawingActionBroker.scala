@@ -53,14 +53,8 @@ class DrawingActionBroker(
                       if (erase) "erase" else "normal")
       }
 
-    val action =
-      if (!erase)
-        StampImage(bytes, stamp)
-      else
-        EraseStampImage(bytes, stamp)
-
     // Actually running the Action would needlessly re-apply the bitmap.
-    publishWithoutRunning(action)
+    publishWithoutRunning(StampImage(bytes, stamp))
 
   }
 
