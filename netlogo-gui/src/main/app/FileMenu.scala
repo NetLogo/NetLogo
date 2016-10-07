@@ -24,14 +24,15 @@ import org.nlogo.window.{ BackgroundFileController, FileController, Events => Wi
 import org.nlogo.workspace.{ OpenModel, SaveModel, SaveModelAs }
 import org.nlogo.plot.Plot
 import org.nlogo.swing.{ Implicits, Menu => SwingMenu }, Implicits.thunk2runnable
-import org.nlogo.fileformat.{ NLogoFormat, NLogoModelSettings, NLogoHubNetFormat, NLogoPreviewCommandsFormat }
+import org.nlogo.fileformat.{ ModelConversion, NLogoFormat, NLogoModelSettings, NLogoHubNetFormat, NLogoPreviewCommandsFormat }
 
 import scala.util.Try
 import scala.concurrent.Future
 
 class FileMenu(app: App,
   modelSaver: ModelSaver,
-  modelLoader: ModelLoader)
+  modelLoader: ModelLoader,
+  modelConverter: ModelConversion)
   extends SwingMenu(I18N.gui.get("menu.file"))
     with OpenModelEvent.Handler
     with LoadModelEvent.Handler {
@@ -465,7 +466,7 @@ class FileMenu(app: App,
   private def loadModel(uri: URI): Option[Model] = {
     ModalProgressTask.runForResultOnBackgroundThread(
       NLogoHierarchy.getFrame(this), I18N.gui.get("dialog.interface.loading.task"), (dialog) => new BackgroundFileController(dialog, controller),
-      (fileController: BackgroundFileController) => OpenModel(uri, fileController, modelLoader, Version))
+      (fileController: BackgroundFileController) => OpenModel(uri, fileController, modelLoader, modelConverter, Version))
   }
 
   private def openFromModel(model: Model, uri: URI, modelType: ModelType): Unit = {

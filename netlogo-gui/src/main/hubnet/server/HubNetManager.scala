@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.core.{ AgentKind, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
@@ -13,6 +13,7 @@ import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel }
 import org.nlogo.agent.{Link, Turtle}
+import org.nlogo.fileformat.ModelConversion
 import org.nlogo.util.Utils, Utils.reader2String
 
 import java.nio.file.Paths
@@ -20,7 +21,7 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader)
+abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader, modelConverter: ModelConversion)
   extends HubNetInterface
   with ConnectionInterface {
 
@@ -325,7 +326,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
 
   def fileInterface(path: String): Option[ClientInterface] = {
     val uri = Paths.get(path).toUri
-    OpenModel(uri, HubNetLoadController, modelLoader, Version)
+    OpenModel(uri, HubNetLoadController, modelLoader, modelConverter, Version)
       .flatMap { model =>
         model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
           .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
@@ -338,6 +339,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
     def errorOpeningURI(uri: URI,exception: Exception): Unit = { }
     def invalidModel(uri: URI): Unit = { }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
+    def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Boolean = true
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
     def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
     def shouldOpenModelOfUnknownVersion(version: String): Boolean = true

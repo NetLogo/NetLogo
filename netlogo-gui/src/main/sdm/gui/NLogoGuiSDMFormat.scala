@@ -22,14 +22,6 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
       .getOrElse(Array[String]())
   }
 
-  override def conversionSource(m: CoreModel, literalParser: LiteralParser): Option[(String, String)] = {
-    m.optionalSectionValue[AggregateDrawing](componentName)
-      .map { drawing =>
-        val sdmModel = drawing.getModel
-        "aggregate" -> new Translator(sdmModel, literalParser).source
-      }
-  }
-
   override def validationErrors(m: CoreModel): Option[String] =
     None
 

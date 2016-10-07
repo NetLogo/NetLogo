@@ -6,19 +6,18 @@ import java.net.URI
 import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
 import scala.sys.process.Process
-import scala.util.{ Success, Failure }
+import scala.util.{ Failure, Success }
 
-import org.nlogo.core.{ Femto, LiteralParser }
+import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.app.App
 import org.nlogo.workspace.{ OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
-import org.nlogo.fileformat
+import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat }
 import org.nlogo.workspace.ModelsLibrary.{ getModelPaths, modelsRoot }
 import org.nlogo.headless.HeadlessWorkspace
-import org.nlogo.fileformat.NLogoFormat
-import org.nlogo.sdm.NLogoSDMFormat
+import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
 
 /**
  *
@@ -87,25 +86,18 @@ object ModelResaver {
     if (modelPath.toString.contains("System Dynamics"))
       systemDynamicsModels = systemDynamicsModels :+ modelPath
     else {
-      val reportError: Exception => Unit = {
-        (e: Exception) =>
-          System.err.println(s"Error converting: ${modelPath.toString} " +
-            Option(e.getMessage).getOrElse(e.getClass.toString))
-          e.printStackTrace()
-          e match {
-            case e: org.nlogo.core.CompilerException =>
-              println(s"start: ${e.start}, end: ${e.end}")
-            case _ =>
-          }
-      }
       val ws = HeadlessWorkspace.newInstance
-      val twoDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, literalParser, NetLogoLegacyDialect, reportError)
-      val threeDConverter = fileformat.ModelConverter(ws.getExtensionManager, ws.getCompilationEnvironment, literalParser, NetLogoThreeDDialect, reportError)
+      val converter =
+        fileformat.converter(ws.getExtensionManager, ws.getCompilationEnvironment,
+          literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
       val modelLoader =
-        fileformat.standardLoader(ws.compiler.utilities, twoDConverter, threeDConverter)
+        fileformat.standardLoader(ws.compiler.utilities)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val controller = new ResaveController(modelPath.toUri)
-      OpenModel(modelPath.toUri, controller, modelLoader, Version).foreach { model =>
+      val dialect =
+        if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
+        else NetLogoLegacyDialect
+      OpenModel(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
         SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
           case Some(Success(u)) => println("resaved: " + u)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)
@@ -193,6 +185,12 @@ object ModelResaver {
     }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = {
       println("invalid Model version: \"" + version + "\" at: " + uri.toString)
+    }
+    def errorAutoconvertingModel(res: FailedConversionResult): Boolean = {
+      println("Autoconversion failed for model at: " + path)
+      println("error: " + res.error)
+      res.error.printStackTrace()
+      false
     }
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = false
     def shouldOpenModelOfLegacyVersion(version: String): Boolean = true

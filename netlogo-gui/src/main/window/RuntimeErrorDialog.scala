@@ -192,19 +192,14 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner) with Run
     textArea.setCaretPosition(0)
   }
 
-  override protected def makeButtons(): JList[JComponent] = {
-    val buttons: JList[JComponent] = new JArrayList[JComponent]()
-    buttons.addAll(super.makeButtons())
-    buttons.add(copyButton)
-    buttons.add(checkbox)
+  override def makeButtons(): Seq[JComponent] = {
     suppressButton.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
         suppressJavaExceptionDialogs = true
         setVisible(false)
       }
     })
-    buttons.add(suppressButton)
-    buttons
+    super.makeButtons() ++ Seq(copyButton, checkbox, suppressButton)
   }
 
   private def buildTexts(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
@@ -236,13 +231,8 @@ class LogoExceptionDialog(owner: Component) extends MessageDialog(owner) with Ru
     textArea.setCaretPosition(0)
   }
 
-  override protected def makeButtons(): JList[JComponent] = {
-    val buttons: JList[JComponent] = new JArrayList[JComponent]()
-    buttons.addAll(super.makeButtons())
-    buttons.add(copyButton)
-    buttons.add(checkbox)
-    buttons
-  }
+  override def makeButtons(): Seq[JComponent] =
+    super.makeButtons() ++ Seq(copyButton, checkbox)
 
   private def buildTexts(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
     textWithoutDetails = errorInfo.errorMessage.getOrElse("")
@@ -259,9 +249,7 @@ class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner) with Runt
   private val dialogTitle: String = "Model Too Large"
   private val ErrorText = I18N.gui.get("error.dialog.outOfMemory")
 
-  override protected def makeButtons(): JList[JComponent] = {
-    val buttons: JList[JComponent] = new JArrayList[JComponent]()
-    buttons.addAll(super.makeButtons())
+  override def makeButtons(): Seq[JComponent] = {
     val openFAQ = new JButton(I18N.gui.get("error.dialog.openFAQ"))
     val baseFaqUrl: String = {
       val docRoot = System.getProperty("netlogo.docs.dir", "docs")
@@ -272,8 +260,7 @@ class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner) with Runt
         BrowserLauncher.openURL(owner, baseFaqUrl, "#howbig", true)
       }
     })
-    buttons.add(openFAQ)
-    buttons
+    super.makeButtons() :+ openFAQ
   }
 
   def doShow(): Unit = {

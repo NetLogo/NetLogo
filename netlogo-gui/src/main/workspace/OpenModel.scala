@@ -6,6 +6,7 @@ import java.net.URI
 
 import org.nlogo.core.Model
 import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelLoader, Version }
+import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion }
 
 import scala.util.{ Failure, Success }
 
@@ -14,6 +15,7 @@ object OpenModel {
 
   trait Controller {
     def errorOpeningURI(uri: URI, exception: Exception): Unit
+    def errorAutoconvertingModel(result: FailedConversionResult): Boolean
     def invalidModel(uri: URI): Unit
     def invalidModelVersion(uri: URI, version: String): Unit
     def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean
@@ -24,6 +26,7 @@ object OpenModel {
   def apply(uri: URI,
     controller: Controller,
     loader: ModelLoader,
+    modelConverter: ModelConversion,
     currentVersion: Version): Option[Model] = {
       val isValidURI = Option(uri)
         .flatMap(ModelLoader.getURIExtension)
@@ -41,7 +44,12 @@ object OpenModel {
             } else if (shouldNotContinueOpeningModel(model, controller, currentVersion))
               None
             else
-              Some(model)
+              modelConverter(model) match {
+                case res: FailedConversionResult =>
+                  if (controller.errorAutoconvertingModel(res)) Some(model)
+                  else None
+                case res => Some(res.model)
+              }
           case Failure(exception: Exception) =>
             controller.errorOpeningURI(uri, exception)
             None

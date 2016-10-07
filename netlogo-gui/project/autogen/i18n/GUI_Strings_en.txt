@@ -17,6 +17,7 @@ common.buttons.exit = Exit
 common.buttons.continue = Continue
 common.buttons.save = Save
 common.buttons.discard = Discard
+common.buttons.dismiss = Dismiss
 common.buttons.halt = Halt
 common.buttons.yes = Yes
 common.buttons.no = No
@@ -197,6 +198,10 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
+file.open.warn.autoconversion.title = Error Converting Model
+file.open.warn.autoconversion.error = This NetLogo model cannot not be automatically converted to the current NetLogo version. \
+ Would you like to continue opening it?
+file.open.warn.autoconversion.detail = Compilation failed with the following message: {0}
 file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
@@ -258,7 +263,6 @@ edit.plot.pen.interval = Interval
 edit.plot.pen.showInLegend = Show in legend
 edit.plot.pen.setupCommands = Pen setup commands
 edit.plot.pen.updateCommands = Pen update commands
-edit.plot.error.dismiss = Dismiss
 edit.plot.error.runtimeError = Runtime Error:
 
 edit.chooser.globalVar = Global variable

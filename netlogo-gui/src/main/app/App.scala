@@ -5,7 +5,7 @@ package org.nlogo.app
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.agent.{Agent, World3D, World}
@@ -13,7 +13,7 @@ import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices, Workspace}
-import org.nlogo.fileformat
+import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
@@ -89,27 +89,22 @@ object App{
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
     pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+    pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
     class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
-      import org.nlogo.fileformat, fileformat.NLogoFormat
       import scala.collection.JavaConversions._
 
       def getDescriptor(): String = "ModelLoaderComponent"
-
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
 
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
-        val compiler =
-          container.getComponent(classOf[CompilerInterface])
+        val compiler         = container.getComponent(classOf[CompilerInterface])
         val compilerServices = new DefaultCompilerServices(compiler)
-        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
 
-        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect)
-        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoThreeDDialect)
         val loader =
-          fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
+          fileformat.standardLoader(compilerServices)
         val additionalComponents =
-          pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
+          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)
           additionalComponents.foldLeft(loader) {
             case (l, serialization) =>
@@ -121,6 +116,23 @@ object App{
     }
 
     pico.addAdapter(new ModelLoaderComponent())
+
+    class ModelConverterComponent extends AbstractAdapter[ModelConversion](classOf[ModelConversion], classOf[ModelConverter]) {
+      import scala.collection.JavaConversions._
+
+      def getDescriptor(): String = "ModelConverterComponent"
+      def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
+
+      def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
+        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+
+        val allAutoConvertables = fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable])
+
+        fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, allAutoConvertables)(container.getComponent(classOf[Dialect]))
+      }
+    }
+
+    pico.addAdapter(new ModelConverterComponent())
 
     pico.addComponent(classOf[CodeToHtml])
     pico.addComponent(classOf[App])

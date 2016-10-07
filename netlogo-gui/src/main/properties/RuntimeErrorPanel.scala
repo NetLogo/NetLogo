@@ -53,11 +53,11 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
 
 
 trait RuntimeErrorDisplayer extends JPanel with ActionListener {
-  private implicit val i18nPrefix = I18N.Prefix("edit.plot.error")
 
   def exceptionMessage: Option[String]
 
   lazy val dismissButton = {
+    implicit val i18nPrefix = I18N.Prefix("common.buttons")
     val button = new JButton(I18N.gui("dismiss"))
     button.setToolTipText(I18N.gui("dismiss"))
     button.addActionListener(this)
@@ -65,6 +65,7 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener {
   }
 
   lazy val errorLabel = {
+    implicit val i18nPrefix = I18N.Prefix("edit.plot.error")
     val label = new JLabel(I18N.gui("runtimeError"))
     label.setIcon(new ImageIcon(getClass.getResource("/images/stop.gif")))
     label

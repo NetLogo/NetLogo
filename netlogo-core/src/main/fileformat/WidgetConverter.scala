@@ -12,8 +12,8 @@ trait WidgetConverter extends AutoConvertable {
   override def requiresAutoConversion(original: Model, needsConversion: String => Boolean): Boolean =
     original.widgets.exists(widgetNeedsConversion(needsConversion))
 
-  override def autoConvert(original: Model, autoConverter: AutoConverter): Model =
-    original.copy(widgets = original.widgets.map(convertWidget(autoConverter)))
+  override def autoConvert(original: Model, autoConverter: AutoConverter): Try[Model] =
+    Try(original.copy(widgets = original.widgets.map(convertWidget(autoConverter))))
 
   private def widgetNeedsConversion(needsConversion: String => Boolean)(w: Widget): Boolean =
     w match {
@@ -29,14 +29,14 @@ trait WidgetConverter extends AutoConvertable {
     }
 
   private def convertWidget(autoConverter: AutoConverter)(w: Widget): Widget = {
-    Try {
-      w match {
-        case cWidget@(_: Button | _: Plot) =>
-          cWidget.convertSource(autoConverter.convertStatement _)
-        case rWidget@(_: Monitor | _: Slider) =>
-          rWidget.convertSource(autoConverter.convertReporterExpression _)
-        case _ => w
-      }
-    } getOrElse w
+    w match {
+      case cWidget@(_: Button | _: Plot) =>
+        cWidget.convertSource(autoConverter.convertStatement _)
+      case rWidget@(_: Monitor | _: Slider) =>
+        rWidget.convertSource(autoConverter.convertReporterExpression _)
+      case _ => w
+    }
   }
 }
+
+object WidgetConverter extends WidgetConverter

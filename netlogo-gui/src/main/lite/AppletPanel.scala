@@ -215,10 +215,10 @@ with ControlSet {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
-    val loader =
-      fileformat.standardLoader(workspace.compiler.utilities,
-        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect))
-    val modelOpt = OpenModel(uri, controller, loader, Version)
+    val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
+      workspace, fileformat.defaultAutoConvertables) _
+    val loader = fileformat.standardLoader(workspace.compiler.utilities)
+    val modelOpt = OpenModel(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }
 

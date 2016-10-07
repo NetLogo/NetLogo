@@ -9,7 +9,7 @@ import java.nio.file.Paths
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ ComponentSerialization, Version, ModelLoader, RendererInterface,
+import org.nlogo.api.{ AutoConvertable, ComponentSerialization, Version, ModelLoader, RendererInterface,
   WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
   NetLogoThreeDDialect, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
@@ -472,9 +472,9 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    val twodConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, this, NetLogoLegacyDialect)
-    val threedConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, this, NetLogoThreeDDialect)
-    fileformat.standardLoader(compiler.utilities, twodConverter, threedConverter)
+    val allAutoConvertables = fileformat.defaultAutoConvertables :+ Femto.scalaSingleton[AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
+    val converter = fileformat.converter(getExtensionManager, getCompilationEnvironment, this, allAutoConvertables) _
+    fileformat.standardLoader(compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
   }

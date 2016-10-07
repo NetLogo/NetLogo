@@ -2,27 +2,17 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.NetLogoLegacyDialect
 
-import org.nlogo.core.{ CompilationOperand, Dialect, Femto, FrontEndInterface, LiteralParser,
-  Model, Program, SourceRewriter }, FrontEndInterface.ProceduresMap
-import org.nlogo.core.{ Button, Monitor, Pen, Plot, Slider, Switch, View }
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager }
+import org.nlogo.core.{ CompilationOperand, LiteralParser,
+  Model, Program, SourceRewriter }
+import org.nlogo.core.{ Button, CompilerException, Monitor,
+  Pen, Plot, Slider, Switch, View }
 
 import org.scalatest.FunSuite
 
-class ModelConverterTests extends FunSuite {
-  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq()),
-    onError: Exception => Unit = { (e: Exception) => throw e }) = {
-    def literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, conversions, onError)
-  }
+import scala.util.Try
 
-  val componentConverters = Seq(new WidgetConverter() {})
-
-  def convert(model: Model, conversions: ConversionSet*): Model =
-    converter(_ => conversions)(model, componentConverters)
-
+class ModelConverterTests extends FunSuite with ConversionHelper {
   test("if the model is empty, returns the model") {
     val model = Model()
     assertResult(model)(convert(model))
@@ -39,11 +29,23 @@ class ModelConverterTests extends FunSuite {
     assertResult(model)(convert(model, ConversionSet(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("left", "right"))))
   }
 
-  test("if the model code tab doesn't compile, returns the model as-is") {
-    val model = Model(code = "fd 1")
-    val convertedModel =
-      converter(_ => Seq(ConversionSet(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))), { _ => })(model, componentConverters)
-    assert(convertedModel == model)
+  test("if the model code doesn't compile when passed in, returns a failure") {
+    val model = Model(code = "to foo fd 1")
+    tryConvert(model, ConversionSet(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))) match {
+      case ErroredConversion(m, e) =>
+        assertResult(model)(m)
+        assert(e.isInstanceOf[CompilerException])
+      case other => fail(s"Expected failure, got $other")
+    }
+  }
+
+  test("if a model component doesn't compile, returns a component failure") {
+    val model = Model(widgets = Seq(View(), Button(Some("fd 1 foobar"), 0, 0, 0, 0)))
+    tryConvert(model, ConversionSet(otherCodeConversions = Seq(_.replaceCommand("fd" -> "bk {0}")), targets = Seq("fd"))) match {
+      case ErroredConversion(m, e) =>
+        assert(e.isInstanceOf[CompilerException])
+      case other => fail(s"Expected failure, got $other")
+    }
   }
 
   test("applies multiple conversions when supplied") {
@@ -201,32 +203,5 @@ class ModelConverterTests extends FunSuite {
     val model = Model(code = originalSource)
     val converted = convert(model, ConversionSet(codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd")))
     assertResult(expectedSource)(converted.code)
-  }
-}
-
-object VidExtensionManager extends DummyExtensionManager {
-  import org.nlogo.core.{ Syntax, Primitive, PrimitiveCommand, PrimitiveReporter}
-
-  override def anyExtensionsLoaded = true
-  override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
-  override def replaceIdentifier(name: String): Primitive = {
-    name match {
-      case "VID:SAVE-RECORDING" =>
-        new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax(right = List(Syntax.StringType)) }
-      case "VID:RECORDER-STATUS" =>
-        new PrimitiveReporter { override def getSyntax = Syntax.reporterSyntax(ret = Syntax.StringType) }
-      case vid if vid.startsWith("VID") =>
-        new PrimitiveCommand { override def getSyntax = Syntax.commandSyntax() }
-      case _ => null
-    }
-  }
-}
-
-object FooCompilationEnvironment extends DummyCompilationEnvironment {
-  import java.nio.file.Files
-  override def resolvePath(filename: String): String = {
-    val file = Files.createTempFile("foo", ".nls")
-    Files.write(file, "to bar bk 1 end".getBytes)
-    file.toString
   }
 }

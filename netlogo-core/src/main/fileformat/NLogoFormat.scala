@@ -14,7 +14,7 @@ import scala.util.{ Failure, Success, Try }
 import scala.io.Source
 
 // THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
-class NLogoFormat(val modelConverter: (Model, Seq[AutoConvertable]) => Model)
+class NLogoFormat
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
     val is3DFormat = false
@@ -31,14 +31,6 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   val SeparatorRegex = "@#\\$#@#\\$#@"
 
   def widgetReaders: Map[String, WidgetReader]
-
-  def modelConverter: (Model, Seq[AutoConvertable]) => Model
-
-  override def constructModel(
-    components: Seq[ComponentSerialization[Array[String], A]],
-    sections:   Map[String, Array[String]]) = {
-      super.constructModel(components, sections).map(modelConverter(_, components))
-  }
 
   def sections(location: URI) =
     Try {
@@ -167,7 +159,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
     showTickCounter = true, frameRate = 30)
 
-  object InterfaceComponent extends ComponentSerialization[Array[String], A] with WidgetConverter {
+  object InterfaceComponent extends ComponentSerialization[Array[String], A] {
     import org.nlogo.fileformat
 
     val componentName = "org.nlogo.modelsection.interface"

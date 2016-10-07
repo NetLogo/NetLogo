@@ -39,13 +39,6 @@ class NLogoSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] 
     }
   }
 
-  override def conversionSource(m: CoreModel, literalParser: LiteralParser): Option[(String, String)] = {
-    m.optionalSectionValue[Model](componentName)
-      .map { model =>
-        "aggregate" -> new Translator(model, literalParser).source
-      }
-  }
-
   private def stringsToModel(s: Array[String]): Option[Model] = {
     Loader.load(s.mkString("\n"))
   }
