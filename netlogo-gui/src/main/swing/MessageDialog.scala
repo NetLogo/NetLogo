@@ -9,7 +9,6 @@ import javax.swing.{ AbstractAction, BorderFactory, JButton, JComponent, JDialog
   JScrollPane, JTextArea }
 
 import org.nlogo.awt.{ Hierarchy, Positioning }
-import org.nlogo.core.I18N
 
 object MessageDialog {
   private val DefaultRows    = 15
@@ -18,13 +17,11 @@ object MessageDialog {
 
 import MessageDialog._
 
-class MessageDialog(owner: Component) extends JDialog(Hierarchy.getFrame(owner)) {
+class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends JDialog(Hierarchy.getFrame(owner)) {
   private def parentFrame: Frame = Hierarchy.getFrame(owner)
   protected val textArea = new JTextArea(DefaultRows, DefaultColumns)
 
   private var firstShow = true
-
-  def dismissName = I18N.gui.get("common.buttons.dismiss")
 
   val dismissAction =
     new AbstractAction(dismissName) {

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, FileDialog => AWTFileDialog }
+import java.awt.{ Component, Dialog, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.nio.file.Paths
 import java.net.URI
@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JButton, JComponent, JDialog }
 import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffix
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.fileformat.FailedConversionResult
+import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, Implicits, MessageDialog, OptionDialog },
   Implicits.thunk2runnable
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
@@ -22,20 +22,19 @@ import scala.util.Try
 
 class BackgroundFileController(dialog: JDialog, foregroundController: FileController) extends OpenModelController with SaveModelController {
 
-  def runOnUIThread[A](f: () => Unit) = {
-    EventQueue.invokeLater { () =>
-      dialog.setVisible(false)
-      f()
-      dialog.setVisible(true)
-    }
-  }
+  def runOnUIThread[A](f: () => Unit) =
+    runOnUIThreadForResult(f)
 
   def runOnUIThreadForResult[A](f: () => A): A = {
     import scala.concurrent.{ Await, Promise }
     import scala.concurrent.duration.{ Duration, MILLISECONDS }
     val promise = Promise[A]()
 
-    runOnUIThread(() => promise.success(f()))
+    EventQueue.invokeLater { () =>
+      dialog.setVisible(false)
+      promise.complete(Try(f()))
+      dialog.setVisible(true)
+    }
 
     Await.result(promise.future, Duration.Inf)
   }
@@ -54,7 +53,7 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
   def errorOpeningURI(uri: java.net.URI,exception: Exception): Unit =
     runOnUIThread(() => foregroundController.errorOpeningURI(uri, exception))
 
-  def errorAutoconvertingModel(res: FailedConversionResult): Boolean =
+  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] =
     runOnUIThreadForResult(() => foregroundController.errorAutoconvertingModel(res))
   def invalidModel(uri: java.net.URI): Unit =
     runOnUIThread(() => foregroundController.invalidModel(uri))
@@ -81,14 +80,16 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     throw new UserCancelException()
   }
 
-  def errorAutoconvertingModel(res: FailedConversionResult): Boolean = {
+  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
     val options = Seq(
       I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
-    println(res.error)
-    res.error.printStackTrace()
+    res.errors.foreach(_.errors.foreach { e =>
+      println(e)
+      e.printStackTrace()
+    })
     val dialog = new AutoConversionErrorDialog(owner)
     dialog.doShow(res)
-    dialog.shouldContinue
+    dialog.modelToOpen
   }
 
   @throws(classOf[IllegalStateException])
@@ -224,27 +225,49 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 }
 
-class AutoConversionErrorDialog(owner: Component) extends MessageDialog(owner) {
-  var shouldContinue = false
+class AutoConversionErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.cancel")) {
+  setModalityType(Dialog.ModalityType.DOCUMENT_MODAL)
 
-  override def dismissName = I18N.gui.get("common.buttons.cancel")
+  var modelToOpen = Option.empty[Model]
+
+  class ConversionAction(name: String) extends AbstractAction(name) {
+    val ModelKey = "ConversionModel"
+    def putModel(model: Model): Unit = putValue(ModelKey, model)
+    def actionPerformed(e: ActionEvent): Unit = {
+      AutoConversionErrorDialog.this.modelToOpen =
+        Option(getValue(ModelKey).asInstanceOf[Model])
+      setVisible(false)
+    }
+  }
+
+  lazy val bestEffortAction = new ConversionAction(I18N.gui.get("file.open.warn.autoconversion.bestEffort"))
+  lazy val originalAction = new ConversionAction(I18N.gui.get("file.open.warn.autoconversion.original"))
 
   override def makeButtons(): Seq[JComponent] = {
-    val continueAction = new AbstractAction(I18N.gui.get("common.buttons.continue")) {
-      def actionPerformed(e: ActionEvent): Unit = {
-        shouldContinue = true
-        setVisible(false)
-      }
-    }
-    super.makeButtons() :+ new JButton(continueAction)
+    super.makeButtons() ++ Seq(new JButton(bestEffortAction), new JButton(originalAction))
   }
 
   def errorMessage(failure: FailedConversionResult): String =
-    I18N.gui.get("file.open.warn.autoconversion.error") + "\n\n" +
-      I18N.gui.getN("file.open.warn.autoconversion.detail", failure.error.getMessage)
+    I18N.gui.get("file.open.warn.autoconversion.error") +
+      failure.errors.map(decorateError(_)).mkString("\n\n", "\n", "")
+
+  private def decorateError(error: ConversionError): String = {
+    val errorMessages = error.errors.map(e => s"- ${e.getMessage}").mkString("\n", "\n", "")
+    I18N.gui.getN("file.open.warn.autoconversion.detail",
+      error.conversionDescription, error.componentDescription, errorMessages)
+  }
 
   def doShow(failure: FailedConversionResult): Unit = {
-    doShow(I18N.gui.get("file.open.warn.autoconversion.title"),
-      errorMessage(failure), 5, 50)
+    modelToOpen = None
+    failure match {
+      case ErroredConversion(original, _) =>
+        bestEffortAction.setEnabled(false)
+        originalAction.putModel(original)
+      case ConversionWithErrors(original, bestEffort, _) =>
+        bestEffortAction.setEnabled(true)
+        originalAction.putModel(original)
+        bestEffortAction.putModel(bestEffort)
+    }
+    doShow(I18N.gui.get("file.open.warn.autoconversion.title"), errorMessage(failure), 5, 50)
   }
 }

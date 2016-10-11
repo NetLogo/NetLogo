@@ -15,7 +15,8 @@ object OpenModel {
 
   trait Controller {
     def errorOpeningURI(uri: URI, exception: Exception): Unit
-    def errorAutoconvertingModel(result: FailedConversionResult): Boolean
+    // this callback returns either None (indicating cancellation) or the Model that should be opened
+    def errorAutoconvertingModel(result: FailedConversionResult): Option[Model]
     def invalidModel(uri: URI): Unit
     def invalidModelVersion(uri: URI, version: String): Unit
     def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean
@@ -45,10 +46,8 @@ object OpenModel {
               None
             else
               modelConverter(model) match {
-                case res: FailedConversionResult =>
-                  if (controller.errorAutoconvertingModel(res)) Some(model)
-                  else None
-                case res => Some(res.model)
+                case res: FailedConversionResult => controller.errorAutoconvertingModel(res)
+                case res                         => Some(res.model)
               }
           case Failure(exception: Exception) =>
             controller.errorOpeningURI(uri, exception)

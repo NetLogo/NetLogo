@@ -9,6 +9,8 @@ import org.nlogo.sdm.Translator
 object SDMGuiAutoConvertable extends AutoConvertable {
   val componentName = "org.nlogo.modelsection.systemdynamics"
 
+  def componentDescription: String = "System Dynamics modeler"
+
   override def conversionSource(m: CoreModel, literalParser: LiteralParser): Option[(String, String)] = {
     m.optionalSectionValue[AggregateDrawing](componentName)
       .map { drawing =>

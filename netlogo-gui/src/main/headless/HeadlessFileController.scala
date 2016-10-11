@@ -34,9 +34,10 @@ object HeadlessFileController extends OpenModel.Controller {
     System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in NetLogo ${Version.version} before opening headlessly. Aborting...")
     false
   }
-  def errorAutoconvertingModel(res: FailedConversionResult): Boolean = {
-    System.err.println(s"While attempting to convert the NetLogo mdoel, NetLogo encountered an error: ${res.error}")
+  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
+    System.err.println(s"While attempting to convert the NetLogo mdoel, NetLogo encountered the following errors:")
+    res.errors.foreach(_.errors.foreach(e => System.err.println(e.getMessage)))
     System.err.println("aborting...")
-    false
+    None
   }
 }

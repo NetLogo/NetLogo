@@ -4,7 +4,8 @@ package org.nlogo.fileformat
 
 import org.nlogo.api.NetLogoLegacyDialect
 
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser, Model }
+import org.nlogo.core.{ Dialect, DummyCompilationEnvironment, DummyExtensionManager,
+  Femto, LiteralParser, Model, SourceRewriter }
 
 import scala.util.Try
 
@@ -25,6 +26,14 @@ trait ConversionHelper {
 
   def convert(model: Model, conversions: ConversionSet*): Model =
     tryConvert(model, conversions: _*).model
+
+  def conversion(
+    name: String = "test conversion",
+    codeTabConversions:   Seq[SourceRewriter => String] = Seq(),
+    otherCodeConversions: Seq[SourceRewriter => String] = Seq(),
+    targets:              Seq[String] = Seq(),
+    conversionDialect:    Dialect => Dialect = identity): ConversionSet =
+      ConversionSet(conversionName = name, codeTabConversions = codeTabConversions, otherCodeConversions = otherCodeConversions, targets = targets, conversionDialect = conversionDialect)
 }
 
 object VidExtensionManager extends DummyExtensionManager {

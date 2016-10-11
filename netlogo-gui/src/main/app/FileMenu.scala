@@ -466,7 +466,13 @@ class FileMenu(app: App,
   private def loadModel(uri: URI): Option[Model] = {
     ModalProgressTask.runForResultOnBackgroundThread(
       NLogoHierarchy.getFrame(this), I18N.gui.get("dialog.interface.loading.task"), (dialog) => new BackgroundFileController(dialog, controller),
-      (fileController: BackgroundFileController) => OpenModel(uri, fileController, modelLoader, modelConverter, Version))
+      (fileController: BackgroundFileController) =>
+        try {
+          OpenModel(uri, fileController, modelLoader, modelConverter, Version)
+        } catch {
+          case e: Exception => println("Exception in FileMenu.loadModel: " + e)
+          None
+        })
   }
 
   private def openFromModel(model: Model, uri: URI, modelType: ModelType): Unit = {

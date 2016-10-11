@@ -186,11 +186,14 @@ object ModelResaver {
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = {
       println("invalid Model version: \"" + version + "\" at: " + uri.toString)
     }
-    def errorAutoconvertingModel(res: FailedConversionResult): Boolean = {
+    def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
       println("Autoconversion failed for model at: " + path)
-      println("error: " + res.error)
-      res.error.printStackTrace()
-      false
+      println("errors:")
+      res.errors.foreach(_.errors.foreach { e =>
+        println(e.getMessage)
+        e.printStackTrace()
+      })
+      None
     }
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = false
     def shouldOpenModelOfLegacyVersion(version: String): Boolean = true

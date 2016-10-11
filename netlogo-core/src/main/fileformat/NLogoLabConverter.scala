@@ -5,10 +5,12 @@ package org.nlogo.fileformat
 import org.nlogo.core.Model
 import org.nlogo.api.{ AutoConvertable, AutoConverter, LabProtocol }
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
 object NLogoLabConverter extends AutoConvertable {
   def componentName = "org.nlogo.modelsection.behaviorspace"
+
+  def componentDescription: String = "BehaviorSpace"
 
   def needingConversion(needsConversion: String => Boolean, protocol: LabProtocol): Boolean = {
     import protocol._
@@ -32,7 +34,7 @@ object NLogoLabConverter extends AutoConvertable {
     model.optionalSectionValue[Seq[LabProtocol]](componentName)
       .exists(protocols => protocols.exists(needingConversion(needsConversion, _)))
 
-  override def autoConvert(model: Model, converter: AutoConverter): Try[Model] = {
+  override def autoConvert(model: Model, converter: AutoConverter): Either[(Model, Seq[Exception]), Model] = {
     Try {
       if (model.hasValueForOptionalSection(componentName))
         model.optionalSectionValue[Seq[LabProtocol]](componentName).map(protocols =>
@@ -40,6 +42,10 @@ object NLogoLabConverter extends AutoConvertable {
           ).getOrElse(model)
       else
         model
+    } match {
+      case Failure(e: Exception) => Left((model, Seq(e)))
+      case Success(m) => Right(m)
+      case Failure(t) => throw t
     }
   }
 }

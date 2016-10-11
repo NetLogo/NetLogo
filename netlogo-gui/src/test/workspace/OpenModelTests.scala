@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 
 import java.net.URI
 import org.nlogo.core.{ Shape, Model, Widget }, Shape.{ LinkShape, VectorShape }
-import org.nlogo.fileformat.{ defaultConverter, FailedConversionResult, ModelConversion,
+import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
   SuccessfulConversion, ErroredConversion }
 import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelFormat, Version }
 
@@ -109,7 +109,7 @@ class OpenModelTests extends FunSuite {
 
   test("notifies the controller if the autoconversion fails") { new OpenTest {
     val exception = new Exception("problem autoconverting")
-    override def autoconverter = { m => ErroredConversion(m, exception) }
+    override def autoconverter = { m => ErroredConversion(m, ConversionError(exception, "", "")) }
     userContinuesOpen()
     assert(openedModel.isDefined)
     assertResult(Some(Model()))(openedModel)
@@ -134,9 +134,11 @@ class MockController extends OpenModel.Controller {
     invalidURI = uri
     notifiedException = exception
   }
-  def errorAutoconvertingModel(res: FailedConversionResult): Boolean = {
-    notifiedException = res.error
-    willOpenModel
+
+  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
+    notifiedException = res.errors.head.errors.head
+    if (willOpenModel) Some(res.model)
+    else None
   }
 
   def invalidModel(uri: URI): Unit = { invalidURI = uri }

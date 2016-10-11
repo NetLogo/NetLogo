@@ -164,7 +164,7 @@ trait RuntimeErrorDialog {
   protected def showText(text: String, rows: Int, columns: Int): Unit
 }
 
-class UnknownErrorDialog(owner: Component) extends MessageDialog(owner) with RuntimeErrorDialog with CopyButton {
+class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
   private lazy val suppressButton   = new JButton(I18N.gui.get("error.dialog.suppress"))
 
   private var dialogTitle: String = ""
@@ -215,7 +215,7 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner) with Run
     doShow(dialogTitle, text, rows, columns)
 }
 
-class LogoExceptionDialog(owner: Component) extends MessageDialog(owner) with RuntimeErrorDialog with CopyButton {
+class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
   private val dialogTitle: String = "Runtime Error"
 
   private var errorMessage: Option[String] = None
@@ -245,7 +245,7 @@ class LogoExceptionDialog(owner: Component) extends MessageDialog(owner) with Ru
     doShow(dialogTitle, text, rows, columns)
 }
 
-class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner) with RuntimeErrorDialog {
+class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog {
   private val dialogTitle: String = "Model Too Large"
   private val ErrorText = I18N.gui.get("error.dialog.outOfMemory")
 

@@ -22,7 +22,7 @@ package object fileformat {
 
   def defaultAutoConvertables: Seq[AutoConvertable] = Seq(WidgetConverter, NLogoLabConverter)
 
-  def defaultConverter: ModelConversion = (m: Model) => NoConversionNeeded(m)
+  def defaultConverter: ModelConversion = (m: Model) => SuccessfulConversion(m, m)
 
   def converter(
     extensionManager:       ExtensionManager,

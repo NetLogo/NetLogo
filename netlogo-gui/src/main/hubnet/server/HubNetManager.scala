@@ -339,7 +339,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
     def errorOpeningURI(uri: URI,exception: Exception): Unit = { }
     def invalidModel(uri: URI): Unit = { }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
-    def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Boolean = true
+    def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Option[Model] = None
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
     def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
     def shouldOpenModelOfUnknownVersion(version: String): Boolean = true

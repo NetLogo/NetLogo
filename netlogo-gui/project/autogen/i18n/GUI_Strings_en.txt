@@ -199,9 +199,11 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
 file.open.warn.autoconversion.title = Error Converting Model
-file.open.warn.autoconversion.error = This NetLogo model cannot not be automatically converted to the current NetLogo version. \
- Would you like to continue opening it?
-file.open.warn.autoconversion.detail = Compilation failed with the following message: {0}
+file.open.warn.autoconversion.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
+ Would you like to continue opening it? \n
+file.open.warn.autoconversion.detail = While running conversion "{0}" on the {1}: {2}
+file.open.warn.autoconversion.bestEffort = Open Partially Converted Model
+file.open.warn.autoconversion.original = Open Unconverted Model
 file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.

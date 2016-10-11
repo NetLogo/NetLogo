@@ -78,26 +78,32 @@ class ModelConverter(
       convertable.requiresAutoConversion(model, containsAnyTargets(targets))
     }
 
-    def runConversion(conversionSet: ConversionSet, model: Model): Try[Model] = {
+    def runConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
       if (targets.nonEmpty && (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _))))
         applyConversion(conversionSet, model)
       else
-        Try(model)
+        SuccessfulConversion(model, model)
     }
 
-    def applyConversion(conversionSet: ConversionSet, model: Model): Try[Model] = {
+    def applyConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
 
       val dialect = conversionSet.conversionDialect(baseDialect)
 
-      lazy val convertedCodeTab: Try[String] =
+      lazy val convertedCodeTab: ConversionResult =
         Try {
-          codeTabConversions.foldLeft(model.code) {
-            case (src, conversion) =>
-              conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+          codeTabConversions.foldLeft(SuccessfulConversion(model, model)) {
+            case (SuccessfulConversion(original, converted), conversion) =>
+              val newProgram =
+                Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
+              val newCode = conversion(rewriter(converted.code, newProgram))
+              SuccessfulConversion(original, model.copy(code = newCode))
+            case (other, _) => other
           }
-        }
+        }.recover {
+          case e: Exception => ErroredConversion(model, ConversionError(e, "code tab", conversionName))
+        }.get
 
       def newStructure(code: String): Try[StructureResults] = {
         val newCompilation = compilationOperand(code,
@@ -111,36 +117,34 @@ class ModelConverter(
         }
       }
 
-      def modelWithConvertedComponents(newCode: String, newStructure: StructureResults): Try[Model] = {
-        val convertedModel = model.copy(code = newCode)
-        val converter =
-          new SnippetConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, newStructure, extensionManager, compilationEnv)
+      def modelWithConvertedComponents(conversionRes: ConversionResult): ConversionResult =
+        newStructure(conversionRes.model.code) match {
+          case Success(convertedStructure) =>
+            val converter =
+              new SnippetConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, convertedStructure, extensionManager, compilationEnv)
 
-        components.foldLeft(Try(convertedModel)) {
-          case (tryModel, component) => tryModel.flatMap(m => component.autoConvert(m, converter))
+            components.foldLeft(conversionRes) {
+              case (res, component) =>
+                res.mergeResult(
+                  component.autoConvert(res.model, converter) match {
+                    case Left((convertedModel, newExceptions)) =>
+                      val error =
+                        ConversionError(newExceptions, component.componentDescription, conversionName)
+                      conversionRes.addError(error).updateModel(convertedModel)
+                    case Right(convertedModel) => conversionRes.updateModel(convertedModel)
+                  })
+            }
+          case Failure(e: Exception) => conversionRes.addError(ConversionError(e, "code tab", conversionName))
+          case Failure(t) => throw t
         }
-      }
 
-      for {
-        code      <- convertedCodeTab
-        structure <- newStructure(code)
-        newModel  <- modelWithConvertedComponents(code, structure)
-      } yield newModel
+      modelWithConvertedComponents(convertedCodeTab)
     }
 
-    val allConversions = applicableConversions(model)
-    if (allConversions.nonEmpty) {
-      allConversions.foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
-        case (SuccessfulConversion(original, convertedModel), conversion) =>
-          runConversion(conversion, convertedModel) match {
-            case Failure(e: Exception) => ErroredConversion(convertedModel, e)
-            case Success(furtherConvertedModel) => SuccessfulConversion(original, furtherConvertedModel)
-            case Failure(t) => throw t
-          }
-        case (res, _) => res
-      }
-    } else
-      NoConversionNeeded(model)
+    applicableConversions(model).foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
+      case (cr, conversion) =>
+        cr.mergeResult(runConversion(conversion, cr.model))
+    }
   }
 
   class SnippetConverter(otherCodeConversions: Seq[SourceRewriter => String],
