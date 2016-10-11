@@ -1,9 +1,7 @@
 <component name="libraryTable">
-  <library name="org.parboiled:parboiled-scala_2.11:1.1.7" type="repository">
-    <properties maven-id="org.parboiled:parboiled-scala_2.11:1.1.7" />
+  <library name="org.parboiled:parboiled-scala_2.11:1.1.7">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib_idea/parboiled-scala_2.11-1.1.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/scala-library-2.11.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib_idea/parboiled-core-1.1.7.jar!/" />
     </CLASSES>
     <JAVADOC />

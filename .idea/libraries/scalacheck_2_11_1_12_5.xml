@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="scalacheck_2.11-1.12.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_idea/scalacheck_2.11-1.12.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

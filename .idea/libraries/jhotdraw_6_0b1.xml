@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="org.ow2.asm:asm-all:5.0.4">
+  <library name="jhotdraw-6.0b1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-all-5.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_idea/jhotdraw-6.0b1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

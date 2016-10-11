@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="org.ow2.asm:asm-all:5.0.4">
+  <library name="scalatest_2.11-2.2.6">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-all-5.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_idea/scalatest_2.11-2.2.6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
