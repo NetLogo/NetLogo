@@ -2,7 +2,12 @@
 
 package org.nlogo.api
 
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
 import org.nlogo.core.FileMode
+
+import java.io.{ FileOutputStream, File }
 
 object FileIO {
 
@@ -58,6 +63,18 @@ object FileIO {
   }
 
   @throws(classOf[java.io.IOException])
+  def writeImageFile(image: BufferedImage, filename: String, format: String): Unit = {
+    // there's a form of ImageIO.write that just takes a filename, but
+    // if we use that when the filename is invalid (e.g. refers to
+    // a directory that doesn't exist), we get an IllegalArgumentException
+    // instead of an IOException, so we make our own OutputStream
+    // so we get the proper exceptions. - ST 8/19/03, 11/26/03
+    val stream = new FileOutputStream(new File(filename))
+    ImageIO.write(image, format, stream)
+    stream.close()
+  }
+
+  @throws(classOf[java.io.IOException])
   def reader2String(reader: java.io.Reader): String =
     reader2String(reader, 8192) // arbitrary default
 
@@ -94,5 +111,4 @@ object FileIO {
     }
     finally file.close(false)
   }
-
 }

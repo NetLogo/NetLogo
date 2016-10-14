@@ -5,7 +5,7 @@ package org.nlogo.app
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, LogoList, Model, Nobody,
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.agent.{Agent, World3D, World}
@@ -13,7 +13,7 @@ import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices, Workspace}
-import org.nlogo.fileformat
+import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.util.Implicits.RichStringLike
@@ -31,7 +31,6 @@ import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 import org.picocontainer.Parameter
 
 import javax.swing._
-import java.awt.event.{WindowAdapter, WindowEvent}
 import java.awt.{Toolkit, Dimension, Frame}
 
 import scala.language.postfixOps
@@ -90,27 +89,22 @@ object App{
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
     pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+    pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
     class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
-      import org.nlogo.fileformat, fileformat.NLogoFormat
       import scala.collection.JavaConversions._
 
       def getDescriptor(): String = "ModelLoaderComponent"
-
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
 
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
-        val compiler =
-          container.getComponent(classOf[CompilerInterface])
+        val compiler         = container.getComponent(classOf[CompilerInterface])
         val compilerServices = new DefaultCompilerServices(compiler)
-        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
 
-        val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect)
-        val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoThreeDDialect)
         val loader =
-          fileformat.standardLoader(compilerServices, twoDConverter, threeDConverter)
+          fileformat.standardLoader(compilerServices)
         val additionalComponents =
-          pico.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
+          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
         if (additionalComponents.nonEmpty)
           additionalComponents.foldLeft(loader) {
             case (l, serialization) =>
@@ -122,6 +116,23 @@ object App{
     }
 
     pico.addAdapter(new ModelLoaderComponent())
+
+    class ModelConverterComponent extends AbstractAdapter[ModelConversion](classOf[ModelConversion], classOf[ModelConverter]) {
+      import scala.collection.JavaConversions._
+
+      def getDescriptor(): String = "ModelConverterComponent"
+      def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
+
+      def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
+        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+
+        val allAutoConvertables = fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable])
+
+        fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, allAutoConvertables)(container.getComponent(classOf[Dialect]))
+      }
+    }
+
+    pico.addAdapter(new ModelConverterComponent())
 
     pico.addComponent(classOf[CodeToHtml])
     pico.addComponent(classOf[App])
@@ -305,7 +316,7 @@ class App extends
   @throws(classOf[UserCancelException])
   def quit(){ fileMenu.quit() }
 
-  locally{
+  locally {
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
@@ -331,10 +342,12 @@ class App extends
     pico.addComponent(new EditorFactory(pico.getComponent(classOf[CompilerServices])))
     pico.addComponent(new MenuBarFactory())
 
+    val controlSet = new AppControlSet()
+
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
-                                  frame, frame, pico.getComponent(classOf[HubNetManagerFactory]), App.this, listenerManager) {
+                                  frame, frame, pico.getComponent(classOf[HubNetManagerFactory]), App.this, listenerManager, controlSet) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
@@ -385,6 +398,8 @@ class App extends
     frame.addLinkComponent(monitorManager)
 
     _tabs = pico.getComponent(classOf[Tabs])
+    controlSet.tabs = Some(_tabs)
+
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
@@ -409,7 +424,7 @@ class App extends
           Array[Parameter] (
             new ConstantParameter(currentModelAsString),
             new ComponentParameter(classOf[AppFrame]),
-            new ConstantParameter(() => workspace.exportView()),
+            new ConstantParameter(() => workspace.exportView),
             new ConstantParameter(() => Boolean.box(
               workspace.procedures.get("SETUP") != null &&
                 workspace.procedures.get("GO") != null)),
@@ -1079,23 +1094,4 @@ class App extends
         tabs.workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
-}
-
-class AppFrame extends JFrame with LinkParent with LinkRoot {
-  setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
-  setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
-  getContentPane.setLayout(new java.awt.BorderLayout)
-  org.nlogo.awt.FullScreenUtilities.setWindowCanFullScreen(this, true)
-  addWindowListener(new WindowAdapter() {
-    override def windowClosing(e: WindowEvent) {
-      try App.app.fileMenu.quit()
-      catch {case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)}
-    }
-    override def windowIconified(e: WindowEvent) {
-      new IconifiedEvent(AppFrame.this, true).raise(App.app)
-    }
-    override def windowDeiconified(e: WindowEvent) {
-      new IconifiedEvent(AppFrame.this, false).raise(App.app)
-    }
-  })
 }

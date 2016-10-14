@@ -16,10 +16,11 @@ class HubNetManagerFactory(linkParent: Component,
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface = {
     workspace match {
       case g: GUIWorkspace =>
-        val loader =
-          fileformat.standardLoader(workspace,
-            fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, NetLogoLegacyDialect))
-        new GUIHubNetManager(g, linkParent, editorFactory, ifactory, menuFactory, loader)
+        val converter =
+          fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
+            workspace, fileformat.defaultAutoConvertables) _
+        val loader = fileformat.standardLoader(workspace)
+        new GUIHubNetManager(g, linkParent, editorFactory, ifactory, menuFactory, loader, converter(NetLogoLegacyDialect))
       case _ => throw new Exception("Expected GUIWorkspace, got: " + workspace)
     }
   }

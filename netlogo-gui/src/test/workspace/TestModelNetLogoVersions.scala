@@ -20,7 +20,7 @@ class TestModelNetLogoVersions extends FunSuite with SlowTest {
       // if this test suddenly starts failing, make sure all models are the most current version
       val loader =
         fileformat.basicLoader
-          .addFormat[Array[String], NLogoThreeDFormat](new NLogoThreeDFormat(fileformat.defaultAutoConversion))
+          .addFormat[Array[String], NLogoThreeDFormat](new NLogoThreeDFormat)
 
       // 5.x.nlogo is a LS is a test model for checking the graceful handling of version problems.
       if (!path.endsWith("5.x.nlogo")) {

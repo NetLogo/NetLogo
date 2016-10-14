@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.core.{ DummyExtensionManager, DummyCompilationEnvironment }
 import org.nlogo.api.ConfigurableModelLoader
-import org.nlogo.fileformat.{ NLogoFormat, NLogoHubNetFormat }
+import org.nlogo.fileformat.{ defaultConverter, NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.DummyAbstractWorkspace
 import org.scalatest.FunSuite
@@ -66,9 +66,9 @@ class HubNetManagerTests extends FunSuite {
     test(name){
       val workspace = new DummyAbstractWorkspace
       val loader = new ConfigurableModelLoader()
-        .addFormat[Array[String], NLogoFormat](new NLogoFormat((m, _) => m))
+        .addFormat[Array[String], NLogoFormat](new NLogoFormat)
         .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(workspace))
-      val manager = new HeadlessHubNetManager(workspace, loader) {
+      val manager = new HeadlessHubNetManager(workspace, loader, defaultConverter) {
         override val connectionManager = new MockConnectionManager(this, workspace)
       }
       manager.reset()

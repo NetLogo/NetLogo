@@ -244,7 +244,7 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     val runnable = new ResizeRunner()
     if (showProgress)
-      ModalProgressTask.apply(Hierarchy.getFrame(gWidget),
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
         I18N.gui.get("view.resize.progress"), runnable)
     else
       runnable.run()

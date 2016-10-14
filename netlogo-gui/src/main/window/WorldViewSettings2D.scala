@@ -104,7 +104,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     val runnable = new RunResize()
     if (showProgress)
-      ModalProgressTask(Hierarchy.getFrame(gWidget),
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
         I18N.gui.get("view.resize.progress"), runnable)
     else
       runnable.run()

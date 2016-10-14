@@ -9,6 +9,7 @@ import org.nlogo.core.model.WidgetReader
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
+import org.nlogo.fileformat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.awt.EventQueue.invokeLater
@@ -23,7 +24,9 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
-                       loader: ModelLoader) extends HubNetManager(workspace, loader) with ViewInterface {
+                       loader: ModelLoader,
+                       modelConverter: ModelConversion)
+  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.

@@ -245,21 +245,6 @@ public abstract strictfp class AbstractWorkspace
         throws java.io.IOException;
   }
 
-  protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
-    writer.println(Dump.csv().header("MODEL SETTINGS"));
-    scala.collection.Seq<String> globals = _world.program().interfaceGlobals();
-    writer.println(Dump.csv().variableNameRow(globals));
-    Object[] values = new Object[globals.size()];
-    int i = 0;
-    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
-      values[i] =
-          _world.getObserverVariableByName(iter.next());
-    }
-    writer.println(Dump.csv().dataRow(values));
-    writer.println();
-  }
-
-
   public abstract void clearAll();
 
   protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();

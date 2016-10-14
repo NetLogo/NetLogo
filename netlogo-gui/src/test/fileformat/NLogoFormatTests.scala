@@ -13,12 +13,13 @@ import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femt
   Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConversions._
+import scala.util.Try
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
 
-  def nlogoFormat = new NLogoFormat((m, _) => m)
+  def nlogoFormat = new NLogoFormat
 
   override def compareSerialized(a: Array[String], otherA: Array[String]): Boolean = {
     Arrays.deepEquals(a.asInstanceOf[Array[Object]], otherA.asInstanceOf[Array[Object]])
@@ -34,7 +35,7 @@ class NLogoFormatIOTest extends FunSuite {
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
 
-  val format = new NLogoFormat((m , _) => m)
+  val format = new NLogoFormat
 
   lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
   // sanity checking, if these fail NetLogo will be pretty unusable
@@ -67,30 +68,26 @@ class NLogoFormatIOTest extends FunSuite {
   }
 }
 
-class NLogoFormatConversionTest extends FunSuite {
-  val extensionManager = VidExtensionManager
-  val compilationEnvironment = FooCompilationEnvironment
-
+class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
   import AutoConversionList.ConversionList
 
-  def nlogoFormat(conversions: Seq[ConversionSet]): NLogoFormat = {
-    new NLogoFormat(new ModelConverter(extensionManager, compilationEnvironment, literalParser, NetLogoLegacyDialect, _ => conversions))
-  }
-
-  val literalParser =
-    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-
-  def testLoader(conversions: Seq[ConversionSet]): ModelLoader = {
-    val format = nlogoFormat(conversions)
-    new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](format)
+  def testLoader: ModelLoader =
+    new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)
       .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
+
+  def tryReadAndConvertModel(m: Model, conversions: Seq[ConversionSet]): ConversionResult = {
+    val loader = testLoader
+    val readModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    tryConvert(readModel, conversions: _*)
   }
+
+  def readAndConvertModel(m: Model, conversions: Seq[ConversionSet]): Model =
+    tryReadAndConvertModel(m, conversions).model
 
   test("performs listed autoconversions") {
     val m = Model(code = "to foo fd 1 end")
-    val conversions = Seq(ConversionSet(Seq(_.replaceCommand("fd" -> "forward {0}")), Seq(), Seq("fd")))
-    val loader = testLoader(conversions)
-    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    val conversions = Seq(conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "forward {0}")), targets = Seq("fd")))
+    val rereadModel = readAndConvertModel(m, conversions)
     assertResult("to foo forward 1 end")(rereadModel.code)
   }
 
@@ -100,18 +97,18 @@ class NLogoFormatConversionTest extends FunSuite {
     val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
       .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
 
-    val loader = testLoader(AutoConversionList.conversions.map(_._2))
-    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+    val conversions = AutoConversionList.conversions.map(_._2)
+    val rereadModel = readAndConvertModel(m, conversions)
     assertResult("vid:record-view")(
       rereadModel.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").get.head.goCommands)
     assert(rereadModel.code.contains("extensions [vid]"))
   }
 
-  test("returns the unconverted version of a model needing conversion which doesn't compile") {
+  test("returns a failure for a model needing conversion which doesn't compile") {
     val m = Model(code = "to foo hsb")
-    val loader = testLoader(AutoConversionList.conversions.map(_._2))
-    val rereadModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
-    assertResult(m.code)(rereadModel.code)
+    val conversions = AutoConversionList.conversions.map(_._2)
+    val rereadModel = tryReadAndConvertModel(m, conversions)
+    assert(rereadModel.hasErrors)
   }
 }
 

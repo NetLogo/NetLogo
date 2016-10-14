@@ -123,7 +123,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   private def login(userid: String, hostip: String, port: Int) {
     var exs: Option[String] = None
-    ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
+    ModalProgressTask.onUIThread(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
     })
     exs match {

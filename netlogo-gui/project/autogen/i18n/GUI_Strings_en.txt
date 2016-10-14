@@ -17,6 +17,7 @@ common.buttons.exit = Exit
 common.buttons.continue = Continue
 common.buttons.save = Save
 common.buttons.discard = Discard
+common.buttons.dismiss = Dismiss
 common.buttons.halt = Halt
 common.buttons.yes = Yes
 common.buttons.no = No
@@ -45,9 +46,15 @@ menu.file.nlw.prompt.message.fromSave = Export model from last save or from open
 menu.file.nlw.prompt.message.fromLibrary = Export model from Models Library or open copy?
 menu.file.print = Print…
 menu.file.export = Export
+menu.file.export.failed = Export Failed
 menu.file.export.world = Export World
+menu.file.export.noPlots = There are no plots to export.
 menu.file.export.plot = Export Plot
+menu.file.export.plot.exportFailed = Export of {0} plot to {1} failed: {2}
+menu.file.export.plot.failed = Export Plot Failed
+menu.file.export.plot.whichPlot = Which plot would you like to export?
 menu.file.export.allPlots = Export All Plots
+menu.file.export.allPlots.exportFailed = Export of all plots to {0} failed: {1}
 menu.file.export.view = Export View
 menu.file.export.interface = Export Interface
 menu.file.export.output = Export Output
@@ -160,6 +167,8 @@ tabs.run.commandcenter.history = History
 tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
 tabs.run.commandcenter.clearHistory = Clear History
 
+tabs.input.export.error = Export failed.  Error:\n{0}
+
 tabs.info = Info
 tabs.info.edit = Edit
 tabs.info.help = Help
@@ -189,6 +198,12 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
+file.open.warn.autoconversion.title = Error Converting Model
+file.open.warn.autoconversion.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
+ Would you like to continue opening it? \n
+file.open.warn.autoconversion.detail = While running conversion "{0}" on the {1}: {2}
+file.open.warn.autoconversion.bestEffort = Open Partially Converted Model
+file.open.warn.autoconversion.original = Open Unconverted Model
 file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
@@ -250,7 +265,6 @@ edit.plot.pen.interval = Interval
 edit.plot.pen.showInLegend = Show in legend
 edit.plot.pen.setupCommands = Pen setup commands
 edit.plot.pen.updateCommands = Pen update commands
-edit.plot.error.dismiss = Dismiss
 edit.plot.error.runtimeError = Runtime Error:
 
 edit.chooser.globalVar = Global variable

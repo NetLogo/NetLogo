@@ -24,7 +24,10 @@ class CSV(dump: Any => String) {
   def number(i: Int) =
     encode(dump(i: java.lang.Integer))
 
-  def dataRow[T](objs: Array[T]) =
+  def dataRow[T](objs: Array[T]): String =
+    objs.map(data).mkString(",")
+
+  def dataRow[T](objs: Seq[T]): String =
     objs.map(data).mkString(",")
 
   def header(s: String) =

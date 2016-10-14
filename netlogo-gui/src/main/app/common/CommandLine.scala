@@ -87,10 +87,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
     this.agent = agent
   }
 
-  ///
-
-  ///
-
   // I have no idea why, but at least on Macs, without this our minimum
   // height is larger than our preferred height, which doesn't make sense
   // - ST 8/26/03

@@ -9,14 +9,14 @@ import javax.swing.{ Action, Box, BoxLayout, JButton, JLabel, JMenuItem, JPanel,
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
-import org.nlogo.awt.{ Fonts, UserCancelException }
+import org.nlogo.awt.{ Fonts, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.editor.Actions
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichAction }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
   InterfaceColors, OutputArea, Zoomable }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace,
                     locationToggleAction: Action) extends JPanel
@@ -29,12 +29,11 @@ class CommandCenter(workspace: AbstractWorkspace,
   private val prompt = new LinePrompt(commandLine)
   private val northPanel = new JPanel
   private val southPanel = new JPanel
-  val output = new OutputArea(commandLine){
-    text.addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
-      override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
-    })
-  }
+  val output = OutputArea.withNextFocus(commandLine)
+  output.text.addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+    override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+  })
 
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
@@ -118,11 +117,14 @@ class CommandCenter(workspace: AbstractWorkspace,
       Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
         addActionListener(() =>
-          try output.export(
-            SwingFileDialog.show(
+          try {
+            val filename = SwingFileDialog.show(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
-              workspace.guessExportName("command center output.txt")))
-          catch {
+              workspace.guessExportName("command center output.txt"))
+            ModalProgressTask.onBackgroundThreadWithUIData(
+              Hierarchy.getFrame(output), I18N.gui.get("dialog.interface.export.task"),
+              () => output.valueText, (text: String) => ExportOutput.silencingErrors(filename, text))
+          } catch {
             case uce: UserCancelException => Exceptions.ignore(uce)
           }
         )

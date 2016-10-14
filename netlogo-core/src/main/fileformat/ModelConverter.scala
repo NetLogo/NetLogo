@@ -17,14 +17,14 @@ object ModelConverter {
     compilationEnvironment: CompilationEnvironment,
     literalParser:          LiteralParser,
     dialect:                Dialect,
-    warnOnError:            Exception => Unit = { _ => }): ((Model, Seq[AutoConvertable]) => Model) = {
+    conversionSections:     Seq[AutoConvertable] = Seq()): ModelConversion = {
     val modelConversions = {(m: Model) =>
       AutoConversionList.conversions.collect {
         case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) =>
           conversionSet
       }
     }
-    new ModelConverter(extensionManager, compilationEnvironment, literalParser, dialect, modelConversions, warnOnError)
+    new ModelConverter(extensionManager, compilationEnvironment, literalParser, dialect, conversionSections, modelConversions)
   }
 }
 
@@ -33,11 +33,11 @@ class ModelConverter(
   compilationEnv:        CompilationEnvironment,
   literalParser:         LiteralParser,
   baseDialect:           Dialect,
-  applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() },
-  warnOnError:           Exception => Unit = { _ => })
-  extends ((Model, Seq[AutoConvertable]) => Model) {
+  components:            Seq[AutoConvertable],
+  applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
+  extends ModelConversion {
 
-  def apply(model: Model, components: Seq[AutoConvertable]): Model = {
+  def apply(model: Model): ConversionResult = {
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand = {
       CompilationOperand(
         sources                = Map("" -> source) ++ components.flatMap(_.conversionSource(model, literalParser)).toMap,
@@ -78,57 +78,76 @@ class ModelConverter(
       convertable.requiresAutoConversion(model, containsAnyTargets(targets))
     }
 
-    def runConversion(conversionSet: ConversionSet, model: Model): Try[Model] = {
+    def runConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
-      Try {
-        if (targets.nonEmpty && (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _))))
-          applyConversion(conversionSet, model)
-        else model
-      }
+      if (targets.nonEmpty && (containsAnyTargets(targets)(model.code) || components.exists(requiresConversion(model, targets, _))))
+        applyConversion(conversionSet, model)
+      else
+        SuccessfulConversion(model, model)
     }
 
-    def applyConversion(conversionSet: ConversionSet, model: Model): Model = {
+    def applyConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
 
       val dialect = conversionSet.conversionDialect(baseDialect)
 
-      val code = codeTabConversions.foldLeft(model.code) {
-        case (src, conversion) =>
-          conversion(rewriter(src, Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)))
+      lazy val convertedCodeTab: ConversionResult =
+        Try {
+          codeTabConversions.foldLeft(SuccessfulConversion(model, model)) {
+            case (SuccessfulConversion(original, converted), conversion) =>
+              val newProgram =
+                Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
+              val newCode = conversion(rewriter(converted.code, newProgram))
+              SuccessfulConversion(original, model.copy(code = newCode))
+            case (other, _) => other
+          }
+        }.recover {
+          case e: Exception => ErroredConversion(model, ConversionError(e, "code tab", conversionName))
+        }.get
+
+      def newStructure(code: String): Try[StructureResults] = {
+        val newCompilation = compilationOperand(code,
+          Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
+          FrontEndInterface.NoProcedures)
+
+        val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
+        Try {
+          val (_, results) = fe.frontEnd(newCompilation)
+          results
+        }
       }
 
-      val newCompilation = compilationOperand(code,
-        Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
-        FrontEndInterface.NoProcedures)
+      def modelWithConvertedComponents(conversionRes: ConversionResult): ConversionResult =
+        newStructure(conversionRes.model.code) match {
+          case Success(convertedStructure) =>
+            val converter =
+              new SnippetConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, convertedStructure, extensionManager, compilationEnv)
 
-      val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
-      val (_, results) = fe.frontEnd(newCompilation)
+            components.foldLeft(conversionRes) {
+              case (res, component) =>
+                res.mergeResult(
+                  component.autoConvert(res.model, converter) match {
+                    case Left((convertedModel, newExceptions)) =>
+                      val error =
+                        ConversionError(newExceptions, component.componentDescription, conversionName)
+                      conversionRes.addError(error).updateModel(convertedModel)
+                    case Right(convertedModel) => conversionRes.updateModel(convertedModel)
+                  })
+            }
+          case Failure(e: Exception) => conversionRes.addError(ConversionError(e, "code tab", conversionName))
+          case Failure(t) => throw t
+        }
 
-      val converter = new ModelConverter(otherCodeConversions, containsAnyTargets(targets), rewriterOp _, results, extensionManager, compilationEnv)
-
-      // need to run optionalConversions even when no other code is changed...
-      val convertedModel = model.copy(code = code)
-      components.foldLeft(convertedModel) {
-        case (m, component) => component.autoConvert(m, converter)
-      }
+      modelWithConvertedComponents(convertedCodeTab)
     }
 
-    applicableConversions(model).foldLeft(model) {
-      case (m, conversion) =>
-        val converted = runConversion(conversion, m)
-        converted match {
-          case f: Failure[_] =>
-            f.exception match {
-              case e: Exception => warnOnError(e)
-              case other        => throw other
-            }
-          case _ =>
-        }
-        converted.getOrElse(m)
+    applicableConversions(model).foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
+      case (cr, conversion) =>
+        cr.mergeResult(runConversion(conversion, cr.model))
     }
   }
 
-  class ModelConverter(otherCodeConversions: Seq[SourceRewriter => String],
+  class SnippetConverter(otherCodeConversions: Seq[SourceRewriter => String],
     containsAnyTargets: String => Boolean,
     rewriter: CompilationOperand => SourceRewriter,
     results: StructureResults,

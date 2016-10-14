@@ -21,10 +21,9 @@ window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program
 window.Dirty
 window.EditWidget - org.nlogo.api.Editable widget
 window.Enable2D - boolean enabled
-window.ExportInterface - java.io.OutputStream stream - java.io.IOException[] exceptionBox
-window.ExportOutput - String filename
-window.ExportPlot - org.nlogo.window.PlotWidgetExportType whichPlots - org.nlogo.plot.Plot plot - String filename
+window.ExportPlot - org.nlogo.window.PlotWidgetExport plotExport - String exportFilename - Runnable onCompletion
 window.ExportWorld - java.io.PrintWriter writer
+window.ExportWidget - org.nlogo.window.Widget widget
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased

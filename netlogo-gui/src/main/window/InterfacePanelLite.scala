@@ -5,9 +5,11 @@ package org.nlogo.window;
 import java.awt.{ Color, Component, Dimension, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
+import java.awt.image.BufferedImage
 import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
 
 import org.nlogo.api.{ CompilerServices, Exceptions, ModelSection, RandomServices, Version, VersionHistory }
+import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.PlotManager
@@ -268,4 +270,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
       revalidate()
     }
   }
+
+  def interfaceImage: BufferedImage =
+    Images.paintToImage(this)
 }

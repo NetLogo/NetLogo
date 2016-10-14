@@ -64,6 +64,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // a String in the value field.  ev 8/13/06
   protected var text = ""
   protected var value: Option[AnyRef] = Option.empty[AnyRef]
+  def valueText = text
   def valueObject = value.orNull
   def valueObject(value: AnyRef) {valueObject(value, false)}
   def valueObject(value: Any, raiseEvent: Boolean) {
@@ -358,15 +359,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def hasContextMenu = true
   override def zoomSubcomponents = true
   override def getMaximumSize = null
-
-  override def export(exportPath: String) {
-    try org.nlogo.api.FileIO.writeFile(exportPath, text, true)
-    catch {
-      case ex: java.io.IOException =>
-        JOptionPane.showMessageDialog(this,
-          "Export failed.  Error:\n" + ex.getMessage, "Export Failed", JOptionPane.ERROR_MESSAGE)
-    }
-  }
 
   protected class NLButton(title:String) extends JButton(title) {
     setFont(new Font(platformFont,Font.PLAIN, 10))

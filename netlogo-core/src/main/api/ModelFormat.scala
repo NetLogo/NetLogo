@@ -8,7 +8,7 @@ import org.nlogo.core.Model
 
 import scala.util.{ Success, Try }
 
-trait ComponentSerialization[A, B <: ModelFormat[A, _]] extends AutoConvertable {
+trait ComponentSerialization[A, B <: ModelFormat[A, _]] {
   def componentName: String
   def addDefault: Model => Model = identity
   def serialize(m: Model): A

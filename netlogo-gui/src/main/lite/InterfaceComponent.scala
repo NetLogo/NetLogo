@@ -168,7 +168,7 @@ with Event.LinkChild {
    */
   def getViewImage: java.awt.image.RenderedImage = {
     EventQueue.mustBeEventDispatchThread()
-    workspace.exportView()
+    workspace.exportView
   }
 
   /**

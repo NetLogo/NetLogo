@@ -43,7 +43,7 @@ public strictfp class View
     mouser = new ViewMouseHandler(this, workspace.world(), this);
     addMouseListener(mouser);
     addMouseMotionListener(mouser);
-    workspace.viewManager.add(this);
+    workspace.viewManager().add(this);
   }
 
   public boolean isHeadless() {
@@ -487,7 +487,7 @@ public strictfp class View
       resetItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
-          workspace.viewManager.incrementalUpdateFromEventThread();
+          workspace.viewManager().incrementalUpdateFromEventThread();
         }
       });
       menu.add(resetItem);
@@ -640,7 +640,7 @@ public strictfp class View
       super.menuSelectionChanged(isIncluded);
       if (!submenu) {
         renderer.outlineAgent((isIncluded) ? agent : null);
-        workspace.viewManager.incrementalUpdateFromEventThread();
+        workspace.viewManager().incrementalUpdateFromEventThread();
       }
     }
   }
@@ -659,7 +659,7 @@ public strictfp class View
     public void menuSelectionChanged(boolean isIncluded) {
       super.menuSelectionChanged(isIncluded);
       renderer.outlineAgent((isIncluded) ? agent : null);
-      workspace.viewManager.incrementalUpdateFromEventThread();
+      workspace.viewManager().incrementalUpdateFromEventThread();
     }
   }
 
@@ -690,6 +690,6 @@ public strictfp class View
         throw new IllegalStateException();
     }
 
-    workspace.viewManager.incrementalUpdateFromEventThread();
+    workspace.viewManager().incrementalUpdateFromEventThread();
   }
 }

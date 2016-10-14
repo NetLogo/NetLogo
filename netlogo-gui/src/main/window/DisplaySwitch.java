@@ -26,10 +26,10 @@ public strictfp class DisplaySwitch
       setSelected(on);
     }
     if (on) {
-      workspace.view.thaw();
-      workspace.viewManager.incrementalUpdateFromEventThread();
+      workspace.view().thaw();
+      workspace.viewManager().incrementalUpdateFromEventThread();
     } else {
-      workspace.view.freeze();
+      workspace.view().freeze();
     }
   }
 }

@@ -12,6 +12,7 @@ trait JobManagerInterface {
   def die()
   def timeToRunSecondaryJobs()
   def maybeRunSecondaryJobs()
+  def onJobThread: Boolean
   def anyPrimaryJobs(): Boolean
   def addJob(job: Job, waitForCompletion: Boolean)
   def makeConcurrentJob(owner: JobOwner, agentset: AgentSet, workspace: Workspace, procedure: Procedure): Job
