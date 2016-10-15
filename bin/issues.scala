@@ -1,4 +1,4 @@
-#!/usr/bin/env sbt -Dsbt.version=0.13.8 -Dsbt.main.class=sbt.ScriptMain --error
+#!/usr/bin/env sbt -Dsbt.version=0.13.12 -Dsbt.main.class=sbt.ScriptMain --error
 
 // This generates Markdown suitable for pasting into
 // https://github.com/NetLogo/NetLogo/wiki/Release-notes
@@ -18,7 +18,7 @@
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 onLoadMessage := ""
 
