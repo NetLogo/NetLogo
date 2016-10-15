@@ -55,15 +55,13 @@ public strictfp class Patch
   }
 
   public AgentSet turtlesHereAgentSet() {
-    return new ArrayAgentSet
-        (AgentKindJ.Turtle(),
-            _turtlesHere.toArray(new Agent[_turtlesHere.size()]));
+    return AgentSet.fromArray(AgentKindJ.Turtle(), _turtlesHere.toArray(new Turtle[_turtlesHere.size()]));
   }
 
   // 0 because user might never create any turtles!
 
-  public AgentSet patchNeighbors;   // cached
-  public AgentSet patchNeighbors4;  // cached
+  public IndexedAgentSet patchNeighbors;   // cached
+  public IndexedAgentSet patchNeighbors4;  // cached
 
   void topologyChanged() {
     patchNeighbors = null;
@@ -329,14 +327,14 @@ public strictfp class Patch
     return world.fastGetPatchAt(x, y);
   }
 
-  public AgentSet getNeighbors() {
+  public IndexedAgentSet getNeighbors() {
     if (patchNeighbors == null) {
       patchNeighbors = world.getTopology().getNeighbors(this);
     }
     return patchNeighbors;
   }
 
-  public AgentSet getNeighbors4() {
+  public IndexedAgentSet getNeighbors4() {
     if (patchNeighbors4 == null) {
       patchNeighbors4 = world.getTopology().getNeighbors4(this);
     }

@@ -91,7 +91,7 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
       return hashCodeCalc;
     } else if (sourceObject instanceof AgentSet) {
       int code = 1;
-      for (AgentSet.Iterator i = ((AgentSet) sourceObject).iterator();
+      for (AgentIterator i = ((AgentSet) sourceObject).iterator();
            i.hasNext();) {
         Agent agent = i.next();
         LogoHashObject obj = new LogoHashObject(agent);

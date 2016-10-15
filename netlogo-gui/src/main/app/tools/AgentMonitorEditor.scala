@@ -221,9 +221,7 @@ with WindowEvents.JobRemovedEvent.Handler
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
         workspace.world.observers()
       else {
-        val agentset = new ArrayAgentSet(agent.kind, 1, false)
-        agentset.add(agent)
-        agentset
+        AgentSet.fromAgent(agent)
       }
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments

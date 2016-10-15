@@ -115,15 +115,19 @@ public strictfp class World
     turtleBreedShapes = new BreedShapes("TURTLES", _turtleShapes);
 
     _observer = createObserver();
-    _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false);
+    _observers = AgentSet.fromAgent(_observer);
 
-    linkManager = new LinkManager(this);
+    linkManager = new LinkManagerImpl(
+        this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link(world, src, dest, breed);
+          }
+        });
     tieManager = new TieManager(this, linkManager);
 
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
 
-    _observers.add(_observer);
     changeTopology(true, true);
     // create patches in the constructor, it's necessary in case
     // the first model we load is 1x1 since when we do create patches
@@ -141,9 +145,9 @@ public strictfp class World
 
   /// empty agentsets
 
-  private final AgentSet _noTurtles = new ArrayAgentSet(AgentKindJ.Turtle(), 0, false);
-  private final AgentSet _noPatches = new ArrayAgentSet(AgentKindJ.Patch(), 0, false);
-  private final AgentSet _noLinks = new ArrayAgentSet(AgentKindJ.Link(), 0, false);
+  private final AgentSet _noTurtles = AgentSet.fromArray(AgentKindJ.Turtle(), new org.nlogo.agent.Agent[0]);
+  private final AgentSet _noPatches = AgentSet.fromArray(AgentKindJ.Patch(), new org.nlogo.agent.Agent[0]);
+  private final AgentSet _noLinks = AgentSet.fromArray(AgentKindJ.Link(), new org.nlogo.agent.Agent[0]);
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -176,7 +180,7 @@ public strictfp class World
     topology = Topology.getTopology(this, xWrapping, yWrapping);
     if (_patches != null) // is null during initialization
     {
-      for (AgentSet.Iterator it = _patches.iterator(); it.hasNext();) {
+      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
         ((Patch) it.next()).topologyChanged();
       }
     }
@@ -441,21 +445,21 @@ public strictfp class World
     return _observer;
   }
 
-  AgentSet _patches = null;
+  IndexedAgentSet _patches = null;
 
   public AgentSet patches() {
     return _patches;
   }
 
-  AgentSet _turtles = null;
+  TreeAgentSet _turtles = null;
 
-  public AgentSet turtles() {
+  public TreeAgentSet turtles() {
     return _turtles;
   }
 
-  AgentSet _links = null;
+  TreeAgentSet _links = null;
 
-  public AgentSet links() {
+  public TreeAgentSet links() {
     return _links;
   }
 
@@ -554,7 +558,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.toArray()[id];
+    return (Patch) _patches.getByIndex(id);
   }
 
   public Patch getPatchAt(double x, double y)
@@ -563,7 +567,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.toArray()[id];
+    return  getPatch(id);
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -588,7 +592,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.toArray()[patchid];
+    return getPatch(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -600,8 +604,7 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.toArray()[(_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor];
+    return getPatch(_worldWidth * (_maxPycor - yc) + xc - _minPxcor);
   }
 
   public Turtle getTurtle(long id) {
@@ -796,7 +799,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = (ArrayAgentSet) AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -846,7 +849,7 @@ public strictfp class World
   }
 
   public void clearPatches() {
-    for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
       Patch patch = (Patch) iter.next();
       patch.pcolorDoubleUnchecked(Color.BoxedBlack());
       patch.label("");
@@ -867,17 +870,17 @@ public strictfp class World
   public void clearTurtles() {
     if (_program.breeds().nonEmpty()) {
       for (AgentSet breed : breeds.values()) {
-        breed.clear();
+        ((TreeAgentSet) breed).clear();
       }
     }
-    for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
-      linkManager.cleanup(turtle);
+      linkManager.cleanupTurtle(turtle);
       turtle.id(-1);
     }
     _turtles.clear();
-    for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
       ((Patch) iter.next()).clearTurtles();
     }
     nextTurtleIndex = 0;
@@ -887,10 +890,10 @@ public strictfp class World
   public void clearLinks() {
     if (_program.linkBreeds().nonEmpty()) {
       for (AgentSet linkBreed : linkBreeds.values()) {
-        linkBreed.clear();
+        ((TreeAgentSet) linkBreed).clear();
       }
     }
-    for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _links.iterator(); iter.hasNext();) {
       Link link = (Link) iter.next();
       link.id = -1;
     }
@@ -966,7 +969,7 @@ public strictfp class World
     // call Agent.realloc() on all the turtles
     try {
       if (_turtles != null) {
-        for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
           Agent agt = iter.next().realloc(_oldProgram != null);
           if (agt != null) {
             doomedAgents.add(agt);
@@ -983,7 +986,7 @@ public strictfp class World
     // call Agent.realloc() on all links
     try {
       if (_links != null) {
-        for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = _links.iterator(); iter.hasNext();) {
           Agent agt = iter.next().realloc(_oldProgram != null);
           if (agt != null) {
             doomedAgents.add(agt);
@@ -1003,7 +1006,7 @@ public strictfp class World
       //  ~Forrest ( 5/2/2007)
       if (_patches != null &&
           (_oldProgram == null || !_program.patchesOwn().equals(_oldProgram.patchesOwn()))) {
-        for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
           iter.next().realloc(_oldProgram != null);
         }
       }
@@ -1109,7 +1112,7 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return breed.type() == Turtle.class
+    return breed.kind() == AgentKindJ.Turtle()
         ? _program.turtlesOwn().size() + result
         : _program.linksOwn().size() + result;
   }

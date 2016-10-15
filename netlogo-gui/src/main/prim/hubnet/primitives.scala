@@ -259,12 +259,8 @@ class _hubnetclearoverride extends Command {
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)
     val set = target match {
-      case agent: Agent =>
-        val set = new ArrayAgentSet(agent.kind, 1, false)
-        set.add(agent)
-        set
-      case set: AgentSet =>
-        set
+      case agent: Agent => AgentSet.fromAgent(agent)
+      case set: AgentSet => set
     }
     if(!workspace.getHubNetManager.exists(_.isOverridable(set.kind, varName)))
       throw new RuntimePrimitiveException(context, this,

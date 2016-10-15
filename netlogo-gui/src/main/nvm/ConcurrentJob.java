@@ -3,6 +3,7 @@
 package org.nlogo.nvm;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
@@ -30,7 +31,7 @@ public strictfp class ConcurrentJob
   private void initialize() {
     contexts = new Context[agentset.count()];
     int count = 0;
-    for (AgentSet.Iterator iter = agentset.shufflerator(random);
+    for (AgentIterator iter = agentset.shufflerator(random);
          iter.hasNext();) {
       Agent agent = iter.next();
       newAgentJoining(agent, count++, address);

@@ -1348,7 +1348,7 @@ public strictfp class Importer
   }
 
   void checkForBlankTurtles() {
-    for (AgentSet.Iterator iter = world.turtles().iterator(); iter.hasNext();) {
+    for (AgentIterator iter = world.turtles().iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       if (turtle.getBreed() == null) {
         String abortingError = turtle.toString() + " was referenced in an agentset or agent " +

@@ -106,19 +106,19 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
     }
     else if(token.value == "TURTLES") {
       // we have an agentset of turtles. parse arguments...
-      val agentset = new ArrayAgentSet(AgentKind.Turtle,1,false)
+      val builder = new AgentSetBuilder(AgentKind.Turtle)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         val value = readLiteralPrefix(token, tokens)
         cAssert(value.isInstanceOf[java.lang.Double], ERR_BAD_TURTLE_SET_ARGS, token)
-        agentset.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
+        builder.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
         token = tokens.next()
       }
-      agentset
+      builder.build
     }
     else if(token.value == "LINKS") {
       // we have an agentset of links. parse arguments...
-      val agentset = new ArrayAgentSet(AgentKind.Link,1,false)
+      val builder = new AgentSetBuilder(AgentKind.Link)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         cAssert(token.tpe == TokenType.OpenBracket, ERR_BAD_LINK_SET_ARGS, token)
@@ -131,14 +131,14 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         val link = world.getOrCreateLink(listVal.get(0).asInstanceOf[java.lang.Double],
                                          listVal.get(1).asInstanceOf[java.lang.Double],
                                          listVal.get(2).asInstanceOf[AgentSet])
-        if(link != null) agentset.add(link)
+        if(link != null) builder.add(link)
         token = tokens.next()
       }
-      agentset
+      builder.build
     }
     else if(token.value == "PATCHES") {
       // we have an agentset of patches. parse arguments...
-      val agentset = new ArrayAgentSet(AgentKind.Patch,1,false)
+      val builder = new AgentSetBuilder(AgentKind.Patch)
       var token = tokens.next()
       while(token.tpe != TokenType.CloseBrace) {
         cAssert(token.tpe == TokenType.OpenBracket, ERR_BAD_PATCH_SET_ARGS, token)
@@ -155,10 +155,10 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
             cAssert(other.isInstanceOf[java.lang.Double], ERR_BAD_PATCH_SET_ARGS, token)
             0
         }.toSeq
-        agentset.add(getPatchAt(token, doubledPatchSet: _*))
+        builder.add(getPatchAt(token, doubledPatchSet: _*))
         token = tokens.next()
       }
-      agentset
+      builder.build
     }
     else if (List("TURTLE", "PATCH", "LINK").contains(token.value)) {
       // we have a single agent

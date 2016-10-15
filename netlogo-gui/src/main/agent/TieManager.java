@@ -4,6 +4,8 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 
+import scala.collection.JavaConversions;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,7 +27,11 @@ public strictfp class TieManager {
 
   /// tie support
 
-  int tieCount = 0;
+  private int tieCount = 0;
+
+  public boolean hasTies() {
+    return tieCount > 0;
+  }
 
   public void setTieMode(Link link, String mode) {
     if (link.isTied()) {
@@ -39,21 +45,20 @@ public strictfp class TieManager {
 
   List<Turtle> tiedTurtles(Turtle root) {
     ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    if (linkManager.srcMap.containsKey(root)) {
-      for (Link link : linkManager.srcMap.get(root)) {
-        if (link.isTied()) {
-          Turtle t = link.end2();
-          myTies.add(t);
-        }
+    for (Iterator<Link> linksFrom =
+         JavaConversions.asJavaIterator(linkManager.findLinksFrom(root, world._links));
+         linksFrom.hasNext();) {
+      Link link = linksFrom.next();
+      if (link.isTied()) {
+        myTies.add(link.end2());
       }
     }
-    if (linkManager.destMap.containsKey(root)) {
-      for (Link link : linkManager.destMap.get(root)) {
-        if (!link.getBreed().isDirected()
-            && link.isTied()) {
-          Turtle t = link.end1();
-          myTies.add(t);
-        }
+    for (Iterator<Link> linksTo =
+         JavaConversions.asJavaIterator(linkManager.findLinksTo(root, world._links));
+         linksTo.hasNext();) {
+      Link link = linksTo.next();
+      if (link.isTied() && !link.getBreed().isDirected()) {
+        myTies.add(link.end1());
       }
     }
     return myTies;

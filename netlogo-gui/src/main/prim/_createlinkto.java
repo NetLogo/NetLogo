@@ -56,11 +56,8 @@ public final strictfp class _createlinkto
       if (src.id != -1 && dest.id != -1) {
         Link link = world.linkManager.createLink(src, dest, breed);
         if (offset - context.ip > 2) {
-          AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Link(), 1,
-              false);
-          edgeset.add(link);
           workspace.joinForeverButtons(link);
-          context.runExclusiveJob(edgeset, next);
+          context.runExclusiveJob(AgentSet.fromAgent(link), next);
         }
       }
     }

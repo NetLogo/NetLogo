@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
@@ -39,7 +40,7 @@ public final strictfp class _turtlevariableof
       AgentSet sourceSet = (AgentSet) agentOrSet;
       LogoListBuilder result = new LogoListBuilder();
       try {
-        for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+        for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
              iter.hasNext();) {
           result.add(iter.next().getTurtleVariable(vn));
         }
@@ -82,7 +83,7 @@ public final strictfp class _turtlevariableof
       AgentSet sourceSet = (AgentSet) agentOrSet;
       LogoListBuilder result = new LogoListBuilder();
       try {
-        for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+        for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
              iter.hasNext();) {
           result.add(iter.next().getTurtleVariable(vn));
         }
@@ -115,7 +116,7 @@ public final strictfp class _turtlevariableof
       throws LogoException {
     LogoListBuilder result = new LogoListBuilder();
     try {
-      for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+      for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
            iter.hasNext();) {
         result.add(iter.next().getTurtleVariable(vn));
       }

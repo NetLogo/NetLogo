@@ -119,8 +119,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean, val procedure: Procedure) {
-    val agentset = new ArrayAgentSet(agent.kind, 1, false)
-    agentset.add(agent)
+    val agentset = AgentSet.fromAgent(agent)
     procedure.topLevel = false
   }
 

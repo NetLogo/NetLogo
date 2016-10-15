@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import scala.collection.JavaConversions;
 
 // All methods in this class assume their AgentSet arguments
 // have already been checked that they are turtle sets, not
@@ -51,7 +52,7 @@ public final strictfp class Layouts {
     int n = nodes.count();
     int midx = world.minPxcor() + (int) StrictMath.floor(world.worldWidth() / 2);
     int midy = world.minPycor() + (int) StrictMath.floor(world.worldHeight() / 2);
-    for (AgentSet.Iterator it = nodes.shufflerator(random); it.hasNext(); i++) {
+    for (AgentIterator it = nodes.shufflerator(random); it.hasNext(); i++) {
       Turtle t = (Turtle) it.next();
       double heading = (i * 360) / n;
       // precheck so turtles don't end up in weird places.
@@ -91,7 +92,7 @@ public final strictfp class Layouts {
     int[] degCount = new int[nodeCount];
 
     Turtle[] agt = new Turtle[nodeCount];
-    for (AgentSet.Iterator it = nodeset.shufflerator(random); it.hasNext(); i++) {
+    for (AgentIterator it = nodeset.shufflerator(random); it.hasNext(); i++) {
       Turtle t = (Turtle) it.next();
       agt[i] = t;
       tMap.put(t, Integer.valueOf(i));
@@ -99,7 +100,7 @@ public final strictfp class Layouts {
       ay[i] = 0.0;
     }
 
-    for (AgentSet.Iterator it = linkset.iterator(); it.hasNext(); i++) {
+    for (AgentIterator it = linkset.iterator(); it.hasNext(); i++) {
       Link link = (Link) it.next();
       Turtle t1 = link.end1();
       Turtle t2 = link.end2();
@@ -113,7 +114,7 @@ public final strictfp class Layouts {
       }
     }
 
-    for (AgentSet.Iterator it = linkset.iterator(); it.hasNext(); i++) {
+    for (AgentIterator it = linkset.iterator(); it.hasNext(); i++) {
       Link link = (Link) it.next();
       double dx = 0;
       double dy = 0;
@@ -253,7 +254,7 @@ public final strictfp class Layouts {
     int[] degCount = new int[nodeCount];
 
     Turtle3D[] agt = new Turtle3D[nodeCount];
-    for (AgentSet.Iterator it = nodeset.shufflerator(random); it.hasNext(); i++) {
+    for (AgentIterator it = nodeset.shufflerator(random); it.hasNext(); i++) {
       Turtle3D t = (Turtle3D) it.next();
       agt[i] = t;
       tMap.put(t, Integer.valueOf(i));
@@ -262,7 +263,7 @@ public final strictfp class Layouts {
       az[i] = 0.0;
     }
 
-    for (AgentSet.Iterator it = linkset.iterator(); it.hasNext(); i++) {
+    for (AgentIterator it = linkset.iterator(); it.hasNext(); i++) {
       Link link = (Link) it.next();
       Turtle t1 = link.end1();
       Turtle t2 = link.end2();
@@ -276,7 +277,7 @@ public final strictfp class Layouts {
       }
     }
 
-    for (AgentSet.Iterator it = linkset.iterator(); it.hasNext(); i++) {
+    for (AgentIterator it = linkset.iterator(); it.hasNext(); i++) {
       Link link = (Link) it.next();
       double dx = 0;
       double dy = 0;
@@ -425,7 +426,7 @@ public final strictfp class Layouts {
                            double radius, org.nlogo.api.MersenneTwisterFast random)
       throws AgentException {
     java.util.ArrayList<Turtle> anchors = new java.util.ArrayList<Turtle>();
-    for (AgentSet.Iterator iter = linkset.iterator();
+    for (AgentIterator iter = linkset.iterator();
          iter.hasNext();) {
       Link link = (Link) iter.next();
       if (!nodeset.contains(link.end1()) && !anchors.contains(link.end1())) {
@@ -443,7 +444,7 @@ public final strictfp class Layouts {
     double[] ay = new double[n];
     int ctr2 = 0;
 
-    for (AgentSet.Iterator iter = nodeset.shufflerator(random); iter.hasNext(); ctr2++) {
+    for (AgentIterator iter = nodeset.shufflerator(random); iter.hasNext(); ctr2++) {
       agt[ctr2] = (Turtle) iter.next();
     }
 
@@ -451,7 +452,7 @@ public final strictfp class Layouts {
       Turtle t = agt[i];
       double fx = 0, fy = 0;
       int degree = 0;
-      for (AgentSet.Iterator it = world.links().shufflerator(random); it.hasNext();) {
+      for (AgentIterator it = world.links().shufflerator(random); it.hasNext();) {
         Link link = (Link) it.next();
         if ((link.end1() == t || link.end2() == t)
             && linkset.contains(link)) {
@@ -541,10 +542,10 @@ public final strictfp class Layouts {
     while (!queue.isEmpty()) {
       TreeNode node = queue.remove(0);
       lastNode = node;
-      AgentSet neighbors = linkManager.findLinkedWith(node.val, linkset);
-
-      for (AgentSet.Iterator iter = neighbors.iterator(); iter.hasNext();) {
-        Turtle t = (Turtle) iter.next();
+      for (Iterator<Turtle> neighbors =
+           JavaConversions.asJavaIterator(linkManager.findLinkedWith(node.val, linkset));
+           neighbors.hasNext();) {
+        Turtle t = neighbors.next();
 
         if (nodeset.contains(t) && !nodeTable.containsKey(t)) {
           TreeNode child = new TreeNode(t, node);

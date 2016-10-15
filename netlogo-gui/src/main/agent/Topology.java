@@ -23,9 +23,9 @@ abstract strictfp class Topology {
   //getPatch methods
   abstract Patch getPatchAt(double xc, double yc) throws AgentException;
 
-  abstract AgentSet getNeighbors(Patch source);
+  abstract IndexedAgentSet getNeighbors(Patch source);
 
-  abstract AgentSet getNeighbors4(Patch source);
+  abstract IndexedAgentSet getNeighbors4(Patch source);
 
   abstract Patch getPN(Patch source);
 
@@ -123,11 +123,11 @@ abstract strictfp class Topology {
 
           oldval = ((Double) patch.getPatchVariable(vn)).doubleValue();
 
-          AgentSet neighbors = patch.getNeighbors();
+          IndexedAgentSet neighbors = patch.getNeighbors();
           int neighborCount = neighbors.count();
           sum = 0;
-          for (int a = 0; a < neighborCount; a++) {
-            Patch p = (Patch) neighbors.agent(a);
+          for (int i = 0; i < neighborCount; i++) {
+            Patch p = (Patch) neighbors.getByIndex(i);
             sum += (((Double) p.getPatchVariable(vn)).doubleValue() / p.getNeighbors().count());
           }
 
@@ -169,11 +169,11 @@ abstract strictfp class Topology {
 
           oldval = ((Double) patch.getPatchVariable(vn)).doubleValue();
 
-          AgentSet neighbors = patch.getNeighbors4();
+          IndexedAgentSet neighbors = patch.getNeighbors4();
           int neighborCount = neighbors.count();
           sum = 0;
-          for (int a = 0; a < neighborCount; a++) {
-            sum += ((Double) ((Patch) neighbors.agent(a))
+          for (int i = 0; i < neighborCount; i++) {
+            sum += ((Double) ((Patch) neighbors.getByIndex(i))
                 .getPatchVariable(vn))
                 .doubleValue();
           }

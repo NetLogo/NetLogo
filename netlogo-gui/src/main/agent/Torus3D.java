@@ -124,8 +124,8 @@ public final strictfp class Torus3D
     }
   }
 
-  public AgentSet getNeighbors3d(Patch3D source) {
-    return new ArrayAgentSet(AgentKindJ.Patch(),
+  public IndexedAgentSet getNeighbors3d(Patch3D source) {
+    return AgentSet.fromArray(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchNorthEast(source), getPatchSouthEast(source),
@@ -142,8 +142,8 @@ public final strictfp class Torus3D
         });
   }
 
-  public AgentSet getNeighbors6(Patch3D source) {
-    return new ArrayAgentSet(AgentKindJ.Patch(),
+  public IndexedAgentSet getNeighbors6(Patch3D source) {
+    return AgentSet.fromArray(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchUp(source), getPatchDown(source)

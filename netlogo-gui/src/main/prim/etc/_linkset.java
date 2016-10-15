@@ -2,14 +2,12 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.AgentKindJ;
+import org.nlogo.agent.AgentIterator;
+import org.nlogo.core.*;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.core.LogoList;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -30,11 +28,11 @@ public final strictfp class _linkset
       Object elt = args[i].report(context);
       if (elt instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) elt;
-        if (tempSet.type() != org.nlogo.agent.Link.class) {
+        if (tempSet.kind() != AgentKindJ.Link()) {
           throw new ArgumentTypeException
               (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
         }
-        for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Link) iter.next());
         }
       } else if (elt instanceof LogoList) {
@@ -46,9 +44,7 @@ public final strictfp class _linkset
             (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
-        AgentKindJ.Link(),
-        resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
+    return AgentSet.fromArray( AgentKindJ.Link(), resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Link> result)
@@ -58,14 +54,13 @@ public final strictfp class _linkset
         result.add((Link) obj);
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
-        if (tempSet.type() != org.nlogo.agent.Link.class) {
+        if (tempSet.kind() != AgentKindJ.Link()) {
           throw new RuntimePrimitiveException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
-        for (AgentSet.Iterator iter2 = tempSet.iterator();
-             iter2.hasNext();) {
-          result.add((Link) iter2.next());
+        for (AgentIterator linkSetIter = tempSet.iterator(); linkSetIter.hasNext();) {
+          result.add((Link) linkSetIter.next());
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);

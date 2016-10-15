@@ -63,10 +63,7 @@ public final strictfp class _createlinkwith
         if (offset - context.ip > 2) {
           // Needed to run the commands with runExclusive(). I was not
           // clear how to run those commands otherwise.  -CLB 03/16/06
-          AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Link(), 1,
-              false);
-          edgeset.add(link);
-          context.runExclusiveJob(edgeset, next);
+          context.runExclusiveJob(AgentSet.fromAgent(link), next);
         }
       }
     }

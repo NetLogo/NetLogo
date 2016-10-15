@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
@@ -29,7 +30,7 @@ public final strictfp class _incone
   public AgentSet report_1(final Context context, AgentSet sourceSet,
                            double radius, double angle)
       throws LogoException {
-    if (sourceSet.type() == org.nlogo.agent.Link.class) {
+    if (sourceSet.kind() == AgentKindJ.Link()) {
       throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
@@ -48,8 +49,6 @@ public final strictfp class _incone
     }
     List<Agent> result =
         world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, true);
-    return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.kind(),
-            result.toArray(new Agent[result.size()]));
+    return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

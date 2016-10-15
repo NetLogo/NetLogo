@@ -202,7 +202,7 @@ class VertCylinder(world: World) extends Topology(world) {
     }
   }
 
-  override def getNeighbors(source: Patch): AgentSet = {
+  override def getNeighbors(source: Patch): IndexedAgentSet = {
     val neighbors =
     if (source.pycor == world.maxPycor) {
       if (source.pycor == world.minPycor) {
@@ -235,14 +235,14 @@ class VertCylinder(world: World) extends Topology(world) {
                 getPatchSouthWest(source), getPatchNorthWest(source))
     }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
   override def observerY: Double = 0.0
 
   override def followOffsetY: Double = 0.0
 
-  override def getNeighbors4(source: Patch): AgentSet = {
+  override def getNeighbors4(source: Patch): IndexedAgentSet = {
     val neighbors =
       if (source.pycor == world.maxPycor) {
         if (source.pycor == world.minPycor) {
@@ -269,7 +269,7 @@ class VertCylinder(world: World) extends Topology(world) {
             getPatchSouth(source), getPatchWest(source))
       }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
   //get patch

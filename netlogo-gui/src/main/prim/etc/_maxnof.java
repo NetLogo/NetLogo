@@ -3,7 +3,9 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
@@ -53,7 +55,7 @@ public final strictfp class _maxnof
 
     org.nlogo.nvm.Context freshContext =
         new org.nlogo.nvm.Context(context, sourceSet);
-    for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+    for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
          iter.hasNext();) {
       org.nlogo.agent.Agent tester = iter.next();
       Object result = freshContext.evaluateReporter(tester, args[2]);
@@ -68,7 +70,7 @@ public final strictfp class _maxnof
       resultList.add(tester);
     }
 
-    AgentSet resultSet = new org.nlogo.agent.ArrayAgentSet(sourceSet.kind(), n, false);
+    AgentSetBuilder resultSet = new AgentSetBuilder(sourceSet.kind(), n);
 
     for (Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator();
          n > 0 && iter.hasNext();) {
@@ -79,6 +81,6 @@ public final strictfp class _maxnof
       }
     }
 
-    return resultSet;
+    return resultSet.build();
   }
 }

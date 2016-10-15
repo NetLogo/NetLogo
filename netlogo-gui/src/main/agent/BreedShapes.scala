@@ -57,13 +57,13 @@ class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   }
 
   def breedShape(breed: AgentSet): String = {
-    Option(shapes.get(breed.printName())).map(res =>
+    Option(shapes.get(breed.printName)).map(res =>
       if (res == "__default") shapes.get(genericBreedName) else res
     ).getOrElse("default")
   }
 
   def breedHasShape(breed: AgentSet): Boolean = {
-    Option(shapes.get(breed.printName())).map(res =>
+    Option(shapes.get(breed.printName)).map(res =>
       if (res == "__default") false else true
     ).getOrElse(false)
   }

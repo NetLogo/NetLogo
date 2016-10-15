@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
@@ -39,8 +40,7 @@ public final strictfp class _createorderedturtles
       throws LogoException {
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
-      AgentSet agentset =
-          new ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles, false);
+      AgentSetBuilder agentSetBuilder = new AgentSetBuilder(AgentKindJ.Turtle(), numberOfTurtles);
       AgentSet breed =
           breedName == NO_BREED
               ? world.turtles()
@@ -49,10 +49,10 @@ public final strictfp class _createorderedturtles
         Turtle turtle = world.createTurtle(breed);
         turtle.colorDouble(Double.valueOf(10.0 * i + 5.0));
         turtle.heading((360.0 * i) / numberOfTurtles);
-        agentset.add(turtle);
+        agentSetBuilder.add(turtle);
         workspace.joinForeverButtons(turtle);
       }
-      context.runExclusiveJob(agentset, next);
+      context.runExclusiveJob(agentSetBuilder.build(), next);
     }
     context.ip = offset;
   }

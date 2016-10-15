@@ -2,10 +2,8 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.*;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.Link;
-import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
@@ -39,7 +37,7 @@ public final strictfp class _createlinkswith
   @Override
   public void perform(final Context context) throws LogoException {
     AgentSet agentset = argEvalAgentSet(context, 0);
-    if (agentset.type() != Turtle.class) {
+    if (agentset.kind() != AgentKindJ.Turtle()) {
       throw new ArgumentTypeException(
         context, this, 0, Syntax.TurtlesetType(), agentset);
     }
@@ -49,12 +47,11 @@ public final strictfp class _createlinkswith
     if (breed == world.links()) {
       breed.setDirected(false);
     }
-    AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Link(), agentset.count(),
-        false);
+    AgentSetBuilder edgeSetBuilder = new AgentSetBuilder(AgentKindJ.Link(), agentset.count());
     Turtle src = (Turtle) context.agent;
     // We have to shuffle here in order for who number assignment
     // to be random! - ST 3/15/06
-    for (AgentSet.Iterator iter = agentset.shufflerator(context.job.random); iter.hasNext();) {
+    for (AgentIterator iter = agentset.shufflerator(context.job.random); iter.hasNext();) {
       Turtle dest = (Turtle) iter.next();
       if (world.linkManager.findLinkEitherWay(src, dest, breed, false) == null) {
         if (src == dest) {
@@ -69,13 +66,14 @@ public final strictfp class _createlinkswith
           } else {
             link = world.linkManager.createLink(src, dest, breed);
           }
-          edgeset.add(link);
+          edgeSetBuilder.add(link);
           workspace.joinForeverButtons(link);
         }
       }
     }
-    if (offset - context.ip > 2 && edgeset.count() > 0) {
-      context.runExclusiveJob(edgeset, next);
+    AgentSet edgeSet = edgeSetBuilder.build();
+    if (offset - context.ip > 2 && edgeSet.count() > 0) {
+      context.runExclusiveJob(edgeSet, next);
     }
     context.ip = offset;
   }
