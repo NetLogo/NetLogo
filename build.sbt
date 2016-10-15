@@ -50,9 +50,8 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "2.2.6"  % "test",
-    // scalatest doesn't yet play nice with scalacheck 1.13.0
-    "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+    "org.scalatest"  %% "scalatest"  % "3.0.0"  % "test",
+    "org.scalacheck" %% "scalacheck" % "1.13.2" % "test"
   )
 )
 
@@ -259,10 +258,9 @@ lazy val parser = CrossProject("parser", file("."),
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-js"   %%%! "scala-parser-combinators" % "1.0.2",
-          "org.scalatest"  %%%! "scalatest" % "3.0.0-M15" % "test",
-          // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%%! "scalacheck" % "1.12.5" % "test"
+          "org.scala-js"   %%%! "scala-parser-combinators" % "1.0.4",
+          "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
+          "org.scalacheck" %%%! "scalacheck" % "1.13.2" % "test"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
@@ -270,7 +268,7 @@ lazy val parser = CrossProject("parser", file("."),
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     )
 
 lazy val parserJVM = parser.jvm
