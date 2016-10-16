@@ -22,7 +22,7 @@ class _linkneighbors(breedName: String) extends Reporter {
     val err = LinkManager.mustNotBeDirected(breed)
     if (err.isDefined)
       throw new RuntimePrimitiveException(context, this, err.get)
-    AgentSet.fromIterator(AgentKind.Turtle,
+    AgentSet.fromIterable(AgentKind.Turtle,
       world.linkManager.findLinkedWith(
         context.agent.asInstanceOf[Turtle], breed))
   }

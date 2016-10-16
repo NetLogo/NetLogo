@@ -45,18 +45,12 @@ public strictfp class TieManager {
 
   List<Turtle> tiedTurtles(Turtle root) {
     ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    for (Iterator<Link> linksFrom =
-         JavaConversions.asJavaIterator(linkManager.findLinksFrom(root, world._links));
-         linksFrom.hasNext();) {
-      Link link = linksFrom.next();
+    for (Link link : JavaConversions.asJavaIterable(linkManager.findLinksFrom(root, world._links))) {
       if (link.isTied()) {
         myTies.add(link.end2());
       }
     }
-    for (Iterator<Link> linksTo =
-         JavaConversions.asJavaIterator(linkManager.findLinksTo(root, world._links));
-         linksTo.hasNext();) {
-      Link link = linksTo.next();
+    for (Link link : JavaConversions.asJavaIterable(linkManager.findLinksTo(root, world._links))) {
       if (link.isTied() && !link.getBreed().isDirected()) {
         myTies.add(link.end1());
       }

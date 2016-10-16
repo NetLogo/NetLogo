@@ -20,7 +20,7 @@ class _myoutlinks(val breedName: String) extends Reporter {
       else world.getLinkBreed(breedName)
     for(err <- LinkManager.mustNotBeUndirected(breed))
       throw new RuntimePrimitiveException(context, this, err)
-    AgentSet.fromIterator(AgentKind.Link,
+    AgentSet.fromIterable(AgentKind.Link,
       world.linkManager.findLinksFrom(
         context.agent.asInstanceOf[Turtle], breed))
   }

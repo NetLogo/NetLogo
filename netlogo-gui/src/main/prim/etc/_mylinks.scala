@@ -18,7 +18,7 @@ class _mylinks(val breedName: String) extends Reporter {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
-    AgentSet.fromIterator(AgentKind.Link,
+    AgentSet.fromIterable(AgentKind.Link,
       world.linkManager.findLinksWith(context.agent.asInstanceOf[Turtle], breed))
   }
 }

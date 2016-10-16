@@ -9,6 +9,8 @@ object AgentSet {
     new ArrayAgentSet(agent.kind, null, Array(agent))
   def fromIterator(kind: core.AgentKind, agents: Iterator[_ <: Agent]): IndexedAgentSet =
     new ArrayAgentSet(kind, null, agents.toArray[Agent])
+  def fromIterable(kind: core.AgentKind, agents: Iterable[_ <: Agent]): IndexedAgentSet =
+    new ArrayAgentSet(kind, null, agents.toArray[Agent])
   // for convenience from Java, overload instead of using default arguments
   def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String): IndexedAgentSet =
     new ArrayAgentSet(kind, printName, agents)

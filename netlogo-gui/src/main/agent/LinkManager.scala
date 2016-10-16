@@ -2,6 +2,8 @@
 
 package org.nlogo.agent
 
+import scala.collection.JavaConversions._
+
 object LinkManager {
   // checking of breed directedness. not sure where else to put this
   def mustNotBeDirected(breed: AgentSet): Option[String] =
@@ -34,13 +36,13 @@ trait LinkManager {
   def findLinkEitherWay(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link
   def findLinkFrom(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link
 
-  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): Iterator[Turtle]
-  def findLinkedTo(target: Turtle, sourceSet: AgentSet): Iterator[Turtle]
-  def findLinkedWith(target: Turtle, sourceSet: AgentSet): Iterator[Turtle]
+  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): Iterable[Turtle]
+  def findLinkedTo(target: Turtle, sourceSet: AgentSet): Iterable[Turtle]
+  def findLinkedWith(target: Turtle, sourceSet: AgentSet): Iterable[Turtle]
 
-  def findLinksFrom(src: Turtle, breed: AgentSet): Iterator[Link]
-  def findLinksTo(target: Turtle, breed: AgentSet): Iterator[Link]
-  def findLinksWith(target: Turtle, breed: AgentSet): Iterator[Link]
+  def findLinksFrom(src: Turtle, breed: AgentSet): Iterable[Link]
+  def findLinksTo(target: Turtle, breed: AgentSet): Iterable[Link]
+  def findLinksWith(target: Turtle, breed: AgentSet): Iterable[Link]
 
 }
 
@@ -156,27 +158,27 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
 
   ///
 
-  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+  def findLinkedFrom(src: Turtle, sourceSet: AgentSet): Iterable[Turtle] = {
     val buf = Buffer[Turtle]()
     for (list <- srcMap.get(src))
       addLinkNeighborsFrom(buf, list, sourceSet, true)
-    buf.iterator
+    buf
   }
 
-  def findLinkedTo(target: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+  def findLinkedTo(target: Turtle, sourceSet: AgentSet): Iterable[Turtle] = {
     val buf = Buffer[Turtle]()
     for (list <- destMap.get(target))
       addLinkNeighborsTo(buf, list, sourceSet, true)
-    buf.iterator
+    buf
   }
 
-  def findLinkedWith(target: Turtle, sourceSet: AgentSet): Iterator[Turtle] = {
+  def findLinkedWith(target: Turtle, sourceSet: AgentSet): Iterable[Turtle] = {
     val buf = Buffer[Turtle]()
     for (list <- destMap.get(target))
       addLinkNeighborsTo(buf, list, sourceSet, false)
     for (list <- srcMap.get(target))
       addLinkNeighborsFrom(buf, list, sourceSet, false)
-    buf.iterator
+    buf
   }
 
   // the next two methods are essentially the same but are separate for
@@ -226,9 +228,8 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
         world.links.getAgent(new DummyLink(world, src, dest, breed))
           .asInstanceOf[Link]
       if (link == null && includeAllLinks && (breed eq world.links))
-        for (breedName <- world.program.linkBreeds.keys) {
-          val agents = world.getLinkAgentBreeds().get(breedName)
-          link = world.links.getAgent(new DummyLink(world, src, dest, agents)).asInstanceOf[Link]
+        world.getLinkAgentBreeds.foreach { breedNamePair =>
+          link = world.links.getAgent(new DummyLink(world, src, dest, breedNamePair._2)).asInstanceOf[Link]
           if (link != null)
             return link
         }
@@ -246,21 +247,19 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
 
   /// plural lookups
 
-  def findLinksFrom(src: Turtle, breed: AgentSet): Iterator[Link] = {
+  def findLinksFrom(src: Turtle, breed: AgentSet): Iterable[Link] = {
     val isAllLinks = breed eq world.links
     srcMap.getOrElse(src, Nil)
-      .iterator
       .filter(link => isAllLinks || (link.getBreed eq breed))
   }
 
-  def findLinksTo(target: Turtle, breed: AgentSet): Iterator[Link] = {
+  def findLinksTo(target: Turtle, breed: AgentSet): Iterable[Link] = {
     val isAllLinks = breed eq world.links
     destMap.getOrElse(target, Nil)
-      .iterator
       .filter(link => isAllLinks || (link.getBreed eq breed))
   }
 
-  def findLinksWith(target: Turtle, breed: AgentSet): Iterator[Link] =
+  def findLinksWith(target: Turtle, breed: AgentSet): Iterable[Link] =
     findLinksTo(target, breed) ++ findLinksFrom(target, breed)
 
 }
