@@ -6,9 +6,6 @@ import scala.annotation.tailrec
 import org.nlogo.core.TokenType
 
 object LexOperations {
-  type LexPredicate = Char => DetectorStates
-  type TokenGenerator = String => Option[(String, TokenType, AnyRef)]
-
   def characterMatching(f: Char => Boolean): LexPredicate =
     aSingle(c => if (f(c)) Accept else Error)
 
@@ -34,7 +31,7 @@ object LexOperations {
     }
 
   def chain(ds: LexPredicate*): LexPredicate = {
-    @tailrec def attemptMatch(matchers: Seq[LexPredicate], c: Char): (Seq[LexPredicate], DetectorStates) =
+    @tailrec def attemptMatch(matchers: Seq[LexPredicate], c: Char): (Seq[LexPredicate], LexStates) =
       matchers.head(c) match {
         case Finished if matchers.tail.nonEmpty => attemptMatch(matchers.tail, c)
         case Finished                           => (Seq(), Finished)
@@ -45,34 +42,9 @@ object LexOperations {
     }
   }
 
-  sealed trait DetectorStates {
-    def continue: Boolean
-    def or(d: DetectorStates): DetectorStates
-  }
-
-  case object Accept extends DetectorStates {
-    val continue = true
-    override def or(d: DetectorStates): DetectorStates = Accept
-  }
-
-  case object Finished extends DetectorStates {
-    val continue = false
-    override def or(d: DetectorStates): DetectorStates = {
-      d match {
-        case Accept => Accept
-        case _ => Finished
-      }
-    }
-  }
-
-  case object Error extends DetectorStates {
-    val continue = false
-    override def or(d: DetectorStates): DetectorStates = d
-  }
-
-  def withFeedback[A](i: A)(f: (A, Char) => (A, DetectorStates)): LexPredicate = {
+  def withFeedback[A](i: A)(f: (A, Char) => (A, LexStates)): LexPredicate = {
     var feedback: A = i
-    def feedingBack(c: Char): DetectorStates = {
+    def feedingBack(c: Char): LexStates = {
       val (newFeedback, ret) = f(feedback, c)
       feedback = newFeedback
       ret

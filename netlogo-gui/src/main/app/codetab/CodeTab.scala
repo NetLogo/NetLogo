@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel }
+import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, BorderFactory, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{ EditorFactory, Events => AppEvents, FindDialog }
@@ -31,17 +31,15 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
       dirty()
     }
   }
-  val text = new EditorFactory(workspace).newEditor(100, 100, false, true, listener, true)
+  val editorFactory = new EditorFactory(workspace)
+  val text = editorFactory.newEditor(100, 100, false, true, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
   val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
-  val scrollableEditor = new JScrollPane(
-    text,
-    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
   def program = workspace.world.program
 
@@ -161,7 +159,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
   }
-  
+
   def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
 

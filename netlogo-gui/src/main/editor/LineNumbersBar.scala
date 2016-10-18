@@ -5,9 +5,9 @@ package org.nlogo.editor
 import java.awt.{ Color, Dimension, Font }
 import javax.swing.JTextPane
 import javax.swing.event.{ DocumentEvent, DocumentListener }
-import javax.swing.text.DefaultCaret
+import javax.swing.text.{ DefaultCaret, JTextComponent }
 
-class LineNumbersBar(editor: EditorArea) extends JTextPane with DocumentListener {
+class LineNumbersBar(editor: JTextComponent) extends JTextPane with DocumentListener {
   var previousLastLineNumber = -1
 
   updateNumbers()

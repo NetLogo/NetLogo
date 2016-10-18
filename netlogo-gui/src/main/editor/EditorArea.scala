@@ -11,10 +11,12 @@ package org.nlogo.editor
 import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.JMenuItem
+import javax.swing.JEditorPane
 import javax.swing.JPopupMenu
 import javax.swing.KeyStroke
 import javax.swing.JViewport
 import javax.swing.SwingUtilities
+import javax.swing.text.Document
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.TextAction
 import javax.swing.text.PlainDocument
@@ -50,7 +52,8 @@ class EditorArea(
   enableHighlightCurrentLine: Boolean = false,
   actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
   menuItems: Seq[Action] = Seq[Action]())
-  extends AbstractEditorArea
+  extends JEditorPane
+  with AbstractEditorArea
    with java.awt.event.FocusListener {
 
   private var indenter: IndenterInterface = new DumbIndenter(this)
@@ -198,13 +201,13 @@ class EditorArea(
     indenter.handleTab()
   }
 
-  def lineToStartOffset(doc: PlainDocument, line: Int): Int =
+  def lineToStartOffset(doc: Document, line: Int): Int =
     doc.getDefaultRootElement.getElement(line).getStartOffset
 
-  def lineToEndOffset(doc: PlainDocument, line: Int): Int =
+  def lineToEndOffset(doc: Document, line: Int): Int =
     doc.getDefaultRootElement.getElement(line).getEndOffset
 
-  def offsetToLine(doc: PlainDocument, offset: Int): Int =
+  def offsetToLine(doc: Document, offset: Int): Int =
     doc.getDefaultRootElement.getElementIndex(offset)
 
   private def currentSelectionProperties: (PlainDocument, Int, Int) = {

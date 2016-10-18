@@ -2,8 +2,7 @@
 
 package org.nlogo.lex
 
-import org.nlogo.core.{ Token, TokenType, TokenizerInterface },
-  TokenLexer.WrappedInput
+import org.nlogo.core.{ Token, TokenType, TokenizerInterface }
 
 // caller's responsibility to check for TokenType.Bad!
 
@@ -55,7 +54,7 @@ object Tokenizer extends TokenizerInterface {
   private class TokenLexIterator(lexer: TokenLexer, reader: java.io.Reader, filename: String)
     extends Iterator[(Token, WrappedInput)] {
     private var lastToken = Option.empty[Token]
-    private var lastInput = lexer.wrapInput(reader, filename)
+    private var lastInput = WrappedInput(reader, filename)
 
     override def hasNext: Boolean = ! lastToken.contains(Token.Eof)
 
