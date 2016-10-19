@@ -12,7 +12,7 @@ import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
 import org.nlogo.window.{ButtonWidget, ChooserWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
 import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
 import org.nlogo.app.common.ExportInterfaceAction
-import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
+import org.nlogo.awt.{Hierarchy, Images, UserCancelException}
 import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.editor.UndoManager
 import org.nlogo.log.Logger
@@ -134,9 +134,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
       case i: CoreInputBox =>
-        val font = Fonts.monospacedFont
-        val textArea = new CodeEditor(1, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
-        val dialogTextArea = new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val textArea       = new CodeEditor(textEditorConfiguration)
+        val dialogTextArea = new CodeEditor(dialogEditorConfiguration)
+
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)

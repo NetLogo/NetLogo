@@ -8,6 +8,8 @@
 
 package org.nlogo.editor
 
+import org.nlogo.core.I18N
+
 import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.JMenuItem
@@ -41,28 +43,20 @@ object EditorArea {
 
 import EditorArea._
 
-class EditorArea(
-  rows: Int,
-  columns: Int,
-  font: java.awt.Font,
-  enableFocusTraversalKeys: Boolean,
-  listener: java.awt.event.TextListener,
-  val colorizer: Colorizer,
-  i18n: String => String,
-  enableHighlightCurrentLine: Boolean = false,
-  actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
-  menuItems: Seq[Action] = Seq[Action]())
+class EditorArea(configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
-   with java.awt.event.FocusListener {
+  with FocusTraversable
+  with java.awt.event.FocusListener {
+
+  val rows = configuration.rows
+  val columns = configuration.columns
+  val colorizer = configuration.colorizer
 
   private var indenter: IndenterInterface = new DumbIndenter(this)
-  private var contextMenu: JPopupMenu = editorContextMenu(colorizer, i18n)
+  private var contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
-  if(enableHighlightCurrentLine) {
-    new LinePainter(this)
-  }
 
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
   locally {
@@ -77,36 +71,19 @@ class EditorArea(
     caret.setBlinkRate(blinkRate)
     setCaret(caret)
     setDragEnabled(false)
-    setFocusTraversalKeysEnabled(enableFocusTraversalKeys)
-    if (enableFocusTraversalKeys) {
-      getInputMap.put(keystroke(Key.VK_TAB),           new TransferFocusAction())
-      getInputMap.put(keystroke(Key.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
-    } else {
-      getInputMap.put(keystroke(Key.VK_TAB),           Actions.tabKeyAction)
-      getInputMap.put(keystroke(Key.VK_TAB, ShiftKey), Actions.shiftTabKeyAction)
-    }
-    setFont(font)
-    setEditorKit(new HighlightEditorKit(listener, colorizer))
+
     getInputMap.put(keystroke(Key.VK_ENTER), new EnterAction())
-
     getInputMap.put(charKeystroke(']'), new CloseBracketAction())
-    getDocument.putProperty(PlainDocument.tabSizeAttribute, Int.box(2))
 
-    // on Windows, prevent save() from outputting ^M characters - ST 2/23/04
-    getDocument.putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n")
     getDocument.addUndoableEditListener(undoManager)
 
     // add key bindings for undo and redo so they work even in modal dialogs
     val mask: Int = getToolkit.getMenuShortcutKeyMask
+
     getKeymap.addActionForKeyStroke(keystroke(Key.VK_Z, mask), UndoManager.undoAction())
     getKeymap.addActionForKeyStroke(keystroke(Key.VK_Y, mask), UndoManager.redoAction())
 
-    // add key binding, for getting quick "contexthelp", based on where
-    // the cursor is...
-    getInputMap.put(keystroke(Key.VK_F1, 0), Actions.quickHelpAction(colorizer, i18n))
-    actionMap.foreach {
-      case (k, v) => getInputMap.put(k, v)
-    }
+    configuration.configureEditorArea(this)
   }
 
   def charKeystroke(char: Char, mask: Int = 0): KeyStroke =
@@ -155,7 +132,7 @@ class EditorArea(
       Array[Action](
         Actions.commentToggleAction,
         Actions.shiftLeftAction, Actions.shiftRightAction,
-        Actions.quickHelpAction(colorizer, i18n)))
+        Actions.quickHelpAction(colorizer, I18N.gui.get _)))
 
   override def getPreferredScrollableViewportSize: Dimension = {
     val dimension =
@@ -179,7 +156,7 @@ class EditorArea(
     getFontMetrics(getFont).charWidth('m')
 
   private def getRowHeight: Int =
-    return getFontMetrics(getFont).getHeight
+    getFontMetrics(getFont).getHeight
 
   override def setText(text: String): Unit =
     // not sure if this really needed - ST 8/27/03
@@ -313,40 +290,20 @@ class EditorArea(
 
   /// select-all-on-focus stuff copied from org.nlogo.swing.TextField
 
-  private var mouseEvent = false
+  private var _selectionActive = true
 
-  private var selectionActive = true
+  def selectionActive = _selectionActive
 
   def setSelection(s: Boolean): Unit = {
-    selectionActive = s
+    _selectionActive = s
   }
 
   def focusGained(fe: java.awt.event.FocusEvent): Unit = {
-    if (!mouseEvent && enableFocusTraversalKeys && selectionActive) {
-      // this is like selectAll(), but it leaves the
-      // caret at the beginning rather than the start;
-      // this prevents the enclosing scrollpane from
-      // scrolling to the end to make the caret
-      // visible; it's nicer to keep the scroll at the
-      // start - ST 12/20/04
-      setCaretPosition(getText().length)
-      moveCaretPosition(0)
-    }
     Actions.setEnabled(true)
     UndoManager.setCurrentManager(undoManager)
   }
 
   def focusLost(fe: java.awt.event.FocusEvent): Unit = {
-    // On Windows (and perhaps Linux? not sure), putting
-    // the focus elsewhere leaves the text selected in the
-    // now-unfocused field.  This causes the text to be drawn
-    // in different colors even though the selection isn't
-    // visible.  I suppose we could make HighlightView smarter
-    // about that, but instead let's just force the Mac-like
-    // behavior and be done with it for now - ST 11/3/03
-    if (enableFocusTraversalKeys)
-      select(0, 0)
-    mouseEvent = fe.isTemporary
     bracketMatcher.focusLost(this)
     colorizer.reset()
     if (!fe.isTemporary) {
@@ -363,9 +320,6 @@ class EditorArea(
   def getMousePos: Int = mousePos
 
   override def processMouseEvent(me: java.awt.event.MouseEvent): Unit = {
-    if (me.getID == java.awt.event.MouseEvent.MOUSE_PRESSED) {
-      mouseEvent = true
-    }
     if (me.isPopupTrigger() && ! contextMenu.isShowing()) {
       mousePos = caret.getMousePosition(me)
       doPopup(me)
@@ -373,7 +327,11 @@ class EditorArea(
       super.processMouseEvent(me)
   }
 
-  private class EditorContextMenu(colorizer: Colorizer, i18n: String => String) extends JPopupMenu {
+  private def doPopup(e: MouseEvent): Unit = {
+    contextMenu.show(this, e.getX, e.getY)
+  }
+
+  private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
 
     val copyItem  = new JMenuItem(Actions.COPY_ACTION)
     val cutItem   = new JMenuItem(Actions.CUT_ACTION)
@@ -381,14 +339,13 @@ class EditorArea(
 
     locally {
       add(copyItem)
-      Actions.COPY_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.copy"))
+      Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
       add(cutItem)
-      Actions.CUT_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.cut"))
+      Actions.CUT_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.cut"))
       add(pasteItem)
-      Actions.PASTE_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.paste"))
+      Actions.PASTE_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.paste"))
       addSeparator()
-      add(new JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)))
-      for(item <- menuItems) {
+      for (item <- configuration.contextActions) {
         item.putValue("editor", EditorArea.this)
         add(new JMenuItem(item))
       }
@@ -403,20 +360,12 @@ class EditorArea(
         Toolkit.getDefaultToolkit.getSystemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor))
       val point = new Point(invoker.getLocationOnScreen)
       point.translate(x, y)
-      for(item <- menuItems){
+      for (item <- configuration.contextActions) {
         item.putValue("cursorLocation", mousePos)
         item.putValue("popupLocation", point)
       }
       super.show(invoker, x, y)
     }
-  }
-
-  private def editorContextMenu(colorizer: Colorizer, i18n: String => String): JPopupMenu = {
-    new EditorContextMenu(colorizer, i18n)
-  }
-
-  private def doPopup(e: MouseEvent): Unit = {
-    contextMenu.show(this, e.getX, e.getY)
   }
 
   override def replaceSelection(s: String): Unit = {
@@ -426,7 +375,7 @@ class EditorArea(
     if (s == null) {
       super.replaceSelection(s)
     } else {
-    var selection = s
+      var selection = s
       // on Macs we're having problems with pasted text from other
       // apps having some weird nonstandard character at the
       // beginning we need to ignore - ST 1/3/06
@@ -465,63 +414,4 @@ class EditorArea(
       case ex: BadLocationException => throw new IllegalStateException(ex)
     }
   }
-
-  ///
-
-  protected class TransferFocusAction extends AbstractAction {
-    def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-      transferFocus()
-    }
-  }
-
-  protected class TransferFocusBackwardAction extends AbstractAction {
-    def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-      transferFocusBackward()
-    }
-  }
-
-  class LinePainter(private var component: JTextComponent) extends Highlighter.HighlightPainter with CaretListener {
-
-    private var lastView: Rectangle = new Rectangle(0, 0, 0, 0)
-    private val color = new Color(255, 249, 228, 100)
-    component.addCaretListener(this)
-    try {
-      component.getHighlighter.addHighlight(0, 0, this)
-    } catch {
-      case ble: BadLocationException =>
-    }
-
-    def paint(g: Graphics,
-              p0: Int,
-              p1: Int,
-              bounds: Shape,
-              c: JTextComponent) {
-      try {
-        val r = c.modelToView(c.getCaretPosition)
-        g.setColor(color)
-        g.fillRect(0, r.y, c.getWidth, r.height)
-        if (lastView == null) lastView = r
-      } catch {
-        case ble: BadLocationException => println(ble)
-      }
-    }
-
-    private def resetHighlight() {
-      try {
-        val offset = component.getCaretPosition
-        val currentView = component.modelToView(offset)
-        if (currentView != null && lastView.y != currentView.y) {
-          component.repaint(0, lastView.y, component.getWidth, lastView.height)
-          lastView = currentView
-        }
-      } catch {
-        case ble: BadLocationException =>
-      }
-    }
-
-    def caretUpdate(e: CaretEvent) {
-      resetHighlight()
-    }
-  }
-
 }

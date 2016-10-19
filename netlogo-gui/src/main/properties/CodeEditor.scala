@@ -2,17 +2,16 @@
 
 package org.nlogo.properties
 
-import org.nlogo.editor.{ Colorizer, EditorArea }
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import javax.swing.plaf.basic.BasicArrowButton
 
 import org.nlogo.awt.RowLayout
 import org.nlogo.window.EditorAreaErrorLabel
 
 import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL_SCROLLBAR_ALWAYS}
-import java.awt.{Font, BorderLayout}
+import java.awt.BorderLayout
 import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
 import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
-import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
 import org.nlogo.api.DummyEditable
 
@@ -44,10 +43,12 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
                               rows: Int = 5, columns: Int = 30)
   extends PropertyEditor(accessor){
 
-  lazy val editor = new EditorArea(rows, columns,
-    new Font(platformMonospacedFont, Font.PLAIN, 12), true,
-    new TextListener() {def textValueChanged(e: TextEvent) {changed()}}, colorizer,
-    org.nlogo.core.I18N.gui.get _)
+  val editorConfig =
+    EditorConfiguration.default(rows, columns, colorizer)
+      .withFocusTraversalEnabled(true)
+      .withListener(new TextListener() {def textValueChanged(e: TextEvent) {changed()}})
+
+  lazy val editor = new EditorArea(editorConfig)
   lazy val scrollPane = new JScrollPane(editor, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse

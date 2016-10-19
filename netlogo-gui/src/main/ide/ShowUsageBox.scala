@@ -117,7 +117,7 @@ class ShowUsageBox() {
       pane.setOpaque(true)
       pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
       val editorKit = boldedString match {
-        case None => new HighlightEditorKit(null, editorArea.colorizer)
+        case None => new HighlightEditorKit(editorArea.colorizer)
         case Some(selectedString) => new BoldEditorKit(selectedString)
       }
       pane.setEditorKit(editorKit)
@@ -150,7 +150,7 @@ class ShowUsageBox() {
     }
   }
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
-  class BoldEditorKit(selectedString: String) extends HighlightEditorKit(null, editorArea.colorizer) {
+  class BoldEditorKit(selectedString: String) extends HighlightEditorKit(editorArea.colorizer) {
 
     import scala.collection.immutable.Range
 

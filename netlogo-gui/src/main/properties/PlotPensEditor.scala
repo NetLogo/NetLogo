@@ -316,7 +316,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellRenderer extends TableCellRenderer {
       val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, font, true, colorizer, I18N.gui.get _)
+      val editor = new EditorField(30, font, true, colorizer)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         // This null check is from strange behavior in java
@@ -331,7 +331,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
       val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, goodFont, true, colorizer, I18N.gui.get _)
+      val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
         editor
