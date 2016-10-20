@@ -3,7 +3,9 @@
 package org.nlogo.editor
 
 import java.awt.Font
+import java.awt.event.KeyEvent
 
+import javax.swing.{ Action, JPopupMenu }
 import javax.swing.text.Document
 
 import org.fife.ui.rtextarea.RTextScrollPane
@@ -11,8 +13,9 @@ import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, RSyntax
   folding.FoldParserManager
 
 import org.nlogo.ide.NetLogoFoldParser
+import KeyBinding._
 
-class AdvancedEditorArea(configuration: EditorConfiguration, rows: Int, columns: Int)
+class AdvancedEditorArea(val configuration: EditorConfiguration, rows: Int, columns: Int)
   extends RSyntaxTextArea(rows, columns) with AbstractEditorArea {
 
   TokenMakerFactory.getDefaultInstance
@@ -35,12 +38,15 @@ class AdvancedEditorArea(configuration: EditorConfiguration, rows: Int, columns:
     setBracketMatchingEnabled(enable)
   }
 
-  def getEditorKit(): javax.swing.text.EditorKit = ???
-  def getEditorKitForContentType(contentType: String): javax.swing.text.EditorKit = ???
-  def setEditorKit(kit: javax.swing.text.EditorKit): Unit = ???
-  def lineToEndOffset(doc: Document,line: Int): Int = ???
-  def lineToStartOffset(doc: Document,line: Int): Int = ???
-  def offsetToLine(doc: Document,line: Int): Int = ???
+  override def getActions(): Array[Action] =
+    super.getActions.filter(_.getValue(Action.NAME) != "RSTA.GoToMatchingBracketAction").toArray[Action]
+
+  override def createPopupMenu(): JPopupMenu = {
+    val popupMenu = super.createPopupMenu
+    configuration.contextActions.foreach(popupMenu.add)
+    popupMenu
+  }
+
   def setIndenter(indenter: Indenter): Unit = {
     indenter.addActions(configuration, getInputMap)
     this.indenter = Some(indenter)
@@ -53,7 +59,12 @@ class AdvancedEditorArea(configuration: EditorConfiguration, rows: Int, columns:
     super.replaceSelection(s)
     indenter.foreach(_.handleInsertion(selection))
   }
-  def setSelection(s: Boolean): Unit = {
-    println(s"selection set to $s")
-  }
+
+  // this needs to be implemented if we ever allow tab-based focus traversal
+  // with this editor area
+  def setSelection(s: Boolean): Unit = { }
+
+  def getEditorKit(): javax.swing.text.EditorKit = ???
+  def getEditorKitForContentType(contentType: String): javax.swing.text.EditorKit = ???
+  def setEditorKit(kit: javax.swing.text.EditorKit): Unit = ???
 }

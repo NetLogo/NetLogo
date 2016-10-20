@@ -113,8 +113,7 @@ class CommandCenter(workspace: AbstractWorkspace,
 
   private def doPopup(e: MouseEvent) {
     new JPopupMenu{
-      add(new JMenuItem(Actions.COPY_ACTION))
-      Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
+      add(new JMenuItem(Actions.CopyAction))
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
         addActionListener(() =>
           try {

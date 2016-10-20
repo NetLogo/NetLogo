@@ -2,13 +2,15 @@
 
 package org.nlogo.app.common;
 
-import org.nlogo.core.I18N;
-import org.nlogo.swing.NonemptyTextFieldActionEnabler;
-import org.nlogo.swing.NonemptyTextFieldButtonEnabler;
-
 import javax.swing.JDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+
+import org.nlogo.core.I18N;
+import org.nlogo.swing.NonemptyTextFieldActionEnabler;
+import org.nlogo.swing.NonemptyTextFieldButtonEnabler;
+import org.nlogo.swing.UserAction;
+import org.nlogo.swing.UserAction.KeyBindings$;
 
 public strictfp class FindDialog
     extends JDialog
@@ -55,6 +57,10 @@ public strictfp class FindDialog
               new javax.swing.ImageIcon
                   (FindDialog.class.getResource
                       ("/images/magnify.gif")));
+      putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
+      putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
+      putValue(javax.swing.Action.ACCELERATOR_KEY,
+          UserAction.KeyBindings$.MODULE$.keystroke('F', true, false));
       setEnabled(false);
     }
 
@@ -86,6 +92,10 @@ public strictfp class FindDialog
               new javax.swing.ImageIcon
                   (FindDialog.class.getResource
                       ("/images/magnify.gif")));
+      putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
+      putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
+      putValue(javax.swing.Action.ACCELERATOR_KEY,
+          UserAction.KeyBindings$.MODULE$.keystroke('G', true, false));
       setEnabled(false);
     }
 

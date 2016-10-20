@@ -10,14 +10,15 @@ import javax.swing.JOptionPane
 import javax.imageio.ImageIO
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ ControlSet, Exceptions, LocalFile, FileIO }
+import org.nlogo.api.{ ControlSet, Exceptions, LocalFile, ModelSettings, FileIO }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ I18N, FileMode }
 import org.nlogo.plot.Plot
 import org.nlogo.swing.{ FileDialog, OptionDialog, ModalProgressTask }
 import org.nlogo.swing.Implicits.thunk2runnable
+import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
-import org.nlogo.window.Events.{ ExportPlotEvent, ExportWidgetEvent, ExportWorldEvent }
+import org.nlogo.window.Events.{ ExportPlotEvent, ExportWidgetEvent, ExportWorldEvent, LoadModelEvent }
 
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
@@ -28,7 +29,8 @@ abstract class GUIWorkspaceScala(world: World,
   controlSet: ControlSet)
   extends AbstractWorkspaceScala(world, hubNetManagerFactory)
   with ExportPlotEvent.Handler
-  with ExportWidgetEvent.Handler {
+  with ExportWidgetEvent.Handler
+  with LoadModelEvent.Handler {
 
   def view: View
 
@@ -38,12 +40,31 @@ abstract class GUIWorkspaceScala(world: World,
 
   val plotExportControls = new PlotExportControls(plotManager)
 
+  // for grid snap
+  private var _snapOn: Boolean = false
+
+  def setSnapOn(snapOn: Boolean): Unit = {
+    _snapOn = snapOn
+  }
+
+  def snapOn = _snapOn
+
   override def exportDrawingToCSV(writer: PrintWriter): Unit = {
     view.renderer.trailDrawer.exportDrawingToCSV(writer)
   }
 
   override def exportOutputAreaToCSV(writer: PrintWriter): Unit = {
     new Events.ExportWorldEvent(writer).raise(this)
+  }
+
+  def handle(e: LoadModelEvent): Unit = {
+    loadFromModel(e.model)
+    world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
+    world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+    e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings") match {
+      case Some(settings: ModelSettings) => setSnapOn(settings.snapToGrid)
+      case _ =>
+    }
   }
 
   def handle(e: ExportWidgetEvent): Unit = {

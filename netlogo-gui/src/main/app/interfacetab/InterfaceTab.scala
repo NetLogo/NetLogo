@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager}
+import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager, Toolkit}
 import java.awt.event.ActionEvent
 import java.awt.print.{PageFormat, Printable}
 import javax.swing._
@@ -10,9 +10,17 @@ import javax.swing._
 import org.nlogo.app.common.{Events => AppEvents}
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable}
+import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction },
+  UserAction.{ ActionCategoryKey, ActionGroupKey, ToolsCategory }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents}
+
+
+object InterfaceTab {
+  val MenuGroup = "org.nlogo.app.InterfaceTab"
+}
+
+import InterfaceTab._
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
@@ -146,9 +154,15 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
+  def menuActions: Seq[Action] = Seq(commandCenterAction)
+
   val commandCenterAction = {
     implicit val i18nPrefix = I18N.Prefix("menu.tools")
     new AbstractAction(I18N.gui("hideCommandCenter")) {
+      putValue(ActionCategoryKey, ToolsCategory)
+      putValue(ActionGroupKey,    MenuGroup)
+      putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Character.valueOf('/'), Toolkit.getDefaultToolkit.getMenuShortcutKeyMask))
+
       override def actionPerformed(e: ActionEvent) {
         if (splitPane.getDividerLocation < maxDividerLocation) {
           splitPane.setDividerLocation(maxDividerLocation)

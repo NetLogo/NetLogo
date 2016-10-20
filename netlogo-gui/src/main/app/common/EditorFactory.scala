@@ -2,6 +2,7 @@
 
 package org.nlogo.app.common
 
+import java.util.prefs.Preferences
 import java.awt.Font
 import java.awt.event.{FocusEvent, InputEvent, KeyEvent}
 import javax.swing.{ Action, JScrollPane, KeyStroke, ScrollPaneConstants }
@@ -19,14 +20,15 @@ import org.fife.ui.rtextarea.RTextScrollPane
 class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(compiler) {
   override def defaultConfiguration(cols: Int, rows: Int): EditorConfiguration = {
     val codeCompletionPopup = new CodeCompletionPopup
-    val showUsageBox = new ShowUsageBox
+    val showUsageBox = new ShowUsageBox(colorizer)
     val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox), new JumpToDeclarationAction())
-    val actionMap = Map(
-      KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK) ->
-        new AutoSuggestAction("auto-suggest", codeCompletionPopup))
     super.defaultConfiguration(cols, rows)
       .withContextActions(actions)
-      .withKeymap(actionMap)
+      .addKeymap(
+        KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
+        new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+      .withLineNumbers(
+        Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
   }
 
   def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean, enableHighlightCurrentLine: Boolean = false): AbstractEditorArea =

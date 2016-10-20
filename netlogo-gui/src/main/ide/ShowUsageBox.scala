@@ -2,19 +2,21 @@
 
 package org.nlogo.ide
 
-import java.awt._
-import java.awt.event._
-import javax.swing.table.{DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer}
-import javax.swing._
-import javax.swing.text.PlainDocument
+import java.awt.{ Color, Component, Cursor, Point }
+import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowFocusListener, WindowEvent }
+import javax.swing.{ BorderFactory, JDialog, JEditorPane, JScrollPane, JTable, SwingConstants, UIDefaults, UIManager }
+import javax.swing.table.{ DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer }
+import javax.swing.text.{ BadLocationException, JTextComponent, PlainDocument }
 
-import org.nlogo.core.{Femto, Token, TokenType, TokenizerInterface}
-import org.nlogo.editor.{EditorArea, HighlightEditorKit}
+import org.nlogo.core.{ Femto, Token, TokenType, TokenizerInterface }
+import org.nlogo.api.Exceptions
+import org.nlogo.editor.{ AbstractEditorArea, Colorizer, EditorArea, HighlightEditorKit, RichDocument }, RichDocument.RichDoc
 
-class ShowUsageBox() {
+class ShowUsageBox(colorizer: Colorizer) {
 
   val usageBox = new JDialog()
-  var editorArea: EditorArea = null
+  var editorArea: AbstractEditorArea = null
+  def document = editorArea.getDocument
   val dataModel = new DefaultTableModel(){
     override def isCellEditable(row: Int, column: Int): Boolean = false
     override def getColumnClass(columnIndex: Int): Class[_] = {
@@ -48,14 +50,25 @@ class ShowUsageBox() {
   usageTable.getColumnModel.getColumn(0).setMinWidth(40)
   usageTable.setShowGrid(false)
 
-  def init(editorArea: EditorArea) {
+  def init(editorArea: AbstractEditorArea) {
     if(this.editorArea == null) {
       this.editorArea = editorArea
+
       usageTable.addMouseListener(new MouseAdapter() {
         override def mouseClicked(e: MouseEvent): Unit = {
           usageBox.setVisible(false)
           val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
-          editorArea.centerCursorInScrollPane(token.start)
+          editorArea.containingViewport.foreach { scrollPane =>
+            try {
+              val r = editorArea.modelToView(token.start)
+              val scrollHeight = scrollPane.getExtentSize.height
+              val viewHeight   = scrollPane.getViewSize.height
+              val y = (0 max r.y - ((scrollHeight - r.height) / 2)) min (viewHeight - scrollHeight)
+              scrollPane.setViewPosition(new Point(0, y))
+            } catch {
+              case ex: BadLocationException => Exceptions.ignore(ex)
+            }
+          }
           editorArea.select(token.start, token.end)
         }
       })
@@ -76,12 +89,15 @@ class ShowUsageBox() {
 
   def showBox(popupLocation: Point, cursorPosition: Int): Unit = {
     val tokenOption = JumpToDeclaration.findTokenContainingPosition(editorArea.getText(), cursorPosition)
-    for {token <- tokenOption} {
-      if(token.tpe == TokenType.Ident || token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
+    for { token <- tokenOption } {
+      if (token.tpe == TokenType.Ident || token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
         val tokens = getUsage(editorArea.getText(), token)
         dataModel.setRowCount(0)
-        for (t <- tokens) {
-          dataModel.addRow(Array[AnyRef](t, editorArea.getLineText(t.start).trim))
+        for {
+          t    <- tokens
+          line <- document.getLineText(document.offsetToLine(t.start))
+        } {
+          dataModel.addRow(Array[AnyRef](t, line.trim))
         }
         if (dataModel.getRowCount != 0) {
           usageTable.setDefaultRenderer(classOf[String], new LineRenderer(Some(token.text)))
@@ -100,13 +116,12 @@ class ShowUsageBox() {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
     var iter = scala.collection.mutable.Seq[Token]()
     var prevLineNo = -1
-    val tokenLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], token.start)
+    val tokenLineNo = document.offsetToLine(token.start)
     for(t <- iterator if t.text.equalsIgnoreCase(token.text) &&
-      (editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)) != tokenLineNo &&
-      editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start) != prevLineNo) {
-
+        document.offsetToLine(t.start) != tokenLineNo &&
+        document.offsetToLine(t.start) != prevLineNo) {
       iter :+= t
-      prevLineNo = editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], t.start)
+      prevLineNo = document.offsetToLine(t.start)
     }
     iter
   }
@@ -117,7 +132,7 @@ class ShowUsageBox() {
       pane.setOpaque(true)
       pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
       val editorKit = boldedString match {
-        case None => new HighlightEditorKit(editorArea.colorizer)
+        case None                 => new HighlightEditorKit(colorizer)
         case Some(selectedString) => new BoldEditorKit(selectedString)
       }
       pane.setEditorKit(editorKit)
@@ -144,13 +159,14 @@ class ShowUsageBox() {
   }
   class LineNumberRenderer extends DefaultTableCellRenderer {
     override def setValue(value: AnyRef) = {
-      setText((editorArea.offsetToLine(editorArea.getDocument.asInstanceOf[PlainDocument], value.asInstanceOf[Token].start) + 1).toString)
+      setText((document.offsetToLine(value.asInstanceOf[Token].start) + 1).toString)
       setHorizontalAlignment(SwingConstants.RIGHT)
       setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
     }
   }
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
-  class BoldEditorKit(selectedString: String) extends HighlightEditorKit(editorArea.colorizer) {
+
+  class BoldEditorKit(selectedString: String) extends HighlightEditorKit(colorizer) {
 
     import scala.collection.immutable.Range
 

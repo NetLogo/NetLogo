@@ -70,6 +70,9 @@ menu.file.import.hubNetClientInterface.prompt = Which section would you like to 
 menu.file.import.hubNetClientInterface.fromInterface = Interface Tab
 menu.file.import.hubNetClientInterface.fromClient = HubNet client
 menu.file.quit = Quit
+menu.file.recent = Recent Files
+menu.file.recent.clear = Clear Items
+menu.file.recent.empty = <empty>
 
 menu.edit = Edit
 menu.edit.cut = Cut
@@ -81,9 +84,9 @@ menu.edit.redo = Redo
 menu.edit.selectAll = Select All
 menu.edit.find = Find…
 menu.edit.findNext = Find Next
-menu.edit.showLineNumbers = Show Line Numbers
 menu.edit.shiftLeft = Shift Left
 menu.edit.shiftRight = Shift Right
+menu.edit.shiftTab = Tab Right
 menu.edit.format = Format
 menu.edit.comment = Comment
 menu.edit.uncomment = Uncomment
@@ -125,6 +128,7 @@ menu.help.netLogoUsersGroup = NetLogo Users Group
 menu.help.netLogoStackOverflow = NetLogo Q & A - Stack Overflow
 menu.help.introToABM = Introduction to Agent-Based Modeling
 menu.help.donate = Donate
+menu.help.aboutVersion = About {0}…
 
 tabs.run = Interface
 tabs.run.editButton = Edit
@@ -377,6 +381,7 @@ edit.hubnet.view.height = Height (pixels)
 tools.preferences = NetLogo Preferences
 tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
+tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview

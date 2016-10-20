@@ -2,12 +2,13 @@
 
 package org.nlogo.ide
 
+import javax.swing.text.JTextComponent
+
 import org.nlogo.core.TokenType.Ident
 import org.nlogo.core._
 import org.nlogo.editor.EditorArea
 
 import scala.collection.mutable.Map
-
 
 object JumpToDeclaration {
 
@@ -15,7 +16,8 @@ object JumpToDeclaration {
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
     iterator.find(p => p.start < position && p.end >= position)
   }
-  def jumpToDeclaration(cursorPosition: Int, editorArea: EditorArea): Unit = {
+
+  def jumpToDeclaration(cursorPosition: Int, editorArea: JTextComponent): Unit = {
     val tokenOption = findTokenContainingPosition(editorArea.getText(), cursorPosition)
     for(token <- tokenOption) {
       if(token.tpe != TokenType.Ident || DefaultTokenMapper.allCommandNames.contains(token.text)

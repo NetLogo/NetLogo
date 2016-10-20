@@ -7,6 +7,8 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ KeyStroke, InputMap }
 import javax.swing.text.TextAction
 
+import KeyBinding.{ keystroke, charKeystroke }
+
 trait Indenter {
   def handleTab(): Unit
 
@@ -45,11 +47,4 @@ trait Indenter {
       inputMap.put(keystroke(KeyEvent.VK_TAB), indentAction)
     }
   }
-
-
-  private def keystroke(key: Int, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(key, mask)
-
-  private def charKeystroke(char: Char, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(Character.valueOf(char), mask)
 }

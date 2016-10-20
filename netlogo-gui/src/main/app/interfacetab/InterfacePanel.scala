@@ -11,7 +11,7 @@ import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
 
 import org.nlogo.window.{ButtonWidget, ChooserWidget, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
 import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
-import org.nlogo.app.common.ExportInterfaceAction
+import org.nlogo.app.common.FileActions.ExportInterfaceAction
 import org.nlogo.awt.{Hierarchy, Images, UserCancelException}
 import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.editor.{ EditorArea, UndoManager }
@@ -89,7 +89,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   val exportItem: JMenuItem = {
     val exportAction =
-      new ExportInterfaceAction(Hierarchy.getFrame(this), workspace)
+      new ExportInterfaceAction(workspace, this)
     new JMenuItem(exportAction)
   }
 

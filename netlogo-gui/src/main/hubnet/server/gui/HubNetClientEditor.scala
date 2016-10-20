@@ -28,12 +28,12 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
     getContentPane.add(iFactory.toolbar(interfacePanel, workspace, buttons, this), BorderLayout.NORTH)
     if (System.getProperty("os.name").startsWith("Mac")) {
-      val menus = new JMenuBar() {add(menuFactory.createFileMenu())}
-      val edit = menuFactory.createEditMenu()
+      val menus = new JMenuBar() {add(menuFactory.createFileMenu)}
+      val edit = menuFactory.createEditMenu
       edit.setEnabled(false)
       menus.add(edit)
-      menus.add(menuFactory.createToolsMenu())
-      menus.add(menuFactory.createZoomMenu())
+      menus.add(menuFactory.createToolsMenu)
+      menus.add(menuFactory.createZoomMenu)
       menuFactory.addHelpMenu(menus)
       setJMenuBar(menus)
     }

@@ -2,9 +2,13 @@
 
 package org.nlogo.app.common
 
-import org.nlogo.api.Version
+import java.awt.Component
+
+import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.core.{ Dialect, Femto }
 import org.nlogo.nvm.CompilerInterface
+import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, ActionSubcategoryKey, FileCategory, FileExportSubcategory }
 
 object CodeToHtml {
   // for standalone use, for example on a web server
@@ -21,6 +25,15 @@ object CodeToHtml {
         Femto.scalaSingleton[Dialect]("org.nlogo.api.NetLogoLegacyDialect")
     val compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", dialect)
     new CodeToHtml(compiler)
+  }
+
+  class Action(workspace: AbstractWorkspace, parent: Component, getText: () => String) extends
+  ExportAction("code", workspace.guessExportName("code.html"), parent, { exportPath =>
+    FileIO.writeFile(exportPath,
+      new CodeToHtml(workspace.compiler).convert(getText()))
+  }) {
+    putValue(ActionCategoryKey,    FileCategory)
+    putValue(ActionSubcategoryKey, FileExportSubcategory)
   }
 }
 

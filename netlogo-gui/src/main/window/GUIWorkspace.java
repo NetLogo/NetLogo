@@ -46,7 +46,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.AfterLoadEvent.Handler,
     org.nlogo.window.Events.BeforeLoadEvent.Handler,
     org.nlogo.window.Events.JobStoppingEvent.Handler,
-    org.nlogo.window.Events.LoadModelEvent.Handler,
     org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
     org.nlogo.window.Events.RemoveJobEvent.Handler,
     org.nlogo.window.Events.AddSliderConstraintEvent.Handler,
@@ -70,9 +69,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GLViewManagerInterface glView = null;
   private final ExternalFileManager externalFileManager;
   public final NetLogoListenerManager listenerManager;
-
-  // for grid snap
-  private boolean snapOn = false;
 
   private PeriodicUpdater periodicUpdater;
   private javax.swing.Timer repaintTimer;
@@ -1131,45 +1127,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     hubNetControlCenterAction.setEnabled(hubNetRunning());
   }
 
-  public final javax.swing.Action hubNetControlCenterAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          hubNetManager().get().showControlCenter();
-        }
-      };
+  public final javax.swing.Action hubNetControlCenterAction = new HubNetControlCenterAction(this);
 
   public final javax.swing.Action switchTo3DViewAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.3DView.switch")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          open3DView();
-        }
-      };
+    new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.3DView.switch")) {
+      public void actionPerformed(java.awt.event.ActionEvent e) {
+        open3DView();
+      }
+    };
 
   /// preview commands & aggregate
-
-  public void handle(org.nlogo.window.Events.LoadModelEvent e) {
-    loadFromModel(e.model);
-    ArrayList<org.nlogo.core.Shape> shapes = new ArrayList<org.nlogo.core.Shape>();
-    scala.collection.Iterator<? extends org.nlogo.core.Shape.VectorShape> shapeIterator = e.model.turtleShapes().iterator();
-    while (shapeIterator.hasNext()) {
-      shapes.add(ShapeConverter.baseVectorShapeToVectorShape(shapeIterator.next()));
-    }
-    world().turtleShapes().replaceShapes(shapes);
-    ArrayList<org.nlogo.core.Shape> linkShapes = new ArrayList<org.nlogo.core.Shape>();
-    scala.collection.Iterator<? extends org.nlogo.core.Shape.LinkShape> linkShapeIterator = e.model.linkShapes().iterator();
-    while (linkShapeIterator.hasNext()) {
-      linkShapes.add(ShapeConverter.baseLinkShapeToLinkShape(linkShapeIterator.next()));
-    }
-    world().linkShapes().replaceShapes(linkShapes);
-  }
-
-  public void snapOn(boolean snapOn) {
-    this.snapOn = snapOn;
-  }
-
-  public boolean snapOn() {
-    return this.snapOn;
-  }
 
   @Override
   public String getSource(String filename)

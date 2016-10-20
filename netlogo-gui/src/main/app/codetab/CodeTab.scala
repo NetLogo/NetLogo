@@ -10,7 +10,7 @@ import java.net.MalformedURLException
 import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, BorderFactory, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ EditorFactory, Events => AppEvents, FindDialog }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.editor.{ DumbIndenter, LineNumbersBar }
 import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton }
@@ -25,20 +25,26 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with Zoomable
   with NlogoPrintable {
 
-  private val listener = new TextListener {
+  private lazy val listener = new TextListener {
     override def textValueChanged(e: TextEvent) {
       needsCompile()
       dirty()
     }
   }
-  val editorFactory = new EditorFactory(workspace)
-  val text = {
-    val config = editorFactory.defaultConfiguration(100, 100)
+
+  lazy val editorFactory = new EditorFactory(workspace)
+
+  def editorConfiguration =
+    editorFactory.defaultConfiguration(100, 100)
       .withCurrentLineHighlighted(true)
       .withListener(listener)
-    editorFactory.newEditor(config, true)
+
+  val text = {
+    val editor = editorFactory.newEditor(editorConfiguration, true)
+    editor.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+    editor
   }
-  text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
@@ -79,6 +85,9 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   }
 
   def dirty() { new WindowEvents.DirtyEvent().raise(this) }
+
+  def menuActions =
+    Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.menuActions
 
   private def needsCompile() {
     _needsCompile = true

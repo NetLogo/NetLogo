@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent
 import java.awt._
 import javax.swing.event.{CaretEvent, CaretListener}
 
+import KeyBinding._
 
 object EditorArea {
   def emptyMap = Map[KeyStroke, TextAction]()
@@ -43,14 +44,14 @@ object EditorArea {
 
 import EditorArea._
 
-class EditorArea(configuration: EditorConfiguration)
+class EditorArea(val configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
   with FocusTraversable
   with java.awt.event.FocusListener {
 
-  val rows = configuration.rows
-  val columns = configuration.columns
+  val rows      = configuration.rows
+  val columns   = configuration.columns
   val colorizer = configuration.colorizer
 
   private var indenter: Option[Indenter] = None
@@ -72,10 +73,7 @@ class EditorArea(configuration: EditorConfiguration)
     setCaret(caret)
     setDragEnabled(false)
 
-    getInputMap.put(keystroke(Key.VK_ENTER), new EnterAction())
-    getInputMap.put(charKeystroke(']'), new CloseBracketAction())
-
-    getDocument.addUndoableEditListener(undoManager)
+    undoManager.watch(this)
 
     // add key bindings for undo and redo so they work even in modal dialogs
     val mask: Int = getToolkit.getMenuShortcutKeyMask
@@ -85,10 +83,6 @@ class EditorArea(configuration: EditorConfiguration)
 
     configuration.configureEditorArea(this)
   }
-
-
-  def keystroke(key: Int, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(key, mask)
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = g.asInstanceOf[Graphics2D]
@@ -118,7 +112,7 @@ class EditorArea(configuration: EditorConfiguration)
       Array[Action](
         Actions.commentToggleAction,
         Actions.shiftLeftAction, Actions.shiftRightAction,
-        Actions.quickHelpAction(colorizer, I18N.gui.get _)))
+        new MouseQuickHelpAction(colorizer)))
 
   override def getPreferredScrollableViewportSize: Dimension = {
     val dimension =
@@ -173,25 +167,6 @@ class EditorArea(configuration: EditorConfiguration)
   def offsetToLine(doc: Document, offset: Int): Int =
     doc.getDefaultRootElement.getElementIndex(offset)
 
-  /**
-    * Centers the line containing the position in editorArea.
-    * By default center the line containing the cursor
-    */
-  def centerCursorInScrollPane(position: Int = getCaretPosition): Unit = {
-    val container = SwingUtilities.getAncestorOfClass(classOf[JViewport], this)
-    if (container == null) return
-    try {
-      val r = modelToView(position)
-      val viewport = container.asInstanceOf[JViewport]
-      val extentHeight = viewport.getExtentSize.height
-      val viewHeight = viewport.getViewSize.height
-      val y = (0 max r.y - ((extentHeight - r.height) / 2)) min (viewHeight - extentHeight)
-      viewport.setViewPosition(new Point(0, y))
-    } catch {
-      case ex: BadLocationException =>
-    }
-  }
-
   private var _selectionActive = true
 
   def selectionActive = _selectionActive
@@ -202,7 +177,6 @@ class EditorArea(configuration: EditorConfiguration)
 
   def focusGained(fe: java.awt.event.FocusEvent): Unit = {
     Actions.setEnabled(true)
-    UndoManager.setCurrentManager(undoManager)
   }
 
   def focusLost(fe: java.awt.event.FocusEvent): Unit = {
@@ -210,7 +184,6 @@ class EditorArea(configuration: EditorConfiguration)
     colorizer.reset()
     if (!fe.isTemporary) {
       Actions.setEnabled(false)
-      UndoManager.setCurrentManager(null)
     }
   }
 
@@ -235,20 +208,16 @@ class EditorArea(configuration: EditorConfiguration)
 
   private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
 
-    val copyItem  = new JMenuItem(Actions.COPY_ACTION)
-    val cutItem   = new JMenuItem(Actions.CUT_ACTION)
-    val pasteItem = new JMenuItem(Actions.PASTE_ACTION)
+    val copyItem  = new JMenuItem(Actions.CopyAction)
+    val cutItem   = new JMenuItem(Actions.CutAction)
+    val pasteItem = new JMenuItem(Actions.PasteAction)
 
     locally {
       add(copyItem)
-      Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
       add(cutItem)
-      Actions.CUT_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.cut"))
       add(pasteItem)
-      Actions.PASTE_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.paste"))
       addSeparator()
       for (item <- configuration.contextActions) {
-        item.putValue("editor", EditorArea.this)
         add(new JMenuItem(item))
       }
     }
@@ -262,9 +231,9 @@ class EditorArea(configuration: EditorConfiguration)
         Toolkit.getDefaultToolkit.getSystemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor))
       val point = new Point(invoker.getLocationOnScreen)
       point.translate(x, y)
-      for (item <- configuration.contextActions) {
-        item.putValue("cursorLocation", mousePos)
-        item.putValue("popupLocation", point)
+      configuration.contextActions.foreach {
+        case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
+        case _ =>
       }
       super.show(invoker, x, y)
     }

@@ -4,11 +4,33 @@ package org.nlogo.swing
 
 // TODO i18n lot of work needed here...
 
-import javax.swing.JTabbedPane
+import java.awt.event.ActionEvent
+import javax.swing.{ Action, AbstractAction, JTabbedPane }
+import UserAction._
 
-class TabsMenu(name: String, tabs: JTabbedPane) extends NumberedMenu(name) {
+object TabsMenu {
+  def tabAction(tabs: JTabbedPane, index: Int): Action =
+    new AbstractAction(tabs.getTitleAt(index)) with MenuAction {
+      category    = TabsCategory
+      rank        = index
+      accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
+      override def actionPerformed(e: ActionEvent) {
+        tabs.setSelectedIndex(index)
+      }
+    }
+
+  def tabActions(tabs: JTabbedPane): Seq[Action] =
+    for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
+}
+
+class TabsMenu(name: String, initialActions: Seq[Action]) extends Menu(name) {
   setMnemonic('A')
-  override lazy val items =
-    for(i <- 0 until tabs.getTabCount)
-    yield (tabs.getTitleAt(i), () => tabs.setSelectedIndex(i))
+
+  initialActions.foreach(offerAction)
+
+  def this(name: String) =
+    this(name, Seq())
+
+  def this(name: String, tabs: JTabbedPane) =
+    this(name, TabsMenu.tabActions(tabs))
 }
