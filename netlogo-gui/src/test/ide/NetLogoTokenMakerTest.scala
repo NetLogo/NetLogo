@@ -161,4 +161,5 @@ class NetLogoTokenMakerTest extends FunSuite {
   testTokenType("fput", TokenTypes.FUNCTION)
   //TODO don't know what NOBODY should be...
   testTokenType("nobody", TokenTypes.DATA_TYPE)
+  //TODO: "Breed" at start of line is a keyword, "breed" elsewhere is a function
 }

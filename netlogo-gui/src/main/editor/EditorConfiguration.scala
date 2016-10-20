@@ -3,10 +3,11 @@
 package org.nlogo.editor
 
 import java.awt.{ Font, GraphicsEnvironment }
-import java.awt.event.{ InputEvent, KeyEvent, TextEvent, TextListener }
+import java.awt.event.{ InputEvent, KeyEvent, TextEvent, TextListener },
+  InputEvent.{ SHIFT_MASK => ShiftKey }
 
 import javax.swing.{ Action, KeyStroke }
-import javax.swing.text.TextAction
+import javax.swing.text.{ JTextComponent, TextAction }
 
 import org.nlogo.core.I18N
 
@@ -62,9 +63,6 @@ case class EditorConfiguration(
       copy(additionalActions = keymap)
 
     def configureEditorArea(editor: EditorArea) = {
-      import InputEvent.{ SHIFT_MASK => ShiftKey }
-      def keystroke(key: Int, mask: Int = 0): KeyStroke =
-        KeyStroke.getKeyStroke(key, mask)
 
       editor.setEditorKit(new HighlightEditorKit(colorizer))
 
@@ -85,6 +83,7 @@ case class EditorConfiguration(
       }
 
       editor.setFocusTraversalKeysEnabled(enableFocusTraversal)
+
       if (enableFocusTraversal) {
         val focusTraversalListener = new FocusTraversalListener(editor)
         editor.addFocusListener(focusTraversalListener)
@@ -92,9 +91,11 @@ case class EditorConfiguration(
         editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           new TransferFocusAction())
         editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
       } else {
-        editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           Actions.tabKeyAction)
         editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), Actions.shiftTabKeyAction)
       }
+
+      val indenter = new DumbIndenter(editor)
+      editor.setIndenter(indenter)
 
       // add key binding, for getting quick "contexthelp", based on where
       // the cursor is...
@@ -103,4 +104,23 @@ case class EditorConfiguration(
       val editorListener = new EditorListener(e => listener.textValueChanged(null))
       editorListener.install(editor)
     }
+
+  def configureAdvancedEditorArea(editor: AbstractEditorArea) = {
+    DocumentProperties.install(editor)
+
+    val editorListener = new EditorListener(e => listener.textValueChanged(null))
+    editorListener.install(editor)
+
+    editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), Actions.shiftTabKeyAction)
+
+    val indenter = new DumbIndenter(editor)
+    editor.setIndenter(indenter)
+
+    additionalActions.foreach {
+      case (k, v) => editor.getInputMap.put(k, v)
+    }
+  }
+
+  private def keystroke(key: Int, mask: Int = 0): KeyStroke =
+    KeyStroke.getKeyStroke(key, mask)
 }

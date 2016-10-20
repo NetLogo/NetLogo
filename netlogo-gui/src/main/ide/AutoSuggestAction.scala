@@ -12,7 +12,7 @@ class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup) 
   final val autoSuggestDocumentListener = new AutoSuggestDocumentListener(codeCompletionPopup)
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    val editorArea = getTextComponent(e).asInstanceOf[EditorArea]
+    val editorArea = getTextComponent(e)
     codeCompletionPopup.init(editorArea, autoSuggestDocumentListener)
 
     codeCompletionPopup.displayPopup()

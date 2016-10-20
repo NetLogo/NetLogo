@@ -6,6 +6,7 @@ import java.awt.{Color, Component, Dimension, GraphicsEnvironment}
 import java.awt.event._
 import javax.swing._
 import javax.swing.event.DocumentEvent
+import javax.swing.text.JTextComponent
 
 import org.nlogo.core.{DefaultTokenMapper, Femto, Token, TokenizerInterface}
 import org.nlogo.window.SyntaxColors
@@ -24,12 +25,12 @@ case class CodeCompletionPopup() {
   window.setUndecorated(true)
   window.add(scrollPane)
   window.setMinimumSize(new Dimension(150, 210))
-  var editorArea: Option[EditorArea] = None
+  var editorArea: Option[JTextComponent] = None
 
   scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
 
-  def init(editorArea: EditorArea, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
+  def init(editorArea: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
     if(this.editorArea.isDefined)
       return
     this.editorArea = Some(editorArea)
@@ -38,7 +39,7 @@ case class CodeCompletionPopup() {
       suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
       suggestionDisplaylist.setVisibleRowCount(10)
       suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer(eA))
-      
+
       suggestionDisplaylist.addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent): Unit = {
           autoCompleteSuggestion(eA, autoSuggestDocumentListener)
@@ -83,7 +84,7 @@ case class CodeCompletionPopup() {
     * @param eA
     * @param autoSuggestDocumentListener
     */
-  def autoCompleteSuggestion(eA: EditorArea, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
+  def autoCompleteSuggestion(eA: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
     isPopupEnabled = false
     var suggestion = suggestionDisplaylist.getSelectedValue
     lastSuggested = suggestion
@@ -118,7 +119,7 @@ case class CodeCompletionPopup() {
     * @param eA
     * @param position
     */
-  def placeWindowOnScreen(eA: EditorArea, position: Int): Unit = {
+  def placeWindowOnScreen(eA: JTextComponent, position: Int): Unit = {
     val screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode.getHeight
     if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView(position).y +
       eA.getFont.getSize > screenHeight) {
@@ -199,7 +200,7 @@ case class CodeCompletionPopup() {
   *
   * @param editorArea
   */
-class SuggestionListRenderer(editorArea: EditorArea) extends ListCellRenderer[String]{
+class SuggestionListRenderer(editorArea: JTextComponent) extends ListCellRenderer[String]{
 
   override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
     val label = new JLabel(value.asInstanceOf[String])

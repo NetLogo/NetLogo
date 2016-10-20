@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import javax.swing.text.Document
+
 trait EditorAreaInterface {
   def getSelectionStart: Int
   def getSelectionEnd: Int

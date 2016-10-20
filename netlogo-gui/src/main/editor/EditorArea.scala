@@ -53,7 +53,7 @@ class EditorArea(configuration: EditorConfiguration)
   val columns = configuration.columns
   val colorizer = configuration.colorizer
 
-  private var indenter: IndenterInterface = new DumbIndenter(this)
+  private var indenter: Option[Indenter] = None
   private var contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
@@ -86,8 +86,6 @@ class EditorArea(configuration: EditorConfiguration)
     configuration.configureEditorArea(this)
   }
 
-  def charKeystroke(char: Char, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(Character.valueOf(char), mask)
 
   def keystroke(key: Int, mask: Int = 0): KeyStroke =
     KeyStroke.getKeyStroke(key, mask)
@@ -110,21 +108,9 @@ class EditorArea(configuration: EditorConfiguration)
     }
   }
 
-  def setIndenter(newIndenter: IndenterInterface): Unit = {
-    indenter = newIndenter
-  }
-
-  class EnterAction extends TextAction("enter") {
-    def actionPerformed(e: ActionEvent): Unit = {
-      indenter.handleEnter()
-    }
-  }
-
-  class CloseBracketAction extends TextAction("close-bracket") {
-    def actionPerformed(e: ActionEvent): Unit = {
-      replaceSelection("]")
-      indenter.handleCloseBracket()
-    }
+  def setIndenter(newIndenter: Indenter): Unit = {
+    indenter = Some(newIndenter)
+    newIndenter.addActions(configuration, getInputMap)
   }
 
   override def getActions: Array[Action] =
@@ -175,7 +161,7 @@ class EditorArea(configuration: EditorConfiguration)
   }
 
   def indentSelection(): Unit = {
-    indenter.handleTab()
+    indenter.foreach(_.handleTab())
   }
 
   def lineToStartOffset(doc: Document, line: Int): Int =
@@ -186,87 +172,6 @@ class EditorArea(configuration: EditorConfiguration)
 
   def offsetToLine(doc: Document, offset: Int): Int =
     doc.getDefaultRootElement.getElementIndex(offset)
-
-  private def currentSelectionProperties: (PlainDocument, Int, Int) = {
-    val doc = getDocument.asInstanceOf[PlainDocument]
-    var currentLine = offsetToLine(doc, getSelectionStart)
-    var endLine     = offsetToLine(doc, getSelectionEnd)
-    // The two following cases are to take care of selections that include
-    // only the very edge of a line of text, either at the top or bottom
-    // of the selection.  Because these lines do not have *any* highlighted
-    // text, it does not make sense to modify these lines. ~Forrest (9/22/2006)
-    if (endLine > currentLine &&
-        getSelectionEnd == lineToStartOffset(doc, endLine)) {
-      endLine -= 1
-    }
-    if (endLine > currentLine &&
-        getSelectionStart == (lineToEndOffset(doc, currentLine) - 1)) {
-      currentLine += 1
-    }
-    (doc, currentLine, endLine)
-  }
-
-  def insertBeforeEachSelectedLine(insertion: String): Unit = {
-    try {
-      val (doc, currentLine, endLine) = currentSelectionProperties
-
-      for (line <- currentLine to endLine) {
-        doc.insertString(lineToStartOffset(doc, line), insertion, null)
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
-
-  def toggleComment(): Unit = {
-    try {
-      val (doc, startLine, endLine) = currentSelectionProperties
-
-      for(currentLine <- startLine to endLine) {
-        val lineStart = lineToStartOffset(doc, currentLine)
-        val lineEnd = lineToEndOffset(doc, currentLine)
-        val text = doc.getText(lineStart, lineEnd - lineStart)
-        val semicolonPos = text.indexOf(';')
-        val allSpaces = (0 until semicolonPos)
-          .forall(i => Character.isWhitespace(text.charAt(i)))
-        if (!allSpaces || semicolonPos == -1) {
-          insertBeforeEachSelectedLine(";")
-          return
-        }
-      }
-      // Logic to uncomment the selected section
-      for (line <- startLine to endLine) {
-        val lineStart = lineToStartOffset(doc, line)
-        val lineEnd   = lineToEndOffset(doc, line)
-        val text      = doc.getText(lineStart, lineEnd - lineStart)
-        val semicolonPos = text.indexOf(';')
-        if (semicolonPos != -1) {
-          val allSpaces = (0 until semicolonPos)
-            .forall(i => Character.isWhitespace(text.charAt(i)))
-          if (allSpaces)
-            doc.remove(lineStart + semicolonPos, 1)
-        }
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
-
-  def shiftLeft(): Unit = {
-    try {
-      val (doc, currentLine, endLine) = currentSelectionProperties
-
-      for (line <- currentLine to endLine) {
-        val lineStart = lineToStartOffset(doc, line)
-        val lineEnd   = lineToEndOffset(doc, line)
-        val text      = doc.getText(lineStart, lineEnd - lineStart)
-        if (text.length > 0 && text.charAt(0) == ' ')
-          doc.remove(lineStart, 1)
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
 
   /**
     * Centers the line containing the position in editorArea.
@@ -286,9 +191,6 @@ class EditorArea(configuration: EditorConfiguration)
       case ex: BadLocationException =>
     }
   }
-
-
-  /// select-all-on-focus stuff copied from org.nlogo.swing.TextField
 
   private var _selectionActive = true
 
@@ -387,7 +289,7 @@ class EditorArea(configuration: EditorConfiguration)
       // and smartTabbing isn't happy with them. ~Forrest (10/4/2006)
       selection = selection.replaceAllLiterally("\t", "  ")
       super.replaceSelection(selection)
-      indenter.handleInsertion(selection)
+      indenter.foreach(_.handleInsertion(selection))
     }
   }
 

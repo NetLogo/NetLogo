@@ -7,6 +7,8 @@ import javax.swing.Action
 import javax.swing.text._
 import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, InsertContentAction}
 
+import RichDocument._
+
 object Actions {
 
   val commentToggleAction = new CommentToggleAction()
@@ -29,10 +31,6 @@ object Actions {
   }
 
   class TabKeyAction extends MyTextAction("tab-key", _.indentSelection() )
-  class ShiftTabKeyAction extends MyTextAction("shift-tab-key", e => { e.shiftLeft(); e.shiftLeft() })
-  class CommentToggleAction extends MyTextAction("toggle-comment", _.toggleComment())
-  class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
-  class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
   def quickHelpAction(colorizer: Colorizer, i18n: String => String) =
     new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
       e => e.getHelpTarget(e.getSelectionStart).foreach(t => colorizer.doHelp(e, t)))
@@ -43,6 +41,103 @@ object Actions {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)
       if(component.isInstanceOf[EditorArea]) f(component.asInstanceOf[EditorArea])
+    }
+  }
+
+  abstract class DocumentAction(name: String) extends TextAction(name) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      val component = getTextComponent(e)
+      try {
+        perform(component, component.getDocument, e)
+      } catch {
+        case ex: BadLocationException => throw new IllegalStateException(ex)
+      }
+    }
+
+    def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit
+  }
+
+  class ShiftLeftAction extends DocumentAction("shift-line-left") {
+    override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
+      val (startLine, endLine) =
+        document.selectionLineRange(component.getSelectionStart, component.getSelectionEnd)
+
+      for {
+        lineNum <- startLine to endLine
+      } {
+        val lineStart = document.lineToStartOffset(lineNum)
+        if (lineStart != -1) {
+          val text = document.getText(lineStart, 1)
+          if (text.length > 0 && text.charAt(0) == ' ') {
+            document.remove(lineStart, 1)
+          }
+        }
+      }
+    }
+  }
+
+  class ShiftRightAction extends DocumentAction("shift-line-right") {
+    override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
+      val (startLine, endLine) =
+        document.selectionLineRange(component.getSelectionStart, component.getSelectionEnd)
+      document.insertBeforeLinesInRange(startLine, endLine, " ")
+    }
+  }
+
+  class ShiftTabKeyAction extends DocumentAction("shift-tab-key") {
+    override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
+      val (startLine, endLine) =
+        document.selectionLineRange(component.getSelectionStart, component.getSelectionEnd)
+      for {
+        lineNum <- startLine to endLine
+      } {
+        val lineStart = document.lineToStartOffset(lineNum)
+        if (lineStart != -1) {
+          val text = document.getText(lineStart, 2)
+          text.length match {
+            case 0 =>
+            case 1 if text.charAt(0) == ' ' => document.remove(lineStart, 1)
+            case _ =>
+              if (text.charAt(0) == ' ' && text.charAt(1) == ' ')
+                document.remove(lineStart, 2)
+              else if (text.charAt(0) == ' ')
+                document.remove(lineStart, 1)
+          }
+        }
+      }
+    }
+  }
+
+  class CommentToggleAction extends DocumentAction("toggle-comment") {
+    override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
+      val (startLine, endLine) =
+        document.selectionLineRange(component.getSelectionStart, component.getSelectionEnd)
+
+      for(currentLine <- startLine to endLine) {
+        val lineStart = document.lineToStartOffset(currentLine)
+        val lineEnd = document.lineToEndOffset(currentLine)
+        val text = document.getText(lineStart, lineEnd - lineStart)
+        val semicolonPos = text.indexOf(';')
+        val allSpaces = (0 until semicolonPos)
+          .forall(i => Character.isWhitespace(text.charAt(i)))
+        if (!allSpaces || semicolonPos == -1) {
+          document.insertBeforeLinesInRange(startLine, endLine, ";")
+          return
+        }
+      }
+      // Logic to uncomment the selected section
+      for (line <- startLine to endLine) {
+        val lineStart = document.lineToStartOffset(line)
+        val lineEnd   = document.lineToEndOffset(line)
+        val text      = document.getText(lineStart, lineEnd - lineStart)
+        val semicolonPos = text.indexOf(';')
+        if (semicolonPos != -1) {
+          val allSpaces = (0 until semicolonPos)
+            .forall(i => Character.isWhitespace(text.charAt(i)))
+          if (allSpaces)
+            document.remove(lineStart + semicolonPos, 1)
+        }
+      }
     }
   }
 }

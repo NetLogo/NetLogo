@@ -37,7 +37,6 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
-  val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
   val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
@@ -116,7 +115,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     if(originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-    lineNumbers.setFont(text.getFont)
+    scrollableEditor.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
@@ -160,8 +159,8 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     else text.setIndenter(new DumbIndenter(text))
   }
 
-  def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
-  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
+  def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
+  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
 
   def isTextSelected(): Boolean = {
     text.getSelectedText() != null && !text.getSelectedText().isEmpty()

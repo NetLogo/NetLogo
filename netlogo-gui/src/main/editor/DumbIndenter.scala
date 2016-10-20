@@ -2,7 +2,10 @@
 
 package org.nlogo.editor
 
-class DumbIndenter(code: AbstractEditorArea) extends IndenterInterface {
+import javax.swing.text.JTextComponent
+import RichDocument._
+
+class DumbIndenter(code: JTextComponent) extends Indenter {
   def handleTab(): Unit = {
     code.replaceSelection("  ")
   }
@@ -13,25 +16,24 @@ class DumbIndenter(code: AbstractEditorArea) extends IndenterInterface {
 
   def handleEnter(): Unit = {
     val doc = code.getDocument
-    val currentLine = code.offsetToLine(doc, code.getSelectionStart)
-    val lineStart = code.lineToStartOffset(doc, currentLine)
-    val lineEnd = code.lineToEndOffset(doc, currentLine)
-    val text = code.getText(lineStart, lineEnd - lineStart)
+    val currentLine = doc.offsetToLine(code.getSelectionStart)
+    val lineStart = doc.lineToStartOffset(currentLine)
+    doc.getLineText(currentLine).foreach { text =>
+      val spaces = new StringBuilder("\n")
+      var i = 0
+      var break = false
 
-    val spaces = new StringBuilder("\n")
-    var i = 0
-    var break = false
-
-    while (! break && i < text.length && lineStart + i < code.getSelectionStart) {
-      val c = text.charAt(i)
-      if (!Character.isWhitespace(c)) {
-        break = true
-      } else {
-        spaces.append(c)
+      while (! break && i < text.length && lineStart + i < code.getSelectionStart) {
+        val c = text.charAt(i)
+        if (!Character.isWhitespace(c)) {
+          break = true
+        } else {
+          spaces.append(c)
+        }
+        i += 1
       }
-      i += 1
+      code.replaceSelection(spaces.toString)
     }
-    code.replaceSelection(spaces.toString)
   }
 
 }

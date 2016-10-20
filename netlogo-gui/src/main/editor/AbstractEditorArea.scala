@@ -12,7 +12,7 @@ trait AbstractEditorArea extends JTextComponent {
 
   def getText(start: Int, end: Int): String
 
-  def setIndenter(i: IndenterInterface): Unit
+  def setIndenter(i: Indenter): Unit
 
   def setSelection(s: Boolean): Unit
 

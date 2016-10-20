@@ -6,7 +6,7 @@ import javax.swing.{ JScrollPane, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
-import org.nlogo.editor.{ AbstractEditorArea, EditorConfiguration }
+import org.nlogo.editor.{ AbstractEditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
 import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory }
 
 class LiteEditorFactory(compiler: CompilerServices) extends EditorFactory {
@@ -19,8 +19,8 @@ class LiteEditorFactory(compiler: CompilerServices) extends EditorFactory {
     new CodeEditor(configuration)
   }
 
-  def scrollPane(editor: AbstractEditorArea): JScrollPane =
-    new JScrollPane(
+  def scrollPane(editor: AbstractEditorArea): EditorScrollPane =
+    new LineNumberScrollPane(
       editor,
       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
