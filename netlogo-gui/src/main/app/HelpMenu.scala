@@ -27,9 +27,11 @@ class HelpMenu(app: App, colorizer: Colorizer)
   def docPath(docName: String): String =
     System.getProperty("netlogo.docs.dir", "docs") + "/" + docName
 
+  /*
   addMenuItem(
     I18N.gui("lookUpInDictionary(F1)"),
-    Actions.quickHelpAction(colorizer, I18N.gui.get _))
+    Actions.quickHelpAction(colorizer))
+  */
   addSeparator()
   addMenuItem(
     launch(I18N.gui("netLogoUserManual"), true,

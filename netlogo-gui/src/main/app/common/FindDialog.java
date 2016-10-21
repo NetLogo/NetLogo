@@ -376,4 +376,20 @@ public strictfp class FindDialog
     replaceBox.setEnabled(enabled);
     replaceLabel.setEnabled(enabled);
   }
+
+  static class FocusListener implements java.awt.event.FocusListener {
+    @Override
+    public void focusGained(java.awt.event.FocusEvent fe) {
+      if (fe.getSource() instanceof javax.swing.text.JTextComponent) {
+        FindDialog.watch((javax.swing.text.JTextComponent) fe.getSource());
+      }
+    }
+
+    @Override
+    public void focusLost(java.awt.event.FocusEvent fe) {
+      if (! fe.isTemporary() && fe.getSource() instanceof javax.swing.text.JTextComponent) {
+        FindDialog.dontWatch((javax.swing.text.JTextComponent) fe.getSource());
+      }
+    }
+  }
 }

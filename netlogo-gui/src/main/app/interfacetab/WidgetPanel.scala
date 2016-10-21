@@ -11,7 +11,7 @@ import org.nlogo.api.{Editable, Version}
 import org.nlogo.awt.{Fonts => NlogoFonts, Mouse => NlogoMouse}
 import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.editor.EditorConfiguration
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.fileformat
 import org.nlogo.log.Logger
 import org.nlogo.nvm.DefaultCompilerServices
@@ -345,8 +345,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
         case i: CoreInputBox =>
           new DummyInputBoxWidget(
-            new CodeEditor(textEditorConfiguration),
-            new CodeEditor(dialogEditorConfiguration),
+            new EditorArea(textEditorConfiguration),
+            new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>

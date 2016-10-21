@@ -216,9 +216,13 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Plot"     -> (() => PlotWidget.apply(plotManager)),
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
     "Chooser"  -> (() => new ChooserWidget(compiler)),
-    "InputBox" -> (() => new InputBoxWidget(
-      editorFactory.newEditor(1, 20, true, false), editorFactory.newEditor(5, 20, false, false),
-      compiler, this)),
+    "InputBox" -> { () =>
+      val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
+        .withFocusTraversalEnabled(true)
+      val multiLineConfig = editorFactory.defaultConfiguration(5, 20)
+      new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
+       editorFactory.newEditor(multiLineConfig), compiler, this)
+    },
     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
     "Output"   -> (() => new OutputWidget()))
 

@@ -3,9 +3,15 @@
 package org.nlogo.window
 
 import javax.swing.JScrollPane
-import org.nlogo.editor.{ AbstractEditorArea, EditorScrollPane }
+import org.nlogo.editor.{ AbstractEditorArea, Colorizer, EditorConfiguration, EditorScrollPane }
 
 trait EditorFactory {
-  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean, enableHighlightCurrentLine: Boolean): AbstractEditorArea
+  def colorizer: Colorizer
+
+  def defaultConfiguration(cols: Int, rows: Int): EditorConfiguration =
+    EditorConfiguration.default(cols, rows, colorizer)
+
+  def newEditor(configuration: EditorConfiguration): AbstractEditorArea
+
   def scrollPane(editor: AbstractEditorArea): EditorScrollPane
 }
