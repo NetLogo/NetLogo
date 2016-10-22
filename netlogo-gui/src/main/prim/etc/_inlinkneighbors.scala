@@ -17,10 +17,8 @@ class _inlinkneighbors(val breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new RuntimePrimitiveException(context, this, err)
     AgentSet.fromIterable(AgentKind.Turtle,
-      world.linkManager.findLinkedTo(
+      world.linkManager.inNeighbors(
         context.agent.asInstanceOf[Turtle], breed))
   }
 

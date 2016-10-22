@@ -19,11 +19,8 @@ class _linkneighbors(breedName: String) extends Reporter {
 
   def report_1(context: Context): AgentSet = {
     val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    val err = LinkManager.mustNotBeDirected(breed)
-    if (err.isDefined)
-      throw new RuntimePrimitiveException(context, this, err.get)
     AgentSet.fromIterable(AgentKind.Turtle,
-      world.linkManager.findLinkedWith(
+      world.linkManager.neighbors(
         context.agent.asInstanceOf[Turtle], breed))
   }
 

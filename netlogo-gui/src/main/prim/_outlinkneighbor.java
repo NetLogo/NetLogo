@@ -6,7 +6,6 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _outlinkneighbor
@@ -32,14 +31,6 @@ public final strictfp class _outlinkneighbor
     Turtle parent = (Turtle) context.agent;
     Turtle target = argEvalTurtle(context, 0);
     AgentSet breed = breedName == null ? world.links() : world.getLinkBreed(breedName);
-    if (breed.isUndirected())
-      return Boolean.FALSE;
-    else {
-      Link link = linkManager.findLinkFrom(parent, target, breed, true);
-      if (link == null || link.getBreed().isUndirected())
-        return Boolean.FALSE;
-      else
-        return Boolean.TRUE;
-    }
+    return !linkManager.linksTo(parent, target, breed).isEmpty();
   }
 }

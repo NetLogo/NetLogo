@@ -53,7 +53,7 @@ public final strictfp class _createlinksfrom
     // to be random! - ST 3/15/06
     for (AgentIterator iter = agentset.shufflerator(context.job.random); iter.hasNext();) {
       Turtle src = (Turtle) iter.next();
-      if (world.linkManager.findLinkFrom(src, dest, breed, false) == null) {
+      if (world.linkManager.getLink(src, dest, breed).isEmpty()){
         if (src == dest) {
           throw new RuntimePrimitiveException
               (context, this,

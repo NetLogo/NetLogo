@@ -6,20 +6,6 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 import java.util.IdentityHashMap
 
-object LinkManager {
-  // checking of breed directedness. not sure where else to put this
-  def mustNotBeDirected(breed: AgentSet): Option[String] =
-    if (breed.isDirected)
-      Some(breed.printName + " is a directed breed.")
-    else
-      None
-  def mustNotBeUndirected(breed: AgentSet): Option[String] =
-    if (breed.isUndirected)
-      Some(breed.printName + " is an undirected breed.")
-    else
-      None
-}
-
 // It would be nice to move this to the api package, but it would take a lot of refactoring to make
 // all of the argument types and return types be the api types. - ST 4/11/13
 
@@ -32,19 +18,43 @@ trait LinkManager {
 
   def checkBreededCompatibility(unbreeded: Boolean): Boolean
 
-  def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link
+  def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link
 
-  def findLink(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link
-  def findLinkEitherWay(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link
-  def findLinkFrom(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link
+  /**
+    * Gets a specific link for the given turtles and link breed.
+    * Note that unlike the other methods in this class, if `world.links` is
+    * given as the breed, *only* an unbreeded link can be found. Thus, there
+    * can only be a single matching link. If the breed is undirected, `src`
+    * and `dest` are interchangeable.
+    */
+  def getLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Option[Link]
 
-  def findLinkedFrom(src: Turtle, breed: AgentSet): Seq[Turtle]
-  def findLinkedTo(target: Turtle, breed: AgentSet): Seq[Turtle]
-  def findLinkedWith(target: Turtle, breed: AgentSet): Seq[Turtle]
+  /**
+    * Gets all links that connect the two turtles with the given link breed.
+    * If `world.links` is given as the breed, *all* links connecting the two
+    * turtles will be returned, regardless of breed. This method ignores
+    * the directedness and direction of links. Because link direction is
+    * ignored, `src` and `dest` are interchangeable.
+    */
+  def linksWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Seq[Link]
 
-  def findLinksFrom(src: Turtle, breed: AgentSet): Seq[Link]
-  def findLinksTo(target: Turtle, breed: AgentSet): Seq[Link]
-  def findLinksWith(target: Turtle, breed: AgentSet): Seq[Link]
+  /**
+    * Gets all links going from `src` to `dest` of the given breed.
+    * Thus, directed, outgoing links from `src` to `dest` as well as
+    * undirected links connecting them will be included. If `world.links` is
+    * given as the breed, *all* such links will be returned, regardless of
+    * breed. Note that no `linksFrom` is provided as you can simply reverse
+    * the arguments to this method.
+    */
+  def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Seq[Link]
+
+  def outNeighbors(src: Turtle, linkBreed: AgentSet): Seq[Turtle]
+  def inNeighbors(target: Turtle, linkBreed: AgentSet): Seq[Turtle]
+  def neighbors(target: Turtle, linkBreed: AgentSet): Seq[Turtle]
+
+  def outLinks(src: Turtle, linkBreed: AgentSet): Seq[Link]
+  def inLinks(target: Turtle, linkBreed: AgentSet): Seq[Link]
+  def links(target: Turtle, linkBreed: AgentSet): Seq[Link]
 
 }
 
@@ -145,8 +155,8 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     !it.hasNext || unbreeded == (it.next().asInstanceOf[Link].getBreed eq world.links)
   }
 
-  def createLink(src: Turtle, dest: Turtle, breed: AgentSet): Link = {
-    val link = linkFactory(world, src, dest, breed)
+  def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link = {
+    val link = linkFactory(world, src, dest, linkBreed)
     bless(link)
     link
   }
@@ -184,74 +194,54 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     breededLinks.valuesIterator.foreach(_.removeTurtle(turtle))
   }
 
-  private def linkMapsForBreed(breed: AgentSet): LinkMaps =
-    if (breed eq world.links) allLinks else breededLinks.getOrElseUpdate(breed, LinkMaps())
+  private def linkMapsForBreed(linkBreed: AgentSet): LinkMaps =
+    if (linkBreed eq world.links) allLinks else breededLinks.getOrElseUpdate(linkBreed, LinkMaps())
 
-  def findLinkedFrom(src: Turtle, breed: AgentSet): Seq[Turtle] =
-    neighbors(src, findLinksFrom(src, breed), breed)
+  def outNeighbors(src: Turtle, linkBreed: AgentSet): Seq[Turtle] =
+    neighbors(src, outLinks(src, linkBreed), linkBreed)
 
-  def findLinkedTo(target: Turtle, breed: AgentSet): Seq[Turtle] =
-    neighbors(target, findLinksTo(target, breed), breed)
+  def inNeighbors(target: Turtle, linkBreed: AgentSet): Seq[Turtle] =
+    neighbors(target, inLinks(target, linkBreed), linkBreed)
 
-  def findLinkedWith(turtle: Turtle, breed: AgentSet): Seq[Turtle] =
-    neighbors(turtle, findLinksWith(turtle, breed), breed)
+  def neighbors(turtle: Turtle, linkBreed: AgentSet): Seq[Turtle] =
+    neighbors(turtle, links(turtle, linkBreed), linkBreed)
 
-  /// single lookups
-
-  def findLink(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link =
-    if (breed.isDirected)
-      findLinkFrom(src, dest, breed, includeAllLinks)
-    else
-      findLinkEitherWay(src, dest, breed, includeAllLinks)
-
-  def findLinkFrom(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link = {
+  def getLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Option[Link] = {
     if (src == null || dest == null)
-      null
-    else {
-      var link =
-        world.links.getAgent(new DummyLink(world, src, dest, breed))
-          .asInstanceOf[Link]
-      if (link == null && includeAllLinks && (breed eq world.links))
-        world.getLinkBreeds.asScala.foreach { breedNamePair =>
-          link = world.links.getAgent(new DummyLink(world, src, dest, breedNamePair._2)).asInstanceOf[Link]
-          if (link != null)
-            return link
-        }
-      link
-    }
+      return None
+    var link = world.links.getAgent(new DummyLink(world, src, dest, linkBreed))
+    if (link == null && linkBreed.isUndirected)
+      link = world.links.getAgent(new DummyLink(world, dest, src, linkBreed))
+    Option(link).asInstanceOf[Option[Link]]
   }
 
-  def findLinkEitherWay(src: Turtle, dest: Turtle, breed: AgentSet, includeAllLinks: Boolean): Link = {
-    val link = findLinkFrom(src, dest, breed, includeAllLinks)
-    if (link != null)
-      link
-    else
-      findLinkFrom(dest, src, breed, includeAllLinks)
-  }
+  def linksWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Seq[Link] =
+    links(src, linkBreed).filter(l => otherEnd(src, l) == dest)
 
-  /// plural lookups
+  def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Seq[Link] =
+    outLinks(src, linkBreed).filter(l => otherEnd(src, l) == dest)
 
-  def findLinksFrom(src: Turtle, breed: AgentSet): Seq[Link] = {
-    val linkMaps = linkMapsForBreed(breed)
+  def outLinks(src: Turtle, linkBreed: AgentSet): Seq[Link] = {
+    val linkMaps = linkMapsForBreed(linkBreed)
     linkMaps.outgoing(src) ::: linkMaps.undirected(src)
   }
 
-  def findLinksTo(target: Turtle, breed: AgentSet): Seq[Link] = {
-    val linkMaps = linkMapsForBreed(breed)
+  def inLinks(target: Turtle, linkBreed: AgentSet): Seq[Link] = {
+    val linkMaps = linkMapsForBreed(linkBreed)
     linkMaps.incoming(target) ::: linkMaps.undirected(target)
   }
 
-  def findLinksWith(turtle: Turtle, breed: AgentSet): Seq[Link] = {
-    val linkMaps = linkMapsForBreed(breed)
+  def links(turtle: Turtle, linkBreed: AgentSet): Seq[Link] = {
+    val linkMaps = linkMapsForBreed(linkBreed)
     linkMaps.undirected(turtle) ::: linkMaps.outgoing(turtle) ::: linkMaps.incoming(turtle)
   }
 
   def otherEnd(turtle: Turtle, link: Link): Turtle =
     if (link.end1 == turtle) link.end2 else link.end1
 
-  def neighbors(turtle: Turtle, links: Seq[Link], breed: AgentSet): Seq[Turtle] = {
+  def neighbors(turtle: Turtle, links: Seq[Link], linkBreed: AgentSet): Seq[Turtle] = {
     val result = links.map(otherEnd(turtle, _))
-    if ((breed eq world.links) && (breededLinks.size > 1))
+    if ((linkBreed eq world.links) && (breededLinks.size > 1))
       result.distinct
     else
       result

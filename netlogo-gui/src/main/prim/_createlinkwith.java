@@ -45,7 +45,7 @@ public final strictfp class _createlinkwith
     if (breed == world.links()) {
       breed.setDirected(false);
     }
-    if (world.linkManager.findLinkEitherWay(src, dest, breed, false) == null) {
+    if (world.linkManager.getLink(src, dest, breed).isEmpty()) {
       if (src == dest) {
         throw new RuntimePrimitiveException
             (context, this,

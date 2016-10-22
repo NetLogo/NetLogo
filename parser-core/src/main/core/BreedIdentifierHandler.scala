@@ -36,24 +36,21 @@ object BreedIdentifierHandler {
     UndirectedLinkPrimitive ( "CREATE-<BREEDS>-WITH"  , Command ,  "etc._createlinkswith"   ),
     DirectedLinkPrimitive   ( "CREATE-<BREED>-TO"     , Command ,  "etc._createlinkto"      ),
     UndirectedLinkPrimitive ( "CREATE-<BREED>-WITH"   , Command ,  "etc._createlinkwith"    ),
-    DirectedLinkPrimitive   ( "IN-<BREED>-FROM"       , Reporter,  "etc._inlinkfrom"        ),
-    DirectedLinkPrimitive   ( "IN-<BREED>-NEIGHBOR?"  , Reporter,  "etc._inlinkneighbor"    ),
-    DirectedLinkPrimitive   ( "IN-<BREED>-NEIGHBORS"  , Reporter,  "etc._inlinkneighbors"   ),
-    UndirectedLinkPrimitive ( "IS-<BREED>?"           , Reporter,  "etc._isbreed"           ),
-    DirectedLinkPrimitive   ( "IS-<BREED>?"           , Reporter,  "etc._isbreed"           ),
-    DirectedLinkPrimitive   ( "<BREEDS>"              , Reporter,  "etc._linkbreed"         ),
-    UndirectedLinkPrimitive ( "<BREEDS>"              , Reporter,  "etc._linkbreed"         ),
-    DirectedLinkPrimitive   ( "<BREED>"               , Reporter,  "etc._linkbreedsingular" ),
-    UndirectedLinkPrimitive ( "<BREED>"               , Reporter,  "etc._linkbreedsingular" ),
-    UndirectedLinkPrimitive ( "<BREED>-NEIGHBOR?"     , Reporter,  "etc._linkneighbor"      ),
-    UndirectedLinkPrimitive ( "<BREED>-NEIGHBORS"     , Reporter,  "etc._linkneighbors"     ),
-    UndirectedLinkPrimitive ( "<BREED>-WITH"          , Reporter,  "etc._linkwith"          ),
-    DirectedLinkPrimitive   ( "MY-IN-<BREEDS>"        , Reporter,  "etc._myinlinks"         ),
-    UndirectedLinkPrimitive ( "MY-<BREEDS>"           , Reporter,  "etc._mylinks"           ),
-    DirectedLinkPrimitive   ( "MY-OUT-<BREEDS>"       , Reporter,  "etc._myoutlinks"        ),
-    DirectedLinkPrimitive   ( "OUT-<BREED>-NEIGHBOR?" , Reporter,  "etc._outlinkneighbor"   ),
-    DirectedLinkPrimitive   ( "OUT-<BREED>-NEIGHBORS" , Reporter,  "etc._outlinkneighbors"  ),
-    DirectedLinkPrimitive   ( "OUT-<BREED>-TO"        , Reporter,  "etc._outlinkto"         )
+    LinkPrimitive ( "IN-<BREED>-FROM"       , Reporter,  "etc._inlinkfrom"        ),
+    LinkPrimitive ( "IN-<BREED>-NEIGHBOR?"  , Reporter,  "etc._inlinkneighbor"    ),
+    LinkPrimitive ( "IN-<BREED>-NEIGHBORS"  , Reporter,  "etc._inlinkneighbors"   ),
+    LinkPrimitive ( "IS-<BREED>?"           , Reporter,  "etc._isbreed"           ),
+    LinkPrimitive ( "<BREEDS>"              , Reporter,  "etc._linkbreed"         ),
+    LinkPrimitive ( "<BREED>"               , Reporter,  "etc._linkbreedsingular" ),
+    LinkPrimitive ( "<BREED>-NEIGHBOR?"     , Reporter,  "etc._linkneighbor"      ),
+    LinkPrimitive ( "<BREED>-NEIGHBORS"     , Reporter,  "etc._linkneighbors"     ),
+    LinkPrimitive ( "<BREED>-WITH"          , Reporter,  "etc._linkwith"          ),
+    LinkPrimitive ( "MY-IN-<BREEDS>"        , Reporter,  "etc._myinlinks"         ),
+    LinkPrimitive ( "MY-<BREEDS>"           , Reporter,  "etc._mylinks"           ),
+    LinkPrimitive ( "MY-OUT-<BREEDS>"       , Reporter,  "etc._myoutlinks"        ),
+    LinkPrimitive ( "OUT-<BREED>-NEIGHBOR?" , Reporter,  "etc._outlinkneighbor"   ),
+    LinkPrimitive ( "OUT-<BREED>-NEIGHBORS" , Reporter,  "etc._outlinkneighbors"  ),
+    LinkPrimitive ( "OUT-<BREED>-TO"        , Reporter,  "etc._outlinkto"         )
 
   )
 
@@ -81,10 +78,14 @@ object BreedIdentifierHandler {
     patternString.matches(s"^$BreedPatternString$$")
 
   private def breedPrimsMatching(tokenType: TokenType, breed: DeclBreed, matches: (String) => Boolean): SpecMatcher =
-    if (breed.isLinkBreed && breed.isDirected)
-      { case directedLink@DirectedLinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => directedLink }
-    else if (breed.isLinkBreed)
-      { case undirectedLink@UndirectedLinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => undirectedLink }
+    if (breed.isLinkBreed && breed.isDirected) {
+      case directedLink@DirectedLinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => directedLink
+      case link@LinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => link
+    }
+    else if (breed.isLinkBreed) {
+      case undirectedLink@UndirectedLinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => undirectedLink
+      case link@LinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => link
+    }
     else
       { case turtle@TurtlePrimitive(pattern, `tokenType`, _) if matches(pattern) => turtle }
 
@@ -137,5 +138,10 @@ object BreedIdentifierHandler {
   private[core] case class UndirectedLinkPrimitive(patternString: String, tokenType: TokenType, primClass: String) extends BreedPrimSpec {
     override def breeds(program: Program):   Map[String, Breed] = program.linkBreeds
     override def isValidBreed(breed: Breed): Boolean            = !breed.isDirected
+  }
+
+  private[core] case class LinkPrimitive(patternString: String, tokenType: TokenType, primClass: String) extends BreedPrimSpec {
+    override def breeds(program: Program): Map[String, Breed]   = program.linkBreeds
+    override def isValidBreed(breed: Breed): Boolean            = true
   }
 }

@@ -23,12 +23,12 @@ import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.MersenneTwisterFast;
+import scala.Option;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -612,9 +612,11 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    return linkManager.findLink((Turtle) _turtles.getAgent(end1),
-        (Turtle) _turtles.getAgent(end2),
-        breed, false);
+    Option<Link> link = linkManager.getLink((Turtle) _turtles.getAgent(end1), (Turtle) _turtles.getAgent(end2), breed);
+    if (link.isEmpty())
+      return null;
+    else
+      return link.get();
   }
 
   private long nextTurtleIndex = 0;
@@ -1319,6 +1321,7 @@ public strictfp class World
     return breedOwns.contains(name);
   }
 
+  // TODO: Get rid of this method
   Map<String, AgentSet> getLinkAgentBreeds() {
     return linkBreeds;
   }

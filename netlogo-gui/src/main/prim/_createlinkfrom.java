@@ -2,13 +2,11 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -45,7 +43,7 @@ public final strictfp class _createlinkfrom
     if (breed == world.links()) {
       breed.setDirected(true);
     }
-    if (world.linkManager.findLinkFrom(src, dest, breed, false) == null) {
+    if (world.linkManager.getLink(src, dest, breed).isEmpty()){
       if (src == dest) {
         throw new RuntimePrimitiveException
             (context, this,
