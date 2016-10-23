@@ -8,6 +8,7 @@ import scala.collection.JavaConversions;
 import scala.collection.Seq;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -47,12 +48,12 @@ public strictfp class TieManager {
 
   List<Turtle> tiedTurtles(Turtle root) {
     ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    for (Link link : JavaConversions.asJavaIterable(linkManager.outLinks(root, world._links))) {
+    for (Link link : linkManager.outLinks(root, world._links)) {
       if (link.isTied()) {
         myTies.add(link.end2());
       }
     }
-    for (Link link : JavaConversions.asJavaIterable(linkManager.inLinks(root, world._links))) {
+    for (Link link : linkManager.inLinks(root, world._links)) {
       if (link.isTied() && !link.getBreed().isDirected()) {
         myTies.add(link.end1());
       }
@@ -152,8 +153,8 @@ public strictfp class TieManager {
       // update positions
       for (Turtle t : myTies) {
         try {
-          boolean rigid = JavaConversions.asJavaCollection(linkManager.linksWith(root, t, world.links()))
-                                         .stream().anyMatch(l -> l.mode().equals(Link.MODE_FIXED));
+          boolean rigid = Arrays.stream(linkManager.linksWith(root, t, world.links()))
+                  .anyMatch(l -> l.mode().equals(Link.MODE_FIXED));
 
           double dh = Turtle.subtractHeadings(newHeading, originalHeading);
           double dist = world.protractor().distance(root.xcor, root.ycor, t.xcor, t.ycor, true);

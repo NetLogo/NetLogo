@@ -32,6 +32,6 @@ public final strictfp class _inlinkneighbor
   public Object report(final Context context) throws LogoException {
     Turtle target = argEvalTurtle(context, 0);
     AgentSet breed = breedName == null ? world.links() : world.getLinkBreed(breedName);
-    return !world.linkManager.linksTo(target, (Turtle) context.agent, breed).isEmpty();
+    return world.linkManager.linksTo(target, (Turtle) context.agent, breed).length > 0;
   }
 }

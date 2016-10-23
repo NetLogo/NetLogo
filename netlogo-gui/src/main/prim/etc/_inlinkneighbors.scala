@@ -17,9 +17,7 @@ class _inlinkneighbors(val breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    AgentSet.fromIterable(AgentKind.Turtle,
-      world.linkManager.inNeighbors(
-        context.agent.asInstanceOf[Turtle], breed))
+    AgentSet.fromArray(AgentKind.Turtle, world.linkManager.inNeighbors(context.agent.asInstanceOf[Turtle], breed))
   }
 
 }

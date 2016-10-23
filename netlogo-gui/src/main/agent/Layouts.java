@@ -559,7 +559,7 @@ public final strictfp class Layouts {
     while (!queue.isEmpty()) {
       TreeNode node = queue.remove(0);
       lastNode = node;
-      for (Turtle t : JavaConversions.asJavaIterable(linkManager.neighbors(node.val, breed))) {
+      for (Turtle t : linkManager.neighbors(node.val, breed)) {
         if (nodeset.contains(t) && !nodeTable.containsKey(t)
                 && (allowedTurtles == null || allowedTurtles.contains(t))) {
           TreeNode child = new TreeNode(t, node);

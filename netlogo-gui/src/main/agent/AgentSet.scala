@@ -14,8 +14,8 @@ object AgentSet {
   // for convenience from Java, overload instead of using default arguments
   def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String): IndexedAgentSet =
     new ArrayAgentSet(kind, printName, agents)
-  def fromArray(kind: core.AgentKind, agents: Array[Agent]): IndexedAgentSet =
-    new ArrayAgentSet(kind, null, agents)
+  def fromArray(kind: core.AgentKind, agents: Array[_ <: Agent]): IndexedAgentSet =
+    new ArrayAgentSet(kind, null, agents.asInstanceOf[Array[Agent]])
 }
 
 abstract class AgentSet(

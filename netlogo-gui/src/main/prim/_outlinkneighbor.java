@@ -31,6 +31,6 @@ public final strictfp class _outlinkneighbor
     Turtle parent = (Turtle) context.agent;
     Turtle target = argEvalTurtle(context, 0);
     AgentSet breed = breedName == null ? world.links() : world.getLinkBreed(breedName);
-    return !linkManager.linksTo(parent, target, breed).isEmpty();
+    return linkManager.linksTo(parent, target, breed).length > 0;
   }
 }
