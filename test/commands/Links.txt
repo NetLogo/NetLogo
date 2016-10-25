@@ -921,3 +921,15 @@ link-finder-primitives-give-all-possible
   length remove-duplicates [ n-values 10 [ link-with turtle 0 ] ] of turtle 1 => 2
   length remove-duplicates [ n-values 10 [ out-link-to turtle 0 ] ] of turtle 1 => 1
   length remove-duplicates [ n-values 10 [ in-link-from turtle 0 ] ] of turtle 1 => 2
+
+link-manager-handles-breed-changes
+  directed-link-breed [ directed-edges directed-edge ]
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  O> clear-all
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  L> set breed undirected-edges
+  (word one-of [ my-undirected-edges ] of turtle 0) => "(undirected-edge 0 1)"
+  count [ my-out-directed-edges ] of turtle 0 => 0
+  O> ask turtle 0 [ die ]
+

@@ -625,6 +625,7 @@ public strictfp class Link
   public void setBreed(AgentSet breed) {
     AgentSet oldBreed = null;
     if (variables[VAR_BREED] instanceof AgentSet) {
+      world.linkManager.removeLink(this);
       oldBreed = (AgentSet) variables[VAR_BREED];
       if (breed == oldBreed) {
         return;
@@ -637,6 +638,9 @@ public strictfp class Link
       ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED] = breed;
+    if (oldBreed != null) {
+      world.linkManager.addLink(this);
+    }
     shape(world.linkBreedShapes.breedShape(breed));
     realloc(false, oldBreed);
   }

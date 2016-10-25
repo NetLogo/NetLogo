@@ -22,6 +22,9 @@ trait LinkManager {
 
   def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link
 
+  def addLink(link: Link)
+  def removeLink(link: Link)
+
   /**
     * Gets a specific link for the given turtles and link breed.
     * Note that unlike the other methods in this class, if `world.links` is
@@ -194,21 +197,20 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
 
   def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link = {
     val link = linkFactory(world, src, dest, linkBreed)
-    bless(link)
+    addLink(link)
     link
   }
 
-  private def bless(link: Link) {
+  def addLink(link: Link) = {
     allLinks.addLink(link)
-    if (link.getBreed eq world.links)
+    if (link.getBreed eq world.links) {
+      world.links.setDirected(link.isDirectedLink)
       unbreededLinkCount += 1
-    else
+    } else
       breededLinks.getOrElseUpdate(link.getBreed, new LinkMap()).addLink(link)
   }
 
-  def cleanupLink(link: Link) {
-    // keep tie bookkeeping up to date
-    link.untie()
+  def removeLink(link: Link) = {
     allLinks.removeLink(link)
     if (link.getBreed eq world.links) {
       unbreededLinkCount -= 1
@@ -218,6 +220,11 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     } else {
       breededLinks(link.getBreed).removeLink(link)
     }
+  }
+
+  override def cleanupLink(link: Link): Unit = {
+    link.untie()
+    removeLink(link)
   }
 
   def cleanupTurtle(turtle: Turtle) {
