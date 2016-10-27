@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-
-package org.nlogo.prim.etc
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+package org.nlogo.prim
 
 import org.nlogo.agent.{AgentSet, Turtle}
 import org.nlogo.nvm.Context

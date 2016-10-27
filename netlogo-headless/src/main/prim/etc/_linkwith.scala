@@ -22,13 +22,13 @@ class _linkwith(val breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeDirected(breed))
-      throw new RuntimePrimitiveException(context, this, err)
-    val link = world.linkManager.findLinkEitherWay(parent, target, breed, true)
-    if (link == null)
+    val links = world.linkManager.linksWith(parent, target, breed)
+    if (links.isEmpty)
       Nobody
+    else if (links.size == 1) // Avoid needlessly invoking the RNG
+      links.head
     else
-      link
+      links(context.getRNG.nextInt(links.size))
   }
 
 }

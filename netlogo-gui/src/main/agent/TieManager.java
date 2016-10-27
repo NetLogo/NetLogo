@@ -50,12 +50,10 @@ public strictfp class TieManager {
     ArrayList<Turtle> myTies = new ArrayList<Turtle>();
     for (Link link : linkManager.outLinks(root, world._links)) {
       if (link.isTied()) {
-        myTies.add(link.end2());
-      }
-    }
-    for (Link link : linkManager.inLinks(root, world._links)) {
-      if (link.isTied() && !link.getBreed().isDirected()) {
-        myTies.add(link.end1());
+        if (root == link.end1)
+          myTies.add(link.end2);
+        else
+          myTies.add(link.end1);
       }
     }
     return myTies;

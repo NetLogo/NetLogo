@@ -14,8 +14,8 @@ import
 class ArrayAgentSet(
   kind: core.AgentKind,
   printName: String,
-  val array: Array[Agent])
-extends AgentSet(kind, printName, false, false, false) {
+  private val array: Array[Agent])
+extends IndexedAgentSet(kind, printName) {
 
   /// conversions
 
@@ -69,8 +69,7 @@ extends AgentSet(kind, printName, false, false, false) {
 
   /// one-agent queries
 
-  override def getAgent(id: AnyRef) =
-    array(id.asInstanceOf[java.lang.Double].intValue)
+  override def getByIndex(index: Int) = array(index)
 
   override def contains(agent: api.Agent): Boolean = {
     val iter = iterator

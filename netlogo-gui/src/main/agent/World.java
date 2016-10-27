@@ -23,7 +23,6 @@ import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.MersenneTwisterFast;
-import scala.Option;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -612,11 +611,8 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    Option<Link> link = linkManager.getLink((Turtle) _turtles.getAgent(end1), (Turtle) _turtles.getAgent(end2), breed);
-    if (link.isEmpty())
-      return null;
-    else
-      return link.get();
+    scala.Option<Link> link = linkManager.getLink((Turtle) _turtles.getAgent(end1), (Turtle) _turtles.getAgent(end2), breed);
+    return link.nonEmpty() ? link.get() : null;
   }
 
   private long nextTurtleIndex = 0;

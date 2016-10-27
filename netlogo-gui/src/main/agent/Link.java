@@ -698,4 +698,7 @@ public strictfp class Link
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
+  public Turtle otherEnd(Turtle parent) {
+    return end1 == parent ? end2 : end1;
+  }
 }

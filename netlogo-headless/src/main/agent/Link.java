@@ -594,6 +594,7 @@ public strictfp class Link
   public void setBreed(AgentSet breed) {
     TreeAgentSet oldBreed = (TreeAgentSet) variables()[VAR_BREED];
     if (variables()[VAR_BREED] instanceof AgentSet) {
+      world().linkManager().removeLink(this);
       oldBreed = (TreeAgentSet) variables()[VAR_BREED];
       if (breed == oldBreed) {
         return;
@@ -606,6 +607,9 @@ public strictfp class Link
       ((TreeAgentSet) breed).add(this);
     }
     variables()[VAR_BREED] = breed;
+    if (oldBreed != null) {
+      world().linkManager().addLink(this);
+    }
     shape(world().linkBreedShapes.breedShape(breed));
     realloc(false, oldBreed);
   }
@@ -665,4 +669,7 @@ public strictfp class Link
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
+  public Turtle otherEnd(Turtle parent) {
+    return end1 == parent ? end2 : end1;
+  }
 }

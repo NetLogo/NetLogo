@@ -174,26 +174,6 @@ public abstract strictfp class Instruction
     return parts[parts.length - 1];
   }
 
-  // checking of breed directedness
-
-  protected void mustNotBeDirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isDirected()) {
-      throw new RuntimePrimitiveException
-          (context, this,
-              breed.printName() + " is a directed breed.");
-    }
-  }
-
-  protected void mustNotBeUndirected(AgentSet breed, Context context)
-      throws EngineException {
-    if (breed.isUndirected()) {
-      throw new RuntimePrimitiveException
-          (context, this,
-              breed.printName() + " is an undirected breed.");
-    }
-  }
-
   protected void checkForBreedCompatibility(AgentSet breed, Context context)
       throws EngineException {
     if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {

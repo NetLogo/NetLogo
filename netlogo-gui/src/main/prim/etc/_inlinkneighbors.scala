@@ -12,11 +12,7 @@ class _inlinkneighbors(val breedName: String) extends Reporter {
   def this() = this(null)
 
   override def report(context: Context): AgentSet = {
-    val breed =
-      if (breedName == null)
-        world.links
-      else
-        world.getLinkBreed(breedName)
+    val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
     AgentSet.fromArray(AgentKind.Turtle, world.linkManager.inNeighbors(context.agent.asInstanceOf[Turtle], breed))
   }
 

@@ -5,21 +5,22 @@ package org.nlogo.agent
 import org.nlogo.{ core, api }
 
 object AgentSet {
-  def fromAgent(agent: Agent): AgentSet =
+  def fromAgent(agent: Agent): IndexedAgentSet =
     new ArrayAgentSet(agent.kind, null, Array(agent))
-  def fromIterator(kind: core.AgentKind, agents: Iterator[Agent]): AgentSet =
-    new ArrayAgentSet(kind, null, agents.toArray)
+  def fromIterator(kind: core.AgentKind, agents: Iterator[_ <: Agent]): IndexedAgentSet =
+    new ArrayAgentSet(kind, null, agents.toArray[Agent])
+  def fromIterable(kind: core.AgentKind, agents: Iterable[_ <: Agent]): IndexedAgentSet =
+    new ArrayAgentSet(kind, null, agents.toArray[Agent])
   // for convenience from Java, overload instead of using default arguments
-  def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
+  def fromArray(kind: core.AgentKind, agents: Array[Agent], printName: String): IndexedAgentSet =
     new ArrayAgentSet(kind, printName, agents)
-  def fromArray(kind: core.AgentKind, agents: Array[Agent]): AgentSet =
-    new ArrayAgentSet(kind, null, agents)
+  def fromArray(kind: core.AgentKind, agents: Array[_ <: Agent]): IndexedAgentSet =
+    new ArrayAgentSet(kind, null, agents.asInstanceOf[Array[Agent]])
 }
 
 abstract class AgentSet(
   val kind: core.AgentKind,
   val printName: String,
-  val removableAgents: Boolean,
   // yuck, vars
   var isDirected: Boolean = false,
   var isUndirected: Boolean = false)
@@ -29,7 +30,6 @@ extends api.AgentSet {
   def equalAgentSetsHelper(otherSet: api.AgentSet): Boolean
   def iterator: AgentIterator
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator
-  def getAgent(id: AnyRef): Agent
   def randomOne(precomputedCount: Int, random: Int): Agent
   def randomTwo(precomputedCount: Int, random1: Int, random2: Int): Array[Agent]
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]

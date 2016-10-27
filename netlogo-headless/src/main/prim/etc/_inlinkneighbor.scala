@@ -2,32 +2,21 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ LinkManager, Turtle }
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.agent.{AgentSet, Turtle}
+import org.nlogo.nvm.Context
+import org.nlogo.nvm.Reporter
 
-class _inlinkneighbor(val breedName: String) extends Reporter {
-
+class _inlinkneighbor(private[this] val breedName: String) extends Reporter {
   def this() = this(null)
 
-  override def toString =
-    super.toString + ":" + breedName
-
-  override def report(context: Context): java.lang.Boolean = {
-    val target = argEvalTurtle(context, 0)
-    val breed =
-      if (breedName == null)
-        world.links
-      else
-        world.getLinkBreed(breedName)
-    if (breed.isUndirected)
-      Boolean.box(false)
-    else {
-      val link =
-        world.linkManager.findLinkFrom(target, context.agent.asInstanceOf[Turtle], breed, true)
-      if (link == null || link.getBreed.isUndirected) Boolean.box(false)
-      else Boolean.box(true)
-    }
+  override def toString: String = {
+    return super.toString + ":" + breedName
   }
 
+  def report(context: Context): AnyRef = {
+    val parent: Turtle = context.agent.asInstanceOf[Turtle]
+    val target: Turtle = argEvalTurtle(context, 0)
+    val breed: AgentSet = if (breedName == null) world.links else world.getLinkBreed(breedName)
+    return Boolean.box(world.linkManager.linksTo(target, parent, breed).length > 0)
+  }
 }

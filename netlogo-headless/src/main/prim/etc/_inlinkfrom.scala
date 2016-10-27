@@ -19,14 +19,13 @@ class _inlinkfrom(val breedName: String) extends Reporter {
     val breed =
       if (breedName == null) world.links
       else world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new RuntimePrimitiveException(context, this, err)
-    val link = world.linkManager.findLinkFrom(
-      target, context.agent.asInstanceOf[Turtle], breed, true)
-    if (link == null)
+    val links = world.linkManager.linksTo(target, context.agent.asInstanceOf[Turtle], breed)
+    if (links.isEmpty)
       Nobody
+    else if (links.size == 1) // Avoid needlessly invoking RNG
+      links.head
     else
-      link
+      links(context.getRNG.nextInt(links.size))
   }
 
 }

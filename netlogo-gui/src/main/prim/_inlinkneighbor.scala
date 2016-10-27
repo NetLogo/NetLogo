@@ -1,12 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-
-package org.nlogo.prim.etc
+package org.nlogo.prim
 
 import org.nlogo.agent.{AgentSet, Turtle}
 import org.nlogo.nvm.Context
 import org.nlogo.nvm.Reporter
 
-class _outlinkneighbor(private[this] val breedName: String) extends Reporter {
+class _inlinkneighbor(private[this] val breedName: String) extends Reporter {
   def this() = this(null)
 
   override def toString: String = {
@@ -17,6 +16,6 @@ class _outlinkneighbor(private[this] val breedName: String) extends Reporter {
     val parent: Turtle = context.agent.asInstanceOf[Turtle]
     val target: Turtle = argEvalTurtle(context, 0)
     val breed: AgentSet = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    return Boolean.box(world.linkManager.linksTo(parent, target, breed).length > 0)
+    return Boolean.box(world.linkManager.linksTo(target, parent, breed).length > 0)
   }
 }

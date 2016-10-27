@@ -11,6 +11,20 @@ import scala.collection.mutable.ArrayBuffer
 // It would be nice to move this to the api package, but it would take a lot of refactoring to make
 // all of the argument types and return types be the api types. - ST 4/11/13
 
+object LinkManager {
+  // checking of breed directedness. not sure where else to put this
+  def mustNotBeDirected(breed: AgentSet): Option[String] =
+    if (breed.isDirected)
+      Some(breed.printName + " is a directed breed.")
+    else
+      None
+  def mustNotBeUndirected(breed: AgentSet): Option[String] =
+    if (breed.isUndirected)
+      Some(breed.printName + " is an undirected breed.")
+    else
+      None
+}
+
 trait LinkManager {
 
   def reset()
@@ -255,10 +269,10 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   }
 
   def linksWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
-    links(src, linkBreed).filter(l => otherEnd(src, l) == dest)
+    links(src, linkBreed).filter(l => l.otherEnd(src) == dest)
 
   def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
-    outLinks(src, linkBreed).filter(l => otherEnd(src, l) == dest)
+    outLinks(src, linkBreed).filter(l => l.otherEnd(src) == dest)
 
   def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link] = {
     val linkMaps = linkMapsForBreed(linkBreed)
@@ -275,14 +289,14 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     linkMaps.links(turtle, includeUndirected = true, includeOutgoing = true, includeIncoming = true)
   }
 
-  def otherEnd(turtle: Turtle, link: Link): Turtle =
-    if (link.end1 == turtle) link.end2 else link.end1
-
   def otherEnds(turtle: Turtle, links: Array[Link], linkBreed: AgentSet): Array[Turtle] = {
+    // Using an explicit while loop was found to have a significant performance
+    // improvement over using `map` in the benchmarks.
+    // -BCH 10/26/2016
     val result = new Array[Turtle](links.length)
     var i = 0
     while (i < links.length) {
-      result(i) = otherEnd(turtle, links(i))
+      result(i) = links(i).otherEnd(turtle)
       i += 1
     }
     if ((linkBreed eq world.links) && (breededLinks.size > 1))

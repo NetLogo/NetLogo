@@ -445,13 +445,13 @@ public strictfp class World
 
   TreeAgentSet _turtles = null;
 
-  public AgentSet turtles() {
+  public TreeAgentSet turtles() {
     return _turtles;
   }
 
   TreeAgentSet _links = null;
 
-  public AgentSet links() {
+  public TreeAgentSet links() {
     return _links;
   }
 
@@ -491,7 +491,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.array()[id];
+    return (Patch) _patches.getByIndex(id);
   }
 
   public Patch getPatchAt(double x, double y)
@@ -500,7 +500,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.array()[id];
+    return getPatch(id);
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -525,7 +525,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.array()[patchid];
+    return getPatch(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -537,8 +537,7 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.array()[(_worldWidth * (_maxPycor - yc))
-                                    + xc - _minPxcor];
+    return getPatch((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
   }
 
   public Turtle getTurtle(long id) {
@@ -546,9 +545,8 @@ public strictfp class World
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
-    return linkManager().findLink((Turtle) _turtles.getAgent(end1),
-        (Turtle) _turtles.getAgent(end2),
-        breed, false);
+    scala.Option<Link> link = linkManager().getLink((Turtle) _turtles.getAgent(end1), (Turtle) _turtles.getAgent(end2), breed);
+    return link.nonEmpty() ? link.get() : null;
   }
 
   private long nextTurtleIndex = 0;

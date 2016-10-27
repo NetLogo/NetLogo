@@ -12,16 +12,8 @@ class _inlinkneighbors(val breedName: String) extends Reporter {
   def this() = this(null)
 
   override def report(context: Context): AgentSet = {
-    val breed =
-      if (breedName == null)
-        world.links
-      else
-        world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeUndirected(breed))
-      throw new RuntimePrimitiveException(context, this, err)
-    AgentSet.fromIterator(AgentKind.Turtle,
-      world.linkManager.findLinkedTo(
-        context.agent.asInstanceOf[Turtle], breed))
+    val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
+    AgentSet.fromArray(AgentKind.Turtle, world.linkManager.inNeighbors(context.agent.asInstanceOf[Turtle], breed))
   }
 
 }
