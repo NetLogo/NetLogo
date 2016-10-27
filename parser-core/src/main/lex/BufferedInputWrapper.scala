@@ -8,7 +8,7 @@ import org.nlogo.core.{ SourceLocation, Token }
 
 import scala.annotation.tailrec
 
-class BufferedInputWrapper(buffReader: AutoGrowingBufferedReader, var offset: Int, val filename: String) extends WrappedInput {
+class BufferedInputWrapper(buffReader: LexReader, var offset: Int, val filename: String) extends WrappedInput {
   def this(input: BufferedReader, offset: Int, filename: String) = {
     this(new AutoGrowingBufferedReader(input), offset, filename)
   }
@@ -24,73 +24,41 @@ class BufferedInputWrapper(buffReader: AutoGrowingBufferedReader, var offset: In
       Some(readChar.asInstanceOf[Char])
   }
 
-  @tailrec private def longestPrefixTail(p: LexPredicate, acc: String): String =
+  @tailrec
+  private def longestPrefixTail(p: LexPredicate, acc: String): String =
     nextChar match {
       case Some(c) if p(c).continue => longestPrefixTail(p, acc + c)
       case _ => acc
     }
 
-    override def hasNext: Boolean = {
-      buffReader.mark()
-      val r = buffReader.read() != -1
-      buffReader.reset()
-      r
-    }
-
-    override def assembleToken(p: LexPredicate, f: TokenGenerator): Option[(Token, WrappedInput)] = {
-      val originalOffset = offset
-      val (prefix, remainder) = longestPrefix(p)
-      (prefix match {
-        case "" => None
-        case nonEmptyString => f(nonEmptyString).map {
-          case (text, tpe, tval) => (new Token(text, tpe, tval)(SourceLocation(originalOffset, remainder.offset, filename)), this)
-        }
-        }) orElse {
-          buffReader.reset()
-          offset = originalOffset
-          None
-        }
-    }
-
-    override def longestPrefix(f: LexPredicate): (String, WrappedInput) = {
-      buffReader.mark()
-      val (a, b) = (longestPrefixTail(f, ""), this)
-      buffReader.reset()
-      buffReader.skip(a.length) // we always go "one too far", so we have to backup
-      offset += a.length
-      (a, b)
-    }
-}
-
-class AutoGrowingBufferedReader(reader: BufferedReader) {
-  private var markSize: Int = 65536
-  private var remainingMark: Int = 0
-
-  def mark(): Unit = {
-    reader.mark(markSize)
-    remainingMark = markSize
+  override def hasNext: Boolean = {
+    buffReader.mark()
+    val r = buffReader.read() != -1
+    buffReader.reset()
+    r
   }
 
-  def reset(): Unit = {
-    reader.reset()
-    remainingMark = markSize
+  override def assembleToken(p: LexPredicate, f: TokenGenerator): Option[(Token, WrappedInput)] = {
+    val originalOffset = offset
+    val (prefix, remainder) = longestPrefix(p)
+    (prefix match {
+      case "" => None
+      case nonEmptyString => f(nonEmptyString).map {
+        case (text, tpe, tval) => (new Token(text, tpe, tval)(SourceLocation(originalOffset, remainder.offset, filename)), this)
+      }
+      }) orElse {
+        buffReader.reset()
+        offset = originalOffset
+        None
+      }
   }
 
-  def skip(l: Long): Unit = {
-    reader.skip(l)
-    remainingMark -= l.toInt
-  }
-
-  def read(): Int = {
-    if (remainingMark == 0) {
-      reader.reset()
-      reader.mark(markSize * 2)
-      reader.skip(markSize)
-      remainingMark = markSize
-      markSize = markSize * 2
-    }
-    val i = reader.read()
-    remainingMark -= 1
-    i
+  override def longestPrefix(f: LexPredicate): (String, WrappedInput) = {
+    buffReader.mark()
+    val (a, b) = (longestPrefixTail(f, ""), this)
+    buffReader.reset()
+    buffReader.skip(a.length) // we always go "one too far", so we have to backup
+    offset += a.length
+    (a, b)
   }
 }

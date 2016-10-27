@@ -9,7 +9,7 @@ import javax.swing.{ Action, JScrollPane, KeyStroke, ScrollPaneConstants }
 import javax.swing.text.TextAction
 
 import scala.collection.JavaConversions._
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.I18N
 import org.nlogo.ide._
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
@@ -29,6 +29,7 @@ class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(com
         new AutoSuggestAction("auto-suggest", codeCompletionPopup))
       .withLineNumbers(
         Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
+      .forThreeDLanguage(Version.is3D)
   }
 
   def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean, enableHighlightCurrentLine: Boolean = false): AbstractEditorArea =

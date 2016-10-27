@@ -51,7 +51,7 @@
       <style token="LITERAL_NUMBER_HEXADECIMAL" fg="6400C8"/>
       <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="963700"/> <!-- AKA "Literal" -->
       <style token="LITERAL_CHAR" fg="DC009C"/>
-      <style token="LITERAL_BACKQUOTE" fg="DC009C"/>
+      <style token="LITERAL_BACKQUOTE" fg="963700"/> <!-- AKA "Literal" (used for NOBODY) -->
       <style token="MARKUP_TAG_DELIMITER" fg="ff0000"/>
       <style token="MARKUP_TAG_NAME" fg="0000ff"/>
       <style token="MARKUP_TAG_ATTRIBUTE" fg="3f7f7f"/>

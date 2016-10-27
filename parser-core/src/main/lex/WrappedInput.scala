@@ -3,6 +3,7 @@
 package org.nlogo.lex
 
 import java.io.{Reader => JReader, BufferedReader}
+import java.text.CharacterIterator
 
 import org.nlogo.core.Token
 
@@ -20,4 +21,7 @@ object WrappedInput {
       case br: BufferedReader => new BufferedInputWrapper(br, 0, filename)
       case r => new BufferedInputWrapper(reader, 0, filename)
     }
+
+  def apply(iter: CharacterIterator, filename: String): WrappedInput =
+    new CharacterIteratorInput(iter, filename)
 }

@@ -2,6 +2,8 @@
 
 package org.nlogo.ide
 
+import java.util.{ List => JList }
+
 import org.nlogo.core.{ CompilerException, Femto, Token, TokenizerInterface, TokenType }
 
 import org.fife.ui.rsyntaxtextarea.{ folding, RSyntaxTextArea },
@@ -9,10 +11,12 @@ import org.fife.ui.rsyntaxtextarea.{ folding, RSyntaxTextArea },
 
 import scala.annotation.tailrec
 import scala.util.Try
+import scala.collection.JavaConverters._
 
 object NetLogoFoldParser {
   val tokenizer: TokenizerInterface =
     Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
+
   val namer: (Token => Token) =
     Femto.scalaSingleton[Token => Token]("org.nlogo.parse.Namer0")
 
@@ -76,8 +80,7 @@ object NetLogoFoldParser {
 import NetLogoFoldParser.sections
 
 class NetLogoFoldParser extends FoldParser {
-  override def getFolds(textArea: RSyntaxTextArea): java.util.List[Fold] = {
-    import scala.collection.JavaConverters._
+  override def getFolds(textArea: RSyntaxTextArea): JList[Fold] = {
     val text = textArea.getText
     val parsedSections = sections(text)
 
