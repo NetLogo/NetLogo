@@ -2,14 +2,10 @@
 
 package org.nlogo.editor
 
-import java.awt.Font
-import java.awt.event.KeyEvent
+import javax.swing.{ Action, JMenu, JPopupMenu }
+import javax.swing.text.EditorKit
 
-import javax.swing.{ Action, JPopupMenu }
-import javax.swing.text.Document
-
-import org.fife.ui.rtextarea.RTextScrollPane
-import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, RSyntaxTextArea, SyntaxConstants, Theme, TokenMakerFactory },
+import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, RSyntaxTextArea, Theme, TokenMakerFactory },
   folding.FoldParserManager
 
 import org.nlogo.ide.NetLogoFoldParser
@@ -38,12 +34,20 @@ class AdvancedEditorArea(val configuration: EditorConfiguration, rows: Int, colu
     setBracketMatchingEnabled(enable)
   }
 
-  override def getActions(): Array[Action] =
+  override def getActions(): Array[Action] = {
     super.getActions.filter(_.getValue(Action.NAME) != "RSTA.GoToMatchingBracketAction").toArray[Action]
+  }
 
   override def createPopupMenu(): JPopupMenu = {
     val popupMenu = super.createPopupMenu
+    val toggleFolds = new ToggleFoldsAction(this)
+    popupMenu.getComponents.last match {
+      case foldMenu: JMenu => foldMenu.add(toggleFolds)
+      case _               => popupMenu.add(toggleFolds)
+    }
+    popupMenu.addSeparator()
     configuration.contextActions.foreach(popupMenu.add)
+    popupMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
     popupMenu
   }
 

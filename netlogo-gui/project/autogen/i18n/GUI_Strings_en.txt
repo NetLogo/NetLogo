@@ -182,6 +182,7 @@ tabs.code.rightclick.jumptodeclaration = Jump To Declaration
 tabs.code.rightclick.quickhelp = Quick Help
 tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo Dictionary.\n \
    Would you like to open the full NetLogo Dictionary?
+tabs.code.rightclick.collapse = Toggle Folds in Selection
 tabs.code.checkButton = Check
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
