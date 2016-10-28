@@ -1166,7 +1166,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_createlinkwith:null,+6 "create-link-with old-node [ set color green ]"
+[3]_createlinkwith:,+6 "create-link-with old-node [ set color green ]"
       _asm_proceduremakenode_procedurevariable_3 "old-node" => Object
            L0
             ALOAD 1

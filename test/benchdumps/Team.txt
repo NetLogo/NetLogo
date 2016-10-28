@@ -7373,7 +7373,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_createlinkswith:null,+5 "create-links-with other turtles with [ in-team? ] set new-collaboration? true [ set thickness 0.3 ]"
+[1]_createlinkswith:,+5 "create-links-with other turtles with [ in-team? ] set new-collaboration? true [ set thickness 0.3 ]"
       _asm_proceduretiecollaborators_otherwith_2 "other turtles with [ in-team? ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_proceduretiecollaborators_turtlevariable_3 "in-team?" => Object
