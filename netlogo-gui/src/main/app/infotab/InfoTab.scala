@@ -13,7 +13,7 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
 import org.nlogo.api.{ VersionHistory, ModelSection }
-import org.nlogo.app.common.FindDialog
+import org.nlogo.app.common.{ FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
@@ -22,11 +22,16 @@ import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButt
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, RichJButton }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
-class InfoTab(attachModelDir: String => String) extends JPanel with
-        DocumentListener with Printable with HyperlinkListener with
-        WindowEvents.LoadModelEvent.Handler with
-        WindowEvents.ZoomedEvent.Handler with
-        Zoomable {
+class InfoTab(attachModelDir: String => String)
+  extends JPanel
+  with DocumentListener
+  with MenuTab
+  with Printable
+  with HyperlinkListener
+  with UndoRedoActions
+  with WindowEvents.LoadModelEvent.Handler
+  with WindowEvents.ZoomedEvent.Handler
+  with Zoomable {
 
   val baseDocUrl: String = {
     val docRoot = System.getProperty("netlogo.docs.dir", "docs")
@@ -90,6 +95,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
       }
     }, BorderLayout.NORTH)
     add(scrollPane,BorderLayout.CENTER)
+    activeMenuActions = Seq(undoAction, redoAction)
   }
 
   private def resetBorders() {

@@ -34,7 +34,13 @@ class HubNetClientEditor(workspace: GUIWorkspace,
       menus.add(edit)
       menus.add(menuFactory.createToolsMenu)
       menus.add(menuFactory.createZoomMenu)
-      menuFactory.addHelpMenu(menus)
+      val helpMenu = menuFactory.createHelpMenu
+      menus.add(helpMenu)
+      try {
+        menus.setHelpMenu(helpMenu)
+      } catch {
+        case e: Error => org.nlogo.api.Exceptions.ignore(e)
+      }
       setJMenuBar(menus)
     }
     setSize(getPreferredSize)

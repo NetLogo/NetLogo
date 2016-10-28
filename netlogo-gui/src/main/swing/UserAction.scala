@@ -7,8 +7,6 @@ import java.awt.event.{ ActionEvent, InputEvent }
 import javax.swing.{ Action, KeyStroke }
 
 object UserAction {
-  /* Key denoting the I18n localization of a given action, from which the name can be looked up */
-  val I18nKey              = "org.nlogo.swing.I18nKey"
   /* Key denoting in which menu an action ought to be included */
   val ActionCategoryKey    = "org.nlogo.swing.ActionCategoryKey"
   /* Key for an action to denote what actions it should be grouped with. Allows like actions to be grouped together. */
@@ -27,6 +25,7 @@ object UserAction {
   val HelpCategory  = "org.nlogo.swing.HelpCategory"
 
   val EditClipboardGroup = "org.nlogo.swing.EditClipboardGroup"
+  val EditSelectionGroup = "org.nlogo.swing.EditSelectionGroup"
   val EditFormatGroup    = "org.nlogo.swing.EditFormatGroup"
   val EditFindGroup      = "org.nlogo.swing.EditFindGroup"
   val EditUndoGroup      = "org.nlogo.swing.EditUndoGroup"
@@ -38,8 +37,9 @@ object UserAction {
   val FileSaveGroup         = "org.nlogo.swing.FileSaveGroup"
   val FileShareGroup        = "org.nlogo.swing.FileShareGroup"
 
-  val HelpWebGroup    = "org.nlogo.swing.HelpWebGroup"
-  val HelpAboutGroup  = "org.nlogo.swing.HelpAboutGroup"
+  val HelpWebGroup     = "org.nlogo.swing.HelpWebGroup"
+  val HelpContextGroup = "org.nlogo.swing.HelpContextGroup"
+  val HelpAboutGroup   = "org.nlogo.swing.HelpAboutGroup"
 
   val ToolsMonitorGroup = "org.nlogo.swing.ToolsMonitorGroup"
   val ToolsDialogsGroup = "org.nlogo.swing.ToolsDialogsGroup"

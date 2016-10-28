@@ -102,7 +102,13 @@ class AggregateModelEditor(
     menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
 
     if (isOSX) {
-      menuBarFactory.addHelpMenu(menuBar)
+      val helpMenu = menuBarFactory.createHelpMenu
+      menuBar.add(helpMenu)
+      try {
+        menuBar.setHelpMenu(helpMenu)
+      } catch {
+        case e: Error => org.nlogo.api.Exceptions.ignore(e)
+      }
     }
 
     setJMenuBar(menuBar)

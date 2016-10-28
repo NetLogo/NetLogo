@@ -11,10 +11,14 @@ import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import org.nlogo.api.Refreshable
 import org.nlogo.editor.Actions
 import org.nlogo.core.I18N
-import org.nlogo.swing.Menu
+import org.nlogo.swing.{ Menu, UserAction },
+  UserAction.{ EditClipboardGroup, EditFindGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup }
 
+object EditMenu {
+  def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup)
+}
 
-class EditMenu extends Menu(I18N.gui.get("menu.edit")) {
+class EditMenu extends Menu(I18N.gui.get("menu.edit"), Menu.model(EditMenu.sortOrder)) {
 
   implicit val i18nName = I18N.Prefix("menu.edit")
 

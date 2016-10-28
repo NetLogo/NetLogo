@@ -24,16 +24,22 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
   }
 }
 
-class ShowPreferencesDialog(newDialog: => JDialog) extends ShowDialogAction(I18N.gui.get("menu.tools.preferences")) {
-  putValue(ActionCategoryKey, ToolsCategory)
-  putValue(ActionGroupKey,    "org.nlogo.app.Preferences")
+object ShowPreferencesDialog {
+  val Group = "org.nlogo.app.Preferences"
+}
+
+class ShowPreferencesDialog(newDialog: => JDialog) extends ShowDialogAction(I18N.gui.get("menu.tools.preferences"))
+  with MenuAction {
+  category = ToolsCategory
+  group    = ShowPreferencesDialog.Group
 
   def createDialog(): JDialog = newDialog
 }
 
-class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.colorSwatches")) {
-  putValue(ActionCategoryKey, ToolsCategory)
-  putValue(ActionGroupKey,    ToolsDialogsGroup)
+class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.colorSwatches"))
+  with MenuAction {
+  category = ToolsCategory
+  group = ToolsDialogsGroup
 
   def createDialog() = new ColorDialog(frame, false)
 
@@ -50,19 +56,21 @@ class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.
 }
 
 class ShowShapeManager(key: String, shapeManager: => ShapesManagerInterface)
-  extends AbstractAction(I18N.gui.get(s"menu.tools.$key")) {
-  putValue(ActionCategoryKey, ToolsCategory)
-  putValue(ActionGroupKey,    ToolsDialogsGroup)
+  extends AbstractAction(I18N.gui.get(s"menu.tools.$key"))
+  with MenuAction {
+  category = ToolsCategory
+  group    = ToolsDialogsGroup
 
   override def actionPerformed(e: ActionEvent) {
     shapeManager.init(I18N.gui.get(s"menu.tools.$key"))
   }
 }
 
-class ShowLabManager(labManager: LabManagerInterface) extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) {
-  putValue(ActionCategoryKey, ToolsCategory)
-  putValue(ActionGroupKey,    ToolsDialogsGroup)
-  putValue(Action.ACCELERATOR_KEY, KeyBindings.keystroke('B', withMenu = true, withShift = true))
+class ShowLabManager(labManager: LabManagerInterface) extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace"))
+  with MenuAction {
+  category    = ToolsCategory
+  group       = ToolsDialogsGroup
+  accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)
 
   override def actionPerformed(e: ActionEvent) {
     labManager.show()
@@ -70,10 +78,11 @@ class ShowLabManager(labManager: LabManagerInterface) extends AbstractAction(I18
 }
 
 class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
-  extends AbstractAction(I18N.gui.get("menu.tools.systemDynamicsModeler")) {
-  putValue(ActionCategoryKey, ToolsCategory)
-  putValue(ActionGroupKey,    ToolsDialogsGroup)
-  putValue(Action.ACCELERATOR_KEY, KeyBindings.keystroke('D', withMenu = true, withShift = true))
+  extends AbstractAction(I18N.gui.get("menu.tools.systemDynamicsModeler"))
+  with MenuAction {
+  category    = ToolsCategory
+  group       = ToolsDialogsGroup
+  accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
 
   override def actionPerformed(e: ActionEvent) {
     aggregateManager.showEditor()
@@ -81,9 +90,10 @@ class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
 }
 
 class OpenHubNetClientEditor(workspace: AbstractWorkspaceScala, linkRoot: LinkRoot)
-  extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor")) {
-    putValue(ActionCategoryKey, ToolsCategory)
-    putValue(ActionGroupKey,    ToolsHubNetGroup)
+  extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
+  with MenuAction {
+    category = ToolsCategory
+    group    = ToolsHubNetGroup
 
   override def actionPerformed(e: ActionEvent) {
     workspace.getHubNetManager.foreach { mgr =>

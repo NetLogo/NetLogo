@@ -8,47 +8,26 @@
 
 package org.nlogo.editor
 
-import org.nlogo.core.I18N
-
-import javax.swing.AbstractAction
-import javax.swing.Action
-import javax.swing.JMenuItem
-import javax.swing.JEditorPane
-import javax.swing.JPopupMenu
-import javax.swing.KeyStroke
-import javax.swing.JViewport
-import javax.swing.SwingUtilities
-import javax.swing.text.Document
-import javax.swing.text.DefaultEditorKit
-import javax.swing.text.TextAction
-import javax.swing.text.PlainDocument
-import javax.swing.text.BadLocationException
-import javax.swing.text.JTextComponent
-import javax.swing.text.Highlighter
+import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.ActionEvent
-import java.awt.event.FocusListener
-import java.awt.event.InputEvent
-import java.awt.event.KeyEvent
-import java.awt.event.MouseEvent
-import java.awt._
-import javax.swing.event.{CaretEvent, CaretListener}
+import java.awt.event.{ FocusListener, InputEvent, KeyEvent, MouseEvent },
+  InputEvent.{ SHIFT_MASK => ShiftKey }
+import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
+import javax.swing.text.{ Document, DefaultEditorKit, TextAction, PlainDocument, BadLocationException }
 
-import KeyBinding._
+import KeyBinding.keystroke
 
 object EditorArea {
-  def emptyMap = Map[KeyStroke, TextAction]()
-  def defaultSize = new java.awt.Dimension(400, 400)
-  def emptySeq = Seq[Action]()
+  def defaultSize = new Dimension(400, 400)
 }
 
-import EditorArea._
+import EditorArea.defaultSize
 
 class EditorArea(val configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
   with FocusTraversable
-  with java.awt.event.FocusListener {
+  with FocusListener {
 
   val rows      = configuration.rows
   val columns   = configuration.columns
@@ -56,13 +35,13 @@ class EditorArea(val configuration: EditorConfiguration)
 
   private var indenter: Option[Indenter] = None
   private var contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
+  contextMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
 
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
+
   locally {
-    import java.awt.event.{ KeyEvent => Key }
-    import InputEvent.{ SHIFT_MASK => ShiftKey }
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK)
     addFocusListener(this)
     addCaretListener(bracketMatcher)
@@ -78,8 +57,8 @@ class EditorArea(val configuration: EditorConfiguration)
     // add key bindings for undo and redo so they work even in modal dialogs
     val mask: Int = getToolkit.getMenuShortcutKeyMask
 
-    getKeymap.addActionForKeyStroke(keystroke(Key.VK_Z, mask), UndoManager.undoAction())
-    getKeymap.addActionForKeyStroke(keystroke(Key.VK_Y, mask), UndoManager.redoAction())
+    getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Z, mask), UndoManager.undoAction())
+    getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction())
 
     configuration.configureEditorArea(this)
   }
@@ -107,12 +86,11 @@ class EditorArea(val configuration: EditorConfiguration)
     newIndenter.addActions(configuration, getInputMap)
   }
 
-  override def getActions: Array[Action] =
-    TextAction.augmentList(super.getActions,
-      Array[Action](
-        Actions.commentToggleAction,
-        Actions.shiftLeftAction, Actions.shiftRightAction,
-        new MouseQuickHelpAction(colorizer)))
+  override def getActions: Array[Action] = {
+    val extraActions =
+      (configuration.editorOnlyActions :+ new MouseQuickHelpAction(colorizer)).toArray[Action]
+    TextAction.augmentList(super.getActions, extraActions)
+  }
 
   override def getPreferredScrollableViewportSize: Dimension = {
     val dimension =
@@ -138,12 +116,9 @@ class EditorArea(val configuration: EditorConfiguration)
   private def getRowHeight: Int =
     getFontMetrics(getFont).getHeight
 
-  override def setText(text: String): Unit =
-    // not sure if this really needed - ST 8/27/03
-    if (text != getText()) {
-      super.setText(text)
-      undoManager.discardAllEdits()
-    }
+  def resetUndoHistory() {
+    undoManager.discardAllEdits()
+  }
 
   @throws(classOf[BadLocationException])
   def getLineText(offset: Int): String = {
@@ -175,16 +150,11 @@ class EditorArea(val configuration: EditorConfiguration)
     _selectionActive = s
   }
 
-  def focusGained(fe: java.awt.event.FocusEvent): Unit = {
-    Actions.setEnabled(true)
-  }
+  def focusGained(fe: java.awt.event.FocusEvent): Unit = { }
 
   def focusLost(fe: java.awt.event.FocusEvent): Unit = {
     bracketMatcher.focusLost(this)
     colorizer.reset()
-    if (!fe.isTemporary) {
-      Actions.setEnabled(false)
-    }
   }
 
   // this is used for quick help, when QH is triggered
@@ -194,7 +164,7 @@ class EditorArea(val configuration: EditorConfiguration)
 
   def getMousePos: Int = mousePos
 
-  override def processMouseEvent(me: java.awt.event.MouseEvent): Unit = {
+  override def processMouseEvent(me: MouseEvent): Unit = {
     if (me.isPopupTrigger() && ! contextMenu.isShowing()) {
       mousePos = caret.getMousePosition(me)
       doPopup(me)
@@ -207,7 +177,6 @@ class EditorArea(val configuration: EditorConfiguration)
   }
 
   private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
-
     val copyItem  = new JMenuItem(Actions.CopyAction)
     val cutItem   = new JMenuItem(Actions.CutAction)
     val pasteItem = new JMenuItem(Actions.PasteAction)
@@ -225,11 +194,11 @@ class EditorArea(val configuration: EditorConfiguration)
     override def show(invoker: Component, x: Int, y: Int): Unit = {
       val text = EditorArea.this.getSelectedText
       val isTextSelected = Option(text).exists(_.length > 0)
+      val point = new Point(invoker.getLocationOnScreen)
       copyItem.setEnabled(isTextSelected)
       cutItem.setEnabled(isTextSelected)
       pasteItem.setEnabled(
         Toolkit.getDefaultToolkit.getSystemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor))
-      val point = new Point(invoker.getLocationOnScreen)
       point.translate(x, y)
       configuration.contextActions.foreach {
         case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
@@ -285,4 +254,7 @@ class EditorArea(val configuration: EditorConfiguration)
       case ex: BadLocationException => throw new IllegalStateException(ex)
     }
   }
+
+  def undoAction = UndoManager.undoAction
+  def redoAction = UndoManager.redoAction
 }

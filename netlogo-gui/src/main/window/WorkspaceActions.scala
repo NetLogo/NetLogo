@@ -16,7 +16,7 @@ object WorkspaceActions {
 
   val HaltGroup     = "org.nlogo.window.WorkspaceActions.Halt"
 
-  def apply(workspace: GUIWorkspace): Seq[Action] = {
+  def apply(workspace: GUIWorkspace): Seq[Action] =
     Seq(
       new SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt),
       new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)),
@@ -25,12 +25,12 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)),
       new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors),
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents),
-      new Open3DViewAction(workspace),
-      new SnapToGridAction(workspace))
+      new Open3DViewAction(workspace))
 
-  }
+  def interfaceActions(workspace: GUIWorkspace): Seq[Action] =
+    Seq(new SnapToGridAction(workspace))
 
-  class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends AbstractAction(name) {
+  class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends AbstractAction(name) with MenuAction {
     def performAction(workspace: GUIWorkspace): Unit = {}
 
     override def actionPerformed(e: ActionEvent): Unit = {
@@ -38,9 +38,10 @@ object WorkspaceActions {
     }
   }
 
-  class SimpleGUIWorkspaceAction(name: String, group: String, workspace: GUIWorkspace, action: GUIWorkspace => Unit) extends GUIWorkspaceAction(name, workspace) {
-    putValue(ActionCategoryKey, ToolsCategory)
-    putValue(ActionGroupKey,    group)
+  class SimpleGUIWorkspaceAction(name: String, menuGroup: String, workspace: GUIWorkspace, action: GUIWorkspace => Unit)
+    extends GUIWorkspaceAction(name, workspace) {
+      category = ToolsCategory
+      group    = menuGroup
 
     override def performAction(workspace: GUIWorkspace): Unit = {
       action(workspace)
@@ -48,10 +49,12 @@ object WorkspaceActions {
   }
 
   // this should be unified with switchTo3DViewAction in GUIWorkspace at some point...
-  class Open3DViewAction(workspace: GUIWorkspace) extends GUIWorkspaceAction(I18N.gui.get("menu.tools.3DView.switch"), workspace) {
-    putValue(ActionCategoryKey,      ToolsCategory)
-    putValue(ActionGroupKey,         ToolsDialogsGroup)
-    putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask | InputEvent.SHIFT_MASK))
+  class Open3DViewAction(workspace: GUIWorkspace)
+  extends GUIWorkspaceAction(I18N.gui.get("menu.tools.3DView.switch"), workspace) {
+    category    = ToolsCategory
+    group       = ToolsDialogsGroup
+    rank        = 0
+    accelerator = KeyBindings.keystroke('T', withMenu = true, withShift = true)
 
     override def performAction(workspace: GUIWorkspace): Unit = {
       try {
@@ -66,11 +69,12 @@ object WorkspaceActions {
   }
 }
 
-class HubNetControlCenterAction(workspace: GUIWorkspace) extends AbstractAction(I18N.gui.get("menu.tools.hubNetControlCenter")) {
-    putValue(ActionCategoryKey,      ToolsCategory)
-    putValue(ActionGroupKey,         ToolsHubNetGroup)
-    putValue(Action.ACCELERATOR_KEY,
-      KeyStroke.getKeyStroke(Character.valueOf('H'), Toolkit.getDefaultToolkit.getMenuShortcutKeyMask | InputEvent.SHIFT_MASK))
+class HubNetControlCenterAction(workspace: GUIWorkspace)
+  extends AbstractAction(I18N.gui.get("menu.tools.hubNetControlCenter"))
+  with MenuAction {
+    category    = ToolsCategory
+    group       = ToolsHubNetGroup
+    accelerator = KeyBindings.keystroke('H', withMenu = true, withShift = true)
 
     override def actionPerformed(e: ActionEvent): Unit = {
       workspace.hubNetManager.get.showControlCenter
@@ -80,10 +84,12 @@ class HubNetControlCenterAction(workspace: GUIWorkspace) extends AbstractAction(
 class SnapToGridAction(workspace: GUIWorkspace)
   extends AbstractAction(I18N.gui.get("menu.edit.snapToGrid"))
   with CheckBoxAction
+  with MenuAction
   with Refreshable {
 
-  putValue(ActionCategoryKey,      EditCategory)
-  putValue(ActionGroupKey,         "SnapToGrid")
+  category = EditCategory
+  group    = "SnapToGrid"
+
   putValue(Action.SELECTED_KEY,    checkedState)
 
   def actionPerformed(e: ActionEvent) = {

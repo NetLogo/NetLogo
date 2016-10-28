@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import javax.swing.{ JViewport, SwingUtilities }
+import javax.swing.{ Action, JViewport, SwingUtilities }
 import javax.swing.text.{ Document, EditorKit, JTextComponent }
 
 trait AbstractEditorArea extends JTextComponent {
@@ -13,6 +13,11 @@ trait AbstractEditorArea extends JTextComponent {
   def setIndenter(i: Indenter): Unit
 
   def setSelection(s: Boolean): Unit
+
+  def resetUndoHistory(): Unit
+
+  def undoAction: Action
+  def redoAction: Action
 
   def containingViewport: Option[JViewport] = {
     SwingUtilities.getAncestorOfClass(classOf[JViewport], this) match {

@@ -2,19 +2,23 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D, KeyboardFocusManager, Toolkit}
+import java.awt.{ BorderLayout, Component, Container,
+  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D,
+  KeyboardFocusManager, Toolkit }
 import java.awt.event.ActionEvent
-import java.awt.print.{PageFormat, Printable}
-import javax.swing._
+import java.awt.print.{ PageFormat, Printable }
+import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JComponent,
+  JPanel, JScrollPane, JSplitPane, KeyStroke, ScrollPaneConstants }
 
-import org.nlogo.app.common.{Events => AppEvents}
+import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
 import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction },
-  UserAction.{ ActionCategoryKey, ActionGroupKey, ToolsCategory }
-import org.nlogo.swing.Implicits.thunk2action
-import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents}
-
+  UserAction.{ MenuAction, ToolsCategory }
+import org.nlogo.swing.{ Implicits, Utils => SwingUtils }, Implicits.thunk2action
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
+  InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
+    WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -25,16 +29,21 @@ import InterfaceTab._
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
-  with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.OutputEvent.Handler
-  with WindowEvents.Enable2DEvent.Handler
-  with AppEvents.SwitchedTabsEvent.Handler
-  with NlogoPrintable {
+  with LoadBeginEvent.Handler
+  with OutputEvent.Handler
+  with Enable2DEvent.Handler
+  with SwitchedTabsEvent.Handler
+  with NlogoPrintable
+  with MenuTab {
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   val commandCenter = new CommandCenter(workspace, new CommandCenterLocationToggleAction)
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
+
+  activeMenuActions =
+    WorkspaceActions.interfaceActions(workspace) ++ Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction())
+
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
   private val scrollPane = new JScrollPane(
@@ -49,7 +58,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, InterfaceColors.GRAPHICS_BACKGROUND))
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
-  private var viewUpdatePanel: org.nlogo.window.ViewUpdatePanel = null
+  private var viewUpdatePanel: ViewUpdatePanel = null
 
   private val splitPane = new JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
@@ -71,7 +80,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     }, BorderLayout.NORTH)
   }
 
-  org.nlogo.swing.Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
+  SwingUtils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
@@ -90,19 +99,18 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
+  final def handle(e: SwitchedTabsEvent) {
     if (e.newTab != this) {
       lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
         commandCenter else iP
 
       monitorManager.refresh()
     } else {
-      commandCenterAction.setEnabled(e.newTab == this)
       lastFocusedComponent.requestFocus()
     }
   }
 
-  def handle(e: WindowEvents.LoadBeginEvent) {
+  def handle(e: LoadBeginEvent) {
     scrollPane.getHorizontalScrollBar.setValue(0)
     scrollPane.getVerticalScrollBar.setValue(0)
   }
@@ -111,13 +119,13 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def getOutputArea = Option(iP.getOutputWidget).map(_.outputArea).getOrElse(commandCenter.output)
 
-  def handle(e: WindowEvents.OutputEvent) {
+  def handle(e: OutputEvent) {
     val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
     if(e.clear && iP.getOutputWidget != null) outputArea.clear()
     if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
   }
 
-  def handle(e: WindowEvents.Enable2DEvent) {
+  def handle(e: Enable2DEvent) {
     viewUpdatePanel.setVisible(e.enabled)
     viewUpdatePanel.handle(null)
   }
@@ -154,36 +162,32 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  def menuActions: Seq[Action] = Seq(commandCenterAction)
+  class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
+  with MenuAction {
+    category    = ToolsCategory
+    group       = MenuGroup
+    accelerator = UserAction.KeyBindings.keystroke('/', withMenu = true)
 
-  val commandCenterAction = {
-    implicit val i18nPrefix = I18N.Prefix("menu.tools")
-    new AbstractAction(I18N.gui("hideCommandCenter")) {
-      putValue(ActionCategoryKey, ToolsCategory)
-      putValue(ActionGroupKey,    MenuGroup)
-      putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Character.valueOf('/'), Toolkit.getDefaultToolkit.getMenuShortcutKeyMask))
-
-      override def actionPerformed(e: ActionEvent) {
-        if (splitPane.getDividerLocation < maxDividerLocation) {
-          splitPane.setDividerLocation(maxDividerLocation)
-          if (iP.isFocusable) iP.requestFocus()
-        }
-        else {
-          if (splitPane.getLastDividerLocation < maxDividerLocation)
-            splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-          else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-            splitPane.getOrientation match {
-              case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-              case _ => // horizontal
-                // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-                splitPane.setDividerLocation(0.5)
-            }
-          commandCenter.requestFocus()
-        }
-        putValue(Action.NAME,
-          if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui("hideCommandCenter")
-          else I18N.gui("showCommandCenter"))
+    override def actionPerformed(e: ActionEvent) {
+      if (splitPane.getDividerLocation < maxDividerLocation) {
+        splitPane.setDividerLocation(maxDividerLocation)
+        if (iP.isFocusable) iP.requestFocus()
       }
+      else {
+        if (splitPane.getLastDividerLocation < maxDividerLocation)
+          splitPane.setDividerLocation(splitPane.getLastDividerLocation)
+        else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
+          splitPane.getOrientation match {
+            case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
+            case _ => // horizontal
+              // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
+              splitPane.setDividerLocation(0.5)
+          }
+          commandCenter.requestFocus()
+      }
+      putValue(Action.NAME,
+        if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
+        else I18N.gui.get("menu.tools.showCommandCenter"))
     }
   }
 

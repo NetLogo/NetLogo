@@ -4,11 +4,12 @@ package org.nlogo.app.common
 
 import java.awt.Component
 
-import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.core.{ Dialect, Femto }
+import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, ActionSubcategoryKey, FileCategory, FileExportSubcategory }
+import org.nlogo.swing.UserAction,
+  UserAction.{ FileCategory, FileExportSubcategory, MenuAction }
+import org.nlogo.workspace.AbstractWorkspace
 
 object CodeToHtml {
   // for standalone use, for example on a web server
@@ -31,9 +32,10 @@ object CodeToHtml {
   ExportAction("code", workspace.guessExportName("code.html"), parent, { exportPath =>
     FileIO.writeFile(exportPath,
       new CodeToHtml(workspace.compiler).convert(getText()))
-  }) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+  }) with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 6
   }
 }
 

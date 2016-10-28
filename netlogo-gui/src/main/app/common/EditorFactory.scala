@@ -11,33 +11,37 @@ import javax.swing.text.TextAction
 import scala.collection.JavaConversions._
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.I18N
-import org.nlogo.ide._
+import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
+  NetLogoFoldParser, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
 import org.nlogo.window.{ EditorColorizer, DefaultEditorFactory }
 
+import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, TokenMakerFactory },
+  folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
 class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(compiler) {
-  override def defaultConfiguration(cols: Int, rows: Int): EditorConfiguration = {
+  override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val codeCompletionPopup = new CodeCompletionPopup
     val showUsageBox = new ShowUsageBox(colorizer)
-    val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox), new JumpToDeclarationAction())
-    super.defaultConfiguration(cols, rows)
+    val shiftTabAction = new ShiftActions.LeftTab()
+    val actions = Seq[Action](
+      new ToggleComments(),
+      new ShiftActions.Left(),
+      new ShiftActions.Right(),
+      new ShowUsageBoxAction(showUsageBox),
+      new JumpToDeclarationAction())
+    super.defaultConfiguration(rows, cols)
       .withContextActions(actions)
       .addKeymap(
         KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
         new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+      .addKeymap(
+        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK), shiftTabAction)
       .withLineNumbers(
         Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
       .forThreeDLanguage(Version.is3D)
   }
-
-  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean, enableHighlightCurrentLine: Boolean = false): AbstractEditorArea =
-    newEditor(
-      defaultConfiguration(cols, rows)
-        .withFocusTraversalEnabled(enableFocusTraversal)
-        .withCurrentLineHighlighted(enableHighlightCurrentLine),
-        false)
 
   def newEditor(configuration: EditorConfiguration, isApp: Boolean): AbstractEditorArea = {
     val editor = newEditor(configuration)
@@ -49,10 +53,15 @@ class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(com
   }
 
   override def newEditor(configuration: EditorConfiguration): AbstractEditorArea = {
-    if (configuration.rows == 100 && configuration.columns == 100) {
-      val editor = new AdvancedEditorArea(configuration, 100, 100)
-      configuration.configureAdvancedEditorArea(editor)
-      editor
+    // This is a proxy for advanced editor fixtures required only by the main code tab
+    // - RG 10/28/16
+    if (configuration.highlightCurrentLine) {
+      val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
+      tmf.putMapping("netlogo",   "org.nlogo.ide.NetLogoTwoDTokenMaker")
+      tmf.putMapping("netlogo3d", "org.nlogo.ide.NetLogoThreeDTokenMaker")
+      FoldParserManager.get.addFoldParserMapping("netlogo", new NetLogoFoldParser())
+      FoldParserManager.get.addFoldParserMapping("netlogo3d", new NetLogoFoldParser())
+      new AdvancedEditorArea(configuration)
     } else
       super.newEditor(configuration)
   }

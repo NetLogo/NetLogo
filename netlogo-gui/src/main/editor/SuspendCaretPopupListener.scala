@@ -14,17 +14,21 @@ import javax.swing.text.{ DefaultCaret, JTextComponent }
  *  is activated and are restored when it closes. */
 class SuspendCaretPopupListener(component: JTextComponent) extends PopupMenuListener {
   var suspendedListener = Option.empty[DefaultCaret]
+  var shouldEnableDrag  = Option.empty[Boolean]
 
   def popupMenuCanceled(e: PopupMenuEvent): Unit = { }
+
 
   def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {
     suspendedListener.foreach(component.addMouseListener)
     suspendedListener.foreach(component.addMouseMotionListener)
     suspendedListener = None
-    component.setDragEnabled(true)
+    shouldEnableDrag.foreach(component.setDragEnabled)
+    shouldEnableDrag = None
   }
 
   def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
+    shouldEnableDrag = Some(component.getDragEnabled)
     component.setDragEnabled(false)
     if (! suspendedListener.isDefined) {
       component.getMouseListeners.foreach {

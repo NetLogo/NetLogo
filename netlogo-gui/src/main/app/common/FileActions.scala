@@ -11,13 +11,13 @@ import org.nlogo.api.LocalFile
 import org.nlogo.plot.Plot
 import org.nlogo.swing.{ Implicits, UserAction },
   Implicits.thunk2runnable,
-  UserAction.{ ActionCategoryKey, ActionSubcategoryKey, FileCategory, FileExportSubcategory, FileImportSubcategory }
+  UserAction.{ FileCategory, FileExportSubcategory, FileImportSubcategory, MenuAction }
 import org.nlogo.window.{ Events => WindowEvents, FileController, GUIWorkspace, PlotWidgetExport },
   WindowEvents.{ ExportPlotEvent }
 
 object FileActions {
 
-  def apply(workspace: GUIWorkspace, parent: java.awt.Component): Seq[Action] = {
+  def apply(workspace: GUIWorkspace, parent: Component): Seq[Action] = {
     val baseActions = Seq(
       new ExportWorldAction(workspace, parent),
       new ExportGraphicsAction(workspace, parent),
@@ -33,15 +33,20 @@ object FileActions {
     baseActions ++ twodSpecificActions
   }
 
-  class ExportWorldAction(workspace: GUIWorkspace, parent: Component) extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld _) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+  class ExportWorldAction(workspace: GUIWorkspace, parent: Component)
+  extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld _)
+  with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 0
   }
 
   class ExportGraphicsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png")) {
-      putValue(ActionCategoryKey,    FileCategory)
-      putValue(ActionSubcategoryKey, FileExportSubcategory)
+    extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png"))
+    with MenuAction {
+      category    = FileCategory
+      subcategory = FileExportSubcategory
+      rank        = 3
 
       def beforeModalDialog(): String = promptForFilePath()
 
@@ -51,18 +56,20 @@ object FileActions {
   }
 
   class ExportOutputAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportAction("output", workspace.guessExportName("output.txt"), parent, { exportPath =>
-    workspace.exportOutput(exportPath)
-  }) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+    extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
+    { exportPath => workspace.exportOutput(exportPath) })
+    with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 5
   }
 
   class ExportPlotAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[(String, Plot)](parent, "plot", workspace.guessExportName("plot.csv")) {
-
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+    extends ExportBackgroundAction[(String, Plot)](parent, "plot", workspace.guessExportName("plot.csv"))
+    with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 1
 
     def beforeModalDialog(): (String, Plot) = {
       val plot = workspace.plotExportControls.choosePlot(frame)
@@ -78,10 +85,11 @@ object FileActions {
   }
 
   class ExportAllPlotsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv")) {
-
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+    extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv"))
+    with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 2
 
     def beforeModalDialog(): String = {
       if (workspace.plotExportControls.plotNames.isEmpty) {
@@ -98,10 +106,11 @@ object FileActions {
   }
 
   class ExportInterfaceAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png")) {
-
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileExportSubcategory)
+    extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png"))
+    with MenuAction {
+    category    = FileCategory
+    subcategory = FileExportSubcategory
+    rank        = 4
 
     def beforeModalDialog(): String = promptForFilePath()
 
@@ -115,10 +124,11 @@ object FileActions {
     workspace.importWorld(importPath)
     workspace.view.dirty()
     workspace.view.repaint()
-    }) {
-      putValue(ActionCategoryKey,    FileCategory)
-      putValue(ActionSubcategoryKey, FileImportSubcategory)
-    }
+  })
+  with MenuAction {
+    category    = FileCategory
+    subcategory = FileImportSubcategory
+  }
 
   class ImportPatchColorsAction(workspace: GUIWorkspace, parent: Component)
   extends ImportAction("patchColors", parent, { importPath =>
@@ -130,9 +140,10 @@ object FileActions {
       workspace.world, true)
     workspace.view.dirty()
     workspace.view.repaint()
-  }) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileImportSubcategory)
+  })
+  with MenuAction {
+    category    = FileCategory
+    subcategory = FileImportSubcategory
   }
 
   class ImportPatchColorsRGBAction(workspace: GUIWorkspace, parent: Component)
@@ -144,18 +155,20 @@ object FileActions {
       new LocalFile(importPath), workspace.world, false)
     workspace.view.dirty()
     workspace.view.repaint()
-  }) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileImportSubcategory)
+  })
+  with MenuAction {
+    category    = FileCategory
+    subcategory = FileImportSubcategory
   }
 
   class ImportDrawingAction(workspace: GUIWorkspace, parent: Component)
   extends ImportAction("drawing", parent, { importPath =>
-    workspace.importDrawing(importPath);
-    workspace.view.dirty();
-    workspace.view.repaint();
-  }) {
-    putValue(ActionCategoryKey,    FileCategory)
-    putValue(ActionSubcategoryKey, FileImportSubcategory)
+    workspace.importDrawing(importPath)
+    workspace.view.dirty()
+    workspace.view.repaint()
+  })
+  with MenuAction {
+    category    = FileCategory
+    subcategory = FileImportSubcategory
   }
 }

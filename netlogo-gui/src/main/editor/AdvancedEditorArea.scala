@@ -5,24 +5,15 @@ package org.nlogo.editor
 import javax.swing.{ Action, JMenu, JPopupMenu }
 import javax.swing.text.EditorKit
 
-import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, RSyntaxTextArea, Theme, TokenMakerFactory },
-  folding.FoldParserManager
+import org.fife.ui.rtextarea.RTextArea
+import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
 
-import org.nlogo.ide.NetLogoFoldParser
-import KeyBinding._
-
-class AdvancedEditorArea(val configuration: EditorConfiguration, rows: Int, columns: Int)
-  extends RSyntaxTextArea(rows, columns) with AbstractEditorArea {
-
-  val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
-  tmf.putMapping("netlogo",   "org.nlogo.ide.NetLogoTwoDTokenMaker")
-  tmf.putMapping("netlogo3d", "org.nlogo.ide.NetLogoThreeDTokenMaker")
+class AdvancedEditorArea(val configuration: EditorConfiguration)
+  extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
 
   var indenter = Option.empty[Indenter]
 
-  FoldParserManager.get.addFoldParserMapping("netlogo", new NetLogoFoldParser())
-  FoldParserManager.get.addFoldParserMapping("netlogo3d", new NetLogoFoldParser())
-
+  // the language style is configured primarily in app.common.EditorFactory
   setSyntaxEditingStyle(if (configuration.is3Dlanguage) "netlogo3d" else "netlogo")
   setCodeFoldingEnabled(true)
 
@@ -30,12 +21,18 @@ class AdvancedEditorArea(val configuration: EditorConfiguration, rows: Int, colu
     Theme.load(getClass.getResourceAsStream("/system/netlogo-editor-style.xml"))
   theme.apply(this)
 
+  configuration.configureAdvancedEditorArea(this)
+
   def enableBracketMatcher(enable: Boolean): Unit = {
     setBracketMatchingEnabled(enable)
   }
 
   override def getActions(): Array[Action] = {
     super.getActions.filter(_.getValue(Action.NAME) != "RSTA.GoToMatchingBracketAction").toArray[Action]
+  }
+
+  def resetUndoHistory(): Unit = {
+    discardAllEdits()
   }
 
   override def createPopupMenu(): JPopupMenu = {
@@ -68,7 +65,13 @@ class AdvancedEditorArea(val configuration: EditorConfiguration, rows: Int, colu
   // with this editor area
   def setSelection(s: Boolean): Unit = { }
 
-  def getEditorKit(): javax.swing.text.EditorKit = ???
-  def getEditorKitForContentType(contentType: String): javax.swing.text.EditorKit = ???
-  def setEditorKit(kit: javax.swing.text.EditorKit): Unit = ???
+  def undoAction = RTextArea.getAction(RTextArea.UNDO_ACTION)
+  def redoAction = RTextArea.getAction(RTextArea.REDO_ACTION)
+
+  // These methods are used only by the input widget, which uses editor.EditorArea
+  // exclusively at present. - RG 10/28/16
+  def getEditorKitForContentType(contentType: String): EditorKit = null
+  def getEditorKit(): EditorKit =
+    getUI.getEditorKit(this)
+  def setEditorKit(kit: EditorKit): Unit = { }
 }

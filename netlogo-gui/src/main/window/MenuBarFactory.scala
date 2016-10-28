@@ -5,13 +5,9 @@ package org.nlogo.window
 import javax.swing.{ JMenu, JMenuBar }
 
 trait MenuBarFactory {
-  def createFileMenu: JMenu
-
-  def createEditMenu: JMenu
-
+  def createFileMenu:  JMenu
+  def createEditMenu:  JMenu
   def createToolsMenu: JMenu
-
-  def createZoomMenu: JMenu
-
-  def addHelpMenu(menuBar: JMenuBar): JMenu
+  def createZoomMenu:  JMenu
+  def createHelpMenu:  JMenu
 }

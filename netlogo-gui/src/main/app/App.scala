@@ -137,7 +137,6 @@ object App{
 
     pico.addComponent(classOf[CodeToHtml])
     pico.addComponent(classOf[App])
-    pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
     pico.add("org.nlogo.gl.view.ViewManager")
     // Anything that needs a parent Frame, we need to use ComponentParameter
@@ -184,6 +183,8 @@ object App{
       "org.nlogo.app.tools.PreviewCommandsEditor",
       new ComponentParameter(classOf[AppFrame]),
       new ComponentParameter(), new ComponentParameter())
+    pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
+      new ConstantParameter(AbstractWorkspace.isApp))
     pico.addComponent(classOf[Tabs])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
@@ -295,7 +296,6 @@ class App extends
   private var _tabs: Tabs = null
   def tabs = _tabs
   var menuBar: MenuBar = null
-  var helpMenu: HelpMenu = null
   var _fileManager: FileManager = null
   var monitorManager:AgentMonitorManager = null
   var aggregateManager: AggregateManagerInterface = null
@@ -329,7 +329,8 @@ class App extends
     })
 
     val interfaceFactory = new InterfaceFactory() {
-      def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel = new WidgetPanel(workspace)
+      def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
+        new WidgetPanel(workspace)
       def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
         new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
           pico.getComponent(classOf[EditDialogFactoryInterface]))
@@ -437,30 +438,26 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    val menuBar = new MenuBar(AbstractWorkspace.isApp)
-
     pico.addComponent(classOf[DirtyMonitor])
     val dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
     frame.addLinkComponent(dirtyMonitor)
+
+    val menuBar = pico.getComponent(classOf[MenuBar])
 
     pico.add(classOf[FileManager],
       "org.nlogo.app.FileManager",
       new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
       new ComponentParameter(), new ComponentParameter(),
-      new ConstantParameter(menuBar.fileMenu), new ConstantParameter(menuBar.fileMenu))
+      new ConstantParameter(menuBar), new ConstantParameter(menuBar))
     setFileManager(pico.getComponent(classOf[FileManager]))
 
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)
 
-    // a little ugly we have to typecast here, but oh well - ST 10/11/05
-    helpMenu = new MenuBarFactory().addHelpMenu(menuBar).asInstanceOf[HelpMenu]
-
     tabs.init(Plugins.load(pico): _*)
 
     app.setMenuBar(menuBar)
-
     frame.setJMenuBar(menuBar)
 
     org.nlogo.window.RuntimeErrorDialog.init(frame)
@@ -512,37 +509,19 @@ class App extends
   // bar.  It's needed especially for OS X since the screen menu bar
   // doesn't get shared across windows.  -- AZS 6/17/2005
   private class MenuBarFactory extends org.nlogo.window.MenuBarFactory {
-    import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, EditCategory, FileCategory, ToolsCategory }
-    def createFileMenu:  JMenu = {
-      val fileMenu = pico.getComponent(classOf[FileMenu])
-      allActions.filter(_.getValue(ActionCategoryKey) == FileCategory).foreach(fileMenu.offerAction)
-      fileMenu
-    }
-    def createEditMenu:  JMenu = {
-      val editMenu = new EditMenu()
-      allActions.filter(_.getValue(ActionCategoryKey) == EditCategory).foreach(editMenu.offerAction)
-      editMenu
-    }
-    def createToolsMenu: JMenu = {
-      val toolsMenu = new ToolsMenu
-      allActions.filter(_.getValue(ActionCategoryKey) == ToolsCategory).foreach(toolsMenu.offerAction)
-      toolsMenu
-    }
-    def createZoomMenu:  JMenu = new ZoomMenu
-    override def addHelpMenu(menuBar:JMenuBar) = {
-      val newMenu = new HelpMenu()
-      menuBar.add(newMenu)
-      if (AbstractWorkspace.isApp) {
-        try
-        menuBar.setHelpMenu(newMenu)
-        catch{
-          // if not implemented in this VM (e.g. 1.8 on Mac as of right now),
-          // then oh well - ST 6/23/03, 8/6/03 - RG 10/21/16
-          case e: Error => org.nlogo.api.Exceptions.ignore(e)
-        }
-      }
+    import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, ToolsCategory }
+    def actions = allActions ++ tabs.permanentMenuActions
+
+    def createMenu(newMenu: org.nlogo.swing.Menu, category: String): JMenu = {
+      actions.filter(_.getValue(ActionCategoryKey) == category).foreach(newMenu.offerAction)
       newMenu
     }
+
+    def createEditMenu:  JMenu = createMenu(new EditMenu,  EditCategory)
+    def createFileMenu:  JMenu = createMenu(new FileMenu,  FileCategory)
+    def createHelpMenu:  JMenu = createMenu(new HelpMenu,  HelpCategory)
+    def createToolsMenu: JMenu = createMenu(new ToolsMenu, ToolsCategory)
+    def createZoomMenu:  JMenu = new ZoomMenu
   }
 
   ///
@@ -658,13 +637,13 @@ class App extends
     workspaceActions ++
     fileManager.actions
 
-    osSpecificActions ++ generalActions ++ tabs.menuActions
+    osSpecificActions ++ generalActions
   }
 
   def setMenuBar(menuBar: MenuBar): Unit = {
     if (menuBar != this.menuBar) {
       this.menuBar = menuBar
-      tabs.menu = menuBar
+      tabs.setMenu(menuBar)
       allActions.foreach(menuBar.offerAction)
       Option(recentFilesMenu).foreach(_.setMenu(menuBar))
     }

@@ -8,19 +8,22 @@ import javax.swing.{ AbstractAction, Action, JTabbedPane, UIManager }
 import javax.swing.plaf.ComponentUI
 
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
+import org.nlogo.app.common.{ Events => AppEvents, MenuTab, TabsInterface }
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ RichAction, UserAction, TabsMenu }, UserAction.{ ActionCategoryKey, ActionRankKey , TabsCategory }
+import org.nlogo.swing.{ RichAction, UserAction, TabsMenu }, UserAction.{ ActionCategoryKey, ActionGroupKey }
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 
-class Tabs(val workspace:  GUIWorkspace,
-           monitorManager: AgentMonitorManager,
-           dialogFactory:  EditDialogFactoryInterface) extends JTabbedPane(javax.swing.SwingConstants.TOP)
+class Tabs(val workspace:    GUIWorkspace,
+           monitorManager:   AgentMonitorManager,
+           dialogFactory:    EditDialogFactoryInterface,
+           private var menu: MenuBar)
+  extends JTabbedPane(javax.swing.SwingConstants.TOP)
+
   with TabsInterface with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
   with org.nlogo.window.LinkRoot
   with LoadBeginEvent.Handler
@@ -43,16 +46,24 @@ class Tabs(val workspace:  GUIWorkspace,
     }
   }
 
-  // This might make more sense as a constructor parameter - RG 10/27/16
-  var menu: UserAction.Menu = null
+  def setMenu(newMenu: MenuBar): Unit = {
+    val menuItems = permanentMenuActions ++ (currentTab match {
+      case mt: MenuTab => mt.activeMenuActions
+      case _ => Seq()
+    })
+    menuItems.foreach(action => menu.revokeAction(action))
+    menuItems.foreach(newMenu.offerAction)
+    menu = newMenu
+  }
+
+  def permanentMenuActions =
+    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ printAction
 
   var tabActions: Seq[Action] = TabsMenu.tabActions(this)
 
-  def menuActions = tabActions ++ codeTab.menuActions ++ interfaceTab.menuActions :+ printAction
-
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val codeTab = new MainCodeTab(workspace, this)
+  val codeTab = new MainCodeTab(workspace, this, menu)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
@@ -69,7 +80,15 @@ class Tabs(val workspace:  GUIWorkspace,
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {
     previousTab = currentTab
+    previousTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.revokeAction(action))
+      case _ =>
+    }
     currentTab = getSelectedComponent
+    currentTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.offerAction(action))
+      case _ =>
+    }
     currentTab.requestFocus()
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
@@ -205,9 +224,9 @@ class Tabs(val workspace:  GUIWorkspace,
   def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
 
   def removeMenuItem(index: Int) {
-    tabActions.foreach(menu.revokeAction(_))
+    tabActions.foreach(action => menu.revokeAction(action))
     tabActions = TabsMenu.tabActions(this)
-    tabActions.foreach(menu.offerAction(_))
+    tabActions.foreach(action => menu.offerAction(action))
   }
 
   def addMenuItem(i: Int, name: String) {
@@ -230,10 +249,10 @@ class Tabs(val workspace:  GUIWorkspace,
       }
     }
 
-    action.putValue(Action.NAME,                  I18N.gui.get("menu.file.print"))
-    action.putValue(UserAction.ActionCategoryKey, UserAction.FileCategory)
-    action.putValue(UserAction.ActionGroupKey,    "org.nlogo.app.Tabs.Print")
-    action.putValue(Action.ACCELERATOR_KEY,       UserAction.KeyBindings.keystroke('P', withMenu = true))
+    action.putValue(Action.NAME,            I18N.gui.get("menu.file.print"))
+    action.putValue(ActionCategoryKey,      UserAction.FileCategory)
+    action.putValue(ActionGroupKey,         "org.nlogo.app.Tabs.Print")
+    action.putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('P', withMenu = true))
     action
   }
 

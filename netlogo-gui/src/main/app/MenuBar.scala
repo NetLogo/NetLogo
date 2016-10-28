@@ -18,38 +18,31 @@ class MenuBar(isApplicationWide: Boolean)
   val fileMenu  = new FileMenu
   val tabsMenu  = new TabsMenu(I18N.gui.get("menu.tabs"))
   val toolsMenu = new ToolsMenu
+  val helpMenu  = new HelpMenu
 
   add(fileMenu)
   add(editMenu)
   add(toolsMenu)
   add(new ZoomMenu)
   add(tabsMenu)
+  add(helpMenu)
 
-  private var helpMenu = Option.empty[HelpMenu]
+  if (isApplicationWide) {
+    try super.setHelpMenu(helpMenu)
+    catch {
+      // if not implemented in this VM (e.g. 1.8 on Mac as of right now),
+      // then oh well - ST 6/23/03, 8/6/03 - RG 10/21/16
+      case e: Error => org.nlogo.api.Exceptions.ignore(e)
+    }
+  }
 
   private var categoryMenus: Map[String, UserAction.Menu] = Map(
     EditCategory  -> editMenu,
+    HelpCategory  -> helpMenu,
     FileCategory  -> fileMenu,
     ToolsCategory -> toolsMenu,
     TabsCategory  -> tabsMenu
   )
-
-  override def setHelpMenu(newHelpMenu: JMenu): Unit = {
-    newHelpMenu match {
-      case hm: HelpMenu =>
-        helpMenu = Some(hm)
-        categoryMenus = categoryMenus + (HelpCategory -> hm)
-      case _ =>
-    }
-    if (isApplicationWide) {
-      try super.setHelpMenu(newHelpMenu)
-      catch{
-        // if not implemented in this VM (e.g. 1.8 on Mac as of right now),
-        // then oh well - ST 6/23/03, 8/6/03 - RG 10/21/16
-        case e: Error => org.nlogo.api.Exceptions.ignore(e)
-      }
-    }
-  }
 
   def offerAction(action: javax.swing.Action): Unit = {
     val categoryKey = action.getValue(ActionCategoryKey) match {

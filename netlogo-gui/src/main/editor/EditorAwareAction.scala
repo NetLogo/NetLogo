@@ -8,7 +8,7 @@ import java.awt.event.{ MouseEvent, MouseListener }
 import javax.swing.Action
 import javax.swing.text.JTextComponent
 
-trait EditorAwareAction extends Action with MouseListener {
+trait EditorAwareAction extends InstallableAction with MouseListener {
   val EditorKey         = "Editor"
   val LocationKey       = "MouseLocation"
   val DocumentOffsetKey = "DocumentOffset"
