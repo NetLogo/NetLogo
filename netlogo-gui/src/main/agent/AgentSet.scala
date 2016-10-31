@@ -18,13 +18,12 @@ object AgentSet {
     new ArrayAgentSet(kind, null, agents.asInstanceOf[Array[Agent]])
 }
 
+
 abstract class AgentSet(
   val kind: core.AgentKind,
   val printName: String,
   // yuck, vars
-  var isDirected: Boolean = false,
-  var isUndirected: Boolean = false)
-extends api.AgentSet {
+  var directed: Directedness = Directedness.Undetermined) extends api.AgentSet {
 
   // abstract methods
   def equalAgentSetsHelper(otherSet: api.AgentSet): Boolean
@@ -39,15 +38,15 @@ extends api.AgentSet {
 
   val agentBit: Byte = AgentBit(kind).toByte
 
-  def clearDirected() {
-    isDirected = false
-    isUndirected = false
+  def isDirected: Boolean = directed == Directedness.Directed
+  def isUndirected: Boolean = directed == Directedness.Undirected
+
+  def clearDirected(): Unit = {
+    directed = Directedness.Undetermined
   }
 
-  def setDirected(directed: Boolean) {
-    isDirected = directed
-    isUndirected = !directed
-  }
+  def setDirected(directed: Boolean) =
+    this.directed = if (directed) Directedness.Directed else Directedness.Undirected
 
   def equalAgentSets(otherSet: api.AgentSet) =
     (this eq otherSet) || (

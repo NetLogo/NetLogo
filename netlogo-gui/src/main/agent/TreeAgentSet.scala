@@ -16,7 +16,7 @@ import
 // know the order that the turtles entered the breed agentset.
 
 class TreeAgentSet(kind: AgentKind, printName: String)
-extends AgentSet(kind, printName, false, false) {
+extends AgentSet(kind, printName) {
 
   private val _agents = new java.util.TreeMap[AnyRef, Agent]
   override val agents: java.lang.Iterable[api.Agent] =
