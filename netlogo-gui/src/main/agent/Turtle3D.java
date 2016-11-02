@@ -76,8 +76,6 @@ public final strictfp class Turtle3D
       variables[i] = World.ZERO;
     }
     if (breed != world.turtles()) {
-      // TODO: We should really be enforcing breeds to be TreeAgentSets at the typelevel, but such a change is too big
-      // right now. -- BCH 10/12/2016
       ((TreeAgentSet) breed).add(this);
     }
 

@@ -122,10 +122,8 @@ public strictfp class InRadiusOrCone3D
                 if ((sourceSet == world.turtles() ||
                     // any turtle set with a non-null print name is either
                     // the set of all turtles, or a breed agentset - ST 2/19/04
-                    (sourceSet.printName() != null &&
-                        sourceSet == turtle.getBreed()) ||
-                    (sourceSet.printName() == null &&
-                        sourceSet.contains(turtle))) &&
+                    (sourceSet.isBreedSet() && sourceSet == turtle.getBreed()) ||
+                    (!sourceSet.isBreedSet() && sourceSet.contains(turtle))) &&
                     (protractor.distance(turtle.xcor(), turtle.ycor(),
                         ((Turtle3D) turtle).zcor(),
                         startX, startY, startZ, wrap)
@@ -258,11 +256,8 @@ public strictfp class InRadiusOrCone3D
                         // any turtle set with a non-null print name is either
                         // the set of all turtles, or a breed agentset - ST 2/19/04
                         if ((sourceSet == world.turtles() ||
-                            (sourceSet.printName() != null &&
-                                sourceSet == turtle.getBreed()) ||
-                            (sourceSet.printName() == null &&
-                                sourceSet.contains(turtle)))
-                            &&
+                            (sourceSet.isBreedSet() && sourceSet == turtle.getBreed()) ||
+                            (!sourceSet.isBreedSet() && sourceSet.contains(turtle))) &&
                             isInCone(turtle.xcor() + worldWidth * worldOffsetX,
                                 turtle.ycor() + worldHeight * worldOffsetY,
                                 ((Turtle3D) turtle).zcor() + worldDepth * worldOffsetZ,

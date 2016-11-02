@@ -314,7 +314,7 @@ final strictfp class Box
     // special cases when we only have one patch in the world
     if (xLoc == world._maxPxcor && xLoc == world._minPxcor &&
         yLoc == world._maxPycor && yLoc == world._minPycor) {
-      return AgentSet.fromArray(AgentKindJ.Patch(), new Patch[0]);
+      return AgentSet.emptyPatchSet();
     }
 
     if (xLoc == world.maxPxcor()) {
@@ -393,7 +393,7 @@ final strictfp class Box
       if (xLoc == world.minPxcor()) {
         if (yLoc == world.maxPycor()) {
           if (yLoc == world.minPycor()) {
-            return AgentSet.fromArray(AgentKindJ.Patch(), new Agent[0]);
+            return AgentSet.emptyPatchSet();
           } else {
             return AgentSet.fromAgent(getPatchSouth(source));
           }

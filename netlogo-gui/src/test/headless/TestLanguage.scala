@@ -194,5 +194,8 @@ TurtleSet_2D
 
 class LanguageTestException (line: String, cause: Exception)
 extends Exception("The test errored on the following line: " + line, cause) {
+  // This just eliminates the stack trace of LanguageTestException. It still
+  // contains the stacktrace of the cause, which is what you care about.
+  // -- BCH 11/1/2016
   setStackTrace(Array())
 }

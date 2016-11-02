@@ -2,23 +2,18 @@
 
 package org.nlogo.app.common
 
-import java.awt.BorderLayout
-import java.awt.event.{ActionListener, KeyListener}
-import javax.swing.{JScrollPane, ScrollPaneConstants}
+import java.awt.{BorderLayout, Dimension}
+import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
+import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
 import org.nlogo.agent.{Agent, AgentSet, OutputObject}
 import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
+import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
 
 import scala.collection.immutable.List
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import javax.swing.KeyStroke
-
-import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 
 object CommandLine {
   val PROMPT = ">"

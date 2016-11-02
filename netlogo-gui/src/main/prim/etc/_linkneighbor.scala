@@ -1,11 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.prim
+package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ AgentSet, LinkManager, Turtle }
-import org.nlogo.api.{ LogoException}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.agent.Turtle
+import org.nlogo.nvm.{Context, Reporter}
 
 class _linkneighbor(breedName: String) extends Reporter {
   def this() = this(null)
@@ -17,7 +15,6 @@ class _linkneighbor(breedName: String) extends Reporter {
   def report_1(context: Context, target: Turtle): Boolean = {
     val parent = context.agent.asInstanceOf[Turtle]
     val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    val linkManager = world.linkManager
-    linkManager.linksWith(parent, target, breed).nonEmpty
+    world.linkManager.linksWith(parent, target, breed).length > 0
   }
 }

@@ -290,7 +290,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), "patches", patchArray);
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

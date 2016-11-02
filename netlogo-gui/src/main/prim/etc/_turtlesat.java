@@ -24,10 +24,10 @@ public final strictfp class _turtlesat
     try {
       patch = context.agent.getPatchAtOffsets(dx, dy);
     } catch (org.nlogo.api.AgentException e) {
-      return AgentSet.fromArray(AgentKindJ.Turtle(), new Agent[0]);
+      return AgentSet.emptyTurtleSet();
     }
     if (patch == null) {
-      return AgentSet.fromArray(AgentKindJ.Turtle(), new Agent[0]);
+      return AgentSet.emptyTurtleSet();
     }
     AgentSetBuilder agentSetBuilder = new AgentSetBuilder(AgentKindJ.Turtle(), patch.turtleCount());
     for (org.nlogo.agent.Turtle turtle : patch.turtlesHere()) {

@@ -17,10 +17,10 @@ class _turtlesat extends Reporter {
     val patch =
       try context.agent.asInstanceOf[Agent3D].getPatchAtOffsets(dx, dy, dz)
       catch {
-        case _: AgentException => return AgentSet.fromArray(AgentKind.Turtle, Array())
+        case _: AgentException => return AgentSet.emptyTurtleSet
       }
     if (patch == null)
-      AgentSet.fromArray(AgentKind.Turtle, Array())
+      AgentSet.emptyTurtleSet
     else {
       val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle, patch.turtleCount)
       val it = patch.turtlesHere.iterator

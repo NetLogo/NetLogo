@@ -1,21 +1,20 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-package org.nlogo.prim
+
+package org.nlogo.prim.etc
 
 import org.nlogo.agent.{AgentSet, Turtle}
-import org.nlogo.nvm.Context
-import org.nlogo.nvm.Reporter
+import org.nlogo.nvm.{Context, Reporter}
 
 class _inlinkneighbor(private[this] val breedName: String) extends Reporter {
   def this() = this(null)
 
-  override def toString: String = {
-    return super.toString + ":" + breedName
-  }
+  override def toString: String = s"${super.toString}:$breedName"
 
-  def report(context: Context): AnyRef = {
+  override def report(context: Context) = Boolean.box(report_1(context, argEvalTurtle(context, 0)))
+
+  def report_1(context: Context, target: Turtle): Boolean = {
     val parent: Turtle = context.agent.asInstanceOf[Turtle]
-    val target: Turtle = argEvalTurtle(context, 0)
     val breed: AgentSet = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    return Boolean.box(world.linkManager.linksTo(target, parent, breed).length > 0)
+    world.linkManager.linksTo(target, parent, breed).length > 0
   }
 }

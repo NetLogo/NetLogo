@@ -24,7 +24,7 @@ class BreedShapesTests extends FunSuite with OneInstancePerTest {
     bs.setUpBreedShapes(false, map)
     bs
   }
-  val foos = AgentSet.fromArray(AgentKind.Turtle, Array[Agent](), "FOOS")
+  val foos = new ArrayAgentSet(AgentKind.Turtle, "FOOS", Array.empty[Agent])
 
   test("setUpBreedShapes with clear removes breed shape associations") {
     val bs = breedShapes

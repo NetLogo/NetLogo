@@ -144,9 +144,9 @@ public strictfp class World
 
   /// empty agentsets
 
-  private final AgentSet _noTurtles = AgentSet.fromArray(AgentKindJ.Turtle(), new org.nlogo.agent.Agent[0]);
-  private final AgentSet _noPatches = AgentSet.fromArray(AgentKindJ.Patch(), new org.nlogo.agent.Agent[0]);
-  private final AgentSet _noLinks = AgentSet.fromArray(AgentKindJ.Link(), new org.nlogo.agent.Agent[0]);
+  private final AgentSet _noTurtles = AgentSet.emptyTurtleSet();
+  private final AgentSet _noPatches = AgentSet.emptyPatchSet();
+  private final AgentSet _noLinks = AgentSet.emptyLinkSet();
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -444,6 +444,10 @@ public strictfp class World
     return _observer;
   }
 
+  // Patches are indexed in row-major order. See `getPatchAt`.
+  // This is also true in 3D (with the x-coordinate corresponding to a stride
+  // of 1, the y-coordinate with a stride of world-width, and the z-coordinate
+  // with a stride of world-width * world-height)
   IndexedAgentSet _patches = null;
 
   public AgentSet patches() {
@@ -564,8 +568,7 @@ public strictfp class World
       throws AgentException {
     int xc = roundX(x);
     int yc = roundY(y);
-    int id = ((_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor);
+    int id = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
     return  getPatch(id);
   }
 
@@ -788,16 +791,16 @@ public strictfp class World
 
     _observer.resetPerspective();
 
-    for (int i = 0; _worldWidth * _worldHeight != i; i++) {
+    for (int i = 0; i < _worldWidth * _worldHeight; i++) {
       Patch patch = new Patch(this, i, x, y, numVariables);
       x++;
-      if (x == (maxPxcor + 1)) {
+      if (x > maxPxcor) {
         x = minPxcor;
         y--;
       }
       patchArray[i] = patch;
     }
-    _patches = (ArrayAgentSet) AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), "patches", patchArray);
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

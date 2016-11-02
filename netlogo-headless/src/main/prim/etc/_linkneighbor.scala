@@ -2,9 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ LinkManager, Turtle }
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.agent.Turtle
+import org.nlogo.nvm.{Context, Reporter}
 
 class _linkneighbor(breedName: String) extends Reporter {
   def this() = this(null)
@@ -16,7 +15,6 @@ class _linkneighbor(breedName: String) extends Reporter {
   def report_1(context: Context, target: Turtle): Boolean = {
     val parent = context.agent.asInstanceOf[Turtle]
     val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    val linkManager = world.linkManager
-    linkManager.linksWith(parent, target, breed).nonEmpty
+    world.linkManager.linksWith(parent, target, breed).length > 0
   }
 }

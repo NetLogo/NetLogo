@@ -98,14 +98,10 @@ public strictfp class InRadiusOrCone {
               continue;
             }
             for (Turtle turtle : patch.turtlesHere()) {
-              if (world.protractor().distance(turtle.xcor(), turtle.ycor(), startX, startY, wrap) <= radius &&
-                  (sourceSet == world.turtles() ||
-                      // any turtle set with a non-null print name is either
-                      // the set of all turtles, or a breed agentset - ST 2/19/04
-                      (sourceSet.printName() != null &&
-                          sourceSet == turtle.getBreed()) ||
-                      (sourceSet.printName() == null &&
-                          sourceSet.contains(turtle)))) {
+              if (world.protractor().distance(turtle.xcor(), turtle.ycor(), startX, startY, wrap) <= radius
+                      && (sourceSet == world.turtles()
+                          || (sourceSet.isBreedSet() && sourceSet == turtle.getBreed())
+                          || (!sourceSet.isBreedSet() && sourceSet.contains(turtle)))) {
                 result.add(turtle);
               }
             }
@@ -238,15 +234,13 @@ public strictfp class InRadiusOrCone {
                   for (int worldOffsetY = -n; worldOffsetY <= n; worldOffsetY++) {
                     // any turtle set with a non-null print name is either
                     // the set of all turtles, or a breed agentset - ST 2/19/04
-                    if ((sourceSet == world.turtles() ||
-                        (sourceSet.printName() != null &&
-                            sourceSet == turtle.getBreed()) ||
-                        (sourceSet.printName() == null &&
-                            sourceSet.contains(turtle)))
-                        && isInCone(turtle.xcor() + worldWidth * worldOffsetX,
-                        turtle.ycor() + worldHeight * worldOffsetY,
-                        startTurtle.xcor(), startTurtle.ycor(),
-                        radius, half, startTurtle.heading())) {
+                    if ((sourceSet == world.turtles()
+                            || (sourceSet.isBreedSet()  && sourceSet == turtle.getBreed())
+                            || (!sourceSet.isBreedSet() && sourceSet.contains(turtle)))
+                            && isInCone(turtle.xcor() + worldWidth * worldOffsetX,
+                                        turtle.ycor() + worldHeight * worldOffsetY,
+                                        startTurtle.xcor(), startTurtle.ycor(),
+                                        radius, half, startTurtle.heading())) {
                       result.add(turtle);
                       break outer;
                     }

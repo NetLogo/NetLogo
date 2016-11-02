@@ -4,16 +4,12 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 
-import scala.collection.JavaConversions;
-import scala.collection.Seq;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import scala.collection.JavaConversions;
 
 public strictfp class TieManager {
   private final World world;

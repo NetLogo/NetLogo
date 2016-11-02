@@ -23,10 +23,10 @@ class _breedat(breedName: String) extends Reporter {
       patch = context.agent.getPatchAtOffsets(dx, dy)
     } catch {
       case e: AgentException =>
-        return AgentSet.fromArray(AgentKind.Turtle, Array())
+        return AgentSet.emptyTurtleSet
     }
     if (patch == null)
-      return AgentSet.fromArray(AgentKind.Turtle, Array())
+      return AgentSet.emptyTurtleSet
     val breed = world.getBreed(breedName)
     AgentSet.fromArray(
       AgentKind.Turtle,

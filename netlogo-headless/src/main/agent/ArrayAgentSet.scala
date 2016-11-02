@@ -5,6 +5,7 @@ package org.nlogo.agent
 import
   org.nlogo.{ api, core },
   org.nlogo.api.MersenneTwisterFast
+import collection.JavaConverters._
 
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and
@@ -58,12 +59,11 @@ extends IndexedAgentSet(kind, printName) {
   /// equality
 
   // assumes we've already checked for equal counts - ST 7/6/06
-  override def equalAgentSetsHelper(otherSet: api.AgentSet) = {
+  override def containsSameAgents(otherSet: api.AgentSet) = {
     val set = collection.mutable.HashSet[api.Agent]()
     val iter = iterator
     while (iter.hasNext)
       set += iter.next()
-    import collection.JavaConverters._
     otherSet.agents.asScala.forall(set.contains)
   }
 
@@ -100,36 +100,29 @@ extends IndexedAgentSet(kind, printName) {
     }
 
   // This is used to optimize the special case of randomSubset where size == 2
-  override def randomTwo(precomputedCount: Int, ran1: Int, ran2: Int): Array[Agent] = {
+  override def randomTwo(precomputedCount: Int, smallRandom: Int, bigRandom: Int): Array[Agent] = {
     // we know precomputedCount, or this method would not have been called.
     // see randomSubset().
-    val (random1, random2) =
-      if (ran2 >= ran1)
-        // if random2 >= random1, we need to increment random2 to choose a later agent.
-        (ran1, ran2 + 1)
-      else
-        (ran2, ran1)
     if (!kind.mortal)
       Array(
-        array(random1),
-        array(random2))
+        array(smallRandom),
+        array(bigRandom))
     else {
       val it = iterator
       var i = 0
       // skip to the first random place
-      while(i < random1) {
+      while(i < smallRandom) {
         it.next()
         i += 1
       }
-      Array(it.next(), {
-        // skip to the second random place
-        i += 1
-        while (i < random2) {
-          it.next()
-          i += 1
-        }
+      val first = it.next()
+      i += 1
+      while (i < bigRandom) {
         it.next()
-      })
+        i += 1
+      }
+      val second = it.next()
+      Array(first, second)
     }
   }
 
@@ -144,8 +137,7 @@ extends IndexedAgentSet(kind, printName) {
         }
         i += 1
       }
-    }
-    else {
+    } else {
       val iter = iterator
       var i, j = 0
       while (j < resultSize) {
@@ -160,9 +152,6 @@ extends IndexedAgentSet(kind, printName) {
     result
   }
 
-  /// iterator methods
-
-  // returns an Iterator object of the appropriate class
   override def iterator: AgentIterator =
     if (!kind.mortal)
       new Iterator

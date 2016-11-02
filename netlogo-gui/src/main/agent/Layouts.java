@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import scala.collection.JavaConversions;
-
 // All methods in this class assume their AgentSet arguments
 // have already been checked that they are turtle sets, not
 // patch sets. - ST 3/10/06
@@ -544,7 +542,7 @@ public final strictfp class Layouts {
 
     AgentSet breed;
     Set<Turtle> allowedTurtles = null;
-    if (linkset.printName() == null) {
+    if (!linkset.isBreedSet()) {
       breed = world.links();
       allowedTurtles = new HashSet<>(linkset.count());
       for (AgentIterator it = linkset.iterator(); it.hasNext();) {
