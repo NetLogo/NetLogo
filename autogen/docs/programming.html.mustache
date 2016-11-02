@@ -2737,10 +2737,26 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       all unbreeded links die, then you can create links of that breed that
       are different in flavor from the previous links.)
     <p>
-      In general, primitives that work with directed links have
-      &quot;in&quot;, &quot;out&quot;, &quot;to&quot;, and &quot;from&quot;
-      in their names. Undirected ones either omit these or use
-      &quot;with&quot;.
+      In general, link primitive names indicate what kind of links they deal
+      with:
+      <ul>
+        <li>
+          Primitives that have &quot;out&quot; in their name deal with
+          outgoing and undirected links. You can think of these as "the links
+          I can use to get <i>from</i> the current node <i>to</i> other nodes."
+          In general, these are probably the primitives you want to use.
+        </li>
+        <li>
+          Primitives that have &quot;in&quot; in their name deal with
+          incoming and undirected links. You can think of these as "the links
+          I can use to get <i>to</i> the current node <i>from</i> other nodes."
+        </li>
+        <li>
+          Primtives that do not specify &quot;in&quot; or &quot;out&quot;, or
+          have &quot;with&quot; in their name deal with <i>all</i> links,
+          both undirected and directed, incoming and outgoing.
+        </li>
+      </ul>
     <p>
       A link's <code>end1</code> and <code>end2</code> variables contain the
       two turtles the link connects. If the link is directed, it goes from
