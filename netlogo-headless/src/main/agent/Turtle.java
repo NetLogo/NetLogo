@@ -206,6 +206,7 @@ public strictfp class Turtle
   // World.getPatchAtDistanceAndHeading() - ST 9/3/03
   public void jump(double distance)
       throws AgentException {
+
     if (heading != cachedHeading) {
       cachedHeading = heading;
       int integerHeading = (int) heading;
@@ -218,9 +219,21 @@ public strictfp class Turtle
         cachedSine = StrictMath.sin(headingRadians);
       }
     }
-    drawJumpLine(xcor, ycor, distance);
+
+    if (!penMode().equals(PEN_UP)) {
+      try {
+        Patch ignore = getPatchAtHeadingAndDistance(0, distance);
+        drawJumpLine(xcor, ycor, distance);
+      } catch (AgentException ex) {
+        // We end up here if `getPatchAtHeadingAndDistance` can't reach the patch that
+        // far away (due to wrapping difficulties) --JAB (11/2/16)
+        org.nlogo.api.Exceptions.ignore(ex);
+      }
+    }
+
     xandycor(xcor + (distance * cachedSine),
         ycor + (distance * cachedCosine), true);
+
   }
 
   public Patch getPatchAtHeadingAndDistance(double delta, double distance)
