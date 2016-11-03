@@ -1,6 +1,6 @@
-package org.nlogo.util
+package org.nlogo.api
 
-import java.lang.StrictMath.{pow, min}
+import java.lang.StrictMath.{min, pow}
 
 /**
   * An implementation of `Range`-like functionality that tries to be as close

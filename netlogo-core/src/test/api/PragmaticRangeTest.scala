@@ -1,11 +1,9 @@
-package org.nlogo.util
+package org.nlogo.api
 
 import org.scalatest.FunSuite
+
 import scala.math.pow
 
-/**
-  * Created by bryan on 11/2/16.
-  */
 class PragmaticRangeTest extends FunSuite {
   // Tests are given as:
   // (start, stop, step, expected length of list)
