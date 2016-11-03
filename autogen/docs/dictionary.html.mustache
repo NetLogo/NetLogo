@@ -485,6 +485,7 @@ Go figure! - ST 12/2/04
       <a href="#of">of</a>
       <a href="#position">position</a>
       <a href="#one-of">one-of</a>
+      <a href="#range">range</a>
       <a href="#reduce">reduce</a>
       <a href="#remove">remove</a>
       <a href="#remove-duplicates">remove-duplicates</a>
@@ -5100,7 +5101,7 @@ show n-values 5 [ [x] -&gt; x * x ]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
-        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>.
+        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>, <a href="#range">range</a>.
         </div>
       <div class="dict_entry" id="neighbors">
         <h3>
@@ -6253,6 +6254,32 @@ ask turtles [
       <p>
         See also <a href="#random-pcor">random-pxcor</a>, <a href="#random-pcor">random-pycor</a>.
       </div>
+    <div class="dict_entry" id="range">
+      <h3>
+        <a>range<span class="since">6.0</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example">range <i>stop</i></span>
+        <span class="prim_example">(range <i>start</i> <i>stop</i>)</span>
+        <span class="prim_example">(range <i>start</i> <i>stop</i> <i>step</i>)</span>
+      </h4>
+      <p>
+        Generates a list of numbers, starting at <i>start</i>, ending before
+        <i>stop</i>, counting by <i>step</i>. <i>start</i> defaults to 0 and
+        <i>step</i> defaults to 1.
+        <pre>
+show range 5
+=&gt; [0 1 2 3 4]
+show (range 2 5)
+=&gt; [2 3 4]
+show (range 2 5 0.5)
+=&gt; [2 2.5 3 3.5 4 4.5]
+show (range 10 0 -1)
+=&gt; [10 9 8 7 6 5 4 3 2 1]
+</pre>
+      <p>
+      See also <a href="#n-values">n-values</a>
+    </div>
     <div class="dict_entry" id="read-from-string">
       <h3>
         <a>read-from-string<span class="since">1.1</span></a>
