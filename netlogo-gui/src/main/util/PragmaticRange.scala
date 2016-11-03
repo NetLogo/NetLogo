@@ -8,9 +8,9 @@ import java.lang.StrictMath.{pow, min}
   * floating-point arithmetic.
   */
 object PragmaticRange {
-  def apply(stop: Double): Seq[Double] = PragmaticRange(0.0, stop)
-  def apply(start: Double, stop: Double): Seq[Double] = PragmaticRange(start, stop, 1.0)
-  def apply(start: Double, stop: Double, step: Double): Seq[Double] = {
+  def apply(stop: Double): Vector[Double] = PragmaticRange(0.0, stop)
+  def apply(start: Double, stop: Double): Vector[Double] = PragmaticRange(start, stop, 1.0)
+  def apply(start: Double, stop: Double, step: Double): Vector[Double] = {
     if (step == 0) throw new IllegalArgumentException("`step` must be nonzero")
 
     val builder = Vector.newBuilder[Double]

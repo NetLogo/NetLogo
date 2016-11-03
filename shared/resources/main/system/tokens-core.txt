@@ -360,6 +360,7 @@ R random-pxcor etc._randompxcor
 R random-pycor etc._randompycor
 R random-xcor etc._randomxcor
 R random-ycor etc._randomycor
+R range etc._range
 R read-from-string etc._readfromstring
 R reduce etc._reduce
 R remainder etc._remainder
