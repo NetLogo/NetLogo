@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
@@ -23,7 +24,7 @@ public final strictfp class _inradius extends Reporter {
 
   public AgentSet report_1(final Context context, AgentSet sourceSet, double radius)
       throws LogoException {
-    if (sourceSet.type() == org.nlogo.agent.Link.class) {
+    if (sourceSet.kind() == AgentKindJ.Link()) {
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
@@ -33,7 +34,6 @@ public final strictfp class _inradius extends Reporter {
     }
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, true);
-    return new ArrayAgentSet(sourceSet.kind(),
-            result.toArray(new Agent[result.size()]));
+    return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

@@ -53,7 +53,7 @@ class Torus(world: World) extends Topology(world) {
   override def getPatchAt(xc: Double, yc: Double): Patch =
     world.getPatchAt(xc, yc)
 
-  override def getNeighbors(source: Patch): AgentSet = {
+  override def getNeighbors(source: Patch): IndexedAgentSet = {
     val neighbors =
       if (source.pxcor == world.maxPxcor && source.pxcor == world.minPxcor) {
         if (source.pycor == world.maxPycor && source.pycor == world.minPycor) {
@@ -70,10 +70,10 @@ class Torus(world: World) extends Topology(world) {
           getPatchSouthWest(source), getPatchNorthWest(source))
       }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
-  override def getNeighbors4(source: Patch): AgentSet = {
+  override def getNeighbors4(source: Patch): IndexedAgentSet = {
     val neighbors =
       if (source.pxcor == world.maxPxcor && source.pxcor == world.minPxcor) {
         if (source.pycor == world.maxPycor && source.pycor == world.minPycor)
@@ -86,7 +86,7 @@ class Torus(world: World) extends Topology(world) {
         Array[Agent](getPatchNorth(source), getPatchEast(source), getPatchSouth(source), getPatchWest(source))
       }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
   override def shortestPathX(x1: Double, x2: Double): Double = {

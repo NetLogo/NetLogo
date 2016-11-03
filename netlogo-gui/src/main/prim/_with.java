@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.core.I18N;
@@ -31,7 +32,7 @@ public final strictfp class _with
     Context freshContext = new Context(context, sourceSet);
     List<Agent> result = new ArrayList<Agent>();
     reporterBlock.checkAgentSetClass(sourceSet, context);
-    for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
       Agent tester = iter.next();
       Object value = freshContext.evaluateReporter(tester, reporterBlock);
       if (!(value instanceof Boolean)) {
@@ -43,7 +44,6 @@ public final strictfp class _with
         result.add(tester);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(sourceSet.kind(),
-        result.toArray(new Agent[result.size()]));
+    return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

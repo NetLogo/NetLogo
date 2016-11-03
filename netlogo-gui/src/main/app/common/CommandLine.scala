@@ -2,28 +2,18 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Dimension, Font }
-import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
-import javax.swing.{ JScrollPane, ScrollPaneConstants }
+import java.awt.{BorderLayout, Dimension}
+import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
+import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
-import org.nlogo.agent.{ Agent, ArrayAgentSet, OutputObject }
-import org.nlogo.awt.Fonts
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget => CoreWidget }
+import org.nlogo.agent.{Agent, AgentSet, OutputObject}
+import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
+import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 import org.nlogo.nvm.Workspace
-import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, OutputEvent }
-import org.nlogo.window.{ CommandCenterInterface, EditorColorizer,
-  Events => WindowEvents, JobWidget, Widget }
+import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
 
 import scala.collection.immutable.List
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import javax.swing.KeyStroke
-import javax.swing.text.TextAction
-import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
-
-import scala.collection.JavaConversions._
 
 object CommandLine {
   val PROMPT = ">"
@@ -200,8 +190,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                       false, true).raise(this)
             }
             if (agent != null) {
-              val agentSet = new ArrayAgentSet(kind, 1, false)
-              agentSet.add(agent)
+              val agentSet = AgentSet.fromAgent(agent)
               agents(agentSet)
             }
             new WindowEvents.AddJobEvent(this, agents, procedure).raise(this)

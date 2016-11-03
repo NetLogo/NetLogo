@@ -376,7 +376,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -450,16 +450,16 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/IndexedAgentSet;
           GOTO L5
          L4
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Patch
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/IndexedAgentSet;
          L5
-         FRAME SAME1 org/nlogo/agent/AgentSet
+         FRAME SAME1 org/nlogo/agent/IndexedAgentSet
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_setpatchvariable_1.keptinstr4 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
@@ -477,15 +477,15 @@ procedure GO:[]{O---}:
           ICONST_0
           ISTORE 5
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentSet$Iterator;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 6
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_1 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentSet$Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_1 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator] []
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentSet$Iterator.hasNext ()Z
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L7
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentSet$Iterator.next ()Lorg/nlogo/agent/Agent;
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 7
           ALOAD 4
           ALOAD 7
@@ -550,7 +550,7 @@ procedure GO:[]{O---}:
          L1
           GOTO L11
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double T org/nlogo/nvm/Context I org/nlogo/agent/AgentSet$Iterator] [org/nlogo/api/AgentException]
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double T org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -589,7 +589,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -826,7 +826,7 @@ procedure SETUP-RANDOM:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP

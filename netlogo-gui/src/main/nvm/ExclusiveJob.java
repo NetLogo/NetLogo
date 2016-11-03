@@ -2,6 +2,7 @@
 
 package org.nlogo.nvm;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
@@ -39,10 +40,9 @@ public strictfp class ExclusiveJob
     // all turtles and one of them hatches; the hatched
     // turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
-    AgentSet.Iterator it = agentset.shufflerator(random);
     Context context = new Context(this, null, 0, null, workspace);
-    context.agentBit = agentset.getAgentBit();
-    while (it.hasNext()) {
+    context.agentBit = agentset.agentBit();
+    for(AgentIterator it = agentset.shufflerator(random); it.hasNext();) {
       context.agent = it.next();
       if (parentContext != null) {
         context.activation = parentContext.activation;

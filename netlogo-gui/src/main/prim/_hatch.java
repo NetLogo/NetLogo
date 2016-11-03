@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
@@ -37,12 +38,11 @@ public final strictfp class _hatch
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
       Turtle parent = (Turtle) context.agent;
-      AgentSet agentset =
-          new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles, false);
+      AgentSetBuilder agentSetBuilder = new AgentSetBuilder(AgentKindJ.Turtle(), numberOfTurtles);
       if (breedName == NO_BREED) {
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.hatch();
-          agentset.add(child);
+          agentSetBuilder.add(child);
           workspace.joinForeverButtons(child);
         }
       } else {
@@ -50,11 +50,11 @@ public final strictfp class _hatch
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.hatch();
           child.setBreed(breed);
-          agentset.add(child);
+          agentSetBuilder.add(child);
           workspace.joinForeverButtons(child);
         }
       }
-      context.runExclusiveJob(agentset, next);
+      context.runExclusiveJob(agentSetBuilder.build(), next);
     }
     context.ip = offset;
   }

@@ -60,7 +60,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
     activation = context.activation;
     letBindings = context.letBindings;
     myself = context.agent;
-    agentBit = agents.getAgentBit();
+    agentBit = agents.agentBit();
     this.workspace = context.workspace;
   }
 

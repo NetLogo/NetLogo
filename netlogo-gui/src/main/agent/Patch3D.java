@@ -309,7 +309,7 @@ public final strictfp class Patch3D
   }
 
   @Override
-  public AgentSet getNeighbors() {
+  public IndexedAgentSet getNeighbors() {
     if (patchNeighbors == null) {
       patchNeighbors = ((Topology3D) world.getTopology()).getNeighbors3d(this);
     }

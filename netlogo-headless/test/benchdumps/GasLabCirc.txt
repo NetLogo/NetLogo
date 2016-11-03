@@ -687,7 +687,7 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerebuildcollisionlist_ask_1.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -768,7 +768,7 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerebuildcollisionlist_ask_4.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1171,7 +1171,7 @@ procedure GO:[]{O---}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_13.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1241,7 +1241,7 @@ procedure GO:[]{O---}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_13 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -1323,7 +1323,7 @@ procedure GO:[]{O---}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_16.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1393,7 +1393,7 @@ procedure GO:[]{O---}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_16 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -1672,7 +1672,7 @@ procedure GO:[]{O---}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_28.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1742,7 +1742,7 @@ procedure GO:[]{O---}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_28 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -1865,7 +1865,7 @@ procedure GO:[]{O---}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_32.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1935,7 +1935,7 @@ procedure GO:[]{O---}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_32 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -2026,7 +2026,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_36.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -3133,7 +3133,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecheckforparticlecollision_ask_5.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -9006,7 +9006,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewinners_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -9076,7 +9076,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewinners_ask_3 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -9321,7 +9321,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewinners_ask_8.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -9391,7 +9391,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewinners_ask_8 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -9544,7 +9544,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewinners_ask_12.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -9614,7 +9614,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewinners_ask_12 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -11340,7 +11340,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewith_ask_17.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -11410,7 +11410,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_ask_17 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -11753,7 +11753,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewith_ask_21.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -11823,7 +11823,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_ask_21 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -12103,7 +12103,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecollidewith_ask_25.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -12173,7 +12173,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_ask_25 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -13824,7 +13824,7 @@ procedure MAKE-BOX:[]{OTPL}:
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
          L7
           ASTORE 2
           ALOAD 1
@@ -13834,7 +13834,7 @@ procedure MAKE-BOX:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L9
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -13847,7 +13847,7 @@ procedure MAKE-BOX:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-         FRAME SAME
+         FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_ask_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context scala/collection/mutable/ArrayBuffer org/nlogo/agent/AgentIterator] []
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
@@ -14352,7 +14352,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurearrange_ask_2.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -14422,7 +14422,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L5
          FRAME FULL [org/nlogo/prim/_asm_procedurearrange_ask_2 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -14646,7 +14646,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEVIRTUAL scala/collection/mutable/ArrayBuffer.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
          L11
           AASTORE
           ALOAD 1
@@ -15570,7 +15570,7 @@ procedure REVERSE-TIME:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurereversetime_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -15714,7 +15714,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduretesttimereversal_ask_1.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -16079,7 +16079,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduretesttimereversal_ask_11.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP

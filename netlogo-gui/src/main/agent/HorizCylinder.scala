@@ -206,7 +206,7 @@ class HorizCylinder(world: World) extends Topology(world) {
     0.0
   }
 
-  override def getNeighbors(source: Patch): AgentSet = {
+  override def getNeighbors(source: Patch): IndexedAgentSet = {
     val neighbors =
       if (source.pxcor == world.maxPxcor) {
         if (source.pxcor == world.minPxcor) {
@@ -239,10 +239,10 @@ class HorizCylinder(world: World) extends Topology(world) {
           getPatchSouthWest(source), getPatchNorthWest(source))
     }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
-  override def getNeighbors4(source: Patch): AgentSet = {
+  override def getNeighbors4(source: Patch): IndexedAgentSet = {
     val neighbors =
       if (source.pxcor == world.maxPxcor) {
         if (source.pxcor == world.minPxcor) {
@@ -271,7 +271,7 @@ class HorizCylinder(world: World) extends Topology(world) {
             getPatchSouth(source), getPatchWest(source))
       }
 
-    new ArrayAgentSet(AgentKind.Patch, neighbors.distinct)
+    AgentSet.fromArray(AgentKind.Patch, neighbors.distinct)
   }
 
   //get patch

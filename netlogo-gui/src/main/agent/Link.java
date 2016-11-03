@@ -76,6 +76,8 @@ public strictfp class Link
     for (int i = 2; i < variables.length; i++) {
       variables[i] = World.ZERO;
     }
+
+    colorDoubleUnchecked(DEFAULT_COLOR);
   }
 
   Link(World world, Turtle end1, Turtle end2, AgentSet breed) {
@@ -99,12 +101,14 @@ public strictfp class Link
     world.links().add(this);
 
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
 
     for (int i = LAST_PREDEFINED_VAR + 1; i < variables.length; i++) {
       variables[i] = World.ZERO;
     }
+
+    colorDoubleUnchecked(DEFAULT_COLOR);
   }
 
   public void die() {
@@ -114,9 +118,9 @@ public strictfp class Link
     AgentSet breed = getBreed();
     world.links().remove(agentKey());
     if (breed != world.links()) {
-      breed.remove(agentKey());
+      ((TreeAgentSet) breed).remove(agentKey());
     }
-    world.linkManager.cleanup(this);
+    world.linkManager.cleanupLink(this);
     id = -1;
   }
 
@@ -542,10 +546,7 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds = new ArrayAgentSet(AgentKindJ.Turtle(), 2, false);
-    bothEnds.add(end1);
-    bothEnds.add(end2);
-    return bothEnds;
+    return AgentSet.fromArray(AgentKindJ.Turtle(), new Turtle[] {end1, end2});
   }
 
   @Override
@@ -624,18 +625,22 @@ public strictfp class Link
   public void setBreed(AgentSet breed) {
     AgentSet oldBreed = null;
     if (variables[VAR_BREED] instanceof AgentSet) {
+      world.linkManager.removeLink(this);
       oldBreed = (AgentSet) variables[VAR_BREED];
       if (breed == oldBreed) {
         return;
       }
       if (oldBreed != world.links()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED]).remove(agentKey());
       }
     }
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED] = breed;
+    if (oldBreed != null) {
+      world.linkManager.addLink(this);
+    }
     shape(world.linkBreedShapes.breedShape(breed));
     realloc(false, oldBreed);
   }
@@ -693,4 +698,7 @@ public strictfp class Link
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
+  public Turtle otherEnd(Turtle parent) {
+    return end1 == parent ? end2 : end1;
+  }
 }

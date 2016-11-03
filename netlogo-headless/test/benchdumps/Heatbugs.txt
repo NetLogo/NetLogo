@@ -240,7 +240,7 @@ procedure SETUP:[]{O---}:
           ALOAD 5
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -310,7 +310,7 @@ procedure SETUP:[]{O---}:
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 6
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ask_0 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
@@ -1001,7 +1001,7 @@ procedure GO:[]{O---}:
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
          L1
           ASTORE 2
           ALOAD 2
@@ -1010,7 +1010,7 @@ procedure GO:[]{O---}:
           ICONST_0
           GOTO L3
          L2
-         FRAME APPEND [org/nlogo/agent/AgentSet]
+         FRAME APPEND [org/nlogo/agent/TreeAgentSet]
           ICONST_1
          L3
          FRAME SAME1 I
@@ -1091,7 +1091,7 @@ procedure GO:[]{O---}:
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
          L1
           ASTORE 2
           ALOAD 1
@@ -1101,7 +1101,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1114,7 +1114,7 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-         FRAME APPEND [org/nlogo/agent/AgentSet]
+         FRAME APPEND [org/nlogo/agent/TreeAgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -1211,7 +1211,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorpatches_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP

@@ -55,8 +55,7 @@ public final strictfp class _ask
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
-      agentset = new ArrayAgentSet(agent.kind(), 1, false);
-      agentset.add(agent);
+      agentset = AgentSet.fromAgent(agent);
     } else {
       throw new ArgumentTypeException(context, this, 0, Syntax.AgentsetType() | Syntax.AgentType(), target);
     }
@@ -86,9 +85,7 @@ public final strictfp class _ask
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
-    AgentSet agentset = new ArrayAgentSet(agent.kind(), 1, false);
-    agentset.add(agent);
-    context.runExclusiveJob(agentset, next);
+    context.runExclusiveJob(AgentSet.fromAgent(agent), next);
     context.ip = offset;
   }
 

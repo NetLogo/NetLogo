@@ -3,16 +3,16 @@
 package org.nlogo.prim
 
 import org.nlogo.core.AgentKind
-import org.nlogo.agent.{ AgentSet, ArrayAgentSet }
-import org.nlogo.api.{ LogoException}
+import org.nlogo.agent.{AgentSet, AgentSetBuilder, ArrayAgentSet}
+import org.nlogo.api.LogoException
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.{Context, Reporter}
 
 class _patchrow extends Reporter {
 
 
   override def report(context: Context): AnyRef = {
-    val result = new ArrayAgentSet(AgentKind.Patch, world.worldWidth, false)
+    val result = new AgentSetBuilder(AgentKind.Patch, world.worldWidth)
     val yDouble = argEvalDoubleValue(context, 0)
     val y = yDouble.toInt
     if (y == yDouble && y >= world.minPycor && y <= world.maxPycor) {
@@ -22,6 +22,6 @@ class _patchrow extends Reporter {
         x+=1
       }
     }
-    result
+    result.build()
   }
 }

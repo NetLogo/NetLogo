@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 // All methods in this class assume their AgentSet arguments
 // have already been checked that they are turtle sets, not
@@ -344,13 +346,26 @@ public final strictfp class Layouts {
     // used to find the maximum depth
     TreeNode lastNode = rootNode;
 
+    AgentSet breed;
+    Set<Turtle> allowedTurtles = null;
+    if (linkset.printName() == null) {
+      breed = world.links();
+      allowedTurtles = new HashSet<>(linkset.count());
+      for (AgentIterator it = linkset.iterator(); it.hasNext();) {
+      Link link = (Link) it.next();
+        allowedTurtles.add(link.end1());
+        allowedTurtles.add(link.end2());
+      }
+    } else {
+      breed = linkset;
+    }
+
     while (!queue.isEmpty()) {
       TreeNode node = queue.remove(0);
       lastNode = node;
-      scala.collection.Iterator<Turtle> iter = linkManager.findLinkedWith(node.val, linkset);
-      while (iter.hasNext()) {
-        Turtle t = iter.next();
-        if (nodeset.contains(t) && !nodeTable.containsKey(t)) {
+      for (Turtle t : linkManager.neighbors(node.val, breed)) {
+        if (nodeset.contains(t) && !nodeTable.containsKey(t)
+                && (allowedTurtles == null || allowedTurtles.contains(t))) {
           TreeNode child = new TreeNode(t, node);
           node.children.add(child);
           nodeTable.put(t, child);

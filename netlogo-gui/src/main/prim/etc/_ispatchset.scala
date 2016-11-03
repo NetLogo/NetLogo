@@ -2,9 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ AgentSet, Patch }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.agent.{AgentSet, Patch}
+import org.nlogo.core.{AgentKind, Syntax}
+import org.nlogo.nvm.{Context, Pure, Reporter}
 
 class _ispatchset extends Reporter with Pure {
 
@@ -12,7 +12,7 @@ class _ispatchset extends Reporter with Pure {
     Boolean.box(
       args(0).report(context) match {
         case set: AgentSet =>
-          set.`type` eq classOf[Patch]
+          set.kind == AgentKind.Patch
         case _ =>
           false
       })

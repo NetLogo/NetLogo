@@ -11,8 +11,8 @@ trait Topology3D {
   def towardsPitchWrap(dx: Double, dy: Double, dz: Double): Double
   @throws(classOf[AgentException])
   def getPatchAt(xc: Double, yc: Double, zc: Double): Patch
-  def getNeighbors3d(source: Patch3D): AgentSet
-  def getNeighbors6(source: Patch3D): AgentSet
+  def getNeighbors3d(source: Patch3D): IndexedAgentSet
+  def getNeighbors6(source: Patch3D): IndexedAgentSet
   def getPNU(source: Patch3D): Patch
   def getPEU(source: Patch3D): Patch
   def getPSU(source: Patch3D): Patch

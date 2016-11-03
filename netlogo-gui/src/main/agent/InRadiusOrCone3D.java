@@ -4,6 +4,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Vect;
+import org.nlogo.core.AgentKindJ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public strictfp class InRadiusOrCone3D
             // never happen - ST 7/18/06
             throw new IllegalStateException(ex);
           }
-          if (sourceSet.type() == Patch.class) {
+          if (sourceSet.kind() == AgentKindJ.Patch()) {
             if (protractor.distance(patch.pxcor, patch.pycor, patch.pzcor,
                 startX, startY, startZ,
                 wrap)
@@ -121,10 +122,8 @@ public strictfp class InRadiusOrCone3D
                 if ((sourceSet == world.turtles() ||
                     // any turtle set with a non-null print name is either
                     // the set of all turtles, or a breed agentset - ST 2/19/04
-                    (sourceSet.printName() != null &&
-                        sourceSet == turtle.getBreed()) ||
-                    (sourceSet.printName() == null &&
-                        sourceSet.contains(turtle))) &&
+                    (sourceSet.isBreedSet() && sourceSet == turtle.getBreed()) ||
+                    (!sourceSet.isBreedSet() && sourceSet.contains(turtle))) &&
                     (protractor.distance(turtle.xcor(), turtle.ycor(),
                         ((Turtle3D) turtle).zcor(),
                         startX, startY, startZ, wrap)
@@ -226,7 +225,7 @@ public strictfp class InRadiusOrCone3D
               (startPatch.pxcor + dx, startPatch.pycor + dy, startPatch.pzcor + dz);
 
           if (patch != null) {
-            if (sourceSet.type() == Patch.class) {
+            if (sourceSet.kind() == AgentKindJ.Patch()) {
               // loop through our world copies
               outer:
               for (int worldOffsetX = -m; worldOffsetX <= m; worldOffsetX++) {
@@ -257,11 +256,8 @@ public strictfp class InRadiusOrCone3D
                         // any turtle set with a non-null print name is either
                         // the set of all turtles, or a breed agentset - ST 2/19/04
                         if ((sourceSet == world.turtles() ||
-                            (sourceSet.printName() != null &&
-                                sourceSet == turtle.getBreed()) ||
-                            (sourceSet.printName() == null &&
-                                sourceSet.contains(turtle)))
-                            &&
+                            (sourceSet.isBreedSet() && sourceSet == turtle.getBreed()) ||
+                            (!sourceSet.isBreedSet() && sourceSet.contains(turtle))) &&
                             isInCone(turtle.xcor() + worldWidth * worldOffsetX,
                                 turtle.ycor() + worldHeight * worldOffsetY,
                                 ((Turtle3D) turtle).zcor() + worldDepth * worldOffsetZ,

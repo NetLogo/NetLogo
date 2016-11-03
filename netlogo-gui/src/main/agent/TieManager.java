@@ -5,6 +5,7 @@ package org.nlogo.agent;
 import org.nlogo.api.AgentException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,11 @@ public strictfp class TieManager {
 
   /// tie support
 
-  int tieCount = 0;
+  private int tieCount = 0;
+
+  public boolean hasTies() {
+    return tieCount > 0;
+  }
 
   public void setTieMode(Link link, String mode) {
     if (link.isTied()) {
@@ -39,21 +44,12 @@ public strictfp class TieManager {
 
   List<Turtle> tiedTurtles(Turtle root) {
     ArrayList<Turtle> myTies = new ArrayList<Turtle>();
-    if (linkManager.srcMap.containsKey(root)) {
-      for (Link link : linkManager.srcMap.get(root)) {
-        if (link.isTied()) {
-          Turtle t = link.end2();
-          myTies.add(t);
-        }
-      }
-    }
-    if (linkManager.destMap.containsKey(root)) {
-      for (Link link : linkManager.destMap.get(root)) {
-        if (!link.getBreed().isDirected()
-            && link.isTied()) {
-          Turtle t = link.end1();
-          myTies.add(t);
-        }
+    for (Link link : linkManager.outLinks(root, world._links)) {
+      if (link.isTied()) {
+        if (root == link.end1)
+          myTies.add(link.end2);
+        else
+          myTies.add(link.end1);
       }
     }
     return myTies;
@@ -151,8 +147,8 @@ public strictfp class TieManager {
       // update positions
       for (Turtle t : myTies) {
         try {
-          Link link = linkManager.findLink(root, t, world.links(), true);
-          boolean rigid = link.mode().equals(Link.MODE_FIXED);
+          boolean rigid = Arrays.stream(linkManager.linksWith(root, t, world.links()))
+                  .anyMatch(l -> l.mode().equals(Link.MODE_FIXED));
 
           double dh = Turtle.subtractHeadings(newHeading, originalHeading);
           double dist = world.protractor().distance(root.xcor, root.ycor, t.xcor, t.ycor, true);

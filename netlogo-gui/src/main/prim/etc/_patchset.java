@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
@@ -32,11 +33,11 @@ public final strictfp class _patchset
       Object elt = args[i].report(context);
       if (elt instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) elt;
-        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+        if (tempSet.kind() != AgentKindJ.Patch()) {
           throw new ArgumentTypeException
               (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
         }
-        for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Patch) iter.next());
         }
       } else if (elt instanceof LogoList) {
@@ -48,9 +49,7 @@ public final strictfp class _patchset
             (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
-        AgentKindJ.Patch(),
-        resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
+    return AgentSet.fromArray( AgentKindJ.Patch(), resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Patch> result)
@@ -62,12 +61,12 @@ public final strictfp class _patchset
         result.add((Patch) obj);
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
-        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+        if (tempSet.kind() != AgentKindJ.Patch()) {
           throw new RuntimePrimitiveException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
-        for (AgentSet.Iterator iter2 = tempSet.iterator();
+        for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
           result.add((Patch) iter2.next());
         }

@@ -26,11 +26,10 @@ class TieManager(private val world: World) {
   }
 
   protected def tiedTurtles(root: Turtle, seenTurtles: Set[Turtle]): Seq[Turtle] = {
-    val linksFrom = world.linkManager.findLinksFrom(root, world.links)
-    val linksTo   = world.linkManager.findLinksTo  (root, world.links)
-    val tiedFromTurtles = linksFrom.collect { case link if link.isTied => link.end2 }
-    val tiedToTurtles   = linksTo  .collect { case link if !link.getBreed.isDirected && link.isTied => link.end1 }
-    (tiedFromTurtles ++ tiedToTurtles).filterNot(t => t.id == -1 || seenTurtles(t)).toSeq.distinct
+    val tiedTurtles = world.linkManager.outLinks(root, world.links).collect {
+      case link if link.isTied => link.otherEnd(root)
+    }
+    tiedTurtles.filterNot(t => t.id == -1 || seenTurtles(t)).toSeq.distinct
   }
 
   private[agent] def turtleMoved(root: Turtle, newX: Double, newY: Double, oldX: Double, oldY: Double): Unit =
@@ -54,7 +53,9 @@ class TieManager(private val world: World) {
 
   private[agent] def turtleTurned(root: Turtle, newHeading: Double, oldHeading: Double, seenTurtles: Set[Turtle]) {
 
-    val isLinkedFixedly = (t: Turtle) => world.linkManager.findLink(root, t, world.links, true).mode == Link.MODE_FIXED
+    val isLinkedFixedly = (t: Turtle) => world.linkManager.linksTo(root, t, world.links)
+                                                          .find( _.mode == Link.MODE_FIXED)
+                                                          .nonEmpty
     val getCoords       = (t: Turtle) => (t.xcor(), t.ycor())
     val squash          = (x: Double) => if (StrictMath.abs(x) < Infinitesimal) 0 else x
     val squashedSin     = StrictMath.toRadians _ andThen StrictMath.sin andThen squash

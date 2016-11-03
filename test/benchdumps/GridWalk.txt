@@ -204,7 +204,7 @@ procedure GO:[]{O---}:
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
          L1
           ASTORE 2
           ALOAD 1
@@ -214,7 +214,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -226,7 +226,7 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-         FRAME APPEND [org/nlogo/agent/AgentSet]
+         FRAME APPEND [org/nlogo/agent/TreeAgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -265,16 +265,16 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
           GOTO L4
          L3
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Patch
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L4
-         FRAME SAME1 org/nlogo/agent/AgentSet
+         FRAME SAME1 org/nlogo/agent/IndexedAgentSet
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
@@ -284,7 +284,7 @@ procedure GO:[]{O---}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L6
          L5
-         FRAME APPEND [org/nlogo/agent/AgentSet I]
+         FRAME APPEND [org/nlogo/agent/IndexedAgentSet I]
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -467,16 +467,16 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
           GOTO L4
          L3
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Patch
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L4
-         FRAME SAME1 org/nlogo/agent/AgentSet
+         FRAME SAME1 org/nlogo/agent/IndexedAgentSet
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
@@ -486,7 +486,7 @@ procedure SETUP:[]{O---}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L6
          L5
-         FRAME APPEND [org/nlogo/agent/AgentSet I]
+         FRAME APPEND [org/nlogo/agent/IndexedAgentSet I]
           ALOAD 2
           ILOAD 3
           ALOAD 1

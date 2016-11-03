@@ -3770,7 +3770,9 @@ ask turtles
       </h4>
       <p>
         Reports true if there is a directed link going from <i>turtle</i>
-        to the caller.
+        to the caller or an undirected link connecting <i>turtle</i> to the
+        caller. You can think of this as "is there a link I can use to get from
+        <i>turtle</i> to the caller?"
       <pre>
 crt 2
 ask turtle 0 [
@@ -3795,8 +3797,10 @@ ask turtle 1 [
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Reports the agentset of all the turtles that have directed links
-        coming from them to the caller.
+        Reports the agentset of all the turtles that have directed links coming
+        from them to the caller as well as all turtles that have an undirected
+        link connecting them with the caller. You can think of this as "all the
+        turtles that can get to the caller using a link."
       <pre>
 crt 4
 ask turtle 0 [ create-links-to other turtles ]
@@ -3814,8 +3818,11 @@ ask turtle 1 [ ask in-link-neighbors [ set color blue ] ] ;; turtle 0 turns blue
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Report the directed link from <i>turtle</i> to the caller. If no
-        link exists then it reports nobody.
+        Reports a directed link from <i>turtle</i> to the caller or an
+        undirected link connecting the two. If no link exists then it
+        reports nobody. If more than one such link exists, reports a
+        random one. You can think of this as "give me a link that I can use
+        to travel from <i>turtle</i> to the caller."
       <pre>
 crt 2
 ask turtle 0 [ create-link-to turtle 1 ]
@@ -4921,8 +4928,13 @@ move-to max-one-of turtles [size]
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports an agentset of all links connected to the
-          caller, regardless of directedness.
+          Reports an agentset of all links connected to the caller of
+          the corresponding breed, regardless of directedness.
+          Generally, you might consider using
+          <a href="#my-out-links"><code>my-out-links</code></a> instead
+          of this primitive, as it works well for either directed or
+          undirected networks (since it excludes directed, incoming
+          links).
         <pre>
 crt 5
 ask turtle 0
@@ -4937,6 +4949,8 @@ ask turtle 1
 ]
 end
 </pre>
+        If you only want the undirected links connected to a node, you
+        can do <code>my-links with [ not is-directed-link? self ]</code>.
       </div>
       <div class="dict_entry" id="my-in-links">
         <h3>
@@ -4950,7 +4964,9 @@ end
         </h4>
         <p>
           Reports an agentset of all the directed links coming in from
-          other nodes to the caller.
+          other nodes to the caller as well as all undirected links
+          connected to the caller. You can think of this as "all links
+          that you can use to travel <i>to</i> this node".
         <pre>
 crt 5
 ask turtle 0
@@ -4976,7 +4992,9 @@ ask turtle 1
         </h4>
         <p>
           Reports an agentset of all the directed links going out from the
-          caller to other nodes.
+          caller to other nodes as well as undirected links connected to the
+          caller. You can think of this as "all links you can use to travel
+          <i>from</i> this node".
         <pre>
 crt 5
 ask turtle 0
@@ -5119,7 +5137,8 @@ ask neighbors4 [ set pcolor red ]
         </h4>
         <p>
           Reports the agentset of all turtles found at the other end of
-          undirected links connected to this turtle.
+          any links (undirected or directed, incoming or outgoing)
+          connected to this turtle.
         <pre>
 crt 3
 ask turtle 0
@@ -5145,8 +5164,8 @@ end
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports true if there is an undirected link between <i>turtle</i>
-          and the caller.
+          Reports true if there is a link (either directed or undirected,
+          incoming or outgoing) between <i>turtle</i> and the caller.
         <pre>
 crt 2
 ask turtle 0
@@ -5439,7 +5458,9 @@ ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
       </h4>
       <p>
         Reports true if there is a directed link going from the caller to
-        <i>turtle</i>.
+        <i>turtle</i> or if there is an undirected link connecting the caller
+        with <i>turtle</i>. You can think of this as "can I get from the caller
+        to <i>turtle</i> using a link?"
       <pre>
 crt 2
 ask turtle 0 [
@@ -5465,7 +5486,8 @@ ask turtle 1 [
       </h4>
       <p>
         Reports the agentset of all the turtles that have directed links
-        from the caller.
+        from the caller, or undirected links with the caller. You can think
+        of this as "who can I get to from the caller using a link?"
       <pre>
 crt 4
 ask turtle 0
@@ -5492,8 +5514,11 @@ end
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Reports the directed link from the caller to <i>turtle</i>. If no
-        link exists then it reports nobody.
+        Reports a directed link from the caller to <i>turtle</i> or an
+        undirected link connecting the two. If no link exists then it
+        reports nobody. If more than one such link exists, reports a
+        random one. You can think of this as "give me a link that I can use
+        to travel from the caller to <i>turtle</i>."
       <pre>
 crt 2
 ask turtle 0 [
@@ -8469,8 +8494,9 @@ show count patches with [pcolor = red]
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Report the undirected link between <i>turtle</i> and the caller. If
-        no link exists then it reports nobody.
+        Reports a link between <i>turtle</i> and the caller (directed or
+        undirected, incoming or outgoing). If no link exists then it reports
+        nobody. If more than one such link exists, reports a random one.
       <pre>
 crt 2
 ask turtle 0 [

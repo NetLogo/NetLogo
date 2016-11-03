@@ -38,8 +38,8 @@ class _uphill4 extends Command with Referencer {
     val patch = turtle.getPatchHere()
     var winningValue = - Double.MaxValue
     val winners = new JArrayList[Patch]()
-    val iter = patch.getNeighbors4().iterator()
-    while (iter.hasNext()) {
+    val iter = patch.getNeighbors4().iterator
+    while (iter.hasNext) {
       val tester = iter.next().asInstanceOf[Patch]
       val value = tester.getPatchVariable(reference.vn)
       if (value.isInstanceOf[java.lang.Double]) {

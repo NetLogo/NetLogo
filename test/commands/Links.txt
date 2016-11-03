@@ -147,8 +147,8 @@ LinkNeighbor
   directed-link-breed [directed-edges directed-edge]
   O> crt 2
   O> ask turtle 0 [create-directed-edge-to turtle 1]
-  [link-neighbor? turtle 1] of turtle 0 => false
-  [link-neighbor? turtle 0] of turtle 1 => false
+  [link-neighbor? turtle 1] of turtle 0 => true
+  [link-neighbor? turtle 0] of turtle 1 => true
 
 LinkNeighbor2
   undirected-link-breed [undirected-edges undirected-edge]
@@ -162,11 +162,6 @@ LinkNeighbor3
   O> ask turtle 0 [create-link-with turtle 1]
   [ link-neighbor? turtle 1 ] of turtle 0 => true
   [ link-neighbor? turtle 0 ] of turtle 1 => true
-
-LinkNeighbor4
-  O> crt 2
-  O> ask turtle 0 [create-link-to turtle 1]
-  [ link-neighbor? turtle 1 ] of turtle 0 => ERROR LINKS is a directed breed.
 
 NodeDies1
   breed [nodes node]
@@ -338,8 +333,8 @@ LinkFromToWith1
   [(list [who] of end1 [who] of end2 )] of [out-link-to turtle 1] of turtle 0 => [0 1]
   [(list [who] of end1 [who] of end2 )] of [in-link-from turtle 0] of turtle 1 => [0 1]
   [out-link-to turtle 0] of turtle 1 => nobody
-  [link-with turtle 1] of turtle 0 => ERROR LINKS is a directed breed.
-  [link-with turtle 0] of turtle 1 => ERROR LINKS is a directed breed.
+  (word [link-with turtle 1] of turtle 0) => "(link 0 1)"
+  (word [link-with turtle 0] of turtle 1) => "(link 0 1)"
 
 LinkFromToWith2
   O> crt 2
@@ -729,22 +724,6 @@ LinkHeading_3D
   T> fd 5 tilt-up 90 fd 5
   all? links [link-pitch = [towards-pitch other-end] of end1] => true
 
-LinkNeighborIsUndirectedOnly1
-  O> crt 2 [ create-links-to other turtles ]
-  T> __ignore link-neighbor? one-of other turtles => ERROR LINKS is a directed breed.
-
-LinkNeighborIsUndirectedOnly2
-  directed-link-breed [directed-edges directed-edge]
-  O> crt 2 [ create-directed-edges-to other turtles ]
-  T> __ignore directed-edge-neighbor? one-of other turtles => COMPILER ERROR Nothing named DIRECTED-EDGE-NEIGHBOR? has been defined.
-
-LinkNeighborsIsUndirectedOnly1
-  directed-link-breed [directors director]
-  O> crt 1
-  O> crt 1 [ create-directors-from other turtles ]
-  count [link-neighbors] of turtle 0 => 0
-  count [link-neighbors] of turtle 1 => 0
-
 # https://github.com/NetLogo/NetLogo/issues/338
 LinkCreationTypeChecking_2D
   O> crt 1
@@ -786,11 +765,11 @@ LinkNeighborsBreeded
   [link-neighbor? turtle 1] of turtle 0 => true
   [link-neighbor? turtle 2] of turtle 0 => false
   [link-neighbor? turtle 0] of turtle 1 => true
-  [link-neighbor? turtle 2] of turtle 1 => false
-  [out-link-neighbor? turtle 1] of turtle 0 => false
-  [in-link-neighbor? turtle 1] of turtle 0 => false
-  [out-link-neighbor? turtle 0] of turtle 1 => false
-  [in-link-neighbor? turtle 0] of turtle 1 => false
+  [link-neighbor? turtle 2] of turtle 1 => true
+  [out-link-neighbor? turtle 1] of turtle 0 => true
+  [in-link-neighbor? turtle 1] of turtle 0 => true
+  [out-link-neighbor? turtle 0] of turtle 1 => true
+  [in-link-neighbor? turtle 0] of turtle 1 => true
   [undirected-edge-neighbor? turtle 1] of turtle 0 => true
   [undirected-edge-neighbor? turtle 2] of turtle 0 => false
   [undirected-edge-neighbor? turtle 0] of turtle 1 => true
@@ -805,3 +784,152 @@ LinkNeighborsBreeded
   [out-directed-edge-neighbor? turtle 0] of turtle 1 => false
   [out-directed-edge-neighbor? turtle 2] of turtle 1 => false
   [out-directed-edge-neighbor? turtle 1] of turtle 2 => true
+
+UndirectedUnbreededLink
+  globals [ source dest l ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-link-with dest [ set l self ] ]
+  # unspecified
+  [ member? l my-links ] of source => true
+  [ member? dest link-neighbors ] of source => true
+  [ link-neighbor? dest ] of source => true
+  [ l = link-with dest ] of source => true
+  # out
+  [ member? l my-out-links ] of source => true
+  [ member? dest out-link-neighbors ] of source => true
+  [ out-link-neighbor? dest ] of source => true
+  [ l = out-link-to dest ] of source => true
+  # in
+  [ member? l my-in-links ] of source => true
+  [ member? dest in-link-neighbors ] of source => true
+  [ in-link-neighbor? dest ] of source => true
+  [ l = in-link-from dest ] of source => true
+
+DirectedUnbreededLink
+  globals [ source dest l ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-link-to dest [ set l self ] ]
+  # Test source node
+  # unspecified
+  [ member? l my-links ] of source => true
+  [ member? dest link-neighbors ] of source => true
+  [ link-neighbor? dest ] of source => true
+  [ l = link-with dest ] of source => true
+  # out
+  [ member? l my-out-links ] of source => true
+  [ member? dest out-link-neighbors ] of source => true
+  [ out-link-neighbor? dest ] of source => true
+  [ l = out-link-to dest ] of source => true
+  # in
+  [ member? l my-in-links ] of source => false
+  [ member? dest in-link-neighbors ] of source => false
+  [ in-link-neighbor? dest ] of source => false
+  [ l = in-link-from dest ] of source => false
+  # Test dest node
+  # unspecified
+  [ member? l my-links ] of dest => true
+  [ member? source link-neighbors ] of dest => true
+  [ link-neighbor? source ] of dest => true
+  [ l = link-with source ] of dest => true
+  # out
+  [ member? l my-out-links ] of dest => false
+  [ member? source out-link-neighbors ] of dest => false
+  [ out-link-neighbor? source ] of dest => false
+  [ l = out-link-to source ] of dest => false
+  # in
+  [ member? l my-in-links ] of dest => true
+  [ member? source in-link-neighbors ] of dest => true
+  [ in-link-neighbor? source ] of dest => true
+  [ l = in-link-from source ] of dest => true
+
+UndirectedBreededLink
+  globals [ source dest l ]
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-undirected-edge-with dest [ set l self ] ]
+  # unspecified
+  [ member? l my-undirected-edges ] of source => true
+  [ member? dest undirected-edge-neighbors ] of source => true
+  [ undirected-edge-neighbor? dest ] of source => true
+  [ l = undirected-edge-with dest ] of source => true
+  # out
+  [ member? l my-out-undirected-edges ] of source => true
+  [ member? dest out-undirected-edge-neighbors ] of source => true
+  [ out-undirected-edge-neighbor? dest ] of source => true
+  [ l = out-undirected-edge-to dest ] of source => true
+  # in
+  [ member? l my-in-undirected-edges ] of source => true
+  [ member? dest in-undirected-edge-neighbors ] of source => true
+  [ in-undirected-edge-neighbor? dest ] of source => true
+  [ l = in-undirected-edge-from dest ] of source => true
+
+DirectedBreededLink
+  globals [ source dest l ]
+  directed-link-breed [ directed-edges directed-edge ]
+  O> crt 2
+  O> set source turtle 0
+  O> set dest turtle 1
+  O> ask source [ create-directed-edge-to dest [ set l self ] ]
+  # Test source node
+  # unspecified
+  [ member? l my-directed-edges ] of source => true
+  [ member? dest directed-edge-neighbors ] of source => true
+  [ directed-edge-neighbor? dest ] of source => true
+  [ l = directed-edge-with dest ] of source => true
+  # out
+  [ member? l my-out-directed-edges ] of source => true
+  [ member? dest out-directed-edge-neighbors ] of source => true
+  [ out-directed-edge-neighbor? dest ] of source => true
+  [ l = out-directed-edge-to dest ] of source => true
+  # in
+  [ member? l my-in-directed-edges ] of source => false
+  [ member? dest in-directed-edge-neighbors ] of source => false
+  [ in-directed-edge-neighbor? dest ] of source => false
+  [ l = in-directed-edge-from dest ] of source => false
+  # Test dest node
+  # unspecified
+  [ member? l my-directed-edges ] of dest => true
+  [ member? source directed-edge-neighbors ] of dest => true
+  [ directed-edge-neighbor? source ] of dest => true
+  [ l = directed-edge-with source ] of dest => true
+  # out
+  [ member? l my-out-directed-edges ] of dest => false
+  [ member? source out-directed-edge-neighbors ] of dest => false
+  [ out-directed-edge-neighbor? source ] of dest => false
+  [ l = out-directed-edge-to source ] of dest => false
+  # in
+  [ member? l my-in-directed-edges ] of dest => true
+  [ member? source in-directed-edge-neighbors ] of dest => true
+  [ in-directed-edge-neighbor? source ] of dest => true
+  [ l = in-directed-edge-from source ] of dest => true
+
+link-finder-primitives-give-all-possible
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  directed-link-breed [ directed-edges directed-edge ]
+  O> random-seed 0
+  O> crt 2
+  O> ask turtle 0 [ create-undirected-edge-with turtle 1 create-directed-edge-to turtle 1 ]
+  length remove-duplicates [ n-values 10 [ link-with turtle 1 ] ] of turtle 0 => 2
+  length remove-duplicates [ n-values 10 [ out-link-to turtle 1 ] ] of turtle 0 => 2
+  length remove-duplicates [ n-values 10 [ in-link-from turtle 1 ] ] of turtle 0 => 1
+  length remove-duplicates [ n-values 10 [ link-with turtle 0 ] ] of turtle 1 => 2
+  length remove-duplicates [ n-values 10 [ out-link-to turtle 0 ] ] of turtle 1 => 1
+  length remove-duplicates [ n-values 10 [ in-link-from turtle 0 ] ] of turtle 1 => 2
+
+link-manager-handles-breed-changes
+  directed-link-breed [ directed-edges directed-edge ]
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  O> clear-all
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  L> set breed undirected-edges
+  (word one-of [ my-undirected-edges ] of turtle 0) => "(undirected-edge 0 1)"
+  count [ my-out-directed-edges ] of turtle 0 => 0
+  O> ask turtle 0 [ die ]
+

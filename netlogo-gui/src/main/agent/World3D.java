@@ -26,7 +26,12 @@ public final strictfp class World3D
   }
 
   public World3D() {
-    linkManager = new LinkManager3D(this);
+    linkManager = new LinkManagerImpl(
+        this, new LinkFactory() {
+          @Override public Link apply(World world, Turtle src, Turtle dest, AgentSet breed) {
+            return new Link3D(world, src, dest, breed);
+          }
+        });
     tieManager = new TieManager3D(this, linkManager);
     drawing = new Drawing3D(this);
     inRadiusOrCone = new InRadiusOrCone3D(this);
@@ -159,7 +164,7 @@ public final strictfp class World3D
         + xc - _minPxcor);
 
 
-    return (Patch) _patches.toArray()[patchid];
+    return (Patch) _patches.getByIndex(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc, int zc) {
@@ -173,9 +178,9 @@ public final strictfp class World3D
   }
 
   public Patch fastGetPatchAt(int xc, int yc, int zc) {
-    return (Patch) _patches.toArray()[((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
+    return (Patch) _patches.getByIndex(((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
         (_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor)];
+        + xc - _minPxcor));
   }
 
   @Override
@@ -285,7 +290,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), "patches", patchArray);
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -393,7 +398,7 @@ public final strictfp class World3D
         (_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
 
-    return (Patch3D) _patches.toArray()[id];
+    return (Patch3D) _patches.getByIndex(id);
   }
 
   @Override

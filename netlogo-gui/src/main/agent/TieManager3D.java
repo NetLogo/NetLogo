@@ -6,10 +6,12 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Matrix3D;
 import org.nlogo.api.Vect;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import scala.collection.JavaConversions;
 
 public strictfp class TieManager3D
     extends TieManager {
@@ -132,8 +134,8 @@ public strictfp class TieManager3D
         for (Turtle t1 : myTies) {
           try {
             Turtle3D t = (Turtle3D) t1;
-            Link link = linkManager.findLink(root, t, world3D.links(), true);
-            boolean rigid = link.mode().equals(Link.MODE_FIXED);
+            boolean rigid = Arrays.stream(linkManager.linksWith(root, t, world3D.links()))
+                    .anyMatch(l -> l.mode().equals(Link.MODE_FIXED));
 
             // In order to get wrapping and line drawing to work properly
             // we have to compute our transform in coordinates relative to the

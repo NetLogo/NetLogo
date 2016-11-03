@@ -9,6 +9,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -42,7 +43,7 @@ public final strictfp class _member
         if (agent.id == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Turtle.class) {
+        if (agentset.kind() != AgentKindJ.Turtle()) {
           return Boolean.FALSE;
         }
         if (agentset == world.turtles()) {
@@ -58,7 +59,7 @@ public final strictfp class _member
         if (agent.id == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Link.class) {
+        if (agentset.kind() != AgentKindJ.Link()) {
           return Boolean.FALSE;
         }
         if (agentset == world.links()) {
@@ -70,7 +71,7 @@ public final strictfp class _member
               Boolean.FALSE;
         }
       } else if (agent instanceof Patch) {
-        if (agentset.type() != Patch.class) {
+        if (agentset.kind() != AgentKindJ.Patch()) {
           return Boolean.FALSE;
         }
         if (agentset == world.patches()) {

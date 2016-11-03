@@ -3,7 +3,9 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
@@ -21,15 +23,13 @@ public final strictfp class _other
   }
 
   public AgentSet report_1(final Context context, AgentSet sourceSet) {
-    AgentSet result =
-        new org.nlogo.agent.ArrayAgentSet(sourceSet.kind(), sourceSet.count(),
-            false);
-    for (AgentSet.Iterator it = sourceSet.iterator(); it.hasNext();) {
+    AgentSetBuilder result = new AgentSetBuilder(sourceSet.kind(), sourceSet.count());
+    for (AgentIterator it = sourceSet.iterator(); it.hasNext();) {
       Agent otherAgent = it.next();
       if (context.agent != otherAgent) {
         result.add(otherAgent);
       }
     }
-    return result;
+    return result.build();
   }
 }
