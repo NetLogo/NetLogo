@@ -8,11 +8,20 @@ import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
 
 import java.util.{ List => JList }
 
-class DummyChooserWidget(compiler: CompilerServices)
-    extends Chooser(compiler)
+class DummyChooserWidget(val compiler: CompilerServices)
+    extends Chooser
     with Editable {
 
   type WidgetModel = CoreChooser
+
+  private var _name = ""
+
+  def name: String = _name
+
+  def name(name: String): Unit = {
+    _name = name
+    repaint()
+  }
 
   setBorder(widgetBorder)
 
@@ -27,7 +36,7 @@ class DummyChooserWidget(compiler: CompilerServices)
 
   override def editFinished: Boolean = {
     super.editFinished
-    name(name())
+    name(name)
     true
   }
 
@@ -71,10 +80,10 @@ class DummyChooserWidget(compiler: CompilerServices)
     val b = getBoundsTuple
     val bounds = getBounds()
     CoreChooser(
-      display  = name().potentiallyEmptyStringToOption,
+      display  = name.potentiallyEmptyStringToOption,
       left     = b._1, top    = b._2,
       right    = b._3, bottom = b._4,
-      variable = name().potentiallyEmptyStringToOption,
+      variable = name.potentiallyEmptyStringToOption,
       choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)
   }

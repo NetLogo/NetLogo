@@ -8,6 +8,7 @@ import org.nlogo.api.AgentException;
 public final strictfp class Torus3D
     extends Torus
     implements Topology3D {
+
   public Torus3D(World3D world) {
     super(world);
   }

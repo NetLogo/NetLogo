@@ -56,7 +56,7 @@ strictfp class EditorDialog
 
   ///
 
-  EditorDialog(VectorShapeContainer cont,
+  EditorDialog(EditorDialog.VectorShapeContainer cont,
                final VectorShape originalShape,
                int x, int y, boolean nameEditable) {
     super((javax.swing.JFrame) null, true);

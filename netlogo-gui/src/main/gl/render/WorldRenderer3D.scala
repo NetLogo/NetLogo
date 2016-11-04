@@ -59,6 +59,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
             catch { case ex: AgentException => 0 }
             roll = 0
         }
+      case _ =>
     }
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)

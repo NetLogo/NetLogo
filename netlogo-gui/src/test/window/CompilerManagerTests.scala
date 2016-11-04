@@ -199,10 +199,10 @@ class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidge
 }
 
 class DummyIGWidget(source: String, var value: AnyRef = Double.box(0)) extends DummyWidget(source) with InterfaceGlobalWidget {
-  def name(): String = "ig"
+  def name: String = "ig"
   def updateConstraints(): Unit = { }
-  def valueObject(x: Any): Unit = x match {
+  def valueObject(x: AnyRef): Unit = x match {
     case a: AnyRef => value = a
   }
-  def valueObject(): Object = value
+  def valueObject: AnyRef = value
 }
