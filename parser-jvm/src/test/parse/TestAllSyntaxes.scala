@@ -199,6 +199,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_randomstate ,string,OTPL,None,10,0,0
                      |_randomxcor ,number,OTPL,None,10,0,0
                      |_randomycor ,number,OTPL,None,10,0,0
+                     |_range number,list,OTPL,None,10,1,1
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
                      |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
                      |_remainder number/number,number,OTPL,None,10,2,2
