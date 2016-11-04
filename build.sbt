@@ -50,10 +50,9 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "3.0.0"  % "test",
+    "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
     // scalatest doesn't yet play nice with scalacheck 1.13.0
-    "org.scalacheck" % "scalacheck_2.12.0-RC2" % "1.13.3" % "test"
-    // "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   )
 )
 

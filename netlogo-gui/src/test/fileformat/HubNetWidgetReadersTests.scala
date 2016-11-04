@@ -18,8 +18,7 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scala.reflect.ClassTag
 
-class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyChecks {
-
+object HubNetGenerators {
   val genPos = Arbitrary.arbTuple4[Int, Int, Int, Int].arbitrary
 
   val genNameString = Gen.listOf(Gen.identifier).map(_.mkString(" "))
@@ -63,11 +62,11 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
 
   val chooseableList: Gen[List[Chooseable]] =
     Gen.listOf(
-    Gen.oneOf(
-      Arbitrary.arbDouble.arbitrary.map(d => ChooseableDouble(Double.box(d))),
+      Gen.oneOf(
+        Arbitrary.arbDouble.arbitrary.map(d => ChooseableDouble(Double.box(d))),
         Arbitrary.arbBool.arbitrary.map(b => ChooseableBoolean(Boolean.box(b))),
-      chooserAcceptableString.map(ChooseableString.apply),
-      Gen.listOf(Gen.identifier).map(l => ChooseableList(LogoList(l: _*)))))
+        chooserAcceptableString.map(ChooseableString.apply),
+        Gen.listOf(Gen.identifier).map(l => ChooseableList(LogoList(l: _*)))))
 
   val chooserWidget: Gen[Chooser] = for {
     pos           <- genPos
@@ -96,31 +95,31 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
       pos       <- genPos
       name      <- escapableOpt(optionalNameString)
       min       <- Arbitrary.arbDouble.arbitrary
-      max       <- Arbitrary.arbDouble.arbitrary.map(_ + min)
+      max       <- Arbitrary.arbDouble.arbitrary.suchThat(_ > min)
       value     <- Gen.choose(min, max)
       inc       <- Arbitrary.arbDouble.arbitrary
       units     <- optionalNameString
       direction <- Gen.oneOf(Horizontal, Vertical)
-    } yield {
-      Slider(display = name,
-        left = pos._1,       top = pos._2,
-        right = pos._3,      bottom = pos._4,
-        min = min.toString,  max = max.toString,
-        variable = name, default = value,
-        step = inc.toString, units = units,
-        direction = direction)
-    }
+      } yield {
+        Slider(display = name,
+          left = pos._1,       top = pos._2,
+          right = pos._3,      bottom = pos._4,
+          min = min.toString,  max = max.toString,
+          variable = name, default = value,
+          step = inc.toString, units = units,
+          direction = direction)
+      }
 
   val switchWidget: Gen[Switch] = for {
     pos     <- genPos
     name    <- escapableOpt(optionalNameString)
     isOn    <- Arbitrary.arbBool.arbitrary
-  } yield {
-    Switch(display = name,
-      left = pos._1,       top = pos._2,
-      right = pos._3,      bottom = pos._4,
-      variable = name, on = isOn)
-  }
+    } yield {
+      Switch(display = name,
+        left = pos._1,       top = pos._2,
+        right = pos._3,      bottom = pos._4,
+        variable = name, on = isOn)
+    }
 
   val viewWidget: Gen[View] = for {
     pos   <- genPos
@@ -129,40 +128,28 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
     minPy <- Arbitrary.arbInt.arbitrary
     maxPy <- Arbitrary.arbInt.arbitrary.map(_ + minPy)
   } yield View(
-      left  = pos._1, top    = pos._2,
-      right = pos._3, bottom = pos._4,
-      dimensions = WorldDimensions(minPx, maxPx, minPy, maxPy))
+    left  = pos._1, top    = pos._2,
+    right = pos._3, bottom = pos._4,
+    dimensions = WorldDimensions(minPx, maxPx, minPy, maxPy))
 
-  val hubNetWidgets: Gen[Widget] = Gen.oneOf(buttonWidget, chooserWidget, monitorWidget, sliderWidget, switchWidget, viewWidget)
+  val hubNetWidgets: Gen[Widget] =
+    Gen.oneOf(buttonWidget, chooserWidget, monitorWidget, sliderWidget, switchWidget, viewWidget)
+
+  implicit val arbWidget = Arbitrary(hubNetWidgets)
 
   val classyReaders =
     HubNetWidgetReaders.additionalReaders
       .values.map(r => new ClassyReader(r))
 
-  object ClassyReader {
-    def apply[A <: WidgetReader, B](reader: WidgetReader)(implicit ev: reader.T =:= B) =
-      new ClassyReader(reader)
-  }
-
   lazy val litParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+}
 
-  class ClassyReader(val reader: WidgetReader) {
-    def applies(w: Widget): Boolean =
-      reader.classTag.unapply(w).nonEmpty
+class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
-    def format(w: Widget): String =
-      reader.classTag.unapply(w).map(reader.format).get
+  import HubNetGenerators._
 
-    def validate(s: String): Boolean =
-      reader.validate(s.lines.toList)
-
-    def parse(s: String): Widget = {
-      reader.parse(s.lines.toList, litParser)
-    }
-  }
-
-  test("round-tripping works") {
+  test("serializes / deserializes hubnet widgets") {
     forAll(hubNetWidgets) { (widget: Widget) =>
       val reader = classyReaders.find(_.applies(widget)).get
       val serialized = reader.format(widget)
@@ -180,5 +167,28 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
     assert(reader.validate(serialized.lines.toList), "serialized wiget should be valid")
     val deserialized = reader.parse(serialized.lines.toList, litParser)
     assert(chooser == deserialized, "round-trip must not change widget, written as:\n" + serialized)
+  }
+}
+
+object ClassyReader {
+  def apply[A <: WidgetReader, B](reader: WidgetReader)(implicit ev: reader.T =:= B) =
+    new ClassyReader(reader)
+}
+
+class ClassyReader(val reader: WidgetReader) {
+  lazy val litParser =
+    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+
+  def applies(w: Widget): Boolean =
+    reader.classTag.unapply(w).nonEmpty
+
+  def format(w: Widget): String =
+    reader.classTag.unapply(w).map(reader.format).get
+
+  def validate(s: String): Boolean =
+    reader.validate(s.lines.toList)
+
+  def parse(s: String): Widget = {
+    reader.parse(s.lines.toList, litParser)
   }
 }
