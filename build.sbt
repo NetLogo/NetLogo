@@ -22,7 +22,7 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.11.8",
+  scalaVersion           := "2.12.0",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
@@ -50,9 +50,10 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "2.2.6"  % "test",
+    "org.scalatest"  %% "scalatest"  % "3.0.0"  % "test",
     // scalatest doesn't yet play nice with scalacheck 1.13.0
-    "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+    "org.scalacheck" % "scalacheck_2.12.0-RC2" % "1.13.3" % "test"
+    // "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
   )
 )
 
@@ -127,7 +128,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
       "org.pegdown" % "pegdown" % "1.6.0",
-      "org.parboiled" %% "parboiled-scala" % "1.1.7",
       "org.parboiled" %% "parboiled" % "2.1.3",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
@@ -180,7 +180,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          += "org.ow2.asm" % "asm-all" % "5.0.4",
-    libraryDependencies          += "org.parboiled" %% "parboiled-scala" % "1.1.7",
+    libraryDependencies          += "org.parboiled" %% "parboiled" % "2.1.3",
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
@@ -278,7 +278,7 @@ lazy val parser = CrossProject("parser", file("."),
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     )
 
 lazy val parserJVM = parser.jvm
