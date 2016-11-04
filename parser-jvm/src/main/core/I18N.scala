@@ -90,9 +90,9 @@ object I18N {
     }
     // internal use only, get all the keys for the given locale.
     // use getKeys not keySet since keySet is new in Java 6 - ST 2/11/11
-    def keys(locale: Locale): Iterator[String] = {
-      import collection.JavaConversions._
-      getBundle(locale).getKeys
+    def keys(locale: Locale): Set[String] = {
+      import collection.JavaConverters._
+      getBundle(locale).keySet.asScala.toSet
     }
     // internal use only, used to set the locale for error messages in the GUI only.
     def setLanguage(locale: Locale) =

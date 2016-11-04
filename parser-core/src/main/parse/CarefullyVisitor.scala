@@ -12,16 +12,16 @@ import org.nlogo.core.prim._
  */
 
 class CarefullyVisitor extends AstTransformer {
-  private val stack = new collection.mutable.Stack[_carefully]
+  private var stack = List.empty[_carefully]
   override def visitStatement(stmt: Statement): Statement = {
     stmt.command match {
       case c:_carefully =>
         // carefully takes two arguments, both command blocks.
         // error-message is allowed only within the second block.
         val arg1 = visitExpression(stmt.args(0))
-        stack.push(c)
+        stack = c::stack
         val arg2 = visitExpression(stmt.args(1))
-        stack.pop()
+        stack = stack.tail
         stmt.copy(args = Seq(arg1, arg2))
       case _ => super.visitStatement(stmt)
     }
@@ -31,7 +31,7 @@ class CarefullyVisitor extends AstTransformer {
       case em: _errormessage =>
         if(stack.isEmpty)
           exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.text), app)
-        app.copy(reporter = em.copy(let = Option(stack.top.let)))
+        app.copy(reporter = em.copy(let = Option(stack.head.let)))
       case _ => super.visitReporterApp(app)
     }
   }

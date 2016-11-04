@@ -74,8 +74,8 @@ class VectorShape extends Observable with BaseVectorShape with Cloneable with ja
     elementList.foreach(_.filled = false)
 
   def getElements: java.util.List[Element] = {
-    import scala.collection.JavaConversions._
-    elementList.toList
+    import scala.collection.JavaConverters._
+    elementList.toList.asJava
   }
 
   def setRotatable(rotatable: Boolean) =

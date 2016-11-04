@@ -9,7 +9,7 @@ import ExtensionManager.ExtensionLoader
 
 import org.scalatest.{ BeforeAndAfter, FunSuite }
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   before {
@@ -56,13 +56,13 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   test("loadedExtensions returns empty list when no extensions loaded") {
-    assert(emptyManager.loadedExtensions.isEmpty)
+    assert(emptyManager.loadedExtensions.asScala.isEmpty)
   }
 
   test("loadedExtensions returns a list of extensions when extensions loaded") {
     new WithLoadedArrayExtension {
-      assert(loadedManager.loadedExtensions.nonEmpty)
-      assert(loadedManager.loadedExtensions.head.getClass.getCanonicalName == "org.nlogo.extensions.array.ArrayExtension")
+      assert(loadedManager.loadedExtensions.asScala.nonEmpty)
+      assert(loadedManager.loadedExtensions.asScala.head.getClass.getCanonicalName == "org.nlogo.extensions.array.ArrayExtension")
     }
   }
 
@@ -168,7 +168,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     new WithLoadedArrayExtension {
       loadedManager.reset()
       assert(! loadedManager.anyExtensionsLoaded)
-      assert(loadedManager.loadedExtensions.isEmpty)
+      assert(loadedManager.loadedExtensions.asScala.isEmpty)
     }
   }
 
@@ -180,7 +180,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     new WithLoadedArrayExtension {
       loadedManager.startFullCompilation()
       loadedManager.finishFullCompilation()
-      assert(loadedManager.loadedExtensions.isEmpty)
+      assert(loadedManager.loadedExtensions.asScala.isEmpty)
     }
   }
 
@@ -189,19 +189,19 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       loadedManager.startFullCompilation()
       loadedManager.importExtension("array", errorSource)
       loadedManager.finishFullCompilation()
-      assert(loadedManager.loadedExtensions.toSeq.length == 1)
+      assert(loadedManager.loadedExtensions.asScala.toSeq.length == 1)
     }
   }
 
   test("importExtensionData takes an extension name, a bunch of data, and an importHandler, and imports the world for an extension") {
     new WithLoadedArrayExtension {
-      loadedManager.importExtensionData("array", List(Array("{{array: 0: 0 0 0 0 0}}")), null)
+      loadedManager.importExtensionData("array", List(Array("{{array: 0: 0 0 0 0 0}}")).asJava, null)
     }
   }
 
   test("importExtensionData errors with ExtensionException if the named extension can't be loaded") {
     intercept[ExtensionException] {
-      emptyManager.importExtensionData("notfound", List[Array[String]](), null)
+      emptyManager.importExtensionData("notfound", List[Array[String]]().asJava, null)
     }
   }
 
