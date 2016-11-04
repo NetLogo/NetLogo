@@ -74,7 +74,8 @@ case class PlotUpdate(plotInterface: PlotInterface) extends Message {
     new ObjectOutputStream(out).writeObject(plotInterface)
     out.toByteArray()
   }
-  def plot = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject().asInstanceOf[PlotInterface]
+  def plot =
+    new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject().asInstanceOf[PlotInterface]
 }
 
 @SerialVersionUID(0)

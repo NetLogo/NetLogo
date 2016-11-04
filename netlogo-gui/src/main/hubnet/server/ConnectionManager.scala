@@ -259,7 +259,8 @@ class ConnectionManager(val connection: ConnectionInterface,
   def isSupportedClientType(clientType:String): Boolean =
     clientInterfaceMap.isDefinedAt(clientType)
 
-  def isValidTag(tag:String) = clientInterfaceSpec.containsWidgetTag(tag)
+  def isValidTag(tag:String) =
+    clientInterfaceSpec.containsWidgetTag(tag)
 
   @throws(classOf[HubNetException])
   def broadcast(tag:String, message:Any) = {

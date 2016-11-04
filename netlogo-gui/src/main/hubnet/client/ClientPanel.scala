@@ -54,9 +54,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handlePlotUpdate(msg: PlotInterface) {
     for (pw <- clientGUI.getInterfaceComponents.collect {case pw: PlotWidget => pw}) {
-      if (pw.plot.name==msg.name) {
+      if (pw.plot.name == msg.name) {
         pw.plot.clear()
         updatePlot(msg.asInstanceOf[org.nlogo.plot.Plot], pw.plot)
+        pw.makeDirty()
         pw.repaintIfNeeded()
       }
     }
@@ -67,8 +68,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     plot2.currentPen = plot2.getPen(plot1.currentPen.get.name)
     plot2.state = plot1.state
     for (pen1 <- plot1.pens) {
-      val pen2 = if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
-      else plot2.getPen(pen1.name).get
+      val pen2 =
+        if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
+        else plot2.getPen(pen1.name).get
       pen2.x = pen1.x
       pen2.color = pen1.color
       pen2.interval = pen1.interval
