@@ -2,33 +2,36 @@
 
 package org.nlogo.fileformat
 
-import org.parboiled.scala._
 import org.nlogo.api.WorldDimensions3D
-import org.nlogo.core.{ UpdateMode, View, WorldDimensions }
+import org.nlogo.core.{ LiteralParser, UpdateMode, View, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
+
+import org.parboiled2._
 
 import scala.reflect.ClassTag
 
-object ThreeDViewReader extends WidgetReader with ConstantRuleWidgetParser with DefaultParboiledWidgetParser {
-  class ThreeDParser extends Parser with ParboiledWidgetParser.RichRule {
+object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWidgetParser {
+  class ThreeDParser(val input: ParserInput) extends Parser
+    with DefaultRule with BaseWidgetParser.RichRule {
 
+   def applyView(s: View, f: View => View) = f(s)
     def ThreeDViewWidget: Rule1[View] = rule {
-      GraphicsWindow ~ NewLine ~
-        push(View(dimensions = new WorldDimensions3D(0, 0, 0, 0, 0, 0))) mapThrough
-        ViewDimensions ~
-        nTimes(2, IgnoredLine) mapThrough
-        PatchSize ~
-        IgnoredLine mapThrough
-        FontSize ~
-        nTimes(4, IgnoredLine) mapThrough
-        WrappingInXAndY ~
-        IgnoredLine mapThrough
-        PCors mapThrough
-        WrappingInZ mapThrough
-        UpdateModeView mapThrough
-        ShowTickCounter mapThrough
-        TickCounterLabel mapThrough
-        FrameRate
+      push(View(dimensions = new WorldDimensions3D(0, 0, 0, 0, 0, 0))) ~
+      GraphicsWindow       ~  NewLine ~
+      ViewDimensions       ~> (applyView _) ~
+      2.times(IgnoredLine) ~
+      PatchSize            ~> (applyView _) ~
+      IgnoredLine          ~
+      FontSize             ~> (applyView _) ~
+      4.times(IgnoredLine) ~
+      WrappingInXAndY      ~> (applyView _) ~
+      IgnoredLine          ~
+      PCors                ~> (applyView _) ~
+      WrappingInZ          ~> (applyView _) ~
+      UpdateModeView       ~> (applyView _) ~
+      ShowTickCounter      ~> (applyView _) ~
+      TickCounterLabel     ~> (applyView _) ~
+      FrameRate            ~> (applyView _)
     }
 
     def dimensionTransform[B <: WorldDimensions3D](f: WorldDimensions3D => WorldDimensions3D)(v: View): View = {
@@ -38,32 +41,33 @@ object ThreeDViewReader extends WidgetReader with ConstantRuleWidgetParser with 
       }
     }
 
-    def FontSize: Rule1[View => View] = rule { (IntValue ~ NewLine) ~~> ((fontSize: Int) =>
+    def FontSize: Rule1[View => View] = rule { (IntValue ~ NewLine) ~> ((fontSize: Int) =>
       ((v: View) => v.copy(fontSize = fontSize))) }
 
     def FrameRate: Rule1[View => View] = rule {
-      (DoubleValue ~ optional(NewLine)) ~~>
+      (DoubleValue ~ optional(NewLine)) ~>
         ((rate: Double) => ((v: View) => v.copy(frameRate = rate)))
     }
 
-    def PatchSize: Rule1[View => View] = rule { (DoubleValue ~ NewLine) ~~> ((size: Double) =>
-      dimensionTransform(_.copyThreeD(patchSize = size)))
+    def PatchSize: Rule1[View => View] = rule { (DoubleValue ~ NewLine) ~> ((size: Double) =>
+      dimensionTransform(_.copyThreeD(patchSize = size))(_))
     }
 
     def PCors: Rule1[View => View] = rule {
-      nTimes(6, IntValue ~ NewLine) ~~> (cors =>
+      6.times(IntValue ~ NewLine) ~> ((cors: Seq[Int]) =>
           dimensionTransform(_.copyThreeD(
             minPxcor = cors(0), maxPxcor = cors(1),
             minPycor = cors(2), maxPycor = cors(3),
-            minPzcor = cors(4), maxPzcor = cors(5))))
+            minPzcor = cors(4), maxPzcor = cors(5)))(_))
     }
 
     def ShowTickCounter: Rule1[View => View] = rule {
-      (BooleanDigit ~ NewLine) ~~> (show => ((v: View) => v.copy(showTickCounter = show)))
+      (BooleanDigit ~ NewLine) ~> ((show: Boolean) =>
+          ((v: View) => v.copy(showTickCounter = show)))
     }
 
     def TickCounterLabel: Rule1[View => View] = rule {
-      group(StringValue ~ NewLine) ~> ((s: String) => { (v: View) =>
+      capture(StringValue ~ NewLine) ~> ((s: String) => { (v: View) =>
           val trimmed = s.stripSuffix("\n")
           if (trimmed == "NIL")
             v.copy(tickCounterLabel = None)
@@ -73,43 +77,42 @@ object ThreeDViewReader extends WidgetReader with ConstantRuleWidgetParser with 
     }
 
     def UpdateModeValue: Rule1[UpdateMode] = rule {
-      rule { ("0" | "1") ~ NewLine } ~>
-        (i => UpdateMode.load(i.take(1).toInt))
+      (capture("0" | "1") ~ NewLine) ~>
+        ((i: String) => UpdateMode.load(i.take(1).toInt))
     }
 
     def UpdateModeView: Rule1[View => View] = rule {
-      UpdateModeValue ~~> (u => ((v: View) => v.copy(updateMode = u)))
+      UpdateModeValue ~> ((u: UpdateMode) => ((v: View) => v.copy(updateMode = u)))
     }
 
     def ViewDimensions: Rule1[View => View] = rule {
-      nTimes(4, IntValue ~ NewLine) ~~> (dims =>
+      4.times(IntValue ~ NewLine) ~> ((dims: Seq[Int]) =>
           ((v: View) => v.copy(left = dims(0), top = dims(1), right = dims(2), bottom = dims(3))))
     }
 
-    def WrappingInXAndY: Rule1[View => View] = rule { (BooleanDigit ~ NewLine ~ BooleanDigit ~ NewLine) ~~> ((wrapsInX: Boolean, wrapsInY: Boolean) =>
-      dimensionTransform(_.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY)))
+    def WrappingInXAndY: Rule1[View => View] = rule { (BooleanDigit ~ NewLine ~ BooleanDigit ~ NewLine) ~> ((wrapsInX: Boolean, wrapsInY: Boolean) =>
+      dimensionTransform(_.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY))(_))
     }
 
     def WrappingInZ: Rule1[View => View] = rule {
-      (BooleanDigit ~ NewLine) ~~> (allowed =>
-          dimensionTransform(_.copyThreeD(wrappingAllowedInZ = allowed)))
+      (BooleanDigit ~ NewLine) ~> ((allowed: Boolean) =>
+          dimensionTransform(_.copyThreeD(wrappingAllowedInZ = allowed))(_))
     }
 
     def GraphicsWindow: Rule0 = rule { "GRAPHICS-WINDOW" }
+
+    def defaultRule = ThreeDViewWidget
   }
 
+  type InternalParser = ThreeDParser
   type T = View
 
   type ParsedWidget = View
 
   def classTag: ClassTag[T] = ClassTag(classOf[View])
 
-  def parser = new ThreeDParser {
-    override val buildParseTree = true
-  }
-
-  override def parseRule =
-    parser.ThreeDViewWidget
+  def parserFromString(s: String): InternalParser =
+    new ThreeDParser(s)
 
   def format(t: View): String = {
     val dimensions = t.dimensions.asInstanceOf[WorldDimensions3D]
@@ -142,6 +145,5 @@ object ThreeDViewReader extends WidgetReader with ConstantRuleWidgetParser with 
       if (t.showTickCounter) "1" else "0",
       t.tickCounterLabel.getOrElse("NIL"),
       t.frameRate).mkString("", "\n", "\n")
-
   }
 }

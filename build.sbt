@@ -128,6 +128,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "javax.media" % "jmf" % "2.1.1e",
       "org.pegdown" % "pegdown" % "1.6.0",
       "org.parboiled" %% "parboiled-scala" % "1.1.7",
+      "org.parboiled" %% "parboiled" % "2.1.3",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
       "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
