@@ -40,7 +40,7 @@ class LockedExecutionContext(lock: Object, delegate: ExecutionContext) extends E
     delegate.reportFailure(cause)
 
   override def prepare(): ExecutionContext =
-    new LockedExecutionContext(lock, delegate.prepare)
+    new LockedExecutionContext(lock, delegate)
 }
 
 class LockedBackgroundExecutionContext(lock: Object)
