@@ -4,10 +4,11 @@ package org.nlogo.app.codetab
 
 import org.nlogo.api.EditorAreaInterface
 import org.nlogo.editor.EditorArea
+import javax.swing.text.JTextComponent
 
 // wraps an EditorArea to satisfy EditorAreaInterface, for the benefit of SmartIndenter
 
-class EditorAreaWrapper(text: EditorArea) extends EditorAreaInterface {
+class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   def getLineOfText(lineNum: Int) = {
     val lineStart = lineToStartOffset(lineNum)
     val lineEnd = lineToEndOffset(lineNum)

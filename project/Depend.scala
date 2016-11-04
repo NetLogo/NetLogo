@@ -72,7 +72,7 @@ object Depend {
       "hubnet/protocol" -> List("api"),
       "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol","fileformat"),
       "hubnet/server/gui" -> List("hubnet/server","window"),
-      "ide" -> List("editor", "api", "window"),
+      "ide" -> List("api", "window"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
       "lab/gui" -> List("lab","window"),

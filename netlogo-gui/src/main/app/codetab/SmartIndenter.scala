@@ -4,10 +4,10 @@ package org.nlogo.app.codetab
 
 import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
 import org.nlogo.core.{ Token, TokenType }
-import org.nlogo.editor.IndenterInterface
+import org.nlogo.editor.Indenter
 
 class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
-extends IndenterInterface {
+extends Indenter {
 
   /// first, the four handle* methods in IndenterInterface
 

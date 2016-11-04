@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Frame }

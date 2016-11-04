@@ -3,19 +3,20 @@
 package org.nlogo.app.codetab
 
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, Action, JCheckBox }
+import javax.swing.{ AbstractAction, Action, JCheckBox, JFrame }
 
 import org.nlogo.api.ModelSection
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ToolBar, ToolBarActionButton }
-import org.nlogo.window.{ Events => WindowEvents }
+import org.nlogo.editor.EditorMenu
+import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace }
 import org.nlogo.workspace.AbstractWorkspace
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.
 // Other Code tabs come and go.
 
-class MainCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface)
+class MainCodeTab(workspace: GUIWorkspace, tabs: TabsInterface, editorMenu: EditorMenu)
 extends CodeTab(workspace)
 with WindowEvents.LoadModelEvent.Handler
 {
@@ -30,6 +31,9 @@ with WindowEvents.LoadModelEvent.Handler
         .raise(MainCodeTab.this)
     }
   }
+
+  override def editorConfiguration =
+    super.editorConfiguration.withMenu(editorMenu)
 
   def smartTabbingEnabled = tabbing.isSelected
 

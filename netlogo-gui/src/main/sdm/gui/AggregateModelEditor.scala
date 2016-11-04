@@ -13,6 +13,7 @@ import org.nlogo.core.{ CompilerException, I18N, LiteralParser, TokenType }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.{ Model, Translator }
+import org.nlogo.swing.TabsMenu
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
 
@@ -81,7 +82,7 @@ class AggregateModelEditor(
     val isOSX = System.getProperty("os.name").startsWith("Mac");
 
     if (isOSX) {
-      menuBar.add(menuBarFactory.createFileMenu());
+      menuBar.add(menuBarFactory.createFileMenu);
     }
 
     val editMenu: CommandMenu = new CommandMenu(I18N.gui.get("menu.edit"))
@@ -91,17 +92,23 @@ class AggregateModelEditor(
     menuBar.add(editMenu)
 
     if (isOSX) {
-      menuBar.add(menuBarFactory.createToolsMenu())
+      menuBar.add(menuBarFactory.createToolsMenu)
       val zoomMenu: JMenuItem =
-        menuBar.add(menuBarFactory.createZoomMenu())
+        menuBar.add(menuBarFactory.createZoomMenu)
       zoomMenu.setEnabled(false)
       menuBar.add(zoomMenu)
     }
 
-    menuBar.add(new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), tabs))
+    menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
 
     if (isOSX) {
-      menuBarFactory.addHelpMenu(menuBar)
+      val helpMenu = menuBarFactory.createHelpMenu
+      menuBar.add(helpMenu)
+      try {
+        menuBar.setHelpMenu(helpMenu)
+      } catch {
+        case e: Error => org.nlogo.api.Exceptions.ignore(e)
+      }
     }
 
     setJMenuBar(menuBar)

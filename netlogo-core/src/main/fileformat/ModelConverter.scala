@@ -37,6 +37,7 @@ class ModelConverter(
   applicableConversions: Model => Seq[ConversionSet] = { _ => Seq() })
   extends ModelConversion {
 
+
   def apply(model: Model): ConversionResult = {
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand = {
       CompilationOperand(
@@ -54,6 +55,9 @@ class ModelConverter(
     def rewriterOp(operand: CompilationOperand): SourceRewriter = {
       Femto.get[SourceRewriter]("org.nlogo.parse.AstRewriter", tokenizer, operand)
     }
+
+    val aggregateConversionDialect = applicableConversions(model).map(_.conversionDialect)
+      .foldLeft(baseDialect) { case (d, convDialect) => convDialect(d) }
 
     def rewriter(source: String, program: Program): SourceRewriter = {
       val operand = compilationOperand(source, program, FrontEndInterface.NoProcedures)
@@ -89,14 +93,12 @@ class ModelConverter(
     def applyConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
 
-      val dialect = conversionSet.conversionDialect(baseDialect)
-
       lazy val convertedCodeTab: ConversionResult =
         Try {
           codeTabConversions.foldLeft(SuccessfulConversion(model, model)) {
             case (SuccessfulConversion(original, converted), conversion) =>
               val newProgram =
-                Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
+                Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals)
               val newCode = conversion(rewriter(converted.code, newProgram))
               SuccessfulConversion(original, model.copy(code = newCode))
             case (other, _) => other
@@ -107,7 +109,7 @@ class ModelConverter(
 
       def newStructure(code: String): Try[StructureResults] = {
         val newCompilation = compilationOperand(code,
-          Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals),
+          Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals),
           FrontEndInterface.NoProcedures)
 
         val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")

@@ -20,7 +20,7 @@ class AppFrame extends JFrame with LinkParent with LinkRoot {
 
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
-      try App.app.fileMenu.quit()
+      try App.app.fileManager.quit()
       catch { case ex: UserCancelException => Exceptions.ignore(ex) }
     }
     override def windowIconified(e: WindowEvent) {

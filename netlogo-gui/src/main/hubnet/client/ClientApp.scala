@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.client
 
 import org.nlogo.swing.Implicits._
-import org.nlogo.window.ClientAppInterface
+import org.nlogo.window.{ ClientAppInterface, EditorFactory }
 import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
@@ -64,7 +64,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     setResizable(false)
   }
 
-  def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
+  def startup(editorFactory: EditorFactory, userid: String, hostip: String,
               port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

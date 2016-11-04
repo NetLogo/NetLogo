@@ -145,7 +145,7 @@ with WindowEvents.JobRemovedEvent.Handler
 
   private val editor = new EditorField(
     17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12),
-    true, new EditorColorizer(workspace), I18N.gui.get _)
+    true, new EditorColorizer(workspace))
   editor.setFont(editor.getFont.deriveFont(10f))
   add(new JScrollPane(editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,

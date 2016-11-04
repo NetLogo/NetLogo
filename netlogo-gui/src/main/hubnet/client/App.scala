@@ -7,7 +7,7 @@ import org.nlogo.api.{ NetLogoThreeDDialect, NetLogoLegacyDialect, Version }
 import org.nlogo.util.NullAppHandler
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.VMCheck
+import org.nlogo.window.{ DefaultEditorFactory, VMCheck }
 
 /**
  * Creates and runs a hubnet client from the command line.
@@ -25,6 +25,6 @@ object App {
     VMCheck.detectBadJVMs()
     val compiler = new org.nlogo.nvm.DefaultCompilerServices(
       Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
-    ClientApp.mainHelper(args, new EditorFactory(compiler), compiler)
+    ClientApp.mainHelper(args, new DefaultEditorFactory(compiler), compiler)
   }
 }

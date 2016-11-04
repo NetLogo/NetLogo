@@ -3,26 +3,34 @@
 package org.nlogo.app
 
 import java.awt.Graphics
-import javax.swing.{ JTabbedPane, UIManager }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, Action, JTabbedPane, UIManager }
 import javax.swing.plaf.ComponentUI
 
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
+import org.nlogo.app.common.{ Events => AppEvents, MenuTab, TabsInterface }
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.RichAction
+import org.nlogo.swing.{ RichAction, UserAction, TabsMenu }, UserAction.{ ActionCategoryKey, ActionGroupKey }
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 
-class Tabs(val workspace: GUIWorkspace,
-           monitorManager: AgentMonitorManager,
-           dialogFactory: EditDialogFactoryInterface) extends JTabbedPane(javax.swing.SwingConstants.TOP)
+class Tabs(val workspace:    GUIWorkspace,
+           monitorManager:   AgentMonitorManager,
+           dialogFactory:    EditDialogFactoryInterface,
+           private var menu: MenuBar)
+  extends JTabbedPane(javax.swing.SwingConstants.TOP)
+
   with TabsInterface with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
   with org.nlogo.window.LinkRoot
-  with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler {
+  with LoadBeginEvent.Handler
+  with RuntimeErrorEvent.Handler
+  with CompiledEvent.Handler
+  with ModelSavedEvent.Handler
+  with AfterLoadEvent.Handler {
 
   locally{
     setOpaque(false)
@@ -38,12 +46,24 @@ class Tabs(val workspace: GUIWorkspace,
     }
   }
 
+  def setMenu(newMenu: MenuBar): Unit = {
+    val menuItems = permanentMenuActions ++ (currentTab match {
+      case mt: MenuTab => mt.activeMenuActions
+      case _ => Seq()
+    })
+    menuItems.foreach(action => menu.revokeAction(action))
+    menuItems.foreach(newMenu.offerAction)
+    menu = newMenu
+  }
 
-  var tabsMenu: org.nlogo.swing.TabsMenu = null
+  def permanentMenuActions =
+    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ printAction
+
+  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
 
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val codeTab = new MainCodeTab(workspace, this)
+  val codeTab = new MainCodeTab(workspace, this, menu)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
@@ -54,12 +74,21 @@ class Tabs(val workspace: GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), codeTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
-    tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
+
+    tabActions = TabsMenu.tabActions(this)
   }
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {
     previousTab = currentTab
+    previousTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.revokeAction(action))
+      case _ =>
+    }
     currentTab = getSelectedComponent
+    currentTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.offerAction(action))
+      case _ =>
+    }
     currentTab.requestFocus()
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
@@ -173,7 +202,7 @@ class Tabs(val workspace: GUIWorkspace,
     getTabWithFilename(filename) foreach { tab =>
       val index = getIndexOfComponent(tab)
       setTitleAt(index, stripPath(filename))
-      tabsMenu.getItem(index).setText(filename)
+      tabActions(index).putValue(Action.NAME, filename)
     }
   }
 
@@ -190,33 +219,41 @@ class Tabs(val workspace: GUIWorkspace,
 
   def forAllCodeTabs(fn: CodeTab => Unit) =
     getComponents collect { case tab: CodeTab => tab } foreach (fn)
-  
+
   def lineNumbersVisible = codeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
 
   def removeMenuItem(index: Int) {
-    // first remove all the menu items after this one...
-    for(i <- tabsMenu.getItemCount() - 1 to index by -1) tabsMenu.remove(i)
-    // then add the ones that still exist back, there might be an easier way to do this by simply
-    // changing the actions in the other menu items but this seemed like more straight forward code.
-    for(i <- index until getTabCount) addMenuItem(i, getTitleAt(i))
+    tabActions.foreach(action => menu.revokeAction(action))
+    tabActions = TabsMenu.tabActions(this)
+    tabActions.foreach(action => menu.offerAction(action))
   }
 
   def addMenuItem(i: Int, name: String) {
-    tabsMenu.addMenuItem(name, ('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
+    val newAction = TabsMenu.tabAction(this, i)
+    tabActions = tabActions :+ newAction
+    menu.offerAction(newAction)
   }
 
   private def stripPath(filename: String): String =
     filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
 
-  val printAction = RichAction("print-current-tab") { _ =>
-    currentTab match {
-      case printable: org.nlogo.swing.Printable =>
-        try org.nlogo.swing.PrinterManager.print(printable, workspace.modelNameForDisplay)
-        catch {
-          case abortEx: java.awt.print.PrinterAbortException => org.nlogo.api.Exceptions.ignore(abortEx)
-        }
+  val printAction = {
+    val action = RichAction("print-current-tab") { _ =>
+      currentTab match {
+        case printable: org.nlogo.swing.Printable =>
+          try org.nlogo.swing.PrinterManager.print(printable, workspace.modelNameForDisplay)
+          catch {
+            case abortEx: java.awt.print.PrinterAbortException => org.nlogo.api.Exceptions.ignore(abortEx)
+          }
+      }
     }
+
+    action.putValue(Action.NAME,            I18N.gui.get("menu.file.print"))
+    action.putValue(ActionCategoryKey,      UserAction.FileCategory)
+    action.putValue(ActionGroupKey,         "org.nlogo.app.Tabs.Print")
+    action.putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('P', withMenu = true))
+    action
   }
 
   override def processMouseMotionEvent(e: java.awt.event.MouseEvent) {
@@ -224,5 +261,13 @@ class Tabs(val workspace: GUIWorkspace,
     // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
     // see any reason why it needs to. It's causing flickering in the info tabs on the affected
     // platforms ev 2/2/09
+  }
+
+  def handle(e: ModelSavedEvent) {
+    saveExternalFiles()
+  }
+
+  def handle(e: AfterLoadEvent) {
+    requestFocus()
   }
 }

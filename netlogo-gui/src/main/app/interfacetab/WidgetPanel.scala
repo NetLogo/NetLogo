@@ -2,20 +2,27 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor}
-import java.awt.event._
-import javax.swing.{JComponent, JLayeredPane, JMenuItem, JPopupMenu}
+import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
+import java.awt.event.{ ActionListener, ActionEvent, FocusEvent, FocusListener, MouseEvent, MouseListener, MouseMotionListener }
+import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
-import scala.collection.JavaConverters._
-import org.nlogo.api.{Editable, Version}
-import org.nlogo.awt.{Fonts => NlogoFonts, Mouse => NlogoMouse}
-import org.nlogo.core.{I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
+import org.nlogo.api.Editable
+import org.nlogo.app.common.EditorFactory
+import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
+import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
+  InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot,
+  Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
+  View => CoreView, Widget => CoreWidget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.window._
-import org.nlogo.window.Events._
+import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
+  GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
+  DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
+  PlotWidget },
+    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent,
+      WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -66,6 +73,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
 
+  protected val editorFactory: EditorFactory = new EditorFactory(workspace)
+
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
   setBackground(AwtColor.WHITE)
@@ -93,7 +102,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   override def getMinimumSize: Dimension =
-    new java.awt.Dimension(0, 0)
+    new Dimension(0, 0)
 
   override def getPreferredSize: Dimension = {
     var maxX = 0
@@ -282,11 +291,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
     val plot = menuItem("plot", CorePlot(None))
     val menuItems = Seq(
-      menuItem("button", CoreButton(None, 0, 0, 0, 0)),
-      menuItem("slider", CoreSlider(None)),
-      menuItem("switch", CoreSwitch(None)),
+      menuItem("button",  CoreButton(None, 0, 0, 0, 0)),
+      menuItem("slider",  CoreSlider(None)),
+      menuItem("switch",  CoreSwitch(None)),
       menuItem("chooser", CoreChooser(None)),
-      menuItem("input", CoreInputBox(None)),
+      menuItem("input",   CoreInputBox(None)),
       menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
       menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)))
@@ -343,16 +352,24 @@ class WidgetPanel(val workspace: GUIWorkspace)
           val names = workspace.plotManager.getPlotNames
           DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
         case i: CoreInputBox =>
-          val font = NlogoFonts.monospacedFont
           new DummyInputBoxWidget(
-            new CodeEditor(1, 20, font, true,  null, new EditorColorizer(workspace), I18N.gui.fn),
-            new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn),
+            new EditorArea(textEditorConfiguration),
+            new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>
           throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }
   }
+
+  protected def textEditorConfiguration: EditorConfiguration =
+    editorFactory.defaultConfiguration(1, 20)
+      .withFont(NlogoFonts.monospacedFont)
+      .withFocusTraversalEnabled(true)
+
+  protected def dialogEditorConfiguration: EditorConfiguration =
+    editorFactory.defaultConfiguration(5, 20)
+      .withFont(NlogoFonts.monospacedFont)
 
   def mouseReleased(e: MouseEvent): Unit =
     if (e.isPopupTrigger)

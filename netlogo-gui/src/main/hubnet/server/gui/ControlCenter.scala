@@ -50,7 +50,10 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   def setPlotMirroring(mirror: Boolean) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     HubNetUtils.plotMirroring = mirror;
-    if (mirror) server.plotManager.broadcastPlots()
+    if (mirror) {
+      server.plotManager.broadcastPlots()
+      server.plotManager.initPlotListeners()
+    }
   }
 
   // Kicks a client and notifies it.

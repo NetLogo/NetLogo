@@ -12,9 +12,14 @@ class EditorField(
   font: java.awt.Font,
   enableFocusTraversalKeys: Boolean,
   colorizer: Colorizer,
-  i18n: String => String,
-  actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
-  menuItems: Seq[Action] = Seq[Action]()) extends EditorArea(1, columns, font, enableFocusTraversalKeys, null, colorizer, i18n, false, actionMap, menuItems) {
+  actionMap: Map[KeyStroke, TextAction] = Map.empty[KeyStroke, TextAction],
+  contextActions: Seq[Action] = Seq())
+  extends EditorArea(
+    EditorConfiguration.default(1, columns, colorizer)
+    .withFont(font)
+    .withFocusTraversalEnabled(enableFocusTraversalKeys)
+    .withKeymap(actionMap)
+    .withContextActions(contextActions)) {
 
   // shut off the default actions for some keystrokes... let
   // someone add a KeyListener if they want - ST 7/30/03

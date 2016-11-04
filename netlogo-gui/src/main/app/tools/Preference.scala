@@ -4,8 +4,9 @@ package org.nlogo.app.tools
 
 import java.util.Locale
 import java.util.prefs.Preferences
-import javax.swing.{ JComboBox, JComponent }
+import javax.swing.{ JCheckBox, JComboBox, JComponent }
 
+import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
 
 trait Preference {
@@ -36,6 +37,22 @@ object Preference {
       val chosenLocale = component.getSelectedItem.asInstanceOf[LocaleWrapper].locale
       prefs.put("user.language", chosenLocale.getLanguage)
       prefs.put("user.country", chosenLocale.getCountry)
+    }
+  }
+
+  class LineNumbers(tabs: TabsInterface) extends Preference {
+    val i18nKey = "editorLineNumbers"
+    val component = new JCheckBox()
+    val restartRequired = false
+
+    def load(prefs: Preferences) = {
+      val lineNumsEnabled = prefs.get("line_numbers", "false").toBoolean
+      component.setSelected(lineNumsEnabled)
+    }
+
+    def save(prefs: Preferences) = {
+      prefs.put("line_numbers", component.isSelected.toString)
+      tabs.lineNumbersVisible = component.isSelected
     }
   }
 }

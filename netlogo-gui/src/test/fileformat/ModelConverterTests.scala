@@ -161,6 +161,30 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     assertResult(convertedSource)(converted.code)
   }
 
+  test("converts movie prims in the presence of tasks") {
+    val originalSource =
+      """|to start
+         |  movie-start user-new-file
+         |end
+         |to test-task
+         |  (run (task [show ?1]) 3)
+         |end""".stripMargin
+    val convertedSource =
+      """|extensions [vid]
+         |globals [_recording-save-file-name]
+         |to start
+         |  set _recording-save-file-name user-new-file
+         |  vid:start-recorder
+         |end
+         |to test-task
+         |  (run ([ [?1] -> show ?1 ]) 3)
+         |end""".stripMargin
+      val conversionSet = AutoConversionList.conversions
+        .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
+        .map(_._2)
+      val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
+      assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet: _*).code)
+  }
   test("lambda-izes") {
     val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head
     val targets = Seq("?1")

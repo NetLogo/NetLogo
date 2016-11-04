@@ -12,9 +12,9 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, LinkRoot,
-  InterfacePanelLite, InvalidVersionException, ReconfigureWorkspaceUI,
-  NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
+import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
+  DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
+  ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModel
 import org.nlogo.fileformat
@@ -51,7 +51,7 @@ with ControlSet {
   protected val world = if(Version.is3D) new World3D() else new World
   val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
-  protected val liteEditorFactory = new LiteEditorFactory(workspace)
+  protected val liteEditorFactory = new DefaultEditorFactory(workspace)
 
   val iP = createInterfacePanel(workspace)
 

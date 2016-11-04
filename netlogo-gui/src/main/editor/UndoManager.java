@@ -8,12 +8,13 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
+
 // some of this is cribbed from Sun's TextComponentDemo - ST 7/30/04
 
 // compound edit stuff copied from My World GIS - ER 4/11/08
 
 public strictfp class UndoManager extends javax.swing.undo.UndoManager
-    implements java.awt.event.ActionListener {
+    implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.beans.PropertyChangeListener {
 
   // Edits that happen less than this number of milliseconds
   // apart will be coalesced into a single CompoundEdit for
@@ -55,6 +56,14 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
     _editInProgress = null;
     _lastEditTime = 0;
     _lastEditSource = null;
+  }
+
+  public void watch(javax.swing.text.JTextComponent textComponent) {
+    textComponent.getDocument().addUndoableEditListener(this);
+    // we watch the document property to ensure we
+    // continue to track the document of this component, even if it changes.
+    textComponent.addPropertyChangeListener(this);
+    textComponent.addFocusListener(this);
   }
 
   @Override
@@ -105,6 +114,23 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
       _lastEditTime = 0;
       _lastEditSource = null;
       _timer.stop();
+    }
+  }
+
+  public void propertyChange(java.beans.PropertyChangeEvent event) {
+    if (event.getPropertyName().equals("document")) {
+      ((javax.swing.text.Document) event.getOldValue()).removeUndoableEditListener(this);
+      ((javax.swing.text.Document) event.getNewValue()).addUndoableEditListener(this);
+    }
+  }
+
+  public void focusGained(java.awt.event.FocusEvent event) {
+    UndoManager.setCurrentManager(this);
+  }
+
+  public void focusLost(java.awt.event.FocusEvent event) {
+    if (! event.isTemporary()) {
+      UndoManager.setCurrentManager(null);
     }
   }
 

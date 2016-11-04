@@ -15,7 +15,7 @@ import org.nlogo.editor.Actions
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
-  InterfaceColors, OutputArea, Zoomable }
+  InterfaceColors, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace,
@@ -113,8 +113,7 @@ class CommandCenter(workspace: AbstractWorkspace,
 
   private def doPopup(e: MouseEvent) {
     new JPopupMenu{
-      add(new JMenuItem(Actions.COPY_ACTION))
-      Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
+      add(new JMenuItem(TextMenuActions.CopyAction))
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
         addActionListener(() =>
           try {

@@ -1,17 +1,18 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension, Font }
+import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
 import javax.swing.{ BorderFactory, DefaultComboBoxModel, ImageIcon, JButton,
   JComboBox, JPanel, JScrollPane }
 
 import org.nlogo.core.I18N
-import org.nlogo.api.PreviewCommands
-import org.nlogo.api.PreviewCommands.{ Compilable, Custom, Default, Manual }
-import org.nlogo.awt.Fonts.platformMonospacedFont
+import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.HasPropertyChangeSupport
 import org.nlogo.util.Implicits.RichString
-import org.nlogo.window.{ CodeEditor, EditorAreaErrorLabel, EditorColorizer }
+import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(colorizer: EditorColorizer) extends JPanel {
 
@@ -31,8 +32,11 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
       propertyChangeSupport.firePropertyChange("textValueChanged", null, null)
     }
   }
-  val editorFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-  val editor = new CodeEditor(0, 0, editorFont, true, textListener, colorizer, I18N.gui.get _) {
+  val configuration =
+    EditorConfiguration.default(0, 0, colorizer)
+      .withFocusTraversalEnabled(true)
+      .withListener(textListener)
+  val editor = new EditorArea(configuration) {
     override def getPreferredSize = new Dimension(350, 100)
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
     override def getText = super.getText().stripTrailingWhiteSpace + "\n"

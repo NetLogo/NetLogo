@@ -7,27 +7,29 @@ import java.awt.image.BufferedImage
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, KeyEvent, KeyListener, MouseEvent}
 import java.io.{ File, FileOutputStream, IOException }
 import java.util.{ArrayList, List => JList}
-import javax.swing.{JMenuItem, JOptionPane, JPopupMenu}
+import javax.swing.{ Action, JMenuItem, JOptionPane, JPopupMenu }
 
-import org.nlogo.window.{ButtonWidget, ChooserWidget, CodeEditor, EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry}
-import org.nlogo.api.{Editable, Exceptions, ModelSection, Version, VersionHistory}
-import org.nlogo.app.common.ExportInterfaceAction
-import org.nlogo.awt.{Fonts, Hierarchy, Images, UserCancelException}
-import org.nlogo.core.{AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget}
-import org.nlogo.editor.UndoManager
+import org.nlogo.api.{ Editable, Exceptions, Version }
+import org.nlogo.app.common.{ FileActions, UndoRedoActions },
+  FileActions.ExportInterfaceAction
+import org.nlogo.awt.Images
+import org.nlogo.core.{
+  AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
+  TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
+import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.Logger
-import org.nlogo.swing.{FileDialog => SwingFileDialog}
-import org.nlogo.swing.ModalProgressTask
-import org.nlogo.window.ChooserWidget
-import org.nlogo.window.Events.{CompileAllEvent, CompileMoreSourceEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
+  GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
+  PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
-
-import scala.collection.JavaConverters._
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
   with KeyListener
-  with LoadWidgetsEvent.Handler {
+  with LoadWidgetsEvent.Handler
+  with UndoRedoActions {
 
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
@@ -89,7 +91,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   val exportItem: JMenuItem = {
     val exportAction =
-      new ExportInterfaceAction(Hierarchy.getFrame(this), workspace)
+      new ExportInterfaceAction(workspace, this)
     new JMenuItem(exportAction)
   }
 
@@ -134,9 +136,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
       case i: CoreInputBox =>
-        val font = Fonts.monospacedFont
-        val textArea = new CodeEditor(1, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
-        val dialogTextArea = new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val textArea       = new EditorArea(textEditorConfiguration)
+        val dialogTextArea = new EditorArea(dialogEditorConfiguration)
+
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
@@ -228,7 +230,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     else
       super.contains(w)
 
-  override def handle(e: org.nlogo.window.Events.WidgetRemovedEvent): Unit = {
+  override def handle(e: WidgetRemovedEvent): Unit = {
     new CompileAllEvent().raise(this)
   }
 

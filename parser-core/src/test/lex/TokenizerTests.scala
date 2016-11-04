@@ -106,6 +106,7 @@ class TokenizerTests extends FunSuite {
     assertResult(expected)(tokens.mkString)
   }
 
+  testLexFailure("\"",           0, 1,  "Closing double quote is missing")
   testLexFailure("\"\\b\"",      0, 4,  "Illegal character after backslash")
   testLexFailure("\"\\\"",       0, 3,  "Closing double quote is missing")
   testLexFailure(""""abc""",     0, 4,  "Closing double quote is missing")
