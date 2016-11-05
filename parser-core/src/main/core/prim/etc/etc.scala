@@ -79,6 +79,15 @@ case class _bothends() extends Reporter {
       ret = Syntax.AgentsetType,
       agentClassString = "---L")
 }
+case class _by() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      left = Syntax.ListType,
+      right = List(Syntax.NumberType),
+      ret = Syntax.ListType,
+      precedence = Syntax.NormalPrecedence + 2
+    )
+}
 case class _ceil() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
@@ -812,14 +821,6 @@ case class _randomycor() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.NumberType)
 }
-case class _range() extends Reporter with Pure {
-  override def syntax =
-    Syntax.reporterSyntax(
-      right = List(Syntax.NumberType | Syntax.RepeatableType),
-      defaultOption = Option(1),
-      minimumOption = Option(1),
-      ret = Syntax.ListType)
-}
 case class _readfromstring() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
@@ -995,6 +996,15 @@ case class _tan() extends Reporter with Pure {
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
 }
+case class _through() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      left = Syntax.NumberType,
+      right = List(Syntax.NumberType),
+      ret = Syntax.ListType,
+      precedence = Syntax.NormalPrecedence + 2
+    )
+}
 case class _thunkdidfinish() extends Command {
   override def syntax =
     Syntax.commandSyntax()
@@ -1035,6 +1045,15 @@ case class _untie() extends Command {
   override def syntax =
     Syntax.commandSyntax(
       agentClassString = "---L")
+}
+case class _until() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      left = Syntax.NumberType,
+      right = List(Syntax.NumberType),
+      precedence = Syntax.NormalPrecedence + 2,
+      ret = Syntax.ListType
+    )
 }
 case class _updatemonitor() extends Command {
   override def syntax =

@@ -44,6 +44,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_bothends ,agentset,---L,None,10,0,0
                      |_butfirst string or list,string or list,OTPL,None,10,1,1
                      |_butlast string or list,string or list,OTPL,None,10,1,1
+                     |_by list,number,list,OTPL,None,12,1,1
                      |_canmove number,TRUE/FALSE,-T--,None,10,1,1
                      |_ceil number,number,OTPL,None,10,1,1
                      |_checksum ,string,O---,None,10,0,0
@@ -199,7 +200,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_randomstate ,string,OTPL,None,10,0,0
                      |_randomxcor ,number,OTPL,None,10,0,0
                      |_randomycor ,number,OTPL,None,10,0,0
-                     |_range number,list,OTPL,None,10,1,1
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
                      |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
                      |_remainder number/number,number,OTPL,None,10,2,2
@@ -231,6 +231,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_sum list,number,OTPL,None,10,1,1
                      |_symbolstring variable,string,OTPL,None,10,1,1
                      |_tan number,number,OTPL,None,10,1,1
+                     |_through number,number,list,OTPL,None,12,1,1
                      |_ticks ,number,OTPL,None,10,0,0
                      |_timer ,number,OTPL,None,10,0,0
                      |_tostring anything,string,OTPL,None,10,1,1
@@ -242,6 +243,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_turtleset list or turtle agentset or turtle,turtle agentset,OTPL,None,10,1,0
                      |_turtleshere ,turtle agentset,-TP-,None,10,0,0
                      |_turtleson agent or agentset,turtle agentset,OTPL,None,10,1,1
+                     |_until number,number,list,OTPL,None,12,1,1
                      |_userdirectory ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_userfile ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_userinput anything,string,OTPL,None,10,1,1

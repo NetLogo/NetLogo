@@ -1,14 +1,22 @@
-range-works-with-different-number-of-args
-  range 5 => [0 1 2 3 4]
-  (range 2 5) => [2 3 4]
-  (range 2 5 0.5) => [2 2.5 3 3.5 4 4.5]
+until-works-alone
+  0 until 5 => [0 1 2 3 4]
+  5 until 0 => [5 4 3 2 1]
+  0.5 until 5.5 => [0.5 1.5 2.5 3.5 4.5]
 
-range-handles-negative-steps
-  range 5 0 -1 => [5 4 3 2 1]
-  range 0 5 -1 => []
+through-works-alone
+  0 through 5 => [0 1 2 3 4 5]
+  5 through 0 => [5 4 3 2 1 0]
+  0.5 through 5.5 => [0.5 1.5 2.5 3.5 4.5 5.5]
 
-range-handles-decimals
-  range 0.5 2.51 0.5 => [0.5 1 1.5 2 2.5]
+by-works-with-until-and-through
+  0 until 5 by 2 => [0 2 4]
+  0 through 6 by 2 => [0 2 4 6]
+  0 until 2 by 0.5 => [0 0.5 1 1.5]
+  0 through 2 by 0.5 => [0 0.5 1 1.5 2]
 
-range-errors
-  range 0 5 0 => ERROR The step-size for range must be non-zero.
+by-gives-empty-list-on-wrong-sign
+  0 until 5 by -1 => []
+
+by-doesnt-work-with-other-stuff-or-0
+  0 until 5 by 0 => ERROR The step-size for BY must be non-zero.
+  [0] by 2 => ERROR BY can only be used with UNTIL and THROUGH.

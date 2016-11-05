@@ -225,6 +225,7 @@ R but-first etc._butfirst
 R but-last etc._butlast
 R butfirst etc._butfirst
 R butlast etc._butlast
+R by etc._by
 R can-move? etc._canmove
 R ceiling etc._ceil
 R cos etc._cos
@@ -360,7 +361,6 @@ R random-pxcor etc._randompxcor
 R random-pycor etc._randompycor
 R random-xcor etc._randomxcor
 R random-ycor etc._randomycor
-R range etc._range
 R read-from-string etc._readfromstring
 R reduce etc._reduce
 R remainder etc._remainder
@@ -392,6 +392,7 @@ R substring etc._substring
 R subtract-headings etc._subtractheadings
 R sum _sum
 R tan etc._tan
+R through etc._through
 R ticks etc._ticks
 R timer etc._timer
 R towards etc._towards
@@ -402,6 +403,7 @@ R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-here etc._turtleshere
 R turtles-on etc._turtleson
+R until etc._until
 R user-directory etc._userdirectory
 R user-file etc._userfile
 R user-input etc._userinput

@@ -2,9 +2,6 @@
 
 package org.nlogo.core
 
-import java.util
-
-import scala.collection
 import scala.language.implicitConversions
 
 object LogoList {
@@ -18,57 +15,56 @@ object LogoList {
     new LogoList(it.toVector)
   def fromVector(v: Vector[AnyRef]) =
     new LogoList(v)
+  def fromSeq(s: Seq[AnyRef]) =
+    new LogoList(s.toVector)
   implicit def toIterator(ll:LogoList): Iterator[AnyRef] = ll.scalaIterator
 }
 
-class LogoList private (private val v: Vector[AnyRef])
+class LogoList protected (protected val iseq: IndexedSeq[AnyRef])
   extends IndexedSeq[AnyRef] with Serializable {
 
-  def scalaIterator = v.iterator
-  override def toVector = v
+  def scalaIterator = iseq.iterator
+  override def toVector = iseq.toVector
 
-  override def length: Int = v.length
+  override def length: Int = iseq.length
 
-  override def apply(idx: Int): AnyRef = v(idx)
+  override def apply(idx: Int): AnyRef = iseq(idx)
 
   override def iterator: collection.Iterator[AnyRef] =
-    v.iterator
-  def get(index: Int) = v(index)
-  override def size = v.size
+    iseq.iterator
+  def get(index: Int) = iseq(index)
+  override def size = iseq.size
   def javaIterator: java.util.Iterator[AnyRef] =
-    new Iterator(v)
+    new Iterator(iseq)
   def javaIterable: java.lang.Iterable[AnyRef] =
-    new Iterable(v)
+    new Iterable(iseq)
   def toJava: java.util.AbstractSequentialList[AnyRef] =
-    new JavaList(v, size)
+    new JavaList(iseq, size)
   def listIterator(i: Int): java.util.ListIterator[AnyRef] =
-    new Iterator(v.drop(i))
+    new Iterator(iseq.drop(i))
   def add(index: Int, obj: AnyRef) = unsupported
 
   /// public methods for prims. input validity checking is caller's job
 
-  def first = v.head
-  def fput(obj: AnyRef) = new LogoList(obj +: v)
-  def lput(obj: AnyRef) = new LogoList(v :+ obj)
-  override def reverse = new LogoList(v.reverse)
-  def replaceItem(index: Int, obj: AnyRef) =
-    new LogoList(v.updated(index, obj))
-  def logoSublist(start: Int, stop: Int) =
-    new LogoList(v.slice(start, stop))
-  def butFirst = new LogoList(v.tail)
-  def butLast = new LogoList(v.init)
-  def removeItem(index: Int) =
-    new LogoList(v.patch(index, Nil, 1))
+  def first = iseq.head
+  def fput(obj: AnyRef) = LogoList.fromSeq(obj +: iseq)
+  def lput(obj: AnyRef) = LogoList.fromSeq(iseq :+ obj)
+  override def reverse = LogoList.fromSeq(iseq.reverse)
+  def replaceItem(index: Int, obj: AnyRef) = LogoList.fromSeq(iseq.updated(index, obj))
+  def logoSublist(start: Int, stop: Int) = LogoList.fromSeq(iseq.slice(start, stop))
+  def butFirst = LogoList.fromSeq(iseq.tail)
+  def butLast = LogoList.fromSeq(iseq.init)
+  def removeItem(index: Int) = LogoList.fromSeq(iseq.patch(index, Nil, 1))
 
-  override def toString = v.mkString("[", ", ", "]")
+  override def toString = iseq.mkString("[", ", ", "]")
 
   /// Iterator class
 
-  private class Iterable(v: Vector[AnyRef]) extends java.lang.Iterable[AnyRef] {
-    val iterator = new Iterator(v)
+  private class Iterable(iseq: IndexedSeq[AnyRef]) extends java.lang.Iterable[AnyRef] {
+    val iterator = new Iterator(iseq)
   }
-  private class Iterator(v: Vector[AnyRef]) extends java.util.ListIterator[AnyRef] {
-    private val it = v.iterator
+  private class Iterator(iseq: IndexedSeq[AnyRef]) extends java.util.ListIterator[AnyRef] {
+    private val it = iseq.iterator
     override def hasNext = it.hasNext
     override def hasPrevious = unsupported
     override def next = it.next
@@ -80,11 +76,10 @@ class LogoList private (private val v: Vector[AnyRef])
     override def remove = unsupported
   }
 
-  private class JavaList(v: Vector[AnyRef], override val size: Int) extends java.util.AbstractSequentialList[AnyRef] {
+  private class JavaList(iseq: IndexedSeq[AnyRef], override val size: Int) extends java.util.AbstractSequentialList[AnyRef] {
     override def listIterator(index: Int): java.util.ListIterator[AnyRef] =
-      new Iterator(v.splitAt(index)._2)
+      new Iterator(iseq.drop(index))
   }
 
   private def unsupported = throw new UnsupportedOperationException
-
 }
