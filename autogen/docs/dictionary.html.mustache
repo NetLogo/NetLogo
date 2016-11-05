@@ -461,6 +461,7 @@ Go figure! - ST 12/2/04
       List
     </h3>
     <p id="listsgroup">
+      <a href="#by">by</a>
       <a href="#but-first-and-last">but-first</a>
       <a href="#but-first-and-last">but-last</a>
       <a href="#empty">empty?</a>
@@ -485,7 +486,6 @@ Go figure! - ST 12/2/04
       <a href="#of">of</a>
       <a href="#position">position</a>
       <a href="#one-of">one-of</a>
-      <a href="#range">range</a>
       <a href="#reduce">reduce</a>
       <a href="#remove">remove</a>
       <a href="#remove-duplicates">remove-duplicates</a>
@@ -498,6 +498,8 @@ Go figure! - ST 12/2/04
       <a href="#sort-by">sort-by</a>
       <a href="#sort-on">sort-on</a>
       <a href="#subliststring">sublist</a>
+      <a href="#through">through</a>
+      <a href="#until">until</a>
       <!-- ======================================== -->
     <h3>
       String
@@ -1411,6 +1413,30 @@ show but-first &quot;string&quot;
 show but-last &quot;string&quot;
 ;; prints &quot;strin&quot;
 </pre><!-- ======================================== -->
+    </div>
+    <div class="dict_entry" id="by">
+      <h3>
+        <a>by<span class="since">6.0</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>range</i> by <i>step-size</i></span>
+      </h4>
+      <p>
+      Modifies the range of numbers created by <i>until</i> or <i>through</i>
+      to use a different step-size. Cannot be used except with <i>until</i> or
+      <i>through</i>.
+      <pre>
+0 until 10 by 2
+=&gt; [0 2 4 8]
+0 until 1 by 0.25
+=&gt; [0 0.25 0.5 0.75]
+9 through 3 by -3
+=&gt; [9 6 3]</pre>
+      <p>
+      See also
+      <a href="#through">through</a>,
+      <a href="#until">until</a>,
+      <a href="#n-values">n-values</a>.
     </div>
   </div>
     <h2>
@@ -5101,7 +5127,7 @@ show n-values 5 [ [x] -&gt; x * x ]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
-        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>, <a href="#range">range</a>.
+        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>
         </div>
       <div class="dict_entry" id="neighbors">
         <h3>
@@ -6254,32 +6280,6 @@ ask turtles [
       <p>
         See also <a href="#random-pcor">random-pxcor</a>, <a href="#random-pcor">random-pycor</a>.
       </div>
-    <div class="dict_entry" id="range">
-      <h3>
-        <a>range<span class="since">6.0</span></a>
-      </h3>
-      <h4>
-        <span class="prim_example">range <i>stop</i></span>
-        <span class="prim_example">(range <i>start</i> <i>stop</i>)</span>
-        <span class="prim_example">(range <i>start</i> <i>stop</i> <i>step</i>)</span>
-      </h4>
-      <p>
-        Generates a list of numbers, starting at <i>start</i>, ending before
-        <i>stop</i>, counting by <i>step</i>. <i>start</i> defaults to 0 and
-        <i>step</i> defaults to 1.
-        <pre>
-show range 5
-=&gt; [0 1 2 3 4]
-show (range 2 5)
-=&gt; [2 3 4]
-show (range 2 5 0.5)
-=&gt; [2 2.5 3 3.5 4 4.5]
-show (range 10 0 -1)
-=&gt; [10 9 8 7 6 5 4 3 2 1]
-</pre>
-      <p>
-      See also <a href="#n-values">n-values</a>
-    </div>
     <div class="dict_entry" id="read-from-string">
       <h3>
         <a>read-from-string<span class="since">1.1</span></a>
@@ -7670,6 +7670,36 @@ show sum [energy] of turtles
         the links will always appear 1 pixel wide. You can set this
         variable to change a link's thickness.
       </div>
+    <div class="dict_entry" id="through">
+      <h3>
+        <a>through<span class="since">6.0</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>start</i> through <i>stop</i></span>
+      </h4>
+      <p>
+      Generates a list of numbers by counting from <i>start</i> through
+      <i>stop</i>. By default, counts by 1, unless <i>start</i> is greater
+      than <i>stop</i>, in which case it counts by -1. You can use <i>by</i>
+      to change the step-size. If you wish to count up to, but not including
+      <i>stop</i>, use <i>until</i> instead.
+
+      <pre>
+1 through 5
+=&gt; [1 2 3 4 5]
+1.5 through 5.5
+=&gt; [1.5 2.5 3.5 4.5 5.5]
+5 through 1
+=&gt; [5 4 3 2 1]
+0 through 10 by 2
+=&gt; [0 2 4 6 8 10]</pre>
+
+      <p>
+      See also
+      <a href="#by">by</a>,
+      <a href="#until">until</a>,
+      <a href="#n-values">n-values</a>.
+    </div>
     <div class="dict_entry" id="tick">
       <h3>
         <a>tick<span class="since">4.0</span></a>
@@ -8155,6 +8185,36 @@ ask turtle 0 [ show sort my-links ]
         See the <a href="programming.html#tie">Tie</a> section of the
         Programming Guide for more details.
       </div>
+    <div class="dict_entry" id="until">
+      <h3>
+        <a>until<span class="since">6.0</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example"><i>start</i> until <i>stop</i></span>
+      </h4>
+      <p>
+      Generates a list of numbers by counting from <i>start</i> until
+      <i>stop</i>, not including <i>stop</i>. By default, counts by 1, unless
+      <i>start</i> is greater than <i>stop</i>, in which case it counts by -1.
+      You can use <i>by</i> to change the step-size. If you wish to include
+      <i>stop</i> in the list, use <i>through</i> instead.
+
+      <pre>
+0 until 5
+=&gt; [0 1 2 3 4]
+0.5 until 5.5
+=&gt; [0.5 1.5 2.5 3.5 4.5]
+5 until 0
+=&gt; [5 4 3 2 1]
+0 until 10 by 2
+=&gt; [0 2 4 6 8]</pre>
+
+      <p>
+      See also
+      <a href="#by">by</a>,
+      <a href="#through">through</a>,
+      <a href="#n-values">n-values</a>.
+    </div>
     <div class="dict_entry" id="update-plots">
       <h3>
         <a>update-plots<span class="since">5.0</span></a>
