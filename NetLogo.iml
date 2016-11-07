@@ -37,5 +37,6 @@
     <orderEntry type="library" name="scalacheck_2.11-1.12.5" level="project" />
     <orderEntry type="library" name="jmock-junit4-2.5.1" level="project" />
     <orderEntry type="library" name="jhotdraw-6.0b1" level="project" />
+    <orderEntry type="library" name="rsyntaxtextarea-2.6.0" level="project" />
   </component>
 </module>
