@@ -2,15 +2,14 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Font, GraphicsEnvironment }
-import java.awt.event.{ InputEvent, KeyEvent, TextEvent, TextListener },
-  InputEvent.{ SHIFT_MASK => ShiftKey }
+import java.awt.event.InputEvent.{ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, META_DOWN_MASK => MetaKey, SHIFT_DOWN_MASK => ShiftKey}
+import java.awt.event.{KeyEvent, TextEvent, TextListener}
+import java.awt.{Font, GraphicsEnvironment}
+import javax.swing.text.{DefaultEditorKit, TextAction}
+import javax.swing.{Action, KeyStroke}
 
-import javax.swing.{ Action, KeyStroke }
-import javax.swing.text.{ JTextComponent, TextAction }
-
-import org.nlogo.core.I18N
-import KeyBinding._
+import org.fife.ui.rtextarea.RTextAreaEditorKit
+import org.nlogo.editor.KeyBinding._
 
 object EditorConfiguration {
   private def os(s: String) =
@@ -135,6 +134,19 @@ case class EditorConfiguration(
 
     additionalActions.foreach {
       case (k, v) => editor.getInputMap.put(k, v)
+    }
+
+    if (EditorConfiguration.os("Mac")) {
+      Seq(
+        (KeyEvent.VK_BACK_SPACE, AltKey)  -> RTextAreaEditorKit.rtaDeletePrevWordAction,
+        // Unfortunately, `rtaDeleteNextWordAction` is not implemented by rta.
+        // Leaving this here for posterity wondering why alt-delete doesn't
+        // work on Macs. - BCH 11/7/2016
+        //(KeyEvent.VK_DELETE,     AltKey)  -> RTextAreaEditorKit.rtaDeleteNextWordAction,
+        (KeyEvent.VK_A,          CtrlKey) -> DefaultEditorKit.beginLineAction,
+        (KeyEvent.VK_E,          CtrlKey) -> DefaultEditorKit.endLineAction,
+        (KeyEvent.VK_K,          CtrlKey) -> RTextAreaEditorKit.rtaDeleteRestOfLineAction
+      ).foreach { case ((key, mod), action) => editor.getInputMap().put(KeyStroke.getKeyStroke(key, mod), action)}
     }
   }
 
