@@ -20,7 +20,7 @@ case class DoubleRange(start: Double, stop: Double, step: Double = 1.0, inclusiv
   val epsilon = StrictMath.pow(2, -52) * StrictMath.pow(2, exponentPrecision)
 
   override val length = {
-    val n = if (inclusive)
+    val l = if (inclusive)
       // We want, for instance, 9.999999999999998 to become 10 instead of 9
       // from the floor, so we add the epsilon here.
       StrictMath.floor((stop - start) / step + epsilon + 1)
@@ -28,12 +28,16 @@ case class DoubleRange(start: Double, stop: Double, step: Double = 1.0, inclusiv
       // We want, for instance, 10.000000000000002 to become 10 instead of 11
       // from the ceil, so we subtract the epsilon here.
       StrictMath.ceil((stop - start) / step - epsilon)
-    StrictMath.max(n, 0).toInt
+
+    if (l > Integer.MAX_VALUE)
+      throw new IllegalArgumentException("Range results in too many elements.")
+
+    StrictMath.max(l, 0).toInt
   }
 
 
   override def apply(idx: Int): JDouble =
-    if (0 <= idx && idx <= length) idx * step + start
+    if (0 <= idx && idx < length) idx * step + start
     else throw new IndexOutOfBoundsException(idx.toString)
 
   override def tail = DoubleRange(start + step, stop, step, inclusive)

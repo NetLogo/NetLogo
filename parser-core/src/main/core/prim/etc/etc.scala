@@ -85,7 +85,7 @@ case class _by() extends Reporter {
       left = Syntax.ListType,
       right = List(Syntax.NumberType),
       ret = Syntax.ListType,
-      precedence = Syntax.NormalPrecedence + 2
+      precedence = Syntax.NormalPrecedence - 4
     )
 }
 case class _ceil() extends Reporter with Pure {
@@ -1002,7 +1002,7 @@ case class _through() extends Reporter {
       left = Syntax.NumberType,
       right = List(Syntax.NumberType),
       ret = Syntax.ListType,
-      precedence = Syntax.NormalPrecedence + 2
+      precedence = Syntax.NormalPrecedence - 4
     )
 }
 case class _thunkdidfinish() extends Command {
@@ -1051,7 +1051,7 @@ case class _until() extends Reporter {
     Syntax.reporterSyntax(
       left = Syntax.NumberType,
       right = List(Syntax.NumberType),
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence - 4,
       ret = Syntax.ListType
     )
 }
