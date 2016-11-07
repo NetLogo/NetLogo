@@ -4,9 +4,7 @@ package org.nlogo.core
 
 trait CompilationEnvironment {
   def profilingEnabled: Boolean
-
   def resolvePath(path: String): String
-
   def getSource(filename: String): String
 }
 

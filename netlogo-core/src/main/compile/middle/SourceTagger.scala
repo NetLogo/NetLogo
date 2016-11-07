@@ -2,14 +2,17 @@
 
 package org.nlogo.compile.middle
 
-import org.nlogo.core.{ Syntax, Token }
+import org.nlogo.core.{ CompilationEnvironment, Syntax, Token }
 import org.nlogo.nvm.Instruction
 import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, ReporterApp, ReporterBlock, Statement }
+
+import scala.util.Try
 
 /**
  * Fills in the source of all of Instructions in the Procedure.
  */
-private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisitor {
+private class SourceTagger(existingSources: Map[String, String], compilationEnvironment: CompilationEnvironment) extends DefaultAstVisitor {
+  var sources: Map[String, String] = Map(existingSources.toSeq: _*)
   var internalSources = Seq[String]()
 
   private def captureInternalSources(f: () => Unit): Seq[String] = {
@@ -69,7 +72,12 @@ private class SourceTagger(sources: Map[String, String]) extends DefaultAstVisit
     val filename = i.getFilename
     val validStartAndEnd = (start > 0 || start < end)
     if (validStartAndEnd) {
-      Option(filename).map(sources.apply).flatMap { source =>
+      if (filename != null && ! sources.isDefinedAt(filename)) {
+        Try(compilationEnvironment.getSource(filename)).foreach { newSource =>
+          sources = sources + (filename -> newSource)
+        }
+      }
+      Option(filename).flatMap(sources.get).flatMap { source =>
         if (end < source.length)
           Some(source.substring(start, end))
         else

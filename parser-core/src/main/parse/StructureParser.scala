@@ -47,7 +47,7 @@ object StructureParser {
             cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
             includeFile(compilationEnvironment, suppliedPath) match {
               case Some((path, fileContents)) =>
-                parseOne(tokenizer, structureParser, fileContents, suppliedPath,
+                parseOne(tokenizer, structureParser, fileContents, path,
                   results.copy(includes = results.includes.tail,
                     includedSources = results.includedSources :+ suppliedPath))
               case None =>

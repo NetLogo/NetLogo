@@ -43,7 +43,7 @@ private object CompilerMain {
       feStructureResults.includedSources.map(i =>
           (i -> compilationEnv.getSource(compilationEnv.resolvePath(i))))
 
-    val allDefs = middleEnd.middleEnd(bridged, allSources, getOptimizations(CompilerFlags(), feStructureResults.program.dialect))
+    val allDefs = middleEnd.middleEnd(bridged, sources, compilationEnv, getOptimizations(CompilerFlags(), feStructureResults.program.dialect))
 
     val newProcedures =
       allDefs

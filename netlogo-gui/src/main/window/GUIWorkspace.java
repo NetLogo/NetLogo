@@ -1142,6 +1142,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public String getSource(String filename)
       throws java.io.IOException {
 
+    if (filename.equals("")) {
+      throw new IllegalArgumentException("cannot provide source for empty filename");
+    }
     String source = null;
     if (externalFileManager != null) {
       source = externalFileManager.getSource(filename);
