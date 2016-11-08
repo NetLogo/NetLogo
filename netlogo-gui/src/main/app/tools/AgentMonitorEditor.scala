@@ -191,7 +191,7 @@ with WindowEvents.JobRemovedEvent.Handler
     if(e.sourceOwner == this) {
       error(e.error)
       if(error != null) {
-        OptionDialog.show(
+        OptionDialog.showMessage(
           workspace.getFrame, I18N.gui.get("common.messages.error"), error.getMessage, Array(I18N.gui.get("common.buttons.ok")))
         setEnabled(true)
         editor.setText(get)

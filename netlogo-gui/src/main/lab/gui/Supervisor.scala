@@ -146,17 +146,17 @@ class Supervisor(dialog: java.awt.Dialog,
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     t match {
       case ex: CompilerException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to syntax error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))
       case ex: LogoException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to runtime error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))
       case ex: java.io.IOException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to I/O error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))

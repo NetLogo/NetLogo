@@ -23,7 +23,7 @@ class _usermessage extends Command {
             override def run = {
               gw.view.mouseDown(false)
               Boolean.box(1 ==
-                OptionDialog.show(gw.getFrame, "User Message", message,
+                OptionDialog.showMessage(gw.getFrame, "User Message", message,
                                   Array(I18N.gui.get("common.buttons.ok"),
                                         I18N.gui.get("common.buttons.halt"))))
             }}).booleanValue

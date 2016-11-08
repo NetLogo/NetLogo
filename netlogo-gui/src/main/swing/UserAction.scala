@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.Toolkit
-import java.awt.event.{ ActionEvent, InputEvent }
+import java.awt.event.InputEvent
 import javax.swing.{ Action, KeyStroke }
 
 object UserAction {
@@ -19,9 +19,9 @@ object UserAction {
   val ActionRankKey        = "org.nlogo.swing.ActionRankKey"
 
   val FileCategory  = "org.nlogo.swing.FileCategory"
-  val TabsCategory  = "org.nlogo.swing.TabsCategory"
   val EditCategory  = "org.nlogo.swing.EditCategory"
   val ToolsCategory = "org.nlogo.swing.ToolsCategory"
+  val TabsCategory  = "org.nlogo.swing.TabsCategory"
   val HelpCategory  = "org.nlogo.swing.HelpCategory"
 
   val EditClipboardGroup = "org.nlogo.swing.EditClipboardGroup"

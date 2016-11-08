@@ -15,20 +15,14 @@ public final strictfp class Utils {
   public static void alert(String message, String continueText) {
     java.awt.Frame bogusFrame = new java.awt.Frame();
     bogusFrame.pack(); // otherwise OptionDialog will fail to get font metrics
-    OptionDialog.show
-        (bogusFrame, "Notice",
-            message,
-            new String[]{continueText});
+    OptionDialog.showMessage(bogusFrame, "Notice", message, new String[]{continueText});
   }
 
   public static void alert(String title, String message, String details, String continueText) {
     java.awt.Frame bogusFrame = new java.awt.Frame();
     bogusFrame.pack(); // otherwise OptionDialog will fail to get font metrics
     message = message + "\n\n" + details;
-    OptionDialog.show
-        (bogusFrame, title,
-            message,
-            new String[]{continueText});
+    OptionDialog.showMessage(bogusFrame, title, message, new String[]{continueText});
   }
 
   /// Swing look & feel

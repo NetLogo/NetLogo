@@ -26,6 +26,8 @@ with WindowEvents.CompiledEvent.Handler
 
   private var includesTable: Map[String, String] = null
 
+  updateVisibility()
+
   def handle(e: WindowEvents.CompiledEvent) {
     if(e.sourceOwner.isInstanceOf[CodeTab])
       updateVisibility()
@@ -73,7 +75,7 @@ with WindowEvents.CompiledEvent.Handler
     else super.getPreferredSize
 
   protected def menuSelection(s: String) {
-    tabs.openTemporaryFile(includesTable(s), true)
+    tabs.openExternalFile(includesTable(s))
   }
 
   private class OpenSourceEditorAction
@@ -86,7 +88,7 @@ with WindowEvents.CompiledEvent.Handler
             FileDialog.LOAD, null)
           .replace(File.separatorChar, '/')
         if(path.endsWith(".nls"))
-          tabs.openTemporaryFile(path, false)
+          tabs.openExternalFile(path)
         else
           JOptionPane.showMessageDialog(target, "Filename must end in *.nls")
       }
@@ -100,7 +102,7 @@ with WindowEvents.CompiledEvent.Handler
   private class NewSourceEditorAction
   extends AbstractAction("New Source File") {
     override def actionPerformed(e: ActionEvent) {
-      tabs.newTemporaryFile()
+      tabs.newExternalFile()
     }
   }
 

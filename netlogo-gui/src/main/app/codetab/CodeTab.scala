@@ -2,23 +2,23 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Dimension, Graphics, Insets }
+import java.awt.{ BorderLayout, Component, Dimension, Graphics, Insets }
 import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, JPanel }
+import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.editor.{ DumbIndenter, LineNumbersBar }
+import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
 
-class CodeTab(val workspace: AbstractWorkspace) extends JPanel
+abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
   with ProceduresInterface
   with ProceduresMenuTarget
   with AppEvents.SwitchedTabsEvent.Handler
@@ -27,11 +27,15 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   with NlogoPrintable
   with MenuTab {
 
+  private var _dirty = false
+  def dirty = _dirty
+  protected def dirty_=(b: Boolean) = {
+    _dirty = b
+    compileAction.setEnabled(b)
+  }
+
   private lazy val listener = new TextListener {
-    override def textValueChanged(e: TextEvent) {
-      needsCompile()
-      dirty()
-    }
+    override def textValueChanged(e: TextEvent) = dirty = true
   }
 
   lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
@@ -50,7 +54,20 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
-  val toolBar = getToolBar
+  val toolBar = new ToolBar {
+    override def addControls() {
+      add(new ToolBarActionButton(FindDialog.FIND_ACTION))
+      add(new ToolBarActionButton(compileAction))
+      add(new ToolBar.Separator)
+      add(new ProceduresMenu(CodeTab.this))
+      add(new IncludesMenu(CodeTab.this, tabs))
+      val additionalComps = getAdditionalToolBarComponents
+      if (additionalComps.nonEmpty) {
+        add(new ToolBar.Separator)
+        additionalComps foreach add
+      }
+    }
+  }
   val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
   def program = workspace.world.program
@@ -66,7 +83,10 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     add(codePanel, BorderLayout.CENTER)
   }
 
-  val compileAction: Action = new CompileAction
+  val compileAction: Action = new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+    putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource("/images/check.gif")))
+    def actionPerformed(e: ActionEvent) = compile()
+  }
 
   private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON,
@@ -86,7 +106,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     }
   }
 
-  def dirty() { new WindowEvents.DirtyEvent().raise(this) }
+  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
   lazy val wrappedUndoAction: Action = {
     new WrappedAction(text.undoAction,
@@ -108,11 +128,6 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   activeMenuActions = editorConfiguration.contextActions.collect {
     case f: FocusedOnlyAction => f
   } ++ Seq(wrappedUndoAction, wrappedRedoAction)
-
-  private def needsCompile() {
-    _needsCompile = true
-    compileAction.setEnabled(true)
-  }
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST
@@ -136,11 +151,9 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   def kind = AgentKind.Observer
 
-  protected var _needsCompile = false
-
   final def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(_needsCompile && e.oldTab == this)
-      recompile()
+    if(dirty && e.oldTab == this)
+      compile()
   }
 
   private var originalFontSize = -1
@@ -156,16 +169,15 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
   // Error code
 
   def handle(e: WindowEvents.CompiledEvent) {
-    _needsCompile = false
-    compileAction.setEnabled(e.error != null)
+    dirty = false
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
     text.revalidate()
   }
 
-  def recompile() { new WindowEvents.CompileAllEvent().raise(this) }
+  protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
 
-  override def requestFocus() { text.requestFocus() }
+  override def requestFocus(): Unit = text.requestFocus()
 
   def innerSource = text.getText
   def getText = text.getText  // for ProceduresMenuTarget

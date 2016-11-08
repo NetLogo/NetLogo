@@ -270,7 +270,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case Text(content, messageType) => messageType match {
         case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
         case Text.MessageType.USER =>
-          OptionDialog.show(getFrame(this), "User Message", content.toString,
+          OptionDialog.showMessage(getFrame(this), "User Message", content.toString,
             Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")))
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }

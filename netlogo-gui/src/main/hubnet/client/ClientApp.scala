@@ -139,7 +139,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   def showExitMessage(title: String, message: String): Boolean = {
     EventQueue.mustBeEventDispatchThread()
     val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
-    0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
+    0 == OptionDialog.showMessage(loginDialog, "Confirm " + title, message, buttons)
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
@@ -147,7 +147,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (isLocal) this.dispose()
     else {
       if (connected) {
-        OptionDialog.show(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+        OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
         dispose()
         doLogin()
         ()
@@ -157,7 +157,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String) {
     EventQueue.mustBeEventDispatchThread()
-    OptionDialog.show(ClientApp.this, "Login Failed",
+    OptionDialog.showMessage(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
     loginDialog.setVisible(true)
   }

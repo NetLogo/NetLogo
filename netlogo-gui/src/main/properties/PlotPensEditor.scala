@@ -120,7 +120,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     // but for now I'll leave it. It would seem weird to have two pens named "turtles"
     // but also weird to allow for one pen to have no name, but only one.
     if((names.toSet - "").size  < (names.toList.filterNot(_ == "")).size){
-      org.nlogo.swing.OptionDialog.show(frame, "Invalid Entry", "Pens list contains duplicate names.",
+      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid Entry", "Pens list contains duplicate names.",
         Array(I18N.gui.get("common.buttons.ok")))
       None
     } else Some(table.getPlotPens)

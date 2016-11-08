@@ -73,7 +73,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
     println(exception)
     exception.printStackTrace()
-    OptionDialog.show(owner, "NetLogo",
+    OptionDialog.showMessage(owner, "NetLogo",
       I18N.gui.getN("file.open.error.unableToOpen",
         Paths.get(uri).toString, exception.getMessage),
       options)
@@ -133,7 +133,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpeningModelFromFutureVersion(version: String): Unit = {
     val message = I18N.gui.getN("file.open.warn.version.newer", Version.version, version)
-    if (OptionDialog.show(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
   }
@@ -141,7 +141,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
     val message = I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version)
-    if (OptionDialog.show(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
   }
@@ -149,7 +149,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
     val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version)
-    if (OptionDialog.show(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
   }
@@ -161,7 +161,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       .map(path => I18N.gui.getN("file.open.error.invalidmodel.withPath", path.toString))
       .getOrElse(I18N.gui.get("file.open.error.invalidmodel"))
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
-    OptionDialog.show(owner, "NetLogo", warningText, options)
+    OptionDialog.showMessage(owner, "NetLogo", warningText, options)
     throw new UserCancelException()
   }
 
@@ -172,7 +172,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       I18N.gui.get("file.open.warn.version.transitionGuide"),
       I18N.gui.get("common.buttons.cancel"))
     val response =
-      OptionDialog.show(owner, I18N.gui.get("common.messages.warning"), message, options)
+      OptionDialog.showMessage(owner, I18N.gui.get("common.messages.warning"), message, options)
     response match {
       case 0 => true
       case 1 =>
@@ -214,14 +214,14 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
         I18N.gui.get("common.buttons.save"),
         I18N.gui.get("common.buttons.cancel"))
       val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version)
-      OptionDialog.show(owner, "NetLogo", message, options) == 0
+      OptionDialog.showMessage(owner, "NetLogo", message, options) == 0
     }
   }
 
   def warnInvalidFileFormat(format: String): Unit = {
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
     val message = I18N.gui.getN("file.save.warn.invalidFormat", format)
-    OptionDialog.show(owner, I18N.gui.get("common.messages.warning"), message, options)
+    OptionDialog.showMessage(owner, I18N.gui.get("common.messages.warning"), message, options)
   }
 }
 

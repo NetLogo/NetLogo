@@ -45,7 +45,7 @@ class PlotExportControls(plotManager: PlotManager) {
   }
 
   def sorryNoPlots(frame: Frame): Unit = {
-    OptionDialog.show(
+    OptionDialog.showMessage(
       frame, I18N.gui.get("menu.file.export.plot"),
       I18N.gui.get("menu.file.export.noPlots"),
       Array[Object](I18N.gui.get("common.buttons.ok")))

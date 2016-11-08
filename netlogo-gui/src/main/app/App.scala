@@ -2,37 +2,33 @@
 
 package org.nlogo.app
 
+import javax.swing._
+import java.awt.{ Toolkit, Dimension, Frame }
+import java.awt.event.ActionEvent
+
+import org.nlogo.agent.{ Agent, World3D, World }
+import org.nlogo.api._
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, FileActions, FindDialog, Events => AppEvents, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog, PreviewCommandsEditor }
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
-  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.agent.{Agent, World3D, World}
-import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
-import org.nlogo.log.Logger
-import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices, Workspace}
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
+Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
-import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.Implicits.RichString
-import org.nlogo.util.Implicits.RichStringLike
-import org.nlogo.util.Pico
+import org.nlogo.log.Logger
+import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, Workspace }
+import org.nlogo.shape.{ ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory}
-import org.nlogo.window.Event.LinkParent
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
 import org.nlogo.swing.Implicits.thunk2runnable
 
 import org.picocontainer.adapters.AbstractAdapter
 import org.picocontainer.Characteristics._
 import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 import org.picocontainer.Parameter
-
-import javax.swing._
-import java.awt.{Toolkit, Dimension, Frame}
-import java.awt.event.ActionEvent
 
 import scala.language.postfixOps
 /**
@@ -459,7 +455,7 @@ class App extends
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)
 
-    tabs.init(Plugins.load(pico): _*)
+    tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
@@ -875,7 +871,7 @@ class App extends
    */
   @throws(classOf[java.io.IOException])
   private[nlogo] def saveOpenModel(): Unit = {
-    dispatchThreadOrBust(fileManager.save(false))
+    dispatchThreadOrBust(fileManager.saveModel(false))
   }
 
   /**
@@ -886,7 +882,7 @@ class App extends
   def handleOpenPath(path: String) = {
     try {
       dispatchThreadOrBust {
-        fileManager.offerSave()
+        fileManager.aboutToCloseFiles()
         open(path)
       }
     } catch {

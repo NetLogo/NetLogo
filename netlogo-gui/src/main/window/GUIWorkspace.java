@@ -306,7 +306,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public boolean warningMessage(String message) {
     String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-    return 0 == org.nlogo.swing.OptionDialog.show(
+    return 0 == org.nlogo.swing.OptionDialog.showMessage(
         getFrame(), I18N.guiJ().get("common.messages.warning"),
         "Warning: " + message, options);
   }
@@ -992,7 +992,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
         String[] options = fatalError ? new String[]{I18N.guiJ().get("common.buttons.ok")} :
             new String[]{I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-        return org.nlogo.swing.OptionDialog.show
+        return org.nlogo.swing.OptionDialog.showMessage
             (getFrame(), title, errorDetails, options) == 0;
       }
     };

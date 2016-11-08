@@ -2,97 +2,56 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.FileDialog
+import java.awt.{Component, FileDialog}
 import java.awt.event.ActionEvent
-import java.io.File
-import javax.swing.{ AbstractAction, JButton }
+import java.io.{File, IOException}
+import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
-import scala.util.Try
-
-import org.nlogo.api.{ FileIO, LocalFile }
-import org.nlogo.app.Tabs
-import org.nlogo.app.common.{ Events => AppEvents, FindDialog, TabsInterface }
+import org.nlogo.api.FileIO
+import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ FileMode, I18N }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBar }
-import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
+import org.nlogo.core.I18N
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton }
+import org.nlogo.window.{ExternalFileInterface, Events => WindowEvents}
 import org.nlogo.workspace.AbstractWorkspace
 
-object TemporaryCodeTab {
-  val NewFile = "New File"
-}
-class TemporaryCodeTab(workspace: AbstractWorkspace,
-                             tabs: TabsInterface,
-                             var filename: String,
-                             fileMustExist: Boolean,
-                             smartIndent: Boolean)
-extends CodeTab(workspace)
+class TemporaryCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface, var filename: TabsInterface.Filename, smartIndent: Boolean)
+extends CodeTab(workspace, tabs)
 with AppEvents.IndenterChangedEvent.Handler
-with WindowEvents.LoadBeginEvent.Handler
-with WindowEvents.AboutToQuitEvent.Handler
 {
-
-  val includesMenu = new IncludesMenu(this, tabs)
-  load(fileMustExist)
+  filename.right foreach { path =>
+        try {
+          innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
+          dirty = false
+        } catch {
+          case _: IOException => innerSource = ""
+        }
+     }
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
-  override def getToolBar =
-    new ToolBar {
-      override def addControls() {
-        add(new JButton(FindDialog.FIND_ACTION))
-        add(new JButton(compileAction))
-        add(new ToolBar.Separator)
-        add(new JButton(new FileCloseAction))
-        add(new ToolBar.Separator)
-        add(new ProceduresMenu(TemporaryCodeTab.this))
-        add(includesMenu)
-      }
-    }
+  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(new FileCloseAction))
 
-  private var _dirty = false
-  def cleanse() { _dirty = false }
-  override def dirty() { _dirty = true }
-  def isDirty = _dirty
+  override def compile() = {
+    save(false)
+    super.compile()
+  }
 
-  private def load(fileMustExist: Boolean) {
-    if (filename == "Aggregate")
-      throw new Exception("Incorrect error direction!")
-    if (filename != TemporaryCodeTab.NewFile) {
-      try {
-        val sourceFile = new LocalFile(filename)
-        if (sourceFile.reader == null)
-          sourceFile.open(FileMode.Read)
-        val origSource = FileIO.reader2String(sourceFile.reader)
-        innerSource = origSource.replaceAll("\r\n", "\n")
-        _dirty = false
-        _needsCompile = false
-        return
-      }
-      catch {
-        case _: java.io.IOException => assert(!fileMustExist)
-      }
-    }
-    innerSource = ""
+  def save(saveAs: Boolean) = {
+    if (saveAs || filename.isLeft)
+      filename = Right(userChooseSavePath())
+    FileIO.writeFile(filename.right.get, text.getText)
+    dirty = false
   }
 
   override def handle(e: WindowEvents.CompiledEvent) {
-    _needsCompile = false
-    compileAction.setEnabled(e.error != null)
+    dirty = false
     if((e.sourceOwner.isInstanceOf[ExternalFileInterface] &&
-        e.sourceOwner.asInstanceOf[ExternalFileInterface].getFileName == filename)
+        e.sourceOwner.asInstanceOf[ExternalFileInterface].getFileName == filename.right.get)
         // if the Code tab compiles then get rid of the error ev 7/26/07
         || (e.sourceOwner.isInstanceOf[CodeTab] && e.error == null))
       errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
-  }
-
-  def handle(e: WindowEvents.LoadBeginEvent) {
-    close()
-  }
-
-  def handle(e: WindowEvents.AboutToQuitEvent) {
-    close()
   }
 
   final def handle(e: AppEvents.IndenterChangedEvent) {
@@ -101,35 +60,20 @@ with WindowEvents.AboutToQuitEvent.Handler
 
   def close() {
     ignoring(classOf[UserCancelException]) {
-      if(_dirty && userWantsToSaveFirst)
-        save()
-      tabs.closeTemporaryFile(filename)
+      if(dirty && userWantsToSaveFirst())
+        save(false)
+      tabs.closeExternalFile(filename)
     }
   }
 
   def doSave() {
-    if(_dirty)
+    if(dirty)
       ignoring(classOf[UserCancelException]) {
-        save()
+        save(false)
       }
   }
 
-  @throws(classOf[UserCancelException])
-  def save() {
-    if(filename == TemporaryCodeTab.NewFile) {
-      filename = userChooseSavePath
-      tabs.saveTemporaryFile(filename)
-      dirty()
-    }
-    if(isDirty) {
-      // ought to handle IOException here? - ST 8/8/10
-      FileIO.writeFile(filename, text.getText())
-      cleanse()
-    }
-  }
-
-  @throws(classOf[UserCancelException])
-  private def userChooseSavePath: String = {
+  private def userChooseSavePath(): String = {
     var newFileName = ""
     while(true) {
       val path = SwingFileDialog.show(
@@ -144,7 +88,7 @@ with WindowEvents.AboutToQuitEvent.Handler
       if(dotIndex != -1)
         newFileName = newFileName.substring(0, dotIndex)
       newFileName ++= ".nls"
-      OptionDialog.show(
+      OptionDialog.showMessage(
         this, I18N.gui.get("common.messages.error"), "You must choose a name ending with: .nls",
         Array("Try Again"))
     }
@@ -152,10 +96,10 @@ with WindowEvents.AboutToQuitEvent.Handler
   }
 
   @throws(classOf[UserCancelException])
-  private def userWantsToSaveFirst = {
+  private def userWantsToSaveFirst() = {
     val options = Array[AnyRef](I18N.gui.get("common.buttons.save"), "Discard", I18N.gui.get("common.buttons.cancel"))
     val message = "Do you want to save the changes you made to " + filename + "?"
-    OptionDialog.show(this, I18N.gui.get("common.messages.warning"), message, options) match {
+    OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"), message, options) match {
       case 0 => true
       case 1 => false
       case _ => throw new UserCancelException

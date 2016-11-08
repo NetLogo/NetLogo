@@ -19,7 +19,7 @@ object TaskWarning {
     "but import-world won't be able to read the file."
   def maybeWarn(parent: java.awt.Component, world: World) {
     def confirmed =
-      0 == OptionDialog.show(parent, "Exporting Anonymous Procedures", message, buttons)
+      0 == OptionDialog.showMessage(parent, "Exporting Anonymous Procedures", message, buttons)
     if(world.allStoredValues.exists(_.isInstanceOf[AnonymousProcedure]) && !confirmed)
       throw new UserCancelException
   }

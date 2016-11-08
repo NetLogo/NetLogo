@@ -175,7 +175,7 @@ class InfoTab(attachModelDir: String => String)
           """The URL you just clicked is invalid. This could
             |mean that it is formatted incorrectly. Click Help
             |to see documentation on using URLs in the Info Tab.""".stripMargin
-        val selection = OptionDialog.show(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
+        val selection = OptionDialog.showMessage(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
           Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")))
         if(selection == 1 /*Help*/) BrowserLauncher.openURL(this, baseDocUrl, "#infotabLinks", true)
       }

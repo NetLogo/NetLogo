@@ -5,30 +5,27 @@ package org.nlogo.app
 import java.awt.Component
 import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, JMenuItem, JOptionPane }
+import javax.swing.{AbstractAction, Action, JOptionPane}
 
-import org.nlogo.window.Events._
+import org.nlogo.api.ModelType
 import org.nlogo.core.I18N
-import org.nlogo.api
-import org.nlogo.window
-import org.nlogo.swing,
-  swing.UserAction,
-    UserAction.{ Menu => ActionMenu, MenuAction }
+import org.nlogo.swing.UserAction, UserAction.{ Menu => ActionMenu, MenuAction }
+import org.nlogo.window.Events._
 
-case class ModelEntry(path: String, modelType: api.ModelType) {
+case class ModelEntry(path: String, modelType: ModelType) {
   def this(line: String) {
     this(line.drop(1), (line(0) match {
-                          case 'N' => api.ModelType.Normal
-                          case 'L' => api.ModelType.Library
-                          case _ => api.ModelType.Normal // This case is only for malformed prefs, which will bork later. FD 5/29/14
+                          case 'N' => ModelType.Normal
+                          case 'L' => ModelType.Library
+                          case _ => ModelType.Normal // This case is only for malformed prefs, which will bork later. FD 5/29/14
     }))
   }
 
   override def toString(): String =
     (modelType match {
-      case api.ModelType.Normal => "N"
-      case api.ModelType.Library => "L"
-      case api.ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
+      case ModelType.Normal => "N"
+      case ModelType.Library => "L"
+      case ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
      }) + path
 }
 
@@ -66,7 +63,7 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
 
   def open(modelEntry: ModelEntry, source: Component): Unit = {
     try {
-      fileManager.offerSave()
+      fileManager.aboutToCloseFiles()
       fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
     } catch {
       case ex: org.nlogo.awt.UserCancelException =>
@@ -138,14 +135,14 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
   // Add models to list when the current model is saved
   def handle(e: ModelSavedEvent) {
     for (p <- Option(e.modelPath)) {
-      recentFiles.add(ModelEntry(p, api.ModelType.Normal))
+      recentFiles.add(ModelEntry(p, ModelType.Normal))
       refreshMenu()
     }
   }
 
   // Add models to list when new models are opened
   def handle(e: BeforeLoadEvent) {
-    if (e.modelType != api.ModelType.New) {
+    if (e.modelType != ModelType.New) {
       for (p <- e.modelPath) {
         recentFiles.add(ModelEntry(p, e.modelType))
         refreshMenu()
@@ -187,7 +184,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     group       = "org.nlogo.app.RecentFilesMenu.ClearItems"
 
     def actionPerformed(e: ActionEvent): Unit = {
-      recentFiles.clear
+      recentFiles.clear()
       refreshMenu()
     }
   }

@@ -6,6 +6,7 @@ app.common.IndenterChanged - boolean isSmart
 
 # org.nlogo.window package
 
+window.AboutToCloseFiles
 window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
 window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint

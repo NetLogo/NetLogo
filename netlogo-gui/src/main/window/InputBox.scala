@@ -233,7 +233,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
         msg = "Expected reporter."
-      org.nlogo.swing.OptionDialog.show(frame, "Invalid input for a " + inputType,
+      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid input for a " + inputType,
         msg, Array(I18N.gui.get("common.buttons.ok")))
     }
   }
