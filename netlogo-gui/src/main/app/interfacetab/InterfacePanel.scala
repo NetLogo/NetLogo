@@ -231,7 +231,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       super.contains(w)
 
   override def handle(e: WidgetRemovedEvent): Unit = {
-    new CompileAllEvent().raise(this)
+    if (e.widget.findWidgetContainer eq this)
+      new CompileAllEvent().raise(this)
   }
 
   def interfaceImage: BufferedImage =
