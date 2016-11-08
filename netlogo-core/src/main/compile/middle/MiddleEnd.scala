@@ -4,6 +4,7 @@ package org.nlogo.compile
 package middle
 
 import org.nlogo.{ core, nvm }
+import org.nlogo.core.CompilationEnvironment
 import org.nlogo.compile.api.{ MiddleEndInterface, Optimizations, ProcedureDefinition }
 
 object MiddleEnd extends MiddleEndInterface {
@@ -14,6 +15,7 @@ object MiddleEnd extends MiddleEndInterface {
   def middleEnd(
     defs: Seq[ProcedureDefinition],
     sources: Map[String, String],
+    compilationEnvironment: CompilationEnvironment,
     optimizations: Optimizations): Seq[ProcedureDefinition] = {
     // lambda-lift
     val allDefs = {
@@ -31,8 +33,10 @@ object MiddleEnd extends MiddleEndInterface {
 
     val transformedProcedures = allDefs.map(transformProcedure)
 
+    val sourceTagger = new SourceTagger(sources, compilationEnvironment)
+
     for(procdef <- transformedProcedures) {
-      procdef.accept(new SourceTagger(sources))
+      procdef.accept(sourceTagger)
       // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
       procdef.accept(new SimpleOfVisitor)            // convert _of(_*variable) => _*variableof
       procdef.accept(new LambdaVariableVisitor)      // handle _lambdavariable

@@ -46,7 +46,7 @@ object Compiler extends nvm.CompilerInterface {
     val (topLevelDefs, structureResults) =
       frontEnd.frontEnd(source, displayName, oldProgram, subprogram, oldProcedures, extensionManager, compilationEnvironment)
     val bridged = bridge(structureResults, oldProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
-    val allDefs = middleEnd.middleEnd(bridged, Map("" -> source), getOptimizations(flags))
+    val allDefs = middleEnd.middleEnd(bridged, Map("" -> source), compilationEnvironment, getOptimizations(flags))
     backEnd.backEnd(allDefs, structureResults.program, compilationEnvironment.profilingEnabled, flags)
   }
 

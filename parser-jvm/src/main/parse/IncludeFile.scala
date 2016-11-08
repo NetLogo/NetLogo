@@ -10,6 +10,6 @@ import scala.util.Try
 object IncludeFile {
   def apply(compilationEnvironment: CompilationEnvironment, suppliedPath: String): Option[(String, String)] = {
     val resolvedPath = compilationEnvironment.resolvePath(suppliedPath)
-    Try(Source.fromFile(resolvedPath).mkString).toOption.map(fileText => (resolvedPath, fileText))
+    Try(compilationEnvironment.getSource(resolvedPath)).toOption.map(fileText => (resolvedPath, fileText))
   }
 }

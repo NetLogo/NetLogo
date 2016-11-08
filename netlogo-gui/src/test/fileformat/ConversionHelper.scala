@@ -56,9 +56,7 @@ object VidExtensionManager extends DummyExtensionManager {
 
 object FooCompilationEnvironment extends DummyCompilationEnvironment {
   import java.nio.file.Files
-  override def resolvePath(filename: String): String = {
-    val file = Files.createTempFile("foo", ".nls")
-    Files.write(file, "to bar bk 1 end".getBytes)
-    file.toString
-  }
+  override def getSource(filename: String): String =
+    if (filename == "foo.nls") "to bar bk 1 end"
+    else super.getSource(filename)
 }

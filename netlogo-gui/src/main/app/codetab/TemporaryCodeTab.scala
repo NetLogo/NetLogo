@@ -8,6 +8,7 @@ import java.io.File
 import javax.swing.{ AbstractAction, JButton }
 
 import scala.util.control.Exception.ignoring
+import scala.util.Try
 
 import org.nlogo.api.{ FileIO, LocalFile }
 import org.nlogo.app.Tabs
