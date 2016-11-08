@@ -10,7 +10,7 @@ import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.window.{ ColorDialog, LabManagerInterface, LinkRoot }
+import org.nlogo.window.{ ColorDialog, LinkRoot }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
 
@@ -63,17 +63,6 @@ class ShowShapeManager(key: String, shapeManager: => ShapesManagerInterface)
 
   override def actionPerformed(e: ActionEvent) {
     shapeManager.init(I18N.gui.get(s"menu.tools.$key"))
-  }
-}
-
-class ShowLabManager(labManager: LabManagerInterface) extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace"))
-  with MenuAction {
-  category    = ToolsCategory
-  group       = ToolsDialogsGroup
-  accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)
-
-  override def actionPerformed(e: ActionEvent) {
-    labManager.show()
   }
 }
 

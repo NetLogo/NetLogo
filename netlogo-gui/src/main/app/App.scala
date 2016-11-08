@@ -620,7 +620,6 @@ class App extends
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
-      new ShowLabManager(labManager),
       new ShowSystemDynamicsModeler(aggregateManager),
       new OpenHubNetClientEditor(workspace, frame),
       workspace.hubNetControlCenterAction,
@@ -635,6 +634,7 @@ class App extends
     HelpActions.apply ++
     FileActions(workspace, menuBar.fileMenu) ++
     workspaceActions ++
+    labManager.actions ++
     fileManager.actions
 
     osSpecificActions ++ generalActions
