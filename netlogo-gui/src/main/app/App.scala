@@ -172,7 +172,7 @@ object App{
           .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
       def openCurrentModelIn(w: Workspace): Unit = {
         w.setModelPath(app.workspace.getModelPath)
-        w.openModel(pico.getComponent(classOf[ModelSaver]).currentModel)
+        w.openModel(pico.getComponent(classOf[ModelSaver]).currentModelInCurrentVersion)
       }
     }
 
@@ -654,6 +654,7 @@ class App extends
   def setFileManager(manager: FileManager): Unit = {
     if (manager != _fileManager) {
       _fileManager = manager
+      frame.addLinkComponent(manager)
       recentFilesMenu = new RecentFilesMenu(frame, manager)
       frame.addLinkComponent(recentFilesMenu)
     }

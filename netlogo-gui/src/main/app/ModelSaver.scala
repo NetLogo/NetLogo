@@ -19,11 +19,11 @@ class ModelSaver(model: ModelSections, loader: ModelLoader) {
 
   def currentModel = {
     val m = _currentModel.copy(
-      code = model.procedureSource,
-      widgets = model.widgets,
-      info = model.info,
+      code         = model.procedureSource,
+      widgets      = model.widgets,
+      info         = model.info,
       turtleShapes = model.turtleShapes,
-      linkShapes = model.linkShapes)
+      linkShapes   = model.linkShapes)
     if (model.additionalSections.isEmpty)
       m
     else
@@ -31,6 +31,9 @@ class ModelSaver(model: ModelSections, loader: ModelLoader) {
         case (newModel, section) => section.updateModel(newModel)
       }
   }
+
+  def currentModelInCurrentVersion: Model =
+    currentModel.copy(version = Version.version)
 
   def setCurrentModel(m: Model) = {
     _currentModel = m
