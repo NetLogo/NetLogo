@@ -29,6 +29,8 @@ object VectorShape {
     val xs = List(150, 40, 150, 260)
     val ys = List(5, 250, 205, 250)
     val defaultShape = new Polygon(xs, ys, new Color(141, 141, 141))
+    defaultShape.filled = true
+    defaultShape.marked = true
     result.addElement(defaultShape)
     result
   }

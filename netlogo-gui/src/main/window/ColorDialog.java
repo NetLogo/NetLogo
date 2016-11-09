@@ -490,6 +490,8 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       for (int i = 0; i <= 15; i++) {
         turtleLabel[i].setIcon(turtleIcon);
       }
+      rightPreviewContainer.repaint();
+      rightPreviewContainer.revalidate();
     } else if (actionCommand.equals("Copy")) // Copy the Color value to the Clipboard
     {
       Toolkit tk = Toolkit.getDefaultToolkit();
