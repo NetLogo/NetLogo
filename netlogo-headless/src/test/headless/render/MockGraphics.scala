@@ -6,7 +6,7 @@ package render
 import java.awt.{List=>AWTList, _}
 import geom.AffineTransform
 import image.BufferedImage
-import collection.mutable.{ListBuffer, Stack}
+import collection.mutable.ListBuffer
 import org.nlogo.api.GraphicsInterface
 import org.nlogo.util.MockSuite
 
@@ -37,7 +37,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   import MockGraphics._
 
   private var composite: String = "src"
-  private var transforms = new Stack[AffineTransform]()
+  private var transforms = List.empty[AffineTransform]
   private var antialiasing: Boolean = false
   private var operations = new ListBuffer[Operation]
   private var stroke = 1.0
@@ -99,7 +99,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   }
   private def size(width: Double, height: Double) = Size(transform.getScaleX * width, transform.getScaleY * height)
 
-  def pop{ transform = transforms.pop }
+  def pop { transform = transforms.head; transforms = transforms.tail }
   def dispose{}
   def setStroke(width: Float, dashes: Array[Float]){ stroke = width }
   def setStroke(width: Double){ stroke = width }
@@ -119,7 +119,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   def scale(x: Double, y: Double, shapeWidth: Double){ transform.scale(x / shapeWidth, y / shapeWidth) }
   def translate(x: Double, y: Double){ transform.translate(x, y) }
   def setInterpolation{}
-  def push{ transforms push transform.clone.asInstanceOf[AffineTransform] }
+  def push { transforms = transform.clone.asInstanceOf[AffineTransform]::transforms }
 
   def setComposite(comp: Composite){
     composite = if (comp == java.awt.AlphaComposite.Src) "src"

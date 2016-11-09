@@ -7,6 +7,7 @@ import java.io.File
 import org.nlogo.headless.{ LanguageTestTag, test => headlessTest },
   headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests, ReporterTests, CommandTests,
                  AbstractFixture, TestMode, Reporter, Command, Declaration, Open, LanguageTest}
+import org.scalactic.source.Position
 import org.scalatest.{ FunSuite, Tag }
 
 import
@@ -23,12 +24,12 @@ trait Finder extends TestFinder {
 }
 
 trait TaggedLanguageTest extends Finder {
-  override def test(name: String, otherTags: Tag*)(testFun: => Unit) =
+  override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) =
     super.test(name, (LanguageTestTag +: otherTags):_*)(testFun)
 }
 
 trait TaggedSlowTest extends Finder {
-  override def test(name: String, otherTags: Tag*)(testFun: => Unit) = {
+  override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) = {
     super.test(name, (SlowTestTag +: otherTags):_*)(testFun)
   }
 }

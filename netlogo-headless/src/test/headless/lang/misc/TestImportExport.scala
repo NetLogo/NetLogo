@@ -251,7 +251,7 @@ class TestImportExport extends FixtureSuite  {
 
   test("ImportSubject", SlowTestTag) { implicit fixture =>
     import fixture.{ declare, testReporter, testCommand, workspace }
-    import scala.collection.JavaConversions._
+    import scala.collection.JavaConverters._
     val filename = getUniqueFilename()
     declare(Model())
     exportWorld(filename)
@@ -272,14 +272,14 @@ class TestImportExport extends FixtureSuite  {
     testCommand("ca")
     importWorld(filename)
     testReporter("[who] of subject", "1")
-    val followAgent: Agent = workspace.world.turtles.agents.iterator.toSeq(1)
+    val followAgent: Agent = workspace.world.turtles.agents.iterator.asScala.toSeq(1)
     assertResult(workspace.world.observer.perspective)(api.Perspective.Follow(followAgent, 5))
     testCommand("ride turtle 1")
     exportWorld(filename)
     testCommand("ca")
     importWorld(filename)
     testReporter("[who] of subject", "1")
-    val rideAgent: Agent = workspace.world.turtles.agents.iterator.toSeq(1)
+    val rideAgent: Agent = workspace.world.turtles.agents.iterator.asScala.toSeq(1)
     assertResult(workspace.world.observer.perspective)(api.Perspective.Ride(rideAgent))
   }
 
