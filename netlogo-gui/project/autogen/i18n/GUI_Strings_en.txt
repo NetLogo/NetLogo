@@ -144,6 +144,11 @@ tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
 tabs.run.viewUpdates.dropdown.onticks = on ticks
 tabs.run.viewUpdates.dropdown.continuous = continuous
 tabs.run.viewUpdates.dropdown.tooltip = change view update mode
+tabs.run.widget.edit = Edit…
+tabs.run.widget.export = Export…
+tabs.run.widget.deselect = Deselect
+tabs.run.widget.delete = Delete
+tabs.run.widget.select = Select
 
 tabs.run.speedslider.normalspeed = normal speed
 tabs.run.speedslider.faster      = faster

@@ -2,6 +2,7 @@
 
 package org.nlogo.app.interfacetab;
 
+import org.nlogo.core.I18N;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
 
@@ -875,7 +876,7 @@ public strictfp class WidgetWrapper
 
     if (widget().getEditable() instanceof org.nlogo.api.Editable) {
       javax.swing.JMenuItem editItem =
-          new javax.swing.JMenuItem("Edit...");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.edit"));
       editItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -890,7 +891,7 @@ public strictfp class WidgetWrapper
 
     if (selected()) {
       javax.swing.JMenuItem unselectItem =
-          new javax.swing.JMenuItem("Unselect");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.deselect"));
       unselectItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -901,7 +902,7 @@ public strictfp class WidgetWrapper
       menu.add(unselectItem);
     } else {
       javax.swing.JMenuItem selectItem =
-          new javax.swing.JMenuItem("Select");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.select"));
       selectItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -913,7 +914,7 @@ public strictfp class WidgetWrapper
     }
     if (widget().deleteable()) {
       javax.swing.JMenuItem deleteItem =
-          new javax.swing.JMenuItem("Delete");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.delete"));
       deleteItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -928,7 +929,7 @@ public strictfp class WidgetWrapper
       location = widget().populateContextMenu(menu, p, source);
       if (widget().exportable()) {
         javax.swing.JMenuItem exportItem =
-            new javax.swing.JMenuItem("Export...");
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.export"));
         exportItem.addActionListener
             (new java.awt.event.ActionListener() {
               public void actionPerformed(java.awt.event.ActionEvent e) {
