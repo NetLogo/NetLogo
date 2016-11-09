@@ -125,7 +125,13 @@ class Supervisor(dialog: java.awt.Dialog,
     worker.abort()
     workspace.jobManager.haltPrimary()
     workerThread.interrupt()
-    while(workerThread.isAlive) Thread.sleep(100)
+    while(workerThread.isAlive) {
+      try {
+        Thread.sleep(100)
+      } catch {
+        case e: InterruptedException => // ignore
+      }
+    }
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable { def run() {
         workspace.jobManager.haltPrimary()
