@@ -4,13 +4,14 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.api.{ EnumeratedValueSet, LabProtocol }
-import org.nlogo.window.EditDialogFactoryInterface
-import java.awt.Component
-import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane,ListCellRenderer}
+import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import java.awt.{ Component, Dimension }
+import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
 import org.nlogo.core.I18N
 
-private class ManagerDialog(manager: LabManager,
-                            dialogFactory: EditDialogFactoryInterface)
+private class ManagerDialog(manager:       LabManager,
+                            dialogFactory: EditDialogFactoryInterface,
+                            menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
@@ -73,6 +74,13 @@ private class ManagerDialog(manager: LabManager,
     val maxBounds = getGraphicsConfiguration.getBounds
     setLocation(maxBounds.x + maxBounds.width / 3,
                 maxBounds.y + maxBounds.height / 2)
+
+    // menu - make a file menu available for saving, but don't show it
+    val menus = new JMenuBar() {
+      add(menuFactory.createFileMenu)
+      setPreferredSize(new Dimension(0, 0))
+    }
+    setJMenuBar(menus)
     // misc
     org.nlogo.swing.Utils.addEscKeyAction(this, closeAction)
     getRootPane.setDefaultButton(runButton)

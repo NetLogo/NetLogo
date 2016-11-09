@@ -2,16 +2,21 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.ModelSection
-import org.nlogo.core.Model
-import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+
+import org.nlogo.api.{ LabProtocol, ModelSection }
+import org.nlogo.core.{ I18N, Model }
+import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
+import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
+
 import scala.collection.mutable.ListBuffer
 
-class LabManager(val workspace: GUIWorkspace,
-                 dialogFactory: EditDialogFactoryInterface,
+class LabManager(val workspace:        GUIWorkspace,
+                 dialogFactory:        EditDialogFactoryInterface,
+                 menuFactory:          MenuBarFactory,
                  val workspaceFactory: WorkspaceFactory with CurrentModelOpener)
   extends LabManagerInterface
   with CompiledEvent.Handler
@@ -30,7 +35,7 @@ class LabManager(val workspace: GUIWorkspace,
   def clearProtocols(): Unit = {
     protocols.clear()
   }
-  private lazy val dialog = new ManagerDialog(this, dialogFactory)
+  private lazy val dialog = new ManagerDialog(this, dialogFactory, menuFactory)
   def show() { dialog.update(); dialog.setVisible(true) }
   def close() { dialog.setVisible(false) }
   def dirty() { new DirtyEvent().raise(this) }
@@ -60,5 +65,17 @@ class LabManager(val workspace: GUIWorkspace,
     (new CompileAllEvent).raise(this)
     if(!lastCompileAllWasSuccessful)
       throw new org.nlogo.awt.UserCancelException
+  }
+
+  val actions = Seq(new ShowLabManager)
+
+  class ShowLabManager extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) with MenuAction {
+    category    = ToolsCategory
+    group       = ToolsDialogsGroup
+    accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)
+
+    override def actionPerformed(e: ActionEvent) {
+      show()
+    }
   }
 }
