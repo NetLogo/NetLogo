@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 471" double => void
       _constdouble:471.0 "471" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 471.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,7 @@ procedure BENCHMARK:[]{O---}:
 [2]_resettimer "reset-timer"
 [3]_askconcurrent:+8 "ask-concurrent turtles [ repeat 350 [ go ] ]"
       _asm_procedurebenchmark_turtles_2 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurebenchmark_turtles_2.world : Lorg/nlogo/agent/World;
@@ -85,6 +88,8 @@ procedure BENCHMARK:[]{O---}:
             ARETURN
 [4]_asm_procedurebenchmark_repeat_3 "repeat 350 [ go ]" double => void
       _constdouble:350.0 "350" => double
+          // parameter final  context
+          // parameter final  d0
          L0
           LDC 350.0
          L1
@@ -123,6 +128,7 @@ procedure BENCHMARK:[]{O---}:
          L1
           RETURN
 [6]_asm_procedurebenchmark_repeatinternal_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ALOAD 0
@@ -154,6 +160,7 @@ procedure BENCHMARK:[]{O---}:
          FRAME SAME
           RETURN
 [7]_asm_procedurebenchmark_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -162,6 +169,7 @@ procedure BENCHMARK:[]{O---}:
           RETURN
 [8]_asm_procedurebenchmark_setobservervariable_7 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -216,6 +224,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
       _equal "pcolor = black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -366,6 +375,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           RETURN
 [5]_asm_procedurefindemptyspot_setturtlevariable_5 "set heading random 360" Object => void
       _randomconst:360 "random 360" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -460,6 +470,7 @@ procedure FIND-NEW-PILE:[]{-T--}:
       _notequal "pcolor != yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -566,6 +577,7 @@ procedure FIND-NEW-PILE:[]{-T--}:
 procedure GET-AWAY:[]{-T--}:
 [0]_asm_proceduregetaway_setturtlevariable_0 "set heading random 360" Object => void
       _randomconst:360 "random 360" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -636,6 +648,7 @@ procedure GET-AWAY:[]{-T--}:
       _notequal "pcolor != black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -791,6 +804,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
       _equal "pcolor = yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -996,6 +1010,7 @@ procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_asm_proceduresetup_ask_0 "ask patches [ if random 100 < density [ set pcolor yellow ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -1051,6 +1066,7 @@ procedure SETUP:[]{O---}:
       _lessthan "random 100 < density" double,Object => boolean
         _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1158,6 +1174,7 @@ procedure SETUP:[]{O---}:
          L6
           RETURN
 [4]_asm_proceduresetup_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1175,6 +1192,7 @@ procedure SETUP:[]{O---}:
             ARETURN
 [6]_asm_proceduresetup_ask_5 "ask turtles set color white [ setxy random world-width random world-height ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_5.world : Lorg/nlogo/agent/World;
@@ -1265,6 +1283,8 @@ procedure SETUP:[]{O---}:
         _worldwidth "world-width" => double
       _random "random world-height" double => double
         _worldheight "world-height" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -1440,6 +1460,7 @@ procedure SETUP:[]{O---}:
          L19
           RETURN
 [9]_asm_proceduresetup_done_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1483,6 +1504,8 @@ procedure WIGGLE:[]{-T--}:
           _turtlevariabledouble:HEADING "heading" => double
           _randomconst:50 "random 50" => double
         _randomconst:50 "random 50" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1

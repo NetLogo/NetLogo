@@ -1071,6 +1071,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
       _constdouble:5454.0 "5454" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 5454.0
          L1
@@ -1092,16 +1094,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1139,6 +1141,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 700 [ go ]" double => void
       _constdouble:700.0 "700" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 700.0
          L1
@@ -1178,6 +1182,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1211,6 +1216,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -1334,6 +1340,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
         _inradius "turtles in-radius vision" AgentSet,double => AgentSet
           _turtles "turtles" => AgentSet
           _observervariable:VISION "vision" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -2001,6 +2008,7 @@ procedure FLOCK:[]{-T--}:
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask turtles [ flock ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -2071,6 +2079,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [2]_asm_procedurego_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2096,6 +2105,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
             _procedurevariable:H1 "h1" => Object
             _procedurevariable:H2 "h2" => Object
         _constdouble:180.0 "180" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -2205,6 +2216,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
       _minus "h1 - h2" double,double => double
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -2350,6 +2363,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
       _greaterthan "h1 > h2" Object,Object => boolean
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2485,6 +2500,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -2642,6 +2659,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -2997,6 +3016,7 @@ procedure SETUP:[]{O---}:
       _plus "yellow - 2 + random 7" double,double => double
         _constdouble:43.0 "yellow - 2" => double
         _randomconst:7 "random 7" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC 43.0
@@ -3053,6 +3073,8 @@ procedure SETUP:[]{O---}:
         _worldwidth "world-width" => double
       _randomfloat "random-float world-height" double => double
         _worldheight "world-height" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -3161,6 +3183,7 @@ procedure SETUP:[]{O---}:
          L3
           RETURN
 [6]_asm_proceduresetup_done_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3183,6 +3206,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
         _abs "abs turn" double => double
           _procedurevariable:TURN "turn" => Object
         _procedurevariable:MAX-TURN "max-turn" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -3293,6 +3318,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
       _greaterthan "turn > 0" Object,double => boolean
         _procedurevariable:TURN "turn" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3363,6 +3389,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           RETURN
 [2]_asm_procedureturnatmost_right_2 "rt max-turn" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -3411,6 +3438,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           RETURN
 [4]_asm_procedureturnatmost_left_4 "lt max-turn" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -3460,6 +3488,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           RETURN
 [6]_asm_procedureturnatmost_right_6 "rt turn" double => void
       _procedurevariable:TURN "turn" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -3515,6 +3544,8 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
         _turtlevariabledouble:HEADING "heading" => Double
         _procedurevariable:NEW-HEADING "new-heading" => Object
       _procedurevariable:MAX-TURN "max-turn" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           NEW org/nlogo/nvm/Activation
@@ -3623,6 +3654,8 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
         _procedurevariable:NEW-HEADING "new-heading" => Object
         _turtlevariabledouble:HEADING "heading" => Double
       _procedurevariable:MAX-TURN "max-turn" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           NEW org/nlogo/nvm/Activation

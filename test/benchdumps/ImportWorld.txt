@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[NAME SALT]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
       _constdouble:362.0 "362" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 362.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -58,6 +60,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [1]_asm_procedurebenchmark_ask_1 "ask patches set p1 random 100 set p2 random 100 [ set pcolor one-of base-colors ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_ask_1.world : Lorg/nlogo/agent/World;
@@ -111,6 +114,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [2]_asm_procedurebenchmark_setpatchvariable_2 "set p1 random 100" Object => void
       _randomconst:100 "random 100" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -154,6 +158,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random 100" Object => void
       _randomconst:100 "random 100" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -261,6 +266,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
          L8
           RETURN
 [5]_asm_procedurebenchmark_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -314,6 +320,9 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [8]_asm_procedurebenchmark_randomseed_8 "random-seed new-seed" double => void
       _newseed "new-seed" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_randomseed_8.world : Lorg/nlogo/agent/World;
@@ -337,16 +346,16 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -365,6 +374,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [9]_asm_procedurebenchmark_setprocedurevariable_9 "let random 10000000" Object => void
       _randomconst:10000000 "random 10000000" => double
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -395,6 +405,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
         _conststring:"firebig-" ""firebig-"" => String
         _procedurevariable:SALT "salt" => Object
         _conststring:".csv" "".csv"" => String
+          // parameter final  context
          L0
           NEW java/lang/StringBuilder
           DUP
@@ -433,6 +444,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
          L8
           RETURN
 [11]_asm_procedurebenchmark_done_11 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -441,6 +453,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           RETURN
 [12]_exportworld "export-world name"
       _asm_procedurebenchmark_procedurevariable_12 "name" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -452,6 +465,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
 [13]_resettimer "reset-timer"
 [14]_importworld "import-world name"
       _asm_procedurebenchmark_procedurevariable_13 "name" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -462,6 +476,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
             ARETURN
 [15]_asm_procedurebenchmark_setobservervariable_14 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0

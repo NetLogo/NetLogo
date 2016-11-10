@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
       _constdouble:362.0 "362" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 362.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [2]_resettimer "reset-timer"
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 1000 [ go ]" double => void
       _constdouble:1000.0 "1000" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 1000.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -222,6 +228,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
         _any "any? turtles-on target" AgentSet => boolean
           _turtleson "turtles-on target"
             _asm_procedurebugmove_procedurevariable_2 "target" => Object
+                  // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -292,6 +299,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           RETURN
 [2]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_3 "target" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -349,6 +357,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
       _plus "tries + 1" double,double => double
         _procedurevariable:TRIES "tries" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -463,6 +472,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
         _any "any? turtles-on target" AgentSet => boolean
           _turtleson "turtles-on target"
             _asm_procedurebugmove_procedurevariable_9 "target" => Object
+                  // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -533,6 +543,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           RETURN
 [8]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_10 "target" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -583,6 +594,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
       _lessorequal "tries <= 9" Object,double => boolean
         _procedurevariable:TRIES "tries" => Object
         _constdouble:9.0 "9" => double
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -666,6 +678,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
       _lessthan "temp < ideal-temp" Object,Object => boolean
         _patchvariable:TEMP "temp" => Object
         _turtlevariable:IDEAL-TEMP "ideal-temp" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -847,6 +860,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
              FRAME SAME1 org/nlogo/agent/IndexedAgentSet
               ARETURN
         _asm_procedurefindtarget_patchvariable_3 "temp" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -971,6 +985,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
              FRAME SAME1 org/nlogo/agent/IndexedAgentSet
               ARETURN
         _asm_procedurefindtarget_patchvariable_7 "temp" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -1084,6 +1099,7 @@ procedure GO:[]{O---}:
       _not "not any? turtles" boolean => boolean
         _any "any? turtles" AgentSet => boolean
           _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_0.world : Lorg/nlogo/agent/World;
@@ -1173,6 +1189,7 @@ procedure GO:[]{O---}:
             ARETURN
 [3]_asm_procedurego_ask_3 "ask turtles [ step ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -1243,6 +1260,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [5]_asm_procedurego_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1281,6 +1299,7 @@ procedure GO:[]{O---}:
 procedure RECOLOR-PATCHES:[]{OTPL}:
 [0]_asm_procedurerecolorpatches_ask_0 "ask patches set temp temp * 1 - evaporation-rate [ set pcolor scale-color red temp 0 500 ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorpatches_ask_0.world : Lorg/nlogo/agent/World;
@@ -1338,6 +1357,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
         _minus "1 - evaporation-rate" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:EVAPORATION-RATE "evaporation-rate" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -1463,6 +1483,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
         _patchvariable:TEMP "temp" => Object
         _constdouble:0.0 "0" => double
         _constdouble:500.0 "500" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1652,6 +1673,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          L23
           RETURN
 [3]_asm_procedurerecolorpatches_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1682,6 +1704,7 @@ procedure SETUP:[]{O---}:
              L1
               ARETURN
         _asm_proceduresetup_patches_2 "patches" => AgentSet
+              // parameter final  context
              L0
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_proceduresetup_patches_2.world : Lorg/nlogo/agent/World;
@@ -2285,6 +2308,7 @@ procedure SETUP:[]{O---}:
         _minus "ideal-temp - temp" double,double => double
           _turtlevariable:IDEAL-TEMP "ideal-temp" => Object
           _patchvariable:TEMP "temp" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2423,6 +2447,7 @@ procedure SETUP:[]{O---}:
          L20
           RETURN
 [9]_asm_proceduresetup_done_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2430,6 +2455,7 @@ procedure SETUP:[]{O---}:
          L1
           RETURN
 [10]_asm_proceduresetup_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2452,6 +2478,7 @@ procedure STEP:[TARGET]{-T--}:
         _minus "ideal-temp - temp" double,double => double
           _turtlevariable:IDEAL-TEMP "ideal-temp" => Object
           _patchvariable:TEMP "temp" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2652,6 +2679,7 @@ procedure STEP:[TARGET]{-T--}:
       _plus "temp + output-heat" double,double => double
         _patchvariable:TEMP "temp" => Object
         _turtlevariable:OUTPUT-HEAT "output-heat" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2828,6 +2856,8 @@ procedure STEP:[TARGET]{-T--}:
         _greaterthan "random-move-chance > random 100" Object,double => boolean
           _observervariable:RANDOM-MOVE-CHANCE "random-move-chance" => Object
           _randomconst:100 "random 100" => double
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2934,6 +2964,7 @@ procedure STEP:[TARGET]{-T--}:
           RETURN
 [6]_asm_procedurestep_call_6 "bug-move target"
       _procedurevariable:TARGET "target" => Object
+          // parameter final  context
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -2966,6 +2997,7 @@ procedure STEP:[TARGET]{-T--}:
       _plus "temp + output-heat" double,double => double
         _patchvariable:TEMP "temp" => Object
         _turtlevariable:OUTPUT-HEAT "output-heat" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException

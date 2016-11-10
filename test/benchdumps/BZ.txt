@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
       _constdouble:5454.0 "5454" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 5454.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20 [ go ]" double => void
       _constdouble:20.0 "20" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 20.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -203,6 +209,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
       _equal "state = n" Object,Object => boolean
         _patchvariable:STATE "state" => Object
         _observervariable:N "n" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -300,6 +307,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           _lessthan "state < n" Object,Object => boolean
             _patchvariable:STATE "state" => Object
             _observervariable:N "n" => Object
+              // parameter final  context
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
              L0
@@ -629,6 +638,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
         _asm_procedurefindnewstate_equal_6 "state = n" Object,Object => boolean
           _patchvariable:STATE "state" => Object
           _observervariable:N "n" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -785,6 +795,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
       _equal "state = 0" Object,double => boolean
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -850,6 +861,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           _div "b / k2" double,double => double
             _procedurevariable:B "b" => Object
             _observervariable:K2 "k2" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
           TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
@@ -1067,6 +1080,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
       _plus "state + sum [ state ] of neighbors" double,double => double
         _patchvariable:STATE "state" => Object
         _nsum:STATE "sum [ state ] of neighbors" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -1220,6 +1234,9 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
                 _procedurevariable:B "b" => Object
               _constdouble:1.0 "1" => double
         _observervariable:G "g" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
           TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
@@ -1420,6 +1437,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
       _greaterthan "new-state > n" Object,Object => boolean
         _patchvariable:NEW-STATE "new-state" => Object
         _observervariable:N "n" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1611,6 +1629,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask patches [ find-new-state ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -1681,6 +1700,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [2]_asm_procedurego_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1689,6 +1709,7 @@ procedure GO:[]{O---}:
           RETURN
 [3]_asm_procedurego_ask_3 "ask patches set state new-state [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -1742,6 +1763,7 @@ procedure GO:[]{O---}:
           RETURN
 [4]_asm_procedurego_setpatchvariable_4 "set state new-state" Object => void
       _patchvariable:NEW-STATE "new-state" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -1797,6 +1819,7 @@ procedure GO:[]{O---}:
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
         _observervariable:N "n" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -2010,6 +2033,7 @@ procedure GO:[]{O---}:
          L26
           RETURN
 [6]_asm_procedurego_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2032,6 +2056,7 @@ procedure SETUP:[]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_asm_proceduresetup_ask_0 "ask patches set state random n + 1 [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -2221,6 +2246,7 @@ procedure SETUP:[]{O---}:
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
         _observervariable:N "n" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -2434,6 +2460,7 @@ procedure SETUP:[]{O---}:
          L26
           RETURN
 [5]_asm_proceduresetup_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1

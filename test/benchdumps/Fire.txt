@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
       _constdouble:362.0 "362" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 362.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 100 [ go ]" double => void
       _constdouble:100.0 "100" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 100.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -207,6 +213,8 @@ reporter procedure BURNING?:[]{-TP-}:
         _lessthan "pcolor < red + 1" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:16.0 "red + 1" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -469,6 +477,7 @@ procedure GO:[]{O---}:
                L1
                FRAME SAME1 java/lang/Object
                 ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_0.world : Lorg/nlogo/agent/World;
@@ -608,6 +617,7 @@ procedure GO:[]{O---}:
           RETURN
 [2]_asm_procedurego_ask_3 "ask patches [ if pcolor = green [ set counts sum [ fire ] of neighbors4 ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -663,6 +673,7 @@ procedure GO:[]{O---}:
       _equal "pcolor = green" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -830,6 +841,7 @@ procedure GO:[]{O---}:
          L11
           RETURN
 [5]_asm_procedurego_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -838,6 +850,7 @@ procedure GO:[]{O---}:
           RETURN
 [6]_asm_procedurego_ask_7 "ask patches [ ifelse pcolor = green [ if counts > 0 set fire 1 set pcolor red [ set burned-trees burned-trees + 1 ] ] [ if burning? [ set pcolor pcolor - 0.3 ] ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_7.world : Lorg/nlogo/agent/World;
@@ -893,6 +906,7 @@ procedure GO:[]{O---}:
       _equal "pcolor = green" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -952,6 +966,7 @@ procedure GO:[]{O---}:
       _greaterthan "counts > 0" Object,double => boolean
         _patchvariable:COUNTS "counts" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1247,6 +1262,7 @@ procedure GO:[]{O---}:
       _minus "pcolor - 0.3" double,double => double
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.3 "0.3" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1333,6 +1349,7 @@ procedure GO:[]{O---}:
          L13
           RETURN
 [15]_asm_procedurego_done_16 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1684,6 +1701,7 @@ procedure SETUP:[]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_asm_proceduresetup_ask_0 "ask patches set fire 0 if pxcor > 1 + min-pxcor [ if random 100 < density [ set pcolor green ] ] [ if pxcor = 1 + min-pycor set pcolor red [ set fire 1 ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -1775,6 +1793,8 @@ procedure SETUP:[]{O---}:
         _plus "1 + min-pxcor" double,double => double
           _constdouble:1.0 "1" => double
           _minpxcor "min-pxcor" => double
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1784,20 +1804,16 @@ procedure SETUP:[]{O---}:
           IFEQ L1
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 5
+          ASTORE 2
           GOTO L2
          L1
          FRAME APPEND [T org/nlogo/agent/Agent]
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 5
-         L2
-         FRAME APPEND [T org/nlogo/agent/Patch]
-          ALOAD 5
           ASTORE 2
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_2 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
           ALOAD 2
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
@@ -1848,6 +1864,7 @@ procedure SETUP:[]{O---}:
       _lessthan "random 100 < density" double,Object => boolean
         _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1960,6 +1977,8 @@ procedure SETUP:[]{O---}:
         _plus "1 + min-pycor" double,double => double
           _constdouble:1.0 "1" => double
           _minpycor "min-pycor" => double
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1969,20 +1988,16 @@ procedure SETUP:[]{O---}:
           IFEQ L1
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 5
+          ASTORE 2
           GOTO L2
          L1
          FRAME APPEND [T org/nlogo/agent/Agent]
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 5
-         L2
-         FRAME APPEND [T org/nlogo/agent/Patch]
-          ALOAD 5
           ASTORE 2
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_5 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
           ALOAD 2
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
@@ -2098,6 +2113,7 @@ procedure SETUP:[]{O---}:
          L6
           RETURN
 [10]_asm_proceduresetup_done_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2110,6 +2126,7 @@ procedure SETUP:[]{O---}:
         _asm_proceduresetup_equal_10 "pcolor = green" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:55.0 "green" => double
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -2160,6 +2177,7 @@ procedure SETUP:[]{O---}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0

@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 2468" double => void
       _constdouble:2468.0 "2468" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2468.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 7000 [ go ]" double => void
       _constdouble:7000.0 "7000" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 7000.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -207,6 +213,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
             _linkvariable:END1 "end1" => Object
           _turtlevariableof:IN-TEAM? "[ in-team? ] of end2" Object => Object
             _linkvariable:END2 "end2" => Object
+              // parameter final  context
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
               TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -533,6 +541,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
              L39
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecolorcollaborations_ask_0.world : Lorg/nlogo/agent/World;
@@ -673,6 +682,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           RETURN
 [1]_asm_procedurecolorcollaborations_ifelse_2 "ifelse new-collaboration? [ ifelse [ incumbent? ] of end1 and [ incumbent? ] of end2 [ set color yellow ] [ ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ] ] ] [ set color red ]" boolean => void
       _linkvariable:NEW-COLLABORATION? "new-collaboration?" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -735,6 +745,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           _linkvariable:END1 "end1" => Object
         _turtlevariableof:INCUMBENT? "[ incumbent? ] of end2" Object => Object
           _linkvariable:END2 "end2" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -1113,6 +1125,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           _linkvariable:END1 "end1" => Object
         _turtlevariableof:INCUMBENT? "[ incumbent? ] of end2" Object => Object
           _linkvariable:END2 "end2" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -1561,6 +1575,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
          L6
           RETURN
 [11]_asm_procedurecolorcollaborations_done_12 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1640,6 +1655,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_4 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1706,6 +1722,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                L8
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -1870,6 +1888,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_8 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1916,6 +1935,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_11 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1982,6 +2002,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                L8
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2146,6 +2168,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_15 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2192,6 +2215,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_18 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2258,6 +2282,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                L8
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2422,6 +2448,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_22 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2468,6 +2495,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_25 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2534,6 +2562,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                L8
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2698,6 +2728,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
       _asm_proceduredoplot_procedurevariable_29 "total" => Object
+            // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2764,6 +2795,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
         _observervariable:GIANT-COMPONENT-SIZE "giant-component-size" => Object
         _count "count turtles" AgentSet => double
           _turtles "turtles" => AgentSet
+            // parameter final  context
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
            L2
             ALOAD 1
@@ -3187,6 +3219,7 @@ procedure EXPLORE:[]{-T--}:
           RETURN
 [4]_asm_procedureexplore_ask_4 "ask link-neighbors [ explore ]" AgentSet => void
       _linkneighbors:null "link-neighbors" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureexplore_ask_4.kept2_breedName : Ljava/lang/String;
@@ -3283,6 +3316,7 @@ procedure EXPLORE:[]{-T--}:
          FRAME SAME
           RETURN
 [6]_asm_procedureexplore_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3370,6 +3404,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           RETURN
 [2]_asm_procedurefindallcomponents_ask_2 "ask turtles [ set explored? false ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindallcomponents_ask_2.world : Lorg/nlogo/agent/World;
@@ -3456,6 +3491,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          L6
           RETURN
 [4]_asm_procedurefindallcomponents_done_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3528,6 +3564,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindallcomponents_setprocedurevariable_5.world : Lorg/nlogo/agent/World;
@@ -3622,6 +3659,8 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
       _equal "start = nobody" Object,Object => boolean
         _procedurevariable:START "start" => Object
         _nobody "nobody" => Nobody$
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3725,6 +3764,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           RETURN
 [9]_asm_procedurefindallcomponents_ask_10 "ask start [ explore ]" Object => void
       _procedurevariable:START "start" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3851,6 +3891,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          L1
           RETURN
 [11]_asm_procedurefindallcomponents_done_12 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4095,6 +4136,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask turtles set incumbent? true set color gray - 1.5 [ set size 0.9 ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -4249,6 +4291,7 @@ procedure GO:[]{O---}:
          L6
           RETURN
 [4]_asm_procedurego_done_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4257,6 +4300,7 @@ procedure GO:[]{O---}:
           RETURN
 [5]_asm_procedurego_ask_5 "ask links [ set new-collaboration? false ]" AgentSet => void
       _links "links" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_5.world : Lorg/nlogo/agent/World;
@@ -4343,6 +4387,7 @@ procedure GO:[]{O---}:
          L6
           RETURN
 [7]_asm_procedurego_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4405,6 +4450,7 @@ procedure GO:[]{O---}:
           RETURN
 [11]_asm_procedurego_ask_11 "ask turtles if downtime > max-downtime [ die ] set in-team? false [ set downtime downtime + 1 ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_11.world : Lorg/nlogo/agent/World;
@@ -4750,6 +4796,7 @@ procedure GO:[]{O---}:
          L13
           RETURN
 [16]_asm_procedurego_done_16 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4892,6 +4939,8 @@ procedure GO:[]{O---}:
 procedure LAYOUT:[_repeatlocal:0]{OTPL}:
 [0]_asm_procedurelayout_repeatlocal_0 "repeat 12 layout-spring turtles links 0.18 0.01 1.2 [ display ]" double => void
       _constdouble:12.0 "12" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 12.0
          L1
@@ -4914,6 +4963,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           RETURN
 [1]_layoutspring "layout-spring turtles links 0.18 0.01 1.2"
       _asm_procedurelayout_turtles_1 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurelayout_turtles_1.world : Lorg/nlogo/agent/World;
@@ -4921,6 +4971,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
            L1
             ARETURN
       _asm_procedurelayout_links_2 "links" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurelayout_links_2.world : Lorg/nlogo/agent/World;
@@ -4947,6 +4998,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
             ARETURN
 [2]_display "display"
 [3]_asm_procedurelayout_repeatlocalinternal_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5134,6 +5186,7 @@ procedure MAKE-NEWCOMER:[]{O---}:
           RETURN
 [5]_asm_proceduremakenewcomer_setobservervariable_5 "set newcomer self" Object => void
       _self "self" => Agent
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -5235,6 +5288,7 @@ procedure MAKE-NEWCOMER:[]{O---}:
          L6
           RETURN
 [8]_asm_proceduremakenewcomer_done_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -5254,6 +5308,7 @@ procedure MAKE-NEWCOMER:[]{O---}:
 procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
 [0]_asm_procedurepickteammembers_setprocedurevariable_0 "let nobody" Object => void
       _nobody "nobody" => Nobody$
+          // parameter final  context
          L0
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
          L1
@@ -5271,6 +5326,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           RETURN
 [1]_asm_procedurepickteammembers_repeatlocal_1 "repeat team-size ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ] [ ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ] ]" double => void
       _observervariable:TEAM-SIZE "team-size" => Object
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -5517,6 +5574,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                    L10
                    FRAME SAME1 java/lang/Boolean
                     ARETURN
+                // parameter final  context
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                 TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
                L0
@@ -5676,6 +5734,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                L19
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+          // parameter final  context
          L0
           LDC 100.0
          L1
@@ -5866,6 +5925,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
              L0
@@ -6035,6 +6095,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
              L21
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_setprocedurevariable_9.world : Lorg/nlogo/agent/World;
@@ -6198,6 +6259,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurepickteammembers_setprocedurevariable_13.world : Lorg/nlogo/agent/World;
@@ -6290,6 +6352,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           RETURN
 [10]_asm_procedurepickteammembers_ask_15 "ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ]" Object => void
       _procedurevariable:NEW-TEAM-MEMBER "new-team-member" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6570,6 +6633,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          L5
           RETURN
 [15]_asm_procedurepickteammembers_done_23 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -6577,6 +6641,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          L1
           RETURN
 [16]_asm_procedurepickteammembers_repeatlocalinternal_24 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6623,6 +6688,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_setdefaultshape "set-default-shape turtles "circle""
       _asm_proceduresetup_turtles_0 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetup_turtles_0.world : Lorg/nlogo/agent/World;
@@ -6636,6 +6702,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
             ARETURN
 [3]_asm_proceduresetup_repeatlocal_2 "repeat team-size [ make-newcomer ]" double => void
       _observervariable:TEAM-SIZE "team-size" => Object
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -6699,6 +6767,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_proceduresetup_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6732,6 +6801,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_proceduresetup_ask_5 "ask turtles set in-team? true [ set incumbent? true ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_5.world : Lorg/nlogo/agent/World;
@@ -6852,6 +6922,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L6
           RETURN
 [9]_asm_proceduresetup_done_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -6896,6 +6967,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [12]_asm_proceduresetup_ask_11 "ask turtles set heading 360 / team-size * who fd 1.75 [ set in-team? false ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_11.world : Lorg/nlogo/agent/World;
@@ -7192,6 +7264,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L6
           RETURN
 [17]_asm_proceduresetup_done_16 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -7235,6 +7308,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduretiecollaborators_ask_0.world : Lorg/nlogo/agent/World;
@@ -7399,6 +7473,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduretiecollaborators_otherwith_2.world : Lorg/nlogo/agent/World;
@@ -7568,6 +7643,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
          L6
           RETURN
 [4]_asm_proceduretiecollaborators_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -7575,6 +7651,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
          L1
           RETURN
 [5]_asm_proceduretiecollaborators_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1

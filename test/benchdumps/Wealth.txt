@@ -263,6 +263,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 48281" double => void
       _constdouble:48281.0 "48281" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 48281.0
          L1
@@ -284,16 +286,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -331,6 +333,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2400 [ go ]" double => void
       _constdouble:2400.0 "2400" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2400.0
          L1
@@ -370,6 +374,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -403,6 +408,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -456,6 +462,7 @@ procedure GO:[]{O---}:
 [0]_tick "tick"
 [1]_asm_procedurego_ask_0 "ask turtles [ turn-towards-grain ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -526,6 +533,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [3]_asm_procedurego_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -645,6 +653,7 @@ procedure GO:[]{O---}:
           RETURN
 [5]_asm_procedurego_ask_4 "ask patches [ grow-grain ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
@@ -715,6 +724,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [7]_asm_procedurego_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -741,6 +751,7 @@ procedure GO:[]{O---}:
           RETURN
 [9]_asm_procedurego_ask_8 "ask turtles [ move-eat-age-die ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_8.world : Lorg/nlogo/agent/World;
@@ -811,6 +822,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [11]_asm_procedurego_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -902,6 +914,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           RETURN
 [2]_asm_proceduregrainahead_repeatlocal_2 "repeat vision set total total + [ grain-here ] of patch-ahead how-far [ set how-far how-far + 1 ]" double => void
       _turtlevariable:VISION "vision" => Object
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -967,6 +981,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
         _patchvariableof:GRAIN-HERE "[ grain-here ] of patch-ahead how-far" Object => Object
           _patchahead "patch-ahead how-far"
             _asm_proceduregrainahead_procedurevariable_4 "how-far" => Object
+                  // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -975,23 +990,26 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
                   AALOAD
                  L1
                   ARETURN
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agentOrSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L8 L9 L9 java/lang/ClassCastException
-         L10
+          TRYCATCHBLOCK L5 L6 L6 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L7 L8 L8 java/lang/ClassCastException
+         L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
-         L11
+         L10
           ASTORE 2
          L0
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L12
+          GOTO L11
          L1
          FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
@@ -1004,27 +1022,25 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L12
+         L11
          FRAME SAME1 D
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3.keptinstr5 : Lorg/nlogo/prim/etc/_patchahead;
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/etc/_patchahead.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
-         L13
+         L12
           ASTORE 2
           ALOAD 2
-          ASTORE 3
-          ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L14
-          ALOAD 3
+          IFEQ L13
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
           GETFIELD org/nlogo/agent/Agent.id : J
           LDC -1
           LCMP
-          IFNE L5
+          IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -1044,56 +1060,78 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [D]
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [D]
           ALOAD 4
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L6
+         L3
+          GOTO L14
+         L4
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 5
-          GOTO L15
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
          L14
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [D]
-          ALOAD 3
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [D java/lang/Object]
+          ASTORE 3
+          GOTO L15
+         L13
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [D]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
           IFEQ L16
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 7
+          ASTORE 6
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
-          ASTORE 8
-         L2
-          ALOAD 7
+          ASTORE 7
+         L5
+          ALOAD 6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 10
+          ASTORE 8
          L17
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [D]
-          ALOAD 10
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L3
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [D]
           ALOAD 8
-          ALOAD 10
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L18
+          ALOAD 7
+          ALOAD 8
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           GOTO L17
-         L3
-         FRAME SAME1 D
-          ALOAD 8
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
+          ASTORE 9
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 9
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L18
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [D]
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          ASTORE 5
-         L15
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [D]
-          ALOAD 5
-          GOTO L18
+          ASTORE 3
+          GOTO L15
          L16
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [D]
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [D]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -1113,37 +1151,17 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L7
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 6
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 9
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L18
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [D java/lang/Object]
+         L15
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [D]
+          ALOAD 3
+         L19
           ASTORE 2
-         L8
+         L7
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L19
-         L9
+          GOTO L20
+         L8
          FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -1155,8 +1173,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L19
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [D D]
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [D D]
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -1164,7 +1182,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           DLOAD 4
           DADD
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3.validDouble (D)D
-         L20
+         L21
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1180,12 +1198,13 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L21
+         L22
           RETURN
 [4]_asm_proceduregrainahead_setprocedurevariable_5 "set how-far how-far + 1" Object => void
       _plus "how-far + 1" double,double => double
         _procedurevariable:HOW-FAR "how-far" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -1242,6 +1261,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L7
           RETURN
 [5]_asm_proceduregrainahead_repeatlocalinternal_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1275,6 +1295,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           RETURN
 [6]_asm_proceduregrainahead_report_7 "report total" Object => void
       _procedurevariable:TOTAL "total" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1368,6 +1389,8 @@ procedure GROW-GRAIN:[]{-TP-}:
       _lessthan "grain-here < max-grain-here" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -1529,6 +1552,7 @@ procedure GROW-GRAIN:[]{-TP-}:
       _plus "grain-here + num-grain-grown" double,double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _observervariable:NUM-GRAIN-GROWN "num-grain-grown" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -1642,6 +1666,8 @@ procedure GROW-GRAIN:[]{-TP-}:
       _greaterthan "grain-here > max-grain-here" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -1801,6 +1827,7 @@ procedure GROW-GRAIN:[]{-TP-}:
           RETURN
 [3]_asm_proceduregrowgrain_setpatchvariable_3 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -1881,6 +1908,7 @@ procedure GROW-GRAIN:[]{-TP-}:
 procedure HARVEST:[]{OTPL}:
 [0]_asm_procedureharvest_ask_0 "ask turtles [ set wealth floor wealth + grain-here / count turtles-here ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureharvest_ask_0.world : Lorg/nlogo/agent/World;
@@ -1940,6 +1968,7 @@ procedure HARVEST:[]{OTPL}:
             _patchvariable:GRAIN-HERE "grain-here" => Object
             _count "count turtles-here" AgentSet => double
               _turtleshere "turtles-here" => AgentSet
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2118,6 +2147,7 @@ procedure HARVEST:[]{OTPL}:
          L25
           RETURN
 [2]_asm_procedureharvest_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2126,6 +2156,7 @@ procedure HARVEST:[]{OTPL}:
           RETURN
 [3]_asm_procedureharvest_ask_3 "ask turtles set grain-here 0 [ recolor-patch ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureharvest_ask_3.world : Lorg/nlogo/agent/World;
@@ -2230,6 +2261,7 @@ procedure HARVEST:[]{OTPL}:
          L1
           RETURN
 [6]_asm_procedureharvest_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2759,6 +2791,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _constdouble:0.0 "0" => double
         _observervariable:MAX-GRAIN "max-grain" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -2986,6 +3019,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
       _max "max [ wealth ] of turtles"
         _asm_procedurerecolorturtles_turtlevariableof_1 "[ wealth ] of turtles" Object => Object
           _turtles "turtles" => AgentSet
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
              L6
@@ -3124,6 +3158,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           RETURN
 [1]_asm_procedurerecolorturtles_ask_2 "ask turtles [ ifelse wealth <= max-wealth / 3 [ set color red ] [ ifelse wealth <= max-wealth * 2 / 3 [ set color green ] [ set color blue ] ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtles_ask_2.world : Lorg/nlogo/agent/World;
@@ -3181,6 +3216,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
         _div "max-wealth / 3" double,double => double
           _procedurevariable:MAX-WEALTH "max-wealth" => Object
           _constdouble:3.0 "3" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3362,6 +3398,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
             _procedurevariable:MAX-WEALTH "max-wealth" => Object
             _constdouble:2.0 "2" => double
           _constdouble:3.0 "3" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3580,6 +3617,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
          L6
           RETURN
 [9]_asm_procedurerecolorturtles_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3635,6 +3673,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
       _mult "90 * random 4" double,double => double
         _constdouble:90.0 "90" => double
         _randomconst:4 "random 4" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC 90.0
@@ -4026,6 +4065,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
       _plus "metabolism + random 50" double,double => double
         _turtlevariable:METABOLISM "metabolism" => Object
         _randomconst:50 "random 50" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -4380,6 +4420,7 @@ procedure SETUP:[]{O---}:
 procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
 [0]_asm_proceduresetuppatches_ask_0 "ask patches set max-grain-here 0 [ if random-float 100.0 <= percent-best-land set max-grain-here max-grain [ set grain-here max-grain-here ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_0.world : Lorg/nlogo/agent/World;
@@ -4585,6 +4626,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [4]_asm_proceduresetuppatches_setpatchvariable_4 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -4635,6 +4677,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L8
           RETURN
 [5]_asm_proceduresetuppatches_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4643,6 +4686,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [6]_asm_proceduresetuppatches_repeatlocal_6 "repeat 5 ask patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ] [ diffuse 0.25 ]" double => void
       _constdouble:5.0 "5" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 5.0
          L1
@@ -4669,6 +4714,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
         _asm_proceduresetuppatches_notequal_8 "max-grain-here != 0" Object,double => boolean
           _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           _constdouble:0.0 "0" => double
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -4721,6 +4767,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
              L9
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.world : Lorg/nlogo/agent/World;
@@ -4861,6 +4908,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [8]_asm_proceduresetuppatches_setpatchvariable_9 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -4911,6 +4959,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L8
           RETURN
 [9]_asm_proceduresetuppatches_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4925,6 +4974,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
            L1
             ARETURN
 [11]_asm_proceduresetuppatches_repeatlocalinternal_12 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4958,6 +5008,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [12]_asm_proceduresetuppatches_repeatlocal_13 "repeat 10 [ diffuse 0.25 ]" double => void
       _constdouble:10.0 "10" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 10.0
          L1
@@ -4986,6 +5038,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
            L1
             ARETURN
 [14]_asm_proceduresetuppatches_repeatlocalinternal_15 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5019,6 +5072,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [15]_asm_proceduresetuppatches_ask_16 "ask patches set grain-here floor grain-here set max-grain-here grain-here [ recolor-patch ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_16.world : Lorg/nlogo/agent/World;
@@ -5073,6 +5127,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
 [16]_asm_proceduresetuppatches_setpatchvariable_17 "set grain-here floor grain-here" Object => void
       _floor "floor grain-here" double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -5154,6 +5209,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 [17]_asm_proceduresetuppatches_setpatchvariable_18 "set max-grain-here grain-here" Object => void
       _patchvariable:GRAIN-HERE "grain-here" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -5222,6 +5278,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L1
           RETURN
 [19]_asm_proceduresetuppatches_done_20 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -5294,6 +5351,7 @@ procedure SETUP-PLOTZ:[]{OTPL}:
 procedure SETUP-TURTLES:[]{O---}:
 [0]_setdefaultshape "set-default-shape turtles "person""
       _asm_proceduresetupturtles_turtles_0 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetupturtles_turtles_0.world : Lorg/nlogo/agent/World;
@@ -5317,6 +5375,8 @@ procedure SETUP-TURTLES:[]{O---}:
 [2]_asm_proceduresetupturtles_setxy_3 "setxy random-pxcor random-pycor" double,double => void
       _randompxcor "random-pxcor" => double
       _randompycor "random-pycor" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -5597,6 +5657,7 @@ procedure SETUP-TURTLES:[]{O---}:
          L17
           RETURN
 [6]_asm_proceduresetupturtles_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -5759,6 +5820,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
       _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
+          // parameter final  context
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -5997,6 +6059,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
       _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
+          // parameter final  context
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -6235,6 +6298,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
       _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
+          // parameter final  context
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -6437,6 +6501,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           RETURN
 [15]_asm_procedureturntowardsgrain_setturtlevariable_15 "set heading best-direction" Object => void
       _procedurevariable:BEST-DIRECTION "best-direction" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -6553,6 +6618,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_2.world : Lorg/nlogo/agent/World;
@@ -6702,6 +6768,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_5.world : Lorg/nlogo/agent/World;
@@ -6851,6 +6918,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_8.world : Lorg/nlogo/agent/World;
@@ -7016,6 +7084,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_2.world : Lorg/nlogo/agent/World;
@@ -7164,6 +7233,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_5.world : Lorg/nlogo/agent/World;
@@ -7312,6 +7382,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_8.world : Lorg/nlogo/agent/World;
@@ -7515,6 +7586,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
       _sort "sort [ wealth ] of turtles" Object => Object
         _turtlevariableof:WEALTH "[ wealth ] of turtles" Object => Object
           _turtles "turtles" => AgentSet
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
@@ -7762,6 +7834,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
 [9]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 "let sum sorted-wealths" Object => void
       _sum "sum sorted-wealths" LogoList => double
         _procedurevariable:SORTED-WEALTHS "sorted-wealths" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -7894,6 +7967,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           RETURN
 [13]_asm_procedureupdatelorenzandginiplots_repeatlocal_12 "repeat num-people set wealth-sum-so-far wealth-sum-so-far + item index sorted-wealths plot wealth-sum-so-far / total-wealth * 100 set index index + 1 [ set gini-index-reserve gini-index-reserve + index / num-people - wealth-sum-so-far / total-wealth ]" double => void
       _observervariable:NUM-PEOPLE "num-people" => Object
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -7943,6 +8018,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
         _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
         _item "item index sorted-wealths"
           _asm_procedureupdatelorenzandginiplots_procedurevariable_14 "index" => Object
+                // parameter final  context
                L0
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7952,6 +8028,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
                L1
                 ARETURN
           _asm_procedureupdatelorenzandginiplots_procedurevariable_15 "sorted-wealths" => Object
+                // parameter final  context
                L0
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7960,6 +8037,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
                 AALOAD
                L1
                 ARETURN
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -8044,6 +8122,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
         _constdouble:100.0 "100" => double
+            // parameter final  context
+            // parameter final  context
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
             TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
            L4
@@ -8142,6 +8222,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
       _plus "index + 1" double,double => double
         _procedurevariable:INDEX "index" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -8207,6 +8288,10 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
         _div "wealth-sum-so-far / total-wealth" double,double => double
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
           TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
@@ -8422,6 +8507,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L27
           RETURN
 [18]_asm_procedureupdatelorenzandginiplots_repeatlocalinternal_19 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -8465,6 +8551,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           _procedurevariable:GINI-INDEX-RESERVE "gini-index-reserve" => Object
           _observervariable:NUM-PEOPLE "num-people" => Object
         _callreport:AREA-OF-EQUALITY-TRIANGLE "area-of-equality-triangle"
+            // parameter final  context
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
             TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
             TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
