@@ -13,13 +13,24 @@ import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton }
-import org.nlogo.window.{ExternalFileInterface, Events => WindowEvents}
+import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.AbstractWorkspace
+
+object TemporaryCodeTab {
+  private var _serialNum = 1
+  def serialNum = {
+    _serialNum += 1
+    _serialNum - 1
+  }
+  private[app] def stripPath(filename: String): String =
+    filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
+}
 
 class TemporaryCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface, var filename: TabsInterface.Filename, smartIndent: Boolean)
 extends CodeTab(workspace, tabs)
-with AppEvents.IndenterChangedEvent.Handler
-{
+with AppEvents.IndenterChangedEvent.Handler {
+  var closing = false
+
   filename.right foreach { path =>
         try {
           innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
@@ -31,37 +42,33 @@ with AppEvents.IndenterChangedEvent.Handler
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
-  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(new FileCloseAction))
+  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(FileCloseAction))
+
+  override def dirty_=(b: Boolean) = {
+    super.dirty_=(b)
+    if (b) new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
+  }
 
   override def compile() = {
     save(false)
     super.compile()
   }
 
+  def filenameForDisplay = (filename.right map TemporaryCodeTab.stripPath).merge
+
   def save(saveAs: Boolean) = {
     if (saveAs || filename.isLeft)
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     dirty = false
-  }
-
-  override def handle(e: WindowEvents.CompiledEvent) {
-    dirty = false
-    if((e.sourceOwner.isInstanceOf[ExternalFileInterface] &&
-        e.sourceOwner.asInstanceOf[ExternalFileInterface].getFileName == filename.right.get)
-        // if the Code tab compiles then get rid of the error ev 7/26/07
-        || (e.sourceOwner.isInstanceOf[CodeTab] && e.error == null))
-      errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
-  }
-
-  final def handle(e: AppEvents.IndenterChangedEvent) {
-    setIndenter(e.isSmart)
+    new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
   def close() {
     ignoring(classOf[UserCancelException]) {
       if(dirty && userWantsToSaveFirst())
         save(false)
+      closing = true
       tabs.closeExternalFile(filename)
     }
   }
@@ -73,32 +80,34 @@ with AppEvents.IndenterChangedEvent.Handler
       }
   }
 
+  override def handle(e: WindowEvents.CompiledEvent) {
+    dirty = false
+    if((e.sourceOwner.isInstanceOf[ExternalFileInterface] &&
+      e.sourceOwner.asInstanceOf[ExternalFileInterface].getFileName == filename.right.get)
+      // if the Code tab compiles then get rid of the error ev 7/26/07
+      || (e.sourceOwner.isInstanceOf[CodeTab] && e.error == null))
+      errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
+  }
+
+  override def handle(e: AppEvents.SwitchedTabsEvent) = if (!closing) super.handle(e)
+
+  final def handle(e: AppEvents.IndenterChangedEvent) {
+    setIndenter(e.isSmart)
+  }
+
   private def userChooseSavePath(): String = {
-    var newFileName = ""
-    while(true) {
-      val path = SwingFileDialog.show(
-        this, "Save NetLogo Source File", FileDialog.SAVE, newFileName)
-      val file = new File(path)
-      newFileName = file.getName
-      val suffixIndex = newFileName.lastIndexOf(".nls")
-      // make sure it ends with .nls and there's at least one character first.
-      if(suffixIndex > 0 && suffixIndex == newFileName.size - 4)
-        return path
-      val dotIndex = newFileName.lastIndexOf('.')
-      if(dotIndex != -1)
-        newFileName = newFileName.substring(0, dotIndex)
-      newFileName ++= ".nls"
-      OptionDialog.showMessage(
-        this, I18N.gui.get("common.messages.error"), "You must choose a name ending with: .nls",
-        Array("Try Again"))
-    }
-    throw new IllegalStateException
+    val newFileName = filenameForDisplay + ".nls"
+    val path = SwingFileDialog.show(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
+    if (path.endsWith(".nls")) path else path + ".nls"
   }
 
   @throws(classOf[UserCancelException])
   private def userWantsToSaveFirst() = {
-    val options = Array[AnyRef](I18N.gui.get("common.buttons.save"), "Discard", I18N.gui.get("common.buttons.cancel"))
-    val message = "Do you want to save the changes you made to " + filename + "?"
+    val options = {
+      implicit val i18nPrefix = I18N.Prefix("common.buttons")
+      Array[AnyRef](I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel"))
+    }
+    val message = I18N.gui.getN("file.save.offer.confirm", filenameForDisplay)
     OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"), message, options) match {
       case 0 => true
       case 1 => false
@@ -106,10 +115,7 @@ with AppEvents.IndenterChangedEvent.Handler
     }
   }
 
-  private class FileCloseAction extends AbstractAction("Close") {
-    override def actionPerformed(e: ActionEvent) {
-      close()
-    }
+  private object FileCloseAction extends AbstractAction(I18N.gui.get("tabs.external.close")) {
+    override def actionPerformed(e: ActionEvent) = close()
   }
-
 }

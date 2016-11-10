@@ -4,15 +4,12 @@ package org.nlogo.app.codetab
 
 import java.awt.Component
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, Action, JCheckBox, JFrame }
+import javax.swing.{ AbstractAction, Action, JCheckBox }
 
-import org.nlogo.api.ModelSection
-import org.nlogo.app.common.{ Events => AppEvents, FindDialog, TabsInterface }
+import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ToolBar, ToolBarActionButton }
 import org.nlogo.editor.EditorMenu
 import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace }
-import org.nlogo.workspace.AbstractWorkspace
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.
 // Other Code tabs come and go.
@@ -49,7 +46,7 @@ with WindowEvents.LoadModelEvent.Handler
 
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
-    if (b) new WindowEvents.DirtyEvent().raise(this)
+    if (b) new WindowEvents.DirtyEvent(None).raise(this)
   }
 
   def handle(e: WindowEvents.LoadModelEvent) {

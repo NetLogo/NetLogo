@@ -3,12 +3,13 @@
 package org.nlogo.app
 
 import javax.swing._
-import java.awt.{ Toolkit, Dimension, Frame }
+import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.ActionEvent
 
-import org.nlogo.agent.{ Agent, World3D, World }
+import org.nlogo.agent.{ Agent, World, World3D }
 import org.nlogo.api._
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, FileActions, FindDialog, Events => AppEvents, SaveModelingCommonsAction }
+import org.nlogo.app.codetab.TemporaryCodeTab
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
@@ -18,7 +19,7 @@ import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, Workspace }
-import org.nlogo.shape.{ ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface }
+import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -27,7 +28,7 @@ import org.nlogo.swing.Implicits.thunk2runnable
 
 import org.picocontainer.adapters.AbstractAdapter
 import org.picocontainer.Characteristics._
-import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
+import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
 import scala.language.postfixOps
@@ -296,6 +297,7 @@ class App extends
   var _fileManager: FileManager = null
   var monitorManager:AgentMonitorManager = null
   var aggregateManager: AggregateManagerInterface = null
+  var dirtyMonitor: DirtyMonitor = null
   var colorDialog: ColorDialog = null
   var labManager:LabManagerInterface = null
   var recentFilesMenu: RecentFilesMenu = null
@@ -438,8 +440,11 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    pico.addComponent(classOf[DirtyMonitor])
-    val dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
+    val titler = (file: Option[String]) => file map externalFileTitle getOrElse modelTitle
+    pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
+      new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
+      new ConstantParameter(titler))
+    dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
     frame.addLinkComponent(dirtyMonitor)
 
     val menuBar = pico.getComponent(classOf[MenuBar])
@@ -718,19 +723,28 @@ class App extends
   /**
    * Internal use only.
    */
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(e.newTab == tabs.interfaceTab){ monitorManager.showAll(); frame.toFront() }
-    else if(e.oldTab == tabs.interfaceTab) monitorManager.hideAll()
+  final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
+    if (e.newTab == tabs.interfaceTab) {
+      monitorManager.showAll()
+      frame.toFront()
+    } else if (e.oldTab == tabs.interfaceTab)
+      monitorManager.hideAll()
+
+    val title = e.newTab match {
+        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+        case _                     => modelTitle
+      }
+    frame.setTitle(title)
   }
 
   /**
    * Internal use only.
    */
-  def handle(e:ModelSavedEvent) {
+  def handle(e: ModelSavedEvent): Unit = {
     workspace.modelSaved(e.modelPath)
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(makeFrameTitle)
+      frame.setTitle(modelTitle)
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
@@ -740,10 +754,10 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:LoadBeginEvent){
+  def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
-    if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
+    if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
@@ -806,20 +820,36 @@ class App extends
   /**
    * Generates OS standard frame title.
    */
-  private def makeFrameTitle = {
+  private def modelTitle = {
     if (workspace.getModelFileName == null) "NetLogo"
-    else{
-      var title = workspace.modelNameForDisplay
-      // on OS X, use standard window title format. otherwise use Windows convention
-      if(! System.getProperty("os.name").startsWith("Mac")) title = title + " - " + "NetLogo"
-      // 8212 is the unicode value for an em dash. we use the number since
-      // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
-      else title = "NetLogo " + (8212.toChar) + " " + title
+    else {
+      val title =
+        // on OS X, use standard window title format. otherwise use Windows convention
+        if(! System.getProperty("os.name").startsWith("Mac")) s"${workspace.modelNameForDisplay} - NetLogo"
+        // 8212 is the unicode value for an em dash. we use the number since
+        // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
+        else s"NetLogo ${8212.toChar} ${workspace.modelNameForDisplay}"
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
-      title
+      val fullTitle = if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
+      if (dirtyMonitor.dirty) s"* $fullTitle" else fullTitle
     }
+  }
+
+  /**
+    * Generates OS standard frame title.
+    */
+  private def externalFileTitle(path: String) = {
+    val filename = TemporaryCodeTab.stripPath(path)
+    val title =
+      // on OS X, use standard window title format. otherwise use Windows convention
+      if(! System.getProperty("os.name").startsWith("Mac")) s"$filename - NetLogo"
+      // 8212 is the unicode value for an em dash. we use the number since
+      // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
+      else s"NetLogo ${8212.toChar} $filename"
+    (tabs.getTabWithFilename(Right(path)) orElse tabs.getTabWithFilename(Left(path))).
+      map (tab => if (tab.dirty) s"* $title" else title).
+      getOrElse(title)
   }
 
   /**

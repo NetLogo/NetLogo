@@ -192,6 +192,9 @@ tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
 tabs.code.indentAutomatically = Indent automatically
 
+tabs.external.new = New File {0}
+tabs.external.close = Close
+
 # File and model operations
 file.open.transitionGuide.url = http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html
 file.open.warn.version.newer = You are attempting to open a model \
@@ -217,12 +220,14 @@ file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
-file.save.filesChanged = The following files has been modified:
-file.save.shouldSave = Save?
-file.save.filename = File Name
-file.save.saveSelected = Save Selected Files
-file.save.discardAll = Discard All
-file.save.confirm = Do you want to save the changes you made to this model?
+file.save.external = Save NetLogo Source File
+file.save.offer.external.filesChanged = The following files has been modified:
+file.save.offer.external.shouldSave = Save?
+file.save.offer.external.filename = File Name
+file.save.offer.external.saveSelected = Save Selected Files
+file.save.offer.external.discardAll = Discard All
+file.save.offer.thisModel = this model
+file.save.offer.confirm = Do you want to save the changes you made to {0}?
 file.save.error = Save failed.  Error: {0}
 file.save.warn.savingInNewerVersion = This model was made with {0}. If you save it in {1} it may not work in the old version anymore.
 file.save.warn.invalidFormat = NetLogo doesn't know how to save in ".{0}" format, please choose a different format.

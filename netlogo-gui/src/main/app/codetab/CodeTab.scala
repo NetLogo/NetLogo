@@ -151,7 +151,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
 
   def kind = AgentKind.Observer
 
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
+  def handle(e: AppEvents.SwitchedTabsEvent) {
     if(dirty && e.oldTab == this)
       compile()
   }

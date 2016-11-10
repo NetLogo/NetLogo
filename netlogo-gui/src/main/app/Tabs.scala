@@ -36,7 +36,8 @@ class Tabs(val workspace:    GUIWorkspace,
   with LoadBeginEvent.Handler
   with RuntimeErrorEvent.Handler
   with CompiledEvent.Handler
-  with AfterLoadEvent.Handler {
+  with AfterLoadEvent.Handler
+  with ExternalFileSavedEvent.Handler {
 
   locally {
     setOpaque(false)
@@ -75,7 +76,6 @@ class Tabs(val workspace:    GUIWorkspace,
   val codeTab = new MainCodeTab(workspace, this, menu)
   var externalFileTabs = Set.empty[TemporaryCodeTab]
 
-  var previousTab: Component = interfaceTab
   var currentTab: Component = interfaceTab
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
@@ -90,8 +90,8 @@ class Tabs(val workspace:    GUIWorkspace,
     dirtyMonitor = monitor
   }
 
-  def stateChanged(e: ChangeEvent) {
-    previousTab = currentTab
+  def stateChanged(e: ChangeEvent): Unit = {
+    val previousTab = currentTab
     previousTab match {
       case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.revokeAction(action))
       case _ =>
@@ -174,6 +174,13 @@ class Tabs(val workspace:    GUIWorkspace,
     }
   }
 
+  def handle(e: ExternalFileSavedEvent) =
+    getTabWithFilename(Right(e.path)) foreach { tab =>
+      val index = indexOfComponent(tab)
+      setTitleAt(index, tab.filenameForDisplay)
+      tabActions(index).putValue(Action.NAME, e.path)
+    }
+
   @throws(classOf[UserCancelException])
   def offerSaveModel(): Unit = {
     if (dirtyMonitor.dirty && fileManager.userWantsToSaveFirst()) {
@@ -182,7 +189,7 @@ class Tabs(val workspace:    GUIWorkspace,
   }
 
   private def offerSaveExternalFiles(): Unit = {
-    implicit val i18nPrefix = I18N.Prefix("file.save")
+    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
     val dirtyExternalFiles = externalFileTabs filter (_.dirty)
     if (dirtyExternalFiles.nonEmpty) {
       val panel = new JPanel
@@ -208,9 +215,9 @@ class Tabs(val workspace:    GUIWorkspace,
   def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
-    externalFileTabs find (_.filename == Right(filename))
+    externalFileTabs find (_.filename == filename)
 
-  def newExternalFile() = addNewTab(Left("New File" + " " + (externalFileTabs.size + 1)))
+  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", TemporaryCodeTab.serialNum: Integer)))
 
   def openExternalFile(filename: String) =
     getTabWithFilename(Right(filename)) match {
@@ -221,9 +228,8 @@ class Tabs(val workspace:    GUIWorkspace,
   def addNewTab(name: Filename) = {
     val tab = new TemporaryCodeTab(workspace, this, name, codeTab.smartTabbingEnabled)
     externalFileTabs += tab
-    val title = (name.right map stripPath).merge
-    addTab(title, tab)
-    addMenuItem(getTabCount - 1, title)
+    addTab(tab.filenameForDisplay, tab)
+    addMenuItem(getTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
     setSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet
@@ -233,13 +239,6 @@ class Tabs(val workspace:    GUIWorkspace,
   }
 
   def saveExternalFiles() = externalFileTabs foreach (_.doSave)
-
-  def saveExternalFile(filename: Filename) =
-    getTabWithFilename(filename) foreach { tab =>
-      val index = indexOfComponent(tab)
-      setTitleAt(index, filename.right.map(stripPath).merge)
-      tabActions(index).putValue(Action.NAME, filename.merge)
-    }
 
   def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
@@ -270,8 +269,16 @@ class Tabs(val workspace:    GUIWorkspace,
     menu.offerAction(newAction)
   }
 
-  private def stripPath(filename: String): String =
-    filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
+  override def processMouseMotionEvent(e: MouseEvent) {
+    // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
+    // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
+    // see any reason why it needs to. It's causing flickering in the info tabs on the affected
+    // platforms ev 2/2/09
+  }
+
+  def handle(e: AfterLoadEvent) {
+    requestFocus()
+  }
 
   object SaveAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.save"), this)
   with MenuAction {
@@ -281,9 +288,7 @@ class Tabs(val workspace:    GUIWorkspace,
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = currentTab match {
-      case externalFileTab: TemporaryCodeTab =>
-        externalFileTab.save(true)
-        saveExternalFile(externalFileTab.filename)
+      case externalFileTab: TemporaryCodeTab => externalFileTab.save(false)
       case _                                 => fileManager.saveModel(false)
     }
   }
@@ -296,9 +301,7 @@ class Tabs(val workspace:    GUIWorkspace,
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = currentTab match {
-      case externalFileTab: TemporaryCodeTab =>
-        externalFileTab.save(true)
-        saveExternalFile(externalFileTab.filename)
+      case externalFileTab: TemporaryCodeTab => externalFileTab.save(true)
       case _                                 => fileManager.saveModel(true)
     }
   }
@@ -329,19 +332,8 @@ class Tabs(val workspace:    GUIWorkspace,
     }
   }
 
-  override def processMouseMotionEvent(e: MouseEvent) {
-    // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
-    // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
-    // see any reason why it needs to. It's causing flickering in the info tabs on the affected
-    // platforms ev 2/2/09
-  }
-
-  def handle(e: AfterLoadEvent) {
-    requestFocus()
-  }
-
   private object SaveTableModel extends DefaultTableModel {
-    implicit val i18nPrefix = I18N.Prefix("file.save")
+    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
     def dirtyExternalFiles = externalFileTabs filter (_.dirty)
     val files = (dirtyExternalFiles map (tab => Array(true: java.lang.Boolean, tab.filename))).toArray
     override def getValueAt(row: Int, col: Int) = col match {

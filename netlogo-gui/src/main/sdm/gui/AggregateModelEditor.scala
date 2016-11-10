@@ -145,7 +145,7 @@ class AggregateModelEditor(
         f match {
           case mef: ModelElementFigure if mef.dirty =>
             new org.nlogo.window.Events.CompileAllEvent().raise(this)
-            new org.nlogo.window.Events.DirtyEvent().raise(this)
+            new org.nlogo.window.Events.DirtyEvent(None).raise(this)
           case _ =>
         }
 

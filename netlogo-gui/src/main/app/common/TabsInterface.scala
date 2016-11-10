@@ -24,6 +24,5 @@ trait TabsInterface {
 
   def newExternalFile(): Unit
   def openExternalFile(filename: String): Unit
-  def saveExternalFile(filename: Filename): Unit
   def closeExternalFile(filename: Filename): Unit
 }

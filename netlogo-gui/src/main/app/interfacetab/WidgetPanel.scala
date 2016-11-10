@@ -541,7 +541,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def handle(e: WidgetEditedEvent): Unit = {
-    new DirtyEvent().raise(this)
+    new DirtyEvent(None).raise(this)
     zoomer.updateZoomInfo(e.widget)
   }
 

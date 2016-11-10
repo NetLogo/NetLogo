@@ -105,7 +105,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     def actionPerformed(e: ActionEvent) {
       new DeleteCommand(I18N.gui("delete"), editor).execute()
       new org.nlogo.window.Events.CompileAllEvent().raise(editor)
-      new org.nlogo.window.Events.DirtyEvent().raise(editor)
+      new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
     }
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
@@ -115,7 +115,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
         model.setDt(newDt.toDouble)
         dtLabel.setText("dt = " + model.getDt)
         new org.nlogo.window.Events.CompileAllEvent().raise(editor)
-        new org.nlogo.window.Events.DirtyEvent().raise(editor)
+        new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
       }
       catch {
         case ex: NumberFormatException => JOptionPane.showMessageDialog(null, I18N.gui("dtNumberError"))

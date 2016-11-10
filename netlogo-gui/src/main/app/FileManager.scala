@@ -95,7 +95,7 @@ object FileManager {
     var exception = Option.empty[IOException]
 
     def importTask(importPath: String, sectionChoice: Int): Runnable =
-      new Runnable() {
+      new Runnable {
         def run(): Unit = {
           try {
             manager.loadModel(Paths.get(importPath).toUri).map(model =>
@@ -276,11 +276,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   private[app] def saveModel(saveAs: Boolean): Unit = {
-    val saveThunk =
-      if (saveAs)
-        SaveModelAs(currentModel, modelLoader, controller, workspace, Version)
-      else
-        SaveModel(currentModel, modelLoader, controller, workspace, Version)
+    val saveThunk = {
+      val saveModel = if (saveAs) SaveModelAs else SaveModel
+      saveModel(currentModel, modelLoader, controller, workspace, Version)
+    }
 
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
@@ -307,7 +306,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       firstLoad = false
       runLoad(parent, uri, model, modelType)
     } else {
-      val loader = new Runnable() {
+      val loader = new Runnable {
         override def run(): Unit = {
           runLoad(parent, uri, model, modelType)
         }
@@ -324,12 +323,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   private[app] def userWantsToSaveFirst(): Boolean = {
-    val options = Array[Object](
-      I18N.gui.get("common.buttons.save"),
-      I18N.gui.get("common.buttons.discard"),
-      I18N.gui.get("common.buttons.cancel"))
+    val options = {
+      implicit val i18nPrefix = I18N.Prefix("common.buttons")
+      Array[Object](I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel"))
+    }
 
-    val message = I18N.gui.get("file.save.confirm")
+    val message = I18N.gui.getN("file.save.offer.confirm", I18N.gui.get("file.save.offer.thisModel"))
 
     OptionDialog.showMessage(parent, "NetLogo", message, options) match {
       case 0 => true
