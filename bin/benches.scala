@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
+exec $SCALA_HOME/bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 import sys.process.Process
@@ -8,16 +8,22 @@ import collection.mutable.{ HashMap, ListBuffer, HashSet }
 val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
+val home = System.getenv("HOME")
+
 val classpath =
-  Seq("target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar",
-      "resources",
-      "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar",
-      "lib_managed/bundles/log4j/log4j/log4j-1.2.16.jar",
-      "lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar")
+  Seq("netlogo-gui/target/classes",
+      "shared/target/classes",
+      "netlogo-gui/resources",
+      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.7.jar",
+      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.3.jar",
+      home + "/.ivy2/cache/org.ow2.asm/asm-all/jars/asm-all-5.0.4.jar",
+      home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.16.jar",
+      home + "/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.7.jar",
+      home + "/.ivy2/cache/org.parboiled/parboiled-scala_2.11/jars/parboiled-scala_2.11-1.1.7.jar",
+      home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.13.6.jar")
     .mkString(":")
 Process("java -classpath " + classpath + " org.nlogo.headless.Main --fullversion")
-  .lines.foreach(println)
+  .lineStream.foreach(println)
 
 // 4.0 & 4.1 numbers from my home iMac on Sep. 13 2011, running Mac OS X Lion.
 // quad-core 2.8 GHz Intel Core i5, memory 4 GB 1333 Mhz DDR3 - ST 9/13/11
@@ -38,7 +44,7 @@ val allNames: List[String] = {
   val nameArgs = args.takeWhile(!_.head.isDigit).toList
   if(!nameArgs.isEmpty) nameArgs
   else Process("find models/test/benchmarks -name *.nlogo -maxdepth 1")
-         .lines.map(_.split("/").last.split(" ").head).toList
+         .lineStream.map(_.split("/").last.split(" ").head).toList
 }
 allNames.foreach(name => results += (name -> new ListBuffer[Double]))
 val width = allNames.map(_.size).max
@@ -47,7 +53,7 @@ def outputLines(name: String): Stream[String] =
   Process("java -classpath " + classpath +
           " org.nlogo.headless.HeadlessBenchmarker " +
           name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", ""))
-    .lines
+    .lineStream
 def record(name: String, line: String) {
   val Match = ("@@@ " + name + """ Benchmark: (\d+\.\d+)( \(hit time limit\))?""").r
   val Match(num, warning) = line
