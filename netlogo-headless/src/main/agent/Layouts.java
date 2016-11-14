@@ -36,7 +36,7 @@ public final strictfp class Layouts {
       Object obj = it.next();
       if (obj instanceof Turtle) {
         Turtle t = (Turtle) obj;
-        double heading = (i * 360) / n;
+        double heading = (i * 360.0) / n;
         // precheck so turtles don't end up in weird places.
         world.protractor().getPatchAtHeadingAndDistance(midx, midy, heading, radius);
         t.xandycor(midx, midy);
@@ -55,7 +55,7 @@ public final strictfp class Layouts {
     int midy = world.minPycor() + (int) StrictMath.floor(world.worldHeight() / 2);
     for (AgentIterator it = nodes.shufflerator(random); it.hasNext(); i++) {
       Turtle t = (Turtle) it.next();
-      double heading = (i * 360) / n;
+      double heading = (i * 360.0) / n;
       // precheck so turtles don't end up in weird places.
       world.protractor().getPatchAtHeadingAndDistance(midx, midy, heading, radius);
       t.xandycor(midx, midy);

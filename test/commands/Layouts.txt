@@ -32,6 +32,18 @@ TestLayoutCircleIsRandom
   O> layout-circle turtles max-pxcor
   sort-by [[t1 t2] -> [heading] of t1 < [heading] of t2] turtles = sort turtles => false
 
+TestLayoutCircleSetsHeadingsCorrectlyList
+  O> random-seed 8123
+  O> crt 7
+  O> layout-circle (sort turtles) max-pxcor
+  all? turtles [heading = ((360 / (count turtles)) * who)] => true
+
+TestLayoutCircleSetsHeadingsCorrectlyTurtleset
+  O> random-seed 8123
+  O> crt 7
+  O> layout-circle turtles max-pxcor
+  [heading] of turtles => [154.28571428571428 0 308.57142857142856 205.71428571428572 257.14285714285717 102.85714285714286 51.42857142857143]
+
 TestLayoutSpringLeaveSomeTurtlesOut
  O> crt 2
  O> ask turtle 0 [ create-link-with turtle 1 ]
