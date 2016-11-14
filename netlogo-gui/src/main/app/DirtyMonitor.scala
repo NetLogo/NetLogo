@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.net.URI
+import java.nio.file.{ Files, Paths }
 
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
@@ -49,7 +50,9 @@ with SaveModel.Controller
 
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
+    TempFileModelTracker.getModelFileUri.foreach(u => Files.deleteIfExists(Paths.get(u)))
   }
+
   private var lastTimeAutoSaved = 0L
   private def doAutoSave() {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
@@ -58,9 +61,14 @@ with SaveModel.Controller
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
-      SaveModel(modelSaver.currentModel, modelLoader, this, modelTracker, Version)
-    }
-    catch {
+      SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
+        f().foreach { savedUri =>
+          if (System.getProperty("os.name").startsWith("Windows")) {
+            Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
+          }
+        }
+      }
+    } catch {
       case ex: java.io.IOException =>
         // not sure what the right thing to do here is we probably
         // don't want to be telling the user all the time that they
@@ -96,12 +104,28 @@ with SaveModel.Controller
     doAutoSave()
   }
 
+  object TempFileModelTracker extends ModelTracker {
+    val delegate = modelTracker
+    def compiler: org.nlogo.nvm.CompilerInterface = delegate.compiler
+    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager
+    override def getModelType = delegate.getModelType
+    override def getModelFileUri: Option[URI] = {
+      delegate.getModelFileUri.map { u =>
+        val p = Paths.get(u)
+        val name = p.getName(p.getNameCount - 1).toString
+        val extension = name.split("\\.").last
+        val nameContent = name.split("\\.").init.mkString(".")
+        p.getParent.resolve(s".$nameContent.tmp.$extension").toUri
+      }
+    }
+  }
+
   // SaveModel.Controller
 
-  // autosaving doesn't choose a file path
-  def chooseFilePath(modelType: ModelType): Option[URI] = None
+  // chooseFilePath is used when the file doesn't yet have a path
+  def chooseFilePath(modelType: ModelType): Option[URI] =
+    Some(Paths.get(DirtyMonitor.autoSaveFileName).toUri)
 
-  // should never automatically save a model in a different version
-  def shouldSaveModelOfDifferingVersion(version: String): Boolean = false
+  def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
   def warnInvalidFileFormat(format: String): Unit = {}
 }
