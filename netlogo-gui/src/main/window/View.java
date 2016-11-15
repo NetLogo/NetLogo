@@ -326,8 +326,6 @@ public strictfp class View
 
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
     setVisible(false);
-    patchSize = 13;
-    zoom = 0;
     renderer = workspace.newRenderer();
   }
 
