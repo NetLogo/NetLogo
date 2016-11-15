@@ -2,26 +2,23 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{Component, FileDialog}
+import java.awt.{ Component, FileDialog }
 import java.awt.event.ActionEvent
-import java.io.{File, IOException}
+import java.io.IOException
 import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
+import org.nlogo.app.common.{ Actions, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
+  Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton, UserAction },
+  UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.AbstractWorkspace
 
 object TemporaryCodeTab {
-  private var _serialNum = 1
-  def serialNum = {
-    _serialNum += 1
-    _serialNum - 1
-  }
   private[app] def stripPath(filename: String): String =
     filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
 }
@@ -42,7 +39,23 @@ with AppEvents.IndenterChangedEvent.Handler {
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
-  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(FileCloseAction))
+  activeMenuActions = {
+    def saveAction(saveAs: Boolean) = {
+      new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
+        with MenuAction {
+        category    = UserAction.FileCategory
+        group       = UserAction.FileSaveGroup
+        accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
+
+        @throws(classOf[UserCancelException])
+        override def action(): Unit = save(saveAs)
+      }
+    }
+
+    Seq(saveAction(false), saveAction(true))
+  }
+
+  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))
 
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
@@ -96,7 +109,7 @@ with AppEvents.IndenterChangedEvent.Handler {
   }
 
   private def userChooseSavePath(): String = {
-    val newFileName = filenameForDisplay + ".nls"
+    val newFileName = if (filenameForDisplay.endsWith(".nls")) filenameForDisplay else filenameForDisplay + ".nls"
     val path = SwingFileDialog.show(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     if (path.endsWith(".nls")) path else path + ".nls"
   }
@@ -115,7 +128,7 @@ with AppEvents.IndenterChangedEvent.Handler {
     }
   }
 
-  private object FileCloseAction extends AbstractAction(I18N.gui.get("tabs.external.close")) {
+  private object CloseAction extends AbstractAction(I18N.gui.get("tabs.external.close")) {
     override def actionPerformed(e: ActionEvent) = close()
   }
 }

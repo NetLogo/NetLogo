@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.net.URI
+import java.nio.file.{ Files, Paths }
 import javax.swing.JFrame
 
 import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version }

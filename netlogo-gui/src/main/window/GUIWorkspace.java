@@ -81,7 +81,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                       ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager,
                       ControlSet controlSet) {
-    super(world, hubNetManagerFactory, frame, controlSet);
+    super(world, hubNetManagerFactory, frame, externalFileManager, controlSet);
     this.kioskLevel = kioskLevel;
     this.linkParent = linkParent;
     this.externalFileManager = externalFileManager;
@@ -1135,32 +1135,5 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         open3DView();
       }
     };
-
-  /// preview commands & aggregate
-
-  @Override
-  public String getSource(String filename)
-      throws java.io.IOException {
-
-    if (filename.equals("")) {
-      throw new IllegalArgumentException("cannot provide source for empty filename");
-    }
-    String source = null;
-    if (externalFileManager != null) {
-      source = externalFileManager.getSource(filename);
-    }
-    if (source == null) {
-      source = super.getSource(filename);
-    }
-    return source;
-  }
-
-  public void logCustomMessage(String msg) {
-    Logger.logCustomMessage(msg);
-  }
-
-  public void logCustomGlobals(Seq<Tuple2<String, String>> nameValuePairs) {
-    Logger.logCustomGlobals(nameValuePairs);
-  }
 
 }

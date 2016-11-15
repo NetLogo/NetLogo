@@ -2,36 +2,31 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, FileDialog => AwtFileDialog, Frame }
-import java.awt.EventQueue.isDispatchThread
+import java.awt.{Component, Frame, FileDialog => AwtFileDialog}
 import java.awt.image.BufferedImage
-import java.io.{ File, FileOutputStream, IOException, PrintWriter }
-import javax.swing.JOptionPane
-import javax.imageio.ImageIO
+import java.io.{IOException, PrintWriter}
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ ControlSet, Exceptions, LocalFile, ModelSettings, FileIO }
-import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ I18N, FileMode }
-import org.nlogo.plot.Plot
-import org.nlogo.swing.{ FileDialog, OptionDialog, ModalProgressTask }
+import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelSettings}
+import org.nlogo.awt.{Hierarchy, UserCancelException}
+import org.nlogo.core.I18N
+import org.nlogo.log.Logger
+import org.nlogo.swing.{FileDialog, ModalProgressTask}
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
-import org.nlogo.window.Events.{ ExportPlotEvent, ExportWidgetEvent, ExportWorldEvent, LoadModelEvent }
+import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
+import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
 
-import scala.util.{ Failure, Success, Try }
-import scala.concurrent.{ Await, Future }
-import scala.concurrent.duration.{ Duration, MILLISECONDS }
 
 abstract class GUIWorkspaceScala(world: World,
   hubNetManagerFactory: HubNetManagerFactory,
   protected val frame: Frame,
+  externalFileManager: ExternalFileManager,
   controlSet: ControlSet)
-  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
-  with ExportPlotEvent.Handler
-  with ExportWidgetEvent.Handler
-  with LoadModelEvent.Handler {
+extends AbstractWorkspaceScala(world, hubNetManagerFactory)
+with ExportPlotEvent.Handler
+with ExportWidgetEvent.Handler
+with LoadModelEvent.Handler {
 
   def view: View
 
@@ -251,4 +246,13 @@ abstract class GUIWorkspaceScala(world: World,
         () => controlSet.userOutput,
         (textFuture: Future[String]) => ExportOutput.silencingErrors(filename, awaitFuture(textFuture, 1000)))
   }
+
+  @throws[java.io.IOException]
+  override def getSource(filename: String): String = {
+    if (filename == "") throw new IllegalArgumentException("cannot provide source for empty filename")
+    Option(externalFileManager) map (_.getSource(filename)) getOrElse (super.getSource(filename))
+  }
+
+  def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)
+  def logCustomGlobals(nameValuePairs: Seq[(String, String)]) = Logger.logCustomGlobals(nameValuePairs: _*)
 }

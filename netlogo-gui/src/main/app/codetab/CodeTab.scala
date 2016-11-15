@@ -10,17 +10,18 @@ import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface, UndoRedoActions }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
+import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton }
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
   with ProceduresInterface
   with ProceduresMenuTarget
+  with UndoRedoActions
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.CompiledEvent.Handler
   with Zoomable
@@ -54,20 +55,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
-  val toolBar = new ToolBar {
-    override def addControls() {
-      add(new ToolBarActionButton(FindDialog.FIND_ACTION))
-      add(new ToolBarActionButton(compileAction))
-      add(new ToolBar.Separator)
-      add(new ProceduresMenu(CodeTab.this))
-      add(new IncludesMenu(CodeTab.this, tabs))
-      val additionalComps = getAdditionalToolBarComponents
-      if (additionalComps.nonEmpty) {
-        add(new ToolBar.Separator)
-        additionalComps foreach add
-      }
-    }
-  }
+  val toolBar = getToolBar
   val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
   def program = workspace.world.program
@@ -103,31 +91,23 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
       add(new ToolBarActionButton(compileAction))
       add(new ToolBar.Separator)
       add(new ProceduresMenu(CodeTab.this))
+      add(new IncludesMenu(CodeTab.this, tabs))
+      val additionalComps = getAdditionalToolBarComponents
+      if (additionalComps.nonEmpty) {
+        add(new ToolBar.Separator)
+        additionalComps foreach add
+      }
     }
   }
 
   protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
-
-  lazy val wrappedUndoAction: Action = {
-    new WrappedAction(text.undoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Z', withMenu = true))
-  }
-
-  lazy val wrappedRedoAction: Action = {
-    new WrappedAction(text.redoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Y', withMenu = true))
-  }
 
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
 
   activeMenuActions = editorConfiguration.contextActions.collect {
     case f: FocusedOnlyAction => f
-  } ++ Seq(wrappedUndoAction, wrappedRedoAction)
+  } ++ Seq(undoAction, redoAction)
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST

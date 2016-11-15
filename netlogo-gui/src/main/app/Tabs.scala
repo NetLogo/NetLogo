@@ -7,8 +7,7 @@ import java.awt.event.{ ActionEvent, MouseEvent }
 import java.awt.print.PrinterAbortException
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.ComponentUI
-import javax.swing.{ AbstractAction, Action, BoxLayout, JLabel, JPanel, JScrollPane, JTabbedPane, JTable, SwingConstants }
-import javax.swing.table.DefaultTableModel
+import javax.swing.{ AbstractAction, Action, JTabbedPane, SwingConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
@@ -20,7 +19,7 @@ import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionDialog, Printable, PrinterManager, TabsMenu, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ Printable, PrinterManager, TabsMenu, UserAction }, UserAction.MenuAction
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
 import org.nlogo.window.{ EditDialogFactoryInterface, Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
@@ -64,7 +63,7 @@ class Tabs(val workspace:    GUIWorkspace,
   }
 
   def permanentMenuActions =
-    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ Seq(SaveAction, SaveAsAction, SaveAllAction, PrintAction)
+    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ Seq(SaveAllAction, PrintAction)
 
   var tabActions: Seq[Action] = TabsMenu.tabActions(this)
 
@@ -92,15 +91,21 @@ class Tabs(val workspace:    GUIWorkspace,
 
   def stateChanged(e: ChangeEvent): Unit = {
     val previousTab = currentTab
-    previousTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.revokeAction(action))
-      case _ =>
-    }
     currentTab = getSelectedComponent
-    currentTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(action => menu.offerAction(action))
+    previousTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(menu.revokeAction)
       case _ =>
     }
+    currentTab match {
+      case mt: MenuTab => mt.activeMenuActions.foreach(menu.offerAction)
+      case _ =>
+    }
+    (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
+      case (true, false) => saveModelActions.foreach(menu.offerAction)
+      case (false, true) => saveModelActions.foreach(menu.revokeAction)
+      case _             =>
+    }
+
     currentTab.requestFocus()
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
@@ -109,7 +114,7 @@ class Tabs(val workspace:    GUIWorkspace,
 
   def handle(e: AboutToCloseFilesEvent): Unit = {
     offerSaveModel()
-    offerSaveExternalFiles()
+    OfferSaveExternalsDialog.offer(externalFileTabs filter (_.dirty), this)
   }
 
   def handle(e: LoadBeginEvent): Unit = setSelectedComponent(interfaceTab)
@@ -188,36 +193,17 @@ class Tabs(val workspace:    GUIWorkspace,
     }
   }
 
-  private def offerSaveExternalFiles(): Unit = {
-    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
-    val dirtyExternalFiles = externalFileTabs filter (_.dirty)
-    if (dirtyExternalFiles.nonEmpty) {
-      val panel = new JPanel
-      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
-      panel.add(new JLabel(I18N.gui("filesChanged")))
-      val table = new JTable(SaveTableModel)
-      table.setShowGrid(false)
-      table.getTableHeader.setReorderingAllowed(false)
-      table.getTableHeader.setResizingAllowed(false)
-      table.setRowSelectionAllowed(false)
-      table.getColumnModel.getColumn(0).setMaxWidth(getFontMetrics(getFont).stringWidth(I18N.gui("shouldSave")) * 2)
-      table.validate()
-      panel.add(new JScrollPane(table))
-      val options = Array(I18N.gui("saveSelected"), I18N.gui("discardAll"), I18N.gui.get("common.buttons.cancel"))
-      OptionDialog.showCustom(this, "NetLogo", panel, options) match {
-        case 0 => SaveTableModel.files filter (_ (0).asInstanceOf[Boolean]) foreach (row => getTabWithFilename(row(1).asInstanceOf[Filename]) foreach (_.save(false)))
-        case 1 =>
-        case _ => throw new UserCancelException
-      }
-    }
-  }
-
   def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
     externalFileTabs find (_.filename == filename)
 
-  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", TemporaryCodeTab.serialNum: Integer)))
+  private var _externalFileNum = 1
+  private def externalFileNum = {
+    _externalFileNum += 1
+    _externalFileNum - 1
+  }
+  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum: Integer)))
 
   def openExternalFile(filename: String) =
     getTabWithFilename(Right(filename)) match {
@@ -280,30 +266,19 @@ class Tabs(val workspace:    GUIWorkspace,
     requestFocus()
   }
 
-  object SaveAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.save"), this)
-  with MenuAction {
-    category    = UserAction.FileCategory
-    group       = UserAction.FileSaveGroup
-    accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true)
+  private val saveModelActions = {
+    def saveAction(saveAs: Boolean) =
+      new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), Tabs.this)
+      with MenuAction {
+        category = UserAction.FileCategory
+        group = UserAction.FileSaveGroup
+        accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
 
-    @throws(classOf[UserCancelException])
-    override def action(): Unit = currentTab match {
-      case externalFileTab: TemporaryCodeTab => externalFileTab.save(false)
-      case _                                 => fileManager.saveModel(false)
-    }
-  }
+        @throws(classOf[UserCancelException])
+        override def action(): Unit = fileManager.saveModel(saveAs)
+      }
 
-  object SaveAsAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAs") + Ellipsis, this)
-  with MenuAction {
-    category    = UserAction.FileCategory
-    group       = UserAction.FileSaveGroup
-    accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = true)
-
-    @throws(classOf[UserCancelException])
-    override def action(): Unit = currentTab match {
-      case externalFileTab: TemporaryCodeTab => externalFileTab.save(true)
-      case _                                 => fileManager.saveModel(true)
-    }
+    Seq(saveAction(false), saveAction(true))
   }
 
   object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), this)
@@ -330,27 +305,5 @@ class Tabs(val workspace:    GUIWorkspace,
           case abortEx: PrinterAbortException => Exceptions.ignore(abortEx)
         }
     }
-  }
-
-  private object SaveTableModel extends DefaultTableModel {
-    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
-    def dirtyExternalFiles = externalFileTabs filter (_.dirty)
-    val files = (dirtyExternalFiles map (tab => Array(true: java.lang.Boolean, tab.filename))).toArray
-    override def getValueAt(row: Int, col: Int) = col match {
-      case 0 => files(row)(col)
-      case 1 => files(row)(col).asInstanceOf[Filename].merge
-    }
-    override def setValueAt(value: AnyRef, row: Int, col: Int) = files(row)(col) = value
-    override def getRowCount: Int = dirtyExternalFiles.size
-    override def getColumnCount: Int = 2
-    override def getColumnName(i: Int): String = i match {
-      case 0 => I18N.gui("shouldSave")
-      case 1 => I18N.gui("filename")
-    }
-    override def getColumnClass(i: Int): Class[_] = i match {
-      case 0 => classOf[java.lang.Boolean]
-      case 1 => classOf[String]
-    }
-    override def isCellEditable(row: Int, col: Int) = col == 0
   }
 }
