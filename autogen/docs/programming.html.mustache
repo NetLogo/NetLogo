@@ -2714,7 +2714,7 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       any patch and you cannot find the distance from a link to another
       point.
     <p>
-      There are two flavors of links, undirected and directed. A directed
+      There are two link designations: undirected and directed. A directed
       link is <i>out</i> of, or <i>from</i>, one node and <i>in</i>to, or
       <i>to</i>, another node. The relationship of a parent to a child
       could be modeled as a directed link. An undirected link appears the
@@ -2735,25 +2735,25 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       impossible to have two unbreeded links where one is directed and the
       other is undirected. A runtime error occurs if you try to do it. (If
       all unbreeded links die, then you can create links of that breed that
-      are different in flavor from the previous links.)
+      are different in designation from the previous links.)
     <p>
       In general, link primitive names indicate what kind of links they deal
       with:
       <ul>
         <li>
-          Primitives that have &quot;out&quot; in their name deal with
+          Primitives that have &quot;out&quot; in their name utilize
           outgoing and undirected links. You can think of these as "the links
           I can use to get <i>from</i> the current node <i>to</i> other nodes."
           In general, these are probably the primitives you want to use.
         </li>
         <li>
-          Primitives that have &quot;in&quot; in their name deal with
+          Primitives that have &quot;in&quot; in their name utilize
           incoming and undirected links. You can think of these as "the links
           I can use to get <i>to</i> the current node <i>from</i> other nodes."
         </li>
         <li>
           Primtives that do not specify &quot;in&quot; or &quot;out&quot;, or
-          have &quot;with&quot; in their name deal with <i>all</i> links,
+          have &quot;with&quot; in their name utilize <i>all</i> links,
           both undirected and directed, incoming and outgoing.
         </li>
       </ul>

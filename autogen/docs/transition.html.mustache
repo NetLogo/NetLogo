@@ -90,11 +90,11 @@
     </h3>
     <p>
       In previous versions of NetLogo, link reporters have had a number of
-      inconsistencies. For example, <code>my-links</code> would report
-      <i>all</i> links connected to a turtle, whereas
-      <code>link-neighbors</code> would only report neighbors connected by
-      <i>undirected</i> links. Furthermore, it was quite difficult to work with
-      models where the links could either be directed or undirected.
+      inconsistencies regarding directed and undirected links. For example,
+      <code>my-links</code> would report <i>all</i> links connected to a turtle,
+      whereas <code>link-neighbors</code> would only report neighbors connected
+      by <i>undirected</i> links. Furthermore, it was quite difficult to work
+      with models where the links could either be directed or undirected.
 
     <p>
       To alleviate these issues, the link primitives have been overhauled in
@@ -104,7 +104,7 @@
       The changes are as follows:
       <ul>
         <li>
-          Link reporters that contain the word &quot;out&quot; now handle
+          Link reporters that contain the word &quot;out&quot; now utilize
           both directed, outgoing links and undirected links. That is, they
           now specify links that can be used to get from the current node to
           other nodes. For example, <code>out-link-neighbor?</code> will
@@ -112,12 +112,13 @@
           given turtle by either an outgoing directed link or an undirected
           link. If you only want directed, outgoing links, you can use a
           breed-specific reporter or
-          <code>my-out-links with [ is-directed? self ]</code>. Generally, you
-          will probably want to use the &quot;out&quot; primitives for most
-          things now.
+          <code>my-out-links with [ is-directed? self ]</code>.
+          Generally, when working with models that have both directed and undirected links,
+          you will probably want to use the &quot;out&quot;
+          primitives for most things now.
         </li>
         <li>
-          Link reporters that contain the word &quot;in&quot; now handle
+          Link reporters that contain the word &quot;in&quot; now utilize
           both directed, incoming links and undirected links. That is, they
           now specify links that can be used to get to the current node from
           other nodes. For example, <code>in-link-neighbor?</code> will
@@ -129,14 +130,14 @@
         </li>
         <li>
           Link reporters that do not specify &quot;out&quot; or &quot;in&quot;
-          handle <i>all</i> links.
+          utilize <i>all</i> links.
         </li>
       </ul>
     <p>
       Furthermore, there are no longer restrictions regarding which reporters
       can be used with which breeds. For unbreeded links, this makes it
-      possible to use the same primitives regardless if your network ends up
-      being directed or undirected.
+      possible to use the same primitives regardless of whether your network
+      ends up being directed or undirected.
     <p>
       The new behavior (including all changed primitives) is summarized by the
       following table, where &quot;un&quot; refers to undirected links,
