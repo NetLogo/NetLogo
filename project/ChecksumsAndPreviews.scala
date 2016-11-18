@@ -12,10 +12,10 @@ object ChecksumsAndPreviews {
   lazy val allPreviews = InputKey[Option[String]]("all-previews", "update all model preview images")
 
   val settings = Seq(
-    checksum <<= makeTask("--checksum"),
-    allChecksums <<= makeTask("--checksums"),
-    preview <<= makeTask("--preview"),
-    allPreviews <<= makeTask("--previews")
+    Def.setting(checksum, makeTask("--checksum")),
+    Def.setting(allChecksums, makeTask("--checksums")),
+    Def.setting(preview, makeTask("--preview")),
+    Def.setting(allPreviews, makeTask("--previews"))
   )
 
   private def makeTask(flag: String) =

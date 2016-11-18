@@ -14,9 +14,7 @@ object Dump {
     "dump compiled models (dump Fire, dump bench, dump all, dump <path>)")
 
   lazy val settings = Seq(
-    dump <<= dumpTask)
-
-  lazy val dumpTask = Def.inputTask {
+    dump := {
       val args   = spaceDelimited("").parsed
       val loader = (testLoader in Test).value
       // oh god, I hope this doesn't break something. it doesn't work without it, the bytecode
@@ -25,7 +23,7 @@ object Dump {
       loader.loadClass("org.nlogo.headless.Dump")
         .getMethod("main", classOf[Array[String]])
         .invoke(null, args.toArray)
-      ()
-  }
+        ()
+    })
 
 }

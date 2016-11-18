@@ -44,8 +44,14 @@ object Testing {
     inConfig(Test)(
       Seq(
         testTempDirectory := file("tmp"),
-        testOnly <<= testOnly dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) },
-        test     <<= test     dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) }) ++
+        testOnly := {
+          IO.createDirectory(testTempDirectory.value)
+          testOnly.evaluated
+        },
+        test     := {
+          IO.createDirectory(testTempDirectory.value)
+          test.value
+        }) ++
       testKeys.flatMap(key =>
           Defaults.defaultTestTasks(key) ++
           Defaults.testTaskOptions(key)) ++

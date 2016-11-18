@@ -18,11 +18,10 @@ object NativeLibs {
     "download native libraries for mac interaction")
 
   lazy val nativeLibsTask =
-    nativeLibs <<= (baseDirectory, streams) map {
-      (base, s) =>
+    nativeLibs := {
         val baseURL = "http://ccl-artifacts.s3.amazonaws.com/"
-        val joglNatives = base / "natives"
-        val joglTmp = base / "jogl-2.3.2.zip"
+        val joglNatives = baseDirectory.value / "natives"
+        val joglTmp = baseDirectory.value / "jogl-2.3.2.zip"
         val joglUrl = new URL(baseURL + "jogl-2.3.2.zip")
         IO.createDirectory(joglNatives)
         IO.download(joglUrl, joglTmp)
