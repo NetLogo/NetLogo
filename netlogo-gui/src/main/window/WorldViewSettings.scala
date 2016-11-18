@@ -175,6 +175,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   }
 
   def load(view: CoreView): AnyRef = {
+    workspace.world.displayOn(false)
     workspace.loadWorld(view, this)
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06

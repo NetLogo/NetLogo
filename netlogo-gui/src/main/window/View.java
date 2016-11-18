@@ -326,8 +326,6 @@ public strictfp class View
 
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
     setVisible(false);
-    patchSize = 13;
-    zoom = 0;
     renderer = workspace.newRenderer();
   }
 
@@ -381,15 +379,15 @@ public strictfp class View
   }
 
   protected double patchSize = 13.0;
-  private double zoom = 0.0;
+  private double zoom = 1.0;
 
   public double patchSize() {
-    return patchSize + zoom;
+    return patchSize * zoom;
   }
 
   public void visualPatchSize(double patchSize) {
     double oldZoom = zoom;
-    zoom = patchSize - this.patchSize;
+    zoom = patchSize / this.patchSize;
     if (zoom != oldZoom) {
       renderer.resetCache(patchSize());
     }
@@ -411,14 +409,6 @@ public strictfp class View
     this.patchSize = patchSize;
     this.viewWidth = worldWidth;
     this.viewHeight = worldHeight;
-
-    renderer.resetCache(patchSize());
-  }
-
-  public void setSize(int worldWidth, int worldHeight, double viewHeight, double viewWidth, double patchSize) {
-    this.patchSize = patchSize;
-    this.viewWidth = viewWidth;
-    this.viewHeight = viewHeight;
 
     renderer.resetCache(patchSize());
   }
