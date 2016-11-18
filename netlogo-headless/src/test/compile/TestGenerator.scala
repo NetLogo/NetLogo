@@ -101,6 +101,11 @@ class TestGenerator extends FunSuite {
     test("xcorEqualsNumber") {
       assertResult(List(
         // context.agent.getTurtleVariableDouble
+        "// parameter final  context",
+        "// parameter final  context",
+        "// parameter final  context",
+        "// parameter final  d0",
+        "// parameter final  d1",
         "L0","ALOAD 1",
         "GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;",
         "CHECKCAST org/nlogo/agent/Turtle",

@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 2929" double => void
       _constdouble:2929.0 "2929" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2929.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -86,6 +88,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2000000 [ go ]" double => void
       _constdouble:2000000.0 "2000000" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2000000.0
          L1
@@ -125,6 +129,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -158,6 +163,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -211,6 +217,7 @@ procedure FLIP:[]{-TP-}:
 [0]_asm_procedureflip_setpatchvariable_0 "set spin - spin" Object => void
       _unaryminus "- spin" double => double
         _patchvariable:SPIN "spin" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -296,6 +303,7 @@ procedure FLIP:[]{-TP-}:
         _mult "2 * spin" double,double => double
           _constdouble:2.0 "2" => double
           _patchvariable:SPIN "spin" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -447,6 +455,7 @@ procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask one-of patches [ update ]" Object => void
       _oneof "one-of patches" AgentSet => Object
         _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -591,6 +600,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [2]_asm_procedurego_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -632,6 +642,7 @@ reporter procedure MAGNETIZATION:[]{OTPL}:
         _observervariable:SUM-OF-SPINS "sum-of-spins" => Object
         _count "count patches" AgentSet => double
           _patches "patches" => AgentSet
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -782,6 +793,7 @@ procedure RECOLOR:[]{-TP-}:
       _equal "spin = 1" Object,double => boolean
         _patchvariable:SPIN "spin" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -927,6 +939,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_asm_proceduresetup_ask_0 "ask patches ifelse initial-magnetization = 0 [ set spin one-of [-1 1] ] [ set spin initial-magnetization ] [ recolor ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -982,6 +995,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
       _equal "initial-magnetization = 0" Object,double => boolean
         _procedurevariable:INITIAL-MAGNETIZATION "initial-magnetization" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1098,6 +1112,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           RETURN
 [6]_asm_proceduresetup_setpatchvariable_4 "set spin initial-magnetization" Object => void
       _procedurevariable:INITIAL-MAGNETIZATION "initial-magnetization" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -1152,6 +1167,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
          L1
           RETURN
 [8]_asm_proceduresetup_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1162,14 +1178,17 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
       _sum "sum [ spin ] of patches" LogoList => double
         _patchvariableof:SPIN "[ spin ] of patches" AgentSet => Object
           _patches "patches" => AgentSet
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
-          TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
-         L8
+          // parameter final  context
+          // parameter final  context
+          // parameter final  sourceSet
+          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
+          TRYCATCHBLOCK L4 L5 L6 org/nlogo/api/AgentException
+         L7
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-         L9
+         L8
           ASTORE 2
           NEW org/nlogo/api/LogoListBuilder
           DUP
@@ -1181,44 +1200,42 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 5
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] []
-          ALOAD 5
+          ASTORE 4
+         L9
+         FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator]
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L1
+          IFEQ L10
           ALOAD 3
-          ALOAD 5
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          GOTO L10
+          GOTO L9
          L1
-         FRAME SAME
-          ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          GOTO L11
-         L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 4
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 4
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L10
+         FRAME APPEND [org/nlogo/agent/AgentIterator]
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
          L11
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/core/LogoList]
           ASTORE 2
-         L3
+         L2
           ALOAD 2
           CHECKCAST org/nlogo/core/LogoList
           GOTO L12
-         L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [java/lang/ClassCastException]
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1269,15 +1286,15 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           DLOAD 2
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
-         L5
+         L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
-         L6
+         L5
           GOTO L17
-         L7
+         L6
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_7 org/nlogo/nvm/Context java/lang/Double T T java/util/Iterator] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1399,6 +1416,7 @@ procedure UPDATE:[EDIFF]{-TP-}:
           _constdouble:2.0 "2" => double
           _patchvariable:SPIN "spin" => Object
         _nsum4:SPIN "sum [ spin ] of neighbors4" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L5
@@ -1568,6 +1586,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
                 _unaryminus "- Ediff" double => double
                   _procedurevariable:EDIFF "Ediff" => Object
                 _observervariable:TEMPERATURE "temperature" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4

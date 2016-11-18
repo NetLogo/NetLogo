@@ -6,7 +6,7 @@ import org.nlogo.api.AgentException;
 
 abstract strictfp class Topology {
 
-  World world;
+  final World world;
 
   Topology(World world) {
     this.world = world;

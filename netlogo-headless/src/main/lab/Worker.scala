@@ -39,7 +39,7 @@ class Worker(val protocol: LabProtocol)
         import collection.JavaConverters._
         // The explicit use of JavaConversions here with a type parameter, instead of just plain
         // "asJava", is required to compile against Java 5 - ST 8/17/11
-        executor.invokeAll(collection.JavaConversions.asJavaCollection[Callable[Unit]](runners)).asScala
+        executor.invokeAll(runners.asJava).asScala
       }
       executor.shutdown()
       executor.awaitTermination(Int.MaxValue, TimeUnit.SECONDS)

@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 19192" double => void
       _constdouble:19192.0 "19192" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 19192.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 250 [ go ]" double => void
       _constdouble:250.0 "250" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 250.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -225,6 +231,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
         _asm_procedureflow_plus_2 "elevation + water" double,double => double
           _patchvariable:ELEVATION "elevation" => Object
           _patchvariable:WATER "water" => Object
+              // parameter final  context
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
               TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -354,18 +362,27 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
                   _procedurevariable:TARGET "target" => Object
               _patchvariableof:WATER "[ water ] of target" Object => Object
                 _procedurevariable:TARGET "target" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agentOrSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agentOrSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
           TRYCATCHBLOCK L8 L9 L10 org/nlogo/api/AgentException
           TRYCATCHBLOCK L11 L12 L12 java/lang/ClassCastException
           TRYCATCHBLOCK L13 L14 L15 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L16 L17 L18 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L19 L20 L20 java/lang/ClassCastException
-          TRYCATCHBLOCK L21 L22 L23 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L24 L25 L26 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L27 L28 L28 java/lang/ClassCastException
-         L29
+          TRYCATCHBLOCK L16 L17 L17 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L18 L19 L19 java/lang/ClassCastException
+          TRYCATCHBLOCK L20 L21 L22 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L23 L24 L24 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L25 L26 L26 java/lang/ClassCastException
+         L27
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
@@ -376,7 +393,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L1
-          GOTO L30
+          GOTO L28
          L2
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -388,11 +405,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L30
+         L28
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder java/lang/Object]
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           DUP
-         L31
+         L29
           LDC 0.5
          L3
           ALOAD 1
@@ -400,7 +417,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L4
-          GOTO L32
+          GOTO L30
          L5
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -412,7 +429,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L32
+         L30
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D java/lang/Object]
           ASTORE 2
          L6
@@ -439,7 +456,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L9
-          GOTO L33
+          GOTO L31
          L10
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -451,14 +468,14 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
           ASTORE 2
          L11
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L34
+          GOTO L32
          L12
          FRAME SAME1 java/lang/ClassCastException
           POP
@@ -471,7 +488,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L34
+         L32
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
@@ -480,27 +497,25 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DADD
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
-         L35
+         L33
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
-         L36
+         L34
           ASTORE 2
           ALOAD 2
-          ASTORE 3
-          ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L37
-          ALOAD 3
+          IFEQ L35
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
           GETFIELD org/nlogo/agent/Agent.id : J
           LDC -1
           LCMP
-          IFNE L16
+          IFNE L13
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -520,56 +535,78 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L16
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L13
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 4
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L17
+         L14
+          GOTO L36
+         L15
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 5
-          GOTO L38
-         L37
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L36
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+          ASTORE 3
+          GOTO L37
+         L35
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
-          IFEQ L39
-          ALOAD 3
+          IFEQ L38
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 7
+          ASTORE 6
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
-          ASTORE 8
-         L13
-          ALOAD 7
+          ASTORE 7
+         L16
+          ALOAD 6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 10
-         L40
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 10
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L14
+          ASTORE 8
+         L39
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          ALOAD 10
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L40
+          ALOAD 7
+          ALOAD 8
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          GOTO L40
-         L14
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 8
+          GOTO L39
+         L17
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
+          ASTORE 9
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 9
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L40
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          ASTORE 5
+          ASTORE 3
+          GOTO L37
          L38
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 5
-          GOTO L41
-         L39
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -589,37 +626,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L18
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 6
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L15
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 9
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
+         L37
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 3
          L41
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
           ASTORE 2
-         L19
+         L18
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L42
-         L20
+         L19
          FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -632,7 +649,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L42
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -649,18 +666,16 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L44
           ASTORE 2
           ALOAD 2
-          ASTORE 3
-          ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L45
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
           GETFIELD org/nlogo/agent/Agent.id : J
           LDC -1
           LCMP
-          IFNE L24
+          IFNE L20
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -680,56 +695,78 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L24
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 4
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L25
-          ASTORE 5
+         L21
           GOTO L46
+         L22
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L46
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+          ASTORE 3
+          GOTO L47
          L45
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 3
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
-          IFEQ L47
-          ALOAD 3
+          IFEQ L48
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 7
+          ASTORE 6
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
-          ASTORE 8
-         L21
-          ALOAD 7
+          ASTORE 7
+         L23
+          ALOAD 6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 10
-         L48
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 10
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L22
+          ASTORE 8
+         L49
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          ALOAD 10
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L50
+          ALOAD 7
+          ALOAD 8
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          GOTO L48
-         L22
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          ASTORE 5
-         L46
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 5
           GOTO L49
-         L47
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L24
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
+          ASTORE 9
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 9
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L50
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 7
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
+          ASTORE 3
+          GOTO L47
+         L48
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -749,37 +786,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L26
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 6
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L23
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 9
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L49
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+         L47
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 3
+         L51
           ASTORE 2
-         L27
+         L25
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L50
-         L28
+          GOTO L52
+         L26
          FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -791,8 +808,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L50
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
+         L52
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -800,7 +817,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DSUB
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
-         L51
+         L53
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -808,7 +825,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DMUL
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
-         L52
+         L54
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -816,7 +833,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-         L53
+         L55
           ASTORE 2
           DCONST_0
           DSTORE 3
@@ -826,17 +843,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterable ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
           ASTORE 6
-         L54
+         L56
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] []
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L55
+          IFEQ L57
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 7
           ALOAD 7
           INSTANCEOF java/lang/Double
-          IFEQ L56
+          IFEQ L58
           ALOAD 7
           CHECKCAST java/lang/Double
           ASTORE 8
@@ -844,24 +861,24 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DSTORE 9
           ALOAD 5
-          IFNULL L57
+          IFNULL L59
           DLOAD 9
           DLOAD 3
           DCMPG
-          IFGE L56
-         L57
+          IFGE L58
+         L59
          FRAME APPEND [java/lang/Object java/lang/Double D]
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
-         L56
+         L58
          FRAME CHOP 2
-          GOTO L54
-         L55
+          GOTO L56
+         L57
          FRAME CHOP 1
           ALOAD 5
-          IFNONNULL L58
+          IFNONNULL L60
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -878,11 +895,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L58
+         L60
          FRAME SAME
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-         L59
+         L61
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -898,12 +915,13 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L60
+         L62
           RETURN
 [2]_asm_procedureflow_if_4 "if amount > 0 let amount * 1 - soil-hardness set elevation elevation - erosion set amount min list water 0.5 * elevation + water - [ elevation ] of target - [ water ] of target set water water - amount [ ask target [ set water water + amount ] ]" boolean => void
       _greaterthan "amount > 0" Object,double => boolean
         _procedurevariable:AMOUNT "amount" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -978,6 +996,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
         _minus "1 - soil-hardness" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:SOIL-HARDNESS "soil-hardness" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -1071,6 +1090,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
       _minus "elevation - erosion" double,double => double
         _patchvariable:ELEVATION "elevation" => Object
         _procedurevariable:EROSION "erosion" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -1196,18 +1217,27 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
                   _procedurevariable:TARGET "target" => Object
               _patchvariableof:WATER "[ water ] of target" Object => Object
                 _procedurevariable:TARGET "target" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agentOrSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agentOrSet
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
           TRYCATCHBLOCK L8 L9 L10 org/nlogo/api/AgentException
           TRYCATCHBLOCK L11 L12 L12 java/lang/ClassCastException
           TRYCATCHBLOCK L13 L14 L15 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L16 L17 L18 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L19 L20 L20 java/lang/ClassCastException
-          TRYCATCHBLOCK L21 L22 L23 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L24 L25 L26 org/nlogo/api/AgentException
-          TRYCATCHBLOCK L27 L28 L28 java/lang/ClassCastException
-         L29
+          TRYCATCHBLOCK L16 L17 L17 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L18 L19 L19 java/lang/ClassCastException
+          TRYCATCHBLOCK L20 L21 L22 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L23 L24 L24 org/nlogo/api/AgentException
+          TRYCATCHBLOCK L25 L26 L26 java/lang/ClassCastException
+         L27
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
@@ -1218,7 +1248,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L1
-          GOTO L30
+          GOTO L28
          L2
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -1230,11 +1260,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L30
+         L28
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder java/lang/Object]
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           DUP
-         L31
+         L29
           LDC 0.5
          L3
           ALOAD 1
@@ -1242,7 +1272,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L4
-          GOTO L32
+          GOTO L30
          L5
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -1254,7 +1284,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L32
+         L30
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D java/lang/Object]
           ASTORE 2
          L6
@@ -1281,7 +1311,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L9
-          GOTO L33
+          GOTO L31
          L10
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -1293,14 +1323,14 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L33
+         L31
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
           ASTORE 2
          L11
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L34
+          GOTO L32
          L12
          FRAME SAME1 java/lang/ClassCastException
           POP
@@ -1313,7 +1343,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L34
+         L32
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
@@ -1322,27 +1352,25 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DADD
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
-         L35
+         L33
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
-         L36
+         L34
           ASTORE 2
           ALOAD 2
-          ASTORE 3
-          ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L37
-          ALOAD 3
+          IFEQ L35
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
           GETFIELD org/nlogo/agent/Agent.id : J
           LDC -1
           LCMP
-          IFNE L16
+          IFNE L13
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -1362,56 +1390,78 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L16
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L13
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 4
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L17
+         L14
+          GOTO L36
+         L15
+         FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 5
-          GOTO L38
-         L37
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L36
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+          ASTORE 3
+          GOTO L37
+         L35
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
-          IFEQ L39
-          ALOAD 3
+          IFEQ L38
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 7
+          ASTORE 6
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
-          ASTORE 8
-         L13
-          ALOAD 7
+          ASTORE 7
+         L16
+          ALOAD 6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 10
-         L40
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 10
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L14
+          ASTORE 8
+         L39
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          ALOAD 10
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L40
+          ALOAD 7
+          ALOAD 8
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          GOTO L40
-         L14
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 8
+          GOTO L39
+         L17
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
+          ASTORE 9
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 9
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L40
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          ASTORE 5
+          ASTORE 3
+          GOTO L37
          L38
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 5
-          GOTO L41
-         L39
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -1431,37 +1481,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L18
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 6
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L15
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 9
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
+         L37
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 3
          L41
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
           ASTORE 2
-         L19
+         L18
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           GOTO L42
-         L20
+         L19
          FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -1474,7 +1504,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L42
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -1491,18 +1521,16 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L44
           ASTORE 2
           ALOAD 2
-          ASTORE 3
-          ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L45
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
           GETFIELD org/nlogo/agent/Agent.id : J
           LDC -1
           LCMP
-          IFNE L24
+          IFNE L20
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -1522,56 +1550,78 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L24
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 4
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-         L25
-          ASTORE 5
+         L21
           GOTO L46
+         L22
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 5
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L46
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+          ASTORE 3
+          GOTO L47
          L45
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 3
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
-          IFEQ L47
-          ALOAD 3
+          IFEQ L48
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 7
+          ASTORE 6
           NEW org/nlogo/api/LogoListBuilder
           DUP
           INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
-          ASTORE 8
-         L21
-          ALOAD 7
+          ASTORE 7
+         L23
+          ALOAD 6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
-          ASTORE 10
-         L48
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 10
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L22
+          ASTORE 8
+         L49
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           ALOAD 8
-          ALOAD 10
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L50
+          ALOAD 7
+          ALOAD 8
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           BIPUSH 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-          GOTO L48
-         L22
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder T org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 8
-          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-          ASTORE 5
-         L46
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
-          ALOAD 5
           GOTO L49
-         L47
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+         L24
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
+          ASTORE 9
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 9
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L50
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 7
+          INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
+          ASTORE 3
+          GOTO L47
+         L48
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object T D] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -1591,37 +1641,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L26
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 6
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 6
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L23
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object D T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder] [org/nlogo/api/AgentException]
-          ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 9
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L49
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D java/lang/Object]
+         L47
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D]
+          ALOAD 3
+         L51
           ASTORE 2
-         L27
+         L25
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L50
-         L28
+          GOTO L52
+         L26
          FRAME SAME1 java/lang/ClassCastException
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -1633,8 +1663,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L50
-         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object T java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
+         L52
+         FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/api/LogoListBuilder org/nlogo/api/LogoListBuilder D D D]
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -1642,7 +1672,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DSUB
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
-         L51
+         L53
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -1650,7 +1680,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 4
           DMUL
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
-         L52
+         L54
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1658,7 +1688,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-         L53
+         L55
           ASTORE 2
           DCONST_0
           DSTORE 3
@@ -1668,17 +1698,17 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterable ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
           ASTORE 6
-         L54
+         L56
          FRAME FULL [org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7 org/nlogo/nvm/Context org/nlogo/core/LogoList D java/lang/Double java/util/Iterator] []
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L55
+          IFEQ L57
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 7
           ALOAD 7
           INSTANCEOF java/lang/Double
-          IFEQ L56
+          IFEQ L58
           ALOAD 7
           CHECKCAST java/lang/Double
           ASTORE 8
@@ -1686,24 +1716,24 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DSTORE 9
           ALOAD 5
-          IFNULL L57
+          IFNULL L59
           DLOAD 9
           DLOAD 3
           DCMPG
-          IFGE L56
-         L57
+          IFGE L58
+         L59
          FRAME APPEND [java/lang/Object java/lang/Double D]
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
-         L56
+         L58
          FRAME CHOP 2
-          GOTO L54
-         L55
+          GOTO L56
+         L57
          FRAME CHOP 1
           ALOAD 5
-          IFNONNULL L58
+          IFNONNULL L60
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -1720,11 +1750,11 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L58
+         L60
          FRAME SAME
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-         L59
+         L61
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1740,12 +1770,14 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           BIPUSH 6
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L60
+         L62
           RETURN
 [6]_asm_procedureflow_setpatchvariable_8 "set water water - amount" Object => void
       _minus "water - amount" double,double => double
         _patchvariable:WATER "water" => Object
         _procedurevariable:AMOUNT "amount" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -1858,6 +1890,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           RETURN
 [7]_asm_procedureflow_ask_9 "ask target [ set water water + amount ]" Object => void
       _procedurevariable:TARGET "target" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1969,6 +2002,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
       _plus "water + amount" double,double => double
         _patchvariable:WATER "water" => Object
         _procedurevariable:AMOUNT "amount" => Object
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -2080,6 +2115,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
          L16
           RETURN
 [9]_asm_procedureflow_done_11 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2291,6 +2327,7 @@ procedure GO:[]{O---}:
       _plus "water + 1" double,double => double
         _patchvariable:WATER "water" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2377,6 +2414,7 @@ procedure GO:[]{O---}:
          L13
           RETURN
 [3]_asm_procedurego_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2495,6 +2533,7 @@ procedure GO:[]{O---}:
       _greaterthan "water > 0" Object,double => boolean
         _patchvariable:WATER "water" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2596,6 +2635,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [7]_asm_procedurego_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2779,6 +2819,7 @@ procedure GO:[]{O---}:
          L6
           RETURN
 [11]_asm_procedurego_done_11 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2912,6 +2953,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [14]_asm_procedurego_done_14 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3091,6 +3133,7 @@ procedure HIDE-WATER:[]{OTPL}:
          L1
           RETURN
 [3]_asm_procedurehidewater_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3115,6 +3158,7 @@ procedure RECOLOR:[]{-TP-}:
           _constdouble:0.0 "0" => double
         _not "not show-water?" boolean => boolean
           _observervariable:SHOW-WATER? "show-water?" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3220,6 +3264,7 @@ procedure RECOLOR:[]{-TP-}:
         _patchvariable:ELEVATION "elevation" => Object
         _constdouble:-250.0 "-250" => double
         _constdouble:100.0 "100" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -3424,6 +3469,7 @@ procedure RECOLOR:[]{-TP-}:
             _constdouble:75.0 "75" => Double
         _constdouble:100.0 "100" => double
         _constdouble:-10.0 "-10" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
@@ -3720,6 +3766,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_proceduresetup_ask_1 "ask patches ifelse bumpy? [ ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ] ] [ set elevation 100 ] set water 0 [ set drain? false ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
@@ -3869,6 +3916,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
               _maxpxcor "max-pxcor" => double
           _constdouble:100.0 "100" => double
         _randomconst:100 "random 100" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC -100.0
@@ -3993,6 +4042,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [8]_asm_proceduresetup_setpatchvariable_6 "set elevation random 125" Object => void
       _randomconst:125 "random 125" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -4144,6 +4194,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L6
           RETURN
 [13]_asm_proceduresetup_done_11 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4195,6 +4246,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [15]_asm_proceduresetup_repeatlocal_13 "repeat terrain-smoothness [ diffuse 0.5 ]" double => void
       _observervariable:TERRAIN-SMOOTHNESS "terrain-smoothness" => Object
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -4247,6 +4300,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
            L1
             ARETURN
 [17]_asm_proceduresetup_repeatlocalinternal_15 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4333,6 +4387,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
              L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.world : Lorg/nlogo/agent/World;
@@ -4540,6 +4595,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L6
           RETURN
 [21]_asm_proceduresetup_done_20 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -4550,6 +4606,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
       _with "patches with [ drain? ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
         _asm_proceduresetup_patchvariable_22 "drain?" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -4572,6 +4629,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -4697,6 +4755,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
         _patches "patches" => AgentSet
         _asm_proceduresetup_not_24 "not drain?" boolean => boolean
           _patchvariable:DRAIN? "drain?" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
              L0
@@ -4758,6 +4817,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -5005,6 +5065,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [26]_asm_proceduresetup_done_27 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -5183,6 +5244,7 @@ procedure SHOW-WATER:[]{OTPL}:
          L1
           RETURN
 [3]_asm_procedureshowwater_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1

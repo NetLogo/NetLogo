@@ -6,7 +6,7 @@ import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Perspective, Version }
 import org.nlogo.workspace.Checksummer
 import org.nlogo.util.SlowTest
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 class TestImportExport extends FunSuite with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
@@ -261,13 +261,13 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective())(Perspective.Follow(workspace.world.turtles.agents.iterator.toSeq(1), 5))
+    assertResult(workspace.world.observer().perspective())(Perspective.Follow(workspace.world.turtles.agents.asScala.iterator.toSeq(1), 5))
     testCommand("ride turtle 1")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective())(Perspective.Ride(workspace.world.turtles.agents.iterator.toSeq(1)))
+    assertResult(workspace.world.observer().perspective())(Perspective.Ride(workspace.world.turtles.agents.asScala.iterator.toSeq(1)))
   }
 
   if(!Version.is3D)

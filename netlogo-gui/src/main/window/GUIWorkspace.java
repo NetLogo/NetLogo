@@ -75,7 +75,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private Lifeguard lifeguard;
 
   public GUIWorkspace(final org.nlogo.agent.World world,
-                      KioskLevel kioskLevel, java.awt.Frame frame,
+                      GUIWorkspace.KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
                       org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,

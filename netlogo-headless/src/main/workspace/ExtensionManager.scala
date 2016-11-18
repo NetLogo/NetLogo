@@ -16,7 +16,7 @@ import java.util.{ List => JList }
 
 import org.nlogo.nvm.FileManager
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -118,7 +118,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def anyExtensionsLoaded: Boolean = jars.nonEmpty
 
   def loadedExtensions: JIterable[ClassManager] =
-    asJavaIterable(jars.values.map(_.classManager))
+    jars.values.map(_.classManager).asJava
 
   private var obj: AnyRef = null
 
@@ -250,7 +250,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def dumpExtensionPrimitives: String = tabulate(
     Seq("EXTENSION", "PRIMITIVE", "TYPE"),
     { jarContainer =>
-      jarContainer.primManager.getPrimitiveNames.map { n =>
+      jarContainer.primManager.getPrimitiveNames.asScala.map { n =>
         val p = jarContainer.primManager.getPrimitive(n)
         Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
       }.toSeq

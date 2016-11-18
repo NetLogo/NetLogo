@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 22" double => void
       _constdouble:22.0 "22" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 22.0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 500 [ go ]" double => void
       _constdouble:500.0 "500" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 500.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -363,6 +369,7 @@ procedure CELL-DEATH:[]{-TP-}:
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask patches [ set live-neighbors count neighbors with [ living? ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -418,6 +425,7 @@ procedure GO:[]{O---}:
       _countwith "count neighbors with [ living? ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurego_patchvariable_2 "living?" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -568,6 +576,7 @@ procedure GO:[]{O---}:
          L12
           RETURN
 [2]_asm_procedurego_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -576,6 +585,7 @@ procedure GO:[]{O---}:
           RETURN
 [3]_asm_procedurego_ask_4 "ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
@@ -631,6 +641,7 @@ procedure GO:[]{O---}:
       _equal "live-neighbors = 3" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:3.0 "3" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -715,6 +726,7 @@ procedure GO:[]{O---}:
       _notequal "live-neighbors != 2" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:2.0 "2" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -791,6 +803,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [9]_asm_procedurego_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -813,6 +826,7 @@ procedure SETUP-RANDOM:[]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_asm_proceduresetuprandom_ask_0 "ask patches [ ifelse random-float 1.0 < initial-density [ cell-birth ] [ cell-death ] ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_ask_0.world : Lorg/nlogo/agent/World;
@@ -990,6 +1004,7 @@ procedure SETUP-RANDOM:[]{O---}:
          L1
           RETURN
 [7]_asm_proceduresetuprandom_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1

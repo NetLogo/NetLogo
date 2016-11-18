@@ -9,6 +9,8 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 0" double => void
       _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           DCONST_0
          L1
@@ -30,16 +32,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -77,6 +79,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 5000 [ go ]" double => void
       _constdouble:5000.0 "5000" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 5000.0
          L1
@@ -116,6 +120,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -149,6 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -203,6 +209,7 @@ procedure COLORIZE:[]{-TP-}:
       _lessorequal "n <= 3" Object,double => boolean
         _patchvariable:N "n" => Object
         _constdouble:3.0 "3" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -288,6 +295,7 @@ procedure COLORIZE:[]{-TP-}:
 [1]_asm_procedurecolorize_setpatchvariable_1 "set pcolor item n [83 54 45 25]" Object => void
       _item "item n [83 54 45 25]"
         _asm_procedurecolorize_patchvariable_2 "n" => Object
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -405,6 +413,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
       _patchset "patch-set one-of patches"
         _asm_procedurego_oneof_1 "one-of patches" AgentSet => Object
           _patches "patches" => AgentSet
+              // parameter final  context
              L0
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedurego_oneof_1.world : Lorg/nlogo/agent/World;
@@ -450,6 +459,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           RETURN
 [1]_asm_procedurego_ask_2 "ask active-patches set n n + 1 set total total + 1 [ colorize ]" Object => void
       _procedurevariable:ACTIVE-PATCHES "active-patches" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -561,6 +571,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
       _plus "n + 1" double,double => double
         _patchvariable:N "n" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -739,6 +750,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L1
           RETURN
 [5]_asm_procedurego_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -758,6 +770,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
         _asm_procedurego_greaterthan_9 "n > 3" Object,double => boolean
           _patchvariable:N "n" => Object
           _constdouble:3.0 "3" => double
+              // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -835,6 +848,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -963,6 +977,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           RETURN
 [8]_asm_procedurego_ask_10 "ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ]" Object => void
       _procedurevariable:OVERLOADED-PATCHES "overloaded-patches" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1074,6 +1089,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
       _minus "n - 4" double,double => double
         _patchvariable:N "n" => Object
         _constdouble:4.0 "4" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1322,6 +1338,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
       _plus "n + 1" double,double => double
         _patchvariable:N "n" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1500,6 +1517,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L1
           RETURN
 [16]_asm_procedurego_done_18 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1507,6 +1525,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L1
           RETURN
 [17]_asm_procedurego_done_19 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1538,6 +1557,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
                FRAME SAME1 org/nlogo/agent/IndexedAgentSet
                 ARETURN
           _asm_procedurego_procedurevariable_22 "overloaded-patches" => Object
+                // parameter final  context
                L0
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1566,6 +1586,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
 [19]_asm_procedurego_while_23 "while [ any? active-patches ] let active-patches with [ n > 3 ] ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ] [ set active-patches patch-set [ neighbors4 ] of overloaded-patches ]" boolean => void
       _any "any? active-patches" AgentSet => boolean
         _procedurevariable:ACTIVE-PATCHES "active-patches" => Object
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -1633,6 +1654,7 @@ procedure SETUP:[]{O---}:
 [0]_clearall "clear-all"
 [1]_asm_proceduresetup_ask_0 "ask patches set n 2 [ colorize ]" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -1737,6 +1759,7 @@ procedure SETUP:[]{O---}:
          L1
           RETURN
 [4]_asm_proceduresetup_done_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1748,6 +1771,7 @@ procedure SETUP:[]{O---}:
         _constdouble:2.0 "2" => double
         _count "count patches" AgentSet => double
           _patches "patches" => AgentSet
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC 2.0

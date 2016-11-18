@@ -5,7 +5,7 @@ package org.nlogo.agent
 import org.nlogo.core.AgentKind
 import org.nlogo.api.AgentException
 
-class Torus(world: World) extends Topology(world) {
+class Torus(_world: World) extends Topology(_world) {
   import Topology.wrap
   //wrapping coordinates
 

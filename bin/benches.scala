@@ -14,12 +14,11 @@ val classpath =
   Seq("netlogo-gui/target/classes",
       "shared/target/classes",
       "netlogo-gui/resources",
-      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.7.jar",
-      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.3.jar",
+      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.0.jar",
+      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.0.4.jar",
       home + "/.ivy2/cache/org.ow2.asm/asm-all/jars/asm-all-5.0.4.jar",
       home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.16.jar",
-      home + "/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.7.jar",
-      home + "/.ivy2/cache/org.parboiled/parboiled-scala_2.11/jars/parboiled-scala_2.11-1.1.7.jar",
+      home + "/.ivy2/cache/org.parboiled/parboiled_2.12/jars/parboiled_2.12-2.1.3.jar",
       home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.13.6.jar")
     .mkString(":")
 Process("java -classpath " + classpath + " org.nlogo.headless.Main --fullversion")

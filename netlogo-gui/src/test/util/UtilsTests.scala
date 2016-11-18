@@ -10,7 +10,7 @@ import org.scalatest.prop.PropertyChecks
 class UtilsTests extends FunSuite {
   test("getStackTrace") {
     val expected = "java.lang.Throwable\n" +
-      " at org.nlogo.util.UtilsTests$$anonfun$1.apply$mcV$sp(UtilsTests.scala:"
+      " at org.nlogo.util.UtilsTests.$anonfun$new$1(UtilsTests.scala:"
     assert(Utils.getStackTrace(new Throwable).filter(_!='\r').take(expected.size) === expected)
   }
 }

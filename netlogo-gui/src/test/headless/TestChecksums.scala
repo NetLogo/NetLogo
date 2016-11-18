@@ -56,6 +56,8 @@ object TestChecksums extends ChecksumTester(println _) {
 
     val checksums = this.checksums
 
+    implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run() {fn()}}
+
     for (entry <- checksums.values) {
       def doit() {
         try {
@@ -73,8 +75,7 @@ object TestChecksums extends ChecksumTester(println _) {
             addFailure(entry.path + ": " + t.getMessage)
         }
       }
-      implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run() {fn()}}
-      executor.execute(doit _)
+      executor.execute(thunk2runnable(doit _))
     }
     executor.shutdown()
     executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)

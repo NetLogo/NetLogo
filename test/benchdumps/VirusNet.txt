@@ -364,6 +364,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
          L6
           RETURN
 [5]_asm_procedurebecomeresistant_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -496,6 +497,8 @@ procedure BECOME-SUSCEPTIBLE:[]{-T--}:
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed 2468" double => void
       _constdouble:2468.0 "2468" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2468.0
          L1
@@ -517,16 +520,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -564,6 +567,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2000 [ go ]" double => void
       _constdouble:2000.0 "2000" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 2000.0
          L1
@@ -603,6 +608,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -636,6 +642,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -793,6 +800,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
              L17
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduredoviruschecks_ask_0.world : Lorg/nlogo/agent/World;
@@ -935,6 +943,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
       _lessthan "random 100 < recovery-chance" double,Object => boolean
         _randomconst:100 "random 100" => double
         _observervariable:RECOVERY-CHANCE "recovery-chance" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1011,6 +1020,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
       _lessthan "random 100 < gain-resistance-chance" double,Object => boolean
         _randomconst:100 "random 100" => double
         _observervariable:GAIN-RESISTANCE-CHANCE "gain-resistance-chance" => Object
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1127,6 +1137,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
          L1
           RETURN
 [6]_asm_proceduredoviruschecks_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1210,6 +1221,7 @@ procedure GO:[]{O---}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_0.world : Lorg/nlogo/agent/World;
@@ -1343,6 +1355,7 @@ procedure GO:[]{O---}:
           RETURN
 [2]_asm_procedurego_ask_3 "ask turtles set virus-check-timer virus-check-timer + 1 [ if virus-check-timer >= virus-check-frequency [ set virus-check-timer 0 ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
@@ -1664,6 +1677,7 @@ procedure GO:[]{O---}:
          L6
           RETURN
 [6]_asm_procedurego_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1785,6 +1799,7 @@ procedure SETUP:[]{O---}:
              L1
               ARETURN
         _asm_proceduresetup_turtles_4 "turtles" => AgentSet
+              // parameter final  context
              L0
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_proceduresetup_turtles_4.world : Lorg/nlogo/agent/World;
@@ -1915,6 +1930,7 @@ procedure SETUP:[]{O---}:
          L1
           RETURN
 [6]_asm_proceduresetup_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1923,6 +1939,7 @@ procedure SETUP:[]{O---}:
           RETURN
 [7]_asm_proceduresetup_ask_7 "ask links [ set color white ]" AgentSet => void
       _links "links" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_7.world : Lorg/nlogo/agent/World;
@@ -2009,6 +2026,7 @@ procedure SETUP:[]{O---}:
          L6
           RETURN
 [9]_asm_proceduresetup_done_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2046,6 +2064,7 @@ procedure SETUP:[]{O---}:
 procedure SETUP-NODES:[]{O---}:
 [0]_setdefaultshape "set-default-shape turtles "circle""
       _asm_proceduresetupnodes_turtles_0 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_turtles_0.world : Lorg/nlogo/agent/World;
@@ -2073,6 +2092,8 @@ procedure SETUP-NODES:[]{O---}:
       _mult "random-ycor * 0.95" double,double => double
         _randomycor "random-ycor" => double
         _constdouble:0.95 "0.95" => double
+          // parameter final  context
+          // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -2332,6 +2353,7 @@ procedure SETUP-NODES:[]{O---}:
          L15
           RETURN
 [5]_asm_proceduresetupnodes_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2468,6 +2490,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
 [2]_asm_proceduresetupspatiallyclusterednetwork_ask_2 "ask one-of turtles let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ] [ if choice != nobody [ create-link-with [ choice ] ] ]" Object => void
       _oneof "one-of turtles" AgentSet => Object
         _turtles "turtles" => AgentSet
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_ask_2.world : Lorg/nlogo/agent/World;
@@ -2600,6 +2623,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           _asm_proceduresetupspatiallyclusterednetwork_not_5 "not link-neighbor? myself" boolean => boolean
             _linkneighbor:null "link-neighbor? myself" Turtle => boolean
               _myself "myself" => Agent
+                // parameter final  context
+                // parameter final  target
                 TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
                L2
                 ALOAD 1
@@ -2702,6 +2727,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                L14
                FRAME SAME1 java/lang/Boolean
                 ARETURN
+              // parameter final  context
              L0
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.world : Lorg/nlogo/agent/World;
@@ -2881,6 +2907,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               DLOAD 2
               INVOKESPECIAL java/lang/Double.<init> (D)V
               ARETURN
+          // parameter final  context
+          // parameter final  value
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_let_3.keptinstr2 : Lorg/nlogo/prim/etc/_minoneof;
           ALOAD 1
@@ -2901,6 +2929,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
       _notequal "choice != nobody" Object,Object => boolean
         _letvariable(CHOICE) "choice" => Object
         _nobody "nobody" => Nobody$
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 1
           ALOAD 0
@@ -2938,6 +2968,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           RETURN
 [5]_createlinkwith:,+7 "create-link-with [ choice ]"
       _asm_proceduresetupspatiallyclusterednetwork_letvariable_8 "choice" => Object
+            // parameter final  context
            L0
             ALOAD 1
             ALOAD 0
@@ -2946,6 +2977,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
            L1
             ARETURN
 [6]_asm_proceduresetupspatiallyclusterednetwork_done_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2953,6 +2985,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L1
           RETURN
 [7]_asm_proceduresetupspatiallyclusterednetwork_done_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2964,6 +2997,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
         _count "count links" AgentSet => double
           _links "links" => AgentSet
         _procedurevariable:NUM-LINKS "num-links" => Object
+          // parameter final  context
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_11.world : Lorg/nlogo/agent/World;
@@ -3041,6 +3076,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           RETURN
 [9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12 "repeat 10 [ layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1 ]" double => void
       _constdouble:10.0 "10" => double
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 10.0
          L1
@@ -3063,6 +3100,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           RETURN
 [10]_layoutspring "layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1"
       _asm_proceduresetupspatiallyclusterednetwork_turtles_13 "turtles" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_turtles_13.world : Lorg/nlogo/agent/World;
@@ -3070,6 +3108,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
            L1
             ARETURN
       _asm_proceduresetupspatiallyclusterednetwork_links_14 "links" => AgentSet
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_links_14.world : Lorg/nlogo/agent/World;
@@ -3086,6 +3125,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
         _worldwidth "world-width" => double
         _sqrt "sqrt number-of-nodes" double => double
           _observervariable:NUMBER-OF-NODES "number-of-nodes" => Object
+            // parameter final  context
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
            L2
             ALOAD 0
@@ -3180,6 +3220,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
            L1
             ARETURN
 [11]_asm_proceduresetupspatiallyclusterednetwork_repeatlocalinternal_18 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3248,6 +3289,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_0.world : Lorg/nlogo/agent/World;
@@ -3452,6 +3494,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
              L10
              FRAME SAME1 java/lang/Boolean
               ARETURN
+          // parameter final  context
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.kept3_breedName : Ljava/lang/String;
@@ -3717,6 +3760,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
          L1
           RETURN
 [4]_asm_procedurespreadvirus_done_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3724,6 +3768,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
          L1
           RETURN
 [5]_asm_procedurespreadvirus_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3886,6 +3931,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
           _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
+            // parameter final  context
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_2.world : Lorg/nlogo/agent/World;
@@ -4051,6 +4098,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
           _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
+            // parameter final  context
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_5.world : Lorg/nlogo/agent/World;
@@ -4216,6 +4265,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
           _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
+            // parameter final  context
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_8.world : Lorg/nlogo/agent/World;

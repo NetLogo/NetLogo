@@ -93,7 +93,7 @@ object App{
     pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
     class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
-      import scala.collection.JavaConversions._
+      import scala.collection.JavaConverters._
 
       def getDescriptor(): String = "ModelLoaderComponent"
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
@@ -105,7 +105,7 @@ object App{
         val loader =
           fileformat.standardLoader(compilerServices)
         val additionalComponents =
-          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]])
+          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
         if (additionalComponents.nonEmpty)
           additionalComponents.foldLeft(loader) {
             case (l, serialization) =>
@@ -119,7 +119,7 @@ object App{
     pico.addAdapter(new ModelLoaderComponent())
 
     class ModelConverterComponent extends AbstractAdapter[ModelConversion](classOf[ModelConversion], classOf[ModelConverter]) {
-      import scala.collection.JavaConversions._
+      import scala.collection.JavaConverters._
 
       def getDescriptor(): String = "ModelConverterComponent"
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
@@ -127,7 +127,8 @@ object App{
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
         val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
 
-        val allAutoConvertables = fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable])
+        val allAutoConvertables =
+          fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable]).asScala
 
         fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, allAutoConvertables)(container.getComponent(classOf[Dialect]))
       }

@@ -38,8 +38,6 @@ abstract class Element(var awtColor: Color = null) extends BaseElement with java
 
   def getHandles: Array[Point]
 
-  override def toString: String
-
   def toReadableString: String
 
   def modify(start: Point, last: Point)

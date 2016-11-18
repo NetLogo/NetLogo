@@ -12,7 +12,7 @@ import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoa
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.util.Try
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
@@ -52,7 +52,7 @@ class NLogoFormatIOTest extends FunSuite {
     val result = format.writeSections(sections, pathToWrite.toUri)
     assert(result.isSuccess)
     assert(Paths.get(result.get).toAbsolutePath == pathToWrite.toAbsolutePath)
-    assert(Files.readAllLines(Paths.get(result.get)).mkString("\n") == Files.readAllLines(antsBenchmarkPath).mkString("\n"))
+    assert(Files.readAllLines(Paths.get(result.get)).asScala.mkString("\n") == Files.readAllLines(antsBenchmarkPath).asScala.mkString("\n"))
   }
 
   test("Invalid NetLogo file gives an error about section count") {
