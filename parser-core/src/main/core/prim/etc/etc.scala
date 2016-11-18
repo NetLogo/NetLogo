@@ -812,6 +812,14 @@ case class _randomycor() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.NumberType)
 }
+case class _range() extends Reporter with Pure {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType | Syntax.RepeatableType),
+      defaultOption = Option(1),
+      minimumOption = Option(1),
+      ret = Syntax.ListType)
+}
 case class _readfromstring() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

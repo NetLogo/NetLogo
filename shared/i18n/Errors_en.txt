@@ -188,6 +188,8 @@ org.nlogo.prim.$common.agentKind.turtle = a turtle
 org.nlogo.prim.$common.agentKind.patch = a patch
 org.nlogo.prim.$common.agentKind.link = a link
 
+org.nlogo.prim.etc._range.zeroStep = The step-size for range must be non-zero.
+
 org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
 
 compiler.CarefullyVisitor.badNesting = {0} cannot be used outside of CAREFULLY.

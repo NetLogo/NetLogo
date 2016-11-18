@@ -473,6 +473,7 @@ R random-pzcor threed._randompzcor
 R random-xcor etc._randomxcor
 R random-ycor etc._randomycor
 R random-zcor threed._randomzcor
+R range etc._range
 R read-from-string etc._readfromstring
 R reduce etc._reduce
 R remainder etc._remainder
