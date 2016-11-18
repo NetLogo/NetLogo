@@ -9,7 +9,7 @@ import org.nlogo.core.CompilerException
 class LoggerTests extends FunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
   val logger = new Logger("esther")
-  DOMConfigurator.configure("dist/netlogo_logging.xml")
+  DOMConfigurator.configure("dist/configuration/NetLogo Logging/netlogo_logging.xml")
   new java.io.File("tmp").mkdir()
   new java.io.File("tmp/LoggerTests").mkdir()
   logger.changeLogDirectory(new java.io.File("tmp/LoggerTests").getCanonicalPath)

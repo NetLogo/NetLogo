@@ -1,6 +1,7 @@
 import java.nio.file.{ attribute, Files, FileVisitResult, FileVisitor, Path, Paths, StandardCopyOption }, attribute.BasicFileAttributes
 import java.io.IOException
 import java.io.File
+import sbt.IO
 
 object FileActions {
   class ListVisitor extends FileVisitor[Path] {
@@ -43,6 +44,22 @@ object FileActions {
       FileVisitResult.CONTINUE
     }
     def visitFileFailed(p: Path, e: IOException): FileVisitResult = { throw e }
+  }
+
+  class CopyFilterVisitor(src: Path, dest: Path, filter: Path => Boolean) extends CopyVisitor(src, dest) {
+    override def visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      if (filter(p))
+        super.visitFile(p, attrs)
+      else if (Files.isDirectory(p))
+        FileVisitResult.SKIP_SUBTREE
+      else
+        FileVisitResult.CONTINUE
+    }
+
+    override def preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
+      if (filter(p)) super.visitFile(p, attrs)
+      else FileVisitResult.SKIP_SUBTREE
+    }
   }
 
   def copyAll(copies: Traversable[(File, File)]): Unit = {
@@ -101,9 +118,21 @@ object FileActions {
     Files.walkFileTree(src, new java.util.HashSet(), Int.MaxValue, new CopyVisitor(src, dest))
   }
 
+  def copyDirectory(src: Path, dest: Path, filter: Path => Boolean): Unit = {
+    Files.walkFileTree(src, new java.util.HashSet(), Int.MaxValue, new CopyFilterVisitor(src, dest, filter))
+  }
+
+  def moveFile(src: File, dest: File): Unit = {
+    Files.move(src.toPath, dest.toPath)
+  }
+
   def enumerateFiles(path: Path): Seq[Path] = {
     val listVisitor = new ListVisitor()
     Files.walkFileTree(path, new java.util.HashSet(), Int.MaxValue, listVisitor)
     listVisitor.pathsFound
+  }
+
+  def remove(f: File): Unit = {
+    IO.delete(f)
   }
 }

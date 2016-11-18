@@ -1,6 +1,6 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, streams, target }
+import Keys.{ baseDirectory, dependencyClasspath, packageBin, runMain, state, streams, target }
 import Docs.{ allDocs, docsRoot, manualPDF }
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import Extensions.extensionRoot
@@ -11,37 +11,27 @@ import NativeLibs.nativeLibs
 
 object NetLogoPackaging {
 
-  lazy val aggregateJDKParser = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
-
-  // build application jar, resources
-  lazy val aggregateOnlyFiles = taskKey[Seq[File]]("Files to be included in the aggregate root")
-  lazy val buildNetLogo = taskKey[Unit]("build NetLogo")
-  lazy val buildVariables = taskKey[Map[String, String]]("NetLogo template variables")
-  lazy val mathematicaRoot = settingKey[File]("root of Mathematica-Link directory")
-  lazy val localSiteTarget = settingKey[File]("directory into which local copy of the site is built")
-  lazy val modelCrossReference = taskKey[Unit]("add model cross references")
-  lazy val netLogoRoot = settingKey[File]("Root directory of NetLogo project")
-  lazy val netLogoLongVersion = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
-  lazy val packageAppParser = settingKey[State => Parser[(PlatformBuild, SubApplication, BuildJDK)]]("parser for packageApp settings")
-  lazy val platformMap = settingKey[Map[String, PlatformBuild]]("map of names to platforms")
-  lazy val subApplicationMap = settingKey[Map[String, SubApplication]]("map of names to sub-application")
-  lazy val webTarget = settingKey[File]("location of finished website")
-  lazy val jfxPackageOptions = taskKey[Package.ManifestAttributes]("Manifest attributes marking package for javapackager")
-  lazy val packageApp = inputKey[File]("package specified app on specified platform")
-  lazy val packageLinuxAggregate = inputKey[File]("package all linux apps into a single directory")
-  lazy val packageMacAggregate = taskKey[File]("package all mac apps into a dmg")
-  lazy val packageWinAggregate = inputKey[File]("package all win apps into a single directory")
+  lazy val aggregateJDKParser      = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
+  lazy val aggregateOnlyFiles      = taskKey[Seq[File]]("Files to be included in the aggregate root")
+  lazy val buildNetLogo            = taskKey[Unit]("build NetLogo")
+  lazy val buildVariables          = taskKey[Map[String, String]]("NetLogo template variables")
+  lazy val buildDownloadPages      = taskKey[Seq[File]]("package the web download pages")
+  lazy val configRoot              = settingKey[File]("configuration directory")
+  lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
+  lazy val localSiteTarget         = settingKey[File]("directory into which local copy of the site is built")
+  lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
+  lazy val modelCrossReference     = taskKey[Unit]("add model cross references")
+  lazy val netLogoLongVersion      = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
+  lazy val netLogoRoot             = settingKey[File]("Root directory of NetLogo project")
   lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
-  lazy val buildDownloadPages  = taskKey[Seq[File]]("package the web download pages")
-  lazy val generateLocalWebsite = taskKey[File]("package the web download pages")
-  lazy val uploadWebsite       = inputKey[Unit]("upload the web download pages to the ccl server")
-
-  // this value is unfortunately dependent upon both the platform and the application
-  val appMainClass: PartialFunction[(String, String), String] = {
-    case ("macosx",            _)                                            => "org.nlogo.app.MacApplication"
-    case ("windows" | "linux", "NetLogo" | "NetLogo 3D" | "NetLogo Logging") => "org.nlogo.app.App"
-    case (_,                   "HubNet Client")                              => "org.nlogo.hubnet.client.App"
-  }
+  lazy val packageLinuxAggregate   = inputKey[File]("package all linux apps into a single directory")
+  lazy val packageMacAggregate     = taskKey[File]("package all mac apps into a dmg")
+  lazy val packageWinAggregate     = inputKey[File]("package all win apps into a single directory")
+  lazy val packagingClasspath      = taskKey[Seq[File]]("Jars to include when packaging")
+  lazy val packagingMainJar        = taskKey[File]("Main jar to use when packaging")
+  lazy val subApplications         = settingKey[Seq[SubApplication]]("map of names to sub-application")
+  lazy val uploadWebsite           = inputKey[Unit]("upload the web download pages to the ccl server")
+  lazy val webTarget               = settingKey[File]("location of finished website")
 
   def bundledDirs(netlogo: Project, macApp: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
     Def.setting {
@@ -59,51 +49,17 @@ object NetLogoPackaging {
       }
     }
 
-  def mainJarAndDependencies(netlogo: Project, macApp: Project)(platform: PlatformBuild, app: SubApplication): Def.Initialize[Task[(File, Seq[File])]] = {
-    def jarExcluded(f: File): Boolean =
-      Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
-        .exists(f.getName.contains)
-
-    def repackageJar(app: SubApplication): Def.Initialize[Task[File]] = {
-      Def.task {
-        val platformBuildDir = target.value / s"${platform.shortName}-build"
-        def repackage(jar: File): File = {
-          val newJarLocation = platformBuildDir / s"${app.jarName}.jar"
-          JavaPackager.packageJar(jar, newJarLocation, None)
-          newJarLocation
-        }
-        FileFunction.cached(streams.value.cacheDirectory, FilesInfo.lastModified, FilesInfo.lastModified)({ jars =>
-          IO.createDirectory(platformBuildDir)
-          jars.map(repackage)
-        })(Set((packageBin in Compile in netlogo).value)).head
-      }
+  def repackageJar(app: SubApplication, platform: PlatformBuild, netlogo: Project): Def.Initialize[Task[File]] =
+    Def.task {
+      val mainClass = if (app.name.contains("HubNet")) Some("org.nlogo.hubnet.client.App") else None
+      val netLogoJar = (packageBin in Compile in netlogo).value
+      val platformBuildDir = target.value / s"${platform.shortName}-build"
+      JavaPackager.repackageJar(app, mainClass, netLogoJar, platformBuildDir)
     }
 
-    if (platform.shortName == "macosx")
-      Def.task {
-        ((packageBin in Compile in macApp).value,
-          (dependencyClasspath in macApp in Runtime).value.files
-            .filterNot(jarExcluded)
-            .filterNot(_.isDirectory))
-      }
-    else
-      Def.bind(repackageJar(app)) { repackagedJar =>
-        Def.task { (repackagedJar.value,
-          (dependencyClasspath in netlogo in Runtime).value.files.filterNot(jarExcluded).filterNot(_.isDirectory)) }
-      }
-  }
-
-  def jvmOptions(platform: PlatformBuild, app: SubApplication): Seq[String] = {
-    (platform.shortName, app.name) match {
-      case ("macosx", "HubNet Client") => Seq(
-          "-Xdock:name=HubNet",
-          "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$")
-      case ("macosx", _              ) => Seq(
-          "-Xdock:name=NetLogo",
-          "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$")
-      case _                           => Seq()
-    }
-  }
+  private def jarExcluded(f: File): Boolean =
+    Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
+      .exists(f.getName.contains)
 
   lazy val jdkParser: Parser[BuildJDK] =
     (mapToParserOpt(JavaPackager.systemPackagerOptions.map(j => (j.version + "-" + j.arch -> j)).toMap)
@@ -124,13 +80,19 @@ object NetLogoPackaging {
   }
 
   def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
+    netLogoRoot     := (baseDirectory in netlogo).value,
+    mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
+    configRoot      := baseDirectory.value / "configuration",
+    localSiteTarget := target.value / marketingVersion.value,
+    aggregateJDKParser := Def.toSParser(jdkParser),
+    subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp),
+    netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
       modelTasks(netlogo).value
       RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
     },
-    mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     packagedMathematicaLink := {
       val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")
@@ -157,46 +119,10 @@ object NetLogoPackaging {
     modelCrossReference := {
       ModelCrossReference((modelsDirectory in netlogo).value)
     },
-    aggregateJDKParser := Def.toSParser(jdkParser),
-    netLogoRoot := (baseDirectory in netlogo).value,
-    platformMap := Map(
-      "linux"  -> LinuxPlatform,
-      "mac"    -> new MacPlatform(macApp),
-      "macimg" -> new MacImagePlatform(macApp),
-      "win"    -> WindowsPlatform),
-    subApplicationMap := Map(
-      "NetLogo"         -> NetLogoCoreApp,
-      "NetLogo 3D"      -> NetLogoThreeDApp,
-      "NetLogo Logging" -> NetLogoLoggingApp,
-      "HubNet Client"   -> HubNetClientApp),
-    netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
     buildVariables := Map[String, String](
       "version"               -> marketingVersion.value,
       "numericOnlyVersion"    -> numericMarketingVersion.value,
       "date"                  -> buildDate.value),
-    packageAppParser := { (s: State) =>
-      ((" " ~> mapToParser(platformMap.value)) ~
-        (" " ~> mapToParser(subApplicationMap.value)) ~
-        aggregateJDKParser.value(s)).map {
-          case ((platform: PlatformBuild, subApp: SubApplication), jpkgr: BuildJDK) => (platform, subApp, jpkgr)
-        }
-    },
-    packageApp            <<=
-      InputTask.createDyn(packageAppParser)(
-        PackageAction.subApplication(
-          appMainClass,
-          mainJarAndDependencies(netlogo, macApp),
-          bundledDirs(netlogo, macApp),
-          jvmOptions)
-        ),
-    packageLinuxAggregate <<=
-      InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("linux", AggregateLinuxBuild, packageApp, packageLinuxAggregate))),
-    packageWinAggregate   <<=
-      InputTask.createDyn(aggregateJDKParser)(Def.task(
-        PackageAction.aggregate("win", AggregateWindowsBuild, packageApp, packageWinAggregate))),
-    packageMacAggregate   <<=
-      PackageAction.aggregate("macimg", AggregateMacBuild, packageApp, packageMacAggregate)(),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = baseDirectory.value / "downloadPages"
@@ -222,7 +148,6 @@ object NetLogoPackaging {
         downloadLocations.map(t => (t._1, t._2.getName))
       Mustache.betweenDirectories(webSource, webTarget.value, vars)
     },
-    localSiteTarget := target.value / marketingVersion.value,
     generateLocalWebsite := {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
       FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
@@ -237,8 +162,161 @@ object NetLogoPackaging {
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release group")
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release permissions")
+    },
+    packagingClasspath := {
+      (dependencyClasspath in netlogo in Runtime).value.files
+        .filterNot(jarExcluded)
+        .filterNot(_.isDirectory) :+ packagingMainJar.value
+    },
+    packagingMainJar := {
+      val mainJar = target.value / "NetLogo.jar"
+      FileActions.copyFile((packageBin in Compile in netlogo).value, mainJar)
+      mainJar
+    },
+    packageLinuxAggregate := {
+      val buildJDK = aggregateJDKParser.parsed
+      val outDir = target.value / s"packaged-linux-${buildJDK.arch}-${buildJDK.version}"
+
+      val srcDir = target.value / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.createDirectories(srcDir)
+
+      // need to consolidate with other platforms
+      val mainJar = packagingMainJar.value
+      FileActions.copyFile(mainJar, srcDir / mainJar.getName)
+
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", srcDir, outDir, target.value, mainJar)
+
+      FileActions.remove(srcDir)
+
+      val bundled = bundledDirs(netlogo, macApp).value(LinuxPlatform)
+
+      val commonConfig = CommonConfiguration(
+        mainJar,
+        "",
+        bundled,
+        packagingClasspath.value,
+        Seq(),
+        Seq(),
+        (aggregateOnlyFiles in packageLinuxAggregate).value,
+        configRoot.value,
+        marketingVersion.value,
+        buildJDK,
+        webTarget.value
+      )
+
+      PackageLinuxAggregate(
+        target.value / s"linux-aggregate-${buildJDK.arch}",
+        commonConfig,
+        (outDir -> "dummy"),
+        subApplications.value,
+        buildVariables.value
+      )
+    },
+    packageWinAggregate := {
+      val buildJDK = aggregateJDKParser.parsed
+      val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo).value
+      val outDir = target.value / s"packaged-win-${buildJDK.arch}-${buildJDK.version}"
+
+      val srcDir = target.value / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.createDirectories(srcDir)
+
+      val mainJar = packagingMainJar.value
+      FileActions.copyFile(mainJar, srcDir / mainJar.getName)
+
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", srcDir, outDir, target.value, mainJar)
+
+      FileActions.remove(srcDir)
+
+      val bundled = bundledDirs(netlogo, macApp).value(WindowsPlatform)
+
+      val commonConfig = CommonConfiguration(
+        mainJar,
+        "",
+        bundled,
+        packagingClasspath.value,
+        Seq(),
+        (configRoot.value ** "*.ico").get.toSeq,
+        aggregateOnlyFiles.value,
+        configRoot.value,
+        marketingVersion.value,
+        buildJDK,
+        webTarget.value
+      )
+
+      PackageWinAggregate(
+        target.value / s"win-aggregate-${buildJDK.arch}",
+        commonConfig,
+        outDir -> "dummy",
+        subApplications.value,
+        buildVariables.value)
+    },
+    packageMacAggregate := {
+      val buildJDK = PathSpecifiedJDK
+      val netLogoJar = repackageJar(DummyApp, new MacImagePlatform(macApp), netlogo).value
+      val outDir = target.value / "packaged-mac"
+
+      val mainJar = packagingMainJar.value
+      val macAppMainJar = (packageBin in Compile in macApp).value
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", target.value, outDir, target.value, mainJar)
+
+      val classPath =
+        (dependencyClasspath in macApp in Runtime).value.files
+          .filterNot(jarExcluded)
+          .filterNot(_.isDirectory) :+ macAppMainJar
+
+      val nlAppConfig = Map(
+        "fileAssociation"  -> "nlogo",
+        "bundleIdentifier" -> "org.nlogo.NetLogo",
+        "bundleName"       -> "NetLogo",
+        "bundleSignature"  -> "nLo1",
+        "iconFile"         -> "NetLogo.icns",
+        "packageID"        -> "APPLnLo1"
+      )
+      val appSpecificConfig = Map(
+        NetLogoCoreApp    -> nlAppConfig,
+        NetLogoLoggingApp -> nlAppConfig,
+        NetLogoThreeDApp  -> Map(
+          "fileAssociation"  -> "nlogo3d",
+          "bundleIdentifier" -> "org.nlogo.NetLogo3D",
+          "bundleName"       -> "NetLogo",
+          "bundleSignature"  -> "nLo1",
+          "iconFile"         -> "NetLogo.icns",
+          "packageID"        -> "APPLnLo1"
+        ),
+        HubNetClientApp  -> Map(
+          "bundleIdentifier" -> "org.nlogo.HubNetClient",
+          "bundleName"       -> "HubNet Client",
+          "bundleSignature"  -> "????",
+          "iconFile"         -> "HubNet.icns",
+          "packageID"        -> "APPL????"
+          )
+      )
+
+
+      val bundled = bundledDirs(netlogo, macApp).value(new MacImagePlatform(macApp))
+      val commonConfig = CommonConfiguration(
+        macAppMainJar,
+        "org.nlogo.app.MacApplication",
+        bundled,
+        classPath,
+        bundled.filter(_.directoryName == "natives"),
+        (configRoot.value ** "*.icns").get.toSeq,
+        aggregateOnlyFiles.value,
+        configRoot.value,
+        marketingVersion.value,
+        buildJDK,
+        webTarget.value
+      )
+      PackageMacAggregate(
+        target.value / "mac-aggregate",
+        commonConfig,
+        appSpecificConfig,
+        outDir -> "dummy",
+        subApplications.value,
+        buildVariables.value)
     }
   )
+
 
   def mapToParser[T](m: Map[String, T]): Parser[T] = {
     m.map(t => t._1 ^^^ t._2).reduceLeft(_ | _)

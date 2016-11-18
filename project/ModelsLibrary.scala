@@ -42,7 +42,7 @@ object ModelsLibrary {
     modelIndex := {
       streams.value.log.info("creating models/index.txt")
       val path = modelsDirectory.value / "index.txt"
-      IO.write(path, generateIndex(modelsDirectory.value))
+      IO.write(path, generateIndex(modelsDirectory.value, streams.value.log))
       Seq(path)
     },
     javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString,
@@ -60,7 +60,7 @@ object ModelsLibrary {
     }
   )
 
-  private def generateIndex(modelsPath: File): String = {
+  private def generateIndex(modelsPath: File, logger: Logger): String = {
     val buf = new StringBuilder
     def println(s: String) { buf ++= s + "\n" }
     // -H tells find to follow symbolic links.  we need that because
@@ -71,8 +71,13 @@ object ModelsLibrary {
         "-name", "test", "-prune", "-o", "-name", "*.nlogo", "-print",
         "-o", "-name", "*.nlogo3d", "-print")
     val paths = command.lines_!
-    def infoTab(path: String) =
+    def infoTab(path: String) = try {
       IO.read(new File(path)).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+    } catch {
+      case e: Exception =>
+        logger.error(s"while generating index, encountered error on file $path : ${e.getMessage}")
+        throw e
+    }
     for(path <- paths) {
       val info = infoTab(path)
       // The (?s) part allows . to match line endings

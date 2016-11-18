@@ -118,7 +118,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    resourceGenerators in Compile <+= I18n.resourceGeneratorTask,
+    resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
     threed := { System.setProperty("org.nlogo.is3d", "true") },
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies ++= Seq(
@@ -140,13 +140,15 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.fifesoft" % "rsyntaxtextarea" % "2.6.0"
     ),
     all := {},
-    all <<= all.dependsOn(
-      htmlDocs,
-      packageBin in Test,
-      Extensions.extensions,
-      NativeLibs.nativeLibs,
-      ModelsLibrary.modelIndex,
-      Scaladoc.apiScaladoc)
+    all := {
+      all.dependsOn(
+        htmlDocs,
+        packageBin in Test,
+        Extensions.extensions,
+        NativeLibs.nativeLibs,
+        ModelsLibrary.modelIndex,
+        Scaladoc.apiScaladoc).value
+    }
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
@@ -202,14 +204,18 @@ lazy val macApp = project.in(file("mac-app")).
     mainClass in Compile in run           := Some("org.nlogo.app.MacApplication"),
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
-    compile in Compile                    <<= (compile in Compile) dependsOn (packageBin in Compile in netlogo),
+    compile in Compile                    := {
+      ((compile in Compile) dependsOn (packageBin in Compile in netlogo)).value
+    },
     unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
     libraryDependencies                   ++= Seq(
       "net.java.dev.jna" % "jna" % "4.2.2",
       "ca.weblite" % "java-objc-bridge" % "1.0.0"),
     libraryDependencies                   ++= (libraryDependencies in netlogo).value,
     libraryDependencies                   ++= (libraryDependencies in parserJVM).value,
-    run in Compile                        <<= (run in Compile) dependsOn NativeLibs.cocoaLibs,
+    run in Compile                        := {
+      ((run in Compile) dependsOn NativeLibs.cocoaLibs).evaluated
+    },
     javaOptions in run                    += "-Djava.library.path=" + (Seq(
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),

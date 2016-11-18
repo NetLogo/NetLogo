@@ -1,4 +1,4 @@
-#!/usr/bin/env sbt -Dsbt.version=0.13.8 -Dsbt.main.class=sbt.ScriptMain --error
+#!/usr/bin/env sbt -Dsbt.version=0.13.13 -Dsbt.main.class=sbt.ScriptMain --error
 
 // This generates Markdown suitable for pasting into
 // https://github.com/NetLogo/NetLogo/wiki/Release-notes

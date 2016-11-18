@@ -8,18 +8,17 @@ object InfoTab {
     "info-tab", "builds info tab section of User Manual")
 
   val infoTabTask =
-    infoTab <<= (fullClasspath in Test, baseDirectory, runner, streams) map {
-      (cp, base, runner, s) =>
-        val cache =
-          FileFunction.cached(s.cacheDirectory / "infotab",
-                              inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+    infoTab := {
+      val cache =
+        FileFunction.cached(streams.value.cacheDirectory / "infotab",
+          inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
-              IO.createDirectory(base / "docs")
+              IO.createDirectory(baseDirectory.value / "docs")
               Run.run("org.nlogo.tools.InfoTabDocGenerator",
-                      cp.map(_.data), Seq(), s.log)(runner)
-              Set(base / "docs" / "infotab.html")
+                (fullClasspath in Test).value.map(_.data), Seq(), streams.value.log)(runner.value)
+              Set(baseDirectory.value / "docs" / "infotab.html")
           }
-        cache(Set(base / "models" / "Code Examples" / "Info Tab Example.nlogo")).toSeq
-      }
+          cache(Set(baseDirectory.value / "models" / "Code Examples" / "Info Tab Example.nlogo")).toSeq
+    }
 
 }
