@@ -63,6 +63,9 @@ object AutoConversionList {
         _.replaceToken("is-command-task?",  "is-anonymous-command?"),
         _.customRewrite("org.nlogo.parse.Lambdaizer"))
       ConversionSet("replace tasks with anonymous procedures", conversions, conversions, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d))
+    },
+    "NetLogo 6.0-BETA2" -> {
+      changeAllCode("rename range to _range", Seq(_.replaceToken("range", "_range")), Seq("range"))
     }
     )
 }

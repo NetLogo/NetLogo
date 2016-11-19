@@ -321,6 +321,17 @@
       The plugin handles fetching the NetLogo jar which extensions compile against as
       well as generation of a jar for the extension containing the appropriate metadata.
     <div id="v52">
+    <h3>
+      Add <code>range</code> primitive
+    </h3>
+    <p id="rangeprim">
+      A new <code>range</code> primitive was added in NetLogo 6. As "range"
+      may appear in existing models as a procedure or variable name, we have
+      added an autoconversion step which will ensure that these models continue
+      to operate immediately upon opening in NetLogo 6. Existing uses of
+      <code>range</code> in models authored before NetLogo 6 will be converted
+      to <code>_range</code> upon first opening in NetLogo 6. Once the model
+      opens, you can rename <code>_range</code> to suit your model.
     <h2>
       <a>Changes for NetLogo 5.2</a>
     </h2>
