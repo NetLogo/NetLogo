@@ -18,8 +18,8 @@ class DummyChooserWidget(val compiler: CompilerServices)
 
   def name: String = _name
 
-  def name(name: String): Unit = {
-    _name = name
+  def name(newName: String): Unit = {
+    _name = newName
     repaint()
   }
 
