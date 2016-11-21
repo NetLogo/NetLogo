@@ -16,13 +16,14 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
-      Version 6.0 (September 2016)
+      Version 6.0 (November 2016)
     </h2>
 
     <h3>Feature Changes</h3>
 
     <ul>
       <li>The NetLogo code editor now offers autocompletion support. Simply press the Control key and the spacebar at the same time while typing a word and you will see a list of similar NetLogo primitives as suggestions.</li>
+      <li>The NetLogo code editor offers the option to "fold" procedures to make navigating large models simpler.</li>
       <li>NetLogo supports multi-level agent-based modeling with the LevelSpace extension</li>
       <li>Line numbering can be enabled in the NetLogo code editor by choosing "Show Line Numbers" from the "Preferences" dialog. This dialog can be opened by selecting "NetLogo" &gt; "Preferences" in Mac, or "Tools" &gt; "Preferences" on Linux or Windows.</li>
       <li>The view resizing arrows have been removed and the tick counter has been relocated under the speed slider.</li>
@@ -34,7 +35,7 @@
       <li>Plots use a random number generator independent of the main-model random number generator.</li>
       <li>Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu. Those commands generate the preview image that appears when you upload your model to the Modeling Commons.</li>
       <li>NetLogo displays a more helpful error message when a program fails due to an "out of memory" error.</li>
-      <li>NetLogo and its bundled extensions are now compiled against Java 8 and Scala 2.11.</li>
+      <li>NetLogo and its bundled extensions are now compiled against Java 8 and Scala 2.12.</li>
       <li>NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode.</li>
     </ul>
 
@@ -55,6 +56,7 @@
     <ul>
       <li>Support for plural-only breed names (e.g., <code>breed [mice]</code>) has been removed. Write <code>breed [mice mouse]</code> instead.</li>
       <li>Tasks have been replaced by anonymous procedures. Tasks made use of <code>?</code> variables which were confusing for novices and difficult to read for experts. Additionally, tasks could not refer to the task variables of a containing task. Anonymous procedures may have named arguments which can be accessed by inner anonymous tasks. Upon first opening a NetLogo 5 model in NetLogo 6, tasks like <code>task [ ?1 + ?2 ]</code> will be automatically converted to <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. See the <a href="transition.html">the transition guide</a> for more information.</li>
+      <li>Link reporters have been overhauled to be more consistent and flexible</li>
       <li>The <code>task</code> primitive is no longer supported.</li>
       <li>Breed names that conflict with language primitives are now disallowed. For instance, <code>breed [strings string]</code> is now disallowed since it makes <code>is-string?</code> ambiguous.</li>
       <li>The compiler errors on duplicated breed singular names. </li>
