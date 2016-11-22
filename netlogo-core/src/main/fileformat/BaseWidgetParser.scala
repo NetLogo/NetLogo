@@ -5,6 +5,7 @@ package org.nlogo.fileformat
 import org.parboiled2._
 
 import org.nlogo.core.{ LiteralParser, Widget }
+import org.nlogo.api.Exceptions
 
 object BaseWidgetParser extends ParsingStringUtils {
   trait RichRule { this: Parser =>
@@ -64,7 +65,7 @@ trait BaseWidgetParser {
     val res = internalParser.defaultRule.run()
     res match {
       case scala.util.Failure(e: ParseError) =>
-        println(internalParser.formatError(e))
+        Exceptions.ignore(new Exception("failure to parse widget:\n" + internalParser.formatError(e)))
       case _ =>
     }
     res.toOption
