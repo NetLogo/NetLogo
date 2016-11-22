@@ -404,6 +404,7 @@ tools.preferences = NetLogo Preferences
 tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
+tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview

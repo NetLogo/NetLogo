@@ -11,7 +11,7 @@ import org.nlogo.api._
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog, PreviewCommandsEditor }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
 Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
@@ -609,8 +609,7 @@ class App extends
 
   lazy val openPreferencesDialog =
     new ShowPreferencesDialog(new PreferencesDialog(frame,
-      Preference.Language,
-      new Preference.LineNumbers(tabs)))
+      Preferences.Language, new Preferences.LineNumbers(tabs), Preferences.IncludedFilesMenu))
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 

@@ -19,15 +19,14 @@ import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, Procedur
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
-  with ProceduresInterface
-  with ProceduresMenuTarget
-  with UndoRedoActions
-  with AppEvents.SwitchedTabsEvent.Handler
-  with WindowEvents.CompiledEvent.Handler
-  with Zoomable
-  with NlogoPrintable
-  with MenuTab {
-
+with ProceduresInterface
+with ProceduresMenuTarget
+with UndoRedoActions
+with AppEvents.SwitchedTabsEvent.Handler
+with WindowEvents.CompiledEvent.Handler
+with Zoomable
+with NlogoPrintable
+with MenuTab {
   private var _dirty = false
   def dirty = _dirty
   protected def dirty_=(b: Boolean) = {
@@ -84,7 +83,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
       add(new ToolBarActionButton(CompileAction))
       add(new ToolBar.Separator)
       add(new ProceduresMenu(CodeTab.this))
-      add(new IncludedFilesMenu(CodeTab.this, tabs))
+      add(new IncludedFilesMenu(getIncludesTable, tabs))
       val additionalComps = getAdditionalToolBarComponents
       if (additionalComps.nonEmpty) {
         add(new ToolBar.Separator)
