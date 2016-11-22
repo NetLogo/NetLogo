@@ -263,6 +263,7 @@ lazy val parser = CrossProject("parser", file("."),
       name := "parser-js",
       ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
       resolvers += Resolver.sonatypeRepo("releases"),
+      parallelExecution in Test := false,
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
