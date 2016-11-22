@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="scalatest_2.11-2.2.6">
+  <library name="scalactic_2.12-3.0.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/scalatest_2.11-2.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_idea/scalactic_2.12-3.0.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
