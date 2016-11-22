@@ -93,13 +93,16 @@ with AppEvents.IndenterChangedEvent.Handler {
       }
   }
 
-  override def handle(e: WindowEvents.CompiledEvent) {
+  override def handle(e: WindowEvents.CompiledEvent) = {
+    def setErrorLabel() = errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
+
     dirty = false
-    if((e.sourceOwner.isInstanceOf[ExternalFileInterface] &&
-      e.sourceOwner.asInstanceOf[ExternalFileInterface].getFileName == filename.right.get)
+    e.sourceOwner match {
+      case file: ExternalFileInterface if file.getFileName == filename.right.get => setErrorLabel()
       // if the Code tab compiles then get rid of the error ev 7/26/07
-      || (e.sourceOwner.isInstanceOf[CodeTab] && e.error == null))
-      errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
+      case tab: CodeTab if e.error == null                                       => setErrorLabel()
+      case _ =>
+    }
   }
 
   override def handle(e: AppEvents.SwitchedTabsEvent) = if (!closing) super.handle(e)
@@ -109,9 +112,11 @@ with AppEvents.IndenterChangedEvent.Handler {
   }
 
   private def userChooseSavePath(): String = {
-    val newFileName = if (filenameForDisplay.endsWith(".nls")) filenameForDisplay else filenameForDisplay + ".nls"
+    def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix
+
+    val newFileName = appendIfNecessary(filenameForDisplay, ".nls")
     val path = SwingFileDialog.show(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
-    if (path.endsWith(".nls")) path else path + ".nls"
+    appendIfNecessary(path, ".nls")
   }
 
   @throws(classOf[UserCancelException])

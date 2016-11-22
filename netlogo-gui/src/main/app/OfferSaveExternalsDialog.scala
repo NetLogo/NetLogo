@@ -44,7 +44,7 @@ object OfferSaveExternalsDialog {
 
   private class SaveTableModel(dirtyExternalFiles: Set[TemporaryCodeTab]) extends DefaultTableModel {
     implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
-    val files = (dirtyExternalFiles map (tab => Array(true: java.lang.Boolean, tab.filename))).toArray
+    val files = (dirtyExternalFiles map (tab => Array[AnyRef](true: java.lang.Boolean, tab.filename))).toArray
     override def getValueAt(row: Int, col: Int) = col match {
       case 0 => files(row)(col)
       case 1 => files(row)(col).asInstanceOf[Filename].merge

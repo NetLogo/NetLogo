@@ -6,6 +6,10 @@ import java.awt.{Component, Frame, FileDialog => AwtFileDialog}
 import java.awt.image.BufferedImage
 import java.io.{IOException, PrintWriter}
 
+import scala.concurrent.{ Await, Future }
+import scala.concurrent.duration.{ Duration, MILLISECONDS }
+import scala.util.{ Failure, Success }
+
 import org.nlogo.agent.World
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelSettings}
 import org.nlogo.awt.{Hierarchy, UserCancelException}
@@ -16,7 +20,6 @@ import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
 import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
-
 
 abstract class GUIWorkspaceScala(world: World,
   hubNetManagerFactory: HubNetManagerFactory,

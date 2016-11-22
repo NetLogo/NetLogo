@@ -167,7 +167,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     }
   }
 
-  object EmptyAction extends AbstractAction(I18N.gui.get("menu.file.recent.empty"))
+  object EmptyAction extends AbstractAction(I18N.gui.get("common.menus.empty"))
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileRecentSubcategory

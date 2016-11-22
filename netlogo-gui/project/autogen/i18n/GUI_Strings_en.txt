@@ -25,6 +25,8 @@ common.buttons.no = No
 common.messages.error = Error
 common.messages.warning = Warning
 
+common.menus.empty = <empty>
+
 # GUI
 
 menu.file = File
@@ -71,7 +73,6 @@ menu.file.import.hubNetClientInterface.fromClient = HubNet client
 menu.file.quit = Quit
 menu.file.recent = Recent Files
 menu.file.recent.clear = Clear Items
-menu.file.recent.empty = <empty>
 
 menu.edit = Edit
 menu.edit.cut = Cut
@@ -190,6 +191,9 @@ tabs.code.rightclick.collapse = Toggle Folds in Selection
 tabs.code.checkButton = Check
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
+tabs.code.includedFiles = Included Files
+tabs.code.includedFiles.new = New Source File
+tabs.code.includedFiles.open = Open Source File
 tabs.code.indentAutomatically = Indent automatically
 
 tabs.external.new = New File {0}
@@ -219,6 +223,7 @@ file.open.warn.autoconversion.original = Open Unconverted Model
 file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
+file.open.error.external.suffix = Filename must end with ".nls".
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
 file.save.external = Save NetLogo Source File
 file.save.offer.external.filesChanged = The following files has been modified:

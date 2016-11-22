@@ -32,7 +32,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
   def dirty = _dirty
   protected def dirty_=(b: Boolean) = {
     _dirty = b
-    compileAction.setEnabled(b)
+    CompileAction.setEnabled(b)
   }
 
   private lazy val listener = new TextListener {
@@ -71,27 +71,20 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) ex
     add(codePanel, BorderLayout.CENTER)
   }
 
-  val compileAction: Action = new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource("/images/check.gif")))
-    def actionPerformed(e: ActionEvent) = compile()
-  }
-
-  private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON,
       new ImageIcon(classOf[CodeTab].getResource(
         "/images/check.gif")))
-    def actionPerformed(e: ActionEvent) {
-      new WindowEvents.CompileAllEvent().raise(CodeTab.this)
-    }
+    def actionPerformed(e: ActionEvent) = compile()
   }
 
   def getToolBar = new ToolBar {
     override def addControls() {
       add(new ToolBarActionButton(FindDialog.FIND_ACTION))
-      add(new ToolBarActionButton(compileAction))
+      add(new ToolBarActionButton(CompileAction))
       add(new ToolBar.Separator)
       add(new ProceduresMenu(CodeTab.this))
-      add(new IncludesMenu(CodeTab.this, tabs))
+      add(new IncludedFilesMenu(CodeTab.this, tabs))
       val additionalComps = getAdditionalToolBarComponents
       if (additionalComps.nonEmpty) {
         add(new ToolBar.Separator)

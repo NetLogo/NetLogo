@@ -87,6 +87,7 @@ class Tabs(val workspace:    GUIWorkspace,
     tabActions = TabsMenu.tabActions(this)
     fileManager = manager
     dirtyMonitor = monitor
+    assert(fileManager != null && dirtyMonitor != null)
   }
 
   def stateChanged(e: ChangeEvent): Unit = {
@@ -131,6 +132,7 @@ class Tabs(val workspace:    GUIWorkspace,
               getTabWithFilename(Right(filename)).get
             }
             highlightRuntimeError(tab, e)
+          case _ =>
         }
 
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
@@ -145,6 +147,10 @@ class Tabs(val workspace:    GUIWorkspace,
     def clearErrors() = forAllCodeTabs(tab => setForegroundAt(indexOfComponent(tab), null))
     def recolorTab(component: Component, hasError: Boolean): Unit =
       setForegroundAt(indexOfComponent(component), if(hasError) errorColor else null)
+    def recolorInterfaceTab() = {
+      if (e.error != null) setSelectedIndex(0)
+      recolorTab(interfaceTab, e.error != null)
+    }
 
     // recolor tabs
     e.sourceOwner match {
@@ -170,12 +176,11 @@ class Tabs(val workspace:    GUIWorkspace,
         if (e.error != null) setSelectedComponent(tab.get)
         recolorTab(tab.get, e.error != null)
         requestFocus()
-      case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
-        if(e.error != null) setSelectedIndex(0)
-        recolorTab(interfaceTab, e.error != null)
+      case null =>
+        recolorInterfaceTab() // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
       case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
-        if(e.error != null) setSelectedIndex(0)
-        recolorTab(interfaceTab, e.error != null)
+        recolorInterfaceTab()
+      case _ =>
     }
   }
 
