@@ -11,55 +11,26 @@ extends Indenter {
 
   /// first, the four handle* methods in IndenterInterface
 
-  def handleTab() {
+  def handleTab() = {
     val line1 = code.offsetToLine(code.getSelectionStart)
     val line2 = code.offsetToLine(code.getSelectionEnd)
-    (line1 to line2).foreach(indentLine(_))
+    (line1 to line2).foreach(indentLine)
   }
-  def handleEnter() {
-    val lineStart = code.lineToStartOffset(code.offsetToLine(code.getSelectionStart))
-    val prevLineText = code.getText(lineStart, code.getSelectionStart - lineStart)
-    val tabDiff = totalValue(prevLineText)
-    if(tabDiff >= 0)
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(prevLineText) + tabDiff * TAB_WIDTH))
-    else
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(
-          code.getLineOfText(
-            code.offsetToLine(
-              findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-              .start)))))
+
+  def handleEnter() = {
+    code.replaceSelection("\n")
+    indentLine(code.offsetToLine(code.getSelectionEnd))
   }
-  def handleInsertion(s: String) {
+
+  def handleInsertion(s: String) = {
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
         handleCloseBracket()
     }
   }
-  def handleCloseBracket() {
-    val currentLine = code.offsetToLine(code.getSelectionStart)
-    val lineStart = code.lineToStartOffset(currentLine)
-    val lineEnd = code.lineToEndOffset(currentLine)
-    val text = code.getText(lineStart, lineEnd - lineStart)
-    val textUpToCursor = text.substring(0, code.getSelectionStart - lineStart)
-    val wordUpToCursor = textUpToCursor.trim.toLowerCase
-    if(List("]", ")", "end").contains(wordUpToCursor)) {
-      val lineSpaceCount = countLeadingSpaces(textUpToCursor)
-      val opener = findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-      val openerLineNum = code.offsetToLine(opener.start)
-      val openerLine = code.getLineOfText(openerLineNum)
-      val spaceDiff = StrictMath.min(lineSpaceCount - countLeadingSpaces(openerLine),
-                                     textUpToCursor.length)
-      if(spaceDiff > 0)
-        code.remove(code.getSelectionStart - wordUpToCursor.length - spaceDiff,
-                    spaceDiff)
-      else if(spaceDiff < 0)
-        code.insertString(code.getSelectionStart - wordUpToCursor.length,
-                          spaces(- spaceDiff))
-    }
-  }
+
+  def handleCloseBracket() = handleTab()
 
   /// private helpers
 
