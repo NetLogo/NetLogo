@@ -43,6 +43,15 @@ to go
 ++]
 end
 
+IfElseMultiLineCompact
+to go
+++ifelse true [
+++++show 1
+++] [
+++++show 2
+++]
+end
+
 Globals
 globals [
 ++glob1
@@ -81,7 +90,17 @@ to bar
 
 MultiLineLiteralList1
 let triangle [[75]
-  [95 64] [17 47 82]]
+++++++++++++++[95 64] [17 47 82]]
+
+WayIndentedCommands
+ask turtles [ fd 1
+++++++++++++++fd 10
+]
+
+WayIndentedComment
+ask turtles [ ;; This does crazy stuff!
+++fd 10       ;; Forward 10! Wow!
+]
 
 Hatch1
 if true
@@ -108,24 +127,10 @@ if true
 #    <-- line with only some spaces on it
 #++foo
 
-#IfElseYetAnotherStyle
-#to bar
-#++ifelse foo [
-#++++x
-#++] [
-#++++y
-#++]
-#end
-
 #MultiLineCommand
 #let digit-sum carry +
 #++read-from-string item ? n1 +
 #++read-from-string item ? n2
-
-#WayIndentedCommands
-#ask turtles [ fd 1
-#++++++++++++++fd 10
-#]
 
 #CommentLinesOneStandaloneOneNot
 #to eat-grass  ;; sheep procedure
@@ -136,10 +141,6 @@ if true
 #
 
 #MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
-#let triangle [[75]
-#              [95 64] [17 47 82]]
-
-#MultiLineLiteralList3 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let x [[1 2 [3 31 32
 #             4 5]
 #        6]
