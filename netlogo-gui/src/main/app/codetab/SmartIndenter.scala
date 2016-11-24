@@ -93,38 +93,29 @@ extends Indenter {
       getComment(tokens).foreach(tok => return Some(tok.start))
     var result = countLeadingSpaces(prevLine)
     // if there is such a previous line if it's got an "opener" that has no closer bump this line in
-    val fromUnmatched = fromUnmatchedOpener(tokens)
-    fromUnmatched match {
-      case Some(tokensInUnmatched) =>
-        // "to" and "to-report" are special because they're followed by the procedure name.
-        // We don't want to indent to the level of the procedure name.
-        // size == 2 because the last token is always EOF. This tells use there's nothing after the unmatched opener.
-        if (List("to", "to-report").contains(tokensInUnmatched.head.text.toLowerCase)
-            || tokensInUnmatched.size == 2
-            || tokensInUnmatched.tail.head.tpe == TokenType.Comment) {
-          // We drop closers at the beginning because the indenter should have
-          // already taken those into account in re-indenting that line.
-          if (totalValue(tokens.dropWhile(isCloser)) > 0) { result += TAB_WIDTH }
-        } else {
-          // There's a token after the unmatched opener on the same line. We match that tokens indentation level.
-          result = tokensInUnmatched.tail.head.start
-        }
-      case None =>
-        // finally, first look for the last closing bracket, then find the matching open bracket then
-        // find the previous command that is outside the brackets.
-        findCommandForLastCloser(
-          prevLine, code.lineToStartOffset(prevLineNum),
-          token != null && isOpener(token)).foreach(opener =>
-          result = countLeadingSpaces(
-            code.getLineOfText(
-              code.offsetToLine(opener.start))))
-        // look for the command on the previous line if we've got an opener (closed opener) look to
-        // see where we are in relation to the command if we're indented past the command move to 1
-        // tab stop past if we're before we move to be in line with the command
-        val cmd = findCommand(prevLine)
-        if (token != null && isOpener(token) && cmd.isDefined &&
-          countLeadingSpaces(currentLine) > result)
-          return Some(result + TAB_WIDTH)
+    // Note that value > 0 implies there's unmatched opener but not vice versa.
+    // If there's an unmatched opener, we *don't* want to indent off the last
+    // command (which is what the else branch does).
+    if (findUnmatchedOpener(tokens).isDefined) {
+      // We may not want to bump this line if the previous line is something
+      // like `  foo ] [`. That's what the following `if` checks for.
+      // We drop closers at the beginning because the indenter should have
+      // already taken those into account in re-indenting that line.
+      if (totalValue(tokens.dropWhile(isCloser)) > 0) { result += TAB_WIDTH }
+    } else {
+      findCommandForLastCloser(
+        prevLine, code.lineToStartOffset(prevLineNum),
+        token != null && isOpener(token)).foreach(opener =>
+        result = countLeadingSpaces(
+          code.getLineOfText(
+            code.offsetToLine(opener.start))))
+      // look for the command on the previous line if we've got an opener (closed opener) look to
+      // see where we are in relation to the command if we're indented past the command move to 1
+      // tab stop past if we're before we move to be in line with the command
+      val cmd = findCommand(prevLine)
+      if (token != null && isOpener(token) && cmd.isDefined &&
+        countLeadingSpaces(currentLine) > result)
+        return Some(result + TAB_WIDTH)
     }
     Some(result)
   }
@@ -132,14 +123,14 @@ extends Indenter {
   private def countLeadingSpaces(s: String) = s.takeWhile(_ == ' ').size
   private def spaces(n: Int) = List.fill(n)(' ').mkString
   private def totalValue(tokens: List[Token]): Int = tokens.map(value).sum
-  private def fromUnmatchedOpener(tokens: List[Token]): Option[List[Token]] = {
-    var stack = 0
-    val result = tokens.reverse.takeWhile { t =>
-      val keepGoing = stack <= 0
-      if (keepGoing) { stack += (if (isOpener(t)) 1 else if (isCloser(t)) -1 else 0) }
-      keepGoing
-    }.reverse
-    if (stack > 0) Some(result) else None
+  private def findUnmatchedOpener(tokens: List[Token]): Option[Token] = {
+    def helper(ts: List[Token], stack: Int): Option[Token] = ts match {
+      case h :: tail if isOpener(h) => if (stack < 0) helper(tail, stack + 1) else Some(h)
+      case h :: tail if isCloser(h) =>                helper(tail, stack - 1)
+      case _ :: tail                =>                helper(tail, stack)
+      case _ => None
+    }
+    helper(tokens.reverse, 0)
   }
 
   private def value(tok: Token) =

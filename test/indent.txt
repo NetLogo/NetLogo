@@ -72,6 +72,25 @@ let my-list
 ++[0 2]
 ]
 
+MultiLineVariadicCommand
+(foreach
+++list1
+++list2
+++[ [x y] ->
+++++foo x y
+++]
+)
+
+AnonymousProcedure
+let func [ [x] ->
+++x + 1
+]
+
+AnonymousProcedureComment
+let func [ [x] -> ;; this does stuff
+++x + 1
+]
+
 Comments1
 ask turtles [ fd 1 ] ;; I am a comment
 +++++++++++++++++++++;;me too
@@ -87,15 +106,6 @@ to foo
 ++ask [ [ [ [
 end
 to bar
-
-MultiLineLiteralList1
-let triangle [[75]
-++++++++++++++[95 64] [17 47 82]]
-
-WayIndentedCommands
-ask turtles [ fd 1
-++++++++++++++fd 10
-]
 
 WayIndentedComment
 ask turtles [ ;; This does crazy stuff!
@@ -127,6 +137,7 @@ if true
 #    <-- line with only some spaces on it
 #++foo
 
+
 #MultiLineCommand
 #let digit-sum carry +
 #++read-from-string item ? n1 +
@@ -138,7 +149,21 @@ if true
 
 #
 # These are even more ambitious.
-#
+# Fixing these requires lots of special casing with anonymous procedures and non-bracket openers
+
+#WayIndentedCommands
+#ask turtles [ fd 1
+#++++++++++++++fd 10
+#]
+
+#ArgIndentMatchingMultilineStatment -- is this ideal?
+#let foo (list 1
+#++++++++++++++2
+#++++++++++++++3)
+
+#MultiLineLiteralList1 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#let triangle [[75]
+#              [95 64] [17 47 82]]
 
 #MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let x [[1 2 [3 31 32
