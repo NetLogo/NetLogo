@@ -13,7 +13,10 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
@@ -1238,4 +1241,17 @@ public strictfp class Turtle
   }
 
 
+  private List<Link> links = new ArrayList<>(0);
+
+  public void addLink(Link link) {
+    links.add(link);
+  }
+
+  public boolean removeLink(Link link) {
+    return links.remove(link);
+  }
+
+  public Link[] links() {
+    return links.toArray(new Link[links.size()]);
+  }
 }
