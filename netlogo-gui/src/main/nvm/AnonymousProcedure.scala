@@ -66,7 +66,7 @@ object AnonymousProcedure {
 case class AnonymousReporter(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
   // anonymous reporters are allowed to take more than the number of arguments (hence repeatable-type)
-  def syntax =
+  val syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
@@ -100,7 +100,7 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
 case class AnonymousCommand(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
-  def syntax =
+  val syntax =
     Syntax.commandSyntax(
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = procedure.agentClassString)
