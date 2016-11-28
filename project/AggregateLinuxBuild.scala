@@ -80,7 +80,7 @@ object PackageLinuxAggregate {
         configureSubApplication(aggregateLinuxDir, app, commonConfig, variables)
       }
 
-      val archiveName = s"netlogo-$version-${jdk.arch}.tgz"
+      val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
       val tarBuildDir = aggregateLinuxDir.getParentFile
 
       RunProcess(Seq("tar", "-zcf", archiveName, aggregateLinuxDir.getName), tarBuildDir, "tar linux aggregate")

@@ -108,7 +108,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-BETA1",
+    version := "6.0.0-BETA2",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -263,6 +263,7 @@ lazy val parser = CrossProject("parser", file("."),
       name := "parser-js",
       ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
       resolvers += Resolver.sonatypeRepo("releases"),
+      parallelExecution in Test := false,
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(

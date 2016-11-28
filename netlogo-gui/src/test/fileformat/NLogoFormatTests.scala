@@ -48,7 +48,8 @@ class NLogoFormatIOTest extends FunSuite {
   test("saves specified sections to a given URI") {
     val sections =
       format.sections(antsBenchmarkPath.toUri).get
-    val pathToWrite = Paths.get("tmp", "AntsCopy"+ System.currentTimeMillis +".nlogo")
+    val pathToWrite = Files.createTempFile("AntsCopy", ".nlogo")
+    Files.delete(pathToWrite)
     val result = format.writeSections(sections, pathToWrite.toUri)
     assert(result.isSuccess)
     assert(Paths.get(result.get).toAbsolutePath == pathToWrite.toAbsolutePath)

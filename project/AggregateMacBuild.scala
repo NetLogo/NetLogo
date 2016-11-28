@@ -154,7 +154,7 @@ object PackageMacAggregate {
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "380m",
+        "-size", "420m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 

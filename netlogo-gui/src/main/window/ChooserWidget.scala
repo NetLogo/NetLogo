@@ -39,7 +39,7 @@ class ChooserWidget(val compiler: CompilerServices)
   def name(newName: String): Unit = name(newName, true)
 
   private def name(newName: String, sendEvent: Boolean): Unit = {
-    _name = name
+    _name = newName
     repaint()
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -50,7 +50,7 @@ class ChooserWidget(val compiler: CompilerServices)
   def nameWrapper: String = name
   // name needs a wrapper because we don't want to recompile until editFinished()
   def nameWrapper(newName: String): Unit = {
-    nameChanged = (name: String) != newName || nameChanged
+    nameChanged = _name != newName || nameChanged
     name(newName, false)
   }
 
@@ -85,7 +85,7 @@ class ChooserWidget(val compiler: CompilerServices)
   override def editFinished(): Boolean = {
     super.editFinished
     name(name, nameChanged)
-    updateConstraints
+    updateConstraints()
     nameChanged = false
     true
   }
