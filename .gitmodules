@@ -62,3 +62,6 @@
 [submodule "extensions/rnd"]
 	path = extensions/rnd
 	url = https://github.com/NetLogo/Rnd-Extension.git
+[submodule "behaviorsearch"]
+	path = behaviorsearch
+	url = https://github.com/NetLogo/behaviorsearch.git
