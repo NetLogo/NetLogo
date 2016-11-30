@@ -11,55 +11,26 @@ extends Indenter {
 
   /// first, the four handle* methods in IndenterInterface
 
-  def handleTab() {
+  def handleTab() = {
     val line1 = code.offsetToLine(code.getSelectionStart)
     val line2 = code.offsetToLine(code.getSelectionEnd)
-    (line1 to line2).foreach(indentLine(_))
+    (line1 to line2).foreach(indentLine)
   }
-  def handleEnter() {
-    val lineStart = code.lineToStartOffset(code.offsetToLine(code.getSelectionStart))
-    val prevLineText = code.getText(lineStart, code.getSelectionStart - lineStart)
-    val tabDiff = totalValue(prevLineText)
-    if(tabDiff >= 0)
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(prevLineText) + tabDiff * TAB_WIDTH))
-    else
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(
-          code.getLineOfText(
-            code.offsetToLine(
-              findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-              .start)))))
+
+  def handleEnter() = {
+    code.replaceSelection("\n")
+    indentLine(code.offsetToLine(code.getSelectionEnd))
   }
-  def handleInsertion(s: String) {
+
+  def handleInsertion(s: String) = {
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
         handleCloseBracket()
     }
   }
-  def handleCloseBracket() {
-    val currentLine = code.offsetToLine(code.getSelectionStart)
-    val lineStart = code.lineToStartOffset(currentLine)
-    val lineEnd = code.lineToEndOffset(currentLine)
-    val text = code.getText(lineStart, lineEnd - lineStart)
-    val textUpToCursor = text.substring(0, code.getSelectionStart - lineStart)
-    val wordUpToCursor = textUpToCursor.trim.toLowerCase
-    if(List("]", ")", "end").contains(wordUpToCursor)) {
-      val lineSpaceCount = countLeadingSpaces(textUpToCursor)
-      val opener = findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-      val openerLineNum = code.offsetToLine(opener.start)
-      val openerLine = code.getLineOfText(openerLineNum)
-      val spaceDiff = StrictMath.min(lineSpaceCount - countLeadingSpaces(openerLine),
-                                     textUpToCursor.length)
-      if(spaceDiff > 0)
-        code.remove(code.getSelectionStart - wordUpToCursor.length - spaceDiff,
-                    spaceDiff)
-      else if(spaceDiff < 0)
-        code.insertString(code.getSelectionStart - wordUpToCursor.length,
-                          spaces(- spaceDiff))
-    }
-  }
+
+  def handleCloseBracket() = handleTab()
 
   /// private helpers
 
@@ -122,14 +93,19 @@ extends Indenter {
       getComment(tokens).foreach(tok => return Some(tok.start))
     var result = countLeadingSpaces(prevLine)
     // if there is such a previous line if it's got an "opener" that has no closer bump this line in
-    if(totalValue(tokens) > 0)
-      result += TAB_WIDTH
-    else {
-      // finally, first look for the last closing bracket, then find the matching open bracket then
-      // find the previous command that is outside the brackets.
+    // Note that value > 0 implies there's unmatched opener but not vice versa.
+    // If there's an unmatched opener, we *don't* want to indent off the last
+    // command (which is what the else branch does).
+    if (findUnmatchedOpener(tokens).isDefined) {
+      // We may not want to bump this line if the previous line is something
+      // like `  foo ] [`. That's what the following `if` checks for.
+      // We drop closers at the beginning because the indenter should have
+      // already taken those into account in re-indenting that line.
+      if (totalValue(tokens.dropWhile(isCloser)) > 0) { result += TAB_WIDTH }
+    } else {
       findCommandForLastCloser(
-          prevLine, code.lineToStartOffset(prevLineNum),
-          token != null && isOpener(token)).foreach(opener =>
+        prevLine, code.lineToStartOffset(prevLineNum),
+        token != null && isOpener(token)).foreach(opener =>
         result = countLeadingSpaces(
           code.getLineOfText(
             code.offsetToLine(opener.start))))
@@ -137,18 +113,25 @@ extends Indenter {
       // see where we are in relation to the command if we're indented past the command move to 1
       // tab stop past if we're before we move to be in line with the command
       val cmd = findCommand(prevLine)
-      if(token != null && isOpener(token) && cmd.isDefined &&
-         countLeadingSpaces(currentLine) > result)
-           return Some(result + TAB_WIDTH)
+      if (token != null && isOpener(token) && cmd.isDefined &&
+        countLeadingSpaces(currentLine) > result)
+        return Some(result + TAB_WIDTH)
     }
     Some(result)
   }
 
   private def countLeadingSpaces(s: String) = s.takeWhile(_ == ' ').size
-  private def isOnlySpaces(s: String) = s.forall(_ == ' ')
   private def spaces(n: Int) = List.fill(n)(' ').mkString
-  private def totalValue(s: String): Int = totalValue(tokenize(s))
   private def totalValue(tokens: List[Token]): Int = tokens.map(value).sum
+  private def findUnmatchedOpener(tokens: List[Token]): Option[Token] = {
+    def helper(ts: List[Token], stack: Int): Option[Token] = ts match {
+      case h :: tail if isOpener(h) => if (stack < 0) helper(tail, stack + 1) else Some(h)
+      case h :: tail if isCloser(h) =>                helper(tail, stack - 1)
+      case _ :: tail                =>                helper(tail, stack)
+      case _ => None
+    }
+    helper(tokens.reverse, 0)
+  }
 
   private def value(tok: Token) =
     if(isOpener(tok)) 1

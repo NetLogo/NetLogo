@@ -43,6 +43,15 @@ to go
 ++]
 end
 
+IfElseMultiLineCompact
+to go
+++ifelse true [
+++++show 1
+++] [
+++++show 2
+++]
+end
+
 Globals
 globals [
 ++glob1
@@ -63,6 +72,25 @@ let my-list
 ++[0 2]
 ]
 
+MultiLineVariadicCommand
+(foreach
+++list1
+++list2
+++[ [x y] ->
+++++foo x y
+++]
+)
+
+AnonymousProcedure
+let func [ [x] ->
+++x + 1
+]
+
+AnonymousProcedureComment
+let func [ [x] -> ;; this does stuff
+++x + 1
+]
+
 Comments1
 ask turtles [ fd 1 ] ;; I am a comment
 +++++++++++++++++++++;;me too
@@ -79,9 +107,10 @@ to foo
 end
 to bar
 
-MultiLineLiteralList1
-let triangle [[75]
-  [95 64] [17 47 82]]
+WayIndentedComment
+ask turtles [ ;; This does crazy stuff!
+++fd 10       ;; Forward 10! Wow!
+]
 
 Hatch1
 if true
@@ -108,24 +137,11 @@ if true
 #    <-- line with only some spaces on it
 #++foo
 
-#IfElseYetAnotherStyle
-#to bar
-#++ifelse foo [
-#++++x
-#++] [
-#++++y
-#++]
-#end
 
 #MultiLineCommand
 #let digit-sum carry +
 #++read-from-string item ? n1 +
 #++read-from-string item ? n2
-
-#WayIndentedCommands
-#ask turtles [ fd 1
-#++++++++++++++fd 10
-#]
 
 #CommentLinesOneStandaloneOneNot
 #to eat-grass  ;; sheep procedure
@@ -133,13 +149,23 @@ if true
 
 #
 # These are even more ambitious.
-#
+# Fixing these requires lots of special casing with anonymous procedures and non-bracket openers
 
-#MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#WayIndentedCommands
+#ask turtles [ fd 1
+#++++++++++++++fd 10
+#]
+
+#ArgIndentMatchingMultilineStatment -- is this ideal?
+#let foo (list 1
+#++++++++++++++2
+#++++++++++++++3)
+
+#MultiLineLiteralList1 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let triangle [[75]
 #              [95 64] [17 47 82]]
 
-#MultiLineLiteralList3 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let x [[1 2 [3 31 32
 #             4 5]
 #        6]
