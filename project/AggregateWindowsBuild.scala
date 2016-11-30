@@ -112,7 +112,8 @@ object PackageWinAggregate {
     }
 
     (sharedAppRoot / (app.name + ".exe")).setWritable(true)
-    RunProcess(Seq((sharedAppRoot / "IconSwap.exe").toString, (sharedAppRoot / (app.iconName + ".ico")).toString, (sharedAppRoot / (app.name + ".exe")).toString),
+    RunProcess(Seq((sharedAppRoot / "IconSwap.exe").toString,
+      (sharedAppRoot / (app.iconName + ".ico")).toString, (sharedAppRoot / (app.name + ".exe")).toString),
       "swapping exe icon")
     (sharedAppRoot / (app.name + ".exe")).setWritable(false)
   }

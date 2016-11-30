@@ -224,6 +224,7 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
+  dependsOn(NetLogoPackaging.behaviorsearchProject).
   settings(NetLogoPackaging.settings(netlogo, macApp): _*).
   settings(NetLogoBuild.settings: _*)
 

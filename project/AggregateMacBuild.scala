@@ -45,7 +45,6 @@ object PackageMacAggregate {
   // ├── Java
   // |   └── All dependency jars
   // └── Java.runtime (contains JRE)
-  val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("natives")
 
   // assumes subApplicationDir is {<app.name>.app as copied by JavaPackager.copyMacStubApplication
@@ -61,8 +60,11 @@ object PackageMacAggregate {
       }
     }
 
-    // add icons
-    common.icons.foreach { f => FileActions.copyAny(f, subApplicationDir / "Contents" / "Resources" / f.getName) }
+    // add icon, remove dummy icon
+    common.icons
+      .filter(f => app.allIcons.exists(iconName => f.getName.startsWith(iconName)))
+      .foreach { f => FileActions.copyAny(f, subApplicationDir / "Contents" / "Resources" / f.getName) }
+    FileActions.remove(subApplicationDir / "Contents" / "Resources" / "dummy.icns")
 
     val allVariables =
       variables ++ app.configurationVariables +
@@ -120,12 +122,13 @@ object PackageMacAggregate {
     }
 
     // add bundled directories
-    commonConfig.bundledDirs.filter(d => contentDirs.contains(d.directoryName)).foreach { d =>
+    commonConfig.bundledDirs.filterNot(d => libraryDirs.contains(d.directoryName)).foreach { d =>
       d.fileMappings.foreach {
         case (f, p) =>
           val targetFile = aggregateMacDir / p
-          if (! targetFile.getParentFile.isDirectory)
+          if (! targetFile.getParentFile.isDirectory) {
             FileActions.createDirectories(targetFile.getParentFile)
+          }
           FileActions.copyFile(f, aggregateMacDir / p)
       }
     }
@@ -154,7 +157,7 @@ object PackageMacAggregate {
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "420m",
+        "-size", "450m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
