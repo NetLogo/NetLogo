@@ -158,11 +158,10 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
         // JC - 3/22/11
         for(pp <- plot.pens; if(!pp.temporary); results <- penThunks.get(pp)) {
           plot.currentPen=pp
-          val callResult = codeType.call(results)
-          callResult.failed.foreach {
-            case e: Exception =>
-              pp.runtimeError = Some(e)
-            case t: Throwable => throw t
+          codeType.call(results) match {
+            case Success(_)            =>
+            case Failure(e: Exception) => pp.runtimeError = Some(e)
+            case Failure(t: Throwable) => throw t
           }
         }
         // restore the currently selected pen

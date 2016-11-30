@@ -25,6 +25,7 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
   // we repaint.  To set or modify the constraints, you use
   // setSliderConstraint, passing in a SliderConstraint object.
   var constraint: SliderConstraint = new ConstantSliderConstraint(minimum, maximum, increment)
+
   setSliderConstraint(constraint)
 
   // constraint runtime errors intentionally not handled here.
@@ -56,14 +57,16 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
           // with where this event is.
       }
 
+    def ignore(d: Double): Unit = {}
+
     (for {
       min <- con.minimum
       max <- con.maximum
       inc <- con.increment
     } yield resetValues(min, max, inc)).getOrElse {
-      con.minimum.failed.foreach(setError)
-      con.maximum.failed.foreach(setError)
-      con.increment.failed.foreach(setError)
+      con.minimum.fold(setError, ignore)
+      con.maximum.fold(setError, ignore)
+      con.increment.fold(setError, ignore)
       false
     }
   }
