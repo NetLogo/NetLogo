@@ -2,12 +2,14 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ model, TextBox, Output, ChooseableList, CompilerException,
+import org.nlogo.core.{ model, TextBox, Output, ChooseableList,
+  CompilerException, ConstraintSpecification,
   LiteralParser, LogoList, Nobody, NumericInput,
   NumberParser, InputBox, Chooser, ChooseableString, Pen, Plot, Switch,
   Monitor, UpdateMode, View, Horizontal, Button, Slider, StringInput,
   Widget, WorldDimensions },
-  model._
+  model._,
+  ConstraintSpecification.{ BoundedNumericConstraintSpecification, UnboundedNumericConstraintSpecification }
 import org.scalatest.FunSuite
 import scala.reflect.ClassTag
 
@@ -272,6 +274,27 @@ class WidgetTest extends FunSuite {
                      |HORIZONTAL""".stripMargin.split("\n").toList
     val sliderWidget = Slider(Some("initial-sheep-stride"), 20, 65, 201, 98, Some("initial-sheep-stride"), "0", "1", 0.2, "0.1", None, Horizontal)
     runSerializationTests(slider, sliderWidget, SliderReader)
+    assertResult(sliderWidget.constraint)(BoundedNumericConstraintSpecification(Double.box(0), Double.box(0.2), Double.box(1), Double.box(0.1)))
+  }
+
+  test("slider with coded bounds") {
+    val slider = """|SLIDER
+                    |20
+                    |65
+                    |201
+                    |98
+                    |count-blue-sheep
+                    |count-blue-sheep
+                    |0
+                    |count sheep
+                    |0
+                    |count sheep / 5
+                    |1
+                    |NIL
+                    |HORIZONTAL""".stripMargin.split("\n").toList
+    val sliderWidget = Slider(Some("count-blue-sheep"), 20, 65, 201, 98, Some("count-blue-sheep"), "0", "count sheep", 0, "count sheep / 5")
+    runSerializationTests(slider, sliderWidget, SliderReader)
+    assertResult(sliderWidget.constraint)(UnboundedNumericConstraintSpecification(0))
   }
 
   test("view") {
