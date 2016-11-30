@@ -24,19 +24,18 @@ sealed trait AnonymousProcedure {
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
   def checkAgentClass(context: Context, agentClassString: String): Unit = {
-    val pairs =
-      Seq(
-        (AgentKind.Observer, 'O'), (AgentKind.Turtle, 'T'),
-        (AgentKind.Patch, 'P'),    (AgentKind.Link, 'L'))
-    val allowedKinds =
-      for {
-        (thisKind, c) <- pairs
-        if agentClassString.contains(c)
-      }
-      yield thisKind
-
-    if (! allowedKinds.contains(context.agent.kind)) {
+    val kind = context.agent.kind
+    if (!(((kind == AgentKind.Observer) && agentClassString.contains('O')) ||
+          ((kind == AgentKind.Turtle) && agentClassString.contains('T')) ||
+          ((kind == AgentKind.Patch) && agentClassString.contains('P')) ||
+          ((kind == AgentKind.Link) && agentClassString.contains('L')))) {
       val instruction = context.activation.procedure.code(context.ip)
+      val allowedKinds = agentClassString.map {
+        case 'O' => AgentKind.Observer
+        case 'T' => AgentKind.Turtle
+        case 'P' => AgentKind.Patch
+        case 'L' => AgentKind.Link
+      }
       throw new RuntimePrimitiveException(context, instruction,
         AbstractScalaInstruction.agentKindError(context.agent.kind, allowedKinds))
     }
@@ -67,7 +66,7 @@ object AnonymousProcedure {
 case class AnonymousReporter(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
   // anonymous reporters are allowed to take more than the number of arguments (hence repeatable-type)
-  def syntax =
+  val syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
@@ -101,7 +100,7 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
 case class AnonymousCommand(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
-  def syntax =
+  val syntax =
     Syntax.commandSyntax(
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = procedure.agentClassString)
