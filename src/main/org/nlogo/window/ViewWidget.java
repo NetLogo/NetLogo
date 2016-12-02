@@ -13,8 +13,7 @@ public strictfp class ViewWidget
     implements
     ViewWidgetInterface,
     org.nlogo.window.Events.PeriodicUpdateEvent.Handler,
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.LoadEndEvent.Handler {
+    org.nlogo.window.Events.LoadBeginEvent.Handler {
 
   @Override
   public String classDisplayName() {
@@ -23,7 +22,6 @@ public strictfp class ViewWidget
 
   private final GUIWorkspace workspace;
   public final View view;
-  public final ViewControlStrip controlStrip;
   public final javax.swing.JLabel tickCounter = new TickCounterLabel();
   public final DisplaySwitch displaySwitch;
 
@@ -34,7 +32,7 @@ public strictfp class ViewWidget
   }
 
   public int getAdditionalHeight() {
-    return (getExtraHeight() + controlStrip.getHeight());
+    return (getExtraHeight());
   }
 
   ViewWidget(GUIWorkspace workspace) {
@@ -43,7 +41,6 @@ public strictfp class ViewWidget
     org.nlogo.awt.Fonts.adjustDefaultFont(tickCounter);
     view = new View(workspace);
 
-    controlStrip = new ViewControlStrip(workspace, this);
     setBackground(InterfaceColors.GRAPHICS_BACKGROUND);
     setBorder
         (javax.swing.BorderFactory.createCompoundBorder
@@ -53,7 +50,6 @@ public strictfp class ViewWidget
                         InterfaceColors.GRAPHICS_BACKGROUND)));
     setLayout(null);
     add(view);
-    add(controlStrip);
     if (org.nlogo.api.Version.is3D()) {
       settings = new WorldViewSettings3D(workspace, this);
     } else {
@@ -81,9 +77,6 @@ public strictfp class ViewWidget
     view.setBounds
         (getInsets().left, getInsets().top + INSIDE_BORDER_HEIGHT + stripHeight,
             availableWidth, graphicsHeight);
-    controlStrip.setBounds
-        (getInsets().left, getInsets().top,
-            availableWidth, stripHeight);
   }
 
   @Override
@@ -122,27 +115,6 @@ public strictfp class ViewWidget
     return false;
   }
 
-  @Override
-  public java.awt.Dimension getMinimumSize() {
-    java.awt.Dimension gSize = view.getMinimumSize();
-    java.awt.Dimension stripSize = controlStrip.getMinimumSize();
-    if (gSize.width > stripSize.width) {
-      return new java.awt.Dimension
-          (gSize.width + getInsets().left + getInsets().right,
-              gSize.height + getExtraHeight() + stripSize.height);
-    } else {
-      // this gets tricky because if it's the control strip that's
-      // determining the minimum width, then we need to calculate
-      // what the graphics window's height will be at that width
-      int ssx = workspace.world.worldWidth();
-      int ssy = workspace.world.worldHeight();
-      double minPatchSize = computePatchSize(stripSize.width, ssx);
-      return new java.awt.Dimension
-          (stripSize.width + getInsets().left + getInsets().right,
-              stripSize.height + getExtraHeight() + (int) (minPatchSize * ssy));
-    }
-  }
-
   public int insetWidth() {
     return getInsets().left + getInsets().right;
   }
@@ -152,12 +124,11 @@ public strictfp class ViewWidget
   }
 
   public int calculateHeight(int worldHeight, double patchSize) {
-    java.awt.Dimension stripSize = controlStrip.getMinimumSize();
-    return stripSize.height + getExtraHeight() + (int) (patchSize * worldHeight);
+    return getExtraHeight() + (int) (patchSize * worldHeight);
   }
 
   public int getMinimumWidth() {
-    return controlStrip.getMinimumSize().width + insetWidth();
+    return insetWidth();
   }
 
   void resetSize() {
@@ -167,7 +138,7 @@ public strictfp class ViewWidget
     java.awt.Dimension dim = view.getPreferredSize();
 
     setSize(dim.width + getInsets().left + getInsets().right,
-        dim.height + getExtraHeight() + controlStrip.getPreferredSize().height);
+        dim.height + getExtraHeight());
     doLayout();
     resetZoomInfo();
   }
@@ -241,12 +212,11 @@ public strictfp class ViewWidget
   public java.awt.Rectangle constrainDrag(java.awt.Rectangle newBounds,
                                           java.awt.Rectangle originalBounds,
                                           MouseMode mouseMode) {
-    int stripHeight = controlStrip.getMinimumSize().height;
     double patchSizeBasedOnNewWidth =
         computePatchSize(newBounds.width - getInsets().left + getInsets().right,
             workspace.world.worldWidth());
     double patchSizeBasedOnNewHeight =
-        computePatchSize(newBounds.height - stripHeight - getExtraHeight(),
+        computePatchSize(newBounds.height - getExtraHeight(),
             workspace.world.worldHeight());
     double newPatchSize;
     // case 1: only width changed; adjust height to match
@@ -276,7 +246,7 @@ public strictfp class ViewWidget
         getInsets().left + getInsets().right;
     int newHeight = (int)
         (newPatchSize * workspace.world.worldHeight()) +
-        getExtraHeight() + stripHeight;
+        getExtraHeight();
     int widthAdjust = newBounds.width - newWidth;
     int heightAdjust = newBounds.height - newHeight;
     int newX = newBounds.x;
@@ -358,17 +328,13 @@ public strictfp class ViewWidget
     tickCounter.setVisible(true);
   }
 
-  public void handle(org.nlogo.window.Events.LoadEndEvent e) {
-    controlStrip.reset();
-  }
-
   public void handle(org.nlogo.window.Events.PeriodicUpdateEvent e) {
     double ticks = workspace.world.tickCounter.ticks();
     String tickText =
         ticks == -1
             ? ""
             : Dump.number(StrictMath.floor(ticks));
-    tickCounter.setText("     " + tickCounterLabel + ": " + tickText);
+    tickCounter.setText(tickCounterLabel + ": " + tickText);
   }
 
   /// tick counter

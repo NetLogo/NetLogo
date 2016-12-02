@@ -258,8 +258,7 @@ strictfp class InterfacePanel
     if (viewWidget instanceof org.nlogo.window.ViewWidget &&
         !type.equals("GRAPHICS-WINDOW") &&
         VersionHistory.olderThan13pre1(modelVersion)) {
-      y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight() +
-          ((org.nlogo.window.ViewWidget) viewWidget).controlStrip.getHeight();
+      y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight();
     }
     if (type.equals("GRAPHICS-WINDOW")) {
       // the graphics widget (and the command center) are special cases because
