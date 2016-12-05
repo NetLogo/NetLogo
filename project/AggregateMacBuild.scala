@@ -67,7 +67,7 @@ object PackageMacAggregate {
     FileActions.remove(subApplicationDir / "Contents" / "Resources" / "dummy.icns")
 
     val allVariables =
-      variables ++ app.configurationVariables +
+      variables ++ app.configurationVariables("macosx") +
       ("mainClass" -> app.mainClass) +
       ("classpathJars" ->
         common.classpath

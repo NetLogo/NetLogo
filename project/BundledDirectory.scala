@@ -61,7 +61,7 @@ class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends 
       case "linux"   =>
         distInclude / "behaviorsearch_headless.sh"  -> "behaviorsearch/behaviorsearch_headless.sh"
       case "macosx"  =>
-        distInclude / "behaviorsearch_headless.sh"  -> "behaviorsearch/behaviorsearch_headless.command"
+        distInclude / "behaviorsearch_headless.command"  -> "behaviorsearch/behaviorsearch_headless.command"
     }
   }
 

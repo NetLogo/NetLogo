@@ -8,10 +8,9 @@ import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import SbtSubdirectory.runSubdirectoryCommand
+import java.nio.file.Paths
 
 object NetLogoPackaging {
-
-  val behaviorsearchProject = ProjectRef(uri(System.getProperty("behaviorsearch.uri", "git://github.com/NetLogo/behaviorsearch.git#wip-60-integration")), "behaviorsearch")
 
   lazy val aggregateJDKParser      = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
   lazy val aggregateOnlyFiles      = taskKey[Seq[File]]("Files to be included in the aggregate root")
@@ -37,7 +36,7 @@ object NetLogoPackaging {
   lazy val uploadWebsite           = inputKey[Unit]("upload the web download pages to the ccl server")
   lazy val webTarget               = settingKey[File]("location of finished website")
 
-  def bundledDirs(netlogo: Project, macApp: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
+  def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
     Def.setting {
       { (platform: PlatformBuild) =>
         val nlDir = (baseDirectory in netlogo).value
@@ -84,7 +83,7 @@ object NetLogoPackaging {
     }
   }
 
-  def settings(netlogo: Project, macApp: Project): Seq[Setting[_]] = Seq(
+  def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[_]] = Seq(
     netLogoRoot     := (baseDirectory in netlogo).value,
     behaviorsearchRoot := netLogoRoot.value.getParentFile / "behaviorsearch",
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
@@ -197,7 +196,7 @@ object NetLogoPackaging {
 
       FileActions.remove(srcDir)
 
-      val bundled = bundledDirs(netlogo, macApp).value(LinuxPlatform)
+      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(LinuxPlatform)
 
       val commonConfig = CommonConfiguration(
         mainJar,
@@ -221,6 +220,11 @@ object NetLogoPackaging {
         buildVariables.value
       )
     },
+    iconFiles in packageWinAggregate := {
+      ((configRoot.value ** "*.ico") +++
+        ((baseDirectory in behaviorsearchProject).value ** "Behaviorsearch.ico") +++
+        ((baseDirectory in behaviorsearchProject).value ** "behaviorsearch_model.ico")).get.toSeq
+    },
     packageWinAggregate := {
       val buildJDK = aggregateJDKParser.parsed
       val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo).value
@@ -236,7 +240,7 @@ object NetLogoPackaging {
 
       FileActions.remove(srcDir)
 
-      val bundled = bundledDirs(netlogo, macApp).value(WindowsPlatform)
+      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(WindowsPlatform)
 
       val commonConfig = CommonConfiguration(
         mainJar,
@@ -244,7 +248,7 @@ object NetLogoPackaging {
         bundled,
         packagingClasspath.value,
         Seq(),
-        (configRoot.value ** "*.ico").get.toSeq,
+        (iconFiles in packageWinAggregate).value,
         aggregateOnlyFiles.value,
         configRoot.value,
         marketingVersion.value,
@@ -317,7 +321,7 @@ object NetLogoPackaging {
       )
 
 
-      val bundled = bundledDirs(netlogo, macApp).value(new MacImagePlatform(macApp))
+      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(new MacImagePlatform(macApp))
       val commonConfig = CommonConfiguration(
         macAppMainJar,
         "org.nlogo.app.MacApplication",

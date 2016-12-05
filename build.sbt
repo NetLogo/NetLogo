@@ -224,8 +224,7 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
-  dependsOn(NetLogoPackaging.behaviorsearchProject).
-  settings(NetLogoPackaging.settings(netlogo, macApp): _*).
+  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*).
   settings(NetLogoBuild.settings: _*)
 
 lazy val sharedResources = (project in file ("shared")).
@@ -294,3 +293,11 @@ lazy val parserCore = (project in file("parser-core")).
 lazy val netlogoCore = (project in file("netlogo-core")).
   settings(scalastyleSettings: _*).
   settings(skip in (Compile, compile) := true)
+
+// only exists for packaging
+lazy val behaviorsearchProject: Project =
+  project.in(file("behaviorsearch"))
+  .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
+  .settings(
+    libraryDependencies -= "org.nlogo" % "netlogo" % Def.ScopedKey[String](Scope(This, This, This, This), AttributeKey[String]("netLogoVersion")).value
+  )
