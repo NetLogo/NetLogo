@@ -306,7 +306,7 @@ object NetLogoPackaging {
           "bundleIdentifier" -> "org.nlogo.HubNetClient",
           "bundleName"       -> "HubNet Client",
           "bundleSignature"  -> "????",
-          "iconFile"         -> "HubNet.icns",
+          "iconFile"         -> "HubNet Client.icns",
           "packageID"        -> "APPL????"
         ),
         BehaviorsearchApp -> Map(
