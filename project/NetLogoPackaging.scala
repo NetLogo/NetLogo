@@ -177,9 +177,7 @@ object NetLogoPackaging {
         .filterNot(_.isDirectory) :+ packagingMainJar.value
     },
     packagingMainJar := {
-      val mainJar = target.value / "NetLogo.jar"
-      FileActions.copyFile((packageBin in Compile in netlogo).value, mainJar)
-      mainJar
+      (packageBin in Compile in netlogo).value
     },
     packageLinuxAggregate := {
       val buildJDK = aggregateJDKParser.parsed
