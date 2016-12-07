@@ -8,7 +8,7 @@ import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
-import org.nlogo.window.Events.{ CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent }
+import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent }
 
 class CompilerManagerTests extends FunSuite {
   def loadWidgets(ws: Seq[JobOwner],
@@ -60,8 +60,8 @@ class CompilerManagerTests extends FunSuite {
       }
   }
 
-  test("compiler manager emits a CompiledEvent for each widget and one for the code tab") {
-    testCompilerManager(run = loadWidgets(Seq(new DummyWidget("")))) { (workspace, compilerManager, events) =>
+  test("compiler manager emits a CompiledEvent for each widget with source and one for the code tab") {
+    testCompilerManager(run = loadWidgets(Seq(new DummyWidget("show 5")))) { (workspace, compilerManager, events) =>
         assert(compilerManager.widgets.size == 1)
         assert(events.length == 3)
         assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
@@ -71,7 +71,7 @@ class CompilerManagerTests extends FunSuite {
   }
 
   test("compiler manager handles CompileMoreSource after loading ends by recompiling widgets") {
-    val widget = new DummyWidget("")
+    val widget = new DummyWidget("set a 5")
     testCompilerManager(run = loadWidgets(Seq(widget)) _ andThen { cm =>
       widget.sourceCode = "set a 10"
       cm.handle(new CompileMoreSourceEvent(widget))
@@ -91,7 +91,7 @@ class CompilerManagerTests extends FunSuite {
   }
 
   test("handles interface global event where widget name changed by compiling everything") {
-    val widget = new DummyIGWidget("")
+    val widget = new DummyIGWidget("bar")
     val nameChanged = new InterfaceGlobalEvent(widget, true, false, false, false)
     testCompilerManager(
       run = loadWidgets(Seq(widget)) _ andThen (_.handle(nameChanged))) {
@@ -158,6 +158,17 @@ class CompilerManagerTests extends FunSuite {
           assert(workspace.world.program.breeds.get("AS").isEmpty)
           assert(workspace.world.getBreed("AS") == null)
       }
+  }
+
+  test("compiler manager does not emit an event for a widget when recompiling all source if that widget has no source") {
+    val widget = new DummyWidget("")
+    testCompilerManager(run = loadWidgets(Seq(widget))) {
+      (workspace, compilerManager, events) =>
+        val compiledEvents = events.collect {
+          case e: CompiledEvent => e
+        }
+      assert(compiledEvents.forall(_.sourceOwner ne widget))
+    }
   }
 }
 
