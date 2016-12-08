@@ -255,15 +255,14 @@ class CompilerManager(val workspace: AbstractWorkspace,
           workspace.world.program, workspace.procedures,
           workspace.getExtensionManager, workspace.getCompilationEnvironment)
 
-      if (!results.proceduresMap.isEmpty) {
+      if (!results.proceduresMap.isEmpty && results.proceduresMap != workspace.procedures) {
         results.head.init(workspace)
         results.head.owner = owner
         raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))
       }
       None
     } catch {
-      case error: CompilerException =>
-        Some(new CompiledEvent(owner, workspace.world.program, null, error))
+      case error: CompilerException => Some(new CompiledEvent(owner, workspace.world.program, null, error))
     }
   }
 
