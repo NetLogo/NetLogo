@@ -2,12 +2,12 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Dimension, Graphics }
+import java.awt.{ BorderLayout, Dimension, Graphics, Insets }
 import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, BorderFactory, JPanel }
+import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
@@ -43,7 +43,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   val text = {
     val editor = editorFactory.newEditor(editorConfiguration, true)
-    editor.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+    editor.setMargin(new Insets(4, 7, 4, 7))
     editor
   }
 
