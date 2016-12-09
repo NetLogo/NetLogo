@@ -173,14 +173,11 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
     outLinks(src, linkBreed).filter(_.otherEnd(src) == dest)
 
-  def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link] =
-    links(src, linkBreed).filter(l => !l.isDirectedLink || l.end1 == src)
+  def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link] = src.selectLinks(true, true, false, linkBreed)
 
-  def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link] =
-    links(target, linkBreed).filter(l => !l.isDirectedLink || l.end2 == target)
+  def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link] = target.selectLinks(true, false, true, linkBreed)
 
-  def links(turtle: Turtle, linkBreed: AgentSet): Array[Link] =
-    if (linkBreed eq world.links) turtle.links else turtle.links.filter(_.getBreed eq linkBreed)
+  def links(turtle: Turtle, linkBreed: AgentSet): Array[Link] = turtle.selectLinks(true, true, true, linkBreed)
 
   def otherEnds(turtle: Turtle, links: Array[Link], linkBreed: AgentSet): Array[Turtle] = {
     // Using an explicit while loop was found to have a significant performance

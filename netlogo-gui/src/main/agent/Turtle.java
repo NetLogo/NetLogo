@@ -1254,4 +1254,25 @@ public strictfp class Turtle
   public Link[] links() {
     return links.toArray(new Link[links.size()]);
   }
+
+  public Link[] selectLinks(boolean undirected, boolean out, boolean in, AgentSet breed) {
+    Link[] result = new Link[links.size()];
+    int writeTo = 0;
+    for (Link link : links) {
+      boolean isDir = link.isDirectedLink();
+      boolean isOut = isDir && link.end1 == this;
+      boolean isIn = isDir && link.end2 == this;
+      boolean passesDirectedness = (undirected && !isDir) || (out && isOut) || (in && isIn);
+      boolean passesBreededness = breed == world.links() || breed == link.getBreed();
+      if (passesBreededness && passesDirectedness) {
+        result[writeTo] = link;
+        writeTo++;
+      }
+    }
+    if (writeTo == result.length) {
+      return result;
+    } else {
+      return Arrays.copyOfRange(result, 0, writeTo);
+    }
+  }
 }
