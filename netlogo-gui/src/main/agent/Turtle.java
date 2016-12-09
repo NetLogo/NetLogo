@@ -1240,7 +1240,6 @@ public strictfp class Turtle
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
-
   private List<Link> links = null;
 
   public void addLink(Link link) {
@@ -1266,7 +1265,7 @@ public strictfp class Turtle
     int writeTo = 0;
     for (Link link : links) {
       // check breed
-      if (breed == world.links() || breed == link.getBreed()) {
+      if (breed == world().links() || breed == link.getBreed()) {
         boolean isDir = link.isDirectedLink();
         // check directedness
         if ((undirected && !isDir) ||
