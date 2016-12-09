@@ -1241,32 +1241,40 @@ public strictfp class Turtle
   }
 
 
-  private List<Link> links = new ArrayList<>(0);
+  private List<Link> links = null;
 
   public void addLink(Link link) {
+    if (links == null) {
+      links = new ArrayList<>(1);
+    }
     links.add(link);
   }
 
   public boolean removeLink(Link link) {
-    return links.remove(link);
+    return links != null && links.remove(link);
   }
 
   public Link[] links() {
-    return links.toArray(new Link[links.size()]);
+    return links == null ? new Link[0] : links.toArray(new Link[links.size()]);
   }
 
   public Link[] selectLinks(boolean undirected, boolean out, boolean in, AgentSet breed) {
+    if (links == null) {
+      return new Link[0];
+    }
     Link[] result = new Link[links.size()];
     int writeTo = 0;
     for (Link link : links) {
-      boolean isDir = link.isDirectedLink();
-      boolean isOut = isDir && link.end1 == this;
-      boolean isIn = isDir && link.end2 == this;
-      boolean passesDirectedness = (undirected && !isDir) || (out && isOut) || (in && isIn);
-      boolean passesBreededness = breed == world.links() || breed == link.getBreed();
-      if (passesBreededness && passesDirectedness) {
-        result[writeTo] = link;
-        writeTo++;
+      // check breed
+      if (breed == world.links() || breed == link.getBreed()) {
+        boolean isDir = link.isDirectedLink();
+        // check directedness
+        if ((undirected && !isDir) ||
+            (out && isDir && link.end1 == this) ||
+            (in  && isDir && link.end2 == this)) {
+          result[writeTo] = link;
+          writeTo++;
+        }
       }
     }
     if (writeTo == result.length) {
