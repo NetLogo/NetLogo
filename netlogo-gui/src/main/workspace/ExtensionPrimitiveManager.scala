@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import org.nlogo.core.Primitive
 
 class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.PrimitiveManager {
-  private val importedPrimitives = collection.mutable.HashMap[String, Primitive]()
+  private[workspace] val importedPrimitives = collection.mutable.HashMap[String, Primitive]()
   var autoImportPrimitives = false
   def addPrimitive(name: String, prim: Primitive) {
     importedPrimitives.put(name.toUpperCase, prim)

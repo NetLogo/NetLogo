@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, CompilationEnvironment }
+import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, CompilationEnvironment, TokenType }
 import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.api.{ DummyCompilerServices, JobOwner,
                       DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
@@ -21,6 +21,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def getExtensionManager = new DummyExtensionManager with ExtensionManager {
     override def dumpExtensionPrimitives: String = ???
     override def dumpExtensions: String = ???
+    override def cachedType(name: String): Option[TokenType] = ???
   }
   override def getCompilationEnvironment = new DummyCompilationEnvironment
   override def waitFor(runnable: CommandRunnable) = unsupported

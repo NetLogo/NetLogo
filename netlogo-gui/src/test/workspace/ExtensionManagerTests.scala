@@ -4,6 +4,7 @@ package org.nlogo.workspace
 
 import java.net.URL
 
+import org.nlogo.core.TokenType
 import org.nlogo.api.ExtensionException
 import ExtensionManager.ExtensionLoader
 
@@ -115,6 +116,16 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     assert(emptyManager.readFromString("foobar") == "foobar")
   }
 
+  test("loading extension caches the types of replaced identifiers") { new WithLoadedArrayExtension {
+    assert(loadedManager.cachedType("ARRAY:SET") === Some(TokenType.Command))
+    assert(loadedManager.cachedType("ARRAY:ITEM") === Some(TokenType.Reporter))
+  } }
+
+  test("clearAll clears type cache") { new WithLoadedArrayExtension {
+    loadedManager.clearAll()
+    assert(loadedManager.cachedType("ARRAY:SET") === None)
+  } }
+
   test("clearAll runs clearAll on all jars") {
     new InMemoryExtensionTest {
       inmemoryManager.importExtension("foo", null)
@@ -190,6 +201,14 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       loadedManager.importExtension("array", errorSource)
       loadedManager.finishFullCompilation()
       assert(loadedManager.loadedExtensions.asScala.toSeq.length == 1)
+    }
+  }
+
+  test("finishFullCompilation clears cached primitives when extension aren't used") {
+    new WithLoadedArrayExtension {
+      loadedManager.startFullCompilation()
+      loadedManager.finishFullCompilation()
+      assert(loadedManager.cachedType("ARRAY:SET").isEmpty)
     }
   }
 

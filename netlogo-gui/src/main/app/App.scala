@@ -343,7 +343,8 @@ class App extends
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter()))
     pico.addComponent(interfaceFactory)
-    pico.addComponent(new EditorFactory(pico.getComponent(classOf[CompilerServices])))
+    val editorFactory = new EditorFactory(pico.getComponent(classOf[CompilerServices]))
+    pico.addComponent(editorFactory)
     pico.addComponent(new MenuBarFactory())
 
     val controlSet = new AppControlSet()
@@ -390,9 +391,11 @@ class App extends
       }
     }
 
+    editorFactory.useExtensionManager(workspace.getExtensionManager)
+
     pico.addComponent(new EditorColorizer(workspace))
 
-     val shapeChangeListener = new ShapeChangeListener(workspace, world)
+    val shapeChangeListener = new ShapeChangeListener(workspace, world)
 
     frame.addLinkComponent(workspace)
 
