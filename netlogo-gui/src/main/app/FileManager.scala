@@ -19,7 +19,7 @@ import org.nlogo.window.{ BackgroundFileController, Events, FileController, Reco
   Events.{ AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.fileformat.ModelConversion
 
-import scala.util.Try
+import scala.util.{ Failure, Try }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -237,7 +237,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
   parent: Container)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
-  private var savedVersion: String = Version.version
   private var firstLoad: Boolean = true
 
   val controller = new FileController(parent, workspace)
@@ -324,11 +323,13 @@ class FileManager(workspace: AbstractWorkspaceScala,
       if (! saver.result.isDefined)
         throw new UserCancelException()
 
-      saver.result.foreach(_.failed.foreach { e =>
-        JOptionPane.showMessageDialog(parent,
-          I18N.gui.getN("menu.file.save.error", e.getMessage),
-          "NetLogo", JOptionPane.ERROR_MESSAGE)
-      })
+      saver.result match {
+        case Some(Failure(e: Throwable)) =>
+          JOptionPane.showMessageDialog(parent,
+            I18N.gui.getN("menu.file.save.error", e.getMessage),
+            "NetLogo", JOptionPane.ERROR_MESSAGE)
+        case _ =>
+      }
     }
   }
 
@@ -345,7 +346,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
       ModalProgressTask.onUIThread(
         Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
     }
-    savedVersion = model.version // maybe the whole model should be stored?
   }
 
   @throws(classOf[UserCancelException])
@@ -369,20 +369,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
     }
   }
 
-  @throws(classOf[UserCancelException])
-  private def checkWithUserBeforeSavingModelFromOldVersion(): Unit = {
-    if (! Version.compatibleVersion(savedVersion)) {
-      val options = Array[Object](
-        I18N.gui.get("common.buttons.save"),
-        I18N.gui.get("common.buttons.cancel"))
-      val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", savedVersion, Version.version)
-      if (OptionDialog.show(parent, "NetLogo", message, options) != 0) {
-        throw new UserCancelException()
-      }
-      savedVersion = Version.version
-    }
-  }
-
   private class Saver(val thunk: () => Try[URI]) extends Runnable {
     var result = Option.empty[Try[URI]]
 
@@ -390,6 +376,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       val r = thunk()
       r.foreach { uri =>
         val path = Paths.get(uri).toString
+        modelSaver.setCurrentModel(modelSaver.currentModel.copy(version = Version.version))
         new ModelSavedEvent(path).raise(eventRaiser)
       }
       result = Some(r)
