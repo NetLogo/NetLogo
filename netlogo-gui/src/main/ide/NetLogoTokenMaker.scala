@@ -10,10 +10,12 @@ import org.fife.ui.rsyntaxtextarea.{ Token => RstaToken, TokenImpl, TokenTypes }
 
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect }
 import org.nlogo.core.{ Dialect, Femto, Nobody, SourceLocation, Token, TokenizerInterface, TokenType }
+import org.nlogo.nvm.ExtensionManager
 
 import scala.annotation.tailrec
 
 trait NetLogoTokenMaker extends TokenMakerBase {
+  def extensionManager: Option[ExtensionManager]
   def dialect: Dialect
 
   val tokenizer = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
@@ -37,12 +39,24 @@ trait NetLogoTokenMaker extends TokenMakerBase {
       dialect.agentVariables.implicitLinkVariableTypeMap.keySet).contains(t.text.toUpperCase)
     }
 
+    def tagToken(t: Token): Token = {
+      val named = namer(t)
+      named.tpe match {
+        case TokenType.Ident =>
+          extensionManager.flatMap { manager =>
+            manager.cachedType(t.text.toUpperCase)
+              .map(tokenType => t.copy(tpe = tokenType))
+          }.getOrElse(t)
+        case _ => named
+      }
+    }
+
     val punctType = TokenTypes.SEPARATOR
     t.tpe match {
       case OpenParen | CloseParen | OpenBracket | CloseBracket | OpenBrace | CloseBrace | Comma => punctType
       case Literal    => literalToken(t.value)
       case Ident      =>
-        val namedToken = namer(t)
+        val namedToken = tagToken(t)
         namedToken.tpe match {
           case Command  => TokenTypes.OPERATOR
           case Reporter => TokenTypes.FUNCTION
@@ -105,13 +119,17 @@ trait NetLogoTokenMaker extends TokenMakerBase {
   }
 }
 
-class NetLogoTwoDTokenMaker extends NetLogoTokenMaker {
+class NetLogoTwoDTokenMaker(val extensionManager: Option[ExtensionManager]) extends NetLogoTokenMaker {
+  def this() = this(None)
+
   def dialect = NetLogoLegacyDialect
 
   def _resetTokenList(): Unit = { super.resetTokenList() }
 }
 
-class NetLogoThreeDTokenMaker extends NetLogoTokenMaker {
+class NetLogoThreeDTokenMaker(val extensionManager: Option[ExtensionManager]) extends NetLogoTokenMaker {
+  def this() = this(None)
+
   def dialect = NetLogoThreeDDialect
 
   def _resetTokenList(): Unit = { super.resetTokenList() }

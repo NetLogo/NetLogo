@@ -12,15 +12,23 @@ import scala.collection.JavaConversions._
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.I18N
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
-  NetLogoFoldParser, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
+  NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
+import org.nlogo.nvm.ExtensionManager
 import org.nlogo.window.{ EditorColorizer, DefaultEditorFactory }
 
 import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(compiler) {
+class EditorFactory(compiler: CompilerServices, optionalExtensionManager: Option[ExtensionManager]) extends DefaultEditorFactory(compiler) {
+  def this(compiler: CompilerServices) = this(compiler, None)
+  def this(compiler: CompilerServices, extensionManager: ExtensionManager) = this(compiler, Some(extensionManager))
+
+  System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
+    "org.nlogo.ide.NetLogoTokenMakerFactory")
+  optionalExtensionManager.foreach(useExtensionManager)
+
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val codeCompletionPopup = new CodeCompletionPopup
     val showUsageBox = new ShowUsageBox(colorizer)
@@ -52,20 +60,21 @@ class EditorFactory(compiler: CompilerServices) extends DefaultEditorFactory(com
     editor
   }
 
+ def useExtensionManager(extensionManager: ExtensionManager): Unit = {
+   val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[NetLogoTokenMakerFactory]
+   tmf.extensionManager = Some(extensionManager)
+ }
+
   override def newEditor(configuration: EditorConfiguration): AbstractEditorArea = {
     // This is a proxy for advanced editor fixtures required only by the main code tab
     // - RG 10/28/16
     if (configuration.highlightCurrentLine) {
-      val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
-      tmf.putMapping("netlogo",   "org.nlogo.ide.NetLogoTwoDTokenMaker")
-      tmf.putMapping("netlogo3d", "org.nlogo.ide.NetLogoThreeDTokenMaker")
       FoldParserManager.get.addFoldParserMapping("netlogo", new NetLogoFoldParser())
       FoldParserManager.get.addFoldParserMapping("netlogo3d", new NetLogoFoldParser())
       new AdvancedEditorArea(configuration)
     } else
       super.newEditor(configuration)
   }
-
 
   override def scrollPane(editor: AbstractEditorArea): EditorScrollPane =
     editor match {

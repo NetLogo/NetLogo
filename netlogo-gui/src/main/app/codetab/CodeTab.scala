@@ -34,7 +34,7 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     }
   }
 
-  lazy val editorFactory = new EditorFactory(workspace)
+  lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
   def editorConfiguration =
     editorFactory.defaultConfiguration(100, 80)

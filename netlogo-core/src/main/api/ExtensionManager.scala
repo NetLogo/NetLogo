@@ -40,5 +40,4 @@ trait ExtensionManager extends CoreManager {
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
-
 }

@@ -6,6 +6,10 @@ import javax.swing.text.Segment
 
 import org.fife.ui.rsyntaxtextarea.{ Token => RstaToken, TokenTypes }
 
+import org.nlogo.core.TokenType
+import org.nlogo.api.DummyExtensionManager
+import org.nlogo.nvm.ExtensionManager
+
 import org.scalatest.FunSuite
 
 class NetLogoTokenMakerTest extends FunSuite {
@@ -13,7 +17,15 @@ class NetLogoTokenMakerTest extends FunSuite {
     var text: String = ""
     val offset = 0
     def seg = new Segment(text.toCharArray, 0, text.length)
-    val nlTokenMaker = new NetLogoTwoDTokenMaker()
+    val extensionManager = new DummyExtensionManager with ExtensionManager {
+      override def cachedType(name: String): Option[TokenType] =
+        name match {
+          case "ARRAY:ITEM" => Some(TokenType.Reporter)
+          case "ARRAY:SET"  => Some(TokenType.Command)
+          case _            => None
+        }
+    }
+    val nlTokenMaker = new NetLogoTwoDTokenMaker(Some(extensionManager))
     def tokens: RstaToken = nlTokenMaker.getTokenList(seg, TokenTypes.NULL, offset)
     def tokenToSeq(t: RstaToken, acc: Seq[RstaToken]): Seq[RstaToken] =
       t match {
@@ -112,4 +124,6 @@ class NetLogoTokenMakerTest extends FunSuite {
   testTokenType("fput", TokenTypes.FUNCTION)
   testTokenType("xcor", TokenTypes.FUNCTION)
   testTokenType("nobody", TokenTypes.LITERAL_BACKQUOTE)
+  testTokenType("array:set", TokenTypes.OPERATOR)
+  testTokenType("array:item", TokenTypes.FUNCTION)
 }
