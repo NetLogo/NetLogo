@@ -233,7 +233,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def wrapSource(innerSource: String): Unit = {
     if (innerSource.trim == "") {
-      source(null, "", null)
+      source("", "", "")
       halt()
     } else {
       source(
