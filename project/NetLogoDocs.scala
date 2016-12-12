@@ -160,9 +160,10 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
   private def renderMarkdown(extensionName: String)(str: String): String = {
     val defaultLinkRenderer = new LinkRenderer()
     val customRenderer = new FakeGitHubLinkRenderer(extensionName, new ManualLinkRenderer(defaultLinkRenderer))
-    new PegDownProcessor(PegdownExtensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         PegdownExtensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         PegdownExtensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
+    new PegDownProcessor(PegdownExtensions.SMARTYPANTS |        // beautifies quotes, dashes, etc.
+                         PegdownExtensions.AUTOLINKS |          // angle brackets around URLs and email addresses not needed
+                         PegdownExtensions.FENCED_CODE_BLOCKS | // delimit code blocks with ```
+                         PegdownExtensions.TABLES)              // tables with "|"
       .markdownToHtml(str, customRenderer)
   }
 
