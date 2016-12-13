@@ -831,7 +831,7 @@ class App extends
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       val fullTitle = if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
-      if (dirtyMonitor.dirty) s"* $fullTitle" else fullTitle
+      if (dirtyMonitor.modelDirty) s"* $fullTitle" else fullTitle
     }
   }
 
@@ -847,7 +847,7 @@ class App extends
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
       else s"NetLogo ${8212.toChar} $filename"
     (tabs.getTabWithFilename(Right(path)) orElse tabs.getTabWithFilename(Left(path))).
-      map (tab => if (tab.dirty) s"* $title" else title).
+      map (tab => if (tab.saveNeeded) s"* $title" else title).
       getOrElse(title)
   }
 

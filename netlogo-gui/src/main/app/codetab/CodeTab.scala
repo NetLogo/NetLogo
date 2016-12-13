@@ -97,9 +97,8 @@ with MenuTab {
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
 
-  activeMenuActions = editorConfiguration.contextActions.collect {
-    case f: FocusedOnlyAction => f
-  } ++ Seq(undoAction, redoAction)
+  activeMenuActions =
+    editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction)
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST
@@ -123,24 +122,19 @@ with MenuTab {
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(dirty && e.oldTab == this)
-      compile()
-  }
+  def handle(e: AppEvents.SwitchedTabsEvent) = if (dirty && e.oldTab == this) compile()
 
   private var originalFontSize = -1
   override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)
-    if(originalFontSize == -1)
+    if (originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
     scrollableEditor.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
-  // Error code
-
-  def handle(e: WindowEvents.CompiledEvent) {
+  def handle(e: WindowEvents.CompiledEvent) = {
     dirty = false
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
@@ -156,24 +150,21 @@ with MenuTab {
   def headerSource = ""
   def source = headerSource + innerSource
 
-  override def innerSource_=(s: String): Unit = {
+  override def innerSource_=(s: String) = {
     text.setText(s)
     text.setCaretPosition(0)
     text.resetUndoHistory()
   }
 
-  def select(start: Int, end: Int) { text.select(start, end) }
+  def select(start: Int, end: Int) = text.select(start, end)
 
   def classDisplayName = "Code"
 
-  /// printing
-
-  // satisfy org.nlogo.swing.Printable
   @throws(classOf[IOException])
-  def print(g: Graphics, pageFormat: PageFormat,pageIndex: Int, printer: PrinterManager): Int =
+  def print(g: Graphics, pageFormat: PageFormat,pageIndex: Int, printer: PrinterManager) =
     printer.printText(g, pageFormat, pageIndex, text.getText)
 
-  def setIndenter(isSmart: Boolean) {
+  def setIndenter(isSmart: Boolean): Unit = {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
   }
@@ -181,7 +172,5 @@ with MenuTab {
   def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
 
-  def isTextSelected(): Boolean = {
-    text.getSelectedText() != null && !text.getSelectedText().isEmpty()
-  }
+  def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 }

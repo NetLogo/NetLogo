@@ -88,22 +88,24 @@ class Tabs(val workspace:    GUIWorkspace,
     fileManager = manager
     dirtyMonitor = monitor
     assert(fileManager != null && dirtyMonitor != null)
+
+    saveModelActions foreach menu.offerAction
   }
 
   def stateChanged(e: ChangeEvent): Unit = {
     val previousTab = currentTab
     currentTab = getSelectedComponent
     previousTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(menu.revokeAction)
+      case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
       case _ =>
     }
     currentTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(menu.offerAction)
+      case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
       case _ =>
     }
     (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-      case (true, false) => saveModelActions.foreach(menu.offerAction)
-      case (false, true) => saveModelActions.foreach(menu.revokeAction)
+      case (true, false) => saveModelActions foreach menu.offerAction
+      case (false, true) => saveModelActions foreach menu.revokeAction
       case _             =>
     }
 
@@ -176,8 +178,8 @@ class Tabs(val workspace:    GUIWorkspace,
         if (e.error != null) setSelectedComponent(tab.get)
         recolorTab(tab.get, e.error != null)
         requestFocus()
-      case null =>
-        recolorInterfaceTab() // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
+      case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
+        recolorInterfaceTab()
       case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
         recolorInterfaceTab()
       case _ =>
@@ -193,7 +195,7 @@ class Tabs(val workspace:    GUIWorkspace,
 
   @throws(classOf[UserCancelException])
   def offerSaveModel(): Unit = {
-    if (dirtyMonitor.dirty && fileManager.userWantsToSaveFirst()) {
+    if (dirtyMonitor.modelDirty && fileManager.userWantsToSaveFirst()) {
       fileManager.saveModel(false)
     }
   }
@@ -204,11 +206,11 @@ class Tabs(val workspace:    GUIWorkspace,
     externalFileTabs find (_.filename == filename)
 
   private var _externalFileNum = 1
-  private def externalFileNum = {
+  private def externalFileNum() = {
     _externalFileNum += 1
     _externalFileNum - 1
   }
-  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum: Integer)))
+  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
 
   def openExternalFile(filename: String) =
     getTabWithFilename(Right(filename)) match {

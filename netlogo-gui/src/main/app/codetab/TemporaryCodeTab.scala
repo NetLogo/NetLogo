@@ -4,7 +4,7 @@ package org.nlogo.app.codetab
 
 import java.awt.{ Component, FileDialog }
 import java.awt.event.ActionEvent
-import java.io.IOException
+import java.io.{ File, IOException }
 import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
@@ -19,23 +19,24 @@ import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.AbstractWorkspace
 
 object TemporaryCodeTab {
-  private[app] def stripPath(filename: String): String =
-    filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
+  private[app] def stripPath(filename: String): String = filename.split(File.separator).last
 }
 
 class TemporaryCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface, var filename: TabsInterface.Filename, smartIndent: Boolean)
 extends CodeTab(workspace, tabs)
 with AppEvents.IndenterChangedEvent.Handler {
   var closing = false
+  var saveNeeded = false
 
   filename.right foreach { path =>
-        try {
-          innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
-          dirty = false
-        } catch {
-          case _: IOException => innerSource = ""
-        }
-     }
+    try {
+      innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
+      dirty = false
+      saveNeeded = false
+    } catch {
+      case _: IOException => innerSource = ""
+    }
+  }
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
@@ -57,14 +58,12 @@ with AppEvents.IndenterChangedEvent.Handler {
 
   override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))
 
-  override def dirty_=(b: Boolean) = {
-    super.dirty_=(b)
-    if (b) new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
-  }
-
-  override def compile() = {
-    save(false)
-    super.compile()
+  override def dirty_=(d: Boolean) = {
+    super.dirty_=(d)
+    if (d) {
+      saveNeeded = true
+      new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
+    }
   }
 
   def filenameForDisplay = (filename.right map TemporaryCodeTab.stripPath).merge
@@ -73,6 +72,7 @@ with AppEvents.IndenterChangedEvent.Handler {
     if (saveAs || filename.isLeft)
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
+    saveNeeded = false
     dirty = false
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
@@ -107,9 +107,7 @@ with AppEvents.IndenterChangedEvent.Handler {
 
   override def handle(e: AppEvents.SwitchedTabsEvent) = if (!closing) super.handle(e)
 
-  final def handle(e: AppEvents.IndenterChangedEvent) {
-    setIndenter(e.isSmart)
-  }
+  final def handle(e: AppEvents.IndenterChangedEvent) = setIndenter(e.isSmart)
 
   private def userChooseSavePath(): String = {
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix

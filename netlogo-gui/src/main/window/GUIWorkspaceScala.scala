@@ -253,7 +253,7 @@ with LoadModelEvent.Handler {
   @throws[java.io.IOException]
   override def getSource(filename: String): String = {
     if (filename == "") throw new IllegalArgumentException("cannot provide source for empty filename")
-    Option(externalFileManager) map (_.getSource(filename)) getOrElse (super.getSource(filename))
+    Option(externalFileManager) flatMap (fm => Option(fm.getSource(filename))) getOrElse (super.getSource(filename))
   }
 
   def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)

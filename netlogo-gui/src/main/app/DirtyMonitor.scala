@@ -33,11 +33,11 @@ with SaveModel.Controller
 {
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
-  private var _dirty = false
-  def dirty = _dirty && !loading
-  private def dirty(dirty: Boolean, path: Option[String] = None): Unit = {
-    if (!path.isDefined && dirty != _dirty && !loading) {
-      _dirty = dirty
+  private var _modelDirty = false
+  def modelDirty = _modelDirty && !loading
+  private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
+    if (!path.isDefined && dirty != _modelDirty && !loading) {
+      _modelDirty = dirty
       // on a Mac, this will make a gray dot appear in the red close button in the frame's title bar
       // to indicate that the document has unsaved changes, as documented at
       // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
@@ -56,7 +56,7 @@ with SaveModel.Controller
   private def doAutoSave() {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
     // good number or even the right ballpark.  feel free to change it. ev 8/22/06
-    if (!dirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
+    if (!modelDirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
@@ -77,28 +77,28 @@ with SaveModel.Controller
   }
 
   /// how we get clean
-  def handle(e: ModelSavedEvent) = dirty(false)
-  def handle(e: ExternalFileSavedEvent) = dirty(false, path = Some(e.path))
+  def handle(e: ModelSavedEvent) = setDirty(false)
+  def handle(e: ExternalFileSavedEvent) = setDirty(false, path = Some(e.path))
   def handle(e: BeforeLoadEvent): Unit = {
-    dirty(false)
+    setDirty(false)
     loading = true
   }
   def handle(e: AfterLoadEvent): Unit = {
-    dirty(false)
+    setDirty(false)
     loading = false
   }
 
   /// how we get dirty
   def handle(e: DirtyEvent): Unit = {
-    dirty(true, path = e.path)
+    setDirty(true, path = e.path)
     doAutoSave()
   }
   def handle(e: WidgetAddedEvent): Unit = {
-    dirty(true)
+    setDirty(true)
     doAutoSave()
   }
   def handle(e: WidgetRemovedEvent): Unit = {
-    dirty(true)
+    setDirty(true)
     doAutoSave()
   }
 
