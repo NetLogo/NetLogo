@@ -1257,20 +1257,27 @@ public strictfp class Turtle
     return links == null ? new Link[0] : links.toArray(new Link[links.size()]);
   }
 
-  public Link[] selectLinks(boolean undirected, boolean out, boolean in, AgentSet breed) {
-    if (links == null) {
+  public Link[] selectLinks(boolean out, boolean in, AgentSet breed) {
+    if (links == null || links.isEmpty()) {
       return new Link[0];
     }
+
+    boolean allBreeds = breed == world().links();
+
+    if (allBreeds && out && in) {
+      return links();
+    }
+
     Link[] result = new Link[links.size()];
     int writeTo = 0;
     for (Link link : links) {
       // check breed
-      if (breed == world().links() || breed == link.getBreed()) {
-        boolean isDir = link.isDirectedLink();
-        // check directedness
-        if ((undirected && !isDir) ||
-            (out && isDir && link.end1 == this) ||
-            (in  && isDir && link.end2 == this)) {
+      if ((allBreeds || breed == link.getBreed())) {
+        // check directedness -- note that undirected links are *always* returned.
+        if ((out && in) ||
+            (out && link.end1 == this) ||
+            (in  && link.end2 == this) ||
+            !link.isDirectedLink()) {
           result[writeTo] = link;
           writeTo++;
         }

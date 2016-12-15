@@ -124,8 +124,6 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
 
   def addLink(link: Link) = {
     if (link.getBreed eq world.links) {
-      // FIXME: Wait, does this make sense? `isDirectedLink` is calculated from the breed...
-      world.links.setDirected(link.isDirectedLink)
       unbreededLinkCount += 1
     }
     link.end1.addLink(link)
@@ -148,7 +146,7 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
     removeLink(link)
   }
 
-  def cleanupTurtle(turtle: Turtle) = turtle.links.foreach(_.die)
+  def cleanupTurtle(turtle: Turtle) = turtle.links.foreach(_.die())
 
   def outNeighbors(src: Turtle, linkBreed: AgentSet): Array[Turtle] =
     otherEnds(src, outLinks(src, linkBreed), linkBreed)
@@ -173,11 +171,14 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
     outLinks(src, linkBreed).filter(_.otherEnd(src) == dest)
 
-  def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link] = src.selectLinks(true, true, false, linkBreed)
+  def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link] =
+    src.selectLinks(true, false, linkBreed)
 
-  def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link] = target.selectLinks(true, false, true, linkBreed)
+  def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link] =
+    target.selectLinks(false, true, linkBreed)
 
-  def links(turtle: Turtle, linkBreed: AgentSet): Array[Link] = turtle.selectLinks(true, true, true, linkBreed)
+  def links(turtle: Turtle, linkBreed: AgentSet): Array[Link] =
+    turtle.selectLinks(true, true, linkBreed)
 
   def otherEnds(turtle: Turtle, links: Array[Link], linkBreed: AgentSet): Array[Turtle] = {
     // Using an explicit while loop was found to have a significant performance
