@@ -62,3 +62,6 @@
 [submodule "extensions/rnd"]
 	path = extensions/rnd
 	url = https://github.com/NetLogo/Rnd-Extension.git
+[submodule "extensions/r"]
+	path = extensions/r
+	url = https://github.com/NetLogo/R-Extension.git
