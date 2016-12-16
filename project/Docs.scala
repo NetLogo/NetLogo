@@ -67,6 +67,7 @@ object Docs {
         "nw"       -> "Networks",
         "palette"  -> "Palette",
         "profiler" -> "Profiler",
+        "r"        -> "R",
         "rnd"      -> "Rnd",
         "sound"    -> "Sound",
         "table"    -> "Table",
