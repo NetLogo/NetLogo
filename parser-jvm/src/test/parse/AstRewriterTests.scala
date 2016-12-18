@@ -13,6 +13,8 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("""__ignore ifelse-value true [""] [ [] ]""")
     assertPreservesSource("fd 1")
     assertPreservesSource("let baz []")
+    assertPreservesSource("show (0.5)")
+    assertPreservesSource("show ln(0.5)")
     assertPreservesSource("create-turtles 10 [ fd 1 ]")
     assertPreservesSource("create-turtles 10 [ ]")
     assertPreservesSource("create-turtles 10")
