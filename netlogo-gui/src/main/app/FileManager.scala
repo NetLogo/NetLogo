@@ -11,14 +11,15 @@ import javax.swing.{ Action, JOptionPane }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version }, ModelReader.{ emptyModelPath, modelSuffix }
-import org.nlogo.app.common.{ Actions, ExceptionCatchingAction }, Actions.Ellipsis
+import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version },
+  ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
-  Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
+  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, SaveModel, SaveModelAs }
 
 object FileManager {
@@ -224,6 +225,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
+    if (dirtyMonitor.modelDirty &&
+        Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent))
+      saveModel(false)
     new AboutToCloseFilesEvent().raise(eventRaiser)
   }
 
@@ -321,22 +325,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
     FileDialog.show(parent, I18N.gui.get("menu.file.open"), AWTFileDialog.LOAD, null)
   }
 
-  @throws(classOf[UserCancelException])
-  private[app] def userWantsToSaveFirst(): Boolean = {
-    val options = {
-      implicit val i18nPrefix = I18N.Prefix("common.buttons")
-      Array[Object](I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel"))
-    }
-
-    val message = I18N.gui.getN("file.save.offer.confirm", I18N.gui.get("file.save.offer.thisModel"))
-
-    OptionDialog.showMessage(parent, "NetLogo", message, options) match {
-      case 0 => true
-      case 1 => false
-      case _ => throw new UserCancelException()
-    }
-  }
-
   private class Saver(val thunk: () => Try[URI]) extends Runnable {
     var result = Option.empty[Try[URI]]
 
@@ -360,4 +348,21 @@ class FileManager(workspace: AbstractWorkspaceScala,
     new ModelsLibraryAction(this, parent),
     new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
     new ImportClientAction(this, workspace, parent))
+
+  def saveModelActions(parent: Component) = {
+    def saveAction(saveAs: Boolean) =
+      new ExceptionCatchingAction(
+        if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"),
+        parent)
+      with MenuAction {
+        category = UserAction.FileCategory
+        group = UserAction.FileSaveGroup
+        accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
+
+        @throws(classOf[UserCancelException])
+        override def action(): Unit = saveModel(saveAs)
+      }
+
+    Seq(saveAction(false), saveAction(true))
+  }
 }

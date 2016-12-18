@@ -15,6 +15,7 @@ import org.nlogo.swing.OptionDialog
 object OfferSaveExternalsDialog {
   def offer(dirtyExternalFiles: Set[TemporaryCodeTab], parent: Component) = {
     implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
+
     if (dirtyExternalFiles.nonEmpty) {
       val panel = new JPanel
       panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
@@ -25,7 +26,8 @@ object OfferSaveExternalsDialog {
       table.getTableHeader.setReorderingAllowed(false)
       table.getTableHeader.setResizingAllowed(false)
       table.setRowSelectionAllowed(false)
-      table.getColumnModel.getColumn(0).setMaxWidth(panel.getFontMetrics(panel.getFont).stringWidth(I18N.gui("shouldSave")) * 2)
+      table.getColumnModel.getColumn(0)
+        .setMaxWidth(panel.getFontMetrics(panel.getFont).stringWidth(I18N.gui("shouldSave")) * 2)
       table.validate()
       panel.add(new JScrollPane(table))
       val options = Array(I18N.gui("saveSelected"), I18N.gui("discardAll"), I18N.gui.get("common.buttons.cancel"))

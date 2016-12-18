@@ -9,7 +9,7 @@ import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Actions, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
+import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
@@ -79,7 +79,7 @@ with AppEvents.IndenterChangedEvent.Handler {
 
   def close() {
     ignoring(classOf[UserCancelException]) {
-      if(dirty && userWantsToSaveFirst())
+      if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
         save(false)
       closing = true
       tabs.closeExternalFile(filename)
@@ -115,20 +115,6 @@ with AppEvents.IndenterChangedEvent.Handler {
     val newFileName = appendIfNecessary(filenameForDisplay, ".nls")
     val path = SwingFileDialog.show(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nls")
-  }
-
-  @throws(classOf[UserCancelException])
-  private def userWantsToSaveFirst() = {
-    val options = {
-      implicit val i18nPrefix = I18N.Prefix("common.buttons")
-      Array[AnyRef](I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel"))
-    }
-    val message = I18N.gui.getN("file.save.offer.confirm", filenameForDisplay)
-    OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"), message, options) match {
-      case 0 => true
-      case 1 => false
-      case _ => throw new UserCancelException
-    }
   }
 
   private object CloseAction extends AbstractAction(I18N.gui.get("tabs.external.close")) {

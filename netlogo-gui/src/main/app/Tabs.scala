@@ -11,8 +11,8 @@ import javax.swing.{ AbstractAction, Action, JTabbedPane, SwingConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ Actions, ExceptionCatchingAction, MenuTab, TabsInterface, Events => AppEvents },
-  Actions.Ellipsis, TabsInterface.Filename
+import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface, Events => AppEvents },
+  TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
@@ -66,6 +66,7 @@ class Tabs(val workspace:    GUIWorkspace,
     tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ Seq(SaveAllAction, PrintAction)
 
   var tabActions: Seq[Action] = TabsMenu.tabActions(this)
+  lazy val saveModelActions = fileManager.saveModelActions(this)
 
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
@@ -92,7 +93,7 @@ class Tabs(val workspace:    GUIWorkspace,
     saveModelActions foreach menu.offerAction
   }
 
-  def stateChanged(e: ChangeEvent): Unit = {
+  def stateChanged(e: ChangeEvent) = {
     val previousTab = currentTab
     currentTab = getSelectedComponent
     previousTab match {
@@ -113,14 +114,12 @@ class Tabs(val workspace:    GUIWorkspace,
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
-  override def requestFocus(): Unit = currentTab.requestFocus()
+  override def requestFocus() = currentTab.requestFocus()
 
-  def handle(e: AboutToCloseFilesEvent): Unit = {
-    offerSaveModel()
-    OfferSaveExternalsDialog.offer(externalFileTabs filter (_.dirty), this)
-  }
+  def handle(e: AboutToCloseFilesEvent) =
+    OfferSaveExternalsDialog.offer(externalFileTabs filter (_.saveNeeded), this)
 
-  def handle(e: LoadBeginEvent): Unit = setSelectedComponent(interfaceTab)
+  def handle(e: LoadBeginEvent) = setSelectedComponent(interfaceTab)
 
   def handle(e: RuntimeErrorEvent) =
      if(!e.jobOwner.isInstanceOf[MonitorWidget])
@@ -144,7 +143,7 @@ class Tabs(val workspace:    GUIWorkspace,
     EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length) )
   }
 
-  def handle(e: CompiledEvent) {
+  def handle(e: CompiledEvent) = {
     val errorColor = Color.RED
     def clearErrors() = forAllCodeTabs(tab => setForegroundAt(indexOfComponent(tab), null))
     def recolorTab(component: Component, hasError: Boolean): Unit =
@@ -193,13 +192,6 @@ class Tabs(val workspace:    GUIWorkspace,
       tabActions(index).putValue(Action.NAME, e.path)
     }
 
-  @throws(classOf[UserCancelException])
-  def offerSaveModel(): Unit = {
-    if (dirtyMonitor.modelDirty && fileManager.userWantsToSaveFirst()) {
-      fileManager.saveModel(false)
-    }
-  }
-
   def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
@@ -230,8 +222,6 @@ class Tabs(val workspace:    GUIWorkspace,
     // (if you know it feel free to fix) ev 7/24/07
     EventQueue.invokeLater( () => requestFocus() )
   }
-
-  def saveExternalFiles() = externalFileTabs foreach (_.doSave)
 
   def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
@@ -269,24 +259,8 @@ class Tabs(val workspace:    GUIWorkspace,
     // platforms ev 2/2/09
   }
 
-  def handle(e: AfterLoadEvent) {
-    requestFocus()
-  }
+  def handle(e: AfterLoadEvent) = requestFocus()
 
-  private val saveModelActions = {
-    def saveAction(saveAs: Boolean) =
-      new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), Tabs.this)
-      with MenuAction {
-        category = UserAction.FileCategory
-        group = UserAction.FileSaveGroup
-        accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
-
-        @throws(classOf[UserCancelException])
-        override def action(): Unit = fileManager.saveModel(saveAs)
-      }
-
-    Seq(saveAction(false), saveAction(true))
-  }
 
   object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), this)
   with MenuAction {

@@ -816,39 +816,31 @@ class App extends
    */
   def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
 
-  /**
-   * Generates OS standard frame title.
-   */
-  private def modelTitle = {
-    if (workspace.getModelFileName == null) "NetLogo"
-    else {
-      val title =
-        // on OS X, use standard window title format. otherwise use Windows convention
-        if(! System.getProperty("os.name").startsWith("Mac")) s"${workspace.modelNameForDisplay} - NetLogo"
-        // 8212 is the unicode value for an em dash. we use the number since
-        // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
-        else s"NetLogo ${8212.toChar} ${workspace.modelNameForDisplay}"
-
-      // OS X UI guidelines prohibit paths in title bars, but oh well...
-      val fullTitle = if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
-      if (dirtyMonitor.modelDirty) s"* $fullTitle" else fullTitle
-    }
-  }
-
-  /**
-    * Generates OS standard frame title.
-    */
-  private def externalFileTitle(path: String) = {
-    val filename = TemporaryCodeTab.stripPath(path)
+  private def frameTitle(filename: String, dirty: Boolean) = {
     val title =
       // on OS X, use standard window title format. otherwise use Windows convention
       if(! System.getProperty("os.name").startsWith("Mac")) s"$filename - NetLogo"
       // 8212 is the unicode value for an em dash. we use the number since
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
       else s"NetLogo ${8212.toChar} $filename"
+
+    if (dirty) s"* $title" else title
+  }
+
+  private def modelTitle = {
+    if (workspace.getModelFileName == null) "NetLogo"
+    else {
+      val title = frameTitle(workspace.modelNameForDisplay, dirtyMonitor.modelDirty)
+      // OS X UI guidelines prohibit paths in title bars, but oh well...
+      if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
+    }
+  }
+
+  private def externalFileTitle(path: String) = {
+    val filename = TemporaryCodeTab.stripPath(path)
     (tabs.getTabWithFilename(Right(path)) orElse tabs.getTabWithFilename(Left(path))).
-      map (tab => if (tab.saveNeeded) s"* $title" else title).
-      getOrElse(title)
+      map (tab => frameTitle(filename, tab.saveNeeded)).
+      getOrElse(frameTitle(filename, false))
   }
 
   /**
