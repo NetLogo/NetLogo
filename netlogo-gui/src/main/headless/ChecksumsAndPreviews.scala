@@ -12,7 +12,7 @@ import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
+    List("ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
          "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 

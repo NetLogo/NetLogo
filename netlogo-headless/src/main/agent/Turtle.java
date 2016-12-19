@@ -14,6 +14,10 @@ import org.nlogo.core.LogoList;
 
 import scala.collection.immutable.Set;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public strictfp class Turtle
     extends Agent
     implements org.nlogo.api.Turtle {
@@ -1205,5 +1209,46 @@ public strictfp class Turtle
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
+  private List<Link> links = null;
 
+  public void addLink(Link link) {
+    if (links == null) {
+      links = new ArrayList<>(1);
+    }
+    links.add(link);
+  }
+
+  public boolean removeLink(Link link) {
+    return links != null && links.remove(link);
+  }
+
+  public Link[] links() {
+    return links == null ? new Link[0] : links.toArray(new Link[links.size()]);
+  }
+
+  public Link[] selectLinks(boolean undirected, boolean out, boolean in, AgentSet breed) {
+    if (links == null) {
+      return new Link[0];
+    }
+    Link[] result = new Link[links.size()];
+    int writeTo = 0;
+    for (Link link : links) {
+      // check breed
+      if (breed == world().links() || breed == link.getBreed()) {
+        boolean isDir = link.isDirectedLink();
+        // check directedness
+        if ((undirected && !isDir) ||
+                (out && isDir && link.end1 == this) ||
+                (in  && isDir && link.end2 == this)) {
+          result[writeTo] = link;
+          writeTo++;
+        }
+      }
+    }
+    if (writeTo == result.length) {
+      return result;
+    } else {
+      return Arrays.copyOfRange(result, 0, writeTo);
+    }
+  }
 }

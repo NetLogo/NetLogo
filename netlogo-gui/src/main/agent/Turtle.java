@@ -13,7 +13,10 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
@@ -1237,5 +1240,53 @@ public strictfp class Turtle
     return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
+  private List<Link> links = null;
 
+  public void addLink(Link link) {
+    if (links == null) {
+      links = new ArrayList<>(1);
+    }
+    links.add(link);
+  }
+
+  public boolean removeLink(Link link) {
+    return links != null && links.remove(link);
+  }
+
+  public Link[] links() {
+    return links == null ? new Link[0] : links.toArray(new Link[links.size()]);
+  }
+
+  public Link[] selectLinks(boolean out, boolean in, AgentSet breed) {
+    if (links == null || links.isEmpty()) {
+      return new Link[0];
+    }
+
+    boolean allBreeds = breed == world().links();
+
+    if (allBreeds && out && in) {
+      return links();
+    }
+
+    Link[] result = new Link[links.size()];
+    int writeTo = 0;
+    for (Link link : links) {
+      // check breed
+      if ((allBreeds || breed == link.getBreed())) {
+        // check directedness -- note that undirected links are *always* returned.
+        if ((out && in) ||
+            (out && link.end1 == this) ||
+            (in  && link.end2 == this) ||
+            !link.isDirectedLink()) {
+          result[writeTo] = link;
+          writeTo++;
+        }
+      }
+    }
+    if (writeTo == result.length) {
+      return result;
+    } else {
+      return Arrays.copyOfRange(result, 0, writeTo);
+    }
+  }
 }

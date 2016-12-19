@@ -933,3 +933,16 @@ link-manager-handles-breed-changes
   count [ my-out-directed-edges ] of turtle 0 => 0
   O> ask turtle 0 [ die ]
 
+link-resize-world-preserves-directedness-of-breeds
+  directed-link-breed [ directed-edges directed-edge ]
+  undirected-link-breed [ undirected-edges undirected-edge ]
+  O> resize-world -20 20 -20 20
+  O> crt 2
+  O> ask turtle 0 [ create-undirected-edge-with turtle 1 ]
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 ]
+  is-directed-link? undirected-edge 0 1 => false
+  is-undirected-link? undirected-edge 0 1 => true
+  is-directed-link? directed-edge 0 1 => true
+  is-undirected-link? directed-edge 0 1 => false
+
+
