@@ -22,17 +22,35 @@ object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(File.separator).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface, var filename: TabsInterface.Filename, smartIndent: Boolean)
-extends CodeTab(workspace, tabs)
-with AppEvents.IndenterChangedEvent.Handler {
+class TemporaryCodeTab(workspace: AbstractWorkspace,
+  tabs:                           TabsInterface,
+  private var _filename:          TabsInterface.Filename,
+  externalFileManager:            ExternalFileManager,
+  smartIndent:                    Boolean)
+  extends CodeTab(workspace, tabs)
+  with AppEvents.IndenterChangedEvent.Handler {
+
   var closing = false
   var saveNeeded = false
+
+  def filename: Either[String, String] = _filename
+
+  def filename_=(newName: Either[String, String]): Unit = {
+    val oldFilename = _filename
+    _filename = newName
+    if (oldFilename.isRight && oldFilename != newName) {
+      externalFileManager.nameChanged(oldFilename.right.get, newName.right.get)
+    } else if (oldFilename.isLeft) {
+      externalFileManager.add(this)
+    }
+  }
 
   filename.right foreach { path =>
     try {
       innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
       dirty = false
       saveNeeded = false
+      externalFileManager.add(this)
     } catch {
       case _: IOException => innerSource = ""
     }
@@ -43,7 +61,7 @@ with AppEvents.IndenterChangedEvent.Handler {
   activeMenuActions = {
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
-        with MenuAction {
+      with MenuAction {
         category    = UserAction.FileCategory
         group       = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
@@ -53,7 +71,6 @@ with AppEvents.IndenterChangedEvent.Handler {
         override def action(): Unit = save(saveAs)
       }
     }
-
     Seq(saveAction(false), saveAction(true))
   }
 
@@ -82,6 +99,7 @@ with AppEvents.IndenterChangedEvent.Handler {
     ignoring(classOf[UserCancelException]) {
       if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
         save(false)
+      externalFileManager.remove(this)
       closing = true
       tabs.closeExternalFile(filename)
     }

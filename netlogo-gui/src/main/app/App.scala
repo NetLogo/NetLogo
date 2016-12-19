@@ -2,19 +2,20 @@
 
 package org.nlogo.app
 
-import javax.swing._
-import java.awt.{ Dimension, Frame, Toolkit }
+
+import javax.swing.{ JOptionPane, JMenu }
 import java.awt.event.ActionEvent
 
 import org.nlogo.agent.{ Agent, World, World3D }
+import java.awt.{ Dimension, Frame, Toolkit }
 import org.nlogo.api._
-import org.nlogo.app.codetab.TemporaryCodeTab
+import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
-Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
+  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.log.Logger
@@ -176,6 +177,7 @@ object App{
 
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[GraphicsPreview])
+    pico.addComponent(classOf[ExternalFileManager])
     pico.add(
       classOf[PreviewCommandsEditorInterface],
       "org.nlogo.app.tools.PreviewCommandsEditor",
@@ -271,7 +273,6 @@ object App{
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.api.Exceptions.Handler with
-    org.nlogo.window.ExternalFileManager with
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
@@ -348,9 +349,16 @@ class App extends
     val controlSet = new AppControlSet()
 
     val world = if(Version.is3D) new World3D() else new World()
+
     pico.addComponent(world)
-    _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
-                                  frame, frame, pico.getComponent(classOf[HubNetManagerFactory]), App.this, listenerManager, controlSet) {
+    _workspace = new GUIWorkspace(world,
+      GUIWorkspace.KioskLevel.NONE,
+      frame,
+      frame,
+      pico.getComponent(classOf[HubNetManagerFactory]),
+      pico.getComponent(classOf[ExternalFileManager]),
+      listenerManager,
+      controlSet) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
@@ -1146,11 +1154,6 @@ class App extends
     openPreferencesDialog.actionPerformed(
       new ActionEvent(frame, ActionEvent.ACTION_PERFORMED, null))
   }
-
-  /**
-   * Internal use only.
-   */
-  def getSource(filename:String) = tabs.getSource(filename)
 
   /// AppFrame
   def getLinkParent: AppFrame = frame // for Event.LinkChild

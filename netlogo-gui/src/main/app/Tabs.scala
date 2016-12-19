@@ -10,7 +10,7 @@ import javax.swing.plaf.ComponentUI
 import javax.swing.{ AbstractAction, Action, JTabbedPane, SwingConstants }
 
 import org.nlogo.api.Exceptions
-import org.nlogo.app.codetab.{ CodeTab, MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface, Events => AppEvents },
   TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
@@ -24,10 +24,11 @@ import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
 import org.nlogo.window.{ EditDialogFactoryInterface, Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
-class Tabs(val workspace:    GUIWorkspace,
-           monitorManager:   AgentMonitorManager,
-           dialogFactory:    EditDialogFactoryInterface,
-           private var menu: MenuBar)
+class Tabs(val workspace:       GUIWorkspace,
+           monitorManager:      AgentMonitorManager,
+           dialogFactory:       EditDialogFactoryInterface,
+           private var menu:    MenuBar,
+           externalFileManager: ExternalFileManager)
   extends JTabbedPane(SwingConstants.TOP)
   with TabsInterface with ChangeListener with LinkParent
   with org.nlogo.window.LinkRoot
@@ -211,7 +212,7 @@ class Tabs(val workspace:    GUIWorkspace,
     }
 
   def addNewTab(name: Filename) = {
-    val tab = new TemporaryCodeTab(workspace, this, name, codeTab.smartTabbingEnabled)
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, codeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     addTab(tab.filenameForDisplay, tab)
