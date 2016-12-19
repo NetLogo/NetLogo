@@ -2,37 +2,34 @@
 
 package org.nlogo.app
 
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, FileActions, FindDialog, Events => AppEvents, SaveModelingCommonsAction }
-import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preference, PreferencesDialog, PreviewCommandsEditor }
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
-  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.agent.{Agent, World3D, World}
+import javax.swing._
+import java.awt.{ Dimension, Frame, Toolkit }
+import java.awt.event.ActionEvent
+
+import org.nlogo.agent.{ Agent, World, World3D }
 import org.nlogo.api._
+import org.nlogo.app.codetab.TemporaryCodeTab
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
+import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.log.Logger
-import org.nlogo.nvm.{CompilerInterface, DefaultCompilerServices, Workspace}
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
+Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
-import org.nlogo.shape.{ShapesManagerInterface, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.Implicits.RichString
-import org.nlogo.util.Implicits.RichStringLike
-import org.nlogo.util.Pico
+import org.nlogo.log.Logger
+import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, Workspace }
+import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory}
-import org.nlogo.window.Event.LinkParent
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
 import org.nlogo.swing.Implicits.thunk2runnable
 
 import org.picocontainer.adapters.AbstractAdapter
 import org.picocontainer.Characteristics._
-import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
+import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
-
-import javax.swing._
-import java.awt.{Toolkit, Dimension, Frame}
-import java.awt.event.ActionEvent
 
 import scala.language.postfixOps
 /**
@@ -300,6 +297,7 @@ class App extends
   var _fileManager: FileManager = null
   var monitorManager:AgentMonitorManager = null
   var aggregateManager: AggregateManagerInterface = null
+  var dirtyMonitor: DirtyMonitor = null
   var colorDialog: ColorDialog = null
   var labManager:LabManagerInterface = null
   var recentFilesMenu: RecentFilesMenu = null
@@ -442,8 +440,11 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    pico.addComponent(classOf[DirtyMonitor])
-    val dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
+    val titler = (file: Option[String]) => file map externalFileTitle getOrElse modelTitle
+    pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
+      new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
+      new ConstantParameter(titler))
+    dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
     frame.addLinkComponent(dirtyMonitor)
 
     val menuBar = pico.getComponent(classOf[MenuBar])
@@ -459,7 +460,7 @@ class App extends
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)
 
-    tabs.init(Plugins.load(pico): _*)
+    tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
@@ -608,8 +609,7 @@ class App extends
 
   lazy val openPreferencesDialog =
     new ShowPreferencesDialog(new PreferencesDialog(frame,
-      Preference.Language,
-      new Preference.LineNumbers(tabs)))
+      Preferences.Language, new Preferences.LineNumbers(tabs), Preferences.IncludedFilesMenu))
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
@@ -722,19 +722,28 @@ class App extends
   /**
    * Internal use only.
    */
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(e.newTab == tabs.interfaceTab){ monitorManager.showAll(); frame.toFront() }
-    else if(e.oldTab == tabs.interfaceTab) monitorManager.hideAll()
+  final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
+    if (e.newTab == tabs.interfaceTab) {
+      monitorManager.showAll()
+      frame.toFront()
+    } else if (e.oldTab == tabs.interfaceTab)
+      monitorManager.hideAll()
+
+    val title = e.newTab match {
+        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+        case _                     => modelTitle
+      }
+    frame.setTitle(title)
   }
 
   /**
    * Internal use only.
    */
-  def handle(e:ModelSavedEvent) {
+  def handle(e: ModelSavedEvent): Unit = {
     workspace.modelSaved(e.modelPath)
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(makeFrameTitle)
+      frame.setTitle(modelTitle)
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
@@ -744,10 +753,10 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:LoadBeginEvent){
+  def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
-    if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
+    if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
@@ -807,23 +816,31 @@ class App extends
    */
   def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
 
-  /**
-   * Generates OS standard frame title.
-   */
-  private def makeFrameTitle = {
-    if (workspace.getModelFileName == null) "NetLogo"
-    else{
-      var title = workspace.modelNameForDisplay
+  private def frameTitle(filename: String, dirty: Boolean) = {
+    val title =
       // on OS X, use standard window title format. otherwise use Windows convention
-      if(! System.getProperty("os.name").startsWith("Mac")) title = title + " - " + "NetLogo"
+      if(! System.getProperty("os.name").startsWith("Mac")) s"$filename - NetLogo"
       // 8212 is the unicode value for an em dash. we use the number since
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
-      else title = "NetLogo " + (8212.toChar) + " " + title
+      else s"NetLogo ${8212.toChar} $filename"
 
+    if (dirty) s"* $title" else title
+  }
+
+  private def modelTitle = {
+    if (workspace.getModelFileName == null) "NetLogo"
+    else {
+      val title = frameTitle(workspace.modelNameForDisplay, dirtyMonitor.modelDirty)
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
-      title
+      if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
     }
+  }
+
+  private def externalFileTitle(path: String) = {
+    val filename = TemporaryCodeTab.stripPath(path)
+    (tabs.getTabWithFilename(Right(path)) orElse tabs.getTabWithFilename(Left(path))).
+      map (tab => frameTitle(filename, tab.saveNeeded)).
+      getOrElse(frameTitle(filename, false))
   }
 
   /**
@@ -875,7 +892,7 @@ class App extends
    */
   @throws(classOf[java.io.IOException])
   private[nlogo] def saveOpenModel(): Unit = {
-    dispatchThreadOrBust(fileManager.save(false))
+    dispatchThreadOrBust(fileManager.saveModel(false))
   }
 
   /**
@@ -886,7 +903,7 @@ class App extends
   def handleOpenPath(path: String) = {
     try {
       dispatchThreadOrBust {
-        fileManager.offerSave()
+        fileManager.aboutToCloseFiles()
         open(path)
       }
     } catch {

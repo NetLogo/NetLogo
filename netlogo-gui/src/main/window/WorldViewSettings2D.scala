@@ -91,7 +91,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         val options = Array[Object](
           I18N.gui.get("view.resize.hubnet.kick"),
           I18N.gui.get("view.resize.hubnet.dontkick"))
-        OptionDialog.show(workspace.getFrame, title, message, options)
+        OptionDialog.showMessage(workspace.getFrame, title, message, options)
       } else
         HubNetIgnore
     }

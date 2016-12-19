@@ -5,6 +5,7 @@ package org.nlogo.app.interfacetab;
 import org.nlogo.core.I18N;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
+import scala.Option;
 
 import java.awt.Dimension;
 
@@ -598,7 +599,7 @@ public strictfp class WidgetWrapper
 
   void doDrop() {
     selected(true, true); // 2nd true = change was temporary
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new org.nlogo.window.Events.DirtyEvent(Option.empty()).raise(this);
     ((WidgetPanel) getParent()).zoomer().updateZoomInfo(widget);
   }
 

@@ -4,9 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.CompilerException
 import org.nlogo.api.{ JobOwner, SourceOwner }
-import org.nlogo.api.AgentException
-import org.nlogo.core.Program
-import org.nlogo.nvm.{ CompilerResults, Procedure }
+import org.nlogo.nvm.CompilerResults
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events.{
@@ -14,13 +12,11 @@ import org.nlogo.window.Events.{
   LoadBeginEvent, LoadEndEvent, RemoveAllJobsEvent,
   WidgetAddedEvent, WidgetRemovedEvent, CompileAllEvent }
 import org.nlogo.api.AgentException
-import org.nlogo.api.LogoException
 import org.nlogo.api.ValueConstraint
 import org.nlogo.api.Exceptions
 import org.nlogo.api.LogoException
 
 import scala.collection.mutable.HashSet
-import scala.collection.JavaConversions._
 
 class CompilerManager(val workspace: AbstractWorkspace,
   val proceduresInterface: ProceduresInterface,
@@ -245,7 +241,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     globalWidgets.foreach(_.updateConstraints())
   }
 
-  // this returns an error event, if n error was encountered
+  // this returns an error event, if an error was encountered
   private def compileSource(owner: JobOwner): Option[CompiledEvent] = {
     try {
       val displayName =

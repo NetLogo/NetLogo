@@ -3,20 +3,18 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Frame }
-import java.awt.event.{ WindowAdapter, WindowEvent }
-import java.util.prefs.Preferences
-import javax.swing.{ BorderFactory, Box, BoxLayout, ImageIcon, JButton,
-  JComponent, JDialog, JLabel, WindowConstants, SwingConstants }
+import java.util.prefs.{ Preferences => JavaPreferences }
+import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, JDialog, SwingConstants, WindowConstants }
 
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ OptionDialog, RichAction, TextFieldBox, Utils => SwingUtils }
+import org.nlogo.swing.{ RichAction, TextFieldBox, Utils => SwingUtils }
 import org.nlogo.swing.Implicits._
 
 class PreferencesDialog(parent: Frame, preferences: Preference*)
 extends JDialog(parent, I18N.gui.get("tools.preferences"), false) {
   private implicit val prefix = I18N.Prefix("tools.preferences")
-  private val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+  private val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val reset = () => {
     preferences foreach (_.load(netLogoPrefs))

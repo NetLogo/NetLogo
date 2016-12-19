@@ -6,6 +6,7 @@ app.common.IndenterChanged - boolean isSmart
 
 # org.nlogo.window package
 
+window.AboutToCloseFiles
 window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
 window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint
@@ -18,12 +19,13 @@ window.BeforeLoad - scala.Option<String> modelPath - org.nlogo.api.ModelType mod
 window.CompileAll
 window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
-window.Dirty
+window.Dirty - scala.Option<String> path
 window.EditWidget - org.nlogo.api.Editable widget
 window.Enable2D - boolean enabled
 window.ExportPlot - org.nlogo.window.PlotWidgetExport plotExport - String exportFilename - Runnable onCompletion
 window.ExportWorld - java.io.PrintWriter writer
 window.ExportWidget - org.nlogo.window.Widget widget
+window.ExternalFileSaved - String path
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased

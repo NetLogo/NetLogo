@@ -59,7 +59,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       try {intervalField.getText.toDouble; true}
       catch {
         case ex: NumberFormatException =>
-          OptionDialog.show(org.nlogo.awt.Hierarchy.getWindow(this),
+          OptionDialog.showMessage(org.nlogo.awt.Hierarchy.getWindow(this),
             "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
           false
       }

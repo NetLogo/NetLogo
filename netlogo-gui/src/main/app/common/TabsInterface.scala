@@ -4,7 +4,17 @@ package org.nlogo.app.common
 
 import java.awt.Component
 
+object TabsInterface {
+  /**
+    * Right indicates a real path, and Left means a name for a never-saved file
+    * (analogous to ModelType.Normal & ModelType.New, respectively)
+    */
+  type Filename = Either[String, String]
+}
+
 trait TabsInterface {
+  import TabsInterface.Filename
+
   val interfaceTab: Component
   val infoTab: Component
   val codeTab: Component
@@ -12,8 +22,7 @@ trait TabsInterface {
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
 
-  def newTemporaryFile(): Unit
-  def openTemporaryFile(filename: String, fileMustExist: Boolean): Unit
-  def saveTemporaryFile(filename: String): Unit
-  def closeTemporaryFile(filename: String): Unit
+  def newExternalFile(): Unit
+  def openExternalFile(filename: String): Unit
+  def closeExternalFile(filename: Filename): Unit
 }

@@ -11,6 +11,7 @@ import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.awt.ImageSelection;
+import scala.Option;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -317,7 +318,7 @@ public strictfp class View
   // for notification from ShapesManager
   public void shapeChanged(org.nlogo.core.Shape shape) {
     dirty = true;
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new org.nlogo.window.Events.DirtyEvent(Option.empty()).raise(this);
     renderer.resetCache(patchSize());
     repaint();
   }
