@@ -80,14 +80,17 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     throw new UserCancelException()
   }
 
-  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
+  def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] =
+    showAutoconversionError(res, "model")
+
+  def showAutoconversionError(res: FailedConversionResult, base: String): Option[Model] = {
     val options = Seq(
       I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
     res.errors.foreach(_.errors.foreach { e =>
       println(e)
       e.printStackTrace()
     })
-    val dialog = new AutoConversionErrorDialog(owner)
+    val dialog = new AutoConversionErrorDialog(owner, base)
     dialog.doShow(res)
     dialog.modelToOpen
   }
@@ -225,7 +228,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 }
 
-class AutoConversionErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.cancel")) {
+class AutoConversionErrorDialog(owner: Component, keyContext: String) extends MessageDialog(owner, I18N.gui.get("common.buttons.cancel")) {
   setModalityType(Dialog.ModalityType.DOCUMENT_MODAL)
 
   var modelToOpen = Option.empty[Model]
@@ -240,20 +243,20 @@ class AutoConversionErrorDialog(owner: Component) extends MessageDialog(owner, I
     }
   }
 
-  lazy val bestEffortAction = new ConversionAction(I18N.gui.get("file.open.warn.autoconversion.bestEffort"))
-  lazy val originalAction = new ConversionAction(I18N.gui.get("file.open.warn.autoconversion.original"))
+  lazy val bestEffortAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.bestEffort"))
+  lazy val originalAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.original"))
 
   override def makeButtons(): Seq[JComponent] = {
     super.makeButtons() ++ Seq(new JButton(bestEffortAction), new JButton(originalAction))
   }
 
   def errorMessage(failure: FailedConversionResult): String =
-    I18N.gui.get("file.open.warn.autoconversion.error") +
+    I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.error") +
       failure.errors.map(decorateError(_)).mkString("\n\n", "\n", "")
 
   private def decorateError(error: ConversionError): String = {
     val errorMessages = error.errors.map(e => s"- ${e.getMessage}").mkString("\n", "\n", "")
-    I18N.gui.getN("file.open.warn.autoconversion.detail",
+    I18N.gui.getN(s"file.open.warn.autoconversion.$keyContext.detail",
       error.conversionDescription, error.componentDescription, errorMessages)
   }
 
@@ -268,6 +271,6 @@ class AutoConversionErrorDialog(owner: Component) extends MessageDialog(owner, I
         originalAction.putModel(original)
         bestEffortAction.putModel(bestEffort)
     }
-    doShow(I18N.gui.get("file.open.warn.autoconversion.title"), errorMessage(failure), 5, 50)
+    doShow(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.title"), errorMessage(failure), 5, 50)
   }
 }

@@ -212,7 +212,7 @@ class Tabs(val workspace:       GUIWorkspace,
     }
 
   def addNewTab(name: Filename) = {
-    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, codeTab.smartTabbingEnabled)
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, codeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     addTab(tab.filenameForDisplay, tab)

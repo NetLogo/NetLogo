@@ -5,27 +5,30 @@ package org.nlogo.app.codetab
 import java.awt.{ Component, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
-import javax.swing.AbstractAction
+import javax.swing.{ Action, AbstractAction }
 
-import scala.util.control.Exception.ignoring
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
+import org.nlogo.fileformat, fileformat.SuccessfulConversion
+
+import scala.util.control.Exception.ignoring
 
 object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(File.separator).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace,
+class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   tabs:                           TabsInterface,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,
+  conversionAction:               TemporaryCodeTab => Action,
   smartIndent:                    Boolean)
   extends CodeTab(workspace, tabs)
   with AppEvents.IndenterChangedEvent.Handler {
@@ -71,7 +74,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace,
         override def action(): Unit = save(saveAs)
       }
     }
-    Seq(saveAction(false), saveAction(true))
+    Seq(saveAction(false), saveAction(true)) ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
   override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))

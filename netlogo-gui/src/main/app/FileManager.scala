@@ -11,12 +11,13 @@ import javax.swing.{ Action, JOptionPane }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version },
+import org.nlogo.api.{ Exceptions, FileIO, ModelLoader, ModelReader, ModelType, Version },
   ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
+import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
-import org.nlogo.fileformat.ModelConversion
+import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
@@ -196,6 +197,37 @@ object FileManager {
       modelSaver.priorModel != modelSaver.currentModel
     }
   }
+
+  class ConvertNlsAction(
+    tab:            TemporaryCodeTab,
+    modelSaver:     ModelSaver,
+    modelConverter: ModelConversion,
+    workspace:      AbstractWorkspaceScala,
+    controller:     FileController)
+  extends ExceptionCatchingAction(I18N.gui.get("menu.edit.convertToNetLogoSix"), tab)
+  with MenuAction{
+    category = UserAction.EditCategory
+    group    = "ConversionGroup"
+
+    override def action(): Unit = {
+      tab.filename.right.toOption
+        .flatMap(name => FileIO.resolvePath(name, Paths.get(workspace.getModelPath)))
+        .foreach { path =>
+        val version =
+          if (Version.is3D) "NetLogo 3D 5.3.1"
+          else              "NetLogo 5.3.1"
+        val tempModel = modelSaver.currentModel.copy(code = tab.innerSource, version = version)
+        modelConverter(tempModel, path) match {
+          case SuccessfulConversion(originalModel, m) => tab.innerSource = m.code
+          case failure: FailedConversionResult =>
+            controller.showAutoconversionError(failure, "nls").foreach { m =>
+              tab.innerSource = m.code
+            }
+        }
+      }
+    }
+  }
+
 }
 
 import FileManager._
@@ -365,5 +397,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
       }
 
     Seq(saveAction(false), saveAction(true))
+  }
+
+  def convertTabAction(t: TemporaryCodeTab): Action = {
+    new ConvertNlsAction(t, modelSaver, modelConverter, workspace, controller)
   }
 }

@@ -91,6 +91,7 @@ menu.edit.format = Format
 menu.edit.comment = Comment
 menu.edit.uncomment = Uncomment
 menu.edit.snapToGrid = Snap to Grid
+menu.edit.convertToNetLogoSix = Convert from 5.3.1 to 6.0
 
 menu.tools = Tools
 menu.tools.preferences = Preferences…
@@ -214,12 +215,18 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
-file.open.warn.autoconversion.title = Error Converting Model
-file.open.warn.autoconversion.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
+file.open.warn.autoconversion.model.title = Error Converting Model
+file.open.warn.autoconversion.model.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
  Would you like to continue opening it? \n
-file.open.warn.autoconversion.detail = While running conversion "{0}" on the {1}: {2}
-file.open.warn.autoconversion.bestEffort = Open Partially Converted Model
-file.open.warn.autoconversion.original = Open Unconverted Model
+file.open.warn.autoconversion.model.detail = While running conversion "{0}" on the {1}: {2}
+file.open.warn.autoconversion.model.bestEffort = Open Partially Converted Model
+file.open.warn.autoconversion.model.original = Open Unconverted Model
+file.open.warn.autoconversion.nls.title = Error Converting .nls File
+file.open.warn.autoconversion.nls.error = NetLogo encountered the following errors while trying to automatically convert the nls file from 5.3.1 to 6.0. \
+ Would you like to change the contents of this tab? \n
+file.open.warn.autoconversion.nls.detail = While running conversion "{0}" on this tab: {2}
+file.open.warn.autoconversion.nls.bestEffort = Use Partial Conversion
+file.open.warn.autoconversion.nls.original = Use Original Code
 file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
