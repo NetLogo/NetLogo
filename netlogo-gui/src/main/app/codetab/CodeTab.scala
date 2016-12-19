@@ -29,10 +29,7 @@ with NlogoPrintable
 with MenuTab {
   private var _dirty = false
   def dirty = _dirty
-  protected def dirty_=(b: Boolean) = {
-    _dirty = b
-    CompileAction.setEnabled(b)
-  }
+  protected def dirty_=(b: Boolean) = _dirty = b
 
   private lazy val listener = new TextListener {
     override def textValueChanged(e: TextEvent) = dirty = true
@@ -68,13 +65,6 @@ with MenuTab {
       add(errorLabel, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
-  }
-
-  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON,
-      new ImageIcon(classOf[CodeTab].getResource(
-        "/images/check.gif")))
-    def actionPerformed(e: ActionEvent) = compile()
   }
 
   def getToolBar = new ToolBar {
@@ -173,4 +163,10 @@ with MenuTab {
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
+
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+    putValue(Action.SMALL_ICON,
+      new ImageIcon(classOf[CodeTab].getResource("/images/check.gif")))
+    def actionPerformed(e: ActionEvent) = compile()
+  }
 }

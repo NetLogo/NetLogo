@@ -358,6 +358,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
         category = UserAction.FileCategory
         group = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
+        rank = 0
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = saveModel(saveAs)

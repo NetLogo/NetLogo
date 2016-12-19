@@ -63,7 +63,7 @@ class Tabs(val workspace:    GUIWorkspace,
   }
 
   def permanentMenuActions =
-    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ Seq(SaveAllAction, PrintAction)
+    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
 
   var tabActions: Seq[Action] = TabsMenu.tabActions(this)
   lazy val saveModelActions = fileManager.saveModelActions(this)
@@ -212,6 +212,7 @@ class Tabs(val workspace:    GUIWorkspace,
 
   def addNewTab(name: Filename) = {
     val tab = new TemporaryCodeTab(workspace, this, name, codeTab.smartTabbingEnabled)
+    if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     addTab(tab.filenameForDisplay, tab)
     addMenuItem(getTabCount - 1, tab.filenameForDisplay)
@@ -232,6 +233,7 @@ class Tabs(val workspace:    GUIWorkspace,
       remove(tab)
       removeMenuItem(index)
       externalFileTabs -= tab
+      if (externalFileTabs.isEmpty) menu.revokeAction(SaveAllAction)
     }
 
   def forAllCodeTabs(fn: CodeTab => Unit) =
@@ -266,6 +268,7 @@ class Tabs(val workspace:    GUIWorkspace,
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileSaveGroup
+    rank        = 1
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
