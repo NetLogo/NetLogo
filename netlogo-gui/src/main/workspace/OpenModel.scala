@@ -3,6 +3,7 @@
 package org.nlogo.workspace
 
 import java.net.URI
+import java.nio.file.Paths
 
 import org.nlogo.core.Model
 import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelLoader, Version }
@@ -45,7 +46,7 @@ object OpenModel {
             } else if (shouldNotContinueOpeningModel(model, controller, currentVersion))
               None
             else
-              modelConverter(model) match {
+              modelConverter(model, Paths.get(uri)) match {
                 case res: FailedConversionResult => controller.errorAutoconvertingModel(res)
                 case res                         => Some(res.model)
               }

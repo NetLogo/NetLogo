@@ -2,11 +2,12 @@
 
 package org.nlogo.fileformat
 
+import java.nio.file.Path
+
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
   FrontEndInterface, LiteralParser, Model, Program, SourceRewriter, StructureResults, Widget },
   FrontEndInterface.ProceduresMap
-
-import org.nlogo.api.{ AutoConverter, AutoConvertable, Version }
+import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO, Version }
 
 import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
@@ -38,12 +39,18 @@ class ModelConverter(
   extends ModelConversion {
 
 
-  def apply(model: Model): ConversionResult = {
+  def apply(model: Model, modelPath: Path): ConversionResult = {
     def compilationOperand(source: String, program: Program, procedures: ProceduresMap): CompilationOperand = {
       CompilationOperand(
         sources                = Map("" -> source) ++ components.flatMap(_.conversionSource(model, literalParser)).toMap,
         extensionManager       = extensionManager,
-        compilationEnvironment = compilationEnv,
+        compilationEnvironment =
+          new CompilationEnvironment {
+            def getSource(filename: String) = compilationEnv.getSource(filename)
+            def profilingEnabled = compilationEnv.profilingEnabled
+            def resolvePath(path: String): String =
+              FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
+          },
         oldProcedures          = procedures,
         containingProgram      = program,
         subprogram             = false)
