@@ -123,6 +123,9 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   }
 
   def addLink(link: Link) = {
+    if (link.getBreed.directed == Directedness.Undetermined)
+      throw new IllegalStateException(
+        "The directedness of a link breed must be set before a link with that breed can be created.")
     if (link.getBreed eq world.links) {
       unbreededLinkCount += 1
     }
