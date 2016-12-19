@@ -122,8 +122,9 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
 
   def addLink(link: Link) = {
     if (link.getBreed eq world.links) {
-      // FIXME: Wait, does this make sense? `isDirectedLink` is calculated from the breed...
-      world.links.setDirected(link.isDirectedLink)
+      if (world.links.directed == Directedness.Undetermined) {
+        world.links.setDirected(false)
+      }
       unbreededLinkCount += 1
     }
     link.end1.addLink(link)

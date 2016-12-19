@@ -745,6 +745,9 @@ public strictfp class World
           agentKind = AgentKindJ.Link();
         }
         AgentSet agentset = new TreeAgentSet(agentKind, b._2.name());
+        if (b._2.isLinkBreed()) {
+          agentset.setDirected(b._2.isDirected());
+        }
         worldBreeds.put(b._1.toUpperCase(), agentset);
       }
     }
