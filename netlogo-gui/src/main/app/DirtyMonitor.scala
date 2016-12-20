@@ -3,12 +3,15 @@
 package org.nlogo.app
 
 import java.net.URI
-import java.nio.file.{ Files, Paths }
+import java.io.IOException
+import java.nio.file.{ Files, Path, Paths }
 import javax.swing.JFrame
 
 import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version }
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
+
+import scala.util.Try
 
 object DirtyMonitor {
   val autoSaveFileName = {
@@ -34,6 +37,8 @@ with SaveModel.Controller
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
   private var _modelDirty = false
+  private var priorTempFile = Option.empty[Path]
+
   def modelDirty = _modelDirty && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
     if (!path.isDefined && dirty != _modelDirty && !loading) {
@@ -49,7 +54,9 @@ with SaveModel.Controller
 
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
-    TempFileModelTracker.getModelFileUri.foreach(u => Files.deleteIfExists(Paths.get(u)))
+    Exceptions.ignoring(classOf[IOException]) {
+      priorTempFile.foreach(Files.deleteIfExists)
+    }
   }
 
   private var lastTimeAutoSaved = 0L
@@ -83,9 +90,14 @@ with SaveModel.Controller
     setDirty(false)
     loading = true
   }
+
   def handle(e: AfterLoadEvent): Unit = {
     setDirty(false)
     loading = false
+    Exceptions.ignoring(classOf[IOException]) {
+      priorTempFile.foreach(Files.deleteIfExists)
+    }
+    priorTempFile = TempFileModelTracker.getModelFileUri.flatMap(u => Try(Paths.get(u)).toOption)
   }
 
   /// how we get dirty
@@ -93,10 +105,12 @@ with SaveModel.Controller
     setDirty(true, path = e.path)
     doAutoSave()
   }
+
   def handle(e: WidgetAddedEvent): Unit = {
     setDirty(true)
     doAutoSave()
   }
+
   def handle(e: WidgetRemovedEvent): Unit = {
     setDirty(true)
     doAutoSave()
