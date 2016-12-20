@@ -121,8 +121,13 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     assert(loadedManager.cachedType("ARRAY:ITEM") === Some(TokenType.Reporter))
   } }
 
-  test("clearAll clears type cache") { new WithLoadedArrayExtension {
+  test("clearAll() leaves type cache in place") { new WithLoadedArrayExtension {
     loadedManager.clearAll()
+    assert(loadedManager.cachedType("ARRAY:SET") === Some(TokenType.Command))
+  } }
+
+  test("reset() clears type cache") { new WithLoadedArrayExtension {
+    loadedManager.reset()
     assert(loadedManager.cachedType("ARRAY:SET") === None)
   } }
 

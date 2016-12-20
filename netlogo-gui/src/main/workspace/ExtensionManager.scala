@@ -218,7 +218,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     for (jar <- jars.values) {
       jar.classManager.clearAll
     }
-    typeCache = Map[String, TokenType]()
   }
 
   @throws(classOf[CompilerException])
