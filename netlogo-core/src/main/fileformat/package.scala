@@ -2,6 +2,8 @@
 
 package org.nlogo
 
+import java.nio.file.Path
+
 import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, ModelLoader, Version }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
 import org.nlogo.core.model.WidgetReader
@@ -9,7 +11,7 @@ import org.nlogo.core.model.WidgetReader
 import scala.util.Try
 
 package object fileformat {
-  type ModelConversion = Model => ConversionResult
+  type ModelConversion = (Model, Path) => ConversionResult
 
   def nlogoReaders(is3D: Boolean): Map[String, WidgetReader] =
     if (is3D)
@@ -22,7 +24,7 @@ package object fileformat {
 
   def defaultAutoConvertables: Seq[AutoConvertable] = Seq(WidgetConverter, NLogoLabConverter)
 
-  def defaultConverter: ModelConversion = (m: Model) => SuccessfulConversion(m, m)
+  def defaultConverter: ModelConversion = (m: Model, path: Path) => SuccessfulConversion(m, m)
 
   def converter(
     extensionManager:       ExtensionManager,

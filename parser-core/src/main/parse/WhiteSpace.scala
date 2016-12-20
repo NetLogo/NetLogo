@@ -273,6 +273,9 @@ class WhitespaceMap(ws: Map[(AstPath, Placement), String]) {
   def ++(other: WhitespaceMap): WhitespaceMap =
     copy(ws ++ other.toMap)
 
+  def -(p: (AstPath, Placement)): WhitespaceMap =
+    copy(ws - p)
+
   def map(f: (((AstPath, Placement), String)) => ((AstPath, Placement), String)): WhitespaceMap =
     copy(ws.map(f))
 

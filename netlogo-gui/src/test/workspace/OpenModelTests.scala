@@ -5,6 +5,8 @@ package org.nlogo.workspace
 import org.scalatest.FunSuite
 
 import java.net.URI
+import java.nio.file.Path
+
 import org.nlogo.core.{ Shape, Model, Widget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
   SuccessfulConversion, ErroredConversion }
@@ -103,13 +105,13 @@ class OpenModelTests extends FunSuite {
   } }
 
   test("runs the autoconversion on the model before returning it") { new OpenTest {
-    override def autoconverter = { m => SuccessfulConversion(m, m.copy(code = "to foo end")) }
+    override def autoconverter = { (m: Model, p: Path) => SuccessfulConversion(m, m.copy(code = "to foo end")) }
     assert(openedModel.get.code == "to foo end")
   } }
 
   test("notifies the controller if the autoconversion fails") { new OpenTest {
     val exception = new Exception("problem autoconverting")
-    override def autoconverter = { m => ErroredConversion(m, ConversionError(exception, "", "")) }
+    override def autoconverter = { (m: Model, p: Path) => ErroredConversion(m, ConversionError(exception, "", "")) }
     userContinuesOpen()
     assert(openedModel.isDefined)
     assertResult(Some(Model()))(openedModel)

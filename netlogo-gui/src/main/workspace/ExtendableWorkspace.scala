@@ -5,8 +5,6 @@ package org.nlogo.workspace
 trait ExtendableWorkspace {
   def setProfilingTracer(tracer: org.nlogo.nvm.Tracer): Unit
   def compilerTestingMode: Boolean
-  @throws(classOf[java.io.IOException])
-  def getSource(filename: String): String
   def profilingEnabled: Boolean
   def fileManager: org.nlogo.nvm.FileManager
   @throws(classOf[java.net.MalformedURLException])

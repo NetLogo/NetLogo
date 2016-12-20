@@ -3,11 +3,11 @@
 package org.nlogo.api
 
 import java.awt.image.BufferedImage
+import java.io.{ FileOutputStream, File }
+import java.nio.file.{ InvalidPathException, Path, Paths }
 import javax.imageio.ImageIO
 
 import org.nlogo.core.FileMode
-
-import java.io.{ FileOutputStream, File }
 
 object FileIO {
 
@@ -110,5 +110,22 @@ object FileIO {
       file.close(true)
     }
     finally file.close(false)
+  }
+
+  def resolvePath(name: String): Option[Path] = resolvePath(name, None)
+
+  def resolvePath(name: String, peerFile: Path): Option[Path] = resolvePath(name, Some(peerFile))
+
+  def resolvePath(name: String, peerFile: Option[Path]): Option[Path] = {
+    try {
+      val path = Paths.get(name)
+      if (path.isAbsolute)
+        Some(path)
+      else
+        (peerFile.flatMap(p => Option(p.toAbsolutePath.getParent).map(_.resolve(name))) orElse
+          Some(Paths.get(System.getProperty("user.home"), name))).map(_.toAbsolutePath)
+    } catch {
+      case e: InvalidPathException => None
+    }
   }
 }

@@ -11,7 +11,7 @@ import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelSection, Versio
 import scala.util.{ Failure, Success, Try }
 import scala.reflect.ClassTag
 
-trait ModelSectionTest[A, B <: ModelFormat[A, _], C] extends FunSuite {
+trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
   def subject: ComponentSerialization[A, B]
 
   def modelComponent(model: Model): C

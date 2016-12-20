@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
-import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, LogoException,
+import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, FileIO, HubNetInterface, LogoException,
   ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
 import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, Widget => CoreWidget, WorldDimensions }
@@ -13,10 +13,10 @@ import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import java.util.WeakHashMap
 import java.net.URL
-import java.io.File
+import java.io.{ File, IOException, PrintWriter }
 import java.nio.file.Paths
 
-import java.io.{IOException,PrintWriter}
+import scala.util.Try
 
 import AbstractWorkspaceTraits._
 
@@ -90,6 +90,29 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     plotRNG.setSeed(seed)
   }
 
+  @throws(classOf[IOException])
+  def getSource(filename: String): String = {
+    // this `filename ==` feels very hacky. We should look for a way to pass
+    // in source-providing components without needing to special-case them
+    // here - RG 12/19/16
+    if (filename == "aggregate") {
+      aggregateManager.innerSource
+    } else {
+      // when we stick a string into a JTextComponent, \r\n sequences
+      // on Windows will get translated to just \n.  This is a problem
+      // because when an error occurs we want to highlight the location
+      // using the token location information recorded by the tokenizer,
+      // but the removal of the \r characters will throw off that information.
+      // So we do the stripping of \r here, *before* we run the tokenizer,
+      // and that avoids the problem. - ST 9/14/04
+
+      val sourceFile = new org.nlogo.api.LocalFile(filename)
+      sourceFile.open(org.nlogo.core.FileMode.Read)
+      val source = org.nlogo.api.FileIO.reader2String(sourceFile.reader)
+      source.replaceAll("\r\n", "\n")
+    }
+  }
+
   override def getCompilationEnvironment = {
     import java.io.{ File => JFile }
     import java.net.MalformedURLException
@@ -99,14 +122,11 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
       def resolvePath(path: String): String = {
         try {
-          val r = Paths.get(attachModelDir(path)).toFile
-          try {
-            r.getCanonicalPath
-          } catch {
-            case ex: IOException => r.getPath
-          }
+          val modelPath = Option(AbstractWorkspaceScala.this.getModelPath)
+            .flatMap(s => Try(Paths.get(s)).toOption)
+          FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
         } catch {
-          case ex: MalformedURLException =>
+          case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
@@ -209,17 +229,7 @@ object AbstractWorkspaceTraits {
      */
     @throws(classOf[java.net.MalformedURLException])
     def attachModelDir(filePath: String): String = {
-      if (new File(filePath).isAbsolute)
-        filePath
-      else {
-        val defaultPath = Paths.get(System.getProperty("user.home"))
-        val modelParentPath =
-          Option(getModelPath).map(s => Paths.get(s)).map(_.getParent)
-            .getOrElse(defaultPath)
-        val attachedPath = modelParentPath.resolve(filePath)
-
-        attachedPath.toAbsolutePath.toString
-      }
+      FileIO.resolvePath(filePath, Option(getModelPath).flatMap(s => Try(Paths.get(s)).toOption)).toString
     }
   }
 

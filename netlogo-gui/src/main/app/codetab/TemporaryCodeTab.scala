@@ -5,34 +5,55 @@ package org.nlogo.app.codetab
 import java.awt.{ Component, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
-import javax.swing.AbstractAction
+import javax.swing.{ Action, AbstractAction }
 
-import scala.util.control.Exception.ignoring
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
+import org.nlogo.fileformat, fileformat.SuccessfulConversion
+
+import scala.util.control.Exception.ignoring
 
 object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(File.separator).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace, tabs: TabsInterface, var filename: TabsInterface.Filename, smartIndent: Boolean)
-extends CodeTab(workspace, tabs)
-with AppEvents.IndenterChangedEvent.Handler {
+class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
+  tabs:                           TabsInterface,
+  private var _filename:          TabsInterface.Filename,
+  externalFileManager:            ExternalFileManager,
+  conversionAction:               TemporaryCodeTab => Action,
+  smartIndent:                    Boolean)
+  extends CodeTab(workspace, tabs)
+  with AppEvents.IndenterChangedEvent.Handler {
+
   var closing = false
   var saveNeeded = false
+
+  def filename: Either[String, String] = _filename
+
+  def filename_=(newName: Either[String, String]): Unit = {
+    val oldFilename = _filename
+    _filename = newName
+    if (oldFilename.isRight && oldFilename != newName) {
+      externalFileManager.nameChanged(oldFilename.right.get, newName.right.get)
+    } else if (oldFilename.isLeft) {
+      externalFileManager.add(this)
+    }
+  }
 
   filename.right foreach { path =>
     try {
       innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
       dirty = false
       saveNeeded = false
+      externalFileManager.add(this)
     } catch {
       case _: IOException => innerSource = ""
     }
@@ -43,7 +64,7 @@ with AppEvents.IndenterChangedEvent.Handler {
   activeMenuActions = {
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
-        with MenuAction {
+      with MenuAction {
         category    = UserAction.FileCategory
         group       = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
@@ -53,8 +74,7 @@ with AppEvents.IndenterChangedEvent.Handler {
         override def action(): Unit = save(saveAs)
       }
     }
-
-    Seq(saveAction(false), saveAction(true))
+    Seq(saveAction(false), saveAction(true)) ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
   override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))
@@ -82,6 +102,7 @@ with AppEvents.IndenterChangedEvent.Handler {
     ignoring(classOf[UserCancelException]) {
       if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
         save(false)
+      externalFileManager.remove(this)
       closing = true
       tabs.closeExternalFile(filename)
     }

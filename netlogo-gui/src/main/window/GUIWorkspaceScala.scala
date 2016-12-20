@@ -21,15 +21,16 @@ import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
 import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
 
-abstract class GUIWorkspaceScala(world: World,
+abstract class GUIWorkspaceScala(
+  world:                World,
   hubNetManagerFactory: HubNetManagerFactory,
-  protected val frame: Frame,
-  externalFileManager: ExternalFileManager,
-  controlSet: ControlSet)
-extends AbstractWorkspaceScala(world, hubNetManagerFactory)
-with ExportPlotEvent.Handler
-with ExportWidgetEvent.Handler
-with LoadModelEvent.Handler {
+  protected val frame:  Frame,
+  externalFileManager:  ExternalFileManager,
+  controlSet:           ControlSet)
+  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
+  with ExportPlotEvent.Handler
+  with ExportWidgetEvent.Handler
+  with LoadModelEvent.Handler {
 
   def view: View
 
@@ -250,10 +251,12 @@ with LoadModelEvent.Handler {
         (textFuture: Future[String]) => ExportOutput.silencingErrors(filename, awaitFuture(textFuture, 1000)))
   }
 
-  @throws[java.io.IOException]
+  @throws(classOf[IOException])
   override def getSource(filename: String): String = {
-    if (filename == "") throw new IllegalArgumentException("cannot provide source for empty filename")
-    Option(externalFileManager) flatMap (fm => Option(fm.getSource(filename))) getOrElse (super.getSource(filename))
+    if (filename == "") {
+      throw new IllegalArgumentException("cannot provide source for empty filename")
+    }
+    externalFileManager.getSource(filename) getOrElse super.getSource(filename)
   }
 
   def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)

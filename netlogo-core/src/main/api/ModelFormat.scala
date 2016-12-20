@@ -8,7 +8,7 @@ import org.nlogo.core.Model
 
 import scala.util.{ Success, Try }
 
-trait ComponentSerialization[A, B <: ModelFormat[A, _]] {
+trait ComponentSerialization[A, B <: ModelFormat[A, B]] {
   def componentName: String
   def addDefault: Model => Model = identity
   def serialize(m: Model): A
@@ -16,7 +16,7 @@ trait ComponentSerialization[A, B <: ModelFormat[A, _]] {
   def deserialize(s: A): Model => Try[Model] = (m: Model) => Success(m)
 }
 
-trait ModelFormat[Section, Format <: ModelFormat[Section, _]] {
+trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
   def name: String
 
   def sections(location: URI): Try[Map[String, Section]]

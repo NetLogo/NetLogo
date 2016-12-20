@@ -67,7 +67,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private final View view;
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
-  private final ExternalFileManager externalFileManager;
   public final NetLogoListenerManager listenerManager;
 
   private PeriodicUpdater periodicUpdater;
@@ -84,7 +83,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     super(world, hubNetManagerFactory, frame, externalFileManager, controlSet);
     this.kioskLevel = kioskLevel;
     this.linkParent = linkParent;
-    this.externalFileManager = externalFileManager;
     this.listenerManager = listenerManager;
     hubNetControlCenterAction.setEnabled(false);
 
@@ -1135,5 +1133,4 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         open3DView();
       }
     };
-
 }

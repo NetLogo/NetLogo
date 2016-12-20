@@ -2,6 +2,8 @@
 
 package org.nlogo.fileformat
 
+import java.nio.file.{ Files, Paths }
+
 import org.nlogo.api.NetLogoLegacyDialect
 
 import org.nlogo.core.{ Dialect, DummyCompilationEnvironment, DummyExtensionManager,
@@ -12,6 +14,8 @@ import scala.util.Try
 trait ConversionHelper {
   val compilationEnvironment = FooCompilationEnvironment
   val extensionManager = VidExtensionManager
+  val tempDir = Files.createTempDirectory("ConversionTest")
+  val modelPath = Files.createTempFile(tempDir, "ConversionTest", ".nlogo") // this is only used for includes file testing
 
   val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
@@ -22,10 +26,14 @@ trait ConversionHelper {
   }
 
   def tryConvert(model: Model, conversions: ConversionSet*): ConversionResult =
-    converter(_ => conversions)(model)
+    converter(_ => conversions)(model, modelPath)
 
   def convert(model: Model, conversions: ConversionSet*): Model =
     tryConvert(model, conversions: _*).model
+
+  def writeNls(name: String, contents: String): Unit = {
+    Files.write(tempDir.resolve(name), contents.getBytes)
+  }
 
   def conversion(
     name: String = "test conversion",
@@ -56,7 +64,10 @@ object VidExtensionManager extends DummyExtensionManager {
 
 object FooCompilationEnvironment extends DummyCompilationEnvironment {
   import java.nio.file.Files
-  override def getSource(filename: String): String =
-    if (filename == "foo.nls") "to bar bk 1 end"
+  override def getSource(filename: String): String = {
+    val path = Paths.get(filename)
+    if (Files.exists(path))
+      new String(Files.readAllBytes(path))
     else super.getSource(filename)
+  }
 }

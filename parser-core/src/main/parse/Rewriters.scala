@@ -106,7 +106,8 @@ trait StatementManipulationVisitor
     addedArgument.map { i =>
       val oldArgPosition = position / AstPath.Expression(stmt.args(i), i)
       val newArgPosition = position / AstPath.Expression(stmt.args(i), 0)
-      ctx.wsMap.map {
+      val filteredMap = if (i == 0) ctx.wsMap else (ctx.wsMap - (newArgPosition -> WhiteSpace.Content))
+      filteredMap.map {
         case ((k, p), v) =>
           if (oldArgPosition.isParentOf(k))
             (k.repath(oldArgPosition, newArgPosition), p) -> v

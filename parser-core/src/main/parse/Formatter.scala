@@ -98,17 +98,19 @@ class Formatter
           case (_, b: _constcodeblock) =>
             super.visitReporterApp(app, position)(
               c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
-          case (false, con: _const) if con.value.isInstanceOf[LogoList] =>
+          case (false, con: _const) =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
           case (false, r: _reporterlambda) if r.synthetic =>
             super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
           case (false, r: _reporterlambda) =>
-            val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
+            val c2 =
+              super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
             val args = c.wsMap.frontMargin(position)
             val frontPadding = if (c.text.last == ' ') "" else " "
             c.appendText(frontPadding + "[" + args + c2.text + c2.wsMap.backMargin(position) + "]")
           case (false, cl: _commandlambda) if cl.argumentNames.nonEmpty && ! cl.synthetic =>
-            val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
+            val c2 =
+              super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
             val args = c.wsMap.frontMargin(position)
             val frontPadding = if (c.text.last == ' ') "" else " "
             c.appendText(frontPadding + "[" + args + c2.text.stripPrefix("[") + c2.wsMap.backMargin(position))

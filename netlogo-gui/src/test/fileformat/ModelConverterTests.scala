@@ -216,6 +216,7 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
   }
 
   test("handles models with includes properly") {
+    writeNls("foo.nls", "to bar bk 1 end")
     val originalSource =
       """|__includes [ "foo.nls" ]
          |to foo
@@ -231,5 +232,21 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     val model = Model(code = originalSource)
     val converted = convert(model, conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd")))
     assertResult(expectedSource)(converted.code)
+  }
+
+  test("won't convert a model with an un-locatable included file") {
+    val originalSource =
+      """|__includes [ "bar.nls" ]
+         |to foo
+         |  bar
+         |  fd 1
+         |end""".stripMargin
+    val model = Model(code = originalSource)
+    val conversions = Seq[SourceRewriter => String](_.replaceCommand("fd" -> "rt 90"))
+    tryConvert(model,
+      conversion(codeTabConversions = conversions, targets = Seq("fd"))) match {
+        case ErroredConversion(_, error) => assert(error.errors.exists(_.getMessage.contains("bar.nls")))
+        case _ => fail("converted model with unidentified includes")
+      }
   }
 }

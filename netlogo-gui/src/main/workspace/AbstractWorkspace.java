@@ -357,27 +357,6 @@ public abstract strictfp class AbstractWorkspace
 
   /// BehaviorSpace
 
-  public String getSource(String filename)
-      throws java.io.IOException {
-    if (filename.equals("aggregate")) {
-      return aggregateManager().innerSource();
-    }
-    // when we stick a string into a JTextComponent, \r\n sequences
-    // on Windows will get translated to just \n.  This is a problem
-    // because when an error occurs we want to highlight the location
-    // using the token location information recorded by the tokenizer,
-    // but the removal of the \r characters will throw off that information.
-    // So we do the stripping of \r here, *before* we run the tokenizer,
-    // and that avoids the problem. - ST 9/14/04
-
-    final org.nlogo.core.File sourceFile;
-
-    sourceFile = new org.nlogo.api.LocalFile(filename);
-    sourceFile.open(FileModeJ.READ());
-    String source = org.nlogo.util.Utils.reader2String(sourceFile.reader());
-    return source.replaceAll("\r\n", "\n");
-  }
-
   public org.nlogo.api.MersenneTwisterFast auxRNG() {
     return _world.auxRNG();
   }
