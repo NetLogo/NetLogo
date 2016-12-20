@@ -1,0 +1,1 @@
+Primitives which don't fall into any other categories, and which other classes have compile-time dependencies on. if a prim is here instead of `prim.etc`, it's because the compiler knows about it specifically and handles it specially somehow.
