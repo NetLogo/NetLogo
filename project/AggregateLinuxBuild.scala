@@ -18,7 +18,7 @@ object PackageLinuxAggregate {
   // There may be an opportunity for abstraction.
   private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
     val allVariables =
-      variables ++ app.configurationVariables +
+      variables ++ app.configurationVariables("linux") +
       ("mainClass"      -> app.mainClass) +
       ("mainClassSlash" -> app.mainClass.replaceAllLiterally(".", "/").replaceAllLiterally("$", "")) +
       ("appIdentifier"  -> app.mainClass.split("\\.").init.mkString(".")) +

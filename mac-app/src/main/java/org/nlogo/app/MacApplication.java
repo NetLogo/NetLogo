@@ -4,6 +4,7 @@ package org.nlogo.app;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import ca.weblite.objc.Client;
@@ -45,15 +46,57 @@ public class MacApplication {
     try {
       String mainApplicationClassName = System.getProperty("org.nlogo.mac.appClassName", "org.nlogo.app.App$");
       Class<?> mainAppClass = Class.forName(mainApplicationClassName);
-      Field appField = mainAppClass.getDeclaredField("MODULE$");
-      Object app = appField.get(mainAppClass);
-      Method mainWithHandler =
-        mainAppClass.getDeclaredMethod("mainWithAppHandler", String[].class, Object.class);
-
-      mainWithHandler.invoke(app, args, handler);
+      try {
+        launchScalaMain(mainAppClass, args, handler);
+      } catch (NoSuchFieldException e) {
+        launchJavaMain(mainAppClass, args, handler);
+      }
     } catch (Exception e) {
-      System.err.println(e.getMessage());
-      e.printStackTrace();
+      printException(e);
     }
   }
+
+  static void printException(Exception e) {
+    System.err.println(e.getMessage());
+    e.printStackTrace();
+  }
+
+  static void launchScalaMain(Class<?> klass, String[] args, MacHandler handler) throws IllegalAccessException, NoSuchFieldException {
+    Field appField = klass.getDeclaredField("MODULE$");
+    Object app = appField.get(klass);
+    invokeMainWithAppHandlerOrFallback(klass, app, args, handler);
+  }
+
+  static void launchJavaMain(Class<?> klass, String[] args, MacHandler handler) throws IllegalAccessException {
+    invokeMainWithAppHandlerOrFallback(klass, null, args, handler);
+  }
+
+  static void invokeMainWithAppHandlerOrFallback(Class<?> klass, Object target, String[] args, MacHandler handler) throws IllegalAccessException {
+    try {
+      Method mainWithHandler = klass.getDeclaredMethod("mainWithAppHandler", String[].class, Object.class);
+      mainWithHandler.invoke(target, args, handler);
+    } catch (NoSuchMethodException e) {
+      System.err.println("Could not find mainWithAppHandler method on class " + klass.getName());
+      printException(e);
+      System.err.println("attempting to invoke main...");
+      invokeMain(klass, target, args);
+    } catch (InvocationTargetException e) {
+      System.err.println("Could not invoke mainWithAppHandler on " + klass.getName());
+      printException(e);
+    }
+  }
+
+  static void invokeMain(Class<?> klass, Object target, String[] args) throws IllegalAccessException {
+    try {
+      Method mainWithHandler = klass.getDeclaredMethod("main", String[].class);
+      mainWithHandler.invoke(target, (Object) args);
+    } catch (NoSuchMethodException e) {
+      System.err.println("Could not find main method on class " + klass.getName());
+      printException(e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Could not invoke main on " + klass.getName());
+      printException(e);
+    }
+  }
+
 }

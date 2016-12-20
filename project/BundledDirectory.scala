@@ -50,3 +50,25 @@ class DocsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   def files: Seq[File] =
     Path.allSubpaths(sourceDir).map(_._1).filterNot(_.isHidden).toSeq
 }
+
+class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends BundledDirectory(baseDirectory) {
+  val directoryName = "behaviorsearch"
+  private def headlessScriptMapping: (File, String) = {
+    val distInclude = baseDirectory / "dist" / "dist_include"
+    platformShortName match {
+      case "windows" =>
+        distInclude / "behaviorsearch_headless.bat" -> "behaviorsearch/behaviorsearch_headless.bat"
+      case "linux"   =>
+        distInclude / "behaviorsearch_headless.sh"  -> "behaviorsearch/behaviorsearch_headless.sh"
+      case "macosx"  =>
+        distInclude / "behaviorsearch_headless.command"  -> "behaviorsearch/behaviorsearch_headless.command"
+    }
+  }
+
+  override def fileMappings = super.fileMappings :+ headlessScriptMapping
+  def files: Seq[File] =
+    ((baseDirectory * "*.TXT") +++
+      (baseDirectory / "documentation" ***) +++
+      (baseDirectory / "resources" ***) +++
+      (baseDirectory / "examples" ***)).get
+}

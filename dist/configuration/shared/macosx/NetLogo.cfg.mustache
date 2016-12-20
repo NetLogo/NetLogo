@@ -14,10 +14,11 @@ app.identifier=org.nlogo.app
 -Dnetlogo.docs.dir=$APPDIR/../../docs
 -Xdock:name={{appShortName}}
 -Dorg.nlogo.mac.appClassName={{{mainClass}}}
--Xmx1024m
+-Xmx{{maxMemory}}
 -Dfile.encoding=UTF-8
 -Dapple.awt.graphics.UseQuartz=true
 {{#jvmOptions}}{{{.}}}
+
 {{/jvmOptions}}
 
 

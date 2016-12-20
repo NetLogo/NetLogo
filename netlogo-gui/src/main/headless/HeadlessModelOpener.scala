@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, ConstantSliderConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
 import org.nlogo.api.{ FileIO, LogoException, ModelSection,
                         NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
 import org.nlogo.fileformat
@@ -98,6 +98,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     import ConstraintSpecification._
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec match {
+        case BoundedNumericConstraintSpecification(min, default, max, step) =>
+          val constraint = new ConstantSliderConstraint(min.doubleValue, max.doubleValue, step.doubleValue)
+          constraint.defaultValue = default.doubleValue
+          constraint
         case NumericConstraintSpecification(default) => new NumericConstraint(default)
         case ChoiceConstraintSpecification(vals, defaultIndex) => new ChooserConstraint(
           LogoList.fromIterator(vals.iterator),

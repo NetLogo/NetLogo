@@ -86,7 +86,14 @@ case class Slider(variable: Option[String],
   with DeclaresGlobalCommand
   with DeclaresConstraint {
   override def varName = variable.getOrElse("")
-  override def constraint = NumericConstraintSpecification(default)
+  override val constraint =
+    (for {
+      minBound <- NumberParser.parse(min).right
+      maxBound <- NumberParser.parse(max).right
+      increment <- NumberParser.parse(step).right
+    } yield BoundedNumericConstraintSpecification(minBound, default, maxBound, increment))
+      .getOrElse(NumericConstraintSpecification(default))
+
   override def convertSource(conversion: String => String): Slider =
     this.copy(min = conversion(min), max = conversion(max), step = conversion(step))
 }
