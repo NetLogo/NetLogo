@@ -1,5 +1,6 @@
+NetLogo 6.0
+December 20, 2016
 NetLogo 6.0-BETA2
-November 18, 2016
 NetLogo 6.0-BETA1
 NetLogo 6.0-RC1
 NetLogo 6.0-M9
