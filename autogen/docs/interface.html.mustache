@@ -1,1295 +1,584 @@
 <!DOCTYPE html>
 <title>
-      NetLogo {{version}} User Manual: Interface Guide
-    </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-      .interfacetable > tbody > tr > td {
-        padding-top: 0.75em;
-        padding-bottom: 0.75em;
-      }
+  NetLogo {{version}} User Manual: Interface Guide
+</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+  .interfacetable > tbody > tr > td {
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+  }
+</style>
+<h1>
+  Interface Guide
+</h1>
+{{> versionTag.html }}
+<p>
+  This section of the manual explains the function of each element in
+  NetLogo's user interface.
+<p>
+  In NetLogo, you have the choice of viewing models found in the Models
+  Library, adding to existing models, or creating your own models. The
+  NetLogo interface was designed to meet all these needs.
+<p>
+  The interface can be divided into two main parts: NetLogo menus, and
+  the main NetLogo window. The main window is divided into tabs.
+<ul>
+  <li><a href="#menus">Menus</a></li>
+  <li><a href="#tabs">Tabs</a></li>
+  <li><a href="#i18n">International usage</a></li>
+</ul>
+<h2>
+  <a>Menus</a>
+</h2>
+<p id="menus">
+  On a Mac, if you are running the NetLogo application, the menu bar is
+  located at the top of the screen. On other platforms, the menu bar is
+  found at the top of the NetLogo window.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/image001.gif">
+<p>
+  The functions available from the menus in the menubar are listed in
+  the following chart.
+<h4>
+  Chart: NetLogo menus
+</h4>
+<table border="1" style='border-collapse:collapse; border:none' class="interfacetable" >
+  <tbody>
+  <tr>
+    <td style='vertical-align: top; border-top:double 4.5pt; border-left:double 4.5pt;border-bottom:solid .5pt;border-right:none; border-color:windowtext;padding:0in 5.4pt 0in 5.4pt'>
+      <p style='margin-right:-27.9pt'><strong>File</strong>
+    </td>
+    <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+    <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:double windowtext 4.5pt; padding:0in 5.4pt 0in 5.4pt' />
+      <tr>
+        <td class="emptyLeft"></td>
+        <td class="nameCenter">New</td>
+        <td class="descriptionRight">Starts a new model.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Open…</td>
+        <td class="descriptionRight">Opens any NetLogo model on your computer.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Models Library</td>
+        <td class="descriptionRight">A collection of demonstration models.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Recent Files</td>
+        <td class="descriptionRight">Re-opens any previously model opened with "File -&gt; Open"</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Save</td>
+        <td class="descriptionRight">Save the current model.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Save As…</td>
+        <td class="descriptionRight">Save the current model using a different name.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Save All</td>
+        <td class="descriptionRight">Save the current model and all open ".nls" files. This option is only available when one or more ".nls" files are open.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Upload to Modeling Commons</td>
+        <td class="descriptionRight">
+          Uploads the model to Modeling Commons. See <a href="modelingcommons.html">Modeling Commons</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Save As NetLogo Web…</td>
+        <td class="descriptionRight">Saves a web page, in HTML format, containing NetLogo web running your model.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export World…</td>
+        <td class="descriptionRight">
+          Saves all variables, the current state of all turtles and
+          patches, the drawing , the plots, the output area and the
+          random state information to a file.
+        </td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export Plot…</td>
+        <td class="descriptionRight"> Saves the data in a plot to a file.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export All Plots…</td>
+        <td class="descriptionRight">Saves the data in all the plots to a file.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export View…</td>
+        <td class="descriptionRight">Save a picture of the current view (2D or 3D) to a file (in PNG format).</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export Interface…</td>
+        <td class="descriptionRight">Save a picture of the current Interface tab. ( in PNG format )</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export Output…</td>
+        <td class="descriptionRight">Save the contents of the output area or the output section of the command center to a file.</td>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Export Code…</td>
+        <td class="descriptionRight">
+        Save the model's code to an HTML file, preserving colors.
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Import World…</td>
+        <td class="descriptionRight">
+        Load a file that was saved by Export World.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Import Patch Colors…</td>
+        <td class="descriptionRight">
+        Load an image into the patches; see the <a href="dictionary#import-pcolors">import-pcolors</a> command.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Import Patch Colors RGB…</td>
+        <td class="descriptionRight">
+        Load an image into the patches using RGB colors; see the
+        <a href="dictionary#import-pcolors-rgb">import-pcolors-rgb</a>
+        command.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Import Drawing…</td>
+        <td class="descriptionRight">
+        Load an image into the drawing, see the <a href="dictionary#import-drawing">import-drawing</a> command.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Import HubNet Client Interface…</td>
+        <td class="descriptionRight">
+        Load the interface from another model into the HubNet Client
+        Editor.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Print…</td>
+        <td class="descriptionRight">Sends the contents of the currently showing tab to your printer.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Quit</td>
+        <td class="descriptionRight">
+        Exits NetLogo. On a Mac, this item is on the NetLogo menu
+        instead.</td>
+      </tr>
+      <tr>
+        <td class="headerSpanningTable"><strong>Edit</strong></td>
+        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+        <td class="descriptionRight" />
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Undo</td>
+        <td class="descriptionRight">
+        Undo last text editing action you performed.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Redo</td>
+        <td class="descriptionRight">
+        Redo last undo action you performed.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Cut</td>
+        <td class="descriptionRight">
+        Cuts out or removes the selected text and temporarily saves it
+        to the clipboard.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Copy</td>
+        <td class="descriptionRight">
+        Copies the selected text.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Paste</td>
+        <td class="descriptionRight">
+        Places the clipboard text where cursor is currently located.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Delete</td>
+        <td class="descriptionRight">
+        Deletes selected text.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Select All</td>
+        <td class="descriptionRight">
+        Select all the text in the active window.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Find…</td>
+        <td class="descriptionRight">
+        Finds a word or sequence of characters within the Info or Code
+        tabs.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Find Next</td>
+        <td class="descriptionRight">
+        Find the next occurrence of the word or sequence you last used
+        Find with.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Comment /
+        <br>
+        Uncomment</td>
+        <td class="descriptionRight">
+        Used in the Code tab to add or remove semicolons from code
+        (semicolons are used in NetLogo code to indicate comments).</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Shift Left / Shift Right</td>
+        <td class="descriptionRight">
+        Used in the Code tab to change the indentation level of code.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">
+        Format</td>
+        <td class="descriptionRight">
+        Used in the Code tab to correct the indentation of the currently selected code.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Snap to Grid</td>
+        <td class="descriptionRight">
+        Available only in the Interface Tab.
+        When enabled new widgets stay on a 5 pixel grid so it is easier
+        to line them up. (Note: this feature is disabled when zoomed in
+        or out.)</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Convert from 5.3.1 to 6.0</td>
+        <td class="descriptionRight">
+        Available only in an ".nls" code tab.
+        Treats the code in this tab as though it were written in 5.3.1 and converts it to run in NetLogo 6.
+        Note that this will <i>not</i> take into account code defined in the main code tab.
+        "Undo" doesn't take this operation into account, so you won't want to save unless you're satisfied with the changes.
+        </td>
+      </tr>
+      <tr>
+        <td class="headerSpanningTable"><strong>Tools</strong></td>
+        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+        <td class="descriptionRight" />
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Preferences…</td>
+        <td class="descriptionRight">
+        Opens the preferences dialog, where you can customize NetLogo
+        settings, including language and editor line numbers.
+        On a Mac, this item is on the NetLogo menu instead.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Halt</td>
+        <td class="descriptionRight">
+        Stops all running code, including buttons and the command
+        center. (Warning: since the code is interrupted in the middle
+        of whatever it was doing, you may get unexpected results if you
+        try to continue running the model without first pressing
+        &quot;setup&quot; to start the model run over.)</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Globals Monitor</td>
+        <td class="descriptionRight">Displays the values of all global variables.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Turtle Monitor</td>
+        <td class="descriptionRight">
+        Displays the values of all of the variables in a particular
+        turtle. You can can also edit the values of the turtle's
+        variables and issue commands to the turtle. (You can also open
+        a turtle monitor via the View; see the View section below.)</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Patch Monitor</td>
+        <td class="descriptionRight">
+        Displays the values of all of the variables in a particular
+        patch. You can can also edit the values of the patch's
+        variables and issue commands to the patch. (You can also open a
+        patch monitor via the View; see the View section below.)</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Link Monitor</td>
+        <td class="descriptionRight">
+        Displays the values of all of the variables in a particular
+        link. You can can also edit the values of the link's
+        variables and issue commands to the link. (You can also open a
+        link monitor via the View; see the View section below.)</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Close All Agent Monitors</td>
+        <td class="descriptionRight">
+        Closes all open agent monitor windows.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Close Monitors for Dead Agents</td>
+        <td class="descriptionRight">
+        Closes all open agent monitor windows targeting dead agents.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Hide/Show Command Center</td>
+        <td class="descriptionRight">
+        Makes the command center visible or invisible. (Note that the
+        command center can also be shown or hidden, or resized, with
+        the mouse.) This option is only available when the Interface Tab
+        is active</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">3D View</td>
+        <td class="descriptionRight">
+        Opens the 3D view. See the <a href="#views">Views</a> section
+        for more information.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Color Swatches</td>
+        <td class="descriptionRight">
+        Opens the Color Swatches. See the <a href="programming.html#colors">Color Section</a> of the Programming
+        Guide for details.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Turtle Shapes Editor</td>
+        <td class="descriptionRight">
+        Draw turtle shapes. See the <a href="shapes.html">Shapes Editor
+        Guide</a> for more information.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Link Shapes Editor</td>
+        <td class="descriptionRight">
+        Draw link shapes. See the <a href="shapes.html">Shapes Editor
+        Guide</a> for more information.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">BehaviorSpace</td>
+        <td class="descriptionRight">
+        Runs the model over and over with different settings. See the
+        <a href="behaviorspace.html">BehaviorSpace Guide</a> for more
+        information.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">System Dynamics Modeler</td>
+        <td class="descriptionRight">
+        Opens the System Dynamics Modeler. See the <a href="systemdynamics.html">System Dynamics Modeler Guide</a> for
+        more details.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Preview Commands Editor</td>
+        <td class="descriptionRight">
+        Allows for easy editing of the commands sequence used to create preview images
+        for models. Gives a way to specify what code will be used (or specify that the
+        image is manually made) and preview the resulting image.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">HubNet Client Editor</td>
+        <td class="descriptionRight">
+        Opens the HubNet Client Editor. See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a> for more
+        details.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">HubNet Control Center</td>
+        <td class="descriptionRight">
+        Disabled if no HubNet activity is open. See the <a href="hubnet.html">HubNet Guide</a> for more information.</td>
+      </tr>
+      <tr>
+        <td class="headerSpanningTable"><strong>Zoom</strong></td>
+        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+        <td class="descriptionRight" />
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Larger</td>
+        <td class="descriptionRight">
+        Increase the overall screen size of the model. Useful on large
+        monitors or when using a projector in front of a group.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Normal Size</td>
+        <td class="descriptionRight">Reset the screen size of the model to the normal size.</td>
+      </tr>
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Smaller</td>
+        <td class="descriptionRight">Decrease the overall screen size of the model.</td>
+      </tr>
+      <tr>
+        <td class="headerSpanningTable"><strong>Tabs</strong></td>
+        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+        <td class="descriptionRight">
 
-      .widget-table {
-        text-align: center;
-        margin: 0 auto;
-      }
-
-      .widget-table > tbody > tr > td {
-        text-align: left;
-        padding: 3px;
-        vertical-align: top;
-      }
-    </style>
-  <h1>
-      Interface Guide
-    </h1>
-    {{> versionTag.html }}
-    <p>
-      This section of the manual explains the function of each element in
-      NetLogo's user interface.
-    <p>
-      In NetLogo, you have the choice of viewing models found in the Models
-      Library, adding to existing models, or creating your own models. The
-      NetLogo interface was designed to meet all these needs.
-    <p>
-      The interface can be divided into two main parts: NetLogo menus, and
-      the main NetLogo window. The main window is divided into tabs.
-    <ul>
-      <li><a href="#menus">Menus</a></li>
-      <li><a href="#tabs">Tabs</a></li>
-      <li><a href="#interface">Interface Tab</a>
-        <ul>
-          <li><a href="#interfaceelements">Working with interface elements</a></li>
-          <li><a href="#views">The 2D and 3D views</a></li>
-          <li><a href="#commandcenter">Command Center</a></li>
-          <li><a href="#plots">Plots</a></li>
-          <li><a href="#sliders">Sliders</a></li>
-          <li><a href="#agentmonitors">Agent monitors</a></li>
-        </ul>
-      </li>
-      <li><a href="#procedures">Code tab</a></li>
-      <li><a href="#includes">Includes menu</a></li>
-      <li><a href="#i18n">International usage</a></li>
-    </ul>
-    <h2>
-      <a>Menus</a>
-    </h2>
-    <p id="menus">
-      On a Mac, if you are running the NetLogo application, the menu bar is
-      located at the top of the screen. On other platforms, the menu bar is
-      found at the top of the NetLogo window.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image001.gif">
-    <p>
-      The functions available from the menus in the menubar are listed in
-      the following chart.
-    <h4>
-      Chart: NetLogo menus
-    </h4>
-    <table border="1" style='border-collapse:collapse; border:none' class="interfacetable" >
-      <tbody>
-      <tr>
-        <td style='vertical-align: top; border-top:double 4.5pt; border-left:double 4.5pt;border-bottom:solid .5pt;border-right:none; border-color:windowtext;padding:0in 5.4pt 0in 5.4pt'>
-          <p style='margin-right:-27.9pt'><strong>File</strong>
-        </td>
-        <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-        <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:double windowtext 4.5pt; padding:0in 5.4pt 0in 5.4pt' />
-          <tr>
-            <td class="emptyLeft"></td>
-            <td class="nameCenter">New</td>
-            <td class="descriptionRight">Starts a new model.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Open…</td>
-            <td class="descriptionRight">Opens any NetLogo model on your computer.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Models Library</td>
-            <td class="descriptionRight">A collection of demonstration models.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Recent Files</td>
-            <td class="descriptionRight">Re-opens any previously model opened with "File -&gt; Open"</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Save</td>
-            <td class="descriptionRight">Save the current model.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Save As…</td>
-            <td class="descriptionRight">Save the current model using a different name.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Save All</td>
-            <td class="descriptionRight">Save the current model and all open ".nls" files. This option is only available when one or more ".nls" files are open.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Upload to Modeling Commons</td>
-            <td class="descriptionRight">
-              Uploads the model to Modeling Commons. See <a href="modelingcommons.html">Modeling Commons</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Save As NetLogo Web…</td>
-            <td class="descriptionRight">Saves a web page, in HTML format, containing NetLogo web running your model.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export World…</td>
-            <td class="descriptionRight">
-              Saves all variables, the current state of all turtles and
-              patches, the drawing , the plots, the output area and the
-              random state information to a file.
-            </td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export Plot…</td>
-            <td class="descriptionRight"> Saves the data in a plot to a file.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export All Plots…</td>
-            <td class="descriptionRight">Saves the data in all the plots to a file.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export View…</td>
-            <td class="descriptionRight">Save a picture of the current view (2D or 3D) to a file (in PNG format).</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export Interface…</td>
-            <td class="descriptionRight">Save a picture of the current Interface tab. ( in PNG format )</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export Output…</td>
-            <td class="descriptionRight">Save the contents of the output area or the output section of the command center to a file.</td>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Export Code…</td>
-            <td class="descriptionRight">
-            Save the model's code to an HTML file, preserving colors.
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Import World…</td>
-            <td class="descriptionRight">
-            Load a file that was saved by Export World.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Import Patch Colors…</td>
-            <td class="descriptionRight">
-            Load an image into the patches; see the <a href="dictionary#import-pcolors">import-pcolors</a> command.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Import Patch Colors RGB…</td>
-            <td class="descriptionRight">
-            Load an image into the patches using RGB colors; see the
-            <a href="dictionary#import-pcolors-rgb">import-pcolors-rgb</a>
-            command.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Import Drawing…</td>
-            <td class="descriptionRight">
-            Load an image into the drawing, see the <a href="dictionary#import-drawing">import-drawing</a> command.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Import HubNet Client Interface…</td>
-            <td class="descriptionRight">
-            Load the interface from another model into the HubNet Client
-            Editor.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Print…</td>
-            <td class="descriptionRight">Sends the contents of the currently showing tab to your printer.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Quit</td>
-            <td class="descriptionRight">
-            Exits NetLogo. On a Mac, this item is on the NetLogo menu
-            instead.</td>
-          </tr>
-          <tr>
-            <td class="headerSpanningTable"><strong>Edit</strong></td>
-            <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-            <td class="descriptionRight" />
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Undo</td>
-            <td class="descriptionRight">
-            Undo last text editing action you performed.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Redo</td>
-            <td class="descriptionRight">
-            Redo last undo action you performed.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Cut</td>
-            <td class="descriptionRight">
-            Cuts out or removes the selected text and temporarily saves it
-            to the clipboard.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Copy</td>
-            <td class="descriptionRight">
-            Copies the selected text.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Paste</td>
-            <td class="descriptionRight">
-            Places the clipboard text where cursor is currently located.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Delete</td>
-            <td class="descriptionRight">
-            Deletes selected text.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Select All</td>
-            <td class="descriptionRight">
-            Select all the text in the active window.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Find…</td>
-            <td class="descriptionRight">
-            Finds a word or sequence of characters within the Info or Code
-            tabs.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Find Next</td>
-            <td class="descriptionRight">
-            Find the next occurrence of the word or sequence you last used
-            Find with.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Comment /
-            <br>
-            Uncomment</td>
-            <td class="descriptionRight">
-            Used in the Code tab to add or remove semicolons from code
-            (semicolons are used in NetLogo code to indicate comments).</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Shift Left / Shift Right</td>
-            <td class="descriptionRight">
-            Used in the Code tab to change the indentation level of code.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">
-            Format</td>
-            <td class="descriptionRight">
-            Used in the Code tab to correct the indentation of the currently selected code.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Snap to Grid</td>
-            <td class="descriptionRight">
-            Available only in the Interface Tab.
-            When enabled new widgets stay on a 5 pixel grid so it is easier
-            to line them up. (Note: this feature is disabled when zoomed in
-            or out.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Convert from 5.3.1 to 6.0</td>
-            <td class="descriptionRight">
-            Available only in an ".nls" code tab.
-            Treats the code in this tab as though it were written in 5.3.1 and converts it to run in NetLogo 6.
-            Note that this will <i>not</i> take into account code defined in the main code tab.
-            "Undo" doesn't take this operation into account, so you won't want to save unless you're satisfied with the changes.
-            </td>
-          </tr>
-          <tr>
-            <td class="headerSpanningTable"><strong>Tools</strong></td>
-            <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-            <td class="descriptionRight" />
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Preferences…</td>
-            <td class="descriptionRight">
-            Opens the preferences dialog, where you can customize NetLogo
-            settings, including language and editor line numbers.
-            On a Mac, this item is on the NetLogo menu instead.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Halt</td>
-            <td class="descriptionRight">
-            Stops all running code, including buttons and the command
-            center. (Warning: since the code is interrupted in the middle
-            of whatever it was doing, you may get unexpected results if you
-            try to continue running the model without first pressing
-            &quot;setup&quot; to start the model run over.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Globals Monitor</td>
-            <td class="descriptionRight">Displays the values of all global variables.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Turtle Monitor</td>
-            <td class="descriptionRight">
-            Displays the values of all of the variables in a particular
-            turtle. You can can also edit the values of the turtle's
-            variables and issue commands to the turtle. (You can also open
-            a turtle monitor via the View; see the View section below.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Patch Monitor</td>
-            <td class="descriptionRight">
-            Displays the values of all of the variables in a particular
-            patch. You can can also edit the values of the patch's
-            variables and issue commands to the patch. (You can also open a
-            patch monitor via the View; see the View section below.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Link Monitor</td>
-            <td class="descriptionRight">
-            Displays the values of all of the variables in a particular
-            link. You can can also edit the values of the link's
-            variables and issue commands to the link. (You can also open a
-            link monitor via the View; see the View section below.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Close All Agent Monitors</td>
-            <td class="descriptionRight">
-            Closes all open agent monitor windows.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Close Monitors for Dead Agents</td>
-            <td class="descriptionRight">
-            Closes all open agent monitor windows targeting dead agents.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Hide/Show Command Center</td>
-            <td class="descriptionRight">
-            Makes the command center visible or invisible. (Note that the
-            command center can also be shown or hidden, or resized, with
-            the mouse.) This option is only available when the Interface Tab
-            is active</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">3D View</td>
-            <td class="descriptionRight">
-            Opens the 3D view. See the <a href="#views">Views</a> section
-            for more information.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Color Swatches</td>
-            <td class="descriptionRight">
-            Opens the Color Swatches. See the <a href="programming.html#colors">Color Section</a> of the Programming
-            Guide for details.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Turtle Shapes Editor</td>
-            <td class="descriptionRight">
-            Draw turtle shapes. See the <a href="shapes.html">Shapes Editor
-            Guide</a> for more information.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Link Shapes Editor</td>
-            <td class="descriptionRight">
-            Draw link shapes. See the <a href="shapes.html">Shapes Editor
-            Guide</a> for more information.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">BehaviorSpace</td>
-            <td class="descriptionRight">
-            Runs the model over and over with different settings. See the
-            <a href="behaviorspace.html">BehaviorSpace Guide</a> for more
-            information.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">System Dynamics Modeler</td>
-            <td class="descriptionRight">
-            Opens the System Dynamics Modeler. See the <a href="systemdynamics.html">System Dynamics Modeler Guide</a> for
-            more details.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Preview Commands Editor</td>
-            <td class="descriptionRight">
-            Allows for easy editing of the commands sequence used to create preview images
-            for models. Gives a way to specify what code will be used (or specify that the
-            image is manually made) and preview the resulting image.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">HubNet Client Editor</td>
-            <td class="descriptionRight">
-            Opens the HubNet Client Editor. See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a> for more
-            details.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">HubNet Control Center</td>
-            <td class="descriptionRight">
-            Disabled if no HubNet activity is open. See the <a href="hubnet.html">HubNet Guide</a> for more information.</td>
-          </tr>
-          <tr>
-            <td class="headerSpanningTable"><strong>Zoom</strong></td>
-            <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-            <td class="descriptionRight" />
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Larger</td>
-            <td class="descriptionRight">
-            Increase the overall screen size of the model. Useful on large
-            monitors or when using a projector in front of a group.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Normal Size</td>
-            <td class="descriptionRight">Reset the screen size of the model to the normal size.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Smaller</td>
-            <td class="descriptionRight">Decrease the overall screen size of the model.</td>
-          </tr>
-          <tr>
-            <td class="headerSpanningTable"><strong>Tabs</strong></td>
-            <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-            <td class="descriptionRight">
-
-              This menu offers keyboard shortcuts for each of the tabs. On a
-              Mac, it's Command 1 through Command 3. On Windows,
-              it's Control 1 through Control 3. Additional numbers are used for
-              tabs containing ".nls" files.</td>
-          </tr>
-          <tr>
-          <td class="headerSpanningTable"><strong>Help</strong></td>
-          <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-          <td class="descriptionRight" />
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Look Up In Dictionary</td>
-            <td class="descriptionRight">
-            Opens a browser with the dictionary entry for the selected
-            command or reporter. (You may also use the F1 key for this.)</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">NetLogo User Manual</td>
-            <td class="descriptionRight">
-            Opens this manual in a web browser.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">NetLogo Dictionary</td>
-            <td class="descriptionRight">
-            Opens the NetLogo Dictionary in a web browser.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">NetLogo Users Group</td>
-            <td class="descriptionRight">
-            Opens the NetLogo Users Group site in a web browser.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Introduction to Agent-Based Modeling</td>
-            <td class="descriptionRight">
-            Opens the MIT Press page for "Introduction to Agent-Based Modeling"
-            (by Uri Wilensky and William Rand) in a web browser.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">Donate</td>
-            <td class="descriptionRight">Opens the NetLogo donation page in a web browser.</td>
-          </tr>
-          <tr>
-            <td class="emptyLeft" />
-            <td class="nameCenter">About NetLogo {{version}}…</td>
-            <td class="descriptionRight">
-            Information on the current NetLogo version you are running. On a
-            Mac, this menu item is on the NetLogo menu instead.</td>
-          </tr>
-      </tbody>
-    </table>
-    <h2>
-      <a>Tabs</a>
-    </h2>
-    <p id="tabs">
-      At the top of NetLogo's main window are three tabs labeled
-      &quot;Interface&quot;, &quot;Info&quot; and &quot;Code&quot; . Only
-      one tab at a time can be visible, but you can switch between them by
-      clicking on the tabs at the top of the window.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/interfacetoolbar.gif">
-    <p>
-      Right below the row of tabs is a toolbar containing a row of
-      controls. The controls available vary from tab to tab.
-    <h2>
-      <a>Interface Tab</a>
-    </h2>
-    <p id="interface">
-      The Interface tab is where you watch your model run. It also has
-      tools you can use to inspect and alter what's going on inside the
-      model.
-    <p>
-      When you first open NetLogo, the Interface tab is empty except for
-      the view, where the turtles and patches appear, and the Command
-      Center, which allows you to issue NetLogo commands.
-    <h3>
-      <a>Working with
-      interface elements</a>
-    </h3>
-    <p id="interfaceelements">
-      The toolbar on the Interface tab contains buttons that let you edit,
-      delete, and create items in the Interface tab and a menu that lets
-      you select different interface items (such as buttons and sliders).
-      <!-- need to scale this one down slightly to fit in PDF without clipping -->
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image007.gif">
-    <p>
-      The buttons in the toolbar are described below.
-    <p>
-      <strong>Adding:</strong> To add an interface element, select the element from
-      the drop down menu. Note that the Add button stays down. Then click
-      on the white area below the toolbar. (If the menu is already showing
-      the right type, you can just press the Add button instead of using
-      the menu again.)
-    <p>
-      <strong>Selecting:</strong> To select an interface element, drag a rectangle
-      around it with your mouse. A gray border with black handles will
-      appear around the element to show it is selected.
-    <p>
-      <strong>Selecting multiple items:</strong> You can select multiple interface
-      elements at the same time by including them in the rectangle you
-      drag. If multiple elements are selected, one of them is the
-      &quot;key&quot; item, which means that if you use the
-      &quot;Edit&quot; or &quot;Delete&quot; buttons on the Interface
-      Toolbar, only the key item is affected. The key item's border is
-      darker gray.
-    <p>
-      <strong>Unselecting:</strong> To unselect all interface elements, click the
-      mouse on the white background of the Interface tab. To unselect an
-      individual element, right-click the element and choose
-      &quot;Unselect&quot; from the popup menu.
-    <p>
-      <strong>Editing:</strong> To change the characteristics of an interface
-      element, select the element, then press the &quot;Edit&quot; button
-      on the Interface toolbar. You may also double click the element once
-      it is selected. A third way to edit an element is to right-click it
-      and choose &quot;Edit&quot; from the popup menu. If you use this last
-      method, it is not necessary to select the element first.
-    <p>
-      <strong>Moving:</strong> Select the interface element, then drag it with your
-      mouse to its new location. If you hold down the shift key while
-      dragging, the element will move only straight up and down or straight
-      left and right.
-    <p>
-      <strong>Resizing:</strong> Select the interface element, then drag the black
-      &quot;handles&quot; in the selection border.
-    <p>
-      <strong>Deleting:</strong> Select the element or elements you want to delete,
-      then press the &quot;Delete&quot; button on the Interface toolbar.
-      You may also delete an element by right-clicking it and choosing
-      &quot;Delete&quot; from the popup menu. If you use this latter
-      method, it is not necessary to select the element first.
-    <p>
-      To learn more about the different kinds of interface elements, refer
-      to the chart below.
-    <h3>
-      Chart: Interface Toolbar
-    </h3>
-    <table class="widget-table" border>
-      <tr>
-        <th>Icon &amp; Name</th>
-        <th>Description</th>
+          This menu offers keyboard shortcuts for each of the tabs. On a
+          Mac, it's Command 1 through Command 3. On Windows,
+          it's Control 1 through Control 3. Additional numbers are used for
+          tabs containing ".nls" files.</td>
       </tr>
       <tr>
-        <td><img alt="Button" src="images/interface/image008.gif"></td>
-        <td>
-          A button is either <em>once</em> or <em>forever</em>. When you click
-          on a once button, it executes its instructions once. The forever
-          button executes the instructions over and over, until you click
-          on the button again to stop the action. If you have assigned an
-          action key to the button, pressing the corresponding keyboard key
-          will act just like a button press when the button is in focus.
-          Buttons with action keys have a letter in the upper right corner
-          of the button to show what the action key is. If the keyboard
-          focus is in another interface element such as the Command Center,
-          pressing the action key won't trigger the button. The letter
-          in the upper right hand corner of the button will be dimmed in
-          this situation. To enable action keys, click in the white
-          background of the Interface tab.
-        </td>
+      <td class="headerSpanningTable"><strong>Help</strong></td>
+      <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
+      <td class="descriptionRight" />
+      <tr>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Look Up In Dictionary</td>
+        <td class="descriptionRight">
+        Opens a browser with the dictionary entry for the selected
+        command or reporter. (You may also use the F1 key for this.)</td>
       </tr>
       <tr>
-        <td><img alt="Slider" src="images/interface/image009.gif"></td>
-        <td>
-          Sliders are global variables, which are accessible by all agents.
-          They are used in models as a quick way to change a variable
-          without having to recode the procedure every time. Instead, the
-          user moves the slider to a value and observes what happens in the
-          model.
-        </td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">NetLogo User Manual</td>
+        <td class="descriptionRight">
+        Opens this manual in a web browser.</td>
       </tr>
       <tr>
-        <td><img alt="Switch" src="images/interface/image010.gif"></td>
-        <td>
-          Switches are a visual representation for a true/false global
-          variable. You may set the variable to either on (true) or off
-          (false) by flipping the switch.
-        </td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">NetLogo Dictionary</td>
+        <td class="descriptionRight">
+        Opens the NetLogo Dictionary in a web browser.</td>
       </tr>
       <tr>
-        <td><img alt="Chooser" src="images/interface/image021.gif"></td>
-        <td>
-          Choosers let you choose a value for a global variable from a list
-          of choices, presented in a drop down menu. The choices may be
-          strings, numbers, booleans, or lists.
-        </td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">NetLogo Users Group</td>
+        <td class="descriptionRight">
+        Opens the NetLogo Users Group site in a web browser.</td>
       </tr>
       <tr>
-        <td><img alt="Input Box" src="images/interface/inputboxbutton.gif"></td>
-        <td>
-          Input Boxes are global variables that contain strings or numbers.
-          The model author chooses what types of values you can enter.
-          Input boxes can be set to check the syntax of a string for
-          commands or reporters. Number input boxes read any type of
-          constant number reporter which allows a more open way to express
-          numbers than a slider. Color input boxes offer a NetLogo color
-          chooser.
-        </td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Introduction to Agent-Based Modeling</td>
+        <td class="descriptionRight">
+        Opens the MIT Press page for "Introduction to Agent-Based Modeling"
+        (by Uri Wilensky and William Rand) in a web browser.</td>
       </tr>
       <tr>
-        <td><img alt="Monitor" src="images/interface/image011.gif"></td>
-        <td>
-          Monitors display the value of any reporter. The reporter could be
-          a variable, a complex reporter, or a call to a reporter
-          procedure. Monitors automatically update several times per
-          second.
-        </td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">Donate</td>
+        <td class="descriptionRight">Opens the NetLogo donation page in a web browser.</td>
       </tr>
       <tr>
-        <td><img alt="Plot" src="images/interface/image013.gif"></td>
-        <td>Plots show data the model is generating.</td>
+        <td class="emptyLeft" />
+        <td class="nameCenter">About NetLogo {{version}}…</td>
+        <td class="descriptionRight">
+        Information on the current NetLogo version you are running. On a
+        Mac, this menu item is on the NetLogo menu instead.</td>
       </tr>
-      <tr>
-        <td><img alt="Output" src="images/interface/image022.gif"></td>
-        <td>
-          The output area is a scrolling area of text which can be used to
-          create a log of activity in the model. A model may only have one
-          output area.
-        </td>
-      </tr>
-      <tr>
-        <td style="text-align: left; padding: 3px; vertical-align: top;">
-          <img alt="Note" src="images/interface/image012.gif">
-        </td>
-        <td style="text-align: left; padding: 3px; vertical-align: top;">
-          Notes lets you add informative text labels to the Interface tab.
-          The contents of notes do not change as the model runs.
-        </td>
-      </tr>
-    </table>
-    <p>
-      The other controls in the Interface toolbar allow you to control the
-      view updates and various other model properties.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image003.gif">
-    <ul>
-      <li>The slider lets you control how fast the model runs. Slower can
-      be valuable since some models run so fast they're hard to follow.
-      You can also fast-forward the model by moving the slider to the
-      right, reducing the frequency of view updates.
-      <li>The view updates checkbox controls whether view updates happen at
-      all.
-      <li>The update mode menu allows you to switch between continuous and
-      tick-based updates.
-      <li>The &quot;Settings...&quot; button allows you to change model
-      settings.
-      </ul>
-    <p>
-      &quot;Continuous&quot; updates means that NetLogo updates (that is,
-      redraws) the view many times a second, regardless of what is going on
-      in the model. &quot;Tick-based&quot; updates means that the view only
-      updates when the tick counter advances. (For a fuller discussion of
-      view updates, see the <a href="programming.html">Programming
-      Guide</a>.)
-    <h3>
-      <a>The 2D and 3D views</a>
-    </h3>
-    <p id="views">
-      The large black square in the Interface tab is the 2D view. It's
-      a visual representation of the NetLogo world of turtles and patches.
-      Initially it's all black because the patches are black and there
-      are no turtles yet. You can open the 3D View, an alternate visual
-      representation of the world, by right clicking (ctrl-clicking on Mac)
-      on the View and choosing &quot;Switch to 3D View&quot; (this option
-      is also available in the "Tools" menu).
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/open3d-context.gif">
-    <p>
-      There are a number of settings for the View (accessible by editing the View,
-      or by pressing the &quot;Settings...&quot; button in the Interface
-      Toolbar):
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/settings.gif">
-    <p>
-      Notice that the settings are broken up into three groups. There are
-      world, view, and ticks counter settings. World settings affect the
-      properties of the world that the turtles live in (changing them may
-      require resetting the world). View and tick counter settings only
-      affect the appearance, changing them will not affect the outcome of
-      the model.
-    <p>
-      The world settings allow you to define the boundaries and topology of
-      the world. At the top of the left side of the world panel you can
-      choose a location for the origin of the world either
-      &quot;Center&quot;, &quot;Corner&quot;, &quot;Edge&quot;, or
-      &quot;Custom&quot;. By default the world has a center configuration
-      where (0,0) is at the center of the world and you define the number
-      of patches from the center to the right and left boundaries and the
-      number of patches from the center to the top and bottom boundaries.
-      For example: if you set Max-Pxcor = 10, then Min-Pxcor will
-      automatically be set to -10, thus there are 10 patches to the left of
-      the origin and 10 patches to the right of patch 0 0, for a total of
-      21 patches in each row.
-    <p>
-      A Corner configuration allows you to define the location of the
-      origin as one of the corners of the world, upper left, upper right,
-      lower left, or lower right. Then you define the far boundary in the x
-      and y directions. For example if you choose to put the origin in the
-      lower left corner of the world you define the right and top
-      (positive) boundaries.
-    <p>
-      Edge mode allows you to place the origin along one of the edges (x or
-      y) then define the far boundary in that direction and both boundaries
-      in the other. For example if you select edge mode along the bottom of
-      the world, you must also define the top boundary, as well as the left
-      and the right.
-    <p>
-      Finally, Custom mode allows you to place the origin at any location
-      in the world, though patch 0 0 must still exist in the world.
-    <p>
-      As you change the settings you will notice that the changes you make
-      are reflected in the preview on the right side of the panel which
-      shows the origin and the boundaries. The width and height of the
-      world are displayed below the preview.
-    <p>
-      Also below the preview there are two checkboxes, the world wrap
-      settings. These allow you to control the topology of the world.
-      Notice when you click the check boxes the preview indicates which
-      directions allow wrapping, and the name of the topology is displayed
-      next to the world dimensions. See the <a href="programming.html#topology">Topology section of the Programming
-      Guide</a> for more information.
-    <p>
-      The view settings allow you to customize the look of the view without
-      changing the world. Changing view settings will never force a world
-      reset. To change the size of the 2D View adjust the &quot;Patch
-      Size&quot; setting, measured in pixels. This does not change the
-      number of patches, only how large the patches appear in the 2D View.
-      (Note that the patch size does not affect the 3D View, as you can
-      simply make the 3D View larger by making the window larger.)
-    <p>
-      The font size setting lets you control the size of turtle, patch, and
-      link labels.
-    <p>
-      The frame rate controls how often the view gets updated. This can
-      have a dramatic effect on the default speed at which a model runs.
-      For more details, see the <a href="programming.html#updates">view
-      updates section</a> of the Programming Guide.
-    <p>
-      The &quot;Smooth edges&quot; checkbox controls the use of
-      anti-aliasing in the 3D view only and only appears when editing from
-      the 3D view. Unchecking it makes lines appear more jagged but may
-      speed up rendering.
-    <p>
-      Tick counter settings control the appearance of the tick counter
-      which is visible (or not) in the view control strip.
-    <p>
-      Turtle, patch and link monitors are easily available through the
-      View, just right-click on the turtle or patch you want to inspect,
-      and choose &quot;inspect turtle ...&quot; or &quot;inspect patch
-      ...&quot; from the popup menu. You can also watch, follow or ride a
-      turtle by selecting the appropriate item in the turtle sub-menu.
-      (Turtle, patch and link monitors can also be opened from the Tools
-      menu or by using the <a href="dictionary.html#inspect"><code>inspect</code></a> command.)
-    <p>
-      Some NetLogo models let you interact with the turtles and patches
-      with your mouse by clicking and dragging in the View.
-    <h4>
-      Manipulating the 3D View
-    </h4>
-    <p>
-      At the bottom of the window there are buttons to move the observer,
-      or change the perspective from which you are looking at the world.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image024.gif">
-    <p>
-      A blue cross appears at the current focus point as you adjust these
-      settings. The little blue triangle will always point along the y-axis
-      in the positive direction, so you can orient yourself in case you get
-      lost.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image025.gif">
-    <p>
-      To look at the world from a different angle, press the
-      &quot;rotate&quot; button, then click and drag the mouse. The
-      observer will continue to face the same point as before (where the
-      blue cross is) but its position in the relation to the xy-plane will
-      change.
-    <p>
-      To move closer or farther away from the world or the agent you are
-      watching, following or riding, press the &quot;zoom&quot; button and
-      drag up and down. Note when you are in follow or ride mode zooming
-      will switch you between ride and follow, since ride is just a special
-      case of follow where the distance at which you are following is 0.
-    <p>
-      To change the position of the observer without changing the direction
-      it is facing select the &quot;move&quot; button and drag the mouse
-      inside the 3D View while holding down the mouse button.
-    <p>
-      To allow the mouse position and state to be passed to the model
-      select the &quot;interact&quot; button and it will function just as
-      the mouse does in the 2D view.
-    <p>
-      To return the observer and focus point to their default positions
-      press the &quot;Reset Perspective&quot; button (or use the <a href="dictionary.html#reset-perspective"><code>reset-perspective</code></a>
-      command).
-    <h5 class="minor-section-header">Fullscreen Mode</h5>
-      To enter fullscreen mode, press the &quot;Full Screen&quot; button,
-      to exit fullscreen mode, press the Esc key.
-    <p>
-      <strong>Note:</strong> Fullscreen mode doesn't work on every computer. It
-      depends on your graphics card. See the <a href="requirements.html#threed">System Requirements</a> for details.
-
-    <h5 class="minor-section-header">3D Shapes</h5>
-      Some shapes are automatically mapped to true 3D counterparts in the
-      3D view. For example, the 2D circle shape becomes a sphere in the 3D
-      view.
-    <table border="1">
-      <tr>
-        <th>Shape name</th>
-        <th>3D shape</th>
-      </tr>
-      <tr>
-        <td>default</td>
-        <td>3D turtle shape</td>
-      </tr>
-      <tr>
-        <td>circle</td>
-        <td>sphere</td>
-      </tr>
-      <tr>
-        <td>dot</td>
-        <td>small sphere</td>
-      </tr>
-      <tr>
-        <td>square</td>
-        <td>cube</td>
-      </tr>
-      <tr>
-        <td>triangle</td>
-        <td>cone</td>
-      </tr>
-      <tr>
-        <td>line</td>
-        <td>3D line</td>
-      </tr>
-      <tr>
-        <td>cylinder</td>
-        <td>3D cylinder</td>
-      </tr>
-      <tr>
-        <td>line-half</td>
-        <td>3D line-half</td>
-      </tr>
-      <tr>
-        <td>car</td>
-        <td>3D car</td>
-      </tr>
-    </table>
-    <p>
-      All other shapes are based on their 2D forms. If a shape is a
-      rotatable shape, it is assumed to be a top view and it is extruded as
-      if through a cookie cutter and oriented parallel to the xy-plane, as
-      in Ants.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image026.gif">
-    <p>
-      Or, if a shape is non-rotatable, it is assumed to be a side view, and
-      it is drawn always facing the observer, as in Wolf Sheep Predation.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image027.gif">
-    <h3>
-      <a>Command Center</a>
-    </h3>
-    <p id="commandcenter">
-      The Command Center allows you to issue commands directly, without
-      adding them to the model's procedures. This is useful for
-      inspecting and manipulating agents on the fly.
-    <p>
-      (<a href="tutorial2.html">Tutorial #2: Commands</a> is an
-      introduction to using commands in the Command Center.)
-    <p>
-      Let's take a look at the design of the Command Center.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image006.gif">
-      <!--<p>You will notice there is a large display box, an agent popup menu
-(observer&gt;), a "clear" button, a button (with the double-headed arrow)
-to relocate the command center to
-the right side of the window, and the history popup menu (in the lower
-right, with the little
-black triangle).-->
-    <p>
-      The smaller box, below the large box, is where you type a command.
-      After typing it press the Return or Enter key to run it.
-    <p>
-      To the left of where you type is a popup menu that initially says
-      &quot;observer&gt;&quot;. You can choose either observer, turtles, or
-      patches, to specify which agents run the command you type.
-    <p>
-      Tip: a quicker way to change agent types is to use the Tab key.
-    <h5 class="minor-section-header">Reporters</h5>
-      If you enter a reporter into the Command Center, the <a href="dictionary.html#show">show</a> command will be inserted before it
-      automatically.
-    <h5 class="minor-section-header">Accessing previous commands</h5>
-      After you type a command, it appears in the large scrolling box above
-      the command line. You can use Copy on the Edit menu in this area to
-      copy commands and then paste them elsewhere, such as the Code tab.
-    <p>
-      You can also access previous commands using the history popup, which
-      is the small downward pointing triangle to the right of where you
-      type commands. Click on the triangle and a menu of previously typed
-      commands appears, so you can pick one to use again.
-    <p>
-      Tip: a quicker way to access previous commands is with the up and
-      down arrow keys on your keyboard.
-    <h5 class="minor-section-header">Clearing</h5>
-      To clear the large scrolling area containing previous commands and
-      output, click &quot;clear&quot; in the top right corner.
-    <p>
-      To clear the history popup menu, choose &quot;Clear History&quot; on
-      that menu.
-    <h5 class="minor-section-header">Arranging</h5>
-      You can hide and show the command center using the Hide Command
-      Center and Show Command Center items on the Tools menu.
-    <p>
-      To resize the command center, drag the bar that separates it from the
-      model interface. Or, click one of the little arrows on the right end
-      of the bar to make the command center either very big or hidden
-      altogether.
-    <p>
-      To switch between a vertical command center and a horizontal one,
-      click the button with the double-headed arrow, just to the left of
-      &quot;Clear&quot;.
-    <h3>
-      <a>Plots</a>
-    </h3>
-    <p id="plots">
-      When the mouse pointer is over the white area of a plot, the x and y
-      coordinates of the mouse location appear. (Note that the mouse
-      location might not correspond exactly to any actual data points in
-      the plot. If you need to know the exact coordinates of plotted
-      points, use the Export Plot menu item and inspect the resulting file
-      in another program.)
-    <p>
-      When you create a plot, as with all widgets, the edit dialog
-      automatically appears.
-    <p>
-      <img src="./images/interface/plot.gif" alt="Plot Editor">
-    <p>
-      Many of the fields are fairly self-explanatory, such as the name of
-      the plot, labels for the x and y axes, ranges for the axes, and the
-      &quot;Show legend?&quot; checkbox.
-    <p>
-      If Auto Scale? is checked the x and y changes will automatically
-      readjust as points are added to the plot if they are outside the
-      current range.
-    <p>
-      Under &quot;Plot setup commands&quot; and &quot;Plot update
-      commands&quot; you can enter commands that will automatically be run
-      at appropriate times. Click the little triangle to open the text box
-      for the commands. Plot commands are explained in more detail in the
-      Plotting section of the Programming Guide.
-    <h4>
-      Plot Pens
-    </h4>
-    <p>
-      In the plot pens section of the dialog, you can create and customize
-      your plot's pens. Each table row represents a pen. By default
-      there is one pen named &quot;default&quot;. (You may wish to change
-      it to a name that has meaning in your model.)
-    <p>
-      To edit the color of a pen click the colored rectangle to the left of
-      the pen's name. This will bring up a dialog that allows you to
-      set the color to one of the NetLogo base hues or a custom color using
-      the color swatches.
-    <p>
-      To edit the pen's name, double click the name.
-    <p>
-      In the &quot;Pen Update Commands&quot; column you can enter commands
-      that will be run when <code>reset-ticks</code>, <code>tick</code>, or
-      <code>update-plots</code> commands are run. This is explained in more
-      detail in the Plotting section of the Programming Guide.
-    <p>
-      The last column has two buttons. Clicking the pencil icon will bring
-      up an edit dialog with additional pen settings. The trash can button
-      deletes the pen.
-    <h5 class="minor-section-header">Plot Pen Advanced Settings</h5>
-    <p>
-      Clicking a pen's edit button will open this dialog:
-    <p>
-      <img src="./images/interface/plot-pen-advanced.gif" alt="Plot Editor">
-    <ul>
-      <li>Mode allows you to change the appearance of the plot pen: line,
-      bar (for a bar chart), or point (a scatter plot of individual
-      points).
-      <li>Interval is the amount by which x advances every time you use the
-      <code>plot</code> command.
-      <li>If the &quot;Show in legend&quot; checkbox is checked the
-      selected pen will be a part of the legend in the upper right hand
-      corner of the plot.
-      <li>In the &quot;Setup commands&quot; field you can enter commands
-      that will be run when <code>reset-ticks</code> or
-      <code>setup-plots</code> runs.
-      <li>In the &quot;Update commands&quot; field you can enter commands
-      that will be run when <code>tick</code> or <code>update-plots</code>
-      runs. This field reappears in the advanced dialog to provide space
-      for editing lengthier sets of commands.
-      </ul>
-    <p>
-      For more detailed information on how each of these features works you
-      can see the Plotting Section of the Programming Guide.
-    <h3>
-      <a>Sliders</a>
-    </h3>
-    <p id="sliders">
-      A slider has an associated global variable. Moving the slider changes
-      the variable's value.
-    <p>
-      When you place a slider in the Interface tab the edit dialog
-      automatically opens, as with all widgets. Most of the fields will be
-      familiar. However, it is important to notice the minimum, maximum and
-      increment fields will take any reporter, not just constants. So, for
-      example, you could make the minimum <a href="dictionary.html#min-pcor"><code>min-pxcor</code></a> and the maximum
-      <a href="dictionary.html#max-pcor"><code>max-pxcor</code></a> and the
-      slider bounds will automatically adjust when you change the size of
-      the world.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/sliderbounds.gif">
-    <h3>
-      <a>Agent Monitors</a>
-    </h3>
-    <p id="agentmonitors">
-      Agent monitors display both the values of all the variables for a
-      particular agent and a mini-view that shows the agent and a small
-      area around it.
-    <p>
-      You can open agent monitors through the Tools menu or the <a href="dictionary.html#inspect"><code>inspect</code></a> command.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/agentmonitor1.gif">
-    <p>
-      You can zoom in or out using the slider beneath the view and you can
-      <a href="dictionary.html#watch"><code>watch</code></a> the agent in the
-      main view using the <code>watch-me</code> button.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/agentmonitor2.gif">
-    <p>
-      Below the slider the current value of each agent variable is
-      displayed. You can enter a new value. It will be as if, for example,
-      the code <code>set pcolor ...</code> had run.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/agentmonitor3.gif">
-    <p>
-      Below the agent variable area there is a mini-command center. Rather
-      than running code as the observer, or talking to all of the turtles,
-      patches, or links, the code entered in this command center is run
-      only by this agent.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/agentmonitor4.gif">
-    <p>
-      You can close an agent monitor by clicking the box in the upper left
-      corner, or by pressing the Esc key. If you hold down shift while you
-      click the box all open agent monitors will close or you can close all
-      the agent monitors using the &quot;Close All Monitors&quot; option in
-      the Tools Menu.
-    <h2>
-      <a>Code tab</a>
-    </h2>
-    <p id="procedures">
-      The Code tab is where the code for the model is stored. Commands you
-      only want to use immediately go in the Command Center; commands you
-      want to save and use later, over and over again, are found in the
-      Code tab.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/codetab.gif">
-    <p>
-      To determine if the code has any errors, you may press the
-      &quot;Check&quot; button. If there are any syntax errors, the Code
-      tab will turn red, the code that contains the error will be
-      highlighted, and an error message will appear.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/codetaberror.gif">
-    <p>
-      Switching tabs also causes the code to be checked, so if you just
-      switch tabs, pressing the Check button first isn't necessary.
-    <p>
-      To find a fragment of code in the procedures, click on the
-      &quot;Find&quot; button in the Code toolbar and the Find dialog will
-      appear.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/image028.gif">
-    <p>
-      You may enter a word or phrase to find, and optionally also a new
-      word or phrase to replace it with. The &quot;Ignore case&quot;
-      checkbox controls whether the capitalization must be the same to
-      indicate a match.
-    <p>
-      If the &quot;Wrap around&quot; checkbox is checked, the entire Code
-      tab will be checked for the phrase, starting at the cursor position.
-      When it reaches the end it will return to the top, otherwise only the
-      area from the cursor position to the end of the Code tab will be
-      searched. The &quot;Next&quot; and &quot;Previous&quot; buttons will
-      move down and up to find another occurrence of the search phrase.
-    <p>
-      &quot;Replace&quot; changes the currently selected phrase with the
-      replace phrase and &quot;Replace &amp; Find&quot; changes the
-      selected phrase and moves to the next occurrence. &quot;Replace
-      All&quot; will change all instances of the find phrase in the search
-      area with the replace phrase.
-    <p>
-      To find a particular procedure definition in your code, use the
-      &quot;Procedures&quot; popup menu in the Code tab. The menu lists all
-      procedures in alphabetical order.
-    <p>
-      The &quot;Shift Left&quot;, &quot;Shift Right&quot;,
-      &quot;Comment&quot;, and &quot;Uncomment&quot; items on the Edit menu
-      are used in the Code tab to change the indentation level of your code
-      or add and remove semicolons, which mark comments, from sections of
-      code.
-    <p>
-      For more information about writing procedures, read <a href="tutorial3.html">Tutorial #3: Procedures</a> and the <a href="programming.html">Programming Guide</a>.
-    <h3>
-      <a>Includes Menu</a>
-    </h3>
-    <p id="includes">
-      <strong>Caution:</strong> The includes facility is new and experimental.
-    <p>
-      When you add the <a href="dictionary.html#includes">__includes</a>
-      keyword to a model a menu to the right of the procedures menu
-      appears. This is the includes menu which lists all the NetLogo source
-      files (.nls) included in this file.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/includesmenu.gif">
-    <p>
-      You can choose a file name from the menu to open a tab for that file,
-      or you can open a new or existing file using New Source File and Open
-      Source File, respectively.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/includesmenuopen.gif">
-    <p>
-      Once you've opened new tabs they become accessible from the Tabs
-      menu, and you can use the keyboard to move from tab to tab (Command +
-      number on Mac, Control + number on other operating systems).
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/tabsmenu.gif">
-    <h3>
-      Automatic indentation
-    </h3>
-    <p>
-      When the Indent Automatically checkbox is selected, NetLogo will
-      automatically attempt to align your code in a logically structured
-      format. For example, when you open a set of square brackets
-      &quot;[&quot; (perhaps after an <code>if</code> statement), NetLogo will
-      automatically add spaces so that the following lines of code are two
-      spaces further indented than the bracket. When you close the square
-      brackets the closing bracket will be lined up with the matching open
-      bracket.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/interface/tabified-code.gif">
-    <p>
-      NetLogo will try to indent the code as you type, but you can also
-      press the tab key anywhere on any line to ask NetLogo to indent the
-      line immediately. Or, you can select a whole region of code and press
-      the tab key to re-indent all of it.
-    <h2>
-      <a>International Usage</a>
-    </h2>
-    <h3>
-      Character sets
-    </h3>
-    <p id="i18n">
-      NetLogo always saves and loads models in the UTF-8 character
-      encoding, which includes a wide range of international characters.
-    <p>
-      If you are in a locale other than U.S. English, let us know if you
-      have any trouble using your local character set.
-    <p>
-      The <a href="transition.html">Transition Guide</a> has advice on
-      converting models containing international characters from earlier
-      NetLogo versions.
-    <h3>
-      Languages
-    </h3>
-    <p>
-      Most of NetLogo's GUI, and some of its error messages, are now
-      &quot;internationalized&quot;. This means that it is now possible to
-      display NetLogo in different languages.
-    <p>
-      We say &quot;possible&quot; here because the current release of
-      NetLogo only supports English, Spanish, Chinese, Russian, and Japanese.
-    <p>
-      The work on internationalization is not complete. We are asking for
-      help from the user community in helping us localize items such as the
-      menus and error messages.
-    <h4>
-      Default language
-    </h4>
-    <p>
-      By default, NetLogo uses the same language your operating system is
-      set to, if available. (If unavailable, you get English.)
-    <p>
-      You can record a preference for a different language by changing the
-      "User Interface Language" option in the preferences dialog. Once a new
-      language is chosen you will have to restart NetLogo.
-    <h3>
-      Support for translators
-    </h3>
-    <p>
-      We hope NetLogo will become available in many different languages. If
-      you would like to translate NetLogo to your language, see <a href="https://github.com/NetLogo/NetLogo/wiki/Localization" target="_blank">this wiki
-      page</a> for instructions.
+  </tbody>
+</table>
+<h2>
+  <a>Tabs</a>
+</h2>
+<p id="tabs">
+  At the top of NetLogo's main window are three tabs labeled
+  &quot;Interface&quot;, &quot;Info&quot; and &quot;Code&quot; . Only
+  one tab at a time can be visible, but you can switch between them by
+  clicking on the tabs at the top of the window.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/interfacetoolbar.gif">
+<p>
+  Right below the row of tabs is a toolbar containing a row of
+  controls. The controls available vary from tab to tab.
+<h2>
+  <a>International Usage</a>
+</h2>
+<h3>
+  Character sets
+</h3>
+<p id="i18n">
+  NetLogo always saves and loads models in the UTF-8 character
+  encoding, which includes a wide range of international characters.
+<p>
+  If you are in a locale other than U.S. English, let us know if you
+  have any trouble using your local character set.
+<p>
+  The <a href="transition.html">Transition Guide</a> has advice on
+  converting models containing international characters from earlier
+  NetLogo versions.
+<h3>
+  Languages
+</h3>
+<p>
+  Most of NetLogo's GUI, and some of its error messages, are now
+  &quot;internationalized&quot;. This means that it is now possible to
+  display NetLogo in different languages.
+<p>
+  We say &quot;possible&quot; here because the current release of
+  NetLogo only supports English, Spanish, Chinese, Russian, and Japanese.
+<p>
+  The work on internationalization is not complete. We are asking for
+  help from the user community in helping us localize items such as the
+  menus and error messages.
+<h4>
+  Default language
+</h4>
+<p>
+  By default, NetLogo uses the same language your operating system is
+  set to, if available. (If unavailable, you get English.)
+<p>
+  You can record a preference for a different language by changing the
+  "User Interface Language" option in the preferences dialog. Once a new
+  language is chosen you will have to restart NetLogo.
+<h3>
+  Support for translators
+</h3>
+<p>
+  We hope NetLogo will become available in many different languages. If
+  you would like to translate NetLogo to your language, see <a href="https://github.com/NetLogo/NetLogo/wiki/Localization" target="_blank">this wiki
+  page</a> for instructions.
 
