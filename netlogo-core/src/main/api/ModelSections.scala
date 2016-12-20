@@ -7,7 +7,7 @@ import org.nlogo.core.{ Model, Shape, OptionalSection, Widget }, Shape.{ LinkSha
 import
   ModelSections._
 
-trait ModelSections {
+private[nlogo] trait ModelSections {
   def procedureSource:  String
   def widgets:          Seq[Widget]
   def info:             String
@@ -16,7 +16,7 @@ trait ModelSections {
   def additionalSections: Seq[ModelSaveable]
 }
 
-object ModelSections {
+private[nlogo] object ModelSections {
   trait ModelSaveable {
     def updateModel(m: Model): Model
   }
