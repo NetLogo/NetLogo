@@ -15,8 +15,6 @@ public final strictfp class _reference
     this.reference = reference;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + reference.kind().toString() + "," + reference.vn();

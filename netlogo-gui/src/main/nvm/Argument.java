@@ -204,10 +204,18 @@ public strictfp class Argument
 
   /**
    * Used by the GIS extension. Other extensions should use
-   * getSymbol where possible.
+   * getSymbol where possible. The compiler turns the reference into a _const,
+   * we just ensure the value is a reference.
    */
-  public Reporter getReference() {
-    return arg;
+  public org.nlogo.core.Reference getReference()
+    throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.core.Reference) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(
+          getExceptionMessage(Syntax.ReferenceType(), obj));
+    }
   }
 
   // if you're looking for the cities extension's <code>getReporter</code>
