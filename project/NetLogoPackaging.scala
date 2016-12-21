@@ -158,6 +158,7 @@ object NetLogoPackaging {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
       FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
+      FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget.value / "docs" / "NetLogo User Manual.pdf")
       localSiteTarget.value
     },
     uploadWebsite := {
