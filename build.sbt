@@ -297,7 +297,5 @@ lazy val netlogoCore = (project in file("netlogo-core")).
 // only exists for packaging
 lazy val behaviorsearchProject: Project =
   project.in(file("behaviorsearch"))
-  .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
-  .settings(
-    libraryDependencies -= "org.nlogo" % "netlogo" % Def.ScopedKey[String](Scope(This, This, This, This), AttributeKey[String]("netLogoVersion")).value
-  )
+    .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
+    .settings(description := "subproject of NetLogo")
