@@ -19,9 +19,10 @@ import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 import org.nlogo.fileformat, fileformat.SuccessfulConversion
 
 import scala.util.control.Exception.ignoring
+import scala.util.matching.Regex
 
 object TemporaryCodeTab {
-  private[app] def stripPath(filename: String): String = filename.split(File.separator).last
+  private[app] def stripPath(filename: String): String = filename.split(Regex.quote(File.separator)).last
 }
 
 class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
