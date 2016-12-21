@@ -218,6 +218,13 @@ public strictfp class Argument
     }
   }
 
+  /**
+   * Used by the rnd extension. Other extensions should use getReporter where possible
+   */
+  public Reporter unevaluatedArgument() {
+    return arg;
+  }
+
   // if you're looking for the cities extension's <code>getReporter</code>
   // method, that has been removed. Change the extension and use
   // <code>getSymbol</code> instead.
