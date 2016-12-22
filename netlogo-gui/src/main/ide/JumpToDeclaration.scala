@@ -32,7 +32,7 @@ object JumpToDeclaration {
 
   def getDeclaration(token: Token, source: String): Option[Token] = {
     val tokens = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source).filter(t => t.tpe != TokenType.Comment).toSeq
-    val (globals, owns) = parseOwns(tokens)
+    val (globals, owns, functions) = parseOuterScope(tokens)
     val indexOfToken = tokens.indexWhere(t => t.start == token.start)
     var stack = 0
     for(i <- indexOfToken to 0 by -1) {
@@ -58,15 +58,22 @@ object JumpToDeclaration {
             argIndex += 1
           }
         }
-        globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase)
+        return globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
       }
     }
-    globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase)
+    globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
   }
 
-  def parseOwns(tokens: Seq[Token]): (Map[String, Token], Map[String, Token]) = {
+  /**
+    * Parsed the variable that are visible in the whole scope of the code.
+    * @param tokens list of all the tokens in the editor
+    * @return tuple of globals, owns, functions. Each value is a map
+    *         from token text to token.
+    */
+  def parseOuterScope(tokens: Seq[Token]): (Map[String, Token], Map[String, Token], Map[String, Token]) = {
     val globals = Map[String, Token]()
     val owns = Map[String, Token]()
+    val functions = Map[String, Token]()
     var i = 0
     while(i < tokens.length) {
       var token = tokens(i)
@@ -78,8 +85,7 @@ object JumpToDeclaration {
             globals += token.text.toUpperCase -> token
           i += 1
         }
-      }
-      if (token.text.toUpperCase.endsWith("-OWN")) {
+      } else if (token.text.toUpperCase.endsWith("-OWN")) {
         i += 1
         while (token.tpe != TokenType.CloseBracket && i < tokens.length) {
           token = tokens(i)
@@ -88,9 +94,16 @@ object JumpToDeclaration {
           }
           i += 1
         }
+      } else if (token.text.equalsIgnoreCase("to") || token.text.equalsIgnoreCase("to-report")) {
+        i += 1
+        if(i < tokens.length) {
+          token = tokens(i)
+          functions += token.text.toUpperCase -> token
+        }
+      } else {
+        i += 1
       }
-      i += 1
     }
-    (globals, owns)
+    (globals, owns, functions)
   }
 }
