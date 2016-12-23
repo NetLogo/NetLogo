@@ -7,20 +7,38 @@ abstract class BundledDirectory(val sourceDir: File) {
   def fileMappings:  Seq[(File, String)] = {
     files zip files.map { f =>
       val Some(relativePath) = Path.relativeTo(sourceDir)(f)
-      directoryName + java.io.File.separator + relativePath
+      directoryName + File.separator + relativePath
     }
+  }
+
+  def fileToPathTuple(f: File): (File, String) = {
+    val Some(relativePath) = Path.relativeTo(sourceDir)(f)
+    f -> (directoryName + File.separator + relativePath)
   }
 }
 
 class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "extensions"
 
-  def files: Seq[File] = {
+  override def fileMappings: Seq[(File, String)] = {
     sourceDir.listFiles.filter(_.isDirectory)
-      .flatMap(f => f.listFiles)
-      .filter(_.getName.endsWith(".jar"))
-      .filterNot(f => f.getName.contains("netlogo") || f.getName.contains("scala-library") || f.getName.contains("QTJava"))
+      .flatMap { anExtensionDir =>
+        if ((anExtensionDir / ".bundledFiles").exists) {
+          IO.readLines(anExtensionDir / ".bundledFiles")
+            .map { line =>
+              val sections = line.split("->")
+              anExtensionDir / sections.last -> (directoryName + File.separator + anExtensionDir.getName + File.separator + sections.last)
+            }
+          } else {
+            anExtensionDir.listFiles
+              .filter(_.getName.endsWith(".jar"))
+              .filterNot(f => f.getName.contains("netlogo") || f.getName.contains("scala-library"))
+              .map(fileToPathTuple)
+          }
+      }
   }
+
+  override def files: Seq[File] = Seq()
 }
 
 class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {

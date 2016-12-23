@@ -96,7 +96,7 @@ object PackageWinAggregate {
     }.toMap
   }
 
-  private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
+  private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef], helperBinDirectory: File): Unit = {
     val allVariables =
       variables ++ app.configurationVariables("windows") +
       ("mainClass"      -> app.mainClass) +
@@ -116,9 +116,13 @@ object PackageWinAggregate {
     }
 
     (sharedAppRoot / (app.name + ".exe")).setWritable(true)
-    RunProcess(Seq((sharedAppRoot / "IconSwap.exe").toString,
+    RunProcess(Seq((helperBinDirectory / "IconSwap.exe").toString,
       (sharedAppRoot / (app.iconName + ".ico")).toString, (sharedAppRoot / (app.name + ".exe")).toString),
       "swapping exe icon")
+    RunProcess(
+      Seq((helperBinDirectory / "verpatch.exe").toString, "/va", (app.name + ".exe"), "/s", "FileDescription", app.name + " " + variables("version")),
+      sharedAppRoot,
+      "Tagging application with versioned description")
     (sharedAppRoot / (app.name + ".exe")).setWritable(false)
   }
 
@@ -166,21 +170,24 @@ object PackageWinAggregate {
       FileActions.copyAny(f, aggregateWinDir / f.getName)
     }
 
-    // extract IconSwap
-    val jfxJar = new java.util.jar.JarFile(file(jdk.javaHome.get) / "lib" / "ant-javafx.jar")
-    val iconSwapEntry = jfxJar.getEntry("com/oracle/tools/packager/windows/IconSwap.exe")
-    val iconSwapStream = jfxJar.getInputStream(iconSwapEntry)
-    IO.transfer(iconSwapStream, aggregateWinDir / "IconSwap.exe")
-    iconSwapStream.close()
-    jfxJar.close()
+    // extract IconSwap and download verpatch, used when customizing the executables
+    if (! (aggregateTarget / "IconSwap.exe").exists) {
+      val jfxJar = new java.util.jar.JarFile(file(jdk.javaHome.get) / "lib" / "ant-javafx.jar")
+      val iconSwapEntry = jfxJar.getEntry("com/oracle/tools/packager/windows/IconSwap.exe")
+      val iconSwapStream = jfxJar.getInputStream(iconSwapEntry)
+      IO.transfer(iconSwapStream, aggregateTarget / "IconSwap.exe")
+      iconSwapStream.close()
+      jfxJar.close()
+    }
+
+    if (! (aggregateTarget / "verpatch.exe").exists) {
+      IO.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
+    }
 
     // configure each sub application
     subApplications.foreach { app =>
-      configureSubApplication(aggregateWinDir, app, commonConfig, variables)
+      configureSubApplication(aggregateWinDir, app, commonConfig, variables, aggregateTarget)
     }
-
-    // remove IconSwap
-    IO.delete(aggregateWinDir / "IconSwap.exe")
 
     val uuidArchiveFileName =
       variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"

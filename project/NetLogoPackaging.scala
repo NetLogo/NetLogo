@@ -158,6 +158,7 @@ object NetLogoPackaging {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
       FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
+      FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget.value / "docs" / "NetLogo User Manual.pdf")
       localSiteTarget.value
     },
     uploadWebsite := {
@@ -166,8 +167,8 @@ object NetLogoPackaging {
       val targetDir = "/usr/local/www/netlogo"
       val generatedSite = generateLocalWebsite.value
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release group")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoLongVersion.value}"), "ssh - change release permissions")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
     },
     packagingClasspath := {
       ((dependencyClasspath in netlogo in Runtime).value.files ++

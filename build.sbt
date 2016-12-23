@@ -108,7 +108,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-SNAPSHOT",
+    version := "6.0.0",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -297,7 +297,5 @@ lazy val netlogoCore = (project in file("netlogo-core")).
 // only exists for packaging
 lazy val behaviorsearchProject: Project =
   project.in(file("behaviorsearch"))
-  .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
-  .settings(
-    libraryDependencies -= "org.nlogo" % "netlogo" % Def.ScopedKey[String](Scope(This, This, This, This), AttributeKey[String]("netLogoVersion")).value
-  )
+    .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
+    .settings(description := "subproject of NetLogo")
