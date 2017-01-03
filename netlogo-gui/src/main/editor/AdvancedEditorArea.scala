@@ -53,7 +53,9 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     this.indenter = Some(indenter)
   }
 
-  override def replaceSelection(s: String): Unit = {
+  // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on
+  // MacOS. -- BCH 12/31/2016
+  override def replaceSelection(s: String): Unit = if (s != null) {
     var selection =
       s.dropWhile(c => Character.getType(c) == Character.FORMAT)
         .replaceAllLiterally("\t", "  ")
