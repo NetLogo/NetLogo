@@ -54,13 +54,15 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   }
 
   // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on
-  // MacOS. -- BCH 12/31/2016
+  // MacOS. This also occurs when int'l keyboards enter "^" -- BCH 12/31/2016, RGG 1/3/17
   override def replaceSelection(s: String): Unit = if (s != null) {
     var selection =
       s.dropWhile(c => Character.getType(c) == Character.FORMAT)
         .replaceAllLiterally("\t", "  ")
     super.replaceSelection(s)
     indenter.foreach(_.handleInsertion(selection))
+  } else {
+    super.replaceSelection(s)
   }
 
   // this needs to be implemented if we ever allow tab-based focus traversal
