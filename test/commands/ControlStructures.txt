@@ -12,6 +12,10 @@ Foreach2
   O> (foreach [1 2 3] [4 5 6] [[x y] -> crt (x + y) ])
   count turtles => 21
 
+ForeachWithDone
+  to foo foreach [ 1 2 3 ] __done end
+  COMPILE> COMPILER ERROR FOREACH expected at least 2 inputs, a list and an anonymous command.
+
 Run1
   O> run "crt 10"
   count turtles => 10

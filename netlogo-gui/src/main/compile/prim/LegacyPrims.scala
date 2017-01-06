@@ -54,7 +54,9 @@ package etc {
   }
 
   case class _english() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---")
+    def syntax = Syntax.commandSyntax(
+      agentClassString = "O---",
+      canBeConcise = false)
   }
 
   case class _extracthsbold() extends Reporter {
@@ -82,7 +84,8 @@ package etc {
   }
 
   case class _git() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType))
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(StringType),
+      canBeConcise = false)
   }
 
   case class _hsbold() extends Reporter {

@@ -531,7 +531,8 @@ case class _link() extends Reporter {
 case class _linkcode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "---L")
+      agentClassString = "---L",
+      canBeConcise = false)
 }
 case class _linklength() extends Reporter {
   override def syntax =
@@ -673,7 +674,8 @@ case class _nvalues() extends Reporter {
 case class _observercode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "O---")
+      agentClassString = "O---",
+      canBeConcise = false)
 }
 case class _patch() extends Reporter {
   override def syntax =
@@ -684,7 +686,8 @@ case class _patch() extends Reporter {
 case class _patchcode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "--P-")
+      agentClassString = "--P-",
+      canBeConcise = false)
 }
 case class _patchhere() extends Reporter {
   override def syntax =
@@ -1029,7 +1032,8 @@ case class _tostring() extends Reporter with Pure {
 case class _turtlecode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "-T--")
+      agentClassString = "-T--",
+      canBeConcise = false)
 }
 case class _untie() extends Command {
   override def syntax =

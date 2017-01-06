@@ -46,7 +46,8 @@ case class Syntax private(
   isRightAssociative: Boolean, // only relevant if infix
   agentClassString: String,
   blockAgentClassString: Option[String],
-  introducesContext: Boolean)
+  introducesContext: Boolean,
+  canBeConcise: Boolean)
 {
 
   import Syntax._
@@ -137,7 +138,8 @@ object Syntax {
     minimumOption: Option[Int] = None, // minimum number of args might be different than the default
     agentClassString: String = "OTPL",
     blockAgentClassString: Option[String] = None,
-    introducesContext: Boolean = false
+    introducesContext: Boolean = false,
+    canBeConcise: Boolean = true
   ): Syntax =
     new Syntax(
       precedence = CommandPrecedence,
@@ -149,7 +151,8 @@ object Syntax {
       isRightAssociative = false,
       agentClassString = agentClassString,
       blockAgentClassString = blockAgentClassString,
-      introducesContext = introducesContext || blockAgentClassString.nonEmpty
+      introducesContext = introducesContext || blockAgentClassString.nonEmpty,
+      canBeConcise = canBeConcise
   )
 
   def reporterSyntax(
@@ -172,7 +175,8 @@ object Syntax {
     isRightAssociative = isRightAssociative,
     agentClassString = agentClassString,
     blockAgentClassString = blockAgentClassString,
-    introducesContext = blockAgentClassString.nonEmpty
+    introducesContext = blockAgentClassString.nonEmpty,
+    canBeConcise = true
   )
 
   /** <i>Unsupported. Do not use.</i> */
