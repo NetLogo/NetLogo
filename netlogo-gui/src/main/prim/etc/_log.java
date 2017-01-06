@@ -30,6 +30,6 @@ public final strictfp class _log extends Reporter implements Pure {
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._log.notAValidBase", base));
     }
-    return validDouble(StrictMath.log(n) / StrictMath.log(base));
+    return validDouble(StrictMath.log(n) / StrictMath.log(base), context);
   }
 }

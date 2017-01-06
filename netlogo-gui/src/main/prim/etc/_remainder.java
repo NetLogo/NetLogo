@@ -25,6 +25,6 @@ public final strictfp class _remainder extends Reporter implements Pure {
     if (d2 == 0) {
       throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
-    return validDouble(d1 % d2);
+    return validDouble(d1 % d2, context);
   }
 }

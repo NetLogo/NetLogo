@@ -19,7 +19,7 @@ class _sum extends Reporter with Pure {
           sum += d.doubleValue
         case _ => // ignore
       }
-    validDouble(sum)
+    validDouble(sum, context)
   }
 
 }

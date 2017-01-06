@@ -17,6 +17,6 @@ public final strictfp class _acos extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double arg0) throws LogoException {
-    return validDouble(StrictMath.toDegrees(StrictMath.acos(arg0)));
+    return validDouble(StrictMath.toDegrees(StrictMath.acos(arg0)), context);
   }
 }

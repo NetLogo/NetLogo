@@ -20,6 +20,6 @@ public final strictfp class _ln extends Reporter implements Pure {
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", d));
     }
-    return validDouble(StrictMath.log(d));
+    return validDouble(StrictMath.log(d), context);
   }
 }

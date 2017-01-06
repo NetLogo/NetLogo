@@ -102,7 +102,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -381,7 +382,8 @@ procedure FLIP:[]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflip_setobservervariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflip_setobservervariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 4
           DSTORE 2
@@ -389,7 +391,8 @@ procedure FLIP:[]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflip_setobservervariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflip_setobservervariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -700,7 +703,8 @@ reporter procedure MAGNETIZATION:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremagnetization_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremagnetization_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -1278,7 +1282,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
          FRAME CHOP 1
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -1467,7 +1472,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1542,7 +1548,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch D org/nlogo/agent/AgentIterator] [D]
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L14
           DSTORE 4
           DSTORE 2
@@ -1550,7 +1557,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -1710,7 +1718,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1788,13 +1797,15 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L29
           DSTORE 2
           ALOAD 0
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.exp (D)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 4
           DSTORE 2

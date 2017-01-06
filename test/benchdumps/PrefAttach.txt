@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -317,7 +318,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          FRAME CHOP 1
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
           DSTORE 2
           ALOAD 0
@@ -327,7 +329,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -737,7 +740,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1026,7 +1030,8 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelayout_repeatlocal_0.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelayout_repeatlocal_0.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1471,7 +1476,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_3.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_3.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           LLOAD 4
           L2D

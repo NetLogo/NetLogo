@@ -20,7 +20,7 @@ public final strictfp class _turtle extends Reporter {
 
   public Object report_1(Context context, double idDouble)
       throws LogoException {
-    long id = validLong(idDouble);
+    long id = validLong(idDouble, context);
     if (id != idDouble) {
       throw new RuntimePrimitiveException
           (context, this, idDouble + " is not an integer");

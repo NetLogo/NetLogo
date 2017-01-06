@@ -16,7 +16,7 @@ public final strictfp class _towardsxy extends Reporter {
               (context.agent,
                   argEvalDoubleValue(context, 0),
                   argEvalDoubleValue(context, 1),
-                  true)); // true = wrap
+                  true), context); // true = wrap
     } catch (org.nlogo.api.AgentException ex) {
       throw new RuntimePrimitiveException
           (context, this, ex.getMessage());

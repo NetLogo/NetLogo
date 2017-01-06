@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -894,7 +895,8 @@ procedure SETUP-RANDOM:[]{O---}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuprandom_ifelse_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuprandom_ifelse_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;

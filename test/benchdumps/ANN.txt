@@ -1096,7 +1096,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_3.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_3.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1676,7 +1677,8 @@ procedure CLICK-INPUT:[]{OTPL}:
               DLOAD 4
               ICONST_1
               INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureclickinput_distancexy_4.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureclickinput_distancexy_4.validDouble (DLorg/nlogo/nvm/Context;)D
              L7
               DSTORE 2
               NEW java/lang/Double
@@ -3258,7 +3260,8 @@ procedure RANDOMIZE-WEIGHTS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextGaussian ()D
           DMUL
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomizeweights_call_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomizeweights_call_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           DSTORE 2
           NEW java/lang/Double
@@ -3383,7 +3386,8 @@ procedure RANDOMIZE-WEIGHTS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextGaussian ()D
           DMUL
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomizeweights_call_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomizeweights_call_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           DSTORE 2
           NEW java/lang/Double
@@ -3635,7 +3639,8 @@ procedure RECOLOR:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setturtlevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setturtlevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4977,7 +4982,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
               DLOAD 2
               DLOAD 4
               DMUL
-              INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_list_7.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_list_7.validDouble (DLorg/nlogo/nvm/Context;)D
              L7
               DSTORE 2
               NEW java/lang/Double
@@ -5969,7 +5975,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DADD
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L8
                 ALOAD 1
                 ALOAD 0
@@ -6017,7 +6024,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DDIV
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L12
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.world : Lorg/nlogo/agent/World;
@@ -6030,7 +6038,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DMUL
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetuplet1letlengthlayersletnoturtlescrtlayersizesetlayerturtlesetlayerselfsetlayerturtlesetlayerselfletlayernum05numlayersmaxpxcorlet0foreachsortlayer1ask1lety205i05layersizemaxpycorsetxyxysetcolorgreysetii1setlayerslputlayerlayers_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L14
                 DSTORE 2
                 NEW java/lang/Double
@@ -6442,7 +6451,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DADD
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L10
                 ALOAD 1
                 ALOAD 0
@@ -6490,7 +6500,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DDIV
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L14
                 DSTORE 4
                 DSTORE 2
@@ -6498,7 +6509,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DSUB
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L15
                 DSTORE 4
                 DSTORE 2
@@ -6506,7 +6518,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DMUL
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L16
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.world : Lorg/nlogo/agent/World;
@@ -6519,7 +6532,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DMUL
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L18
                 DSTORE 2
                 NEW java/lang/Double
@@ -6728,7 +6742,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 2
                 DLOAD 4
                 DADD
-                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_setletvariable_5.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_anonymouscommandfromproceduresetupask1let205i05layersizemaxpycorsetxyxysetcolorgreylet205i05layersizemaxpycorsetxyxysetcolorgreysetii1_setletvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
                L6
                 DSTORE 2
                 NEW java/lang/Double
@@ -7028,7 +7043,8 @@ reporter procedure SIGMOID:[X]{OTPL}:
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.pow (DD)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 4
           DSTORE 2
@@ -7036,7 +7052,8 @@ reporter procedure SIGMOID:[X]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           DSTORE 4
           DSTORE 2
@@ -7059,7 +7076,8 @@ reporter procedure SIGMOID:[X]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresigmoid_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 2
           NEW java/lang/Double
@@ -7343,7 +7361,8 @@ procedure UPDATE-ACTIVATION:[INCOMING]{-T--}:
                 DLOAD 2
                 DLOAD 4
                 DMUL
-                INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_mult_1.validDouble (D)D
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_mult_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L22
                 DSTORE 2
                 NEW java/lang/Double
@@ -7407,7 +7426,8 @@ procedure UPDATE-ACTIVATION:[INCOMING]{-T--}:
          FRAME CHOP 1
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
           DSTORE 2
           NEW java/lang/Double
@@ -7531,7 +7551,8 @@ procedure UPDATE-ACTIVATION:[INCOMING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_call_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateactivation_call_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -7974,7 +7995,8 @@ procedure UPDATE-LINK-LOOK:[W]{---L}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelinklook_setlinkvariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelinklook_setlinkvariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           DLOAD 2

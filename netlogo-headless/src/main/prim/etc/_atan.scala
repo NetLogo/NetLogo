@@ -20,5 +20,5 @@ class _atan extends Reporter with Pure {
       if (d2 > 0) 0 else 180
     else if (d2 == 0)
       if (d1 > 0) 90 else 270
-    else (StrictMath.toDegrees(StrictMath.atan2(d1, d2)) + 360) % 360
+    else validDouble(StrictMath.toDegrees(StrictMath.atan2(d1, d2)) + 360, context) % 360
 }

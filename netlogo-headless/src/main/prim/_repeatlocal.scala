@@ -14,7 +14,7 @@ class _repeatlocal(vn: Int) extends Command with CustomAssembled {
   }
 
   def perform_1(context: Context, arg0: Double) {
-    context.activation.args(vn) = new MutableLong(validLong(arg0))
+    context.activation.args(vn) = new MutableLong(validLong(arg0, context))
     context.ip = offset
   }
 

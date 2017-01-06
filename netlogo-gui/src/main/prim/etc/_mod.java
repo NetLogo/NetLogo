@@ -24,6 +24,6 @@ public final strictfp class _mod extends Reporter implements Pure {
     if (d1 == 0) {
       throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
-    return validDouble(d0 - (StrictMath.floor(d0 / d1) * d1));
+    return validDouble(d0 - (StrictMath.floor(d0 / d1) * d1), context);
   }
 }

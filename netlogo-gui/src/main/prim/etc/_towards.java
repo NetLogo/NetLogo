@@ -27,7 +27,7 @@ public final strictfp class _towards extends Reporter {
     try {
       return validDouble
           (world.protractor().towards
-              (context.agent, agent, true)); // true = wrap
+              (context.agent, agent, true), context); // true = wrap
     } catch (org.nlogo.api.AgentException ex) {
       throw new RuntimePrimitiveException
           (context, this, ex.getMessage());

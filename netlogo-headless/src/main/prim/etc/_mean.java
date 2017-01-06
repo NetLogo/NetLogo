@@ -32,6 +32,6 @@ public final strictfp class _mean extends Reporter implements Pure {
       }
       sum += ((Double) elt).doubleValue();
     }
-    return validDouble(sum / list.size());
+    return validDouble(sum / list.size(), context);
   }
 }

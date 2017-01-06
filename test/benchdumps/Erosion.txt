@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -322,7 +323,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
               DLOAD 2
               DLOAD 4
               DADD
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_plus_2.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_plus_2.validDouble (DLorg/nlogo/nvm/Context;)D
              L13
               DSTORE 2
               NEW java/lang/Double
@@ -496,7 +498,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L33
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -656,7 +659,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L43
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -816,7 +820,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L53
           DSTORE 4
           DSTORE 2
@@ -824,7 +829,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L54
           DSTORE 2
           NEW java/lang/Double
@@ -1059,7 +1065,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           DSTORE 4
           DSTORE 2
@@ -1067,7 +1074,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1168,7 +1176,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -1351,7 +1360,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L33
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1511,7 +1521,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L43
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1671,7 +1682,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L53
           DSTORE 4
           DSTORE 2
@@ -1679,7 +1691,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setprocedurevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L54
           DSTORE 2
           NEW java/lang/Double
@@ -1854,7 +1867,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -2080,7 +2094,8 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureflow_setpatchvariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -2257,7 +2272,8 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_if_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2379,7 +2395,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -3419,7 +3436,8 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 2
           DLOAD 10
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L21
           DSTORE 2
           NEW java/lang/Double
@@ -3683,7 +3701,8 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 2
           DLOAD 10
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L28
           DSTORE 2
           NEW java/lang/Double
@@ -3938,7 +3957,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 4
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.world : Lorg/nlogo/agent/World;
@@ -3966,7 +3986,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           DSTORE 4
           DSTORE 2
@@ -3974,7 +3995,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           LDC 100.0
          L12
@@ -3984,7 +4006,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -3999,7 +4022,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -4284,7 +4308,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_13.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_13.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1

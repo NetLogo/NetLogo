@@ -10,7 +10,7 @@ class _random extends Reporter {
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
 
   def report_1(context: Context, maxDouble: Double): Double = {
-    var maxLong = validLong(maxDouble)
+    var maxLong = validLong(maxDouble, context)
     if (maxDouble != maxLong)
       maxLong += (if (maxDouble >= 0) 1 else -1)
     if (maxLong > 0)

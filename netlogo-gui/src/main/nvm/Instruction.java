@@ -184,12 +184,12 @@ public abstract strictfp class Instruction
 
   // checking of numeric types
 
-  public long validLong(double d) throws LogoException {
+  public long validLong(double d, Context context) throws LogoException {
     // 9007199254740992 is the largest/smallest integer
     // exactly representable in a double - ST 1/29/08
     if (d > 9007199254740992L || d < -9007199254740992L) {
       throw new RuntimePrimitiveException
-          (null, this,
+          (context, this,
               d + " is too large to be represented exactly as an integer in NetLogo");
     }
     return (long) d;
@@ -201,19 +201,19 @@ public abstract strictfp class Instruction
     return d <= 9007199254740992L && d >= -9007199254740992L;
   }
 
-  public Double newValidDouble(double d) throws LogoException {
+  public Double newValidDouble(double d, Context context) throws LogoException {
     if (Double.isInfinite(d) || Double.isNaN(d)) {
-      invalidDouble(d);
+      invalidDouble(d, context);
     }
     return Double.valueOf(d);
   }
 
-  public double validDouble(double d) throws LogoException {
+  public double validDouble(double d, Context context) throws LogoException {
     // yeah, this line is repeated from the previous method,
     // but factoring it out would cost us a method call, and this
     // is extremely efficiency-critical code, so... - ST 11/1/04
     if (Double.isInfinite(d) || Double.isNaN(d)) {
-      invalidDouble(d);
+      invalidDouble(d, context);
     }
     // Returning d makes it easier to insert validDouble() calls into
     // expressions without having to break those expressions up into
@@ -222,11 +222,9 @@ public abstract strictfp class Instruction
     return d;
   }
 
-  private void invalidDouble(double d) throws LogoException {
-    // it's hard to get a context here in some situations because
-    // of optimizations. the context will get set later.
+  private void invalidDouble(double d, Context context) throws LogoException {
     throw new RuntimePrimitiveException
-        (null, this,
+        (context, this,
             "math operation produced "
                 + (Double.isInfinite(d)
                 ? "a number too large for NetLogo"

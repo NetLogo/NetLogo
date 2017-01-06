@@ -11,7 +11,7 @@ class _dz extends Reporter {
   override def report(context: Context) = {
     val turtle = context.agent.asInstanceOf[Turtle3D]
     val value = turtle.dz
-    validDouble(value)
+    validDouble(value, context)
     Double.box(
       if (StrictMath.abs(value) < 3.2e-15)
         0

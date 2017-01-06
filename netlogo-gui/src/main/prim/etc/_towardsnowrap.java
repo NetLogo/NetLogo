@@ -24,7 +24,7 @@ public final strictfp class _towardsnowrap extends Reporter {
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     try {
-      return validDouble(world.protractor().towards(context.agent, agent, false)); // false = don't wrap
+      return validDouble(world.protractor().towards(context.agent, agent, false), context); // false = don't wrap
     } catch (org.nlogo.api.AgentException ex) {
       throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }

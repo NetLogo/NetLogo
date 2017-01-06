@@ -34,7 +34,7 @@ class _nsum4(vn: Int) extends Reporter {
               "org.nlogo.prim.$common.noSumOfListWithNonNumbers",
               Dump.logoObject(x).toString, TypeNames.name(x)))
       }
-    validDouble(sum)
+    validDouble(sum, context)
   }
 
 }

@@ -16,7 +16,7 @@ class _repeat extends Command with CustomAssembled {
   }
 
   def perform_1(context: Context, d0: Double) {
-    context.let(_let, new MutableLong(validLong(d0)))
+    context.let(_let, new MutableLong(validLong(d0, context)))
     context.ip = offset
   }
 

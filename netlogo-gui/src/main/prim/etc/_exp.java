@@ -17,6 +17,6 @@ public final strictfp class _exp extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double d0) throws LogoException {
-    return validDouble(StrictMath.exp(d0));
+    return validDouble(StrictMath.exp(d0), context);
   }
 }

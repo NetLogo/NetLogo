@@ -160,6 +160,9 @@ Exponentiation6
 Exponentiation7
   2 ^ 0 => 1
 
+Exponentiation8
+  e ^ 1024 => ERROR math operation produced a number too large for NetLogo
+
 Ceiling1
   ceiling 4.5 => 5
 

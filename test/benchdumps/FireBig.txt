@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -806,7 +807,8 @@ procedure GO:[]{O---}:
          FRAME CHOP 1
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1157,7 +1159,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -1314,7 +1317,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_15.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_15.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -1519,7 +1523,8 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           LDC 100.0
          L11
@@ -1529,7 +1534,8 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 2
           NEW java/lang/Double
@@ -1831,7 +1837,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 4
           DSTORE 2
@@ -2015,7 +2022,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_if_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 4
           DSTORE 2

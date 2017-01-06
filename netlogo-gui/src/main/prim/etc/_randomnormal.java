@@ -25,6 +25,6 @@ public final strictfp class _randomnormal extends Reporter {
           context, this, I18N.errorsJ().get("org.nlogo.prim.etc._randomNormal.secondInputNotNegative"));
 
     }
-    return validDouble(mean + sdev * context.job.random.nextGaussian());
+    return validDouble(mean + sdev * context.job.random.nextGaussian(), context);
   }
 }

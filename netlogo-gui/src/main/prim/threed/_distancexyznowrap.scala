@@ -15,5 +15,5 @@ class _distancexyznowrap extends Reporter {
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1),
         argEvalDoubleValue(context, 2),
-        false))  // wrap = false
+        false), context)  // wrap = false
 }

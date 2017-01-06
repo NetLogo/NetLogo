@@ -48,6 +48,6 @@ public final strictfp class _standarddeviation extends Reporter implements Pure 
     }
     return validDouble
         (StrictMath.sqrt
-            (squareOfDifference / (listSize - badElts - 1)));
+            (squareOfDifference / (listSize - badElts - 1)), context);
   }
 }

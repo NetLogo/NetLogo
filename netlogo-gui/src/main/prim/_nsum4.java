@@ -54,6 +54,6 @@ public final strictfp class _nsum4 extends Reporter {
 
       sum += ((Double) value).doubleValue();
     }
-    return validDouble(sum);
+    return validDouble(sum, context);
   }
 }

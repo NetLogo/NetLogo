@@ -10,7 +10,7 @@ class _linkpitch extends Reporter {
 
   override def report(context: Context) = {
     val link = context.agent.asInstanceOf[Link]
-    try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true))
+    try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true), context)
     catch {
       case e: org.nlogo.api.AgentException =>
         throw new org.nlogo.nvm.RuntimePrimitiveException(

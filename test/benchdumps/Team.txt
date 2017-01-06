@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1837,7 +1838,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2117,7 +2119,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2397,7 +2400,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2677,7 +2681,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2853,7 +2858,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_div_33.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_div_33.validDouble (DLorg/nlogo/nvm/Context;)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -2994,7 +3000,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
             I2D
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_mean_36.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduredoplot_mean_36.validDouble (DLorg/nlogo/nvm/Context;)D
            L9
             DSTORE 2
             NEW java/lang/Double
@@ -3183,7 +3190,8 @@ procedure EXPLORE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureexplore_setobservervariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureexplore_setobservervariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -4761,7 +4769,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_15.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_15.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4953,7 +4962,8 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelayout_repeatlocal_0.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelayout_repeatlocal_0.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -5364,7 +5374,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_repeatlocal_1.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_repeatlocal_1.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -5388,7 +5399,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -5746,7 +5758,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepickteammembers_ifelse_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -6740,7 +6753,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -7076,7 +7090,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -7090,7 +7105,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 2
           NEW java/lang/Double
