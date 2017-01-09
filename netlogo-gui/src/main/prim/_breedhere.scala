@@ -24,7 +24,7 @@ class _breedhere(breedName: String) extends Reporter {
     val itr = patch.turtlesHere.iterator
     while (itr.hasNext) {
       val turtle = itr.next()
-      if (turtle.getBreed == breed)
+      if (turtle.getBreed eq breed)
         agentSetBuilder.add(turtle)
     }
     agentSetBuilder.build()

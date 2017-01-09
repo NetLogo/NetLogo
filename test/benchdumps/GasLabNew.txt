@@ -2993,79 +2993,68 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ASTORE 7
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/AgentSet;
-          DUP
-          IFNONNULL L6
-          POP
           ALOAD 4
-          IFNULL L7
-          GOTO L4
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_if_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent org/nlogo/agent/AgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator org/nlogo/agent/Turtle] [org/nlogo/agent/AgentSet]
-          ALOAD 4
-          INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L4
-         L7
-         FRAME SAME
+          IF_ACMPNE L4
           ALOAD 5
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L4
          L5
-         FRAME CHOP 1
+         FRAME SAME
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
-         L8
+         L6
           ASTORE 2
           ICONST_0
           ISTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 4
-         L9
+         L7
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_if_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I org/nlogo/agent/AgentIterator org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
           ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L10
+          IFEQ L8
           ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          IF_ACMPEQ L9
+          IF_ACMPEQ L7
           IINC 3 1
-          GOTO L9
-         L10
+          GOTO L7
+         L8
          FRAME SAME
           ILOAD 3
           I2D
-         L11
+         L9
           DCONST_1
-         L12
+         L10
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DCMPL
-          IFNE L13
+          IFNE L11
           ICONST_1
-          GOTO L14
-         L13
+          GOTO L12
+         L11
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_if_0 org/nlogo/nvm/Context D D java/util/Iterator] []
           ICONST_0
-         L14
+         L12
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L15
+          IFEQ L13
           ICONST_1
-          GOTO L16
-         L15
+          GOTO L14
+         L13
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_if_0 org/nlogo/nvm/Context I T D java/util/Iterator] [org/nlogo/nvm/Context]
           BIPUSH 8
-         L16
+         L14
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_if_0 org/nlogo/nvm/Context I T D java/util/Iterator] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L17
+         L15
           RETURN
 [1]_asm_procedurecheckforcollision_setprocedurevariable_1 "let one-of other particles-here with [ who < [ who ] of myself and myself != last-collision ]" Object => void
       _oneof "one-of other particles-here with [ who < [ who ] of myself and myself != last-collision ]" AgentSet => Object
@@ -3329,28 +3318,17 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ASTORE 7
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/AgentSet;
-          DUP
-          IFNONNULL L6
-          POP
           ALOAD 4
-          IFNULL L7
-          GOTO L4
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_setprocedurevariable_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent org/nlogo/agent/AgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator org/nlogo/agent/Turtle] [org/nlogo/agent/AgentSet]
-          ALOAD 4
-          INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L4
-         L7
-         FRAME SAME
+          IF_ACMPNE L4
           ALOAD 5
           ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L4
          L5
-         FRAME CHOP 1
+         FRAME SAME
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
-         L8
+         L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecheckforcollision_setprocedurevariable_1.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
@@ -3372,20 +3350,20 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 6
-         L9
+         L7
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_setprocedurevariable_1 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context java/util/ArrayList org/nlogo/agent/AgentIterator] []
           ALOAD 6
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L10
+          IFEQ L8
           ALOAD 6
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 7
           ALOAD 7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          IF_ACMPNE L11
-          GOTO L9
-         L11
+          IF_ACMPNE L9
+          GOTO L7
+         L9
          FRAME APPEND [org/nlogo/agent/Agent]
           ALOAD 4
           ALOAD 7
@@ -3394,7 +3372,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ASTORE 8
           ALOAD 8
           INSTANCEOF java/lang/Boolean
-          IFNE L12
+          IFNE L10
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -3420,20 +3398,20 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L12
+         L10
          FRAME APPEND [java/lang/Object]
           ALOAD 8
           CHECKCAST java/lang/Boolean
           INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFEQ L13
+          IFEQ L11
           ALOAD 5
           ALOAD 7
           INVOKEINTERFACE java/util/List.add (Ljava/lang/Object;)Z
           POP
-         L13
+         L11
          FRAME SAME
-          GOTO L9
-         L10
+          GOTO L7
+         L8
          FRAME CHOP 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
@@ -3444,16 +3422,16 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
           INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
-         L14
+         L12
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           ISTORE 3
           ILOAD 3
-          IFNE L15
+          IFNE L13
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
-          GOTO L16
-         L15
+          GOTO L14
+         L13
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_setprocedurevariable_1 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I org/nlogo/nvm/Context java/util/ArrayList org/nlogo/agent/AgentIterator] []
           ALOAD 2
           ILOAD 3
@@ -3463,7 +3441,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ILOAD 3
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
-         L16
+         L14
          FRAME SAME1 java/lang/Object
           ASTORE 2
           ALOAD 1
@@ -3475,7 +3453,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L17
+         L15
           RETURN
 [2]_asm_procedurecheckforcollision_if_3 "if candidate != nobody and speed > 0 or [ speed ] of candidate > 0 collide-with candidate set last-collision candidate [ ask candidate [ set last-collision myself ] ]" boolean => void
       _and "candidate != nobody and speed > 0 or [ speed ] of candidate > 0"
