@@ -16,7 +16,7 @@ class _towardspitch extends Reporter {
       throw new RuntimePrimitiveException(
         context, this, I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
           agent.classDisplayName))
-    try newValidDouble(world.protractor.towardsPitch(context.agent, agent, true)) // true = wrap
+    try newValidDouble(world.protractor.towardsPitch(context.agent, agent, true), context) // true = wrap
     catch {
       case ex: AgentException =>
         throw new RuntimePrimitiveException(context, this, ex.getMessage)

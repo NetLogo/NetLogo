@@ -98,7 +98,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L3
           DSTORE 2
           ALOAD 1
@@ -109,7 +110,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -333,7 +335,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           DLOAD 4
           DMUL
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -492,7 +495,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -538,7 +542,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebindigit_report_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -744,7 +749,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -847,7 +853,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -950,7 +957,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1053,7 +1061,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1156,7 +1165,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1259,7 +1269,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1362,7 +1373,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_14.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_14.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1465,7 +1477,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_16.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculaterule_setprocedurevariable_16.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -5012,7 +5025,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -5869,7 +5883,8 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureprintblock_repeatlocal_5.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureprintblock_repeatlocal_5.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -6801,7 +6816,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               DLOAD 2
               DLOAD 4
               DADD
-              INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupcontinue_plus_11.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupcontinue_plus_11.validDouble (DLorg/nlogo/nvm/Context;)D
              L5
               DSTORE 2
               NEW java/lang/Double
@@ -7429,7 +7445,8 @@ procedure SHOW-RULES:[RULES]{O---}:
               DLOAD 2
               DLOAD 4
               DSUB
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_greaterthan_3.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_greaterthan_3.validDouble (DLorg/nlogo/nvm/Context;)D
              L6
               DSTORE 4
               DSTORE 2
@@ -7728,7 +7745,8 @@ procedure SHOW-RULES:[RULES]{O---}:
               DLOAD 2
               DLOAD 4
               DADD
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (DLorg/nlogo/nvm/Context;)D
              L13
               ALOAD 0
               GETFIELD org/nlogo/prim/_asm_procedureshowrules_and_7.world : Lorg/nlogo/agent/World;
@@ -7758,7 +7776,8 @@ procedure SHOW-RULES:[RULES]{O---}:
               DLOAD 2
               DLOAD 4
               DDIV
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (DLorg/nlogo/nvm/Context;)D
              L17
               DSTORE 2
               DLOAD 2
@@ -7790,7 +7809,8 @@ procedure SHOW-RULES:[RULES]{O---}:
               DLOAD 4
               DMUL
               DSUB
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (D)D
+              ALOAD 1
+              INVOKEVIRTUAL org/nlogo/prim/_asm_procedureshowrules_and_7.validDouble (DLorg/nlogo/nvm/Context;)D
              L20
               DCONST_0
              L21

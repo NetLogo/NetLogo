@@ -16,7 +16,7 @@ class _breedsingular(breedName: String) extends Reporter {
   override def report(context: Context) = report_1(context, argEvalDoubleValue(context, 0))
 
   def report_1(context: Context, idDouble: Double): AnyRef = {
-    val id = validLong(idDouble)
+    val id = validLong(idDouble, context)
     if (id != idDouble)
       throw new RuntimePrimitiveException(context, this, s"$idDouble is not an integer")
     val turtle = world.getTurtle(id)

@@ -81,7 +81,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 4
           DSTORE 2
@@ -89,7 +90,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
           LDC 2.0
          L14
@@ -114,7 +116,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -149,7 +152,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.pow (DD)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L20
           DSTORE 4
           DSTORE 2
@@ -172,7 +176,8 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           DSTORE 2
           NEW java/lang/Double
@@ -347,7 +352,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -620,7 +626,8 @@ procedure GO:[]{O---}:
           DLOAD 4
           DMUL
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_if_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_if_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DCONST_0
          L9
@@ -967,7 +974,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1181,7 +1189,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L21
           DSTORE 2
           NEW java/lang/Double
@@ -1241,7 +1250,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrainahead_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1628,7 +1638,8 @@ procedure GROW-GRAIN:[]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrowgrain_setpatchvariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrowgrain_setpatchvariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L14
           DSTORE 2
           NEW java/lang/Double
@@ -2100,7 +2111,8 @@ procedure HARVEST:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureharvest_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureharvest_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L21
           DSTORE 4
           DSTORE 2
@@ -2108,7 +2120,8 @@ procedure HARVEST:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureharvest_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureharvest_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           DSTORE 2
           DLOAD 2
@@ -2393,7 +2406,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremoveeatagedie_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremoveeatagedie_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           DSTORE 2
           NEW java/lang/Double
@@ -2482,7 +2496,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremoveeatagedie_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremoveeatagedie_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2970,7 +2985,8 @@ procedure RECOLOR-PATCH:[]{-TP-}:
           DLOAD 2
           DLOAD 10
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorpatch_setpatchvariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorpatch_setpatchvariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -3288,7 +3304,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           DSTORE 3
           ASTORE 2
@@ -3455,7 +3472,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           LDC 3.0
          L10
@@ -3480,7 +3498,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 3
           ASTORE 2
@@ -3691,7 +3710,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -3820,7 +3840,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
           DCONST_1
          L17
@@ -3830,12 +3851,14 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L18
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -3895,7 +3918,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L25
           DSTORE 2
           NEW java/lang/Double
@@ -3967,7 +3991,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -4027,7 +4052,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -4122,7 +4148,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -4194,7 +4221,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -4254,7 +4282,8 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -4522,7 +4551,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_if_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4700,7 +4730,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_repeatlocal_6.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_repeatlocal_6.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -5022,7 +5053,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_repeatlocal_13.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuppatches_repeatlocal_13.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -5570,7 +5602,8 @@ procedure SETUP-TURTLES:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupturtles_setturtlevariable_6.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupturtles_setturtlevariable_6.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -7567,7 +7600,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_5.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_5.validDouble (DLorg/nlogo/nvm/Context;)D
            L7
             DSTORE 2
             NEW java/lang/Double
@@ -7892,7 +7926,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          FRAME CHOP 1
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -8005,7 +8040,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_repeatlocal_12.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_repeatlocal_12.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -8097,7 +8133,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           NEW java/lang/Double
@@ -8200,7 +8237,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_mult_16.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_mult_16.validDouble (DLorg/nlogo/nvm/Context;)D
            L10
             LDC 100.0
            L11
@@ -8210,7 +8248,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_mult_16.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_mult_16.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             DSTORE 2
             NEW java/lang/Double
@@ -8259,7 +8298,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -8396,7 +8436,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
          L18
           DSTORE 4
           DSTORE 2
@@ -8404,7 +8445,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -8479,7 +8521,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
          L25
           DSTORE 4
           DSTORE 2
@@ -8487,7 +8530,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
          L26
           DSTORE 2
           NEW java/lang/Double
@@ -8628,7 +8672,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_21.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_21.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             NEW org/nlogo/nvm/Activation
             DUP
@@ -8693,7 +8738,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_21.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_21.validDouble (DLorg/nlogo/nvm/Context;)D
            L16
             DSTORE 2
             NEW java/lang/Double

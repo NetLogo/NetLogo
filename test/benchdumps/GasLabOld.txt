@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -395,7 +396,8 @@ procedure BOUNCE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_if_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_if_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L31
           DSTORE 4
           DSTORE 2
@@ -508,7 +510,8 @@ procedure BOUNCE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -728,7 +731,8 @@ procedure BOUNCE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_if_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L31
           DSTORE 4
           DSTORE 2
@@ -812,7 +816,8 @@ procedure BOUNCE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_setturtlevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebounce_setturtlevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           DSTORE 2
           NEW java/lang/Double
@@ -1004,7 +1009,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L17
           DSTORE 2
           DLOAD 2
@@ -1017,7 +1023,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           DSTORE 2
           NEW java/lang/Double
@@ -1154,7 +1161,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L17
           DSTORE 2
           DLOAD 2
@@ -1167,7 +1175,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           DSTORE 2
           NEW java/lang/Double
@@ -1339,7 +1348,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           DSTORE 2
           DLOAD 2
@@ -1352,7 +1362,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -1524,7 +1535,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           DSTORE 2
           DLOAD 2
@@ -1537,7 +1549,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -1680,7 +1693,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1766,7 +1780,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L36
           DSTORE 4
           DSTORE 2
@@ -1774,7 +1789,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L20
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1860,7 +1876,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L40
           DSTORE 4
           DSTORE 2
@@ -1883,7 +1900,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setprocedurevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L42
           DSTORE 2
           NEW java/lang/Double
@@ -1974,7 +1992,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2021,7 +2040,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           DSTORE 2
           NEW java/lang/Double
@@ -2127,7 +2147,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2174,7 +2195,8 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_7.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecalculatevelocitycomponents_setturtlevariable_7.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           DSTORE 2
           NEW java/lang/Double
@@ -2782,7 +2804,8 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforcollision_call_4.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforcollision_call_4.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           LLOAD 4
           L2D
@@ -5004,7 +5027,8 @@ procedure FADE:[]{-TP-}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefade_setpatchvariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefade_setpatchvariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -5091,7 +5115,8 @@ procedure FADE:[]{-TP-}:
           DLOAD 2
           ICONST_0
           INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefade_if_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefade_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
           LDC 40.0
          L8
@@ -5924,7 +5949,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_6.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setobservervariable_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -6791,7 +6817,8 @@ procedure MOVE:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremove_jump_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremove_jump_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
          L7
@@ -7074,7 +7101,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           LDC 2.0
          L16
@@ -7109,7 +7137,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
           LDC 2.0
          L20
@@ -7119,12 +7148,14 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L21
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -7184,7 +7215,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L28
           DCONST_1
          L29
@@ -7219,7 +7251,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
           LDC 2.0
          L33
@@ -7254,7 +7287,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L36
           LDC 2.0
          L37
@@ -7264,12 +7298,14 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L38
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -7329,7 +7365,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L45
           DSTORE 4
           DSTORE 2
@@ -7552,7 +7589,8 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L18
           DSTORE 3
           ASTORE 2
@@ -7934,7 +7972,8 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L18
           DSTORE 3
           ASTORE 2
@@ -8420,7 +8459,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -8506,7 +8546,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L29
           DSTORE 4
           DSTORE 2
@@ -8514,7 +8555,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 2
           DLOAD 2
@@ -8934,7 +8976,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L26
@@ -8945,7 +8988,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 2
           NEW java/lang/Double
@@ -9214,7 +9258,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -9358,7 +9403,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L28
@@ -9369,7 +9415,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
           DSTORE 2
           NEW java/lang/Double
@@ -9638,7 +9685,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -9782,7 +9830,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L28
@@ -9793,7 +9842,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
           DSTORE 2
           NEW java/lang/Double
@@ -10194,7 +10244,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L26
@@ -10205,7 +10256,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 2
           NEW java/lang/Double
@@ -10341,7 +10393,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -10427,7 +10480,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L26
           DSTORE 4
           DSTORE 2
@@ -10435,7 +10489,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setprocedurevariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L27
           DSTORE 2
           DLOAD 2
@@ -11009,7 +11064,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L26
@@ -11020,7 +11076,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 2
           NEW java/lang/Double
@@ -11289,7 +11346,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -11433,7 +11491,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L28
@@ -11444,7 +11503,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
           DSTORE 2
           NEW java/lang/Double
@@ -11713,7 +11773,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -11857,7 +11918,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L28
@@ -11868,7 +11930,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
           DSTORE 2
           NEW java/lang/Double
@@ -12269,7 +12332,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
           LDC 360.0
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26.validDouble (DLorg/nlogo/nvm/Context;)D
           LDC 360.0
           DREM
          L26
@@ -12280,7 +12344,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 2
           DLOAD 4
           DSUB
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26.validDouble (DLorg/nlogo/nvm/Context;)D
          L30
           DSTORE 2
           NEW java/lang/Double
@@ -12622,7 +12687,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           LDC 100.0
          L10
@@ -12647,14 +12713,16 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 2
           ALOAD 0
           DLOAD 2
           ICONST_0
           INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -12980,7 +13048,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_10.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_10.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           LLOAD 4
           L2D
@@ -13258,7 +13327,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_2.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_2.validDouble (DLorg/nlogo/nvm/Context;)D
            L6
             DSTORE 2
             NEW java/lang/Double
@@ -13327,14 +13397,16 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_4.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_4.validDouble (DLorg/nlogo/nvm/Context;)D
            L7
             DSTORE 2
             ALOAD 0
             DLOAD 2
             ICONST_0
             INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_4.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_4.validDouble (DLorg/nlogo/nvm/Context;)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -13444,7 +13516,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (DLorg/nlogo/nvm/Context;)D
            L11
             DSTORE 4
             DSTORE 2
@@ -13452,7 +13525,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -13487,7 +13561,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (DLorg/nlogo/nvm/Context;)D
            L16
             DSTORE 4
             DSTORE 2
@@ -13495,7 +13570,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (DLorg/nlogo/nvm/Context;)D
            L17
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -13528,7 +13604,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.validDouble (DLorg/nlogo/nvm/Context;)D
            L20
             DSTORE 2
             NEW java/lang/Double
@@ -13597,14 +13674,16 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_15.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_15.validDouble (DLorg/nlogo/nvm/Context;)D
            L7
             DSTORE 2
             ALOAD 0
             DLOAD 2
             ICONST_0
             INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_15.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetuphistograms_round_15.validDouble (DLorg/nlogo/nvm/Context;)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -13862,7 +13941,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -13909,7 +13989,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -13956,7 +14037,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L25
           DSTORE 2
           NEW java/lang/Double
@@ -14632,7 +14714,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -14790,7 +14873,8 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
           I2D
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
           DSTORE 2
           NEW java/lang/Double
@@ -14986,14 +15070,16 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L8
           DSTORE 2
           ALOAD 0
           DLOAD 2
           ICONST_0
           INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_12.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatevariables_setobservervariable_12.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           NEW java/lang/Double

@@ -10,6 +10,9 @@ link-breeds
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
       _constdouble:579.0 "579" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 579.0
          L1
@@ -31,16 +34,16 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
+          NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
           LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -78,6 +81,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 [2]_resettimer "reset-timer"
 [3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
       _constdouble:10000.0 "10000" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 10000.0
          L1
@@ -90,7 +96,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -117,6 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [5]_asm_procedurebenchmark_repeatlocalinternal_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -150,6 +158,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 [6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
       _timer "timer" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -171,9 +182,6 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 7
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -188,8 +196,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [7]_asm_procedurebenchmark_return_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -204,6 +217,9 @@ procedure SETUP:[]{O---}:
 [1]_resetticks "reset-ticks"
 [2]_asm_proceduresetup_ask_0 "ask" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_0.world : Lorg/nlogo/agent/World;
@@ -259,6 +275,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [3]_asm_proceduresetup_setpatchvariable_1 "set" Object => void
       _constdouble:55.0 "green" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -272,9 +291,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -289,8 +305,13 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [4]_asm_proceduresetup_done_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -299,6 +320,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [5]_asm_proceduresetup_if_3 "if" boolean => void
       _observervariable:GRASS? "grass?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -343,6 +367,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [6]_asm_proceduresetup_ask_4 "ask" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_4.world : Lorg/nlogo/agent/World;
@@ -399,6 +426,11 @@ procedure SETUP:[]{O---}:
 [7]_asm_proceduresetup_setpatchvariable_5 "set" Object => void
       _random "random" double => double
         _observervariable:GRASS-DELAY "grass-delay" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  maxDouble
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -431,7 +463,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -500,9 +533,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L3
-          ALOAD 1
-          BIPUSH 8
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L14
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5 org/nlogo/nvm/Context java/lang/Double T J] [org/nlogo/api/AgentException]
@@ -517,11 +547,22 @@ procedure SETUP:[]{O---}:
           ATHROW
          L14
          FRAME SAME
+          ALOAD 1
+          BIPUSH 8
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L15
           RETURN
 [8]_asm_proceduresetup_if_6 "if" boolean => void
       _equal "=" double,double => boolean
         _randomconst:2 "random" => double
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  arg0
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -561,6 +602,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [9]_asm_proceduresetup_setpatchvariable_7 "set" Object => void
       _constdouble:35.0 "brown" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -574,9 +618,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 10
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setpatchvariable_7 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -591,8 +632,13 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 10
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [10]_asm_proceduresetup_done_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -601,6 +647,7 @@ procedure SETUP:[]{O---}:
           RETURN
 [11]_crofast:SHEEP "create-ordered-sheep"
       _asm_proceduresetup_observervariable_9 "init-sheep" => Object
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetup_observervariable_9.world : Lorg/nlogo/agent/World;
@@ -611,6 +658,9 @@ procedure SETUP:[]{O---}:
             ARETURN
 [12]_asm_proceduresetup_ask_10 "ask" AgentSet => void
       _breed:SHEEP "sheep" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_10.world : Lorg/nlogo/agent/World;
@@ -667,6 +717,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [13]_asm_proceduresetup_setturtleorlinkvariable_11 "set" Object => void
       _constdouble:9.9 "white" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -680,9 +733,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 14
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_11 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -697,12 +747,25 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 14
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [14]_asm_proceduresetup_setturtlevariable_12 "set" Object => void
       _randomfloat "random-float" double => double
         _mult "*" double,double => double
           _constdouble:2.0 "2" => double
           _observervariable:SHEEP-METABOLISM "sheep-metabolism" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  d
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -761,9 +824,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L3
-          ALOAD 1
-          BIPUSH 15
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L11
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -778,9 +838,16 @@ procedure SETUP:[]{O---}:
           ATHROW
          L11
          FRAME SAME
+          ALOAD 1
+          BIPUSH 15
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L12
           RETURN
 [15]_asm_proceduresetup_setturtleorlinkvariable_13 "set" Object => void
       _conststring:"sheep" ""sheep"" => String
+          // parameter final  context
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC "sheep"
@@ -793,9 +860,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 16
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_13 org/nlogo/nvm/Context java/lang/String] [org/nlogo/api/AgentException]
@@ -810,12 +874,22 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 16
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [16]_asm_proceduresetup_setxy_14 "setxy" double,double => void
       _random "random" double => double
         _worldwidth "world-width" => double
       _random "random" double => double
         _worldheight "world-height" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  maxDouble
+          // parameter final  context
+          // parameter final  context
+          // parameter final  maxDouble
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -826,7 +900,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_14.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_14.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -890,7 +965,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_14.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_14.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -995,6 +1071,7 @@ procedure SETUP:[]{O---}:
          L19
           RETURN
 [17]_asm_proceduresetup_done_15 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1003,6 +1080,7 @@ procedure SETUP:[]{O---}:
           RETURN
 [18]_crofast:WOLVES "create-ordered-wolves"
       _asm_proceduresetup_observervariable_16 "init-wolves" => Object
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetup_observervariable_16.world : Lorg/nlogo/agent/World;
@@ -1013,6 +1091,9 @@ procedure SETUP:[]{O---}:
             ARETURN
 [19]_asm_proceduresetup_ask_17 "ask" AgentSet => void
       _breed:WOLVES "wolves" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.world : Lorg/nlogo/agent/World;
@@ -1069,6 +1150,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [20]_asm_proceduresetup_setturtleorlinkvariable_18 "set" Object => void
       _constdouble:0.0 "black" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -1082,9 +1166,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 21
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_18 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -1099,12 +1180,25 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 21
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [21]_asm_proceduresetup_setturtlevariable_19 "set" Object => void
       _randomfloat "random-float" double => double
         _mult "*" double,double => double
           _constdouble:2.0 "2" => double
           _observervariable:WOLF-METABOLISM "wolf-metabolism" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  d
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -1163,9 +1257,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L3
-          ALOAD 1
-          BIPUSH 22
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L11
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_19 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -1180,9 +1271,16 @@ procedure SETUP:[]{O---}:
           ATHROW
          L11
          FRAME SAME
+          ALOAD 1
+          BIPUSH 22
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L12
           RETURN
 [22]_asm_proceduresetup_setturtleorlinkvariable_20 "set" Object => void
       _conststring:"wolf" ""wolf"" => String
+          // parameter final  context
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           LDC "wolf"
@@ -1195,9 +1293,6 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          ALOAD 1
-          BIPUSH 23
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_20 org/nlogo/nvm/Context java/lang/String] [org/nlogo/api/AgentException]
@@ -1212,12 +1307,22 @@ procedure SETUP:[]{O---}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          BIPUSH 23
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [23]_asm_proceduresetup_setxy_21 "setxy" double,double => void
       _random "random" double => double
         _worldwidth "world-width" => double
       _random "random" double => double
         _worldheight "world-height" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  maxDouble
+          // parameter final  context
+          // parameter final  context
+          // parameter final  maxDouble
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -1228,7 +1333,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_21.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_21.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -1292,7 +1398,8 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_21.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setxy_21.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -1397,6 +1504,7 @@ procedure SETUP:[]{O---}:
          L19
           RETURN
 [24]_asm_proceduresetup_done_22 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1405,6 +1513,9 @@ procedure SETUP:[]{O---}:
           RETURN
 [25]_asm_proceduresetup_if_23 "if" boolean => void
       _observervariable:PLOT? "plot?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -1466,6 +1577,7 @@ procedure SETUP:[]{O---}:
          L1
           RETURN
 [27]_asm_proceduresetup_return_25 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -1478,6 +1590,9 @@ procedure SETUP:[]{O---}:
 procedure GO:[]{O---}:
 [0]_asm_procedurego_ask_0 "ask" AgentSet => void
       _breed:SHEEP "sheep" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
@@ -1552,6 +1667,9 @@ procedure GO:[]{O---}:
           RETURN
 [2]_asm_procedurego_if_2 "if" boolean => void
       _observervariable:GRASS? "grass?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -1598,6 +1716,13 @@ procedure GO:[]{O---}:
       _minus "-" double,double => double
         _turtlevariable:ENERGY "energy" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1662,9 +1787,6 @@ procedure GO:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L6
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L12
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurego_setturtlevariable_3 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -1679,6 +1801,10 @@ procedure GO:[]{O---}:
           ATHROW
          L12
          FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L13
           RETURN
 [4]_asm_procedurego_call_4 "eat-grass"
          L0
@@ -1735,6 +1861,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [7]_asm_procedurego_done_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1743,6 +1870,9 @@ procedure GO:[]{O---}:
           RETURN
 [8]_asm_procedurego_ask_8 "ask" AgentSet => void
       _breed:WOLVES "wolves" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_8.world : Lorg/nlogo/agent/World;
@@ -1819,6 +1949,13 @@ procedure GO:[]{O---}:
       _minus "-" double,double => double
         _turtlevariable:ENERGY "energy" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -1883,9 +2020,6 @@ procedure GO:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L6
-          ALOAD 1
-          BIPUSH 11
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L12
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurego_setturtlevariable_10 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -1900,6 +2034,10 @@ procedure GO:[]{O---}:
           ATHROW
          L12
          FRAME SAME
+          ALOAD 1
+          BIPUSH 11
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L13
           RETURN
 [11]_asm_procedurego_call_11 "catch-sheep"
          L0
@@ -1956,6 +2094,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [14]_asm_procedurego_done_14 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -1964,6 +2103,9 @@ procedure GO:[]{O---}:
           RETURN
 [15]_asm_procedurego_if_15 "if" boolean => void
       _observervariable:GRASS? "grass?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -2008,6 +2150,9 @@ procedure GO:[]{O---}:
           RETURN
 [16]_asm_procedurego_ask_16 "ask" AgentSet => void
       _patches "patches" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_16.world : Lorg/nlogo/agent/World;
@@ -2080,6 +2225,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [18]_asm_procedurego_done_18 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2088,6 +2234,9 @@ procedure GO:[]{O---}:
           RETURN
 [19]_asm_procedurego_if_19 "if" boolean => void
       _observervariable:PLOT? "plot?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -2154,6 +2303,15 @@ procedure GO:[]{O---}:
         _count "count" AgentSet => double
           _turtles "turtles" => AgentSet
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  arg0
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_21.world : Lorg/nlogo/agent/World;
@@ -2232,6 +2390,7 @@ procedure GO:[]{O---}:
          L3
           RETURN
 [24]_asm_procedurego_return_23 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2246,6 +2405,13 @@ procedure MOVE:[]{-T--}:
       _minus "-" double,double => double
         _randomconst:50 "random" => double
         _randomconst:50 "random" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  delta
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -2279,25 +2445,28 @@ procedure MOVE:[]{-T--}:
          L4
           RETURN
 [1]_asm_proceduremove_fd1_1 "fd" => void
-          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+          // parameter final  context
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           DCONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
-          GOTO L2
          L1
-         FRAME SAME1 org/nlogo/api/AgentException
-          ASTORE 2
+          GOTO L3
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
+          POP
+         L3
          FRAME SAME
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L3
+         L4
           RETURN
 [2]_asm_proceduremove_return_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2312,6 +2481,13 @@ procedure EAT-GRASS:[]{-T--}:
       _equal "=" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2338,11 +2514,9 @@ procedure EAT-GRASS:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 5
+          ALOAD 2
           CHECKCAST java/lang/Double
           ASTORE 6
           DLOAD 3
@@ -2353,19 +2527,19 @@ procedure EAT-GRASS:[]{-T--}:
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 7
+          ISTORE 5
           GOTO L8
          L5
-         FRAME CHOP 1
+         FRAME CHOP 2
           ICONST_0
-          ISTORE 7
+          ISTORE 5
          L8
-         FRAME APPEND [T I]
-          ILOAD 7
+         FRAME APPEND [I]
+          ILOAD 5
          L9
           ISTORE 2
           ALOAD 1
@@ -2374,15 +2548,18 @@ procedure EAT-GRASS:[]{-T--}:
           ICONST_1
           GOTO L11
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
           ICONST_3
          L11
-         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
 [1]_asm_procedureeatgrass_setpatchvariable_1 "set" Object => void
       _constdouble:35.0 "brown" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -2396,9 +2573,6 @@ procedure EAT-GRASS:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -2413,11 +2587,22 @@ procedure EAT-GRASS:[]{-T--}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [2]_asm_procedureeatgrass_setturtlevariable_2 "set" Object => void
       _plus "+" double,double => double
         _turtlevariable:ENERGY "energy" => Object
         _observervariable:SHEEP-METABOLISM "sheep-metabolism" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d1
+          // parameter final  d2
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -2507,9 +2692,6 @@ procedure EAT-GRASS:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L8
-          ALOAD 1
-          ICONST_3
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L15
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_setturtlevariable_2 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -2524,8 +2706,13 @@ procedure EAT-GRASS:[]{-T--}:
           ATHROW
          L15
          FRAME SAME
+          ALOAD 1
+          ICONST_3
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L16
           RETURN
 [3]_asm_procedureeatgrass_return_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2541,6 +2728,15 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
         _randomfloat "random-float" double => double
           _constdouble:100.0 "100" => double
         _observervariable:SHEEP-REPRODUCE "sheep-reproduce" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 100.0
          L1
@@ -2561,11 +2757,9 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ASTORE 4
           DSTORE 2
           ALOAD 4
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L4
-          ALOAD 5
+          ALOAD 4
           CHECKCAST java/lang/Double
           ASTORE 6
           DLOAD 2
@@ -2576,15 +2770,14 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ICONST_1
           GOTO L6
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context D java/lang/Object java/lang/Object java/lang/Double] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context D java/lang/Object T java/lang/Double] []
           ICONST_0
          L6
          FRAME SAME1 I
-          ISTORE 7
-          ILOAD 7
+          ISTORE 5
           GOTO L7
          L4
-         FRAME CHOP 1
+         FRAME CHOP 2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2613,26 +2806,34 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context D java/lang/Object java/lang/Object java/lang/Double I] [I]
+         FRAME APPEND [I java/lang/Double]
+          ILOAD 5
+         L8
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L9
           ICONST_1
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context I T java/lang/Object java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context]
-          BIPUSH 6
+          GOTO L10
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context I T java/lang/Object java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context I]
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context]
+          BIPUSH 6
          L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_if_0 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context I]
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L11
           RETURN
 [1]_asm_procedurereproducesheep_setturtlevariable_1 "set" Object => void
       _round "round" double => double
         _div "/" double,double => double
           _turtlevariable:ENERGY "energy" => Object
           _constdouble:2.0 "2" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2718,9 +2919,6 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L6
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L14
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurereproducesheep_setturtlevariable_1 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -2735,9 +2933,14 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ATHROW
          L14
          FRAME SAME
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L15
           RETURN
 [2]_hatch:,+6 "hatch"
       _asm_procedurereproducesheep_constdouble_2 "1" => Double
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurereproducesheep_constdouble_2.kept1_value : Ljava/lang/Double;
@@ -2745,6 +2948,9 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
             ARETURN
 [3]_asm_procedurereproducesheep_right_3 "rt" double => void
       _randomconst:360 "random" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  delta
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -2765,25 +2971,28 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
          L2
           RETURN
 [4]_asm_procedurereproducesheep_fd1_4 "fd" => void
-          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+          // parameter final  context
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           DCONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
-          GOTO L2
          L1
-         FRAME SAME1 org/nlogo/api/AgentException
-          ASTORE 2
+          GOTO L3
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
+          POP
+         L3
          FRAME SAME
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L3
+         L4
           RETURN
 [5]_asm_procedurereproducesheep_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -2791,6 +3000,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
          L1
           RETURN
 [6]_asm_procedurereproducesheep_return_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -2806,6 +3016,15 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
         _randomfloat "random-float" double => double
           _constdouble:100.0 "100" => double
         _observervariable:WOLF-REPRODUCE "wolf-reproduce" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  arg0
          L0
           LDC 100.0
          L1
@@ -2826,11 +3045,9 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ASTORE 4
           DSTORE 2
           ALOAD 4
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L4
-          ALOAD 5
+          ALOAD 4
           CHECKCAST java/lang/Double
           ASTORE 6
           DLOAD 2
@@ -2841,15 +3058,14 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ICONST_1
           GOTO L6
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context D java/lang/Object java/lang/Object java/lang/Double] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context D java/lang/Object T java/lang/Double] []
           ICONST_0
          L6
          FRAME SAME1 I
-          ISTORE 7
-          ILOAD 7
+          ISTORE 5
           GOTO L7
          L4
-         FRAME CHOP 1
+         FRAME CHOP 2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2878,26 +3094,34 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context D java/lang/Object java/lang/Object java/lang/Double I] [I]
+         FRAME APPEND [I java/lang/Double]
+          ILOAD 5
+         L8
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L9
           ICONST_1
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context I T java/lang/Object java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context]
-          BIPUSH 6
+          GOTO L10
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context I T java/lang/Object java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context I]
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context]
+          BIPUSH 6
          L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_if_0 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context I]
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L11
           RETURN
 [1]_asm_procedurereproducewolves_setturtlevariable_1 "set" Object => void
       _round "round" double => double
         _div "/" double,double => double
           _turtlevariable:ENERGY "energy" => Object
           _constdouble:2.0 "2" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -2983,9 +3207,6 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L6
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L14
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurereproducewolves_setturtlevariable_1 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -3000,9 +3221,14 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ATHROW
          L14
          FRAME SAME
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L15
           RETURN
 [2]_hatch:,+6 "hatch"
       _asm_procedurereproducewolves_constdouble_2 "1" => Double
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurereproducewolves_constdouble_2.kept1_value : Ljava/lang/Double;
@@ -3010,6 +3236,9 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
             ARETURN
 [3]_asm_procedurereproducewolves_right_3 "rt" double => void
       _randomconst:360 "random" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  delta
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -3030,25 +3259,28 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
          L2
           RETURN
 [4]_asm_procedurereproducewolves_fd1_4 "fd" => void
-          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+          // parameter final  context
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Turtle
           DCONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
-          GOTO L2
          L1
-         FRAME SAME1 org/nlogo/api/AgentException
-          ASTORE 2
+          GOTO L3
          L2
+         FRAME SAME1 org/nlogo/api/AgentException
+          POP
+         L3
          FRAME SAME
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L3
+         L4
           RETURN
 [5]_asm_procedurereproducewolves_done_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3056,6 +3288,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
          L1
           RETURN
 [6]_asm_procedurereproducewolves_return_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3069,6 +3302,11 @@ procedure CATCH-SHEEP:[]{-T--}:
 [0]_asm_procedurecatchsheep_setturtlevariable_0 "set" Object => void
       _oneof "one-of" AgentSet => Object
         _breedhere:SHEEP "sheep-here" => AgentSet
+          // parameter final  context
+          // parameter final  context
+          // parameter final  agents
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 1
@@ -3079,10 +3317,8 @@ procedure CATCH-SHEEP:[]{-T--}:
           IFEQ L4
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 5
+          ASTORE 2
           GOTO L5
          L4
          FRAME APPEND [T org/nlogo/agent/Agent]
@@ -3091,60 +3327,55 @@ procedure CATCH-SHEEP:[]{-T--}:
           IFEQ L6
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 6
-          ALOAD 6
-          ASTORE 5
-         L5
-         FRAME APPEND [T org/nlogo/agent/Patch]
-          ALOAD 5
           ASTORE 2
+          GOTO L5
+         L6
+         FRAME SAME
+          NEW scala/MatchError
+          DUP
+          ALOAD 3
+          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          ATHROW
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
           NEW org/nlogo/agent/AgentSetBuilder
           DUP
           GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtleCount ()I
           INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
-          ASTORE 7
+          ASTORE 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           LDC "SHEEP"
           INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
-          ASTORE 8
+          ASTORE 5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
-          ASTORE 9
+          ASTORE 6
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch T org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] []
-          ALOAD 9
+         FRAME APPEND [org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator]
+          ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L8
-          ALOAD 9
+          ALOAD 6
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 10
-          ALOAD 10
-          INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/AgentSet;
-          ALOAD 8
-          IF_ACMPNE L7
+          ASTORE 7
           ALOAD 7
-          ALOAD 10
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/AgentSet;
+          ALOAD 5
+          IF_ACMPNE L7
+          ALOAD 4
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L7
          L8
          FRAME SAME
-          ALOAD 7
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/AgentSet;
-          GOTO L9
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context T org/nlogo/agent/Agent] []
-          NEW scala/MatchError
-          DUP
-          ALOAD 3
-          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
-          ATHROW
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T org/nlogo/agent/Patch T org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] [org/nlogo/agent/AgentSet]
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
@@ -3155,7 +3386,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L11
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I T org/nlogo/agent/Patch T org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -3174,12 +3405,9 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L12
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I T org/nlogo/agent/Patch T org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] [org/nlogo/api/AgentException]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentSet java/util/Iterator] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -3191,11 +3419,22 @@ procedure CATCH-SHEEP:[]{-T--}:
           ATHROW
          L12
          FRAME SAME
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L13
           RETURN
 [1]_asm_procedurecatchsheep_if_1 "if" boolean => void
       _notequal "!=" Object,Object => boolean
         _turtlevariable:PREY "prey" => Object
         _nobody "nobody" => Nobody$
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3225,12 +3464,12 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/api/Equality$.equals (Ljava/lang/Object;Ljava/lang/Object;)Z
-          IFEQ L5
-          ICONST_0
+          IFNE L5
+          ICONST_1
           GOTO L6
          L5
          FRAME APPEND [java/lang/Object org/nlogo/core/Nobody$]
-          ICONST_1
+          ICONST_0
          L6
          FRAME SAME1 I
           ISTORE 2
@@ -3249,6 +3488,9 @@ procedure CATCH-SHEEP:[]{-T--}:
           RETURN
 [2]_asm_procedurecatchsheep_ask_2 "ask" Object => void
       _turtlevariable:PREY "prey" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  target
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3272,18 +3514,16 @@ procedure CATCH-SHEEP:[]{-T--}:
          FRAME SAME1 java/lang/Object
           ASTORE 2
           ALOAD 2
-          ASTORE 4
-          ALOAD 4
           INSTANCEOF org/nlogo/agent/AgentSet
           IFEQ L4
-          ALOAD 4
+          ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
-          ASTORE 5
+          ASTORE 4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
           IFNE L5
-          ALOAD 5
+          ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
@@ -3299,8 +3539,8 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_ask_2 org/nlogo/nvm/Context java/lang/Object T java/lang/Object org/nlogo/agent/AgentSet] []
-          ALOAD 5
+         FRAME APPEND [java/lang/Object T org/nlogo/agent/AgentSet]
+          ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
@@ -3317,18 +3557,18 @@ procedure CATCH-SHEEP:[]{-T--}:
           ATHROW
          L5
          FRAME SAME
-          ALOAD 5
-          ASTORE 6
+          ALOAD 4
+          ASTORE 3
           GOTO L7
          L4
-         FRAME CHOP 1
-          ALOAD 4
+         FRAME CHOP 2
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L8
-          ALOAD 4
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
-          ASTORE 7
-          ALOAD 7
+          ASTORE 5
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
@@ -3345,7 +3585,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          ALOAD 7
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
@@ -3355,23 +3595,12 @@ procedure CATCH-SHEEP:[]{-T--}:
          L9
          FRAME APPEND [T T org/nlogo/agent/Agent]
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
-          ALOAD 7
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
-          ASTORE 6
-         L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_ask_2 org/nlogo/nvm/Context java/lang/Object T java/lang/Object T org/nlogo/agent/AgentSet] []
-          ALOAD 6
           ASTORE 3
-          ALOAD 1
-          ALOAD 3
-          ICONST_3
-          INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
-          ALOAD 1
-          ICONST_5
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L10
+          GOTO L7
          L8
-         FRAME CHOP 2
+         FRAME CHOP 3
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -3385,11 +3614,22 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
+         L7
+         FRAME APPEND [org/nlogo/agent/AgentSet]
+          ALOAD 1
+          ALOAD 3
+          ICONST_3
+          INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
+          ALOAD 1
+          ICONST_5
+          PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_ask_2 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet java/lang/Object T org/nlogo/agent/AgentSet] []
           RETURN
 [3]_asm_procedurecatchsheep_setturtlevariable_3 "set" Object => void
       _constdouble:-1.0 "-1" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -3403,9 +3643,6 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_3 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -3420,8 +3657,13 @@ procedure CATCH-SHEEP:[]{-T--}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [4]_asm_procedurecatchsheep_done_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_1
@@ -3432,6 +3674,13 @@ procedure CATCH-SHEEP:[]{-T--}:
       _plus "+" double,double => double
         _turtlevariable:ENERGY "energy" => Object
         _observervariable:WOLF-METABOLISM "wolf-metabolism" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d1
+          // parameter final  d2
+          // parameter final  context
+          // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
@@ -3521,9 +3770,6 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L8
-          ALOAD 1
-          BIPUSH 6
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L15
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_5 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -3538,8 +3784,13 @@ procedure CATCH-SHEEP:[]{-T--}:
           ATHROW
          L15
          FRAME SAME
+          ALOAD 1
+          BIPUSH 6
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L16
           RETURN
 [6]_asm_procedurecatchsheep_return_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3554,6 +3805,13 @@ procedure DEATH:[]{-T--}:
       _lessthan "<" Object,double => boolean
         _turtlevariable:ENERGY "energy" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  arg1
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3580,14 +3838,10 @@ procedure DEATH:[]{-T--}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 5
+          ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
-          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DLOAD 3
           DCMPG
@@ -3595,15 +3849,14 @@ procedure DEATH:[]{-T--}:
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
+         FRAME APPEND [java/lang/Object D]
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 7
-          ILOAD 7
+          ISTORE 5
           GOTO L8
          L5
-         FRAME CHOP 1
+         FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -3632,20 +3885,22 @@ procedure DEATH:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
-         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double I] [I]
+         FRAME APPEND [I]
+          ILOAD 5
+         L9
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L9
+          IFEQ L10
           ICONST_1
-          GOTO L10
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context I D java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context]
-          ICONST_2
+          GOTO L11
          L10
-         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context I D java/lang/Object java/lang/Double I] [org/nlogo/nvm/Context I]
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          ICONST_2
          L11
+         FRAME FULL [org/nlogo/prim/_asm_proceduredeath_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L12
           RETURN
 [1]_asm_proceduredeath_die_1 "die" => void
          L0
@@ -3672,6 +3927,7 @@ procedure DEATH:[]{-T--}:
          L3
           RETURN
 [2]_asm_proceduredeath_return_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3686,6 +3942,13 @@ procedure GROW-GRASS:[]{-TP-}:
       _equal "=" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:35.0 "brown" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3712,11 +3975,9 @@ procedure GROW-GRASS:[]{-TP-}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 5
+          ALOAD 2
           CHECKCAST java/lang/Double
           ASTORE 6
           DLOAD 3
@@ -3727,19 +3988,19 @@ procedure GROW-GRASS:[]{-TP-}:
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 7
+          ISTORE 5
           GOTO L8
          L5
-         FRAME CHOP 1
+         FRAME CHOP 2
           ICONST_0
-          ISTORE 7
+          ISTORE 5
          L8
-         FRAME APPEND [T I]
-          ILOAD 7
+         FRAME APPEND [I]
+          ILOAD 5
          L9
           ISTORE 2
           ALOAD 1
@@ -3748,10 +4009,10 @@ procedure GROW-GRASS:[]{-TP-}:
           ICONST_1
           GOTO L11
          L10
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context]
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
           BIPUSH 6
          L11
-         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D java/lang/Object T I] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
@@ -3759,6 +4020,10 @@ procedure GROW-GRASS:[]{-TP-}:
       _lessorequal "<=" Object,double => boolean
         _patchvariable:COUNTDOWN "countdown" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3843,6 +4108,9 @@ procedure GROW-GRASS:[]{-TP-}:
           RETURN
 [2]_asm_proceduregrowgrass_setpatchvariable_2 "set" Object => void
       _constdouble:55.0 "green" => Double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -3856,9 +4124,6 @@ procedure GROW-GRASS:[]{-TP-}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_3
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
@@ -3873,9 +4138,16 @@ procedure GROW-GRASS:[]{-TP-}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          ICONST_3
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [3]_asm_proceduregrowgrass_setpatchvariable_3 "set" Object => void
       _observervariable:GRASS-DELAY "grass-delay" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
@@ -3892,9 +4164,6 @@ procedure GROW-GRASS:[]{-TP-}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L1
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L5
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
@@ -3909,8 +4178,13 @@ procedure GROW-GRASS:[]{-TP-}:
           ATHROW
          L5
          FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
           RETURN
 [4]_asm_proceduregrowgrass_goto_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 6
@@ -3921,6 +4195,13 @@ procedure GROW-GRASS:[]{-TP-}:
       _minus "-" double,double => double
         _patchvariable:COUNTDOWN "countdown" => Object
         _constdouble:1.0 "1" => double
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  d0
+          // parameter final  d1
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
@@ -3985,9 +4266,6 @@ procedure GROW-GRASS:[]{-TP-}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L6
-          ALOAD 1
-          BIPUSH 6
-          PUTFIELD org/nlogo/nvm/Context.ip : I
           GOTO L12
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
@@ -4002,8 +4280,13 @@ procedure GROW-GRASS:[]{-TP-}:
           ATHROW
          L12
          FRAME SAME
+          ALOAD 1
+          BIPUSH 6
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L13
           RETURN
 [6]_asm_proceduregrowgrass_return_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -4016,6 +4299,7 @@ procedure GROW-GRASS:[]{-TP-}:
 procedure GRAPH:[]{OTPL}:
 [0]_setcurrentplotpen "set-current-plot-pen"
       _asm_proceduregraph_conststring_0 ""sheep"" => String
+            // parameter final  context
            L0
             LDC "sheep"
            L1
@@ -4023,6 +4307,9 @@ procedure GRAPH:[]{OTPL}:
 [1]_plot "plot"
       _asm_proceduregraph_count_1 "count" AgentSet => double
         _breed:SHEEP "sheep" => AgentSet
+            // parameter final  context
+            // parameter final  context
+            // parameter final  arg0
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduregraph_count_1.world : Lorg/nlogo/agent/World;
@@ -4042,6 +4329,7 @@ procedure GRAPH:[]{OTPL}:
             ARETURN
 [2]_setcurrentplotpen "set-current-plot-pen"
       _asm_proceduregraph_conststring_2 ""wolves"" => String
+            // parameter final  context
            L0
             LDC "wolves"
            L1
@@ -4049,6 +4337,9 @@ procedure GRAPH:[]{OTPL}:
 [3]_plot "plot"
       _asm_proceduregraph_count_3 "count" AgentSet => double
         _breed:WOLVES "wolves" => AgentSet
+            // parameter final  context
+            // parameter final  context
+            // parameter final  arg0
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduregraph_count_3.world : Lorg/nlogo/agent/World;
@@ -4068,6 +4359,9 @@ procedure GRAPH:[]{OTPL}:
             ARETURN
 [4]_asm_proceduregraph_if_4 "if" boolean => void
       _observervariable:GRASS? "grass?" => Object
+          // parameter final  context
+          // parameter final  context
+          // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -4112,6 +4406,7 @@ procedure GRAPH:[]{OTPL}:
           RETURN
 [5]_setcurrentplotpen "set-current-plot-pen"
       _asm_proceduregraph_conststring_5 ""grass / 4"" => String
+            // parameter final  context
            L0
             LDC "grass / 4"
            L1
@@ -4123,6 +4418,11 @@ procedure GRAPH:[]{OTPL}:
           _asm_proceduregraph_equal_7 "=" Object,double => boolean
             _patchvariable:PCOLOR "pcolor" => Object
             _constdouble:55.0 "green" => double
+                // parameter final  context
+                // parameter final  context
+                // parameter final  context
+                // parameter final  arg0
+                // parameter final  d1
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                L0
                 ALOAD 1
@@ -4149,11 +4449,9 @@ procedure GRAPH:[]{OTPL}:
                 DSTORE 3
                 ASTORE 2
                 ALOAD 2
-                ASTORE 5
-                ALOAD 5
                 INSTANCEOF java/lang/Double
                 IFEQ L5
-                ALOAD 5
+                ALOAD 2
                 CHECKCAST java/lang/Double
                 ASTORE 6
                 DLOAD 3
@@ -4164,19 +4462,19 @@ procedure GRAPH:[]{OTPL}:
                 ICONST_1
                 GOTO L7
                L6
-               FRAME FULL [org/nlogo/prim/_asm_proceduregraph_equal_7 org/nlogo/nvm/Context java/lang/Object D java/lang/Object java/lang/Double] []
+               FRAME FULL [org/nlogo/prim/_asm_proceduregraph_equal_7 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
                 ICONST_0
                L7
                FRAME SAME1 I
-                ISTORE 7
+                ISTORE 5
                 GOTO L8
                L5
-               FRAME CHOP 1
+               FRAME CHOP 2
                 ICONST_0
-                ISTORE 7
+                ISTORE 5
                L8
-               FRAME APPEND [T I]
-                ILOAD 7
+               FRAME APPEND [I]
+                ILOAD 5
                L9
                 IFEQ L10
                 GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
@@ -4188,6 +4486,11 @@ procedure GRAPH:[]{OTPL}:
                FRAME SAME1 java/lang/Boolean
                 ARETURN
         _constdouble:4.0 "4" => double
+            // parameter final  context
+            // parameter final  context
+            // parameter final  sourceSet
+            // parameter final  block
+            // parameter final  context
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduregraph_div_6.world : Lorg/nlogo/agent/World;
@@ -4230,25 +4533,15 @@ procedure GRAPH:[]{OTPL}:
             IFEQ L4
             ALOAD 8
             CHECKCAST java/lang/Boolean
-            ASTORE 9
-            ALOAD 9
             INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-            IFEQ L5
+            IFEQ L2
             ILOAD 5
             ICONST_1
             IADD
             ISTORE 5
-            GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-            GOTO L6
-           L5
-           FRAME APPEND [org/nlogo/agent/Agent java/lang/Object java/lang/Boolean]
-            GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-           L6
-           FRAME SAME1 scala/runtime/BoxedUnit
-            ASTORE 10
             GOTO L2
            L4
-           FRAME CHOP 1
+           FRAME APPEND [org/nlogo/agent/Agent java/lang/Object]
             NEW org/nlogo/nvm/RuntimePrimitiveException
             DUP
             ALOAD 1
@@ -4283,15 +4576,15 @@ procedure GRAPH:[]{OTPL}:
            FRAME CHOP 2
             ILOAD 5
             I2D
-           L7
+           L5
             LDC 4.0
-           L8
+           L6
             DSTORE 4
             DSTORE 2
             DLOAD 4
             DCONST_0
             DCMPL
-            IFNE L9
+            IFNE L7
             NEW org/nlogo/nvm/RuntimePrimitiveException
             DUP
             ALOAD 1
@@ -4301,12 +4594,12 @@ procedure GRAPH:[]{OTPL}:
             INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L9
+           L7
            FRAME FULL [org/nlogo/prim/_asm_proceduregraph_div_6 org/nlogo/nvm/Context D D org/nlogo/agent/AgentIterator] []
             DLOAD 2
             DLOAD 4
             DDIV
-           L10
+           L8
             DSTORE 2
             NEW java/lang/Double
             DUP
@@ -4314,6 +4607,7 @@ procedure GRAPH:[]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
 [7]_asm_proceduregraph_return_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V

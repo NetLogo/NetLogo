@@ -16,6 +16,6 @@ public final strictfp class _precision extends Reporter implements Pure {
     double d = argEvalDoubleValue(context, 0);
     int numberOfPlaces = argEvalIntValue(context, 1);
     return validDouble(org.nlogo.api.Approximate.approximate
-        (d, numberOfPlaces));
+        (d, numberOfPlaces), context);
   }
 }

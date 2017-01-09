@@ -20,6 +20,6 @@ public final strictfp class _pow extends Reporter implements Pure {
 
   public double report_1(Context context, double d0, double d1)
       throws LogoException {
-    return validDouble(StrictMath.pow(d0, d1));
+    return validDouble(StrictMath.pow(d0, d1), context);
   }
 }

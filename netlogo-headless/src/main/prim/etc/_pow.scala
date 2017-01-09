@@ -15,6 +15,6 @@ class _pow extends Reporter with Pure {
         argEvalDoubleValue(context, 1)))
 
   def report_1(context: Context, d0: Double, d1: Double): Double =
-    validDouble(StrictMath.pow(d0, d1))
+    validDouble(StrictMath.pow(d0, d1), context)
 
 }

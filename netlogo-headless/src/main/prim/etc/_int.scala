@@ -9,5 +9,5 @@ class _int extends Reporter with Pure {
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
   def report_1(context: Context, d0: Double): Double =
-    validLong(d0).toDouble
+    validLong(d0, context).toDouble
 }

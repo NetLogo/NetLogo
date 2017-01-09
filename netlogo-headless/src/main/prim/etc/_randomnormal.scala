@@ -17,6 +17,6 @@ class _randomnormal extends Reporter {
       throw new RuntimePrimitiveException(
           context, this, I18N.errors.get(
             "org.nlogo.prim.etc._randomNormal.secondInputNotNegative"))
-    validDouble(mean + sdev * context.job.random.nextGaussian)
+    validDouble(mean + sdev * context.job.random.nextGaussian, context)
   }
 }

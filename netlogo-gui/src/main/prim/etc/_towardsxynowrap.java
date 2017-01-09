@@ -19,7 +19,7 @@ public final strictfp class _towardsxynowrap extends Reporter {
               (context.agent,
                   argEvalDoubleValue(context, 0),
                   argEvalDoubleValue(context, 1),
-                  false)); // true = don't wrap
+                  false), context); // true = don't wrap
     } catch (org.nlogo.api.AgentException ex) {
       throw new RuntimePrimitiveException
           (context, this, ex.getMessage());

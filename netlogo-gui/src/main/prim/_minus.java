@@ -19,6 +19,6 @@ public final strictfp class _minus extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double arg0, double arg1) throws LogoException {
-    return validDouble(arg0 - arg1);
+    return validDouble(arg0 - arg1, context);
   }
 }

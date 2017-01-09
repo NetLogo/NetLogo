@@ -9,5 +9,5 @@ class _acos extends Reporter with Pure {
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
   def report_1(context: Context, arg0: Double): Double =
-    validDouble(StrictMath.toDegrees(StrictMath.acos(arg0)))
+    validDouble(StrictMath.toDegrees(StrictMath.acos(arg0)), context)
 }

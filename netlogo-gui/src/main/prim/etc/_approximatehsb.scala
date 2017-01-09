@@ -15,7 +15,7 @@ class _approximatehsb extends Reporter with Pure {
         argEvalDoubleValue(context, 2));
 
   def report_1(context: Context, h: Double, s: Double, b: Double): java.lang.Double =
-    validDouble(api.Color.getClosestColorNumberByHSB(h.toFloat, s.toFloat, b.toFloat))
+    validDouble(api.Color.getClosestColorNumberByHSB(h.toFloat, s.toFloat, b.toFloat), context)
 }
 
 class _approximatehsbold extends Reporter with Pure {
@@ -27,5 +27,5 @@ class _approximatehsbold extends Reporter with Pure {
         argEvalDoubleValue(context, 2));
 
   def report_1(context: Context, h: Double, s: Double, b: Double): java.lang.Double =
-    validDouble(api.Color.getClosestColorNumberByHSB(h.toFloat * (360.0f / 255.0f), s.toFloat * (100.0f / 255.0f), b.toFloat * (100.0f / 255.0f)))
+    validDouble(api.Color.getClosestColorNumberByHSB(h.toFloat * (360.0f / 255.0f), s.toFloat * (100.0f / 255.0f), b.toFloat * (100.0f / 255.0f)), context)
 }

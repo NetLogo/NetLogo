@@ -15,7 +15,7 @@ class _towardspitchxyznowrap extends Reporter {
       argEvalDoubleValue(context, 0),
       argEvalDoubleValue(context, 1),
       argEvalDoubleValue(context, 2),
-      false)) // true = don't wrap
+      false), context) // true = don't wrap
     catch {
       case ex: AgentException =>
         throw new RuntimePrimitiveException(context, this, ex.getMessage)

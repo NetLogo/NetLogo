@@ -33,6 +33,6 @@ public final strictfp class _approximatergb extends Reporter implements Pure {
             ((0xff << 24) +
                 (StrictMath.round(r) << 16) +
                 (StrictMath.round(g) << 8) +
-                (StrictMath.round(b))));
+                (StrictMath.round(b))), context);
   }
 }

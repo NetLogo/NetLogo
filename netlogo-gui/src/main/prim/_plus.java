@@ -15,10 +15,10 @@ public final strictfp class _plus extends Reporter implements Pure {
   public Object report(Context context) throws LogoException {
     return validDouble
         (argEvalDoubleValue(context, 0) +
-            argEvalDoubleValue(context, 1));
+            argEvalDoubleValue(context, 1), context);
   }
 
   public double report_1(Context context, double d1, double d2) throws LogoException {
-    return validDouble(d1 + d2);
+    return validDouble(d1 + d2, context);
   }
 }

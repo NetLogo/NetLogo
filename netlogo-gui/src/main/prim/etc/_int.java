@@ -17,6 +17,6 @@ public final strictfp class _int extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double d0) throws LogoException {
-    return validLong(d0);
+    return validLong(d0, context);
   }
 }

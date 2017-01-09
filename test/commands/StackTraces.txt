@@ -132,3 +132,10 @@
     called by procedure GO\
     called by procedure GO2\
     called by procedure __EVALUATOR
+
+*StackTraces-NumericRangeExceeded
+  turtles-own [ n ]
+  O> crt 10000 [ set n e ^ 706 ]
+  O> show sum [ n ] of turtles => STACKTRACE math operation produced a number too large for NetLogo\
+  error while observer running SUM\
+    called by procedure __EVALUATOR

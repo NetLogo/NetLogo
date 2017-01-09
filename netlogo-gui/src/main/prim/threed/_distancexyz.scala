@@ -15,5 +15,5 @@ class _distancexyz extends Reporter {
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1),
         argEvalDoubleValue(context, 2),
-        true)) // wrap = true
+        true), context) // wrap = true
 }

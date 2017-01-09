@@ -581,7 +581,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1462,7 +1463,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setturtlevariable_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L11
           DSTORE 2
           NEW java/lang/Double
@@ -2129,7 +2131,8 @@ procedure SETUP-NODES:[]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.world : Lorg/nlogo/agent/World;
@@ -2164,7 +2167,8 @@ procedure SETUP-NODES:[]{O---}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 4
           DSTORE 2
@@ -2266,7 +2270,8 @@ procedure SETUP-NODES:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setturtlevariable_5.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnodes_setturtlevariable_5.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -2436,7 +2441,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DLOAD 2
           DLOAD 4
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           LDC 2.0
          L10
@@ -2461,7 +2467,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 2
           NEW java/lang/Double
@@ -3090,7 +3097,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -3205,7 +3213,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_div_16.validDouble (DLorg/nlogo/nvm/Context;)D
            L9
             DSTORE 2
             NEW java/lang/Double
@@ -3675,7 +3684,8 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurespreadvirus_if_4.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurespreadvirus_if_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4043,7 +4053,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_2.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_2.validDouble (DLorg/nlogo/nvm/Context;)D
            L10
             LDC 100.0
            L11
@@ -4053,7 +4064,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_2.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_2.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             DSTORE 2
             NEW java/lang/Double
@@ -4210,7 +4222,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_5.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_5.validDouble (DLorg/nlogo/nvm/Context;)D
            L10
             LDC 100.0
            L11
@@ -4220,7 +4233,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_5.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_5.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             DSTORE 2
             NEW java/lang/Double
@@ -4377,7 +4391,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DDIV
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_8.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_8.validDouble (DLorg/nlogo/nvm/Context;)D
            L10
             LDC 100.0
            L11
@@ -4387,7 +4402,8 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             DLOAD 4
             DMUL
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_8.validDouble (D)D
+            ALOAD 1
+            INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdateplot_mult_8.validDouble (DLorg/nlogo/nvm/Context;)D
            L12
             DSTORE 2
             NEW java/lang/Double

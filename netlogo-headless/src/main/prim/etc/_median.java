@@ -42,8 +42,7 @@ public final strictfp class _median
     }
     Double middle1 = nums.get(medianPos - 1);
     Double middle2 = nums.get(medianPos);
-    return newValidDouble
-        ((middle1.doubleValue() + middle2.doubleValue()) / 2);
+    return newValidDouble((middle1.doubleValue() + middle2.doubleValue()) / 2, context);
   }
 
 }

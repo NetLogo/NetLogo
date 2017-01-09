@@ -53,6 +53,6 @@ public final strictfp class _scalecolor extends Reporter implements Pure {
     } else if (perc < 0) {
       perc = 0;
     }
-    return validDouble(color + perc);
+    return validDouble(color + perc, context);
   }
 }

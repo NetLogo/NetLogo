@@ -16,7 +16,7 @@ class _repeatlocal(private[this] val vn: Int) extends Command with CustomAssembl
 
   @throws(classOf[LogoException])
   def perform_1(context: Context, arg0: Double): Unit = {
-    context.activation.args(vn) = new MutableLong(validLong(arg0))
+    context.activation.args(vn) = new MutableLong(validLong(arg0, context))
     context.ip = offset
   }
 

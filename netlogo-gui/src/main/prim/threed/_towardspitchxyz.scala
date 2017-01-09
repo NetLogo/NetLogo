@@ -16,7 +16,7 @@ class _towardspitchxyz extends Reporter {
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1),
         argEvalDoubleValue(context, 2),
-        true)) // true = wrap
+        true), context) // true = wrap
     catch {
       case ex: AgentException =>
         throw new RuntimePrimitiveException(context, this, ex.getMessage)

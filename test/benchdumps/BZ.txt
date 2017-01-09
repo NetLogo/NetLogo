@@ -93,7 +93,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (DLorg/nlogo/nvm/Context;)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -941,12 +942,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L17
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validLong (DLorg/nlogo/nvm/Context;)J
           L2D
          L18
           ALOAD 1
@@ -1021,12 +1024,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validLong (DLorg/nlogo/nvm/Context;)J
           L2D
          L25
           DSTORE 4
@@ -1035,7 +1040,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
          L26
           DSTORE 2
           NEW java/lang/Double
@@ -1196,7 +1202,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          FRAME FULL [org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10 org/nlogo/nvm/Context org/nlogo/agent/Patch D org/nlogo/agent/AgentIterator] [D]
           ALOAD 0
           DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L12
           DSTORE 4
           DSTORE 2
@@ -1204,7 +1211,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setprocedurevariable_10.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -1327,7 +1335,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L18
           DCONST_1
          L19
@@ -1337,7 +1346,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L20
           DSTORE 4
           DSTORE 2
@@ -1360,12 +1370,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DDIV
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L22
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validLong (DLorg/nlogo/nvm/Context;)J
           L2D
          L23
           ALOAD 1
@@ -1399,7 +1411,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
          L26
           DSTORE 2
           NEW java/lang/Double
@@ -1998,7 +2011,8 @@ procedure GO:[]{O---}:
           DLOAD 2
           DLOAD 10
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_5.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_setpatchvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           NEW java/lang/Double
@@ -2149,12 +2163,14 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 4
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1.validLong (D)J
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_1.validLong (DLorg/nlogo/nvm/Context;)J
           LSTORE 4
           DLOAD 2
           LLOAD 4
@@ -2425,7 +2441,8 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           DLOAD 10
           DADD
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_2.validDouble (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setpatchvariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L24
           DSTORE 2
           NEW java/lang/Double

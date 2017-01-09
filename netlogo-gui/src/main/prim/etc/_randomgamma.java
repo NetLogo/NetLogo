@@ -24,6 +24,6 @@ public final strictfp class _randomgamma extends Reporter {
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc._randomgamma.noNegativeInputs", displayName()));
     }
-    return validDouble(org.nlogo.agent.Gamma.nextDouble(context.job.random, alpha, lambda));
+    return validDouble(org.nlogo.agent.Gamma.nextDouble(context.job.random, alpha, lambda), context);
   }
 }

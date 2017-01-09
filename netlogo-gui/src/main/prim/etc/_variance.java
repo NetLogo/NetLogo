@@ -46,6 +46,6 @@ public final strictfp class _variance extends Reporter implements Pure {
             StrictMath.pow(((Number) elt).doubleValue() - mean, 2);
       }
     }
-    return validDouble(squareOfDifference / (listSize - badElts - 1));
+    return validDouble(squareOfDifference / (listSize - badElts - 1), context);
   }
 }

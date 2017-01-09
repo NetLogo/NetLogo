@@ -27,6 +27,6 @@ public final strictfp class _sum extends Reporter implements Pure {
         sum += ((Double) elt).doubleValue();
       }
     }
-    return validDouble(sum);
+    return validDouble(sum, context);
   }
 }

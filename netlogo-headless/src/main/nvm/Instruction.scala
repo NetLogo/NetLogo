@@ -337,27 +337,27 @@ abstract class Instruction extends InstructionJ with TokenHolder {
 
   /// checking of numeric types
 
-  def validLong(d: Double): Long = {
+  def validLong(d: Double, context: Context): Long = {
     // 9007199254740992 is the largest/smallest integer
     // exactly representable in a double - ST 1/29/08
     if (d > 9007199254740992L || d < -9007199254740992L)
-      throw new RuntimePrimitiveException(null, this,
+      throw new RuntimePrimitiveException(context, this,
         s"$d is too large to be represented exactly as an integer in NetLogo")
     d.toLong
   }
 
-  def newValidDouble(d: Double): java.lang.Double = {
+  def newValidDouble(d: Double, context: Context): java.lang.Double = {
     if (java.lang.Double.isInfinite(d) || java.lang.Double.isNaN(d))
-      invalidDouble(d)
+      invalidDouble(d, context)
     Double.box(d)
   }
 
-  def validDouble(d: Double): Double = {
+  def validDouble(d: Double, context: Context): Double = {
     // yeah, this line is repeated from the previous method,
     // but factoring it out would cost us a method call, and this
     // is extremely efficiency-critical code, so... - ST 11/1/04
     if (java.lang.Double.isInfinite(d) || java.lang.Double.isNaN(d))
-      invalidDouble(d)
+      invalidDouble(d, context)
     // Returning d makes it easier to insert validDouble() calls into
     // expressions without having to break those expressions up into
     // multiple statements.  The caller is free to ignore the return
@@ -365,10 +365,8 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     d
   }
 
-  private def invalidDouble(d: Double): Nothing =
-    // it's hard to get a context here in some situations because
-    // of optimizations. the context will get set later.
-    throw new RuntimePrimitiveException(null, this,
+  private def invalidDouble(d: Double, context: Context): Nothing =
+    throw new RuntimePrimitiveException(context, this,
       "math operation produced "
         + (if (java.lang.Double.isInfinite(d))
              "a number too large for NetLogo"

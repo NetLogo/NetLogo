@@ -18,7 +18,7 @@ public final strictfp class _distancexy extends Reporter {
   }
 
   public double report_1(Context context, double arg0, double arg1) throws LogoException {
-    return validDouble(world.protractor().distance
-        (context.agent, arg0, arg1, true)); // true = wrap
+    return validDouble(world.protractor().distance(context.agent, arg0, arg1, true), // true = wrap
+        context);
   }
 }
