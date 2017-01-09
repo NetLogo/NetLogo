@@ -13,20 +13,22 @@ class JumpToDeclarationTests extends FunSuite {
     |  variable
     |]
     |
-    |you-own [
-    |  variable
-    |]
+    |you-own [variable]
+    |they-own [something]
     |
     |globals [scared]
     |to foo
     |  scared 1
     |  let scared
     |  set scared 0
+    |  new
     |end
     |
     |to new [scared]
     |  set variable 7
     |  set scared 5
+    |  set something 10
+    |  foo #
     |end
     """.stripMargin
 
@@ -86,6 +88,24 @@ class JumpToDeclarationTests extends FunSuite {
   test("own-test") {
     val token = createToken("variable", TokenType.Ident, source1.indexOf("set variable 7") + 4)
     val startIndex = source1.indexOf("variable")
+    testTokenPosition(token, startIndex)
+  }
+
+  test("own-continuous-test") {
+    val token = createToken("something", TokenType.Ident, source1.indexOf("set something 10") + 4)
+    val startIndex = source1.indexOf("something")
+    testTokenPosition(token, startIndex)
+  }
+
+  test("function-test-1") {
+    val token = createToken("new", TokenType.Ident, source1.indexOf("new"))
+    val startIndex = source1.indexOf("to new") + 3
+    testTokenPosition(token, startIndex)
+  }
+
+  test("function-test-2") {
+    val token = createToken("foo", TokenType.Ident, source1.indexOf("foo #"))
+    val startIndex = source1.indexOf("to foo") + 3
     testTokenPosition(token, startIndex)
   }
 
