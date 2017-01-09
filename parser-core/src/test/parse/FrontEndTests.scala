@@ -213,6 +213,9 @@ class FrontEndTests extends FunSuite {
     runTest("foreach [1 2 3] print",
       "_foreach()[_const([1.0, 2.0, 3.0])[], _commandlambda(_0)[[_print()[_lambdavariable(_0)[]]]]]")
   }
+  test("DoParseForeachWithDone") {
+    runFailure("foreach [1 2 3] __done", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
+  }
   test("DoParselet") {
     runTest("let x 5 __ignore x",
       "_let(Let(X))[_const(5.0)[]] _ignore()[_letvariable(Let(X))[]]")

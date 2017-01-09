@@ -128,7 +128,7 @@ case class _createturtles(breedName: String) extends Command {
       blockAgentClassString = Option("-T--"))
 }
 case class _done() extends Command {
-  override def syntax = Syntax.commandSyntax()
+  override def syntax = Syntax.commandSyntax(canBeConcise = false)
 }
 case class _equal() extends Reporter with Pure {
   override def syntax =

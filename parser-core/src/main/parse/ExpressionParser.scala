@@ -462,6 +462,8 @@ object ExpressionParser {
   // expand e.g. "foreach xs print" -> "foreach xs [[x] -> print x]"
   private def expandConciseCommandLambda(token: Token, scope: SymbolTable): core.ReporterApp = {
     val coreCommand = token.value.asInstanceOf[core.Command]
+    if (! coreCommand.syntax.canBeConcise)
+      throw new UnexpectedTokenException(token)
     val (varNames, varApps) = syntheticVariables(coreCommand.syntax.totalDefault, coreCommand.token, scope)
     val stmtArgs =
       if (coreCommand.syntax.takesOptionalCommandBlock)
