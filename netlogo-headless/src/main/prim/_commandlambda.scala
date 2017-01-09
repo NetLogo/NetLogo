@@ -18,7 +18,7 @@ class _commandlambda(val argumentNames: Seq[String], var proc: Procedure, val cl
     AnonymousCommand(
       procedure = proc,
       formals = proc.lambdaFormals,
-      lets = c.allLets,
+      binding = c.activation.binding.copy,
       locals = c.activation.args)
 
 }

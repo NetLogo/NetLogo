@@ -107,4 +107,18 @@ class WorldTests extends FunSuite with AbstractTestWorld {
     assertResult(99)(world.getLinkBreed("FOOS").count)
     assertResult(0)(world.getLinkBreed("BARS").count)
   }
+  test("breedsOwnIndexOf returns the index for the breed variable") {
+    val program = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", owns = Seq("A", "B"))))
+    val world = makeWorld(worldRectangle, program)
+    assertResult(13)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "A"))
+    assertResult(14)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "B"))
+    assertResult(-1)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "C"))
+  }
+  test("linkBreedsOwnIndexOf returns the index for link breed variable") {
+    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", owns = Seq("A", "B"), isLinkBreed = true)))
+    val world = makeWorld(worldRectangle, program)
+    assertResult(10)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "A"))
+    assertResult(11)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "B"))
+    assertResult(-1)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "C"))
+  }
 }

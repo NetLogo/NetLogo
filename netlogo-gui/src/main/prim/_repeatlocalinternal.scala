@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ Let, Syntax }
-import org.nlogo.nvm.{ Command, Context, MutableLong }
+import org.nlogo.nvm.{ Binding, Command, Context, MutableLong }
 
 class _repeatlocalinternal(private[this] val _vn: Int, _offset: Int) extends Command {
   offset = _offset

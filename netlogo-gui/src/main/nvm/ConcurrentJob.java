@@ -39,12 +39,14 @@ public strictfp class ConcurrentJob
   }
 
   public void newAgentJoining(Agent agent, int count, int address) {
-    Context context =
-        new Context(this, agent,
-            address,
-            parentContext == null
-                ? new Activation(topLevelProcedure, null, 0)
-                : parentContext.activation, workspace);
+    Activation activation = null;
+    if (parentContext != null) {
+      Activation parent = parentContext.activation;
+      activation = new Activation(parent.procedure, parent.parent, parent.args, parent.returnAddress, new Binding(parent.binding));
+    } else {
+      activation = new Activation(topLevelProcedure, null, 0);
+    }
+    Context context = new Context(this, agent, address, activation, workspace);
     if (count == -1) // this whole -1 as a special value business is a bit kludgey - ST
     {
       if (contexts == null) {

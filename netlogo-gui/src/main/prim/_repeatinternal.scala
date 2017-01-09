@@ -13,7 +13,7 @@ class _repeatinternal(_offset: Int, private[this] val _let: Let) extends Command
     super.toString + ":" + offset
 
   override def perform(context: Context): Unit = {
-    val counter = context.getLet(_let).asInstanceOf[MutableLong]
+    val counter = context.activation.binding.getLet(_let).asInstanceOf[MutableLong]
     if (counter.value <= 0) {
       context.ip = next
     } else {
@@ -23,7 +23,7 @@ class _repeatinternal(_offset: Int, private[this] val _let: Let) extends Command
   }
 
   def perform_1(context: Context): Unit = {
-    val counter = context.getLet(_let).asInstanceOf[MutableLong]
+    val counter = context.activation.binding.getLet(_let).asInstanceOf[MutableLong]
     if (counter.value <= 0) {
       context.ip = next
     } else {

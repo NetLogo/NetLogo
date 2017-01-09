@@ -15,7 +15,7 @@ import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, S
 /**
  * fills the code array of the Procedure object with Commands.
  */
-private class Assembler {
+private[compile] class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
   def assemble(procdef: ProcedureDefinition) {
     val proc = procdef.procedure

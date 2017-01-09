@@ -2549,9 +2549,11 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
                   // parameter final  context
                  L0
                   ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+                  GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurecalculatepressure_equal_6.kept2__let : Lorg/nlogo/core/Let;
-                  INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
+                  INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                  L1
                   DCONST_0
                  L2

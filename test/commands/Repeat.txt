@@ -1,24 +1,24 @@
 TurtlesRepeat1
   O> crt 10
-  O> ask turtles [ repeat 4 [ fd 1 ] ]
-  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+  O> ask turtles [ repeat 1 [ fd 2 ] ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [2]
 
 TurtlesRepeat2
   O> crt 10
-  T> repeat 4 [ fd 1 ]
-  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+  T> repeat 1 [ fd 2 ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [2]
 
 TurtlesRepeat3
-  to foo repeat 4 [ fd 1 ] end
+  to foo repeat 1 [ fd 2 ] end
   O> crt 10
   T> foo
-  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [2]
 
 TurtlesRepeat4
-  to foo fd 1 end
+  to foo fd 2 end
   O> crt 10
-  T> repeat 4 [ foo ]
-  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [4]
+  T> repeat 1 [ foo ]
+  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [2]
 
 RepeatInsideRecursiveProcedure1
   globals [ glob1 ]
@@ -48,3 +48,8 @@ NonIntegerCount
 RepeatWithReport
   to-report three let i 0 repeat 20 [ set i i + 1 if i = 3 [report i] ] report i end
   three => 3
+
+RepeatRepeat
+  to-report six let i 0 ask one-of turtles [ repeat 3 [ repeat 2 [ set i i + 1 ] ] ] report i end
+  O> crt 1
+  six => 6

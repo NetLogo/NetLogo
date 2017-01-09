@@ -66,7 +66,8 @@ case class _callreport(proc: FrontEndProcedure) extends Reporter {
     s"_call($name)"
 }
 case class _carefully() extends Command {
-  val let: Let = Let()
+  //TODO: This may not work...
+  val let: Let = Let("~CAREFULLY_ERROR")
   override def syntax =
     Syntax.commandSyntax(
       right = List(Syntax.CommandBlockType, Syntax.CommandBlockType),

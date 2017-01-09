@@ -23,13 +23,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   private Workspace workspace;
   private boolean inReporterProcedure = false;
 
-  // Reverting to old way of initializing an empty List because
-  // the Eclipse java compiler gets trumped by a simple List.empty()
-  // and thinks the method call is ambiguous. NP 2012-11-28.
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  public scala.collection.immutable.List<LetBinding> letBindings =
-    (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-
   /**
    * It is necessary for each Context to have its own stopping flag
    * in order to support the hack where if the last procedure call
@@ -61,7 +54,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   public Context(Context context, AgentSet agents) {
     job = context.job;
     activation = context.activation;
-    letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agents.agentBit();
   }
@@ -69,7 +61,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   public Context(Context context, Agent agent) {
     job = context.job;
     activation = context.activation;
-    letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agent.agentBit();
   }
@@ -244,8 +235,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job
     activation = newActivation;
-    // let bindings can "leak" out of a reporter procedure. This should be fixed in a more sizable overhaul of NVM. RG 9/15/16
-    scala.collection.immutable.List<LetBinding> priorLetBindings = letBindings;
     ip = 0;
     try {
       do {
@@ -271,64 +260,10 @@ public final strictfp class Context implements org.nlogo.api.Context {
       inReporterProcedure = oldInReporterProcedure;
       ip                  = activation.returnAddress();
       activation          = activation.parent().get();
-      letBindings         = priorLetBindings;
     }
     Object result = job.result;
     job.result = null;
     return result;
-  }
-
-  /// stuff for "let"
-
-  public void let(Let let, Object value) {
-    letBindings = letBindings.$colon$colon(new LetBinding(let, value));
-  }
-
-  // typecasts in getLet and setLet necessary because Java's type
-  // system can't fully grok Scala collections stuff - ST 7/7/12,
-  // 11/1/12, 9/25/13
-  public Object getLet(Let let) {
-    scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
-    {
-      LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        return binding.value();
-      }
-      rest = ((scala.collection.immutable.$colon$colon<LetBinding>) rest).tail();
-    }
-    return job.parentContext.getLet(let);
-  }
-  public void setLet(Let let, Object value) {
-    scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
-    {
-      LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        binding.value_$eq(value);
-        return;
-      }
-      rest = ((scala.collection.immutable.$colon$colon<LetBinding>) rest).tail();
-    }
-    job.parentContext.setLet(let, value);
-  }
-
-  public scala.collection.immutable.List<LetBinding> allLets() {
-    // fast path
-    if(job.parentContext == null) {
-      return letBindings;
-    }
-    // slow path
-    else {
-      scala.collection.mutable.ListBuffer<LetBinding> buf =
-        new scala.collection.mutable.ListBuffer<LetBinding>();
-      Context walk = this;
-      while(walk != null && activation == walk.activation) {
-        buf.$plus$plus$eq(walk.letBindings);
-        walk = walk.job.parentContext;
-      }
-      return buf.toList();
-    }
   }
 
   ///

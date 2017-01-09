@@ -8,24 +8,35 @@ public final strictfp class Activation implements org.nlogo.api.Activation {
   public final Activation parent;
   final int returnAddress;
   final public Object[] args;
+  public Binding binding;
 
   private static final Object[] NO_ARGS = new Object[]{};
 
   public Activation(Procedure procedure, Activation parent,
-                    Object[] args, int returnAddress) {
+      Object[] args, int returnAddress, Binding binding) {
+    this.procedure = procedure;
+    this.parent = parent;
+    this.args = args;
+    this.returnAddress = returnAddress;
+    this.binding = binding;
+  }
+
+  public Activation(Procedure procedure, Activation parent,
+      Object[] args, int returnAddress) {
+    this.procedure = procedure;
+    this.parent = parent;
+    this.args = args;
+    this.returnAddress = returnAddress;
+    this.binding = new Binding();
+  }
+
+  public Activation(Procedure procedure, Activation parent, int returnAddress) {
     this.procedure = procedure;
     this.parent = parent;
     this.returnAddress = returnAddress;
     int size = procedure.size();
-    this.args = args;
-  }
-
-  public Activation(Procedure procedure, Activation parent, int returnAddress) {
-     this.procedure = procedure;
-     this.parent = parent;
-     this.returnAddress = returnAddress;
-     int size = procedure.size();
-     args = (size > 0) ? new Object[size] : NO_ARGS;
+    args = (size > 0) ? new Object[size] : NO_ARGS;
+    this.binding = new Binding();
   }
 
   public static Activation forRunOrRunresult(Procedure procedure, Activation parent, int returnAddress) {

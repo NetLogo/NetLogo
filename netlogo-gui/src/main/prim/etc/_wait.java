@@ -12,16 +12,15 @@ import org.nlogo.nvm.MutableLong;
 public final strictfp class _wait
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
-  private final Let let = new Let(null);
 
-
+  private final Let let = new Let("~WAITCOUNTER");
 
   @Override
   public void perform(final Context context)
       throws LogoException {
     long targetTime = System.nanoTime();
     targetTime += argEvalDoubleValue(context, 0) * 1000000000;
-    context.let(let, new MutableLong(targetTime));
+    context.activation.binding.let(let, new MutableLong(targetTime));
     context.ip = next;
   }
 

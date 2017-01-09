@@ -26,11 +26,14 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
 
   def newAgentJoining(agent: Agent, initialCount: Int, address: Int) {
     var count = initialCount
-    val context = new Context(
-      this, agent, address,
+    val activation =
       if (parentContext == null)
         new Activation(topLevelProcedure, null, 0)
-      else parentContext.activation)
+      else {
+        val parent = parentContext.activation
+        new Activation(parent.procedure, parent.parent.orNull, parent.args, parent.returnAddress, new Binding(parent.binding))
+      }
+    val context = new Context(this, agent, address, activation)
     if (count == -1) { // this whole -1 as a special value business is a bit kludgey - ST
       if (contexts == null)
         initialize()

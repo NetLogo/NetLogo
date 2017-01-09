@@ -14,9 +14,14 @@ import org.nlogo.nvm.MutableDouble;
 public final strictfp class _bk
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
-  final Let let = new Let(null);
 
+  final Let let;
 
+  public _bk(org.nlogo.core.Token token) {
+    super();
+    token_$eq(token);
+    let = new Let("~" + token.text() + "_" + token.start());
+  }
 
   @Override
   public void perform(Context context) throws LogoException {
@@ -24,7 +29,7 @@ public final strictfp class _bk
   }
 
   public void perform_1(Context context, double d) {
-    context.let(let, new MutableDouble(-d));
+    context.activation.binding.let(let, new MutableDouble(-d));
     context.ip = next;
   }
 

@@ -54,10 +54,17 @@ public strictfp class ExclusiveJob
       }
       context.ip = address;
       context.finished = false;
-      scala.collection.immutable.List<LetBinding> oldLets = context.letBindings;
+      Activation oldActivation = context.activation;
+      context.activation.binding_$eq(context.activation.binding().enterScope());
       context.runExclusive();
-      context.letBindings = oldLets;
+      if (context.activation == oldActivation) {
+        context.activation.binding_$eq(context.activation.binding().exitScope());
+      }
     }
+  }
+
+  public void runTest() {
+    run();
   }
 
   // used by Evaluator.MyThunk

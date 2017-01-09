@@ -23,4 +23,6 @@ trait MiddleEndInterface {
 trait BackEndInterface {
   def backEnd(defs: Seq[ProcedureDefinition], program: Program,
       profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults
+
+  def assemble(procDef: ProcedureDefinition, useGenerator: Boolean, profilingEnabled: Boolean): Unit
 }

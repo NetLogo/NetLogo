@@ -32,6 +32,6 @@ public final strictfp class _errormessage
   }
 
   public String report_1(final Context context) {
-    return ((LogoException) context.getLet(let)).getMessage();
+    return ((LogoException) context.activation.binding.getLet(let)).getMessage();
   }
 }

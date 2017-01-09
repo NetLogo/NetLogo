@@ -16,5 +16,5 @@ class _errormessage(let: Let) extends Reporter {
   override def report(context: Context): String =
     report_1(context)
   def report_1(context: Context): String =
-    context.getLet(let).asInstanceOf[LogoException].getMessage
+    context.activation.binding.getLet(let).asInstanceOf[LogoException].getMessage
 }

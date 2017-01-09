@@ -6,24 +6,29 @@ import org.nlogo.api.{ Activation => ApiActivation }
 
 object Activation {
   private val NoArgs = Array[AnyRef]()
+  def args(size: Int): Array[AnyRef] = {
+    if (size > 0)
+      new Array[AnyRef](size)
+    else
+      NoArgs
+  }
+
 }
 
 class Activation(
   val procedure: Procedure,
   _parent: Activation,
   private[nlogo] val args: Array[AnyRef],
-  val returnAddress: Int) extends ApiActivation {
+  val returnAddress: Int,
+  var binding: Binding) extends ApiActivation {
 
-  def this(procedure: Procedure, parent: Activation, returnAddress: Int) = {
-    this(procedure, parent, {
-      val size = procedure.size
-      if (size > 0)
-        new Array[AnyRef](size)
-      else
-        Activation.NoArgs
-    }, returnAddress)
+  def this(procedure: Procedure, parent: Activation, args: Array[AnyRef], returnAddress: Int) = {
+    this(procedure, parent, args, returnAddress, new Binding())
   }
 
+  def this(procedure: Procedure, parent: Activation, returnAddress: Int) = {
+    this(procedure, parent, Activation.args(procedure.size), returnAddress, new Binding())
+  }
 
   def parent: Option[Activation] =
     Option(_parent)

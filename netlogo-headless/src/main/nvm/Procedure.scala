@@ -27,7 +27,7 @@ class Procedure(
   def isLambda = parent != null
 
   // cache args.size() for efficiency with making Activations
-  var size = 0
+  var size = argTokens.length
 
   def getLambdaFormal(name: String): Option[Let] =
     lambdaFormals.find(_.name == name) orElse Option(parent).flatMap(_.getLambdaFormal(name))

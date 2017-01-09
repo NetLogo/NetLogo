@@ -11,7 +11,6 @@ class _lambdavariable(val varName: String) extends Reporter {
     super.toString + ":" + varName
 
   override def report(context: Context) = {
-    val let = context.allLets.find(_.let.name == varName).get
-    let.value // LambdaVariableVisitor compiles us out of existence
+    context.activation.binding.getLetByName(varName) // LambdaVariableVisitor compiles us out of existence
   }
 }

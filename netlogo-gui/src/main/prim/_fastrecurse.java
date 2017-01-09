@@ -16,8 +16,6 @@ public final strictfp class _fastrecurse
     token_$eq(original.token());
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + offset;

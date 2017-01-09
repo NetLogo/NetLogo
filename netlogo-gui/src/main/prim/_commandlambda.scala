@@ -11,7 +11,7 @@ class _commandlambda(val argumentNames: Seq[String], var proc: LiftedLambda, val
   override def report(c: Context): AnyRef = {
     AnonymousCommand(procedure = proc,
                 formals   = proc.lambdaFormals,
-                lets      = c.allLets,
+                binding   = c.activation.binding.copy,
                 locals    = c.activation.args)
   }
 }

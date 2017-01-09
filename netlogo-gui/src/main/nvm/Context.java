@@ -23,10 +23,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   private Workspace workspace;
   private boolean inReporterProcedure = false;
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  public scala.collection.immutable.List<LetBinding> letBindings =
-      (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-
   /**
    * It is necessary for each Context to have its own stopping flag
    * in order to support the hack where if the last procedure call
@@ -58,7 +54,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   public Context(Context context, AgentSet agents) {
     job = context.job;
     activation = context.activation;
-    letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agents.agentBit();
     this.workspace = context.workspace;
@@ -67,7 +62,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   public Context(Context context, Agent agent) {
     job = context.job;
     activation = context.activation;
-    letBindings = context.letBindings;
     myself = context.agent;
     agentBit = agent.getAgentBit();
     this.workspace = context.workspace;
@@ -238,13 +232,11 @@ public final strictfp class Context implements org.nlogo.api.Context {
     return reporter.report(this);
   }
 
-  public Object callReporterProcedure(Activation newActivation)
+  public Object callReporterProcedure(Activation newActivation) // probably should take arguments
       throws LogoException {
     boolean oldInReporterProcedure = inReporterProcedure;
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job
-    // keep track of letBindings and activation so we can "reset" those after the call
-    scala.collection.immutable.List<LetBinding> priorLetBindings = letBindings;
     activation = newActivation;
     ip = 0;
     try {
@@ -269,67 +261,12 @@ public final strictfp class Context implements org.nlogo.api.Context {
       throw new NetLogoStackOverflow(copy(), activation.procedure.code()[ip], ex);
     } finally {
       inReporterProcedure = oldInReporterProcedure;
-      letBindings         = priorLetBindings;
       ip                  = activation.returnAddress;
       activation          = activation.parent;
     }
     Object result = job.result;
     job.result    = null;
     return result;
-  }
-
-  /// stuff for "let"
-
-  public void let(Let let, Object value) {
-    letBindings = letBindings.$colon$colon(new LetBinding(let, value));
-  }
-
-  @SuppressWarnings("unchecked")
-  public Object getLet(Let let) {
-    scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
-    {
-      LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        return binding.value();
-      }
-      rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
-    }
-    return job.parentContext.getLet(let);
-  }
-
-  @SuppressWarnings("unchecked")
-  public void setLet(Let let, Object value) {
-    scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
-    {
-      LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        binding.value_$eq(value);
-        return;
-      }
-      rest = (scala.collection.immutable.List<LetBinding>) rest.tail(); // NOPMD
-    }
-    job.parentContext.setLet(let, value);
-  }
-
-
-  public scala.collection.immutable.List<LetBinding> allLets() {
-    // fast path
-    if(job.parentContext == null) {
-      return letBindings;
-    }
-    // slow path
-    else {
-      scala.collection.mutable.ListBuffer<LetBinding> buf =
-        new scala.collection.mutable.ListBuffer<LetBinding>();
-      Context walk = this;
-      while(walk != null && activation == walk.activation) {
-        buf.$plus$plus$eq(walk.letBindings);
-        walk = walk.job.parentContext;
-      }
-      return buf.toList();
-    }
   }
 
   ///
