@@ -1238,21 +1238,21 @@ foreach [1 2 3] show
 =&gt; 2
 =&gt; 3
 foreach [2 4 6]
-  [ crt ?
-    show (word &quot;created &quot; ? &quot; turtles&quot;) ]
+  [ [n] -&gt; crt n
+    show (word &quot;created &quot; n &quot; turtles&quot;) ]
 =&gt; created 2 turtles
 =&gt; created 4 turtles
 =&gt; created 6 turtles
 </pre>
     <p>
-      In the block, the variable <a href="dictionary.html#ques"><code>?</code></a> holds the current value from
+      In the block, the variable <code>n</code> holds the current value from
       the input list.
     <p>
       Here are some more examples of <a href="dictionary.html#foreach"><code>foreach</code></a>:
     <pre>
-foreach [1 2 3] [ ask turtles [ fd ? ] ]
+foreach [1 2 3] [ [steps] -&gt; ask turtles [ fd steps ] ]
 ;; turtles move forward 6 patches
-foreach [true false true true] [ ask turtles [ if ? [ fd 1 ] ] ]
+foreach [true false true true] [ [should-move?] -&gt; ask turtles [ if should-move? [ fd 1 ] ] ]
 ;; turtles move forward 3 patches
 </pre>
     <p>
@@ -1267,8 +1267,9 @@ show map round [1.2 2.2 2.7]
     <p>
       <a href="dictionary.html#map"><code>map</code></a> reports a list
       containing the results of applying the reporter to each item in the
-      input list. Again, use <a href="dictionary.html#ques"><code>?</code></a>
-      to refer to the current item in the list.
+      input list. Again, use the variable named in the anonymous procedure
+      (<code>x</code> in the examples below) to refer to the current
+      item in the list.
     <p>
       Here are a couple more examples of <a href="dictionary.html#map"><code>map</code></a>:
     <pre>
