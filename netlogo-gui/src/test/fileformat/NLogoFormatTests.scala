@@ -67,6 +67,14 @@ class NLogoFormatIOTest extends FunSuite {
     assert(xmlResult.isFailure)
     assert(xmlResult.failed.get.getMessage.contains("nlogo"))
   }
+
+  test("opens models with code containing the delimiter if it doesn't take up the whole line") {
+    val code = "to foo show \"@#$#@#$#@\" end"
+    val modelSource = code + ("\n@#$#@#$#@" * 12)
+    val result = format.sectionsFromSource(modelSource)
+    assert(result.isSuccess)
+    assert(result.get("org.nlogo.modelsection.code")(0) == code)
+  }
 }
 
 class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
