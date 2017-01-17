@@ -13,7 +13,7 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     val allComponents = Seq(
     "whatis", "copyright", "versions", "requirements", "contact",
     "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
-    "infotab", "programming", "transition", "shapes",
+    "interfacetab", "infotab", "codetab", "programming", "transition", "shapes",
     "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
     "modelingcommons", "logging", "controlling", "mathematica", "3d",
     "extensions") ++
