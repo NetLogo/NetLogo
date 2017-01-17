@@ -76,7 +76,12 @@ object JavaPackager {
   // Additionally, if the jdk name contains '64', it will be labelled
   // as a 64-bit build. YMMV.
   def linuxPackagerOptions: Seq[BuildJDK] = {
-    val alternatives = Process("update-alternatives --list javapackager".split(" ")).!!
+    val alternatives =
+      try {
+        Process("update-alternatives --list javapackager".split(" ")).!!
+      } catch {
+        case ex: java.lang.RuntimeException => "" // RHEL bugs out with this command, just use path-specified
+      }
     val options = alternatives.split("\n").filterNot(_ == "")
     if (options.size < 2)
       Seq(PathSpecifiedJDK)
