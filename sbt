@@ -50,6 +50,10 @@ GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.13.jar
 URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.13/sbt-launch.jar'
 
+if [ ! -f $BUILD_NUMBER ] ; then
+  JAVA_OPTS="-Dsbt.log.noformat=true"
+fi
+
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
   mkdir -p $HOME/.sbt
