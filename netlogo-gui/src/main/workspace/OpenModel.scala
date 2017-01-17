@@ -43,7 +43,7 @@ object OpenModel {
             if (! model.version.startsWith("NetLogo")) {
               controller.invalidModelVersion(uri, model.version)
               None
-            } else if (shouldNotContinueOpeningModel(model, controller, currentVersion))
+            } else if (shouldCancelOpeningModel(model, controller, currentVersion))
               None
             else
               modelConverter(model, Paths.get(uri)) match {
@@ -58,11 +58,16 @@ object OpenModel {
       }
   }
 
-  private def shouldNotContinueOpeningModel(model: Model, controller: Controller, currentVersion: Version): Boolean = {
+  private def shouldCancelOpeningModel(model: Model, controller: Controller, currentVersion: Version): Boolean = {
     val modelArity = if (Version.is3D(model.version)) 3 else 2
     val modelArityDiffers = Version.is3D(model.version) != currentVersion.is3D
-    ((modelArityDiffers && ! controller.shouldOpenModelOfDifferingArity(modelArity, model.version)) ||
-      (! currentVersion.knownVersion(model.version) && ! controller.shouldOpenModelOfUnknownVersion(model.version)) ||
-      (! currentVersion.compatibleVersion(model.version) && ! controller.shouldOpenModelOfLegacyVersion(model.version)))
+    if (modelArityDiffers)
+      ! controller.shouldOpenModelOfDifferingArity(modelArity, model.version)
+    else if (! currentVersion.knownVersion(model.version))
+      ! controller.shouldOpenModelOfUnknownVersion(model.version)
+    else if (! currentVersion.compatibleVersion(model.version))
+      ! controller.shouldOpenModelOfLegacyVersion(model.version)
+    else
+      false
   }
 }

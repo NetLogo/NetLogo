@@ -61,6 +61,7 @@ class OpenModelTests extends FunSuite {
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity == 3)
     assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
+    assert(! controller.notifiedVersionUnknown)
   } }
 
   test("doesn't open different-arity model unless the user approves") { new OpenTest {
@@ -125,6 +126,7 @@ class MockController extends OpenModel.Controller {
   var notifiedModelArity: Int = 0
   var notifiedModelVersion: String = _
   var notifiedException: Exception = _
+  var notifiedVersionUnknown: Boolean = false
   var willOpenModel = false
 
   def openModel(willDo: Boolean): MockController = {
@@ -155,6 +157,7 @@ class MockController extends OpenModel.Controller {
   }
   def shouldOpenModelOfUnknownVersion(version: String): Boolean = {
     notifiedModelVersion = version
+    notifiedVersionUnknown = true
     willOpenModel
   }
   def shouldOpenModelOfLegacyVersion(version: String): Boolean = {
