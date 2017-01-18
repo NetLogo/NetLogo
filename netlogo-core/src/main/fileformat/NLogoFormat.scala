@@ -28,7 +28,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   def is3DFormat: Boolean
   def name: String
   val Separator = "@#$#@#$#@"
-  val SeparatorRegex = "@#\\$#@#\\$#@"
+  val SeparatorRegex = "(?m)^@#\\$#@#\\$#@$"
 
   def widgetReaders: Map[String, WidgetReader]
 
