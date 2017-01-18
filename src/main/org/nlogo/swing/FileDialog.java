@@ -54,7 +54,6 @@ public final strictfp class FileDialog {
       System.getProperty("os.name").startsWith("Mac");
   private static final boolean LINUX =
       System.getProperty("os.name").startsWith("Linux");
-
   private static String show(java.awt.Frame parentFrame, String title,
                              int mode, boolean directoriesOnly, String file)
       throws org.nlogo.awt.UserCancelException {
