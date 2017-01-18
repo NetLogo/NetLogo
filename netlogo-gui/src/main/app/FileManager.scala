@@ -21,7 +21,7 @@ import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, Successfu
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, SaveModel, SaveModelAs }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -100,7 +100,8 @@ object FileManager {
       new Runnable {
         def run(): Unit = {
           try {
-            manager.loadModel(Paths.get(importPath).toUri).map(model =>
+            val uri = Paths.get(importPath).toUri
+            manager.loadModel(uri, manager.openModelURI(uri)).map(model =>
               workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
           } catch {
             case ex: IOException => exception = Some(ex)
@@ -279,20 +280,38 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType): Unit = {
-    loadModel(uri).foreach(m => openFromModel(m, uri, modelType))
+    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType))
+  }
+
+  private def openModelURI(uri: URI): (OpenModel.Controller) => Option[Model] =
+    ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, Version))
+
+  def openFromSource(uri: URI, modelSource: String, modelType: ModelType): Unit = {
+    loadModel(uri,
+      (fileController: OpenModel.Controller) =>
+        OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
+          .foreach(m => openFromModel(m, uri, modelType))
+  }
+
+  /**
+   * Opens a model from the Model object.
+   * This must be called from the Swing event dispatch thread.
+   */
+  def openModel(uri: URI, model: Model, modelType: ModelType): Unit = {
+    openFromModel(model, uri, modelType)
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
     ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
   }
 
-  private def loadModel(uri: URI): Option[Model] = {
+  private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
     ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
       (dialog) => new BackgroundFileController(dialog, controller),
       (fileController: BackgroundFileController) =>
         try {
-          OpenModel(uri, fileController, modelLoader, modelConverter, Version)
+          openModel(fileController)
         } catch {
           case e: Exception => println("Exception in FileMenu.loadModel: " + e)
           None

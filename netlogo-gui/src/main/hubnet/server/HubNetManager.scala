@@ -11,7 +11,7 @@ import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.util.Utils, Utils.reader2String
@@ -326,7 +326,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
 
   def fileInterface(path: String): Option[ClientInterface] = {
     val uri = Paths.get(path).toUri
-    OpenModel(uri, HubNetLoadController, modelLoader, modelConverter, Version)
+    OpenModelFromURI(uri, HubNetLoadController, modelLoader, modelConverter, Version)
       .flatMap { model =>
         model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
           .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))

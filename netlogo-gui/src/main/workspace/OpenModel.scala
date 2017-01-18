@@ -9,11 +9,9 @@ import org.nlogo.core.Model
 import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelLoader, Version }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion }
 
-import scala.util.{ Failure, Success }
+import scala.util.{ Failure, Success, Try }
 
 object OpenModel {
-  class InvalidModelException(message: String) extends Exception(message)
-
   trait Controller {
     def errorOpeningURI(uri: URI, exception: Exception): Unit
     // this callback returns either None (indicating cancellation) or the Model that should be opened
@@ -24,8 +22,18 @@ object OpenModel {
     def shouldOpenModelOfUnknownVersion(version: String): Boolean
     def shouldOpenModelOfLegacyVersion(version: String): Boolean
   }
+}
 
-  def apply(uri: URI,
+import OpenModel.Controller
+
+trait OpenModel[OpenParameter] {
+  class InvalidModelException(message: String) extends Exception(message)
+
+  def readModel(loader: ModelLoader, param: OpenParameter): Try[Model]
+
+  def runOpenModelProcess(
+    openParam: OpenParameter,
+    uri: URI,
     controller: Controller,
     loader: ModelLoader,
     modelConverter: ModelConversion,
@@ -38,7 +46,7 @@ object OpenModel {
         controller.invalidModel(uri)
         None
       } else {
-        loader.readModel(uri) match {
+        readModel(loader, openParam) match {
           case Success(model) =>
             if (! model.version.startsWith("NetLogo")) {
               controller.invalidModelVersion(uri, model.version)
@@ -69,5 +77,34 @@ object OpenModel {
       ! controller.shouldOpenModelOfLegacyVersion(model.version)
     else
       false
+  }
+}
+
+object OpenModelFromURI extends OpenModel[URI] {
+  def readModel(loader: ModelLoader, uri: URI): Try[Model] =
+    loader.readModel(uri)
+
+  def apply(
+    uri:            URI,
+    controller:     Controller,
+    loader:         ModelLoader,
+    modelConverter: ModelConversion,
+    currentVersion: Version): Option[Model] = {
+    runOpenModelProcess(uri, uri, controller, loader, modelConverter, currentVersion)
+  }
+}
+
+object OpenModelFromSource extends OpenModel[(URI, String)] {
+  def readModel(loader: ModelLoader, uriAndSource: (URI, String)): Try[Model] =
+    loader.readModel(uriAndSource._2, uriAndSource._1.getPath.split("\\.").last)
+
+  def apply(
+    uri:            URI,
+    source:         String,
+    controller:     Controller,
+    loader:         ModelLoader,
+    modelConverter: ModelConversion,
+    currentVersion: Version): Option[Model] = {
+    runOpenModelProcess((uri, source), uri, controller, loader, modelConverter, currentVersion)
   }
 }
