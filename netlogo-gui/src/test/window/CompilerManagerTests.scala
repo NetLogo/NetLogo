@@ -39,137 +39,147 @@ class CompilerManagerTests extends FunSuite {
         assertions(workspace, compilerManager, events)
       }
 
-  // this test can probably get deleted
-  test("compiler manager sets up with the LoadBeginEvent") {
-    testCompilerManager(run = loadWidgets(Seq(), source = "")) {
-      (workspace, compilerManager, events) =>
-        assert(compilerManager.widgets.isEmpty)
-        assert(workspace.world.program != null)
+  trait Helper {
+    var widgets: Seq[JobOwner] = Seq.empty[JobOwner]
+    var source: String = "globals [ a b c ] to foo fd 1 end"
+    var events = Seq.empty[Event]
+    lazy val workspace = newWorkspace
+    lazy val procedures = new DummyProcedures()
+    lazy val compilerManager = new CompilerManager(workspace, procedures, ((e, o) => events = events :+ e))
+    def loadWidgets(): Unit = {
+      compilerManager.proceduresInterface.innerSource = source
+      compilerManager.handle(new LoadBeginEvent())
+      compilerManager.handle(new LoadBeginEvent())
+      widgets.foreach { w =>
+        compilerManager.handle(new CompileMoreSourceEvent(w))
+      }
+      compilerManager.handle(new LoadEndEvent())
     }
   }
 
-  test("given no widgets, the compiler manager emits one CompiledEvent for empty widgets, one CompiledEvent for code tab") {
-    testCompilerManager(run = loadWidgets(Seq())) { (workspace, compilerManager, events) =>
-        assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
-        assert(workspace.procedures.get("FOO").nonEmpty)
-        assert(workspace.procedures.apply("FOO").owner == compilerManager.proceduresInterface)
-        assert(events.length == 3)
-        assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
-        assert(events(1).isInstanceOf[Events.CompiledEvent])
-        assert(events(2).isInstanceOf[Events.CompiledEvent])
-      }
-  }
+  test("compiler manager set its own widgets and world program") { new Helper {
+    source = ""
+    loadWidgets()
+    assert(compilerManager.widgets.isEmpty)
+    assert(workspace.world.program != null)
+  } }
 
-  test("compiler manager emits a CompiledEvent for each widget with source and one for the code tab") {
-    testCompilerManager(run = loadWidgets(Seq(new DummyWidget("show 5")))) { (workspace, compilerManager, events) =>
-        assert(compilerManager.widgets.size == 1)
-        assert(events.length == 3)
-        assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
-        assert(events(1).isInstanceOf[Events.CompiledEvent])
-        assert(events(2).isInstanceOf[Events.CompiledEvent])
-      }
-  }
+  test("given no widgets, the compiler manager emits one CompiledEvent for empty widgets, one CompiledEvent for code tab") { new Helper {
+    loadWidgets()
+    assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
+    assert(workspace.procedures.get("FOO").nonEmpty)
+    assert(workspace.procedures.apply("FOO").owner == compilerManager.proceduresInterface)
+    assert(events.length == 3)
+    assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
+    assert(events(1).isInstanceOf[Events.CompiledEvent])
+    assert(events(2).isInstanceOf[Events.CompiledEvent])
+  } }
 
-  test("compiler manager handles CompileMoreSource after loading ends by recompiling widgets") {
+  test("compiler manager emits a CompiledEvent for each widget with source and one for the code tab") { new Helper {
+    widgets = Seq(new DummyWidget("show 5"))
+    loadWidgets()
+    assert(compilerManager.widgets.size == 1)
+    assert(events.length == 3)
+    assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
+    assert(events(1).isInstanceOf[Events.CompiledEvent])
+    assert(events(2).isInstanceOf[Events.CompiledEvent])
+  } }
+
+  test("compiler manager handles CompileMoreSource after loading ends by recompiling widgets") { new Helper {
     val widget = new DummyWidget("set a 5")
-    testCompilerManager(run = loadWidgets(Seq(widget)) _ andThen { cm =>
-      widget.sourceCode = "set a 10"
-      cm.handle(new CompileMoreSourceEvent(widget))
-      }) { (workspace, compilerManager, events) =>
-        assert(events.length == 4)
-        assert(events(3).isInstanceOf[Events.CompiledEvent])
-      }
-  }
+    widgets = Seq(widget)
+    loadWidgets()
+    widget.sourceCode = "set a 10"
+    compilerManager.handle(new CompileMoreSourceEvent(widget))
+    assert(events.length == 4)
+    assert(events(3).isInstanceOf[Events.CompiledEvent])
+  } }
 
-  test("compiler widget compiles the command center source and emits a compiled event") {
+  test("compiler manager clears the world at the end of loading") { new Helper {
+    workspace.world.createTurtle(workspace.world.turtles)
+    loadWidgets()
+    assert(workspace.world.turtles.isEmpty)
+  } }
+
+  test("compiler widget compiles the command center source and emits a compiled event") { new Helper {
+    loadWidgets()
     val ccWidget = new DummyWidget("", true)
-    testCompilerManager(run = loadWidgets(Seq()) _ andThen
-    { cm => cm.handle(new CompileMoreSourceEvent(ccWidget)) }) { (workspace, compilerManager, events) =>
-      assert(events.length == 4)
-      assert(events(3).isInstanceOf[Events.CompiledEvent])
-    }
-  }
+    compilerManager.handle(new CompileMoreSourceEvent(ccWidget))
+    assert(events.length == 4)
+    assert(events(3).isInstanceOf[Events.CompiledEvent])
+  } }
 
-  test("handles interface global event where widget name changed by compiling everything") {
+  test("handles interface global event where widget name changed by compiling everything") { new Helper {
     val widget = new DummyIGWidget("bar")
+    widgets = Seq(widget)
+    loadWidgets()
     val nameChanged = new InterfaceGlobalEvent(widget, true, false, false, false)
-    testCompilerManager(
-      run = loadWidgets(Seq(widget)) _ andThen (_.handle(nameChanged))) {
-        (workspace, compilerManager, events) =>
-          assert(events.length == 6)
-          assert(events(3).isInstanceOf[Events.RemoveAllJobsEvent])
-          assert(events(4).isInstanceOf[Events.CompiledEvent])
-          assert(events(5).isInstanceOf[Events.CompiledEvent])
-      }
-  }
+    compilerManager.handle(nameChanged)
+    assert(events.length == 6)
+    assert(events(3).isInstanceOf[Events.RemoveAllJobsEvent])
+    assert(events(4).isInstanceOf[Events.CompiledEvent])
+    assert(events(5).isInstanceOf[Events.CompiledEvent])
+  } }
 
-  test("sets an updating interface global widget to the value of the same-named global") {
+  test("sets an updating interface global widget to the value of the same-named global") { new Helper {
     val widget = new DummyIGWidget("")
+    widgets = Seq(widget)
+    source = "globals [ig]"
+    loadWidgets()
+    workspace.world.setObserverVariableByName("ig", Double.box(10))
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
-    testCompilerManager(
-      run = loadWidgets(Seq(widget), source = "globals [ig]") _ andThen { cm =>
-        cm.workspace.world.setObserverVariableByName("ig", Double.box(10))
-        cm.handle(updateIGValue)
-      }) {
-        (workspace, compilerManager, events) =>
-          assert(widget.value == Double.box(10))
-      }
-  }
+    compilerManager.handle(updateIGValue)
+    assert(widget.value == Double.box(10))
+  } }
 
-  test("handles an interface global event where the value has changed by setting the global to the value of the widget") {
+  test("handles an interface global event where the value has changed by setting the global to the value of the widget") { new Helper {
     val widget = new DummyIGWidget("", Double.box(10))
+    widgets = Seq(widget)
+    source = "globals [ig]"
+    loadWidgets()
     val igValueChange = new InterfaceGlobalEvent(widget, false, false, false, false)
-    testCompilerManager( run =
-      loadWidgets(Seq(widget), source = "globals [ig]") _ andThen
-      (_.handle(igValueChange))) {
-        (workspace, compilerManager, events) =>
-          assert(workspace.world.getObserverVariableByName("IG") == Double.box(10))
-      }
-  }
+    compilerManager.handle(igValueChange)
+    assert(workspace.world.getObserverVariableByName("IG") == Double.box(10))
+  } }
 
-  test("adds all loaded widgets to it's widget set") {
+  test("adds all loaded widgets to its widget set") { new Helper {
     val igWidget = new DummyIGWidget("", Double.box(10))
     val jobWidget = new DummyJobWidget("", null)
-    testCompilerManager(run = loadWidgets(Seq(igWidget, jobWidget))) {
-      (workspace, compilerManager, events) =>
-        assert(compilerManager.widgets.contains(jobWidget))
-        assert(compilerManager.widgets.contains(igWidget))
-    }
-  }
+    widgets = Seq(igWidget, jobWidget)
+    loadWidgets()
+    assert(compilerManager.widgets.contains(jobWidget))
+    assert(compilerManager.widgets.contains(igWidget))
+  } }
 
-  test("adds interface global widgets to it's globalWidget set") {
+  test("adds interface global widgets to it's globalWidget set") { new Helper {
     val igWidget = new DummyIGWidget("", Double.box(10))
-    val igValueChange = new InterfaceGlobalEvent(igWidget, false, false, false, false)
-    testCompilerManager(run = loadWidgets(Seq(igWidget)) _ andThen
-      (_.handle(igValueChange))) {
-      (workspace, compilerManager, events) =>
-        assert(compilerManager.globalWidgets.contains(igWidget))
-    }
-  }
+    widgets = Seq(igWidget)
+    loadWidgets()
+    compilerManager.handle(new InterfaceGlobalEvent(igWidget, false, false, false, false))
+    assert(compilerManager.globalWidgets.contains(igWidget))
+  } }
 
-  test("compiler manager clears the old program completely when loading begins") {
-    testCompilerManager(run =
-      loadWidgets(Seq(), source = "breed [ as a ]") _ andThen
-      loadWidgets(Seq(), source = "breed [ bs b ]") _) {
-        (workspace, compilerManager, events) =>
-          assert(workspace.world.program.breeds.get("BS").isDefined)
-          assert(workspace.world.getBreed("BS") != null)
-          assert(workspace.world.getBreed("BS").isInstanceOf[org.nlogo.api.AgentSet])
-          assert(workspace.world.program.breeds.get("AS").isEmpty)
-          assert(workspace.world.getBreed("AS") == null)
-      }
-  }
+  test("compiler manager clears the old program completely when loading begins") { new Helper {
+    source = "breed [ as a ]"
+    loadWidgets()
+    source = "breed [ bs b ]"
+    loadWidgets()
+    assert(workspace.world.program.breeds.get("BS").isDefined)
+    assert(workspace.world.getBreed("BS") != null)
+    assert(workspace.world.getBreed("BS").isInstanceOf[org.nlogo.api.AgentSet])
+    assert(workspace.world.program.breeds.get("AS").isEmpty)
+    assert(workspace.world.getBreed("AS") == null)
+  } }
 
-  test("compiler manager does not emit an event for a widget when recompiling all source if that widget has no source") {
+  test("compiler manager does not emit an event for a widget when recompiling all source if that widget has no source") { new Helper {
     val widget = new DummyWidget("")
-    testCompilerManager(run = loadWidgets(Seq(widget))) {
-      (workspace, compilerManager, events) =>
-        val compiledEvents = events.collect {
-          case e: CompiledEvent => e
-        }
-      assert(compiledEvents.forall(_.sourceOwner ne widget))
+    widgets = Seq(widget)
+    loadWidgets()
+    val compiledEvents = events.collect {
+      case e: CompiledEvent => e
     }
-  }
+    assert(compiledEvents.forall(_.sourceOwner ne widget))
+  } }
 }
 
 class DummyProcedures extends ProceduresInterface {

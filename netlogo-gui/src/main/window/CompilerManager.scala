@@ -64,6 +64,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
   def handle(e: LoadEndEvent): Unit = {
     isLoading = false
     compileAll()
+    workspace.world.clearAll()
   }
 
   def handle(e: CompileMoreSourceEvent): Unit = {

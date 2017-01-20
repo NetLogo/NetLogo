@@ -7,7 +7,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
-import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent }
+import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent }
 
 object TickCounterLabel {
   private val TickCounterLabelDefault = "ticks"
@@ -17,8 +17,9 @@ import TickCounterLabel._
 
 class TickCounterLabel(world: World)
   extends JLabel
-  with PeriodicUpdateEvent.Handler
-  with LoadBeginEvent.Handler {
+  with AfterLoadEvent.Handler
+  with LoadBeginEvent.Handler
+  with PeriodicUpdateEvent.Handler {
   private var _label: String = TickCounterLabelDefault
 
   override def getPreferredSize: Dimension = getMinimumSize
@@ -34,6 +35,10 @@ class TickCounterLabel(world: World)
     setText("")
     _label = "ticks"
     setVisible(true)
+  }
+
+  def handle(e: AfterLoadEvent): Unit = {
+    redrawTickCounter()
   }
 
   def handle(e: PeriodicUpdateEvent): Unit = {
