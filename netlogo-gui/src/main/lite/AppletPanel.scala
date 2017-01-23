@@ -16,7 +16,7 @@ import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
   ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
-import org.nlogo.workspace.OpenModel
+import org.nlogo.workspace.{ OpenModel, OpenModelFromURI }
 import org.nlogo.fileformat
 
 import scala.concurrent.{ Future, Promise }
@@ -218,7 +218,7 @@ with ControlSet {
     val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
       workspace, fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
-    val modelOpt = OpenModel(uri, controller, loader, converter(workspace.world.program.dialect), Version)
+    val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }
 

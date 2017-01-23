@@ -11,7 +11,7 @@ import scala.util.{ Failure, Success }
 import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.app.App
-import org.nlogo.workspace.{ OpenModel, SaveModel },
+import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
 import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat }
@@ -97,7 +97,7 @@ object ModelResaver {
       val dialect =
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
-      OpenModel(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
+      OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
         SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
           case Some(Success(u)) => println("resaved: " + u)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)

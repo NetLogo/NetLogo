@@ -963,7 +963,7 @@ class App extends
   def openFromSource(source:String, path:String, modelType:ModelType){
     import java.nio.file.Paths
     dispatchThreadOrBust(
-      try fileManager.openFromURI(Paths.get(path).toUri, modelType)
+      try fileManager.openFromSource(Paths.get(path).toUri, source, modelType)
       catch { case ex:UserCancelException => org.nlogo.api.Exceptions.ignore(ex) })
   }
 

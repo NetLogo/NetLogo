@@ -33,7 +33,7 @@ class OpenModelTests extends FunSuite {
       override def knownVersion(v: String) = v == currentVersion || super.knownVersion(v)
     }
     lazy val loader = new ConfigurableModelLoader().addFormat[String, MockFormat](format)
-    lazy val openedModel = OpenModel(uri, controller, loader, autoconverter, VersionInfo)
+    lazy val openedModel = OpenModelFromURI(uri, controller, loader, autoconverter, VersionInfo)
   }
 
   test("if asked to open a model will a null path, returns none and reports an invalid URI") { new OpenTest {
@@ -117,6 +117,11 @@ class OpenModelTests extends FunSuite {
     assert(openedModel.isDefined)
     assertResult(Some(Model()))(openedModel)
     assert(controller.notifiedException == exception)
+  } }
+
+  test("OpenFromSource opens the model properly") { new OpenTest {
+    val modelFromSource = OpenModelFromSource(uri, "model source", controller, loader, autoconverter, VersionInfo)
+    assertResult(Some(Model()))(modelFromSource)
   } }
 }
 

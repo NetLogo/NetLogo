@@ -8,7 +8,7 @@ import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, Workspace }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.workspace.OpenModel
+import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
 import scala.util.{ Failure, Success }
 
@@ -60,7 +60,7 @@ object BehaviorSpaceCoordinator {
     val loader = fileformat.standardLoader(literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 
-    OpenModel(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
+    OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
