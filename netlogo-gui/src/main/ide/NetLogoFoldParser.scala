@@ -30,27 +30,27 @@ object NetLogoFoldParser {
     def takeUntilCloseBracketOrKeyword(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.CloseBracket                  => acc :+ tokens.next
+        case TokenType.CloseBracket                  => tokens.next +: acc
         case TokenType.OpenBracket if acc.length > 1 => acc
         case TokenType.Ident if tokens.head.text.equalsIgnoreCase("BREED") => acc
         case TokenType.Keyword | TokenType.Eof       => acc
-        case _ => takeUntilCloseBracketOrKeyword(acc :+ tokens.next)
+        case _ => takeUntilCloseBracketOrKeyword(tokens.next +: acc)
       }
 
     @tailrec
     def takeUntilEnd(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.Keyword if (tokens.head.value == "END") => acc :+ tokens.next
+        case TokenType.Keyword if (tokens.head.value == "END") => tokens.next +: acc
         case TokenType.Keyword | TokenType.Eof => acc
-        case _ => takeUntilEnd(acc :+ tokens.next)
+        case _ => takeUntilEnd(tokens.next +: acc)
       }
 
     @tailrec
     def takeUntilNonComment(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.Comment => takeUntilNonComment(acc :+ tokens.next)
+        case TokenType.Comment => takeUntilNonComment(tokens.next +: acc)
         case _                 => acc
       }
 
@@ -70,10 +70,10 @@ object NetLogoFoldParser {
           case _ =>
             takeUntilEnd(Seq(tokens.next))
         }
-        takeUntilEof(acc :+ next)
+        takeUntilEof(next.reverse +: acc)
       }
 
-    takeUntilEof(Seq())
+    takeUntilEof(Seq()).reverse
   }
 }
 
