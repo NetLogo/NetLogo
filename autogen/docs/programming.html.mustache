@@ -1238,7 +1238,7 @@ foreach [1 2 3] show
 =&gt; 2
 =&gt; 3
 foreach [2 4 6]
-  [ [n] -&gt; crt n
+  [ n -&gt; crt n
     show (word &quot;created &quot; n &quot; turtles&quot;) ]
 =&gt; created 2 turtles
 =&gt; created 4 turtles
@@ -1250,9 +1250,9 @@ foreach [2 4 6]
     <p>
       Here are some more examples of <a href="dictionary.html#foreach"><code>foreach</code></a>:
     <pre>
-foreach [1 2 3] [ [steps] -&gt; ask turtles [ fd steps ] ]
+foreach [1 2 3] [ steps -&gt; ask turtles [ fd steps ] ]
 ;; turtles move forward 6 patches
-foreach [true false true true] [ [should-move?] -&gt; ask turtles [ if should-move? [ fd 1 ] ] ]
+foreach [true false true true] [ should-move? -&gt; ask turtles [ if should-move? [ fd 1 ] ] ]
 ;; turtles move forward 3 patches
 </pre>
     <p>
@@ -1273,9 +1273,9 @@ show map round [1.2 2.2 2.7]
     <p>
       Here are a couple more examples of <a href="dictionary.html#map"><code>map</code></a>:
     <pre>
-show map [ [x] -&gt; x &lt; 0 ] [1 -1 3 4 -2 -10]
+show map [ x -&gt; x &lt; 0 ] [1 -1 3 4 -2 -10]
 ;; prints [false true false false true true]
-show map [ [x] -&gt; x * x ] [1 2 3]
+show map [ x -&gt; x * x ] [1 2 3]
 ;; prints [1 4 9]
 </pre>
     <p>
@@ -1373,7 +1373,7 @@ sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles
       something. To do this, use the <a href="dictionary.html#foreach"><code>foreach</code></a> and <a href="dictionary.html#ask"><code>ask</code></a> commands in combination, like
       this:
     <pre>
-foreach sort turtles [ [the-turtle] -&gt;
+foreach sort turtles [ the-turtle -&gt;
   ask the-turtle [
     ...
   ]
@@ -2860,9 +2860,9 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       The <code>-&gt;</code> creates an anonymous procedure.
       The anonymous procedure it reports might be a command or a reporter,
       depending on what kind of block you pass it.
-      For example <code>[ [] -&gt; fd 1 ]</code> reports an anonymous command,
+      For example <code>[ -&gt; fd 1 ]</code> reports an anonymous command,
       because <code>fd</code> is a command, while
-      <code>[ [] -&gt; count turtles ]</code> reports an anonymous reporter,
+      <code>[ -&gt; count turtles ]</code> reports an anonymous reporter,
       because <code>count</code> is a reporter.
     <p>
       These primitives require anonymous procedures as input: <code>foreach</code>,
@@ -2871,7 +2871,14 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       if your anonymous procedure takes no arguments.
       For example one may write simply <code>foreach mylist [ print ]</code>
       instead of <code>foreach mylist [ [x] -&gt; print x ]</code>, though the latter
-      is also accepted.
+      is also accepted. Additionally, while brackets around argument names are required
+      for anonymous procedures of two or more arguments, they may be omitted for
+      anonymous procedures of one or zero arguments. So <code>foreach mylist [ x -&gt; print x ]</code>
+      is equivalent to <code>foreach mylist [ [x] -&gt; print x ]</code>.
+    <p>
+      <b>Note</b>: brackets around arguments were <b>always required</b> in NetLogo 6.0.0.
+      If you copy and paste code into NetLogo 6.0.0 using anonymous procedures with
+      unbracketed arguments, the code will not compile until you have added the brackets.
     <p>
       The <code>run</code> command accepts anonymous commands as well as strings.
     <p>
@@ -2965,16 +2972,16 @@ foreach [1 2 3 4] [ print ? ]
           Control primitives such as <code>ifelse</code> and <code>while</code> and
           agent primitives such as <code>of</code> and <code>with</code> don't
           accept anonymous procedures.
-          So for example if I have an anonymous reporter <code>let r [ [] -&gt; if random 2 == 0 ]</code> and
-          two anonymous commands <code>let c1 [ [] -&gt; tick ]</code> and
-          <code>let c2 [ [] -&gt; stop ]</code>, I can't write <code>
+          So for example if I have an anonymous reporter <code>let r [ -&gt; if random 2 == 0 ]</code> and
+          two anonymous commands <code>let c1 [ -&gt; tick ]</code> and
+          <code>let c2 [ -&gt; stop ]</code>, I can't write <code>
           ifelse r c1 c2</code>, I must write <code>ifelse runresult r [ run c1 ]
           [ run c2 ]</code>.</li>
         <li>The concise syntax where <code>-&gt;</code> may be omitted is only
           available to primitives and extension primitives, not ordinary
           procedures. So for example if I have a procedure <code>p</code> that
           accepts an anonymous procedure as input, it must be called as e.g.
-          <code>p [ [] -&gt; ...  ]</code> not <code>p [ ... ]</code>.</li>
+          <code>p [ -&gt; ...  ]</code> not <code>p [ ... ]</code>.</li>
       </ul>
     <h3>
       Code example

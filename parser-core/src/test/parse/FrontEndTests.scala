@@ -147,6 +147,18 @@ class FrontEndTests extends FunSuite {
     runTest("__ignore [[x] -> x + x]",
       "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
   }
+  test("unbracketed lambda parse") {
+    runTest("__ignore [x -> x + x]",
+      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
+  }
+  test("unbracketed nested lambda parse") {
+    runTest("__ignore [x -> [y ->  x / y ]]",
+      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
+  }
+  test("unbracketed zero-argument lambda parse") {
+    runTest("__ignore [ -> 4]",
+      "_ignore()[_reporterlambda()[_const(4)[]]]")
+  }
   test("nested lambda parse") {
     runTest("__ignore [[x] -> [[y] ->  x / y ]]",
       "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
@@ -175,13 +187,13 @@ class FrontEndTests extends FunSuite {
     runFailure("__ignore [[]->", "No closing bracket for this open bracket.", 9, 10)
   }
   test("invalidLambda4") {
-    runFailure("__ignore [foo ->]", "Expected a literal value.", 10, 13)
-  }
-  test("invalidLambda5") {
-    runFailure("__ignore [->]", "An anonymous procedure must start with a list of arguments", 10, 12)
+    runFailure("__ignore [ foo bar -> ]", "An anonymous procedures of two or more arguments must enclose its argument list in brackets", 11, 18)
   }
   test("lambda argument shadows primitive name") {
     runFailure("__ignore [[turtles] -> 2]", "There is already a primitive reporter called TURTLES", 11, 18)
+  }
+  test("unbracketed lambda argument shadows primitive name") {
+    runFailure("__ignore [turtles -> 2]", "There is already a primitive reporter called TURTLES", 10, 17)
   }
   test("lambda argument duplicate name") {
     runFailure("__ignore [[bar bar] -> 2]", "There is already a local variable here called BAR", 15, 18)
@@ -189,11 +201,20 @@ class FrontEndTests extends FunSuite {
   test("lambda argument duplicate nested name") {
     runFailure("__ignore [[bar] -> [[bar] -> 2]]", "There is already a local variable here called BAR", 21, 24)
   }
+  test("unbracketed lambda argument duplicate nested name") {
+    runFailure("__ignore [bar -> [bar -> 2]]", "There is already a local variable here called BAR", 18, 21)
+  }
   test("lambda argument shadows local variable") {
     runFailure("let baz 7 __ignore [[baz] -> 3]", "There is already a local variable here called BAZ", 21, 24)
   }
-  test("lambda argument shadows its own name") {
+  test("unbracketed lambda argument shadows local variable") {
+    runFailure("let baz 7 __ignore [baz -> 3]", "There is already a local variable here called BAZ", 20, 23)
+  }
+  test("lambda argument shadows procedure name") {
     runFailure("let baz [[baz] -> 3]", "There is already a local variable here called BAZ", 10, 13)
+  }
+  test("unbracketed lambda argument shadows procedure name") {
+    runFailure("let baz [baz -> 3]", "There is already a local variable here called BAZ", 9, 12)
   }
   test("lambda argument shadows procedure variable") {
     runFailure("__ignore [[bar] -> 2]", "There is already a local variable here called BAR", 11, 14, "to foo [bar] ")

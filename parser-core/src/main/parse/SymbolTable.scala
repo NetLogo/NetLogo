@@ -38,6 +38,9 @@ class SymbolTable(private val syms: ImmutableMap[String, SymbolType], private va
   def ++(other: SymbolTable): SymbolTable =
     new SymbolTable(syms ++ other.syms, uniqueVarID + other.uniqueVarID)
 
+  def -(name: String): SymbolTable =
+    new SymbolTable(syms - name.toUpperCase, uniqueVarID)
+
   def apply(name: String) = syms(name.toUpperCase)
 
   def contains(name: String) = syms.isDefinedAt(name.toUpperCase)
@@ -57,4 +60,14 @@ class SymbolTable(private val syms: ImmutableMap[String, SymbolType], private va
     val Some((symbolName, symbolID)) = foundSymbolAndID
     (symbolName, new SymbolTable(syms + (symbolName -> symType), symbolID + 1))
   }
+
+  override def equals(that: Any): Boolean = {
+    that match {
+      case st: SymbolTable => st.syms == syms
+      case _ => super.equals(that)
+    }
+  }
+
+  override def toString: String =
+    syms.mkString(", ")
 }

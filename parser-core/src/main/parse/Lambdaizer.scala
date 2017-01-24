@@ -47,7 +47,10 @@ class Lambdaizer extends PositionalAstFolder[Map[AstPath, Operation]] {
           case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
           case _ =>
             val vars = maxVar.map(1 to _).map(_.map(num => varName(nestingDepth, num))) getOrElse Seq()
-            val varString = if (vars.nonEmpty) vars.mkString(" [", " ", "] ->") else ""
+            val varString =
+              if (vars.isEmpty) ""
+              else if (vars.length == 1) vars.mkString(" ", "", " ->")
+              else vars.mkString(" [", " ", "] ->")
             val frontMargin = if (varString.isEmpty || bodyText.startsWith(" ")) "" else " "
             val backMargin = {
               val storedMargin = ctx.wsMap.get(path, WhiteSpace.BackMargin)

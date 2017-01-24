@@ -177,7 +177,7 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
          |  vid:start-recorder
          |end
          |to test-task
-         |  (run ([ [?1] -> show ?1 ]) 3)
+         |  (run ([ ?1 -> show ?1 ]) 3)
          |end""".stripMargin
       val conversionSet = AutoConversionList.conversions
         .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
