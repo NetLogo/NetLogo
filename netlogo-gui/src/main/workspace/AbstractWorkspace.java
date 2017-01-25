@@ -388,6 +388,10 @@ public abstract strictfp class AbstractWorkspace
     return compiler().tokenizeForColorization(s, getExtensionManager());
   }
 
+  public scala.collection.Iterator<Token> tokenizeForColorizationIterator(String s) {
+    return compiler().tokenizeForColorizationIterator(s, getExtensionManager());
+  }
+
   public Token getTokenAtPosition(String s, int pos) {
     return compiler().getTokenAtPosition(s, pos);
   }

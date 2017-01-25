@@ -53,6 +53,7 @@ trait CompilerInterface {
   def isReporter(s: String, program: Program, procedures: ListMap[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
   def tokenizeForColorization(source: String, extensionManager: ApiExtensionManager): Array[Token]
+  def tokenizeForColorizationIterator(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
 }
 
 case class CompilerFlags(

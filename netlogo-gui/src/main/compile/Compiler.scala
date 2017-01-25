@@ -164,5 +164,7 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
   // this is for the syntax-highlighting editor
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token] =
     frontEnd.tokenizeForColorization(source, defaultDialect, extensionManager).toArray
+  def tokenizeForColorizationIterator(source: String, extensionManager: ExtensionManager): Iterator[Token] =
+    frontEnd.tokenizeForColorizationIterator(source, defaultDialect, extensionManager)
 
 }
