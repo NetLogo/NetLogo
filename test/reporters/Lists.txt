@@ -61,6 +61,24 @@ Lput4
 Lput5
   lput 2 first [1] => ERROR LPUT expected input to be a list but got the number 1 instead.
 
+ListInsert1
+  insert-item -1 [1 2] 3 => ERROR -1 isn't greater than or equal to zero.
+
+ListInsert2
+  insert-item 3 [1 2] 4 => ERROR Can't find element 3 of the list [1 2], which is only of length 2.
+
+ListInsert3
+  insert-item 0 [] 1 => [1]
+
+ListInsert4
+  insert-item 1 [8 9] 3 => [8 3 9]
+
+ListInsert5
+  insert-item 2 [8 9] "h" => [8 9 "h"]
+
+ListInsert6
+  insert-item 1 [2 3] [9 5] => [2 [9 5] 3]
+
 ListFirst1
   first [] => ERROR List is empty.
 

@@ -103,6 +103,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_inlinkneighbors ,agentset,-T--,None,10,0,0
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,None,12,1,1
                      |_inradiusnowrap agentset,number,agentset,-TP-,None,12,1,1
+                     |_insertitem number/string or list/anything,string or list,OTPL,None,10,3,3
                      |_int number,number,OTPL,None,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,None,10,1,1

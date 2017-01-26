@@ -469,6 +469,7 @@ Go figure! - ST 12/2/04
       <a href="#foreach">foreach</a>
       <a href="#fput">fput</a>
       <a href="#histogram">histogram</a>
+      <a href="#insert-item">insert-item</a>
       <a href="#is-of-type">is-list?</a>
       <a href="#item">item</a>
       <a href="#last">last</a>
@@ -508,6 +509,7 @@ Go figure! - ST 12/2/04
       <a href="#but-first-and-last">but-last</a>
       <a href="#empty">empty?</a>
       <a href="#first">first</a>
+      <a href="#insert-item">insert-item</a>
       <a href="#is-of-type">is-string?</a>
       <a href="#item">item</a>
       <a href="#last">last</a>
@@ -3868,6 +3870,31 @@ ask turtles
 ;; each turtle makes a red &quot;splotch&quot; around itself
 </pre>
     </div>
+
+    <div class="dict_entry" id="insert-item">
+      <h3>
+        <a>insert-item<span class="since">6.0.1</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example">insert-item <i>index list value</i></span>
+        <span class="prim_example">insert-item <i>index string1 string2</i></span>
+      </h4>
+      <p>
+        On a list, inserts an item in that list. <i>index</i> is the index
+        where the item will be inserted. The first item has an index of 0. 
+        (The 6th item in a list would have an index of 5.)
+      <p>
+        Likewise for a string, but all characters in a multiple-character <i>string2</i> 
+        are inserted at <i>index</i>.
+      <pre>
+show insert-item 2 [2 7 4 5] 15
+=&gt; [2 7 15 4 5]
+show insert-item 2 &quot;cat&quot; &quot;re&quot;
+=&gt; &quot;caret&quot;
+</pre>
+    </div>
+
+
     <div class="dict_entry" id="inspect">
       <h3>
         <a>inspect<span class="since">1.1</span></a>

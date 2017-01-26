@@ -255,6 +255,7 @@ R in-link-from etc._inlinkfrom
 R in-link-neighbor? etc._inlinkneighbor
 R in-link-neighbors etc._inlinkneighbors
 R in-radius _inradius
+R insert-item etc._insertitem
 R int etc._int
 R is-agent? etc._isagent
 R is-agentset? etc._isagentset
