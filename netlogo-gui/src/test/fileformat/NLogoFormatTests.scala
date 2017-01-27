@@ -130,6 +130,7 @@ class CodeComponentTest extends NLogoFormatTest[String] {
   def attachComponent(b: String): Model = Model(code = b)
 
   testDeserializes("empty code section to empty string", Array[String](), "")
+  testSerializes("strips whitespace from end-of-line", "abc  \n", Array[String]("abc"))
   testRoundTripsSerialForm("single line of code", Array[String]("breed [foos foo]"))
   testRoundTripsObjectForm("empty line code", "")
   testRoundTripsObjectForm("single line of code", "breed [ foos foo ]")
