@@ -49,7 +49,9 @@ trait FrontEndInterface {
   // lists the strings contained by the __includes list
   def findIncludes(source: String): Seq[String]
 
-  // does enough tokenization to be used by the frontEnd
+  // these do enough tokenization to be used by the frontEnd.
+  // It's up to to the caller to decide whether they want a Seq or an Iterator
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[Token]
+  def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
 }
 

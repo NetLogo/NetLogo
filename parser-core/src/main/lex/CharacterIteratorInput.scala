@@ -13,17 +13,17 @@ class CharacterIteratorInput(val iterator: CharacterIterator, var offset: Int, v
   def hasNext: Boolean = iterator.current != DONE
 
   @tailrec
-  private def longestPrefixTail(p: LexPredicate, acc: String): String = {
+  private def longestPrefixTail(p: LexPredicate, acc: StringBuilder): String = {
     val c = iterator.current
     if (c != DONE && p(c).continue) {
       iterator.next()
-      longestPrefixTail(p, acc + c)
+      longestPrefixTail(p, acc.append(c))
     } else
-      acc
+      acc.toString
   }
 
   def longestPrefix(f: LexPredicate): (String, WrappedInput) =
-    (longestPrefixTail(f, ""), new CharacterIteratorInput(iterator, filename))
+    (longestPrefixTail(f, new StringBuilder()), new CharacterIteratorInput(iterator, filename))
 
   def assembleToken(p: LexPredicate, f: TokenGenerator): Option[(Token, WrappedInput)] = {
     val offset = iterator.getIndex

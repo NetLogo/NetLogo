@@ -31,12 +31,15 @@ object LexOperations {
     }
 
   def chain(ds: LexPredicate*): LexPredicate = {
-    @tailrec def attemptMatch(matchers: Seq[LexPredicate], c: Char): (Seq[LexPredicate], LexStates) =
-      matchers.head(c) match {
-        case Finished if matchers.tail.nonEmpty => attemptMatch(matchers.tail, c)
-        case Finished                           => (Seq(), Finished)
-        case state                              => (matchers, state)
-      }
+    @tailrec def attemptMatch(matchers: Seq[LexPredicate], c: Char): (Seq[LexPredicate], LexStates) = {
+      val state = matchers.head(c)
+      if ((state eq Finished) && matchers.tail.nonEmpty)
+        attemptMatch(matchers.tail, c)
+      else if (state eq Finished)
+        (Seq(), Finished)
+      else
+        (matchers, state)
+    }
     withFeedback(ds) {
       case (matchers, c) => attemptMatch(matchers, c)
     }
