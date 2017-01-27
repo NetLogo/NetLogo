@@ -2839,9 +2839,9 @@ ask turtles
       <pre>
 show filter is-number? [1 &quot;2&quot; 3]
 =&gt; [1 3]
-show filter [ [i] -&gt; i &lt; 3 ] [1 3 2]
+show filter [ i -&gt; i &lt; 3 ] [1 3 2]
 =&gt; [1 2]
-show filter [ [s] -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
+show filter [ s -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
 =&gt; [&quot;hi&quot; &quot;everyone&quot;]
 </pre>
       <p>
@@ -2924,7 +2924,7 @@ foreach [1.1 2.2 2.6] show
 =&gt; 1.1
 =&gt; 2.2
 =&gt; 2.6
-foreach [1.1 2.2 2.6] [ [x] -&gt; show (word x &quot; -&gt; &quot; round i) ]
+foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round i) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
 =&gt; 2.6 -&gt; 3
@@ -4514,7 +4514,7 @@ set mylist lput 42 mylist
         <pre>
 show map round [1.1 2.2 2.7]
 =&gt; [1 2 3]
-show map [ [i] -&gt; i * i ] [1 2 3]
+show map [ i -&gt; i * i ] [1 2 3]
 =&gt; [1 4 9]
 </pre>
         <p>
@@ -5093,11 +5093,11 @@ ask n-of 50 patches [ set pcolor green ]
         <pre>
 show n-values 5 [1]
 =&gt; [1 1 1 1 1]
-show n-values 5 [ [i] -&gt; i ]
+show n-values 5 [ i -&gt; i ]
 =&gt; [0 1 2 3 4]
 show n-values 3 turtle
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show n-values 5 [ [x] -&gt; x * x ]
+show n-values 5 [ x -&gt; x * x ]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
@@ -7316,7 +7316,7 @@ show sin 270
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
 let n 0
-foreach sort patches [ [the-patch] -&gt;
+foreach sort patches [ the-patch -&gt;
   ask the-patch [
     set plabel n
     set n n + 1
@@ -7383,7 +7383,7 @@ show sort-on [who] turtles
 show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
-  [ [the-turtle] -&gt; ask the-turtle [ do-something ] ]
+  [ the-turtle -&gt; ask the-turtle [ do-something ] ]
 ;; turtles run &quot;do-something&quot; one at a time, in
 ;; ascending order by size
 </pre>
