@@ -98,6 +98,21 @@ public strictfp class EditorArea<TokenType>
     getInputMap().put
         (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
             Actions.quickHelpAction(colorizer, i18n));
+
+    getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+      public void insertUpdate(javax.swing.event.DocumentEvent e) {
+        new org.nlogo.window.Events.ModelModifiedEvent()
+                .raise(EditorArea.this);
+      }
+
+      public void removeUpdate(javax.swing.event.DocumentEvent e) {
+        new org.nlogo.window.Events.ModelModifiedEvent()
+                .raise(EditorArea.this);
+      }
+
+      public void changedUpdate(javax.swing.event.DocumentEvent e) {
+      }
+    });
   }
 
   @Override

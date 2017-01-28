@@ -253,6 +253,7 @@ class App extends
     LoadSectionEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
+    ModelModifiedEvent.Handler with
     Events.SwitchedTabsEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
@@ -661,7 +662,7 @@ class App extends
     workspace.modelSaved(e.modelPath)
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(makeFrameTitle)
+      frame.setTitle(makeFrameTitle(false))
       if (workspace.hubnetManager() != null) {
         workspace.hubnetManager().setTitle(workspace.modelNameForDisplay,
           workspace.getModelDir, workspace.getModelType)
@@ -669,13 +670,18 @@ class App extends
     }
   }
 
+  def handle(e: ModelModifiedEvent) {
+    if(!frame.getTitle().contains("*")){
+      frame.setTitle(makeFrameTitle(true))
+    }
+  }
   /**
    * Internal use only.
    */
   def handle(e:LoadBeginEvent){
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
-    if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
+    if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle(false))
     if(workspace.hubnetManager() != null) workspace.hubnetManager().closeClientEditor()
   }
 
@@ -727,6 +733,7 @@ class App extends
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
     frame.toFront()
+    frame.setTitle(makeFrameTitle(false))
     tabs.interfaceTab.requestFocus()
   }
 
@@ -738,16 +745,20 @@ class App extends
   /**
    * Generates OS standard frame title.
    */
-  private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+  private def makeFrameTitle(modified: Boolean) : String = {
+    if(workspace.getModelFileName() == null){
+      if(modified) "NetLogo*"
+      else "NetLogo"
+    }
     else{
       var title = workspace.modelNameForDisplay
+      // Adding the star for modified
+      if(modified) title += "*"
       // on OS X, use standard window title format. otherwise use Windows convention
       if(! System.getProperty("os.name").startsWith("Mac")) title = title + " - " + "NetLogo"
       // 8212 is the unicode value for an em dash. we use the number since
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
       else title = "NetLogo " + (8212.toChar) + " " + title
-
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
       title
