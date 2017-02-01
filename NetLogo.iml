@@ -38,8 +38,8 @@
     <orderEntry type="library" name="scalatest_2.12-3.0.1" level="project" />
     <orderEntry type="library" name="scala-parser-combinators_2.12-1.0.4" level="project" />
     <orderEntry type="library" name="parboiled_2.12-2.1.3" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.12.0" level="application" />
     <orderEntry type="library" name="shapeless_2.12-2.3.2" level="project" />
     <orderEntry type="library" name="scalactic_2.12-3.0.1" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
   </component>
 </module>
