@@ -32,6 +32,7 @@ class DummyCompilerServices extends CompilerServices {
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported
   def tokenizeForColorization(s: String): Array[Token] = unsupported
+  def tokenizeForColorizationIterator(s: String): Iterator[Token] = unsupported
   def getTokenAtPosition(source: String, position: Int): Token = unsupported
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] = unsupported
 }

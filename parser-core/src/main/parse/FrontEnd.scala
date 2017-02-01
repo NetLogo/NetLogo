@@ -50,6 +50,10 @@ trait FrontEndMain extends NetLogoParser {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
   }
 
+  def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
+    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
+  }
+
   def findIncludes(source: String): Seq[String] = {
     val tokens = tokenizer.tokenizeString(source)
     StructureParser.findIncludes(tokens)

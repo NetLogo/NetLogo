@@ -110,8 +110,9 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
 
   object CodeComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.code"
+    val EndOfLineSpaces = new scala.util.matching.Regex("(?m)\\s*$")
     override def addDefault = ((m: Model) => m.copy(code = ""))
-    def serialize(m: Model): Array[String] = m.code.lines.map(_.replaceAll("\\s*$", "")).toArray
+    def serialize(m: Model): Array[String] = EndOfLineSpaces.replaceAllIn(m.code, "").lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(lines: Array[String]) = { (m: Model) =>
       Try(m.copy(code = lines.mkString("\n")))

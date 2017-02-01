@@ -23,13 +23,20 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
     text.getDocument.getDefaultRootElement.getElementIndex(offset)
   def lineToStartOffset(line: Int) =
     text.getDocument.getDefaultRootElement.getElement(line).getStartOffset
-  def lineToEndOffset(line: Int) =
+  def lineToEndOffset(line: Int) = {
     text.getDocument.getDefaultRootElement.getElement(line).getEndOffset
+  }
   def insertString(pos: Int, spaces: String) {
     text.getDocument.insertString(pos, spaces, null)
   }
   def replaceSelection(s: String) { text.replaceSelection(s) }
   def remove(start: Int, len: Int) {
-    text.getDocument.remove(start, len)
+    try {
+      text.getDocument.remove(start, len)
+    } catch {
+      case ex: javax.swing.text.BadLocationException =>
+        println("errored removing: " + start + ", " + len)
+        throw ex
+    }
   }
 }

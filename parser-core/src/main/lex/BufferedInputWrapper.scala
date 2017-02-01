@@ -25,10 +25,10 @@ class BufferedInputWrapper(buffReader: LexReader, var offset: Int, val filename:
   }
 
   @tailrec
-  private def longestPrefixTail(p: LexPredicate, acc: String): String =
+  private def longestPrefixTail(p: LexPredicate, acc: StringBuilder): String =
     nextChar match {
-      case Some(c) if p(c).continue => longestPrefixTail(p, acc + c)
-      case _ => acc
+      case Some(c) if p(c).continue => longestPrefixTail(p, acc.append(c))
+      case _ => acc.toString
     }
 
   override def hasNext: Boolean = {
@@ -55,7 +55,7 @@ class BufferedInputWrapper(buffReader: LexReader, var offset: Int, val filename:
 
   override def longestPrefix(f: LexPredicate): (String, WrappedInput) = {
     buffReader.mark()
-    val (a, b) = (longestPrefixTail(f, ""), this)
+    val (a, b) = (longestPrefixTail(f, new StringBuilder()), this)
     buffReader.reset()
     buffReader.skip(a.length) // we always go "one too far", so we have to backup
     offset += a.length

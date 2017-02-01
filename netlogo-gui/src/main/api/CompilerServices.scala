@@ -17,6 +17,7 @@ trait CompilerServices extends LiteralParser {
   def isReporter(s: String): Boolean
   def isValidIdentifier(s: String): Boolean
   def tokenizeForColorization(source: String): Array[Token]
+  def tokenizeForColorizationIterator(source: String): Iterator[Token]
   def getTokenAtPosition(source: String, position: Int): Token
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
 }

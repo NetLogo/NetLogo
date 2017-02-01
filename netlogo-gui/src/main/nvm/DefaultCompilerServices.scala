@@ -37,6 +37,9 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(
       source, new org.nlogo.api.DummyExtensionManager)
+  def tokenizeForColorizationIterator(source: String) =
+    compiler.tokenizeForColorizationIterator(
+      source, new org.nlogo.api.DummyExtensionManager)
   def getTokenAtPosition(source: String, pos: Int) =
     compiler.getTokenAtPosition(source, pos)
   def findProcedurePositions(source: String) =
