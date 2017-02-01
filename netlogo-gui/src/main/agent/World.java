@@ -1021,7 +1021,41 @@ public strictfp class World
     _observer.realloc(_oldProgram != null);
     // and finally...
     setUpShapes(false);
+    buildBreedCaches();
     _oldProgram = null;
+  }
+
+  private HashMap<String, Integer> breedsOwnCache = new HashMap<String, Integer>();
+
+  private void buildBreedCaches() {
+    breedsOwnCache = new HashMap<String, Integer>(16, 0.5f);
+    for (AgentSet breed : breeds.values()) {
+      scala.Option<Breed> b = _program.breeds().get(breed.printName());
+      if (! b.isEmpty()) {
+        scala.collection.Iterator<String> ownsIter = b.get().owns().iterator();
+        int offset = _program.turtlesOwn().size();
+        while (ownsIter.hasNext()) {
+          String varName = ownsIter.next();
+          String key = breed.printName() + "~" + varName;
+          breedsOwnCache.put(key, new Integer(offset));
+          offset++;
+        }
+      }
+    }
+
+    for (AgentSet linkBreed: linkBreeds.values()) {
+      scala.Option<Breed> b = _program.linkBreeds().get(linkBreed.printName());
+      if (! b.isEmpty()) {
+        scala.collection.Iterator<String> ownsIter = b.get().owns().iterator();
+        int offset = _program.linksOwn().size();
+        while(ownsIter.hasNext()) {
+          String varName = ownsIter.next();
+          String key = linkBreed.printName() + "~" + varName;
+          breedsOwnCache.put(key, new Integer(offset));
+          offset++;
+        }
+      }
+    }
   }
 
   /// patch scratch
@@ -1108,17 +1142,11 @@ public strictfp class World
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    scala.Option<Breed> b = _program.breeds().get(breed.printName());
-    if (b.isEmpty()) {
+    Integer result = breedsOwnCache.get(breed.printName() + "~" + name);
+    if (result == null)
       return -1;
-    }
-    int result = b.get().owns().indexOf(name);
-    if (result == -1) {
-      return -1;
-    }
-    return breed.kind() == AgentKindJ.Turtle()
-        ? _program.turtlesOwn().size() + result
-        : _program.linksOwn().size() + result;
+    else
+      return result.intValue();
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
@@ -1127,15 +1155,11 @@ public strictfp class World
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    scala.Option<Breed> b = _program.linkBreeds().get(breed.printName());
-    if (b.isEmpty()) {
+    Integer result = breedsOwnCache.get(breed.printName() + "~" + name);
+    if (result == null)
       return -1;
-    }
-    int result = b.get().owns().indexOf(name);
-    if (result == -1) {
-      return -1;
-    }
-    return _program.linksOwn().size() + result;
+    else
+      return result.intValue();
   }
 
   /**
@@ -1318,9 +1342,7 @@ public strictfp class World
     if (breed == _turtles) {
       return false;
     }
-    scala.collection.Seq<String> breedOwns =
-        _program.breeds().apply(breed.printName()).owns();
-    return breedOwns.contains(name);
+    return breedsOwnIndexOf(breed, name) != -1;
   }
 
   // TODO: Get rid of this method

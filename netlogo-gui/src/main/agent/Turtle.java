@@ -264,15 +264,6 @@ public strictfp class Turtle
     return currentPatch;
   }
 
-  private void mustOwn(String name)
-      throws AgentException {
-    if (name != null && !world.breedOwns(getBreed(), name)) {
-      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
-          getBreed().printName(), name));
-    }
-  }
-
-
   @Override
   public Object getVariable(int vn) {
     return getTurtleVariable(vn);
@@ -353,8 +344,11 @@ public strictfp class Turtle
   @Override
   public Object getBreedVariable(String name)
       throws AgentException {
-    mustOwn(name);
     int vn = world.breedsOwnIndexOf(getBreed(), name);
+    if (name != null && vn == -1) {
+      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+          getBreed().printName(), name));
+    }
     return getTurtleVariable(vn);
   }
 
@@ -561,8 +555,11 @@ public strictfp class Turtle
   @Override
   public void setBreedVariable(String name, Object value)
       throws AgentException {
-    mustOwn(name);
     int vn = world.breedsOwnIndexOf(getBreed(), name);
+    if (name != null && vn == -1) {
+      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+          getBreed().printName(), name));
+    }
     setTurtleVariable(vn, value);
   }
 
