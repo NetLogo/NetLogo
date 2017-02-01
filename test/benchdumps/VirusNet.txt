@@ -555,8 +555,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -598,8 +600,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1102,8 +1106,10 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduredoviruschecks_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1127,8 +1133,10 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduredoviruschecks_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1694,8 +1702,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_8.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 8
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1712,8 +1722,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_9.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 9
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1731,8 +1743,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_10.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 11
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1762,8 +1776,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1780,8 +1796,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1921,8 +1939,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2043,8 +2063,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_10.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 11
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2226,8 +2248,10 @@ procedure SETUP-NODES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3759,8 +3783,10 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

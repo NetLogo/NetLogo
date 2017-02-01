@@ -66,8 +66,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -110,8 +112,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1251,8 +1255,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1277,8 +1283,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2834,8 +2842,10 @@ procedure STEP:[TARGET]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurestep_setprocedurevariable_4.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -2986,10 +2996,9 @@ procedure STEP:[TARGET]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurestep_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 1
@@ -2999,6 +3008,8 @@ procedure STEP:[TARGET]{-T--}:
           AALOAD
          L2
           AASTORE
+          BIPUSH 7
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

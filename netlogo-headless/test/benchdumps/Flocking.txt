@@ -68,8 +68,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -112,8 +114,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -488,8 +492,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -527,8 +533,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -619,8 +627,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -812,8 +822,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -838,8 +850,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -856,8 +870,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_7.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 8
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1191,10 +1207,9 @@ procedure SEPARATE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureseparate_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L0
           ALOAD 1
@@ -1215,7 +1230,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           ASTORE 2
          L3
           ALOAD 2
@@ -1249,14 +1264,14 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 4
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
           ASTORE 3
           GOTO L10
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
           IFEQ L11
@@ -1274,7 +1289,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
           ASTORE 7
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L13
@@ -1286,13 +1301,13 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           GOTO L12
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 6
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 3
           GOTO L10
          L11
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -1307,7 +1322,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 3
          L4
           GOTO L14
@@ -1323,10 +1338,9 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L15
           ALOAD 0
@@ -1336,6 +1350,8 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L16
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1367,10 +1383,9 @@ procedure ALIGN:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurealign_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           NEW org/nlogo/nvm/Activation
@@ -1379,8 +1394,10 @@ procedure ALIGN:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurealign_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -1394,10 +1411,9 @@ procedure ALIGN:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurealign_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedurealign_call_0 org/nlogo/nvm/Context] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L3
           ALOAD 0
@@ -1407,6 +1423,8 @@ procedure ALIGN:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1901,10 +1919,9 @@ procedure COHERE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecohere_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           NEW org/nlogo/nvm/Activation
@@ -1913,8 +1930,10 @@ procedure COHERE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecohere_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -1928,10 +1947,9 @@ procedure COHERE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecohere_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecohere_call_0 org/nlogo/nvm/Context] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L3
           ALOAD 0
@@ -1941,6 +1959,8 @@ procedure COHERE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2556,10 +2576,9 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturntowards_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L4
           NEW org/nlogo/nvm/Activation
@@ -2568,10 +2587,9 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturntowards_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L5
           ALOAD 1
@@ -2582,7 +2600,6 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
          L6
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L0
           ALOAD 1
@@ -2604,8 +2621,10 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Double]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I L4 L4 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Double]
           AASTORE
+          ICONST_0
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -2619,10 +2638,9 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L9
           ALOAD 1
@@ -2632,6 +2650,8 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           AALOAD
          L10
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2668,10 +2688,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturnaway_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L4
           NEW org/nlogo/nvm/Activation
@@ -2680,10 +2699,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturnaway_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L0
           ALOAD 1
@@ -2705,10 +2723,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Double]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I L4 L4 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Double]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L6
           ALOAD 1
@@ -2718,6 +2735,8 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           AALOAD
          L7
           AASTORE
+          ICONST_0
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -2731,10 +2750,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L9
           ALOAD 1
@@ -2744,6 +2762,8 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           AALOAD
          L10
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

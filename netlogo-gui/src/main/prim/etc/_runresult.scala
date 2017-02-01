@@ -18,8 +18,7 @@ class _runresult extends Reporter {
             token.text + " doesn't accept further inputs if the first is a string")
         try {
           val procedure = workspace.compileForRun(s, context, true)
-          val newActivation = new Activation(procedure, context.activation, context.ip)
-          newActivation.setUpArgsForRunOrRunresult()
+          val newActivation = Activation.forRunOrRunresult(procedure, context.activation, context.ip)
           val result = context.callReporterProcedure(newActivation)
           if (result == null)
             throw new RuntimePrimitiveException(context, this, "failed to report a result")

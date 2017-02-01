@@ -102,6 +102,7 @@ extends DefaultAstVisitor {
             convertSetToLocal(stmt,  newProcedureVar(proc.args.size, l.let, None))
             alteredLets(proc).put(l.let, proc.args.size)
             proc.localsCount += 1
+            proc.size += 1
             proc.args :+= l.let.name
           }
         } else for {

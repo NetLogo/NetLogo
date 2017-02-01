@@ -35,6 +35,7 @@ private class RepeatVisitor extends DefaultAstVisitor {
             newrepeat.copyMetadataFrom(stmt.command)
             stmt.command = newrepeat
             proc.localsCount += 1
+            proc.size += 1
             // actual name here doesn't really matter, I don't think - ST 11/10/05
             proc.args :+= "_repeatlocal:" + vn
           }

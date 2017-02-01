@@ -80,15 +80,15 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
     checkAgentClass(context, syntax.agentClassString)
     val oldLets = context.letBindings
-    val oldLocals = context.activation.args
-    context.activation.args = locals
+    val oldActivation = context.activation
+    context.activation = new Activation(oldActivation.procedure, oldActivation.parent, locals, oldActivation.returnAddress)
     context.letBindings = lets
     bindArgs(context, args)
     try {
       body.report(context)
     } finally {
       context.letBindings = oldLets
-      context.activation.args = oldLocals
+      context.activation = oldActivation
     }
   }
 }
@@ -120,8 +120,7 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
     val oldActivation = context.activation
     // the return address doesn't matter here since we're not actually using
     // _call and _return, we're just executing the body - ST 2/4/11
-    context.activation = new Activation(procedure, context.activation, 0)
-    context.activation.args = locals
+    context.activation = new Activation(procedure, oldActivation, locals, 0)
     context.ip = 0
     try context.runExclusive()
     catch {
