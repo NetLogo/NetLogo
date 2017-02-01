@@ -7737,8 +7737,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[11]_setbreedvariable:SPEED "set speed sqrt v1t * v1t + v1l * v1l"
-      _asm_procedurecollidewith_sqrt_14 "sqrt v1t * v1t + v1l * v1l" double => double
+[11]_asm_procedurecollidewith_setbreedvariable_14 "set speed sqrt v1t * v1t + v1l * v1l" Object => void
+      _sqrt "sqrt v1t * v1t + v1l * v1l" double => double
         _plus "v1t * v1t + v1l * v1l" double,double => double
           _mult "v1t * v1t" double,double => double
             _procedurevariable:V1T "v1t" => Object
@@ -7746,178 +7746,205 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           _mult "v1l * v1l" double,double => double
             _procedurevariable:V1L "v1l" => Object
             _procedurevariable:V1L "v1l" => Object
-            // parameter final  context
-            // parameter final  context
-            // parameter final  context
-            // parameter final  context
-            TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
-            TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
-            TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
-            TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
-           L8
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            ICONST_5
-            AALOAD
-           L9
-            ASTORE 2
-           L0
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L10
-           L1
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 0
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L10
-           FRAME SAME1 D
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            ICONST_5
-            AALOAD
-           L11
-            ASTORE 2
-           L2
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L12
-           L3
-           FRAME SAME1 java/lang/ClassCastException
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 1
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L12
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object] [D D]
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DMUL
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (DLorg/nlogo/nvm/Context;)D
-           L13
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 6
-            AALOAD
-           L14
-            ASTORE 2
-           L4
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L15
-           L5
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 0
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L15
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 6
-            AALOAD
-           L16
-            ASTORE 2
-           L6
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L17
-           L7
-           FRAME SAME1 java/lang/ClassCastException
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 1
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L17
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DMUL
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (DLorg/nlogo/nvm/Context;)D
-           L18
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DADD
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_14.validDouble (DLorg/nlogo/nvm/Context;)D
-           L19
-            DSTORE 2
-            DLOAD 2
-            DCONST_0
-            DCMPG
-            IFGE L20
-            NEW org/nlogo/nvm/RuntimePrimitiveException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc._sqrt.squareRootIsImaginary"
-            ICONST_1
-            ANEWARRAY java/lang/Object
-            DUP
-            ICONST_0
-            DLOAD 2
-            INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-            AASTORE
-            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-            INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-            ATHROW
-           L20
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_14 org/nlogo/nvm/Context D D] []
-            DLOAD 2
-            INVOKESTATIC java/lang/StrictMath.sqrt (D)D
-           L21
-            DSTORE 2
-            NEW java/lang/Double
-            DUP
-            DLOAD 2
-            INVOKESPECIAL java/lang/Double.<init> (D)V
-            ARETURN
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
+          TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
+          TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
+          TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
+          TRYCATCHBLOCK L8 L9 L10 org/nlogo/api/AgentException
+         L11
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          ICONST_5
+          AALOAD
+         L12
+          ASTORE 2
+         L0
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L13
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 0
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L13
+         FRAME SAME1 D
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          ICONST_5
+          AALOAD
+         L14
+          ASTORE 2
+         L2
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L15
+         L3
+         FRAME SAME1 java/lang/ClassCastException
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 1
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Object] [D D]
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DMUL
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14.validDouble (DLorg/nlogo/nvm/Context;)D
+         L16
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 6
+          AALOAD
+         L17
+          ASTORE 2
+         L4
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L18
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 0
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L18
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Object T D] [D D]
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 6
+          AALOAD
+         L19
+          ASTORE 2
+         L6
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L20
+         L7
+         FRAME SAME1 java/lang/ClassCastException
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 1
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DMUL
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14.validDouble (DLorg/nlogo/nvm/Context;)D
+         L21
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DADD
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14.validDouble (DLorg/nlogo/nvm/Context;)D
+         L22
+          DSTORE 2
+          DLOAD 2
+          DCONST_0
+          DCMPG
+          IFGE L23
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+          LDC "org.nlogo.prim.etc._sqrt.squareRootIsImaginary"
+          ICONST_1
+          ANEWARRAY java/lang/Object
+          DUP
+          ICONST_0
+          DLOAD 2
+          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          AASTORE
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L23
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context D D] []
+          DLOAD 2
+          INVOKESTATIC java/lang/StrictMath.sqrt (D)D
+         L24
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L8
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          LDC "SPEED"
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setBreedVariable (Ljava/lang/String;Ljava/lang/Object;)V
+         L9
+          GOTO L25
+         L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_14 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L25
+         FRAME SAME
+          ALOAD 1
+          BIPUSH 12
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L26
+          RETURN
 [12]_asm_procedurecollidewith_if_15 "if v1l != 0 or v1t != 0 [ set heading theta - atan v1l v1t ]" boolean => void
       _or "v1l != 0 or v1t != 0"
         _notequal "v1l != 0" Object,double => boolean
@@ -8320,8 +8347,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_setbreedvariable:SPEED "set speed sqrt v2t * v2t + v2l * v2l"
-      _asm_procedurecollidewith_sqrt_18 "sqrt v2t * v2t + v2l * v2l" double => double
+[15]_asm_procedurecollidewith_setbreedvariable_18 "set speed sqrt v2t * v2t + v2l * v2l" Object => void
+      _sqrt "sqrt v2t * v2t + v2l * v2l" double => double
         _plus "v2t * v2t + v2l * v2l" double,double => double
           _mult "v2t * v2t" double,double => double
             _procedurevariable:V2T "v2t" => Object
@@ -8329,178 +8356,205 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           _mult "v2l * v2l" double,double => double
             _procedurevariable:V2L "v2l" => Object
             _procedurevariable:V2L "v2l" => Object
-            // parameter final  context
-            // parameter final  context
-            // parameter final  context
-            // parameter final  context
-            TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
-            TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
-            TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
-            TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
-           L8
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 7
-            AALOAD
-           L9
-            ASTORE 2
-           L0
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L10
-           L1
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 0
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L10
-           FRAME SAME1 D
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 7
-            AALOAD
-           L11
-            ASTORE 2
-           L2
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L12
-           L3
-           FRAME SAME1 java/lang/ClassCastException
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 1
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L12
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object] [D D]
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DMUL
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (DLorg/nlogo/nvm/Context;)D
-           L13
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 8
-            AALOAD
-           L14
-            ASTORE 2
-           L4
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L15
-           L5
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 0
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L15
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-            BIPUSH 8
-            AALOAD
-           L16
-            ASTORE 2
-           L6
-            ALOAD 2
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            GOTO L17
-           L7
-           FRAME SAME1 java/lang/ClassCastException
-            POP
-            NEW org/nlogo/nvm/ArgumentTypeException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            BIPUSH 1
-            LDC 1
-            ALOAD 2
-            INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-            ATHROW
-           L17
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DMUL
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (DLorg/nlogo/nvm/Context;)D
-           L18
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DADD
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_sqrt_18.validDouble (DLorg/nlogo/nvm/Context;)D
-           L19
-            DSTORE 2
-            DLOAD 2
-            DCONST_0
-            DCMPG
-            IFGE L20
-            NEW org/nlogo/nvm/RuntimePrimitiveException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc._sqrt.squareRootIsImaginary"
-            ICONST_1
-            ANEWARRAY java/lang/Object
-            DUP
-            ICONST_0
-            DLOAD 2
-            INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-            AASTORE
-            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-            INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-            ATHROW
-           L20
-           FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context D D] []
-            DLOAD 2
-            INVOKESTATIC java/lang/StrictMath.sqrt (D)D
-           L21
-            DSTORE 2
-            NEW java/lang/Double
-            DUP
-            DLOAD 2
-            INVOKESPECIAL java/lang/Double.<init> (D)V
-            ARETURN
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          // parameter final  context
+          TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
+          TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
+          TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
+          TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
+          TRYCATCHBLOCK L8 L9 L10 org/nlogo/api/AgentException
+         L11
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 7
+          AALOAD
+         L12
+          ASTORE 2
+         L0
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L13
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 0
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L13
+         FRAME SAME1 D
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 7
+          AALOAD
+         L14
+          ASTORE 2
+         L2
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L15
+         L3
+         FRAME SAME1 java/lang/ClassCastException
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 1
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L15
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Object] [D D]
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DMUL
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
+         L16
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 8
+          AALOAD
+         L17
+          ASTORE 2
+         L4
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L18
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 0
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L18
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Object T D] [D D]
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+          BIPUSH 8
+          AALOAD
+         L19
+          ASTORE 2
+         L6
+          ALOAD 2
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          GOTO L20
+         L7
+         FRAME SAME1 java/lang/ClassCastException
+          POP
+          NEW org/nlogo/nvm/ArgumentTypeException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          BIPUSH 1
+          LDC 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+          ATHROW
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Object T D] [D D D]
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DMUL
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
+         L21
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DADD
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18.validDouble (DLorg/nlogo/nvm/Context;)D
+         L22
+          DSTORE 2
+          DLOAD 2
+          DCONST_0
+          DCMPG
+          IFGE L23
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+          LDC "org.nlogo.prim.etc._sqrt.squareRootIsImaginary"
+          ICONST_1
+          ANEWARRAY java/lang/Object
+          DUP
+          ICONST_0
+          DLOAD 2
+          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          AASTORE
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L23
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context D D] []
+          DLOAD 2
+          INVOKESTATIC java/lang/StrictMath.sqrt (D)D
+         L24
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L8
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          LDC "SPEED"
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setBreedVariable (Ljava/lang/String;Ljava/lang/Object;)V
+         L9
+          GOTO L25
+         L10
+         FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setbreedvariable_18 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L25
+         FRAME SAME
+          ALOAD 1
+          BIPUSH 16
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L26
+          RETURN
 [16]_asm_procedurecollidewith_done_19 => void
           // parameter final  context
          L0
@@ -11411,13 +11465,40 @@ procedure MAKE-PARTICLES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[1]_setbreedvariable:SPEED "set speed 1"
-      _asm_proceduremakeparticles_constdouble_1 "1" => Double
-           L0
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_constdouble_1.kept1_value : Ljava/lang/Double;
-           L1
-            ARETURN
+[1]_asm_proceduremakeparticles_setbreedvariable_1 "set speed 1" Object => void
+      _constdouble:1.0 "1" => Double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_setbreedvariable_1.kept2_value : Ljava/lang/Double;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          LDC "SPEED"
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setBreedVariable (Ljava/lang/String;Ljava/lang/Object;)V
+         L1
+          GOTO L5
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduremakeparticles_setbreedvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+         FRAME SAME
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L6
+          RETURN
 [2]_asm_proceduremakeparticles_setturtlevariable_2 "set size smallest-particle-size + random-float largest-particle-size - smallest-particle-size" Object => void
       _plus "smallest-particle-size + random-float largest-particle-size - smallest-particle-size" double,double => double
         _observervariable:SMALLEST-PARTICLE-SIZE "smallest-particle-size" => Object
@@ -11566,38 +11647,65 @@ procedure MAKE-PARTICLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[3]_setbreedvariable:MASS "set mass size * size"
-      _asm_proceduremakeparticles_mult_3 "size * size" double,double => double
+[3]_asm_proceduremakeparticles_setbreedvariable_3 "set mass size * size" Object => void
+      _mult "size * size" double,double => double
         _turtlevariabledouble:SIZE "size" => double
         _turtlevariabledouble:SIZE "size" => double
-           L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-            CHECKCAST org/nlogo/agent/Turtle
-            BIPUSH 10
-            INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
-           L1
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-            CHECKCAST org/nlogo/agent/Turtle
-            BIPUSH 10
-            INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
-           L2
-            DSTORE 4
-            DSTORE 2
-            ALOAD 0
-            DLOAD 2
-            DLOAD 4
-            DMUL
-            ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_mult_3.validDouble (DLorg/nlogo/nvm/Context;)D
-           L3
-            DSTORE 2
-            NEW java/lang/Double
-            DUP
-            DLOAD 2
-            INVOKESPECIAL java/lang/Double.<init> (D)V
-            ARETURN
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          CHECKCAST org/nlogo/agent/Turtle
+          BIPUSH 10
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
+         L4
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          CHECKCAST org/nlogo/agent/Turtle
+          BIPUSH 10
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
+         L5
+          DSTORE 4
+          DSTORE 2
+          ALOAD 0
+          DLOAD 2
+          DLOAD 4
+          DMUL
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremakeparticles_setbreedvariable_3.validDouble (DLorg/nlogo/nvm/Context;)D
+         L6
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          LDC "MASS"
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setBreedVariable (Ljava/lang/String;Ljava/lang/Object;)V
+         L1
+          GOTO L7
+         L2
+         FRAME FULL [org/nlogo/prim/_asm_proceduremakeparticles_setbreedvariable_3 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
+          ASTORE 3
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L7
+         FRAME SAME
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L8
+          RETURN
 [4]_asm_proceduremakeparticles_call_4 "recolor"
          L0
           NEW org/nlogo/nvm/Activation
