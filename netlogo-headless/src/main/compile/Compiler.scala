@@ -3,8 +3,10 @@
 package org.nlogo.compile
 
 import org.nlogo.{ api => nlogoApi, core, nvm },
-  core.{ CompilationEnvironment, Femto, CompilerUtilitiesInterface, FrontEndInterface, Program},
-  nvm.Procedure.{ ProceduresMap, NoProcedures }
+  nlogoApi.{ ExtensionManager, SourceOwner },
+  core.{ CompilationEnvironment, CompilationOperand, Femto, CompilerUtilitiesInterface, FrontEndInterface, Program},
+  nvm.{ CompilerFlags, CompilerResults, Procedure },
+    Procedure.{ ProceduresMap, NoProcedures }
 
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, BackEndInterface,
   CommandMunger, FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ReporterMunger }
@@ -48,6 +50,16 @@ object Compiler extends nvm.CompilerInterface {
     val bridged = bridge(structureResults, oldProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
     val allDefs = middleEnd.middleEnd(bridged, Map("" -> source), compilationEnvironment, getOptimizations(flags))
     backEnd.backEnd(allDefs, structureResults.program, compilationEnvironment.profilingEnabled, flags)
+  }
+
+  def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
+    val allSources =
+      Map("" -> source) ++ additionalSources.map(additionalSource => additionalSource.classDisplayName -> additionalSource.innerSource).toMap
+    val (topLevelDefs, structureResults) =
+      frontEnd.frontEnd(CompilationOperand(allSources, extensionManager, compilationEnv, program, Procedure.NoProcedures, subprogram = false))
+    val bridged = bridge(structureResults, Procedure.NoProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
+    val allDefs = middleEnd.middleEnd(bridged, allSources, compilationEnv, getOptimizations(CompilerFlags()))
+    backEnd.backEnd(allDefs, structureResults.program, compilationEnv.profilingEnabled, CompilerFlags())
   }
 
   private def getOptimizations(flags: nvm.CompilerFlags): Optimizations =

@@ -20,7 +20,7 @@ class _foreach extends Command {
           I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.iterator
     }
-    val cmd = argEvalCommand(context, n)
+    val cmd = argEvalAnonymousCommand(context, n)
     if (n < cmd.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(cmd, n))
     var i = 0

@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[NAME SALT]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
       _constdouble:362.0 "362" => double
           // parameter final  context
           // parameter final  context
@@ -59,7 +59,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurebenchmark_ask_1 "ask" AgentSet => void
+[1]_asm_procedurebenchmark_ask_1 "ask patches set p1 random 100 set p2 random 100 [ set pcolor one-of base-colors ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -117,8 +117,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurebenchmark_setpatchvariable_2 "set" Object => void
-      _randomconst:100 "random" => double
+[2]_asm_procedurebenchmark_setpatchvariable_2 "set p1 random 100" Object => void
+      _randomconst:100 "random 100" => double
           // parameter final  context
           // parameter final  context
           // parameter final  arg0
@@ -163,8 +163,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_procedurebenchmark_setpatchvariable_3 "set" Object => void
-      _randomconst:100 "random" => double
+[3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random 100" Object => void
+      _randomconst:100 "random 100" => double
           // parameter final  context
           // parameter final  context
           // parameter final  arg0
@@ -209,8 +209,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_procedurebenchmark_setpatchvariable_4 "set" Object => void
-      _oneof "one-of" LogoList => Object
+[4]_asm_procedurebenchmark_setpatchvariable_4 "set pcolor one-of base-colors" Object => void
+      _oneof "one-of base-colors" LogoList => Object
         _basecolors "base-colors" => LogoList
           // parameter final  context
           // parameter final  context
@@ -292,7 +292,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurebenchmark_setprocedurevariable_6 "let" Object => void
+[6]_asm_procedurebenchmark_setprocedurevariable_6 "let """ Object => void
       _conststring:"" """" => String
           // parameter final  context
           // parameter final  context
@@ -303,7 +303,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -312,7 +312,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_procedurebenchmark_withlocalrandomness_7 "with-local-randomness" => void
+[7]_asm_procedurebenchmark_withlocalrandomness_7 "with-local-randomness random-seed new-seed let random 10000000 [ set name (word "firebig-" salt ".csv") ]" => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -342,7 +342,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurebenchmark_randomseed_8 "random-seed" double => void
+[8]_asm_procedurebenchmark_randomseed_8 "random-seed new-seed" double => void
       _newseed "new-seed" => double
           // parameter final  context
           // parameter final  context
@@ -396,8 +396,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[9]_asm_procedurebenchmark_setprocedurevariable_9 "let" Object => void
-      _randomconst:10000000 "random" => double
+[9]_asm_procedurebenchmark_setprocedurevariable_9 "let random 10000000" Object => void
+      _randomconst:10000000 "random 10000000" => double
           // parameter final  context
           // parameter final  context
           // parameter final  arg0
@@ -417,7 +417,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -426,8 +426,8 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_asm_procedurebenchmark_setprocedurevariable_10 "set" Object => void
-      _word "word"
+[10]_asm_procedurebenchmark_setprocedurevariable_10 "set name (word "firebig-" salt ".csv")" Object => void
+      _word "(word "firebig-" salt ".csv")"
         _conststring:"firebig-" ""firebig-"" => String
         _procedurevariable:SALT "salt" => Object
         _conststring:".csv" "".csv"" => String
@@ -448,7 +448,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L4
@@ -464,7 +464,7 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -481,30 +481,30 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[12]_exportworld "export-world"
+[12]_exportworld "export-world name"
       _asm_procedurebenchmark_procedurevariable_12 "name" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
 [13]_resettimer "reset-timer"
-[14]_importworld "import-world"
+[14]_importworld "import-world name"
       _asm_procedurebenchmark_procedurevariable_13 "name" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
-[15]_asm_procedurebenchmark_setobservervariable_14 "set" Object => void
+[15]_asm_procedurebenchmark_setobservervariable_14 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context

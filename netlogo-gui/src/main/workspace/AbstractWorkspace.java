@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.core.CompilerException;
@@ -21,16 +21,21 @@ import org.nlogo.core.UpdateModeJ;
 import org.nlogo.agent.Importer;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.EditorWorkspace;
 import org.nlogo.nvm.FileManager;
 import org.nlogo.nvm.Job;
 import org.nlogo.nvm.JobManagerInterface;
+import org.nlogo.nvm.LoggingWorkspace;
 import org.nlogo.nvm.MutableLong;
+import org.nlogo.nvm.PresentationCompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
+    EditorWorkspace,
     ExtendableWorkspace,
+    LoggingWorkspace,
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 
@@ -43,12 +48,7 @@ public abstract strictfp class AbstractWorkspace
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
-  private final WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes =
-      new WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>>(); // public for _every
-
-  public WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes() {
-    return lastRunTimes;
-  }
+  public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
   //public final WorldLoader worldLoader ;
 
@@ -150,6 +150,11 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract void init();
 
+  @Override
+  public abstract PresentationCompilerInterface compiler();
+
+  public abstract AggregateManagerInterface aggregateManager();
+
   /// methods that may be called from the job thread by prims
 
   public void joinForeverButtons(org.nlogo.agent.Agent agent) {
@@ -170,14 +175,16 @@ public abstract strictfp class AbstractWorkspace
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
                                  boolean reporter)
       throws CompilerException {
-    String key = source + "@" + context.activation.procedure.args().size() +
+    String key = source + "@" + context.activation.procedure().args().size() +
         "@" + context.agentBit;
-    Procedure proc = codeBits.get(key);
-    if (proc == null) {
-      proc = evaluator.compileForRun(source, context, reporter);
+    scala.Option<Procedure> storedProc = codeBits.get(key);
+    if (storedProc.isEmpty()) {
+      Procedure proc = evaluator.compileForRun(source, context, reporter);
       codeBits.put(key, proc);
+      return proc;
+    } else {
+      return storedProc.get();
     }
-    return proc;
   }
 
   /// misc
@@ -210,6 +217,10 @@ public abstract strictfp class AbstractWorkspace
 
   // called when the engine comes up for air
   public abstract void breathe();
+
+  public void breathe(org.nlogo.nvm.Context context) {
+    breathe();
+  }
 
   /// output
 

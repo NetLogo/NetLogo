@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
       _constdouble:5454.0 "5454" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20 [ go ]" double => void
       _constdouble:20.0 "20" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -131,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -159,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -218,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_ask_0 "ask" AgentSet => void
+[2]_asm_proceduresetup_ask_0 "ask patches set state random n + 1 [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -276,9 +276,9 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetup_setpatchvariable_1 "set" Object => void
-      _random "random" double => double
-        _plus "+" double,double => double
+[3]_asm_proceduresetup_setpatchvariable_1 "set state random n + 1" Object => void
+      _random "random n + 1" double => double
+        _plus "n + 1" double,double => double
           _observervariable:N "n" => Object
           _constdouble:1.0 "1" => double
           // parameter final  context
@@ -419,8 +419,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[4]_asm_proceduresetup_setpatchvariable_2 "set" Object => void
-      _scalecolor "scale-color" double,double,double,double => double
+[4]_asm_proceduresetup_setpatchvariable_2 "set pcolor scale-color red state 0 n" Object => void
+      _scalecolor "scale-color red state 0 n" double,double,double,double => double
         _constdouble:15.0 "red" => double
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
@@ -665,7 +665,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask patches [ find-new-state ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -751,7 +751,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_3 "ask" AgentSet => void
+[3]_asm_procedurego_ask_3 "ask patches set state new-state [ set pcolor scale-color red state 0 n ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -809,7 +809,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedurego_setpatchvariable_4 "set" Object => void
+[4]_asm_procedurego_setpatchvariable_4 "set state new-state" Object => void
       _patchvariable:NEW-STATE "new-state" => Object
           // parameter final  context
           // parameter final  context
@@ -863,8 +863,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[5]_asm_procedurego_setpatchvariable_5 "set" Object => void
-      _scalecolor "scale-color" double,double,double,double => double
+[5]_asm_procedurego_setpatchvariable_5 "set pcolor scale-color red state 0 n" Object => void
+      _scalecolor "scale-color red state 0 n" double,double,double,double => double
         _constdouble:15.0 "red" => double
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
@@ -1110,8 +1110,8 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure FIND-NEW-STATE:[A B S]{-TP-}:
-[0]_asm_procedurefindnewstate_ifelse_0 "ifelse" boolean => void
-      _equal "=" Object,Object => boolean
+[0]_asm_procedurefindnewstate_ifelse_0 "ifelse state = n [ set new-state 0 ] let count neighbors with [ state > 0 and state < n ] let count neighbors with [ state = n ] ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ] [ if new-state > n [ set new-state n ] ]" boolean => void
+      _equal "state = n" Object,Object => boolean
         _patchvariable:STATE "state" => Object
         _observervariable:N "n" => Object
           // parameter final  context
@@ -1169,7 +1169,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_procedurefindnewstate_setpatchvariable_1 "set" Object => void
+[1]_asm_procedurefindnewstate_setpatchvariable_1 "set new-state 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -1214,14 +1214,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurefindnewstate_setprocedurevariable_3 "let" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[3]_asm_procedurefindnewstate_setprocedurevariable_3 "let count neighbors with [ state > 0 and state < n ]" Object => void
+      _countwith "count neighbors with [ state > 0 and state < n ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
-        _asm_procedurefindnewstate_and_4 "and"
-          _greaterthan ">" Object,double => boolean
+        _asm_procedurefindnewstate_and_4 "state > 0 and state < n"
+          _greaterthan "state > 0" Object,double => boolean
             _patchvariable:STATE "state" => Object
             _constdouble:0.0 "0" => double
-          _lessthan "<" Object,Object => boolean
+          _lessthan "state < n" Object,Object => boolean
             _patchvariable:STATE "state" => Object
             _observervariable:N "n" => Object
               // parameter final  context
@@ -1584,7 +1584,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -1593,10 +1593,10 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[4]_asm_procedurefindnewstate_setprocedurevariable_5 "let" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[4]_asm_procedurefindnewstate_setprocedurevariable_5 "let count neighbors with [ state = n ]" Object => void
+      _countwith "count neighbors with [ state = n ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
-        _asm_procedurefindnewstate_equal_6 "=" Object,Object => boolean
+        _asm_procedurefindnewstate_equal_6 "state = n" Object,Object => boolean
           _patchvariable:STATE "state" => Object
           _observervariable:N "n" => Object
               // parameter final  context
@@ -1775,7 +1775,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -1784,8 +1784,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[5]_asm_procedurefindnewstate_ifelse_7 "ifelse" boolean => void
-      _equal "=" Object,double => boolean
+[5]_asm_procedurefindnewstate_ifelse_7 "ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ]" boolean => void
+      _equal "state = 0" Object,double => boolean
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -1862,14 +1862,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[6]_asm_procedurefindnewstate_setpatchvariable_8 "set" Object => void
-      _plus "+" double,double => double
-        _int "int" double => double
-          _div "/" double,double => double
+[6]_asm_procedurefindnewstate_setpatchvariable_8 "set new-state int a / k1 + int b / k2" Object => void
+      _plus "int a / k1 + int b / k2" double,double => double
+        _int "int a / k1" double => double
+          _div "a / k1" double,double => double
             _procedurevariable:A "a" => Object
             _observervariable:K1 "k1" => Object
-        _int "int" double => double
-          _div "/" double,double => double
+        _int "int b / k2" double => double
+          _div "b / k2" double,double => double
             _procedurevariable:B "b" => Object
             _observervariable:K2 "k2" => Object
           // parameter final  context
@@ -1893,7 +1893,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L12
@@ -1973,7 +1973,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L18
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L19
@@ -2097,10 +2097,10 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurefindnewstate_setprocedurevariable_10 "let" Object => void
-      _plus "+" double,double => double
+[8]_asm_procedurefindnewstate_setprocedurevariable_10 "let state + sum [ state ] of neighbors" Object => void
+      _plus "state + sum [ state ] of neighbors" double,double => double
         _patchvariable:STATE "state" => Object
-        _nsum:STATE "sum" => double
+        _nsum:STATE "sum [ state ] of neighbors" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -2258,7 +2258,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -2267,13 +2267,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[9]_asm_procedurefindnewstate_setpatchvariable_11 "set" Object => void
-      _plus "+" double,double => double
-        _int "int" double => double
-          _div "/" double,double => double
+[9]_asm_procedurefindnewstate_setpatchvariable_11 "set new-state int s / a + b + 1 + g" Object => void
+      _plus "int s / a + b + 1 + g" double,double => double
+        _int "int s / a + b + 1" double => double
+          _div "s / a + b + 1" double,double => double
             _procedurevariable:S "s" => Object
-            _plus "+" double,double => double
-              _plus "+" double,double => double
+            _plus "a + b + 1" double,double => double
+              _plus "a + b" double,double => double
                 _procedurevariable:A "a" => Object
                 _procedurevariable:B "b" => Object
               _constdouble:1.0 "1" => double
@@ -2304,7 +2304,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L12
@@ -2330,7 +2330,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L14
@@ -2356,7 +2356,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          FRAME FULL [org/nlogo/prim/_asm_procedurefindnewstate_setpatchvariable_11 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L16
@@ -2486,8 +2486,8 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L28
           RETURN
-[10]_asm_procedurefindnewstate_if_12 "if" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[10]_asm_procedurefindnewstate_if_12 "if new-state > n [ set new-state n ]" boolean => void
+      _greaterthan "new-state > n" Object,Object => boolean
         _patchvariable:NEW-STATE "new-state" => Object
         _observervariable:N "n" => Object
           // parameter final  context
@@ -2641,7 +2641,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[11]_asm_procedurefindnewstate_setpatchvariable_13 "set" Object => void
+[11]_asm_procedurefindnewstate_setpatchvariable_13 "set new-state n" Object => void
       _observervariable:N "n" => Object
           // parameter final  context
           // parameter final  context

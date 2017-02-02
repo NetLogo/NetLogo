@@ -15,7 +15,7 @@ class _sortby extends Reporter {
     "Comparison method violates its general contract!"
 
   override def report(context: Context) = {
-    val reporter = argEvalReporter(context, 0)
+    val reporter = argEvalAnonymousReporter(context, 0)
     if (reporter.syntax.minimum > 2)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(reporter, 2))
     val obj = args(1).report(context)

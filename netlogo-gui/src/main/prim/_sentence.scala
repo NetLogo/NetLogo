@@ -4,7 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, Reporter, Pure }
+import org.nlogo.nvm.{ Context, Reporter}
+import org.nlogo.core.Pure
 
 class _sentence extends Reporter with Pure {
   override def report(context: Context): LogoList =

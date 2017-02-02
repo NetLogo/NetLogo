@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 121862" double => void
       _constdouble:121862.0 "121862" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 3000 [ go ]" double => void
       _constdouble:3000.0 "3000" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -131,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -159,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -218,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_setdefaultshape "set-default-shape"
+[2]_setdefaultshape "set-default-shape turtles "circle""
       _asm_proceduresetup_turtles_0 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -233,7 +233,7 @@ procedure SETUP:[]{O---}:
             LDC "circle"
            L1
             ARETURN
-[3]_asm_proceduresetup_call_2 "make-node"
+[3]_asm_proceduresetup_call_2 "make-node nobody"
       _nobody "nobody" => Nobody$
           // parameter final  context
          L0
@@ -261,8 +261,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[4]_asm_proceduresetup_call_3 "make-node"
-      _turtle "turtle" double => Object
+[4]_asm_proceduresetup_call_3 "make-node turtle 0"
+      _turtle "turtle 0" double => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
           // parameter final  context
@@ -345,7 +345,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask links [ set color gray ]" AgentSet => void
       _links "links" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -403,7 +403,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_setturtleorlinkvariable_1 "set" Object => void
+[1]_asm_procedurego_setturtleorlinkvariable_1 "set color gray" Object => void
       _constdouble:5.0 "gray" => Double
           // parameter final  context
           // parameter final  context
@@ -448,7 +448,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_call_3 "make-node"
+[3]_asm_procedurego_call_3 "make-node find-partner"
       _callreport:FIND-PARTNER "find-partner"
          L0
           NEW org/nlogo/nvm/Activation
@@ -510,7 +510,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure MAKE-NODE:[OLD-NODE]{O---}:
-[0]_createorderedturtles:,+11 "cro"
+[0]_createorderedturtles:,+11 "cro 1 set color red [ if old-node != nobody create-link-with old-node [ set color green ] move-to old-node rt random 360 [ fd 8 ] ]"
       _asm_proceduremakenode_constdouble_0 "1" => Double
             // parameter final  context
            L0
@@ -518,7 +518,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
             GETFIELD org/nlogo/prim/_asm_proceduremakenode_constdouble_0.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[1]_asm_proceduremakenode_setturtleorlinkvariable_1 "set" Object => void
+[1]_asm_proceduremakenode_setturtleorlinkvariable_1 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -555,8 +555,8 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduremakenode_if_2 "if" boolean => void
-      _notequal "!=" Object,Object => boolean
+[2]_asm_proceduremakenode_if_2 "if old-node != nobody create-link-with old-node [ set color green ] move-to old-node rt random 360 [ fd 8 ]" boolean => void
+      _notequal "old-node != nobody" Object,Object => boolean
         _procedurevariable:OLD-NODE "old-node" => Object
         _nobody "nobody" => Nobody$
           // parameter final  context
@@ -569,7 +569,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -603,18 +603,18 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_createlinkwith:,+6 "create-link-with"
+[3]_createlinkwith:,+6 "create-link-with old-node [ set color green ]"
       _asm_proceduremakenode_procedurevariable_3 "old-node" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
-[4]_asm_proceduremakenode_setturtleorlinkvariable_4 "set" Object => void
+[4]_asm_proceduremakenode_setturtleorlinkvariable_4 "set color green" Object => void
       _constdouble:55.0 "green" => Double
           // parameter final  context
           // parameter final  context
@@ -659,19 +659,19 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_moveto "move-to"
+[6]_moveto "move-to old-node"
       _asm_proceduremakenode_procedurevariable_6 "old-node" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
-[7]_asm_proceduremakenode_right_7 "rt" double => void
-      _randomconst:360 "random" => double
+[7]_asm_proceduremakenode_right_7 "rt random 360" double => void
+      _randomconst:360 "random 360" => double
           // parameter final  context
           // parameter final  context
           // parameter final  delta
@@ -694,7 +694,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[8]_asm_proceduremakenode_fd_8 "fd" double => void
+[8]_asm_proceduremakenode_fd_8 "fd 8" double => void
       _constdouble:8.0 "8" => double
           // parameter final  context
           // parameter final  context
@@ -705,7 +705,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakenode_fd_8.kept1__let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableDouble
@@ -729,7 +729,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakenode_fdinternal_9.kept1_let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
@@ -829,11 +829,11 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           RETURN
 
 reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
-[0]_asm_procedurefindpartner_setprocedurevariable_0 "let" Object => void
-      _randomfloat "random-float" double => double
-        _sum "sum" LogoList => double
-          _of "of"
-            _asm_procedurefindpartner_count_1 "count" AgentSet => double
+[0]_asm_procedurefindpartner_setprocedurevariable_0 "let random-float sum [ count link-neighbors ] of turtles" Object => void
+      _randomfloat "random-float sum [ count link-neighbors ] of turtles" double => double
+        _sum "sum [ count link-neighbors ] of turtles" LogoList => double
+          _of "[ count link-neighbors ] of turtles"
+            _asm_procedurefindpartner_count_1 "count link-neighbors" AgentSet => double
               _linkneighbors:null "link-neighbors" => AgentSet
                   // parameter final  context
                   // parameter final  context
@@ -968,7 +968,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -977,7 +977,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_procedurefindpartner_setprocedurevariable_3 "let" Object => void
+[1]_asm_procedurefindpartner_setprocedurevariable_3 "let nobody" Object => void
       _nobody "nobody" => Nobody$
           // parameter final  context
           // parameter final  context
@@ -988,7 +988,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -997,7 +997,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_procedurefindpartner_ask_4 "ask" AgentSet => void
+[2]_asm_procedurefindpartner_ask_4 "ask turtles let count link-neighbors [ if partner = nobody [ ifelse nc > total [ set partner self ] [ set total total - nc ] ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1055,8 +1055,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedurefindpartner_let_5 "let" Object => void
-      _count "count" AgentSet => double
+[3]_asm_procedurefindpartner_let_5 "let count link-neighbors" Object => void
+      _count "count link-neighbors" AgentSet => double
         _linkneighbors:null "link-neighbors" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1107,7 +1107,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindpartner_let_5.kept1__let : Lorg/nlogo/core/Let;
           ALOAD 2
@@ -1117,8 +1117,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[4]_asm_procedurefindpartner_if_6 "if" boolean => void
-      _equal "=" Object,Object => boolean
+[4]_asm_procedurefindpartner_if_6 "if partner = nobody [ ifelse nc > total [ set partner self ] [ set total total - nc ] ]" boolean => void
+      _equal "partner = nobody" Object,Object => boolean
         _procedurevariable:PARTNER "partner" => Object
         _nobody "nobody" => Nobody$
           // parameter final  context
@@ -1131,7 +1131,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
@@ -1158,8 +1158,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_procedurefindpartner_ifelse_7 "ifelse" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[5]_asm_procedurefindpartner_ifelse_7 "ifelse nc > total [ set partner self ] [ set total total - nc ]" boolean => void
+      _greaterthan "nc > total" Object,Object => boolean
         _letvariable(Let(NC)) "nc" => Object
         _procedurevariable:TOTAL "total" => Object
           // parameter final  context
@@ -1172,14 +1172,14 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindpartner_ifelse_7.kept3__let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
@@ -1300,7 +1300,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[6]_asm_procedurefindpartner_setprocedurevariable_8 "set" Object => void
+[6]_asm_procedurefindpartner_setprocedurevariable_8 "set partner self" Object => void
       _self "self" => Agent
           // parameter final  context
           // parameter final  context
@@ -1312,7 +1312,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -1329,8 +1329,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurefindpartner_setprocedurevariable_10 "set" Object => void
-      _minus "-" double,double => double
+[8]_asm_procedurefindpartner_setprocedurevariable_10 "set total total - nc" Object => void
+      _minus "total - nc" double,double => double
         _procedurevariable:TOTAL "total" => Object
         _letvariable(Let(NC)) "nc" => Object
           // parameter final  context
@@ -1345,7 +1345,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L5
@@ -1371,7 +1371,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_10.kept4__let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
@@ -1410,7 +1410,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -1427,13 +1427,13 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[10]_asm_procedurefindpartner_report_12 "report" Object => void
+[10]_asm_procedurefindpartner_report_12 "report partner" Object => void
       _procedurevariable:PARTNER "partner" => Object
           // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
@@ -1451,7 +1451,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1473,7 +1473,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          FRAME APPEND [java/lang/Object]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L3
           NEW org/nlogo/nvm/NonLocalExit
@@ -1521,7 +1521,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ATHROW
 
 procedure LAYOUT:[_repeatlocal:0]{OTPL}:
-[0]_asm_procedurelayout_repeatlocal_0 "repeat" double => void
+[0]_asm_procedurelayout_repeatlocal_0 "repeat 3 layout-spring turtles links 0.5 1.0 0.4 [ display ]" double => void
       _constdouble:3.0 "3" => double
           // parameter final  context
           // parameter final  context
@@ -1532,7 +1532,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -1547,7 +1547,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_layoutspring "layout-spring"
+[1]_layoutspring "layout-spring turtles links 0.5 1.0 0.4"
       _asm_procedurelayout_turtles_1 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -1591,7 +1591,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong

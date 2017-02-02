@@ -7,6 +7,7 @@ import org.nlogo.api.OutputDestinationJ;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.nvm.EditorWorkspace;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
 /**
@@ -21,7 +22,7 @@ public final strictfp class _edit
   public void perform(final Context context) throws LogoException {
     String path = null;
     try {
-      path = workspace.convertToNormal();
+      path = ((EditorWorkspace) workspace).convertToNormal();
     } catch (java.io.IOException ex) {
       throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }

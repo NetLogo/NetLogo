@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{Agent, World, World3D}
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{AggregateManagerInterface, Version}
 
@@ -64,7 +64,7 @@ extends AbstractWorkspaceScala(
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
-  override def compiler: CompilerInterface = unsupported
+  override def compiler: PresentationCompilerInterface = unsupported
 
   def openModel(model: org.nlogo.core.Model): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported

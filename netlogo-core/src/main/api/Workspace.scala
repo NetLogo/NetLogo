@@ -56,7 +56,9 @@ with ViewSettings with Controllable {
   def patchSize: Double
   def changeTopology(wrapX: Boolean, wrapY: Boolean)
   @throws(classOf[IOException])
-  def open(modelPath: String)
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
+  def open(modelPath: String): Unit
   def openModel(model: Model)
   def mouseDown: Boolean = false
   def mouseInside: Boolean = false

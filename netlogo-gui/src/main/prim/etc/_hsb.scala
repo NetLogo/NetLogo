@@ -5,7 +5,8 @@ package org.nlogo.prim.etc
 import org.nlogo.api.{ LogoListBuilder }
 import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.core.Pure
 
 object hsb {
    def toList(hMax: Float, sMax: Float, bMax: Float,

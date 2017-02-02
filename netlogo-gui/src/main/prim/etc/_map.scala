@@ -17,7 +17,7 @@ class _map extends Reporter {
   // case. - ST 3/20/08
   override def report(context: Context) = {
 
-    val rep = argEvalReporter(context, 0)
+    val rep = argEvalAnonymousReporter(context, 0)
     val n = args.length - 1
     if (n < rep.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(rep, n))

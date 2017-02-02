@@ -166,6 +166,10 @@ public abstract strictfp class Agent
 
   public abstract int getAgentBit();
 
+  public int agentBit() {
+    return getAgentBit();
+  }
+
   public boolean isPartiallyTransparent() {
     int alpha = alpha();
     return alpha > 0 && alpha < 255;

@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 471" double => void
       _constdouble:471.0 "471" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_askconcurrent:+8 "ask-concurrent"
+[3]_askconcurrent:+8 "ask-concurrent turtles [ repeat 350 [ go ] ]"
       _asm_procedurebenchmark_turtles_2 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -89,7 +89,7 @@ procedure BENCHMARK:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L1
             ARETURN
-[4]_asm_procedurebenchmark_repeat_3 "repeat" double => void
+[4]_asm_procedurebenchmark_repeat_3 "repeat 350 [ go ]" double => void
       _constdouble:350.0 "350" => double
           // parameter final  context
           // parameter final  context
@@ -100,7 +100,7 @@ procedure BENCHMARK:[]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeat_3.kept1__let : Lorg/nlogo/core/Let;
           NEW org/nlogo/nvm/MutableLong
@@ -141,7 +141,7 @@ procedure BENCHMARK:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeatinternal_5.kept1_let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
@@ -178,7 +178,7 @@ procedure BENCHMARK:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_procedurebenchmark_setobservervariable_7 "set" Object => void
+[8]_asm_procedurebenchmark_setobservervariable_7 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -236,7 +236,7 @@ procedure BENCHMARK:[]{O---}:
 
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
-[1]_asm_proceduresetup_ask_0 "ask" AgentSet => void
+[1]_asm_proceduresetup_ask_0 "ask patches [ if random 100 < density [ set pcolor yellow ] ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -294,9 +294,9 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_proceduresetup_if_1 "if" boolean => void
-      _lessthan "<" double,Object => boolean
-        _randomconst:100 "random" => double
+[2]_asm_proceduresetup_if_1 "if random 100 < density [ set pcolor yellow ]" boolean => void
+      _lessthan "random 100 < density" double,Object => boolean
+        _randomconst:100 "random 100" => double
         _observervariable:DENSITY "density" => Object
           // parameter final  context
           // parameter final  context
@@ -388,7 +388,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[3]_asm_proceduresetup_setpatchvariable_2 "set" Object => void
+[3]_asm_proceduresetup_setpatchvariable_2 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
           // parameter final  context
           // parameter final  context
@@ -433,7 +433,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[5]_crofast: "create-ordered-turtles"
+[5]_crofast: "create-ordered-turtles [ number ]"
       _asm_proceduresetup_observervariable_4 "number" => Object
             // parameter final  context
            L0
@@ -444,7 +444,7 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[6]_asm_proceduresetup_ask_5 "ask" AgentSet => void
+[6]_asm_proceduresetup_ask_5 "ask turtles set color white [ setxy random world-width random world-height ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -502,7 +502,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[7]_asm_proceduresetup_setturtleorlinkvariable_6 "set" Object => void
+[7]_asm_proceduresetup_setturtleorlinkvariable_6 "set color white" Object => void
       _constdouble:9.9 "white" => Double
           // parameter final  context
           // parameter final  context
@@ -539,10 +539,10 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[8]_asm_proceduresetup_setxy_7 "setxy" double,double => void
-      _random "random" double => double
+[8]_asm_proceduresetup_setxy_7 "setxy random world-width random world-height" double,double => void
+      _random "random world-width" double => double
         _worldwidth "world-width" => double
-      _random "random" double => double
+      _random "random world-height" double => double
         _worldheight "world-height" => double
           // parameter final  context
           // parameter final  context
@@ -822,8 +822,8 @@ procedure GO:[]{-T--}:
           RETURN
 
 procedure SEARCH-FOR-CHIP:[]{-T--}:
-[0]_asm_proceduresearchforchip_ifelse_0 "ifelse" boolean => void
-      _equal "=" Object,double => boolean
+[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ]" boolean => void
+      _equal "pcolor = yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
           // parameter final  context
@@ -900,7 +900,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_proceduresearchforchip_setpatchvariable_1 "set" Object => void
+[1]_asm_proceduresearchforchip_setpatchvariable_1 "set pcolor black" Object => void
       _constdouble:0.0 "black" => Double
           // parameter final  context
           // parameter final  context
@@ -937,7 +937,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresearchforchip_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_proceduresearchforchip_setturtleorlinkvariable_2 "set color orange" Object => void
       _constdouble:25.0 "orange" => Double
           // parameter final  context
           // parameter final  context
@@ -974,7 +974,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresearchforchip_jump_3 "jump" double => void
+[3]_asm_proceduresearchforchip_jump_3 "jump 20" double => void
       _constdouble:20.0 "20" => double
           // parameter final  context
           // parameter final  context
@@ -1061,8 +1061,8 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           RETURN
 
 procedure FIND-NEW-PILE:[]{-T--}:
-[0]_asm_procedurefindnewpile_if_0 "if" boolean => void
-      _notequal "!=" Object,double => boolean
+[0]_asm_procedurefindnewpile_if_0 "if pcolor != yellow wiggle [ find-new-pile ]" boolean => void
+      _notequal "pcolor != yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
           // parameter final  context
@@ -1190,8 +1190,8 @@ procedure FIND-NEW-PILE:[]{-T--}:
           RETURN
 
 procedure FIND-EMPTY-SPOT:[]{-T--}:
-[0]_asm_procedurefindemptyspot_ifelse_0 "ifelse" boolean => void
-      _equal "=" Object,double => boolean
+[0]_asm_procedurefindemptyspot_ifelse_0 "ifelse pcolor = black set pcolor yellow set color white [ get-away ] set heading random 360 fd 1 [ find-empty-spot ]" boolean => void
+      _equal "pcolor = black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
           // parameter final  context
@@ -1268,7 +1268,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_procedurefindemptyspot_setpatchvariable_1 "set" Object => void
+[1]_asm_procedurefindemptyspot_setpatchvariable_1 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
           // parameter final  context
           // parameter final  context
@@ -1305,7 +1305,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurefindemptyspot_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_procedurefindemptyspot_setturtleorlinkvariable_2 "set color white" Object => void
       _constdouble:9.9 "white" => Double
           // parameter final  context
           // parameter final  context
@@ -1370,8 +1370,8 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurefindemptyspot_setturtlevariable_5 "set" Object => void
-      _randomconst:360 "random" => double
+[5]_asm_procedurefindemptyspot_setturtlevariable_5 "set heading random 360" Object => void
+      _randomconst:360 "random 360" => double
           // parameter final  context
           // parameter final  context
           // parameter final  value
@@ -1416,7 +1416,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_procedurefindemptyspot_fd1_6 "fd" => void
+[6]_asm_procedurefindemptyspot_fd1_6 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -1468,8 +1468,8 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           RETURN
 
 procedure GET-AWAY:[]{-T--}:
-[0]_asm_proceduregetaway_setturtlevariable_0 "set" Object => void
-      _randomconst:360 "random" => double
+[0]_asm_proceduregetaway_setturtlevariable_0 "set heading random 360" Object => void
+      _randomconst:360 "random 360" => double
           // parameter final  context
           // parameter final  context
           // parameter final  value
@@ -1514,7 +1514,7 @@ procedure GET-AWAY:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_proceduregetaway_jump_1 "jump" double => void
+[1]_asm_proceduregetaway_jump_1 "jump 20" double => void
       _constdouble:20.0 "20" => double
           // parameter final  context
           // parameter final  context
@@ -1542,8 +1542,8 @@ procedure GET-AWAY:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduregetaway_if_2 "if" boolean => void
-      _notequal "!=" Object,double => boolean
+[2]_asm_proceduregetaway_if_2 "if pcolor != black [ get-away ]" boolean => void
+      _notequal "pcolor != black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
           // parameter final  context
@@ -1651,7 +1651,7 @@ procedure GET-AWAY:[]{-T--}:
           RETURN
 
 procedure WIGGLE:[]{-T--}:
-[0]_asm_procedurewiggle_fd1_0 "fd" => void
+[0]_asm_procedurewiggle_fd1_0 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -1672,12 +1672,12 @@ procedure WIGGLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurewiggle_setturtlevariable_1 "set" Object => void
-      _minus "-" double,double => double
-        _plus "+" double,double => double
+[1]_asm_procedurewiggle_setturtlevariable_1 "set heading heading + random 50 - random 50" Object => void
+      _minus "heading + random 50 - random 50" double,double => double
+        _plus "heading + random 50" double,double => double
           _turtlevariabledouble:HEADING "heading" => double
-          _randomconst:50 "random" => double
-        _randomconst:50 "random" => double
+          _randomconst:50 "random 50" => double
+        _randomconst:50 "random 50" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context

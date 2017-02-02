@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.core.Pure
 
 class _isstring extends Reporter with Pure {
 

@@ -3,9 +3,9 @@
 package org.nlogo.prim
 
 import org.nlogo.core.ClosedVariable
-import org.nlogo.nvm.{ AnonymousCommand, Context, Procedure, Reporter }
+import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Procedure, Reporter }
 
-class _commandlambda(val argumentNames: Seq[String], var proc: Procedure, val closedVariables: Set[ClosedVariable]) extends Reporter {
+class _commandlambda(val argumentNames: Seq[String], var proc: LiftedLambda, val closedVariables: Set[ClosedVariable]) extends Reporter {
 
   override def toString =
     super.toString +
@@ -17,7 +17,7 @@ class _commandlambda(val argumentNames: Seq[String], var proc: Procedure, val cl
   override def report(c: Context): AnyRef =
     AnonymousCommand(
       procedure = proc,
-      formals = proc.lambdaFormals,
+      formals = proc.lambdaFormalsArray,
       binding = c.activation.binding.copy,
       locals = c.activation.args)
 

@@ -10,7 +10,7 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _applyresult extends Reporter {
   override def report(context: Context) = {
-    val rep = argEvalReporter(context, 0)
+    val rep = argEvalAnonymousReporter(context, 0)
     val list = argEvalList(context, 1)
     if (list.size < rep.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(rep, list.size))

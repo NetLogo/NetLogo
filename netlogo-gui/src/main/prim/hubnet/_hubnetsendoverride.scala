@@ -8,10 +8,7 @@ import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context}
 import org.nlogo.nvm.RuntimePrimitiveException
 
-class _hubnetsendoverride extends Command {
-
-
-
+class _hubnetsendoverride extends Command with HubNetPrim {
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
@@ -23,7 +20,7 @@ class _hubnetsendoverride extends Command {
       case _ => throw new IllegalStateException("cant happen...")
     }
 
-    if(!workspace.getHubNetManager.get.isOverridable(set.kind, varName))
+    if(!hubNetManager.get.isOverridable(set.kind, varName))
       throw new RuntimePrimitiveException(context, this,
         "you cannot override " + varName)
 
@@ -47,7 +44,7 @@ class _hubnetsendoverride extends Command {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      def run() { workspace.getHubNetManager.foreach(
+      def run() { hubNetManager.foreach(
       _.sendOverrideList(client, set.kind, varName, overrides.toMap)) }
     })
     context.ip = next

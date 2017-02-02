@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException,
 
 class _apply extends Command {
   override def perform(context: Context) = {
-    val cmd = argEvalCommand(context, 0)
+    val cmd = argEvalAnonymousCommand(context, 0)
     val list = argEvalList(context, 1)
     if (list.size < cmd.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(cmd, list.size))

@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 362" double => void
       _constdouble:362.0 "362" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L1
           RETURN
 [2]_resettimer "reset-timer"
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 20000 [ go ]" double => void
       _constdouble:20000.0 "20000" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -131,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -159,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -218,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+6 "cro"
+[2]_createorderedturtles:,+6 "cro 1000 move-to one-of patches [ face one-of neighbors4 ]"
       _asm_proceduresetup_constdouble_0 "1000" => Double
             // parameter final  context
            L0
@@ -226,8 +226,8 @@ procedure SETUP:[]{O---}:
             GETFIELD org/nlogo/prim/_asm_proceduresetup_constdouble_0.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_moveto "move-to"
-      _asm_proceduresetup_oneof_1 "one-of" AgentSet => Object
+[3]_moveto "move-to one-of patches"
+      _asm_proceduresetup_oneof_1 "one-of patches" AgentSet => Object
         _patches "patches" => AgentSet
             // parameter final  context
             // parameter final  context
@@ -259,8 +259,8 @@ procedure SETUP:[]{O---}:
            L3
            FRAME SAME1 java/lang/Object
             ARETURN
-[4]_asm_proceduresetup_face_2 "face" Agent => void
-      _oneof "one-of" AgentSet => Object
+[4]_asm_proceduresetup_face_2 "face one-of neighbors4" Agent => void
+      _oneof "one-of neighbors4" AgentSet => Object
         _neighbors4 "neighbors4" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -414,7 +414,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles face one-of neighbors4 [ fd 1 ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -472,8 +472,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_face_1 "face" Agent => void
-      _oneof "one-of" AgentSet => Object
+[1]_asm_procedurego_face_1 "face one-of neighbors4" Agent => void
+      _oneof "one-of neighbors4" AgentSet => Object
         _neighbors4 "neighbors4" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -607,7 +607,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[2]_asm_procedurego_fd1_2 "fd" => void
+[2]_asm_procedurego_fd1_2 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0

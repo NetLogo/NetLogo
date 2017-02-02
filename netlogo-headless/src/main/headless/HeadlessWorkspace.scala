@@ -78,7 +78,7 @@ class HeadlessWorkspace(
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 
-  override def parser = compiler.utilities
+  def parser = compiler.utilities
 
   def isHeadless = true
 
@@ -190,7 +190,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
     if (!compilerTestingMode)
       world.clearTurtles()
   }
-  override def inspectAgent(agent: Agent, radius: Double) {
+  def inspectAgent(agent: Agent, radius: Double) {
     if (!silent)
       println(agent)
   }
@@ -324,7 +324,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(context: Context, force: Boolean) { }
+  override def requestDisplayUpdate(force: Boolean) { }
 
   /**
    * Internal use only.

@@ -5,13 +5,13 @@ package org.nlogo.lite
 import org.nlogo.core.{ AgentKind, Model, Femto }
 import org.nlogo.agent.{ Agent, World }
 import org.nlogo.api.{ AggregateManagerInterface, ControlSet, FileIO, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
 import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager, controlSet: ControlSet)
 extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager, controlSet) {
-  val compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+  val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   // lazy to avoid initialization order snafu - ST 3/1/11
   lazy val updateManager = new UpdateManager() {
     override def defaultFrameRate = LiteWorkspace.this.frameRate

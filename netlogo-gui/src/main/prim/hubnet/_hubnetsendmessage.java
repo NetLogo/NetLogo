@@ -14,7 +14,7 @@ import java.util.Iterator;
 import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsendmessage
-    extends org.nlogo.nvm.Command {
+    extends HubNetCommand {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     Object clients = args[0].report(context);
@@ -43,7 +43,7 @@ public final strictfp class _hubnetsendmessage
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    workspace.getHubNetManager().get().sendText(asScalaBuffer(nodes), Dump.logoObject(data) + "\n");
+    hubNetManager().get().sendText(asScalaBuffer(nodes), Dump.logoObject(data) + "\n");
     context.ip = next;
   }
 

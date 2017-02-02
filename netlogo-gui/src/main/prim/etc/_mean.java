@@ -10,7 +10,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;

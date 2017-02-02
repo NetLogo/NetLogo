@@ -7,11 +7,11 @@ import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, FileIO, HubNetInte
   ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
   Workspace => APIWorkspace, WorldDimensions3D, Version }
 import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, Widget => CoreWidget, WorldDimensions }
-import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, Context, Procedure, Tracer }
+import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
-import java.util.WeakHashMap
+import collection.mutable.WeakHashMap
 import java.net.URL
 import java.io.{ File, IOException, PrintWriter }
 import java.nio.file.Paths
@@ -33,6 +33,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Compiling
   with BehaviorSpaceInformation
   with Traceable with HubNetManager
+  with Components
   with ExtendableWorkspaceMethods with Exporting
   with Plotting {
 
@@ -41,6 +42,10 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   def compilerTestingMode: Boolean
 
   var previewCommands: PreviewCommands = PreviewCommands.Default
+
+  // used by `_every`
+  val lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]] =
+    new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]()
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
@@ -284,26 +289,23 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait HubNetManager extends AbstractWorkspace { this: AbstractWorkspaceScala =>
+  trait HubNetManager extends AbstractWorkspace with Components { self: AbstractWorkspaceScala =>
     def hubNetManagerFactory: HubNetManagerFactory
-
-    private var _hubNetManager = Option.empty[HubNetInterface]
 
     private var _hubNetRunning: Boolean = false
 
-    def hubNetManager = _hubNetManager
+    if (hubNetManagerFactory != null) {
+      addLifecycle(
+        new ComponentLifecycle[HubNetInterface] {
+          val klass = classOf[HubNetInterface]
 
-    @throws(classOf[InterruptedException])
-    abstract override def dispose(): Unit = {
-      super.dispose()
-      hubNetManager.foreach(_.disconnect())
-    }
+          override def create(): Option[HubNetInterface] =
+            Some(hubNetManagerFactory.newInstance(self))
 
-    def getHubNetManager: Option[HubNetInterface] = {
-      if (hubNetManager.isEmpty && hubNetManagerFactory != null) {
-        _hubNetManager = Some(hubNetManagerFactory.newInstance(this))
-      }
-      _hubNetManager
+          override def dispose(hubNet: HubNetInterface): Unit = {
+            hubNet.disconnect()
+          }
+        })
     }
 
     def hubNetRunning = _hubNetRunning
@@ -311,5 +313,10 @@ object AbstractWorkspaceTraits {
     def hubNetRunning_=(running: Boolean): Unit = {
       _hubNetRunning = running;
     }
+
+    def hubNetManager = getHubNetManager
+
+    def getHubNetManager: Option[HubNetInterface] =
+      getComponent(classOf[HubNetInterface])
   }
 }

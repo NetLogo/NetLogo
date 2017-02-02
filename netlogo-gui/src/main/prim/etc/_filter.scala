@@ -10,7 +10,7 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _filter extends Reporter {
   def report(context: Context): LogoList = {
-    val reporter = argEvalReporter(context, 0)
+    val reporter = argEvalAnonymousReporter(context, 0)
     val list = argEvalList(context, 1)
     if (reporter.syntax.minimum > 1)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(reporter, 1))

@@ -20,7 +20,7 @@ extends AbstractWorkspace(new World)
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported
   override def waitForQueuedEvents(): Unit = unsupported
-  override def inspectAgent(agent: Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(agent: api.Agent, radius: Double): Unit = unsupported
   override def inspectAgent(kind: core.AgentKind, agent: Agent, radius: Double): Unit = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
@@ -50,12 +50,11 @@ extends AbstractWorkspace(new World)
                             ex: Exception) = unsupported
   override def ownerFinished(owner: api.JobOwner) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
-  override def requestDisplayUpdate(context: nvm.Context, force: Boolean) = unsupported
+  override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe(context: nvm.Context): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: nvm.Job) = unsupported
   override def compiler: CompilerInterface = unsupported
-  override def parser = unsupported
   override def renderer = unsupported
   override def command(source: String) = unsupported
   override def report(source: String) = unsupported

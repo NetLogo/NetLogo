@@ -5,7 +5,7 @@ package org.nlogo.hubnet.client
 import org.nlogo.core.Femto
 import org.nlogo.api.{ NetLogoThreeDDialect, NetLogoLegacyDialect, Version }
 import org.nlogo.util.NullAppHandler
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.{ DefaultEditorFactory, VMCheck }
 
@@ -24,7 +24,7 @@ object App {
     AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
     val compiler = new org.nlogo.nvm.DefaultCompilerServices(
-      Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
+      Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
     ClientApp.mainHelper(args, new DefaultEditorFactory(compiler), compiler)
   }
 }

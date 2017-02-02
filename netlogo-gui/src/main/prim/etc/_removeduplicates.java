@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public final strictfp class _removeduplicates
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
 
 
   @Override

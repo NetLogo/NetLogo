@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 2468" double => void
       _constdouble:2468.0 "2468" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2000 [ go ]" double => void
       _constdouble:2000.0 "2000" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -131,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -159,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -258,8 +258,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetup_ask_2 "ask" Object => void
-      _nof "n-of"
+[4]_asm_proceduresetup_ask_2 "ask n-of initial-outbreak-size turtles [ become-infected ]" Object => void
+      _nof "n-of initial-outbreak-size turtles"
         _asm_proceduresetup_observervariable_3 "initial-outbreak-size" => Object
               // parameter final  context
              L0
@@ -426,7 +426,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[7]_asm_proceduresetup_ask_7 "ask" AgentSet => void
+[7]_asm_proceduresetup_ask_7 "ask links [ set color white ]" AgentSet => void
       _links "links" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -484,7 +484,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[8]_asm_proceduresetup_setturtleorlinkvariable_8 "set" Object => void
+[8]_asm_proceduresetup_setturtleorlinkvariable_8 "set color white" Object => void
       _constdouble:9.9 "white" => Double
           // parameter final  context
           // parameter final  context
@@ -561,7 +561,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure SETUP-NODES:[]{O---}:
-[0]_setdefaultshape "set-default-shape"
+[0]_setdefaultshape "set-default-shape turtles "circle""
       _asm_proceduresetupnodes_turtles_0 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -576,7 +576,7 @@ procedure SETUP-NODES:[]{O---}:
             LDC "circle"
            L1
             ARETURN
-[1]_createturtles:,+6 "crt"
+[1]_createturtles:,+6 "crt number-of-nodes setxy random-xcor * 0.95 random-ycor * 0.95 become-susceptible [ set virus-check-timer random virus-check-frequency ]"
       _asm_proceduresetupnodes_observervariable_2 "number-of-nodes" => Object
             // parameter final  context
            L0
@@ -587,11 +587,11 @@ procedure SETUP-NODES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_asm_proceduresetupnodes_setxy_3 "setxy" double,double => void
-      _mult "*" double,double => double
+[2]_asm_proceduresetupnodes_setxy_3 "setxy random-xcor * 0.95 random-ycor * 0.95" double,double => void
+      _mult "random-xcor * 0.95" double,double => double
         _randomxcor "random-xcor" => double
         _constdouble:0.95 "0.95" => double
-      _mult "*" double,double => double
+      _mult "random-ycor * 0.95" double,double => double
         _randomycor "random-ycor" => double
         _constdouble:0.95 "0.95" => double
           // parameter final  context
@@ -740,8 +740,8 @@ procedure SETUP-NODES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetupnodes_setturtlevariable_5 "set" Object => void
-      _random "random" double => double
+[4]_asm_proceduresetupnodes_setturtlevariable_5 "set virus-check-timer random virus-check-frequency" Object => void
+      _random "random virus-check-frequency" double => double
         _observervariable:VIRUS-CHECK-FREQUENCY "virus-check-frequency" => Object
           // parameter final  context
           // parameter final  context
@@ -889,9 +889,9 @@ procedure SETUP-NODES:[]{O---}:
           RETURN
 
 procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
-[0]_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0 "let" Object => void
-      _div "/" double,double => double
-        _mult "*" double,double => double
+[0]_asm_proceduresetupspatiallyclusterednetwork_setprocedurevariable_0 "let average-node-degree * number-of-nodes / 2" Object => void
+      _div "average-node-degree * number-of-nodes / 2" double,double => double
+        _mult "average-node-degree * number-of-nodes" double,double => double
           _observervariable:AVERAGE-NODE-DEGREE "average-node-degree" => Object
           _observervariable:NUMBER-OF-NODES "number-of-nodes" => Object
         _constdouble:2.0 "2" => double
@@ -995,7 +995,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -1012,8 +1012,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_proceduresetupspatiallyclusterednetwork_ask_2 "ask" Object => void
-      _oneof "one-of" AgentSet => Object
+[2]_asm_proceduresetupspatiallyclusterednetwork_ask_2 "ask one-of turtles let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ] [ if choice != nobody [ create-link-with [ choice ] ] ]" Object => void
+      _oneof "one-of turtles" AgentSet => Object
         _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1159,12 +1159,12 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[3]_asm_proceduresetupspatiallyclusterednetwork_let_3 "let" Object => void
-      _minoneof "min-one-of"
-        _asm_proceduresetupspatiallyclusterednetwork_otherwith_4 "other" AgentSet,Reporter => AgentSet
+[3]_asm_proceduresetupspatiallyclusterednetwork_let_3 "let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ]" Object => void
+      _minoneof "min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ]"
+        _asm_proceduresetupspatiallyclusterednetwork_otherwith_4 "other turtles with [ not link-neighbor? myself ]" AgentSet,Reporter => AgentSet
           _turtles "turtles" => AgentSet
-          _asm_proceduresetupspatiallyclusterednetwork_not_5 "not" boolean => boolean
-            _linkneighbor:null "link-neighbor?" Turtle => boolean
+          _asm_proceduresetupspatiallyclusterednetwork_not_5 "not link-neighbor? myself" boolean => boolean
+            _linkneighbor:null "link-neighbor? myself" Turtle => boolean
               _myself "myself" => Agent
                 // parameter final  context
                 // parameter final  target
@@ -1378,7 +1378,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-        _asm_proceduresetupspatiallyclusterednetwork_distance_6 "distance" Agent => double
+        _asm_proceduresetupspatiallyclusterednetwork_distance_6 "distance myself" Agent => double
           _myself "myself" => Agent
              L0
               ALOAD 1
@@ -1467,7 +1467,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_let_3.kept1__let : Lorg/nlogo/core/Let;
           ALOAD 2
@@ -1477,8 +1477,8 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetupspatiallyclusterednetwork_if_7 "if" boolean => void
-      _notequal "!=" Object,Object => boolean
+[4]_asm_proceduresetupspatiallyclusterednetwork_if_7 "if choice != nobody [ create-link-with [ choice ] ]" boolean => void
+      _notequal "choice != nobody" Object,Object => boolean
         _letvariable(Let(CHOICE)) "choice" => Object
         _nobody "nobody" => Nobody$
           // parameter final  context
@@ -1491,7 +1491,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+          GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_if_7.kept3__let : Lorg/nlogo/core/Let;
           INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
@@ -1526,13 +1526,13 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_createlinkwith:,+7 "create-link-with"
+[5]_createlinkwith:,+7 "create-link-with [ choice ]"
       _asm_proceduresetupspatiallyclusterednetwork_letvariable_8 "choice" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.binding ()Lorg/nlogo/nvm/Binding;
+            GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_letvariable_8.kept1__let : Lorg/nlogo/core/Let;
             INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
@@ -1554,9 +1554,9 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[8]_asm_proceduresetupspatiallyclusterednetwork_while_11 "while" boolean => void
-      _lessthan "<" double,Object => boolean
-        _count "count" AgentSet => double
+[8]_asm_proceduresetupspatiallyclusterednetwork_while_11 "while [ count links < num-links ] [ ask one-of turtles let min-one-of other turtles with [ not link-neighbor? myself ] [ distance myself ] [ if choice != nobody [ create-link-with [ choice ] ] ] ]" boolean => void
+      _lessthan "count links < num-links" double,Object => boolean
+        _count "count links" AgentSet => double
           _links "links" => AgentSet
         _procedurevariable:NUM-LINKS "num-links" => Object
           // parameter final  context
@@ -1578,7 +1578,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L3
@@ -1651,7 +1651,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12 "repeat" double => void
+[9]_asm_proceduresetupspatiallyclusterednetwork_repeatlocal_12 "repeat 10 [ layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1 ]" double => void
       _constdouble:10.0 "10" => double
           // parameter final  context
           // parameter final  context
@@ -1662,7 +1662,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -1677,7 +1677,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_layoutspring "layout-spring"
+[10]_layoutspring "layout-spring turtles links 0.3 world-width / sqrt number-of-nodes 1"
       _asm_proceduresetupspatiallyclusterednetwork_turtles_13 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -1701,9 +1701,9 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_constdouble_15.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetupspatiallyclusterednetwork_div_16 "/" double,double => double
+      _asm_proceduresetupspatiallyclusterednetwork_div_16 "world-width / sqrt number-of-nodes" double,double => double
         _worldwidth "world-width" => double
-        _sqrt "sqrt" double => double
+        _sqrt "sqrt number-of-nodes" double => double
           _observervariable:NUMBER-OF-NODES "number-of-nodes" => Object
             // parameter final  context
             // parameter final  context
@@ -1805,7 +1805,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -1845,10 +1845,10 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_if_0 "if" boolean => void
-      _all "all?" AgentSet,Reporter => boolean
+[0]_asm_procedurego_if_0 "if all? turtles [ not infected? ] [ stop ]" boolean => void
+      _all "all? turtles [ not infected? ]" AgentSet,Reporter => boolean
         _turtles "turtles" => AgentSet
-        _asm_procedurego_not_1 "not" boolean => boolean
+        _asm_procedurego_not_1 "not infected?" boolean => boolean
           _turtlevariable:INFECTED? "infected?" => Object
               // parameter final  context
               // parameter final  context
@@ -2024,8 +2024,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -2048,7 +2048,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[2]_asm_procedurego_ask_3 "ask" AgentSet => void
+[2]_asm_procedurego_ask_3 "ask turtles set virus-check-timer virus-check-timer + 1 [ if virus-check-timer >= virus-check-frequency [ set virus-check-timer 0 ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2106,8 +2106,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedurego_setturtlevariable_4 "set" Object => void
-      _plus "+" double,double => double
+[3]_asm_procedurego_setturtlevariable_4 "set virus-check-timer virus-check-timer + 1" Object => void
+      _plus "virus-check-timer + 1" double,double => double
         _turtlevariable:VIRUS-CHECK-TIMER "virus-check-timer" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -2200,8 +2200,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[4]_asm_procedurego_if_5 "if" boolean => void
-      _greaterorequal ">=" Object,Object => boolean
+[4]_asm_procedurego_if_5 "if virus-check-timer >= virus-check-frequency [ set virus-check-timer 0 ]" boolean => void
+      _greaterorequal "virus-check-timer >= virus-check-frequency" Object,Object => boolean
         _turtlevariable:VIRUS-CHECK-TIMER "virus-check-timer" => Object
         _observervariable:VIRUS-CHECK-FREQUENCY "virus-check-frequency" => Object
           // parameter final  context
@@ -2351,7 +2351,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[5]_asm_procedurego_setturtlevariable_6 "set" Object => void
+[5]_asm_procedurego_setturtlevariable_6 "set virus-check-timer 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -2469,7 +2469,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure BECOME-INFECTED:[]{-T--}:
-[0]_asm_procedurebecomeinfected_setturtlevariable_0 "set" Object => void
+[0]_asm_procedurebecomeinfected_setturtlevariable_0 "set infected? true" Object => void
       _constboolean:true "true" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2506,7 +2506,7 @@ procedure BECOME-INFECTED:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurebecomeinfected_setturtlevariable_1 "set" Object => void
+[1]_asm_procedurebecomeinfected_setturtlevariable_1 "set resistant? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2543,7 +2543,7 @@ procedure BECOME-INFECTED:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurebecomeinfected_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_procedurebecomeinfected_setturtleorlinkvariable_2 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -2592,7 +2592,7 @@ procedure BECOME-INFECTED:[]{-T--}:
           RETURN
 
 procedure BECOME-SUSCEPTIBLE:[]{-T--}:
-[0]_asm_procedurebecomesusceptible_setturtlevariable_0 "set" Object => void
+[0]_asm_procedurebecomesusceptible_setturtlevariable_0 "set infected? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2629,7 +2629,7 @@ procedure BECOME-SUSCEPTIBLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurebecomesusceptible_setturtlevariable_1 "set" Object => void
+[1]_asm_procedurebecomesusceptible_setturtlevariable_1 "set resistant? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2666,7 +2666,7 @@ procedure BECOME-SUSCEPTIBLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurebecomesusceptible_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_procedurebecomesusceptible_setturtleorlinkvariable_2 "set color green" Object => void
       _constdouble:55.0 "green" => Double
           // parameter final  context
           // parameter final  context
@@ -2715,7 +2715,7 @@ procedure BECOME-SUSCEPTIBLE:[]{-T--}:
           RETURN
 
 procedure BECOME-RESISTANT:[]{-T--}:
-[0]_asm_procedurebecomeresistant_setturtlevariable_0 "set" Object => void
+[0]_asm_procedurebecomeresistant_setturtlevariable_0 "set infected? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2752,7 +2752,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurebecomeresistant_setturtlevariable_1 "set" Object => void
+[1]_asm_procedurebecomeresistant_setturtlevariable_1 "set resistant? true" Object => void
       _constboolean:true "true" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2789,7 +2789,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurebecomeresistant_setturtleorlinkvariable_2 "set" Object => void
+[2]_asm_procedurebecomeresistant_setturtleorlinkvariable_2 "set color gray" Object => void
       _constdouble:5.0 "gray" => Double
           // parameter final  context
           // parameter final  context
@@ -2826,7 +2826,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_procedurebecomeresistant_ask_3 "ask" Object => void
+[3]_asm_procedurebecomeresistant_ask_3 "ask my-links [ set color gray - 2 ]" Object => void
       _mylinks:null "my-links"
           // parameter final  context
           // parameter final  target
@@ -2948,8 +2948,8 @@ procedure BECOME-RESISTANT:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[4]_asm_procedurebecomeresistant_setturtleorlinkvariable_4 "set" Object => void
-      _constdouble:3.0 "-" => Double
+[4]_asm_procedurebecomeresistant_setturtleorlinkvariable_4 "set color gray - 2" Object => void
+      _constdouble:3.0 "gray - 2" => Double
           // parameter final  context
           // parameter final  context
           // parameter final  value
@@ -3005,8 +3005,8 @@ procedure BECOME-RESISTANT:[]{-T--}:
           RETURN
 
 procedure SPREAD-VIRUS:[]{OTPL}:
-[0]_asm_procedurespreadvirus_ask_0 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[0]_asm_procedurespreadvirus_ask_0 "ask turtles with [ infected? ] [ ask link-neighbors with [ not resistant? ] [ if random-float 100 < virus-spread-chance [ become-infected ] ] ]" AgentSet => void
+      _with "turtles with [ infected? ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
         _asm_procedurespreadvirus_turtlevariable_1 "infected?" => Object
               // parameter final  context
@@ -3183,10 +3183,10 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_procedurespreadvirus_ask_2 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[1]_asm_procedurespreadvirus_ask_2 "ask link-neighbors with [ not resistant? ] [ if random-float 100 < virus-spread-chance [ become-infected ] ]" AgentSet => void
+      _with "link-neighbors with [ not resistant? ]" AgentSet,Reporter => AgentSet
         _linkneighbors:null "link-neighbors" => AgentSet
-        _asm_procedurespreadvirus_not_3 "not" boolean => boolean
+        _asm_procedurespreadvirus_not_3 "not resistant?" boolean => boolean
           _turtlevariable:RESISTANT? "resistant?" => Object
               // parameter final  context
               // parameter final  context
@@ -3429,9 +3429,9 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[2]_asm_procedurespreadvirus_if_4 "if" boolean => void
-      _lessthan "<" double,Object => boolean
-        _randomfloat "random-float" double => double
+[2]_asm_procedurespreadvirus_if_4 "if random-float 100 < virus-spread-chance [ become-infected ]" boolean => void
+      _lessthan "random-float 100 < virus-spread-chance" double,Object => boolean
+        _randomfloat "random-float 100" double => double
           _constdouble:100.0 "100" => double
         _observervariable:VIRUS-SPREAD-CHANCE "virus-spread-chance" => Object
           // parameter final  context
@@ -3577,12 +3577,12 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           RETURN
 
 procedure DO-VIRUS-CHECKS:[]{OTPL}:
-[0]_asm_proceduredoviruschecks_ask_0 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[0]_asm_proceduredoviruschecks_ask_0 "ask turtles with [ infected? and virus-check-timer = 0 ] [ if random 100 < recovery-chance [ ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ] ] ]" AgentSet => void
+      _with "turtles with [ infected? and virus-check-timer = 0 ]" AgentSet,Reporter => AgentSet
         _turtles "turtles" => AgentSet
-        _asm_proceduredoviruschecks_and_1 "and"
+        _asm_proceduredoviruschecks_and_1 "infected? and virus-check-timer = 0"
           _turtlevariable:INFECTED? "infected?" => Object
-          _equal "=" Object,double => boolean
+          _equal "virus-check-timer = 0" Object,double => boolean
             _turtlevariable:VIRUS-CHECK-TIMER "virus-check-timer" => Object
             _constdouble:0.0 "0" => double
               // parameter final  context
@@ -3853,9 +3853,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduredoviruschecks_if_2 "if" boolean => void
-      _lessthan "<" double,Object => boolean
-        _randomconst:100 "random" => double
+[1]_asm_proceduredoviruschecks_if_2 "if random 100 < recovery-chance [ ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ] ]" boolean => void
+      _lessthan "random 100 < recovery-chance" double,Object => boolean
+        _randomconst:100 "random 100" => double
         _observervariable:RECOVERY-CHANCE "recovery-chance" => Object
           // parameter final  context
           // parameter final  context
@@ -3947,9 +3947,9 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[2]_asm_proceduredoviruschecks_ifelse_3 "ifelse" boolean => void
-      _lessthan "<" double,Object => boolean
-        _randomconst:100 "random" => double
+[2]_asm_proceduredoviruschecks_ifelse_3 "ifelse random 100 < gain-resistance-chance [ become-resistant ] [ become-susceptible ]" boolean => void
+      _lessthan "random 100 < gain-resistance-chance" double,Object => boolean
+        _randomconst:100 "random 100" => double
         _observervariable:GAIN-RESISTANCE-CHANCE "gain-resistance-chance" => Object
           // parameter final  context
           // parameter final  context
@@ -4109,29 +4109,29 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           RETURN
 
 procedure UPDATE-PLOT:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Network Status""
       _asm_procedureupdateplot_conststring_0 ""Network Status"" => String
             // parameter final  context
            L0
             LDC "Network Status"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen"
+[1]_setcurrentplotpen "set-current-plot-pen "susceptible""
       _asm_procedureupdateplot_conststring_1 ""susceptible"" => String
             // parameter final  context
            L0
             LDC "susceptible"
            L1
             ARETURN
-[2]_plot "plot"
-      _asm_procedureupdateplot_mult_2 "*" double,double => double
-        _div "/" double,double => double
-          _countwith "count" AgentSet,Reporter => double
+[2]_plot "plot count turtles with [ not infected? and not resistant? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_2 "count turtles with [ not infected? and not resistant? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ not infected? and not resistant? ] / count turtles" double,double => double
+          _countwith "count turtles with [ not infected? and not resistant? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
-            _asm_procedureupdateplot_and_3 "and"
-              _not "not" boolean => boolean
+            _asm_procedureupdateplot_and_3 "not infected? and not resistant?"
+              _not "not infected?" boolean => boolean
                 _turtlevariable:INFECTED? "infected?" => Object
-              _not "not" boolean => boolean
+              _not "not resistant?" boolean => boolean
                 _turtlevariable:RESISTANT? "resistant?" => Object
                   // parameter final  context
                   // parameter final  context
@@ -4259,7 +4259,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
                  L21
                  FRAME SAME1 java/lang/Boolean
                   ARETURN
-          _count "count" AgentSet => double
+          _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
             // parameter final  context
@@ -4403,17 +4403,17 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen"
+[3]_setcurrentplotpen "set-current-plot-pen "infected""
       _asm_procedureupdateplot_conststring_4 ""infected"" => String
             // parameter final  context
            L0
             LDC "infected"
            L1
             ARETURN
-[4]_plot "plot"
-      _asm_procedureupdateplot_mult_5 "*" double,double => double
-        _div "/" double,double => double
-          _countwith "count" AgentSet,Reporter => double
+[4]_plot "plot count turtles with [ infected? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_5 "count turtles with [ infected? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ infected? ] / count turtles" double,double => double
+          _countwith "count turtles with [ infected? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
             _asm_procedureupdateplot_turtlevariable_6 "infected?" => Object
                   // parameter final  context
@@ -4439,7 +4439,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-          _count "count" AgentSet => double
+          _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
             // parameter final  context
@@ -4583,17 +4583,17 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "resistant""
       _asm_procedureupdateplot_conststring_7 ""resistant"" => String
             // parameter final  context
            L0
             LDC "resistant"
            L1
             ARETURN
-[6]_plot "plot"
-      _asm_procedureupdateplot_mult_8 "*" double,double => double
-        _div "/" double,double => double
-          _countwith "count" AgentSet,Reporter => double
+[6]_plot "plot count turtles with [ resistant? ] / count turtles * 100"
+      _asm_procedureupdateplot_mult_8 "count turtles with [ resistant? ] / count turtles * 100" double,double => double
+        _div "count turtles with [ resistant? ] / count turtles" double,double => double
+          _countwith "count turtles with [ resistant? ]" AgentSet,Reporter => double
             _turtles "turtles" => AgentSet
             _asm_procedureupdateplot_turtlevariable_9 "resistant?" => Object
                   // parameter final  context
@@ -4619,7 +4619,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-          _count "count" AgentSet => double
+          _count "count turtles" AgentSet => double
             _turtles "turtles" => AgentSet
         _constdouble:100.0 "100" => double
             // parameter final  context

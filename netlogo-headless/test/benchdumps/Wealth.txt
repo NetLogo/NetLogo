@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 48281" double => void
       _constdouble:48281.0 "48281" => double
           // parameter final  context
           // parameter final  context
@@ -80,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 2400 [ go ]" double => void
       _constdouble:2400.0 "2400" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -131,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -159,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -218,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetup_setobservervariable_0 "set" Object => void
+[2]_asm_proceduresetup_setobservervariable_0 "set max-grain 50" Object => void
       _constdouble:50.0 "50" => Double
           // parameter final  context
           // parameter final  context
@@ -348,7 +348,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
-[0]_asm_proceduresetuppatches_ask_0 "ask" AgentSet => void
+[0]_asm_proceduresetuppatches_ask_0 "ask patches set max-grain-here 0 [ if random-float 100.0 <= percent-best-land set max-grain-here max-grain [ set grain-here max-grain-here ] ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -406,7 +406,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_proceduresetuppatches_setpatchvariable_1 "set" Object => void
+[1]_asm_proceduresetuppatches_setpatchvariable_1 "set max-grain-here 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -443,9 +443,9 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresetuppatches_if_2 "if" boolean => void
-      _lessorequal "<=" double,Object => boolean
-        _randomfloat "random-float" double => double
+[2]_asm_proceduresetuppatches_if_2 "if random-float 100.0 <= percent-best-land set max-grain-here max-grain [ set grain-here max-grain-here ]" boolean => void
+      _lessorequal "random-float 100.0 <= percent-best-land" double,Object => boolean
+        _randomfloat "random-float 100.0" double => double
           _constdouble:100.0 "100.0" => double
         _observervariable:PERCENT-BEST-LAND "percent-best-land" => Object
           // parameter final  context
@@ -530,7 +530,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[3]_asm_proceduresetuppatches_setpatchvariable_3 "set" Object => void
+[3]_asm_proceduresetuppatches_setpatchvariable_3 "set max-grain-here max-grain" Object => void
       _observervariable:MAX-GRAIN "max-grain" => Object
           // parameter final  context
           // parameter final  context
@@ -570,7 +570,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresetuppatches_setpatchvariable_4 "set" Object => void
+[4]_asm_proceduresetuppatches_setpatchvariable_4 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           // parameter final  context
           // parameter final  context
@@ -632,7 +632,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_proceduresetuppatches_repeatlocal_6 "repeat" double => void
+[6]_asm_proceduresetuppatches_repeatlocal_6 "repeat 5 ask patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ] [ diffuse 0.25 ]" double => void
       _constdouble:5.0 "5" => double
           // parameter final  context
           // parameter final  context
@@ -643,7 +643,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -658,10 +658,10 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_proceduresetuppatches_ask_7 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[7]_asm_proceduresetuppatches_ask_7 "ask patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ]" AgentSet => void
+      _with "patches with [ max-grain-here != 0 ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_proceduresetuppatches_notequal_8 "!=" Object,double => boolean
+        _asm_proceduresetuppatches_notequal_8 "max-grain-here != 0" Object,double => boolean
           _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           _constdouble:0.0 "0" => double
               // parameter final  context
@@ -882,7 +882,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[8]_asm_proceduresetuppatches_setpatchvariable_9 "set" Object => void
+[8]_asm_proceduresetuppatches_setpatchvariable_9 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           // parameter final  context
           // parameter final  context
@@ -944,7 +944,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[10]_diffuse:GRAIN-HERE "diffuse"
+[10]_diffuse:GRAIN-HERE "diffuse 0.25"
       _asm_proceduresetuppatches_constdouble_11 "0.25" => Double
             // parameter final  context
            L0
@@ -957,7 +957,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -985,7 +985,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L2
          FRAME SAME
           RETURN
-[12]_asm_proceduresetuppatches_repeatlocal_13 "repeat" double => void
+[12]_asm_proceduresetuppatches_repeatlocal_13 "repeat 10 [ diffuse 0.25 ]" double => void
       _constdouble:10.0 "10" => double
           // parameter final  context
           // parameter final  context
@@ -996,7 +996,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -1011,7 +1011,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[13]_diffuse:GRAIN-HERE "diffuse"
+[13]_diffuse:GRAIN-HERE "diffuse 0.25"
       _asm_proceduresetuppatches_constdouble_14 "0.25" => Double
             // parameter final  context
            L0
@@ -1024,7 +1024,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -1052,7 +1052,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L2
          FRAME SAME
           RETURN
-[15]_asm_proceduresetuppatches_ask_16 "ask" AgentSet => void
+[15]_asm_proceduresetuppatches_ask_16 "ask patches set grain-here floor grain-here set max-grain-here grain-here [ recolor-patch ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1110,8 +1110,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[16]_asm_proceduresetuppatches_setpatchvariable_17 "set" Object => void
-      _floor "floor" double => double
+[16]_asm_proceduresetuppatches_setpatchvariable_17 "set grain-here floor grain-here" Object => void
+      _floor "floor grain-here" double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
           // parameter final  context
           // parameter final  context
@@ -1197,7 +1197,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[17]_asm_proceduresetuppatches_setpatchvariable_18 "set" Object => void
+[17]_asm_proceduresetuppatches_setpatchvariable_18 "set max-grain-here grain-here" Object => void
       _patchvariable:GRAIN-HERE "grain-here" => Object
           // parameter final  context
           // parameter final  context
@@ -1291,8 +1291,8 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           RETURN
 
 procedure RECOLOR-PATCH:[]{-TP-}:
-[0]_asm_procedurerecolorpatch_setpatchvariable_0 "set" Object => void
-      _scalecolor "scale-color" double,double,double,double => double
+[0]_asm_procedurerecolorpatch_setpatchvariable_0 "set pcolor scale-color yellow grain-here 0 max-grain" Object => void
+      _scalecolor "scale-color yellow grain-here 0 max-grain" double,double,double,double => double
         _constdouble:45.0 "yellow" => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _constdouble:0.0 "0" => double
@@ -1529,7 +1529,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
           RETURN
 
 procedure SETUP-TURTLES:[]{O---}:
-[0]_setdefaultshape "set-default-shape"
+[0]_setdefaultshape "set-default-shape turtles "person""
       _asm_proceduresetupturtles_turtles_0 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -1544,7 +1544,7 @@ procedure SETUP-TURTLES:[]{O---}:
             LDC "person"
            L1
             ARETURN
-[1]_createorderedturtles:,+7 "cro"
+[1]_createorderedturtles:,+7 "cro num-people setxy random-pxcor random-pycor set size 1.5 set-initial-turtle-vars [ set age random life-expectancy ]"
       _asm_proceduresetupturtles_observervariable_2 "num-people" => Object
             // parameter final  context
            L0
@@ -1555,7 +1555,7 @@ procedure SETUP-TURTLES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_asm_proceduresetupturtles_setxy_3 "setxy" double,double => void
+[2]_asm_proceduresetupturtles_setxy_3 "setxy random-pxcor random-pycor" double,double => void
       _randompxcor "random-pxcor" => double
       _randompycor "random-pycor" => double
           // parameter final  context
@@ -1652,7 +1652,7 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_proceduresetupturtles_setturtlevariable_4 "set" Object => void
+[3]_asm_proceduresetupturtles_setturtlevariable_4 "set size 1.5" Object => void
       _constdouble:1.5 "1.5" => Double
           // parameter final  context
           // parameter final  context
@@ -1709,8 +1709,8 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduresetupturtles_setturtlevariable_6 "set" Object => void
-      _random "random" double => double
+[5]_asm_proceduresetupturtles_setturtlevariable_6 "set age random life-expectancy" Object => void
+      _random "random life-expectancy" double => double
         _turtlevariable:LIFE-EXPECTANCY "life-expectancy" => Object
           // parameter final  context
           // parameter final  context
@@ -1892,7 +1892,7 @@ procedure SETUP-TURTLES:[]{O---}:
           RETURN
 
 procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
-[0]_asm_proceduresetinitialturtlevars_setturtlevariable_0 "set" Object => void
+[0]_asm_proceduresetinitialturtlevars_setturtlevariable_0 "set age 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -1929,10 +1929,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_proceduresetinitialturtlevars_setturtlevariable_1 "set" Object => void
-      _mult "*" double,double => double
+[1]_asm_proceduresetinitialturtlevars_setturtlevariable_1 "set heading 90 * random 4" Object => void
+      _mult "90 * random 4" double,double => double
         _constdouble:90.0 "90" => double
-        _randomconst:4 "random" => double
+        _randomconst:4 "random 4" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -1989,12 +1989,12 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[2]_asm_proceduresetinitialturtlevars_setturtlevariable_2 "set" Object => void
-      _plus "+" double,double => double
+[2]_asm_proceduresetinitialturtlevars_setturtlevariable_2 "set life-expectancy life-expectancy-min + random life-expectancy-max - life-expectancy-min + 1" Object => void
+      _plus "life-expectancy-min + random life-expectancy-max - life-expectancy-min + 1" double,double => double
         _observervariable:LIFE-EXPECTANCY-MIN "life-expectancy-min" => Object
-        _random "random" double => double
-          _plus "+" double,double => double
-            _minus "-" double,double => double
+        _random "random life-expectancy-max - life-expectancy-min + 1" double => double
+          _plus "life-expectancy-max - life-expectancy-min + 1" double,double => double
+            _minus "life-expectancy-max - life-expectancy-min" double,double => double
               _observervariable:LIFE-EXPECTANCY-MAX "life-expectancy-max" => Object
               _observervariable:LIFE-EXPECTANCY-MIN "life-expectancy-min" => Object
             _constdouble:1.0 "1" => double
@@ -2210,10 +2210,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L27
           RETURN
-[3]_asm_proceduresetinitialturtlevars_setturtlevariable_3 "set" Object => void
-      _plus "+" double,double => double
+[3]_asm_proceduresetinitialturtlevars_setturtlevariable_3 "set metabolism 1 + random metabolism-max" Object => void
+      _plus "1 + random metabolism-max" double,double => double
         _constdouble:1.0 "1" => double
-        _random "random" double => double
+        _random "random metabolism-max" double => double
           _observervariable:METABOLISM-MAX "metabolism-max" => Object
           // parameter final  context
           // parameter final  context
@@ -2353,10 +2353,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[4]_asm_proceduresetinitialturtlevars_setturtlevariable_4 "set" Object => void
-      _plus "+" double,double => double
+[4]_asm_proceduresetinitialturtlevars_setturtlevariable_4 "set wealth metabolism + random 50" Object => void
+      _plus "metabolism + random 50" double,double => double
         _turtlevariable:METABOLISM "metabolism" => Object
-        _randomconst:50 "random" => double
+        _randomconst:50 "random 50" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -2452,10 +2452,10 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[5]_asm_proceduresetinitialturtlevars_setturtlevariable_5 "set" Object => void
-      _plus "+" double,double => double
+[5]_asm_proceduresetinitialturtlevars_setturtlevariable_5 "set vision 1 + random max-vision" Object => void
+      _plus "1 + random max-vision" double,double => double
         _constdouble:1.0 "1" => double
-        _random "random" double => double
+        _random "random max-vision" double => double
           _observervariable:MAX-VISION "max-vision" => Object
           // parameter final  context
           // parameter final  context
@@ -2607,9 +2607,9 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           RETURN
 
 procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
-[0]_asm_procedurerecolorturtles_setprocedurevariable_0 "let" Object => void
-      _max "max"
-        _asm_procedurerecolorturtles_turtlevariableof_1 "of" Object => Object
+[0]_asm_procedurerecolorturtles_setprocedurevariable_0 "let max [ wealth ] of turtles" Object => void
+      _max "max [ wealth ] of turtles"
+        _asm_procedurerecolorturtles_turtlevariableof_1 "[ wealth ] of turtles" Object => Object
           _turtles "turtles" => AgentSet
               // parameter final  context
               // parameter final  context
@@ -2739,7 +2739,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -2748,7 +2748,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurerecolorturtles_ask_2 "ask" AgentSet => void
+[1]_asm_procedurerecolorturtles_ask_2 "ask turtles [ ifelse wealth <= max-wealth / 3 [ set color red ] [ ifelse wealth <= max-wealth * 2 / 3 [ set color green ] [ set color blue ] ] ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2806,10 +2806,10 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[2]_asm_procedurerecolorturtles_ifelse_3 "ifelse" boolean => void
-      _lessorequal "<=" Object,double => boolean
+[2]_asm_procedurerecolorturtles_ifelse_3 "ifelse wealth <= max-wealth / 3 [ set color red ] [ ifelse wealth <= max-wealth * 2 / 3 [ set color green ] [ set color blue ] ]" boolean => void
+      _lessorequal "wealth <= max-wealth / 3" Object,double => boolean
         _turtlevariable:WEALTH "wealth" => Object
-        _div "/" double,double => double
+        _div "max-wealth / 3" double,double => double
           _procedurevariable:MAX-WEALTH "max-wealth" => Object
           _constdouble:3.0 "3" => double
           // parameter final  context
@@ -2841,7 +2841,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
          FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L6
@@ -2947,7 +2947,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[3]_asm_procedurerecolorturtles_setturtleorlinkvariable_4 "set" Object => void
+[3]_asm_procedurerecolorturtles_setturtleorlinkvariable_4 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -2992,11 +2992,11 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurerecolorturtles_ifelse_6 "ifelse" boolean => void
-      _lessorequal "<=" Object,double => boolean
+[5]_asm_procedurerecolorturtles_ifelse_6 "ifelse wealth <= max-wealth * 2 / 3 [ set color green ] [ set color blue ]" boolean => void
+      _lessorequal "wealth <= max-wealth * 2 / 3" Object,double => boolean
         _turtlevariable:WEALTH "wealth" => Object
-        _div "/" double,double => double
-          _mult "*" double,double => double
+        _div "max-wealth * 2 / 3" double,double => double
+          _mult "max-wealth * 2" double,double => double
             _procedurevariable:MAX-WEALTH "max-wealth" => Object
             _constdouble:2.0 "2" => double
           _constdouble:3.0 "3" => double
@@ -3033,7 +3033,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
          FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L6
@@ -3147,7 +3147,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L19
           RETURN
-[6]_asm_procedurerecolorturtles_setturtleorlinkvariable_7 "set" Object => void
+[6]_asm_procedurerecolorturtles_setturtleorlinkvariable_7 "set color green" Object => void
       _constdouble:55.0 "green" => Double
           // parameter final  context
           // parameter final  context
@@ -3192,7 +3192,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurerecolorturtles_setturtleorlinkvariable_9 "set" Object => void
+[8]_asm_procedurerecolorturtles_setturtleorlinkvariable_9 "set color blue" Object => void
       _constdouble:105.0 "blue" => Double
           // parameter final  context
           // parameter final  context
@@ -3250,7 +3250,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
 
 procedure GO:[]{O---}:
 [0]_tick "tick"
-[1]_asm_procedurego_ask_0 "ask" AgentSet => void
+[1]_asm_procedurego_ask_0 "ask turtles [ turn-towards-grain ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -3336,9 +3336,9 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[4]_asm_procedurego_if_3 "if" boolean => void
-      _equal "=" double,double => boolean
-        _mod "mod" double,double => double
+[4]_asm_procedurego_if_3 "if ticks mod grain-growth-interval = 0 [ ask patches [ grow-grain ] ]" boolean => void
+      _equal "ticks mod grain-growth-interval = 0" double,double => boolean
+        _mod "ticks mod grain-growth-interval" double,double => double
           _ticks "ticks" => double
           _observervariable:GRAIN-GROWTH-INTERVAL "grain-growth-interval" => Object
         _constdouble:0.0 "0" => double
@@ -3456,7 +3456,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[5]_asm_procedurego_ask_4 "ask" AgentSet => void
+[5]_asm_procedurego_ask_4 "ask patches [ grow-grain ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -3562,7 +3562,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurego_ask_8 "ask" AgentSet => void
+[9]_asm_procedurego_ask_8 "ask turtles [ move-eat-age-die ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -3700,7 +3700,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
-[0]_asm_procedureturntowardsgrain_setturtlevariable_0 "set" Object => void
+[0]_asm_procedureturntowardsgrain_setturtlevariable_0 "set heading 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -3737,7 +3737,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedureturntowardsgrain_setprocedurevariable_1 "let" Object => void
+[1]_asm_procedureturntowardsgrain_setprocedurevariable_1 "let 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -3749,7 +3749,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -3758,7 +3758,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_procedureturntowardsgrain_setprocedurevariable_2 "let" Object => void
+[2]_asm_procedureturntowardsgrain_setprocedurevariable_2 "let grain-ahead" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
           // parameter final  context
           // parameter final  arg0
@@ -3790,7 +3790,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -3799,7 +3799,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[3]_asm_procedureturntowardsgrain_setturtlevariable_3 "set" Object => void
+[3]_asm_procedureturntowardsgrain_setturtlevariable_3 "set heading 90" Object => void
       _constdouble:90.0 "90" => Double
           // parameter final  context
           // parameter final  context
@@ -3836,8 +3836,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_procedureturntowardsgrain_if_4 "if" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[4]_asm_procedureturntowardsgrain_if_4 "if grain-ahead > best-amount set best-direction 90 [ set best-amount grain-ahead ]" boolean => void
+      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
           // parameter final  context
@@ -3873,7 +3873,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L2
@@ -3994,7 +3994,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[5]_asm_procedureturntowardsgrain_setprocedurevariable_5 "set" Object => void
+[5]_asm_procedureturntowardsgrain_setprocedurevariable_5 "set best-direction 90" Object => void
       _constdouble:90.0 "90" => Double
           // parameter final  context
           // parameter final  context
@@ -4006,7 +4006,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4015,7 +4015,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[6]_asm_procedureturntowardsgrain_setprocedurevariable_6 "set" Object => void
+[6]_asm_procedureturntowardsgrain_setprocedurevariable_6 "set best-amount grain-ahead" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
           // parameter final  context
           // parameter final  arg0
@@ -4047,7 +4047,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4056,7 +4056,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_procedureturntowardsgrain_setturtlevariable_7 "set" Object => void
+[7]_asm_procedureturntowardsgrain_setturtlevariable_7 "set heading 180" Object => void
       _constdouble:180.0 "180" => Double
           // parameter final  context
           // parameter final  context
@@ -4093,8 +4093,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[8]_asm_procedureturntowardsgrain_if_8 "if" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[8]_asm_procedureturntowardsgrain_if_8 "if grain-ahead > best-amount set best-direction 180 [ set best-amount grain-ahead ]" boolean => void
+      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
           // parameter final  context
@@ -4130,7 +4130,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L2
@@ -4251,7 +4251,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[9]_asm_procedureturntowardsgrain_setprocedurevariable_9 "set" Object => void
+[9]_asm_procedureturntowardsgrain_setprocedurevariable_9 "set best-direction 180" Object => void
       _constdouble:180.0 "180" => Double
           // parameter final  context
           // parameter final  context
@@ -4263,7 +4263,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4272,7 +4272,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[10]_asm_procedureturntowardsgrain_setprocedurevariable_10 "set" Object => void
+[10]_asm_procedureturntowardsgrain_setprocedurevariable_10 "set best-amount grain-ahead" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
           // parameter final  context
           // parameter final  arg0
@@ -4304,7 +4304,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4313,7 +4313,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[11]_asm_procedureturntowardsgrain_setturtlevariable_11 "set" Object => void
+[11]_asm_procedureturntowardsgrain_setturtlevariable_11 "set heading 270" Object => void
       _constdouble:270.0 "270" => Double
           // parameter final  context
           // parameter final  context
@@ -4350,8 +4350,8 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[12]_asm_procedureturntowardsgrain_if_12 "if" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[12]_asm_procedureturntowardsgrain_if_12 "if grain-ahead > best-amount set best-direction 270 [ set best-amount grain-ahead ]" boolean => void
+      _greaterthan "grain-ahead > best-amount" Object,Object => boolean
         _callreport:GRAIN-AHEAD "grain-ahead"
         _procedurevariable:BEST-AMOUNT "best-amount" => Object
           // parameter final  context
@@ -4387,7 +4387,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          FRAME SAME1 java/lang/Object
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L2
@@ -4508,7 +4508,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[13]_asm_procedureturntowardsgrain_setprocedurevariable_13 "set" Object => void
+[13]_asm_procedureturntowardsgrain_setprocedurevariable_13 "set best-direction 270" Object => void
       _constdouble:270.0 "270" => Double
           // parameter final  context
           // parameter final  context
@@ -4520,7 +4520,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4529,7 +4529,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[14]_asm_procedureturntowardsgrain_setprocedurevariable_14 "set" Object => void
+[14]_asm_procedureturntowardsgrain_setprocedurevariable_14 "set best-amount grain-ahead" Object => void
       _callreport:GRAIN-AHEAD "grain-ahead"
           // parameter final  context
           // parameter final  arg0
@@ -4561,7 +4561,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4570,7 +4570,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[15]_asm_procedureturntowardsgrain_setturtlevariable_15 "set" Object => void
+[15]_asm_procedureturntowardsgrain_setturtlevariable_15 "set heading best-direction" Object => void
       _procedurevariable:BEST-DIRECTION "best-direction" => Object
           // parameter final  context
           // parameter final  context
@@ -4579,7 +4579,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L4
@@ -4622,7 +4622,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           RETURN
 
 reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
-[0]_asm_proceduregrainahead_setprocedurevariable_0 "let" Object => void
+[0]_asm_proceduregrainahead_setprocedurevariable_0 "let 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -4634,7 +4634,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4643,7 +4643,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_proceduregrainahead_setprocedurevariable_1 "let" Object => void
+[1]_asm_proceduregrainahead_setprocedurevariable_1 "let 1" Object => void
       _constdouble:1.0 "1" => Double
           // parameter final  context
           // parameter final  context
@@ -4655,7 +4655,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4664,7 +4664,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[2]_asm_proceduregrainahead_repeatlocal_2 "repeat" double => void
+[2]_asm_proceduregrainahead_repeatlocal_2 "repeat vision set total total + [ grain-here ] of patch-ahead how-far [ set how-far how-far + 1 ]" double => void
       _turtlevariable:VISION "vision" => Object
           // parameter final  context
           // parameter final  context
@@ -4714,7 +4714,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -4729,17 +4729,17 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_proceduregrainahead_setprocedurevariable_3 "set" Object => void
-      _plus "+" double,double => double
+[3]_asm_proceduregrainahead_setprocedurevariable_3 "set total total + [ grain-here ] of patch-ahead how-far" Object => void
+      _plus "total + [ grain-here ] of patch-ahead how-far" double,double => double
         _procedurevariable:TOTAL "total" => Object
-        _patchvariableof:GRAIN-HERE "of" Object => Object
-          _patchahead "patch-ahead"
+        _patchvariableof:GRAIN-HERE "[ grain-here ] of patch-ahead how-far" Object => Object
+          _patchahead "patch-ahead how-far"
             _asm_proceduregrainahead_procedurevariable_4 "how-far" => Object
                   // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                  INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+                  GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
                   ICONST_1
                   AALOAD
                  L1
@@ -4758,7 +4758,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L7
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L8
@@ -4935,7 +4935,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4944,8 +4944,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[4]_asm_proceduregrainahead_setprocedurevariable_5 "set" Object => void
-      _plus "+" double,double => double
+[4]_asm_proceduregrainahead_setprocedurevariable_5 "set how-far how-far + 1" Object => void
+      _plus "how-far + 1" double,double => double
         _procedurevariable:HOW-FAR "how-far" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -4959,7 +4959,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L3
@@ -4999,7 +4999,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -5013,7 +5013,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -5041,13 +5041,13 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_proceduregrainahead_report_7 "report" Object => void
+[6]_asm_proceduregrainahead_report_7 "report total" Object => void
       _procedurevariable:TOTAL "total" => Object
           // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -5065,7 +5065,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5087,7 +5087,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
          FRAME APPEND [java/lang/Object]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L3
           NEW org/nlogo/nvm/NonLocalExit
@@ -5135,8 +5135,8 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ATHROW
 
 procedure GROW-GRAIN:[]{-TP-}:
-[0]_asm_proceduregrowgrain_if_0 "if" boolean => void
-      _lessthan "<" Object,Object => boolean
+[0]_asm_proceduregrowgrain_if_0 "if grain-here < max-grain-here set grain-here grain-here + num-grain-grown if grain-here > max-grain-here [ set grain-here max-grain-here ] [ recolor-patch ]" boolean => void
+      _lessthan "grain-here < max-grain-here" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           // parameter final  context
@@ -5304,8 +5304,8 @@ procedure GROW-GRAIN:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[1]_asm_proceduregrowgrain_setpatchvariable_1 "set" Object => void
-      _plus "+" double,double => double
+[1]_asm_proceduregrowgrain_setpatchvariable_1 "set grain-here grain-here + num-grain-grown" Object => void
+      _plus "grain-here + num-grain-grown" double,double => double
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _observervariable:NUM-GRAIN-GROWN "num-grain-grown" => Object
           // parameter final  context
@@ -5423,8 +5423,8 @@ procedure GROW-GRAIN:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[2]_asm_proceduregrowgrain_if_2 "if" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[2]_asm_proceduregrowgrain_if_2 "if grain-here > max-grain-here [ set grain-here max-grain-here ]" boolean => void
+      _greaterthan "grain-here > max-grain-here" Object,Object => boolean
         _patchvariable:GRAIN-HERE "grain-here" => Object
         _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           // parameter final  context
@@ -5592,7 +5592,7 @@ procedure GROW-GRAIN:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[3]_asm_proceduregrowgrain_setpatchvariable_3 "set" Object => void
+[3]_asm_proceduregrowgrain_setpatchvariable_3 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
           // parameter final  context
           // parameter final  context
@@ -5678,7 +5678,7 @@ procedure GROW-GRAIN:[]{-TP-}:
           RETURN
 
 procedure HARVEST:[]{OTPL}:
-[0]_asm_procedureharvest_ask_0 "ask" AgentSet => void
+[0]_asm_procedureharvest_ask_0 "ask turtles [ set wealth floor wealth + grain-here / count turtles-here ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -5736,13 +5736,13 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedureharvest_setturtlevariable_1 "set" Object => void
-      _floor "floor" double => double
-        _plus "+" double,double => double
+[1]_asm_procedureharvest_setturtlevariable_1 "set wealth floor wealth + grain-here / count turtles-here" Object => void
+      _floor "floor wealth + grain-here / count turtles-here" double => double
+        _plus "wealth + grain-here / count turtles-here" double,double => double
           _turtlevariable:WEALTH "wealth" => Object
-          _div "/" double,double => double
+          _div "grain-here / count turtles-here" double,double => double
             _patchvariable:GRAIN-HERE "grain-here" => Object
-            _count "count" AgentSet => double
+            _count "count turtles-here" AgentSet => double
               _turtleshere "turtles-here" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -5936,7 +5936,7 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedureharvest_ask_3 "ask" AgentSet => void
+[3]_asm_procedureharvest_ask_3 "ask turtles set grain-here 0 [ recolor-patch ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -5994,7 +5994,7 @@ procedure HARVEST:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureharvest_setpatchvariable_4 "set" Object => void
+[4]_asm_procedureharvest_setpatchvariable_4 "set grain-here 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -6071,7 +6071,7 @@ procedure HARVEST:[]{OTPL}:
           RETURN
 
 procedure MOVE-EAT-AGE-DIE:[]{-T--}:
-[0]_asm_proceduremoveeatagedie_fd1_0 "fd" => void
+[0]_asm_proceduremoveeatagedie_fd1_0 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -6092,8 +6092,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_proceduremoveeatagedie_setturtlevariable_1 "set" Object => void
-      _minus "-" double,double => double
+[1]_asm_proceduremoveeatagedie_setturtlevariable_1 "set wealth wealth - metabolism" Object => void
+      _minus "wealth - metabolism" double,double => double
         _turtlevariable:WEALTH "wealth" => Object
         _turtlevariable:METABOLISM "metabolism" => Object
           // parameter final  context
@@ -6225,8 +6225,8 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L18
           RETURN
-[2]_asm_proceduremoveeatagedie_setturtlevariable_2 "set" Object => void
-      _plus "+" double,double => double
+[2]_asm_proceduremoveeatagedie_setturtlevariable_2 "set age age + 1" Object => void
+      _plus "age + 1" double,double => double
         _turtlevariable:AGE "age" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -6319,12 +6319,12 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[3]_asm_proceduremoveeatagedie_if_3 "if" boolean => void
-      _or "or"
-        _lessthan "<" Object,double => boolean
+[3]_asm_proceduremoveeatagedie_if_3 "if wealth < 0 or age >= life-expectancy [ set-initial-turtle-vars ]" boolean => void
+      _or "wealth < 0 or age >= life-expectancy"
+        _lessthan "wealth < 0" Object,double => boolean
           _turtlevariable:WEALTH "wealth" => Object
           _constdouble:0.0 "0" => double
-        _greaterorequal ">=" Object,Object => boolean
+        _greaterorequal "age >= life-expectancy" Object,Object => boolean
           _turtlevariable:AGE "age" => Object
           _turtlevariable:LIFE-EXPECTANCY "life-expectancy" => Object
           // parameter final  context
@@ -6608,14 +6608,14 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           RETURN
 
 procedure SETUP-PLOTZ:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Class Plot""
       _asm_proceduresetupplotz_conststring_0 ""Class Plot"" => String
             // parameter final  context
            L0
             LDC "Class Plot"
            L1
             ARETURN
-[1]_setplotyrange "set-plot-y-range"
+[1]_setplotyrange "set-plot-y-range 0 num-people"
       _asm_proceduresetupplotz_constdouble_1 "0" => Double
             // parameter final  context
            L0
@@ -6633,14 +6633,14 @@ procedure SETUP-PLOTZ:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_setcurrentplot "set-current-plot"
+[2]_setcurrentplot "set-current-plot "Class Histogram""
       _asm_proceduresetupplotz_conststring_3 ""Class Histogram"" => String
             // parameter final  context
            L0
             LDC "Class Histogram"
            L1
             ARETURN
-[3]_setplotyrange "set-plot-y-range"
+[3]_setplotyrange "set-plot-y-range 0 num-people"
       _asm_proceduresetupplotz_constdouble_4 "0" => Double
             // parameter final  context
            L0
@@ -6742,24 +6742,24 @@ procedure UPDATE-PLOTZ:[]{OTPL}:
           RETURN
 
 procedure UPDATE-CLASS-PLOT:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Class Plot""
       _asm_procedureupdateclassplot_conststring_0 ""Class Plot"" => String
             // parameter final  context
            L0
             LDC "Class Plot"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen"
+[1]_setcurrentplotpen "set-current-plot-pen "low""
       _asm_procedureupdateclassplot_conststring_1 ""low"" => String
             // parameter final  context
            L0
             LDC "low"
            L1
             ARETURN
-[2]_plot "plot"
-      _asm_procedureupdateclassplot_countwith_2 "count" AgentSet,Reporter => double
+[2]_plot "plot count turtles with [ color = red ]"
+      _asm_procedureupdateclassplot_countwith_2 "count turtles with [ color = red ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_3 "=" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_3 "color = red" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:15.0 "red" => double
               // parameter final  context
@@ -6925,17 +6925,17 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen"
+[3]_setcurrentplotpen "set-current-plot-pen "mid""
       _asm_procedureupdateclassplot_conststring_4 ""mid"" => String
             // parameter final  context
            L0
             LDC "mid"
            L1
             ARETURN
-[4]_plot "plot"
-      _asm_procedureupdateclassplot_countwith_5 "count" AgentSet,Reporter => double
+[4]_plot "plot count turtles with [ color = green ]"
+      _asm_procedureupdateclassplot_countwith_5 "count turtles with [ color = green ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_6 "=" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_6 "color = green" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:55.0 "green" => double
               // parameter final  context
@@ -7101,17 +7101,17 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "up""
       _asm_procedureupdateclassplot_conststring_7 ""up"" => String
             // parameter final  context
            L0
             LDC "up"
            L1
             ARETURN
-[6]_plot "plot"
-      _asm_procedureupdateclassplot_countwith_8 "count" AgentSet,Reporter => double
+[6]_plot "plot count turtles with [ color = blue ]"
+      _asm_procedureupdateclassplot_countwith_8 "count turtles with [ color = blue ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclassplot_equal_9 "=" Object,double => boolean
+        _asm_procedureupdateclassplot_equal_9 "color = blue" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:105.0 "blue" => double
               // parameter final  context
@@ -7289,7 +7289,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
           RETURN
 
 procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Class Histogram""
       _asm_procedureupdateclasshistogram_conststring_0 ""Class Histogram"" => String
             // parameter final  context
            L0
@@ -7297,7 +7297,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
            L1
             ARETURN
 [1]_plotpenreset "plot-pen-reset"
-[2]_setplotpencolor "set-plot-pen-color"
+[2]_setplotpencolor "set-plot-pen-color red"
       _asm_procedureupdateclasshistogram_constdouble_1 "red" => Double
             // parameter final  context
            L0
@@ -7305,10 +7305,10 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_1.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[3]_plot "plot"
-      _asm_procedureupdateclasshistogram_countwith_2 "count" AgentSet,Reporter => double
+[3]_plot "plot count turtles with [ color = red ]"
+      _asm_procedureupdateclasshistogram_countwith_2 "count turtles with [ color = red ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_3 "=" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_3 "color = red" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:15.0 "red" => double
               // parameter final  context
@@ -7474,7 +7474,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_setplotpencolor "set-plot-pen-color"
+[4]_setplotpencolor "set-plot-pen-color green"
       _asm_procedureupdateclasshistogram_constdouble_4 "green" => Double
             // parameter final  context
            L0
@@ -7482,10 +7482,10 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_4.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_plot "plot"
-      _asm_procedureupdateclasshistogram_countwith_5 "count" AgentSet,Reporter => double
+[5]_plot "plot count turtles with [ color = green ]"
+      _asm_procedureupdateclasshistogram_countwith_5 "count turtles with [ color = green ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_6 "=" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_6 "color = green" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:55.0 "green" => double
               // parameter final  context
@@ -7651,7 +7651,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[6]_setplotpencolor "set-plot-pen-color"
+[6]_setplotpencolor "set-plot-pen-color blue"
       _asm_procedureupdateclasshistogram_constdouble_7 "blue" => Double
             // parameter final  context
            L0
@@ -7659,10 +7659,10 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_constdouble_7.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[7]_plot "plot"
-      _asm_procedureupdateclasshistogram_countwith_8 "count" AgentSet,Reporter => double
+[7]_plot "plot count turtles with [ color = blue ]"
+      _asm_procedureupdateclasshistogram_countwith_8 "count turtles with [ color = blue ]" AgentSet,Reporter => double
         _turtles "turtles" => AgentSet
-        _asm_procedureupdateclasshistogram_equal_9 "=" Object,double => boolean
+        _asm_procedureupdateclasshistogram_equal_9 "color = blue" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:105.0 "blue" => double
               // parameter final  context
@@ -7840,7 +7840,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
           RETURN
 
 procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-SO-FAR INDEX GINI-INDEX-RESERVE _repeatlocal:5]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Lorenz Curve""
       _asm_procedureupdatelorenzandginiplots_conststring_0 ""Lorenz Curve"" => String
             // parameter final  context
            L0
@@ -7848,14 +7848,14 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
            L1
             ARETURN
 [1]_clearplot "clear-plot"
-[2]_setcurrentplotpen "set-current-plot-pen"
+[2]_setcurrentplotpen "set-current-plot-pen "equal""
       _asm_procedureupdatelorenzandginiplots_conststring_1 ""equal"" => String
             // parameter final  context
            L0
             LDC "equal"
            L1
             ARETURN
-[3]_plot "plot"
+[3]_plot "plot 0"
       _asm_procedureupdatelorenzandginiplots_constdouble_2 "0" => Double
             // parameter final  context
            L0
@@ -7863,7 +7863,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_2.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[4]_plot "plot"
+[4]_plot "plot 100"
       _asm_procedureupdatelorenzandginiplots_constdouble_3 "100" => Double
             // parameter final  context
            L0
@@ -7871,15 +7871,15 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_3.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "lorenz""
       _asm_procedureupdatelorenzandginiplots_conststring_4 ""lorenz"" => String
             // parameter final  context
            L0
             LDC "lorenz"
            L1
             ARETURN
-[6]_setplotpeninterval "set-plot-pen-interval"
-      _asm_procedureupdatelorenzandginiplots_div_5 "/" double,double => double
+[6]_setplotpeninterval "set-plot-pen-interval 100 / num-people"
+      _asm_procedureupdatelorenzandginiplots_div_5 "100 / num-people" double,double => double
         _constdouble:100.0 "100" => double
         _observervariable:NUM-PEOPLE "num-people" => Object
             // parameter final  context
@@ -7941,7 +7941,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[7]_plot "plot"
+[7]_plot "plot 0"
       _asm_procedureupdatelorenzandginiplots_constdouble_6 "0" => Double
             // parameter final  context
            L0
@@ -7949,9 +7949,9 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_constdouble_6.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[8]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 "let" Object => void
-      _sort "sort" Object => Object
-        _turtlevariableof:WEALTH "of" Object => Object
+[8]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7 "let sort [ wealth ] of turtles" Object => void
+      _sort "sort [ wealth ] of turtles" Object => Object
+        _turtlevariableof:WEALTH "[ wealth ] of turtles" Object => Object
           _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -8190,7 +8190,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -8199,8 +8199,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[9]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 "let" Object => void
-      _sum "sum" LogoList => double
+[9]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_8 "let sum sorted-wealths" Object => void
+      _sum "sum sorted-wealths" LogoList => double
         _procedurevariable:SORTED-WEALTHS "sorted-wealths" => Object
           // parameter final  context
           // parameter final  context
@@ -8211,7 +8211,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L3
@@ -8275,7 +8275,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -8284,7 +8284,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[10]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_9 "let" Object => void
+[10]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_9 "let 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -8296,7 +8296,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -8305,7 +8305,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[11]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_10 "let" Object => void
+[11]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_10 "let 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -8317,7 +8317,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           ALOAD 2
           AASTORE
@@ -8326,7 +8326,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[12]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_11 "let" Object => void
+[12]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_11 "let 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -8338,7 +8338,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           ALOAD 2
           AASTORE
@@ -8347,7 +8347,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[13]_asm_procedureupdatelorenzandginiplots_repeatlocal_12 "repeat" double => void
+[13]_asm_procedureupdatelorenzandginiplots_repeatlocal_12 "repeat num-people set wealth-sum-so-far wealth-sum-so-far + item index sorted-wealths plot wealth-sum-so-far / total-wealth * 100 set index index + 1 [ set gini-index-reserve gini-index-reserve + index / num-people - wealth-sum-so-far / total-wealth ]" double => void
       _observervariable:NUM-PEOPLE "num-people" => Object
           // parameter final  context
           // parameter final  context
@@ -8383,7 +8383,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -8398,16 +8398,16 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[14]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13 "set" Object => void
-      _plus "+" double,double => double
+[14]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_13 "set wealth-sum-so-far wealth-sum-so-far + item index sorted-wealths" Object => void
+      _plus "wealth-sum-so-far + item index sorted-wealths" double,double => double
         _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
-        _item "item"
+        _item "item index sorted-wealths"
           _asm_procedureupdatelorenzandginiplots_procedurevariable_14 "index" => Object
                 // parameter final  context
                L0
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+                GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
                 ICONST_3
                 AALOAD
                L1
@@ -8417,7 +8417,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
                L0
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+                GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
                 ICONST_0
                 AALOAD
                L1
@@ -8433,7 +8433,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L5
@@ -8495,7 +8495,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -8504,9 +8504,9 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[15]_plot "plot"
-      _asm_procedureupdatelorenzandginiplots_mult_16 "*" double,double => double
-        _div "/" double,double => double
+[15]_plot "plot wealth-sum-so-far / total-wealth * 100"
+      _asm_procedureupdatelorenzandginiplots_mult_16 "wealth-sum-so-far / total-wealth * 100" double,double => double
+        _div "wealth-sum-so-far / total-wealth" double,double => double
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
         _constdouble:100.0 "100" => double
@@ -8521,7 +8521,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
            L4
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_2
             AALOAD
            L5
@@ -8547,7 +8547,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
            FRAME SAME1 D
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_1
             AALOAD
            L7
@@ -8606,8 +8606,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[16]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17 "set" Object => void
-      _plus "+" double,double => double
+[16]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_17 "set index index + 1" Object => void
+      _plus "index + 1" double,double => double
         _procedurevariable:INDEX "index" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -8621,7 +8621,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           AALOAD
          L3
@@ -8661,7 +8661,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           ALOAD 2
           AASTORE
@@ -8670,14 +8670,14 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[17]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18 "set" Object => void
-      _minus "-" double,double => double
-        _plus "+" double,double => double
+[17]_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18 "set gini-index-reserve gini-index-reserve + index / num-people - wealth-sum-so-far / total-wealth" Object => void
+      _minus "gini-index-reserve + index / num-people - wealth-sum-so-far / total-wealth" double,double => double
+        _plus "gini-index-reserve + index / num-people" double,double => double
           _procedurevariable:GINI-INDEX-RESERVE "gini-index-reserve" => Object
-          _div "/" double,double => double
+          _div "index / num-people" double,double => double
             _procedurevariable:INDEX "index" => Object
             _observervariable:NUM-PEOPLE "num-people" => Object
-        _div "/" double,double => double
+        _div "wealth-sum-so-far / total-wealth" double,double => double
           _procedurevariable:WEALTH-SUM-SO-FAR "wealth-sum-so-far" => Object
           _procedurevariable:TOTAL-WEALTH "total-wealth" => Object
           // parameter final  context
@@ -8701,7 +8701,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L10
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L11
@@ -8727,7 +8727,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           AALOAD
          L13
@@ -8806,7 +8806,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L19
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L20
@@ -8832,7 +8832,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          FRAME FULL [org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_18 org/nlogo/nvm/Context java/lang/Object T D] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L22
@@ -8891,7 +8891,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           ALOAD 2
           AASTORE
@@ -8905,7 +8905,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -8933,16 +8933,16 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L2
          FRAME SAME
           RETURN
-[19]_setcurrentplot "set-current-plot"
+[19]_setcurrentplot "set-current-plot "Gini-Index v. Time""
       _asm_procedureupdatelorenzandginiplots_conststring_20 ""Gini-Index v. Time"" => String
             // parameter final  context
            L0
             LDC "Gini-Index v. Time"
            L1
             ARETURN
-[20]_plot "plot"
-      _asm_procedureupdatelorenzandginiplots_div_21 "/" double,double => double
-        _div "/" double,double => double
+[20]_plot "plot gini-index-reserve / num-people / area-of-equality-triangle"
+      _asm_procedureupdatelorenzandginiplots_div_21 "gini-index-reserve / num-people / area-of-equality-triangle" double,double => double
+        _div "gini-index-reserve / num-people" double,double => double
           _procedurevariable:GINI-INDEX-RESERVE "gini-index-reserve" => Object
           _observervariable:NUM-PEOPLE "num-people" => Object
         _callreport:AREA-OF-EQUALITY-TRIANGLE "area-of-equality-triangle"
@@ -8954,7 +8954,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
            L6
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_4
             AALOAD
            L7
@@ -9108,16 +9108,16 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           RETURN
 
 reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
-[0]_asm_procedureareaofequalitytriangle_report_0 "report" Object => void
-      _div "/" double,double => double
-        _div "/" double,double => double
-          _mult "*" double,double => double
+[0]_asm_procedureareaofequalitytriangle_report_0 "report num-people * num-people - 1 / 2 / num-people ^ 2" Object => void
+      _div "num-people * num-people - 1 / 2 / num-people ^ 2" double,double => double
+        _div "num-people * num-people - 1 / 2" double,double => double
+          _mult "num-people * num-people - 1" double,double => double
             _observervariable:NUM-PEOPLE "num-people" => Object
-            _minus "-" double,double => double
+            _minus "num-people - 1" double,double => double
               _observervariable:NUM-PEOPLE "num-people" => Object
               _constdouble:1.0 "1" => double
           _constdouble:2.0 "2" => double
-        _pow "^" double,double => double
+        _pow "num-people ^ 2" double,double => double
           _observervariable:NUM-PEOPLE "num-people" => Object
           _constdouble:2.0 "2" => double
           // parameter final  context
@@ -9305,7 +9305,7 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L23
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9327,7 +9327,7 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L24
           NEW org/nlogo/nvm/NonLocalExit

@@ -5,7 +5,7 @@ package org.nlogo.headless
 import org.nlogo.api.{ AutoConvertable, ModelLoader, ComponentSerialization, CompilerServices, ConfigurableModelLoader,
   NetLogoLegacyDialect, NetLogoThreeDDialect, Workspace }
 
-import org.nlogo.nvm.{ DefaultCompilerServices, CompilerInterface }
+import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
@@ -22,7 +22,7 @@ class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoa
 
   def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
     val compiler =
-      container.getComponent(classOf[CompilerInterface])
+      container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
     val loader = fileformat.standardLoader(compilerServices)
     val additionalComponents =

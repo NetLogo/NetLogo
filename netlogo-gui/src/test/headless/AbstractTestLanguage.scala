@@ -6,7 +6,7 @@ import org.scalatest.Assertions
 import org.nlogo.agent.Agent
 import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D }
 import org.nlogo.core.{ AgentKind, CompilerException, Model, Program, WorldDimensions }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.Femto
 
 object AbstractTestLanguage {
@@ -19,7 +19,7 @@ trait AbstractTestLanguage extends Assertions {
 
   import AbstractTestLanguage._
 
-  val compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler",
+  val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler",
     if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
 
   lazy val workspace: HeadlessWorkspace = {

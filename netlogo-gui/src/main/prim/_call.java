@@ -8,6 +8,7 @@ import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Procedure;
+import org.nlogo.nvm.Procedure;
 
 // Note that _call is "CustomGenerated".  That means that the bytecode
 // generator generates custom bytecode for _call, instead of using the

@@ -71,13 +71,13 @@ class NvmTests extends FunSuite {
 
     def commandProcedure(name: String, i: Int = 0): Procedure = {
       val args = (0 until i).map(j => "PROCEDUREVAR" + j)
-      val p = new Procedure(false, token(name.toUpperCase), name.toUpperCase, None, args.map(token _), Vector(args: _*))
+      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token _), null)
       p.topLevel = true
       p
     }
 
     def reporterProcedure(name: String): Procedure = {
-      val p = new Procedure(true, token(name.toUpperCase), name.toUpperCase, None)
+      val p = new Procedure(true, name.toUpperCase, token(name.toUpperCase), Seq.empty[Token], null)
       p.topLevel = true
       p
     }
@@ -87,7 +87,7 @@ class NvmTests extends FunSuite {
       // we add done because that's done for buttons and command center procedures "top-level procedures"
       assembleProcedure(proc, stmtBuilder.done)
       world.mainRNG.setSeed(0)
-      exclusiveJob(proc).runTest()
+      exclusiveJob(proc).run()
       probes.foreach(_.verify())
     }
 

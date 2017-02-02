@@ -6,10 +6,12 @@ import org.nlogo.core.{ CompilationEnvironment, StructureResults, Program }
 import org.nlogo.{ core, api => nlogoApi, nvm },
   nvm.Procedure.ProceduresMap
 
+import scala.collection.immutable.ListMap
+
 trait FrontMiddleBridgeInterface {
   def apply(
     structureResults: StructureResults,
-    oldProcedures:    ProceduresMap,
+    oldProcedures:    ListMap[String, nvm.Procedure],
     topLevelDefs:     Seq[core.ProcedureDefinition],
     backifier:        Backifier
   ): Seq[ProcedureDefinition]

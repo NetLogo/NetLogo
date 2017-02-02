@@ -8,9 +8,8 @@ import org.nlogo.nvm.{ Command, Context}
 import org.nlogo.nvm.RuntimePrimitiveException
 
 class _tickadvance extends Command {
-
-
   switches = true
+
   override def perform(context: Context) {
     val amount = argEvalDoubleValue(context, 0)
     if(amount < 0)

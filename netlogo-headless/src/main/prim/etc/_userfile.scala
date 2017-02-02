@@ -9,7 +9,7 @@ import org.nlogo.nvm.RuntimePrimitiveException
 class _userfile extends Reporter {
 
   override def report(context: Context): AnyRef = {
-    workspace.updateUI(context)
+    workspace.updateUI()
     val result: Option[String] =
       workspace.waitForResult(
         new ReporterRunnable[Option[String]] {
