@@ -110,7 +110,7 @@ class NvmTests extends FunSuite {
 
     def checkBindingCount(i: Int): _probe = {
       val p = new _probe( { (c: Context) =>
-        c.activation.binding.containedLets.size == i && {
+        c.activation.binding.size == i && {
           var head = c.activation.binding.head
           var j = 0
           while (j < i) {

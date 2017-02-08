@@ -4,37 +4,61 @@ package org.nlogo.nvm
 
 import org.nlogo.core.Let
 
-import java.util.LinkedHashSet
+import java.util.HashSet
+
+import scala.annotation.tailrec
 
 object Binding {
   trait ChildBinding {
     val let: Let // may be null
-    var value: AnyRef // may be null
+    val binding: LetBinding
+    def value = binding.value
     def next: ChildBinding
-    def next_=(newNext: ChildBinding): Unit
+    def withNext(newNext: ChildBinding): ChildBinding
+    def concat(other: ChildBinding): ChildBinding
   }
 
-  case class BoundLet(let: Let, var value: AnyRef, var next: ChildBinding) extends ChildBinding
+  case class BoundLet(let: Let, val binding: LetBinding, val next: ChildBinding) extends ChildBinding {
+    def withNext(newNext: ChildBinding): ChildBinding =
+      copy(next = newNext)
+
+    def concat(other: ChildBinding): ChildBinding =
+      addBindings(other, this)
+
+    @tailrec
+    private def addBindings(toAdd: ChildBinding, acc: ChildBinding): ChildBinding = {
+      if (toAdd eq EmptyBinding)
+        acc
+      else
+        addBindings(toAdd.next, toAdd.withNext(acc))
+    }
+  }
 
   case object EmptyBinding extends ChildBinding {
     val let = null
-    var value: AnyRef = null
+    val binding: LetBinding = null
     val next = this
-    def next_=(newNext: ChildBinding): Unit = {}
+    def withNext(newNext: ChildBinding): ChildBinding =
+      newNext match {
+        case EmptyBinding => this
+        case boundLet: BoundLet => boundLet.withNext(this)
+      }
+    def concat(other: ChildBinding): ChildBinding =
+      other
   }
 }
 
 import Binding._
 
-class Binding(var head: ChildBinding, val parent: Binding, val containedLets: LinkedHashSet[Let]) {
+class Binding(var head: ChildBinding, val parent: Binding, var size: Int = 0) {
   def this(parent: Binding) =
-    this(EmptyBinding, parent, new LinkedHashSet[Let]())
+    this(EmptyBinding, parent)
 
   def this() =
-    this(EmptyBinding, null, new LinkedHashSet[Let]())
+    this(EmptyBinding, null)
 
   def enterScope(): Binding = {
-    new Binding(EmptyBinding, this, new LinkedHashSet[Let]())
+    new Binding(EmptyBinding, this)
   }
 
   def exitScope(): Binding = {
@@ -43,79 +67,52 @@ class Binding(var head: ChildBinding, val parent: Binding, val containedLets: Li
     parent
   }
 
-  @scala.annotation.tailrec
-  private def rebindLet(b: ChildBinding, let: Let, value: AnyRef): Unit = {
-    if (b.next.let == let) // when let isn't first, point the prior BoundLet to it
-      b.next = new BoundLet(let, value, b.next.next)
-    else if (b.let == let) // when let is first, we don't need to repoint any `next`s
-      head = new BoundLet(let, value, b.next)
+  @tailrec
+  private def removeLet(b: ChildBinding, let: Let, removed: ChildBinding): (ChildBinding, Boolean) = {
+    if (b.let eq let)
+      (removed concat b.next, true)
     else if (b.next ne b)
-      rebindLet(b.next, let, value)
+      removeLet(b.next, let, b.withNext(removed))
+    else
+      (removed, false)
   }
 
   def let(let: Let, value: AnyRef): Unit = {
-    if (containedLets.contains(let)) {
-      rebindLet(head, let, value)
-    } else {
-      containedLets.add(let)
-      head = new BoundLet(let, value, head)
-    }
+    val (removedBindings, didRemove) = removeLet(head, let, EmptyBinding)
+    if (! didRemove) { size += 1 }
+    head = new BoundLet(let, LetBinding(let, value), removedBindings)
   }
 
-  @scala.annotation.tailrec
+  @tailrec
   private def updateWalk(b: ChildBinding, let: Let, value: AnyRef): Unit = {
-    if (b.let == let)
-      b.value = value
-    else if (b.next == b)
+    if (b.let eq let)
+      b.binding.value = value
+    else if (b.next ne b)
+      updateWalk(b.next, let, value)
+    else if (parent == null)
       throw new IllegalStateException(s"Attempted to set undefined variable ${let.name}")
     else
-      updateWalk(b.next, let, value)
+      parent.updateWalk(parent.head, let, value)
   }
 
   def setLet(let: Let, value: AnyRef): Unit = {
-    if (containedLets.contains(let))
-      updateWalk(head, let, value)
-    else {
-      var updated: Boolean = false
-      var iter = parent
-      while (iter != null && !updated) {
-        if (iter.containedLets.contains(let)) {
-          updateWalk(iter.head, let, value)
-          updated = true
-        }
-        iter = iter.parent
-      }
-      if (! updated)
-        throw new IllegalStateException(s"Attempted to set undefined variable ${let.name}")
-    }
+    updateWalk(head, let, value)
   }
 
-  @scala.annotation.tailrec
+  @tailrec
   private def findWalk(b: ChildBinding, let: Let): AnyRef = {
-    if (b.let == let)
+    if (b.let eq let)
       b.value
-    else if (b.next == b)
+    else if (b.next ne b)
+      findWalk(b.next, let)
+    else if (parent == null)
       throw new NoSuchElementException(s"Could not find bound value for ${let.name}")
     else
-      findWalk(b.next, let)
+      parent.findWalk(parent.head, let)
   }
 
   def getLet(let: Let): AnyRef = {
-    if (containedLets.contains(let))
-      findWalk(head, let)
-    else {
-      var found: AnyRef = null
-      var iter = parent
-      while (iter != null && found == null) {
-        if (iter.containedLets.contains(let)) {
-          found = findWalk(iter.head, let)
-        }
-        iter = iter.parent
-      }
-      if (found == null)
-        throw new NoSuchElementException(s"Could not find bound value for ${let.name}")
-      found
-    }
+    findWalk(head, let)
   }
 
   /* This is for testing purposes only */
@@ -152,5 +149,5 @@ class Binding(var head: ChildBinding, val parent: Binding, val containedLets: Li
   }
 
   def copy: Binding =
-    new Binding(head, parent, containedLets.clone.asInstanceOf[LinkedHashSet[Let]])
+    new Binding(head, parent, size)
 }

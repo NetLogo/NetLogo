@@ -43,6 +43,36 @@ class BindingTests extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(binding.getLet(abc) == Double.box(1))
   } }
 
+  test("rebinding should not affect closed variables") { new BindingTestHelper {
+    val x = new Let("x")
+    val y = new Let("y")
+    binding.let(abc, Double.box(0))
+    binding.let(x, Double.box(1))
+    binding.let(y, Double.box(2))
+    val closure = binding.copy
+    binding.setLet(y, Double.box(3))
+    binding.let(x, Double.box(1))
+    binding.let(y, Double.box(2))
+    binding.setLet(x, Double.box(4))
+    assert(closure.getLet(y) == Double.box(3))
+    assert(closure.getLet(x) == Double.box(1))
+  } }
+
+  test("rebinding should not affect closed variables 2") { new BindingTestHelper {
+    val x = new Let("x")
+    val y = new Let("y")
+    binding.let(abc, Double.box(0))
+    binding.let(x, Double.box(1))
+    binding.let(y, Double.box(2))
+    val closure = binding.copy
+    binding.setLet(x, Double.box(3))
+    binding.let(x, Double.box(1))
+    binding.let(y, Double.box(2))
+    binding.setLet(y, Double.box(4))
+    assert(closure.getLet(x) == Double.box(3))
+    assert(closure.getLet(y) == Double.box(2))
+  } }
+
   test("enter scope leaves previously defined let variables accessible") { new BindingTestHelper {
     binding.let(abc, Double.box(0))
     binding = binding.enterScope()
