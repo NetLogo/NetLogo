@@ -185,15 +185,40 @@ extends IndexedAgentSet(kind, printName) {
 
   // extended to skip dead agents
   private class DeadSkippingIterator extends Iterator {
-    // skip initial dead agents
-    while (index < arraySize && array(index).id == -1)
+    var nextAgent: Agent = null
+
+    // find the first agent (if there is one):
+    while(index < array.size && array(index).id == -1)
       index += 1
+    if (index < array.size)
+      nextAgent = array(index)
+
+    // if hasNext returns false, then nextAgent must be null.
+    override def hasNext: Boolean = {
+      if (nextAgent != null && nextAgent.id != -1)
+        true
+      else {
+        // if nextAgent is null or dead, attempt to find new one:
+        do index += 1
+        while (index < array.size && array(index).id == -1)
+
+        // replace null nextAgent if successfully found one:
+        if (index < array.size) {
+          nextAgent = array(index)
+          true
+        } else
+          false
+      }
+    }
+
     override def next() = {
-      val result = index
-      // skip to next live agent
-      do index += 1
-      while (index < arraySize && array(index).id == -1)
-      array(result)
+      if (hasNext) {
+        val ret = nextAgent
+        nextAgent = null
+        ret
+      } else
+      // should always throw index out of bounds exception:
+        array(index)
     }
   }
 
