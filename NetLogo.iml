@@ -41,5 +41,6 @@
     <orderEntry type="library" name="shapeless_2.12-2.3.2" level="project" />
     <orderEntry type="library" name="scalactic_2.12-3.0.1" level="project" />
     <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
+    <orderEntry type="library" name="org.scalatest:scalatest_2.12:3.0.1" level="project" />
   </component>
 </module>
