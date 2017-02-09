@@ -5,90 +5,90 @@ package org.nlogo.agent
 import org.nlogo.core.LogoList
 import org.nlogo.{api, core}
 
-class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet: AgentSet)
+import scala.collection.mutable
+
+class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet: AgentSet, private var others: List[Agent] = List(), private var withs: List[(Agent) => Boolean] = List())
   extends AgentSet(kind, printName) {
 
-  var others = List[Agent]()
+//  def noFilters: Boolean =
+//    others.isEmpty && withs.isEmpty
 
-  def isEmpty = agentSet.isEmpty
+  def isEmpty = force().isEmpty
 
-  def count = {
-    if (others.isEmpty)
-      agentSet.count
-    else
-      agentSet.count - others.count(x => agentSet.contains(x))
-  }
+  def count = force().count
 
-  def contains(a: api.Agent): Boolean = agentSet.contains(a)
-  def containsSameAgents(otherSet: api.AgentSet): Boolean = agentSet.containsSameAgents(otherSet)
+  def contains(a: api.Agent): Boolean = force().contains(a)
 
-  def iterator: AgentIterator = {
+  def containsSameAgents(otherSet: api.AgentSet): Boolean =
+    force().containsSameAgents(otherSet)
+
+  def iterator: AgentIterator =
       new FilteringIterator(agentSet.iterator)
-  }
 
-  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator = agentSet.shufflerator(rng)
+  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
+    force().shufflerator(rng)
 
-  def randomOne(precomputedCount: Int, random: Int): Agent = {
-    if (others.isEmpty)
-      agentSet.randomOne(precomputedCount, random)
-    else {
-      val iter = iterator
-      var i = 0
-      while (i < random) {
-        iter.next()
-        i += 1
-      }
-      iter.next()
-    }
-  }
+  def randomOne(precomputedCount: Int, random: Int): Agent =
+    force().randomOne(precomputedCount, random)
 
   def randomTwo(precomputedCount: Int, smallRandom: Int, bigRandom: Int): Array[Agent] =
-    agentSet.randomTwo(precomputedCount, smallRandom, bigRandom)
-  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    agentSet.randomSubsetGeneral(resultSize, precomputedCount, rng)
-  def toLogoList: LogoList = agentSet.toLogoList
+    force().randomTwo(precomputedCount, smallRandom, bigRandom)
 
-  def other(agent: Agent): Unit = {
+  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
+    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
+
+  def toLogoList: LogoList = force().toLogoList
+
+  def lazyOther(agent: Agent): Unit = {
     others = agent :: others
   }
 
+  def lazyWith(filter: (Agent) => Boolean): Unit = {
+    withs = withs :+ filter
+  }
+
+  def passesWiths(agent: Agent): Boolean = {
+    for (filter <- withs) {
+      if (! filter(agent))
+        return false
+    }
+    true
+  }
+
+  def passesFilters(agent: Agent): Boolean = {
+    ! others.contains(agent) && passesWiths(agent)
+  }
+
   def force(): AgentSet = {
-    if (others.isEmpty)
+    if (others.isEmpty && withs.isEmpty)
       agentSet
     else {
+      //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
       val it = iterator
-      var array = Array[Agent]()
+      var l = new mutable.UnrolledBuffer[Agent]()
       while (it.hasNext) {
-        array = array :+ it.next()
+        l = l :+ it.next()
       }
-      new ArrayAgentSet(kind, "", array)
+      new ArrayAgentSet(kind, "", l.toArray)
     }
   }
 
   private class FilteringIterator(agentIterator: AgentIterator) extends AgentIterator {
     var nextAgent: Agent = null
 
-    // find the first agent (if there is one):
-    while ((others.contains(nextAgent) || nextAgent == null) && agentIterator.hasNext)
-      nextAgent = agentIterator.next()
-    if (others.contains(nextAgent))
-      nextAgent = null
-
     override def hasNext: Boolean = {
-      if (nextAgent != null && ! others.contains(nextAgent) && nextAgent.id != -1)
+      if (nextAgent != null && nextAgent.id != -1 && passesFilters(nextAgent))
         true
       else {
-        while ((others.contains(nextAgent) || nextAgent == null) && agentIterator.hasNext)
+        while ((nextAgent == null || ! passesFilters(nextAgent)) && agentIterator.hasNext)
           nextAgent = agentIterator.next()
-        if (! others.contains(nextAgent) && nextAgent != null && nextAgent.id != -1) {
+        if (nextAgent != null && passesFilters(nextAgent) && nextAgent.id != -1) {
           true
         } else {
           nextAgent = null
           false
         }
-
       }
-
     }
 
     override def next(): Agent = {
@@ -99,7 +99,6 @@ class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet
       } else
         agentIterator.next()
     }
-
   }
 
 }

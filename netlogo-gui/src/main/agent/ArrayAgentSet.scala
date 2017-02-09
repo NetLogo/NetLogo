@@ -165,6 +165,8 @@ extends IndexedAgentSet(kind, printName) {
   // and the last one is a person named "SHUFFLER, Ator", which Google thought
   // was close enough!  ;-)  ~Forrest (10/3/2008)
 
+  // shufflerator: 12 google hits - majority are NetLogo related ~Eric (2/9/2017)
+
   override def shufflerator(rng: MersenneTwisterFast): AgentIterator =
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
@@ -187,21 +189,14 @@ extends IndexedAgentSet(kind, printName) {
   private class DeadSkippingIterator extends Iterator {
     var nextAgent: Agent = null
 
-    // find the first agent (if there is one):
-    while(index < array.size && array(index).id == -1)
-      index += 1
-    if (index < array.size)
-      nextAgent = array(index)
-
     // if hasNext returns false, then nextAgent must be null.
     override def hasNext: Boolean = {
       if (nextAgent != null && nextAgent.id != -1)
         true
       else {
         // if nextAgent is null or dead, attempt to find new one:
-        do index += 1
         while (index < array.size && array(index).id == -1)
-
+          index += 1
         // replace null nextAgent if successfully found one:
         if (index < array.size) {
           nextAgent = array(index)
@@ -215,6 +210,7 @@ extends IndexedAgentSet(kind, printName) {
       if (hasNext) {
         val ret = nextAgent
         nextAgent = null
+        index += 1
         ret
       } else
       // should always throw index out of bounds exception:
