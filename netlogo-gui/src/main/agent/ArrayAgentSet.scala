@@ -56,6 +56,8 @@ extends IndexedAgentSet(kind, printName) {
       result
     }
 
+  private[agent] def sizeBound: Int = array.length
+
   /// equality
 
   // assumes we've already checked for equal counts - ST 7/6/06

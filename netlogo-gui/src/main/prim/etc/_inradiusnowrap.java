@@ -34,8 +34,6 @@ public final strictfp class _inradiusnowrap
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
     }
-    List<Agent> result =
-        world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, false);
-    return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
+    return world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, false);
   }
 }

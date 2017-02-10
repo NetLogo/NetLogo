@@ -19,8 +19,7 @@ public strictfp class InRadiusOrCone3D
   }
 
   @Override
-  public List<Agent> inRadius(Agent agent, AgentSet sourceSet,
-                              double radius, boolean wrap) {
+  public IndexedAgentSet inRadius(Agent agent, AgentSet sourceSet, double radius, boolean wrap) {
     int worldWidth = world.worldWidth();
     int worldHeight = world.worldHeight();
     int worldDepth = world.worldDepth();
@@ -29,7 +28,7 @@ public strictfp class InRadiusOrCone3D
     int minPxcor = world.minPxcor();
     int minPycor = world.minPycor();
 
-    List<Agent> result = new ArrayList<Agent>();
+    AgentSetBuilder result = new AgentSetBuilder(sourceSet.kind(), sourceSet.sizeBound());
     Patch3D startPatch;
     double startX, startY, startZ;
     if (agent instanceof Turtle) {
@@ -136,11 +135,11 @@ public strictfp class InRadiusOrCone3D
         }
       }
     }
-    return result;
+    return result.build();
   }
 
   @Override
-  public List<Agent> inCone(Turtle callingTurtle, AgentSet sourceSet,
+  public IndexedAgentSet inCone(Turtle callingTurtle, AgentSet sourceSet,
                             double radius, double angle, boolean wrap) {
     int worldWidth = world.worldWidth();
     int worldHeight = world.worldHeight();
@@ -162,7 +161,7 @@ public strictfp class InRadiusOrCone3D
       k = world.wrappingAllowedInZ() ? (int) StrictMath.ceil(radius / worldDepth) : 0;
     }
 
-    List<Agent> result = new ArrayList<Agent>();
+    AgentSetBuilder result = new AgentSetBuilder(sourceSet.kind(), sourceSet.sizeBound());
     Patch3D startPatch = (Patch3D) startTurtle.getPatchHere();
     double half = angle / 2;
     // dxmax and dymax determine which patches we will check.  the patches we
@@ -277,7 +276,7 @@ public strictfp class InRadiusOrCone3D
         }
       }
     }
-    return result;
+    return result.build();
   }
 
   private boolean isInCone(double x, double y, double z,

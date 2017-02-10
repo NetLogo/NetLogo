@@ -57,7 +57,7 @@ object TestLanguage {
               .mkString("\n").trim
 
           if (! nonDecls.exists(e => e.isInstanceOf[Compile] || e.isInstanceOf[Open])) {
-            openModel(new Model(code = decls, widgets = StandardWidgets))
+            openModel(new Model(code = decls, widgets = StandardWidgets, version = Version.version))
           } else {
             init()
           }

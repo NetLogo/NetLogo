@@ -1428,17 +1428,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ALOAD 2
           DLOAD 3
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/InRadiusOrCone.inRadius (Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/AgentSet;DZ)Ljava/util/List;
-          ASTORE 5
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ALOAD 5
-          ALOAD 5
-          INVOKEINTERFACE java/util/List.size ()I
-          ANEWARRAY org/nlogo/agent/Agent
-          INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
-          CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/InRadiusOrCone.inRadius (Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/AgentSet;DZ)Lorg/nlogo/agent/IndexedAgentSet;
          L11
           ASTORE 2
           NEW org/nlogo/agent/AgentSetBuilder
@@ -1453,7 +1443,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 4
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator java/lang/Object] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator] []
           ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L13
@@ -1468,10 +1458,10 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
          L14
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator org/nlogo/agent/Agent] []
+         FRAME APPEND [org/nlogo/agent/Agent]
           GOTO L12
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator java/lang/Object] []
+         FRAME CHOP 1
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
          L15

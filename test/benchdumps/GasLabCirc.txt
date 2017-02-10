@@ -12074,17 +12074,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ALOAD 2
           DLOAD 3
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/InRadiusOrCone.inRadius (Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/AgentSet;DZ)Ljava/util/List;
-          ASTORE 5
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ALOAD 5
-          ALOAD 5
-          INVOKEINTERFACE java/util/List.size ()I
-          ANEWARRAY org/nlogo/agent/Agent
-          INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
-          CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/InRadiusOrCone.inRadius (Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/AgentSet;DZ)Lorg/nlogo/agent/IndexedAgentSet;
          L13
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureoverlapping_report_0.keptinstr10 : Lorg/nlogo/nvm/Reporter;
