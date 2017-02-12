@@ -88,9 +88,9 @@ private object CompilerMain {
           .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
           .map(className => Femto.scalaSingleton[CommandMunger](className))
       val reporterOpts =
-        Seq("PatchAt", "With", "OneOfWith", "Nsum", "Nsum4", "CountWith", "OtherWith",
+        Seq("PatchAt", "With", /* "OneOfWith", */ "Nsum", "Nsum4", /* "CountWith", "OtherWith",
           "WithOther", "AnyOther", "AnyOtherWith", "CountOther", "CountOtherWith", "AnyWith1",
-          "AnyWith2", "AnyWith3", "AnyWith4", "AnyWith5", "RandomConst")
+          "AnyWith2", "AnyWith3", "AnyWith4", "AnyWith5",*/ "RandomConst")
           .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
           .map(className => Femto.scalaSingleton[ReporterMunger](className))
       val netLogoSpecificOptimizations =

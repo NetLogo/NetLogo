@@ -7,7 +7,11 @@ import org.nlogo.{api, core}
 
 import scala.collection.mutable
 
-class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet: AgentSet, private var others: List[Agent] = List(), private var withs: List[(Agent) => Boolean] = List())
+class LazyAgentSet(kind: core.AgentKind,
+                   printName: String,
+                   private val agentSet: AgentSet,
+                   private var others: List[Agent] = List(),
+                   private var withs: List[(Agent) => Boolean] = List())
   extends AgentSet(kind, printName) {
 
 //  def noFilters: Boolean =
@@ -49,9 +53,12 @@ class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet
 
   def passesWiths(agent: Agent): Boolean = {
     for (filter <- withs) {
-      if (! filter(agent))
+      if (! filter(agent)) {
+        println("false")
         return false
+      }
     }
+    println("true")
     true
   }
 
@@ -77,6 +84,7 @@ class LazyAgentSet(kind: core.AgentKind, printName: String, private val agentSet
     var nextAgent: Agent = null
 
     override def hasNext: Boolean = {
+//      lazy val passes = passesFilters(nextAgent)
       if (nextAgent != null && nextAgent.id != -1 && passesFilters(nextAgent))
         true
       else {

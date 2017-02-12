@@ -245,6 +245,17 @@ Agentsets12_3D
 Agentsets13
   count (patches with [true]) at-points [[-3 -4] [-3 -4] [-3.5 -4.5]] => 1
 
+Agentsets14
+  to-report report-error error "Fail" report true end
+  O> crt 5
+  count turtles with [false] with [report-error] => 0
+
+*Agentsets15
+  globals [t]
+  to-report first-filter set t t + 1 report true end
+  O> crt 5
+  count turtles with [first-filter] with [t < 5] => 4
+
 AgentSetEquality
   globals [ glob1 ]
   turtles = turtles => true
