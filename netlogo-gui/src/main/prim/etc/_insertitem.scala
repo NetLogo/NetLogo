@@ -1,6 +1,4 @@
-/**
-  * Created by Eric on 1/25/17.
-  */
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim.etc
 
