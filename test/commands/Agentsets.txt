@@ -250,11 +250,19 @@ Agentsets14
   O> crt 5
   count turtles with [false] with [report-error] => 0
 
-*Agentsets15
+Agentsets15
   globals [t]
+  to-report filtered-turtles report count turtles with [first-filter] with [t < 5] end
   to-report first-filter set t t + 1 report true end
   O> crt 5
-  count turtles with [first-filter] with [t < 5] => 4
+  filtered-turtles => 4
+
+Agentsets16
+  globals [t]
+  to-report filtered-turtles report count turtles with [first-filter] with [t < 2] end
+  to-report first-filter set t t + 1 report true end
+  O> crt 2
+  filtered-turtles => 1
 
 AgentSetEquality
   globals [ glob1 ]

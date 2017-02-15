@@ -54,11 +54,9 @@ class LazyAgentSet(kind: core.AgentKind,
   def passesWiths(agent: Agent): Boolean = {
     for (filter <- withs) {
       if (! filter(agent)) {
-        println("false")
         return false
       }
     }
-    println("true")
     true
   }
 
@@ -66,6 +64,10 @@ class LazyAgentSet(kind: core.AgentKind,
     ! others.contains(agent) && passesWiths(agent)
   }
 
+  // assumptions:
+  // 1. agents only accessed after force
+  // 2. agents only modified by side-effects of filters within force
+  // 3. agents that pass filters are immediately included in the resulting AgentSet
   def force(): AgentSet = {
     if (others.isEmpty && withs.isEmpty)
       agentSet
@@ -84,13 +86,22 @@ class LazyAgentSet(kind: core.AgentKind,
     var nextAgent: Agent = null
 
     override def hasNext: Boolean = {
-//      lazy val passes = passesFilters(nextAgent)
-      if (nextAgent != null && nextAgent.id != -1 && passesFilters(nextAgent))
+      if (nextAgent != null && nextAgent.id != -1)
         true
       else {
-        while ((nextAgent == null || ! passesFilters(nextAgent)) && agentIterator.hasNext)
-          nextAgent = agentIterator.next()
-        if (nextAgent != null && passesFilters(nextAgent) && nextAgent.id != -1) {
+        var passes = false
+        var next = false
+        do {
+
+          next = agentIterator.hasNext
+          if (next) {
+            nextAgent = agentIterator.next()
+            passes = passesFilters(nextAgent)
+          }
+
+        } while ((nextAgent == null || ! passes) && next)
+
+        if (nextAgent != null && passes && nextAgent.id != -1) {
           true
         } else {
           nextAgent = null

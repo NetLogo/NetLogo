@@ -60,7 +60,7 @@ class AgentSetTests extends FunSuite {
       val t3 = makeTurtle()
       val a = createLazyAgentSet(Array(t1,t2,t3))
       val threshold = a.randomOne(3,1).id
-      a.lazyWith((a: Agent) => a.id >= threshold)
+      a.lazyWith((ag: Agent) => ag.id >= threshold)
       assertResult(2)(a.count)
     }
   }
