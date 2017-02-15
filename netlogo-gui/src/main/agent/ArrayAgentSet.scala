@@ -18,6 +18,8 @@ class ArrayAgentSet(
   private val array: Array[Agent])
 extends IndexedAgentSet(kind, printName) {
 
+  private[this] val arraySize = array.size
+
   /// conversions
 
   override def toLogoList = {
@@ -45,7 +47,7 @@ extends IndexedAgentSet(kind, printName) {
 
   override def count =
     if (!kind.mortal)
-      array.size
+      arraySize
     else {
       var result = 0
       val iter = iterator
@@ -128,7 +130,7 @@ extends IndexedAgentSet(kind, printName) {
 
   override def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, random: MersenneTwisterFast) = {
     val result = new Array[Agent](resultSize)
-    if (precomputedCount == array.size) {
+    if (precomputedCount == arraySize) {
       var i, j = 0
       while (j < resultSize) {
         if (random.nextInt(precomputedCount - i) < resultSize - j) {
@@ -173,7 +175,7 @@ extends IndexedAgentSet(kind, printName) {
 
   private class Iterator extends AgentIterator {
     protected var index = 0
-    override def hasNext = index < array.size
+    override def hasNext = index < arraySize
     override def next() = {
       val result = array(index)
       index += 1
@@ -184,13 +186,13 @@ extends IndexedAgentSet(kind, printName) {
   // extended to skip dead agents
   private class DeadSkippingIterator extends Iterator {
     // skip initial dead agents
-    while (index < array.size && array(index).id == -1)
+    while (index < arraySize && array(index).id == -1)
       index += 1
     override def next() = {
       val result = index
       // skip to next live agent
       do index += 1
-      while (index < array.size && array(index).id == -1)
+      while (index < arraySize && array(index).id == -1)
       array(result)
     }
   }

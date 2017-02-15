@@ -19,5 +19,5 @@ class _letvariable(private[this] val _let: Let) extends Reporter {
     report_1(context)
 
   def report_1(context: Context): AnyRef =
-    context.getLet(_let)
+    context.activation.binding.getLet(_let)
 }

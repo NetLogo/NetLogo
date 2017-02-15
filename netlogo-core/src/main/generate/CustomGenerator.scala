@@ -73,11 +73,12 @@ class CustomGenerator(profilingEnabled: Boolean) {
 
   /*  Example code, just to show what bytecode is being generated
    public void perform_N (Object o0, Object o1) {
-     Activation newActivation =
-     new Activation(procedure, context.activation, n)
-     newActivation.args[ 0 ] = o0
-     newActivation.args[ 1 ] = o1
+     Object[] args = new Object[procedure.size]
+     args[ 0 ] = o0
+     args[ 1 ] = o1
      ...
+     Activation newActivation =
+     new Activation(procedure, context.activation, args, n)
      context.activation = newActivation
      context.ip = 0
      // included only if profiling data collection:
@@ -96,20 +97,24 @@ class CustomGenerator(profilingEnabled: Boolean) {
     // stack: Activation Activation Procedure Context
     mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
     // stack: Activation Activation Procedure Activation
-    mv.push(instr.next)
-    // stack: Activation Activation Procedure Activation int
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V", false)
-    // operand stack: Activation
+    mv.visitIntInsn(SIPUSH, instr.procedure.size)
+    // stack: Activation Activation Procedure Activation Int
+    mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
+    // stack: Activation Activation Procedure Activation Args[]
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
-      // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      generateArgsAccess(mv)
+      // stack: Activation Activation Procedure Activation Args[] Args[]
       mv.push(i)
-      // operand stack: Activation Args[] i
+      // stack: Activation Activation Procedure Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
+      // stack: Activation Activation Procedure Activation Args[] i Arg
       mv.visitInsn(AASTORE)
-      // operand stack: Activation
+      // stack: Activation Activation Procedure Activation Args[]
     }
+    mv.push(instr.next)
+    // stack: Activation Activation Procedure Activation Args[] int
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V", false)
+    // operand stack: Activation
     // if profiling,we'll need an extra Activation on the stack.
     if (profilingEnabled) mv.visitInsn(DUP)
     mv.visitVarInsn(ALOAD, 1)
@@ -144,11 +149,11 @@ class CustomGenerator(profilingEnabled: Boolean) {
   /* Example code, just to show what bytecode is being generated
    *
    public void perform_N (Object o0, Object o1) {
-     Activation newActivation =
-     new Activation(procedure, context.activation, n)
-     newActivation.args[ 0 ] = o0
-     newActivation.args[ 1 ] = o1
+     Object[] args = new Object[procedure.size];
+     args[ 0 ] = o0
+     args[ 1 ] = o1
      ...
+     Activation newActivation = new Activation(procedure, context.activation, args n)
      context.activation = newActivation
      context.ip = 0
      // included only if profiling data collection:
@@ -167,20 +172,23 @@ class CustomGenerator(profilingEnabled: Boolean) {
     // stack: Activation Activation Procedure Context
     mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
     // stack: Activation Activation Procedure Activation
-    mv.push(ip)
-    // stack: Activation Activation Procedure Activation int
-    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V", false)
-    // operand stack:  Activation
+    mv.visitIntInsn(SIPUSH, instr.procedure.size)
+    // stack: Activation Activation Procedure Activation Int
+    mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
+    // stack: Activation Activation Procedure Activation Args[]
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
-      // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      generateArgsAccess(mv)
+      // stack: Activation Activation Procedure Activation Args[] Args[]
       mv.push(i)
-      // operand stack: Activation Args[] i
+      // stack: Activation Activation Procedure Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
+      // stack: Activation Activation Procedure Activation Args[] i Arg
       mv.visitInsn(AASTORE)
-      // operand stack: Activation
+      // stack: Activation Activation Procedure Activation Args[]
     }
+    mv.push(ip)
+    // stack: Activation Activation Procedure Activation Args[] int
+    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V", false)
     // if profiling,we'll need an extra Activation on the stack.
     if (profilingEnabled) mv.visitInsn(DUP)
     // operand stack: [Activation] Activation

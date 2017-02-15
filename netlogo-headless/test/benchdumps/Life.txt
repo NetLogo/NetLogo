@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 22" double => void
       _constdouble:22.0 "22" => double
           // parameter final  context
           // parameter final  context
@@ -68,8 +68,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -78,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 500 [ go ]" double => void
       _constdouble:500.0 "500" => double
           // parameter final  context
           // parameter final  context
@@ -89,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -112,8 +114,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -127,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -155,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -214,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP-RANDOM:[]{O---}:
 [0]_clearall "clear-all"
 [1]_resetticks "reset-ticks"
-[2]_asm_proceduresetuprandom_ask_0 "ask" AgentSet => void
+[2]_asm_proceduresetuprandom_ask_0 "ask patches [ ifelse random-float 1.0 < initial-density [ cell-birth ] [ cell-death ] ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -272,9 +276,9 @@ procedure SETUP-RANDOM:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_proceduresetuprandom_ifelse_1 "ifelse" boolean => void
-      _lessthan "<" double,Object => boolean
-        _randomfloat "random-float" double => double
+[3]_asm_proceduresetuprandom_ifelse_1 "ifelse random-float 1.0 < initial-density [ cell-birth ] [ cell-death ]" boolean => void
+      _lessthan "random-float 1.0 < initial-density" double,Object => boolean
+        _randomfloat "random-float 1.0" double => double
           _constdouble:1.0 "1.0" => double
         _observervariable:INITIAL-DENSITY "initial-density" => Object
           // parameter final  context
@@ -380,8 +384,10 @@ procedure SETUP-RANDOM:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -406,8 +412,10 @@ procedure SETUP-RANDOM:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -436,7 +444,7 @@ procedure SETUP-RANDOM:[]{O---}:
           RETURN
 
 procedure CELL-BIRTH:[]{-TP-}:
-[0]_asm_procedurecellbirth_setpatchvariable_0 "set" Object => void
+[0]_asm_procedurecellbirth_setpatchvariable_0 "set living? true" Object => void
       _constboolean:true "true" => Boolean
           // parameter final  context
           // parameter final  context
@@ -473,7 +481,7 @@ procedure CELL-BIRTH:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurecellbirth_setpatchvariable_1 "set" Object => void
+[1]_asm_procedurecellbirth_setpatchvariable_1 "set pcolor fgcolor" Object => void
       _observervariable:FGCOLOR "fgcolor" => Object
           // parameter final  context
           // parameter final  context
@@ -525,7 +533,7 @@ procedure CELL-BIRTH:[]{-TP-}:
           RETURN
 
 procedure CELL-DEATH:[]{-TP-}:
-[0]_asm_procedurecelldeath_setpatchvariable_0 "set" Object => void
+[0]_asm_procedurecelldeath_setpatchvariable_0 "set living? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -562,7 +570,7 @@ procedure CELL-DEATH:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurecelldeath_setpatchvariable_1 "set" Object => void
+[1]_asm_procedurecelldeath_setpatchvariable_1 "set pcolor bgcolor" Object => void
       _observervariable:BGCOLOR "bgcolor" => Object
           // parameter final  context
           // parameter final  context
@@ -614,7 +622,7 @@ procedure CELL-DEATH:[]{-TP-}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask patches [ set live-neighbors count neighbors with [ living? ] ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -672,8 +680,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurego_setpatchvariable_1 "set" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[1]_asm_procedurego_setpatchvariable_1 "set live-neighbors count neighbors with [ living? ]" Object => void
+      _countwith "count neighbors with [ living? ]" AgentSet,Reporter => double
         _neighbors "neighbors" => AgentSet
         _asm_procedurego_patchvariable_2 "living?" => Object
               // parameter final  context
@@ -860,7 +868,7 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_4 "ask" AgentSet => void
+[3]_asm_procedurego_ask_4 "ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -918,8 +926,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedurego_ifelse_5 "ifelse" boolean => void
-      _equal "=" Object,double => boolean
+[4]_asm_procedurego_ifelse_5 "ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ]" boolean => void
+      _equal "live-neighbors = 3" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:3.0 "3" => double
           // parameter final  context
@@ -1004,8 +1012,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1022,8 +1032,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_procedurego_if_8 "if" boolean => void
-      _notequal "!=" Object,double => boolean
+[7]_asm_procedurego_if_8 "if live-neighbors != 2 [ cell-death ]" boolean => void
+      _notequal "live-neighbors != 2" Object,double => boolean
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:2.0 "2" => double
           // parameter final  context
@@ -1108,8 +1118,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_9.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 9
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

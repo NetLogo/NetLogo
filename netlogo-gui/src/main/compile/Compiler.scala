@@ -5,7 +5,7 @@ package org.nlogo.compile
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, NumberParser, SourceOwner, TokenizerInterface, World }
 import org.nlogo.parse.Namer
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, ImportHandler, Procedure, Workspace }
+import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure, Workspace }
 import org.nlogo.api.ExtensionManager
 
 import scala.collection.immutable.ListMap
@@ -14,14 +14,14 @@ import scala.collection.JavaConversions._
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
 
-class Compiler(dialect: Dialect) extends CompilerInterface {
+class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   val defaultDialect = dialect
 
   val utilities =
     Femto.scalaSingleton[CompilerUtilitiesInterface]("org.nlogo.parse.CompilerUtilities")
 
-  private val frontEnd =
+  def frontEnd =
     Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
   // tokenizer singletons
@@ -54,12 +54,43 @@ class Compiler(dialect: Dialect) extends CompilerInterface {
     new CompilerResults(procedures, newProgram)
   }
 
+  //NOTE: This doesn't actually pay attention to flags, at the moment
+  def compileProgram(
+    source:                 String,
+    program:                Program,
+    extensionManager:       ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    flags:                  CompilerFlags): CompilerResults = {
+      compileProgram(source, Seq(), program, extensionManager, compilationEnvironment)
+  }
+
+  def makeLiteralReporter(value: AnyRef): org.nlogo.nvm.Reporter =
+    Literals.makeLiteralReporter(value)
+
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
-  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager, compilationEnv:CompilationEnvironment):CompilerResults = {
+  def compileMoreCode(
+    source:           String,
+    displayName:      Option[String],
+    program:          Program,
+    oldProcedures:    ProceduresMap,
+    extensionManager: ExtensionManager,
+    compilationEnv:   CompilationEnvironment): CompilerResults = {
     val (procedures, newProgram) =
       CompilerMain.compile(Map("" -> source),displayName,program,true,oldProcedures,extensionManager,compilationEnv)
     new CompilerResults(procedures, newProgram)
+  }
+
+  //NOTE: This doesn't actually pay attention to flags, at the moment
+  def compileMoreCode(
+    source:                 String,
+    displayName:            Option[String],
+    program:                Program,
+    oldProcedures:          Procedure.ProceduresMap,
+    extensionManager:       ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    flags:                  CompilerFlags): CompilerResults = {
+      compileMoreCode(source, displayName, program, oldProcedures, extensionManager, compilationEnvironment)
   }
 
   // these two used by input boxes

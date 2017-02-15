@@ -31,6 +31,6 @@ class _breedat(breedName: String) extends Reporter {
     AgentSet.fromArray(
       AgentKind.Turtle,
       patch.turtlesHere.asScala.
-        filter(turtle => turtle != null && turtle.getBreed == breed).toArray)
+        filter(turtle => turtle != null && (turtle.getBreed eq breed)).toArray)
   }
 }

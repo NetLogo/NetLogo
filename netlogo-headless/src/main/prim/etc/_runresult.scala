@@ -18,9 +18,7 @@ class _runresult extends Reporter {
         try {
           val procedure = workspace.compileForRun(
             argEvalString(context, 0), context, true)
-          val newActivation = new Activation(
-            procedure, context.activation, context.ip)
-          newActivation.setUpArgsForRunOrRunresult()
+          val newActivation = Activation.forRunOrRunresult(procedure, context.activation, context.ip)
           val result = context.callReporterProcedure(newActivation)
           if (result == null)
             throw new RuntimePrimitiveException(context, this, "failed to report a result")

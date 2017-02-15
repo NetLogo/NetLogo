@@ -13,7 +13,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _removeitem
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     int index = argEvalIntValue(context, 0);

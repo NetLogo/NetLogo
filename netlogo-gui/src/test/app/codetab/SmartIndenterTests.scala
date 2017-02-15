@@ -3,7 +3,7 @@
 package org.nlogo.app.codetab
 
 import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
-import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices }
+import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
 import org.nlogo.core.Femto
 import org.nlogo.api.FileIO.file2String
 import org.scalatest.FunSuite
@@ -97,7 +97,7 @@ class SmartIndenterTests extends FunSuite {
   }
 
   val compiler = new DefaultCompilerServices(
-    Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoLegacyDialect else NetLogoThreeDDialect))
+    Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoLegacyDialect else NetLogoThreeDDialect))
 
   // call FunSuite's test method for each test read
   for(Array(name, in, out) <- data) {

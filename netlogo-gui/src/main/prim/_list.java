@@ -10,7 +10,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _list
     extends Reporter
-    implements org.nlogo.nvm.Pure, org.nlogo.nvm.CustomGenerated {
+    implements org.nlogo.core.Pure, org.nlogo.nvm.CustomGenerated {
 
   @Override
   public int returnType() {

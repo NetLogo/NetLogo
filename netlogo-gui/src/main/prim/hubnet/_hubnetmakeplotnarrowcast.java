@@ -8,7 +8,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _hubnetmakeplotnarrowcast
-    extends org.nlogo.nvm.Command {
+    extends HubNetCommand {
 
 
   @Override
@@ -19,7 +19,7 @@ public final strictfp class _hubnetmakeplotnarrowcast
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() throws LogoException {
-            if (!workspace.getHubNetManager().get().addNarrowcastPlot(name)) {
+            if (!hubNetManager().get().addNarrowcastPlot(name)) {
               throw new RuntimePrimitiveException
                   (context, _hubnetmakeplotnarrowcast.this,
                       "no such plot: \"" + name + "\"");

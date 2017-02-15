@@ -9,7 +9,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _or
     extends Reporter
-    implements org.nlogo.nvm.Pure, org.nlogo.nvm.CustomGenerated {
+    implements org.nlogo.core.Pure, org.nlogo.nvm.CustomGenerated {
   @Override
   public int returnType() {
     return Syntax.BooleanType();

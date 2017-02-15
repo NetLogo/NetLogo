@@ -141,6 +141,12 @@ class Backifier(program: Program,
         new nvmprim._magicopen(name)
       case cc: core.prim._carefully =>
         new nvmprim._carefully(cc.let)
+      case bk: core.prim._bk =>
+        new nvmprim._bk(c.token)
+      case fd: core.prim._fd =>
+        new nvmprim._fd(c.token)
+      case rep: core.prim._repeat =>
+        new nvmprim._repeat(c.token)
       case _ =>
         fallback[core.Command, nvm.Command](c)
     }

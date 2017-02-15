@@ -17,22 +17,21 @@ public final strictfp class _setbreedvariable
     this.switches = true;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + name;
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
-    Object value = args[0].report(context);
+  public void perform(final Context context) throws LogoException {
+    perform_1(context, args[0].report(context));
+  }
+
+  public void perform_1(final org.nlogo.nvm.Context context, Object arg0) {
     try {
-      context.agent.setBreedVariable(name, value);
+      context.agent.setBreedVariable(name, arg0);
     } catch (org.nlogo.api.AgentException ex) {
-      throw new RuntimePrimitiveException
-          (context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }

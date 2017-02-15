@@ -40,11 +40,12 @@ public final strictfp class _callreport
 
   @Override
   public Object report(Context context) throws LogoException {
-    Activation newActivation =
-        new Activation(procedure, context.activation, context.ip);
+    Object[] callArgs = new Object[procedure.size()];
     for (int i = 0; i < (procedure.args().size() - procedure.localsCount()); i++) {
-      newActivation.args[i] = args[i].report(context);
+      callArgs[i] = args[i].report(context);
     }
+    Activation newActivation =
+        new Activation(procedure, context.activation, callArgs, context.ip);
     Object result = context.callReporterProcedure(newActivation);
     if (result == null) {
       throw new RuntimePrimitiveException

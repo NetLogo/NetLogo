@@ -10,8 +10,8 @@ import scala.collection.JavaConversions._
 class _commandlambda(val argumentNames: Seq[String], var proc: LiftedLambda, val closedVariables: Set[ClosedVariable]) extends Reporter {
   override def report(c: Context): AnyRef = {
     AnonymousCommand(procedure = proc,
-                formals   = proc.lambdaFormals,
-                lets      = c.allLets,
+                formals   = proc.lambdaFormalsArray,
+                binding   = c.activation.binding.copy,
                 locals    = c.activation.args)
   }
 }

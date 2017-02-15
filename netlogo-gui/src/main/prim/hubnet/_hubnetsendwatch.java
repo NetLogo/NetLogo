@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 
 public strictfp class _hubnetsendwatch
-    extends org.nlogo.nvm.Command {
+    extends HubNetCommand {
 
 
   @Override
@@ -20,7 +20,7 @@ public strictfp class _hubnetsendwatch
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().get().sendAgentPerspective
+            hubNetManager().get().sendAgentPerspective
                 (client,
                     PerspectiveJ.WATCH,
                     agent.kind(), agent.id, ((world.worldWidth() - 1) / 2), false);

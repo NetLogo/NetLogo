@@ -65,7 +65,7 @@ extends api.LogoThunkFactory with LiteralParser
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
 with RunCache with Jobs with Warning with OutputArea with Importing
-with ExtendableWorkspace with ExtensionCompilationEnvironment {
+with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
 
   world.parser_=(this)
 
@@ -93,14 +93,14 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)
-    requestDisplayUpdate(context, true)
+    requestDisplayUpdate(true)
   }
 
   def resetTicks(context: Context) {
     world.tickCounter.reset()
     setupPlots(context)
     updatePlots(context)
-    requestDisplayUpdate(context, true)
+    requestDisplayUpdate(true)
   }
 
   def clearTicks() {
@@ -703,5 +703,17 @@ object AbstractWorkspaceTraits {
         }
       }
     }
+  }
+
+  trait APIConformant {
+    var _behaviorSpaceExperimentName: String = ""
+    def behaviorSpaceExperimentName(name: String): Unit = {
+      _behaviorSpaceExperimentName = name
+    }
+    def behaviorSpaceExperimentName: String = _behaviorSpaceExperimentName
+    def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A] = None
+    def inspectAgent(agent: org.nlogo.api.Agent,radius: Double): Unit = { }
+    def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
+    def stopInspectingDeadAgents(): Unit = { }
   }
 }

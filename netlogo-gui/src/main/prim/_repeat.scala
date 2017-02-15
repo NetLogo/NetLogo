@@ -2,12 +2,15 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Let
+import org.nlogo.core.{ Let, Token }
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
 
-class _repeat extends Command with CustomAssembled {
-  private[this] val _let: Let = new Let(null)
+class _repeat(_token: Token) extends Command with CustomAssembled {
+  token_=(_token)
+
+  private[this] val _let: Let = new Let("~" + _token.text + "_" + _token.start.toString)
+
   def let = _let
 
   @throws(classOf[LogoException])
@@ -17,7 +20,7 @@ class _repeat extends Command with CustomAssembled {
 
   @throws(classOf[LogoException])
   def perform_1(context: Context, d0: Double): Unit = {
-    context.let(_let, new MutableLong(validLong(d0, context)))
+    context.activation.binding.let(_let, new MutableLong(validLong(d0, context)))
     context.ip = offset
   }
 

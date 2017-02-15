@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.core.Syntax
 import org.nlogo.api, api.{ LogoListBuilder }
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.core.Pure
 
 class _approximatehsb extends Reporter with Pure {
 

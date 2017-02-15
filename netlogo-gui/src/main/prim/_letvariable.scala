@@ -12,7 +12,7 @@ class _letvariable(private[this] val _let: Let) extends Reporter {
 
   override def report(context: Context): AnyRef = report_1(context)
 
-  def report_1(context: Context): AnyRef = context.getLet(_let)
+  def report_1(context: Context): AnyRef = context.activation.binding.getLet(_let)
 }
 
 object _letvariable {

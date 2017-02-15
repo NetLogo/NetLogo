@@ -16,8 +16,6 @@ public final strictfp class _askconcurrent
     this.switches = true;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":+" + offset;

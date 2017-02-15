@@ -6,7 +6,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _subtractheadings extends Reporter implements Pure {

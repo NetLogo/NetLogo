@@ -14,7 +14,7 @@ class _let(private[this] val _let: Let) extends Command {
   }
 
   def perform_1(context: Context, arg0: AnyRef) {
-    context.let(_let, arg0)
+    context.activation.binding.let(_let, arg0)
     context.ip = next
   }
 }

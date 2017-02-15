@@ -14,6 +14,6 @@ class _reporterlambda(argumentNames: Seq[String], val closedVariables: Set[Close
   def getFormal(name: String): Option[Let] = formals.find(_.name == name)
 
   override def report(c: Context): AnyRef = {
-    AnonymousReporter(body = args(0), formals = formalsArray, lets = c.allLets, locals = c.activation.args)
+    AnonymousReporter(body = args(0), formals = formalsArray, binding = c.activation.binding, locals = c.activation.args)
   }
 }

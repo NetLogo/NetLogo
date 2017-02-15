@@ -38,6 +38,12 @@ class Backifier(
         new prim._let(let)
       case cc: core.prim._carefully =>
         new prim._carefully(cc.let)
+      case bk: core.prim._bk =>
+        new prim._bk(c.token)
+      case fd: core.prim._fd =>
+        new prim._fd(c.token)
+      case rep: core.prim._repeat =>
+        new prim._repeat(c.token)
       case _ =>
         fallback[core.Command, nvm.Command](c)
     }

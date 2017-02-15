@@ -1,23 +1,31 @@
 #!/bin/sh
-exec bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
+exec $SCALA_HOME/bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 import sys.process.Process
 
+val home = System.getenv("HOME")
+
 // it might be better to move this into sbt where we wouldn't need to
 // use a hand-maintained classpath like this - ST 8/2/13
 val classpath =
-  Seq("target/classes",
-      System.getenv("HOME") + "/.sbt/boot/scala-2.9.2/lib/scala-library.jar",
-      "resources",
-      "lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar",
-      "lib_managed/bundles/log4j/log4j/log4j-1.2.16.jar",
-      "lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar")
+  Seq("netlogo-gui/target/classes",
+      "shared/target/classes",
+      "netlogo-gui/resources",
+      System.getenv("SCALA_HOME") + "/lib/scala-library.jar",
+      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.0.4.jar",
+      home + "/.ivy2/cache/org.ow2.asm/asm-all/jars/asm-all-5.0.4.jar",
+      home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.16.jar",
+      home + "/.ivy2/cache/org.parboiled/parboiled_2.12/jars/parboiled_2.12-2.1.3.jar",
+      home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.13.6.jar")
     .mkString(":")
 
-val allNames: List[String] =
-  Process("find models/test/benchmarks -name *.nlogo -maxdepth 1")
+val allNames: List[String] = {
+  val nameArgs = args.takeWhile(!_.head.isDigit).toList
+  if(!nameArgs.isEmpty) nameArgs
+  else Process("find models/test/benchmarks -name *.nlogo -maxdepth 1")
     .lines.map(_.split("/").last.split(" ").head).toList
+}
 
 Process("mkdir -p tmp/profiles").!
 

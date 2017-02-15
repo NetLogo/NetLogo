@@ -8,6 +8,7 @@ import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Procedure;
+import org.nlogo.nvm.Procedure;
 
 // Note that _call is "CustomGenerated".  That means that the bytecode
 // generator generates custom bytecode for _call, instead of using the
@@ -30,8 +31,6 @@ public final strictfp class _call
     return Syntax.VoidType();
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":" + procedure.name();
@@ -39,11 +38,11 @@ public final strictfp class _call
 
   @Override
   public void perform(Context context) throws LogoException {
-    Activation newActivation = new Activation(procedure, context.activation, next);
+    Object[] callArgs = new Object[procedure.size()];
     for (int i = 0; i < (procedure.args().size() - procedure.localsCount()); i++) {
-      newActivation.args[i] = args[i].report(context);
+      callArgs[i] = args[i].report(context);
     }
-    context.activation = newActivation;
+    context.activation = new Activation(procedure, context.activation, callArgs, next);
     context.ip = 0;
   }
 }

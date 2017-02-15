@@ -76,8 +76,7 @@ class Evaluator(workspace: AbstractWorkspace) {
       context.job.random = ownerOption.map(_.random).getOrElse(workspace.world.mainRNG.clone)
       val procedureResult = Try {
         context.runExclusiveJob(workspace.world.observers, 0)
-        val stopped = workspace.completedActivations.get(newActivation) != true
-        stopped
+        ! workspace.completedActivations.get(newActivation).contains(true)
       }
       context.activation = oldActivation
       context.job.random = oldRandom

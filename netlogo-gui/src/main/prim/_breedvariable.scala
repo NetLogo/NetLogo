@@ -9,7 +9,6 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _breedvariable(private[this] val _name: String) extends Reporter {
 
-
   override def toString: String = s"${super.toString}:$name"
 
   override def report(context: Context) = report_1(context)

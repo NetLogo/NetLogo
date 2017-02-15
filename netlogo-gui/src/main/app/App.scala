@@ -19,7 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, M
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.log.Logger
-import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, Workspace }
+import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
@@ -97,7 +97,7 @@ object App{
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
 
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
-        val compiler         = container.getComponent(classOf[CompilerInterface])
+        val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
         val compilerServices = new DefaultCompilerServices(compiler)
 
         val loader =
@@ -359,7 +359,7 @@ class App extends
       pico.getComponent(classOf[ExternalFileManager]),
       listenerManager,
       controlSet) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])
+      val compiler = pico.getComponent(classOf[PresentationCompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate

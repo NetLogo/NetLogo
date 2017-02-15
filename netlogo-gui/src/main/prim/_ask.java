@@ -21,8 +21,6 @@ public final strictfp class _ask
     this.switches = true;
   }
 
-
-
   @Override
   public String toString() {
     return super.toString() + ":+" + offset;

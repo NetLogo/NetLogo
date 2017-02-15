@@ -353,7 +353,7 @@ case class _foreach() extends Command {
 }
 case class _foreverbuttonend() extends Command {
   override def syntax =
-    Syntax.commandSyntax()
+    Syntax.commandSyntax(canBeConcise = false)
 }
 case class _fput() extends Reporter with Pure {
   override def syntax =

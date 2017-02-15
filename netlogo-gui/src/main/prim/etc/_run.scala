@@ -18,8 +18,7 @@ class _run extends Command {
           val procedure = workspace.compileForRun(s, context, false)
           // the procedure returned by compileForRun is executed without switching Contexts, only
           // activations.  so we create a new activation...
-          context.activation = new Activation(procedure, context.activation, next)
-          context.activation.setUpArgsForRunOrRunresult()
+          context.activation = Activation.forRunOrRunresult(procedure, context.activation, next)
           // put the instruction pointer at the beginning of the new procedure.  note that when we made
           // the new Activation above, we passed the proper return address to the constructor so the
           // flow execution will resume in the right place.

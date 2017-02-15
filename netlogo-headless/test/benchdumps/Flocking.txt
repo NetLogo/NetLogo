@@ -7,7 +7,7 @@ breeds
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 5454" double => void
       _constdouble:5454.0 "5454" => double
           // parameter final  context
           // parameter final  context
@@ -68,8 +68,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -78,7 +80,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 700 [ go ]" double => void
       _constdouble:700.0 "700" => double
           // parameter final  context
           // parameter final  context
@@ -89,7 +91,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -112,8 +114,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -127,7 +131,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -155,7 +159,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -214,7 +218,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_createorderedturtles:,+7 "cro"
+[2]_createorderedturtles:,+7 "cro population set color yellow - 2 + random 7 setxy random-float world-width random-float world-height [ rt random-float 360 ]"
       _asm_proceduresetup_observervariable_0 "population" => Object
             // parameter final  context
            L0
@@ -225,10 +229,10 @@ procedure SETUP:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set" Object => void
-      _plus "+" double,double => double
-        _constdouble:43.0 "-" => double
-        _randomconst:7 "random" => double
+[3]_asm_proceduresetup_setturtleorlinkvariable_1 "set color yellow - 2 + random 7" Object => void
+      _plus "yellow - 2 + random 7" double,double => double
+        _constdouble:43.0 "yellow - 2" => double
+        _randomconst:7 "random 7" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -285,10 +289,10 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[4]_asm_proceduresetup_setxy_2 "setxy" double,double => void
-      _randomfloat "random-float" double => double
+[4]_asm_proceduresetup_setxy_2 "setxy random-float world-width random-float world-height" double,double => void
+      _randomfloat "random-float world-width" double => double
         _worldwidth "world-width" => double
-      _randomfloat "random-float" double => double
+      _randomfloat "random-float world-height" double => double
         _worldheight "world-height" => double
           // parameter final  context
           // parameter final  context
@@ -372,8 +376,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[5]_asm_proceduresetup_right_3 "rt" double => void
-      _randomfloat "random-float" double => double
+[5]_asm_proceduresetup_right_3 "rt random-float 360" double => void
+      _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
           // parameter final  context
           // parameter final  context
@@ -422,7 +426,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles [ flock ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -488,8 +492,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -527,8 +533,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -537,8 +545,8 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflock_if_1 "if" boolean => void
-      _any "any?" AgentSet => boolean
+[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ] ]" boolean => void
+      _any "any? flockmates" AgentSet => boolean
         _turtlevariable:FLOCKMATES "flockmates" => Object
           // parameter final  context
           // parameter final  context
@@ -619,8 +627,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -629,9 +639,9 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureflock_ifelse_3 "ifelse" boolean => void
-      _lessthan "<" double,Object => boolean
-        _distance "distance" Agent => double
+[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]" boolean => void
+      _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
+        _distance "distance nearest-neighbor" Agent => double
           _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
         _observervariable:MINIMUM-SEPARATION "minimum-separation" => Object
           // parameter final  context
@@ -812,8 +822,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -838,8 +850,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -856,8 +870,10 @@ procedure FLOCK:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureflock_call_7.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 8
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -866,7 +882,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedureflock_fd1_8 "fd" => void
+[8]_asm_procedureflock_fd1_8 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -899,9 +915,9 @@ procedure FLOCK:[]{-T--}:
           RETURN
 
 procedure FIND-FLOCKMATES:[]{-T--}:
-[0]_asm_procedurefindflockmates_setturtlevariable_0 "set" Object => void
-      _other "other" AgentSet => AgentSet
-        _inradiusboundingbox "in-radius"
+[0]_asm_procedurefindflockmates_setturtlevariable_0 "set flockmates other turtles in-radius vision" Object => void
+      _other "other turtles in-radius vision" AgentSet => AgentSet
+        _inradiusboundingbox "turtles in-radius vision"
           _asm_procedurefindflockmates_turtles_1 "turtles" => AgentSet
                 // parameter final  context
                L0
@@ -1022,8 +1038,8 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           RETURN
 
 procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
-[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set" Object => void
-      _minoneof "min-one-of"
+[0]_asm_procedurefindnearestneighbor_setturtlevariable_0 "set nearest-neighbor min-one-of flockmates [ distance myself ]" Object => void
+      _minoneof "min-one-of flockmates [ distance myself ]"
         _asm_procedurefindnearestneighbor_turtlevariable_1 "flockmates" => Object
               // parameter final  context
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1048,7 +1064,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
              L3
              FRAME SAME1 java/lang/Object
               ARETURN
-        _asm_procedurefindnearestneighbor_distance_2 "distance" Agent => double
+        _asm_procedurefindnearestneighbor_distance_2 "distance myself" Agent => double
           _myself "myself" => Agent
              L0
               ALOAD 1
@@ -1174,8 +1190,8 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
           RETURN
 
 procedure SEPARATE:[]{-T--}:
-[0]_asm_procedureseparate_call_0 "turn-away"
-      _turtlevariableof:HEADING "of" Object => Object
+[0]_asm_procedureseparate_call_0 "turn-away [ heading ] of nearest-neighbor max-separate-turn"
+      _turtlevariableof:HEADING "[ heading ] of nearest-neighbor" Object => Object
         _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
       _observervariable:MAX-SEPARATE-TURN "max-separate-turn" => Object
           // parameter final  context
@@ -1191,10 +1207,9 @@ procedure SEPARATE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureseparate_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L0
           ALOAD 1
@@ -1215,7 +1230,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           ASTORE 2
          L3
           ALOAD 2
@@ -1249,14 +1264,14 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/Agent] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 4
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
           ASTORE 3
           GOTO L10
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
           IFEQ L11
@@ -1274,7 +1289,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
           ASTORE 7
          L12
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L13
@@ -1286,13 +1301,13 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           GOTO L12
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 6
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
           ASTORE 3
           GOTO L10
          L11
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -1307,7 +1322,7 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 3
          L4
           GOTO L14
@@ -1323,10 +1338,9 @@ procedure SEPARATE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
-         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureseparate_call_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [L6 L6 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L15
           ALOAD 0
@@ -1336,6 +1350,8 @@ procedure SEPARATE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L16
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1356,7 +1372,7 @@ procedure SEPARATE:[]{-T--}:
           RETURN
 
 procedure ALIGN:[]{-T--}:
-[0]_asm_procedurealign_call_0 "turn-towards"
+[0]_asm_procedurealign_call_0 "turn-towards average-flockmate-heading max-align-turn"
       _callreport:AVERAGE-FLOCKMATE-HEADING "average-flockmate-heading"
       _observervariable:MAX-ALIGN-TURN "max-align-turn" => Object
           // parameter final  context
@@ -1367,10 +1383,9 @@ procedure ALIGN:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurealign_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           NEW org/nlogo/nvm/Activation
@@ -1379,8 +1394,10 @@ procedure ALIGN:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurealign_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -1394,10 +1411,9 @@ procedure ALIGN:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurealign_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedurealign_call_0 org/nlogo/nvm/Context] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L3
           ALOAD 0
@@ -1407,6 +1423,8 @@ procedure ALIGN:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1427,11 +1445,11 @@ procedure ALIGN:[]{-T--}:
           RETURN
 
 reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
-[0]_asm_procedureaverageflockmateheading_report_0 "report" Object => void
-      _atan "atan" double,double => double
-        _mean "mean" LogoList => double
-          _of "of"
-            _asm_procedureaverageflockmateheading_sin_1 "sin" double => double
+[0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [ sin heading ] of flockmates mean [ cos heading ] of flockmates" Object => void
+      _atan "atan mean [ sin heading ] of flockmates mean [ cos heading ] of flockmates" double,double => double
+        _mean "mean [ sin heading ] of flockmates" LogoList => double
+          _of "[ sin heading ] of flockmates"
+            _asm_procedureaverageflockmateheading_sin_1 "sin heading" double => double
               _turtlevariabledouble:HEADING "heading" => double
                   // parameter final  context
                   // parameter final  context
@@ -1478,9 +1496,9 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean" LogoList => double
-          _of "of"
-            _asm_procedureaverageflockmateheading_cos_3 "cos" double => double
+        _mean "mean [ cos heading ] of flockmates" LogoList => double
+          _of "[ cos heading ] of flockmates"
+            _asm_procedureaverageflockmateheading_cos_3 "cos heading" double => double
               _turtlevariabledouble:HEADING "heading" => double
                   // parameter final  context
                   // parameter final  context
@@ -1820,7 +1838,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L24
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1842,7 +1860,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L25
           NEW org/nlogo/nvm/NonLocalExit
@@ -1890,7 +1908,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ATHROW
 
 procedure COHERE:[]{-T--}:
-[0]_asm_procedurecohere_call_0 "turn-towards"
+[0]_asm_procedurecohere_call_0 "turn-towards average-heading-towards-flockmates max-cohere-turn"
       _callreport:AVERAGE-HEADING-TOWARDS-FLOCKMATES "average-heading-towards-flockmates"
       _observervariable:MAX-COHERE-TURN "max-cohere-turn" => Object
           // parameter final  context
@@ -1901,10 +1919,9 @@ procedure COHERE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecohere_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           NEW org/nlogo/nvm/Activation
@@ -1913,8 +1930,10 @@ procedure COHERE:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecohere_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -1928,10 +1947,9 @@ procedure COHERE:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecohere_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecohere_call_0 org/nlogo/nvm/Context] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L3
           ALOAD 0
@@ -1941,6 +1959,8 @@ procedure COHERE:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1961,13 +1981,13 @@ procedure COHERE:[]{-T--}:
           RETURN
 
 reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
-[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report" Object => void
-      _atan "atan" double,double => double
-        _mean "mean" LogoList => double
-          _of "of"
-            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin" double => double
-              _plus "+" double,double => double
-                _towards "towards"
+[0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [ sin towards myself + 180 ] of flockmates mean [ cos towards myself + 180 ] of flockmates" Object => void
+      _atan "atan mean [ sin towards myself + 180 ] of flockmates mean [ cos towards myself + 180 ] of flockmates" double,double => double
+        _mean "mean [ sin towards myself + 180 ] of flockmates" LogoList => double
+          _of "[ sin towards myself + 180 ] of flockmates"
+            _asm_procedureaverageheadingtowardsflockmates_sin_1 "sin towards myself + 180" double => double
+              _plus "towards myself + 180" double,double => double
+                _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_2 "myself" => Agent
                        L0
                         ALOAD 1
@@ -2070,11 +2090,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                  L3
                  FRAME SAME1 java/lang/Object
                   ARETURN
-        _mean "mean" LogoList => double
-          _of "of"
-            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos" double => double
-              _plus "+" double,double => double
-                _towards "towards"
+        _mean "mean [ cos towards myself + 180 ] of flockmates" LogoList => double
+          _of "[ cos towards myself + 180 ] of flockmates"
+            _asm_procedureaverageheadingtowardsflockmates_cos_4 "cos towards myself + 180" double => double
+              _plus "towards myself + 180" double,double => double
+                _towards "towards myself"
                   _asm_procedureaverageheadingtowardsflockmates_myself_5 "myself" => Agent
                        L0
                         ALOAD 1
@@ -2470,7 +2490,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L24
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2492,7 +2512,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L25
           NEW org/nlogo/nvm/NonLocalExit
@@ -2540,8 +2560,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ATHROW
 
 procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturntowards_call_0 "turn-at-most"
-      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings"
+[0]_asm_procedureturntowards_call_0 "turn-at-most my-subtract-headings new-heading heading max-turn"
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings new-heading heading"
         _procedurevariable:NEW-HEADING "new-heading" => Object
         _turtlevariabledouble:HEADING "heading" => Double
       _procedurevariable:MAX-TURN "max-turn" => Object
@@ -2556,10 +2576,9 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturntowards_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L4
           NEW org/nlogo/nvm/Activation
@@ -2568,21 +2587,19 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturntowards_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L6
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L0
           ALOAD 1
@@ -2604,8 +2621,10 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Double]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I L4 L4 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Double]
           AASTORE
+          ICONST_0
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -2619,19 +2638,20 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturntowards_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L10
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2652,8 +2672,8 @@ procedure TURN-TOWARDS:[NEW-HEADING MAX-TURN]{-T--}:
           RETURN
 
 procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
-[0]_asm_procedureturnaway_call_0 "turn-at-most"
-      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings"
+[0]_asm_procedureturnaway_call_0 "turn-at-most my-subtract-headings heading new-heading max-turn"
+      _callreport:MY-SUBTRACT-HEADINGS "my-subtract-headings heading new-heading"
         _turtlevariabledouble:HEADING "heading" => Double
         _procedurevariable:NEW-HEADING "new-heading" => Object
       _procedurevariable:MAX-TURN "max-turn" => Object
@@ -2668,10 +2688,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturnaway_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L4
           NEW org/nlogo/nvm/Activation
@@ -2680,10 +2699,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureturnaway_call_0.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_0
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L0
           ALOAD 1
@@ -2705,19 +2723,20 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Double]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I L4 L4 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Double]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L7
           AASTORE
+          ICONST_0
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -2731,19 +2750,20 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedureturnaway_call_0 org/nlogo/nvm/Context] [L3 L3 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L10
           AASTORE
+          ICONST_1
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2764,9 +2784,9 @@ procedure TURN-AWAY:[NEW-HEADING MAX-TURN]{-T--}:
           RETURN
 
 procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
-[0]_asm_procedureturnatmost_ifelse_0 "ifelse" boolean => void
-      _greaterthan ">" double,Object => boolean
-        _abs "abs" double => double
+[0]_asm_procedureturnatmost_ifelse_0 "ifelse abs turn > max-turn [ ifelse turn > 0 [ rt max-turn ] [ lt max-turn ] ] [ rt turn ]" boolean => void
+      _greaterthan "abs turn > max-turn" double,Object => boolean
+        _abs "abs turn" double => double
           _procedurevariable:TURN "turn" => Object
         _procedurevariable:MAX-TURN "max-turn" => Object
           // parameter final  context
@@ -2782,7 +2802,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L3
@@ -2822,7 +2842,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L7
@@ -2895,8 +2915,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[1]_asm_procedureturnatmost_ifelse_1 "ifelse" boolean => void
-      _greaterthan ">" Object,double => boolean
+[1]_asm_procedureturnatmost_ifelse_1 "ifelse turn > 0 [ rt max-turn ] [ lt max-turn ]" boolean => void
+      _greaterthan "turn > 0" Object,double => boolean
         _procedurevariable:TURN "turn" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -2909,7 +2929,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -2982,7 +3002,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[2]_asm_procedureturnatmost_right_2 "rt" double => void
+[2]_asm_procedureturnatmost_right_2 "rt max-turn" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
           // parameter final  context
           // parameter final  context
@@ -2991,7 +3011,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L3
@@ -3034,7 +3054,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_procedureturnatmost_left_4 "lt" double => void
+[4]_asm_procedureturnatmost_left_4 "lt max-turn" double => void
       _procedurevariable:MAX-TURN "max-turn" => Object
           // parameter final  context
           // parameter final  context
@@ -3043,7 +3063,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L3
@@ -3087,7 +3107,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_procedureturnatmost_right_6 "rt" double => void
+[6]_asm_procedureturnatmost_right_6 "rt turn" double => void
       _procedurevariable:TURN "turn" => Object
           // parameter final  context
           // parameter final  context
@@ -3096,7 +3116,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L3
@@ -3143,10 +3163,10 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           RETURN
 
 reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
-[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse" boolean => void
-      _lessorequal "<=" double,double => boolean
-        _abs "abs" double => double
-          _minus "-" double,double => double
+[0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs h1 - h2 <= 180 [ report h1 - h2 ] [ ifelse h1 > h2 [ report h1 - h2 - 360 ] [ report h1 - h2 + 360 ] ]" boolean => void
+      _lessorequal "abs h1 - h2 <= 180" double,double => boolean
+        _abs "abs h1 - h2" double => double
+          _minus "h1 - h2" double,double => double
             _procedurevariable:H1 "h1" => Object
             _procedurevariable:H2 "h2" => Object
         _constdouble:180.0 "180" => double
@@ -3165,7 +3185,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L5
@@ -3191,7 +3211,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L7
@@ -3264,8 +3284,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[1]_asm_proceduremysubtractheadings_report_1 "report" Object => void
-      _minus "-" double,double => double
+[1]_asm_proceduremysubtractheadings_report_1 "report h1 - h2" Object => void
+      _minus "h1 - h2" double,double => double
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
           // parameter final  context
@@ -3278,7 +3298,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L5
@@ -3304,7 +3324,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L7
@@ -3353,7 +3373,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L10
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3375,7 +3395,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_1 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L11
           NEW org/nlogo/nvm/NonLocalExit
@@ -3413,8 +3433,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[3]_asm_proceduremysubtractheadings_ifelse_3 "ifelse h1 > h2 [ report h1 - h2 - 360 ] [ report h1 - h2 + 360 ]" boolean => void
+      _greaterthan "h1 > h2" Object,Object => boolean
         _procedurevariable:H1 "h1" => Object
         _procedurevariable:H2 "h2" => Object
           // parameter final  context
@@ -3427,13 +3447,13 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L2
@@ -3554,9 +3574,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[4]_asm_proceduremysubtractheadings_report_4 "report" Object => void
-      _minus "-" double,double => double
-        _minus "-" double,double => double
+[4]_asm_proceduremysubtractheadings_report_4 "report h1 - h2 - 360" Object => void
+      _minus "h1 - h2 - 360" double,double => double
+        _minus "h1 - h2" double,double => double
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
@@ -3574,7 +3594,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L5
@@ -3600,7 +3620,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L7
@@ -3657,7 +3677,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L12
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3679,7 +3699,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_4 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L13
           NEW org/nlogo/nvm/NonLocalExit
@@ -3717,9 +3737,9 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_proceduremysubtractheadings_report_6 "report" Object => void
-      _plus "+" double,double => double
-        _minus "-" double,double => double
+[6]_asm_proceduremysubtractheadings_report_6 "report h1 - h2 + 360" Object => void
+      _plus "h1 - h2 + 360" double,double => double
+        _minus "h1 - h2" double,double => double
           _procedurevariable:H1 "h1" => Object
           _procedurevariable:H2 "h2" => Object
         _constdouble:360.0 "360" => double
@@ -3737,7 +3757,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L5
@@ -3763,7 +3783,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L7
@@ -3820,7 +3840,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L12
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3842,7 +3862,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduremysubtractheadings_report_6 org/nlogo/nvm/Context java/lang/Double T D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L13
           NEW org/nlogo/nvm/NonLocalExit

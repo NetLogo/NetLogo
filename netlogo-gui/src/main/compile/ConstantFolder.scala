@@ -17,9 +17,9 @@ package org.nlogo.compile
 // happen.  ~Forrest (10/13/2006)
 // I think compile time reporting is definitely good. - ST 2/12/09
 
-import org.nlogo.core.{ CompilerException, Fail, LogoList, Nobody }, Fail._
+import org.nlogo.core.{ CompilerException, Fail, LogoList, Nobody, Pure }, Fail._
 import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ Pure, Reporter }
+import org.nlogo.nvm.Reporter
 import org.nlogo.prim.{ _constboolean, _constdouble, _constlist, _conststring, _nobody }
 import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, ReporterApp }
 

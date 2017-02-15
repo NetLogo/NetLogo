@@ -6,11 +6,11 @@ import org.scalatest.FunSuite
 
 import org.nlogo.api.{ FileIO, DummyCompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.fileformat.NLogoLabFormat
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.{ Femto, LiteralParser }
 
 class ProtocolEditableTests extends FunSuite {
-  val compiler = Femto.get[CompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+  val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
   // make sure all the protocols in test/protocols.xml survive a round trip through conversion to
   // ProtocolEditable and back. It would be possible to cut the dependency on the compiler

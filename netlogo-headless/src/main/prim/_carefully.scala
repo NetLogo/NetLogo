@@ -17,6 +17,7 @@ class _carefully(let: Let) extends Command with CustomAssembled {
 
   def perform_1(context: Context) {
     val agentset = AgentSet.fromAgent(context.agent)
+    val oldBinding = context.activation.binding.copy
     try {
       // start new job that skips over the _goto command
       context.runExclusiveJob(agentset, next + 1)
@@ -24,7 +25,8 @@ class _carefully(let: Let) extends Command with CustomAssembled {
       context.ip = next
     }
     catch { case ex: LogoException =>
-      context.let(let, ex)
+      context.activation.binding = oldBinding
+      context.activation.binding.let(let, ex)
       context.ip = offset  // jump to error handler
     }
   }

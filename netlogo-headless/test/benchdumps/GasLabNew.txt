@@ -9,7 +9,7 @@ CLOCKERS = Breed(CLOCKERS, CLOCKER, , false)
 link-breeds 
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 361" double => void
       _constdouble:361.0 "361" => double
           // parameter final  context
           // parameter final  context
@@ -70,8 +70,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -80,7 +82,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 17000 [ go ]" double => void
       _constdouble:17000.0 "17000" => double
           // parameter final  context
           // parameter final  context
@@ -91,7 +93,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -114,8 +116,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -129,7 +133,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -157,7 +161,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -216,7 +220,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
 procedure SETUP:[]{O---}:
 [0]_clearall "ca"
 [1]_resetticks "reset-ticks"
-[2]_setdefaultshape "set-default-shape"
+[2]_setdefaultshape "set-default-shape particles "circle""
       _asm_proceduresetup_breed_0 "particles" => AgentSet
             // parameter final  context
            L0
@@ -232,7 +236,7 @@ procedure SETUP:[]{O---}:
             LDC "circle"
            L1
             ARETURN
-[3]_asm_proceduresetup_setobservervariable_2 "set" Object => void
+[3]_asm_proceduresetup_setobservervariable_2 "set fade-needed? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -270,8 +274,8 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresetup_setobservervariable_3 "set" Object => void
-      _minus "-" double,double => double
+[4]_asm_proceduresetup_setobservervariable_3 "set box-edge max-pxcor - 1" Object => void
+      _minus "max-pxcor - 1" double,double => double
         _maxpxcor "max-pxcor" => double
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -329,11 +333,11 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[5]_asm_proceduresetup_setobservervariable_4 "set" Object => void
-      _plus "+" double,double => double
-        _mult "*" double,double => double
+[5]_asm_proceduresetup_setobservervariable_4 "set length-horizontal-surface 2 * box-edge - 1 + 1" Object => void
+      _plus "2 * box-edge - 1 + 1" double,double => double
+        _mult "2 * box-edge - 1" double,double => double
           _constdouble:2.0 "2" => double
-          _minus "-" double,double => double
+          _minus "box-edge - 1" double,double => double
             _observervariable:BOX-EDGE "box-edge" => Object
             _constdouble:1.0 "1" => double
         _constdouble:1.0 "1" => double
@@ -438,11 +442,11 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[6]_asm_proceduresetup_setobservervariable_5 "set" Object => void
-      _plus "+" double,double => double
-        _mult "*" double,double => double
+[6]_asm_proceduresetup_setobservervariable_5 "set length-vertical-surface 2 * box-edge - 1 + 1" Object => void
+      _plus "2 * box-edge - 1 + 1" double,double => double
+        _mult "2 * box-edge - 1" double,double => double
           _constdouble:2.0 "2" => double
-          _minus "-" double,double => double
+          _minus "box-edge - 1" double,double => double
             _observervariable:BOX-EDGE "box-edge" => Object
             _constdouble:1.0 "1" => double
         _constdouble:1.0 "1" => double
@@ -555,8 +559,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 8
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -573,8 +579,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_7.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 9
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -591,8 +599,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_8.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 10
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -601,7 +611,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[10]_asm_proceduresetup_setobservervariable_9 "set" Object => void
+[10]_asm_proceduresetup_setobservervariable_9 "set pressure-history []" Object => void
       _constlist:[] "[]" => LogoList
           // parameter final  context
           // parameter final  context
@@ -639,7 +649,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[11]_asm_proceduresetup_setobservervariable_10 "set" Object => void
+[11]_asm_proceduresetup_setobservervariable_10 "set zero-pressure-count 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -685,8 +695,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_11.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 13
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -695,7 +707,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[13]_asm_proceduresetup_setobservervariable_12 "set" Object => void
+[13]_asm_proceduresetup_setobservervariable_12 "set init-avg-speed avg-speed" Object => void
       _observervariable:AVG-SPEED "avg-speed" => Object
           // parameter final  context
           // parameter final  context
@@ -736,7 +748,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[14]_asm_proceduresetup_setobservervariable_13 "set" Object => void
+[14]_asm_proceduresetup_setobservervariable_13 "set init-avg-energy avg-energy" Object => void
       _observervariable:AVG-ENERGY "avg-energy" => Object
           // parameter final  context
           // parameter final  context
@@ -785,8 +797,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_14.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 16
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -803,8 +817,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_15.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 17
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -821,8 +837,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_16.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 18
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -843,10 +861,10 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure UPDATE-VARIABLES:[]{OTPL}:
-[0]_asm_procedureupdatevariables_setobservervariable_0 "set" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[0]_asm_procedureupdatevariables_setobservervariable_0 "set medium count particles with [ color = green ]" Object => void
+      _countwith "count particles with [ color = green ]" AgentSet,Reporter => double
         _breed:PARTICLES "particles" => AgentSet
-        _asm_procedureupdatevariables_equal_1 "=" Object,double => boolean
+        _asm_procedureupdatevariables_equal_1 "color = green" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:55.0 "green" => double
               // parameter final  context
@@ -1043,10 +1061,10 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[1]_asm_procedureupdatevariables_setobservervariable_2 "set" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[1]_asm_procedureupdatevariables_setobservervariable_2 "set slow count particles with [ color = blue ]" Object => void
+      _countwith "count particles with [ color = blue ]" AgentSet,Reporter => double
         _breed:PARTICLES "particles" => AgentSet
-        _asm_procedureupdatevariables_equal_3 "=" Object,double => boolean
+        _asm_procedureupdatevariables_equal_3 "color = blue" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:105.0 "blue" => double
               // parameter final  context
@@ -1243,10 +1261,10 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[2]_asm_procedureupdatevariables_setobservervariable_4 "set" Object => void
-      _countwith "count" AgentSet,Reporter => double
+[2]_asm_procedureupdatevariables_setobservervariable_4 "set fast count particles with [ color = red ]" Object => void
+      _countwith "count particles with [ color = red ]" AgentSet,Reporter => double
         _breed:PARTICLES "particles" => AgentSet
-        _asm_procedureupdatevariables_equal_5 "=" Object,double => boolean
+        _asm_procedureupdatevariables_equal_5 "color = red" Object,double => boolean
           _turtleorlinkvariable:COLOR "color" => Object
           _constdouble:15.0 "red" => double
               // parameter final  context
@@ -1443,9 +1461,9 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[3]_asm_procedureupdatevariables_setobservervariable_6 "set" Object => void
-      _mean "mean" LogoList => double
-        _breedvariableof:SPEED "of"
+[3]_asm_procedureupdatevariables_setobservervariable_6 "set avg-speed mean [ speed ] of particles" Object => void
+      _mean "mean [ speed ] of particles" LogoList => double
+        _breedvariableof:SPEED "[ speed ] of particles"
           _asm_procedureupdatevariables_breed_7 "particles" => AgentSet
                 // parameter final  context
                L0
@@ -1589,9 +1607,9 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[4]_asm_procedureupdatevariables_setobservervariable_8 "set" Object => void
-      _mean "mean" LogoList => double
-        _breedvariableof:ENERGY "of"
+[4]_asm_procedureupdatevariables_setobservervariable_8 "set avg-energy mean [ energy ] of particles" Object => void
+      _mean "mean [ energy ] of particles" LogoList => double
+        _breedvariableof:ENERGY "[ energy ] of particles"
           _asm_procedureupdatevariables_breed_9 "particles" => AgentSet
                 // parameter final  context
                L0
@@ -1747,7 +1765,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           RETURN
 
 procedure GO:[OLD-CLOCK]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask particles [ bounce ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1814,8 +1832,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 3
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1832,7 +1852,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_asm_procedurego_ask_3 "ask" AgentSet => void
+[3]_asm_procedurego_ask_3 "ask particles [ move ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1899,8 +1919,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1917,7 +1939,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_procedurego_ask_6 "ask" AgentSet => void
+[6]_asm_procedurego_ask_6 "ask particles [ if collide? [ check-for-collision ] ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -1976,7 +1998,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[7]_asm_procedurego_if_7 "if" boolean => void
+[7]_asm_procedurego_if_7 "if collide? [ check-for-collision ]" boolean => void
       _observervariable:COLLIDE? "collide?" => Object
           // parameter final  context
           // parameter final  context
@@ -2031,8 +2053,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_8.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           BIPUSH 9
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2049,7 +2073,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[10]_asm_procedurego_if_10 "if" boolean => void
+[10]_asm_procedurego_if_10 "if trace? [ ask particle 0 set pcolor gray [ set fade-needed? true ] ]" boolean => void
       _observervariable:TRACE? "trace?" => Object
           // parameter final  context
           // parameter final  context
@@ -2096,8 +2120,8 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[11]_asm_procedurego_ask_11 "ask" Object => void
-      _breedsingular:PARTICLES "particle" double => Object
+[11]_asm_procedurego_ask_11 "ask particle 0 set pcolor gray [ set fade-needed? true ]" Object => void
+      _breedsingular:PARTICLES "particle 0" double => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
           // parameter final  context
@@ -2314,7 +2338,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[12]_asm_procedurego_setpatchvariable_12 "set" Object => void
+[12]_asm_procedurego_setpatchvariable_12 "set pcolor gray" Object => void
       _constdouble:5.0 "gray" => Double
           // parameter final  context
           // parameter final  context
@@ -2351,7 +2375,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[13]_asm_procedurego_setobservervariable_13 "set" Object => void
+[13]_asm_procedurego_setobservervariable_13 "set fade-needed? true" Object => void
       _constboolean:true "true" => Boolean
           // parameter final  context
           // parameter final  context
@@ -2397,7 +2421,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[15]_asm_procedurego_setprocedurevariable_15 "let" Object => void
+[15]_asm_procedurego_setprocedurevariable_15 "let ticks" Object => void
       _ticks "ticks" => double
           // parameter final  context
           // parameter final  arg0
@@ -2431,7 +2455,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -2440,7 +2464,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[16]_tickadvance "tick-advance"
+[16]_tickadvance "tick-advance tick-length"
       _asm_procedurego_observervariable_16 "tick-length" => Object
             // parameter final  context
            L0
@@ -2451,12 +2475,12 @@ procedure GO:[OLD-CLOCK]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[17]_asm_procedurego_if_17 "if" boolean => void
-      _greaterthan ">" double,double => boolean
-        _floor "floor" double => double
+[17]_asm_procedurego_if_17 "if floor ticks > floor ticks - tick-length ifelse any? particles [ set wall-hits-per-particle mean [ wall-hits ] of particles ] [ set wall-hits-per-particle 0 ] ask particles [ set wall-hits 0 ] if fade-needed? [ fade-patches ] calculate-pressure update-variables [ do-plotting ]" boolean => void
+      _greaterthan "floor ticks > floor ticks - tick-length" double,double => boolean
+        _floor "floor ticks" double => double
           _ticks "ticks" => double
-        _floor "floor" double => double
-          _minus "-" double,double => double
+        _floor "floor ticks - tick-length" double => double
+          _minus "ticks - tick-length" double,double => double
             _ticks "ticks" => double
             _observervariable:TICK-LENGTH "tick-length" => Object
           // parameter final  context
@@ -2583,8 +2607,8 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[18]_asm_procedurego_ifelse_18 "ifelse" boolean => void
-      _any "any?" AgentSet => boolean
+[18]_asm_procedurego_ifelse_18 "ifelse any? particles [ set wall-hits-per-particle mean [ wall-hits ] of particles ] [ set wall-hits-per-particle 0 ]" boolean => void
+      _any "any? particles" AgentSet => boolean
         _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2622,9 +2646,9 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[19]_asm_procedurego_setobservervariable_19 "set" Object => void
-      _mean "mean" LogoList => double
-        _breedvariableof:WALL-HITS "of"
+[19]_asm_procedurego_setobservervariable_19 "set wall-hits-per-particle mean [ wall-hits ] of particles" Object => void
+      _mean "mean [ wall-hits ] of particles" LogoList => double
+        _breedvariableof:WALL-HITS "[ wall-hits ] of particles"
           _asm_procedurego_breed_20 "particles" => AgentSet
                 // parameter final  context
                L0
@@ -2776,7 +2800,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[21]_asm_procedurego_setobservervariable_22 "set" Object => void
+[21]_asm_procedurego_setobservervariable_22 "set wall-hits-per-particle 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -2814,7 +2838,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[22]_asm_procedurego_ask_23 "ask" AgentSet => void
+[22]_asm_procedurego_ask_23 "ask particles [ set wall-hits 0 ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2873,7 +2897,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[23]_setbreedvariable:WALL-HITS "set"
+[23]_setbreedvariable:WALL-HITS "set wall-hits 0"
       _asm_procedurego_constdouble_24 "0" => Double
             // parameter final  context
            L0
@@ -2889,7 +2913,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[25]_asm_procedurego_if_26 "if" boolean => void
+[25]_asm_procedurego_if_26 "if fade-needed? [ fade-patches ]" boolean => void
       _observervariable:FADE-NEEDED? "fade-needed?" => Object
           // parameter final  context
           // parameter final  context
@@ -2944,8 +2968,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_27.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           BIPUSH 27
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2962,8 +2988,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_28.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 28
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2980,8 +3008,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_29.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 29
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2998,8 +3028,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_30.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 30
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3016,8 +3048,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_31.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 31
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3026,7 +3060,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[31]_asm_procedurego_ask_32 "ask" AgentSet => void
+[31]_asm_procedurego_ask_32 "ask clockers [ set heading ticks * 360 ]" AgentSet => void
       _breed:CLOCKERS "clockers" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -3085,8 +3119,8 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[32]_asm_procedurego_setturtlevariable_33 "set" Object => void
-      _mult "*" double,double => double
+[32]_asm_procedurego_setturtlevariable_33 "set heading ticks * 360" Object => void
+      _mult "ticks * 360" double,double => double
         _ticks "ticks" => double
         _constdouble:360.0 "360" => double
           // parameter final  context
@@ -3166,11 +3200,11 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[34]_asm_procedurego_ask_35 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[34]_asm_procedurego_ask_35 "ask flashes with [ ticks - birthday > 0.4 ] set pcolor yellow [ die ]" AgentSet => void
+      _with "flashes with [ ticks - birthday > 0.4 ]" AgentSet,Reporter => AgentSet
         _breed:FLASHES "flashes" => AgentSet
-        _asm_procedurego_greaterthan_36 ">" double,double => boolean
-          _minus "-" double,double => double
+        _asm_procedurego_greaterthan_36 "ticks - birthday > 0.4" double,double => boolean
+          _minus "ticks - birthday" double,double => double
             _ticks "ticks" => double
             _breedvariable:BIRTHDAY "birthday" => Object
           _constdouble:0.4 "0.4" => double
@@ -3427,7 +3461,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[35]_asm_procedurego_setpatchvariable_37 "set" Object => void
+[35]_asm_procedurego_setpatchvariable_37 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
           // parameter final  context
           // parameter final  context
@@ -3509,10 +3543,10 @@ procedure GO:[OLD-CLOCK]{O---}:
           RETURN
 
 procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
-[0]_asm_procedurecalculateticklength_ifelse_0 "ifelse" boolean => void
-      _anywith "any?" AgentSet,Reporter => boolean
+[0]_asm_procedurecalculateticklength_ifelse_0 "ifelse any? particles with [ speed > 0 ] [ set tick-length 1 / ceiling max [ speed ] of particles ] [ set tick-length 1 ]" boolean => void
+      _anywith "any? particles with [ speed > 0 ]" AgentSet,Reporter => boolean
         _breed:PARTICLES "particles" => AgentSet
-        _asm_procedurecalculateticklength_greaterthan_1 ">" Object,double => boolean
+        _asm_procedurecalculateticklength_greaterthan_1 "speed > 0" Object,double => boolean
           _breedvariable:SPEED "speed" => Object
           _constdouble:0.0 "0" => double
               // parameter final  context
@@ -3706,12 +3740,12 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_procedurecalculateticklength_setobservervariable_2 "set" Object => void
-      _div "/" double,double => double
+[1]_asm_procedurecalculateticklength_setobservervariable_2 "set tick-length 1 / ceiling max [ speed ] of particles" Object => void
+      _div "1 / ceiling max [ speed ] of particles" double,double => double
         _constdouble:1.0 "1" => double
-        _ceil "ceiling" double => double
-          _max "max"
-            _breedvariableof:SPEED "of"
+        _ceil "ceiling max [ speed ] of particles" double => double
+          _max "max [ speed ] of particles"
+            _breedvariableof:SPEED "[ speed ] of particles"
               _asm_procedurecalculateticklength_breed_3 "particles" => AgentSet
                     // parameter final  context
                    L0
@@ -3822,7 +3856,7 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurecalculateticklength_setobservervariable_5 "set" Object => void
+[3]_asm_procedurecalculateticklength_setobservervariable_5 "set tick-length 1" Object => void
       _constdouble:1.0 "1" => Double
           // parameter final  context
           // parameter final  context
@@ -3872,11 +3906,11 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
           RETURN
 
 procedure CALCULATE-PRESSURE:[]{OTPL}:
-[0]_asm_procedurecalculatepressure_setobservervariable_0 "set" Object => void
-      _mult "*" double,double => double
+[0]_asm_procedurecalculatepressure_setobservervariable_0 "set pressure 15 * sum [ momentum-difference ] of particles" Object => void
+      _mult "15 * sum [ momentum-difference ] of particles" double,double => double
         _constdouble:15.0 "15" => double
-        _sum "sum" LogoList => double
-          _breedvariableof:MOMENTUM-DIFFERENCE "of"
+        _sum "sum [ momentum-difference ] of particles" LogoList => double
+          _breedvariableof:MOMENTUM-DIFFERENCE "[ momentum-difference ] of particles"
             _asm_procedurecalculatepressure_breed_1 "particles" => AgentSet
                   // parameter final  context
                  L0
@@ -3995,8 +4029,8 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L14
           RETURN
-[1]_asm_procedurecalculatepressure_setobservervariable_2 "set" Object => void
-      _lput "lput"
+[1]_asm_procedurecalculatepressure_setobservervariable_2 "set pressure-history lput pressure pressure-history" Object => void
+      _lput "lput pressure pressure-history"
         _asm_procedurecalculatepressure_observervariable_3 "pressure" => Object
               // parameter final  context
              L0
@@ -4053,11 +4087,11 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[2]_asm_procedurecalculatepressure_setobservervariable_5 "set" Object => void
-      _length "length" LogoList => double
-        _filter "filter"
+[2]_asm_procedurecalculatepressure_setobservervariable_5 "set zero-pressure-count length filter [ [p] -> p = 0] pressure-history" Object => void
+      _length "length filter [ [p] -> p = 0] pressure-history" LogoList => double
+        _filter "filter [ [p] -> p = 0] pressure-history"
           _reporterlambda "[ [p] -> p = 0]"
-            _asm_procedurecalculatepressure_equal_6 "=" Object,double => boolean
+            _asm_procedurecalculatepressure_equal_6 "p = 0" Object,double => boolean
               _letvariable(Let(P)) "p" => Object
               _constdouble:0.0 "0" => double
                   // parameter final  context
@@ -4067,9 +4101,11 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
                   // parameter final  d1
                  L0
                   ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+                  GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurecalculatepressure_equal_6.kept2__let : Lorg/nlogo/core/Let;
-                  INVOKEVIRTUAL org/nlogo/nvm/Context.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
+                  INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                  L1
                   DCONST_0
                  L2
@@ -4188,7 +4224,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[3]_asm_procedurecalculatepressure_ask_8 "ask" AgentSet => void
+[3]_asm_procedurecalculatepressure_ask_8 "ask particles [ set momentum-difference 0 ]" AgentSet => void
       _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -4247,7 +4283,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_setbreedvariable:MOMENTUM-DIFFERENCE "set"
+[4]_setbreedvariable:MOMENTUM-DIFFERENCE "set momentum-difference 0"
       _asm_procedurecalculatepressure_constdouble_9 "0" => Double
             // parameter final  context
            L0
@@ -4275,8 +4311,8 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           RETURN
 
 procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
-[0]_asm_procedurebounce_if_0 "if" boolean => void
-      _shadeof "shade-of?"
+[0]_asm_procedurebounce_if_0 "if shade-of? yellow pcolor [ stop ]" boolean => void
+      _shadeof "shade-of? yellow pcolor"
         _asm_procedurebounce_constdouble_1 "yellow" => Double
               // parameter final  context
              L0
@@ -4364,8 +4400,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -4388,8 +4424,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[2]_asm_procedurebounce_setprocedurevariable_4 "let" Object => void
-      _patchahead "patch-ahead"
+[2]_asm_procedurebounce_setprocedurevariable_4 "let patch-ahead 1" Object => void
+      _patchahead "patch-ahead 1"
         _asm_procedurebounce_constdouble_5 "1" => Double
               // parameter final  context
              L0
@@ -4407,7 +4443,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4416,8 +4452,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebounce_setprocedurevariable_6 "let" Object => void
-      _patchvariableof:PXCOR "of" Object => Object
+[3]_asm_procedurebounce_setprocedurevariable_6 "let [ pxcor ] of new-patch" Object => void
+      _patchvariableof:PXCOR "[ pxcor ] of new-patch" Object => Object
         _procedurevariable:NEW-PATCH "new-patch" => Object
           // parameter final  context
           // parameter final  context
@@ -4428,7 +4464,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L4
@@ -4549,7 +4585,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4558,8 +4594,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[4]_asm_procedurebounce_setprocedurevariable_7 "let" Object => void
-      _patchvariableof:PYCOR "of" Object => Object
+[4]_asm_procedurebounce_setprocedurevariable_7 "let [ pycor ] of new-patch" Object => void
+      _patchvariableof:PYCOR "[ pycor ] of new-patch" Object => Object
         _procedurevariable:NEW-PATCH "new-patch" => Object
           // parameter final  context
           // parameter final  context
@@ -4570,7 +4606,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L4
@@ -4691,7 +4727,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -4700,9 +4736,9 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[5]_asm_procedurebounce_if_8 "if" boolean => void
-      _not "not" boolean => boolean
-        _shadeof "shade-of?"
+[5]_asm_procedurebounce_if_8 "if not shade-of? yellow [ pcolor ] of new-patch [ stop ]" boolean => void
+      _not "not shade-of? yellow [ pcolor ] of new-patch" boolean => boolean
+        _shadeof "shade-of? yellow [ pcolor ] of new-patch"
           _asm_procedurebounce_constdouble_9 "yellow" => Double
                 // parameter final  context
                L0
@@ -4710,7 +4746,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
                 GETFIELD org/nlogo/prim/_asm_procedurebounce_constdouble_9.kept1_value : Ljava/lang/Double;
                L1
                 ARETURN
-          _asm_procedurebounce_patchvariableof_10 "of" Object => Object
+          _asm_procedurebounce_patchvariableof_10 "[ pcolor ] of new-patch" Object => Object
             _procedurevariable:NEW-PATCH "new-patch" => Object
                 // parameter final  context
                 // parameter final  context
@@ -4719,7 +4755,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
                L3
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+                GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
                 ICONST_0
                 AALOAD
                L4
@@ -4906,8 +4942,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -4930,14 +4966,14 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[7]_asm_procedurebounce_if_12 "if" boolean => void
-      _and "and"
-        _notequal "!=" double,Object => boolean
-          _abs "abs" double => double
+[7]_asm_procedurebounce_if_12 "if abs new-px != box-edge and abs new-py != box-edge [ stop ]" boolean => void
+      _and "abs new-px != box-edge and abs new-py != box-edge"
+        _notequal "abs new-px != box-edge" double,Object => boolean
+          _abs "abs new-px" double => double
             _procedurevariable:NEW-PX "new-px" => Object
           _observervariable:BOX-EDGE "box-edge" => Object
-        _notequal "!=" double,Object => boolean
-          _abs "abs" double => double
+        _notequal "abs new-py != box-edge" double,Object => boolean
+          _abs "abs new-py" double => double
             _procedurevariable:NEW-PY "new-py" => Object
           _observervariable:BOX-EDGE "box-edge" => Object
           // parameter final  context
@@ -4961,7 +4997,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L5
@@ -5039,7 +5075,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L16
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L17
@@ -5147,8 +5183,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -5171,9 +5207,9 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[9]_asm_procedurebounce_if_14 "if" boolean => void
-      _equal "=" double,Object => boolean
-        _abs "abs" double => double
+[9]_asm_procedurebounce_if_14 "if abs new-px = box-edge set heading - heading set wall-hits wall-hits + 1 [ set momentum-difference momentum-difference + abs sin heading * 2 * mass * speed / length-vertical-surface ]" boolean => void
+      _equal "abs new-px = box-edge" double,Object => boolean
+        _abs "abs new-px" double => double
           _procedurevariable:NEW-PX "new-px" => Object
         _observervariable:BOX-EDGE "box-edge" => Object
           // parameter final  context
@@ -5189,7 +5225,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L3
@@ -5277,8 +5313,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[10]_asm_procedurebounce_setturtlevariable_15 "set" Object => void
-      _unaryminus "-" double => double
+[10]_asm_procedurebounce_setturtlevariable_15 "set heading - heading" Object => void
+      _unaryminus "- heading" double => double
         _turtlevariabledouble:HEADING "heading" => double
           // parameter final  context
           // parameter final  context
@@ -5329,8 +5365,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[11]_setbreedvariable:WALL-HITS "set"
-      _asm_procedurebounce_plus_16 "+" double,double => double
+[11]_setbreedvariable:WALL-HITS "set wall-hits wall-hits + 1"
+      _asm_procedurebounce_plus_16 "wall-hits + 1" double,double => double
         _breedvariable:WALL-HITS "wall-hits" => Object
         _constdouble:1.0 "1" => double
             // parameter final  context
@@ -5394,15 +5430,15 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[12]_setbreedvariable:MOMENTUM-DIFFERENCE "set"
-      _asm_procedurebounce_plus_17 "+" double,double => double
+[12]_setbreedvariable:MOMENTUM-DIFFERENCE "set momentum-difference momentum-difference + abs sin heading * 2 * mass * speed / length-vertical-surface"
+      _asm_procedurebounce_plus_17 "momentum-difference + abs sin heading * 2 * mass * speed / length-vertical-surface" double,double => double
         _breedvariable:MOMENTUM-DIFFERENCE "momentum-difference" => Object
-        _div "/" double,double => double
-          _abs "abs" double => double
-            _mult "*" double,double => double
-              _mult "*" double,double => double
-                _mult "*" double,double => double
-                  _sin "sin" double => double
+        _div "abs sin heading * 2 * mass * speed / length-vertical-surface" double,double => double
+          _abs "abs sin heading * 2 * mass * speed" double => double
+            _mult "sin heading * 2 * mass * speed" double,double => double
+              _mult "sin heading * 2 * mass" double,double => double
+                _mult "sin heading * 2" double,double => double
+                  _sin "sin heading" double => double
                     _turtlevariabledouble:HEADING "heading" => double
                   _constdouble:2.0 "2" => double
                 _breedvariable:MASS "mass" => Object
@@ -5659,9 +5695,9 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[13]_asm_procedurebounce_if_18 "if" boolean => void
-      _equal "=" double,Object => boolean
-        _abs "abs" double => double
+[13]_asm_procedurebounce_if_18 "if abs new-py = box-edge set heading 180 - heading set wall-hits wall-hits + 1 [ set momentum-difference momentum-difference + abs cos heading * 2 * mass * speed / length-horizontal-surface ]" boolean => void
+      _equal "abs new-py = box-edge" double,Object => boolean
+        _abs "abs new-py" double => double
           _procedurevariable:NEW-PY "new-py" => Object
         _observervariable:BOX-EDGE "box-edge" => Object
           // parameter final  context
@@ -5677,7 +5713,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L3
@@ -5765,8 +5801,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[14]_asm_procedurebounce_setturtlevariable_19 "set" Object => void
-      _minus "-" double,double => double
+[14]_asm_procedurebounce_setturtlevariable_19 "set heading 180 - heading" Object => void
+      _minus "180 - heading" double,double => double
         _constdouble:180.0 "180" => double
         _turtlevariabledouble:HEADING "heading" => double
           // parameter final  context
@@ -5824,8 +5860,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[15]_setbreedvariable:WALL-HITS "set"
-      _asm_procedurebounce_plus_20 "+" double,double => double
+[15]_setbreedvariable:WALL-HITS "set wall-hits wall-hits + 1"
+      _asm_procedurebounce_plus_20 "wall-hits + 1" double,double => double
         _breedvariable:WALL-HITS "wall-hits" => Object
         _constdouble:1.0 "1" => double
             // parameter final  context
@@ -5889,15 +5925,15 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[16]_setbreedvariable:MOMENTUM-DIFFERENCE "set"
-      _asm_procedurebounce_plus_21 "+" double,double => double
+[16]_setbreedvariable:MOMENTUM-DIFFERENCE "set momentum-difference momentum-difference + abs cos heading * 2 * mass * speed / length-horizontal-surface"
+      _asm_procedurebounce_plus_21 "momentum-difference + abs cos heading * 2 * mass * speed / length-horizontal-surface" double,double => double
         _breedvariable:MOMENTUM-DIFFERENCE "momentum-difference" => Object
-        _div "/" double,double => double
-          _abs "abs" double => double
-            _mult "*" double,double => double
-              _mult "*" double,double => double
-                _mult "*" double,double => double
-                  _cos "cos" double => double
+        _div "abs cos heading * 2 * mass * speed / length-horizontal-surface" double,double => double
+          _abs "abs cos heading * 2 * mass * speed" double => double
+            _mult "cos heading * 2 * mass * speed" double,double => double
+              _mult "cos heading * 2 * mass" double,double => double
+                _mult "cos heading * 2" double,double => double
+                  _cos "cos heading" double => double
                     _turtlevariabledouble:HEADING "heading" => double
                   _constdouble:2.0 "2" => double
                 _breedvariable:MASS "mass" => Object
@@ -6154,14 +6190,14 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[17]_asm_procedurebounce_ask_22 "ask" Object => void
-      _patch "patch"
+[17]_asm_procedurebounce_ask_22 "ask patch new-px new-py [ sprout-flashes 1 ht set birthday ticks [ set pcolor yellow - 3 ] ]" Object => void
+      _patch "patch new-px new-py"
         _asm_procedurebounce_procedurevariable_23 "new-px" => Object
               // parameter final  context
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_1
               AALOAD
              L1
@@ -6171,7 +6207,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_2
               AALOAD
              L1
@@ -6296,7 +6332,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[18]_sprout:FLASHES,+23 "sprout-flashes"
+[18]_sprout:FLASHES,+23 "sprout-flashes 1 ht set birthday ticks [ set pcolor yellow - 3 ]"
       _asm_procedurebounce_constdouble_25 "1" => Double
             // parameter final  context
            L0
@@ -6305,7 +6341,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
            L1
             ARETURN
 [19]_hideturtle "ht"
-[20]_setbreedvariable:BIRTHDAY "set"
+[20]_setbreedvariable:BIRTHDAY "set birthday ticks"
       _asm_procedurebounce_ticks_26 "ticks" => double
            L0
             ALOAD 0
@@ -6335,8 +6371,8 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[21]_asm_procedurebounce_setpatchvariable_27 "set" Object => void
-      _constdouble:42.0 "-" => Double
+[21]_asm_procedurebounce_setpatchvariable_27 "set pcolor yellow - 3" Object => void
+      _constdouble:42.0 "yellow - 3" => Double
           // parameter final  context
           // parameter final  context
           // parameter final  arg0
@@ -6400,7 +6436,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           RETURN
 
 procedure MOVE:[OLD-PATCH]{-T--}:
-[0]_asm_proceduremove_setprocedurevariable_0 "let" Object => void
+[0]_asm_proceduremove_setprocedurevariable_0 "let patch-here" Object => void
       _patchhere "patch-here" => Patch
           // parameter final  context
           // parameter final  context
@@ -6414,7 +6450,7 @@ procedure MOVE:[OLD-PATCH]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -6423,8 +6459,8 @@ procedure MOVE:[OLD-PATCH]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_proceduremove_jump_1 "jump" double => void
-      _mult "*" double,double => double
+[1]_asm_proceduremove_jump_1 "jump speed * tick-length" double => void
+      _mult "speed * tick-length" double,double => double
         _breedvariable:SPEED "speed" => Object
         _observervariable:TICK-LENGTH "tick-length" => Object
           // parameter final  context
@@ -6529,8 +6565,8 @@ procedure MOVE:[OLD-PATCH]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[2]_asm_proceduremove_if_2 "if" boolean => void
-      _notequal "!=" Object,Object => boolean
+[2]_asm_proceduremove_if_2 "if patch-here != old-patch [ set last-collision nobody ]" boolean => void
+      _notequal "patch-here != old-patch" Object,Object => boolean
         _patchhere "patch-here" => Patch
         _procedurevariable:OLD-PATCH "old-patch" => Object
           // parameter final  context
@@ -6548,7 +6584,7 @@ procedure MOVE:[OLD-PATCH]{-T--}:
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
@@ -6580,7 +6616,7 @@ procedure MOVE:[OLD-PATCH]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_setbreedvariable:LAST-COLLISION "set"
+[3]_setbreedvariable:LAST-COLLISION "set last-collision nobody"
       _asm_proceduremove_nobody_3 "nobody" => Nobody$
             // parameter final  context
            L0
@@ -6599,9 +6635,9 @@ procedure MOVE:[OLD-PATCH]{-T--}:
           RETURN
 
 procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
-[0]_asm_procedurecheckforcollision_if_0 "if" boolean => void
-      _equal "=" double,double => boolean
-        _countother "count" AgentSet => double
+[0]_asm_procedurecheckforcollision_if_0 "if count other particles-here = 1 let one-of other particles-here with [ who < [ who ] of myself and myself != last-collision ] [ if candidate != nobody and speed > 0 or [ speed ] of candidate > 0 collide-with candidate set last-collision candidate [ ask candidate [ set last-collision myself ] ] ]" boolean => void
+      _equal "count other particles-here = 1" double,double => boolean
+        _countother "count other particles-here" AgentSet => double
           _breedhere:PARTICLES "particles-here" => AgentSet
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -6736,16 +6772,16 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[1]_asm_procedurecheckforcollision_setprocedurevariable_1 "let" Object => void
-      _oneof "one-of" AgentSet => Object
-        _otherwith "other" AgentSet,Reporter => AgentSet
+[1]_asm_procedurecheckforcollision_setprocedurevariable_1 "let one-of other particles-here with [ who < [ who ] of myself and myself != last-collision ]" Object => void
+      _oneof "one-of other particles-here with [ who < [ who ] of myself and myself != last-collision ]" AgentSet => Object
+        _otherwith "other particles-here with [ who < [ who ] of myself and myself != last-collision ]" AgentSet,Reporter => AgentSet
           _breedhere:PARTICLES "particles-here" => AgentSet
-          _asm_procedurecheckforcollision_and_2 "and"
-            _lessthan "<" double,Object => boolean
+          _asm_procedurecheckforcollision_and_2 "who < [ who ] of myself and myself != last-collision"
+            _lessthan "who < [ who ] of myself" double,Object => boolean
               _turtlevariabledouble:WHO "who" => double
-              _turtlevariableof:WHO "of" Agent => Object
+              _turtlevariableof:WHO "[ who ] of myself" Agent => Object
                 _myself "myself" => Agent
-            _notequal "!=" Object,Object => boolean
+            _notequal "myself != last-collision" Object,Object => boolean
               _myself "myself" => Agent
               _breedvariable:LAST-COLLISION "last-collision" => Object
                 // parameter final  context
@@ -7160,7 +7196,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -7169,23 +7205,23 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[2]_asm_procedurecheckforcollision_if_3 "if" boolean => void
-      _and "and"
-        _notequal "!=" Object,Object => boolean
+[2]_asm_procedurecheckforcollision_if_3 "if candidate != nobody and speed > 0 or [ speed ] of candidate > 0 collide-with candidate set last-collision candidate [ ask candidate [ set last-collision myself ] ]" boolean => void
+      _and "candidate != nobody and speed > 0 or [ speed ] of candidate > 0"
+        _notequal "candidate != nobody" Object,Object => boolean
           _procedurevariable:CANDIDATE "candidate" => Object
           _nobody "nobody" => Nobody$
-        _or "or"
-          _greaterthan ">" Object,double => boolean
+        _or "speed > 0 or [ speed ] of candidate > 0"
+          _greaterthan "speed > 0" Object,double => boolean
             _breedvariable:SPEED "speed" => Object
             _constdouble:0.0 "0" => double
-          _greaterthan ">" Object,double => boolean
-            _breedvariableof:SPEED "of"
+          _greaterthan "[ speed ] of candidate > 0" Object,double => boolean
+            _breedvariableof:SPEED "[ speed ] of candidate"
               _asm_procedurecheckforcollision_procedurevariable_4 "candidate" => Object
                     // parameter final  context
                    L0
                     ALOAD 1
                     GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                    INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+                    GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
                     ICONST_0
                     AALOAD
                    L1
@@ -7211,7 +7247,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L4
@@ -7394,7 +7430,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L28
           RETURN
-[3]_asm_procedurecheckforcollision_call_5 "collide-with"
+[3]_asm_procedurecheckforcollision_call_5 "collide-with candidate"
       _procedurevariable:CANDIDATE "candidate" => Object
           // parameter final  context
          L0
@@ -7404,19 +7440,20 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecheckforcollision_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 10
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
           AASTORE
+          ICONST_4
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7425,18 +7462,18 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[4]_setbreedvariable:LAST-COLLISION "set"
+[4]_setbreedvariable:LAST-COLLISION "set last-collision candidate"
       _asm_procedurecheckforcollision_procedurevariable_6 "candidate" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
-[5]_asm_procedurecheckforcollision_ask_7 "ask" Object => void
+[5]_asm_procedurecheckforcollision_ask_7 "ask candidate [ set last-collision myself ]" Object => void
       _procedurevariable:CANDIDATE "candidate" => Object
           // parameter final  context
           // parameter final  context
@@ -7444,7 +7481,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -7561,7 +7598,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[6]_setbreedvariable:LAST-COLLISION "set"
+[6]_setbreedvariable:LAST-COLLISION "set last-collision myself"
       _asm_procedurecheckforcollision_myself_8 "myself" => Agent
            L0
             ALOAD 1
@@ -7608,14 +7645,14 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           RETURN
 
 procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V2L VCM]{-T--}:
-[0]_asm_procedurecollidewith_setprocedurevariable_0 "let" Object => void
-      _breedvariableof:MASS "of"
+[0]_asm_procedurecollidewith_setprocedurevariable_0 "let [ mass ] of other-particle" Object => void
+      _breedvariableof:MASS "[ mass ] of other-particle"
         _asm_procedurecollidewith_procedurevariable_1 "other-particle" => Object
               // parameter final  context
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_0
               AALOAD
              L1
@@ -7630,7 +7667,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -7639,14 +7676,14 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurecollidewith_setprocedurevariable_2 "let" Object => void
-      _breedvariableof:SPEED "of"
+[1]_asm_procedurecollidewith_setprocedurevariable_2 "let [ speed ] of other-particle" Object => void
+      _breedvariableof:SPEED "[ speed ] of other-particle"
         _asm_procedurecollidewith_procedurevariable_3 "other-particle" => Object
               // parameter final  context
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_0
               AALOAD
              L1
@@ -7661,7 +7698,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -7670,8 +7707,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[2]_asm_procedurecollidewith_setprocedurevariable_4 "let" Object => void
-      _turtlevariableof:HEADING "of" Object => Object
+[2]_asm_procedurecollidewith_setprocedurevariable_4 "let [ heading ] of other-particle" Object => void
+      _turtlevariableof:HEADING "[ heading ] of other-particle" Object => Object
         _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           // parameter final  context
           // parameter final  context
@@ -7682,7 +7719,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L4
@@ -7797,7 +7834,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           ALOAD 2
           AASTORE
@@ -7806,8 +7843,8 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[3]_asm_procedurecollidewith_setprocedurevariable_5 "let" Object => void
-      _randomfloat "random-float" double => double
+[3]_asm_procedurecollidewith_setprocedurevariable_5 "let random-float 360" Object => void
+      _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
           // parameter final  context
           // parameter final  context
@@ -7833,7 +7870,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           ALOAD 2
           AASTORE
@@ -7842,11 +7879,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[4]_asm_procedurecollidewith_setprocedurevariable_6 "let" Object => void
-      _mult "*" double,double => double
+[4]_asm_procedurecollidewith_setprocedurevariable_6 "let speed * cos theta - heading" Object => void
+      _mult "speed * cos theta - heading" double,double => double
         _breedvariable:SPEED "speed" => Object
-        _cos "cos" double => double
-          _minus "-" double,double => double
+        _cos "cos theta - heading" double => double
+          _minus "theta - heading" double,double => double
             _procedurevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
           // parameter final  context
@@ -7907,7 +7944,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L9
@@ -7962,7 +7999,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           ALOAD 2
           AASTORE
@@ -7971,11 +8008,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[5]_asm_procedurecollidewith_setprocedurevariable_7 "let" Object => void
-      _mult "*" double,double => double
+[5]_asm_procedurecollidewith_setprocedurevariable_7 "let speed * sin theta - heading" Object => void
+      _mult "speed * sin theta - heading" double,double => double
         _breedvariable:SPEED "speed" => Object
-        _sin "sin" double => double
-          _minus "-" double,double => double
+        _sin "sin theta - heading" double => double
+          _minus "theta - heading" double,double => double
             _procedurevariable:THETA "theta" => Object
             _turtlevariabledouble:HEADING "heading" => double
           // parameter final  context
@@ -8036,7 +8073,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L9
@@ -8091,7 +8128,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 6
           ALOAD 2
           AASTORE
@@ -8100,11 +8137,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L15
           RETURN
-[6]_asm_procedurecollidewith_setprocedurevariable_8 "let" Object => void
-      _mult "*" double,double => double
+[6]_asm_procedurecollidewith_setprocedurevariable_8 "let speed2 * cos theta - heading2" Object => void
+      _mult "speed2 * cos theta - heading2" double,double => double
         _procedurevariable:SPEED2 "speed2" => Object
-        _cos "cos" double => double
-          _minus "-" double,double => double
+        _cos "cos theta - heading2" double => double
+          _minus "theta - heading2" double,double => double
             _procedurevariable:THETA "theta" => Object
             _procedurevariable:HEADING2 "heading2" => Object
           // parameter final  context
@@ -8126,7 +8163,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L7
@@ -8152,7 +8189,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L9
@@ -8178,7 +8215,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_8 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           AALOAD
          L11
@@ -8227,7 +8264,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           ALOAD 2
           AASTORE
@@ -8236,11 +8273,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[7]_asm_procedurecollidewith_setprocedurevariable_9 "let" Object => void
-      _mult "*" double,double => double
+[7]_asm_procedurecollidewith_setprocedurevariable_9 "let speed2 * sin theta - heading2" Object => void
+      _mult "speed2 * sin theta - heading2" double,double => double
         _procedurevariable:SPEED2 "speed2" => Object
-        _sin "sin" double => double
-          _minus "-" double,double => double
+        _sin "sin theta - heading2" double => double
+          _minus "theta - heading2" double,double => double
             _procedurevariable:THETA "theta" => Object
             _procedurevariable:HEADING2 "heading2" => Object
           // parameter final  context
@@ -8262,7 +8299,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L7
@@ -8288,7 +8325,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L9
@@ -8314,7 +8351,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_9 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_3
           AALOAD
          L11
@@ -8363,7 +8400,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 8
           ALOAD 2
           AASTORE
@@ -8372,16 +8409,16 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L16
           RETURN
-[8]_asm_procedurecollidewith_setprocedurevariable_10 "let" Object => void
-      _div "/" double,double => double
-        _plus "+" double,double => double
-          _mult "*" double,double => double
+[8]_asm_procedurecollidewith_setprocedurevariable_10 "let mass * v1t + mass2 * v2t / mass + mass2" Object => void
+      _div "mass * v1t + mass2 * v2t / mass + mass2" double,double => double
+        _plus "mass * v1t + mass2 * v2t" double,double => double
+          _mult "mass * v1t" double,double => double
             _breedvariable:MASS "mass" => Object
             _procedurevariable:V1T "v1t" => Object
-          _mult "*" double,double => double
+          _mult "mass2 * v2t" double,double => double
             _procedurevariable:MASS2 "mass2" => Object
             _procedurevariable:V2T "v2t" => Object
-        _plus "+" double,double => double
+        _plus "mass + mass2" double,double => double
           _breedvariable:MASS "mass" => Object
           _procedurevariable:MASS2 "mass2" => Object
           // parameter final  context
@@ -8454,7 +8491,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           AALOAD
          L20
@@ -8486,7 +8523,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L22
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L23
@@ -8512,7 +8549,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_10 org/nlogo/nvm/Context java/lang/Object T D] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           AALOAD
          L25
@@ -8589,7 +8626,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setprocedurevariable_10 org/nlogo/nvm/Context java/lang/Object T D] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L30
@@ -8648,7 +8685,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 9
           ALOAD 2
           AASTORE
@@ -8657,9 +8694,9 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L35
           RETURN
-[9]_asm_procedurecollidewith_setprocedurevariable_11 "set" Object => void
-      _minus "-" double,double => double
-        _mult "*" double,double => double
+[9]_asm_procedurecollidewith_setprocedurevariable_11 "set v1t 2 * vcm - v1t" Object => void
+      _minus "2 * vcm - v1t" double,double => double
+        _mult "2 * vcm" double,double => double
           _constdouble:2.0 "2" => double
           _procedurevariable:VCM "vcm" => Object
         _procedurevariable:V1T "v1t" => Object
@@ -8681,7 +8718,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 9
           AALOAD
          L6
@@ -8713,7 +8750,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L8
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           AALOAD
          L9
@@ -8751,7 +8788,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           ALOAD 2
           AASTORE
@@ -8760,9 +8797,9 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[10]_asm_procedurecollidewith_setprocedurevariable_12 "set" Object => void
-      _minus "-" double,double => double
-        _mult "*" double,double => double
+[10]_asm_procedurecollidewith_setprocedurevariable_12 "set v2t 2 * vcm - v2t" Object => void
+      _minus "2 * vcm - v2t" double,double => double
+        _mult "2 * vcm" double,double => double
           _constdouble:2.0 "2" => double
           _procedurevariable:VCM "vcm" => Object
         _procedurevariable:V2T "v2t" => Object
@@ -8784,7 +8821,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 9
           AALOAD
          L6
@@ -8816,7 +8853,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L8
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           AALOAD
          L9
@@ -8854,7 +8891,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           ALOAD 2
           AASTORE
@@ -8863,13 +8900,13 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[11]_setbreedvariable:SPEED "set"
-      _asm_procedurecollidewith_sqrt_13 "sqrt" double => double
-        _plus "+" double,double => double
-          _mult "*" double,double => double
+[11]_setbreedvariable:SPEED "set speed sqrt v1t * v1t + v1l * v1l"
+      _asm_procedurecollidewith_sqrt_13 "sqrt v1t * v1t + v1l * v1l" double => double
+        _plus "v1t * v1t + v1l * v1l" double,double => double
+          _mult "v1t * v1t" double,double => double
             _procedurevariable:V1T "v1t" => Object
             _procedurevariable:V1T "v1t" => Object
-          _mult "*" double,double => double
+          _mult "v1l * v1l" double,double => double
             _procedurevariable:V1L "v1l" => Object
             _procedurevariable:V1L "v1l" => Object
             // parameter final  context
@@ -8892,7 +8929,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            L8
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_5
             AALOAD
            L9
@@ -8918,7 +8955,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME SAME1 D
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_5
             AALOAD
            L11
@@ -8950,7 +8987,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            L13
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 6
             AALOAD
            L14
@@ -8976,7 +9013,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_13 org/nlogo/nvm/Context java/lang/Object T D] [D D]
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 6
             AALOAD
            L16
@@ -9044,10 +9081,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[12]_setbreedvariable:ENERGY "set"
-      _asm_procedurecollidewith_mult_14 "*" double,double => double
-        _mult "*" double,double => double
-          _mult "*" double,double => double
+[12]_setbreedvariable:ENERGY "set energy 0.5 * mass * speed * speed"
+      _asm_procedurecollidewith_mult_14 "0.5 * mass * speed * speed" double,double => double
+        _mult "0.5 * mass * speed" double,double => double
+          _mult "0.5 * mass" double,double => double
             _constdouble:0.5 "0.5" => double
             _breedvariable:MASS "mass" => Object
           _breedvariable:SPEED "speed" => Object
@@ -9215,12 +9252,12 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[13]_asm_procedurecollidewith_if_15 "if" boolean => void
-      _or "or"
-        _notequal "!=" Object,double => boolean
+[13]_asm_procedurecollidewith_if_15 "if v1l != 0 or v1t != 0 [ set heading theta - atan v1l v1t ]" boolean => void
+      _or "v1l != 0 or v1t != 0"
+        _notequal "v1l != 0" Object,double => boolean
           _procedurevariable:V1L "v1l" => Object
           _constdouble:0.0 "0" => double
-        _notequal "!=" Object,double => boolean
+        _notequal "v1t != 0" Object,double => boolean
           _procedurevariable:V1T "v1t" => Object
           _constdouble:0.0 "0" => double
           // parameter final  context
@@ -9238,7 +9275,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 6
           AALOAD
          L1
@@ -9278,7 +9315,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           AALOAD
          L10
@@ -9334,10 +9371,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[14]_asm_procedurecollidewith_setturtlevariable_16 "set" Object => void
-      _minus "-" double,double => double
+[14]_asm_procedurecollidewith_setturtlevariable_16 "set heading theta - atan v1l v1t" Object => void
+      _minus "theta - atan v1l v1t" double,double => double
         _procedurevariable:THETA "theta" => Object
-        _atan "atan" double,double => double
+        _atan "atan v1l v1t" double,double => double
           _procedurevariable:V1L "v1l" => Object
           _procedurevariable:V1T "v1t" => Object
           // parameter final  context
@@ -9358,7 +9395,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L10
@@ -9384,7 +9421,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 6
           AALOAD
          L12
@@ -9410,7 +9447,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_16 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_5
           AALOAD
          L14
@@ -9547,7 +9584,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L24
           RETURN
-[15]_asm_procedurecollidewith_ask_17 "ask" Object => void
+[15]_asm_procedurecollidewith_ask_17 "ask other-particle [ set speed sqrt v2t * v2t + v2l * v2l ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           // parameter final  context
           // parameter final  context
@@ -9555,7 +9592,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -9672,13 +9709,13 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[16]_setbreedvariable:SPEED "set"
-      _asm_procedurecollidewith_sqrt_18 "sqrt" double => double
-        _plus "+" double,double => double
-          _mult "*" double,double => double
+[16]_setbreedvariable:SPEED "set speed sqrt v2t * v2t + v2l * v2l"
+      _asm_procedurecollidewith_sqrt_18 "sqrt v2t * v2t + v2l * v2l" double => double
+        _plus "v2t * v2t + v2l * v2l" double,double => double
+          _mult "v2t * v2t" double,double => double
             _procedurevariable:V2T "v2t" => Object
             _procedurevariable:V2T "v2t" => Object
-          _mult "*" double,double => double
+          _mult "v2l * v2l" double,double => double
             _procedurevariable:V2L "v2l" => Object
             _procedurevariable:V2L "v2l" => Object
             // parameter final  context
@@ -9701,7 +9738,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            L8
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 7
             AALOAD
            L9
@@ -9727,7 +9764,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME SAME1 D
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 7
             AALOAD
            L11
@@ -9759,7 +9796,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            L13
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 8
             AALOAD
            L14
@@ -9785,7 +9822,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
            FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_sqrt_18 org/nlogo/nvm/Context java/lang/Object T D] [D D]
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             BIPUSH 8
             AALOAD
            L16
@@ -9861,7 +9898,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[18]_asm_procedurecollidewith_ask_20 "ask" Object => void
+[18]_asm_procedurecollidewith_ask_20 "ask other-particle [ set energy 0.5 * mass * speed * speed ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           // parameter final  context
           // parameter final  context
@@ -9869,7 +9906,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -9986,10 +10023,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[19]_setbreedvariable:ENERGY "set"
-      _asm_procedurecollidewith_mult_21 "*" double,double => double
-        _mult "*" double,double => double
-          _mult "*" double,double => double
+[19]_setbreedvariable:ENERGY "set energy 0.5 * mass * speed * speed"
+      _asm_procedurecollidewith_mult_21 "0.5 * mass * speed * speed" double,double => double
+        _mult "0.5 * mass * speed" double,double => double
+          _mult "0.5 * mass" double,double => double
             _constdouble:0.5 "0.5" => double
             _breedvariable:MASS "mass" => Object
           _breedvariable:SPEED "speed" => Object
@@ -10165,12 +10202,12 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[21]_asm_procedurecollidewith_if_23 "if" boolean => void
-      _or "or"
-        _notequal "!=" Object,double => boolean
+[21]_asm_procedurecollidewith_if_23 "if v2l != 0 or v2t != 0 [ ask other-particle [ set heading theta - atan v2l v2t ] ]" boolean => void
+      _or "v2l != 0 or v2t != 0"
+        _notequal "v2l != 0" Object,double => boolean
           _procedurevariable:V2L "v2l" => Object
           _constdouble:0.0 "0" => double
-        _notequal "!=" Object,double => boolean
+        _notequal "v2t != 0" Object,double => boolean
           _procedurevariable:V2T "v2t" => Object
           _constdouble:0.0 "0" => double
           // parameter final  context
@@ -10188,7 +10225,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 8
           AALOAD
          L1
@@ -10228,7 +10265,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           AALOAD
          L10
@@ -10284,7 +10321,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[22]_asm_procedurecollidewith_ask_24 "ask" Object => void
+[22]_asm_procedurecollidewith_ask_24 "ask other-particle [ set heading theta - atan v2l v2t ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           // parameter final  context
           // parameter final  context
@@ -10292,7 +10329,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -10409,10 +10446,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[23]_asm_procedurecollidewith_setturtlevariable_25 "set" Object => void
-      _minus "-" double,double => double
+[23]_asm_procedurecollidewith_setturtlevariable_25 "set heading theta - atan v2l v2t" Object => void
+      _minus "theta - atan v2l v2t" double,double => double
         _procedurevariable:THETA "theta" => Object
-        _atan "atan" double,double => double
+        _atan "atan v2l v2t" double,double => double
           _procedurevariable:V2L "v2l" => Object
           _procedurevariable:V2T "v2t" => Object
           // parameter final  context
@@ -10433,7 +10470,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_4
           AALOAD
          L10
@@ -10459,7 +10496,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME SAME1 D
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 8
           AALOAD
          L12
@@ -10485,7 +10522,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          FRAME FULL [org/nlogo/prim/_asm_procedurecollidewith_setturtlevariable_25 org/nlogo/nvm/Context java/lang/Object] [D D]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           BIPUSH 7
           AALOAD
          L14
@@ -10638,8 +10675,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GETFIELD org/nlogo/prim/_asm_procedurecollidewith_call_27.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 26
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -10648,7 +10687,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[26]_asm_procedurecollidewith_ask_28 "ask" Object => void
+[26]_asm_procedurecollidewith_ask_28 "ask other-particle [ recolor ]" Object => void
       _procedurevariable:OTHER-PARTICLE "other-particle" => Object
           // parameter final  context
           // parameter final  context
@@ -10656,7 +10695,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -10781,8 +10820,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GETFIELD org/nlogo/prim/_asm_procedurecollidewith_call_29.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 28
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -10811,10 +10852,10 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           RETURN
 
 procedure RECOLOR:[]{-T--}:
-[0]_asm_procedurerecolor_ifelse_0 "ifelse" boolean => void
-      _lessthan "<" Object,double => boolean
+[0]_asm_procedurerecolor_ifelse_0 "ifelse speed < 0.5 * 10 [ set color blue ] [ ifelse speed > 1.5 * 10 [ set color red ] [ set color green ] ]" boolean => void
+      _lessthan "speed < 0.5 * 10" Object,double => boolean
         _breedvariable:SPEED "speed" => Object
-        _constdouble:5.0 "*" => double
+        _constdouble:5.0 "0.5 * 10" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -10912,7 +10953,7 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_procedurerecolor_setturtleorlinkvariable_1 "set" Object => void
+[1]_asm_procedurerecolor_setturtleorlinkvariable_1 "set color blue" Object => void
       _constdouble:105.0 "blue" => Double
           // parameter final  context
           // parameter final  context
@@ -10957,10 +10998,10 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurerecolor_ifelse_3 "ifelse" boolean => void
-      _greaterthan ">" Object,double => boolean
+[3]_asm_procedurerecolor_ifelse_3 "ifelse speed > 1.5 * 10 [ set color red ] [ set color green ]" boolean => void
+      _greaterthan "speed > 1.5 * 10" Object,double => boolean
         _breedvariable:SPEED "speed" => Object
-        _constdouble:15.0 "*" => double
+        _constdouble:15.0 "1.5 * 10" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -11058,7 +11099,7 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[4]_asm_procedurerecolor_setturtleorlinkvariable_4 "set" Object => void
+[4]_asm_procedurerecolor_setturtleorlinkvariable_4 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -11103,7 +11144,7 @@ procedure RECOLOR:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_procedurerecolor_setturtleorlinkvariable_6 "set" Object => void
+[6]_asm_procedurerecolor_setturtleorlinkvariable_6 "set color green" Object => void
       _constdouble:55.0 "green" => Double
           // parameter final  context
           // parameter final  context
@@ -11152,14 +11193,14 @@ procedure RECOLOR:[]{-T--}:
           RETURN
 
 procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
-[0]_asm_procedurefadepatches_setprocedurevariable_0 "let" Object => void
-      _with "with" AgentSet,Reporter => AgentSet
+[0]_asm_procedurefadepatches_setprocedurevariable_0 "let patches with [ pcolor != yellow and pcolor != black ]" Object => void
+      _with "patches with [ pcolor != yellow and pcolor != black ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_procedurefadepatches_and_1 "and"
-          _notequal "!=" Object,double => boolean
+        _asm_procedurefadepatches_and_1 "pcolor != yellow and pcolor != black"
+          _notequal "pcolor != yellow" Object,double => boolean
             _patchvariable:PCOLOR "pcolor" => Object
             _constdouble:45.0 "yellow" => double
-          _notequal "!=" Object,double => boolean
+          _notequal "pcolor != black" Object,double => boolean
             _patchvariable:PCOLOR "pcolor" => Object
             _constdouble:0.0 "black" => double
               // parameter final  context
@@ -11400,7 +11441,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -11409,8 +11450,8 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[1]_asm_procedurefadepatches_ifelse_2 "ifelse" boolean => void
-      _any "any?" AgentSet => boolean
+[1]_asm_procedurefadepatches_ifelse_2 "ifelse any? trace-patches [ ask trace-patches set pcolor pcolor - 0.4 [ if not trace? or round pcolor = black [ set pcolor black ] ] ] [ set fade-needed? false ]" boolean => void
+      _any "any? trace-patches" AgentSet => boolean
         _procedurevariable:TRACE-PATCHES "trace-patches" => Object
           // parameter final  context
           // parameter final  context
@@ -11421,7 +11462,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L3
@@ -11469,7 +11510,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_procedurefadepatches_ask_3 "ask" Object => void
+[2]_asm_procedurefadepatches_ask_3 "ask trace-patches set pcolor pcolor - 0.4 [ if not trace? or round pcolor = black [ set pcolor black ] ]" Object => void
       _procedurevariable:TRACE-PATCHES "trace-patches" => Object
           // parameter final  context
           // parameter final  context
@@ -11477,7 +11518,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
@@ -11594,8 +11635,8 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[3]_asm_procedurefadepatches_setpatchvariable_4 "set" Object => void
-      _minus "-" double,double => double
+[3]_asm_procedurefadepatches_setpatchvariable_4 "set pcolor pcolor - 0.4" Object => void
+      _minus "pcolor - 0.4" double,double => double
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.4 "0.4" => double
           // parameter final  context
@@ -11688,12 +11729,12 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[4]_asm_procedurefadepatches_if_5 "if" boolean => void
-      _or "or"
-        _not "not" boolean => boolean
+[4]_asm_procedurefadepatches_if_5 "if not trace? or round pcolor = black [ set pcolor black ]" boolean => void
+      _or "not trace? or round pcolor = black"
+        _not "not trace?" boolean => boolean
           _observervariable:TRACE? "trace?" => Object
-        _equal "=" double,double => boolean
-          _round "round" double => double
+        _equal "round pcolor = black" double,double => boolean
+          _round "round pcolor" double => double
             _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:0.0 "black" => double
           // parameter final  context
@@ -11830,7 +11871,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L22
           RETURN
-[5]_asm_procedurefadepatches_setpatchvariable_6 "set" Object => void
+[5]_asm_procedurefadepatches_setpatchvariable_6 "set pcolor black" Object => void
       _constdouble:0.0 "black" => Double
           // parameter final  context
           // parameter final  context
@@ -11883,7 +11924,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedurefadepatches_setobservervariable_9 "set" Object => void
+[8]_asm_procedurefadepatches_setobservervariable_9 "set fade-needed? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -11933,26 +11974,26 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           RETURN
 
 procedure MAKE-BOX:[]{OTPL}:
-[0]_asm_proceduremakebox_ask_0 "ask" AgentSet => void
-      _with "with" AgentSet,Reporter => AgentSet
+[0]_asm_proceduremakebox_ask_0 "ask patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ] [ set pcolor yellow ]" AgentSet => void
+      _with "patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_proceduremakebox_or_1 "or"
-          _and "and"
-            _equal "=" double,Object => boolean
-              _abs "abs" double => double
+        _asm_proceduremakebox_or_1 "abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge"
+          _and "abs pxcor = box-edge and abs pycor <= box-edge"
+            _equal "abs pxcor = box-edge" double,Object => boolean
+              _abs "abs pxcor" double => double
                 _patchvariabledouble:PXCOR "pxcor" => double
               _observervariable:BOX-EDGE "box-edge" => Object
-            _lessorequal "<=" double,Object => boolean
-              _abs "abs" double => double
+            _lessorequal "abs pycor <= box-edge" double,Object => boolean
+              _abs "abs pycor" double => double
                 _patchvariabledouble:PYCOR "pycor" => double
               _observervariable:BOX-EDGE "box-edge" => Object
-          _and "and"
-            _equal "=" double,Object => boolean
-              _abs "abs" double => double
+          _and "abs pycor = box-edge and abs pxcor <= box-edge"
+            _equal "abs pycor = box-edge" double,Object => boolean
+              _abs "abs pycor" double => double
                 _patchvariabledouble:PYCOR "pycor" => double
               _observervariable:BOX-EDGE "box-edge" => Object
-            _lessorequal "<=" double,Object => boolean
-              _abs "abs" double => double
+            _lessorequal "abs pxcor <= box-edge" double,Object => boolean
+              _abs "abs pxcor" double => double
                 _patchvariabledouble:PXCOR "pxcor" => double
               _observervariable:BOX-EDGE "box-edge" => Object
               // parameter final  context
@@ -12524,7 +12565,7 @@ procedure MAKE-BOX:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduremakebox_setpatchvariable_2 "set" Object => void
+[1]_asm_proceduremakebox_setpatchvariable_2 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
           // parameter final  context
           // parameter final  context
@@ -12581,7 +12622,7 @@ procedure MAKE-BOX:[]{OTPL}:
           RETURN
 
 procedure MAKE-PARTICLES:[]{O---}:
-[0]_createorderedturtles:PARTICLES,+5 "create-ordered-particles"
+[0]_createorderedturtles:PARTICLES,+5 "create-ordered-particles number-of-particles setup-particle random-position [ recolor ]"
       _asm_proceduremakeparticles_observervariable_0 "number-of-particles" => Object
             // parameter final  context
            L0
@@ -12600,8 +12641,10 @@ procedure MAKE-PARTICLES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12618,8 +12661,10 @@ procedure MAKE-PARTICLES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12636,8 +12681,10 @@ procedure MAKE-PARTICLES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12662,8 +12709,10 @@ procedure MAKE-PARTICLES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduremakeparticles_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12684,7 +12733,7 @@ procedure MAKE-PARTICLES:[]{O---}:
           RETURN
 
 procedure SETUP-PARTICLE:[]{-T--}:
-[0]_setbreedvariable:SPEED "set"
+[0]_setbreedvariable:SPEED "set speed init-particle-speed"
       _asm_proceduresetupparticle_observervariable_0 "init-particle-speed" => Object
             // parameter final  context
            L0
@@ -12695,7 +12744,7 @@ procedure SETUP-PARTICLE:[]{-T--}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[1]_setbreedvariable:MASS "set"
+[1]_setbreedvariable:MASS "set mass particle-mass"
       _asm_proceduresetupparticle_observervariable_1 "particle-mass" => Object
             // parameter final  context
            L0
@@ -12706,10 +12755,10 @@ procedure SETUP-PARTICLE:[]{-T--}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_setbreedvariable:ENERGY "set"
-      _asm_proceduresetupparticle_mult_2 "*" double,double => double
-        _mult "*" double,double => double
-          _mult "*" double,double => double
+[2]_setbreedvariable:ENERGY "set energy 0.5 * mass * speed * speed"
+      _asm_proceduresetupparticle_mult_2 "0.5 * mass * speed * speed" double,double => double
+        _mult "0.5 * mass * speed" double,double => double
+          _mult "0.5 * mass" double,double => double
             _constdouble:0.5 "0.5" => double
             _breedvariable:MASS "mass" => Object
           _breedvariable:SPEED "speed" => Object
@@ -12877,14 +12926,14 @@ procedure SETUP-PARTICLE:[]{-T--}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setbreedvariable:LAST-COLLISION "set"
+[3]_setbreedvariable:LAST-COLLISION "set last-collision nobody"
       _asm_proceduresetupparticle_nobody_3 "nobody" => Nobody$
             // parameter final  context
            L0
             GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
            L1
             ARETURN
-[4]_setbreedvariable:WALL-HITS "set"
+[4]_setbreedvariable:WALL-HITS "set wall-hits 0"
       _asm_proceduresetupparticle_constdouble_4 "0" => Double
             // parameter final  context
            L0
@@ -12892,7 +12941,7 @@ procedure SETUP-PARTICLE:[]{-T--}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupparticle_constdouble_4.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_setbreedvariable:MOMENTUM-DIFFERENCE "set"
+[5]_setbreedvariable:MOMENTUM-DIFFERENCE "set momentum-difference 0"
       _asm_proceduresetupparticle_constdouble_5 "0" => Double
             // parameter final  context
            L0
@@ -12912,24 +12961,24 @@ procedure SETUP-PARTICLE:[]{-T--}:
           RETURN
 
 procedure RANDOM-POSITION:[]{-T--}:
-[0]_asm_procedurerandomposition_setxy_0 "setxy" double,double => void
-      _plus "+" double,double => double
-        _minus "-" double,double => double
+[0]_asm_procedurerandomposition_setxy_0 "setxy 1 - box-edge + random-float 2 * box-edge - 2 1 - box-edge + random-float 2 * box-edge - 2" double,double => void
+      _plus "1 - box-edge + random-float 2 * box-edge - 2" double,double => double
+        _minus "1 - box-edge" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:BOX-EDGE "box-edge" => Object
-        _randomfloat "random-float" double => double
-          _minus "-" double,double => double
-            _mult "*" double,double => double
+        _randomfloat "random-float 2 * box-edge - 2" double => double
+          _minus "2 * box-edge - 2" double,double => double
+            _mult "2 * box-edge" double,double => double
               _constdouble:2.0 "2" => double
               _observervariable:BOX-EDGE "box-edge" => Object
             _constdouble:2.0 "2" => double
-      _plus "+" double,double => double
-        _minus "-" double,double => double
+      _plus "1 - box-edge + random-float 2 * box-edge - 2" double,double => double
+        _minus "1 - box-edge" double,double => double
           _constdouble:1.0 "1" => double
           _observervariable:BOX-EDGE "box-edge" => Object
-        _randomfloat "random-float" double => double
-          _minus "-" double,double => double
-            _mult "*" double,double => double
+        _randomfloat "random-float 2 * box-edge - 2" double => double
+          _minus "2 * box-edge - 2" double,double => double
+            _mult "2 * box-edge" double,double => double
               _constdouble:2.0 "2" => double
               _observervariable:BOX-EDGE "box-edge" => Object
             _constdouble:2.0 "2" => double
@@ -13205,8 +13254,8 @@ procedure RANDOM-POSITION:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L37
           RETURN
-[1]_asm_procedurerandomposition_setturtlevariable_1 "set" Object => void
-      _randomfloat "random-float" double => double
+[1]_asm_procedurerandomposition_setturtlevariable_1 "set heading random-float 360" Object => void
+      _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
           // parameter final  context
           // parameter final  context
@@ -13269,14 +13318,14 @@ procedure RANDOM-POSITION:[]{-T--}:
           RETURN
 
 procedure SETUP-PLOTZ:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Speed Counts""
       _asm_proceduresetupplotz_conststring_0 ""Speed Counts"" => String
             // parameter final  context
            L0
             LDC "Speed Counts"
            L1
             ARETURN
-[1]_setplotyrange "set-plot-y-range"
+[1]_setplotyrange "set-plot-y-range 0 ceiling number-of-particles / 6"
       _asm_proceduresetupplotz_constdouble_1 "0" => Double
             // parameter final  context
            L0
@@ -13284,8 +13333,8 @@ procedure SETUP-PLOTZ:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupplotz_constdouble_1.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetupplotz_ceil_2 "ceiling" double => double
-        _div "/" double,double => double
+      _asm_proceduresetupplotz_ceil_2 "ceiling number-of-particles / 6" double => double
+        _div "number-of-particles / 6" double,double => double
           _observervariable:NUMBER-OF-PARTICLES "number-of-particles" => Object
           _constdouble:6.0 "6" => double
             // parameter final  context
@@ -13365,14 +13414,14 @@ procedure SETUP-PLOTZ:[]{OTPL}:
           RETURN
 
 procedure SETUP-HISTOGRAMS:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Speed Histogram""
       _asm_proceduresetuphistograms_conststring_0 ""Speed Histogram"" => String
             // parameter final  context
            L0
             LDC "Speed Histogram"
            L1
             ARETURN
-[1]_setplotxrange "set-plot-x-range"
+[1]_setplotxrange "set-plot-x-range 0 init-particle-speed * 2"
       _asm_proceduresetuphistograms_constdouble_1 "0" => Double
             // parameter final  context
            L0
@@ -13380,7 +13429,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_1.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_mult_2 "*" double,double => double
+      _asm_proceduresetuphistograms_mult_2 "init-particle-speed * 2" double,double => double
         _observervariable:INIT-PARTICLE-SPEED "init-particle-speed" => Object
         _constdouble:2.0 "2" => double
             // parameter final  context
@@ -13430,7 +13479,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[2]_setplotyrange "set-plot-y-range"
+[2]_setplotyrange "set-plot-y-range 0 ceiling number-of-particles / 6"
       _asm_proceduresetuphistograms_constdouble_3 "0" => Double
             // parameter final  context
            L0
@@ -13438,8 +13487,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_3.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_ceil_4 "ceiling" double => double
-        _div "/" double,double => double
+      _asm_proceduresetuphistograms_ceil_4 "ceiling number-of-particles / 6" double => double
+        _div "number-of-particles / 6" double,double => double
           _observervariable:NUMBER-OF-PARTICLES "number-of-particles" => Object
           _constdouble:6.0 "6" => double
             // parameter final  context
@@ -13507,14 +13556,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen"
+[3]_setcurrentplotpen "set-current-plot-pen "medium""
       _asm_proceduresetuphistograms_conststring_5 ""medium"" => String
             // parameter final  context
            L0
             LDC "medium"
            L1
             ARETURN
-[4]_sethistogramnumbars "set-histogram-num-bars"
+[4]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_6 "40" => Double
             // parameter final  context
            L0
@@ -13522,14 +13571,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_6.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_proceduresetuphistograms_conststring_7 ""slow"" => String
             // parameter final  context
            L0
             LDC "slow"
            L1
             ARETURN
-[6]_sethistogramnumbars "set-histogram-num-bars"
+[6]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_8 "40" => Double
             // parameter final  context
            L0
@@ -13537,14 +13586,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_8.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[7]_setcurrentplotpen "set-current-plot-pen"
+[7]_setcurrentplotpen "set-current-plot-pen "fast""
       _asm_proceduresetuphistograms_conststring_9 ""fast"" => String
             // parameter final  context
            L0
             LDC "fast"
            L1
             ARETURN
-[8]_sethistogramnumbars "set-histogram-num-bars"
+[8]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_10 "40" => Double
             // parameter final  context
            L0
@@ -13552,14 +13601,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_10.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[9]_setcurrentplotpen "set-current-plot-pen"
+[9]_setcurrentplotpen "set-current-plot-pen "init-avg-speed""
       _asm_proceduresetuphistograms_conststring_11 ""init-avg-speed"" => String
             // parameter final  context
            L0
             LDC "init-avg-speed"
            L1
             ARETURN
-[10]_asm_proceduresetuphistograms_call_12 "draw-vert-line"
+[10]_asm_proceduresetuphistograms_call_12 "draw-vert-line init-avg-speed"
       _observervariable:INIT-AVG-SPEED "init-avg-speed" => Object
           // parameter final  context
          L0
@@ -13569,10 +13618,9 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_call_12.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 11
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
@@ -13582,6 +13630,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           AASTORE
+          BIPUSH 11
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -13590,14 +13640,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[11]_setcurrentplot "set-current-plot"
+[11]_setcurrentplot "set-current-plot "Energy Histogram""
       _asm_proceduresetuphistograms_conststring_13 ""Energy Histogram"" => String
             // parameter final  context
            L0
             LDC "Energy Histogram"
            L1
             ARETURN
-[12]_setplotxrange "set-plot-x-range"
+[12]_setplotxrange "set-plot-x-range 0 0.5 * init-particle-speed * 2 * init-particle-speed * 2 * particle-mass"
       _asm_proceduresetuphistograms_constdouble_14 "0" => Double
             // parameter final  context
            L0
@@ -13605,14 +13655,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_14.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_mult_15 "*" double,double => double
-        _mult "*" double,double => double
-          _mult "*" double,double => double
+      _asm_proceduresetuphistograms_mult_15 "0.5 * init-particle-speed * 2 * init-particle-speed * 2 * particle-mass" double,double => double
+        _mult "0.5 * init-particle-speed * 2 * init-particle-speed * 2" double,double => double
+          _mult "0.5 * init-particle-speed * 2" double,double => double
             _constdouble:0.5 "0.5" => double
-            _mult "*" double,double => double
+            _mult "init-particle-speed * 2" double,double => double
               _observervariable:INIT-PARTICLE-SPEED "init-particle-speed" => Object
               _constdouble:2.0 "2" => double
-          _mult "*" double,double => double
+          _mult "init-particle-speed * 2" double,double => double
             _observervariable:INIT-PARTICLE-SPEED "init-particle-speed" => Object
             _constdouble:2.0 "2" => double
         _observervariable:PARTICLE-MASS "particle-mass" => Object
@@ -13761,7 +13811,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[13]_setplotyrange "set-plot-y-range"
+[13]_setplotyrange "set-plot-y-range 0 ceiling number-of-particles / 6"
       _asm_proceduresetuphistograms_constdouble_16 "0" => Double
             // parameter final  context
            L0
@@ -13769,8 +13819,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_16.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-      _asm_proceduresetuphistograms_ceil_17 "ceiling" double => double
-        _div "/" double,double => double
+      _asm_proceduresetuphistograms_ceil_17 "ceiling number-of-particles / 6" double => double
+        _div "number-of-particles / 6" double,double => double
           _observervariable:NUMBER-OF-PARTICLES "number-of-particles" => Object
           _constdouble:6.0 "6" => double
             // parameter final  context
@@ -13838,14 +13888,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[14]_setcurrentplotpen "set-current-plot-pen"
+[14]_setcurrentplotpen "set-current-plot-pen "medium""
       _asm_proceduresetuphistograms_conststring_18 ""medium"" => String
             // parameter final  context
            L0
             LDC "medium"
            L1
             ARETURN
-[15]_sethistogramnumbars "set-histogram-num-bars"
+[15]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_19 "40" => Double
             // parameter final  context
            L0
@@ -13853,14 +13903,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_19.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[16]_setcurrentplotpen "set-current-plot-pen"
+[16]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_proceduresetuphistograms_conststring_20 ""slow"" => String
             // parameter final  context
            L0
             LDC "slow"
            L1
             ARETURN
-[17]_sethistogramnumbars "set-histogram-num-bars"
+[17]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_21 "40" => Double
             // parameter final  context
            L0
@@ -13868,14 +13918,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_21.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[18]_setcurrentplotpen "set-current-plot-pen"
+[18]_setcurrentplotpen "set-current-plot-pen "fast""
       _asm_proceduresetuphistograms_conststring_22 ""fast"" => String
             // parameter final  context
            L0
             LDC "fast"
            L1
             ARETURN
-[19]_sethistogramnumbars "set-histogram-num-bars"
+[19]_sethistogramnumbars "set-histogram-num-bars 40"
       _asm_proceduresetuphistograms_constdouble_23 "40" => Double
             // parameter final  context
            L0
@@ -13883,14 +13933,14 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_constdouble_23.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[20]_setcurrentplotpen "set-current-plot-pen"
+[20]_setcurrentplotpen "set-current-plot-pen "init-avg-energy""
       _asm_proceduresetuphistograms_conststring_24 ""init-avg-energy"" => String
             // parameter final  context
            L0
             LDC "init-avg-energy"
            L1
             ARETURN
-[21]_asm_proceduresetuphistograms_call_25 "draw-vert-line"
+[21]_asm_proceduresetuphistograms_call_25 "draw-vert-line init-avg-energy"
       _observervariable:INIT-AVG-ENERGY "init-avg-energy" => Object
           // parameter final  context
          L0
@@ -13900,10 +13950,9 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_call_25.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 22
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
@@ -13913,6 +13962,8 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           AASTORE
+          BIPUSH 22
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -13933,16 +13984,16 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
           RETURN
 
 procedure DO-PLOTTING:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Pressure vs. Time""
       _asm_proceduredoplotting_conststring_0 ""Pressure vs. Time"" => String
             // parameter final  context
            L0
             LDC "Pressure vs. Time"
            L1
             ARETURN
-[1]_asm_proceduredoplotting_if_1 "if" boolean => void
-      _greaterthan ">" double,double => boolean
-        _length "length" Object => double
+[1]_asm_proceduredoplotting_if_1 "if length pressure-history > 0 [ plotxy ticks mean last-n 3 pressure-history ]" boolean => void
+      _greaterthan "length pressure-history > 0" double,double => boolean
+        _length "length pressure-history" Object => double
           _observervariable:PRESSURE-HISTORY "pressure-history" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -14022,7 +14073,7 @@ procedure DO-PLOTTING:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[2]_plotxy "plotxy"
+[2]_plotxy "plotxy ticks mean last-n 3 pressure-history"
       _asm_proceduredoplotting_ticks_2 "ticks" => double
            L0
             ALOAD 0
@@ -14052,8 +14103,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-      _asm_proceduredoplotting_mean_3 "mean" LogoList => double
-        _callreport:LAST-N "last-n"
+      _asm_proceduredoplotting_mean_3 "mean last-n 3 pressure-history" LogoList => double
+        _callreport:LAST-N "last-n 3 pressure-history"
           _constdouble:3.0 "3" => Double
           _observervariable:PRESSURE-HISTORY "pressure-history" => Object
             // parameter final  context
@@ -14066,10 +14117,9 @@ procedure DO-PLOTTING:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduredoplotting_mean_3.kept2_procedure : Lorg/nlogo/nvm/Procedure;
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            ICONST_2
-            INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+            SIPUSH 2
+            ANEWARRAY java/lang/Object
             DUP
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
             ICONST_0
            L3
             ALOAD 0
@@ -14077,7 +14127,6 @@ procedure DO-PLOTTING:[]{OTPL}:
            L4
             AASTORE
             DUP
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
             ICONST_1
            L5
             ALOAD 0
@@ -14087,6 +14136,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L6
             AASTORE
+            ICONST_2
+            INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
             ALOAD 1
             SWAP
             INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -14199,21 +14250,21 @@ procedure DO-PLOTTING:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[3]_setcurrentplot "set-current-plot"
+[3]_setcurrentplot "set-current-plot "Speed Counts""
       _asm_proceduredoplotting_conststring_4 ""Speed Counts"" => String
             // parameter final  context
            L0
             LDC "Speed Counts"
            L1
             ARETURN
-[4]_setcurrentplotpen "set-current-plot-pen"
+[4]_setcurrentplotpen "set-current-plot-pen "fast""
       _asm_proceduredoplotting_conststring_5 ""fast"" => String
             // parameter final  context
            L0
             LDC "fast"
            L1
             ARETURN
-[5]_plot "plot"
+[5]_plot "plot fast"
       _asm_proceduredoplotting_observervariable_6 "fast" => Object
             // parameter final  context
            L0
@@ -14224,14 +14275,14 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[6]_setcurrentplotpen "set-current-plot-pen"
+[6]_setcurrentplotpen "set-current-plot-pen "medium""
       _asm_proceduredoplotting_conststring_7 ""medium"" => String
             // parameter final  context
            L0
             LDC "medium"
            L1
             ARETURN
-[7]_plot "plot"
+[7]_plot "plot medium"
       _asm_proceduredoplotting_observervariable_8 "medium" => Object
             // parameter final  context
            L0
@@ -14242,14 +14293,14 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[8]_setcurrentplotpen "set-current-plot-pen"
+[8]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_proceduredoplotting_conststring_9 ""slow"" => String
             // parameter final  context
            L0
             LDC "slow"
            L1
             ARETURN
-[9]_plot "plot"
+[9]_plot "plot slow"
       _asm_proceduredoplotting_observervariable_10 "slow" => Object
             // parameter final  context
            L0
@@ -14260,8 +14311,8 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[10]_asm_proceduredoplotting_if_11 "if" boolean => void
-      _greaterthan ">" double,double => boolean
+[10]_asm_proceduredoplotting_if_11 "if ticks > 1 set-current-plot "Wall Hits per Particle" [ plotxy ticks wall-hits-per-particle ]" boolean => void
+      _greaterthan "ticks > 1" double,double => boolean
         _ticks "ticks" => double
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -14321,14 +14372,14 @@ procedure DO-PLOTTING:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[11]_setcurrentplot "set-current-plot"
+[11]_setcurrentplot "set-current-plot "Wall Hits per Particle""
       _asm_proceduredoplotting_conststring_12 ""Wall Hits per Particle"" => String
             // parameter final  context
            L0
             LDC "Wall Hits per Particle"
            L1
             ARETURN
-[12]_plotxy "plotxy"
+[12]_plotxy "plotxy ticks wall-hits-per-particle"
       _asm_proceduredoplotting_ticks_13 "ticks" => double
            L0
             ALOAD 0
@@ -14376,8 +14427,10 @@ procedure DO-PLOTTING:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduredoplotting_call_15.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 14
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -14398,25 +14451,25 @@ procedure DO-PLOTTING:[]{OTPL}:
           RETURN
 
 procedure PLOT-HISTOGRAMS:[]{OTPL}:
-[0]_setcurrentplot "set-current-plot"
+[0]_setcurrentplot "set-current-plot "Energy histogram""
       _asm_procedureplothistograms_conststring_0 ""Energy histogram"" => String
             // parameter final  context
            L0
             LDC "Energy histogram"
            L1
             ARETURN
-[1]_setcurrentplotpen "set-current-plot-pen"
+[1]_setcurrentplotpen "set-current-plot-pen "fast""
       _asm_procedureplothistograms_conststring_1 ""fast"" => String
             // parameter final  context
            L0
             LDC "fast"
            L1
             ARETURN
-[2]_histogram "histogram"
-      _breedvariableof:ENERGY "of"
-        _asm_procedureplothistograms_with_2 "with" AgentSet,Reporter => AgentSet
+[2]_histogram "histogram [ energy ] of particles with [ color = red ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [ color = red ]"
+        _asm_procedureplothistograms_with_2 "particles with [ color = red ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_3 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_3 "color = red" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:15.0 "red" => double
                 // parameter final  context
@@ -14589,18 +14642,18 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen"
+[3]_setcurrentplotpen "set-current-plot-pen "medium""
       _asm_procedureplothistograms_conststring_4 ""medium"" => String
             // parameter final  context
            L0
             LDC "medium"
            L1
             ARETURN
-[4]_histogram "histogram"
-      _breedvariableof:ENERGY "of"
-        _asm_procedureplothistograms_with_5 "with" AgentSet,Reporter => AgentSet
+[4]_histogram "histogram [ energy ] of particles with [ color = green ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [ color = green ]"
+        _asm_procedureplothistograms_with_5 "particles with [ color = green ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_6 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_6 "color = green" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:55.0 "green" => double
                 // parameter final  context
@@ -14773,18 +14826,18 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_procedureplothistograms_conststring_7 ""slow"" => String
             // parameter final  context
            L0
             LDC "slow"
            L1
             ARETURN
-[6]_histogram "histogram"
-      _breedvariableof:ENERGY "of"
-        _asm_procedureplothistograms_with_8 "with" AgentSet,Reporter => AgentSet
+[6]_histogram "histogram [ energy ] of particles with [ color = blue ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [ color = blue ]"
+        _asm_procedureplothistograms_with_8 "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_9 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_9 "color = blue" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:105.0 "blue" => double
                 // parameter final  context
@@ -14957,7 +15010,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[7]_setcurrentplotpen "set-current-plot-pen"
+[7]_setcurrentplotpen "set-current-plot-pen "avg-energy""
       _asm_procedureplothistograms_conststring_10 ""avg-energy"" => String
             // parameter final  context
            L0
@@ -14965,7 +15018,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
            L1
             ARETURN
 [8]_plotpenreset "plot-pen-reset"
-[9]_asm_procedureplothistograms_call_11 "draw-vert-line"
+[9]_asm_procedureplothistograms_call_11 "draw-vert-line avg-energy"
       _observervariable:AVG-ENERGY "avg-energy" => Object
           // parameter final  context
          L0
@@ -14975,10 +15028,9 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedureplothistograms_call_11.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 10
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
@@ -14988,6 +15040,8 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           AASTORE
+          BIPUSH 10
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -14996,25 +15050,25 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[10]_setcurrentplot "set-current-plot"
+[10]_setcurrentplot "set-current-plot "Speed histogram""
       _asm_procedureplothistograms_conststring_12 ""Speed histogram"" => String
             // parameter final  context
            L0
             LDC "Speed histogram"
            L1
             ARETURN
-[11]_setcurrentplotpen "set-current-plot-pen"
+[11]_setcurrentplotpen "set-current-plot-pen "fast""
       _asm_procedureplothistograms_conststring_13 ""fast"" => String
             // parameter final  context
            L0
             LDC "fast"
            L1
             ARETURN
-[12]_histogram "histogram"
-      _breedvariableof:SPEED "of"
-        _asm_procedureplothistograms_with_14 "with" AgentSet,Reporter => AgentSet
+[12]_histogram "histogram [ speed ] of particles with [ color = red ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [ color = red ]"
+        _asm_procedureplothistograms_with_14 "particles with [ color = red ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_15 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_15 "color = red" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:15.0 "red" => double
                 // parameter final  context
@@ -15187,18 +15241,18 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[13]_setcurrentplotpen "set-current-plot-pen"
+[13]_setcurrentplotpen "set-current-plot-pen "medium""
       _asm_procedureplothistograms_conststring_16 ""medium"" => String
             // parameter final  context
            L0
             LDC "medium"
            L1
             ARETURN
-[14]_histogram "histogram"
-      _breedvariableof:SPEED "of"
-        _asm_procedureplothistograms_with_17 "with" AgentSet,Reporter => AgentSet
+[14]_histogram "histogram [ speed ] of particles with [ color = green ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [ color = green ]"
+        _asm_procedureplothistograms_with_17 "particles with [ color = green ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_18 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_18 "color = green" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:55.0 "green" => double
                 // parameter final  context
@@ -15371,18 +15425,18 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[15]_setcurrentplotpen "set-current-plot-pen"
+[15]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_procedureplothistograms_conststring_19 ""slow"" => String
             // parameter final  context
            L0
             LDC "slow"
            L1
             ARETURN
-[16]_histogram "histogram"
-      _breedvariableof:SPEED "of"
-        _asm_procedureplothistograms_with_20 "with" AgentSet,Reporter => AgentSet
+[16]_histogram "histogram [ speed ] of particles with [ color = blue ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [ color = blue ]"
+        _asm_procedureplothistograms_with_20 "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
           _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_21 "=" Object,double => boolean
+          _asm_procedureplothistograms_equal_21 "color = blue" Object,double => boolean
             _turtleorlinkvariable:COLOR "color" => Object
             _constdouble:105.0 "blue" => double
                 // parameter final  context
@@ -15555,7 +15609,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
              L5
               ARETURN
-[17]_setcurrentplotpen "set-current-plot-pen"
+[17]_setcurrentplotpen "set-current-plot-pen "avg-speed""
       _asm_procedureplothistograms_conststring_22 ""avg-speed"" => String
             // parameter final  context
            L0
@@ -15563,7 +15617,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
            L1
             ARETURN
 [18]_plotpenreset "plot-pen-reset"
-[19]_asm_procedureplothistograms_call_23 "draw-vert-line"
+[19]_asm_procedureplothistograms_call_23 "draw-vert-line avg-speed"
       _observervariable:AVG-SPEED "avg-speed" => Object
           // parameter final  context
          L0
@@ -15573,10 +15627,9 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedureplothistograms_call_23.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          BIPUSH 20
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 1
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
@@ -15586,6 +15639,8 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           AASTORE
+          BIPUSH 20
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -15606,26 +15661,26 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
           RETURN
 
 procedure DRAW-VERT-LINE:[XVAL]{OTPL}:
-[0]_plotxy "plotxy"
+[0]_plotxy "plotxy xval plot-y-min"
       _asm_proceduredrawvertline_procedurevariable_0 "xval" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
             ARETURN
       _plotymin "plot-y-min"
 [1]_plotpendown "plot-pen-down"
-[2]_plotxy "plotxy"
+[2]_plotxy "plotxy xval plot-y-max"
       _asm_proceduredrawvertline_procedurevariable_1 "xval" => Object
             // parameter final  context
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-            INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+            GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
             ICONST_0
             AALOAD
            L1
@@ -15644,10 +15699,10 @@ procedure DRAW-VERT-LINE:[XVAL]{OTPL}:
           RETURN
 
 reporter procedure LAST-N:[N THE-LIST]{OTPL}:
-[0]_asm_procedurelastn_ifelse_0 "ifelse" boolean => void
-      _greaterorequal ">=" Object,double => boolean
+[0]_asm_procedurelastn_ifelse_0 "ifelse n >= length the-list [ report the-list ] [ report last-n n butfirst the-list ]" boolean => void
+      _greaterorequal "n >= length the-list" Object,double => boolean
         _procedurevariable:N "n" => Object
-        _length "length" Object => double
+        _length "length the-list" Object => double
           _procedurevariable:THE-LIST "the-list" => Object
           // parameter final  context
           // parameter final  context
@@ -15656,13 +15711,13 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L2
@@ -15759,13 +15814,13 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_procedurelastn_report_1 "report" Object => void
+[1]_asm_procedurelastn_report_1 "report the-list" Object => void
       _procedurevariable:THE-LIST "the-list" => Object
           // parameter final  context
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
@@ -15783,7 +15838,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -15805,7 +15860,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
          FRAME APPEND [java/lang/Object]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L3
           NEW org/nlogo/nvm/NonLocalExit
@@ -15843,10 +15898,10 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurelastn_report_3 "report" Object => void
-      _callreport:LAST-N "last-n"
+[3]_asm_procedurelastn_report_3 "report last-n n butfirst the-list" Object => void
+      _callreport:LAST-N "last-n n butfirst the-list"
         _procedurevariable:N "n" => Object
-        _butfirst "butfirst" Object => Object
+        _butfirst "butfirst the-list" Object => Object
           _procedurevariable:THE-LIST "the-list" => Object
           // parameter final  context
           // parameter final  context
@@ -15857,26 +15912,24 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurelastn_report_3.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
           AASTORE
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_1
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L4
@@ -15906,12 +15959,12 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/core/LogoList.butFirst ()Lorg/nlogo/core/LogoList;
           GOTO L7
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 2
           INSTANCEOF java/lang/String
           IFEQ L8
@@ -15939,13 +15992,13 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object java/lang/String] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object java/lang/String] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           ALOAD 3
           ICONST_1
           INVOKEVIRTUAL java/lang/String.substring (I)Ljava/lang/String;
           GOTO L7
          L8
-         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I]
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
           ALOAD 1
@@ -15958,8 +16011,10 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [org/nlogo/nvm/Activation [Ljava/lang/Object; I java/lang/Object]
+         FRAME FULL [org/nlogo/prim/_asm_procedurelastn_report_3 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [L0 L0 org/nlogo/nvm/Procedure org/nlogo/nvm/Activation [Ljava/lang/Object; [Ljava/lang/Object; I java/lang/Object]
           AASTORE
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -15988,7 +16043,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L11
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -16010,7 +16065,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L12
           NEW org/nlogo/nvm/NonLocalExit
@@ -16058,7 +16113,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ATHROW
 
 procedure MAKE-CLOCKER:[]{O---}:
-[0]_setdefaultshape "set-default-shape"
+[0]_setdefaultshape "set-default-shape clockers "clocker""
       _asm_proceduremakeclocker_breed_0 "clockers" => AgentSet
             // parameter final  context
            L0
@@ -16074,7 +16129,7 @@ procedure MAKE-CLOCKER:[]{O---}:
             LDC "clocker"
            L1
             ARETURN
-[1]_createorderedturtles:CLOCKERS,+7 "create-ordered-clockers"
+[1]_createorderedturtles:CLOCKERS,+7 "create-ordered-clockers 1 setxy box-edge - 5 box-edge - 5 set color violet + 2 set size 10 [ set heading 0 ]"
       _asm_proceduremakeclocker_constdouble_2 "1" => Double
             // parameter final  context
            L0
@@ -16082,11 +16137,11 @@ procedure MAKE-CLOCKER:[]{O---}:
             GETFIELD org/nlogo/prim/_asm_proceduremakeclocker_constdouble_2.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[2]_asm_proceduremakeclocker_setxy_3 "setxy" double,double => void
-      _minus "-" double,double => double
+[2]_asm_proceduremakeclocker_setxy_3 "setxy box-edge - 5 box-edge - 5" double,double => void
+      _minus "box-edge - 5" double,double => double
         _observervariable:BOX-EDGE "box-edge" => Object
         _constdouble:5.0 "5" => double
-      _minus "-" double,double => double
+      _minus "box-edge - 5" double,double => double
         _observervariable:BOX-EDGE "box-edge" => Object
         _constdouble:5.0 "5" => double
           // parameter final  context
@@ -16219,8 +16274,8 @@ procedure MAKE-CLOCKER:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[3]_asm_proceduremakeclocker_setturtleorlinkvariable_4 "set" Object => void
-      _constdouble:117.0 "+" => Double
+[3]_asm_proceduremakeclocker_setturtleorlinkvariable_4 "set color violet + 2" Object => void
+      _constdouble:117.0 "violet + 2" => Double
           // parameter final  context
           // parameter final  context
           // parameter final  value
@@ -16256,7 +16311,7 @@ procedure MAKE-CLOCKER:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduremakeclocker_setturtlevariable_5 "set" Object => void
+[4]_asm_proceduremakeclocker_setturtlevariable_5 "set size 10" Object => void
       _constdouble:10.0 "10" => Double
           // parameter final  context
           // parameter final  context
@@ -16293,7 +16348,7 @@ procedure MAKE-CLOCKER:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_proceduremakeclocker_setturtlevariable_6 "set" Object => void
+[5]_asm_proceduremakeclocker_setturtlevariable_6 "set heading 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context

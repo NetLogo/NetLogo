@@ -13,6 +13,6 @@ class _reporterlambda(argumentNames: Seq[String], val closedVariables: Set[Close
   def formalsArray: Array[Let] = formals.toArray
 
   override def report(c: Context): AnyRef = {
-    AnonymousReporter(body = args(0), formals = formalsArray, lets = c.allLets, locals = c.activation.args)
+    AnonymousReporter(body = args(0), formals = formalsArray, binding = c.activation.binding, locals = c.activation.args)
   }
 }

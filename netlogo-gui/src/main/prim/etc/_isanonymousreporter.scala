@@ -4,7 +4,8 @@ package org.nlogo.prim.etc
 
 import org.nlogo.core.Syntax
 import org.nlogo.api.AnonymousReporter
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.core.Pure
 
 class _isanonymousreporter extends Reporter with Pure {
   override def report(context: Context) =

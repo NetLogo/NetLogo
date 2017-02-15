@@ -17,8 +17,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -35,8 +37,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -53,8 +57,10 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetup_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -75,7 +81,7 @@ procedure SETUP:[]{O---}:
           RETURN
 
 procedure BENCHMARK:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmark_randomseed_0 "random-seed" double => void
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 337" double => void
       _constdouble:337.0 "337" => double
           // parameter final  context
           // parameter final  context
@@ -136,8 +142,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -146,7 +154,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_2 "repeat" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "repeat 800 [ go ]" double => void
       _constdouble:800.0 "800" => double
           // parameter final  context
           // parameter final  context
@@ -157,7 +165,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DSTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           NEW org/nlogo/nvm/MutableLong
           DUP
@@ -180,8 +188,10 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -195,7 +205,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
           CHECKCAST org/nlogo/nvm/MutableLong
@@ -223,7 +233,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L2
          FRAME SAME
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_5 "set" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer "timer" => double
           // parameter final  context
           // parameter final  context
@@ -280,7 +290,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure SETUP-TURTLES:[]{O---}:
-[0]_setdefaultshape "set-default-shape"
+[0]_setdefaultshape "set-default-shape turtles "bug""
       _asm_proceduresetupturtles_turtles_0 "turtles" => AgentSet
             // parameter final  context
            L0
@@ -295,7 +305,7 @@ procedure SETUP-TURTLES:[]{O---}:
             LDC "bug"
            L1
             ARETURN
-[1]_createorderedturtles:,+7 "cro"
+[1]_createorderedturtles:,+7 "cro ants set size 2 rt random-float 360 set color red [ set carrying-food? false ]"
       _asm_proceduresetupturtles_observervariable_2 "ants" => Object
             // parameter final  context
            L0
@@ -306,7 +316,7 @@ procedure SETUP-TURTLES:[]{O---}:
             INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-[2]_asm_proceduresetupturtles_setturtlevariable_3 "set" Object => void
+[2]_asm_proceduresetupturtles_setturtlevariable_3 "set size 2" Object => void
       _constdouble:2.0 "2" => Double
           // parameter final  context
           // parameter final  context
@@ -343,8 +353,8 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresetupturtles_right_4 "rt" double => void
-      _randomfloat "random-float" double => double
+[3]_asm_proceduresetupturtles_right_4 "rt random-float 360" double => void
+      _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
           // parameter final  context
           // parameter final  context
@@ -373,7 +383,7 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L3
           RETURN
-[4]_asm_proceduresetupturtles_setturtleorlinkvariable_5 "set" Object => void
+[4]_asm_proceduresetupturtles_setturtleorlinkvariable_5 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -410,7 +420,7 @@ procedure SETUP-TURTLES:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[5]_asm_proceduresetupturtles_setturtlevariable_6 "set" Object => void
+[5]_asm_proceduresetupturtles_setturtlevariable_6 "set carrying-food? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -467,7 +477,7 @@ procedure SETUP-TURTLES:[]{O---}:
           RETURN
 
 procedure SETUP-PATCHES:[]{OTPL}:
-[0]_asm_proceduresetuppatches_ask_0 "ask" AgentSet => void
+[0]_asm_proceduresetuppatches_ask_0 "ask patches set chemical 0 set food 0 set food-source-number -1 setup-nest setup-food [ update-display ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -525,7 +535,7 @@ procedure SETUP-PATCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_proceduresetuppatches_setpatchvariable_1 "set" Object => void
+[1]_asm_proceduresetuppatches_setpatchvariable_1 "set chemical 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -562,7 +572,7 @@ procedure SETUP-PATCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresetuppatches_setpatchvariable_2 "set" Object => void
+[2]_asm_proceduresetuppatches_setpatchvariable_2 "set food 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
           // parameter final  context
@@ -599,7 +609,7 @@ procedure SETUP-PATCHES:[]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresetuppatches_setpatchvariable_3 "set" Object => void
+[3]_asm_proceduresetuppatches_setpatchvariable_3 "set food-source-number -1" Object => void
       _constdouble:-1.0 "-1" => Double
           // parameter final  context
           // parameter final  context
@@ -644,8 +654,10 @@ procedure SETUP-PATCHES:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_5
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -662,8 +674,10 @@ procedure SETUP-PATCHES:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -680,8 +694,10 @@ procedure SETUP-PATCHES:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -710,9 +726,9 @@ procedure SETUP-PATCHES:[]{OTPL}:
           RETURN
 
 procedure SETUP-NEST:[]{-TP-}:
-[0]_asm_proceduresetupnest_setpatchvariable_0 "set" Object => void
-      _lessthan "<" double,double => boolean
-        _distancexy "distancexy" double,double => double
+[0]_asm_proceduresetupnest_setpatchvariable_0 "set nest? distancexy 0 0 < 5" Object => void
+      _lessthan "distancexy 0 0 < 5" double,double => boolean
+        _distancexy "distancexy 0 0" double,double => double
           _constdouble:0.0 "0" => double
           _constdouble:0.0 "0" => double
         _constdouble:5.0 "5" => double
@@ -795,10 +811,10 @@ procedure SETUP-NEST:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[1]_asm_proceduresetupnest_setpatchvariable_1 "set" Object => void
-      _minus "-" double,double => double
+[1]_asm_proceduresetupnest_setpatchvariable_1 "set nest-scent 200 - distancexy 0 0" Object => void
+      _minus "200 - distancexy 0 0" double,double => double
         _constdouble:200.0 "200" => double
-        _distancexy "distancexy" double,double => double
+        _distancexy "distancexy 0 0" double,double => double
           _constdouble:0.0 "0" => double
           _constdouble:0.0 "0" => double
           // parameter final  context
@@ -882,10 +898,10 @@ procedure SETUP-NEST:[]{-TP-}:
           RETURN
 
 procedure SETUP-FOOD:[]{-TP-}:
-[0]_asm_proceduresetupfood_if_0 "if" boolean => void
-      _lessthan "<" double,double => boolean
-        _distancexy "distancexy" double,double => double
-          _mult "*" double,double => double
+[0]_asm_proceduresetupfood_if_0 "if distancexy 0.6 * max-pxcor 0 < 5 [ set food-source-number 1 ]" boolean => void
+      _lessthan "distancexy 0.6 * max-pxcor 0 < 5" double,double => boolean
+        _distancexy "distancexy 0.6 * max-pxcor 0" double,double => double
+          _mult "0.6 * max-pxcor" double,double => double
             _constdouble:0.6 "0.6" => double
             _maxpxcor "max-pxcor" => double
           _constdouble:0.0 "0" => double
@@ -962,7 +978,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[1]_asm_proceduresetupfood_setpatchvariable_1 "set" Object => void
+[1]_asm_proceduresetupfood_setpatchvariable_1 "set food-source-number 1" Object => void
       _constdouble:1.0 "1" => Double
           // parameter final  context
           // parameter final  context
@@ -999,13 +1015,13 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_proceduresetupfood_if_2 "if" boolean => void
-      _lessthan "<" double,double => boolean
-        _distancexy "distancexy" double,double => double
-          _mult "*" double,double => double
+[2]_asm_proceduresetupfood_if_2 "if distancexy -0.6 * max-pxcor -0.6 * max-pycor < 5 [ set food-source-number 2 ]" boolean => void
+      _lessthan "distancexy -0.6 * max-pxcor -0.6 * max-pycor < 5" double,double => boolean
+        _distancexy "distancexy -0.6 * max-pxcor -0.6 * max-pycor" double,double => double
+          _mult "-0.6 * max-pxcor" double,double => double
             _constdouble:-0.6 "-0.6" => double
             _maxpxcor "max-pxcor" => double
-          _mult "*" double,double => double
+          _mult "-0.6 * max-pycor" double,double => double
             _constdouble:-0.6 "-0.6" => double
             _maxpycor "max-pycor" => double
         _constdouble:5.0 "5" => double
@@ -1096,7 +1112,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[3]_asm_proceduresetupfood_setpatchvariable_3 "set" Object => void
+[3]_asm_proceduresetupfood_setpatchvariable_3 "set food-source-number 2" Object => void
       _constdouble:2.0 "2" => Double
           // parameter final  context
           // parameter final  context
@@ -1133,13 +1149,13 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_proceduresetupfood_if_4 "if" boolean => void
-      _lessthan "<" double,double => boolean
-        _distancexy "distancexy" double,double => double
-          _mult "*" double,double => double
+[4]_asm_proceduresetupfood_if_4 "if distancexy -0.8 * max-pxcor 0.8 * max-pycor < 5 [ set food-source-number 3 ]" boolean => void
+      _lessthan "distancexy -0.8 * max-pxcor 0.8 * max-pycor < 5" double,double => boolean
+        _distancexy "distancexy -0.8 * max-pxcor 0.8 * max-pycor" double,double => double
+          _mult "-0.8 * max-pxcor" double,double => double
             _constdouble:-0.8 "-0.8" => double
             _maxpxcor "max-pxcor" => double
-          _mult "*" double,double => double
+          _mult "0.8 * max-pycor" double,double => double
             _constdouble:0.8 "0.8" => double
             _maxpycor "max-pycor" => double
         _constdouble:5.0 "5" => double
@@ -1230,7 +1246,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[5]_asm_proceduresetupfood_setpatchvariable_5 "set" Object => void
+[5]_asm_proceduresetupfood_setpatchvariable_5 "set food-source-number 3" Object => void
       _constdouble:3.0 "3" => Double
           // parameter final  context
           // parameter final  context
@@ -1267,8 +1283,8 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_proceduresetupfood_if_6 "if" boolean => void
-      _greaterthan ">" Object,double => boolean
+[6]_asm_proceduresetupfood_if_6 "if food-source-number > 0 [ set food 1 + random 2 ]" boolean => void
+      _greaterthan "food-source-number > 0" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -1368,10 +1384,10 @@ procedure SETUP-FOOD:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[7]_asm_proceduresetupfood_setpatchvariable_7 "set" Object => void
-      _plus "+" double,double => double
+[7]_asm_proceduresetupfood_setpatchvariable_7 "set food 1 + random 2" Object => void
+      _plus "1 + random 2" double,double => double
         _constdouble:1.0 "1" => double
-        _randomconst:2 "random" => double
+        _randomconst:2 "random 2" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -1440,7 +1456,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           RETURN
 
 procedure UPDATE-DISPLAY:[]{-TP-}:
-[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse" boolean => void
+[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse nest? [ set pcolor violet ] [ ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ] ]" boolean => void
       _patchvariable:NEST? "nest?" => Object
           // parameter final  context
           // parameter final  context
@@ -1501,7 +1517,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedureupdatedisplay_setpatchvariable_1 "set" Object => void
+[1]_asm_procedureupdatedisplay_setpatchvariable_1 "set pcolor violet" Object => void
       _constdouble:115.0 "violet" => Double
           // parameter final  context
           // parameter final  context
@@ -1546,8 +1562,8 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureupdatedisplay_ifelse_3 "ifelse" boolean => void
-      _greaterthan ">" Object,double => boolean
+[3]_asm_procedureupdatedisplay_ifelse_3 "ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ]" boolean => void
+      _greaterthan "food > 0" Object,double => boolean
         _patchvariable:FOOD "food" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -1647,8 +1663,8 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[4]_asm_procedureupdatedisplay_if_4 "if" boolean => void
-      _equal "=" Object,double => boolean
+[4]_asm_procedureupdatedisplay_if_4 "if food-source-number = 1 [ set pcolor cyan ]" boolean => void
+      _equal "food-source-number = 1" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -1725,7 +1741,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[5]_asm_procedureupdatedisplay_setpatchvariable_5 "set" Object => void
+[5]_asm_procedureupdatedisplay_setpatchvariable_5 "set pcolor cyan" Object => void
       _constdouble:85.0 "cyan" => Double
           // parameter final  context
           // parameter final  context
@@ -1762,8 +1778,8 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[6]_asm_procedureupdatedisplay_if_6 "if" boolean => void
-      _equal "=" Object,double => boolean
+[6]_asm_procedureupdatedisplay_if_6 "if food-source-number = 2 [ set pcolor sky ]" boolean => void
+      _equal "food-source-number = 2" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:2.0 "2" => double
           // parameter final  context
@@ -1840,7 +1856,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[7]_asm_procedureupdatedisplay_setpatchvariable_7 "set" Object => void
+[7]_asm_procedureupdatedisplay_setpatchvariable_7 "set pcolor sky" Object => void
       _constdouble:95.0 "sky" => Double
           // parameter final  context
           // parameter final  context
@@ -1877,8 +1893,8 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[8]_asm_procedureupdatedisplay_if_8 "if" boolean => void
-      _equal "=" Object,double => boolean
+[8]_asm_procedureupdatedisplay_if_8 "if food-source-number = 3 [ set pcolor blue ]" boolean => void
+      _equal "food-source-number = 3" Object,double => boolean
         _patchvariable:FOOD-SOURCE-NUMBER "food-source-number" => Object
         _constdouble:3.0 "3" => double
           // parameter final  context
@@ -1955,7 +1971,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[9]_asm_procedureupdatedisplay_setpatchvariable_9 "set" Object => void
+[9]_asm_procedureupdatedisplay_setpatchvariable_9 "set pcolor blue" Object => void
       _constdouble:105.0 "blue" => Double
           // parameter final  context
           // parameter final  context
@@ -2000,8 +2016,8 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedureupdatedisplay_setpatchvariable_11 "set" Object => void
-      _scalecolor "scale-color" double,double,double,double => double
+[11]_asm_procedureupdatedisplay_setpatchvariable_11 "set pcolor scale-color green chemical 0.1 5" Object => void
+      _scalecolor "scale-color green chemical 0.1 5" double,double,double,double => double
         _constdouble:55.0 "green" => double
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:0.1 "0.1" => double
@@ -2213,7 +2229,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ask_0 "ask" AgentSet => void
+[0]_asm_procedurego_ask_0 "ask turtles [ go-turtles ]" AgentSet => void
       _turtles "turtles" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2279,8 +2295,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2297,8 +2315,8 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[3]_diffuse:CHEMICAL "diffuse"
-      _asm_procedurego_div_3 "/" double,double => double
+[3]_diffuse:CHEMICAL "diffuse diffusion-rate / 100"
+      _asm_procedurego_div_3 "diffusion-rate / 100" double,double => double
         _observervariable:DIFFUSION-RATE "diffusion-rate" => Object
         _constdouble:100.0 "100" => double
             // parameter final  context
@@ -2360,7 +2378,7 @@ procedure GO:[]{O---}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[4]_asm_procedurego_ask_4 "ask" AgentSet => void
+[4]_asm_procedurego_ask_4 "ask patches [ go-patches ]" AgentSet => void
       _patches "patches" => AgentSet
           // parameter final  context
           // parameter final  context
@@ -2426,8 +2444,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 6
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2453,8 +2473,10 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_call_7.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 9
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2475,8 +2497,8 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure GO-TURTLES:[]{-T--}:
-[0]_asm_proceduregoturtles_if_0 "if" boolean => void
-      _lessthan "<" double,double => boolean
+[0]_asm_proceduregoturtles_if_0 "if who < ticks [ ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ] ]" boolean => void
+      _lessthan "who < ticks" double,double => boolean
         _turtlevariabledouble:WHO "who" => double
         _ticks "ticks" => double
           // parameter final  context
@@ -2540,7 +2562,7 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduregoturtles_ifelse_1 "ifelse" boolean => void
+[1]_asm_proceduregoturtles_ifelse_1 "ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ]" boolean => void
       _turtlevariable:CARRYING-FOOD? "carrying-food?" => Object
           // parameter final  context
           // parameter final  context
@@ -2601,8 +2623,8 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[2]_asm_proceduregoturtles_setturtleorlinkvariable_2 "set" Object => void
-      _constdouble:26.0 "+" => Double
+[2]_asm_proceduregoturtles_setturtleorlinkvariable_2 "set color orange + 1" Object => void
+      _constdouble:26.0 "orange + 1" => Double
           // parameter final  context
           // parameter final  context
           // parameter final  value
@@ -2646,8 +2668,10 @@ procedure GO-TURTLES:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_proceduregoturtles_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_4
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2664,7 +2688,7 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduregoturtles_setturtleorlinkvariable_5 "set" Object => void
+[5]_asm_proceduregoturtles_setturtleorlinkvariable_5 "set color red" Object => void
       _constdouble:15.0 "red" => Double
           // parameter final  context
           // parameter final  context
@@ -2709,8 +2733,10 @@ procedure GO-TURTLES:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_proceduregoturtles_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 7
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2731,11 +2757,11 @@ procedure GO-TURTLES:[]{-T--}:
           RETURN
 
 procedure GO-PATCHES:[]{-TP-}:
-[0]_asm_proceduregopatches_setpatchvariable_0 "set" Object => void
-      _div "/" double,double => double
-        _mult "*" double,double => double
+[0]_asm_proceduregopatches_setpatchvariable_0 "set chemical chemical * 100 - evaporation-rate / 100" Object => void
+      _div "chemical * 100 - evaporation-rate / 100" double,double => double
+        _mult "chemical * 100 - evaporation-rate" double,double => double
           _patchvariable:CHEMICAL "chemical" => Object
-          _minus "-" double,double => double
+          _minus "100 - evaporation-rate" double,double => double
             _constdouble:100.0 "100" => double
             _observervariable:EVAPORATION-RATE "evaporation-rate" => Object
         _constdouble:100.0 "100" => double
@@ -2898,8 +2924,10 @@ procedure GO-PATCHES:[]{-TP-}:
           GETFIELD org/nlogo/prim/_asm_proceduregopatches_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2920,7 +2948,7 @@ procedure GO-PATCHES:[]{-TP-}:
           RETURN
 
 procedure RETURN-TO-NEST:[]{-T--}:
-[0]_asm_procedurereturntonest_ifelse_0 "ifelse" boolean => void
+[0]_asm_procedurereturntonest_ifelse_0 "ifelse nest? set carrying-food? false rt 180 [ fd 1 ] set chemical chemical + drop-size set drop-size drop-size - 1.5 if drop-size < 1 [ set drop-size 1 ] uphill-nest-scent wiggle [ fd 1 ]" boolean => void
       _patchvariable:NEST? "nest?" => Object
           // parameter final  context
           // parameter final  context
@@ -2981,7 +3009,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[1]_asm_procedurereturntonest_setturtlevariable_1 "set" Object => void
+[1]_asm_procedurereturntonest_setturtlevariable_1 "set carrying-food? false" Object => void
       _constboolean:false "false" => Boolean
           // parameter final  context
           // parameter final  context
@@ -3018,7 +3046,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurereturntonest_right_2 "rt" double => void
+[2]_asm_procedurereturntonest_right_2 "rt 180" double => void
       _constdouble:180.0 "180" => double
           // parameter final  context
           // parameter final  context
@@ -3037,7 +3065,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[3]_asm_procedurereturntonest_fd1_3 "fd" => void
+[3]_asm_procedurereturntonest_fd1_3 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -3066,8 +3094,8 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurereturntonest_setpatchvariable_5 "set" Object => void
-      _plus "+" double,double => double
+[5]_asm_procedurereturntonest_setpatchvariable_5 "set chemical chemical + drop-size" Object => void
+      _plus "chemical + drop-size" double,double => double
         _patchvariable:CHEMICAL "chemical" => Object
         _turtlevariable:DROP-SIZE "drop-size" => Object
           // parameter final  context
@@ -3199,8 +3227,8 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L18
           RETURN
-[6]_asm_procedurereturntonest_setturtlevariable_6 "set" Object => void
-      _minus "-" double,double => double
+[6]_asm_procedurereturntonest_setturtlevariable_6 "set drop-size drop-size - 1.5" Object => void
+      _minus "drop-size - 1.5" double,double => double
         _turtlevariable:DROP-SIZE "drop-size" => Object
         _constdouble:1.5 "1.5" => double
           // parameter final  context
@@ -3293,8 +3321,8 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[7]_asm_procedurereturntonest_if_7 "if" boolean => void
-      _lessthan "<" Object,double => boolean
+[7]_asm_procedurereturntonest_if_7 "if drop-size < 1 [ set drop-size 1 ]" boolean => void
+      _lessthan "drop-size < 1" Object,double => boolean
         _turtlevariable:DROP-SIZE "drop-size" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -3394,7 +3422,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[8]_asm_procedurereturntonest_setturtlevariable_8 "set" Object => void
+[8]_asm_procedurereturntonest_setturtlevariable_8 "set drop-size 1" Object => void
       _constdouble:1.0 "1" => Double
           // parameter final  context
           // parameter final  context
@@ -3439,8 +3467,10 @@ procedure RETURN-TO-NEST:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurereturntonest_call_9.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 3
+          ANEWARRAY java/lang/Object
           BIPUSH 10
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3457,8 +3487,10 @@ procedure RETURN-TO-NEST:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurereturntonest_call_10.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 11
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3467,7 +3499,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedurereturntonest_fd1_11 "fd" => void
+[11]_asm_procedurereturntonest_fd1_11 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -3500,8 +3532,8 @@ procedure RETURN-TO-NEST:[]{-T--}:
           RETURN
 
 procedure LOOK-FOR-FOOD:[]{-T--}:
-[0]_asm_procedurelookforfood_if_0 "if" boolean => void
-      _greaterthan ">" Object,double => boolean
+[0]_asm_procedurelookforfood_if_0 "if food > 0 set carrying-food? true set food food - 1 set drop-size 60 rt 180 [ stop ]" boolean => void
+      _greaterthan "food > 0" Object,double => boolean
         _patchvariable:FOOD "food" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
@@ -3601,7 +3633,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_procedurelookforfood_setturtlevariable_1 "set" Object => void
+[1]_asm_procedurelookforfood_setturtlevariable_1 "set carrying-food? true" Object => void
       _constboolean:true "true" => Boolean
           // parameter final  context
           // parameter final  context
@@ -3638,8 +3670,8 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[2]_asm_procedurelookforfood_setpatchvariable_2 "set" Object => void
-      _minus "-" double,double => double
+[2]_asm_procedurelookforfood_setpatchvariable_2 "set food food - 1" Object => void
+      _minus "food - 1" double,double => double
         _patchvariable:FOOD "food" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
@@ -3732,7 +3764,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L13
           RETURN
-[3]_asm_procedurelookforfood_setturtlevariable_3 "set" Object => void
+[3]_asm_procedurelookforfood_setturtlevariable_3 "set drop-size 60" Object => void
       _constdouble:60.0 "60" => Double
           // parameter final  context
           // parameter final  context
@@ -3769,7 +3801,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[4]_asm_procedurelookforfood_right_4 "rt" double => void
+[4]_asm_procedurelookforfood_right_4 "rt 180" double => void
       _constdouble:180.0 "180" => double
           // parameter final  context
           // parameter final  context
@@ -3802,8 +3834,8 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -3826,8 +3858,8 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[6]_asm_procedurelookforfood_ifelse_6 "ifelse" boolean => void
-      _greaterthan ">" Object,double => boolean
+[6]_asm_procedurelookforfood_ifelse_6 "ifelse chemical > 2 [ fd 1 ] [ ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ] ]" boolean => void
+      _greaterthan "chemical > 2" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:2.0 "2" => double
           // parameter final  context
@@ -3927,7 +3959,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[7]_asm_procedurelookforfood_fd1_7 "fd" => void
+[7]_asm_procedurelookforfood_fd1_7 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -3956,8 +3988,8 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurelookforfood_ifelse_9 "ifelse" boolean => void
-      _lessthan "<" Object,double => boolean
+[9]_asm_procedurelookforfood_ifelse_9 "ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ]" boolean => void
+      _lessthan "chemical < 0.05" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:0.05 "0.05" => double
           // parameter final  context
@@ -4065,8 +4097,10 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurelookforfood_call_10.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           BIPUSH 11
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4075,7 +4109,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[11]_asm_procedurelookforfood_fd1_11 "fd" => void
+[11]_asm_procedurelookforfood_fd1_11 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -4112,8 +4146,10 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurelookforfood_call_13.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 3
+          ANEWARRAY java/lang/Object
           BIPUSH 14
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4122,7 +4158,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[14]_asm_procedurelookforfood_fd1_14 "fd" => void
+[14]_asm_procedurelookforfood_fd1_14 "fd 1" => void
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
@@ -4163,8 +4199,10 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillchemical_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4173,9 +4211,9 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureuphillchemical_setprocedurevariable_1 "let" Object => void
-      _patchvariableof:CHEMICAL "of" Object => Object
-        _patchahead "patch-ahead"
+[1]_asm_procedureuphillchemical_setprocedurevariable_1 "let [ chemical ] of patch-ahead 1" Object => void
+      _patchvariableof:CHEMICAL "[ chemical ] of patch-ahead 1" Object => Object
+        _patchahead "patch-ahead 1"
           _asm_procedureuphillchemical_constdouble_2 "1" => Double
                 // parameter final  context
                L0
@@ -4310,7 +4348,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -4319,8 +4357,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[2]_asm_procedureuphillchemical_setprocedurevariable_3 "let" Object => void
-      _callreport:CHEMICAL-SCENT "chemical-scent"
+[2]_asm_procedureuphillchemical_setprocedurevariable_3 "let chemical-scent 45" Object => void
+      _callreport:CHEMICAL-SCENT "chemical-scent 45"
         _constdouble:45.0 "45" => Double
           // parameter final  context
           // parameter final  context
@@ -4332,16 +4370,17 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_3.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_3.kept3_value : Ljava/lang/Double;
          L2
           AASTORE
+          ICONST_2
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -4359,7 +4398,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -4368,8 +4407,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedureuphillchemical_setprocedurevariable_4 "let" Object => void
-      _callreport:CHEMICAL-SCENT "chemical-scent"
+[3]_asm_procedureuphillchemical_setprocedurevariable_4 "let chemical-scent -45" Object => void
+      _callreport:CHEMICAL-SCENT "chemical-scent -45"
         _constdouble:-45.0 "-45" => Double
           // parameter final  context
           // parameter final  context
@@ -4381,16 +4420,17 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_4.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureuphillchemical_setprocedurevariable_4.kept3_value : Ljava/lang/Double;
          L2
           AASTORE
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -4408,7 +4448,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -4417,12 +4457,12 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureuphillchemical_if_5 "if" boolean => void
-      _or "or"
-        _greaterthan ">" Object,Object => boolean
+[4]_asm_procedureuphillchemical_if_5 "if scent-right > scent-ahead or scent-left > scent-ahead [ ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ] ]" boolean => void
+      _or "scent-right > scent-ahead or scent-left > scent-ahead"
+        _greaterthan "scent-right > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-RIGHT "scent-right" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
-        _greaterthan ">" Object,Object => boolean
+        _greaterthan "scent-left > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-LEFT "scent-left" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
           // parameter final  context
@@ -4440,13 +4480,13 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
@@ -4557,13 +4597,13 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L12
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L13
@@ -4690,8 +4730,8 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L24
           RETURN
-[5]_asm_procedureuphillchemical_ifelse_6 "ifelse" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[5]_asm_procedureuphillchemical_ifelse_6 "ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ]" boolean => void
+      _greaterthan "scent-right > scent-left" Object,Object => boolean
         _procedurevariable:SCENT-RIGHT "scent-right" => Object
         _procedurevariable:SCENT-LEFT "scent-left" => Object
           // parameter final  context
@@ -4704,13 +4744,13 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L2
@@ -4831,7 +4871,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[6]_asm_procedureuphillchemical_right_7 "rt" double => void
+[6]_asm_procedureuphillchemical_right_7 "rt 45" double => void
       _constdouble:45.0 "45" => double
           // parameter final  context
           // parameter final  context
@@ -4858,7 +4898,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedureuphillchemical_left_9 "lt" double => void
+[8]_asm_procedureuphillchemical_left_9 "lt 45" double => void
       _constdouble:45.0 "45" => double
           // parameter final  context
           // parameter final  context
@@ -4898,8 +4938,10 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillnestscent_call_0.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          SIPUSH 0
+          ANEWARRAY java/lang/Object
           ICONST_1
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4908,9 +4950,9 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureuphillnestscent_setprocedurevariable_1 "let" Object => void
-      _patchvariableof:NEST-SCENT "of" Object => Object
-        _patchahead "patch-ahead"
+[1]_asm_procedureuphillnestscent_setprocedurevariable_1 "let [ nest-scent ] of patch-ahead 1" Object => void
+      _patchvariableof:NEST-SCENT "[ nest-scent ] of patch-ahead 1" Object => Object
+        _patchahead "patch-ahead 1"
           _asm_procedureuphillnestscent_constdouble_2 "1" => Double
                 // parameter final  context
                L0
@@ -5045,7 +5087,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           ALOAD 2
           AASTORE
@@ -5054,8 +5096,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[2]_asm_procedureuphillnestscent_setprocedurevariable_3 "let" Object => void
-      _callreport:GET-NEST-SCENT "get-nest-scent"
+[2]_asm_procedureuphillnestscent_setprocedurevariable_3 "let get-nest-scent 45" Object => void
+      _callreport:GET-NEST-SCENT "get-nest-scent 45"
         _constdouble:45.0 "45" => Double
           // parameter final  context
           // parameter final  context
@@ -5067,16 +5109,17 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_3.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_2
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_3.kept3_value : Ljava/lang/Double;
          L2
           AASTORE
+          ICONST_2
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -5094,7 +5137,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -5103,8 +5146,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[3]_asm_procedureuphillnestscent_setprocedurevariable_4 "let" Object => void
-      _callreport:GET-NEST-SCENT "get-nest-scent"
+[3]_asm_procedureuphillnestscent_setprocedurevariable_4 "let get-nest-scent -45" Object => void
+      _callreport:GET-NEST-SCENT "get-nest-scent -45"
         _constdouble:-45.0 "-45" => Double
           // parameter final  context
           // parameter final  context
@@ -5116,16 +5159,17 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_4.kept2_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          SIPUSH 2
+          ANEWARRAY java/lang/Object
           DUP
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureuphillnestscent_setprocedurevariable_4.kept3_value : Ljava/lang/Double;
          L2
           AASTORE
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;[Ljava/lang/Object;I)V
           ALOAD 1
           SWAP
           INVOKEVIRTUAL org/nlogo/nvm/Context.callReporterProcedure (Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;
@@ -5143,7 +5187,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           ALOAD 2
           AASTORE
@@ -5152,12 +5196,12 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_procedureuphillnestscent_if_5 "if" boolean => void
-      _or "or"
-        _greaterthan ">" Object,Object => boolean
+[4]_asm_procedureuphillnestscent_if_5 "if scent-right > scent-ahead or scent-left > scent-ahead [ ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ] ]" boolean => void
+      _or "scent-right > scent-ahead or scent-left > scent-ahead"
+        _greaterthan "scent-right > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-RIGHT "scent-right" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
-        _greaterthan ">" Object,Object => boolean
+        _greaterthan "scent-left > scent-ahead" Object,Object => boolean
           _procedurevariable:SCENT-LEFT "scent-left" => Object
           _procedurevariable:SCENT-AHEAD "scent-ahead" => Object
           // parameter final  context
@@ -5175,13 +5219,13 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L2
@@ -5292,13 +5336,13 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L12
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
          L13
@@ -5425,8 +5469,8 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L24
           RETURN
-[5]_asm_procedureuphillnestscent_ifelse_6 "ifelse" boolean => void
-      _greaterthan ">" Object,Object => boolean
+[5]_asm_procedureuphillnestscent_ifelse_6 "ifelse scent-right > scent-left [ rt 45 ] [ lt 45 ]" boolean => void
+      _greaterthan "scent-right > scent-left" Object,Object => boolean
         _procedurevariable:SCENT-RIGHT "scent-right" => Object
         _procedurevariable:SCENT-LEFT "scent-left" => Object
           // parameter final  context
@@ -5439,13 +5483,13 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_2
           AALOAD
          L2
@@ -5566,7 +5610,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[6]_asm_procedureuphillnestscent_right_7 "rt" double => void
+[6]_asm_procedureuphillnestscent_right_7 "rt 45" double => void
       _constdouble:45.0 "45" => double
           // parameter final  context
           // parameter final  context
@@ -5593,7 +5637,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_procedureuphillnestscent_left_9 "lt" double => void
+[8]_asm_procedureuphillnestscent_left_9 "lt 45" double => void
       _constdouble:45.0 "45" => double
           // parameter final  context
           // parameter final  context
@@ -5625,10 +5669,10 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           RETURN
 
 procedure WIGGLE:[]{-T--}:
-[0]_asm_procedurewiggle_right_0 "rt" double => void
-      _minus "-" double,double => double
-        _randomconst:40 "random" => double
-        _randomconst:40 "random" => double
+[0]_asm_procedurewiggle_right_0 "rt random 40 - random 40" double => void
+      _minus "random 40 - random 40" double,double => double
+        _randomconst:40 "random 40" => double
+        _randomconst:40 "random 40" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
@@ -5668,9 +5712,9 @@ procedure WIGGLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[1]_asm_procedurewiggle_if_1 "if" boolean => void
-      _not "not" boolean => boolean
-        _canmove "can-move?"
+[1]_asm_procedurewiggle_if_1 "if not can-move? 1 [ rt 180 ]" boolean => void
+      _not "not can-move? 1" boolean => boolean
+        _canmove "can-move? 1"
           _asm_procedurewiggle_constdouble_2 "1" => Double
                 // parameter final  context
                L0
@@ -5732,7 +5776,7 @@ procedure WIGGLE:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[2]_asm_procedurewiggle_right_3 "rt" double => void
+[2]_asm_procedurewiggle_right_3 "rt 180" double => void
       _constdouble:180.0 "180" => double
           // parameter final  context
           // parameter final  context
@@ -5763,14 +5807,14 @@ procedure WIGGLE:[]{-T--}:
           RETURN
 
 reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
-[0]_asm_proceduregetnestscent_setprocedurevariable_0 "let" Object => void
-      _patchrightandahead "patch-right-and-ahead"
+[0]_asm_proceduregetnestscent_setprocedurevariable_0 "let patch-right-and-ahead angle 1" Object => void
+      _patchrightandahead "patch-right-and-ahead angle 1"
         _asm_proceduregetnestscent_procedurevariable_1 "angle" => Object
               // parameter final  context
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_0
               AALOAD
              L1
@@ -5792,7 +5836,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -5801,8 +5845,8 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_proceduregetnestscent_if_3 "if" boolean => void
-      _notequal "!=" Object,Object => boolean
+[1]_asm_proceduregetnestscent_if_3 "if p != nobody [ report [ nest-scent ] of p ]" boolean => void
+      _notequal "p != nobody" Object,Object => boolean
         _procedurevariable:P "p" => Object
         _nobody "nobody" => Nobody$
           // parameter final  context
@@ -5815,7 +5859,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
@@ -5849,8 +5893,8 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[2]_asm_proceduregetnestscent_report_4 "report" Object => void
-      _patchvariableof:NEST-SCENT "of" Object => Object
+[2]_asm_proceduregetnestscent_report_4 "report [ nest-scent ] of p" Object => void
+      _patchvariableof:NEST-SCENT "[ nest-scent ] of p" Object => Object
         _procedurevariable:P "p" => Object
           // parameter final  context
           // parameter final  context
@@ -5859,7 +5903,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L4
@@ -5991,7 +6035,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L12
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6013,7 +6057,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L13
           NEW org/nlogo/nvm/NonLocalExit
@@ -6043,7 +6087,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L14
          FRAME SAME
           RETURN
-[3]_asm_proceduregetnestscent_report_5 "report" Object => void
+[3]_asm_proceduregetnestscent_report_5 "report 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
          L0
@@ -6064,7 +6108,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6086,7 +6130,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          FRAME APPEND [java/lang/Double]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L3
           NEW org/nlogo/nvm/NonLocalExit
@@ -6134,14 +6178,14 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ATHROW
 
 reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
-[0]_asm_procedurechemicalscent_setprocedurevariable_0 "let" Object => void
-      _patchrightandahead "patch-right-and-ahead"
+[0]_asm_procedurechemicalscent_setprocedurevariable_0 "let patch-right-and-ahead angle 1" Object => void
+      _patchrightandahead "patch-right-and-ahead angle 1"
         _asm_procedurechemicalscent_procedurevariable_1 "angle" => Object
               // parameter final  context
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-              INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+              GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
               ICONST_0
               AALOAD
              L1
@@ -6163,7 +6207,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           ALOAD 2
           AASTORE
@@ -6172,8 +6216,8 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedurechemicalscent_if_3 "if" boolean => void
-      _notequal "!=" Object,Object => boolean
+[1]_asm_procedurechemicalscent_if_3 "if p != nobody [ report [ chemical ] of p ]" boolean => void
+      _notequal "p != nobody" Object,Object => boolean
         _procedurevariable:P "p" => Object
         _nobody "nobody" => Nobody$
           // parameter final  context
@@ -6186,7 +6230,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L1
@@ -6220,8 +6264,8 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[2]_asm_procedurechemicalscent_report_4 "report" Object => void
-      _patchvariableof:CHEMICAL "of" Object => Object
+[2]_asm_procedurechemicalscent_report_4 "report [ chemical ] of p" Object => void
+      _patchvariableof:CHEMICAL "[ chemical ] of p" Object => Object
         _procedurevariable:P "p" => Object
           // parameter final  context
           // parameter final  context
@@ -6230,7 +6274,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_1
           AALOAD
          L4
@@ -6362,7 +6406,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L12
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6384,7 +6428,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          FRAME SAME
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L13
           NEW org/nlogo/nvm/NonLocalExit
@@ -6414,7 +6458,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          L14
          FRAME SAME
           RETURN
-[3]_asm_procedurechemicalscent_report_5 "report" Object => void
+[3]_asm_procedurechemicalscent_report_5 "report 0" Object => void
       _constdouble:0.0 "0" => Double
           // parameter final  context
          L0
@@ -6435,7 +6479,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6457,7 +6501,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          FRAME APPEND [java/lang/Double]
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
           IFEQ L3
           NEW org/nlogo/nvm/NonLocalExit
@@ -6505,8 +6549,8 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ATHROW
 
 procedure DO-PLOTTING:[]{OTPL}:
-[0]_asm_proceduredoplotting_if_0 "if" boolean => void
-      _not "not" boolean => boolean
+[0]_asm_proceduredoplotting_if_0 "if not plot? [ stop ]" boolean => void
+      _not "not plot?" boolean => boolean
         _observervariable:PLOT? "plot?" => Object
           // parameter final  context
           // parameter final  context
@@ -6579,8 +6623,8 @@ procedure DO-PLOTTING:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -6603,24 +6647,24 @@ procedure DO-PLOTTING:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[2]_setcurrentplot "set-current-plot"
+[2]_setcurrentplot "set-current-plot "Food in each pile""
       _asm_proceduredoplotting_conststring_2 ""Food in each pile"" => String
             // parameter final  context
            L0
             LDC "Food in each pile"
            L1
             ARETURN
-[3]_setcurrentplotpen "set-current-plot-pen"
+[3]_setcurrentplotpen "set-current-plot-pen "food-in-pile1""
       _asm_proceduredoplotting_conststring_3 ""food-in-pile1"" => String
             // parameter final  context
            L0
             LDC "food-in-pile1"
            L1
             ARETURN
-[4]_plot "plot"
-      _asm_proceduredoplotting_countwith_4 "count" AgentSet,Reporter => double
+[4]_plot "plot count patches with [ pcolor = cyan ]"
+      _asm_proceduredoplotting_countwith_4 "count patches with [ pcolor = cyan ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
-        _asm_proceduredoplotting_equal_5 "=" Object,double => boolean
+        _asm_proceduredoplotting_equal_5 "pcolor = cyan" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:85.0 "cyan" => double
               // parameter final  context
@@ -6786,17 +6830,17 @@ procedure DO-PLOTTING:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[5]_setcurrentplotpen "set-current-plot-pen"
+[5]_setcurrentplotpen "set-current-plot-pen "food-in-pile2""
       _asm_proceduredoplotting_conststring_6 ""food-in-pile2"" => String
             // parameter final  context
            L0
             LDC "food-in-pile2"
            L1
             ARETURN
-[6]_plot "plot"
-      _asm_proceduredoplotting_countwith_7 "count" AgentSet,Reporter => double
+[6]_plot "plot count patches with [ pcolor = sky ]"
+      _asm_proceduredoplotting_countwith_7 "count patches with [ pcolor = sky ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
-        _asm_proceduredoplotting_equal_8 "=" Object,double => boolean
+        _asm_proceduredoplotting_equal_8 "pcolor = sky" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:95.0 "sky" => double
               // parameter final  context
@@ -6962,17 +7006,17 @@ procedure DO-PLOTTING:[]{OTPL}:
             DLOAD 2
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
-[7]_setcurrentplotpen "set-current-plot-pen"
+[7]_setcurrentplotpen "set-current-plot-pen "food-in-pile3""
       _asm_proceduredoplotting_conststring_9 ""food-in-pile3"" => String
             // parameter final  context
            L0
             LDC "food-in-pile3"
            L1
             ARETURN
-[8]_plot "plot"
-      _asm_proceduredoplotting_countwith_10 "count" AgentSet,Reporter => double
+[8]_plot "plot count patches with [ pcolor = blue ]"
+      _asm_proceduredoplotting_countwith_10 "count patches with [ pcolor = blue ]" AgentSet,Reporter => double
         _patches "patches" => AgentSet
-        _asm_proceduredoplotting_equal_11 "=" Object,double => boolean
+        _asm_proceduredoplotting_equal_11 "pcolor = blue" Object,double => boolean
           _patchvariable:PCOLOR "pcolor" => Object
           _constdouble:105.0 "blue" => double
               // parameter final  context

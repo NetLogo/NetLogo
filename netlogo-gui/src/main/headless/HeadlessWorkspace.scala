@@ -15,7 +15,7 @@ import org.nlogo.api.{ AutoConvertable, ComponentSerialization, Version, ModelLo
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
-                       Workspace, DefaultCompilerServices, CompilerInterface }
+                       Workspace, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat, fileformat.NLogoFormat
 import org.nlogo.util.Pico
@@ -104,7 +104,7 @@ object HeadlessWorkspace {
  */
 class HeadlessWorkspace(
   _world: World,
-  val compiler: CompilerInterface,
+  val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory)

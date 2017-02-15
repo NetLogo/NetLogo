@@ -12,7 +12,7 @@ import
   org.scalacheck.Gen
 
 import
-  org.scalatest.{ FunSuite, prop, PropSpec },
+  org.scalatest.{ FunSuite, prop },
     prop.GeneratorDrivenPropertyChecks
 
 class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyChecks {

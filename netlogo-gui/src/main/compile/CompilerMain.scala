@@ -29,9 +29,14 @@ private object CompilerMain {
   private val frontEnd =
     Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
-  def compile(sources: Map[String, String], displayName: Option[String], program: Program, subprogram: Boolean,
-              oldProcedures: ListMap[String, Procedure],
-              extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): (ListMap[String, Procedure], Program) = {
+  def compile(
+    sources:          Map[String, String],
+    displayName:      Option[String],
+    program:          Program,
+    subprogram:       Boolean,
+    oldProcedures:    ListMap[String, Procedure],
+    extensionManager: ExtensionManager,
+    compilationEnv:   CompilationEnvironment): (ListMap[String, Procedure], Program) = {
 
     val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
     val (topLevelDefs, feStructureResults) =

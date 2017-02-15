@@ -1,0 +1,455 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.compile
+
+import org.scalatest.FunSuite
+
+import org.nlogo.api.{ DummyExtensionManager, SimpleJobOwner }
+import org.nlogo.compile.api.{ BackEndInterface, CommandBlock, Expression,
+  ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements }
+import org.nlogo.core.{
+  AgentKind, Command => CoreCommand, DummyCompilationEnvironment, Femto,
+  Instantiator, Let, Reporter => CoreReporter, SourceLocation, Syntax, Token,
+  TokenType, prim => coreprim },
+    coreprim.{
+      _call => _corecall, _callreport => _corecallreport, _carefully => _corecarefully,
+      _const => _coreconst, _createturtles => _corecrt, _done => _coredone, _equal => _coreequal,
+      _lessthan => _corelessthan, _let => _corelet, _letvariable => _coreletvariable,
+      _repeat => _corerepeat, _return => _corereturn, _set => _coreset }
+import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure, Reporter }
+import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring, _crtfast,
+  _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
+  _return, _setletvariable }
+
+import scala.collection.immutable.ListMap
+
+// Q: Why is there an nvm test in the compile package?
+// A: Because much of nvm's behavior depends on the prim
+//    package and `nvm` may not depend on `prim`. Perhaps
+//    in some future, we will isolate things so that `nvm`
+//    can be tested without reference to `prim`, until then
+//    this test lives here. RG 1/30/17
+class NvmTests extends FunSuite {
+  def token(s: String): Token = Token(s.toUpperCase, TokenType.Command, null)(SourceLocation(0, 0, ""))
+
+  val loc = SourceLocation(0, 0, "")
+
+  val backEnd = Femto.scalaSingleton[BackEndInterface]("org.nlogo.compile.back.BackEnd")
+
+  def constInt(i: Int): ReporterApp =
+    new ReporterApp(_coreconst(Double.box(i)), new _constdouble(Double.box(i)), loc)
+
+  val one = constInt(1)
+  val two = constInt(2)
+
+  def constString(s: String): ReporterApp =
+    new ReporterApp(_coreconst(s), new _conststring(s), loc)
+
+  class _probe(condition: Context => Boolean, val name: String) extends Command {
+    var satisfiedCondition = false
+
+    override def perform(context: Context): Unit = {
+      satisfiedCondition = condition(context)
+      context.ip = next
+    }
+
+    def verify(): Unit = {
+      assert(satisfiedCondition, name)
+    }
+  }
+
+  case class _probesyntax() extends CoreCommand() {
+    def syntax = Syntax.commandSyntax()
+  }
+
+  trait Helper {
+    lazy val workspace = new org.nlogo.nvm.DummyWorkspace()
+    lazy val world = new org.nlogo.agent.World()
+    lazy val owner = new SimpleJobOwner("Test", world.mainRNG, AgentKind.Observer)
+
+    val a = new Let("a")
+    val b = new Let("b")
+
+    def commandProcedure(name: String, i: Int = 0): Procedure = {
+      val args = (0 until i).map(j => "PROCEDUREVAR" + j)
+      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token _), null)
+      p.args = args.toVector
+      p.topLevel = true
+      p
+    }
+
+    def reporterProcedure(name: String): Procedure = {
+      val p = new Procedure(true, name.toUpperCase,  token(name.toUpperCase), Seq(), null)
+      p.topLevel = true
+      p
+    }
+
+    // these may need to be split up at some point...
+    def execute(proc: Procedure, stmtBuilder: StatementsBuilder): Unit = {
+      // we add done because that's done for buttons and command center procedures "top-level procedures"
+      assembleProcedure(proc, stmtBuilder.done)
+      world.mainRNG.setSeed(0)
+      exclusiveJob(proc).run()
+    }
+
+    def assembleProcedure(proc: Procedure, statements: StatementsBuilder): Unit = {
+      val procDef = new ProcedureDefinition(proc, statements.build)
+      backEnd.assemble(procDef, false, false)
+      proc.init(workspace)
+    }
+
+    def exclusiveJob(proc: Procedure): ExclusiveJob =
+      new ExclusiveJob(owner, world.observers, proc, 0, null, workspace, world.mainRNG)
+
+    def checkBinding(l: Let, value: AnyRef): _probe =
+      new _probe( { (c: Context) => c.activation.binding.getLet(l) == value }, s"${l.name} is bound to $value")
+
+    def checkBindingCount(i: Int): _probe = {
+      new _probe( { (c: Context) =>
+        c.activation.binding.size == i && {
+          var head = c.activation.binding.head
+          var j = 0
+          while (j < i) {
+            head = head.next
+            j += 1
+          }
+          head == Binding.EmptyBinding
+        }
+      }, s"contains only $i let-bindings")
+    }
+
+    def checkNotBound(l: Let): _probe =
+      new _probe({ (c: Context) =>
+        try {
+          c.activation.binding.getLet(l)
+          false
+        } catch {
+          case e: NoSuchElementException => true
+          case _: Exception => false
+        }
+      }, s"${l.name} is bound, but shouldn't be")
+  }
+
+  test("`repeat` doesn't lead to accumulation of let variables") { new Helper {
+    val proc = commandProcedure("repeat")
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(2) // one for A, one for Repeat
+
+    val repeatBody = new StatementsBuilder() {
+      let(a, one)
+      probe(containsA)
+      probe(containsSingleBinding)
+    }
+
+    val procedureBody = new StatementsBuilder() {
+      statement(_corerepeat(), new _repeat(token("repeat")), Seq(two, repeatBody.buildBlock))
+    }
+
+    execute(proc, procedureBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`loop` doesn't lead to accumulation of let variables") { new Helper {
+    val proc = commandProcedure("loop")
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(2) // one for A, one for B
+
+    val stop = new StatementsBuilder() {
+      statementEtc("_stop", Seq())
+    }
+
+    val bEqualsTwo = new ReporterBuilder() {
+      withReporter(_coreequal(), new _equal())
+      withArg(new ReporterApp(_coreletvariable(b), new _letvariable(b), loc))
+      withArg(two)
+    }
+
+    val loopBody = new StatementsBuilder() {
+      let(a, one)
+      probe(containsA)
+      probe(containsSingleBinding)
+      statementEtc("etc._if", Seq(bEqualsTwo.build, stop.buildBlock))
+      statement(_coreset(), new _setletvariable(b), Seq(two))
+    }
+
+    val procedureBody = new StatementsBuilder() {
+      let(b, one)
+      statementEtc("etc._loop", Seq(loopBody.buildBlock))
+    }
+    execute(proc, procedureBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`repeatlocal` doesn't lead to accumulation of let variables") { new Helper {
+    val proc = commandProcedure("repeatlocal", 1)
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(1)
+
+    val repeatBody = new StatementsBuilder() {
+      let(a, one)
+      probe(containsA)
+      probe(containsSingleBinding)
+    }
+
+    val procedureBody = new StatementsBuilder() {
+      statement(_corerepeat(), new _repeatlocal(0), Seq(two, repeatBody.buildBlock))
+    }
+
+    execute(proc, procedureBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`while` doesn't lead to accumulation of let variables") { new Helper {
+    val proc = commandProcedure("while")
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(2) // one for A, one for B
+
+    val getB = new ReporterApp(_coreletvariable(b), new _letvariable(b), loc)
+
+    val incrementB =
+      new ReporterBuilder() {
+        reporterAppEtc("etc._plus", "etc._plus")
+        withArg(getB)
+        withArg(one)
+      }
+
+    val whileBody = new StatementsBuilder() {
+      let(a, one)
+      probe(containsA)
+      probe(containsSingleBinding)
+      statement(_coreset(), new _setletvariable(b), Seq(incrementB.build))
+    }
+
+    val bLessThanThree =
+      new ReporterBuilder() {
+        withReporter(_corelessthan(), new _lessthan())
+        withArg(getB)
+        withArg(constInt(3))
+      }
+
+    val procedureBody = new StatementsBuilder() {
+      let(b, one)
+      statementEtc("etc._while", Seq(bLessThanThree.buildBlock, whileBody.buildBlock))
+    }
+
+    execute(proc, procedureBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("call/return restores context state") { new Helper {
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(1)
+    val caller = commandProcedure("caller")
+    val callee = commandProcedure("callee")
+    val callerBody = new StatementsBuilder() {
+      let(a, one)
+      statement(_corecall(callee), new _call(callee))
+      probe(containsA)
+      probe(containsSingleBinding)
+    }
+    val calleeBody = new StatementsBuilder() {
+      let(b, two)
+    }
+    assembleProcedure(callee, calleeBody)
+    execute(caller, callerBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("callreport/report restores context state") { new Helper {
+    val containsA = checkBinding(a, Double.box(1))
+    val containsSingleBinding = checkBindingCount(1)
+    val caller = commandProcedure("caller")
+    val callee = reporterProcedure("callee")
+    val callCalleeForValue = new ReporterBuilder() {
+      withReporter(_corecallreport(callee), new _callreport(callee))
+    }
+    val callerBody = new StatementsBuilder() {
+      let(a, one)
+      _ignore(callCalleeForValue.build)
+      probe(containsA)
+      probe(containsSingleBinding)
+    }
+    val calleeBody = new StatementsBuilder() {
+      let(b, two)
+      statementEtc("_report", "_report", Seq(two))
+    }
+    assembleProcedure(callee, calleeBody)
+    execute(caller, callerBody)
+    containsA.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`carefully` properly restores context in normal case") { new Helper {
+    val containsA = checkBinding(a, Double.box(1))
+    val doesNotContainB = checkNotBound(b)
+    val containsSingleBinding = checkBindingCount(1)
+    val proc = commandProcedure("carefully")
+    val carefullyBody = new StatementsBuilder() {
+      let(b, two)
+    }
+    val carefullyHandle = new StatementsBuilder() { }
+    val procedureBody = new StatementsBuilder() {
+      let(a, one)
+      carefully(carefullyBody, carefullyHandle)
+      probe(containsA)
+      probe(doesNotContainB)
+      probe(containsSingleBinding)
+    }
+    execute(proc, procedureBody)
+    containsA.verify()
+    doesNotContainB.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`carefully` properly restores context after error case") { new Helper {
+    val containsA = checkBinding(a, Double.box(1))
+    val doesNotContainB = checkNotBound(b)
+    // One of these is A, one is the binding for `errormessage`
+    // In an ideal world, we would clear up the binding for `errormessage` once we
+    // exit the handle block. Unfortunately, the architecture of nvm doesn't make
+    // this easy - RG 2/1/17
+    val containsSingleBinding = checkBindingCount(2)
+    val proc = commandProcedure("carefully")
+    val carefullyBody = new StatementsBuilder() {
+      let(b, one)
+      statementEtc("etc._error", Seq(constString("foo")))
+    }
+    val carefullyHandle = new StatementsBuilder() { }
+    val procedureBody = new StatementsBuilder() {
+      let(a, one)
+      carefully(carefullyBody, carefullyHandle)
+      probe(containsA)
+      probe(doesNotContainB)
+      probe(containsSingleBinding)
+    }
+    execute(proc, procedureBody)
+    containsA.verify()
+    doesNotContainB.verify()
+    containsSingleBinding.verify()
+  } }
+
+  test("`carefully` properly restores context in error block in error case") { new Helper {
+    val doesNotContainA = checkNotBound(a)
+    val proc = commandProcedure("carefully")
+    val carefullyBody = new StatementsBuilder() {
+      let(a, one)
+      statementEtc("etc._error", Seq(constString("foo")))
+    }
+    val carefullyHandle = new StatementsBuilder() {
+      probe(doesNotContainA)
+    }
+    val procedureBody = new StatementsBuilder() {
+      carefully(carefullyBody, carefullyHandle)
+    }
+    execute(proc, procedureBody)
+    doesNotContainA.verify()
+  } }
+
+
+  test("`carefully` properly restores context after error inside procedure call") { new Helper {
+    val containsA = checkBinding(a, Double.box(1))
+    val doesNotContainB = checkNotBound(b)
+    val caller = commandProcedure("caller")
+    val callee = commandProcedure("callee")
+    val calleeBody = new StatementsBuilder() {
+      let(b, two)
+      statementEtc("etc._error", Seq(constString("foo")))
+    }
+    val carefullyBody = new StatementsBuilder() {
+      statement(_corecall(callee), new _call(callee))
+    }
+    val carefullyHandle = new StatementsBuilder() { }
+    val callerBody = new StatementsBuilder() {
+      let(a, one)
+      carefully(carefullyBody, carefullyHandle)
+      probe(containsA)
+      probe(doesNotContainB)
+    }
+    assembleProcedure(callee, calleeBody)
+    execute(caller, callerBody)
+    containsA.verify()
+    doesNotContainB.verify()
+  } }
+
+  class ReporterBuilder {
+    var args = Seq.empty[Expression]
+    var rep: Reporter = null
+    var coreRep: CoreReporter = null
+
+    def withReporter(cr: CoreReporter, r: Reporter): ReporterBuilder = {
+      coreRep = cr
+      rep = r
+      this
+    }
+
+    def withArg(f: ReporterBuilder => ReporterBuilder): ReporterBuilder = {
+      args :+= f(new ReporterBuilder()).build
+      this
+    }
+
+    def withArg(a: Expression): ReporterBuilder = {
+      args :+= a
+      this
+    }
+
+    def reporterAppEtc(coreName: String, primName: String): ReporterBuilder = {
+      coreRep = Instantiator.newInstance[CoreReporter](Class.forName(s"org.nlogo.core.prim.$coreName"))
+      rep = Instantiator.newInstance[Reporter](Class.forName(s"org.nlogo.prim.$primName"))
+      this
+    }
+
+    def build: ReporterApp = new ReporterApp(coreRep, rep, args, loc)
+
+    def buildBlock: ReporterBlock = new ReporterBlock(build, loc)
+  }
+
+  // How to fix dependency problem:
+  // - we need to create nvm
+
+  class StatementsBuilder {
+    var stmts = Seq.empty[Statement]
+    def statement(coreCmd: CoreCommand, cmd: Command, args: Seq[Expression]): StatementsBuilder = {
+      stmts :+= new Statement(coreCmd, cmd, args, loc)
+      this
+    }
+    def statement(coreCmd: CoreCommand, cmd: Command): StatementsBuilder = {
+      stmts :+= new Statement(coreCmd, cmd, Seq.empty[Expression], loc)
+      this
+    }
+    def statementEtc(name: String, args: Seq[Expression]): StatementsBuilder =
+      statementEtc(name, name, args)
+    def statementEtc(coreName: String, primName: String, args: Seq[Expression]): StatementsBuilder = {
+      val tokName = coreName.split("_").last
+      val core = Instantiator.newInstance[CoreCommand](Class.forName(s"org.nlogo.core.prim.$coreName"))
+      val prim = Instantiator.newInstance[Command](Class.forName(s"org.nlogo.prim.$primName"))
+      stmts :+= new Statement(core, prim, args, loc)
+      this
+    }
+
+    def let(l: Let, value: Expression): StatementsBuilder =
+      statement(_corelet(Some(l)), new _let(l), Seq(value))
+
+    def _ignore(app: ReporterApp): StatementsBuilder =
+      statementEtc("etc._ignore", Seq(app))
+
+    def carefully(block: StatementsBuilder, errorBlock: StatementsBuilder): StatementsBuilder = {
+      val coreCarefully = _corecarefully()
+      statement(coreCarefully, new _carefully(coreCarefully.let),
+        Seq(block.buildBlock, errorBlock.buildBlock))
+    }
+
+    def probe(cmd: Command): StatementsBuilder =
+      statement(_probesyntax(), cmd)
+
+    def done = statement(_coredone(),    new _done())
+
+    def build: Statements = new Statements(stmts, loc)
+
+    def buildBlock: CommandBlock = new CommandBlock(build, loc)
+  }
+}
