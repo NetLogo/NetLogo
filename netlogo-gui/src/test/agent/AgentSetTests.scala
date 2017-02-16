@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.MersenneTwisterFast
+import org.nlogo.api.{Dump, MersenneTwisterFast}
 import org.scalatest.FunSuite
 import org.nlogo.core.AgentKind
 
@@ -13,12 +13,13 @@ class AgentSetTests extends FunSuite {
 
   def makeTurtle() = world.createTurtle(world.turtles())
 
-  def createArrayAgentSet(array: Array[Agent]) = new ArrayAgentSet(AgentKind.Turtle, "", array)
-  def createLazyAgentSet(array: Array[Agent]) = new LazyAgentSet(AgentKind.Turtle, "", createArrayAgentSet(array))
+  def createArrayAgentSet(array: Array[Agent]) = new ArrayAgentSet(AgentKind.Turtle, null, array)
+  def createLazyAgentSet(array: Array[Agent]) = new LazyAgentSet(AgentKind.Turtle, null, createArrayAgentSet(array))
 
   testAgentSet(createArrayAgentSet, "ArrayAgentSet")
   testAgentSet(createLazyAgentSet, "LazyAgentSet")
   testLazies()
+
 
   def testLazies(): Unit = {
     testLazyOther()
@@ -26,6 +27,10 @@ class AgentSetTests extends FunSuite {
     testForce()
     testLazyIterator()
     testLazyOtherAndWith()
+    test("Lazy Dump") {
+      val a = createLazyAgentSet(Array())
+      assertResult("(agentset, 0 turtles)")(Dump.logoObject(a, false, false))
+    }
   }
   // lazy-specific tests
   def testLazyWith(): Unit = {
@@ -146,8 +151,10 @@ class AgentSetTests extends FunSuite {
       val it = a.iterator
       a.lazyWith((_) => true)
       assertResult(true)(it.hasNext)
-      a.lazyWith((_) => false)
-      assertResult(false)(it.hasNext)
+      // we assume that filters don't change
+      // between calls to hasNext
+//      a.lazyWith((_) => false)
+//      assertResult(false)(it.hasNext)
     }
   }
   def testLazyOtherAndWith(): Unit = {

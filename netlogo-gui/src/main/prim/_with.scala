@@ -20,15 +20,19 @@ class _with extends Reporter {
 //    val result = collection.mutable.ArrayBuffer[Agent]()
     reporterBlock.checkAgentSetClass(sourceSet, context)
 
-    new LazyAgentSet(sourceSet.kind, "", sourceSet,
-      withs = List(
-        (agent: Agent) => freshContext.evaluateReporter(agent, reporterBlock) match {
-          case b: java.lang.Boolean => b.booleanValue
-          case x => throw new RuntimePrimitiveException(context, this, I18N.errors.getN(
-            "org.nlogo.prim.$common.expectedBooleanValue",
-            displayName, Dump.logoObject(agent), Dump.logoObject(x)))
-      })
-    )
+    val filter = (agent: Agent) => freshContext.evaluateReporter(agent, reporterBlock) match {
+      case b: java.lang.Boolean => b.booleanValue
+      case x => throw new RuntimePrimitiveException(context, this, I18N.errors.getN(
+        "org.nlogo.prim.$common.expectedBooleanValue",
+        displayName, Dump.logoObject(agent), Dump.logoObject(x)))
+    }
+
+    if (sourceSet.isInstanceOf[LazyAgentSet]) {
+      sourceSet.asInstanceOf[LazyAgentSet].lazyWith(filter)
+      sourceSet
+    } else {
+      new LazyAgentSet(sourceSet.kind, null, sourceSet, withs = List(filter))
+    }
 //    val iter = lazySet.iterator
 //    while(iter.hasNext) {
 //      val tester = iter.next()

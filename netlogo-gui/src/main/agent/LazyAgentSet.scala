@@ -68,6 +68,7 @@ class LazyAgentSet(kind: core.AgentKind,
   // 1. agents only accessed after force
   // 2. agents only modified by side-effects of filters within force
   // 3. agents that pass filters are immediately included in the resulting AgentSet
+  // 4. filters don't change between calls to hasNext
   def force(): AgentSet = {
     if (others.isEmpty && withs.isEmpty)
       agentSet
@@ -78,7 +79,7 @@ class LazyAgentSet(kind: core.AgentKind,
       while (it.hasNext) {
         l = l :+ it.next()
       }
-      new ArrayAgentSet(kind, "", l.toArray)
+      new ArrayAgentSet(kind, null, l.toArray)
     }
   }
 
