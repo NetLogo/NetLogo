@@ -163,7 +163,8 @@ class NetLogoDocs(docsSource: File, docsTarget: File, netLogoRoot: File, modelsD
     new PegDownProcessor(PegdownExtensions.SMARTYPANTS |        // beautifies quotes, dashes, etc.
                          PegdownExtensions.AUTOLINKS |          // angle brackets around URLs and email addresses not needed
                          PegdownExtensions.FENCED_CODE_BLOCKS | // delimit code blocks with ```
-                         PegdownExtensions.TABLES)              // tables with "|"
+                         PegdownExtensions.TABLES,              // tables with "|"
+                         10000L)                                // 10-second timeout
       .markdownToHtml(str, customRenderer)
   }
 
