@@ -255,8 +255,8 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
           ASTORE 5
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
-          INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/util/Collection;
+          INVOKEINTERFACE java/util/Collection.iterator ()Ljava/util/Iterator;
           ASTORE 6
          L7
          FRAME APPEND [org/nlogo/agent/AgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator]
