@@ -34,6 +34,10 @@ abstract class AgentSet(
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def toLogoList: LogoList
 
+  // this is an upper bound on the size of the agentset. It's used in heuristics, so it should
+  // be free or cheap to compute.
+  private[agent] def sizeBound: Int
+
   ///
 
   val agentBit: Byte = AgentBit(kind).toByte

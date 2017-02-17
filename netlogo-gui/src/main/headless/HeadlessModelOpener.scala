@@ -38,7 +38,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     for (plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
 
-    val dialect = if (Version.is3D(model.version)) NetLogoThreeDDialect
+    val dialect =
+      if (Version.is3D(model.version)) NetLogoThreeDDialect
       else NetLogoLegacyDialect
 
     // load system dynamics model (if present)

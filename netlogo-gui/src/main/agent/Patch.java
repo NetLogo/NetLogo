@@ -14,6 +14,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public strictfp class Patch
     extends Agent
@@ -32,7 +33,7 @@ public strictfp class Patch
 
   // turtles here
 
-  public Iterable<Turtle> turtlesHere() {
+  public Collection<Turtle> turtlesHere() {
     return _turtlesHere;
   }
 

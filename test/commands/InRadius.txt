@@ -60,7 +60,7 @@ InRadius2_3D
   O> create-frogs 100 [ setxy random-xcor random-ycor set color red ]
   O> set glob1 [count turtles in-radius 3] of turtle 0
   glob1 = [ count turtles with [ color = red ] in-radius 3 ] of turtle 0 => true
-  glob1 = [ count turtles with [ color = red ] in-radius 3 ] of turtle 0 => true
+  glob1 = [ count turtles in-radius 3 with [ color = red ] ] of turtle 0 => true
 
 InRadius3_2D
   O> resize-world 0 11 0 11
@@ -160,6 +160,77 @@ InRadius5_3D
   [count patches in-radius 1] of patch -3 -4 0 => 7
   [count patches in-radius 1] of patch max-pxcor 0 0 => 7
   [count patches in-radius 1] of patch max-pxcor max-pycor 0 => 7
+
+InRadius6_2D
+  O> __change-topology true true
+  O> ask patches [ sprout 1 ]
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 0 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 0 => 9
+  [[count turtles in-radius 2] of one-of turtles-here] of patch 0 0 => 13
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 0 0 => 117
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 -5 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 -5 => 9
+  [[count turtles in-radius 5] of one-of turtles-here] of patch -5 -5 => 81
+  [[count turtles in-radius 7] of one-of turtles-here] of patch -5 -5 => 117
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 5 0 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 0 => 9
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 0 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 0 => 9
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 5 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 5 => 9
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 -5 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 -5 => 9
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 5 5 => 5
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 5 => 9
+  O> __change-topology true false
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 0 0 => 117
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 0 => 5
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 -5 => 4
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 -5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 -5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 0 => 9
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 0 => 9
+  [[count turtles in-radius 7] of one-of turtles-here] of patch -5 -5 => 72
+  O> __change-topology false true
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 0 0 => 117
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 0 => 5
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 -5 => 4
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 -5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 -5 => 9
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 5 => 9
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 0 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 0 => 6
+  [[count turtles in-radius 7] of one-of turtles-here] of patch -5 -5 => 72
+  O> __change-topology false false
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 0 0 => 117
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 0 => 5
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 -5 => 3
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 -5 => 4
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 -5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 5 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 0 => 6
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 0 => 6
+  [[count turtles in-radius 7] of one-of turtles-here] of patch -5 -5 => 45
+
+InRadius6_3D
+  O> ask patches [ sprout 1 ]
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 0 0 0 => 7
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 0 0 0 => 19
+  [[count turtles in-radius 2] of one-of turtles-here] of patch 0 0 0 => 33
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 0 0 0 => 1143
+  [[count turtles in-radius 1] of one-of turtles-here] of patch -5 -5 -5 => 7
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch -5 -5 -5 => 19
+  [[count turtles in-radius 2] of one-of turtles-here] of patch -5 -5 -5 => 33
+  [[count turtles in-radius 7] of one-of turtles-here] of patch -5 -5 -5 => 1143
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 5 5 0 => 7
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 5 0 => 19
+  [[count turtles in-radius 2] of one-of turtles-here] of patch 5 5 0 => 33
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 5 5 0 => 1143
+  [[count turtles in-radius 1] of one-of turtles-here] of patch 5 0 0 => 7
+  [[count turtles in-radius 1.42] of one-of turtles-here] of patch 5 0 0 => 19
+  [[count turtles in-radius 2] of one-of turtles-here] of patch 5 0 0 => 33
+  [[count turtles in-radius 7] of one-of turtles-here] of patch 5 0 0 => 1143
 
 InRadiusLargeRadius1_2D
   O> __change-topology true true

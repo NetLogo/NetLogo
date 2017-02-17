@@ -26,6 +26,8 @@ extends AgentSet(kind, printName) {
 
   override def count = _agents.size
 
+  private[agent] def sizeBound: Int = _agents.size
+
   override def isEmpty = _agents.isEmpty
 
   // Assumes we've already checked that the counts are equal. - ST 7/6/06

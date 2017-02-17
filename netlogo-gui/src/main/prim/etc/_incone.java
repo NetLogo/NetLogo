@@ -47,8 +47,6 @@ public final strictfp class _incone
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noAngleGreaterThan360", displayName()));
 
     }
-    List<Agent> result =
-        world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, true);
-    return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
+    return world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, true);
   }
 }
