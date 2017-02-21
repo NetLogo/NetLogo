@@ -75,7 +75,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         override def action(): Unit = save(saveAs)
       }
     }
-    Seq(saveAction(false), saveAction(true)) ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
+    Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
   override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))
