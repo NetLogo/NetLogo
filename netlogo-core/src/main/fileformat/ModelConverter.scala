@@ -74,14 +74,14 @@ class ModelConverter(
 
     def targetToRegexString(t: String): String = {
       if (t.length > 0 && t.head.isLetter && t.last.isLetter)
-        "\\b" + Regex.quote(t) + "\\b"
+        "^[^;]*\\b" + Regex.quote(t) + "\\b"
       else
         Regex.quote(t)
     }
 
     def containsAnyTargets(targets: Seq[String])(source: String): Boolean = {
       val anyTarget =
-        new Regex("(?i)" + targets.map(targetToRegexString).mkString("|"))
+        new Regex("(?mi)" + targets.map(targetToRegexString).mkString("|"))
       anyTarget.findFirstIn(source).isDefined
     }
 
