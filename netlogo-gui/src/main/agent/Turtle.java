@@ -1254,12 +1254,13 @@ public strictfp class Turtle
     return links == null ? new Link[0] : links.toArray(new Link[links.size()]);
   }
 
-  public Link[] selectLinks(boolean out, boolean in, AgentSet breed) {
+  public Link[] selectLinks(boolean out, boolean in, AgentSet linkSet) {
     if (links == null || links.isEmpty()) {
       return new Link[0];
     }
 
-    boolean allBreeds = breed == world().links();
+    boolean allBreeds = linkSet == world().links();
+    boolean notBreedSet = ! linkSet.isBreedSet();
 
     if (allBreeds && out && in) {
       return links();
@@ -1268,8 +1269,8 @@ public strictfp class Turtle
     Link[] result = new Link[links.size()];
     int writeTo = 0;
     for (Link link : links) {
-      // check breed
-      if ((allBreeds || breed == link.getBreed())) {
+      // check linkSet
+      if (allBreeds || linkSet == link.getBreed() || (notBreedSet && linkSet.contains(link))) {
         // check directedness -- note that undirected links are *always* returned.
         if ((out && in) ||
             (out && link.end1 == this) ||
