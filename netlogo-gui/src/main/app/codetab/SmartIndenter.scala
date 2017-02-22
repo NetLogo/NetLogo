@@ -57,7 +57,7 @@ extends Indenter {
   def handleTab() = {
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
-      executeIndentations(indentations)
+      executeIndentations(indentations, true)
     }
   }
 
@@ -69,7 +69,7 @@ extends Indenter {
     // end - 1 because the editor includes newlines as part of the text given in a line
     val indentations = lineIndentation(start, end - 1)
     if (indentations.nonEmpty) {
-      executeIndentations(indentations)
+      executeIndentations(indentations, false)
     }
   }
 
@@ -81,12 +81,18 @@ extends Indenter {
     }
   }
 
-  def handleCloseBracket() = handleTab()
+  def handleCloseBracket() = {
+    val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
+    if (indentations.nonEmpty) {
+      executeIndentations(indentations, true)
+    }
+  }
 
   /// private helpers
-  private def executeIndentations(indentations: Seq[LineIndent]): Unit = {
+  private def executeIndentations(indentations: Seq[LineIndent], maintainCaretPosition: Boolean): Unit = {
     val start = indentations.head.lineStart
     val finish = indentations.last.lineEnd
+    val startCaretPosition = code.getCaretPosition
     val builder = new StringBuilder(finish - start)
     indentations.foldLeft(0) { (offset: Int, indent: LineIndent) =>
       val newOffset = (offset, indent) match {
@@ -109,6 +115,18 @@ extends Indenter {
     // Remove trailing newline
     builder.delete(builder.length - 1, builder.length)
     code.replace(start, finish - start, builder.toString)
+    if (maintainCaretPosition) {
+      if (startCaretPosition >= start) {
+        val caretOffset = indentations.foldLeft(0) {
+          case (offset, indent) if indent.lineStart <= startCaretPosition + 1 =>
+            offset + indent.delta
+          case (offset, indent) => offset
+        }
+        code.setCaretPosition(startCaretPosition + caretOffset max 0)
+      } else {
+        code.setCaretPosition(startCaretPosition)
+      }
+    }
   }
 
   private def lineIndentation(startOffset: Int, endOffset: Int): Seq[LineIndent] = {

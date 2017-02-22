@@ -7,6 +7,8 @@ import javax.swing.text.Document
 trait EditorAreaInterface {
   def getSelectionStart: Int
   def getSelectionEnd: Int
+  def getCaretPosition: Int
+  def setCaretPosition(pos: Int): Unit
   def setSelectionStart(pos: Int)
   def setSelectionEnd(pos: Int)
   def offsetToLine(pos: Int): Int

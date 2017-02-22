@@ -15,6 +15,8 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
     val lineEnd = lineToEndOffset(lineNum)
     getText(lineStart, lineEnd - lineStart)
   }
+  def getCaretPosition: Int = text.getCaretPosition
+  def setCaretPosition(pos: Int) = text.setCaretPosition(pos)
   def getText(start: Int, len: Int) = text.getDocument.getText(start, len)
   def getSelectionStart = text.getSelectionStart
   def getSelectionEnd = text.getSelectionEnd

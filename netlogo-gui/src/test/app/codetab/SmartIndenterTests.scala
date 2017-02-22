@@ -14,11 +14,16 @@ object SmartIndenterTests {
   class Scaffold(var text: String) extends EditorAreaInterface {
     import scala.beans.BeanProperty
 
+    private var _caretPosition: Int = 0
     private var selectionStart = 0
     private var selectionEnd = 0
     private var _linesText = text
     private var _lines = text.split("\\n")
 
+    def getCaretPosition = _caretPosition
+    def setCaretPosition(pos: Int) = {
+      _caretPosition = pos
+    }
     def getSelectionStart = selectionStart
     def setSelectionStart(pos: Int): Unit = {
       selectionStart = pos
@@ -62,6 +67,7 @@ object SmartIndenterTests {
 
     def replace(start: Int, len: Int, str: String): Unit = {
       text = text.substring(0, start) + str + text.substring(start + len, text.length)
+      _caretPosition = start + str.length
     }
   }
 }
@@ -146,6 +152,19 @@ class SmartIndenterTests extends FunSuite {
           indenter.handleEnter()
           assert(out.lines.toSeq(i + 1) === code.lines(i + 1))
         }
+      }
+    }
+
+    test("maintains caret position in " + name) {
+      for {
+        (char, index) <- in.zipWithIndex if ! char.isWhitespace
+      } {
+        val code = new Scaffold(in)
+        code.setCaretPosition(index)
+        new SmartIndenter(code, compiler).handleTab()
+        val startOffset = code.getCaretPosition.min(code.text.size - 1).max(0)
+        val newChar = code.getText(startOffset, 1)
+        assert(char == newChar.head, s"When caret started at: $index (${code.text.slice(index, 3)}), ended at: ${code.getCaretPosition}")
       }
     }
   }
