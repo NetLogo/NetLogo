@@ -14,7 +14,8 @@ trait EditorAreaInterface {
   def lineToEndOffset(pos: Int): Int
   def getText(start: Int, len: Int): String
   def getLineOfText(lineNum: Int): String
-  def insertString(pos: Int, spaces: String)
+  def insertString(pos: Int, str: String)
   def replaceSelection(text: String)
+  def replace(start: Int, len: Int, str: String): Unit
   def remove(start: Int, len: Int)
 }

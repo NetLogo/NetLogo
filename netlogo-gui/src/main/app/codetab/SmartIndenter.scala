@@ -108,8 +108,7 @@ extends Indenter {
     }
     // Remove trailing newline
     builder.delete(builder.length - 1, builder.length)
-    code.remove(start, finish - start)
-    code.insertString(start, builder.toString)
+    code.replace(start, finish - start, builder.toString)
   }
 
   private def lineIndentation(startOffset: Int, endOffset: Int): Seq[LineIndent] = {

@@ -59,6 +59,10 @@ object SmartIndenterTests {
     def replaceSelection(str: String) { text = text.take(selectionStart) + str + text.drop(selectionEnd) }
 
     def remove(start: Int, len: Int) { text = text.substring(0, start) + text.substring(start + len, text.length) }
+
+    def replace(start: Int, len: Int, str: String): Unit = {
+      text = text.substring(0, start) + str + text.substring(start + len, text.length)
+    }
   }
 }
 
