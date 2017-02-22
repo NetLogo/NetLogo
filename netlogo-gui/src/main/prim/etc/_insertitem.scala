@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.Dump
-import org.nlogo.core.{I18N, LogoList, Syntax}
+import org.nlogo.core.{I18N, LogoList, Syntax, Pure}
 import org.nlogo.nvm._
 
 class _insertitem extends Reporter with Pure {

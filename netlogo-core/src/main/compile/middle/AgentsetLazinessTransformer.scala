@@ -4,6 +4,7 @@ package org.nlogo.compile
 package middle
 
 import org.nlogo.compile.api.{AstTransformer, Expression, ReporterApp, Statement}
+import org.nlogo.nvm.AcceptsLazy
 import org.nlogo.prim._
 import org.nlogo.prim.etc._
 import org.nlogo.prim._count
@@ -21,21 +22,7 @@ class AgentsetLazinessTransformer extends AstTransformer {
           }
         new ReporterApp(_force.coreprim(), new _force(), forceArgs, newApp.sourceLocation)
 
-
-      case _: _count | _: _any | _: _member | _: _nof | _: _oneof =>
-//        val forceArgs = newApp.args.head match {
-//          case ReporterApp(_, _: _force, innerArgs, _) =>
-//            innerArgs
-//          case _ => newApp.args
-//        }
-//        var forceArgs = Seq[Expression]()
-//        for(a <- newApp.args) {
-//          forceArgs = forceArgs :+
-//          a match {
-//            case ReporterApp(_, _: _force, innerArgs, _) => innerArgs
-//            case _ => Seq(a)
-//          }
-//        }
+      case _: AcceptsLazy =>
         val forceArgs = newApp.args.map {
           case ReporterApp(_, _: _force, innerArg, _) => innerArg.head
           case arg => arg

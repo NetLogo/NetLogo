@@ -5,11 +5,12 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
+import org.nlogo.nvm.AcceptsLazy;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _any
-    extends Reporter {
+    extends Reporter implements AcceptsLazy {
 
 
   @Override

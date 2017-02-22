@@ -12,6 +12,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.nvm.AcceptsLazy;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
@@ -19,7 +20,7 @@ import java.util.Iterator;
 
 public final strictfp class _member
     extends Reporter
-    implements org.nlogo.core.Pure {
+    implements org.nlogo.core.Pure, AcceptsLazy {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     Object obj = args[1].report(context);

@@ -7,13 +7,10 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
-import org.nlogo.nvm.ArgumentTypeException;
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.RuntimePrimitiveException;
-import org.nlogo.nvm.Reporter;
+import org.nlogo.nvm.*;
 
 public final strictfp class _oneof
-    extends Reporter {
+    extends Reporter implements AcceptsLazy {
   @Override
   public Object report(final Context context) throws LogoException {
     Object obj = args[0].report(context);

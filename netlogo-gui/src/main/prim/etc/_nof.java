@@ -8,15 +8,12 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
-import org.nlogo.nvm.ArgumentTypeException;
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.RuntimePrimitiveException;
-import org.nlogo.nvm.Reporter;
+import org.nlogo.nvm.*;
 
 import java.util.Iterator;
 
 public final strictfp class _nof
-    extends Reporter {
+    extends Reporter implements AcceptsLazy {
   @Override
   public Object report(final Context context)
       throws LogoException {
