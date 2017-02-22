@@ -27,59 +27,54 @@ class AgentsetLazinessTransformerTests extends FunSuite {
     }
   }
 
-  test("let other turtles forces evaluation of lazy agentset") { new Helper {
+  test("other forces evaluation") { new Helper {
     assertResult("_let[_force[_other[_turtles[]]]]")(compileCommands("let foo other turtles"))
-  } }
-
-  test("let other other turtles forces evaluation of lazy agentset") { new Helper {
     assertResult("_let[_force[_other[_other[_turtles[]]]]]")(compileCommands("let foo other other turtles"))
   } }
 
-  test("let with turtles forces evaluation") { new Helper {
+  test("with forces evaluation") { new Helper {
     assertResult("_let[_force[_with[_turtles[], [_constboolean:true[]]]]]")(compileCommands("let foo turtles with [ true ]"))
+    assertResult("_let[_force[_with[_with[_turtles[], [_constboolean:true[]]], [_constboolean:true[]]]]]")(compileCommands("let foo turtles with [ true ] with [ true ]"))
   } }
 
-  test("let with with turtles forces evaluation once") { new Helper {
-    assertResult("_let[_force[_with[_with[_turtles[], [_constboolean:true[]]]]]]")(compileCommands("let foo turtles with [ true ] with [ true ]"))
+  test("other with forces evaluation") { new Helper {
+    assertResult("_let[_force[_other[_with[_turtles[], [_constboolean:true[]]]]]]")(compileCommands("let foo other turtles with [ true ]"))
   } }
 
-  test("let count turtles does not force evaluation") { new Helper {
+  test("count does not force evaluation") { new Helper {
     assertResult("_let[_count[_turtles[]]]")(compileCommands("let foo count turtles"))
-  } }
-
-  test("let count other turtles does not force evaluation") { new Helper {
     assertResult("_let[_count[_other[_turtles[]]]]")(compileCommands("let foo count other turtles"))
-  } }
-
-  test("let count with turtles does not force evaluation") { new Helper {
     assertResult("_let[_count[_with[_turtles[], [_constboolean:true[]]]]]")(compileCommands("let foo count turtles with [ true ]"))
   } }
 
-  test("list other turtles forces evaluation") { new Helper {
-    assertResult("_let[_list[_force[_other[_turtles[]]]]]")(compileCommands("let foo (list other turtles)"))
-  } }
-
-  test("list other with turtles forces evaluation once") { new Helper {
-    assertResult("_let[_list[_force[_other[_with[_turtles[], [_constboolean:true[]]]]]]]")(compileCommands("let foo (list other turtles with [ true ])"))
-  } }
-
-  test("any? turtles does not force evaluation") { new Helper {
+  test("any? does not force evaluation") { new Helper {
     assertResult("_let[_any[_turtles[]]]")(compileCommands("let foo any? turtles"))
-  } }
-
-  test("any? other turtles does not force evaluation") { new Helper {
     assertResult("_let[_any[_other[_turtles[]]]]")(compileCommands("let foo any? other turtles"))
-  } }
-
-  test("any? other other turtles does not force evaluation") { new Helper {
     assertResult("_let[_any[_other[_other[_turtles[]]]]]")(compileCommands("let foo any? other other turtles"))
-  } }
-
-  test("any? other with turtles does not force evaluation") { new Helper {
     assertResult("_let[_any[_other[_with[_turtles[], [_constboolean:true[]]]]]]")(compileCommands("let foo any? other turtles with [ true ]"))
   } }
 
-//  test("member other does not force evaluation") { new Helper {
-//    assertResult()
-//  } }
+  test("n-of does not force evaluation") { new Helper {
+    assertResult("_let[_nof[_constdouble:3.0[], _turtles[]]]")(compileCommands("let foo n-of 3 turtles"))
+    assertResult("_let[_nof[_constdouble:3.0[], _other[_turtles[]]]]")(compileCommands("let foo n-of 3 other turtles"))
+    assertResult("_let[_nof[_constdouble:3.0[], _other[_with[_turtles[], [_constboolean:true[]]]]]]")(compileCommands("let foo n-of 3 other turtles with [ true ]"))
+  } }
+
+  test("one-of does not force evaluation") { new Helper {
+    assertResult("_let[_oneof[_turtles[]]]")(compileCommands("let foo one-of turtles"))
+    assertResult("_let[_oneof[_other[_turtles[]]]]")(compileCommands("let foo one-of other turtles"))
+    assertResult("_let[_oneof[_other[_with[_turtles[], [_constboolean:true[]]]]]]")(compileCommands("let foo one-of other turtles with [ true ]"))
+  } }
+
+  test("member does not force evaluation") { new Helper {
+    assertResult("_let[_member[_turtle[_constdouble:0.0[]], _with[_turtles[], [_constboolean:true[]]]]]")(compileCommands("let foo member? turtle 0 turtles with [ true ]"))
+    assertResult("_let[_member[_turtle[_constdouble:0.0[]], _other[_turtles[]]]]")(compileCommands("let foo member? turtle 0 other turtles"))
+  } }
+
+  test("list forces evaluation") { new Helper {
+    assertResult("_let[_list[_force[_other[_turtles[]]]]]")(compileCommands("let foo (list other turtles)"))
+    assertResult("_let[_list[_force[_other[_with[_turtles[], [_constboolean:true[]]]]]]]")(compileCommands("let foo (list other turtles with [ true ])"))
+  } }
+
+
 }

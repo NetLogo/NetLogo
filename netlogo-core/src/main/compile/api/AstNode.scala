@@ -189,6 +189,8 @@ extends Expression with Application {
   def this(coreReporter: core.Reporter, reporter: nvm.Reporter, sourceLocation: SourceLocation) =
     this(coreReporter, reporter, collection.mutable.Buffer[Expression](), sourceLocation)
 
+  def this(coreReporter: core.Reporter, reporter: nvm.Reporter, args: Seq[Expression], sourceLocation: SourceLocation) =
+    this(coreReporter, reporter, collection.mutable.Buffer[Expression](args: _*), sourceLocation)
   /**
    * the args for this application.
    */
