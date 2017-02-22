@@ -5,7 +5,7 @@ package org.nlogo.app.codetab
 import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
 import org.nlogo.core.Femto
-import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.FileIO.fileToString
 import org.scalatest.FunSuite
 
 import scala.util.matching.Regex
@@ -89,7 +89,7 @@ class SmartIndenterTests extends FunSuite {
 
     def spec2out(spec: String) = replaceLeading(replaceLeading(spec, '-', ""), '+', " ")
 
-    file2String(path)
+    fileToString(path)
             .split("\n")
             .filter(!_.startsWith("#"))
             .dropWhile(_.isEmpty)

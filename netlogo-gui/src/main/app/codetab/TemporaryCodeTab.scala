@@ -18,6 +18,7 @@ import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 import org.nlogo.fileformat, fileformat.SuccessfulConversion
 
+import scala.io.Codec
 import scala.util.control.Exception.ignoring
 import scala.util.matching.Regex
 
@@ -51,7 +52,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
   filename.right foreach { path =>
     try {
-      innerSource = FileIO.file2String(path).replaceAll("\r\n", "\n")
+      innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
       dirty = false
       saveNeeded = false
       externalFileManager.add(this)

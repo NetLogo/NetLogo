@@ -1,4 +1,4 @@
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
 
 package org.nlogo.app
 
@@ -33,6 +33,7 @@ import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
 import scala.language.postfixOps
+import scala.io.Codec
 /**
  * The main class for the complete NetLogo application.
  *
@@ -702,7 +703,7 @@ class App extends
   private def reload() {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
+    if (modelType != ModelType.New && path != null) openFromSource(FileIO.fileToString(path)(Codec.UTF8), path, modelType)
     else commandLater("print \"can't, new model\"")
   }
 
@@ -719,7 +720,7 @@ class App extends
         }
       if (fullName != null) {
         val path = org.nlogo.workspace.ModelsLibrary.getModelPath(fullName)
-        val source = org.nlogo.api.FileIO.file2String(path)
+        val source = org.nlogo.api.FileIO.fileToString(path)(Codec.UTF8)
         org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
       }
     }

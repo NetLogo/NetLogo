@@ -8,6 +8,8 @@ import org.w3c.dom
 import org.xml.sax
 import language.implicitConversions
 
+import scala.io.Codec
+
 object ProtocolLoader
 {
   val PREAMBLE = """<?xml version="1.0" encoding="us-ascii"?>"""
@@ -37,7 +39,7 @@ class ProtocolLoader(services: CompilerUtilitiesInterface)
     str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
        .replaceAll("<timeLimit ticks=\"", "<timeLimit steps=\"")
   implicit def file2inputSource(file: java.io.File): sax.InputSource =
-    xml2inputSource(FileIO.file2String(file))
+    xml2inputSource(FileIO.fileToString(file)(Codec.UTF8))
 
   implicit def xml2inputSource(xml: String): sax.InputSource = {
     val doctypedXml =
