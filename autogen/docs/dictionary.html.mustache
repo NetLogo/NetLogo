@@ -50,12 +50,13 @@
       </div>
       <div class="block">
         <div class="smallfont centertext tocborder inlineblock">
-          Categories: <a href="#turtlegroup">Turtle</a> -
-          <a href="#patchgroup">Patch</a> - <a href="#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
-          - <a href="#anonproceduresgroup">Anonymous Procedures</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a> - <a href="#perspectivegroup">Perspective</a>
+          Categories: <a href="#turtlegroup">Turtle</a> - <a href="#patchgroup">Patch</a> - <a href="#linkgroup">Links</a>
+          - <a href="#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
+          - <a href="#anonproceduresgroup">Anonymous Procedures</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a>
           <br>
+          <a href="#perspectivegroup">Perspective</a> -
           <a href="#iogroup">Input/Output</a> - <a href="#fileiogroup">File</a> - <a href="#listsgroup">List</a> -
-          <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a> - <a href="#linkgroup">Links</a>
+          <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a>
           - <a href="#systemgroup">System</a> - <a href="#hubnetgroup">HubNet</a>
         </div>
       </div>
@@ -204,6 +205,69 @@ Go figure! - ST 12/2/04
       <a href="#stop-inspecting">stop-inspecting</a>
       <a href="#subject">subject</a>
       <a href="#turtles-here">turtles-here</a>
+      <!-- ======================================== -->
+    <h3>
+      Link-related
+    </h3>
+    <p id="linkgroup">
+      <a href="#both-ends">both-ends</a>
+      <a href="#clear-links">clear-links</a>
+      <a href="#create-link">create-&lt;breed&gt;-from</a>
+      <a href="#create-link">create-&lt;breeds&gt;-from</a>
+      <a href="#create-link">create-&lt;breed&gt;-to</a>
+      <a href="#create-link">create-&lt;breeds&gt;-to</a>
+      <a href="#create-link">create-&lt;breed&gt;-with</a>
+      <a href="#create-link">create-&lt;breeds&gt;-with</a>
+      <a href="#create-link">create-link-from</a>
+      <a href="#create-link">create-links-from</a>
+      <a href="#create-link">create-link-to</a>
+      <a href="#create-link">create-links-to</a>
+      <a href="#create-link">create-link-with</a>
+      <a href="#create-link">create-links-with</a>
+      <a href="#die">die</a>
+      <a href="#hide-link">hide-link</a>
+      <a href="#in-link-neighbor">in-&lt;breed&gt;-neighbor?</a>
+      <a href="#in-link-neighbors">in-&lt;breed&gt;-neighbors</a>
+      <a href="#in-link-from">in-&lt;breed&gt;-from</a>
+      <a href="#in-link-neighbor">in-link-neighbor?</a>
+      <a href="#in-link-neighbors">in-link-neighbors</a>
+      <a href="#in-link-from">in-link-from</a>
+      <a href="#is-of-type">is-directed-link?</a>
+      <a href="#is-of-type">is-link?</a>
+      <a href="#is-of-type">is-link-set?</a>
+      <a href="#is-of-type">is-undirected-link?</a>
+      <a href="#layout-radial">layout-radial</a>
+      <a href="#layout-spring">layout-spring</a>
+      <a href="#layout-tutte">layout-tutte</a>
+      <a href="#link-neighbor">&lt;breed&gt;-neighbor?</a>
+      <a href="#link-neighbors">&lt;breed&gt;-neighbors</a>
+      <a href="#link-with">&lt;breed&gt;-with</a>
+      <a href="#link-heading">link-heading</a>
+      <a href="#link-length">link-length</a>
+      <a href="#link-neighbor">link-neighbor?</a>
+      <a href="#link">link</a>
+      <a href="#links">links</a>
+      <a href="#links-own">links-own</a>
+      <a href="#links-own">&lt;link-breeds&gt;-own</a>
+      <a href="#link-neighbors">link-neighbors</a>
+      <a href="#link-with">link-with</a>
+      <a href="#my-links">my-&lt;breeds&gt;</a>
+      <a href="#my-in-links">my-in-&lt;breeds&gt;</a>
+      <a href="#my-in-links">my-in-links</a>
+      <a href="#my-links">my-links</a>
+      <a href="#my-out-links">my-out-&lt;breeds&gt;</a>
+      <a href="#my-out-links">my-out-links</a>
+      <a href="#no-links">no-links</a>
+      <a href="#other-end">other-end</a>
+      <a href="#out-link-neighbor">out-&lt;breed&gt;-neighbor?</a>
+      <a href="#out-link-neighbors">out-&lt;breed&gt;-neighbors</a>
+      <a href="#out-link-to">out-&lt;breed&gt;-to</a>
+      <a href="#out-link-neighbor">out-link-neighbor?</a>
+      <a href="#out-link-neighbors">out-link-neighbors</a>
+      <a href="#out-link-to">out-link-to</a>
+      <a href="#show-link">show-link</a>
+      <a href="#tie">tie</a>
+      <a href="#untie">untie</a>
       <!-- ======================================== -->
     <h3>
       <a>Agentset</a>
@@ -600,69 +664,6 @@ Go figure! - ST 12/2/04
       <a href="#set-plot--range">set-plot-y-range</a>
       <a href="#setup-plots">setup-plots</a>
       <a href="#update-plots">update-plots</a>
-      <!-- ======================================== -->
-    <h3>
-      Links
-    </h3>
-    <p id="linkgroup">
-      <a href="#both-ends">both-ends</a>
-      <a href="#clear-links">clear-links</a>
-      <a href="#create-link">create-&lt;breed&gt;-from</a>
-      <a href="#create-link">create-&lt;breeds&gt;-from</a>
-      <a href="#create-link">create-&lt;breed&gt;-to</a>
-      <a href="#create-link">create-&lt;breeds&gt;-to</a>
-      <a href="#create-link">create-&lt;breed&gt;-with</a>
-      <a href="#create-link">create-&lt;breeds&gt;-with</a>
-      <a href="#create-link">create-link-from</a>
-      <a href="#create-link">create-links-from</a>
-      <a href="#create-link">create-link-to</a>
-      <a href="#create-link">create-links-to</a>
-      <a href="#create-link">create-link-with</a>
-      <a href="#create-link">create-links-with</a>
-      <a href="#die">die</a>
-      <a href="#hide-link">hide-link</a>
-      <a href="#in-link-neighbor">in-&lt;breed&gt;-neighbor?</a>
-      <a href="#in-link-neighbors">in-&lt;breed&gt;-neighbors</a>
-      <a href="#in-link-from">in-&lt;breed&gt;-from</a>
-      <a href="#in-link-neighbor">in-link-neighbor?</a>
-      <a href="#in-link-neighbors">in-link-neighbors</a>
-      <a href="#in-link-from">in-link-from</a>
-      <a href="#is-of-type">is-directed-link?</a>
-      <a href="#is-of-type">is-link?</a>
-      <a href="#is-of-type">is-link-set?</a>
-      <a href="#is-of-type">is-undirected-link?</a>
-      <a href="#layout-radial">layout-radial</a>
-      <a href="#layout-spring">layout-spring</a>
-      <a href="#layout-tutte">layout-tutte</a>
-      <a href="#link-neighbor">&lt;breed&gt;-neighbor?</a>
-      <a href="#link-neighbors">&lt;breed&gt;-neighbors</a>
-      <a href="#link-with">&lt;breed&gt;-with</a>
-      <a href="#link-heading">link-heading</a>
-      <a href="#link-length">link-length</a>
-      <a href="#link-neighbor">link-neighbor?</a>
-      <a href="#link">link</a>
-      <a href="#links">links</a>
-      <a href="#links-own">links-own</a>
-      <a href="#links-own">&lt;link-breeds&gt;-own</a>
-      <a href="#link-neighbors">link-neighbors</a>
-      <a href="#link-with">link-with</a>
-      <a href="#my-links">my-&lt;breeds&gt;</a>
-      <a href="#my-in-links">my-in-&lt;breeds&gt;</a>
-      <a href="#my-in-links">my-in-links</a>
-      <a href="#my-links">my-links</a>
-      <a href="#my-out-links">my-out-&lt;breeds&gt;</a>
-      <a href="#my-out-links">my-out-links</a>
-      <a href="#no-links">no-links</a>
-      <a href="#other-end">other-end</a>
-      <a href="#out-link-neighbor">out-&lt;breed&gt;-neighbor?</a>
-      <a href="#out-link-neighbors">out-&lt;breed&gt;-neighbors</a>
-      <a href="#out-link-to">out-&lt;breed&gt;-to</a>
-      <a href="#out-link-neighbor">out-link-neighbor?</a>
-      <a href="#out-link-neighbors">out-link-neighbors</a>
-      <a href="#out-link-to">out-link-to</a>
-      <a href="#show-link">show-link</a>
-      <a href="#tie">tie</a>
-      <a href="#untie">untie</a>
       <!-- ======================================== -->
     <h3>
       BehaviorSpace
@@ -3835,7 +3836,7 @@ ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
       </div>
     <div class="dict_entry" id="includes">
       <h3>
-        <a>__includes</a>
+        <a>__includes<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">__includes [ <i>filename</i> ... ]</span>
@@ -3908,8 +3909,8 @@ show int -3.5
       <h3>
         <a>is-agent?<span class="since">1.2.1</span></a>
         <a>is-agentset?<span class="since">1.2.1</span></a>
-        <a>is-anonymous-command?<span class="since">5.0</span></a>
-        <a>is-anonymous-reporter?<span class="since">5.0</span></a>
+        <a>is-anonymous-command?<span class="since">6.0</span></a>
+        <a>is-anonymous-reporter?<span class="since">6.0</span></a>
         <a>is-boolean?<span class="since">1.2.1</span></a>
         <a>is-directed-link?<span class="since">4.0</span></a>
         <a>is-link?<span class="since">4.0</span></a>
