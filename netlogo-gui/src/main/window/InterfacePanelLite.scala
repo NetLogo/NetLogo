@@ -29,7 +29,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
-  private var _hasFocus: Boolean = true
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
   // when the mouse is released from the SliderDragControl
@@ -80,12 +79,10 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
 
   def focusGained(e: FocusEvent): Unit = {
-    _hasFocus = true
     enableButtonKeys(true)
   }
 
   def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
     enableButtonKeys(false)
   }
 

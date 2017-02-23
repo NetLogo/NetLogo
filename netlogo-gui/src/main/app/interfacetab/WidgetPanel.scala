@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionListener, ActionEvent, FocusEvent, FocusListener, MouseEvent, MouseListener, MouseMotionListener }
+import java.awt.event.{ ActionListener, ActionEvent, FocusEvent, MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.Editable
@@ -39,14 +39,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetContainer
     with MouseListener
     with MouseMotionListener
-    with FocusListener
     with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler {
 
   import WidgetPanel.GridSnap
 
-  private[app] var _hasFocus: Boolean = false
   protected var selectionRect: Rectangle = null // convert to Option?
   protected var widgetCreator: WidgetCreator = null
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -80,7 +78,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   setBackground(AwtColor.WHITE)
   addMouseListener(this)
   addMouseMotionListener(this)
-  addFocusListener(this)
   setAutoscrolls(true)
   glassPane.setOpaque(false)
   glassPane.setVisible(false)
@@ -91,14 +88,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def requestFocus(): Unit = {
     requestFocusInWindow()
-  }
-
-  def focusGained(e: FocusEvent): Unit = {
-    _hasFocus = true
-  }
-
-  def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
   }
 
   override def getMinimumSize: Dimension =

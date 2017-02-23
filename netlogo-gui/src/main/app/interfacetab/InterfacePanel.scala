@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{Cursor, FileDialog => AwtFileDialog}
 import java.awt.image.BufferedImage
-import java.awt.event.{ActionEvent, ActionListener, FocusEvent, KeyEvent, KeyListener, MouseEvent}
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
 import java.io.{ File, FileOutputStream, IOException }
 import java.util.{ArrayList, List => JList}
 import javax.swing.{ Action, JMenuItem, JOptionPane, JPopupMenu }
@@ -27,6 +27,7 @@ import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
+  with FocusListener
   with KeyListener
   with LoadWidgetsEvent.Handler
   with UndoRedoActions {
@@ -45,12 +46,10 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override def focusGained(e: FocusEvent): Unit = {
     UndoManager.setCurrentManager(WidgetActions.undoManager)
-    _hasFocus = true
     enableButtonKeys(true)
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
     enableButtonKeys(false)
   }
 
