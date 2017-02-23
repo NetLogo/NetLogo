@@ -17,7 +17,7 @@ class AgentsetLazinessTransformerTests extends FunSuite {
     }
 
     def compileCommands(source: String) = {
-      compile("to __test [x] " + source + "\nend")
+      compile("globals [x] to __test " + source + "\nend")
         .statements.stmts.head.toString
     }
 
@@ -35,6 +35,7 @@ class AgentsetLazinessTransformerTests extends FunSuite {
   test("with forces evaluation") { new Helper {
     assertResult("_let[_force[_with[_turtles[], [_constboolean:true[]]]]]")(compileCommands("let foo turtles with [ true ]"))
     assertResult("_let[_force[_with[_with[_turtles[], [_constboolean:true[]]], [_constboolean:true[]]]]]")(compileCommands("let foo turtles with [ true ] with [ true ]"))
+    assertResult("_set[_force[_with[_turtles[], [_constboolean:true[]]]]]")(compileCommands("set x turtles with [ true ]"))
   } }
 
   test("other with forces evaluation") { new Helper {

@@ -4,6 +4,7 @@ package org.nlogo.compile
 package middle
 
 import org.nlogo.compile.api.{AstTransformer, Expression, ReporterApp, Statement}
+import org.nlogo.core.{Token, TokenType}
 import org.nlogo.nvm.AcceptsLazy
 import org.nlogo.prim._
 import org.nlogo.prim.etc._
@@ -20,14 +21,16 @@ class AgentsetLazinessTransformer extends AstTransformer {
               Seq(newApp.copy(args = innerArg ++ newApp.args.tail))
             case _ => Seq(newApp)
           }
-        new ReporterApp(_force.coreprim(), new _force(), forceArgs, newApp.sourceLocation)
+        val new_force = new _force()
+        new_force.token = new Token("", TokenType.Keyword, "")(app.sourceLocation)
+        new ReporterApp(_force.coreprim(), new _force(), forceArgs, app.sourceLocation)
 
       case _: AcceptsLazy =>
         val forceArgs = newApp.args.map {
           case ReporterApp(_, _: _force, innerArg, _) => innerArg.head
           case arg => arg
         }
-        new ReporterApp(app.coreReporter, app.reporter, forceArgs, newApp.sourceLocation)
+        new ReporterApp(app.coreReporter, app.reporter, forceArgs, app.sourceLocation)
 
       case _ => newApp
     }

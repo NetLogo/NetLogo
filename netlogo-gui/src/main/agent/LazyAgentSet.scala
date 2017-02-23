@@ -70,8 +70,9 @@ class LazyAgentSet(kind: core.AgentKind,
   // 3. agents that pass filters are immediately included in the resulting AgentSet
   // 4. filters don't change between calls to hasNext
   def force(): AgentSet = {
-    if (others.isEmpty && withs.isEmpty)
+    if (others.isEmpty && withs.isEmpty) {
       agentSet
+    }
     else {
       //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
       val it = iterator
