@@ -11,8 +11,10 @@ import org.nlogo.nvm.RuntimePrimitiveException
 class _other extends Reporter {
 
   def report(context: Context): AgentSet = {
-    val sourceSet = argEvalAgentSet(context, 0)
-    
+    report_1(context, argEvalAgentSet(context, 0))
+  }
+
+  def report_1(context: Context, sourceSet: AgentSet): AgentSet = {
     if (sourceSet.isInstanceOf[LazyAgentSet]) {
       sourceSet.asInstanceOf[LazyAgentSet].lazyOther(context.agent)
       sourceSet
@@ -20,5 +22,4 @@ class _other extends Reporter {
       new LazyAgentSet(sourceSet.kind, null, sourceSet, others = List(context.agent))
     }
   }
-
 }

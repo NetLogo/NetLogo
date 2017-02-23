@@ -858,6 +858,9 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
              FRAME SAME1 java/lang/Boolean
               ARETURN
           // parameter final  context
+          // parameter final  context
+          // parameter final  sourceSet
+          // parameter final  reporterBlock
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -895,83 +898,57 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/Context.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/agent/AgentSet;)V
           ASTORE 4
-          NEW java/util/ArrayList
-          DUP
-          INVOKESPECIAL java/util/ArrayList.<init> ()V
-          ASTORE 5
           ALOAD 3
           ALOAD 2
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Reporter.checkAgentSetClass (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
-          ASTORE 6
-         L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_setprocedurevariable_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context java/util/ArrayList org/nlogo/agent/AgentIterator] []
-          ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L6
-          ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
-          ASTORE 7
+          NEW org/nlogo/prim/WithFunction
+          DUP
           ALOAD 4
-          ALOAD 7
-          ALOAD 3
-          INVOKEVIRTUAL org/nlogo/nvm/Context.evaluateReporter (Lorg/nlogo/agent/Agent;Lorg/nlogo/nvm/Reporter;)Ljava/lang/Object;
-          ASTORE 8
-          ALOAD 8
-          INSTANCEOF java/lang/Boolean
-          IFNE L7
-          NEW org/nlogo/nvm/RuntimePrimitiveException
-          DUP
-          ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
-          ICONST_3
-          ANEWARRAY java/lang/Object
-          DUP
-          ICONST_0
           LDC "WITH"
-          AASTORE
-          DUP
-          ICONST_1
-          ALOAD 7
-          INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
-          AASTORE
-          DUP
-          ICONST_2
-          ALOAD 8
-          INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
-          AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L7
-         FRAME APPEND [org/nlogo/agent/Agent java/lang/Object]
-          ALOAD 8
-          CHECKCAST java/lang/Boolean
-          INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFEQ L8
+          ALOAD 3
+          INVOKESPECIAL org/nlogo/prim/WithFunction.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;Lorg/nlogo/nvm/Reporter;)V
+          ASTORE 5
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L5
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
           ALOAD 5
-          ALOAD 7
-          INVOKEINTERFACE java/util/List.add (Ljava/lang/Object;)Z
-          POP
-         L8
-         FRAME SAME
-          GOTO L5
-         L6
-         FRAME CHOP 2
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.lazyWith (Lscala/Function1;)V
+          ALOAD 2
+          GOTO L6
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_setprocedurevariable_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
+          ASTORE 6
+          GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          ICONST_1
+          ANEWARRAY org/nlogo/prim/WithFunction
+          DUP
+          ICONST_0
           ALOAD 5
-          ALOAD 5
-          INVOKEINTERFACE java/util/List.size ()I
-          ANEWARRAY org/nlogo/agent/Agent
-          INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
-          CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
-         L9
+          AASTORE
+          CHECKCAST [Ljava/lang/Object;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
+          ASTORE 7
+          GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
+          ASTORE 8
+          NEW org/nlogo/agent/LazyAgentSet
+          DUP
+          ALOAD 6
+          ACONST_NULL
+          ALOAD 2
+          ALOAD 8
+          ALOAD 7
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+         L6
+         FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -982,7 +959,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ALOAD 1
           BIPUSH 8
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L7
           RETURN
 [8]_asm_procedurego_ask_10 "ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ]" Object => void
       _procedurevariable:OVERLOADED-PATCHES "overloaded-patches" => Object

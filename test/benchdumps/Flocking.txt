@@ -1358,6 +1358,8 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           _turtles "turtles" => AgentSet
           _observervariable:VISION "vision" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  sourceSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
@@ -1449,40 +1451,41 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/core/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
          L11
           ASTORE 2
-          NEW org/nlogo/agent/AgentSetBuilder
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L12
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.lazyOther (Lorg/nlogo/agent/Agent;)V
+          ALOAD 2
+          GOTO L13
+         L12
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet D java/util/List] []
+          NEW org/nlogo/agent/LazyAgentSet
           DUP
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
+          ACONST_NULL
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
-          ASTORE 3
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
-          ASTORE 4
-         L12
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator java/lang/Object] []
-          ALOAD 4
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFEQ L13
-          ALOAD 4
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
-          ASTORE 5
+          GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          ICONST_1
+          ANEWARRAY org/nlogo/agent/Agent
+          DUP
+          ICONST_0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ALOAD 5
-          IF_ACMPEQ L14
-          ALOAD 3
-          ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
-         L14
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator org/nlogo/agent/Agent] []
-          GOTO L12
+          AASTORE
+          CHECKCAST [Ljava/lang/Object;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
+          GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$5 ()Lscala/collection/immutable/List;
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L13
-         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/agent/AgentSetBuilder org/nlogo/agent/AgentIterator java/lang/Object] []
-          ALOAD 3
-          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
-         L15
+         FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
          L2
           ALOAD 1
@@ -1491,9 +1494,9 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L3
-          GOTO L16
+          GOTO L14
          L4
-         FRAME SAME1 org/nlogo/api/AgentException
+         FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/AgentSet D java/util/List] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1503,12 +1506,12 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L16
+         L14
          FRAME SAME
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L17
+         L15
           RETURN
 [1]_asm_procedurefindflockmates_return_1 => void
          L0
