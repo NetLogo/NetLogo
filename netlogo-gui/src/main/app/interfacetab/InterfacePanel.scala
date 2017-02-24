@@ -22,7 +22,8 @@ import org.nlogo.log.Logger
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
   GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
   PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
-    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent}
+    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadBeginEvent, LoadWidgetsEvent,
+    RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
@@ -232,8 +233,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   override def handle(e: WidgetRemovedEvent): Unit = {
     // We use `raiseLater` to ensure that the WidgetRemovedEvent
     // propagates to the Compiler.
-    if (e.widget.findWidgetContainer eq this)
+    if ((e.widget.findWidgetContainer eq this) && ! unloading) {
       new CompileAllEvent().raiseLater(this)
+    }
   }
 
   def interfaceImage: BufferedImage =
@@ -241,6 +243,14 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   def handle(e: LoadWidgetsEvent): Unit = {
     loadWidgets(e.widgets)
+  }
+
+  private var unloading = false
+
+  override def handle(e: LoadBeginEvent): Unit = {
+    unloading = true
+    super.handle(e)
+    unloading = false
   }
 
   override def removeAllWidgets(): Unit = {
