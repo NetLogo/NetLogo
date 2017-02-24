@@ -23,7 +23,7 @@ class AgentsetLazinessTransformer extends AstTransformer {
           }
         val new_force = new _force()
         new_force.token = new Token("", TokenType.Keyword, "")(app.sourceLocation)
-        new ReporterApp(_force.coreprim(), new _force(), forceArgs, app.sourceLocation)
+        new ReporterApp(_force.coreprim(), new_force, forceArgs, app.sourceLocation)
 
       case _: AcceptsLazy =>
         val forceArgs = newApp.args.map {
