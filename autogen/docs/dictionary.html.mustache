@@ -6342,7 +6342,7 @@ show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
 =&gt; 3
 show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
-show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item ] (fput [] [1 2 3 4 5])
+show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
 </pre>
       <p>
