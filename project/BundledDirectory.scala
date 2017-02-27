@@ -1,5 +1,6 @@
 import sbt._
 import java.io.File
+import scala.language.postfixOps
 
 abstract class BundledDirectory(val sourceDir: File) {
   def directoryName: String
