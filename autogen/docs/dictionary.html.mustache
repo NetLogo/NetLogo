@@ -8288,6 +8288,9 @@ file-open user-new-file
       <pre>
 show user-input &quot;What is your name?&quot;
 </pre>
+      <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-message">
       <h3>
@@ -8297,12 +8300,18 @@ show user-input &quot;What is your name?&quot;
         <span class="prim_example">user-message <i>value</i></span>
       </h4>
       <p>
-        Opens a dialog with <i>value</i> displayed as the message.
+        Opens a dialog with <i>value</i> displayed as the message to the user.
       <p>
         <i>value</i> may be of any type, but is typically a string.
-      <pre>
+        <pre>
 user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 </pre>
+        <p>
+        Note that if a user closes the <code>user-message</code> dialog
+        with the &quot;X&quot; in the corner, the behavior will be the same as if they had clicked &quot;OK&quot;.
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-one-of">
       <h3>
@@ -8323,6 +8332,9 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-yes-or-no">
       <h3>
@@ -8340,6 +8352,9 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
 if user-yes-or-no? &quot;Set up the model?&quot;
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div><!-- ======================================== -->
   </div>
     <h2>

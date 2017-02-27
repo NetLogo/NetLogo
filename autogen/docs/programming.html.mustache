@@ -67,6 +67,8 @@
       <li>
         <a href="#ask-concurrent">Ask-Concurrent</a>
       <li>
+        <a href="#user-interaction">User Interaction Primitives</a>
+      <li>
         <a href="#tie">Tie</a>
       <li>
         <a href="#includes">Multiple source files</a>
@@ -3088,6 +3090,37 @@ while [any? turtles with [steps &gt; 0]] [
       the exact details of how <code>ask-concurrent</code> works. We make no
       guarantees that its semantics will remain the same in future versions
       of NetLogo, or that it will continue to be supported at all.
+    <h2>
+      <a>User Interaction Primitives</a>
+    </h2>
+    <p id="user-interaction">
+      NetLogo features several primitives which allow a model to interact with the user.
+      These primitives include <a href="dictionary.html#user-directory">user-directory</a>,
+      <a href="dictionary.html#user-file">user-file</a>, <a href="dictionary.html#user-new-file">user-new-file</a>,
+      <a href="dictionary.html#user-input">user-input</a>, <a href="dictionary.html#user-message">user-message</a>,
+      <a href="dictionary.html#user-one-of">user-one-of</a>, and <a href="dictionary.html#user-yes-or-no">user-yes-or-no?</a>.
+    <p>
+      These primitives differ in precisely what interaction they take with the user.
+      <code>user-directory</code>, <code>user-file</code>, and <code>user-new-file</code> are all reporters
+      which prompt the user to select an item from the file system and report the path of the
+      selected item to NetLogo. <code>user-yes-or-no?</code>, <code>user-one-of</code>, and <code>user-input</code>
+      all prompt the user to provide input in the form of text or a selection.
+      <code>user-message</code> simply presents a message to the user.
+    <p>
+      Note that all active forever buttons will pause when one of
+      these primitives is used and will resume only when the user
+      completes the interaction with the button.
+    <h3>
+      What does &quot;Halt&quot; mean?
+    </h3>
+    <p>
+      The primitives which prompt the user for input, as well as <code>user-message</code>
+      all provide a &quot;Halt&quot; button. The effect of this button is the same for
+      all of these primitives - it halts the model. When the model is halted all running
+      code is stopped, including buttons and the command center. Since halting stops
+      code in the middle of whatever it happened to be doing at the time it was halted,
+      you may see strange results if you continue to run the model after a halt
+      without setting it up again.
     <h2>
       <a>Tie</a>
     </h2>
