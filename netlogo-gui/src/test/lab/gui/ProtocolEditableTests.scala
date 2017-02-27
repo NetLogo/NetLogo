@@ -24,7 +24,7 @@ class ProtocolEditableTests extends FunSuite {
       override def readFromString(s: String): AnyRef =
         compiler.readFromString(s)
     }
-    val protocolLines = FileIO.file2String("test/lab/protocols.xml").lines.toArray
+    val protocolLines = FileIO.fileToString("test/lab/protocols.xml").lines.toArray
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
     protocols.foreach { protocol =>
       val editedProtocol = new ProtocolEditable(protocol, null, workspace, new AnyRef).get.get

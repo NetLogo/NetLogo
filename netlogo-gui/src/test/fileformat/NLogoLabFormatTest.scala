@@ -25,5 +25,5 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   testRoundTripsObjectForm("empty list of experiment protocols", Seq())
   testRoundTripsObjectForm("a simple experiment protocol", Seq(expectedProto))
   testRoundTripsSerialForm("a multi-experiment protocol", testBehaviorSpaceXml("BehaviorSpaceMultiples.xml"))
-  testRoundTripsSerialForm("all test protocols", FileIO.file2String("test/lab/protocols.xml").lines.toArray)
+  testRoundTripsSerialForm("all test protocols", FileIO.fileToString("test/lab/protocols.xml").lines.toArray)
 }

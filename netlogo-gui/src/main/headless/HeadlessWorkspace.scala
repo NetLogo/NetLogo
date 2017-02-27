@@ -22,6 +22,8 @@ import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
 
+import scala.io.Codec
+
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
  */
@@ -500,7 +502,7 @@ with org.nlogo.api.ViewSettings {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
         if (compilerTestingMode &&
-            FileIO.file2String(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
+            FileIO.fileToString(path)(Codec.UTF8).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
           System.out.println("ignored compile error: " + path)
         else throw ex
     }

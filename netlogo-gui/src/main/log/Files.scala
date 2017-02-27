@@ -4,8 +4,10 @@ package org.nlogo.log
 
 import java.util.zip.ZipOutputStream
 import java.io.FileOutputStream
-import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.FileIO.fileToString
 import org.nlogo.api.Exceptions.ignoring
+
+import scala.io.Codec
 
 object Files {
 
@@ -36,7 +38,7 @@ object Files {
           // move on. ev 3/14/07
           ignoring(classOf[java.io.IOException]) {
             val fullPath = path + System.getProperty("file.separator") + file
-            val data = file2String(fullPath).getBytes
+            val data = fileToString(fullPath)(Codec.UTF8).getBytes
             out.putNextEntry(new java.util.zip.ZipEntry(file))
             out.write(data, 0, data.length)
             out.closeEntry()

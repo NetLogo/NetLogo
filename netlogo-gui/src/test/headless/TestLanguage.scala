@@ -8,7 +8,7 @@ import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Comman
 import org.scalatest.{FunSuite, Tag}
 import org.scalatest.exceptions.TestFailedException
 import org.nlogo.api.{SimpleJobOwner, Version, WorldDimensions3D}
-import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.FileIO.fileToString
 import java.io.File
 import org.nlogo.util.{Utils, SlowTest}
 
@@ -163,7 +163,7 @@ object TestParser {
         f.getParentFile.getName
       else
         f.getName.replace(".txt", "")
-    parseString(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
+    parseString(suiteName, preprocessStackTraces(fileToString(f.getAbsolutePath)))
   }
   def parseString(suiteName: String, s: String): List[LanguageTest] = {
     Parser.parse(suiteName, s)

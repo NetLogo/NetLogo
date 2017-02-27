@@ -22,6 +22,6 @@ class CodeToHtmlTests extends FunSuite with SlowTest {
     // very long Code tabs shouldn't blow the stack.
     test("don't blow stack", SlowTest.Tag) {
       val path = "models/test/Really Long Code.nls"
-      assertResult(1011109)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)
+      assertResult(1011109)(convert(FileIO.fileToString(path).replaceAll("\r\n", "\n")).size)
     }
 }

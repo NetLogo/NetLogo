@@ -35,7 +35,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def withoutFirst6Lines(s: String) =
     s.split("\n").drop(6).mkString("", "\n", "\n")
   def slurp(path: String) =
-    stripLineFeeds(FileIO.file2String(path))
+    stripLineFeeds(FileIO.fileToString(path))
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 
