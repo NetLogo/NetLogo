@@ -7312,10 +7312,20 @@ show sin 270
         Or, if the input is an agentset or a list containing at least one
         agent, a sorted list of agents (never an agentset) is reported;
         non-agents are ignored. Agents are sorted in the same order the
-        &lt; operator uses.
+        &lt; operator uses. (Patches are sorted with the top left-most patch first
+        and the bottom right-most patch last, turtles are sorted by <code>who</code>
+        number).
       <pre>
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
+show sort [2 1 "a"]
+=&gt; [1 2]
+show sort (list "a" "c" "b" (patch 0 0))
+=&gt; ["a" "b" "c"]
+show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
+=&gt; [(patch 0 1) (patch 0 0) (patch 1 0)]
+
+;; label patches with numbers in left-to-right, top-to-bottom order
 let n 0
 foreach sort patches [ the-patch -&gt;
   ask the-patch [
@@ -7323,8 +7333,14 @@ foreach sort patches [ the-patch -&gt;
     set n n + 1
   ]
 ]
-;; patches are labeled with numbers in left-to-right,
-;; top-to-bottom order
+
+;; some additional examples to clarify behavior in strange cases
+show sort (list patch 0 0 patch 0 1 patch 1 0 turtle 0 turtle 1) ; turtles are always sorted lower than patches
+=&gt; [(turtle 0) (turtle 1) (patch 0 1) (patch 0 0) (patch 1 0)]
+show sort (list nobody false true) ; booleans and nobody cannot be sorted
+=&gt; []
+show sort (list [1 2 3] turtles) ; lists and agentsets are not included if they are inside a list passed to sort
+=&gt; []
 </pre>
       <p>
         See also <a href="#sort-by">sort-by</a>, <a href="#sort-on">sort-on</a>.
