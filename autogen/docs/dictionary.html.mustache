@@ -2890,10 +2890,16 @@ show floor -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Similar to ride, but, in the 3D view, the observer's vantage
+        Similar to ride, but, in the 3D view, the observer&apos;s vantage
         point is behind and above <i>turtle</i>.
       <p>
-        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>follow</code> will alter the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        the followed turtle instead.
+      <p>
+        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>,
+        <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
       </div>
     <div class="dict_entry" id="follow-me">
       <h3>
@@ -2905,6 +2911,11 @@ show floor -4.5
       </h4>
       <p>
         Asks the observer to follow this turtle.
+      <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>follow-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        this turtle instead.
       <p>
         See also <a href="#follow">follow</a>.
       </div>
@@ -6631,6 +6642,11 @@ show reverse &quot;live&quot;
         3D view it is as if looking through the eyes of the turtle. If the
         turtle dies, the perspective resets to the default.
       <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting the ridden turtle instead.
+      <p>
         See also <a href="#reset-perspective">reset-perspective</a>,
         <a href="#watch">watch</a>, <a href="#follow">follow</a>, <a href="#subject">subject</a>.
       </div>
@@ -6644,6 +6660,11 @@ show reverse &quot;live&quot;
       </h4>
       <p>
         Asks the observer to ride this turtle.
+      <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting this turtle instead.
       <p>
         See also <a href="#ride">ride</a>.
       </div>
@@ -8438,7 +8459,13 @@ repeat 10 [ fd 1 wait 0.5 ]
         Puts a spotlight on <i>agent</i>. In the 3D view the observer will
         also turn to face the subject.
       <p>
-        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch-me">watch-me</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch-me">watch-me</a>.
       </div>
     <div class="dict_entry" id="watch-me">
       <h3>
@@ -8451,7 +8478,13 @@ repeat 10 [ fd 1 wait 0.5 ]
       <p>
         Asks the observer to watch this agent.
       <p>
-        See also <a href="#watch">watch</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch">watch</a>.
       </div>
     <div class="dict_entry" id="while">
       <h3>
