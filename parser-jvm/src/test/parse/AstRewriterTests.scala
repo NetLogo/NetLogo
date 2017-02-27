@@ -55,11 +55,16 @@ class AstRewriterTests extends FunSuite {
       replaceReporterToken("ifelse true = false [ __hsb-old 1 2 3 ] [ __hsb-old 4 5 6 ]",
         "hsb" -> "__hsb-old"))
     assertResult("is-an-agent? one-of turtles")(replaceReporterToken("is-agent? one-of turtles", "is-agent?" -> "is-an-agent?"))
+    assertResult("; is-agent? checks for turtles")(
+      replaceReporterToken("; is-agent? checks for turtles", "is-agent?" -> "is-an-agent?"))
+    assertResult("is-an-agent? one-of turtles ; is-agent? checks for turtles")(
+      replaceReporterToken("is-agent? one-of turtles ; is-agent? checks for turtles", "is-agent?" -> "is-an-agent?"))
   }
 
   test("remove command") {
     assertResult("")(remove("fd 1", "fd"))
     assertResult("bk 1")(remove("fd 1 bk 1", "fd"))
+    assertResult("; bk 1")(remove("; bk 1\n", "bk"))
     assertResult("create-turtles 10 [ fd 1 ]")(remove("create-turtles 10 [ fd 1 ]", "bk"))
     assertResult("create-turtles 10 [ ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
     assertResult("ask turtles [ ask one-of other turtles [ ] ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
@@ -71,6 +76,7 @@ class AstRewriterTests extends FunSuite {
   test("adds new command based on existing command") {
     assertResult("fd 1 bk 1")(addCommand("bk 1", "bk" -> "fd 1"))
     assertResult("fd 2 bk 2")(addCommand("bk 2", "bk" -> "fd {0}"))
+    assertResult("; bk 2")(addCommand("; bk 2\n", "bk" -> "fd {0}"))
     assertResult("fd exp 10 bk exp 10")(addCommand("bk exp 10", "bk" -> "fd {0}"))
     assertResult("set foo exp 10 bk exp 10")(addCommand("bk exp 10", "bk" -> "set foo {0}"))
     assertResult("set foo 2 setxy 1 2")(addCommand("setxy 1 2", "setxy" -> "set foo {1}"))
@@ -82,6 +88,7 @@ class AstRewriterTests extends FunSuite {
   test("rename command and manipulate arguments") {
     assertResult("file-close-all")(replaceCommand("file-close", "file-close" -> "file-close-all"))
     assertResult("fd 1")(replaceCommand("bk 1", "bk" -> "fd 1"))
+    assertResult("; bk 1")(replaceCommand("; bk 1\n", "bk" -> "fd 1"))
     assertResult("fd exp 3")(replaceCommand("bk exp 3", "bk" -> "fd {0}"))
     assertResult("fd exp 3")(replaceCommand("setxy 2 exp 3", "setxy" -> "fd {1}"))
     assertResult("(fd exp 3)")(replaceCommand("setxy 2 exp 3", "setxy" -> "(fd {1})"))
@@ -93,6 +100,7 @@ class AstRewriterTests extends FunSuite {
     assertResult("true")(replaceReporter("false", "false" -> "true")) // reality only exists in the mind
     assertResult("pi")(replaceReporter("e", "e" -> "pi"))
     assertResult("distance one-of other turtles")(replaceReporter("distance one-of turtles", "turtles" -> "other turtles"))
+    assertResult("2 ; 1 + 2")(replaceReporter("2 ; 1 + 2\n", "1" -> "2"))
     assertResult("2 + 2")(replaceReporter("1 + 2", "1" -> "2"))
     assertResult("2 + 2 + 2")(replaceReporter("1 + 2", "1" -> "2 + 2"))
     assertResult("2 + 2 + 2")(replaceReporter("2 + 1", "1" -> "2 + 2"))

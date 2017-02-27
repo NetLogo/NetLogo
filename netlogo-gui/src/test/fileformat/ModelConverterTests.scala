@@ -161,6 +161,24 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     assertResult(convertedSource)(converted.code)
   }
 
+  test("doesn't try to convert movie prims if they're all commented out") {
+    val originalSource =
+      """|to maybe-error
+         |  ; movie-cancel; movie stuff
+         |  ; movie-start "kinomodel2.mov"
+         |  ; movie-set-frame-rate 10
+         |  ; repeat 365 * 3
+         |  ; [  go
+         |  ;   movie-grab-view
+         |  ; ]
+         |end""".stripMargin
+    val conversionSet = AutoConversionList.conversions
+      .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
+      .map(_._2)
+    val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
+    assertResult(originalSource)(convert(Model(code = originalSource), conversionSet: _*).code)
+  }
+
   test("converts movie prims in the presence of tasks") {
     val originalSource =
       """|to start
