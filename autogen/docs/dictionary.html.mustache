@@ -235,6 +235,7 @@ Go figure! - ST 12/2/04
       <a href="#is-of-type">is-directed-link?</a>
       <a href="#is-of-type">is-link?</a>
       <a href="#is-of-type">is-link-set?</a>
+      <a href="#is-of-type">is-<i>&lt;link-breed&gt;</i>?</a>
       <a href="#is-of-type">is-undirected-link?</a>
       <a href="#layout-radial">layout-radial</a>
       <a href="#layout-spring">layout-spring</a>
@@ -1027,6 +1028,12 @@ show 5 * 6 + 6 / 3
 show 5 * (6 + 6) / 3
 =&gt; 20
 </pre>
+      <p>
+        Many extension objects may be tested for equality and inequality
+        using = and !=.
+        For instance, the array, matrix, and table objects returned by their
+        respective extensions may be compared for equality / inequality.
+        Extension objects may not be tested using &lt;, &gt;, &lt;=, or &gt;=.
     </div>
     <div class="dict_entry" id="asin">
       <h3>
@@ -2890,10 +2897,16 @@ show floor -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Similar to ride, but, in the 3D view, the observer's vantage
+        Similar to ride, but, in the 3D view, the observer&apos;s vantage
         point is behind and above <i>turtle</i>.
       <p>
-        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>follow</code> will alter the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        the followed turtle instead.
+      <p>
+        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>,
+        <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
       </div>
     <div class="dict_entry" id="follow-me">
       <h3>
@@ -2905,6 +2918,11 @@ show floor -4.5
       </h4>
       <p>
         Asks the observer to follow this turtle.
+      <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>follow-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        this turtle instead.
       <p>
         See also <a href="#follow">follow</a>.
       </div>
@@ -2925,7 +2943,7 @@ foreach [1.1 2.2 2.6] show
 =&gt; 1.1
 =&gt; 2.2
 =&gt; 2.6
-foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round i) ]
+foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round x) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
 =&gt; 2.6 -&gt; 3
@@ -3931,6 +3949,7 @@ show int -3.5
         <span class="prim_example">is-anonymous-reporter? <i>value</i></span>
         <span class="prim_example">is-boolean? <i>value</i></span>
         <span class="prim_example">is-<i>&lt;breed&gt;</i>? <i>value</i></span>
+        <span class="prim_example">is-<i>&lt;link-breed&gt;</i>? <i>value</i></span>
         <span class="prim_example">is-directed-link? <i>value</i></span>
         <span class="prim_example">is-link? <i>value</i></span>
         <span class="prim_example">is-link-set? <i>value</i></span>
@@ -6342,7 +6361,7 @@ show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
 =&gt; 3
 show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
-show reduce [ [result-so-far next-item] -&gt; fput result-so-far next-item ] (fput [] [1 2 3 4 5])
+show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
 </pre>
       <p>
@@ -6631,6 +6650,11 @@ show reverse &quot;live&quot;
         3D view it is as if looking through the eyes of the turtle. If the
         turtle dies, the perspective resets to the default.
       <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting the ridden turtle instead.
+      <p>
         See also <a href="#reset-perspective">reset-perspective</a>,
         <a href="#watch">watch</a>, <a href="#follow">follow</a>, <a href="#subject">subject</a>.
       </div>
@@ -6644,6 +6668,11 @@ show reverse &quot;live&quot;
       </h4>
       <p>
         Asks the observer to ride this turtle.
+      <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting this turtle instead.
       <p>
         See also <a href="#ride">ride</a>.
       </div>
@@ -7312,10 +7341,20 @@ show sin 270
         Or, if the input is an agentset or a list containing at least one
         agent, a sorted list of agents (never an agentset) is reported;
         non-agents are ignored. Agents are sorted in the same order the
-        &lt; operator uses.
+        &lt; operator uses. (Patches are sorted with the top left-most patch first
+        and the bottom right-most patch last, turtles are sorted by <code>who</code>
+        number).
       <pre>
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
+show sort [2 1 "a"]
+=&gt; [1 2]
+show sort (list "a" "c" "b" (patch 0 0))
+=&gt; ["a" "b" "c"]
+show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
+=&gt; [(patch 0 1) (patch 0 0) (patch 1 0)]
+
+;; label patches with numbers in left-to-right, top-to-bottom order
 let n 0
 foreach sort patches [ the-patch -&gt;
   ask the-patch [
@@ -7323,8 +7362,14 @@ foreach sort patches [ the-patch -&gt;
     set n n + 1
   ]
 ]
-;; patches are labeled with numbers in left-to-right,
-;; top-to-bottom order
+
+;; some additional examples to clarify behavior in strange cases
+show sort (list patch 0 0 patch 0 1 patch 1 0 turtle 0 turtle 1) ; turtles are always sorted lower than patches
+=&gt; [(turtle 0) (turtle 1) (patch 0 1) (patch 0 0) (patch 1 0)]
+show sort (list nobody false true) ; booleans and nobody cannot be sorted
+=&gt; []
+show sort (list [1 2 3] turtles) ; lists and agentsets are not included if they are inside a list passed to sort
+=&gt; []
 </pre>
       <p>
         See also <a href="#sort-by">sort-by</a>, <a href="#sort-on">sort-on</a>.
@@ -8288,6 +8333,9 @@ file-open user-new-file
       <pre>
 show user-input &quot;What is your name?&quot;
 </pre>
+      <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-message">
       <h3>
@@ -8297,12 +8345,18 @@ show user-input &quot;What is your name?&quot;
         <span class="prim_example">user-message <i>value</i></span>
       </h4>
       <p>
-        Opens a dialog with <i>value</i> displayed as the message.
+        Opens a dialog with <i>value</i> displayed as the message to the user.
       <p>
         <i>value</i> may be of any type, but is typically a string.
-      <pre>
+        <pre>
 user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 </pre>
+        <p>
+        Note that if a user closes the <code>user-message</code> dialog
+        with the &quot;X&quot; in the corner, the behavior will be the same as if they had clicked &quot;OK&quot;.
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-one-of">
       <h3>
@@ -8323,6 +8377,9 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-yes-or-no">
       <h3>
@@ -8340,6 +8397,9 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
 if user-yes-or-no? &quot;Set up the model?&quot;
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div><!-- ======================================== -->
   </div>
     <h2>
@@ -8407,7 +8467,13 @@ repeat 10 [ fd 1 wait 0.5 ]
         Puts a spotlight on <i>agent</i>. In the 3D view the observer will
         also turn to face the subject.
       <p>
-        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch-me">watch-me</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch-me">watch-me</a>.
       </div>
     <div class="dict_entry" id="watch-me">
       <h3>
@@ -8420,7 +8486,13 @@ repeat 10 [ fd 1 wait 0.5 ]
       <p>
         Asks the observer to watch this agent.
       <p>
-        See also <a href="#watch">watch</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch">watch</a>.
       </div>
     <div class="dict_entry" id="while">
       <h3>
