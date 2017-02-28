@@ -67,11 +67,11 @@ trait LinkManager {
 
   def outNeighbors(src: Turtle, linkBreed: AgentSet): Array[Turtle]
   def inNeighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle]
-  def neighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle]
+  def neighbors(target: Turtle, linkSet: AgentSet): Array[Turtle]
 
   def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link]
   def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link]
-  def links(target: Turtle, linkBreed: AgentSet): Array[Link]
+  def links(target: Turtle, linkSet: AgentSet): Array[Link]
 
 }
 
