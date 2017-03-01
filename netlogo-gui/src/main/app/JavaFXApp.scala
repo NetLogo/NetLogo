@@ -1,0 +1,96 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
+
+package org.nlogo.app
+
+import javafx.application.Application
+import javafx.stage.Stage
+import org.nlogo.util.Pico
+
+
+import org.nlogo.api._
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
+  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
+import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
+
+import org.picocontainer.adapters.AbstractAdapter
+
+class JavaFXApp extends Application {
+
+  private val pico = new Pico()
+
+  /**
+   * Should be called once at startup to create the application and
+   * start it running.  May not be called more than once.  Once
+   * this method has called, the singleton instance of this class
+   * is stored in <code>app</code>.
+   *
+   * <p>This method must <strong>not</strong> be called from the AWT event
+   * queue thread.
+   *
+   * @param args Should be empty. (Passing non-empty arguments
+   *             is not currently documented.)
+   */
+  override def init(): Unit = {
+    AbstractWorkspace.isApp(true)
+    AbstractWorkspace.isApplet(false)
+
+    pico.add("org.nlogo.compile.Compiler")
+    if (Version.is3D)
+      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
+    else
+      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
+
+    class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
+      import scala.collection.JavaConverters._
+
+      def getDescriptor(): String = "ModelLoaderComponent"
+      def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
+
+      def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
+        val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
+        val compilerServices = new DefaultCompilerServices(compiler)
+
+        val loader =
+          fileformat.standardLoader(compilerServices)
+        val additionalComponents =
+          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
+        if (additionalComponents.nonEmpty)
+          additionalComponents.foldLeft(loader) {
+            case (l, serialization) =>
+              l.addSerializer[Array[String], NLogoFormat](serialization)
+          }
+        else
+          loader
+      }
+    }
+
+    pico.addAdapter(new ModelLoaderComponent())
+
+    class ModelConverterComponent extends AbstractAdapter[ModelConversion](classOf[ModelConversion], classOf[ModelConverter]) {
+      import scala.collection.JavaConverters._
+
+      def getDescriptor(): String = "ModelConverterComponent"
+      def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
+
+      def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
+        val workspace = container.getComponent(classOf[org.nlogo.api.Workspace])
+
+        val allAutoConvertables =
+          fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable]).asScala
+
+        fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, allAutoConvertables)(container.getComponent(classOf[Dialect]))
+      }
+    }
+
+    pico.addAdapter(new ModelConverterComponent())
+
+    pico.addComponent(classOf[ModelSaver])
+    pico.addComponent(classOf[JavaFXApp], this)
+  }
+
+  override def start(primaryStage: Stage): Unit = {
+
+  }
+}
