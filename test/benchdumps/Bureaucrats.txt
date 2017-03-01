@@ -773,94 +773,97 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_procedurego_setprocedurevariable_8 "let active-patches with [ n > 3 ]" Object => void
-      _with "active-patches with [ n > 3 ]" AgentSet,Reporter => AgentSet
-        _procedurevariable:ACTIVE-PATCHES "active-patches" => Object
-        _asm_procedurego_greaterthan_9 "n > 3" Object,double => boolean
-          _patchvariable:N "n" => Object
-          _constdouble:3.0 "3" => double
-              // parameter final  context
-              TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-             L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ICONST_5
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-             L1
-              GOTO L3
-             L2
-             FRAME SAME1 org/nlogo/api/AgentException
-              ASTORE 2
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              ALOAD 2
-              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L3
-             FRAME SAME1 java/lang/Object
-              LDC 3.0
-             L4
-              DSTORE 3
-              ASTORE 2
-              ALOAD 2
-              INSTANCEOF java/lang/Double
-              IFEQ L5
-              ALOAD 2
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DLOAD 3
-              DCMPL
-              IFLE L6
-              ICONST_1
-              GOTO L7
-             L6
-             FRAME APPEND [java/lang/Object D]
-              ICONST_0
-             L7
-             FRAME SAME1 I
-              GOTO L8
-             L5
-             FRAME SAME
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-              LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
-              ICONST_2
-              ANEWARRAY java/lang/Object
-              DUP
-              ICONST_0
-              ALOAD 2
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              DUP
-              ICONST_1
-              DLOAD 3
-              INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L8
-             FRAME SAME1 I
-              IFEQ L9
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L10
-             L9
-             FRAME SAME
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L10
-             FRAME SAME1 java/lang/Boolean
-              ARETURN
+[7]_asm_procedurego_setprocedurevariable_8 "let active-patches with [n > 3] active-patches with [ n > 3 ]" Object => void
+      _force "active-patches with [n > 3] active-patches with [ n > 3 ]" AgentSet => AgentSet
+        _with "active-patches with [ n > 3 ]" AgentSet,Reporter => AgentSet
+          _procedurevariable:ACTIVE-PATCHES "active-patches" => Object
+          _asm_procedurego_greaterthan_9 "n > 3" Object,double => boolean
+            _patchvariable:N "n" => Object
+            _constdouble:3.0 "3" => double
+                // parameter final  context
+                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ICONST_5
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+               L1
+                GOTO L3
+               L2
+               FRAME SAME1 org/nlogo/api/AgentException
+                ASTORE 2
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 2
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L3
+               FRAME SAME1 java/lang/Object
+                LDC 3.0
+               L4
+                DSTORE 3
+                ASTORE 2
+                ALOAD 2
+                INSTANCEOF java/lang/Double
+                IFEQ L5
+                ALOAD 2
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DLOAD 3
+                DCMPL
+                IFLE L6
+                ICONST_1
+                GOTO L7
+               L6
+               FRAME APPEND [java/lang/Object D]
+                ICONST_0
+               L7
+               FRAME SAME1 I
+                GOTO L8
+               L5
+               FRAME SAME
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+                LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
+                ICONST_2
+                ANEWARRAY java/lang/Object
+                DUP
+                ICONST_0
+                ALOAD 2
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                DUP
+                ICONST_1
+                DLOAD 3
+                INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L8
+               FRAME SAME1 I
+                IFEQ L9
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L10
+               L9
+               FRAME SAME
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L10
+               FRAME SAME1 java/lang/Boolean
+                ARETURN
           // parameter final  context
           // parameter final  context
           // parameter final  sourceSet
           // parameter final  reporterBlock
+          // parameter final  context
+          // parameter final  sourceSet
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -889,7 +892,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L4
          FRAME SAME1 org/nlogo/agent/AgentSet
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_setprocedurevariable_8.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+          GETFIELD org/nlogo/prim/_asm_procedurego_setprocedurevariable_8.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -950,6 +953,19 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L6
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L7
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+          GOTO L8
+         L7
+         FRAME SAME
+          ALOAD 2
+         L8
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
@@ -959,7 +975,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ALOAD 1
           BIPUSH 8
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L7
+         L9
           RETURN
 [8]_asm_procedurego_ask_10 "ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ]" Object => void
       _procedurevariable:OVERLOADED-PATCHES "overloaded-patches" => Object
@@ -1577,7 +1593,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[19]_asm_procedurego_while_23 "while [ any? active-patches ] let active-patches with [ n > 3 ] ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ] [ set active-patches patch-set [ neighbors4 ] of overloaded-patches ]" boolean => void
+[19]_asm_procedurego_while_23 "while [ any? active-patches ] let active-patches with [n > 3] active-patches with [ n > 3 ] ask overloaded-patches set n n - 4 set total total - 4 colorize [ ask neighbors4 set n n + 1 set total total + 1 [ colorize ] ] [ set active-patches patch-set [ neighbors4 ] of overloaded-patches ]" boolean => void
       _any "any? active-patches" AgentSet => boolean
         _procedurevariable:ACTIVE-PATCHES "active-patches" => Object
           // parameter final  context

@@ -7721,131 +7721,134 @@ procedure DRAW-VERT-LINE:[XVAL]{OTPL}:
           RETURN
 
 procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
-[0]_asm_procedurefadepatches_setprocedurevariable_0 "let patches with [ pcolor != yellow and pcolor != black ]" Object => void
-      _with "patches with [ pcolor != yellow and pcolor != black ]" AgentSet,Reporter => AgentSet
-        _patches "patches" => AgentSet
-        _asm_procedurefadepatches_and_1 "pcolor != yellow and pcolor != black"
-          _notequal "pcolor != yellow" Object,double => boolean
-            _patchvariable:PCOLOR "pcolor" => Object
-            _constdouble:45.0 "yellow" => double
-          _notequal "pcolor != black" Object,double => boolean
-            _patchvariable:PCOLOR "pcolor" => Object
-            _constdouble:0.0 "black" => double
-              // parameter final  context
-              // parameter final  context
-              TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-              TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
-             L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ICONST_2
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-             L1
-              GOTO L6
-             L2
-             FRAME SAME1 org/nlogo/api/AgentException
-              ASTORE 2
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              ALOAD 2
-              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L6
-             FRAME SAME1 java/lang/Object
-              LDC 45.0
-             L7
-              DSTORE 3
-              ASTORE 2
-              ALOAD 2
-              INSTANCEOF java/lang/Double
-              IFEQ L8
-              DLOAD 3
-              ALOAD 2
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPL
-              IFEQ L9
-             L8
-             FRAME APPEND [java/lang/Object D]
-              ICONST_1
-              GOTO L10
-             L9
-             FRAME SAME
-              ICONST_0
-             L10
-             FRAME SAME1 I
-              IFEQ L11
-             L3
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ICONST_2
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-             L4
-              GOTO L12
-             L5
-             FRAME SAME1 org/nlogo/api/AgentException
-              ASTORE 2
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              ALOAD 2
-              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L12
-             FRAME SAME1 java/lang/Object
-              DCONST_0
-             L13
-              DSTORE 3
-              ASTORE 2
-              ALOAD 2
-              INSTANCEOF java/lang/Double
-              IFEQ L14
-              DLOAD 3
-              ALOAD 2
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPL
-              IFEQ L15
-             L14
-             FRAME SAME
-              ICONST_1
-              GOTO L16
-             L15
-             FRAME SAME
-              ICONST_0
-             L16
-             FRAME SAME1 I
-              GOTO L17
-             L11
-             FRAME SAME
-              ICONST_0
-             L17
-             FRAME SAME1 I
-              IFEQ L18
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L19
-             L18
-             FRAME SAME
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L19
-             FRAME SAME1 java/lang/Boolean
-              ARETURN
+[0]_asm_procedurefadepatches_setprocedurevariable_0 "let patches with [(pcolor != yellow) and (pcolor != black)] patches with [ pcolor != yellow and pcolor != black ]" Object => void
+      _force "patches with [(pcolor != yellow) and (pcolor != black)] patches with [ pcolor != yellow and pcolor != black ]" AgentSet => AgentSet
+        _with "patches with [ pcolor != yellow and pcolor != black ]" AgentSet,Reporter => AgentSet
+          _patches "patches" => AgentSet
+          _asm_procedurefadepatches_and_1 "pcolor != yellow and pcolor != black"
+            _notequal "pcolor != yellow" Object,double => boolean
+              _patchvariable:PCOLOR "pcolor" => Object
+              _constdouble:45.0 "yellow" => double
+            _notequal "pcolor != black" Object,double => boolean
+              _patchvariable:PCOLOR "pcolor" => Object
+              _constdouble:0.0 "black" => double
+                // parameter final  context
+                // parameter final  context
+                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ICONST_2
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+               L1
+                GOTO L6
+               L2
+               FRAME SAME1 org/nlogo/api/AgentException
+                ASTORE 2
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 2
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L6
+               FRAME SAME1 java/lang/Object
+                LDC 45.0
+               L7
+                DSTORE 3
+                ASTORE 2
+                ALOAD 2
+                INSTANCEOF java/lang/Double
+                IFEQ L8
+                DLOAD 3
+                ALOAD 2
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPL
+                IFEQ L9
+               L8
+               FRAME APPEND [java/lang/Object D]
+                ICONST_1
+                GOTO L10
+               L9
+               FRAME SAME
+                ICONST_0
+               L10
+               FRAME SAME1 I
+                IFEQ L11
+               L3
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ICONST_2
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+               L4
+                GOTO L12
+               L5
+               FRAME SAME1 org/nlogo/api/AgentException
+                ASTORE 2
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 2
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L12
+               FRAME SAME1 java/lang/Object
+                DCONST_0
+               L13
+                DSTORE 3
+                ASTORE 2
+                ALOAD 2
+                INSTANCEOF java/lang/Double
+                IFEQ L14
+                DLOAD 3
+                ALOAD 2
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPL
+                IFEQ L15
+               L14
+               FRAME SAME
+                ICONST_1
+                GOTO L16
+               L15
+               FRAME SAME
+                ICONST_0
+               L16
+               FRAME SAME1 I
+                GOTO L17
+               L11
+               FRAME SAME
+                ICONST_0
+               L17
+               FRAME SAME1 I
+                IFEQ L18
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L19
+               L18
+               FRAME SAME
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L19
+               FRAME SAME1 java/lang/Boolean
+                ARETURN
           // parameter final  context
           // parameter final  context
           // parameter final  sourceSet
           // parameter final  reporterBlock
+          // parameter final  context
+          // parameter final  sourceSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurefadepatches_setprocedurevariable_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefadepatches_setprocedurevariable_0.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+          GETFIELD org/nlogo/prim/_asm_procedurefadepatches_setprocedurevariable_0.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -7906,6 +7909,19 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L4
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+          GOTO L5
+         L4
+         FRAME SAME
+          ALOAD 2
+         L5
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
@@ -7915,7 +7931,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L4
+         L6
           RETURN
 [1]_asm_procedurefadepatches_ifelse_2 "ifelse any? trace-patches [ ask trace-patches set pcolor pcolor - 0.4 [ if not trace? or round pcolor = black [ set pcolor black ] ] ] [ set fade-needed? false ]" boolean => void
       _any "any? trace-patches" AgentSet => boolean
@@ -9793,115 +9809,118 @@ procedure GO:[OLD-CLOCK]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[34]_asm_procedurego_ask_35 "ask flashes with [ ticks - birthday > 0.4 ] set pcolor yellow [ die ]" AgentSet => void
-      _with "flashes with [ ticks - birthday > 0.4 ]" AgentSet,Reporter => AgentSet
-        _breed:FLASHES "flashes" => AgentSet
-        _asm_procedurego_greaterthan_36 "ticks - birthday > 0.4" double,double => boolean
-          _minus "ticks - birthday" double,double => double
-            _ticks "ticks" => double
-            _breedvariable:BIRTHDAY "birthday" => Object
-          _constdouble:0.4 "0.4" => double
-              // parameter final  context
-              TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-              TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
-             L5
-              ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedurego_greaterthan_36.world : Lorg/nlogo/agent/World;
-              INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
-              DSTORE 2
-              DLOAD 2
-              LDC -1.0
-              DCMPL
-              IFNE L6
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-              LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-              INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L6
-             FRAME APPEND [D]
-              DLOAD 2
-             L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              LDC "BIRTHDAY"
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getBreedVariable (Ljava/lang/String;)Ljava/lang/Object;
-             L1
-              GOTO L7
-             L2
-             FRAME SAME1 org/nlogo/api/AgentException
-              ASTORE 2
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              ALOAD 2
-              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L7
-             FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context D] [D java/lang/Object]
-              ASTORE 2
-             L3
-              ALOAD 2
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              GOTO L8
-             L4
-             FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
-              POP
-              NEW org/nlogo/nvm/ArgumentTypeException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              BIPUSH 1
-              LDC 1
-              ALOAD 2
-              INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
-              ATHROW
-             L8
-             FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context java/lang/Object] [D D]
-              DSTORE 4
-              DSTORE 2
-              ALOAD 0
-              DLOAD 2
-              DLOAD 4
-              DSUB
-              ALOAD 1
-              INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_greaterthan_36.validDouble (DLorg/nlogo/nvm/Context;)D
-             L9
-              LDC 0.4
-             L10
-              DSTORE 4
-              DSTORE 2
-              DLOAD 2
-              DLOAD 4
-              DCMPL
-              IFLE L11
-              ICONST_1
-              GOTO L12
-             L11
-             FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context D D] []
-              ICONST_0
-             L12
-             FRAME SAME1 I
-              IFEQ L13
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L14
-             L13
-             FRAME SAME
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L14
-             FRAME SAME1 java/lang/Boolean
-              ARETURN
+[34]_asm_procedurego_ask_35 "ask flashes with [ticks - birthday > 0.4] flashes with [ ticks - birthday > 0.4 ] set pcolor yellow [ die ]" AgentSet => void
+      _force "flashes with [ticks - birthday > 0.4] flashes with [ ticks - birthday > 0.4 ]" AgentSet => AgentSet
+        _with "flashes with [ ticks - birthday > 0.4 ]" AgentSet,Reporter => AgentSet
+          _breed:FLASHES "flashes" => AgentSet
+          _asm_procedurego_greaterthan_36 "ticks - birthday > 0.4" double,double => boolean
+            _minus "ticks - birthday" double,double => double
+              _ticks "ticks" => double
+              _breedvariable:BIRTHDAY "birthday" => Object
+            _constdouble:0.4 "0.4" => double
+                // parameter final  context
+                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
+               L5
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_procedurego_greaterthan_36.world : Lorg/nlogo/agent/World;
+                INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
+                DSTORE 2
+                DLOAD 2
+                LDC -1.0
+                DCMPL
+                IFNE L6
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+                LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
+                INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L6
+               FRAME APPEND [D]
+                DLOAD 2
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                LDC "BIRTHDAY"
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getBreedVariable (Ljava/lang/String;)Ljava/lang/Object;
+               L1
+                GOTO L7
+               L2
+               FRAME SAME1 org/nlogo/api/AgentException
+                ASTORE 2
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 2
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L7
+               FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context D] [D java/lang/Object]
+                ASTORE 2
+               L3
+                ALOAD 2
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                GOTO L8
+               L4
+               FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+                POP
+                NEW org/nlogo/nvm/ArgumentTypeException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                BIPUSH 1
+                LDC 1
+                ALOAD 2
+                INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
+                ATHROW
+               L8
+               FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context java/lang/Object] [D D]
+                DSTORE 4
+                DSTORE 2
+                ALOAD 0
+                DLOAD 2
+                DLOAD 4
+                DSUB
+                ALOAD 1
+                INVOKEVIRTUAL org/nlogo/prim/_asm_procedurego_greaterthan_36.validDouble (DLorg/nlogo/nvm/Context;)D
+               L9
+                LDC 0.4
+               L10
+                DSTORE 4
+                DSTORE 2
+                DLOAD 2
+                DLOAD 4
+                DCMPL
+                IFLE L11
+                ICONST_1
+                GOTO L12
+               L11
+               FRAME FULL [org/nlogo/prim/_asm_procedurego_greaterthan_36 org/nlogo/nvm/Context D D] []
+                ICONST_0
+               L12
+               FRAME SAME1 I
+                IFEQ L13
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L14
+               L13
+               FRAME SAME
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L14
+               FRAME SAME1 java/lang/Boolean
+                ARETURN
           // parameter final  context
           // parameter final  context
           // parameter final  sourceSet
           // parameter final  reporterBlock
+          // parameter final  context
+          // parameter final  sourceSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_35.world : Lorg/nlogo/agent/World;
@@ -9909,7 +9928,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_ask_35.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_35.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -9970,15 +9989,28 @@ procedure GO:[OLD-CLOCK]{O---}:
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L4
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+          GOTO L5
+         L4
+         FRAME SAME
+          ALOAD 2
+         L5
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L4
+          IFNE L6
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_35.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
-          IF_ACMPNE L5
+          IF_ACMPNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -9988,13 +10020,13 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L7
          FRAME SAME
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_35.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L4
+          IF_ACMPNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -10004,7 +10036,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L6
          FRAME SAME
           ALOAD 1
           ALOAD 2
@@ -10013,7 +10045,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ALOAD 1
           BIPUSH 38
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L8
           RETURN
 [35]_asm_procedurego_setpatchvariable_37 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
@@ -10502,363 +10534,368 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           ATHROW
 
 procedure MAKE-BOX:[]{OTPL}:
-[0]_asm_proceduremakebox_ask_0 "ask patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ] [ set pcolor yellow ]" AgentSet => void
-      _with "patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ]" AgentSet,Reporter => AgentSet
-        _patches "patches" => AgentSet
-        _asm_proceduremakebox_or_1 "abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge"
-          _and "abs pxcor = box-edge and abs pycor <= box-edge"
-            _equal "abs pxcor = box-edge" double,Object => boolean
-              _abs "abs pxcor" double => double
-                _patchvariabledouble:PXCOR "pxcor" => double
-              _observervariable:BOX-EDGE "box-edge" => Object
-            _lessorequal "abs pycor <= box-edge" double,Object => boolean
-              _abs "abs pycor" double => double
-                _patchvariabledouble:PYCOR "pycor" => double
-              _observervariable:BOX-EDGE "box-edge" => Object
-          _and "abs pycor = box-edge and abs pxcor <= box-edge"
-            _equal "abs pycor = box-edge" double,Object => boolean
-              _abs "abs pycor" double => double
-                _patchvariabledouble:PYCOR "pycor" => double
-              _observervariable:BOX-EDGE "box-edge" => Object
-            _lessorequal "abs pxcor <= box-edge" double,Object => boolean
-              _abs "abs pxcor" double => double
-                _patchvariabledouble:PXCOR "pxcor" => double
-              _observervariable:BOX-EDGE "box-edge" => Object
-              // parameter final  context
-              // parameter final  context
-              // parameter final  context
-              // parameter final  context
-             L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ASTORE 3
-              ALOAD 3
-              INSTANCEOF org/nlogo/agent/Turtle
-              IFEQ L1
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Turtle
-              INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-              ASTORE 2
-              GOTO L2
-             L1
-             FRAME APPEND [T org/nlogo/agent/Agent]
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Patch
-              ASTORE 2
-             L2
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
-              ALOAD 2
-              ICONST_0
-              INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
-             L3
-              DSTORE 2
-              DLOAD 2
-              DCONST_0
-              DCMPG
-              IFGE L4
-              DLOAD 2
-              DNEG
-              GOTO L5
-             L4
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D] []
-              DLOAD 2
-             L5
-             FRAME SAME1 D
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              BIPUSH 7
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-             L6
-              ASTORE 4
-              DSTORE 2
-              ALOAD 4
-              INSTANCEOF java/lang/Double
-              IFEQ L7
-              DLOAD 2
-              ALOAD 4
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPL
-              IFNE L7
-              ICONST_1
-              GOTO L8
-             L7
-             FRAME APPEND [java/lang/Object]
-              ICONST_0
-             L8
-             FRAME SAME1 I
-              IFEQ L9
-             L10
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ASTORE 3
-              ALOAD 3
-              INSTANCEOF org/nlogo/agent/Turtle
-              IFEQ L11
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Turtle
-              INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-              ASTORE 2
-              GOTO L12
-             L11
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Patch
-              ASTORE 2
-             L12
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 2
-              ICONST_1
-              INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
-             L13
-              DSTORE 2
-              DLOAD 2
-              DCONST_0
-              DCMPG
-              IFGE L14
-              DLOAD 2
-              DNEG
-              GOTO L15
-             L14
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
-              DLOAD 2
-             L15
-             FRAME SAME1 D
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              BIPUSH 7
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-             L16
-              ASTORE 4
-              DSTORE 2
-              ALOAD 4
-              INSTANCEOF java/lang/Double
-              IFEQ L17
-              DLOAD 2
-              ALOAD 4
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPG
-              IFGT L18
-              ICONST_1
-              GOTO L19
-             L18
-             FRAME SAME
-              ICONST_0
-             L19
-             FRAME SAME1 I
-              GOTO L20
-             L17
-             FRAME SAME
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-              LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
-              ICONST_2
-              ANEWARRAY java/lang/Object
-              DUP
-              ICONST_0
-              DLOAD 2
-              INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              DUP
-              ICONST_1
-              ALOAD 4
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L20
-             FRAME SAME1 I
-              GOTO L21
-             L9
-             FRAME SAME
-              ICONST_0
-             L21
-             FRAME SAME1 I
-              IFNE L22
-             L23
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ASTORE 3
-              ALOAD 3
-              INSTANCEOF org/nlogo/agent/Turtle
-              IFEQ L24
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Turtle
-              INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-              ASTORE 2
-              GOTO L25
-             L24
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Patch
-              ASTORE 2
-             L25
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 2
-              ICONST_1
-              INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
-             L26
-              DSTORE 2
-              DLOAD 2
-              DCONST_0
-              DCMPG
-              IFGE L27
-              DLOAD 2
-              DNEG
-              GOTO L28
-             L27
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
-              DLOAD 2
-             L28
-             FRAME SAME1 D
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              BIPUSH 7
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-             L29
-              ASTORE 4
-              DSTORE 2
-              ALOAD 4
-              INSTANCEOF java/lang/Double
-              IFEQ L30
-              DLOAD 2
-              ALOAD 4
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPL
-              IFNE L30
-              ICONST_1
-              GOTO L31
-             L30
-             FRAME SAME
-              ICONST_0
-             L31
-             FRAME SAME1 I
-              IFEQ L32
-             L33
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              ASTORE 3
-              ALOAD 3
-              INSTANCEOF org/nlogo/agent/Turtle
-              IFEQ L34
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Turtle
-              INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-              ASTORE 2
-              GOTO L35
-             L34
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 3
-              CHECKCAST org/nlogo/agent/Patch
-              ASTORE 2
-             L35
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
-              ALOAD 2
-              ICONST_0
-              INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
-             L36
-              DSTORE 2
-              DLOAD 2
-              DCONST_0
-              DCMPG
-              IFGE L37
-              DLOAD 2
-              DNEG
-              GOTO L38
-             L37
-             FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
-              DLOAD 2
-             L38
-             FRAME SAME1 D
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              BIPUSH 7
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-             L39
-              ASTORE 4
-              DSTORE 2
-              ALOAD 4
-              INSTANCEOF java/lang/Double
-              IFEQ L40
-              DLOAD 2
-              ALOAD 4
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPG
-              IFGT L41
-              ICONST_1
-              GOTO L42
-             L41
-             FRAME SAME
-              ICONST_0
-             L42
-             FRAME SAME1 I
-              GOTO L43
-             L40
-             FRAME SAME
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-              LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
-              ICONST_2
-              ANEWARRAY java/lang/Object
-              DUP
-              ICONST_0
-              DLOAD 2
-              INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              DUP
-              ICONST_1
-              ALOAD 4
-              INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
-              AASTORE
-              INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L43
-             FRAME SAME1 I
-              GOTO L44
-             L32
-             FRAME SAME
-              ICONST_0
-             L44
-             FRAME SAME1 I
-              GOTO L45
-             L22
-             FRAME SAME
-              ICONST_1
-             L45
-             FRAME SAME1 I
-              IFEQ L46
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L47
-             L46
-             FRAME SAME
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L47
-             FRAME SAME1 java/lang/Boolean
-              ARETURN
+[0]_asm_proceduremakebox_ask_0 "ask patches with [ ((abs pxcor = box-edge) and (abs pycor <= box-edge)) or
+                     ((abs pycor = box-edge) and (abs pxcor <= box-edge)) ] patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ] [ set pcolor yellow ]" AgentSet => void
+      _force "patches with [ ((abs pxcor = box-edge) and (abs pycor <= box-edge)) or
+                     ((abs pycor = box-edge) and (abs pxcor <= box-edge)) ] patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ]" AgentSet => AgentSet
+        _with "patches with [ abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge ]" AgentSet,Reporter => AgentSet
+          _patches "patches" => AgentSet
+          _asm_proceduremakebox_or_1 "abs pxcor = box-edge and abs pycor <= box-edge or abs pycor = box-edge and abs pxcor <= box-edge"
+            _and "abs pxcor = box-edge and abs pycor <= box-edge"
+              _equal "abs pxcor = box-edge" double,Object => boolean
+                _abs "abs pxcor" double => double
+                  _patchvariabledouble:PXCOR "pxcor" => double
+                _observervariable:BOX-EDGE "box-edge" => Object
+              _lessorequal "abs pycor <= box-edge" double,Object => boolean
+                _abs "abs pycor" double => double
+                  _patchvariabledouble:PYCOR "pycor" => double
+                _observervariable:BOX-EDGE "box-edge" => Object
+            _and "abs pycor = box-edge and abs pxcor <= box-edge"
+              _equal "abs pycor = box-edge" double,Object => boolean
+                _abs "abs pycor" double => double
+                  _patchvariabledouble:PYCOR "pycor" => double
+                _observervariable:BOX-EDGE "box-edge" => Object
+              _lessorequal "abs pxcor <= box-edge" double,Object => boolean
+                _abs "abs pxcor" double => double
+                  _patchvariabledouble:PXCOR "pxcor" => double
+                _observervariable:BOX-EDGE "box-edge" => Object
+                // parameter final  context
+                // parameter final  context
+                // parameter final  context
+                // parameter final  context
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ASTORE 3
+                ALOAD 3
+                INSTANCEOF org/nlogo/agent/Turtle
+                IFEQ L1
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Turtle
+                INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+                ASTORE 2
+                GOTO L2
+               L1
+               FRAME APPEND [T org/nlogo/agent/Agent]
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Patch
+                ASTORE 2
+               L2
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
+                ALOAD 2
+                ICONST_0
+                INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
+               L3
+                DSTORE 2
+                DLOAD 2
+                DCONST_0
+                DCMPG
+                IFGE L4
+                DLOAD 2
+                DNEG
+                GOTO L5
+               L4
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D] []
+                DLOAD 2
+               L5
+               FRAME SAME1 D
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                BIPUSH 7
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+               L6
+                ASTORE 4
+                DSTORE 2
+                ALOAD 4
+                INSTANCEOF java/lang/Double
+                IFEQ L7
+                DLOAD 2
+                ALOAD 4
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPL
+                IFNE L7
+                ICONST_1
+                GOTO L8
+               L7
+               FRAME APPEND [java/lang/Object]
+                ICONST_0
+               L8
+               FRAME SAME1 I
+                IFEQ L9
+               L10
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ASTORE 3
+                ALOAD 3
+                INSTANCEOF org/nlogo/agent/Turtle
+                IFEQ L11
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Turtle
+                INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+                ASTORE 2
+                GOTO L12
+               L11
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Patch
+                ASTORE 2
+               L12
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 2
+                ICONST_1
+                INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
+               L13
+                DSTORE 2
+                DLOAD 2
+                DCONST_0
+                DCMPG
+                IFGE L14
+                DLOAD 2
+                DNEG
+                GOTO L15
+               L14
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
+                DLOAD 2
+               L15
+               FRAME SAME1 D
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                BIPUSH 7
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+               L16
+                ASTORE 4
+                DSTORE 2
+                ALOAD 4
+                INSTANCEOF java/lang/Double
+                IFEQ L17
+                DLOAD 2
+                ALOAD 4
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPG
+                IFGT L18
+                ICONST_1
+                GOTO L19
+               L18
+               FRAME SAME
+                ICONST_0
+               L19
+               FRAME SAME1 I
+                GOTO L20
+               L17
+               FRAME SAME
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+                LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
+                ICONST_2
+                ANEWARRAY java/lang/Object
+                DUP
+                ICONST_0
+                DLOAD 2
+                INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                DUP
+                ICONST_1
+                ALOAD 4
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L20
+               FRAME SAME1 I
+                GOTO L21
+               L9
+               FRAME SAME
+                ICONST_0
+               L21
+               FRAME SAME1 I
+                IFNE L22
+               L23
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ASTORE 3
+                ALOAD 3
+                INSTANCEOF org/nlogo/agent/Turtle
+                IFEQ L24
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Turtle
+                INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+                ASTORE 2
+                GOTO L25
+               L24
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Patch
+                ASTORE 2
+               L25
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 2
+                ICONST_1
+                INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
+               L26
+                DSTORE 2
+                DLOAD 2
+                DCONST_0
+                DCMPG
+                IFGE L27
+                DLOAD 2
+                DNEG
+                GOTO L28
+               L27
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
+                DLOAD 2
+               L28
+               FRAME SAME1 D
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                BIPUSH 7
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+               L29
+                ASTORE 4
+                DSTORE 2
+                ALOAD 4
+                INSTANCEOF java/lang/Double
+                IFEQ L30
+                DLOAD 2
+                ALOAD 4
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPL
+                IFNE L30
+                ICONST_1
+                GOTO L31
+               L30
+               FRAME SAME
+                ICONST_0
+               L31
+               FRAME SAME1 I
+                IFEQ L32
+               L33
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ASTORE 3
+                ALOAD 3
+                INSTANCEOF org/nlogo/agent/Turtle
+                IFEQ L34
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Turtle
+                INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+                ASTORE 2
+                GOTO L35
+               L34
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context T org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 3
+                CHECKCAST org/nlogo/agent/Patch
+                ASTORE 2
+               L35
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent java/lang/Object] []
+                ALOAD 2
+                ICONST_0
+                INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
+               L36
+                DSTORE 2
+                DLOAD 2
+                DCONST_0
+                DCMPG
+                IFGE L37
+                DLOAD 2
+                DNEG
+                GOTO L38
+               L37
+               FRAME FULL [org/nlogo/prim/_asm_proceduremakebox_or_1 org/nlogo/nvm/Context D java/lang/Object] []
+                DLOAD 2
+               L38
+               FRAME SAME1 D
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                BIPUSH 7
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+               L39
+                ASTORE 4
+                DSTORE 2
+                ALOAD 4
+                INSTANCEOF java/lang/Double
+                IFEQ L40
+                DLOAD 2
+                ALOAD 4
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPG
+                IFGT L41
+                ICONST_1
+                GOTO L42
+               L41
+               FRAME SAME
+                ICONST_0
+               L42
+               FRAME SAME1 I
+                GOTO L43
+               L40
+               FRAME SAME
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+                LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
+                ICONST_2
+                ANEWARRAY java/lang/Object
+                DUP
+                ICONST_0
+                DLOAD 2
+                INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                DUP
+                ICONST_1
+                ALOAD 4
+                INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
+                AASTORE
+                INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L43
+               FRAME SAME1 I
+                GOTO L44
+               L32
+               FRAME SAME
+                ICONST_0
+               L44
+               FRAME SAME1 I
+                GOTO L45
+               L22
+               FRAME SAME
+                ICONST_1
+               L45
+               FRAME SAME1 I
+                IFEQ L46
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L47
+               L46
+               FRAME SAME
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L47
+               FRAME SAME1 java/lang/Boolean
+                ARETURN
           // parameter final  context
           // parameter final  context
           // parameter final  sourceSet
           // parameter final  reporterBlock
+          // parameter final  context
+          // parameter final  sourceSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+          GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -10919,15 +10956,28 @@ procedure MAKE-BOX:[]{OTPL}:
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L4
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+          GOTO L5
+         L4
+         FRAME SAME
+          ALOAD 2
+         L5
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L4
+          IFNE L6
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
-          IF_ACMPNE L5
+          IF_ACMPNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -10937,13 +10987,13 @@ procedure MAKE-BOX:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L7
          FRAME SAME
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L4
+          IF_ACMPNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -10953,7 +11003,7 @@ procedure MAKE-BOX:[]{OTPL}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L6
          FRAME SAME
           ALOAD 1
           ALOAD 2
@@ -10962,7 +11012,7 @@ procedure MAKE-BOX:[]{OTPL}:
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L8
           RETURN
 [1]_asm_proceduremakebox_setpatchvariable_2 "set pcolor yellow" Object => void
       _constdouble:45.0 "yellow" => Double
@@ -11622,75 +11672,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[2]_histogram "histogram [ energy ] of particles with [ color = red ]"
-      _breedvariableof:ENERGY "[ energy ] of particles with [ color = red ]"
-        _asm_procedureplothistograms_with_2 "particles with [ color = red ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_3 "color = red" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:15.0 "red" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 15.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[2]_histogram "histogram [ energy ] of particles with [color = red] particles with [ color = red ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [color = red] particles with [ color = red ]"
+        _asm_procedureplothistograms_force_2 "particles with [color = red] particles with [ color = red ]" AgentSet => AgentSet
+          _with "particles with [ color = red ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_3 "color = red" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:15.0 "red" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 15.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_2.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_2.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_2.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_2.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -11721,7 +11774,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -11749,6 +11802,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 7
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
+             FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
              FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [3]_setcurrentplotpen "set-current-plot-pen "medium""
@@ -11757,75 +11823,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "medium"
            L1
             ARETURN
-[4]_histogram "histogram [ energy ] of particles with [ color = green ]"
-      _breedvariableof:ENERGY "[ energy ] of particles with [ color = green ]"
-        _asm_procedureplothistograms_with_5 "particles with [ color = green ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_6 "color = green" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:55.0 "green" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 55.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[4]_histogram "histogram [ energy ] of particles with [color = green] particles with [ color = green ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [color = green] particles with [ color = green ]"
+        _asm_procedureplothistograms_force_5 "particles with [color = green] particles with [ color = green ]" AgentSet => AgentSet
+          _with "particles with [ color = green ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_6 "color = green" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:55.0 "green" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 55.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_5.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_5.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_5.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_5.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -11856,7 +11925,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -11885,6 +11954,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
              FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
+             FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [5]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_procedureplothistograms_conststring_7 ""slow"" => String
@@ -11892,75 +11974,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[6]_histogram "histogram [ energy ] of particles with [ color = blue ]"
-      _breedvariableof:ENERGY "[ energy ] of particles with [ color = blue ]"
-        _asm_procedureplothistograms_with_8 "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_9 "color = blue" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:105.0 "blue" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 105.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[6]_histogram "histogram [ energy ] of particles with [color = blue] particles with [ color = blue ]"
+      _breedvariableof:ENERGY "[ energy ] of particles with [color = blue] particles with [ color = blue ]"
+        _asm_procedureplothistograms_force_8 "particles with [color = blue] particles with [ color = blue ]" AgentSet => AgentSet
+          _with "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_9 "color = blue" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:105.0 "blue" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 105.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_8.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_8.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_8.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_8.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -11991,7 +12076,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -12019,6 +12104,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 7
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
+             FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
              FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [7]_setcurrentplotpen "set-current-plot-pen "avg-energy""
@@ -12070,75 +12168,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[12]_histogram "histogram [ speed ] of particles with [ color = red ]"
-      _breedvariableof:SPEED "[ speed ] of particles with [ color = red ]"
-        _asm_procedureplothistograms_with_14 "particles with [ color = red ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_15 "color = red" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:15.0 "red" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 15.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[12]_histogram "histogram [ speed ] of particles with [color = red] particles with [ color = red ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [color = red] particles with [ color = red ]"
+        _asm_procedureplothistograms_force_14 "particles with [color = red] particles with [ color = red ]" AgentSet => AgentSet
+          _with "particles with [ color = red ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_15 "color = red" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:15.0 "red" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 15.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_14.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_14.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_14.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_14.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -12169,7 +12270,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_14 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_14 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -12197,6 +12298,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 7
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
+             FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
              FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [13]_setcurrentplotpen "set-current-plot-pen "medium""
@@ -12205,75 +12319,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "medium"
            L1
             ARETURN
-[14]_histogram "histogram [ speed ] of particles with [ color = green ]"
-      _breedvariableof:SPEED "[ speed ] of particles with [ color = green ]"
-        _asm_procedureplothistograms_with_17 "particles with [ color = green ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_18 "color = green" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:55.0 "green" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 55.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[14]_histogram "histogram [ speed ] of particles with [color = green] particles with [ color = green ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [color = green] particles with [ color = green ]"
+        _asm_procedureplothistograms_force_17 "particles with [color = green] particles with [ color = green ]" AgentSet => AgentSet
+          _with "particles with [ color = green ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_18 "color = green" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:55.0 "green" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 55.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_17.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_17.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_17.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_17.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -12304,7 +12421,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_17 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_17 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -12333,6 +12450,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
              FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
+             FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [15]_setcurrentplotpen "set-current-plot-pen "slow""
       _asm_procedureplothistograms_conststring_19 ""slow"" => String
@@ -12340,75 +12470,78 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[16]_histogram "histogram [ speed ] of particles with [ color = blue ]"
-      _breedvariableof:SPEED "[ speed ] of particles with [ color = blue ]"
-        _asm_procedureplothistograms_with_20 "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
-          _breed:PARTICLES "particles" => AgentSet
-          _asm_procedureplothistograms_equal_21 "color = blue" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:105.0 "blue" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 105.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[16]_histogram "histogram [ speed ] of particles with [color = blue] particles with [ color = blue ]"
+      _breedvariableof:SPEED "[ speed ] of particles with [color = blue] particles with [ color = blue ]"
+        _asm_procedureplothistograms_force_20 "particles with [color = blue] particles with [ color = blue ]" AgentSet => AgentSet
+          _with "particles with [ color = blue ]" AgentSet,Reporter => AgentSet
+            _breed:PARTICLES "particles" => AgentSet
+            _asm_procedureplothistograms_equal_21 "color = blue" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:105.0 "blue" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 105.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
               // parameter final  context
               // parameter final  context
               // parameter final  sourceSet
               // parameter final  reporterBlock
+              // parameter final  context
+              // parameter final  sourceSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_20.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_20.world : Lorg/nlogo/agent/World;
               LDC "PARTICLES"
               INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_with_20.keptinstr3 : Lorg/nlogo/nvm/Reporter;
+              GETFIELD org/nlogo/prim/_asm_procedureplothistograms_force_20.keptinstr4 : Lorg/nlogo/nvm/Reporter;
               ASTORE 3
               ASTORE 2
               NEW org/nlogo/nvm/Context
@@ -12439,7 +12572,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 2
               GOTO L3
              L2
-             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_with_20 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+             FRAME FULL [org/nlogo/prim/_asm_procedureplothistograms_force_20 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
               ASTORE 6
@@ -12467,6 +12600,19 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
               ALOAD 7
               INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
              L3
+             FRAME SAME1 org/nlogo/agent/AgentSet
+              ASTORE 2
+              ALOAD 2
+              INSTANCEOF org/nlogo/agent/LazyAgentSet
+              IFEQ L4
+              ALOAD 2
+              CHECKCAST org/nlogo/agent/LazyAgentSet
+              INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+              GOTO L5
+             L4
+             FRAME SAME
+              ALOAD 2
+             L5
              FRAME SAME1 org/nlogo/agent/AgentSet
               ARETURN
 [17]_setcurrentplotpen "set-current-plot-pen "avg-speed""

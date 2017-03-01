@@ -2976,67 +2976,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "average"
            L1
             ARETURN
-[2]_histogram "histogram [ speed ] of turtles with [ color = green ]"
-      _asm_proceduredohistograms_turtlevariableof_2 "[ speed ] of turtles with [ color = green ]" Object => Object
-        _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_3 "color = green" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:55.0 "green" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 55.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[2]_histogram "histogram [ speed ] of turtles with [ color = green ] turtles with [ color = green ]"
+      _asm_proceduredohistograms_turtlevariableof_2 "[ speed ] of turtles with [ color = green ] turtles with [ color = green ]" Object => Object
+        _force "turtles with [ color = green ] turtles with [ color = green ]" AgentSet => AgentSet
+          _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_3 "color = green" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:55.0 "green" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 55.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -3045,7 +3048,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -3107,8 +3110,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -3139,7 +3155,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -3151,11 +3167,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -3170,7 +3186,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -3181,10 +3197,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -3196,12 +3212,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -3214,7 +3230,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [3]_setcurrentplotpen "set-current-plot-pen "slow""
@@ -3223,67 +3239,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[4]_histogram "histogram [ speed ] of turtles with [ color = blue ]"
-      _asm_proceduredohistograms_turtlevariableof_5 "[ speed ] of turtles with [ color = blue ]" Object => Object
-        _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_6 "color = blue" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:105.0 "blue" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 105.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[4]_histogram "histogram [ speed ] of turtles with [ color = blue ] turtles with [ color = blue ]"
+      _asm_proceduredohistograms_turtlevariableof_5 "[ speed ] of turtles with [ color = blue ] turtles with [ color = blue ]" Object => Object
+        _force "turtles with [ color = blue ] turtles with [ color = blue ]" AgentSet => AgentSet
+          _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_6 "color = blue" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:105.0 "blue" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 105.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -3292,7 +3311,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -3354,8 +3373,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -3386,7 +3418,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -3398,11 +3430,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -3417,7 +3449,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -3428,10 +3460,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -3443,12 +3475,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -3461,7 +3493,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [5]_setcurrentplotpen "set-current-plot-pen "fast""
@@ -3470,67 +3502,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[6]_histogram "histogram [ speed ] of turtles with [ color = red ]"
-      _asm_proceduredohistograms_turtlevariableof_8 "[ speed ] of turtles with [ color = red ]" Object => Object
-        _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_9 "color = red" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:15.0 "red" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 15.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[6]_histogram "histogram [ speed ] of turtles with [ color = red ] turtles with [ color = red ]"
+      _asm_proceduredohistograms_turtlevariableof_8 "[ speed ] of turtles with [ color = red ] turtles with [ color = red ]" Object => Object
+        _force "turtles with [ color = red ] turtles with [ color = red ]" AgentSet => AgentSet
+          _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_9 "color = red" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:15.0 "red" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 15.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -3539,7 +3574,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -3601,8 +3636,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -3633,7 +3681,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -3645,11 +3693,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -3664,7 +3712,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -3675,10 +3723,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 13
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -3690,12 +3738,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -3708,7 +3756,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [7]_setcurrentplotpen "set-current-plot-pen "Vert-Line""
@@ -3806,67 +3854,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "average"
            L1
             ARETURN
-[13]_histogram "histogram [ energy ] of turtles with [ color = green ]"
-      _asm_proceduredohistograms_turtlevariableof_15 "[ energy ] of turtles with [ color = green ]" Object => Object
-        _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_16 "color = green" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:55.0 "green" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 55.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[13]_histogram "histogram [ energy ] of turtles with [ color = green ] turtles with [ color = green ]"
+      _asm_proceduredohistograms_turtlevariableof_15 "[ energy ] of turtles with [ color = green ] turtles with [ color = green ]" Object => Object
+        _force "turtles with [ color = green ] turtles with [ color = green ]" AgentSet => AgentSet
+          _with "turtles with [ color = green ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_16 "color = green" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:55.0 "green" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 55.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -3875,7 +3926,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -3937,8 +3988,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -3969,7 +4033,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -3981,11 +4045,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -4000,7 +4064,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -4011,10 +4075,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -4026,12 +4090,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -4044,7 +4108,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [14]_setcurrentplotpen "set-current-plot-pen "slow""
@@ -4053,67 +4117,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "slow"
            L1
             ARETURN
-[15]_histogram "histogram [ energy ] of turtles with [ color = blue ]"
-      _asm_proceduredohistograms_turtlevariableof_18 "[ energy ] of turtles with [ color = blue ]" Object => Object
-        _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_19 "color = blue" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:105.0 "blue" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 105.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[15]_histogram "histogram [ energy ] of turtles with [ color = blue ] turtles with [ color = blue ]"
+      _asm_proceduredohistograms_turtlevariableof_18 "[ energy ] of turtles with [ color = blue ] turtles with [ color = blue ]" Object => Object
+        _force "turtles with [ color = blue ] turtles with [ color = blue ]" AgentSet => AgentSet
+          _with "turtles with [ color = blue ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_19 "color = blue" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:105.0 "blue" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 105.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -4122,7 +4189,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -4184,8 +4251,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -4216,7 +4296,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -4228,11 +4308,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -4247,7 +4327,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -4258,10 +4338,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -4273,12 +4353,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -4291,7 +4371,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [16]_setcurrentplotpen "set-current-plot-pen "fast""
@@ -4300,67 +4380,70 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             LDC "fast"
            L1
             ARETURN
-[17]_histogram "histogram [ energy ] of turtles with [ color = red ]"
-      _asm_proceduredohistograms_turtlevariableof_21 "[ energy ] of turtles with [ color = red ]" Object => Object
-        _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
-          _turtles "turtles" => AgentSet
-          _asm_proceduredohistograms_equal_22 "color = red" Object,double => boolean
-            _turtleorlinkvariable:COLOR "color" => Object
-            _constdouble:15.0 "red" => double
-                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-               L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-                LDC "COLOR"
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
-               L1
-                GOTO L3
-               L2
-               FRAME SAME1 org/nlogo/api/AgentException
-                ASTORE 2
-                NEW org/nlogo/nvm/RuntimePrimitiveException
-                DUP
-                ALOAD 1
-                ALOAD 0
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-                ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 15.0
-               L4
-                DSTORE 3
-                ASTORE 2
-                ALOAD 2
-                INSTANCEOF java/lang/Double
-                IFEQ L5
-                DLOAD 3
-                ALOAD 2
-                CHECKCAST java/lang/Double
-                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-                DCMPL
-                IFNE L5
-                ICONST_1
-                GOTO L6
-               L5
-               FRAME APPEND [java/lang/Object D]
-                ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
-               L7
-               FRAME SAME
-                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
-               FRAME SAME1 java/lang/Boolean
-                ARETURN
+[17]_histogram "histogram [ energy ] of turtles with [ color = red ] turtles with [ color = red ]"
+      _asm_proceduredohistograms_turtlevariableof_21 "[ energy ] of turtles with [ color = red ] turtles with [ color = red ]" Object => Object
+        _force "turtles with [ color = red ] turtles with [ color = red ]" AgentSet => AgentSet
+          _with "turtles with [ color = red ]" AgentSet,Reporter => AgentSet
+            _turtles "turtles" => AgentSet
+            _asm_proceduredohistograms_equal_22 "color = red" Object,double => boolean
+              _turtleorlinkvariable:COLOR "color" => Object
+              _constdouble:15.0 "red" => double
+                  TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+                 L0
+                  ALOAD 1
+                  GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                  LDC "COLOR"
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleOrLinkVariable (Ljava/lang/String;)Ljava/lang/Object;
+                 L1
+                  GOTO L3
+                 L2
+                 FRAME SAME1 org/nlogo/api/AgentException
+                  ASTORE 2
+                  NEW org/nlogo/nvm/RuntimePrimitiveException
+                  DUP
+                  ALOAD 1
+                  ALOAD 0
+                  ALOAD 2
+                  INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                  INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                  ATHROW
+                 L3
+                 FRAME SAME1 java/lang/Object
+                  LDC 15.0
+                 L4
+                  DSTORE 3
+                  ASTORE 2
+                  ALOAD 2
+                  INSTANCEOF java/lang/Double
+                  IFEQ L5
+                  DLOAD 3
+                  ALOAD 2
+                  CHECKCAST java/lang/Double
+                  INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                  DCMPL
+                  IFNE L5
+                  ICONST_1
+                  GOTO L6
+                 L5
+                 FRAME APPEND [java/lang/Object D]
+                  ICONST_0
+                 L6
+                 FRAME SAME1 I
+                  IFEQ L7
+                  GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                  GOTO L8
+                 L7
+                 FRAME SAME
+                  GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+                 L8
+                 FRAME SAME1 java/lang/Boolean
+                  ARETURN
             // parameter final  context
             // parameter final  context
             // parameter final  sourceSet
             // parameter final  reporterBlock
+            // parameter final  context
+            // parameter final  sourceSet
             TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
             TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
            L6
@@ -4369,7 +4452,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
            L7
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21.keptinstr5 : Lorg/nlogo/nvm/Reporter;
             ASTORE 3
             ASTORE 2
             NEW org/nlogo/nvm/Context
@@ -4431,8 +4514,21 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
             ALOAD 2
-            INSTANCEOF org/nlogo/agent/Agent
+            INSTANCEOF org/nlogo/agent/LazyAgentSet
             IFEQ L10
+            ALOAD 2
+            CHECKCAST org/nlogo/agent/LazyAgentSet
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+            GOTO L11
+           L10
+           FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+            ALOAD 2
+           L11
+           FRAME SAME1 org/nlogo/agent/AgentSet
+            ASTORE 2
+            ALOAD 2
+            INSTANCEOF org/nlogo/agent/Agent
+            IFEQ L12
             ALOAD 2
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
@@ -4463,7 +4559,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
            L1
-            GOTO L11
+            GOTO L13
            L2
            FRAME SAME1 org/nlogo/api/AgentException
             ASTORE 4
@@ -4475,11 +4571,11 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L10
+           L12
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             ALOAD 2
             INSTANCEOF org/nlogo/agent/AgentSet
-            IFEQ L12
+            IFEQ L14
             ALOAD 2
             CHECKCAST org/nlogo/agent/AgentSet
             ASTORE 3
@@ -4494,7 +4590,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.shufflerator (Lorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/AgentIterator;
             ASTORE 5
-           L13
+           L15
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 5
             INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
@@ -4505,10 +4601,10 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             BIPUSH 15
             INVOKEVIRTUAL org/nlogo/agent/Agent.getTurtleVariable (I)Ljava/lang/Object;
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
-            GOTO L13
+            GOTO L15
            L4
            FRAME SAME
-            GOTO L14
+            GOTO L16
            L5
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder java/lang/Object] [org/nlogo/api/AgentException]
             ASTORE 5
@@ -4520,12 +4616,12 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
-           L14
+           L16
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/agent/AgentSet org/nlogo/api/LogoListBuilder org/nlogo/agent/AgentIterator] []
             ALOAD 4
             INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.toLogoList ()Lorg/nlogo/core/LogoList;
-            GOTO L11
-           L12
+            GOTO L13
+           L14
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/nvm/ArgumentTypeException
             DUP
@@ -4538,7 +4634,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
-           L11
+           L13
            FRAME FULL [org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object java/lang/Object java/lang/Object] [java/lang/Object]
             ARETURN
 [18]_setcurrentplotpen "set-current-plot-pen "Vert-Line""

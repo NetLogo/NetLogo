@@ -2,23 +2,24 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ AgentSet, AgentSetBuilder }
-import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.agent.{Agent, AgentSet, LazyAgentSet}
+import org.nlogo.api.Dump
+import org.nlogo.core.I18N
+import org.nlogo.nvm.{Context, Reporter}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _other extends Reporter {
 
-  override def report(context: Context): AgentSet =
+  def report(context: Context): AgentSet = {
     report_1(context, argEvalAgentSet(context, 0))
-
-  def report_1(context: Context, sourceSet: AgentSet): AgentSet = {
-    val builder = new AgentSetBuilder(sourceSet.kind, sourceSet.count)
-    val it = sourceSet.iterator
-    while(it.hasNext) {
-      val otherAgent = it.next()
-      if (context.agent ne otherAgent)
-        builder.add(otherAgent)
-    }
-    builder.build()
   }
 
+  def report_1(context: Context, sourceSet: AgentSet): AgentSet = {
+    if (sourceSet.isInstanceOf[LazyAgentSet]) {
+      sourceSet.asInstanceOf[LazyAgentSet].lazyOther(context.agent)
+      sourceSet
+    } else {
+      new LazyAgentSet(sourceSet.kind, null, sourceSet, others = List(context.agent))
+    }
+  }
 }

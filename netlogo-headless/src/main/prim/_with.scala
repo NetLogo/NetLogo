@@ -2,36 +2,42 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.agent.{Agent, AgentSet, LazyAgentSet}
 import org.nlogo.api.Dump
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.{Context, Instruction, Reporter}
 import org.nlogo.nvm.RuntimePrimitiveException
 
 class _with extends Reporter {
 
-  override def report(context: Context): AgentSet =
-    report_1(context, argEvalAgentSet(context, 0), args(1))
+  def report(context: Context): AgentSet = {
+    val sourceSet = argEvalAgentSet(context, 0)
+    val reporterBlock = args(1)
+    report_1(context, sourceSet, reporterBlock)
+  }
 
   def report_1(context: Context, sourceSet: AgentSet, reporterBlock: Reporter): AgentSet = {
     val freshContext = new Context(context, sourceSet)
-    val result = collection.mutable.ArrayBuffer[Agent]()
     reporterBlock.checkAgentSetClass(sourceSet, context)
-    val iter = sourceSet.iterator
-    while(iter.hasNext) {
-      val tester = iter.next()
-      freshContext.evaluateReporter(tester, reporterBlock) match {
-        case b: java.lang.Boolean =>
-          if (b.booleanValue)
-            result += tester
-        case x =>
-          throw new RuntimePrimitiveException(
-            context, this, I18N.errors.getN(
-              "org.nlogo.prim.$common.expectedBooleanValue",
-              displayName, Dump.logoObject(tester), Dump.logoObject(x)))
-      }
-    }
-    AgentSet.fromArray(sourceSet.kind, result.toArray)
-  }
 
+    val filter = new WithFunction(freshContext, this, displayName, reporterBlock)
+
+    if (sourceSet.isInstanceOf[LazyAgentSet]) {
+      sourceSet.asInstanceOf[LazyAgentSet].lazyWith(filter)
+      sourceSet
+    } else {
+      new LazyAgentSet(sourceSet.kind, null, sourceSet, withs = List(filter))
+    }
+  }
+}
+
+class WithFunction(freshContext: Context, instruction: Instruction, displayName: String, reporterBlock: Reporter)
+  extends scala.Function1[Agent, Boolean] {
+  override def apply(agent: Agent): Boolean =
+    freshContext.evaluateReporter(agent, reporterBlock) match {
+      case b: java.lang.Boolean => b.booleanValue
+      case x => throw new RuntimePrimitiveException(freshContext, instruction, I18N.errors.getN(
+        "org.nlogo.prim.$common.expectedBooleanValue",
+        displayName, Dump.logoObject(agent), Dump.logoObject(x)))
+    }
 }

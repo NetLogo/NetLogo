@@ -4744,7 +4744,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[6]_asm_proceduresetuppatches_repeatlocal_6 "repeat 5 ask patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ] [ diffuse 0.25 ]" double => void
+[6]_asm_proceduresetuppatches_repeatlocal_6 "repeat 5 ask patches with [max-grain-here != 0] patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ] [ diffuse 0.25 ]" double => void
       _constdouble:5.0 "5" => double
           // parameter final  context
           // parameter final  arg0
@@ -4769,76 +4769,79 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[7]_asm_proceduresetuppatches_ask_7 "ask patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ]" AgentSet => void
-      _with "patches with [ max-grain-here != 0 ]" AgentSet,Reporter => AgentSet
-        _patches "patches" => AgentSet
-        _asm_proceduresetuppatches_notequal_8 "max-grain-here != 0" Object,double => boolean
-          _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
-          _constdouble:0.0 "0" => double
-              // parameter final  context
-              TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-             L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-              BIPUSH 6
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
-             L1
-              GOTO L3
-             L2
-             FRAME SAME1 org/nlogo/api/AgentException
-              ASTORE 2
-              NEW org/nlogo/nvm/RuntimePrimitiveException
-              DUP
-              ALOAD 1
-              ALOAD 0
-              ALOAD 2
-              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
-              INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-              ATHROW
-             L3
-             FRAME SAME1 java/lang/Object
-              DCONST_0
-             L4
-              DSTORE 3
-              ASTORE 2
-              ALOAD 2
-              INSTANCEOF java/lang/Double
-              IFEQ L5
-              DLOAD 3
-              ALOAD 2
-              CHECKCAST java/lang/Double
-              INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-              DCMPL
-              IFEQ L6
-             L5
-             FRAME APPEND [java/lang/Object D]
-              ICONST_1
-              GOTO L7
-             L6
-             FRAME SAME
-              ICONST_0
-             L7
-             FRAME SAME1 I
-              IFEQ L8
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L9
-             L8
-             FRAME SAME
-              GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L9
-             FRAME SAME1 java/lang/Boolean
-              ARETURN
+[7]_asm_proceduresetuppatches_ask_7 "ask patches with [max-grain-here != 0] patches with [ max-grain-here != 0 ] [ set grain-here max-grain-here ]" AgentSet => void
+      _force "patches with [max-grain-here != 0] patches with [ max-grain-here != 0 ]" AgentSet => AgentSet
+        _with "patches with [ max-grain-here != 0 ]" AgentSet,Reporter => AgentSet
+          _patches "patches" => AgentSet
+          _asm_proceduresetuppatches_notequal_8 "max-grain-here != 0" Object,double => boolean
+            _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
+            _constdouble:0.0 "0" => double
+                // parameter final  context
+                TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                BIPUSH 6
+                INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+               L1
+                GOTO L3
+               L2
+               FRAME SAME1 org/nlogo/api/AgentException
+                ASTORE 2
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 2
+                INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+                INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+                ATHROW
+               L3
+               FRAME SAME1 java/lang/Object
+                DCONST_0
+               L4
+                DSTORE 3
+                ASTORE 2
+                ALOAD 2
+                INSTANCEOF java/lang/Double
+                IFEQ L5
+                DLOAD 3
+                ALOAD 2
+                CHECKCAST java/lang/Double
+                INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+                DCMPL
+                IFEQ L6
+               L5
+               FRAME APPEND [java/lang/Object D]
+                ICONST_1
+                GOTO L7
+               L6
+               FRAME SAME
+                ICONST_0
+               L7
+               FRAME SAME1 I
+                IFEQ L8
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L9
+               L8
+               FRAME SAME
+                GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
+               L9
+               FRAME SAME1 java/lang/Boolean
+                ARETURN
           // parameter final  context
           // parameter final  context
           // parameter final  sourceSet
           // parameter final  reporterBlock
+          // parameter final  context
+          // parameter final  sourceSet
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.keptinstr4 : Lorg/nlogo/nvm/Reporter;
+          GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.keptinstr5 : Lorg/nlogo/nvm/Reporter;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -4899,15 +4902,28 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/LazyAgentSet
+          IFEQ L4
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/LazyAgentSet
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet.force ()Lorg/nlogo/agent/AgentSet;
+          GOTO L5
+         L4
+         FRAME SAME
+          ALOAD 2
+         L5
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L4
+          IFNE L6
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
-          IF_ACMPNE L5
+          IF_ACMPNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -4917,13 +4933,13 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L7
          FRAME SAME
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
-          IF_ACMPNE L4
+          IF_ACMPNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -4933,7 +4949,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L6
          FRAME SAME
           ALOAD 1
           ALOAD 2
@@ -4942,7 +4958,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           ALOAD 1
           BIPUSH 10
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L8
           RETURN
 [8]_asm_proceduresetuppatches_setpatchvariable_9 "set grain-here max-grain-here" Object => void
       _patchvariable:MAX-GRAIN-HERE "max-grain-here" => Object
