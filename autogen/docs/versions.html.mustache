@@ -16,6 +16,44 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
+      Version 6.0.1 (March 2017)
+    </h2>
+
+    <h3>Bugfixes</h3>
+    <ul>
+      <li>The NetLogo code editor navigates and indents models much more quickly and efficiently than in NetLogo 6.0.</li>
+      <li>The NetLogo 5-to-6 autoconverter now ignores commented-out code.</li>
+      <li>The behavior of layout-radial in NetLogo 6 did not match the 5.3.1 behavior. This has been corrected and layout-radial should be identical between NetLogo 6 and NetLogo 5.3.1</li>
+      <li>NetLogo 6 raised a NullPointerException when numbers became too large for NetLogo to handle. This is now properly displayed to the user as a number out of bounds error.</li>
+      <li>Certain models that used a let-variables alongside anonymous procedures would become progressively slower while running in NetLogo 6. These models now run at a steady speed.</li>
+      <li>Reloading a model now clears global variables.</li>
+      <li>Clearer warning dialogs when opening an older version of a NetLogo 2D file in NetLogo 3D.</li>
+      <li>Using <code>foreach</code> improperly in the Command Center will display the same error as it would if used improperly in the code tab.</li>
+      <li>Extremely long anonymous procedures no longer cause an exception when compiled.</li>
+    </ul>
+
+    <h3>Extension Changes</h3>
+    <ul>
+      <li>A new primitive, <code>table:values</code> has been added to the table extension.</li>
+      <li>The R extension has been updated to take full advantage of the JavaGD R library using <code>r:setPlotDevice</code>.</li>
+      <li>User's can now supply a path to the R extension by configuring the value of r.lib.paths in the user.properties file.</li>
+    </ul>
+
+    <h3>Documentation Changes</h3>
+    <ul>
+      <li>The system dynamics tutorial now instructs the user to set the <code>dt</code> to a value which gives stable behavior</li>
+      <li>The documentation for <code>follow</code>, <code>ride</code>, and <code>watch</code> has been clarified to indicate that calling one undoes highlights and perspective changes caused by the other</li>
+      <li>The documentation for <code>=</code> and <code>!=</code> indicates that they work with extension objects.</li>
+      <li>Several examples have been added to <code>sort</code> clarifying the behavior of <code>sort</code> on lists featuring different types of objects.</li>
+      <li>A new <a href="programming.html#user-interaction">section on User Interface primitives</a> has been added to the programming guide which discusses the behavior of the &quot;Halt&quot; button in the various user interaction dialogs.</li>
+      <li>Incorrect example code for <code>foreach</code> and <code>reduce</code> has been corrected.</li>
+    </ul>
+
+    <h3>Models</h3>
+    <ul>
+    </ul>
+
+    <h2>
       Version 6.0 (December 2016)
     </h2>
 
