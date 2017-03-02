@@ -24,8 +24,7 @@ object ModelInterfaceBuilder {
         button.relocate(b.left, b.top)
         interfacePane.getChildren.add(button)
       case s: CoreSlider  =>
-        // TODO: This only allows for sliders with constant mins and maxes
-        val slider = new Slider(s.min.toDouble, s.max.toDouble, s.default)
+        val slider = new SliderControl(s)
         slider.relocate(s.left, s.top)
         interfacePane.getChildren.add(slider)
       case v: CoreView    =>

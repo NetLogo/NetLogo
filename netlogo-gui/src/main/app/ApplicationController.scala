@@ -40,7 +40,7 @@ class ApplicationController {
       override def handle(a: ActionEvent): Unit = {
         val fileChooser = new FileChooser()
         fileChooser.setTitle("Select a NetLogo model")
-        fileChooser.setInitialDirectory(new java.io.File(new java.io.File(System.getProperty("user.dir")).getParentFile, "models"))
+        fileChooser.setInitialDirectory(new java.io.File(new java.io.File(System.getProperty("user.dir")).getParentFile, "models/Sample Models/Biology"))
         val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
         val openModelUI = new OpenModelUI(executor, menuBar.getScene.getWindow)
         selectedFile.foreach { file =>
