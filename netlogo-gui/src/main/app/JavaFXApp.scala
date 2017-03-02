@@ -3,15 +3,17 @@
 package org.nlogo.app
 
 import javafx.application.Application
+import javafx.fxml.FXMLLoader
+import javafx.scene.{ Group, Scene }
 import javafx.stage.Stage
-import org.nlogo.util.Pico
-
 
 import org.nlogo.api._
+import org.nlogo.agent.World
 import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
+import org.nlogo.util.Pico
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
 
 import org.picocontainer.adapters.AbstractAdapter
@@ -19,6 +21,12 @@ import org.picocontainer.adapters.AbstractAdapter
 class JavaFXApp extends Application {
 
   private val pico = new Pico()
+
+  var threadPool: java.util.concurrent.ExecutorService = _
+
+  var applicationController: ApplicationController = _
+
+  var workspace: JFXGUIWorkspace = _
 
   /**
    * Should be called once at startup to create the application and
@@ -86,11 +94,35 @@ class JavaFXApp extends Application {
 
     pico.addAdapter(new ModelConverterComponent())
 
+    workspace = new JFXGUIWorkspace(new World())
+
+    pico.addComponent(workspace)
     pico.addComponent(classOf[ModelSaver])
     pico.addComponent(classOf[JavaFXApp], this)
+
+    threadPool = java.util.concurrent.Executors.newFixedThreadPool(2)
   }
 
   override def start(primaryStage: Stage): Unit = {
+    import javafx.scene.layout.{ HBox, VBox }
+    val loader = new FXMLLoader(getClass.getClassLoader.getResource("Application.fxml"))
+    val vBox = loader.load().asInstanceOf[VBox]
+    applicationController = loader.getController.asInstanceOf[ApplicationController]
+    applicationController.modelLoader = pico.getComponent(classOf[ModelLoader])
+    applicationController.modelConverter = pico.getComponent(classOf[ModelConverter])
+    applicationController.executor = threadPool
+    val scene = new Scene(vBox)
+    primaryStage.setScene(scene)
+    primaryStage.show()
+  }
 
+  override def stop(): Unit = {
+    workspace.dispose()
+    threadPool.shutdown()
+    if (! threadPool.awaitTermination(100, java.util.concurrent.TimeUnit.MILLISECONDS)) {
+      threadPool.shutdownNow()
+      System.exit(0)
+    }
+    javafx.application.Platform.exit()
   }
 }
