@@ -127,8 +127,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(
     name := "NetLogo",
     version := "6.0.2",
-    isSnapshot := false,
-    mainClass in Compile := Some("org.nlogo.app.App"),
+    isSnapshot := true,
+    mainClass in Compile := Some("org.nlogo.app.JavaFXApp"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
