@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
 
-package org.nlogo.app
+package org.nlogo.javafx
 
 import org.nlogo.internalapi.{ CompiledModel, CompiledWidget, CompiledButton, NonCompiledWidget }
 import org.nlogo.api.NetLogoLegacyDialect
@@ -26,6 +26,12 @@ object CompileAll {
     } catch {
       case e: CompilerException =>
         CompiledModel(model, Seq(), Left(e))
+      case e: Exception =>
+        println("exception!")
+        throw e
+      case s: scala.NotImplementedError =>
+        s.printStackTrace()
+        throw s
     }
   }
 

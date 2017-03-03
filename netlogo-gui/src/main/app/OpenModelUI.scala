@@ -17,11 +17,13 @@ import org.nlogo.workspace.OpenModel
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
-class OpenModelUI(executor: Executor, window: Window)
+class OpenModelUI(backgroundContext: ExecutionContext, window: Window)
   extends OpenModel[URI]
   with OpenModel.Controller {
 
     class CancelException extends RuntimeException("canceled!")
+
+  override def backgroundExecutionContext = backgroundContext
 
   def controllerExecutionContext: ExecutionContext = JavaFXExecutionContext
 

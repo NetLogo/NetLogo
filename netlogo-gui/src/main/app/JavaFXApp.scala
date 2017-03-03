@@ -94,7 +94,7 @@ class JavaFXApp extends Application {
 
     pico.addAdapter(new ModelConverterComponent())
 
-    workspace = new JFXGUIWorkspace(new World())
+    workspace = new JFXGUIWorkspace(new World(), pico.getComponent(classOf[PresentationCompilerInterface]))
 
     pico.addComponent(workspace)
     pico.addComponent(classOf[ModelSaver])
@@ -111,6 +111,7 @@ class JavaFXApp extends Application {
     applicationController.modelLoader = pico.getComponent(classOf[ModelLoader])
     applicationController.modelConverter = pico.getComponent(classOf[ModelConverter])
     applicationController.executor = threadPool
+    applicationController.workspace = workspace
     val scene = new Scene(vBox)
     primaryStage.setScene(scene)
     primaryStage.show()

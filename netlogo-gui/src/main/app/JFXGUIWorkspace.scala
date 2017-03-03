@@ -4,9 +4,12 @@ package org.nlogo.app
 
 import org.nlogo.agent.World
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelSettings}
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
-class JFXGUIWorkspace(world: World) extends AbstractWorkspaceScala(world, null) {
+class JFXGUIWorkspace(world: World,
+  val compiler: PresentationCompilerInterface)
+  extends AbstractWorkspaceScala(world, null) {
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
   def aggregateManager(): org.nlogo.api.AggregateManagerInterface = ???
@@ -42,8 +45,6 @@ class JFXGUIWorkspace(world: World) extends AbstractWorkspaceScala(world, null) 
   def startLogging(properties: String): Unit = ???
   def zipLogFiles(filename: String): Unit = ???
 
-  // Members declared in org.nlogo.workspace.ModelTracker
-  def compiler: org.nlogo.nvm.PresentationCompilerInterface = ???
 
   // Members declared in org.nlogo.nvm.Workspace
   def inspectAgent(agentKind: org.nlogo.core.AgentKind,agent: org.nlogo.agent.Agent,radius: Double): Unit = ???
