@@ -8,6 +8,7 @@ import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
 import javax.swing.{ Action, JOptionPane }
 
+import scala.concurrent.Future
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
@@ -19,7 +20,7 @@ import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
+import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI, SwingUnlockedExecutionContext },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
 
@@ -101,8 +102,11 @@ object FileManager {
         def run(): Unit = {
           try {
             val uri = Paths.get(importPath).toUri
-            manager.loadModel(uri, manager.openModelURI(uri)).map(model =>
-              workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
+            manager.loadModel(uri, manager.openModelURI(uri)).foreach { model =>
+              workspace.getHubNetManager.foreach { hnManager =>
+                hnManager.importClientInterface(model, sectionChoice == 1)
+              }
+            }(SwingUnlockedExecutionContext)
           } catch {
             case ex: IOException => exception = Some(ex)
           }
@@ -280,17 +284,17 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType): Unit = {
-    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType))
+    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType))(SwingUnlockedExecutionContext)
   }
 
-  private def openModelURI(uri: URI): (OpenModel.Controller) => Option[Model] =
-    ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, Version))
+  private def openModelURI(uri: URI): (OpenModel.Controller) => Future[Model] =
+    ((fileController: OpenModel.Controller) => new OpenModelFromURI(SwingUnlockedExecutionContext)(uri, fileController, modelLoader, modelConverter, Version))
 
   def openFromSource(uri: URI, modelSource: String, modelType: ModelType): Unit = {
     loadModel(uri,
       (fileController: OpenModel.Controller) =>
-        OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
-          .foreach(m => openFromModel(m, uri, modelType))
+        new OpenModelFromSource(SwingUnlockedExecutionContext)(uri, modelSource, fileController, modelLoader, modelConverter, Version))
+          .foreach(m => openFromModel(m, uri, modelType))(SwingUnlockedExecutionContext)
   }
 
   /**
@@ -305,7 +309,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
   }
 
-  private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
+  private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Future[Model]): Future[Model] = {
     ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
       (dialog) => new BackgroundFileController(dialog, controller),
@@ -313,8 +317,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
         try {
           openModel(fileController)
         } catch {
-          case e: Exception => println("Exception in FileMenu.loadModel: " + e)
-          None
+          case e: Exception =>
+            println("Exception in FileMenu.loadModel: " + e)
+            Future.failed(e)
         })
   }
 
@@ -322,7 +327,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
   @throws(classOf[IOException])
   def newModel(): Unit = {
     try {
-      openFromModel(modelLoader.emptyModel(modelSuffix), getClass.getResource(emptyModelPath).toURI, ModelType.New)
+      openFromModel(
+        modelLoader.emptyModel(modelSuffix),
+        getClass.getResource(emptyModelPath).toURI,
+        ModelType.New)
     } catch  {
       case ex: URISyntaxException =>
         println("Unable to locate empty model: " + emptyModelPath)

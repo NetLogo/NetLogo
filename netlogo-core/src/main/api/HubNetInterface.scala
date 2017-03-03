@@ -118,7 +118,9 @@ trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
   def setHistogramNumBars(clientId: String, num: Int)
   def setPlotPenInterval(clientId: String, interval: Double)
   def currentlyActiveInterface: HubNetInterface.ClientInterface
+  @deprecated("6.0", "Calculator HubNet is no longer supported")
   def calculatorInterface(activity: String, tags: Seq[String]): HubNetInterface.ClientInterface
+  @deprecated("6.0", "Define your HubNet interface using a NetLogo model")
   def fileInterface(path: String): Option[HubNetInterface.ClientInterface]
 }
 

@@ -17,7 +17,7 @@ import org.nlogo.core.I18N
 import org.nlogo.log.Logger
 import org.nlogo.swing.{FileDialog, ModalProgressTask}
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
+import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory, NetLogoExecutionContext}
 import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
 
 abstract class GUIWorkspaceScala(

@@ -12,7 +12,7 @@ import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
-  ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
+  ReconfigureWorkspaceUI, SwingUnlockedExecutionContext, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
@@ -216,8 +216,11 @@ with ControlSet {
     val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
       workspace, fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
-    val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
-    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
+    val modelOpt =
+      new OpenModelFromURI(SwingUnlockedExecutionContext)(uri, controller, loader, converter(workspace.world.program.dialect), Version)
+        .foreach { model =>
+          ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace)
+        }(SwingUnlockedExecutionContext)
   }
 
   def userInterface: Future[BufferedImage] = {

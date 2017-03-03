@@ -2,6 +2,11 @@
 
 package org.nlogo.hubnet.server
 
+import java.nio.file.Paths
+import java.net.URI
+import java.io.{ Serializable => JSerializable }
+import java.util.concurrent.LinkedBlockingQueue
+
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
 import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
@@ -10,14 +15,13 @@ import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, NetLogoExecutionContext,
+  OpenModel, OpenModelFromURI }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
 
-import java.nio.file.Paths
-import java.net.URI
-import java.io.{ Serializable => JSerializable }
-import java.util.concurrent.LinkedBlockingQueue
+import scala.concurrent.{ Await, Future }
+import scala.concurrent.duration.Duration
 
 abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader, modelConverter: ModelConversion)
   extends HubNetInterface
@@ -324,11 +328,14 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
 
   def fileInterface(path: String): Option[ClientInterface] = {
     val uri = Paths.get(path).toUri
-    OpenModelFromURI(uri, HubNetLoadController, modelLoader, modelConverter, Version)
-      .flatMap { model =>
-        model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
-          .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
-      }
+    val interface =
+      new OpenModelFromURI(NetLogoExecutionContext.backgroundExecutionContext)(
+        uri, HubNetLoadController, modelLoader, modelConverter, Version)
+        .map { model =>
+          model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient")
+            .map(widgets => ComputerInterface(widgets, model.turtleShapes, model.linkShapes))
+        }(NetLogoExecutionContext.backgroundExecutionContext)
+    Await.result(interface, Duration.Inf)
   }
 
   object HubNetLoadController extends OpenModel.Controller {

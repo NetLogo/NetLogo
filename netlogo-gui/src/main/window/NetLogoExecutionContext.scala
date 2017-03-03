@@ -8,10 +8,7 @@ import scala.concurrent.ExecutionContext
 
 import org.nlogo.awt.EventQueue
 
-object NetLogoExecutionContext {
-  implicit def backgroundExecutionContext: ExecutionContext =
-    ExecutionContext.global
-}
+import org.nlogo.workspace.NetLogoExecutionContext
 
 object SwingUnlockedExecutionContext extends ExecutionContext {
   def execute(runnable: Runnable): Unit     = {

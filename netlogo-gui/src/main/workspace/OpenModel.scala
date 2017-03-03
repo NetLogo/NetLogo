@@ -11,6 +11,8 @@ import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion }
 
 import scala.util.{ Failure, Success, Try }
 
+import scala.concurrent.{ ExecutionContext, Future }
+
 object OpenModel {
   trait Controller {
     def errorOpeningURI(uri: URI, exception: Exception): Unit
@@ -22,14 +24,21 @@ object OpenModel {
     def shouldOpenModelOfUnknownVersion(version: String): Boolean
     def shouldOpenModelOfLegacyVersion(version: String): Boolean
   }
+
+  class CancelException extends RuntimeException
 }
 
-import OpenModel.Controller
+import OpenModel._
 
 trait OpenModel[OpenParameter] {
   class InvalidModelException(message: String) extends Exception(message)
 
   def readModel(loader: ModelLoader, param: OpenParameter): Try[Model]
+
+  def controllerExecutionContext: ExecutionContext
+
+  def backgroundExecutionContext: ExecutionContext =
+    NetLogoExecutionContext.backgroundExecutionContext
 
   def runOpenModelProcess(
     openParam: OpenParameter,
@@ -37,33 +46,61 @@ trait OpenModel[OpenParameter] {
     controller: Controller,
     loader: ModelLoader,
     modelConverter: ModelConversion,
-    currentVersion: Version): Option[Model] = {
-      val isValidURI = Option(uri)
-        .flatMap(ModelLoader.getURIExtension)
-        .map(ext => loader.formats.map(_.name).contains(ext))
-        .getOrElse(false)
-      if (! isValidURI) {
-        controller.invalidModel(uri)
-        None
-      } else {
-        readModel(loader, openParam) match {
-          case Success(model) =>
-            if (! model.version.startsWith("NetLogo")) {
-              controller.invalidModelVersion(uri, model.version)
-              None
-            } else if (shouldCancelOpeningModel(model, controller, currentVersion))
-              None
-            else
-              modelConverter(model, Paths.get(uri)) match {
-                case res: FailedConversionResult => controller.errorAutoconvertingModel(res)
-                case res                         => Some(res.model)
-              }
-          case Failure(exception: Exception) =>
-            controller.errorOpeningURI(uri, exception)
-            None
-          case Failure(ex) => throw ex
+    currentVersion: Version): Future[Model] = {
+      implicit val ec = controllerExecutionContext
+      val isValidURI = Future {
+        Option(uri)
+          .flatMap(ModelLoader.getURIExtension)
+          .map(ext => loader.formats.map(_.name).contains(ext))
+          .getOrElse(false)
+      }(backgroundExecutionContext)
+
+      def reportFailure(f: Controller => Unit): Future[Model] =
+        Future {
+          f(controller)
+          throw new CancelException()
         }
-      }
+
+      def invalidModel = reportFailure(_.invalidModel(uri))
+
+      def errorReadingModel(exception: Exception) =
+        reportFailure(_.errorOpeningURI(uri, exception))
+
+      def invalidModelVersion(model: Model) =
+        reportFailure(_.invalidModelVersion(uri, model.version))
+
+      def modelFuture =
+        Future { readModel(loader, openParam) }(backgroundExecutionContext)
+
+      def checkForCancellation(model: Model) =
+        Future {
+          if (shouldCancelOpeningModel(model, controller, currentVersion))
+            throw new CancelException()
+          else
+            model
+        }
+
+      def convertModel(model: Model): Future[Model] =
+        Future { modelConverter(model, Paths.get(uri)) }(backgroundExecutionContext)
+          .flatMap { r =>
+            r match {
+              case res: FailedConversionResult =>
+                Future { controller.errorAutoconvertingModel(res).getOrElse(throw new CancelException()) }
+              case res                         => Future(res.model)
+            }
+          }(backgroundExecutionContext)
+
+      isValidURI.flatMap { isValid =>
+        if (! isValid) invalidModel
+        else
+          modelFuture.flatMap {
+            case Success(model: Model) if model.version.startsWith("NetLogo") =>
+              checkForCancellation(model).flatMap(convertModel)(backgroundExecutionContext)
+            case Success(model: Model)  => invalidModelVersion(model)
+            case Failure(ex: Exception) => errorReadingModel(ex)
+            case Failure(ex)            => throw ex
+          }(backgroundExecutionContext)
+      }(backgroundExecutionContext)
   }
 
   private def shouldCancelOpeningModel(model: Model, controller: Controller, currentVersion: Version): Boolean = {
@@ -80,7 +117,8 @@ trait OpenModel[OpenParameter] {
   }
 }
 
-object OpenModelFromURI extends OpenModel[URI] {
+class OpenModelFromURI(val controllerExecutionContext: ExecutionContext)
+  extends OpenModel[URI] {
   def readModel(loader: ModelLoader, uri: URI): Try[Model] =
     loader.readModel(uri)
 
@@ -89,12 +127,13 @@ object OpenModelFromURI extends OpenModel[URI] {
     controller:     Controller,
     loader:         ModelLoader,
     modelConverter: ModelConversion,
-    currentVersion: Version): Option[Model] = {
+    currentVersion: Version): Future[Model] = {
     runOpenModelProcess(uri, uri, controller, loader, modelConverter, currentVersion)
   }
 }
 
-object OpenModelFromSource extends OpenModel[(URI, String)] {
+class OpenModelFromSource(val controllerExecutionContext: ExecutionContext)
+  extends OpenModel[(URI, String)] {
   def readModel(loader: ModelLoader, uriAndSource: (URI, String)): Try[Model] =
     loader.readModel(uriAndSource._2, uriAndSource._1.getPath.split("\\.").last)
 
@@ -104,7 +143,7 @@ object OpenModelFromSource extends OpenModel[(URI, String)] {
     controller:     Controller,
     loader:         ModelLoader,
     modelConverter: ModelConversion,
-    currentVersion: Version): Option[Model] = {
+    currentVersion: Version): Future[Model] = {
     runOpenModelProcess((uri, source), uri, controller, loader, modelConverter, currentVersion)
   }
 }
