@@ -90,7 +90,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     view = viewWidget.view();
     viewManager().setPrimary(view);
 
-    periodicUpdater = new PeriodicUpdater(jobManager);
+    periodicUpdater = new PeriodicUpdater(jobManager());
     periodicUpdater.start();
     world.trailDrawer(this);
 
@@ -98,7 +98,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     javax.swing.Action repaintAction =
         new javax.swing.AbstractAction() {
           public void actionPerformed(java.awt.event.ActionEvent e) {
-            if (world.displayOn() && displaySwitchOn() && !jobManager.anyPrimaryJobs()) {
+            if (world.displayOn() && displaySwitchOn() && !jobManager().anyPrimaryJobs()) {
               viewManager().paintImmediately(world.observer().updatePosition());
             }
           }
@@ -136,7 +136,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     public void run() {
       try {
         while (true) {
-          if (jobManager.anyPrimaryJobs()) {
+          if (jobManager().anyPrimaryJobs()) {
             world().comeUpForAir = true;
           }
           // 100 times a second seems like plenty
@@ -652,7 +652,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // this is called on the job thread when the engine comes up for air - ST 1/10/07
   @Override
   public void breathe() {
-    jobManager.maybeRunSecondaryJobs();
+    jobManager().maybeRunSecondaryJobs();
     if (updateMode().equals(UpdateModeJ.CONTINUOUS())) {
       updateManager().pseudoTick();
       updateDisplay(true);
@@ -699,7 +699,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   @Override
   public void halt() {
-    jobManager.interrupt();
+    jobManager().interrupt();
     org.nlogo.swing.ModalProgressTask.onUIThread(
       getFrame(), "Halting...",
       new Runnable() {
@@ -839,31 +839,31 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     if (owner.ownsPrimaryJobs()) {
       if (e.procedure != null) {
-        jobManager.addJob(owner, agents, this, e.procedure);
+        jobManager().addJob(owner, agents, this, e.procedure);
       } else {
         new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
-      jobManager.addSecondaryJob(owner, agents, this, e.procedure);
+      jobManager().addSecondaryJob(owner, agents, this, e.procedure);
     }
   }
 
   public void handle(org.nlogo.window.Events.RemoveJobEvent e) {
     org.nlogo.api.JobOwner owner = e.owner;
     if (owner.ownsPrimaryJobs()) {
-      jobManager.finishJobs(owner);
+      jobManager().finishJobs(owner);
     } else {
-      jobManager.finishSecondaryJobs(owner);
+      jobManager().finishSecondaryJobs(owner);
     }
   }
 
   public void handle(org.nlogo.window.Events.JobStoppingEvent e) {
-    jobManager.stoppingJobs(e.owner);
+    jobManager().stoppingJobs(e.owner);
   }
 
   public void handle(org.nlogo.window.Events.RemoveAllJobsEvent e) {
-    jobManager.haltSecondary();
-    jobManager.haltPrimary();
+    jobManager().haltSecondary();
+    jobManager().haltPrimary();
   }
 
   public void handle(org.nlogo.window.Events.AddBooleanConstraintEvent e) {
@@ -924,7 +924,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(org.nlogo.window.Events.CompiledEvent e) {
-    codeBits.clear();
+    codeBits().clear();
   }
 
   /// agents
@@ -1081,8 +1081,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (hubNetManager().isDefined()) {
       hubNetManager().get().disconnect();
     }
-    jobManager.haltSecondary();
-    jobManager.haltPrimary();
+    jobManager().haltSecondary();
+    jobManager().haltPrimary();
     getExtensionManager().reset();
     fileManager().handleModelChange();
     previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());

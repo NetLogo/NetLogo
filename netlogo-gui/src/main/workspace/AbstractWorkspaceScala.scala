@@ -29,10 +29,12 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Procedures
   with Compiling
   with BehaviorSpaceInformation
+  with JobManagement
   with Traceable with HubNetManager
   with Components
   with ExtendableWorkspaceMethods with Exporting
-  with Plotting {
+  with Plotting
+  with PlotEvaluating {
 
   def isHeadless: Boolean
 

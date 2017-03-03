@@ -44,8 +44,6 @@ public abstract strictfp class AbstractWorkspace
 
   public final org.nlogo.agent.World _world;
 
-  public final org.nlogo.nvm.JobManagerInterface jobManager;
-  protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
@@ -56,9 +54,7 @@ public abstract strictfp class AbstractWorkspace
 
   protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
-    evaluator = new Evaluator(this);
-    jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
-        new Object[]{this, world, world});
+    world.compiler_$eq(this);
     extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
@@ -81,7 +77,6 @@ public abstract strictfp class AbstractWorkspace
    */
   public void dispose()
       throws InterruptedException {
-    jobManager.die();
     getExtensionManager().reset();
   }
 
@@ -156,35 +151,11 @@ public abstract strictfp class AbstractWorkspace
 
   /// methods that may be called from the job thread by prims
 
-  public void joinForeverButtons(org.nlogo.agent.Agent agent) {
-    jobManager.joinForeverButtons(agent);
-  }
+  public abstract void joinForeverButtons(org.nlogo.agent.Agent agent);
 
-  public void addJobFromJobThread(org.nlogo.nvm.Job job) {
-    jobManager.addJobFromJobThread(job);
-  }
+  public abstract void addJobFromJobThread(org.nlogo.nvm.Job job);
 
   public abstract void magicOpen(String name);
-
-  // this is used to cache the compiled code used by the "run"
-  // and "runresult" prims - ST 6/7/07
-  public WeakHashMap<String, Procedure> codeBits =
-      new WeakHashMap<String, Procedure>();
-
-  public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
-                                 boolean reporter)
-      throws CompilerException {
-    String key = source + "@" + context.activation.procedure().args().size() +
-        "@" + context.agentBit;
-    scala.Option<Procedure> storedProc = codeBits.get(key);
-    if (storedProc.isEmpty()) {
-      Procedure proc = evaluator.compileForRun(source, context, reporter);
-      codeBits.put(key, proc);
-      return proc;
-    } else {
-      return storedProc.get();
-    }
-  }
 
   /// misc
 
@@ -207,7 +178,6 @@ public abstract strictfp class AbstractWorkspace
       throws CompilerException, LogoException;
 
   public void halt() {
-    jobManager.haltPrimary();
     _world.displayOn(true);
   }
 

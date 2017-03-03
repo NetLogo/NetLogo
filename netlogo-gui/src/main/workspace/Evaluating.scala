@@ -5,10 +5,18 @@ package org.nlogo.workspace
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ Context, Procedure }
 
-trait Evaluating { this: AbstractWorkspace =>
+import scala.collection.mutable.WeakHashMap
+
+trait Evaluating { this: AbstractWorkspace with JobManagement =>
   var lastLogoException: LogoException = null
+
+  private[workspace] val evaluator = new Evaluator(this)
+
+  // this is used to cache the compiled code used by the "run"
+  // and "runresult" prims - ST 6/7/07
+  val codeBits = new WeakHashMap[String, Procedure]()
 
   override def clearLastLogoException() { lastLogoException = null }
 
@@ -106,5 +114,19 @@ trait Evaluating { this: AbstractWorkspace =>
       throw ex
     }
     result
+  }
+
+
+  @throws(classOf[CompilerException])
+  def compileForRun(source: String, context: Context, reporter: Boolean): Procedure = {
+    val key =
+      s"$source@${context.activation.procedure.args.size}@${context.agentBit}"
+    val storedProc = codeBits.get(key)
+
+    storedProc.getOrElse {
+      val proc = evaluator.compileForRun(source, context, reporter)
+      codeBits.put(key, proc)
+      proc
+    }
   }
 }

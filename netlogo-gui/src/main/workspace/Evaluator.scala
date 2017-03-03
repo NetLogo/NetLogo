@@ -10,7 +10,7 @@ import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
 import scala.collection.immutable.Vector
 import scala.util.Try
 
-class Evaluator(workspace: AbstractWorkspace) {
+class Evaluator(workspace: AbstractWorkspace with JobManagement) {
 
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner,
