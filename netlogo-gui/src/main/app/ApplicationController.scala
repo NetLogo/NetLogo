@@ -7,22 +7,23 @@ import java.util.concurrent.Executor
 
 import javafx.fxml.FXML
 import javafx.event.{ ActionEvent, EventHandler }
-import javafx.scene.control.{ Alert, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
+import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
 import javafx.scene.layout.AnchorPane
 import javafx.stage.{ FileChooser, Window }
 
-import org.nlogo.javafx.{ CompileAll, JavaFXExecutionContext, OpenModelUI }
+import org.nlogo.javafx.{ CompileAll, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
+import org.nlogo.internalapi.ModelRunner
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.AbstractWorkspaceScala
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
-class ApplicationController {
+class ApplicationController extends ModelRunner {
   var executor: Executor = _
-  var workspace: AbstractWorkspace = _
+  var workspace: AbstractWorkspaceScala = _
 
   var modelLoader: ModelLoader = _
   var modelConverter: ModelConversion = _
@@ -35,6 +36,12 @@ class ApplicationController {
 
   @FXML
   var interfaceArea: AnchorPane = _
+
+  var widgetsByTag = Map.empty[String, Button]
+
+  def tagError(tag: String, error: Exception): Unit = {
+    // empty implementation (for now!)
+  }
 
   @FXML
   def initialize(): Unit = {
@@ -49,21 +56,13 @@ class ApplicationController {
         selectedFile.foreach { file =>
           openModelUI(file.toURI, modelLoader, modelConverter)
             .map { m =>
-              println("starting compilation!")
-              try {
-              val r = CompileAll(m, workspace)
-              println("finished compilation!")
-              r
-              } catch {
-                case e: Exception =>
-                  println("EXCEPTION!")
-                  throw e
-              }
+              CompileAll(m, workspace)
             }(executionContext)
             .foreach {
               compiledModel =>
-                println("adding children!")
-                interfaceArea.getChildren.add(ModelInterfaceBuilder.build(compiledModel.model))
+                val (interfaceWidgetsPane, widgetsMap) = ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
+                widgetsByTag = widgetsMap
+                interfaceArea.getChildren.add(interfaceWidgetsPane)
             }(JavaFXExecutionContext)
         }
       }

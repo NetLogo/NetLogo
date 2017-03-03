@@ -3,9 +3,10 @@
 package org.nlogo.app
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelSettings}
-import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
+import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface }
 import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.javafx.DummyJobOwner
 
 class JFXGUIWorkspace(world: World,
   val compiler: PresentationCompilerInterface)
@@ -37,7 +38,14 @@ class JFXGUIWorkspace(world: World,
   // Members declared in org.nlogo.nvm.JobManagerOwner // TODO: These will probably need to be implemented before the model will run
   def ownerFinished(owner: org.nlogo.api.JobOwner): Unit = ???
   def periodicUpdate(): Unit = ???
-  def runtimeError(owner: org.nlogo.api.JobOwner,context: org.nlogo.nvm.Context,instruction: org.nlogo.nvm.Instruction,ex: Exception): Unit = ???
+  def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception): Unit = {
+    owner match {
+      case d: DummyJobOwner =>
+      case _ =>
+    }
+    println(ex.getMessage)
+    ex.printStackTrace()
+  }
   def updateDisplay(haveWorldLockAlready: Boolean): Unit = ???
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace

@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
 
-package org.nlogo.app
+package org.nlogo.javafx
 
 import javafx.beans.value.ObservableValue
 import javafx.event.{ Event, EventHandler }

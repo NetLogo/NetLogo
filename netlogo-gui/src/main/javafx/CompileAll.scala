@@ -2,15 +2,49 @@
 
 package org.nlogo.javafx
 
-import org.nlogo.internalapi.{ CompiledModel, CompiledWidget, CompiledButton, NonCompiledWidget }
-import org.nlogo.api.NetLogoLegacyDialect
+import org.nlogo.internalapi.{
+  CompiledModel, CompiledWidget, CompiledButton => ApiCompiledButton,
+  EmptyRunnableModel, NonCompiledWidget, RunnableModel }
+import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
+import org.nlogo.internalapi.ModelRunner
 import org.nlogo.core.{ AgentKind, Button => CoreButton, CompilerException,
   Model, Program, Widget }
-import org.nlogo.nvm.CompilerResults
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.nvm.{ CompilerResults, Procedure }
+import org.nlogo.workspace.{ AbstractWorkspace, Evaluating }
+
+
+class DummyJobOwner(val random: MersenneTwisterFast, modelRunner: ModelRunner, val tag: String) extends JobOwner {
+  def displayName: String = "Job Owner" // TODO: we may want another button
+  def isButton: Boolean = true // TODO: our only owners at this point are buttons
+  def isCommandCenter: Boolean = false
+  def isLinkForeverButton: Boolean = false
+  def isTurtleForeverButton: Boolean = false
+  def ownsPrimaryJobs: Boolean = true
+
+  def classDisplayName: String = "Button"
+  def headerSource: String = ""
+  def innerSource: String = ""
+  def innerSource_=(s: String): Unit = {}
+  def kind: org.nlogo.core.AgentKind = AgentKind.Observer
+  def source: String = ""
+}
+
+class CompiledRunnableModel(workspace: AbstractWorkspace with Evaluating, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
+  def runTag(tag: String, modelRunner: ModelRunner): Unit = {
+    compiledWidgets.collect {
+      case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => c
+    }.foreach { button =>
+      workspace.runCompiledCommands(new DummyJobOwner(workspace.world.mainRNG, modelRunner, tag),
+        button.procedure)
+    }
+  }
+}
+
+case class CompiledButton(val widget: CoreButton, val compilerError: Option[CompilerException], val tag: String, val procedure: Procedure)
+  extends ApiCompiledButton
 
 object CompileAll {
-  def apply(model: Model, workspace: AbstractWorkspace): CompiledModel = {
+  def apply(model: Model, workspace: AbstractWorkspace with Evaluating): CompiledModel = {
     //TODO: We're forcing this to be a 2D Program
     val program = Program.fromDialect(NetLogoLegacyDialect).copy(interfaceGlobals = model.interfaceGlobals)
     try {
@@ -22,10 +56,13 @@ object CompileAll {
       workspace.init()
       workspace.world.program(results.program)
       val compiledWidgets = model.widgets.map(compileWidget(results, workspace))
-      CompiledModel(model, compiledWidgets, Right(results.program))
+      CompiledModel(model,
+        compiledWidgets,
+        new CompiledRunnableModel(workspace, compiledWidgets),
+        Right(results.program))
     } catch {
       case e: CompilerException =>
-        CompiledModel(model, Seq(), Left(e))
+        CompiledModel(model, Seq(), EmptyRunnableModel, Left(e))
       case e: Exception =>
         println("exception!")
         throw e
@@ -56,10 +93,10 @@ object CompileAll {
                 results.program, results.proceduresMap,
                 workspace.getExtensionManager, workspace.getCompilationEnvironment)
             buttonResults.head.init(workspace)
-            CompiledButton(b, None, tag)
+            CompiledButton(b, None, tag, buttonResults.head)
           } catch {
             case e: CompilerException =>
-              CompiledButton(b, Some(e), "")
+              CompiledButton(b, Some(e), "", null)
           }
         } getOrElse NonCompiledWidget(widget)
 
