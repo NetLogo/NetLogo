@@ -35,7 +35,6 @@ trait Indenter {
   def closeBracketAction: TextAction =
     new TextAction("close-bracket") {
       def actionPerformed(e: ActionEvent): Unit = {
-        getTextComponent(e).replaceSelection("]")
         handleCloseBracket()
       }
     }

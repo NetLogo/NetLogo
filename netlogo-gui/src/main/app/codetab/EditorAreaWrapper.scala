@@ -3,7 +3,7 @@
 package org.nlogo.app.codetab
 
 import org.nlogo.api.EditorAreaInterface
-import org.nlogo.editor.EditorArea
+import org.nlogo.editor.{ AdvancedEditorArea, AbstractEditorArea }
 import javax.swing.JTextArea
 import javax.swing.text.{ AbstractDocument, JTextComponent }
 
@@ -63,6 +63,18 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
       case ex: javax.swing.text.BadLocationException =>
         println("errored removing: " + start + ", " + len)
         throw ex
+    }
+  }
+  override def beginCompoundEdit(): Unit = {
+    text match {
+      case a: AdvancedEditorArea => a.beginCompoundEdit()
+      case _ => super.beginCompoundEdit()
+    }
+  }
+  override def endCompoundEdit(): Unit = {
+    text match {
+      case a: AdvancedEditorArea => a.endCompoundEdit()
+      case _ => super.endCompoundEdit()
     }
   }
 }
