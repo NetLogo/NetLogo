@@ -3,9 +3,8 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{CommandLogoThunk, LogoThunkFactory, MersenneTwisterFast}
+import org.nlogo.api.{CommandLogoThunk, HaltSignal, LogoThunkFactory, MersenneTwisterFast}
 import org.nlogo.core.CompilerException
-import org.nlogo.nvm.HaltException
 
 import scala.util.{Failure, Success, Try}
 
@@ -132,7 +131,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
       val stopped =
         codeType.call(plotThunks(plot)) match {
           case Success(stop) => stop
-          case Failure(e: HaltException) => throw e
+          case Failure(e: HaltSignal) => throw e
           case Failure(e: Exception) =>
             plot.runtimeError = Some(e)
             false
@@ -162,7 +161,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
           plot.currentPen=pp
           codeType.call(results) match {
             case Success(_)            =>
-            case Failure(e: HaltException) => throw e
+            case Failure(e: HaltSignal) => throw e
             case Failure(e: Exception) => pp.runtimeError = Some(e)
             case Failure(t: Throwable) => throw t
           }

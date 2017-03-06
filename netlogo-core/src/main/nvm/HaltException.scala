@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.LogoException
+import org.nlogo.api.{HaltSignal, LogoException}
 
 class HaltException(val haltAll: Boolean)
-  extends LogoException("model halted by user")
+  extends LogoException("model halted by user") with HaltSignal
