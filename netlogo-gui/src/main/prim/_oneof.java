@@ -28,7 +28,7 @@ public final strictfp class _oneof
       if (count == 0) {
         return org.nlogo.core.Nobody$.MODULE$;
       } else {
-        return agents.randomOne(count, context.job.random.nextInt(count));
+        return agents.randomOne(count, context.job.random);
       }
     } else {
       throw new ArgumentTypeException
@@ -43,7 +43,7 @@ public final strictfp class _oneof
     if (count == 0) {
       return org.nlogo.core.Nobody$.MODULE$;
     } else {
-      return agents.randomOne(count, context.job.random.nextInt(count));
+      return agents.randomOne(count, context.job.random);
     }
   }
 
@@ -71,7 +71,7 @@ public final strictfp class _oneof
       if (count == 0) {
         return org.nlogo.core.Nobody$.MODULE$;
       } else {
-        return agents.randomOne(count, context.job.random.nextInt(count));
+        return agents.randomOne(count, context.job.random);
       }
     } else {
       throw new ArgumentTypeException(context, this, 0,

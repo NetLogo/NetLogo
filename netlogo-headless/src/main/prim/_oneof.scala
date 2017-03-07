@@ -17,7 +17,7 @@ class _oneof extends Reporter {
     if (count == 0)
       Nobody
     else
-      agents.randomOne(count, context.job.random.nextInt(count))
+      agents.randomOne(count, context.job.random)
   }
 
   def report_2(context: Context, list: LogoList): AnyRef = {
@@ -36,7 +36,7 @@ class _oneof extends Reporter {
         if (count == 0)
           Nobody
         else
-          agents.randomOne(count, context.job.random.nextInt(count))
+          agents.randomOne(count, context.job.random)
       case list: LogoList =>
         val size = list.size
         if (size == 0)

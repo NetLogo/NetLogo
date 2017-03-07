@@ -9,17 +9,35 @@ import org.nlogo.core.AgentKind
 class AgentSetTests extends FunSuite {
 
   val world = new World()
+  world.createPatches(-10,10,-10,10)
   world.realloc()
 
   def makeTurtle() = world.createTurtle(world.turtles())
 
   def createArrayAgentSet(array: Array[Agent]) = new ArrayAgentSet(AgentKind.Turtle, null, array)
-  def createLazyAgentSet(array: Array[Agent]) = new LazyAgentSet(AgentKind.Turtle, null, createArrayAgentSet(array))
+  def createLazyAgentSet(array: Array[Agent]) = new LazyAgentSet(null, createArrayAgentSet(array))
 
   testAgentSet(createArrayAgentSet, "ArrayAgentSet")
   testAgentSet(createLazyAgentSet, "LazyAgentSet")
   testLazies()
 
+  test("patches oneof") {
+    val a = new LazyAgentSet(null, world.patches())
+    a.lazyWith((a: Agent) => (a.asInstanceOf[Patch].pxcor >= 4) && a.asInstanceOf[Patch].pycor == 5)
+    val c = a.count
+    assertResult(7)(c)
+    var r = a.randomOne(c, world.mainRNG())
+    for (_ <- 1 to 20) {
+      r = a.randomOne(c, world.mainRNG())
+      assertResult(r.asInstanceOf[Patch].pycor)(5)
+    }
+  }
+
+//  test("patches any") {
+//    val a = new LazyAgentSet(null, world.patches())
+//    a.lazyWith((a: Agent) => (a.asInstanceOf[Patch].pxcor >= 4) && a.asInstanceOf[Patch].pycor == 5)
+//
+//  }
 
   def testLazies(): Unit = {
     testLazyOther()
@@ -64,9 +82,14 @@ class AgentSetTests extends FunSuite {
       val t2 = makeTurtle()
       val t3 = makeTurtle()
       val a = createLazyAgentSet(Array(t1,t2,t3))
-      val threshold = a.randomOne(3,1).id
+      val threshold = t2.id()
       a.lazyWith((ag: Agent) => ag.id >= threshold)
       assertResult(2)(a.count)
+    }
+    test(header + "patches") {
+      val a = new LazyAgentSet(null, world.patches())
+      a.lazyWith((a: Agent) => a.asInstanceOf[Patch].pxcor == 5 && a.asInstanceOf[Patch].pycor == 5)
+      assertResult(1)(a.count)
     }
   }
 
@@ -78,7 +101,7 @@ class AgentSetTests extends FunSuite {
       a.lazyOther(t1)
       assertResult(0)(a.count)
       assertThrows[Exception] {
-        a.randomOne(0,0)
+        a.randomOne(0,world.mainRNG())
       }
     }
     test(header + "1-agent set") {
@@ -87,7 +110,7 @@ class AgentSetTests extends FunSuite {
       a.lazyOther(t1)
       assertResult(0)(a.count)
       assertThrows[Exception] {
-        a.randomOne(0,0)
+        a.randomOne(0,world.mainRNG())
       }
     }
     test(header + "irrelevant other") {
@@ -96,7 +119,7 @@ class AgentSetTests extends FunSuite {
       val a = createLazyAgentSet(Array(t1))
       a.lazyOther(t2)
       assertResult(1)(a.count)
-      assertResult(t1)(a.randomOne(1,0))
+      assertResult(t1)(a.randomOne(1,world.mainRNG()))
     }
     test(header + "2-agent set") {
       val t1 = makeTurtle()
@@ -104,10 +127,10 @@ class AgentSetTests extends FunSuite {
       val a = createLazyAgentSet(Array(t1,t2))
       a.lazyOther(t1)
       assertResult(1)(a.count)
-      assertResult(t2)(a.randomOne(1,0))
-      assertThrows[Exception] {
-        a.randomOne(1,1)
-      }
+      assertResult(t2)(a.randomOne(1,world.mainRNG()))
+//      assertThrows[Exception] {
+//        a.randomOne(1,1)
+//      }
     }
   }
 
@@ -169,13 +192,14 @@ class AgentSetTests extends FunSuite {
     assertResult(true)(it1.hasNext)
     assertResult(t2)(it1.next())
     assertResult(2)(a.count)
-    val threshold = a.randomOne(2,0).id
+    val threshold = t2.id()
     a.lazyWith((ag: Agent) => ag.id <= threshold)
     assertResult(false)(it1.hasNext)
     assertThrows[Exception] {
       it1.next()
     }
-    assertResult(1)(a.count)
+    // assumption: no withs/others will be added after a force
+//    assertResult(1)(a.count)
     val it2 = a.iterator
     assertResult(t2)(it2.next())
     assertResult(false)(it2.hasNext)
@@ -253,20 +277,35 @@ class AgentSetTests extends FunSuite {
       val t1 = makeTurtle()
       val t2 = makeTurtle()
       val a = createAgentSet(Array(t1, t2))
-      assertResult(t1)(a.randomOne(2, 0))
-      assertResult(t2)(a.randomOne(2, 1))
+      assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
+      assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
+      assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
+      assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
       t1.die()
-      assertResult(t2)(a.randomOne(2, 0))
-      assertThrows[Exception] {
-        a.randomOne(2, 1)
-      }
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+//      assertThrows[Exception] {
+//        a.randomOne(2, 1)
+//      }
     }
 
     test(agentSetType + ": randomOne errors when agent set empty") {
       val a = createAgentSet(Array())
       assertThrows[Exception] {
-        a.randomOne(0, 0)
+        a.randomOne(0, world.mainRNG())
       }
+    }
+
+    test(agentSetType + ": patches with") {
+      val a = new LazyAgentSet(null, world.patches())
+      a.lazyWith((a: Agent) => (a.asInstanceOf[Patch].pxcor == 5 || a.asInstanceOf[Patch].pxcor == 6) && a.asInstanceOf[Patch].pycor == 5)
+      println(a.randomOne(2,world.mainRNG()))
+      assertResult(true)(Array(world.getPatchAt(5,5),world.getPatchAt(6,5)).contains(a.randomOne(2,world.mainRNG())))
+      assertResult(true)(Array(world.getPatchAt(5,5),world.getPatchAt(6,5)).contains(a.randomOne(2,world.mainRNG())))
+      assertResult(true)(Array(world.getPatchAt(5,5),world.getPatchAt(6,5)).contains(a.randomOne(2,world.mainRNG())))
+      assertResult(true)(Array(world.getPatchAt(5,5),world.getPatchAt(6,5)).contains(a.randomOne(2,world.mainRNG())))
     }
   }
 
@@ -275,7 +314,10 @@ class AgentSetTests extends FunSuite {
       val t1 = makeTurtle()
       val t2 = makeTurtle()
       val a = createAgentSet(Array(t1, t2))
-      assertResult(Array(t1,t2))(a.randomTwo(2,0,1))
+      assertResult(Array(t1,t2))(a.randomTwo(2,world.mainRNG()))
+      assertResult(Array(t1,t2))(a.randomTwo(2,world.mainRNG()))
+      assertResult(Array(t1,t2))(a.randomTwo(2,world.mainRNG()))
+      assertResult(Array(t1,t2))(a.randomTwo(2,world.mainRNG()))
     }
   }
 

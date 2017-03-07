@@ -71,8 +71,9 @@ extends AgentSet(kind, printName) {
   // and _randomnof resulting in more than one total call to count(), since count() can be O(n)
   // - ST 2/27/03
 
-  override def randomOne(precomputedCount: Int, random: Int): Agent = {
+  override def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent = {
     // note: assume agentset nonempty, since _randomoneof.java checks for that
+    val random = rng.nextInt(precomputedCount)
     val iter = iterator
     var i = 0
     while(i < random) {
@@ -83,30 +84,39 @@ extends AgentSet(kind, printName) {
   }
 
   // This is used to optimize the special case of randomSubset where size == 2
-  override def randomTwo(precomputedCount: Int, smallRandom: Int, bigRandom: Int): Array[Agent] = {
+  override def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
     // we know precomputedCount, or this method would not have been called.
     // see randomSubset().
-    if (precomputedCount == nextIndex)
-      Array(
-        _agents.get(Double.box(smallRandom)),
-        _agents.get(Double.box(bigRandom)))
-    else {
-      val it = iterator
-      var i = 0
-      // skip to the first random place
-      while(i < smallRandom) {
-        it.next()
-        i += 1
-      }
-      val first = it.next()
-      i += 1
-      while (i < bigRandom) {
-        it.next()
-        i += 1
-      }
-      val second = it.next()
-      Array(first, second)
-    }
+//    var smallRandom = rng.nextInt(precomputedCount)
+//    var bigRandom = rng.nextInt(precomputedCount)
+//    if (smallRandom > bigRandom) {
+//      val temp = smallRandom
+//      smallRandom = bigRandom
+//      bigRandom = temp
+//    }
+//
+//    if (precomputedCount == nextIndex)
+//      Array(
+//        _agents.get(Double.box(smallRandom)),
+//        _agents.get(Double.box(bigRandom)))
+//    else {
+//      val it = iterator
+//      var i = 0
+//      // skip to the first random place
+//      while(i < smallRandom) {
+//        it.next()
+//        i += 1
+//      }
+//      val first = it.next()
+//      i += 1
+//      while (i < bigRandom) {
+//        it.next()
+//        i += 1
+//      }
+//      val second = it.next()
+//      Array(first, second)
+//    }
+    randomSubsetGeneral(2, precomputedCount, rng)
   }
 
   override def randomSubsetGeneral(resultSize: Int, precomputedCount: Int,
