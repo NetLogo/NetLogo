@@ -59,10 +59,6 @@ object CompileAll {
       workspace.world.program(results.program)
       val compiledWidgets = model.widgets.map(compileWidget(results, workspace))
 
-      // prep world for run...
-      workspace.world.realloc()
-      setDefaultValues(workspace.world, model.widgets)
-
       CompiledModel(model,
         compiledWidgets,
         new CompiledRunnableModel(workspace, compiledWidgets),
@@ -76,26 +72,6 @@ object CompileAll {
       case s: scala.NotImplementedError =>
         s.printStackTrace()
         throw s
-    }
-  }
-
-  def setDefaultValues(world: World, widgets: Seq[Widget]): Unit = {
-    val observerGlobals = widgets.collect {
-      case CoreSwitch(Some(name), _, _, _, _, _, isOn) => name -> isOn
-      case CoreSlider(Some(name), _, _, _, _, _, _, _, default, _, _, _) =>
-        name -> default
-      case CoreChooser(Some(name), _, _, _, _, _, choices, selected) =>
-        name -> choices(selected)
-      case CoreInputBox(Some(name), _, _, _, _, NumericInput(default, _)) =>
-        name -> default
-      case CoreInputBox(Some(name), _, _, _, _, StringInput(default, _, _)) =>
-        name -> default
-    }
-
-    observerGlobals.foreach {
-      case (name, value) =>
-        if (world.observerOwnsIndexOf(name) != -1)
-          world.setObserverVariableByName(name, value)
     }
   }
 

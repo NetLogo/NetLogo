@@ -137,6 +137,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   def rotate(theta: Double) { g.rotate(theta) }
   def rotate(theta: Double, x: Double, y: Double) { g.rotate(theta, x, y) }
   def rotate(theta: Double, x: Double, y: Double, offset: Double) {
+    println(s"Rotating: $theta ($x, $y) @offset: $offset")
     val offset2 = if (isQuartz) offset - 1 else offset
     g.rotate(theta, x + offset2 / 2, y + offset2 / 2)
   }
@@ -183,7 +184,9 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
         new java.awt.BasicStroke(width, java.awt.BasicStroke.CAP_ROUND,
                                  java.awt.BasicStroke.JOIN_MITER))
   }
-  def translate(x: Double, y: Double) { g.translate(x, y) }
+  def translate(x: Double, y: Double) {
+    g.translate(x, y)
+  }
   def drawPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) { g.drawPolygon(xcors, ycors, length) }
   def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) { g.fillPolygon(xcors, ycors, length) }
   def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int) { g.drawPolyline(xcors, ycors, length) }

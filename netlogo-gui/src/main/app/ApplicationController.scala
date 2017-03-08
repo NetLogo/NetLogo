@@ -15,13 +15,13 @@ import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar ,
 import javafx.scene.layout.{ AnchorPane, Pane }
 import javafx.stage.{ FileChooser, Window }
 
-import org.nlogo.javafx.{ CompileAll, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
+import org.nlogo.javafx.{ CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
 import org.nlogo.internalapi.ModelRunner
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
@@ -65,20 +65,27 @@ class ApplicationController extends ModelRunner {
         val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
         val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
         selectedFile.foreach { file =>
-          openModelUI(file.toURI, modelLoader, modelConverter)
+          val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
             .map { m =>
               CompileAll(m, workspace)
             }(executionContext)
-            .foreach {
-              compiledModel =>
-                val (interfaceWidgetsPane, widgetsMap) = ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
-                interfacePane = interfaceWidgetsPane
-                widgetsByTag = widgetsMap
-                interfaceArea.getChildren.add(interfaceWidgetsPane)
-            }(JavaFXExecutionContext)
+          openedModel.foreach {
+            compiledModel =>
+              ConfigureWorld(workspace, compiledModel)
+          }(executionContext)
+          openedModel.foreach {
+            compiledModel =>
+              val (interfaceWidgetsPane, widgetsMap) = ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
+              interfacePane = interfaceWidgetsPane
+              widgetsByTag = widgetsMap
+              //TODO: add turtle and link shapes to workspace
+              interfaceArea.getChildren.add(interfaceWidgetsPane)
+          }(JavaFXExecutionContext)
         }
       }
     })
+    /* start scheduling canvas updates */
+    timer.schedule(scheduleRefresh, 1000)
   }
 
   def scheduleRefresh =
@@ -98,10 +105,25 @@ class ApplicationController extends ModelRunner {
     Option(worldUpdates.poll()).foreach { world =>
       interfacePane.getChildren().asScala.foreach {
         case c: Canvas =>
+          val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
+          val renderer = new org.nlogo.render.Renderer(workspace.world)
+          val settings = new org.nlogo.api.ViewSettings {
+            def fontSize: Int = 12
+            // TODO: Why is this separate from world.patchSize?
+            def patchSize: Double = world.patchSize
+            def viewWidth: Double = c.getWidth
+            def viewHeight: Double = c.getHeight
+            def perspective: org.nlogo.api.Perspective = world.observer.perspective
+            def viewOffsetX: Double = world.observer.followOffsetX
+            def viewOffsetY: Double = world.observer.followOffsetY
+            def drawSpotlight: Boolean = true
+            def renderPerspective: Boolean = true
+            def isHeadless: Boolean = false
+          }
+          renderer.paint(graphicsInterface, settings)
         case _ =>
       }
     }
-    /* Update if there's anything in the update queue */
     timer.schedule(scheduleRefresh, 1000)
   }
 

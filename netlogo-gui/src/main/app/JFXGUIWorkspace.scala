@@ -60,7 +60,7 @@ class JFXGUIWorkspace(world: World,
   }
   def updateDisplay(haveWorldLockAlready: Boolean): Unit = {
     println("updateDisplay: " + haveWorldLockAlready)
-    // TODO: This needs to be implemented
+    worldUpdates.offer(world) // TODO: This should be a copy of world
   }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace
