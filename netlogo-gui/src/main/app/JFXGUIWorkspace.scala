@@ -2,6 +2,8 @@
 
 package org.nlogo.app
 
+import java.util.concurrent.BlockingQueue
+
 import org.nlogo.agent.World
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
 import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface }
@@ -9,7 +11,8 @@ import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
 
 class JFXGUIWorkspace(world: World,
-  val compiler: PresentationCompilerInterface)
+  val compiler: PresentationCompilerInterface,
+  worldUpdates: BlockingQueue[World])
   extends AbstractWorkspaceScala(world, null) {
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
@@ -26,7 +29,8 @@ class JFXGUIWorkspace(world: World,
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???
   def requestDisplayUpdate(force: Boolean): Unit = {
-    println("requestDisplayUpdate: " + force)
+    println("requestDisplayUpdate: " + force + " from: " + Thread.currentThread.getName)
+    worldUpdates.offer(world) // TODO: This should be a copy of world
   }
   override def sendOutput(x$1: org.nlogo.agent.OutputObject,x$2: Boolean): Unit = ???
 

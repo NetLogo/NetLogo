@@ -28,6 +28,8 @@ class JavaFXApp extends Application {
 
   var workspace: JFXGUIWorkspace = _
 
+  var worldUpdates: java.util.concurrent.BlockingQueue[org.nlogo.agent.World] = _
+
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -94,7 +96,8 @@ class JavaFXApp extends Application {
 
     pico.addAdapter(new ModelConverterComponent())
 
-    workspace = new JFXGUIWorkspace(new World(), pico.getComponent(classOf[PresentationCompilerInterface]))
+    worldUpdates = new java.util.concurrent.LinkedBlockingQueue[org.nlogo.agent.World]()
+    workspace = new JFXGUIWorkspace(new World(), pico.getComponent(classOf[PresentationCompilerInterface]), worldUpdates)
 
     pico.addComponent(workspace)
     pico.addComponent(classOf[ModelSaver])
@@ -112,6 +115,7 @@ class JavaFXApp extends Application {
     applicationController.modelConverter = pico.getComponent(classOf[ModelConverter])
     applicationController.executor = threadPool
     applicationController.workspace = workspace
+    applicationController.worldUpdates = worldUpdates
     val scene = new Scene(vBox)
     primaryStage.setScene(scene)
     primaryStage.show()
@@ -119,6 +123,7 @@ class JavaFXApp extends Application {
 
   override def stop(): Unit = {
     workspace.dispose()
+    applicationController.dispose()
     threadPool.shutdown()
     if (! threadPool.awaitTermination(100, java.util.concurrent.TimeUnit.MILLISECONDS)) {
       threadPool.shutdownNow()

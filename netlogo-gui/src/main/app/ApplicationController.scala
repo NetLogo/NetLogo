@@ -5,14 +5,19 @@ package org.nlogo.app
 import java.net.URI
 import java.util.concurrent.Executor
 
+import java.util.concurrent.BlockingQueue
+
+import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.event.{ ActionEvent, EventHandler }
+import javafx.scene.canvas.Canvas
 import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
-import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.{ AnchorPane, Pane }
 import javafx.stage.{ FileChooser, Window }
 
 import org.nlogo.javafx.{ CompileAll, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
+import org.nlogo.agent.World
 import org.nlogo.internalapi.ModelRunner
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
@@ -28,6 +33,8 @@ class ApplicationController extends ModelRunner {
   var modelLoader: ModelLoader = _
   var modelConverter: ModelConversion = _
 
+  var worldUpdates: BlockingQueue[World] = _
+
   @FXML
   var openFile: MenuItem = _
 
@@ -38,6 +45,10 @@ class ApplicationController extends ModelRunner {
   var interfaceArea: AnchorPane = _
 
   var widgetsByTag = Map.empty[String, Button]
+
+  var interfacePane: Pane = _
+
+  val timer = new java.util.Timer()
 
   def tagError(tag: String, error: Exception): Unit = {
     // empty implementation (for now!)
@@ -61,6 +72,7 @@ class ApplicationController extends ModelRunner {
             .foreach {
               compiledModel =>
                 val (interfaceWidgetsPane, widgetsMap) = ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
+                interfacePane = interfaceWidgetsPane
                 widgetsByTag = widgetsMap
                 interfaceArea.getChildren.add(interfaceWidgetsPane)
             }(JavaFXExecutionContext)
@@ -68,4 +80,33 @@ class ApplicationController extends ModelRunner {
       }
     })
   }
+
+  def scheduleRefresh =
+    new java.util.TimerTask {
+      override def run(): Unit = {
+        Platform.runLater(new Runnable() {
+          override def run(): Unit = {
+            refreshCanvas()
+          }
+        })
+      }
+    }
+
+  import scala.collection.JavaConverters._
+
+  def refreshCanvas(): Unit = {
+    Option(worldUpdates.poll()).foreach { world =>
+      interfacePane.getChildren().asScala.foreach {
+        case c: Canvas =>
+        case _ =>
+      }
+    }
+    /* Update if there's anything in the update queue */
+    timer.schedule(scheduleRefresh, 1000)
+  }
+
+  def dispose(): Unit = {
+    timer.cancel()
+  }
+
 }
