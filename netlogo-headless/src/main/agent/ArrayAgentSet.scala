@@ -18,6 +18,8 @@ class ArrayAgentSet(
   private val array: Array[Agent])
 extends IndexedAgentSet(kind, printName) {
 
+  private[this] val arraySize = array.size
+
   /// conversions
 
   override def toLogoList = {
@@ -45,7 +47,7 @@ extends IndexedAgentSet(kind, printName) {
 
   override def count =
     if (!kind.mortal)
-      array.size
+      arraySize
     else {
       var result = 0
       val iter = iterator
@@ -86,7 +88,8 @@ extends IndexedAgentSet(kind, printName) {
   // - ST 2/27/03
 
   // assume agentset is nonempty, since _randomoneof.java checks for that
-  override def randomOne(precomputedCount: Int, random: Int) =
+  override def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast) = {
+    val random = rng.nextInt(precomputedCount)
     if (!kind.mortal)
       array(random)
     else {
@@ -98,11 +101,18 @@ extends IndexedAgentSet(kind, printName) {
       }
       iter.next()
     }
+  }
 
   // This is used to optimize the special case of randomSubset where size == 2
-  override def randomTwo(precomputedCount: Int, smallRandom: Int, bigRandom: Int): Array[Agent] = {
+  override def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
     // we know precomputedCount, or this method would not have been called.
     // see randomSubset().
+    val (smallRandom, bigRandom) = {
+      val r1 = rng.nextInt(precomputedCount)
+      val r2 = rng.nextInt(precomputedCount - 1)
+      if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
+    }
+
     if (!kind.mortal)
       Array(
         array(smallRandom),
@@ -128,7 +138,7 @@ extends IndexedAgentSet(kind, printName) {
 
   override def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, random: MersenneTwisterFast) = {
     val result = new Array[Agent](resultSize)
-    if (precomputedCount == array.size) {
+    if (precomputedCount == arraySize) {
       var i, j = 0
       while (j < resultSize) {
         if (random.nextInt(precomputedCount - i) < resultSize - j) {
@@ -163,6 +173,8 @@ extends IndexedAgentSet(kind, printName) {
   // and the last one is a person named "SHUFFLER, Ator", which Google thought
   // was close enough!  ;-)  ~Forrest (10/3/2008)
 
+  // shufflerator: 12 google hits - majority are NetLogo related ~Eric (2/9/2017)
+
   override def shufflerator(rng: MersenneTwisterFast): AgentIterator =
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
@@ -173,7 +185,7 @@ extends IndexedAgentSet(kind, printName) {
 
   private class Iterator extends AgentIterator {
     protected var index = 0
-    override def hasNext = index < array.size
+    override def hasNext = index < arraySize
     override def next() = {
       val result = array(index)
       index += 1
@@ -183,15 +195,34 @@ extends IndexedAgentSet(kind, printName) {
 
   // extended to skip dead agents
   private class DeadSkippingIterator extends Iterator {
-    // skip initial dead agents
-    while (index < array.size && array(index).id == -1)
-      index += 1
+    var nextAgent: Agent = null
+
+    // if hasNext returns false, then nextAgent must be null.
+    override def hasNext: Boolean = {
+      if (nextAgent != null && nextAgent.id != -1)
+        true
+      else {
+        // if nextAgent is null or dead, attempt to find new one:
+        while (index < array.size && array(index).id == -1)
+          index += 1
+        // replace null nextAgent if successfully found one:
+        if (index < array.size) {
+          nextAgent = array(index)
+          true
+        } else
+          false
+      }
+    }
+
     override def next() = {
-      val result = index
-      // skip to next live agent
-      do index += 1
-      while (index < array.size && array(index).id == -1)
-      array(result)
+      if (hasNext) {
+        val ret = nextAgent
+        nextAgent = null
+        index += 1
+        ret
+      } else
+      // should always throw index out of bounds exception:
+        array(index)
     }
   }
 

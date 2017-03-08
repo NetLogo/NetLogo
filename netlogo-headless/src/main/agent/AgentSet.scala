@@ -29,8 +29,8 @@ abstract class AgentSet(
   def containsSameAgents(otherSet: api.AgentSet): Boolean
   def iterator: AgentIterator
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator
-  def randomOne(precomputedCount: Int, random: Int): Agent
-  def randomTwo(precomputedCount: Int, smallRandom: Int, bigRandom: Int): Array[Agent]
+  def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent
+  def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def toLogoList: LogoList
 
@@ -83,14 +83,9 @@ abstract class AgentSet(
         case 0 =>
           Array()
         case 1 =>
-          Array(randomOne(precomputedCount, rng.nextInt(precomputedCount)))
+          Array(randomOne(precomputedCount, rng))
         case 2 =>
-          val (smallRan, bigRan) = {
-            val r1 = rng.nextInt(precomputedCount)
-            val r2 = rng.nextInt(precomputedCount - 1)
-            if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
-          }
-          randomTwo(precomputedCount, smallRan, bigRan)
+          randomTwo(precomputedCount, rng)
         case _ =>
           randomSubsetGeneral(resultSize, precomputedCount, rng)
       }

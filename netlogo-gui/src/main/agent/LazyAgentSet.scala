@@ -13,12 +13,7 @@ class LazyAgentSet(printName: String,
                    private var withs: List[(Agent) => Boolean] = List())
   extends AgentSet(agentSet.kind, printName) {
 
-//  def noFilters: Boolean =
-//    others.isEmpty && withs.isEmpty
-
   var forcedSet : AgentSet = null
-
-//  def isEmpty = force().isEmpty
 
   def isEmpty = {
     !iterator.hasNext
@@ -26,7 +21,6 @@ class LazyAgentSet(printName: String,
 
   def count = force().count
 
-//  def contains(a: api.Agent): Boolean = force().contains(a)
   def contains(a: api.Agent): Boolean = {
     val it = iterator
     while (it.hasNext)
@@ -35,8 +29,11 @@ class LazyAgentSet(printName: String,
     false
   }
 
-  def containsSameAgents(otherSet: api.AgentSet): Boolean =
-    force().containsSameAgents(otherSet)
+  def containsSameAgents(otherSet: api.AgentSet): Boolean = 
+    otherSet match {
+      case l : LazyAgentSet => force().containsSameAgents(l.force())
+      case _ => force().containsSameAgents(otherSet)
+    }
 
   def iterator: AgentIterator =
     new FilteringIterator(agentSet.iterator)
@@ -55,46 +52,32 @@ class LazyAgentSet(printName: String,
     iter.next()
   }
 
-
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
-//    var smallRandom = rng.nextInt(precomputedCount)
-//    var bigRandom = rng.nextInt(precomputedCount)
-//    if (smallRandom > bigRandom) {
-//      val temp = smallRandom
-//      smallRandom = bigRandom
-//      bigRandom = temp
-//    }
-//
-//    val it = iterator
-//    var i = 0
-//    // skip to the first random place
-//    while(i < smallRandom) {
-//      it.next()
-//      i += 1
-//    }
-//    val first = it.next()
-//    i += 1
-//    while (i < bigRandom) {
-//      it.next()
-//      i += 1
-//    }
-//    val second = it.next()
-//    Array(first, second)
-    randomSubsetGeneral(2, precomputedCount, rng)
+    val (smallRandom, bigRandom) = {
+      val r1 = rng.nextInt(precomputedCount)
+      val r2 = rng.nextInt(precomputedCount - 1)
+      if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
+    }
+
+    val it = iterator
+    var i = 0
+    // skip to the first random place
+    while(i < smallRandom) {
+      it.next()
+      i += 1
+    }
+    val first = it.next()
+    i += 1
+    while (i < bigRandom) {
+      it.next()
+      i += 1
+    }
+    val second = it.next()
+    Array(first, second)
   }
 
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
     val result = new Array[Agent](resultSize)
-//    if (precomputedCount == arraySize) {
-//      var i, j = 0
-//      while (j < resultSize) {
-//        if (rng.nextInt(precomputedCount - i) < resultSize - j) {
-//          result(j) = array(i)
-//          j += 1
-//        }
-//        i += 1
-//      }
-//    } else {
     val iter = iterator
     var i, j = 0
     while (j < resultSize) {
@@ -105,7 +88,6 @@ class LazyAgentSet(printName: String,
       }
       i += 1
     }
-//    }
     result
   }
 

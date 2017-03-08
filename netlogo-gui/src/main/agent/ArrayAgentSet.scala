@@ -107,36 +107,33 @@ extends IndexedAgentSet(kind, printName) {
   override def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
     // we know precomputedCount, or this method would not have been called.
     // see randomSubset().
-//    var smallRandom = rng.nextInt(precomputedCount)
-//    var bigRandom = rng.nextInt(precomputedCount)
-//    if (smallRandom > bigRandom) {
-//      val temp = smallRandom
-//      smallRandom = bigRandom
-//      bigRandom = temp
-//    }
-//
-//    if (!kind.mortal)
-//      Array(
-//        array(smallRandom),
-//        array(bigRandom))
-//    else {
-//      val it = iterator
-//      var i = 0
-//      // skip to the first random place
-//      while(i < smallRandom) {
-//        it.next()
-//        i += 1
-//      }
-//      val first = it.next()
-//      i += 1
-//      while (i < bigRandom) {
-//        it.next()
-//        i += 1
-//      }
-//      val second = it.next()
-//      Array(first, second)
-//    }
-    randomSubsetGeneral(2, precomputedCount, rng)
+    val (smallRandom, bigRandom) = {
+      val r1 = rng.nextInt(precomputedCount)
+      val r2 = rng.nextInt(precomputedCount - 1)
+      if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
+    }
+
+    if (!kind.mortal)
+      Array(
+        array(smallRandom),
+        array(bigRandom))
+    else {
+      val it = iterator
+      var i = 0
+      // skip to the first random place
+      while(i < smallRandom) {
+        it.next()
+        i += 1
+      }
+      val first = it.next()
+      i += 1
+      while (i < bigRandom) {
+        it.next()
+        i += 1
+      }
+      val second = it.next()
+      Array(first, second)
+    }
   }
 
   override def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, random: MersenneTwisterFast) = {

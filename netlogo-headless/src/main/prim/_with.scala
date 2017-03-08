@@ -26,7 +26,7 @@ class _with extends Reporter {
       sourceSet.asInstanceOf[LazyAgentSet].lazyWith(filter)
       sourceSet
     } else {
-      new LazyAgentSet(sourceSet.kind, null, sourceSet, withs = List(filter))
+      new LazyAgentSet(null, sourceSet, withs = List(filter))
     }
   }
 }

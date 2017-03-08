@@ -85,11 +85,6 @@ abstract class AgentSet(
         case 1 =>
           Array(randomOne(precomputedCount, rng))
         case 2 =>
-          val (smallRan, bigRan) = {
-            val r1 = rng.nextInt(precomputedCount)
-            val r2 = rng.nextInt(precomputedCount - 1)
-            if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
-          }
           randomTwo(precomputedCount, rng)
         case _ =>
           randomSubsetGeneral(resultSize, precomputedCount, rng)
