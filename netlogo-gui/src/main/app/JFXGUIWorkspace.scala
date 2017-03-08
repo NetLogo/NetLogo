@@ -17,13 +17,17 @@ class JFXGUIWorkspace(world: World,
   def breathe(): Unit = {
     jobManager.maybeRunSecondaryJobs()
   }
-  def clearDrawing(): Unit = ???
+  def clearDrawing(): Unit = {
+    // drawings not supported
+  }
   override def importDrawing(x$1: org.nlogo.core.File): Unit = ???
   override def importerErrorHandler(): org.nlogo.agent.Importer.ErrorHandler = ???
   def magicOpen(x$1: String): Unit = ???
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???
-  def requestDisplayUpdate(x$1: Boolean): Unit = ??? // TODO: this probably needs to be implemented
+  def requestDisplayUpdate(force: Boolean): Unit = {
+    println("requestDisplayUpdate: " + force)
+  }
   override def sendOutput(x$1: org.nlogo.agent.OutputObject,x$2: Boolean): Unit = ???
 
 
@@ -36,8 +40,12 @@ class JFXGUIWorkspace(world: World,
   def exportOutputAreaToCSV(writer: java.io.PrintWriter): Unit = ???
 
   // Members declared in org.nlogo.nvm.JobManagerOwner // TODO: These will probably need to be implemented before the model will run
-  def ownerFinished(owner: org.nlogo.api.JobOwner): Unit = ???
-  def periodicUpdate(): Unit = ???
+  def ownerFinished(owner: org.nlogo.api.JobOwner): Unit = {
+    // TODO: This may need a full implementation
+  }
+  def periodicUpdate(): Unit = {
+    // TODO: This will probably need to be implemented, but we need a view first
+  }
   def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception): Unit = {
     owner match {
       case d: DummyJobOwner =>
@@ -46,7 +54,10 @@ class JFXGUIWorkspace(world: World,
     println(ex.getMessage)
     ex.printStackTrace()
   }
-  def updateDisplay(haveWorldLockAlready: Boolean): Unit = ???
+  def updateDisplay(haveWorldLockAlready: Boolean): Unit = {
+    println("updateDisplay: " + haveWorldLockAlready)
+    // TODO: This needs to be implemented
+  }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace
   def deleteLogFiles(): Unit = ???
@@ -62,7 +73,9 @@ class JFXGUIWorkspace(world: World,
 
   // Members declared in org.nlogo.api.Workspace
   def changeTopology(wrapX: Boolean,wrapY: Boolean): Unit = ???
-  def clearOutput(): Unit = ???
+  def clearOutput(): Unit = {
+    // output widget not supported
+  }
   def exportDrawing(path: String,format: String): Unit = ???
   def exportInterface(path: String): Unit = ???
   def exportOutput(path: String): Unit = ???
