@@ -31,8 +31,8 @@ class TestChecksums extends FunSuite {
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
   // We're disabling nw and ls extension models from getting checksummed due to the fact that they're inconsistent at the moment
   // this MUST BE FIXED - RG 8/31/16
-//  for (entry <- TestChecksums.checksums.values if ! entry.path.contains("Examples/nw") && ! entry.path.contains("Examples/ls")) {
-  for (entry <- TestChecksums.checksums.values if entry.path.contains("Division")) {
+  for (entry <- TestChecksums.checksums.values if ! entry.path.contains("Examples/nw") && ! entry.path.contains("Examples/ls")) {
+//  for (entry <- TestChecksums.checksums.values if entry.path.contains("Division")) {
     test(entry.path, SlowTest.Tag) {
       val tester = new ChecksumTester(info(_))
       tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)

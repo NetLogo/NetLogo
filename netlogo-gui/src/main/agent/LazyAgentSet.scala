@@ -29,7 +29,7 @@ class LazyAgentSet(printName: String,
     false
   }
 
-  def containsSameAgents(otherSet: api.AgentSet): Boolean = 
+  def containsSameAgents(otherSet: api.AgentSet): Boolean =
     otherSet match {
       case l : LazyAgentSet => force().containsSameAgents(l.force())
       case _ => force().containsSameAgents(otherSet)
@@ -41,55 +41,14 @@ class LazyAgentSet(printName: String,
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
     new FilteringIterator(agentSet.shufflerator(rng))
 
-  def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent = {
-    val random = rng.nextInt(precomputedCount)
-    val iter = iterator
-    var i = 0
-    while (i < random) {
-      iter.next()
-      i += 1
-    }
-    iter.next()
-  }
+  def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent = 
+    force().randomOne(precomputedCount, rng)
 
-  def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
-    val (smallRandom, bigRandom) = {
-      val r1 = rng.nextInt(precomputedCount)
-      val r2 = rng.nextInt(precomputedCount - 1)
-      if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
-    }
+  def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
+    force().randomTwo(precomputedCount, rng)
 
-    val it = iterator
-    var i = 0
-    // skip to the first random place
-    while(i < smallRandom) {
-      it.next()
-      i += 1
-    }
-    val first = it.next()
-    i += 1
-    while (i < bigRandom) {
-      it.next()
-      i += 1
-    }
-    val second = it.next()
-    Array(first, second)
-  }
-
-  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] = {
-    val result = new Array[Agent](resultSize)
-    val iter = iterator
-    var i, j = 0
-    while (j < resultSize) {
-      val next = iter.next()
-      if (rng.nextInt(precomputedCount - i) < resultSize - j) {
-        result(j) = next
-        j += 1
-      }
-      i += 1
-    }
-    result
-  }
+  def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
+    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
 
   def toLogoList: LogoList = force().toLogoList
 
