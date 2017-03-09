@@ -19,24 +19,38 @@
       Version 6.0.1 (March 2017)
     </h2>
 
+    <h3>Feature Changes</h3>
+    <ul>
+      <li>
+        Brackets are required around anonymous procedure reporters only when there are two or more arguments.
+        For instance <code>[ [x] -&gt; x ]</code> can now be written <code>[ x -&gt; x ]</code>.
+        Note this change makes it possible to create models in NetLogo 6.0.1 that will not run in NetLogo 6.0.
+        If you plan to use your model in NetLogo 6.0, be sure to include brackets around anonymous procedure arguments.
+        For a short period after the release, models which use unbracketed lambda arguments may not work on netlogoweb.org.
+      </li>
+    </ul>
+
     <h3>Bugfixes</h3>
     <ul>
       <li>The NetLogo code editor navigates and indents models much more quickly and efficiently than in NetLogo 6.0.</li>
       <li>The NetLogo 5-to-6 autoconverter now ignores commented-out code.</li>
-      <li>The behavior of layout-radial in NetLogo 6 did not match the 5.3.1 behavior. This has been corrected and layout-radial should be identical between NetLogo 6 and NetLogo 5.3.1</li>
+      <li>The behavior of layout-radial in NetLogo 6 did not match the 5.3.1 behavior. This has been corrected and layout-radial should be identical between NetLogo 6.0.1 and NetLogo 5.3.1</li>
       <li>NetLogo 6 raised a NullPointerException when numbers became too large for NetLogo to handle. This is now properly displayed to the user as a number out of bounds error.</li>
-      <li>Certain models that used a let-variables alongside anonymous procedures would become progressively slower while running in NetLogo 6. These models now run at a steady speed.</li>
+      <li>Improved performance of models which use <code>let</code> and anonymous procedures together.</li>
       <li>Reloading a model now clears global variables.</li>
       <li>Clearer warning dialogs when opening an older version of a NetLogo 2D file in NetLogo 3D.</li>
       <li>Using <code>foreach</code> improperly in the Command Center will display the same error as it would if used improperly in the code tab.</li>
       <li>Extremely long anonymous procedures no longer cause an exception when compiled.</li>
+      <li><code>in-radius</code> is no longer pathologically slow on agentsets created using <code>with</code>.</li>
     </ul>
 
     <h3>Extension Changes</h3>
     <ul>
       <li>A new primitive, <code>table:values</code> has been added to the table extension.</li>
       <li>The R extension has been updated to take full advantage of the JavaGD R library using <code>r:setPlotDevice</code>.</li>
-      <li>User's can now supply a path to the R extension by configuring the value of r.lib.paths in the user.properties file.</li>
+      <li>Users can now supply a path to the R extension by configuring the value of r.lib.paths in the user.properties file.</li>
+      <li>Fixed a LevelSpace bug preventing interactive models from using nls files.</li>
+      <li>Fixed a LevelSpace bug causing NetLogo to lock up when trying to load a nonexistent file as an interactive model.</li>
     </ul>
 
     <h3>Documentation Changes</h3>
@@ -50,7 +64,47 @@
     </ul>
 
     <h3>Models</h3>
+    <p>All models have been updated to reflect the new optional nature of brackets for zero/one argument anonymous procedures. This resulted in changes to 108 models.</p>
+
+    <p>All models have been updated to reflect the availability of the new range primitive. This resulted in changes to 12 models.</p>
+
+    <h4>New Sample Model</h4>
     <ul>
+      <li>GenJam - Duple</li>
+    </ul>
+
+    <h4>New Curricular Model</h4>
+
+    <ul>
+      <li>
+        Lattice Land curriculum:
+        <ul>
+          <li>Lattice Land Explore</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Revised Sample Models</h4>
+
+    <ul>
+      <li>PD 2 Person Iterated: info tab updates and extensive fixes for the code.</li>
+      <li>Party: fixed bug where a monitor covered a plot.</li>
+      <li>Signaling Game: info tab updates.</li>
+    </ul>
+
+    <h4>Revised Curricular Models</h4>
+
+    <ul>
+      <li>
+        GenEvo curriculum:
+        <ul>
+          <li>GenEvo 1 Genetic Switch: info tab updates and new graduated method of displaying lacZ concentration.</li>
+          <li>GenEvo 2 Genetic Drift: info tab updates and interface tweaks. New model preview.</li>
+          <li>GenEvo 3 Genetic Drift and Natural Selection: info tab updates and interface tweaks.</li>
+          <li>GenEvo 4 Competition: info tab updates.</li>
+          <li>Genetic Switch - Synthetic Biology has been renamed and is now Synthetic Biology - Genetic Switch. It also received info tab updates and a few interface changes.</li>
+        </ul>
+      </li>
     </ul>
 
     <h2>

@@ -73,9 +73,6 @@
       <li>
         <a href="#unattended"><b>How do I install NetLogo
         unattended?</b></a>
-      <li>
-        <a href="#netlogo_java"><b>On Windows, how do I configure the Java
-        installation that the without-Java installer uses?</b></a>
       </ul>
     <h3>
       Running
@@ -99,6 +96,12 @@
         <a href="#windowsmemory"><b>When I try to start NetLogo on Windows
         I get an error &quot;The JVM could not be started&quot;.
         Help!</b></a>
+      <li>
+        <a href="#wont-start-mac"><b>NetLogo won&apos;t start
+            on Mac OS Sierra (or later)</b></a>
+      <li>
+        <a href="#graphics-settings"><b>NetLogo won&apos;t start
+            on Windows or crashes suddenly on Mac OS Sierra</b></a>
       <li>
         <a href="#batch"><b>Can I run NetLogo from the command line,
         without the GUI?</b></a>
@@ -520,23 +523,6 @@
 NetLogo{{version}}Installer.exe -q
 </pre>
       </ul>
-    <h3>
-      <b>On Windows, how do I
-      configure the Java installation that the without-Java installer
-      uses?</b>
-    </h3>
-    <p id="netlogo_java">
-      The without-Java installer automatically searches for appropriate
-      Java installations on your machine. If you wish to direct NetLogo to
-      a particular installation you may do so by setting the environment
-      variable NETLOGO_JAVA to the full path of the installation.
-    <ul>
-      <li>Go to the Start Menu -&gt; Control Panel -&gt; System.
-      <li>Switch to the &quot;Advanced&quot; panel
-      <li>Press the &quot;Environment Variables&quot; button.
-      <li>Add NETLOGO_JAVA as a variable and set the value to the path of
-      the Java installation.
-      </ul>
     <h2>
       Running
     </h2>
@@ -576,17 +562,17 @@ NetLogo{{version}}Installer.exe -q
         Why does NetLogo bundle Java?
     </h3>
     <p>
-      For backwards compatibility, NetLogo 5.0.0-5.2.1 on Mac OS X required
-      that Java 6 from Apple be installed. As OS X continued to update,
-      java 6 was removed from the default distribution and only available for
-      download from Apple, adding to the complexity of installing NetLogo.
+      Since Mac OS X Lion, Apple have encouraged Mac application developers to bundle Java.
+      NetLogo bundles Java because it allows us to deliver a consistent, convenient experience to our users.
+      Bundling Java allows us to test for compatibility once and avoid any bugs caused by version mismatches or
+      Java configuration incompatibilities.
     <p>
-      The decision was made to bundle Java 8 with 5.3, reducing installation
-      complexity and hopefully promoting stability. To minimize any disruption,
-      the upgrade NetLogo 5.3 avoided any changes not directly related to
-      bundling java 8.  If you're running 5.2.1 happily on Java 6, or stuck
-      on a version of OS X older than 10.8.3, there are <b>no</b>
-      features that you need to upgrade in order to get.
+      If users are interested in using Java on their system instead of the version of Java bundled with
+      NetLogo, they can configure NetLogo to use a different Java runtime.
+      Please note that <b>this change is done at your own risk</b>.
+      We are unable to offer support for problems caused by running NetLogo with an alternate Java Runtime.
+      To change the Java runtime used by NetLogo, open the <a href="#where-is-cfg-file">NetLogo.cfg</a>
+      file and modify the <code>app.runtime</code> property to the path of your preferred Java Runtime.
     </div>
     <h3>
       How come NetLogo won't
@@ -598,7 +584,7 @@ NetLogo{{version}}Installer.exe -q
       the .cfg files to point to a different version of java (see
       <a href="#howbig">How big can my model be?</a> for more information).
     <p>
-      In theory, any Java 6 or later runtime will run NetLogo. In practice,
+      In theory, any Java 8 or later runtime will run NetLogo. In practice,
       some Java implementations aren't high enough quality. Recent
       versions of OpenJDK should work; older ones may not. GNU libgcj does
       not work.
@@ -654,6 +640,43 @@ NetLogo{{version}}Installer.exe -q
       <a href="http://windows.microsoft.com/en-US/windows-vista/32-bit-and-64-bit-Windows-frequently-asked-questions" target="_blank">
       Microsoft's FAQ page on 64-bit Windows</a>.
     <h3>
+      NetLogo won&apos;t start on Mac OS Sierra (or later)
+    </h3>
+    <p id="wont-start-mac">
+      Some users have reported problems opening NetLogo 6 on Mac OS Sierra.
+      We&apos;ve been unable to determine a root cause for this problem, but we&apos;re continuing to investigate.
+      We&apos;re looking for assistance from you if you run into this problem.
+      It would be extremely helpful if you could run the following command in the "Terminal" application and send the output in an email to <a href="mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug">bugs@ccl.northwestern.edu</a>.
+<pre>
+xattr -pl com.apple.quarantine /Applications/NetLogo\ 6.0/NetLogo\ 6.0.app
+</pre>
+    </p>
+    <p>
+    running it should give you a single line of output (something like <code>com.apple.quarantine: 01e1;58ac6af2;Firefox;F2E0B1E2-D203-4B05-8DF9-ABA58B52EFEA</code>, but yours will have different numbers, letters, and words). Please copy and paste this string into the email you send us.
+    </p>
+    <p>
+      There is also a partial workaround! Running the following command in the Terminal will enable users to run NetLogo without turning Gatekeeper completely off. The command is:
+
+<pre>
+sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ 6.0/NetLogo\ 6.0.app
+</pre>
+      Note that if you plan to run NetLogo 3D, HubNet Client, or NetLogo Logging, you may also need to re-run that command once for each of those applications.
+      If the workaround was not effective for you, please <a href="mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug%20Workaround">send us an email and let us know</a>.
+    </p>
+    <h3>
+      NetLogo won&apos;t start on Windows or crashes suddenly on Mac OS Sierra
+    </h3>
+    <p id="graphics-settings">
+      Some users on Mac OS with discrete graphics cards experience sudden crashes of NetLogo when switching between integrated and discrete graphics.
+      It's possible to prevent these crashes by <a href="https://support.apple.com/en-us/HT202043">disabling automatic graphics switching in System Preferences</a>.
+    </p>
+    <p>
+      Some Windows users may also be unable to open NetLogo due to graphics card settings or drivers.
+      If you are unable to open NetLogo on Windows, you might be able to fix this by updating or reinstalling your graphics driver and/or disabling any graphics card utilities.
+      Because NetLogo might be unable to start for a number of reasons, we encourage you to
+      <a href="mailto:bugs@ccl.northwestern.edu?subject=NetLogo%206%20Launch%20Problem%20in%20Windows">contact us</a> if these steps aren&apos;t effective in resolving the problem.
+    </p>
+    <h3>
       Can I run NetLogo from the command
       line, without the GUI?
     </h3>
@@ -698,14 +721,33 @@ NetLogo{{version}}Installer.exe -q
     </h3>
     <p id="autosave">
       Yes. NetLogo auto-saves files as you are working on them. The
-      auto-save files can be found in your OS-specific temporary directory.
-      On most Unix-like systems (including MacOS) that is <code>/tmp</code>.
-      On Windows Vista the logs can be found in
-      <code>C:\Users\&lt;user&gt;\AppData\Local\Temp</code>,
-      where <code>&lt;user&gt;</code> is the logged in user. The files are
-      named according to the following format:
+      path to the auto-save file depends on whether or not the NetLogo model
+      has been saved.
+    <p>
+      For NetLogo models which have been saved, a hidden
+      file with the name &quot;.<i>filename</i>.tmp.nlogo&quot; will be
+      created in the same directory as the NetLogo model.
+    <p>
+      For unsaved NetLogo models, autosave files can be found
+      in your OS-specific java temporary directory.
+      The files are named according to the following format:
       <code>autosave_yyyy-MM-dd.HH_mm_ss.nlogo</code> where the time and date
       are the time and date the model was opened.
+      The exact path will depend on your operating system:
+      <ul>
+        <li>On Mac OS, the temporary directory is
+          <code>/var/folders/68/&lt;30-character-alphanumeric-sequence&gt;/T/</code>.
+          The 30-character-alphanumeric-sequence is unique to each machine.
+        </li>
+        <li>
+          On Windows the logs can be found in
+          <code>C:\Users\&lt;user&gt;\AppData\Local\Temp</code>,
+          where <code>&lt;user&gt;</code> is the logged in user.
+        </li>
+        <li>
+          On most non-Mac Unix-like systems the temp directory is <code>/tmp</code>.
+        </li>
+      </ul>
     <h2>
       Usage
     </h2>
@@ -762,7 +804,7 @@ NetLogo{{version}}Installer.exe -q
     <p>
       If you are using BehaviorSpace, note that doing runs in parallel will
       multiply your RAM usage accordingly.
-    <p>
+    <p id="where-is-cfg-file">
     Each platform contains &quot;.cfg&quot; files containing
     JVM settings. There is one cfg file for each sub-application
     (NetLogo, NetLogo 3D, HubNet Client, etc.) Although the file
