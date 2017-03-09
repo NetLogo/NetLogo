@@ -1468,8 +1468,6 @@ procedure FIND-FLOCKMATES:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet D java/util/List] []
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           ACONST_NULL
           ALOAD 2
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
@@ -1485,8 +1483,8 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$5 ()Lscala/collection/immutable/List;
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L13
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2

@@ -591,9 +591,6 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           GOTO L3
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurecolorcollaborations_ask_0 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -605,18 +602,17 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -1791,9 +1787,6 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D]
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -1805,18 +1798,17 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D org/nlogo/agent/AgentSet]
           ASTORE 2
@@ -2067,9 +2059,6 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D]
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -2081,18 +2070,17 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D org/nlogo/agent/AgentSet]
           ASTORE 2
@@ -2343,9 +2331,6 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D]
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -2357,18 +2342,17 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D org/nlogo/agent/AgentSet]
           ASTORE 2
@@ -2619,9 +2603,6 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D]
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -2633,18 +2614,17 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [D org/nlogo/agent/AgentSet]
           ASTORE 2
@@ -3594,9 +3574,6 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           GOTO L3
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurefindallcomponents_setprocedurevariable_5 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -3608,18 +3585,17 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -3637,9 +3613,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          ILOAD 3
-          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (ILorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/Agent;
          L5
          FRAME SAME1 java/lang/Object
           ASTORE 2
@@ -5704,9 +5678,6 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                   GOTO L13
                  L12
                  FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_and_7 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-                  ALOAD 2
-                  INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-                  ASTORE 6
                   GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
                   GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
                   ICONST_1
@@ -5718,18 +5689,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                   CHECKCAST [Ljava/lang/Object;
                   INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
                   INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-                  ASTORE 7
+                  ASTORE 6
                   GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-                  INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-                  ASTORE 8
+                  INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+                  ASTORE 7
                   NEW org/nlogo/agent/LazyAgentSet
                   DUP
-                  ALOAD 6
                   ACONST_NULL
                   ALOAD 2
-                  ALOAD 8
                   ALOAD 7
-                  INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+                  ALOAD 6
+                  INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
                  L13
                  FRAME SAME1 org/nlogo/agent/AgentSet
                   ASTORE 2
@@ -5865,9 +5835,6 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L12
          L11
          FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_ifelse_6 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -5879,18 +5846,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L12
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -6078,9 +6044,6 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 GOTO L15
                L14
                FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_and_10 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-                ALOAD 2
-                INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-                ASTORE 6
                 GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
                 GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
                 ICONST_1
@@ -6092,18 +6055,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 CHECKCAST [Ljava/lang/Object;
                 INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
                 INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-                ASTORE 7
+                ASTORE 6
                 GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-                INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-                ASTORE 8
+                INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+                ASTORE 7
                 NEW org/nlogo/agent/LazyAgentSet
                 DUP
-                ALOAD 6
                 ACONST_NULL
                 ALOAD 2
-                ALOAD 8
                 ALOAD 7
-                INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+                ALOAD 6
+                INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
                L15
                FRAME SAME1 org/nlogo/agent/AgentSet
                 ASTORE 2
@@ -6174,9 +6136,6 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L3
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_setprocedurevariable_9 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -6188,18 +6147,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -6217,9 +6175,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          ILOAD 3
-          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (ILorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/Agent;
          L5
          FRAME SAME1 java/lang/Object
           ASTORE 2
@@ -6350,9 +6306,6 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L3
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_setprocedurevariable_13 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -6364,18 +6317,17 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -6393,9 +6345,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          ILOAD 3
-          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (ILorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/Agent;
          L5
          FRAME SAME1 java/lang/Object
           ASTORE 2
@@ -7426,9 +7376,6 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           GOTO L3
          L2
          FRAME FULL [org/nlogo/prim/_asm_proceduretiecollaborators_ask_0 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-          ASTORE 6
           GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
           GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
@@ -7440,18 +7387,17 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           CHECKCAST [Ljava/lang/Object;
           INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-          ASTORE 7
+          ASTORE 6
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-          ASTORE 8
+          INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+          ASTORE 7
           NEW org/nlogo/agent/LazyAgentSet
           DUP
-          ALOAD 6
           ACONST_NULL
           ALOAD 2
-          ALOAD 8
           ALOAD 7
-          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+          ALOAD 6
+          INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L3
          FRAME SAME1 org/nlogo/agent/AgentSet
           ASTORE 2
@@ -7587,9 +7533,6 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             GOTO L3
            L2
            FRAME FULL [org/nlogo/prim/_asm_proceduretiecollaborators_force_2 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
-            ASTORE 6
             GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
             GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
             ICONST_1
@@ -7601,18 +7544,17 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             CHECKCAST [Ljava/lang/Object;
             INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
-            ASTORE 7
+            ASTORE 6
             GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
-            ASTORE 8
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$3 ()Lscala/collection/immutable/List;
+            ASTORE 7
             NEW org/nlogo/agent/LazyAgentSet
             DUP
-            ALOAD 6
             ACONST_NULL
             ALOAD 2
-            ALOAD 8
             ALOAD 7
-            INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+            ALOAD 6
+            INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
            L3
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2
@@ -7630,8 +7572,6 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
            FRAME FULL [org/nlogo/prim/_asm_proceduretiecollaborators_force_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
             NEW org/nlogo/agent/LazyAgentSet
             DUP
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
             ACONST_NULL
             ALOAD 2
             GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
@@ -7647,8 +7587,8 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
             INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
             GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
-            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$5 ()Lscala/collection/immutable/List;
-            INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Lorg/nlogo/core/AgentKind;Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
+            INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
+            INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
            L5
            FRAME SAME1 org/nlogo/agent/AgentSet
             ASTORE 2

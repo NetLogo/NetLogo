@@ -484,9 +484,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          ILOAD 3
-          INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (ILorg/nlogo/api/MersenneTwisterFast;)Lorg/nlogo/agent/Agent;
          L3
          FRAME SAME1 java/lang/Object
           ASTORE 2
