@@ -41,7 +41,7 @@ class LazyAgentSet(printName: String,
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
     new FilteringIterator(agentSet.shufflerator(rng))
 
-  def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent = 
+  def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
     force().randomOne(precomputedCount, rng)
 
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
@@ -87,11 +87,11 @@ class LazyAgentSet(printName: String,
       else {
         //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
         val it = iterator
-        var l = new mutable.UnrolledBuffer[Agent]()
+        val l = new AgentSetBuilder(kind)
         while (it.hasNext) {
-          l = l :+ it.next()
+          l.add(it.next())
         }
-        forcedSet = new ArrayAgentSet(kind, null, l.toArray)
+        forcedSet = l.build()
       }
     }
     forcedSet
