@@ -13,7 +13,7 @@ object LetNamer extends TokenTransformer[Boolean] {
   override def transform(token: Token, lastTokenWasLet: Boolean): (Token, Boolean) =
     token match {
       case t @ Token(_, TokenType.Ident, _) if lastTokenWasLet =>
-        (t.refine(core.prim._letname(), tpe = TokenType.Reporter), false)
+        (t.refine(new core.prim._letname(), tpe = TokenType.Reporter), false)
       case t @ (Token(_, TokenType.Ident, "LET") |  Token(_, TokenType.Ident, "__LET")) =>
         (t, true)
       case t => (t, false)

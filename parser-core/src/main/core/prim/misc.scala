@@ -229,7 +229,7 @@ case class _lessthan() extends Reporter with Pure {
 case class _let(let: Option[Let]) extends Command {
   def this() = this(None)
   override def syntax =
-    Syntax.commandSyntax(right = List(Syntax.WildcardType, Syntax.WildcardType))
+    Syntax.commandSyntax(right = List(Syntax.SymbolType, Syntax.WildcardType))
 
   override def toString = "_let(" + let.map(_.toString).getOrElse("") + ")"
 
@@ -238,11 +238,10 @@ case class _let(let: Option[Let]) extends Command {
     copyInstruction(newLet)
   }
 }
-case class _letname() extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      ret = Syntax.WildcardType)
+object _letname {
+  def apply() = new _letname()
 }
+class _letname() extends _symbol()
 case class _letvariable(let: Let) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

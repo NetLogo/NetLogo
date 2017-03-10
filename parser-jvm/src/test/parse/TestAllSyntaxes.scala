@@ -238,7 +238,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_substring string/number/number,string,OTPL,None,10,3,3
                      |_subtractheadings number/number,number,OTPL,None,10,2,2
                      |_sum list,number,OTPL,None,10,1,1
-                     |_symbolstring variable,string,OTPL,None,10,1,1
+                     |_symbolstring variable name,string,OTPL,None,10,1,1
                      |_tan number,number,OTPL,None,10,1,1
                      |_ticks ,number,OTPL,None,10,0,0
                      |_timer ,number,OTPL,None,10,0,0
@@ -363,7 +363,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_layoutspring turtle agentset/link agentset/number/number/number,OTPL,None,0,5,5
                     |_layouttutte turtle agentset/link agentset/number,OTPL,None,0,3,3
                     |_left number,-T--,None,0,1,1
-                    |_let anything/anything,OTPL,None,0,2,2
+                    |_let variable name/anything,OTPL,None,0,2,2
                     |_linkcode ,---L,None,0,0,0
                     |_loop command block,OTPL,None,0,1,1
                     |_mkdir string,OTPL,None,0,1,1

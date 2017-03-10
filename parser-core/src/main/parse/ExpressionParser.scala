@@ -273,6 +273,7 @@ object ExpressionParser {
       case block: DelayedBlock => parseDelayedBlock(block, goalType, scope)
       case _ => originalArg
     }
+
     cAssert(compatible(goalType, arg.reportedType), {
       // remove reference type from message unless it's part of the goalType, confusing to see
       // "expected a variable or a number"
