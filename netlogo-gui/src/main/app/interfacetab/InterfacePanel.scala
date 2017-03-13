@@ -42,6 +42,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   viewWidget.asInstanceOf[Widget].deleteable = false
   addKeyListener(this)
   addMouseListener(this)
+  addFocusListener(this)
 
   ///
 
