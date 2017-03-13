@@ -107,34 +107,41 @@ object ExpressionParser {
     displayName: String,
     scope: SymbolTable): Seq[core.Expression] = {
     val typedArgs = scala.collection.mutable.Seq[core.Expression](untypedArgs: _*)
-    var actual1 = 0
+    val formalTypes = if (syntax.isInfix) syntax.left +: syntax.right else syntax.right
     // first look at left arg, if any
     if (syntax.isInfix) {
-      val tpe = syntax.left
-      // this shouldn't really be possible here...
-      cAssert(untypedArgs.size >= 1, missingInput(syntax, displayName, false), location)
-      typedArgs.update(0, resolveType(tpe, untypedArgs(0), displayName, scope))
-      // the first right arg is the second arg.
-      actual1 = 1
+      cAssert(untypedArgs.size >= 1, missingInput(syntax, displayName, 0), location)
     }
-    // look at right args from left-to-right...
-    var formal1 = 0
+    /*
+    if (compatible(Syntax.OptionalType, formalTypes.last) && formalTypes.length - 1 == untypedArgs.size) {
+      // only need to check the first (length - 1) arguments
+    } else if (compatible(Syntax.RepeatableType, formalTypes.last)) {
+      // Check the first (formalTypes.length - 1) arguments,
+      // Then check the remaining (untypedArgs.length - (formalTypes.length - 1)) arguments to match the repeatable syntax type
+    } else {
+      // We know the that the arguments must match the formalTypes exactly.
+      // This involves making sure that the number of arguments is as expected and all arguments match their expected types
+    }
+    */
+    var index = 0
+    // var formal1 = 0
     val types = syntax.right
-    while (formal1 < types.length && !compatible(Syntax.RepeatableType, types(formal1))) {
-      if (formal1 == types.length - 1 && untypedArgs.size == types.length - 1 && compatible(Syntax.OptionalType, types(formal1)))
+    while (index < formalTypes.length && !compatible(Syntax.RepeatableType, formalTypes(index))) {
+      if (index == formalTypes.length - 1 && untypedArgs.size == formalTypes.length - 1 && compatible(Syntax.OptionalType, formalTypes(index)))
         return scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
-      cAssert(untypedArgs.size > actual1, missingInput(syntax, displayName, true), location)
-      typedArgs.update(actual1, resolveType(types(formal1), untypedArgs(actual1), displayName, scope))
-      formal1 += 1
-      actual1 += 1
+      cAssert(untypedArgs.size > index, missingInput(syntax, displayName, index), location)
+      typedArgs.update(index, resolveType(formalTypes(index), untypedArgs(index), displayName, scope))
+      index += 1
     }
+    var actual1 = index
+    var formal1 = index
     if (formal1 < types.length) {
       // then we encountered a repeatable arg, so we look at right args from right-to-left...
       var actual2 = untypedArgs.size - 1
       var formal2 = types.length - 1
       while (formal2 >= 0 && !compatible(Syntax.RepeatableType, types(formal2))) {
-        cAssert(untypedArgs.size > actual2 && actual2 > -1, missingInput(syntax, displayName, true), location)
-        typedArgs.update(actual2, resolveType(types(formal2), untypedArgs(actual2), displayName, scope))
+        cAssert(untypedArgs.size > actual2 && actual2 > -1, missingInput(syntax, displayName, actual2), location)
+        typedArgs.update(actual2, resolveType(formalTypes(actual2), untypedArgs(actual2), displayName, scope))
         formal2 -= 1
         actual2 -= 1
       }
@@ -229,15 +236,18 @@ object ExpressionParser {
     try
       parseExpressionInternal(tokens, false, syntax.precedence, goalType, scope)
     catch {
-      case _: MissingPrefixException | _: UnexpectedTokenException =>
-        exception(missingInput(syntax, displayName, true), sourceLocation)
+      case ex: MissingPrefixException =>
+        exception(MissingInputOnLeft, ex.token.sourceLocation)
+      case ex: UnexpectedTokenException =>
+        exception(missingInput(syntax, displayName, 0), sourceLocation)
     }
   }
 
   /**
    * this is used for generating an error message when some arguments are found to be missing
    */
-  private def missingInput(syntax: Syntax, displayName: String, right: Boolean): String = {
+  private def missingInput(syntax: Syntax, displayName: String, argumentIndex: Int): String = {
+    val right = argumentIndex >= 1 || (! syntax.isInfix)
     lazy val inputName          = if (syntax.rightDefault > 1) "inputs"        else "input"
     lazy val variadicQuantifier = if (syntax.isVariadic)       " at least"     else ""
     lazy val infixQuantifier    = if (syntax.isInfix)          " on the right" else ""

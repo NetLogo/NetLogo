@@ -433,7 +433,7 @@ case class _sentence() extends Reporter with Pure {
 case class _set() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      right = List(Syntax.WildcardType, Syntax.WildcardType))
+      right = List(Syntax.SymbolType, Syntax.WildcardType))
 }
 case class _sprout(breedName: String) extends Command {
   def this() = this("")
