@@ -3494,6 +3494,11 @@ histogram [color] of turtles
         <i>agent</i> showing a <i>radius</i> sized Moore neighborhood
         around the agent.
       <p>
+        A client may only watch or follow a single subject.
+        Calling <code>hubnet-send-follow</code> will alter the highlight created by
+        prior calls to <code>hubnet-send-watch</code>, highlighting
+        the followed agent instead.
+      <p>
         See also: <a href="#hubnet-send-watch">hubnet-send-watch</a>,
         <a href="#hubnet-reset-perspective">hubnet-reset-perspective</a>
       </div>
@@ -3548,6 +3553,10 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
       <p>
         Tells the client associated with <i>client-name</i> to watch
         <i>agent</i>.
+      <p>
+        A client may only watch or follow a single subject.
+        Calling <code>hubnet-send-watch</code> will undo perspective changes caused
+        by prior calls to <code>hubnet-send-follow</code>.
       <p>
         See also: <a href="#hubnet-send-follow">hubnet-send-follow</a>,
         <a href="#hubnet-reset-perspective">hubnet-reset-perspective</a>
