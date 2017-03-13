@@ -20,4 +20,6 @@ trait EditorAreaInterface {
   def replaceSelection(text: String)
   def replace(start: Int, len: Int, str: String): Unit
   def remove(start: Int, len: Int)
+  def beginCompoundEdit(): Unit = {}
+  def endCompoundEdit(): Unit = {}
 }

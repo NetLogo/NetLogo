@@ -10,7 +10,9 @@ class DumbIndenter(code: JTextComponent) extends Indenter {
     code.replaceSelection("  ")
   }
 
-  def handleCloseBracket(): Unit = { }
+  def handleCloseBracket(): Unit = {
+    code.replaceSelection("]")
+  }
 
   def handleInsertion(text: String): Unit = { }
 

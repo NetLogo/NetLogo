@@ -3,7 +3,7 @@
 package org.nlogo.editor
 
 import javax.swing.{ Action, JMenu, JPopupMenu }
-import javax.swing.text.EditorKit
+import javax.swing.text.{ AbstractDocument, EditorKit }
 
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
@@ -78,4 +78,12 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   def getEditorKit(): EditorKit =
     getUI.getEditorKit(this)
   def setEditorKit(kit: EditorKit): Unit = { }
+
+  def beginCompoundEdit(): Unit = {
+    beginAtomicEdit()
+  }
+
+  def endCompoundEdit(): Unit = {
+    endAtomicEdit()
+  }
 }

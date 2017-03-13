@@ -55,44 +55,57 @@ extends Indenter {
 
   /// first, the four handle* methods in IndenterInterface
   def handleTab() = {
+    code.beginCompoundEdit()
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
-      executeIndentations(indentations, true)
+      executeIndentations(indentations, Some(code.getCaretPosition))
     }
+    code.endCompoundEdit()
   }
 
   def handleEnter() = {
+    code.beginCompoundEdit()
     code.replaceSelection("\n")
+    val originalCaretPosition = code.getCaretPosition
     val line = code.offsetToLine(code.getSelectionEnd)
     val start = code.lineToStartOffset(line)
     val end = code.lineToEndOffset(line)
     // end - 1 because the editor includes newlines as part of the text given in a line
     val indentations = lineIndentation(start, end - 1)
     if (indentations.nonEmpty) {
-      executeIndentations(indentations, false)
+      executeIndentations(indentations, Some(originalCaretPosition))
     }
+    code.endCompoundEdit()
   }
 
   def handleInsertion(s: String) = {
+    code.beginCompoundEdit()
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
-        handleCloseBracket()
+        indentSelectedLine()
     }
+    code.endCompoundEdit()
   }
 
   def handleCloseBracket() = {
+    code.beginCompoundEdit()
+    code.replaceSelection("]")
+    indentSelectedLine()
+    code.endCompoundEdit()
+  }
+
+  def indentSelectedLine(): Unit = {
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
-      executeIndentations(indentations, true)
+      executeIndentations(indentations, Some(code.getCaretPosition))
     }
   }
 
   /// private helpers
-  private def executeIndentations(indentations: Seq[LineIndent], maintainCaretPosition: Boolean): Unit = {
+  private def executeIndentations(indentations: Seq[LineIndent], caretPosition: Option[Int]): Unit = {
     val start = indentations.head.lineStart
     val finish = indentations.last.lineEnd
-    val startCaretPosition = code.getCaretPosition
     val builder = new StringBuilder(finish - start)
     indentations.foldLeft(0) { (offset: Int, indent: LineIndent) =>
       val newOffset = (offset, indent) match {
@@ -114,18 +127,24 @@ extends Indenter {
     }
     // Remove trailing newline
     builder.delete(builder.length - 1, builder.length)
-    code.replace(start, finish - start, builder.toString)
-    if (maintainCaretPosition) {
-      if (startCaretPosition >= start) {
-        val caretOffset = indentations.foldLeft(0) {
-          case (offset, indent) if indent.lineStart <= startCaretPosition + 1 =>
-            offset + indent.delta
-          case (offset, indent) => offset
-        }
-        code.setCaretPosition(startCaretPosition + caretOffset max 0)
-      } else {
-        code.setCaretPosition(startCaretPosition)
+    if (caretPosition.isDefined) {
+      caretPosition.foreach { startCaretPosition =>
+        val finalCaretPosition =
+          if (startCaretPosition >= start) {
+            val caretOffset = indentations.foldLeft(0) {
+              case (offset, indent) if indent.lineStart <= startCaretPosition + 1 =>
+                offset + indent.delta
+              case (offset, indent) => offset
+            }
+            startCaretPosition + caretOffset max 0
+          } else {
+            startCaretPosition
+          }
+        code.replace(start, finish - start, builder.toString)
+        code.setCaretPosition(finalCaretPosition)
       }
+    } else {
+      code.replace(start, finish - start, builder.toString)
     }
   }
 
