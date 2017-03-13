@@ -108,7 +108,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.1-RC1",
+    version := "6.0.1",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -173,7 +173,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.0",
+    version       := "6.0.1",
     isSnapshot    := true,
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
@@ -257,7 +257,7 @@ lazy val parser = CrossProject("parser", file("."),
   settings(
     isSnapshot := true,
     name := "parser",
-    version := "0.0.1",
+    version := "0.1.1",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
@@ -271,7 +271,7 @@ lazy val parser = CrossProject("parser", file("."),
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-js"   %%%! "scala-parser-combinators" % "1.1.0-SNAPSHOT" from("http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/scala-parser-combinators_sjs0.6_2.12-1.1.0-SNAPSHOT.jar"),
+          "org.scala-lang.modules"   %%%! "scala-parser-combinators" % "1.0.5",
           "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
           "org.scalacheck" %%%! "scalacheck" % "1.13.4" % "test"
@@ -282,7 +282,7 @@ lazy val parser = CrossProject("parser", file("."),
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5"
     )
 
 lazy val parserJVM = parser.jvm
