@@ -69,11 +69,11 @@ trait LinkManager {
 
   def outNeighbors(src: Turtle, linkBreed: AgentSet): Array[Turtle]
   def inNeighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle]
-  def neighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle]
+  def neighbors(target: Turtle, linkSet: AgentSet): Array[Turtle]
 
   def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link]
   def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link]
-  def links(target: Turtle, linkBreed: AgentSet): Array[Link]
+  def links(target: Turtle, linkSet: AgentSet): Array[Link]
 
 }
 
@@ -157,8 +157,8 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   def inNeighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle] =
     otherEnds(target, inLinks(target, linkBreed), linkBreed)
 
-  def neighbors(turtle: Turtle, linkBreed: AgentSet): Array[Turtle] =
-    otherEnds(turtle, links(turtle, linkBreed), linkBreed)
+  def neighbors(turtle: Turtle, linkSet: AgentSet): Array[Turtle] =
+    otherEnds(turtle, links(turtle, linkSet), linkSet)
 
   def getLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Option[Link] = {
     if (src == null || dest == null)
@@ -180,8 +180,8 @@ class LinkManagerImpl(world: World, linkFactory: LinkFactory) extends LinkManage
   def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link] =
     target.selectLinks(false, true, linkBreed)
 
-  def links(turtle: Turtle, linkBreed: AgentSet): Array[Link] =
-    turtle.selectLinks(true, true, linkBreed)
+  def links(turtle: Turtle, linkSet: AgentSet): Array[Link] =
+    turtle.selectLinks(true, true, linkSet)
 
   def otherEnds(turtle: Turtle, links: Array[Link], linkBreed: AgentSet): Array[Turtle] = {
     // Using an explicit while loop was found to have a significant performance

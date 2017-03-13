@@ -48,7 +48,7 @@ object AppletTester {
     frame.pack() // create peers, otherwise go() will fail
     panel.setAdVisible(false)
     val name = new java.io.File(path).getName
-    val source = org.nlogo.api.FileIO.file2String(path)
+    val source = org.nlogo.api.FileIO.fileToString(path)
     val modelUri = java.nio.file.Paths.get(path).toUri
     panel.openFromURI(modelUri)
     frame.pack() // now that InterfacePanel knows its preferred size

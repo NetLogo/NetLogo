@@ -11,7 +11,7 @@ import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import AutoConversionList.ConversionList
 import scala.util.{ Failure, Success, Try }
-import scala.io.Source
+import scala.io.{ Codec, Source }, Codec.UTF8
 
 // THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
 class NLogoFormat
@@ -34,8 +34,8 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
 
   def sections(location: URI) =
     Try {
-      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)
-      else Source.fromURI(location)
+      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)(UTF8)
+      else Source.fromURI(location)(UTF8)
       }.flatMap { s =>
         val sections = sectionsFromSource(s.mkString)
         s.close()

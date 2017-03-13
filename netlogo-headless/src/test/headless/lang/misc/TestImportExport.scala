@@ -7,7 +7,7 @@ package misc
 import
   org.nlogo.{ api, agent, core, util, workspace => ws },
     api.Agent,
-    api.FileIO.file2String,
+    api.FileIO.fileToString,
     agent.AgentSet,
     core._,
     util.SlowTestTag,
@@ -51,7 +51,7 @@ class TestImportExport extends FixtureSuite  {
     // run the setup commands, run export-world, and slurp the resulting export into a string
     testCommand(setup)
     exportWorld(filename)
-    val export1 = file2String(filename)
+    val export1 = fileToString(filename)
 
     // alter the state of the random number generator
     testCommand("repeat 500 [ __ignore random 100 ]")
@@ -65,7 +65,7 @@ class TestImportExport extends FixtureSuite  {
     exportWorld(filename)
 
     // new slurp the second export into a string
-    val export2 = file2String(filename)
+    val export2 = fileToString(filename)
     assert(delete(filename))
 
     // the two strings exports be equal except for the date
@@ -320,10 +320,10 @@ class TestImportExport extends FixtureSuite  {
     val filename = getUniqueFilename()
     workspace.open("test/import/plot-custom-color.nlogo")
     exportWorld("../../" + filename)
-    val export1 = file2String(filename)
+    val export1 = fileToString(filename)
     testCommand("ca import-world \"../../" + filename + "\"")
     exportWorld("../../" + filename)
-    val export2 = file2String(filename)
+    val export2 = fileToString(filename)
     assertResult(dropLines(export1, 3))(
       dropLines(export2, 3))
   }
@@ -443,7 +443,7 @@ class TestImportExport extends FixtureSuite  {
 
   test("TrailingCommas", SlowTestTag) { implicit fixture =>
     import fixture._
-    declare(Model(code = file2String("test/import/trailing-commas.nlogo")))
+    declare(Model(code = fileToString("test/import/trailing-commas.nlogo")))
     testCommand("import-world \"test/import/trailing-commas.csv\"")
   }
 
@@ -472,7 +472,7 @@ class TestImportExport extends FixtureSuite  {
 
   test("ExtraFieldValue", SlowTestTag) { implicit fixture =>
     import fixture._
-    declare(Model(code = file2String("test/import/trailing-commas.nlogo")))
+    declare(Model(code = fileToString("test/import/trailing-commas.nlogo")))
     val errorNumber = Array(0)
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {

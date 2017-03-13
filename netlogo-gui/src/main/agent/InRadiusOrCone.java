@@ -7,6 +7,7 @@ import org.nlogo.core.AgentKindJ;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 public strictfp class InRadiusOrCone {
   private final World world;
@@ -75,6 +76,18 @@ public strictfp class InRadiusOrCone {
       dymax = StrictMath.min((maxPycor - startPatch.pycor), r);
     }
 
+    HashSet<Long> cachedIDs = null;
+    if (! sourceSet.isBreedSet()) {
+      cachedIDs = new HashSet<Long>(sourceSet.count());
+      AgentIterator sourceTurtles = sourceSet.iterator();
+      while (sourceTurtles.hasNext()) {
+        Agent t = sourceTurtles.next();
+        cachedIDs.add(new Long(t.id()));
+      }
+    } else {
+      cachedIDs = new HashSet<Long>(0);
+    }
+
     for (int dy = dymin; dy <= dymax; dy++) {
       for (int dx = dxmin; dx <= dxmax; dx++) {
         try {
@@ -82,7 +95,7 @@ public strictfp class InRadiusOrCone {
 
           if (sourceSet.kind() == AgentKindJ.Patch()) {
             if (world.protractor().distance(patch.pxcor, patch.pycor, startX, startY, wrap) <= radius &&
-                (sourceSet == world.patches() || sourceSet.contains(patch))) {
+                (sourceSet == world.patches() || cachedIDs.contains(new Long(patch.id())))) {
               result.add(patch);
             }
           } else if (sourceSet.kind() == AgentKindJ.Turtle()) {
@@ -101,7 +114,7 @@ public strictfp class InRadiusOrCone {
               if (world.protractor().distance(turtle.xcor(), turtle.ycor(), startX, startY, wrap) <= radius
                       && (sourceSet == world.turtles()
                           || (sourceSet.isBreedSet() && sourceSet == turtle.getBreed())
-                          || (!sourceSet.isBreedSet() && sourceSet.contains(turtle)))) {
+                          || cachedIDs.contains(new Long(turtle.id())))) {
                 result.add(turtle);
               }
             }
@@ -193,6 +206,18 @@ public strictfp class InRadiusOrCone {
       dymax = StrictMath.min((maxPycor - startPatch.pycor), r);
     }
 
+    HashSet<Long> cachedIDs = null;
+    if (! sourceSet.isBreedSet()) {
+      cachedIDs = new HashSet<Long>(sourceSet.count());
+      AgentIterator sourceTurtles = sourceSet.iterator();
+      while (sourceTurtles.hasNext()) {
+        Agent t = sourceTurtles.next();
+        cachedIDs.add(new Long(t.id()));
+      }
+    } else {
+      cachedIDs = new HashSet<Long>(0);
+    }
+
     // loop through the patches in the rectangle.  (it doesn't matter what
     // order we check them in.)
     for (int dy = dymin; dy <= dymax; dy++) {
@@ -207,7 +232,7 @@ public strictfp class InRadiusOrCone {
             outer:
             for (int worldOffsetX = -m; worldOffsetX <= m; worldOffsetX++) {
               for (int worldOffsetY = -n; worldOffsetY <= n; worldOffsetY++) {
-                if ((sourceSet == world.patches() || sourceSet.contains(patch))
+                if ((sourceSet == world.patches() || cachedIDs.contains(new Long(patch.id())))
                     && isInCone(patch.pxcor + worldWidth * worldOffsetX,
                     patch.pycor + worldHeight * worldOffsetY,
                     startTurtle.xcor(), startTurtle.ycor(),
@@ -236,7 +261,7 @@ public strictfp class InRadiusOrCone {
                     // the set of all turtles, or a breed agentset - ST 2/19/04
                     if ((sourceSet == world.turtles()
                             || (sourceSet.isBreedSet()  && sourceSet == turtle.getBreed())
-                            || (!sourceSet.isBreedSet() && sourceSet.contains(turtle)))
+                            || cachedIDs.contains(new Long(turtle.id())))
                             && isInCone(turtle.xcor() + worldWidth * worldOffsetX,
                                         turtle.ycor() + worldHeight * worldOffsetY,
                                         startTurtle.xcor(), startTurtle.ycor(),

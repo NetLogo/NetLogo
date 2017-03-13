@@ -10,18 +10,17 @@ import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface, UndoRedoActions }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton }
+import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
 with ProceduresInterface
 with ProceduresMenuTarget
-with UndoRedoActions
 with AppEvents.SwitchedTabsEvent.Handler
 with WindowEvents.CompiledEvent.Handler
 with Zoomable
@@ -46,6 +45,20 @@ with MenuTab {
     val editor = editorFactory.newEditor(editorConfiguration, true)
     editor.setMargin(new Insets(4, 7, 4, 7))
     editor
+  }
+
+  lazy val undoAction: Action = {
+    new WrappedAction(text.undoAction,
+      UserAction.EditCategory,
+      UserAction.EditUndoGroup,
+      UserAction.KeyBindings.keystroke('Z', withMenu = true))
+  }
+
+  lazy val redoAction: Action = {
+    new WrappedAction(text.redoAction,
+      UserAction.EditCategory,
+      UserAction.EditUndoGroup,
+      UserAction.KeyBindings.keystroke('Y', withMenu = true))
   }
 
   override def zoomTarget = text

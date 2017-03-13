@@ -35,6 +35,10 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
 
   private static UndoManager currentManager = null;
 
+  static UndoManager currentManager() {
+    return currentManager;
+  }
+
   public static void setCurrentManager(UndoManager manager) {
     currentManager = manager;
     undoAction.updateUndoState();

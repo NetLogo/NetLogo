@@ -13,7 +13,10 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ FocusListener, InputEvent, KeyEvent, MouseEvent },
   InputEvent.{ SHIFT_MASK => ShiftKey }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
-import javax.swing.text.{ Document, DefaultEditorKit, TextAction, PlainDocument, BadLocationException }
+import javax.swing.event.UndoableEditEvent
+import javax.swing.undo.AbstractUndoableEdit
+import javax.swing.text.{ AbstractDocument, Document, DefaultEditorKit,
+  TextAction, PlainDocument, BadLocationException }
 
 import KeyBinding.keystroke
 

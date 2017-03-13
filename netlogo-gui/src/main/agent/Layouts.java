@@ -540,24 +540,20 @@ public final strictfp class Layouts {
     // used to find the maximum depth
     TreeNode lastNode = rootNode;
 
-    AgentSet breed;
     Set<Turtle> allowedTurtles = null;
     if (!linkset.isBreedSet()) {
-      breed = world.links();
       allowedTurtles = new HashSet<>(linkset.count());
       for (AgentIterator it = linkset.iterator(); it.hasNext();) {
       Link link = (Link) it.next();
         allowedTurtles.add(link.end1());
         allowedTurtles.add(link.end2());
       }
-    } else {
-      breed = linkset;
     }
 
     while (!queue.isEmpty()) {
       TreeNode node = queue.remove(0);
       lastNode = node;
-      for (Turtle t : linkManager.neighbors(node.val, breed)) {
+      for (Turtle t : linkManager.neighbors(node.val, linkset)) {
         if (nodeset.contains(t) && !nodeTable.containsKey(t)
                 && (allowedTurtles == null || allowedTurtles.contains(t))) {
           TreeNode child = new TreeNode(t, node);

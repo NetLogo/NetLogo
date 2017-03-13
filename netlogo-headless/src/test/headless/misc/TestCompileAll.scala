@@ -62,7 +62,7 @@ object TestCompileAll {
 class TestCompileAll extends FunSuite  {
   for {
     path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
-    text <- TestCompileAll.goodModel(FileIO.file2String(path))
+    text <- TestCompileAll.goodModel(FileIO.fileToString(path))
   }  {
       test("compile: " + path, SlowTestTag) {
         compile(path, text)
@@ -75,7 +75,7 @@ class TestCompileAll extends FunSuite  {
   for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTestTag) {
       val workspace = HeadlessWorkspace.newInstance
-      val version = ModelReader.parseModel(FileIO.file2String(path), workspace.parser, Map()).version
+      val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version
       assert(Version.compatibleVersion(version))
     }
 
