@@ -11,7 +11,7 @@ import scala.concurrent.duration.{ Duration, MILLISECONDS }
 import scala.util.{ Failure, Success }
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelSettings}
+import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelReader, ModelSettings}
 import org.nlogo.awt.{Hierarchy, UserCancelException}
 import org.nlogo.core.I18N
 import org.nlogo.log.Logger
@@ -257,6 +257,13 @@ abstract class GUIWorkspaceScala(
       throw new IllegalArgumentException("cannot provide source for empty filename")
     }
     externalFileManager.getSource(filename) getOrElse super.getSource(filename)
+  }
+
+  override def guessExportName(defaultName: String): String = {
+    if (Option(getModelFileName).contains("empty." + ModelReader.modelSuffix))
+      defaultName
+    else
+      super.guessExportName(defaultName)
   }
 
   def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)

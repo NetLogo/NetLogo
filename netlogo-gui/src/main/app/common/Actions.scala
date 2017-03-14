@@ -24,7 +24,7 @@ object Actions {
 
 import Actions._
 
-abstract class ExportBackgroundAction[A](parent: Component, taskName: String, suggestedFileName: String)
+abstract class ExportBackgroundAction[A](parent: Component, taskName: String, suggestedFileName: => String)
 extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellipsis) {
   def frame = NLogoHierarchy.getFrame(parent)
 
@@ -73,7 +73,7 @@ extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellip
   }
 }
 
-abstract class ExportAction(taskName: String, suggestedFileName: String, parent: Component, performExport: String => Unit = {(s) => })
+abstract class ExportAction(taskName: String, suggestedFileName: => String, parent: Component, performExport: String => Unit = {(s) => })
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.export." + taskName) + Actions.Ellipsis, parent) {
 
   def exportTask(path: String): Runnable = new Runnable() {
