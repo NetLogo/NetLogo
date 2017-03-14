@@ -85,6 +85,7 @@ object ChecksumsAndPreviews {
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
+          "/ART/GENJAM - DUPLE.NLOGO",
           "/EXTENSIONS EXAMPLES/SOUND/"),
         Some("it uses the vid extension") -> List(
           "/EXTENSIONS EXAMPLES/VID/"))
