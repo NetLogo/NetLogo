@@ -75,10 +75,24 @@ object PackageLinuxAggregate {
         FileActions.copyAny(f, aggregateLinuxDir / f.getName)
       }
 
+      val variablesAndJarClasspath =
+
       // configure each sub application
       subApplications.foreach { app =>
         configureSubApplication(aggregateLinuxDir, app, commonConfig, variables)
       }
+
+      val headlessClasspath =
+        ("classpathJars"  ->
+          commonConfig.classpath
+            .map(jar => "app/" + jar.getName)
+            .sorted
+            .mkString(File.pathSeparator))
+
+      val targetFile = aggregateLinuxDir / "netlogo-headless.sh"
+      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
+        targetFile, variables + headlessClasspath)
+      targetFile.setExecutable(true)
 
       val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
       val tarBuildDir = aggregateLinuxDir.getParentFile
