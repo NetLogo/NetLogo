@@ -19,7 +19,7 @@ class _other extends Reporter {
       sourceSet.asInstanceOf[LazyAgentSet].lazyOther(context.agent)
       sourceSet
     } else {
-      new LazyAgentSet(null, sourceSet, others = List(context.agent))
+      new LazyAgentSet(null, sourceSet, context.agent :: Nil)
     }
   }
 }
