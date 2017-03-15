@@ -7,7 +7,6 @@ import org.nlogo.compile.api.{AstTransformer, Expression, ReporterApp, Statement
 import org.nlogo.core.{Token, TokenType}
 import org.nlogo.nvm.AcceptsLazy
 import org.nlogo.prim._
-import org.nlogo.prim.etc._
 import org.nlogo.prim._count
 
 class AgentsetLazinessTransformer extends AstTransformer {

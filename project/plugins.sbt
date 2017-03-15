@@ -62,3 +62,5 @@ libraryDependencies ++= Seq(
   "org.pegdown"                       % "pegdown" % "1.6.0",
   "org.apache.commons"                % "commons-lang3" % "3.1"
 )
+
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.20")

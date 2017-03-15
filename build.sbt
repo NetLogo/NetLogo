@@ -2,7 +2,7 @@ import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
+import NetLogoBuild.{ all, autogenRoot, cclArtifacts, inDirectory, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Testing.testTempDirectory
 
@@ -79,6 +79,48 @@ def publicationSettings(repository: String) =
 lazy val root =
    project.in(file(".")).
    aggregate(netlogo, parserJVM)
+
+lazy val netlogoBenchmark =
+  project.in(file("netlogo-bench")).
+  dependsOn(parserJVM).
+  enablePlugins(JmhPlugin).
+  settings(commonSettings: _*).
+  settings(shareSourceDirectory("netlogo-core"): _*).
+  settings(shareSourceDirectory("netlogo-gui"): _*).
+  settings(jvmSettings: _*).
+  settings(scalaSettings: _*).
+  settings(JFlexRunner.settings: _*).
+  settings(
+    name := "NetLogo-Benchmark",
+    resourceDirectory in Compile  := baseDirectory.value / "resources",
+    resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
+    excludeFilter in unmanagedSources := HiddenFileFilter ||
+    inDirectory("app") ||
+      inDirectory("editor") || inDirectory("lab") || inDirectory("lite") || inDirectory("ide") || inDirectory("gl") ||
+      inDirectory("render") || inDirectory("headless") || inDirectory("hubnet") || inDirectory("mc") || inDirectory("plot") ||
+      inDirectory("etc") || inDirectory("gui") || inDirectory("properties") || inDirectory("render") ||
+      inDirectory("sdm") || inDirectory("shape") || inDirectory("swing") || inDirectory("widget") || inDirectory("window") ||
+      inDirectory("workspace"),
+    autogenRoot     := baseDirectory.value.getParentFile / "autogen",
+    libraryDependencies ++= Seq(
+      "org.ow2.asm" % "asm-all" % "5.0.4",
+      "org.picocontainer" % "picocontainer" % "2.13.6",
+      "log4j" % "log4j" % "1.2.16",
+      "javax.media" % "jmf" % "2.1.1e",
+      "commons-codec" % "commons-codec" % "1.10",
+      "org.pegdown" % "pegdown" % "1.6.0",
+      "org.parboiled" %% "parboiled" % "2.1.3",
+      "org.jogamp.jogl" % "jogl-all" % "2.3.2",
+      "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
+      "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
+      "org.jmock" % "jmock" % "2.5.1" % "test",
+      "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+      "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+      "org.apache.httpcomponents" % "httpclient" % "4.2",
+      "org.apache.httpcomponents" % "httpmime" % "4.2",
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+      "com.fifesoft" % "rsyntaxtextarea" % "2.6.0"
+    ))
 
 lazy val netlogo = project.in(file("netlogo-gui")).
    dependsOn(parserJVM).
