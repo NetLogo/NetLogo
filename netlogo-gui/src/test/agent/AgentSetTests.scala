@@ -139,8 +139,8 @@ class AgentSetTests extends FunSuite {
     test(header + "single-set other") {
       val t1 = makeTurtle()
       val a = createLazyAgentSet(Array(t1))
-      val it = a.iterator
       a.lazyOther(t1)
+      val it = a.iterator
       assertResult(false)(it.hasNext)
       assertThrows[Exception] {
         it.next()
@@ -150,10 +150,10 @@ class AgentSetTests extends FunSuite {
       val t1 = makeTurtle()
       val t2 = makeTurtle()
       val a = createLazyAgentSet((Array(t1, t2)))
+      a.lazyOther(t2)
       val it = a.iterator
       assertResult(true)(it.hasNext)
       assertResult(t1)(it.next())
-      a.lazyOther(t2)
       assertResult(false)(it.hasNext)
       assertThrows[Exception] {
         it.next()
@@ -181,6 +181,7 @@ class AgentSetTests extends FunSuite {
     }
   }
   def testLazyOtherAndWith(): Unit = {
+    test("lazy other and with") {
     val t1 = makeTurtle()
     val t2 = makeTurtle()
     val t3 = makeTurtle()
@@ -203,6 +204,7 @@ class AgentSetTests extends FunSuite {
     val it2 = a.iterator
     assertResult(t2)(it2.next())
     assertResult(false)(it2.hasNext)
+    }
   }
 
 

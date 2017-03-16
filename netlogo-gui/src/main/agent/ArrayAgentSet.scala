@@ -45,7 +45,7 @@ extends IndexedAgentSet(kind, printName) {
     else
       !iterator.hasNext
 
-  override def count =
+  override def count = {
     if (!kind.mortal)
       arraySize
     else {
@@ -57,6 +57,7 @@ extends IndexedAgentSet(kind, printName) {
       }
       result
     }
+  }
 
   /// equality
 

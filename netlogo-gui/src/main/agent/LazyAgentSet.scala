@@ -8,7 +8,7 @@ import org.nlogo.{api, core}
 import scala.collection.mutable
 
 class LazyAgentSet(printName: String,
-                   private val agentSet: AgentSet,
+                   val agentSet: AgentSet,
                    private var others: List[Agent] = List(),
                    private var withs: List[(Agent) => Boolean] = List())
   extends AgentSet(agentSet.kind, printName) {
@@ -36,10 +36,10 @@ class LazyAgentSet(printName: String,
     }
 
   def iterator: AgentIterator =
-    new FilteringIterator(agentSet.iterator)
+    new FilteringIterator(agentSet.iterator, others, withs)
 
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
-    new FilteringIterator(agentSet.shufflerator(rng))
+    new FilteringIterator(agentSet.shufflerator(rng), others, withs)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
     force().randomOne(precomputedCount, rng)
@@ -69,10 +69,6 @@ class LazyAgentSet(printName: String,
     true
   }
 
-  def passesFilters(agent: Agent): Boolean = {
-    ! others.contains(agent) && passesWiths(agent)
-  }
-
   // assumptions:
   // 1. agents only accessed after force
   // 2. agents only modified by side-effects of filters within force
@@ -97,32 +93,36 @@ class LazyAgentSet(printName: String,
     forcedSet
   }
 
-  private class FilteringIterator(agentIterator: AgentIterator) extends AgentIterator {
+  private class FilteringIterator(agentIterator: AgentIterator, others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
     var nextAgent: Agent = null
 
+    var foundContained: Boolean = false
+
+    def passesFilters(agent: Agent): Boolean = {
+      ! others.contains(agent) && passesWiths(agent)
+    }
+
     override def hasNext: Boolean = {
-      if (nextAgent != null && nextAgent.id != -1)
-        true
-      else {
-        var passes = false
-        var next = false
-        do {
+      if (nextAgent == null) {
+        var next = true
+        nextAgent = null
+
+        while (nextAgent == null && next) {
 
           next = agentIterator.hasNext
+
           if (next) {
             nextAgent = agentIterator.next()
-            passes = passesFilters(nextAgent)
+            if (! passesFilters(nextAgent)) {
+              nextAgent = null
+            }
           }
 
-        } while ((nextAgent == null || ! passes) && next)
-
-        if (nextAgent != null && passes && nextAgent.id != -1) {
-          true
-        } else {
-          nextAgent = null
-          false
         }
-      }
+
+        nextAgent != null
+      } else
+        true
     }
 
     override def next(): Agent = {
