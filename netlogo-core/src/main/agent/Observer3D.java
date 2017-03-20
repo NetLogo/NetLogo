@@ -10,7 +10,8 @@ import org.nlogo.api.Vect;
 public final strictfp class Observer3D
     extends Observer
     implements Agent3D {
-  public Observer3D(World world) {
+
+  public Observer3D(World3D world) {
     super(world);
   }
 

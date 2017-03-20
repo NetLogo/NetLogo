@@ -24,14 +24,15 @@ object ConfigureWorld {
   }
 
   def setDefaultValues(world: World, widgets: Seq[Widget]): Unit = {
-    val observerGlobals = widgets.collect {
-      case CoreSwitch(Some(name), _, _, _, _, _, isOn) => name -> isOn
+    val observerGlobals: Seq[(String, AnyRef)] = widgets.collect {
+      case CoreSwitch(Some(name), _, _, _, _, _, isOn) =>
+        name -> Boolean.box(isOn)
       case CoreSlider(Some(name), _, _, _, _, _, _, _, default, _, _, _) =>
-        name -> default
+        name -> Double.box(default)
       case CoreChooser(Some(name), _, _, _, _, _, choices, selected) =>
-        name -> choices(selected)
+        name -> choices(selected).value
       case CoreInputBox(Some(name), _, _, _, _, NumericInput(default, _)) =>
-        name -> default
+        name -> Double.box(default)
       case CoreInputBox(Some(name), _, _, _, _, StringInput(default, _, _)) =>
         name -> default
     }

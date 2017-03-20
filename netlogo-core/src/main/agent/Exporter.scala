@@ -14,7 +14,7 @@ import collection.JavaConverters._
 // I converted this from Java without (for now, at least) making any effort to clean it up and make
 // it more Scalatastic. - ST 4/12/11
 
-private[agent] class Exporter(world: World, writer: PrintWriter) {
+private[agent] class Exporter(world: CoreWorld with LinkManagement with TurtleManagement, writer: PrintWriter) {
 
   import writer.{ print, println }
 

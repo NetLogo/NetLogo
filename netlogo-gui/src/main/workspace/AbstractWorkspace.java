@@ -54,7 +54,6 @@ public abstract strictfp class AbstractWorkspace
 
   protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
-    world.compiler_$eq(this);
     extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 

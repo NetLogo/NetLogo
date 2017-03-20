@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import org.nlogo.api.AgentException
 
-class Link3D(world: World, end1: Turtle, end2: Turtle, breed: AgentSet)
+class Link3D(world: World3D, end1: Turtle, end2: Turtle, breed: AgentSet)
 extends Link(world, end1, end2, breed)
 with org.nlogo.api.Link3D {
   def z1 = end1.asInstanceOf[Turtle3D].zcor

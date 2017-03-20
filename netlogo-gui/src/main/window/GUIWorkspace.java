@@ -137,7 +137,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       try {
         while (true) {
           if (jobManager().anyPrimaryJobs()) {
-            world().comeUpForAir = true;
+            world().comeUpForAir_$eq(true);
           }
           // 100 times a second seems like plenty
           Thread.sleep(10);
@@ -657,7 +657,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       updateManager().pseudoTick();
       updateDisplay(true);
     }
-    world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
+    world().comeUpForAir_$eq(updateManager().shouldComeUpForAirAgain());
     notifyListeners();
   }
 

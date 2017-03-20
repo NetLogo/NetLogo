@@ -105,7 +105,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (command.world.comeUpForAir()) {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
@@ -133,7 +133,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (command.world.comeUpForAir()) {
           comeUpForAir(command);
         }
       } while (!finished);
@@ -256,7 +256,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (command.world.comeUpForAir()) {
           comeUpForAir(command);
         }
       }
@@ -327,7 +327,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
       command.workspace.breathe(this);
     }
     if (Thread.currentThread().isInterrupted()) {
-      command.world.comeUpForAir = false;
+      command.world.comeUpForAir_$eq(false);
       finished = true;
       throw new HaltException(true);
     }

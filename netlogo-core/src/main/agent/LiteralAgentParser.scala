@@ -15,7 +15,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
 {
 
   // janky, but oh well - ST 5/2/13
-  def world = _world.asInstanceOf[World]
+  def world = _world.asInstanceOf[CoreWorld with AgentManagement]
 
   /// all error messages used in this class
   private val ERR_EXPECTED_BREED = "Expected breed"

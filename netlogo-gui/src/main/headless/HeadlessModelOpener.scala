@@ -62,7 +62,11 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     }
 
     ws.init()
+<<<<<<< HEAD
     ws.world.asInstanceOf[CompilationManagement].program(results.program)
+=======
+    ws.world.asInstanceOf[org.nlogo.agent.CompilationManagement].program(results.program)
+>>>>>>> Convert World to scala
 
     // test code is mixed with actual code here, which is a bit funny.
     if (ws.compilerTestingMode)
@@ -105,7 +109,11 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
       }
+<<<<<<< HEAD
       ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+=======
+      ws.world.observer.variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+>>>>>>> Convert World to scala
     }
 
     ws.command(interfaceGlobalCommands)

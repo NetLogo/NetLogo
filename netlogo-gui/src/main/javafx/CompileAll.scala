@@ -56,7 +56,7 @@ object CompileAll {
           workspace.getCompilationEnvironment)
       workspace.setProcedures(results.proceduresMap)
       workspace.init()
-      workspace.world.program(results.program)
+      workspace.world.asInstanceOf[org.nlogo.agent.CompilationManagement].program(results.program)
       val compiledWidgets = model.widgets.map(compileWidget(results, workspace))
 
       CompiledModel(model,
