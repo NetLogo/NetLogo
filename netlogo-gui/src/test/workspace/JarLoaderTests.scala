@@ -106,7 +106,8 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
   }
 
   test("extensionData raises an error when the jar manifest doesn't have the required fields") {
-    intercept[ExtensionManagerException] { jarLoader.extensionData("empty", emptyJarFile.toURI.toURL) }
+    val exception = intercept[ExtensionManagerException] { jarLoader.extensionData("empty", emptyJarFile.toURI.toURL) }
+    assert(exception.getMessage.startsWith("Bad extension 'empty':"))
   }
 
   test("extensionClassLoader returns a URLClassLoader with the provided loader as a parent") {
