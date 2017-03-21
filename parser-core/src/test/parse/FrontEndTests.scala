@@ -121,6 +121,9 @@ class FrontEndTests extends FunSuite {
     // here the error is at TokenType.Eof - ST 9/29/14
     runFailure("let", "LET expected 2 inputs.", 0, 3)
   }
+  test("dangling argument errors as expected command") {
+    runFailure("let _x 2 show 2 _x", "Expected command.", 16, 18)
+  }
   test("unknown reporter failure") {
     runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)
   }

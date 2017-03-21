@@ -71,7 +71,7 @@ object ExpressionParser {
         (stmt.withArguments(arguments), newScope)
       case _ =>
         token.value match {
-          case (_: core.prim._symbol | _: core.prim._unknownidentifier) =>
+          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase) =>
             exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
           case _ => exception(ExpectedCommand, token)
         }
