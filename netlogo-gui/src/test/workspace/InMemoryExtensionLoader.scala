@@ -20,7 +20,7 @@ class InMemoryExtensionLoader(prefix: String, classManager: ClassManager) extend
     if (extensionName == prefix && url.toString.endsWith(s"/$extensionName"))
       new ExtensionData(extensionName, url, extensionName, classManager.getClass.getCanonicalName, Some(currentVer), 0)
     else
-      throw new ExtensionManagerException(NoManifest)
+      throw new ExtensionManagerException(NoManifest(extensionName))
   }
 
   def extensionClassLoader(fileURL: URL, parent: ClassLoader): ClassLoader = parent
