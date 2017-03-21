@@ -60,6 +60,15 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("dangling argument errors as expected command") {
     runFailure("let _x 2 show 2 _x", "Expected command.", 16, 18)
   }
+  test("run with no arguments") {
+    runFailure("run", "RUN expected at least 1 input, a string or anonymous command and any input.", 0, 3)
+  }
+  test("foreach with no list") {
+    runFailure("foreach [ x -> show x ]", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
+  }
+  test("map with no arguments") {
+    runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 10)
+  }
   test("unknown reporter failure") {
     runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)
   }
@@ -125,11 +134,11 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("__ignore [ foo bar -> ]", "An anonymous procedures of two or more arguments must enclose its argument list in brackets", 11, 18)
   }
   test("DoParseVariadic") {
-    runTest("__ignore list 1 2",
+    testParse("__ignore list 1 2",
       "_ignore()[_list()[_const(1)[], _const(2)[]]]")
   }
   test("DoParseVariadic2") {
-    runTest("__ignore (list 1 2 3)",
+    testParse("__ignore (list 1 2 3)",
       "_ignore()[_list()[_const(1)[], _const(2)[], _const(3)[]]]")
   }
   test("DoParseMap") {

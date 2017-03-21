@@ -109,49 +109,64 @@ object ExpressionParser {
     val typedArgs = scala.collection.mutable.Seq[core.Expression](untypedArgs: _*)
     val formalTypes = if (syntax.isInfix) syntax.left +: syntax.right else syntax.right
     // first look at left arg, if any
-    if (syntax.isInfix) {
+    if (syntax.isInfix) { //TODO: See if this if-statement can be removed
       cAssert(untypedArgs.size >= 1, missingInput(syntax, displayName, 0), location)
     }
-    /*
-    if (compatible(Syntax.OptionalType, formalTypes.last) && formalTypes.length - 1 == untypedArgs.size) {
-      // only need to check the first (length - 1) arguments
-    } else if (compatible(Syntax.RepeatableType, formalTypes.last)) {
+    var index = 0
+    val types = syntax.right
+    val repeatedIndex = formalTypes.indexWhere(t => compatible(Syntax.RepeatableType, t))
+    if (repeatedIndex != -1) {
+      println(untypedArgs + ",  " + formalTypes)
+      // TODO: Not sure that this check is necessary here...
+      cAssert(untypedArgs.size >= repeatedIndex, missingInput(syntax, displayName, index), location)
+
       // Check the first (formalTypes.length - 1) arguments,
       // Then check the remaining (untypedArgs.length - (formalTypes.length - 1)) arguments to match the repeatable syntax type
+      while (index < repeatedIndex) {
+        typedArgs.update(index, resolveType(formalTypes(index), untypedArgs(index), displayName, scope))
+        index += 1
+      }
+      var actual1 = index
+      var formal1 = index
+      if (formal1 < types.length) {
+        // then we encountered a repeatable arg, so we look at right args from right-to-left...
+        var actual2 = untypedArgs.size - 1
+        var formal2 = types.length - 1
+        while (formal2 >= 0 && !compatible(Syntax.RepeatableType, types(formal2))) {
+          cAssert(untypedArgs.size > actual2 && actual2 > -1, missingInput(syntax, displayName, actual2), location)
+          typedArgs.update(actual2, resolveType(formalTypes(actual2), untypedArgs(actual2), displayName, scope))
+          formal2 -= 1
+          actual2 -= 1
+        }
+        // now we check any repeatable args...
+        while (actual1 <= actual2) {
+          typedArgs.update(actual1, resolveType(types(formal1), untypedArgs(actual1), displayName, scope))
+          actual1 += 1
+        }
+      }
+      scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
     } else {
-      // We know the that the arguments must match the formalTypes exactly.
-      // This involves making sure that the number of arguments is as expected and all arguments match their expected types
-    }
-    */
-    var index = 0
-    // var formal1 = 0
-    val types = syntax.right
-    while (index < formalTypes.length && !compatible(Syntax.RepeatableType, formalTypes(index))) {
-      if (index == formalTypes.length - 1 && untypedArgs.size == formalTypes.length - 1 && compatible(Syntax.OptionalType, formalTypes(index)))
-        return scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
-      cAssert(untypedArgs.size > index, missingInput(syntax, displayName, index), location)
-      typedArgs.update(index, resolveType(formalTypes(index), untypedArgs(index), displayName, scope))
-      index += 1
-    }
-    var actual1 = index
-    var formal1 = index
-    if (formal1 < types.length) {
-      // then we encountered a repeatable arg, so we look at right args from right-to-left...
-      var actual2 = untypedArgs.size - 1
-      var formal2 = types.length - 1
-      while (formal2 >= 0 && !compatible(Syntax.RepeatableType, types(formal2))) {
-        cAssert(untypedArgs.size > actual2 && actual2 > -1, missingInput(syntax, displayName, actual2), location)
-        typedArgs.update(actual2, resolveType(formalTypes(actual2), untypedArgs(actual2), displayName, scope))
-        formal2 -= 1
-        actual2 -= 1
+      val checkedTypes =
+        if (formalTypes.lastOption.exists(t => compatible(Syntax.OptionalType, t)) && formalTypes.length - 1 == untypedArgs.size) {
+          // only need to check the first (length - 1) arguments
+          formalTypes.init
+        } else {
+          // We know the that the arguments must match the formalTypes exactly.
+          // This involves making sure that the number of arguments is as expected and all arguments match their expected types
+          formalTypes
+        }
+      cAssert(untypedArgs.length == checkedTypes.length, missingInput(syntax, displayName, untypedArgs.length), location)
+
+      (checkedTypes zip untypedArgs).zipWithIndex.foreach {
+        case ((tpe, arg), i) =>
       }
-      // now we check any repeatable args...
-      while (actual1 <= actual2) {
-        typedArgs.update(actual1, resolveType(types(formal1), untypedArgs(actual1), displayName, scope))
-        actual1 += 1
+
+      while (index < checkedTypes.length) {
+        typedArgs.update(index, resolveType(formalTypes(index), untypedArgs(index), displayName, scope))
+        index += 1
       }
+      scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
     }
-    scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
   }
 
   /**
