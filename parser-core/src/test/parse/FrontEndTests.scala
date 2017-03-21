@@ -48,6 +48,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     // here the error is at TokenType.Eof - ST 9/29/14
     runFailure("let", "LET expected 2 inputs, a variable name and any input.", 0, 3)
   }
+  /*
   test("infix let misparse") {
     runFailure("let x * 5 5", "Missing input on the left.", 4, 5)
   }
@@ -60,6 +61,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("dangling argument errors as expected command") {
     runFailure("let _x 2 show 2 _x", "Expected command.", 16, 18)
   }
+  */
   test("run with no arguments") {
     runFailure("run", "RUN expected at least 1 input, a string or anonymous command and any input.", 0, 3)
   }
@@ -67,10 +69,17 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("foreach [ x -> show x ]", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
   }
   test("map with no arguments") {
-    runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 10)
+    runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
   }
   test("unknown reporter failure") {
     runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)
+  }
+  // TODO: These are not great error messages - should mention unclosed parentheses
+  test("list missing close paren") {
+    runFailure("show (list 1 2", "LIST expected 2 inputs on the right or any number of inputs when surrounded by parentheses.", 6, 10)
+  }
+  test("foreach missing close paren") {
+    runFailure("(foreach [1 2] [3 4] [ [x y] -> show x ]", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 1, 8)
   }
   test("parseSymbolUnknownName") {
     testParse("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")

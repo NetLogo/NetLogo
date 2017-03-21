@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import scala.util.{ Failure, Try }
+
 object Fail {
 
   // "desc" is by-name so we don't retrieve error messages from i18n bundles unless the error is
@@ -25,5 +27,26 @@ object Fail {
     exception(message, location.start, location.end, location.filename)
   def exception(message: String, start: Int, end: Int, filename: String): Nothing =
     throw new CompilerException(message, start, end, filename)
+
+  def cTry[A](condition: Boolean, a: =>A, desc: =>String, locatable: SourceLocatable): Try[A] = {
+    if(!condition)
+      fail(desc, locatable)
+    else
+      Try(a)
+  }
+
+  def cTry[A](condition: Boolean, a: =>A, desc: =>String, location: SourceLocation): Try[A] = {
+    if(!condition)
+      fail(desc, location)
+    else
+      Try(a)
+  }
+
+  def fail(message: String, locatable: SourceLocatable): Try[Nothing] =
+    exception(message, locatable.sourceLocation)
+  def fail(message: String, location: SourceLocation): Try[Nothing] =
+    exception(message, location.start, location.end, location.filename)
+  def fail(message: String, start: Int, end: Int, filename: String): Try[Nothing] =
+    new Failure(new CompilerException(message, start, end, filename))
 
 }

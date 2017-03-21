@@ -5,11 +5,13 @@ package org.nlogo.parse
 import org.nlogo.core,
   core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, Syntax, Token, TokenType },
     prim.Lambda,
-    Fail.{ cAssert, exception },
+    Fail.{ cAssert, exception, cTry, fail },
     Syntax.compatible
 
 import scala.annotation.tailrec
 import collection.mutable.Buffer
+
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Parses procedure bodies.
@@ -27,7 +29,7 @@ object ExpressionParser {
    * something else), and so are parsed as such. */
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
     val buffered = tokens.buffered
-    val statementList = parseStatements(buffered, scope, TokenType.Eof, parseStatement(_, false, _))
+    val statementList = parseStatements(buffered, scope, TokenType.Eof, parseStatement(_, false, _)).get
     val stmts = new core.Statements(buffered.head.filename, statementList, false)
     val end =
       if (buffered.head.end < Int.MaxValue) buffered.head.start
@@ -35,15 +37,24 @@ object ExpressionParser {
     new core.ProcedureDefinition(procedureDeclaration, stmts, end)
   }
 
-  private def parseStatements(tokens: BufferedIterator[Token], scope: SymbolTable, terminator: TokenType, f: (BufferedIterator[Token], SymbolTable) => (core.Statement, SymbolTable)): Seq[core.Statement] = {
+  private def parseStatements(
+    tokens: BufferedIterator[Token],
+    scope: SymbolTable,
+    terminator: TokenType,
+    f: (BufferedIterator[Token], SymbolTable) => Try[(core.Statement, SymbolTable)]): Try[Seq[core.Statement]] = {
     val b = Buffer[core.Statement]()
     var activeScope = scope
-    while (tokens.head.tpe != terminator) {
-      val (stmt, s) = f(tokens, activeScope)
-      activeScope = s
-      b += stmt
+    var badStmt = Option.empty[Failure[Seq[core.Statement]]]
+    while (badStmt.isEmpty && tokens.head.tpe != terminator) {
+      f(tokens, activeScope) match {
+        case Success((stmt, newScope)) =>
+          activeScope = newScope
+          b += stmt
+        case Failure(ex) =>
+          badStmt = Some(Failure(ex))
+      }
     }
-    b.toSeq
+    badStmt.getOrElse(Try(b.toSeq))
   }
 
   /**
@@ -51,28 +62,31 @@ object ExpressionParser {
    *
    * @return the parsed statement and the symbol table resulting from any added scope
    */
-  private def parseStatement(tokens: BufferedIterator[Token], variadic: Boolean, scope: SymbolTable): (core.Statement, SymbolTable) = {
+  private def parseStatement(tokens: BufferedIterator[Token], variadic: Boolean, scope: SymbolTable): Try[(core.Statement, SymbolTable)] = {
     val token = tokens.head
     token.tpe match {
       case TokenType.OpenParen =>
-        val ((stmt, newScope), loc) = parseParenthesized(tokens, parseStatement(_, true, scope), token.filename)
-        (stmt.changeLocation(loc), newScope)
+        parseParenthesized(tokens, parseStatement(_, true, scope), token.filename).map {
+          case ((stmt, newScope), loc) => (stmt.changeLocation(loc), newScope)
+        }
       case TokenType.Command =>
-        tokens.next()
-        val coreCommand = token.value.asInstanceOf[core.Command]
-        val nameToken = if (tokens.head.tpe != TokenType.Eof) Some(tokens.head) else None
-        val (stmt, newScope) =
-          LetScope(coreCommand, nameToken, scope).map {
-            case (letCommand, newScope) =>
-              (new core.Statement(letCommand, token.sourceLocation), newScope)
-          }.getOrElse((new core.Statement(coreCommand, token.sourceLocation), scope))
-        val arguments = parsePotentiallyVariadicArgumentList(coreCommand.syntax, variadic, stmt, tokens, newScope)
-        (stmt.withArguments(arguments), newScope)
+        Try {
+          tokens.next()
+          val coreCommand = token.value.asInstanceOf[core.Command]
+          val nameToken = if (tokens.head.tpe != TokenType.Eof) Some(tokens.head) else None
+          val (stmt, newScope) =
+            LetScope(coreCommand, nameToken, scope).map {
+              case (letCommand, newScope) =>
+                (new core.Statement(letCommand, token.sourceLocation), newScope)
+            }.getOrElse((new core.Statement(coreCommand, token.sourceLocation), scope))
+          val arguments = parsePotentiallyVariadicArgumentList(coreCommand.syntax, variadic, stmt, tokens, newScope)
+          (stmt.withArguments(arguments), newScope)
+        }
       case _ =>
         token.value match {
           case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase) =>
-            exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
-          case _ => exception(ExpectedCommand, token)
+            fail(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
+          case _ => fail(ExpectedCommand, token)
         }
     }
   }
@@ -185,12 +199,13 @@ object ExpressionParser {
     val args = Buffer[core.Expression]()
 
     for (i <- 0 until syntax.rightDefault) {
-      args += parseArgExpression(syntax, tokens, sourceLocation, displayName, right(i min (right.size - 1)), scope) } // null = app
+      args += parseArgExpression(syntax, tokens, sourceLocation, displayName, right(i min (right.size - 1)), scope).get
+    } // null = app
 
     if (takesOptionalCommandBlock) {
       val newExp =
         if (tokens.head.tpe == TokenType.OpenBracket)
-          parseArgExpression(syntax, tokens, sourceLocation, displayName, right.last, scope) // null = app
+          parseArgExpression(syntax, tokens, sourceLocation, displayName, right.last, scope).get // null = app
         else {
           // synthetic block so later phases of compilation have consistent number of arguments
           val file = tokens.head.filename
@@ -224,7 +239,7 @@ object ExpressionParser {
           cAssert(parsedArgs.size == syntax.totalDefault, InvalidVariadicContext, sourceLocation)
           parsedArgs
         case _ =>
-          val newExp = parseArgExpression(syntax, toks, sourceLocation, displayName, goalTypes.head, scope)
+          val newExp = parseArgExpression(syntax, toks, sourceLocation, displayName, goalTypes.head, scope).get
           val newGoals = if (goalTypes.tail.nonEmpty) goalTypes.tail else goalTypes
           parseArgument(toks, newGoals, scope, parsedArgs :+ newExp)
       }
@@ -247,14 +262,15 @@ object ExpressionParser {
       sourceLocation: SourceLocation,
       displayName:    String, // app.instruction.displayName
       goalType:       Int,
-      scope:          SymbolTable): core.Expression = {
-    try
-      parseExpressionInternal(tokens, false, syntax.precedence, goalType, scope)
-    catch {
+      scope:          SymbolTable): Try[core.Expression] = {
+    parseExpressionInternal(tokens, false, syntax.precedence, goalType, scope) recoverWith {
+      case (_: UnexpectedTokenException | _: MissingPrefixException) =>
+        fail(missingInput(syntax, displayName, 0), sourceLocation)
+      /*
       case ex: MissingPrefixException =>
+        ex.printStackTrace()
         exception(MissingInputOnLeft, ex.token.sourceLocation)
-      case ex: UnexpectedTokenException =>
-        exception(missingInput(syntax, displayName, 0), sourceLocation)
+        */
     }
   }
 
@@ -323,30 +339,29 @@ object ExpressionParser {
    * @param tokens   the input token stream
    * @param variadic whether to treat this expression as possibly variadic
    */
-  def parseExpression(tokens: BufferedIterator[Token], variadic: Boolean, goalType: Int, scope: SymbolTable): core.Expression = {
-    try
-      parseExpressionInternal(tokens, variadic, MinPrecedence, goalType, scope)
-    catch {
-      case e: MissingPrefixException => exception(MissingInputOnLeft, e.token)
-      case e: UnexpectedTokenException => exception(ExpectedReporter, e.token)
+  def parseExpression(tokens: BufferedIterator[Token], variadic: Boolean, goalType: Int, scope: SymbolTable): Try[core.Expression] = {
+    parseExpressionInternal(tokens, variadic, MinPrecedence, goalType, scope) recoverWith {
+      case e: MissingPrefixException => fail(MissingInputOnLeft, e.token)
+      case e: UnexpectedTokenException => fail(ExpectedReporter, e.token)
     }
   }
 
   /**
    * parses a parenthesized something. Assumes that the first token in the iterator is an open paren
    *
-   * @return (Opening paren, parenthenesized A, Closing Paren)
+   * @return Try[(parenthenesized A, Source Location from Opening to Closing Paren)]
    */
-  private def parseParenthesized[A](tokens: BufferedIterator[Token], parse: BufferedIterator[Token] => A, filename: String): (A, SourceLocation) = {
+  private def parseParenthesized[A](tokens: BufferedIterator[Token], parse: BufferedIterator[Token] => Try[A], filename: String): Try[(A, SourceLocation)] = {
     val openParen = tokens.next()
     assert(openParen.tpe == TokenType.OpenParen)
-    val node = parse(tokens)
-    val closeParen = tokens.next()
-    // if next is an Eof, we complain and point to the open paren.
-    cAssert(closeParen.tpe != TokenType.Eof, MissingCloseParen, openParen)
-    // if it's anything else other than ), we complain and point to the next token itself.
-    cAssert(closeParen.tpe == TokenType.CloseParen, ExpectedCloseParen, closeParen)
-    (node, SourceLocation(openParen.start, closeParen.end, filename))
+    for {
+      node <- parse(tokens)
+      closeParen = tokens.next()
+      // if next is an Eof, we complain and point to the open paren.
+      node2 <- cTry(closeParen.tpe != TokenType.Eof, node, MissingCloseParen, openParen)
+      // if it's anything else other than ), we complain and point to the next token itself.
+      node3 <- cTry(closeParen.tpe == TokenType.CloseParen, node, ExpectedCloseParen, closeParen)
+    } yield (node3, SourceLocation(openParen.start, closeParen.end, filename))
   }
 
   /**
@@ -372,38 +387,41 @@ object ExpressionParser {
       variadic: Boolean,
       precedence: Int,
       goalType: Int,
-      scope: SymbolTable): core.Expression = {
-    val token = tokens.head
+      scope: SymbolTable): Try[core.Expression] = {
+    var token = tokens.head
     val wantAnyLambda = goalType == (Syntax.ReporterType | Syntax.CommandType)
     val wantReporterLambda = wantAnyLambda || goalType == Syntax.ReporterType
     val wantCommandLambda = wantAnyLambda || goalType == Syntax.CommandType
-    val expr: core.Expression =
+    val expr: Try[core.Expression] =
       token.tpe match {
         case TokenType.OpenParen =>
-          val (expr, loc) = parseParenthesized(tokens, { ts =>
-            val exp = parseExpression(ts, true, goalType, scope)
-            // we also special case an out-of-place command, since this is what the command center does
-            // if you leave off a final paren (because of the __done at the end).
-            cAssert(ts.head.tpe != TokenType.Command, MissingCloseParen, token)
-            exp
-          }, token.filename)
-          expr.changeLocation(loc)
+          def parseInnerExp(ts: BufferedIterator[Token]): Try[core.Expression] =
+            for {
+              exp      <- parseExpression(ts, true, goalType, scope)
+              // we also special case an out-of-place command, since this is what the command center does
+              // if you leave off a final paren (because of the __done at the end).
+              validExp <- cTry(ts.head.tpe != TokenType.Command, exp, MissingCloseParen, token)
+            } yield validExp
+
+          parseParenthesized(tokens, parseInnerExp _, token.filename).map {
+            case (expr, loc) => expr.changeLocation(loc)
+          }
         case TokenType.OpenBracket =>
           delayBlock(token, tokens, scope)
         case TokenType.Reporter | TokenType.Command
-          if compatible(goalType, Syntax.SymbolType) =>
+            if compatible(goalType, Syntax.SymbolType) =>
           tokens.next()
           val symbol = new core.prim._symbol()
           token.refine(symbol)
-          new core.ReporterApp(symbol, token.sourceLocation)
+          Try(new core.ReporterApp(symbol, token.sourceLocation))
         case TokenType.Reporter | TokenType.Literal =>
+          Try {
           tokens.next()
           val (syntax, rApp) = token.tpe match {
             case TokenType.Literal =>
               val coreReporter = new core.prim._const(token.value)
               coreReporter.token = token
-              (coreReporter.syntax,
-                new core.ReporterApp(coreReporter, token.sourceLocation))
+              (coreReporter.syntax, new core.ReporterApp(coreReporter, token.sourceLocation))
             case TokenType.Reporter =>
               val coreReporter = token.value.asInstanceOf[core.Reporter]
               if (coreReporter.isInstanceOf[core.prim._symbol] || coreReporter.isInstanceOf[core.prim._unknownidentifier]) {
@@ -442,15 +460,16 @@ object ExpressionParser {
           // the normal case
           else
             rApp.withArguments(parsePotentiallyVariadicArgumentList(syntax, variadic, rApp, tokens, scope))
+          }
         case TokenType.Command if wantCommandLambda =>
           tokens.next()
           expandConciseCommandLambda(token, scope)
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
           // generally either means MissingInputOnRight or ExpectedReporter.
-          throw new UnexpectedTokenException(token)
+          Failure(new UnexpectedTokenException(token))
       }
-    parseMore(expr, tokens, precedence, scope)
+    expr.flatMap(e => parseMore(e, tokens, precedence, scope))
   }
 
   private def syntheticVariables(count: Int, token: Token, scope: SymbolTable): (Seq[String], Seq[core.ReporterApp]) = {
@@ -480,28 +499,32 @@ object ExpressionParser {
     new core.ReporterApp(lambda, Seq(rApp.withArguments(varApps)), reporter.token.sourceLocation)
   }
 
+
   // expand e.g. "foreach xs print" -> "foreach xs [[x] -> print x]"
-  private def expandConciseCommandLambda(token: Token, scope: SymbolTable): core.ReporterApp = {
+  private def expandConciseCommandLambda(token: Token, scope: SymbolTable): Try[core.ReporterApp] = {
     val coreCommand = token.value.asInstanceOf[core.Command]
     if (! coreCommand.syntax.canBeConcise)
-      throw new UnexpectedTokenException(token)
-    val (varNames, varApps) = syntheticVariables(coreCommand.syntax.totalDefault, coreCommand.token, scope)
-    val stmtArgs =
-      if (coreCommand.syntax.takesOptionalCommandBlock)
-        // synthesize an empty block so that later phases of compilation will be dealing with a
-        // consistent number of arguments - ST 3/4/08
-        varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
-      else varApps
+      Failure(new UnexpectedTokenException(token))
+    else {
+      val (varNames, varApps) = syntheticVariables(coreCommand.syntax.totalDefault, coreCommand.token, scope)
+      val stmtArgs =
+        if (coreCommand.syntax.takesOptionalCommandBlock)
+          // synthesize an empty block so that later phases of compilation will be dealing with a
+          // consistent number of arguments - ST 3/4/08
+          varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
+        else varApps
 
-    val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
-    lambda.token = token
+      val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
+      lambda.token = token
 
-    val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)
+      val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)
 
-    val commandBlock = commandBlockWithStatements(token.sourceLocation, Seq(stmt), synthetic = true)
+      val commandBlock = commandBlockWithStatements(token.sourceLocation, Seq(stmt), synthetic = true)
 
-    new core.ReporterApp(lambda, Seq(commandBlock), token.sourceLocation)
+      Success(new core.ReporterApp(lambda, Seq(commandBlock), token.sourceLocation))
+    }
   }
+
 
   private def commandBlockWithStatements(sourceLocation: SourceLocation, stmts: Seq[core.Statement], synthetic: Boolean = false) = {
     val statements = new core.Statements(sourceLocation.filename, stmts)
@@ -514,7 +537,8 @@ object ExpressionParser {
    * operator. If so, we use what we've seen so far as its first arg, and then parse its other
    * arguments. Then we repeat. The result of all of this is the actual expr.
    */
-  def parseMore(originalExpr: core.Expression, tokens: BufferedIterator[Token], precedence: Int, scope: SymbolTable): core.Expression = {
+  def parseMore(originalExpr: core.Expression, tokens: BufferedIterator[Token], precedence: Int, scope: SymbolTable): Try[core.Expression] = {
+    Try {
     var expr = originalExpr
     var done = false
     while (!done) {
@@ -538,6 +562,7 @@ object ExpressionParser {
       else done = true
     }
     expr
+    }
   }
 
   /**
@@ -545,7 +570,7 @@ object ExpressionParser {
    * information, and since type info isn't available in a simple left-to-right way, we delay the
    * parsing of blocks by packaging up their tokens in a DelayedBlock. This also makes error reports
    * a bit nicer, since we can point out the entire block if something goes wrong. */
-  private def delayBlock(openBracket: Token, tokens: BufferedIterator[Token], scope: SymbolTable): DelayedBlock = {
+  private def delayBlock(openBracket: Token, tokens: BufferedIterator[Token], scope: SymbolTable): Try[DelayedBlock] = {
     import collection.mutable.{ Buffer, UnrolledBuffer }
 
     // The purpose of the recursion here is to collect all of the tokens until we reach the
@@ -566,8 +591,9 @@ object ExpressionParser {
         exception(MissingCloseBracket, openBracket)
     }
 
-    val collectedBlock = collect(tokens, new UnrolledBuffer[Token](), 0).toSeq
-    DelayedBlock(openBracket, collectedBlock.tail, scope)
+    Try { collect(tokens, new UnrolledBuffer[Token](), 0).toSeq }.map { collectedBlock =>
+      DelayedBlock(openBracket, collectedBlock.tail, scope)
+    }
   }
 
   /**
@@ -582,15 +608,16 @@ object ExpressionParser {
       val stmts = parseStatements(i, scope, TokenType.CloseBracket, { (ts, s) =>
         // if next is an Eof, we complain and point to the open bracket.
         // this should be impossible, since it's a delayed block.
-        cAssert(ts.head.tpe != TokenType.Eof, MissingCloseBracket, block.openBracket)
-        parseStatement(ts, false, s)
-      })
+        cTry(ts.head.tpe != TokenType.Eof, true, MissingCloseBracket, block.openBracket).flatMap { _ =>
+          parseStatement(ts, false, s)
+        }
+      }).get
       (stmts, i.next())
     }
 
     def reporterApp(i: BufferedIterator[Token], expressionGoal: Int, scope: SymbolTable): (core.ReporterApp, Token) = {
       val expr = resolveType(Syntax.WildcardType,
-        parseExpression(tokens, false, expressionGoal, scope), null, scope)
+        parseExpression(tokens, false, expressionGoal, scope).get, null, scope)
       val lastToken = tokens.next()
       // should be impossible for delayed block
       cAssert(lastToken.tpe != TokenType.Eof, MissingCloseBracket, block.openBracket)
