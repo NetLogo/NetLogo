@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{ EnumeratedValueSet, FileIO, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ RefEnumeratedValueSet, FileIO, LabProtocol, SteppedValueSet }
 import org.nlogo.core.CompilerUtilitiesInterface
 import org.w3c.dom
 import org.xml.sax
@@ -85,7 +85,7 @@ class ProtocolLoader(services: CompilerUtilitiesInterface)
                               parse("step"),parse("last"))
         }
         def readEnumeratedValueSetElement(e: dom.Element) =
-          new EnumeratedValueSet(e.getAttribute("variable"),
+          new RefEnumeratedValueSet(e.getAttribute("variable"),
                                  e.getElementsByTagName("value")
                                  .map(e =>
                                    services.readFromString(e.getAttribute("value"))))

@@ -34,7 +34,7 @@ class Worker(val protocol: LabProtocol)
     try {
       listeners.foreach(_.experimentStarted())
       runners =
-        (for((settings, runNumber) <- protocol.elements zip Stream.from(1).iterator)
+        (for((settings, runNumber) <- protocol.refElements zip Stream.from(1).iterator)
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures = {
         import collection.JavaConverters._
@@ -73,7 +73,7 @@ class Worker(val protocol: LabProtocol)
       else Some(workspace.compileReporter(protocol.exitCondition))
     val metricProcedures = protocol.metrics.map(workspace.compileReporter(_))
   }
-  class Runner(runNumber: Int, settings: List[(String, Any)], fn: ()=>Workspace)
+  class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Workspace)
     extends Callable[Unit]
   {
     class FailedException(message: String) extends LogoException(message)
@@ -105,7 +105,7 @@ class Worker(val protocol: LabProtocol)
           newProcedures
         }
       import procedures._
-      def setVariables(settings: List[(String, Any)]) {
+      def setVariables(settings: List[(String, AnyRef)]) {
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {
