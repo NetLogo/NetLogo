@@ -155,6 +155,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     val LabelyMax = getLabel(plot.yMax)
     val yLength = LabelyMax.length
     if (yLength >= 8){yAxis.setMax(LabelyMax.substring(0,4) + LabelyMax.substring(yLength - 3, yLength)) }
+    else {yAxis.setMax(LabelyMax)}
     if(plot.pensDirty) {
       legend.refresh()
       plot.pensDirty = false
