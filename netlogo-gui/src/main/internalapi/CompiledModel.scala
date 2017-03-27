@@ -11,7 +11,7 @@ sealed trait CompiledWidget {
 
 trait CompiledButton extends CompiledWidget {
   def widget: Button
-  def tag: String
+  def procedureTag: String
 }
 
 case class NonCompiledWidget(val widget: Widget) extends CompiledWidget {
@@ -28,10 +28,22 @@ trait ModelRunner {
   def tagError(tag: String, error: Exception): Unit
 }
 
+trait RunComponent {
+  def tagAction(action: ModelAction, actionTag: String): Unit
+  def updateReceived(update: ModelUpdate): Unit
+}
+
 trait RunnableModel {
   def runTag(tag: String, runner: ModelRunner): Unit
+  def submitAction(action: ModelAction): Unit // when you don't care that the job completes
+  def submitAction(action: ModelAction, component: RunComponent): Unit
 }
 
 object EmptyRunnableModel extends RunnableModel {
   def runTag(tag: String, runner: ModelRunner): Unit = {}
+  def submitAction(action: ModelAction): Unit = {}
+  def submitAction(action: ModelAction, component: RunComponent): Unit = {
+    component.tagAction(action, "")
+    component.updateReceived(ActionCompleted(""))
+  }
 }

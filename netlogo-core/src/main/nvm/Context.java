@@ -144,6 +144,35 @@ public final strictfp class Context implements org.nlogo.api.Context {
     }
   }
 
+  scala.util.Either<Context, Integer> runFor(int steps) {
+    if (agent.id() == -1) // is our agent dead?
+    {
+      finished = true;
+      return scala.util.Right.<Context, Integer>apply(Integer.valueOf(0));
+    }
+    Command command = null;
+    int completedSteps = 0;
+    try {
+      while (completedSteps < steps && !finished) {
+        command = activation.code[ip];
+        if ((agentBit & command.agentBits) == 0) {
+          command.throwAgentClassException(this, agent.kind());
+        }
+        command.perform(this);
+        completedSteps++;
+      }
+
+      if (!finished) {
+        return scala.util.Left.<Context, Integer>apply(this);
+      }
+    } catch (EngineException ex) {
+      throw ex;
+    } catch (LogoException ex) {
+      EngineException.rethrow(ex, copy(), command);
+    }
+    return scala.util.Right.<Context, Integer>apply(Integer.valueOf(completedSteps));
+  }
+
   public boolean hasParentContext() {
     return job.parentContext != null;
   }

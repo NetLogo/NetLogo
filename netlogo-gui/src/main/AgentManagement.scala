@@ -163,6 +163,7 @@ trait AgentManagement
   // This has to be a deep copy.
   // Since this is only for display, we don't care (for the moment) about any variables other than the core variables.
   // This means that we'll ask agents to create themselves and copy over only their core variables.
+  // TODO: Copy over observer?
   def copyAgents(other: AgentManagement, newWorld: World): Unit = {
     import scala.collection.JavaConverters._
     // first we recreate all the breeds
@@ -190,7 +191,6 @@ trait AgentManagement
       i += 1
     }
     newWorld._patches = new ArrayAgentSet(AgentKind.Patch, "patches", newPatchArray)
-  
 
     val turtleVariableCount = program.dialect.agentVariables.implicitTurtleVariableTypeMap.size
     // then we recreate all the agents, setting their breed to the breed in the new world.

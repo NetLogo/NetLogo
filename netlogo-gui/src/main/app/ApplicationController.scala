@@ -15,7 +15,7 @@ import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar ,
 import javafx.scene.layout.{ AnchorPane, Pane }
 import javafx.stage.{ FileChooser, Window }
 
-import org.nlogo.javafx.{ CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
+import org.nlogo.javafx.{ ButtonControl, CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
 import org.nlogo.internalapi.ModelRunner
@@ -44,7 +44,7 @@ class ApplicationController extends ModelRunner {
   @FXML
   var interfaceArea: AnchorPane = _
 
-  var widgetsByTag = Map.empty[String, Button]
+  var widgetsByTag = Map.empty[String, ButtonControl]
 
   var interfacePane: Pane = _
 

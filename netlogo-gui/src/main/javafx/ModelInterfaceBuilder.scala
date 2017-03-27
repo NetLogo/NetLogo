@@ -13,26 +13,21 @@ import org.nlogo.core.{
   I18N, Model, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
-import org.nlogo.internalapi.{ CompiledButton => ApiCompiledButton, CompiledModel, ModelRunner }
+import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, CompiledModel, ModelRunner }
 
 object ModelInterfaceBuilder {
 
-  def build(compiledModel: CompiledModel, modelRunner: ModelRunner): (Pane, Map[String, Button]) = {
+  def build(compiledModel: CompiledModel, modelRunner: ModelRunner): (Pane, Map[String, ButtonControl]) = {
     val model = compiledModel.model
     val interfacePane = new Pane()
     val widgetsMap =
       compiledModel.compiledWidgets.flatMap {
         case compiledButton: ApiCompiledButton =>
+          val button = new ButtonControl(compiledButton, compiledModel.runnableModel, modelRunner)
           val b = compiledButton.widget
-          val button = new Button(b.display orElse b.source getOrElse "")
           button.relocate(b.left, b.top)
-          button.setOnAction(new EventHandler[ActionEvent] {
-            override def handle(a: ActionEvent): Unit = {
-              compiledModel.runnableModel.runTag(compiledButton.tag, modelRunner)
-            }
-          })
           interfacePane.getChildren.add(button)
-          Seq(compiledButton.tag -> button)
+          Seq(compiledButton.procedureTag -> button)
         case other =>
           other.widget match {
             case s: CoreSlider  =>

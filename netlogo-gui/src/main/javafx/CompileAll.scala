@@ -7,7 +7,7 @@ import org.nlogo.internalapi.{
   EmptyRunnableModel, NonCompiledWidget, RunnableModel }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
-import org.nlogo.internalapi.ModelRunner
+import org.nlogo.internalapi.{ ModelAction, ModelRunner, RunComponent }
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, NumericInput, Program,
   Slider => CoreSlider, StringInput, Switch => CoreSwitch, Widget }
@@ -32,6 +32,10 @@ class DummyJobOwner(val random: MersenneTwisterFast, modelRunner: ModelRunner, v
 }
 
 class CompiledRunnableModel(workspace: AbstractWorkspace with Evaluating, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
+  val componentMap = Map.empty[String, RunComponent]
+
+  def submitAction(action: ModelAction): Unit = {} // when you don't care that the job completes
+  def submitAction(action: ModelAction, component: RunComponent): Unit = {}
   def runTag(tag: String, modelRunner: ModelRunner): Unit = {
     compiledWidgets.collect {
       case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => c
@@ -42,7 +46,7 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with Evaluating, compil
   }
 }
 
-case class CompiledButton(val widget: CoreButton, val compilerError: Option[CompilerException], val tag: String, val procedure: Procedure)
+case class CompiledButton(val widget: CoreButton, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure)
   extends ApiCompiledButton
 
 object CompileAll {
