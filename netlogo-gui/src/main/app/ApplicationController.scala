@@ -18,7 +18,7 @@ import javafx.stage.{ FileChooser, Window }
 import org.nlogo.javafx.{ ButtonControl, CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
-import org.nlogo.internalapi.ModelRunner
+import org.nlogo.internalapi.{ ModelRunner, SchedulerWorkspace }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
@@ -28,7 +28,7 @@ import scala.util.Try
 
 class ApplicationController extends ModelRunner {
   var executor: Executor = _
-  var workspace: AbstractWorkspaceScala = _
+  var workspace: AbstractWorkspaceScala with SchedulerWorkspace = _
 
   var modelLoader: ModelLoader = _
   var modelConverter: ModelConversion = _

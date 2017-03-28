@@ -23,14 +23,15 @@ class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
 }
 
 class SuspendableJob(
-  suspendedState: Option[(Context, AgentIterator)], stepSize: Int, parentActivation: Activation, agentset: AgentSet, topLevelProcedure: Procedure,
+  suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast)
-extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, parentContext, workspace, random) {
+  extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, parentContext, workspace, random)
+  with org.nlogo.internalapi.SuspendableJob {
 
   def this(
-  suspendedState: Option[(Context, AgentIterator)], stepSize: Int, agentset: AgentSet, topLevelProcedure: Procedure,
+  suspendedState: Option[(Context, AgentIterator)], agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast) =
-    this(suspendedState, stepSize, {
+    this(suspendedState, {
       // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
       if (parentContext == null)
         new Activation(topLevelProcedure, null, address)
@@ -38,9 +39,9 @@ extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, par
         parentContext.activation
     }, agentset, topLevelProcedure, address, parentContext, workspace, random)
 
-  def this(stepSize: Int, agentset: AgentSet, topLevelProcedure: Procedure,
+  def this(agentset: AgentSet, topLevelProcedure: Procedure,
     address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast) =
-      this(None, stepSize, agentset, topLevelProcedure, address, parentContext, workspace, random)
+      this(None, agentset, topLevelProcedure, address, parentContext, workspace, random)
 
   override def exclusive = true
 
@@ -60,7 +61,7 @@ extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, par
       c.activation.binding = c.activation.binding.enterScope()
       c.runFor(stepsRemaining) match {
         case Left(continueContext) =>
-          Some(new SuspendableJob(Some((c, agentIterator)), stepSize, parentActivation, agentset,
+          Some(new SuspendableJob(Some((c, agentIterator)), parentActivation, agentset,
             topLevelProcedure, address, parentContext, workspace, random))
         case Right(completedSteps) =>
           if (c.activation == parentActivation) {
@@ -84,18 +85,18 @@ extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, par
     // - ST 12/5/05, 3/15/06
     suspendedState match {
       case Some((ctx, it)) =>
-        ctx.runFor(stepSize) match {
+        ctx.runFor(steps) match {
           case Left(continueContext) =>
-            Some(new SuspendableJob(Some((ctx, it)), stepSize, parentActivation, agentset,
+            Some(new SuspendableJob(Some((ctx, it)), parentActivation, agentset,
               topLevelProcedure, address, parentContext, workspace, random))
           case Right(completedSteps) =>
             if (ctx.activation == parentActivation)
               ctx.activation.binding = ctx.activation.binding.exitScope()
-            runShuffled(stepSize - completedSteps, it)
+            runShuffled(steps - completedSteps, it)
         }
       case None =>
         val it = agentset.shufflerator(random)
-        runShuffled(stepSize, it)
+        runShuffled(steps, it)
     }
   }
 

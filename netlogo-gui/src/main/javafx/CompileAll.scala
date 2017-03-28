@@ -7,11 +7,11 @@ import org.nlogo.internalapi.{
   EmptyRunnableModel, NonCompiledWidget, RunnableModel }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ ModelAction, ModelRunner, RunComponent }
+import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelRunner, RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, NumericInput, Program,
   Slider => CoreSlider, StringInput, Switch => CoreSwitch, Widget }
-import org.nlogo.nvm.{ CompilerResults, Procedure }
+import org.nlogo.nvm.{ CompilerResults, Procedure, SuspendableJob }
 import org.nlogo.workspace.{ AbstractWorkspace, Evaluating }
 
 
@@ -31,22 +31,40 @@ class DummyJobOwner(val random: MersenneTwisterFast, modelRunner: ModelRunner, v
   def source: String = ""
 }
 
-class CompiledRunnableModel(workspace: AbstractWorkspace with Evaluating, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
+class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
+  import workspace.scheduledJobThread
+
   val componentMap = Map.empty[String, RunComponent]
 
-  def submitAction(action: ModelAction): Unit = {
-    workspace.submitAction(action)
-  } // when you don't care that the job completes
-  def submitAction(action: ModelAction, component: RunComponent): Unit = {
-    workspace.submitAction(action, component)
+  override def submitAction(action: ModelAction): Unit = {
+    scheduleAction(action, None)
   }
-  def runTag(tag: String, modelRunner: ModelRunner): Unit = {
-    compiledWidgets.collect {
-      case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => c
-    }.foreach { button =>
-      workspace.runCompiledCommands(new DummyJobOwner(workspace.world.mainRNG, modelRunner, tag),
-        button.procedure)
+  override def submitAction(action: ModelAction, component: RunComponent): Unit = {
+    scheduleAction(action, Some(component))
+  }
+
+  private def scheduleAction(action: ModelAction, componentOpt: Option[RunComponent]): Unit = {
+    action match {
+      case UpdateInterfaceGlobal(name, value) =>
+        val tag = scheduledJobThread.scheduleOperation(() => workspace.world.setObserverVariableByName(name, value.get))
+        componentOpt.foreach { component => component.tagAction(action, tag) }
+      case AddProcedureRun(widgetTag, isForever) =>
+        // TODO: this doesn't take isForever into account yet
+        val p = findWidgetProcedure(widgetTag)
+        findWidgetProcedure(widgetTag).foreach { procedure =>
+          val job =
+            new SuspendableJob(workspace.world.observers, procedure, 0, null, workspace, workspace.world.mainRNG)
+          val tag = scheduledJobThread.scheduleJob(job)
+          componentOpt.foreach { component => component.tagAction(action, tag) }
+        }
+      case StopProcedure(jobTag) => scheduledJobThread.stopJob(jobTag)
     }
+  }
+
+  def findWidgetProcedure(tag: String): Option[Procedure] = {
+    compiledWidgets.collect {
+      case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => procedure
+    }.headOption
   }
 }
 
@@ -54,7 +72,7 @@ case class CompiledButton(val widget: CoreButton, val compilerError: Option[Comp
   extends ApiCompiledButton
 
 object CompileAll {
-  def apply(model: Model, workspace: AbstractWorkspace with Evaluating): CompiledModel = {
+  def apply(model: Model, workspace: AbstractWorkspace with SchedulerWorkspace): CompiledModel = {
     //TODO: We're forcing this to be a 2D Program
     val program = Program.fromDialect(NetLogoLegacyDialect).copy(interfaceGlobals = model.interfaceGlobals)
     try {

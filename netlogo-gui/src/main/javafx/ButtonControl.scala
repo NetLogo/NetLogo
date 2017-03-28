@@ -34,7 +34,10 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
   @FXML
   var label: Label = _
 
+  val button = compiledButton.widget
+
   var jobActive: Boolean = false
+  var jobTag: Option[String] = None
 
   @FXML
   def handleClickEvent(event: MouseEvent): Unit = {
@@ -43,13 +46,11 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
       // TODO: Leaving the screen and coming back seems to revert the background color to
       // inactive, even though it hasn't been set differently...
       setBackground(new Background(new BackgroundFill(activeBackgroundColor, bgFill.getRadii, bgFill.getInsets)))
-      runnableModel.runTag(compiledButton.procedureTag, modelRunner)
+      runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, button.forever), this)
       jobActive = true
       // compiledModel.runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, true))
     }
   }
-
-  val button = compiledButton.widget
 
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("Button.fxml"))
@@ -70,11 +71,16 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
   }
 
   def tagAction(action: ModelAction, actionTag: String): Unit = {
+    action match {
+      case AddProcedureRun(_, _) => jobTag = Some(actionTag)
+      case _ =>
+    }
   }
 
   def updateReceived(update: ModelUpdate): Unit = {
     val bgFill = getBackground.getFills.get(0)
     setBackground(new Background(new BackgroundFill(inactiveBackgroundColor, bgFill.getRadii, bgFill.getInsets)))
+    jobTag = None
     jobActive = false
   }
 }

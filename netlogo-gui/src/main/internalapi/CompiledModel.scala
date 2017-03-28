@@ -34,7 +34,6 @@ trait RunComponent {
 }
 
 trait RunnableModel {
-  def runTag(tag: String, runner: ModelRunner): Unit
   def submitAction(action: ModelAction): Unit // when you don't care that the job completes
   def submitAction(action: ModelAction, component: RunComponent): Unit
 }

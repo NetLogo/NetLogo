@@ -4,21 +4,26 @@ package org.nlogo.app
 
 import java.util.concurrent.BlockingQueue
 
+import org.nlogo.core.Femto
 import org.nlogo.agent.World
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
-import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface }
+import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface, SuspendableJob }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
-import org.nlogo.internalapi.{ ModelAction, RunComponent }
+import org.nlogo.internalapi.{ JobScheduler, ModelAction, RunComponent, SchedulerWorkspace }
 
 class JFXGUIWorkspace(world: World,
   val compiler: PresentationCompilerInterface,
   worldUpdates: BlockingQueue[World])
-  extends AbstractWorkspaceScala(world, null) {
+  extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace {
+
+    val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread")
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
   def aggregateManager(): org.nlogo.api.AggregateManagerInterface = ???
+
   override def dispose(): Unit = {
+    scheduledJobThread.die()
     super.dispose()
   }
   def breathe(): Unit = {
@@ -103,9 +108,4 @@ class JFXGUIWorkspace(world: World,
   def setDimensions(dim: org.nlogo.core.WorldDimensions,patchSize: Double): Unit = ???
   def setDimensions(dim: org.nlogo.core.WorldDimensions): Unit = ???
 
-
-  override def submitAction(action: ModelAction): Unit = {
-  }
-  override def submitAction(action: ModelAction, component: RunComponent): Unit = {
-  }
 }
