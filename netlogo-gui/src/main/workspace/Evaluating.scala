@@ -6,6 +6,7 @@ import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
 import org.nlogo.nvm.{ Context, Procedure }
+import org.nlogo.internalapi.{ ModelAction, RunComponent }
 
 import scala.collection.mutable.WeakHashMap
 
@@ -19,6 +20,11 @@ trait Evaluating { this: AbstractWorkspace with JobManagement =>
   val codeBits = new WeakHashMap[String, Procedure]()
 
   override def clearLastLogoException() { lastLogoException = null }
+
+  def submitAction(action: ModelAction): Unit = {
+  }
+  def submitAction(action: ModelAction, component: RunComponent): Unit = {
+  }
 
   @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =

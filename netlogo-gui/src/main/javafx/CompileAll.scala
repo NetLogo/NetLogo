@@ -34,8 +34,12 @@ class DummyJobOwner(val random: MersenneTwisterFast, modelRunner: ModelRunner, v
 class CompiledRunnableModel(workspace: AbstractWorkspace with Evaluating, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
   val componentMap = Map.empty[String, RunComponent]
 
-  def submitAction(action: ModelAction): Unit = {} // when you don't care that the job completes
-  def submitAction(action: ModelAction, component: RunComponent): Unit = {}
+  def submitAction(action: ModelAction): Unit = {
+    workspace.submitAction(action)
+  } // when you don't care that the job completes
+  def submitAction(action: ModelAction, component: RunComponent): Unit = {
+    workspace.submitAction(action, component)
+  }
   def runTag(tag: String, modelRunner: ModelRunner): Unit = {
     compiledWidgets.collect {
       case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => c

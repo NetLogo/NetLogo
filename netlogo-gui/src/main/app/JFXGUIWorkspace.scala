@@ -9,6 +9,7 @@ import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
 import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
+import org.nlogo.internalapi.{ ModelAction, RunComponent }
 
 class JFXGUIWorkspace(world: World,
   val compiler: PresentationCompilerInterface,
@@ -17,6 +18,9 @@ class JFXGUIWorkspace(world: World,
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
   def aggregateManager(): org.nlogo.api.AggregateManagerInterface = ???
+  override def dispose(): Unit = {
+    super.dispose()
+  }
   def breathe(): Unit = {
     jobManager.maybeRunSecondaryJobs()
   }
@@ -98,4 +102,10 @@ class JFXGUIWorkspace(world: World,
   def resizeView(): Unit = ???
   def setDimensions(dim: org.nlogo.core.WorldDimensions,patchSize: Double): Unit = ???
   def setDimensions(dim: org.nlogo.core.WorldDimensions): Unit = ???
+
+
+  override def submitAction(action: ModelAction): Unit = {
+  }
+  override def submitAction(action: ModelAction, component: RunComponent): Unit = {
+  }
 }
