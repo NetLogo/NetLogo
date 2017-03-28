@@ -40,6 +40,8 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
   def handleClickEvent(event: MouseEvent): Unit = {
     if (! jobActive) {
       val bgFill = getBackground.getFills.get(0)
+      // TODO: Leaving the screen and coming back seems to revert the background color to
+      // inactive, even though it hasn't been set differently...
       setBackground(new Background(new BackgroundFill(activeBackgroundColor, bgFill.getRadii, bgFill.getInsets)))
       runnableModel.runTag(compiledButton.procedureTag, modelRunner)
       jobActive = true

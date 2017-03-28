@@ -93,7 +93,8 @@ object CompileAll {
             case AgentKind.Patch => "__patchcode"
             case AgentKind.Link => "__linkcode"
           }
-          val (repeatStart, repeatEnd) = if (b.forever) ("loop [", "__foreverbuttonend ]") else ("", "__done")
+          //val (repeatStart, repeatEnd) = if (b.forever) ("loop [", "__foreverbuttonend ]") else ("", "__done")
+          val (repeatStart, repeatEnd) = ("", "__done")
           val tag = s" __button-" + b.hashCode
           val source = s"to $tag [] $headerCode $repeatStart \n $buttonSource \n $repeatEnd end"
           val displayName = b.display.getOrElse(buttonSource.trim.replaceAll("\\s+", " "))
