@@ -186,6 +186,24 @@ class ScheduledJobThreadTest extends FunSuite {
     assertUpdate { case JobErrored(t, _) => assertResult(jobTag)(t) }
   } }
 
+  test("sends an update when a job is stopped") { new Helper {
+    val jobTag = subject.scheduleJob(DummyKeepRunningJob)
+    subject.stopJob(jobTag)
+    subject.runEvent()
+    subject.runEvent()
+    subject.runEvent()
+    assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
+  } }
+
+  test("sends an update when a job is stopped before being run") { new Helper {
+    val jobTag = subject.scheduleJob(DummyKeepRunningJob)
+    subject.stopJob(jobTag)
+    subject.queue.add(subject.queue.poll()) // swap the order of the job add and job stop
+    subject.runEvent()
+    subject.runEvent()
+    assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
+  } }
+
   test("supports a halt operation which clears all existing jobs") {
     pending
   }

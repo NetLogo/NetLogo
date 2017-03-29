@@ -23,13 +23,13 @@ class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
 }
 
 class SuspendableJob(
-  suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, agentset: AgentSet, topLevelProcedure: Procedure,
+  suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, forever: Boolean, agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast)
   extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, parentContext, workspace, random)
   with org.nlogo.internalapi.SuspendableJob {
 
   def this(
-  suspendedState: Option[(Context, AgentIterator)], agentset: AgentSet, topLevelProcedure: Procedure,
+  suspendedState: Option[(Context, AgentIterator)], forever: Boolean, agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast) =
     this(suspendedState, {
       // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
@@ -37,11 +37,15 @@ class SuspendableJob(
         new Activation(topLevelProcedure, null, address)
       else
         parentContext.activation
-    }, agentset, topLevelProcedure, address, parentContext, workspace, random)
+    }, forever, agentset, topLevelProcedure, address, parentContext, workspace, random)
 
   def this(agentset: AgentSet, topLevelProcedure: Procedure,
     address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast) =
-      this(None, agentset, topLevelProcedure, address, parentContext, workspace, random)
+      this(None, false, agentset, topLevelProcedure, address, parentContext, workspace, random)
+
+  def this(agentset: AgentSet, forever: Boolean, topLevelProcedure: Procedure,
+    address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast) =
+      this(None, forever, agentset, topLevelProcedure, address, parentContext, workspace, random)
 
   override def exclusive = true
 
@@ -61,7 +65,7 @@ class SuspendableJob(
       c.activation.binding = c.activation.binding.enterScope()
       c.runFor(stepsRemaining) match {
         case Left(continueContext) =>
-          Some(new SuspendableJob(Some((c, agentIterator)), parentActivation, agentset,
+          Some(new SuspendableJob(Some((c, agentIterator)), parentActivation, forever, agentset,
             topLevelProcedure, address, parentContext, workspace, random))
         case Right(completedSteps) =>
           if (c.activation == parentActivation) {
@@ -70,10 +74,14 @@ class SuspendableJob(
           runShuffled(stepsRemaining - completedSteps, agentIterator)
       }
     } else {
-      state = Job.DONE
-      None
+      if (forever) {
+        Some(new SuspendableJob(None, parentActivation, true, agentset, topLevelProcedure,
+          address, parentContext, workspace, random))
+      } else {
+        state = Job.DONE
+        None
+      }
     }
-
   }
 
   def runFor(steps: Int): Option[SuspendableJob] = {
@@ -87,7 +95,7 @@ class SuspendableJob(
       case Some((ctx, it)) =>
         ctx.runFor(steps) match {
           case Left(continueContext) =>
-            Some(new SuspendableJob(Some((ctx, it)), parentActivation, agentset,
+            Some(new SuspendableJob(Some((ctx, it)), parentActivation, forever, agentset,
               topLevelProcedure, address, parentContext, workspace, random))
           case Right(completedSteps) =>
             if (ctx.activation == parentActivation)

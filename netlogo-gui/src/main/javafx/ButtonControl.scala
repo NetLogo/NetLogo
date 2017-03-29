@@ -2,17 +2,18 @@
 
 package org.nlogo.javafx
 
-import javafx.event.ActionEvent
-import javafx.beans.property.ObjectProperty
+import javafx.event.{ ActionEvent, EventHandler }
+import javafx.beans.binding.Bindings
+import javafx.beans.property.{ ObjectProperty, SimpleBooleanProperty }
 import javafx.fxml.{ FXML, FXMLLoader }
-import javafx.scene.control.Label
+import javafx.scene.control.{ ButtonBase, ToggleButton }
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.{ Background, BackgroundFill, GridPane }
+import javafx.scene.layout.{ Background, BackgroundFill, StackPane }
 import javafx.scene.paint.Color
 
 import org.nlogo.core.{ Button => CoreButton }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, ModelAction, ModelRunner, ModelUpdate, RunComponent, RunnableModel }
+import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, ModelAction, ModelRunner, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
 
 object ButtonControl {
   sealed trait ButtonState
@@ -23,51 +24,43 @@ object ButtonControl {
 import ButtonControl._
 
 // TODO: Figure out a way to disable until ticks start (if appropriate)
-class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, modelRunner: ModelRunner) extends GridPane with RunComponent {
+class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, modelRunner: ModelRunner) extends StackPane with RunComponent {
   val activeBackgroundColor = Color.web("#1F6A99")
   val inactiveBackgroundColor = Color.web("#BACFF3")
 
-
   @FXML
-  var foreverIcon: ImageView = _
+  var button: ButtonBase = _
 
-  @FXML
-  var label: Label = _
+  val buttonModel = compiledButton.widget
 
-  val button = compiledButton.widget
+  val activeProperty = new SimpleBooleanProperty(false)
 
-  var jobActive: Boolean = false
   var jobTag: Option[String] = None
 
-  @FXML
-  def handleClickEvent(event: MouseEvent): Unit = {
-    if (! jobActive) {
-      val bgFill = getBackground.getFills.get(0)
-      // TODO: Leaving the screen and coming back seems to revert the background color to
-      // inactive, even though it hasn't been set differently...
-      setBackground(new Background(new BackgroundFill(activeBackgroundColor, bgFill.getRadii, bgFill.getInsets)))
-      runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, button.forever), this)
-      jobActive = true
-      // compiledModel.runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, true))
+  val triggerStart = new EventHandler[ActionEvent] {
+    def handle(e: ActionEvent): Unit = {
+      activeProperty.set(true)
+      runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, buttonModel.forever), ButtonControl.this)
+    }
+  }
+
+  val triggerStop = new EventHandler[ActionEvent] {
+    def handle(e: ActionEvent): Unit = {
+      jobTag.foreach { tag => runnableModel.submitAction(StopProcedure(tag), ButtonControl.this) }
     }
   }
 
   locally {
-    val loader = new FXMLLoader(getClass.getClassLoader.getResource("Button.fxml"))
+    val loader = new FXMLLoader(getClass.getClassLoader.getResource(
+      if (buttonModel.forever) "ForeverButton.fxml" else "Button.fxml"))
     loader.setController(this)
     loader.setRoot(this)
     loader.load()
-    label.setText(button.display orElse button.source getOrElse "")
-    setPrefSize(button.right - button.left, button.bottom - button.top)
-    if (button.forever) {
-      foreverIcon.setPreserveRatio(true)
-      val columnConstraint = getColumnConstraints.get(2)
-      val rowConstraint     = getRowConstraints.get(2)
-      //only bind on height because height is basically always less than width
-      foreverIcon.setFitHeight(rowConstraint.getPrefHeight)
-      foreverIcon.fitHeightProperty().bind(rowConstraint.prefHeightProperty())
-      foreverIcon.setOpacity(1.0)
-    }
+    button.setText(buttonModel.display orElse buttonModel.source getOrElse "")
+    setPrefSize(buttonModel.right - buttonModel.left, buttonModel.bottom - buttonModel.top)
+    button.setOnAction(triggerStart)
+    button.onActionProperty.bind(
+      Bindings.when(activeProperty).`then`(triggerStop).otherwise(triggerStart))
   }
 
   def tagAction(action: ModelAction, actionTag: String): Unit = {
@@ -78,9 +71,7 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
   }
 
   def updateReceived(update: ModelUpdate): Unit = {
-    val bgFill = getBackground.getFills.get(0)
-    setBackground(new Background(new BackgroundFill(inactiveBackgroundColor, bgFill.getRadii, bgFill.getInsets)))
     jobTag = None
-    jobActive = false
+    activeProperty.set(false)
   }
 }

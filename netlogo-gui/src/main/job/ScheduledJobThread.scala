@@ -86,7 +86,12 @@ trait JobScheduler extends ApiJobScheduler {
   private var stopList = Set.empty[String]
 
   def clearStopList(): Unit = {
-    stopList = Set.empty[String]
+    stopList.foreach(jobStopped)
+  }
+
+  private def jobStopped(tag: String): Unit = {
+    stopList -= tag
+    updates.add(JobDone(tag))
   }
 
   // TODO: This doesn't yet return information about completed jobs
@@ -94,10 +99,10 @@ trait JobScheduler extends ApiJobScheduler {
     queue.poll(timeout, timeoutUnit) match {
       case null                   => clearStopList()
       case AddJob(job, tag, time) =>
-        if (stopList.contains(tag)) stopList -= tag
+        if (stopList.contains(tag)) jobStopped(tag)
         else                        queue.add(RunJob(job, tag, System.currentTimeMillis))
       case RunJob(job, tag, time) =>
-        if (stopList.contains(tag)) stopList -= tag
+        if (stopList.contains(tag)) jobStopped(tag)
         else {
           Try(job.runFor(StepsPerRun)) match {
             case Success(None)    => updates.add(JobDone(tag))
@@ -128,6 +133,7 @@ class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
 
   setPriority(Thread.NORM_PRIORITY - 1)
   start()
+
   // TODO: need to implement halt here...
   override def run(): Unit = {
     while (! dying) {

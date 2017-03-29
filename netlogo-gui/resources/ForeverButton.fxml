@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<fx:root prefHeight="50.0" prefWidth="150.0" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ToggleButton fx:id="button" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" style="-fx-base: #BACFF3;" text="ToggleButton" />
+      <ImageView fx:id="foreverIcon" fitHeight="15.0" fitWidth="15.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_RIGHT">
+         <image>
+            <Image url="@images/forever.png" />
+         </image>
+         <viewport>
+            <Rectangle2D height="40.0" width="40.0" />
+         </viewport>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+      </ImageView>
+   </children>
+</fx:root>

@@ -64,7 +64,7 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
         val p = findWidgetProcedure(widgetTag)
         findWidgetProcedure(widgetTag).foreach { procedure =>
           val job =
-            new SuspendableJob(workspace.world.observers, procedure, 0, null, workspace, workspace.world.mainRNG)
+            new SuspendableJob(workspace.world.observers, isForever, procedure, 0, null, workspace, workspace.world.mainRNG)
           val tag = scheduledJobThread.scheduleJob(job)
           registerTag(componentOpt, action, tag)
         }

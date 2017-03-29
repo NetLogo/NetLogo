@@ -39,7 +39,7 @@ class JFXGUIWorkspace(world: World,
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???
   def requestDisplayUpdate(force: Boolean): Unit = {
-    modelUpdates.offer(WorldUpdate(world.copy)) // TODO: This should be a copy of world
+    modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
   }
   override def sendOutput(x$1: org.nlogo.agent.OutputObject,x$2: Boolean): Unit = ???
 
@@ -69,7 +69,7 @@ class JFXGUIWorkspace(world: World,
   }
   def updateDisplay(haveWorldLockAlready: Boolean): Unit = {
     println("updateDisplay: " + haveWorldLockAlready)
-    modelUpdates.offer(WorldUpdate(world.copy)) // TODO: This should be a copy of world
+    modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
   }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace

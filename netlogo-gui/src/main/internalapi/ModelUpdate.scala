@@ -10,6 +10,6 @@ sealed trait ModelUpdate {
 
 case class JobDone(tag: String) extends ModelUpdate // done could mean halted, stopped, or completed
 case class JobErrored(tag: String, error: Exception) extends ModelUpdate
-case class WorldUpdate(world: World) extends ModelUpdate {
+case class WorldUpdate(world: World, time: Long) extends ModelUpdate {
   def tag = "~world-update~"
 }
