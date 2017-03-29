@@ -12,9 +12,3 @@ case class AddProcedureRun(widgetTag: String, isForever: Boolean) extends ModelA
 case class StopProcedure(jobTag: String) extends ModelAction
 
 case class TaggedAction(action: ModelAction, tag: String)
-
-sealed trait ModelUpdate
-
-case class ActionCompleted(tag: String) extends ModelUpdate
-case class JobDone(jobTag: String) extends ModelUpdate // done could mean halted, stopped, or completed
-case class JobErrored(jobTag: String, error: Exception) extends ModelUpdate

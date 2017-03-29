@@ -7,7 +7,8 @@ import org.nlogo.internalapi.{
   EmptyRunnableModel, NonCompiledWidget, RunnableModel }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelRunner, RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
+import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelRunner, ModelUpdate,
+  RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, NumericInput, Program,
   Slider => CoreSlider, StringInput, Switch => CoreSwitch, Widget }
@@ -39,15 +40,25 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
   override def submitAction(action: ModelAction): Unit = {
     scheduleAction(action, None)
   }
+
   override def submitAction(action: ModelAction, component: RunComponent): Unit = {
     scheduleAction(action, Some(component))
+  }
+
+  private var taggedComponents = Map.empty[String, RunComponent]
+
+  private def registerTag(componentOpt: Option[RunComponent], action: ModelAction, tag: String): Unit = {
+    componentOpt.foreach { component =>
+      taggedComponents = taggedComponents + (tag -> component)
+      component.tagAction(action, tag)
+    }
   }
 
   private def scheduleAction(action: ModelAction, componentOpt: Option[RunComponent]): Unit = {
     action match {
       case UpdateInterfaceGlobal(name, value) =>
         val tag = scheduledJobThread.scheduleOperation(() => workspace.world.setObserverVariableByName(name, value.get))
-        componentOpt.foreach { component => component.tagAction(action, tag) }
+        registerTag(componentOpt, action, tag)
       case AddProcedureRun(widgetTag, isForever) =>
         // TODO: this doesn't take isForever into account yet
         val p = findWidgetProcedure(widgetTag)
@@ -55,7 +66,7 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
           val job =
             new SuspendableJob(workspace.world.observers, procedure, 0, null, workspace, workspace.world.mainRNG)
           val tag = scheduledJobThread.scheduleJob(job)
-          componentOpt.foreach { component => component.tagAction(action, tag) }
+          registerTag(componentOpt, action, tag)
         }
       case StopProcedure(jobTag) => scheduledJobThread.stopJob(jobTag)
     }
@@ -65,6 +76,11 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
     compiledWidgets.collect {
       case c@CompiledButton(_, _, t, procedure) if t == tag && procedure != null => procedure
     }.headOption
+  }
+
+  def notifyUpdate(update: ModelUpdate): Unit = {
+    taggedComponents.get(update.tag).foreach(_.updateReceived(update))
+    taggedComponents -= update.tag
   }
 }
 

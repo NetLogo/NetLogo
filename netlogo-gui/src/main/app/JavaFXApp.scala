@@ -11,6 +11,7 @@ import org.nlogo.api._
 import org.nlogo.agent.{ World, World2D }
 import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.internalapi.ModelUpdate
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.util.Pico
@@ -28,7 +29,7 @@ class JavaFXApp extends Application {
 
   var workspace: JFXGUIWorkspace = _
 
-  var worldUpdates: java.util.concurrent.BlockingQueue[org.nlogo.agent.World] = _
+  var worldUpdates: java.util.concurrent.BlockingQueue[ModelUpdate] = _
 
   /**
    * Should be called once at startup to create the application and
@@ -96,7 +97,7 @@ class JavaFXApp extends Application {
 
     pico.addAdapter(new ModelConverterComponent())
 
-    worldUpdates = new java.util.concurrent.LinkedBlockingQueue[org.nlogo.agent.World]()
+    worldUpdates = new java.util.concurrent.LinkedBlockingQueue[ModelUpdate]()
     val world = new World2D()
     workspace = new JFXGUIWorkspace(world, pico.getComponent(classOf[PresentationCompilerInterface]), worldUpdates)
     world.compiler = workspace

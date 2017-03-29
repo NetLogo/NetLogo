@@ -36,13 +36,14 @@ trait RunComponent {
 trait RunnableModel {
   def submitAction(action: ModelAction): Unit // when you don't care that the job completes
   def submitAction(action: ModelAction, component: RunComponent): Unit
+  def notifyUpdate(update: ModelUpdate): Unit
 }
 
 object EmptyRunnableModel extends RunnableModel {
-  def runTag(tag: String, runner: ModelRunner): Unit = {}
   def submitAction(action: ModelAction): Unit = {}
   def submitAction(action: ModelAction, component: RunComponent): Unit = {
     component.tagAction(action, "")
     component.updateReceived(ActionCompleted(""))
   }
+  def notifyUpdate(update: ModelUpdate): Unit = {}
 }

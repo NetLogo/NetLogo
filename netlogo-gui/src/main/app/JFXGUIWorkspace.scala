@@ -10,14 +10,15 @@ import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
 import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface, SuspendableJob }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
-import org.nlogo.internalapi.{ JobScheduler, ModelAction, RunComponent, SchedulerWorkspace }
+import org.nlogo.internalapi.{ JobScheduler, ModelAction, ModelUpdate, RunComponent,
+  WorldUpdate, SchedulerWorkspace }
 
 class JFXGUIWorkspace(world: World,
   val compiler: PresentationCompilerInterface,
-  worldUpdates: BlockingQueue[World])
+  modelUpdates: BlockingQueue[ModelUpdate])
   extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace {
 
-    val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread")
+    val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread", modelUpdates)
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
   def aggregateManager(): org.nlogo.api.AggregateManagerInterface = ???
@@ -38,8 +39,7 @@ class JFXGUIWorkspace(world: World,
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???
   def requestDisplayUpdate(force: Boolean): Unit = {
-    println("requestDisplayUpdate: " + force + " from: " + Thread.currentThread.getName)
-    worldUpdates.offer(world.copy) // TODO: This should be a copy of world
+    modelUpdates.offer(WorldUpdate(world.copy)) // TODO: This should be a copy of world
   }
   override def sendOutput(x$1: org.nlogo.agent.OutputObject,x$2: Boolean): Unit = ???
 
@@ -69,7 +69,7 @@ class JFXGUIWorkspace(world: World,
   }
   def updateDisplay(haveWorldLockAlready: Boolean): Unit = {
     println("updateDisplay: " + haveWorldLockAlready)
-    worldUpdates.offer(world.copy) // TODO: This should be a copy of world
+    modelUpdates.offer(WorldUpdate(world.copy)) // TODO: This should be a copy of world
   }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace

@@ -6,7 +6,10 @@ import java.util.{ Comparator, UUID }
 import java.util.concurrent.{ BlockingQueue, PriorityBlockingQueue, TimeUnit }
 
 import org.nlogo.internalapi.{ AddProcedureRun, JobScheduler => ApiJobScheduler,
-  ModelAction, StopProcedure, SuspendableJob, UpdateInterfaceGlobal }
+  JobDone, JobErrored, ModelAction, ModelUpdate, StopProcedure,
+  SuspendableJob, UpdateInterfaceGlobal }
+
+import scala.util.{ Failure, Success, Try }
 
 object ScheduledJobThread {
   sealed trait ScheduledEvent {
@@ -54,6 +57,8 @@ trait JobScheduler extends ApiJobScheduler {
 
   def queue: BlockingQueue[ScheduledEvent]
 
+  def updates: BlockingQueue[ModelUpdate]
+
   def scheduleJob(job: SuspendableJob): String = {
     val jobTag = UUID.randomUUID.toString
     val e = AddJob(job, jobTag, System.currentTimeMillis)
@@ -94,19 +99,27 @@ trait JobScheduler extends ApiJobScheduler {
       case RunJob(job, tag, time) =>
         if (stopList.contains(tag)) stopList -= tag
         else {
-          job.runFor(StepsPerRun) match {
-            case None    =>
-            case Some(j) => queue.add(RunJob(j, tag, System.currentTimeMillis))
+          Try(job.runFor(StepsPerRun)) match {
+            case Success(None)    => updates.add(JobDone(tag))
+            case Success(Some(j)) => queue.add(RunJob(j, tag, System.currentTimeMillis))
+            case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
+            case Failure(e) => throw e
           }
         }
       case StopJob(cancelTag, time) =>
         stopList += cancelTag
-      case ScheduleOperation(op, tag, time) => op()
+      case ScheduleOperation(op, tag, time) =>
+        Try(op()) match {
+          case Success(())                  => updates.add(JobDone(tag))
+          case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
+          case Failure(e)                   => throw e
+        }
     }
   }
 }
 
-class ScheduledJobThread extends Thread(null, null, "ScheduledJobThread", JobThread.stackSize * 1024 * 1024)
+class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
+  extends Thread(null, null, "ScheduledJobThread", JobThread.stackSize * 1024 * 1024)
   with JobScheduler {
 
   val queue = new PriorityBlockingQueue[ScheduledEvent](100, ScheduledJobThread.PriorityOrder)

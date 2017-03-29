@@ -18,7 +18,7 @@ import javafx.stage.{ FileChooser, Window }
 import org.nlogo.javafx.{ ButtonControl, CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ ModelRunner, SchedulerWorkspace }
+import org.nlogo.internalapi.{ CompiledModel, ModelRunner, ModelUpdate, SchedulerWorkspace, WorldUpdate }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
@@ -33,7 +33,7 @@ class ApplicationController extends ModelRunner {
   var modelLoader: ModelLoader = _
   var modelConverter: ModelConversion = _
 
-  var worldUpdates: BlockingQueue[World] = _
+  var worldUpdates: BlockingQueue[ModelUpdate] = _
 
   @FXML
   var openFile: MenuItem = _
@@ -47,6 +47,7 @@ class ApplicationController extends ModelRunner {
   var widgetsByTag = Map.empty[String, ButtonControl]
 
   var interfacePane: Pane = _
+  var compiledModel: CompiledModel = _
 
   val timer = new java.util.Timer()
 
@@ -69,23 +70,24 @@ class ApplicationController extends ModelRunner {
             .map { m =>
               CompileAll(m, workspace)
             }(executionContext)
-          openedModel.foreach {
+          openedModel.map {
             compiledModel =>
               ConfigureWorld(workspace, compiledModel)
-          }(executionContext)
-          openedModel.foreach {
+              compiledModel
+          }(executionContext).foreach {
             compiledModel =>
-              val (interfaceWidgetsPane, widgetsMap) = ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
+              ApplicationController.this.compiledModel = compiledModel
+              val (interfaceWidgetsPane, widgetsMap) =
+                ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
               interfacePane = interfaceWidgetsPane
               widgetsByTag = widgetsMap
-              //TODO: add turtle and link shapes to workspace
               interfaceArea.getChildren.add(interfaceWidgetsPane)
           }(JavaFXExecutionContext)
         }
       }
     })
     /* start scheduling canvas updates */
-    timer.schedule(scheduleRefresh, 1000)
+    timer.schedule(scheduleRefresh, 200)
   }
 
   def scheduleRefresh =
@@ -101,34 +103,41 @@ class ApplicationController extends ModelRunner {
 
   import scala.collection.JavaConverters._
 
+  class FakeViewSettings(canvas: Canvas, world: World) extends org.nlogo.api.ViewSettings {
+    def fontSize: Int = 12
+    // TODO: Why is this separate from world.patchSize?
+    def patchSize: Double = world.patchSize
+    def viewWidth: Double = canvas.getWidth
+    def viewHeight: Double = canvas.getHeight
+    def perspective: org.nlogo.api.Perspective = world.observer.perspective
+    def viewOffsetX: Double = world.observer.followOffsetX
+    def viewOffsetY: Double = world.observer.followOffsetY
+    def drawSpotlight: Boolean = true
+    def renderPerspective: Boolean = true
+    def isHeadless: Boolean = false
+  }
+
   def refreshCanvas(): Unit = {
-    Option(worldUpdates.poll()).foreach { world =>
-      interfacePane.getChildren().asScala.foreach {
-        case c: Canvas =>
-          val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
-          val renderer = new org.nlogo.render.Renderer(workspace.world)
-          val settings = new org.nlogo.api.ViewSettings {
-            def fontSize: Int = 12
-            // TODO: Why is this separate from world.patchSize?
-            def patchSize: Double = world.patchSize
-            def viewWidth: Double = c.getWidth
-            def viewHeight: Double = c.getHeight
-            def perspective: org.nlogo.api.Perspective = world.observer.perspective
-            def viewOffsetX: Double = world.observer.followOffsetX
-            def viewOffsetY: Double = world.observer.followOffsetY
-            def drawSpotlight: Boolean = true
-            def renderPerspective: Boolean = true
-            def isHeadless: Boolean = false
+    var updatesFinished = false
+    while (! updatesFinished) {
+      Option(worldUpdates.poll()) match {
+        case Some(WorldUpdate(world: World)) =>
+          interfacePane.getChildren().asScala.foreach {
+            case c: Canvas =>
+              val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
+              val renderer = new org.nlogo.render.Renderer(workspace.world)
+              val settings = new FakeViewSettings(c, world)
+              renderer.paint(graphicsInterface, settings)
+            case _ =>
           }
-          renderer.paint(graphicsInterface, settings)
-        case _ =>
+          case Some(other) => compiledModel.runnableModel.notifyUpdate(other)
+          case None => updatesFinished = true
       }
     }
-    timer.schedule(scheduleRefresh, 1000)
+    timer.schedule(scheduleRefresh, 200)
   }
 
   def dispose(): Unit = {
     timer.cancel()
   }
-
 }

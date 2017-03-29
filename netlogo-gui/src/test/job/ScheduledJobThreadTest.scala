@@ -6,7 +6,8 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.{ Collections, ArrayList }
 
-import org.nlogo.internalapi.{ ModelAction, UpdateInterfaceGlobal, AddProcedureRun, StopProcedure, SuspendableJob }
+import org.nlogo.internalapi.{ ModelAction, UpdateInterfaceGlobal, AddProcedureRun,
+  JobDone, JobErrored, ModelUpdate, StopProcedure, SuspendableJob }
 
 import org.scalatest.{ FunSuite, Inside }
 
@@ -57,6 +58,7 @@ class ScheduledJobThreadTest extends FunSuite {
   class Subject extends JobScheduler {
     override def timeout = 10
     val queue = new LinkedBlockingQueue[ScheduledEvent]
+    val updates = new LinkedBlockingQueue[ModelUpdate]
     def die(): Unit = {}
   }
 
@@ -75,6 +77,16 @@ class ScheduledJobThreadTest extends FunSuite {
         wasRun = true
         Some(this)
       }
+    }
+    val DummyErrorJob = new SuspendableJob {
+      def runFor(steps: Int): Option[SuspendableJob] = {
+        wasRun = true
+        throw new RuntimeException("error!")
+      }
+    }
+    def assertUpdate[U](pf: PartialFunction[ModelUpdate, U]): U = {
+      assert(! subject.updates.isEmpty)
+      inside(subject.updates.peek)(pf)
     }
   }
 
@@ -146,4 +158,35 @@ class ScheduledJobThreadTest extends FunSuite {
     subject.runEvent()
     assert(ranOp)
   } }
+
+  test("sends an update when a job finishes") { new Helper {
+    val jobTag = subject.scheduleJob(DummyOneRunJob)
+    subject.runEvent()
+    subject.runEvent()
+    assert(! subject.updates.isEmpty)
+    assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
+  } }
+
+  test("sends an update when a job errors") { new Helper {
+    val jobTag = subject.scheduleJob(DummyErrorJob)
+    subject.runEvent()
+    subject.runEvent()
+    assertUpdate { case JobErrored(t, _) => assertResult(jobTag)(t) }
+  } }
+
+  test("sends an update when an operation completes") { new Helper {
+    val jobTag = subject.scheduleOperation({() => })
+    subject.runEvent()
+    assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
+  } }
+
+  test("sends an update when an operation errors") { new Helper {
+    val jobTag = subject.scheduleOperation({ () => throw new RuntimeException("error!") })
+    subject.runEvent()
+    assertUpdate { case JobErrored(t, _) => assertResult(jobTag)(t) }
+  } }
+
+  test("supports a halt operation which clears all existing jobs") {
+    pending
+  }
 }
