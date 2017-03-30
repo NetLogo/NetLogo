@@ -23,7 +23,6 @@ public abstract strictfp class Job {
   public final AgentSet agentset;
   public final Context parentContext;
   public final Procedure topLevelProcedure;
-  protected final Workspace workspace;
 
   public org.nlogo.api.MersenneTwisterFast random;
 
@@ -32,14 +31,12 @@ public abstract strictfp class Job {
       Procedure topLevelProcedure,
       int address,
       Context parentContext,
-      Workspace workspace,
       org.nlogo.api.MersenneTwisterFast random) {
     this.owner = owner;
     this.agentset = agentset;
     this.topLevelProcedure = topLevelProcedure;
     this.address = address;
     this.parentContext = parentContext;
-    this.workspace = workspace;
     this.random = random;
   }
 

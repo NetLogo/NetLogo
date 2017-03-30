@@ -839,12 +839,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     if (owner.ownsPrimaryJobs()) {
       if (e.procedure != null) {
-        jobManager().addJob(owner, agents, this, e.procedure);
+        jobManager().addJob(owner, agents, e.procedure);
       } else {
         new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
-      jobManager().addSecondaryJob(owner, agents, this, e.procedure);
+      jobManager().addSecondaryJob(owner, agents, e.procedure);
     }
   }
 

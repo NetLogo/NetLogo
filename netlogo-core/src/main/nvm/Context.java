@@ -206,7 +206,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public void runExclusiveJob(AgentSet agentset, int address) {
     new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, workspace, job.random)
+        (job.owner, agentset, activation.procedure, address, this, job.random)
         .run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
@@ -217,7 +217,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public Job makeConcurrentJob(AgentSet agentset) {
-    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, workspace, job.random);
+    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, job.random);
   }
 
   public void returnFromProcedure() {

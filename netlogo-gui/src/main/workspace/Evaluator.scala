@@ -19,14 +19,14 @@ class Evaluator(workspace: AbstractWorkspace with JobManagement) {
                        waitForCompletion: Boolean = true) = {
     val procedure = invokeCompiler(source, None, true, agentSet.kind)
     workspace.jobManager.addJob(
-      workspace.jobManager.makeConcurrentJob(owner, agentSet, workspace, procedure),
+      workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
       waitForCompletion)
   }
 
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
     val procedure = invokeCompiler(source, None, false, agents.kind)
-    workspace.jobManager.addReporterJobAndWait(owner, agents, workspace, procedure)
+    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
   @throws(classOf[CompilerException])
@@ -41,13 +41,13 @@ class Evaluator(workspace: AbstractWorkspace with JobManagement) {
    * @return whether the code did a "stop" at the top level
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
-    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, workspace, procedure)
+    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, procedure)
     workspace.jobManager.addJob(job, true)
     job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
-    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, workspace, procedure)
+    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
 
   ///
 
@@ -94,7 +94,7 @@ class Evaluator(workspace: AbstractWorkspace with JobManagement) {
           // calling the procedure directly.  This is temporary code that never got cleaned up.
           // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
           // is ever run. - ST 1/8/10
-          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random)
+          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
           val context = new Context(job, agent, 0, null, workspace)
           Try(context.callReporterProcedure(new Activation(procedure, null, 0)))
         }
