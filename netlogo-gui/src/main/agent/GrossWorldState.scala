@@ -53,6 +53,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld =>
   }
 
   abstract override def clearAll(): Unit = {
+    super.clearAll()
     _patchesAllBlack = true
     _mayHavePartiallyTransparentObjects = false
   }
