@@ -21,6 +21,8 @@ public strictfp class Turtle2D
   // that the slot is open.  --mas 12/18/01
   Turtle2D(World world, long id) {
     this(world, world.turtles(), World.Zero(), World.Zero(), false);
+    id(id);
+    world.turtles().add(this);
   }
 
   Turtle2D(World world) {

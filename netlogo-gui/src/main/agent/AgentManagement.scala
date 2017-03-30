@@ -186,7 +186,6 @@ trait AgentManagement
       val patch = patchIter.next.asInstanceOf[Patch]
       val newPatch = new Patch(newWorld, patch.id.toInt, patch.pxcor, patch.pycor, patch.variables.length)
       System.arraycopy(patch.variables, 0, newPatch.variables, 0, patch.variables.length)
-      val turtlesHereIter = patch.turtlesHere.iterator
       newPatchArray(i) = newPatch
       i += 1
     }
@@ -198,12 +197,18 @@ trait AgentManagement
     val turtleIter = turtles.iterator
     while (turtleIter.hasNext) {
       val turtle = turtleIter.next().asInstanceOf[Turtle2D]
-      val newTurtle = new Turtle2D(newWorld, turtle.id)
-      System.arraycopy(turtle.variables, 0, newTurtle.variables, 0, turtleVariableCount)
+      val newTurtle = new Turtle2D(newWorld, turtle.id())
+      System.arraycopy(turtle.variables, 0, newTurtle.variables, 0, 7)
+      System.arraycopy(turtle.variables, 9, newTurtle.variables, 9, 4)
+      newTurtle.xcor = turtle.xcor
+      newTurtle.ycor = turtle.ycor
+      newTurtle.heading = turtle.heading
       if (turtle.getBreed != turtles) {
         val newBreed = other.breeds.get(turtle.getBreed.printName)
         newTurtle.setBreed(newBreed)
       }
+      val newPatchHere = newWorld.getPatch(turtle.getPatchHere.id().toInt)
+      newPatchHere.addTurtle(newTurtle)
     }
 
     val linkIter = links.iterator
@@ -225,5 +230,8 @@ trait AgentManagement
         newLink.variables, AgentVariableNumbers.VAR_THICKNESS,
         AgentVariableNumbers.VAR_TIEMODE - AgentVariableNumbers.VAR_LBREED)
     }
+
+    newWorld.turtleShapes.addAll(turtleShapes.shapeList.shapes)
+    newWorld.linkShapes.addAll(linkShapes.shapeList.shapes)
   }
 }
