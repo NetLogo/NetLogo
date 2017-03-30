@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox
 import org.nlogo.core.{ Monitor => CoreMonitor }
 import org.nlogo.internalapi.{ CompiledMonitor => ApiCompiledMonitor, ModelAction, ModelUpdate, RunComponent, RunnableModel }
 
-class MonitorControl(compiledMonitor: ApiCompiledMonitor, runnableModel: RunnableModel) extends VBox with RunComponent {
+class MonitorControl(compiledMonitor: ApiCompiledMonitor) extends VBox {
 
   @FXML
   var nameLabel: Label = _
@@ -27,11 +27,8 @@ class MonitorControl(compiledMonitor: ApiCompiledMonitor, runnableModel: Runnabl
     setPrefSize(monitorModel.right - monitorModel.left, monitorModel.bottom - monitorModel.top)
     nameLabel.setText(monitorModel.display orElse monitorModel.source getOrElse "")
     valueLabel.setText("0")
-  }
-
-  def tagAction(action: ModelAction, actionTag: String): Unit = {
-  }
-
-  def updateReceived(update: ModelUpdate): Unit = {
+    compiledMonitor.onUpdate({ (s: String) =>
+      valueLabel.setText(s)
+    })
   }
 }

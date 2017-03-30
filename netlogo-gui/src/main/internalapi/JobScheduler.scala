@@ -7,6 +7,7 @@ trait SuspendableJob {
 }
 
 trait JobScheduler {
+  def registerMonitorUpdate(name: String, op: () => AnyRef): Unit
   def scheduleJob(job: SuspendableJob): String
   def stopJob(jobTag: String): Unit
   def scheduleOperation(op: () => Unit): String

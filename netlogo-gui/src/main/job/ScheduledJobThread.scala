@@ -138,7 +138,7 @@ trait JobScheduler extends ApiJobScheduler {
       case RunMonitors(updaters, time) =>
         val allMonitors = updaters ++ pendingMonitors
         pendingMonitors = Map.empty[String, () => AnyRef]
-        val monitorValues = allMonitors.map { case (k, op) => k -> op() }.toMap
+        val monitorValues = allMonitors.map { case (k, op) => k -> Try(op()) }.toMap
         queue.add(RunMonitors(allMonitors, System.currentTimeMillis))
         updates.add(MonitorsUpdate(monitorValues))
     }

@@ -14,7 +14,10 @@ trait CompiledButton extends CompiledWidget {
   def procedureTag: String
 }
 
+// consider adding an onError callback
 trait CompiledMonitor extends CompiledWidget {
+  // this callback will be called on the JavaFX UI thread when the value changes
+  def onUpdate(callback: String => Unit): Unit
   def widget: Monitor
   def procedureTag: String
 }

@@ -30,11 +30,11 @@ object ModelInterfaceBuilder {
           interfacePane.getChildren.add(button)
           Seq(compiledButton.procedureTag -> button)
         case compiledMonitor: ApiCompiledMonitor =>
-          val monitor = new MonitorControl(compiledMonitor, compiledModel.runnableModel)
+          val monitor = new MonitorControl(compiledMonitor)
           val m = compiledMonitor.widget
           monitor.relocate(m.left, m.top)
           interfacePane.getChildren.add(monitor)
-          Seq(compiledMonitor.procedureTag -> monitor)
+          Seq()
         case other =>
           other.widget match {
             case s: CoreSlider  =>

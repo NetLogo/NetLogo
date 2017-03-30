@@ -21,11 +21,6 @@ trait Evaluating { this: AbstractWorkspace with JobManagement =>
 
   override def clearLastLogoException() { lastLogoException = null }
 
-  def submitAction(action: ModelAction): Unit = {
-  }
-  def submitAction(action: ModelAction, component: RunComponent): Unit = {
-  }
-
   @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
     evaluator.makeReporterThunk(source, world.observer,

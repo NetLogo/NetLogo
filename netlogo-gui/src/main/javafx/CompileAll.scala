@@ -8,7 +8,7 @@ import org.nlogo.internalapi.{
   EmptyRunnableModel, NonCompiledWidget, RunnableModel }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelUpdate,
+import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelUpdate, MonitorsUpdate,
   RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, Monitor => CoreMonitor, NumericInput, Program,
@@ -16,6 +16,8 @@ import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
 import org.nlogo.nvm.{ CompilerResults, Procedure, SuspendableJob }
 import org.nlogo.workspace.{ AbstractWorkspace, Evaluating }
 
+
+import scala.util.{ Failure, Success }
 
 class DummyJobOwner(val random: MersenneTwisterFast, val tag: String) extends JobOwner {
   def displayName: String = "Job Owner" // TODO: we may want another button
@@ -48,6 +50,19 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
 
   private var taggedComponents = Map.empty[String, RunComponent]
 
+  val monitorRegistry: Map[String, CompiledMonitor] =
+    compiledWidgets.collect {
+      case cm: CompiledMonitor => cm.procedureTag -> cm
+    }.toMap
+
+  monitorRegistry.values.foreach {
+    case cm: CompiledMonitor =>
+      scheduledJobThread.registerMonitorUpdate(cm.procedureTag, {
+        () =>
+          workspace.runCompiledReporter(new DummyJobOwner(workspace.world.auxRNG, cm.procedureTag), cm.procedure)
+      })
+  }
+
   private def registerTag(componentOpt: Option[RunComponent], action: ModelAction, tag: String): Unit = {
     componentOpt.foreach { component =>
       taggedComponents = taggedComponents + (tag -> component)
@@ -59,8 +74,7 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
     action match {
       case UpdateInterfaceGlobal(name, value) =>
         val tag = scheduledJobThread.scheduleOperation( { () =>
-            println(s"setting value of $name to ${value.get}")
-            workspace.world.setObserverVariableByName(name, value.get)
+          workspace.world.setObserverVariableByName(name, value.get)
         })
         registerTag(componentOpt, action, tag)
       case AddProcedureRun(widgetTag, isForever) =>
@@ -83,16 +97,37 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
   }
 
   def notifyUpdate(update: ModelUpdate): Unit = {
-    taggedComponents.get(update.tag).foreach(_.updateReceived(update))
-    taggedComponents -= update.tag
+    update match {
+      case MonitorsUpdate(values) =>
+        values.foreach {
+          case (k, Success(v)) => monitorRegistry.get(k).foreach(_.update(v))
+          case (k, Failure(v)) => println(s"failure for monitor ${monitorRegistry(k)}: $v")
+        }
+      case other =>
+        taggedComponents.get(update.tag).foreach(_.updateReceived(update))
+        taggedComponents -= update.tag
+    }
   }
 }
 
 case class CompiledButton(val widget: CoreButton, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure)
   extends ApiCompiledButton
 
-case class CompiledMonitor(val widget: CoreMonitor, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure)
-  extends ApiCompiledMonitor
+case class CompiledMonitor(val widget: CoreMonitor, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure, val compiledSource: String)
+  extends ApiCompiledMonitor {
+    var updateCallback: (String => Unit) = { (s: String) => }
+
+    def onUpdate(callback: String => Unit): Unit = {
+      updateCallback = callback
+    }
+
+    def update(value: AnyRef): Unit = {
+      value match {
+        case s: String => updateCallback(s)
+        case other     => updateCallback(other.toString)
+      }
+    }
+}
 
 object CompileAll {
   def apply(model: Model, workspace: AbstractWorkspace with SchedulerWorkspace): CompiledModel = {
@@ -157,15 +192,16 @@ object CompileAll {
           val source = s"to-report $tag [] __observercode \n report __monitorprecision (\n ${monitorSource} \n) ${m.precision} end"
           val displayName = m.display.orElse(m.source).getOrElse("")
           try {
+            println("monitor source: " + source)
             val monitorResults =
               workspace.compiler.compileMoreCode(source, Some(displayName),
                 results.program, results.proceduresMap,
                 workspace.getExtensionManager, workspace.getCompilationEnvironment)
             monitorResults.head.init(workspace)
-            CompiledMonitor(m, None, tag, monitorResults.head)
+            CompiledMonitor(m, None, tag, monitorResults.head, source)
           } catch {
             case e: CompilerException =>
-              CompiledMonitor(m, Some(e), "", null)
+              CompiledMonitor(m, Some(e), "", null, source)
           }
         } getOrElse NonCompiledWidget(widget)
       case _ => NonCompiledWidget(widget)

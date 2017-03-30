@@ -12,6 +12,7 @@ import org.nlogo.internalapi.{ ModelAction, UpdateInterfaceGlobal, AddProcedureR
 import org.scalatest.{ FunSuite, Inside }
 
 import scala.collection.JavaConverters._
+import scala.util.Try
 
 import ScheduledJobThread._
 
@@ -221,7 +222,7 @@ class ScheduledJobThreadTest extends FunSuite {
     subject.registerMonitorUpdate("abc", () => Double.box(123))
     subject.runEvent()
     subject.runEvent()
-    assertUpdate { case MonitorsUpdate(values) => assertResult(Double.box(123))(values("abc")) }
+    assertUpdate { case MonitorsUpdate(values) => assertResult(Try(Double.box(123)))(values("abc")) }
   } }
 
   test("supports a halt operation which clears all existing jobs") {
