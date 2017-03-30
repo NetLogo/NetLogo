@@ -111,8 +111,8 @@ class ApplicationController extends ModelRunner {
     def perspective: org.nlogo.api.Perspective = world.observer.perspective
     def viewOffsetX: Double = world.observer.followOffsetX
     def viewOffsetY: Double = world.observer.followOffsetY
-    def drawSpotlight: Boolean = true
-    def renderPerspective: Boolean = true
+    def drawSpotlight: Boolean = false
+    def renderPerspective: Boolean = false
     def isHeadless: Boolean = false
   }
 
@@ -123,7 +123,7 @@ class ApplicationController extends ModelRunner {
       interfacePane.getChildren().asScala.foreach {
         case c: Canvas =>
           val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
-          val renderer = new org.nlogo.render.Renderer(workspace.world)
+          val renderer = new org.nlogo.render.Renderer(world)
           val settings = new FakeViewSettings(c, world)
           renderer.paint(graphicsInterface, settings)
         case _ =>

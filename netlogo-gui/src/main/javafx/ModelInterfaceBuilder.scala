@@ -36,9 +36,8 @@ object ModelInterfaceBuilder {
               interfacePane.getChildren.add(slider)
             case v: CoreView    =>
               import javafx.scene.paint.Color
-              val width  = v.right - v.left
-              val height = v.bottom - v.top
-              val c = new Canvas(width, height)
+              val d = compiledModel.model.view.dimensions
+              val c = new Canvas(d.width * d.patchSize, d.height * d.patchSize)
               c.relocate(v.left, v.top)
               interfacePane.getChildren.add(c)
               val gc = c.getGraphicsContext2D
