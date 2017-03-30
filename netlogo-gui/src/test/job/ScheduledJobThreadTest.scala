@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.{ Collections, ArrayList }
 
 import org.nlogo.internalapi.{ ModelAction, UpdateInterfaceGlobal, AddProcedureRun,
-  JobDone, JobErrored, ModelUpdate, StopProcedure, SuspendableJob }
+  JobDone, JobErrored, ModelUpdate, MonitorsUpdate, StopProcedure, SuspendableJob }
 
 import org.scalatest.{ FunSuite, Inside }
 
@@ -45,6 +45,11 @@ class ScheduledJobThreadTest extends FunSuite {
     assertSortedOrder(AddJob(null, "abc", 0), AddJob(null, "abc", 1))
   }
 
+  test("job ordering ranks adding a job and adding a monitor by time"){
+    assertSortedOrder(AddMonitor("abc", () => Double.box(123), 0), AddJob(null, "abc", 1))
+    assertSortedOrder(AddJob(null, "abc", 0), AddMonitor("abc", () => Double.box(123), 1))
+  }
+
   test("job ordering puts run job behind adding a job"){
     assertSortedOrder(AddJob(null, "abc", 0), RunJob(null, "abc", 1))
   }
@@ -53,6 +58,14 @@ class ScheduledJobThreadTest extends FunSuite {
   // jobs, this ordering should be tweaked
   test("job ordering puts the oldest run job first"){
     assertSortedOrder(RunJob(null, "abc", 0), RunJob(null, "abc", 1))
+  }
+
+  test("job ordering puts an old monitor update ahead of RunJob") {
+    assertSortedOrder(RunMonitors(Map.empty[String, () => AnyRef], 0), RunJob(null, "abc", 1))
+  }
+
+  test("job ordering puts an old job ahead of monitor updates") {
+    assertSortedOrder(RunMonitors(Map.empty[String, () => AnyRef], 0), RunJob(null, "abc", 1))
   }
 
   class Subject extends JobScheduler {
@@ -202,6 +215,13 @@ class ScheduledJobThreadTest extends FunSuite {
     subject.runEvent()
     subject.runEvent()
     assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
+  } }
+
+  test("sends monitor updates") { new Helper {
+    subject.registerMonitorUpdate("abc", () => Double.box(123))
+    subject.runEvent()
+    subject.runEvent()
+    assertUpdate { case MonitorsUpdate(values) => assertResult(Double.box(123))(values("abc")) }
   } }
 
   test("supports a halt operation which clears all existing jobs") {

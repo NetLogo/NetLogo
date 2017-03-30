@@ -154,7 +154,7 @@ object CompileAll {
       case m: CoreMonitor =>
         m.source map { monitorSource =>
           val tag = s"__monitor-${m.hashCode}"
-          val source = s"to-report $tag [] __observercode \n __monitorprecision (\n ${monitorSource} \n) ${m.precision} end"
+          val source = s"to-report $tag [] __observercode \n report __monitorprecision (\n ${monitorSource} \n) ${m.precision} end"
           val displayName = m.display.orElse(m.source).getOrElse("")
           try {
             val monitorResults =
