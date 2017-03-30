@@ -18,7 +18,7 @@ import javafx.stage.{ FileChooser, Window }
 import org.nlogo.javafx.{ ButtonControl, CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ CompiledModel, ModelRunner, ModelUpdate, SchedulerWorkspace, WorldUpdate }
+import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
@@ -26,7 +26,7 @@ import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
-class ApplicationController extends ModelRunner {
+class ApplicationController {
   var executor: Executor = _
   var workspace: AbstractWorkspaceScala with SchedulerWorkspace = _
 
@@ -89,7 +89,7 @@ class ApplicationController extends ModelRunner {
             compiledModel =>
               ApplicationController.this.compiledModel = compiledModel
               val (interfaceWidgetsPane, widgetsMap) =
-                ModelInterfaceBuilder.build(compiledModel, ApplicationController.this)
+                ModelInterfaceBuilder.build(compiledModel)
               interfacePane = interfaceWidgetsPane
               widgetsByTag = widgetsMap
               interfaceArea.getChildren.add(interfaceWidgetsPane)

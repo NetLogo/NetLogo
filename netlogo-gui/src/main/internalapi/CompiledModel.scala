@@ -24,10 +24,6 @@ case class CompiledModel(
   val runnableModel: RunnableModel,
   val compilationResult: Either[CompilerException, Program])
 
-trait ModelRunner {
-  def tagError(tag: String, error: Exception): Unit
-}
-
 trait RunComponent {
   def tagAction(action: ModelAction, actionTag: String): Unit
   def updateReceived(update: ModelUpdate): Unit
@@ -43,7 +39,7 @@ object EmptyRunnableModel extends RunnableModel {
   def submitAction(action: ModelAction): Unit = {}
   def submitAction(action: ModelAction, component: RunComponent): Unit = {
     component.tagAction(action, "")
-    component.updateReceived(ActionCompleted(""))
+    component.updateReceived(JobDone(""))
   }
   def notifyUpdate(update: ModelUpdate): Unit = {}
 }

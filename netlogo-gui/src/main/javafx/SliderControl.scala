@@ -2,6 +2,9 @@
 
 package org.nlogo.javafx
 
+import java.lang.{ Boolean => JBoolean, Double => JDouble }
+import java.util.concurrent.atomic.AtomicReference
+
 import javafx.beans.value.ObservableValue
 import javafx.event.{ Event, EventHandler }
 import javafx.fxml.{ FXML, FXMLLoader }
@@ -12,10 +15,12 @@ import javafx.scene.input.TouchEvent
 
 import com.sun.javafx.scene.control.skin.SliderSkin
 
+import org.nlogo.internalapi.{ RunnableModel, UpdateInterfaceGlobal }
+
 import org.nlogo.core.{ Slider => CoreSlider }
 
 // TODO: This only allows for sliders with constant mins and maxes
-class SliderControl(model: CoreSlider) extends GridPane {
+class SliderControl(model: CoreSlider, runnableModel: RunnableModel) extends GridPane {
 
   @FXML
   var slider: Slider = _
@@ -25,6 +30,8 @@ class SliderControl(model: CoreSlider) extends GridPane {
 
   @FXML
   var valueLabel: Label = _
+
+  val currentValue = new AtomicReference[JDouble](Double.box(model.default))
 
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("Slider.fxml"))
@@ -39,6 +46,16 @@ class SliderControl(model: CoreSlider) extends GridPane {
     slider.setSnapToTicks(true)
     slider.setMajorTickUnit(model.step.toDouble)
     slider.setMinorTickCount(0)
+    slider.valueProperty.addListener(new javafx.beans.value.ChangeListener[Number]() {
+      def changed(o: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        if (! slider.valueChangingProperty.get()) {
+          currentValue.set(Double.box(newValue.doubleValue))
+          model.variable.foreach { variableName =>
+            runnableModel.submitAction(UpdateInterfaceGlobal(variableName.toUpperCase, currentValue))
+          }
+        }
+      }
+    })
     bindSliderToLabel(slider, valueLabel)
   }
 

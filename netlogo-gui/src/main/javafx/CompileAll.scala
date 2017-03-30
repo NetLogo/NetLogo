@@ -7,7 +7,7 @@ import org.nlogo.internalapi.{
   EmptyRunnableModel, NonCompiledWidget, RunnableModel }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelRunner, ModelUpdate,
+import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelUpdate,
   RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, NumericInput, Program,
@@ -16,7 +16,7 @@ import org.nlogo.nvm.{ CompilerResults, Procedure, SuspendableJob }
 import org.nlogo.workspace.{ AbstractWorkspace, Evaluating }
 
 
-class DummyJobOwner(val random: MersenneTwisterFast, modelRunner: ModelRunner, val tag: String) extends JobOwner {
+class DummyJobOwner(val random: MersenneTwisterFast, val tag: String) extends JobOwner {
   def displayName: String = "Job Owner" // TODO: we may want another button
   def isButton: Boolean = true // TODO: our only owners at this point are buttons
   def isCommandCenter: Boolean = false
@@ -57,7 +57,10 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
   private def scheduleAction(action: ModelAction, componentOpt: Option[RunComponent]): Unit = {
     action match {
       case UpdateInterfaceGlobal(name, value) =>
-        val tag = scheduledJobThread.scheduleOperation(() => workspace.world.setObserverVariableByName(name, value.get))
+        val tag = scheduledJobThread.scheduleOperation( { () =>
+            println(s"setting value of $name to ${value.get}")
+            workspace.world.setObserverVariableByName(name, value.get)
+        })
         registerTag(componentOpt, action, tag)
       case AddProcedureRun(widgetTag, isForever) =>
         // TODO: this doesn't take isForever into account yet
@@ -127,7 +130,6 @@ object CompileAll {
             case AgentKind.Patch => "__patchcode"
             case AgentKind.Link => "__linkcode"
           }
-          //val (repeatStart, repeatEnd) = if (b.forever) ("loop [", "__foreverbuttonend ]") else ("", "__done")
           val (repeatStart, repeatEnd) = ("", "__done")
           val tag = s" __button-" + b.hashCode
           val source = s"to $tag [] $headerCode $repeatStart \n $buttonSource \n $repeatEnd end"

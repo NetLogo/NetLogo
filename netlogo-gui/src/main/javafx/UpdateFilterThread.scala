@@ -32,7 +32,8 @@ class UpdateFilterThread(worldUpdates: BlockingQueue[ModelUpdate], periodicInter
       try {
         worldUpdates.poll(periodicInterval, TimeUnit.MILLISECONDS) match {
           case null                         =>
-          case WorldUpdate(world: World, t) => latestWorld.set((world, t))
+          case WorldUpdate(world: World, t) =>
+            latestWorld.set((world, t))
           case other                        => filteredUpdates.put(other)
         }
         requestUpdateIfNeeded()

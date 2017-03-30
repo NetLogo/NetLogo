@@ -13,7 +13,7 @@ import javafx.scene.layout.{ Background, BackgroundFill, StackPane }
 import javafx.scene.paint.Color
 
 import org.nlogo.core.{ Button => CoreButton }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, ModelAction, ModelRunner, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
+import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, ModelAction, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
 
 object ButtonControl {
   sealed trait ButtonState
@@ -24,7 +24,7 @@ object ButtonControl {
 import ButtonControl._
 
 // TODO: Figure out a way to disable until ticks start (if appropriate)
-class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, modelRunner: ModelRunner) extends StackPane with RunComponent {
+class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel) extends StackPane with RunComponent {
   val activeBackgroundColor = Color.web("#1F6A99")
   val inactiveBackgroundColor = Color.web("#BACFF3")
 
