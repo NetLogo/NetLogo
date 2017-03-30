@@ -2,7 +2,7 @@
 
 package org.nlogo.internalapi
 
-import org.nlogo.core.{ Button, Model, CompilerException, Program, Widget }
+import org.nlogo.core.{ Button, CompilerException, Model, Monitor, Program, Widget }
 
 sealed trait CompiledWidget {
   def widget: Widget
@@ -11,6 +11,11 @@ sealed trait CompiledWidget {
 
 trait CompiledButton extends CompiledWidget {
   def widget: Button
+  def procedureTag: String
+}
+
+trait CompiledMonitor extends CompiledWidget {
+  def widget: Monitor
   def procedureTag: String
 }
 

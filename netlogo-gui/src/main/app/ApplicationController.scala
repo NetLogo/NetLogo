@@ -55,8 +55,6 @@ class ApplicationController {
   @FXML
   var interfaceArea: AnchorPane = _
 
-  var widgetsByTag = Map.empty[String, ButtonControl]
-
   var interfacePane: Pane = _
   var compiledModel: CompiledModel = _
 
@@ -90,8 +88,10 @@ class ApplicationController {
               ApplicationController.this.compiledModel = compiledModel
               val (interfaceWidgetsPane, widgetsMap) =
                 ModelInterfaceBuilder.build(compiledModel)
+              if (interfacePane != null) {
+                interfaceArea.getChildren.remove(interfacePane)
+              }
               interfacePane = interfaceWidgetsPane
-              widgetsByTag = widgetsMap
               interfaceArea.getChildren.add(interfaceWidgetsPane)
           }(JavaFXExecutionContext)
         }
