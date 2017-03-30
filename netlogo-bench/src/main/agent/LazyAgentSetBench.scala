@@ -13,11 +13,11 @@ import scala.util.Random
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 class LazyAgentSetBench {
 
-  val turtleCount = 500
+  val turtleCount = 1000
   var aTurtle: Agent = _
 
-  var arrayAgentSet: IndexedAgentSet = _
-  var lazyAgentSet: LazyAgentSet = _
+  var a: IndexedAgentSet = _
+  var l: LazyAgentSet = _
   var turtles: Array[Agent] = _
 
   def createArrayAgentSet(array: Array[Agent]) = new ArrayAgentSet(AgentKind.Turtle, null, array)
@@ -33,44 +33,73 @@ class LazyAgentSetBench {
     def newTurtle = world.createTurtle(world.turtles())
     turtles = (1 to turtleCount).map(_ => newTurtle).toArray[Agent]
     aTurtle = newTurtle
+    a = createArrayAgentSet(turtles)
+    l = createLazyAgentSet(turtles)
     // lazyAgentSet.lazyOther(aTurtle)
   }
 
-  @TearDown(Level.Iteration)
-  def teardown() = {
-    aTurtle = null
-    arrayAgentSet = null
-    lazyAgentSet = null
+//  @TearDown(Level.Iteration)
+//  def teardown() = {
+//    aTurtle = null
+//    arrayAgentSet = null
+//    lazyAgentSet = null
+//  }
+
+//  @Benchmark
+  def Init_Array() = {
+    a = createArrayAgentSet(turtles)
+  }
+
+//  @Benchmark
+  def Init_Lazy() = {
+    l = createLazyAgentSet(turtles)
+  }
+
+//  @Benchmark
+  def Count_Array() = {
+    a.count
+  }
+
+//  @Benchmark
+  def Count_Lazy() = {
+//    lazyAgentSet.lazyOther(turtles(0))
+    l.count
   }
 
   @Benchmark
-  def measureArrayAgentsetCount() = {
-    arrayAgentSet = createArrayAgentSet(turtles)
-    arrayAgentSet.count
+  def Iter_Array() = {
+    a.iterator
   }
 
   @Benchmark
-  def measureLazyAgentsetCount() = {
-    lazyAgentSet = createLazyAgentSet(turtles)
-    lazyAgentSet.lazyOther(turtles(0))
-    lazyAgentSet.count
+  def Iter_Lazy() = {
+    l.iterator
+  }
+
+//  @Benchmark
+  def Contains1_Array() = {
+//    var i = 0
+//    val builder = new AgentSetBuilder(AgentKind.Turtle, turtleCount)
+//    while (i < turtleCount) {
+//      builder.add(turtles(i))
+//      i += 1
+//    }
+//    arrayAgentSet = builder.build()
+    a.contains(aTurtle)
+  }
+
+//  @Benchmark
+  def Contains1_Lazy() = {
+    l.contains(aTurtle)
   }
 
   @Benchmark
-  def measureArrayAgentsetContains() = {
-    var i = 0
-    val builder = new AgentSetBuilder(AgentKind.Turtle, turtleCount)
-    while (i < turtleCount) {
-      builder.add(turtles(i))
-      i += 1
-    }
-    arrayAgentSet = builder.build()
-    arrayAgentSet.contains(aTurtle)
+  def Contains2_Array() = {
+    a.contains(turtles(0))
   }
 
   @Benchmark
-  def measureLazyAgentsetContains() = {
-    lazyAgentSet = createLazyAgentSet(turtles)
-    lazyAgentSet.contains(aTurtle)
+  def Contains2_Lazy() = {
+    l.contains(turtles(0))
   }
 }
