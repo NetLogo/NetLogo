@@ -1,4 +1,4 @@
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.javafx
 
@@ -13,7 +13,7 @@ import org.nlogo.internalapi.{ AddProcedureRun, ModelAction, ModelUpdate, Monito
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, Monitor => CoreMonitor, NumericInput, Program,
   Slider => CoreSlider, StringInput, Switch => CoreSwitch, Widget }
-import org.nlogo.nvm.{ CompilerResults, Procedure, SuspendableJob }
+import org.nlogo.nvm.{ CompilerResults, ConcurrentJob, ExclusiveJob, Procedure, SuspendableJob }
 import org.nlogo.workspace.{ AbstractWorkspace, Evaluating }
 
 
@@ -57,10 +57,9 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
 
   monitorRegistry.values.foreach {
     case cm: CompiledMonitor =>
-      scheduledJobThread.registerMonitorUpdate(cm.procedureTag, {
-        () =>
-          workspace.runCompiledReporter(new DummyJobOwner(workspace.world.auxRNG, cm.procedureTag), cm.procedure)
-      })
+      val job =
+        new SuspendableJob(workspace.world.observers, false, cm.procedure, 0, null, workspace.world.mainRNG)
+      scheduledJobThread.registerMonitor(cm.procedureTag, job)
   }
 
   private def registerTag(componentOpt: Option[RunComponent], action: ModelAction, tag: String): Unit = {
@@ -98,10 +97,13 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
 
   def notifyUpdate(update: ModelUpdate): Unit = {
     update match {
-      case MonitorsUpdate(values) =>
+      case MonitorsUpdate(values, time) =>
         values.foreach {
-          case (k, Success(v)) => monitorRegistry.get(k).foreach(_.update(v))
-          case (k, Failure(v)) => println(s"failure for monitor ${monitorRegistry(k)}: $v")
+          case (k, Success(v)) =>
+            monitorRegistry.get(k).foreach(_.update(v))
+          case (k, Failure(v)) =>
+            println(s"failure for monitor ${monitorRegistry(k)}: $v")
+            println(monitorRegistry.get(k).map(_.procedure.dump))
         }
       case other =>
         taggedComponents.get(update.tag).foreach(_.updateReceived(update))

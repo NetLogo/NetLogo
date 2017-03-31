@@ -42,7 +42,7 @@ class ApplicationController {
     if (filterThread != null) {
       filterThread.die()
     }
-    filterThread = new UpdateFilterThread(updates, 40, () => refreshCanvas())
+    filterThread = new UpdateFilterThread(updates, 40, () => processUpdates())
     filterThread.start()
   }
 
@@ -116,25 +116,29 @@ class ApplicationController {
     def isHeadless: Boolean = false
   }
 
-  def refreshCanvas(): Unit = {
-    val (world, t) = filterThread.latestWorld.get
-    if (t != lastWorldTimestamp) {
-      lastWorldTimestamp = t
-      interfacePane.getChildren().asScala.foreach {
-        case c: Canvas =>
-          val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
-          val renderer = new org.nlogo.render.Renderer(world)
-          val settings = new FakeViewSettings(c, world)
-          renderer.paint(graphicsInterface, settings)
-        case _ =>
-      }
+  def processUpdates(): Unit = {
+    filterThread.filteredUpdates.poll() match {
+      case WorldUpdate(world: World, _) =>
+        interfacePane.getChildren().asScala.foreach {
+          case c: Canvas =>
+            val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
+            val renderer = new org.nlogo.render.Renderer(world)
+            val settings = new FakeViewSettings(c, world)
+            renderer.paint(graphicsInterface, settings)
+          case _ =>
+        }
+      case update if update != null =>
+        Option(compiledModel).foreach { model =>
+          model.runnableModel.notifyUpdate(update)
+        }
+      case _ =>
     }
-
-    for {
-      model  <- Option(compiledModel)
-      update <- Option(filterThread.filteredUpdates.poll())
-    } {
-      model.runnableModel.notifyUpdate(update)
+    if (filterThread.filteredUpdates.peek != null) {
+      Platform.runLater(new Runnable() {
+        override def run(): Unit = {
+          processUpdates()
+        }
+      })
     }
   }
 

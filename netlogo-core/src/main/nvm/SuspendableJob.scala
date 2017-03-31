@@ -109,7 +109,7 @@ class SuspendableJob(
   }
 
   // used by Evaluator.MyThunk
-  def callReporterProcedure() =
+  def runResult() =
     new Context(this, agentset.iterator.next(), 0, null)
      .callReporterProcedure(new Activation(topLevelProcedure, null, 0))
 

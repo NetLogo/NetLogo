@@ -343,6 +343,9 @@ class NvmTests extends FunSuite {
     execute(proc, procedureBody)
   } }
 
+  /* This may too ambitious for NetLogo at present.
+   * But I think perhaps activation.result could be used to pass results between
+   * Activations and be a unified stop condition between command and reporter procedures.
   test("reporter procedures can be called from the top level") { new Helper {
     val proc = reporterProcedure("report-one")
     val procBody = new StatementsBuilder() {
@@ -350,6 +353,7 @@ class NvmTests extends FunSuite {
     }
     execute(proc, procBody)
   } }
+  */
 
   test("`carefully` properly restores context after error inside procedure call") { new Helper {
     val containsA = checkBinding(a, Double.box(1))
