@@ -19,12 +19,12 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
     var count = 0
     val iter = agentset.shufflerator(random)
     while(iter.hasNext) {
-      newAgentJoining(iter.next(), count, address)
+      newAgentJoining(iter.next(), count)
       count += 1
     }
   }
 
-  def newAgentJoining(agent: Agent, initialCount: Int, address: Int) {
+  def newAgentJoining(agent: Agent, initialCount: Int) {
     var count = initialCount
     val activation =
       if (parentContext == null)

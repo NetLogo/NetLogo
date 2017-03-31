@@ -11,6 +11,7 @@ public final strictfp class Activation implements org.nlogo.api.Activation {
   final public Object[] args;
   final Command[] code; // this is cached from procedure for speed
   public Binding binding;
+  public Object result = null; // used to store the return value of this procedure call
 
   public Activation(Procedure procedure, Activation parent, Object[] args, int returnAddress, Binding binding) {
     this.procedure = procedure;

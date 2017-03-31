@@ -21,7 +21,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
   public Activation activation;
   public boolean waiting = false; // are we waiting on a child job?
   private Workspace workspace;
-  private boolean inReporterProcedure = false;
 
   /**
    * It is necessary for each Context to have its own stopping flag
@@ -86,29 +85,76 @@ public final strictfp class Context implements org.nlogo.api.Context {
     return new Context(job, agent, ip, activation);
   }
 
-  public boolean makeChildrenExclusive() {
-    return inReporterProcedure || job.exclusive();
-  }
-
   // this method runs only until a command switches
   void stepConcurrent() {
-    if (agent._id == -1) // is our agent dead?
-    {
-      finished = true;
-      return;
+    if (checkRunnable()) {
+      Command command = null;
+      do {
+        command = runSingleStep();
+      } while (!command.switches && !finished);
     }
+  }
+
+  // this method runs until the context is finished
+  void runExclusive() {
+    if (checkRunnable()) {
+      do {
+        runSingleStep();
+      } while (!finished);
+    }
+  }
+
+  scala.util.Either<Context, Integer> runFor(int steps) {
+    int completedSteps = 0;
+    if (checkRunnable()) {
+      Command command = null;
+      while (completedSteps < steps && !finished) {
+        command = runSingleStep(); // this runs "comeUpForAir", which shouldn't be needed here
+        completedSteps++;
+      }
+      if (!finished) {
+        return scala.util.Left.<Context, Integer>apply(this);
+      }
+    }
+    return scala.util.Right.<Context, Integer>apply(Integer.valueOf(completedSteps));
+  }
+
+  public Object callReporterProcedure(Activation newActivation) throws LogoException {
     Command command = null;
+    activation = newActivation;
+    ip = 0;
     try {
       do {
-        command = activation.code[ip];
-        if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.kind());
-        }
-        command.perform(this);
-        if (command.world.comeUpForAir()) {
-          comeUpForAir(command);
-        }
-      } while (!command.switches && !finished);
+        command = runSingleStep();
+      } while (!finished && activation.result == null);
+    } catch (NonLocalExit e) {
+      // do nothing
+    } finally {
+      ip         = activation.returnAddress;
+      activation = activation.parentOrNull();
+    }
+    return newActivation.result;
+  }
+
+  boolean checkRunnable() {
+    if (agent._id == -1) {
+      finished = true;
+      return false;
+    }
+    return true;
+  }
+
+  Command runSingleStep() {
+    Command command = activation.code[ip];
+    try {
+      if ((agentBit & command.agentBits) == 0) {
+        command.throwAgentClassException(this, agent.kind());
+      }
+      command.perform(this);
+      if (command.world.comeUpForAir()) {
+        comeUpForAir(command);
+      }
+      return command;
     } catch (EngineException ex) {
       throw ex;
     } catch (LogoException ex) {
@@ -116,61 +162,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
     } catch (StackOverflowError ex) {
       throw new NetLogoStackOverflow(copy(), activation.code[ip], ex);
     }
-  }
-
-  // this method runs until the context is finished
-  void runExclusive() {
-    if (agent._id == -1) // is our agent dead?
-    {
-      finished = true;
-      return;
-    }
-    Command command = null;
-    try {
-      do {
-        command = activation.code[ip];
-        if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.kind());
-        }
-        command.perform(this);
-        if (command.world.comeUpForAir()) {
-          comeUpForAir(command);
-        }
-      } while (!finished);
-    } catch (EngineException ex) {
-      throw ex;
-    } catch (LogoException ex) {
-      EngineException.rethrow(ex, copy(), command);
-    }
-  }
-
-  scala.util.Either<Context, Integer> runFor(int steps) {
-    if (agent.id() == -1) // is our agent dead?
-    {
-      finished = true;
-      return scala.util.Right.<Context, Integer>apply(Integer.valueOf(0));
-    }
-    Command command = null;
-    int completedSteps = 0;
-    try {
-      while (completedSteps < steps && !finished) {
-        command = activation.code[ip];
-        if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.kind());
-        }
-        command.perform(this);
-        completedSteps++;
-      }
-
-      if (!finished) {
-        return scala.util.Left.<Context, Integer>apply(this);
-      }
-    } catch (EngineException ex) {
-      throw ex;
-    } catch (LogoException ex) {
-      EngineException.rethrow(ex, copy(), command);
-    }
-    return scala.util.Right.<Context, Integer>apply(Integer.valueOf(completedSteps));
+    return null;
   }
 
   public boolean hasParentContext() {
@@ -205,15 +197,17 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public void runExclusiveJob(AgentSet agentset, int address) {
-    new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, job.random)
-        .run();
+    makeExclusiveJob(agentset, address).run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
     // - ST 6/27/05, 1/10/07
     if (agent._id == -1) {
       finished = true;
     }
+  }
+
+  private ExclusiveJob makeExclusiveJob(AgentSet agentset, int address) {
+    return new ExclusiveJob(job.owner, agentset, activation.procedure, address, this, job.random);
   }
 
   public Job makeConcurrentJob(AgentSet agentset) {
@@ -271,44 +265,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
     this.agent = agent;
     return reporter.report(this);
   }
-
-  public Object callReporterProcedure(Activation newActivation) throws LogoException {
-    boolean oldInReporterProcedure = inReporterProcedure;
-    Command command = null;
-    inReporterProcedure = true; // so use of "ask" will create an exclusive job
-    activation = newActivation;
-    ip = 0;
-    try {
-      do {
-        command = activation.code[ip];
-        if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.kind());
-        }
-        command.perform(this);
-        if (command.world.comeUpForAir()) {
-          comeUpForAir(command);
-        }
-      }
-      while (!finished && job.result == null);
-    } catch (NonLocalExit e) {
-      // do nothing
-    } catch (EngineException ex) {
-      throw ex;
-    } catch (LogoException ex) {
-      EngineException.rethrow(ex, copy(), command);
-    } catch (StackOverflowError ex) {
-      throw new NetLogoStackOverflow(copy(), activation.code[ip], ex);
-    } finally {
-      inReporterProcedure = oldInReporterProcedure;
-      ip                  = activation.returnAddress;
-      activation          = activation.parentOrNull();
-    }
-    Object result = job.result;
-    job.result = null;
-    return result;
-  }
-
-  ///
 
   // this had to be made public so that workspace.Evaluator could call it when
   // running command thunks. - JC 6/11/10

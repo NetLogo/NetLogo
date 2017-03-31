@@ -24,6 +24,6 @@ public final strictfp class _returnreport extends Command {
 
   public void perform_1(Context context) throws LogoException {
     throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
+        I18N.errorsJ().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
   }
 }

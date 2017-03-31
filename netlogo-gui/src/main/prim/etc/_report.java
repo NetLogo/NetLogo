@@ -17,7 +17,7 @@ public final strictfp class _report extends Command {
   }
 
   public void perform_1(Context context, Object arg0) throws LogoException {
-    context.job.result = arg0;
+    context.activation.result = arg0;
     context.stopping = false;
     context.ip = next;
     if (! context.activation.nonLambdaActivation().procedure.isReporter()) {

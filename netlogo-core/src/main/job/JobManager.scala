@@ -81,12 +81,12 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       case t: Turtle =>
         thread.turtleForeverButtonJobs.synchronized {
           for (job <- thread.turtleForeverButtonJobs.asScala)
-            job.newAgentJoining(agent, -1, 0)
+            job.newAgentJoining(agent, -1)
         }
       case t: Link =>
         thread.linkForeverButtonJobs.synchronized {
           for (job <- thread.linkForeverButtonJobs.asScala)
-            job.newAgentJoining(agent, -1, 0)
+            job.newAgentJoining(agent, -1)
         }
       case _ =>
         // this shouldn't happen because patches shouldn't be joining.

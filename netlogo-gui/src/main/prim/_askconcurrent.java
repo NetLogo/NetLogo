@@ -6,7 +6,9 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
+import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.ExclusiveJob;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _askconcurrent
@@ -34,7 +36,15 @@ public final strictfp class _askconcurrent
             (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
       }
     }
-    if (context.makeChildrenExclusive()) {
+    boolean inReporter = false;
+    Activation a = context.activation;
+    while (a != null && ! inReporter) {
+      if (a.procedure.isReporter()) {
+        inReporter = true;
+      }
+      a = a.parent;
+    }
+    if (context.job instanceof ExclusiveJob || inReporter) {
       context.runExclusiveJob(agentset, next);
     } else {
       context.waiting = true;
