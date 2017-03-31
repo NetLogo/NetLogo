@@ -120,6 +120,7 @@ class TokenizerTests extends FunSuite {
   // 216C is a Unicode character I chose pretty much at random.  it's a Roman numeral
   // for fifty, and *looks* just like an L, but is not a letter according to Unicode.
   testLexFailure("foo\u216Cbar", 3, 4,  "This non-standard character is not allowed.")
+  testLexFailure(".5*",          0, 3,  "Illegal number format")
   testLexFailure("__ignore 3__ignore 4", 9, 18, "Illegal number format")
 
   test("carriageReturnsAreWhitespace") {

@@ -9,4 +9,8 @@ class NumberParserTests extends FunSuite {
     test(s"isLeft $input") {
       assert(NumberParser.parse(input).isLeft)
     }
+
+  test("in comma-delimited-decimal regions, number-like strings starting with '.' do not error") {
+    assert(NumberParser.parse(".5*").isLeft)
+  }
 }

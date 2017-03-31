@@ -5,13 +5,18 @@ package org.nlogo.core
 // This is highly performance-critical code for import-world. - ST 4/7/11
 
 import java.lang.{ Double => JDouble, Long => JLong }
+import java.text.{ DecimalFormat, NumberFormat }
+import java.util.Locale
 
 object NumberParser {
   // this is used on error to determine whether a number
   // is truly invalid, or just too large
   private val decimalFormat = {
-    val f = new java.text.DecimalFormat()
-    f.setParseBigDecimal(true)
+    val f = NumberFormat.getInstance(new Locale("en", "US"))
+    f match {
+      case d: DecimalFormat => d.setParseBigDecimal(true)
+      case _ =>
+    }
     f
   }
 
@@ -55,11 +60,15 @@ object NumberParser {
     }
     catch {
       case ex: NumberFormatException =>
-        Option(decimalFormat.parse(text)) match {
-          case Some(num: Number) if (num.longValue > 9007199254740992L || num.longValue < -9007199254740992L) =>
-            Left(s"$text $IsTooLargeForExactness")
-          case _ =>
-            Left(IllegalFormat)
+        try {
+          Option(decimalFormat.parse(text)) match {
+            case Some(num: Number) if (num.longValue > 9007199254740992L || num.longValue < -9007199254740992L) =>
+              Left(s"$text $IsTooLargeForExactness")
+            case _ =>
+              Left(IllegalFormat)
+          }
+        } catch {
+          case ex: Exception => Left(IllegalFormat)
         }
     }
   }

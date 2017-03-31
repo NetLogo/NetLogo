@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
-import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, NumberParser, SourceOwner, TokenizerInterface, World }
+import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, TokenizerInterface, World }
 import org.nlogo.parse.Namer
 import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure, Workspace }
 import org.nlogo.api.ExtensionManager
