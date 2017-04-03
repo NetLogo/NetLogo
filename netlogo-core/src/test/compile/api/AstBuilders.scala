@@ -80,7 +80,7 @@ trait StatementsBuilderBase {
   def buildBlock: CommandBlock = new CommandBlock(build, loc)
 }
 
-class StatementsBuilder {
+class StatementsBuilder extends StatementsBuilderBase {
   type ThisBuilder = StatementsBuilder
   def thisBuilder = this
 }
