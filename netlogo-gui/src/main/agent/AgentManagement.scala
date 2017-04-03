@@ -191,6 +191,17 @@ trait AgentManagement
     }
     newWorld._patches = new ArrayAgentSet(AgentKind.Patch, "patches", newPatchArray)
 
+    newWorld.turtleShapes.addAll(turtleShapes.shapeList.shapes)
+    breeds.asScala.foreach {
+      case (name, agentset) if turtleBreedShapes.breedHasShape(agentset) =>
+        newWorld.turtleBreedShapes.setBreedShape(agentset.printName, turtleBreedShapes.breedShape(agentset))
+    }
+    newWorld.linkShapes.addAll(linkShapes.shapeList.shapes)
+    linkBreeds.asScala.foreach {
+      case (name, agentset) if linkBreedShapes.breedHasShape(agentset) =>
+        newWorld.linkBreedShapes.setBreedShape(agentset.printName, linkBreedShapes.breedShape(agentset))
+    }
+
     val turtleVariableCount = program.dialect.agentVariables.implicitTurtleVariableTypeMap.size
     // then we recreate all the agents, setting their breed to the breed in the new world.
     // this also causes the agent to be added to its breed.
@@ -230,8 +241,5 @@ trait AgentManagement
         newLink.variables, AgentVariableNumbers.VAR_THICKNESS,
         AgentVariableNumbers.VAR_TIEMODE - AgentVariableNumbers.VAR_LBREED)
     }
-
-    newWorld.turtleShapes.addAll(turtleShapes.shapeList.shapes)
-    newWorld.linkShapes.addAll(linkShapes.shapeList.shapes)
   }
 }

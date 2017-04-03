@@ -18,12 +18,12 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
 
   def draw(shape: java.awt.Shape): Unit = ???
 
-  def drawCircle(x: Double,y: Double,xDiamter: Double,yDiameter: Double,scale: Double,angle: Double): Unit = {
+  def drawCircle(x: Double,y: Double,xDiameter: Double,yDiameter: Double,scale: Double,angle: Double): Unit = {
     // need scale, angle...
+    // println(s"drawing circle: ($x, $y) w: $xDiameter, h: $yDiameter, scale: $scale, angle: $angle")
     context.save()
-    context.scale(scale, scale)
     context.rotate(angle)
-    context.strokeOval(x, y, xDiamter, yDiameter)
+    context.strokeOval(x, y, xDiameter, yDiameter)
     context.restore()
   }
 
@@ -56,12 +56,14 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
     context.strokeLine(x1, y1, x2, y2)
   }
   def drawPolygon(xcors: Array[Int],ycors: Array[Int],length: Int): Unit = {
+    // println(s"drawing polygon")
     context.strokePolygon(
       xcors.map(_.toDouble).toArray[Double],
       ycors.map(_.toDouble).toArray[Double],
       length)
   }
   def drawPolyline(xcors: Array[Int],ycors: Array[Int],length: Int): Unit = {
+    // println(s"drawing polyline")
     context.strokePolyline(
       xcors.map(_.toDouble).toArray[Double],
       ycors.map(_.toDouble).toArray[Double],
@@ -69,36 +71,42 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
   }
 
   def drawRect(x: Double,y: Double,width: Double,height: Double,scale: Double,angle: Double): Unit = {
+    // println(s"drawing rect ($x, $y), w: $width, h: $height, scale: $scale, angle: $angle ")
     context.save()
-    context.scale(scale, scale)
+    // context.scale(scale, scale)
     context.rotate(angle)
     context.strokeRect(x, y, width, height)
     context.restore()
   }
 
-  def fill(shape: java.awt.Shape): Unit = ???
+  def fill(shape: java.awt.Shape): Unit = {
+    // println(s"filling arbitrary shape")
+    ???
+  }
 
   def fillCircle(x: Double,y: Double,xDiameter: Double,yDiameter: Double,scale: Double,angle: Double): Unit = {
+    // println(s"filling circle: ($x, $y) w: $xDiameter, h: $yDiameter, scale: $scale, angle: $angle")
     context.save()
-    context.scale(scale, scale)
     context.rotate(angle)
     context.fillOval(x, y, xDiameter, yDiameter)
     context.restore()
   }
   def fillPolygon(xcors: Array[Int],ycors: Array[Int],length: Int): Unit = {
+    // println(s"filling polygon")
     context.fillPolygon(
       xcors.map(_.toDouble).toArray[Double],
       ycors.map(_.toDouble).toArray[Double],
       length)
   }
   def fillRect(x: Double,y: Double,width: Double,height: Double,scale: Double,angle: Double): Unit = {
+    // println(s"filling rect ($x, $y), w: $width, h: $height, scale: $scale, angle: $angle ")
     context.save()
-    context.scale(scale, scale)
     context.rotate(angle)
     context.fillRect(x, y, width, height)
     context.restore()
   }
   def fillRect(x: Int,y: Int,width: Int,height: Int): Unit = {
+    // println(s"filling rect ($x, $y), w: $width, h: $height")
     context.fillRect(x, y, width, height)
   }
 

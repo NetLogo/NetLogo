@@ -81,4 +81,8 @@ class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   def setBreedShape(breed: AgentSet, shapeName: String): Unit = {
     shapes.put(breed.printName, shapeName)
   }
+
+  private [agent] def setBreedShape(breedName: String, shapeName: String): Unit = {
+    shapes.put(breedName, shapeName)
+  }
 }
