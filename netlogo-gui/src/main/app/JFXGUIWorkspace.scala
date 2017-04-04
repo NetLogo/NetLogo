@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import java.util.concurrent.BlockingQueue
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.{ AtomicBoolean, AtomicReference, AtomicInteger }
 
 import org.nlogo.core.Femto
 import org.nlogo.agent.World
@@ -12,12 +12,14 @@ import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface, Susp
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
 import org.nlogo.internalapi.{ JobScheduler, ModelAction, ModelUpdate, RunComponent,
-  WorldUpdate, SchedulerWorkspace }
+  WorldUpdate, WritableGUIWorkspace, SchedulerWorkspace }
+
+import java.lang.{ Double => JDouble }
 
 class JFXGUIWorkspace(world: World,
   val compiler: PresentationCompilerInterface,
   modelUpdates: BlockingQueue[ModelUpdate])
-  extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace {
+  extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace with WritableGUIWorkspace {
 
     val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread", modelUpdates)
 
@@ -128,4 +130,21 @@ class JFXGUIWorkspace(world: World,
   def setDimensions(dim: org.nlogo.core.WorldDimensions,patchSize: Double): Unit = ???
   def setDimensions(dim: org.nlogo.core.WorldDimensions): Unit = ???
 
+  private val _mouseX = new AtomicReference[JDouble](Double.box(0.0))
+  private val _mouseY = new AtomicReference[JDouble](Double.box(0.0))
+  private val _mouseInside = new AtomicBoolean(false)
+  private val _mouseDown = new AtomicBoolean(false)
+
+  override def setMouseDown(isDown: Boolean): Unit = _mouseDown.set(isDown)
+  override def setMouseInside(isInside: Boolean): Unit = _mouseInside.set(isInside)
+
+  override def setMouseCors(x: Double, y: Double): Unit = {
+    _mouseX.set(Double.box(x))
+    _mouseY.set(Double.box(y))
+  }
+
+  override def mouseXCor: Double = _mouseX.get.doubleValue
+  override def mouseYCor: Double = _mouseY.get.doubleValue
+  override def mouseDown: Boolean = _mouseDown.get
+  override def mouseInside: Boolean = _mouseInside.get
 }

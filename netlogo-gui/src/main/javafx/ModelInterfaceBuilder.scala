@@ -5,7 +5,6 @@ package org.nlogo.javafx
 import javafx.fxml.FXML
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.control.{ Button, ScrollPane, Slider }
-import javafx.scene.canvas.Canvas
 import javafx.scene.layout.Pane
 import javafx.stage.{ FileChooser, Window }
 
@@ -45,7 +44,7 @@ object ModelInterfaceBuilder {
             case v: CoreView    =>
               import javafx.scene.paint.Color
               val d = compiledModel.model.view.dimensions
-              val c = new Canvas(d.width * d.patchSize, d.height * d.patchSize)
+              val c = new Canvas(model.view)
               c.relocate(v.left, v.top)
               interfacePane.getChildren.add(c)
               val gc = c.getGraphicsContext2D

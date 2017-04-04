@@ -19,7 +19,7 @@ import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInte
   JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate }
+import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate, WritableGUIWorkspace }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
@@ -29,7 +29,7 @@ import scala.util.Try
 
 class ApplicationController {
   var executor: Executor = _
-  var workspace: AbstractWorkspaceScala with SchedulerWorkspace = _
+  var workspace: AbstractWorkspaceScala with SchedulerWorkspace with WritableGUIWorkspace = _
 
   var modelLoader: ModelLoader = _
   var modelConverter: ModelConversion = _
@@ -97,6 +97,7 @@ class ApplicationController {
               }
               interfaceArea = interfaceWidgetsPane
               interfaceTabArea.getChildren.add(interfaceWidgetsPane)
+              interfaceArea.registerMouseEventSink(workspace)
               AnchorPane.setTopAnchor(interfaceArea, 0.0)
               AnchorPane.setBottomAnchor(interfaceArea, 0.0)
               AnchorPane.setLeftAnchor(interfaceArea, 0.0)

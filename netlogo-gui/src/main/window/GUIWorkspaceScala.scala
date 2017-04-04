@@ -11,7 +11,7 @@ import scala.concurrent.duration.{ Duration, MILLISECONDS }
 import scala.util.{ Failure, Success }
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelReader, ModelSettings}
+import org.nlogo.api.{ControlSet, Exceptions, FileIO, LogoException, ModelReader, ModelSettings}
 import org.nlogo.awt.{Hierarchy, UserCancelException}
 import org.nlogo.core.I18N
 import org.nlogo.log.Logger
@@ -29,7 +29,8 @@ abstract class GUIWorkspaceScala(
   extends AbstractWorkspaceScala(world, hubNetManagerFactory)
   with ExportPlotEvent.Handler
   with ExportWidgetEvent.Handler
-  with LoadModelEvent.Handler {
+  with LoadModelEvent.Handler
+  with org.nlogo.internalapi.GUIWorkspace {
 
   def view: View
 
@@ -266,4 +267,45 @@ abstract class GUIWorkspaceScala(
 
   def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)
   def logCustomGlobals(nameValuePairs: Seq[(String, String)]) = Logger.logCustomGlobals(nameValuePairs: _*)
+
+  @throws(classOf[LogoException])
+  def waitForQueuedEvents(): Unit = {
+    ThreadUtils.waitForQueuedEvents(this)
+  }
+
+  // when we've got two views going the mouse reporters should
+  // be smart about which view we might be in and return something that makes
+  // sense ev 12/20/07
+  @throws(classOf[LogoException])
+  override def mouseDown: Boolean = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse clicks - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseDown
+  }
+
+  @throws(classOf[LogoException])
+  override def mouseInside: Boolean = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseInside
+  }
+
+  @throws(classOf[LogoException])
+  override def mouseXCor: Double = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseXCor
+  }
+
+  @throws(classOf[LogoException])
+  override def mouseYCor: Double = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseYCor
+  }
+
 }

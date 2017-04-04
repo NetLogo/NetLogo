@@ -285,11 +285,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return ThreadUtils.waitForResult(this, runnable);
   }
 
-  public void waitForQueuedEvents()
-      throws LogoException {
-    ThreadUtils.waitForQueuedEvents(this);
-  }
-
   /// Event.LinkChild stuff
 
   public Object getLinkParent() {
@@ -526,41 +521,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-
-  // when we've got two views going the mouse reporters should
-  // be smart about which view we might be in and return something that makes
-  // sense ev 12/20/07
-  public boolean mouseDown()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse clicks - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager().mouseDown();
-  }
-
-  public boolean mouseInside()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager().mouseInside();
-  }
-
-  public double mouseXCor()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager().mouseXCor();
-  }
-
-  public double mouseYCor()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager().mouseYCor();
-  }
 
   // shouldn't have to fully qualify UpdateMode here, but we were having
   // intermittent compile failures on this line since upgrading to

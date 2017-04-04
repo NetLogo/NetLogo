@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.{CommandRunnable, LogoException, ReporterRunnable}
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.HaltException
 
 object ThreadUtils {
@@ -10,9 +11,9 @@ object ThreadUtils {
   val DO_NOTHING = new CommandRunnable() {def run() {}}
 
   @throws(classOf[LogoException])
-  def waitForQueuedEvents(workspace: GUIWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
+  def waitForQueuedEvents(workspace: AbstractWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
 
-  def waitFor(workspace: GUIWorkspace, runnable: Runnable): Unit = {
+  def waitFor(workspace: AbstractWorkspace, runnable: Runnable): Unit = {
     try waitForResult(workspace, reporter(runnable.run _))
     catch {
       case ex: HaltException => org.nlogo.api.Exceptions.ignore(ex)
@@ -25,7 +26,7 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable) {
+  def waitFor(workspace: AbstractWorkspace, runnable: CommandRunnable) {
     waitForResult(workspace, reporter(runnable.run _))
   }
 
@@ -36,7 +37,7 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitForResult[T](workspace: GUIWorkspace, runnable: ReporterRunnable[T]) = {
+  def waitForResult[T](workspace: AbstractWorkspace, runnable: ReporterRunnable[T]) = {
     val result = new Result[T]()
     // in order to wait for the event thread without deadlocking,
     // we need to give up our lock on World by calling wait()

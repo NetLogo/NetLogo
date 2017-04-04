@@ -9,11 +9,12 @@ import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.fxml.{ FXML, FXMLLoader }
 import javafx.scene.control.{ ToggleButton }
 import javafx.scene.layout.{ HBox, Pane, StackPane, VBox }
-import javafx.scene.canvas.Canvas
 
 import java.lang.{ Boolean => JBoolean }
 
 import scala.collection.JavaConverters._
+
+import org.nlogo.internalapi.WritableGUIWorkspace
 
 class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
   @FXML
@@ -69,6 +70,9 @@ class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
     interfacePane.getChildren().asScala.collect {
       case c: Canvas => c
     }.headOption
+
+  def registerMouseEventSink(workspace: WritableGUIWorkspace): Unit =
+    getViewCanvas.foreach(_.attachToWorkspace(workspace))
 
   val ticks = speedControl.ticks
 }
