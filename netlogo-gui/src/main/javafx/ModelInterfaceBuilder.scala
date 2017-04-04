@@ -25,7 +25,7 @@ object ModelInterfaceBuilder {
     val widgetsMap =
       compiledModel.compiledWidgets.flatMap {
         case compiledButton: ApiCompiledButton =>
-          val button = new ButtonControl(compiledButton, compiledModel.runnableModel)
+          val button = new ButtonControl(compiledButton, compiledModel.runnableModel, speedControl.foreverInterval)
           val b = compiledButton.widget
           button.relocate(b.left, b.top)
           interfacePane.getChildren.add(button)

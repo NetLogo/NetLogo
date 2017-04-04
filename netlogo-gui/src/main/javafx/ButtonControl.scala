@@ -4,19 +4,23 @@ package org.nlogo.javafx
 
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.beans.binding.Bindings
-import javafx.beans.property.{ ObjectProperty, SimpleBooleanProperty }
+import javafx.beans.property.{ DoubleProperty, ObjectProperty, SimpleBooleanProperty }
+import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.fxml.{ FXML, FXMLLoader }
 import javafx.scene.control.{ ButtonBase, ToggleButton }
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.{ Background, BackgroundFill, StackPane }
 import javafx.scene.paint.Color
+import java.lang.{ Double => JDouble }
 
 import org.nlogo.core.{ Button => CoreButton }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, ModelAction, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
+import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, JobDone, JobErrored, ModelAction, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
 
 // TODO: Figure out a way to disable until ticks start (if appropriate)
-class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel) extends StackPane with RunComponent {
+class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, foreverInterval: DoubleProperty)
+  extends StackPane with RunComponent {
+
   @FXML
   var button: ButtonBase = _
 
@@ -24,12 +28,13 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
 
   val activeProperty = new SimpleBooleanProperty(false)
 
+  var stoppingTag: Option[String] = None
   var jobTag: Option[String] = None
 
   val triggerStart = new EventHandler[ActionEvent] {
     def handle(e: ActionEvent): Unit = {
       activeProperty.set(true)
-      runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, buttonModel.forever), ButtonControl.this)
+      startProcedureRun(foreverInterval.doubleValue)
     }
   }
 
@@ -54,13 +59,48 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
 
   def tagAction(action: ModelAction, actionTag: String): Unit = {
     action match {
-      case AddProcedureRun(_, _) => jobTag = Some(actionTag)
+      case AddProcedureRun(_, _, _) => jobTag = Some(actionTag)
       case _ =>
     }
   }
 
   def updateReceived(update: ModelUpdate): Unit = {
-    jobTag = None
-    activeProperty.set(false)
+    update match {
+      case JobDone(t) =>
+        if (stoppingTag.contains(t)) {
+          stoppingTag = None
+        }
+        if (jobTag.contains(t)) {
+          jobTag = None
+          activeProperty.set(false)
+        }
+      case JobErrored(t, _) =>
+        if (stoppingTag.contains(t)) {
+          stoppingTag = None
+        }
+        if (jobTag.contains(t)) {
+          jobTag = None
+          activeProperty.set(false)
+        }
+      case _ =>
+    }
+  }
+
+  foreverInterval.addListener(new ChangeListener[Number] {
+    override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+      if (activeProperty.getValue.booleanValue) {
+        for {
+          tag <- jobTag
+        } {
+          stoppingTag = Some(tag)
+          runnableModel.submitAction(StopProcedure(tag), ButtonControl.this)
+          startProcedureRun(newValue.doubleValue)
+        }
+      }
+    }
+  })
+
+  private def startProcedureRun(interval: Double): Unit = {
+    runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, buttonModel.forever, interval.toLong), this)
   }
 }

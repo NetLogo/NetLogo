@@ -71,10 +71,10 @@ object ScheduledJobThread {
 import ScheduledJobThread._
 
 trait JobScheduler extends ApiJobScheduler {
-  val StepsPerRun = 100
+  val StepsPerRun = 1000
   val MonitorInterval = 100
 
-  def timeout = 500
+  def timeout = 50
 
   def timeoutUnit: TimeUnit = TimeUnit.MILLISECONDS
 

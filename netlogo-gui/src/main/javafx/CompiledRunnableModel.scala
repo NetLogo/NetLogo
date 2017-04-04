@@ -63,13 +63,13 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
           workspace.world.setObserverVariableByName(name, value.get)
         })
         registerTag(componentOpt, action, tag)
-      case AddProcedureRun(widgetTag, isForever) =>
+      case AddProcedureRun(widgetTag, isForever, interval) =>
         // TODO: this doesn't take isForever into account yet
         val p = findWidgetProcedure(widgetTag)
         findWidgetProcedure(widgetTag).foreach { procedure =>
           val job =
             new SuspendableJob(workspace.world.observers, isForever, procedure, 0, null, workspace.world.mainRNG)
-          val tag = scheduledJobThread.scheduleJob(job)
+          val tag = scheduledJobThread.scheduleJob(job, interval)
           registerTag(componentOpt, action, tag)
         }
       case StopProcedure(jobTag) => scheduledJobThread.stopJob(jobTag)

@@ -138,6 +138,9 @@ class ApplicationController {
         }
       case _ =>
     }
+    if (workspace != null && interfaceArea != null) {
+      workspace.setFrameSkips(interfaceArea.speedControl.frameSkips.getValue)
+    }
     if (filterThread.filteredUpdates.peek != null) {
       Platform.runLater(new Runnable() {
         override def run(): Unit = {

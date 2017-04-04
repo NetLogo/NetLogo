@@ -22,6 +22,9 @@ class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
   def source: String = ""
 }
 
+// TODO: Note that the interaction between ScheduledJobThread and this class means it is possible to
+// stop this job normally in such a way that the procedure *hasn't finished*. This should be fixed before public
+// release.
 class SuspendableJob(
   suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, forever: Boolean, agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, random: MersenneTwisterFast)

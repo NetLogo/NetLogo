@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.util.concurrent.BlockingQueue
+import java.util.concurrent.atomic.AtomicInteger
 
 import org.nlogo.core.Femto
 import org.nlogo.agent.World
@@ -19,6 +20,7 @@ class JFXGUIWorkspace(world: World,
   extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace {
 
     val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread", modelUpdates)
+
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace
   def aggregateManager(): org.nlogo.api.AggregateManagerInterface = ???
@@ -38,9 +40,6 @@ class JFXGUIWorkspace(world: World,
   def magicOpen(x$1: String): Unit = ???
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???
-  def requestDisplayUpdate(force: Boolean): Unit = {
-    modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
-  }
   override def sendOutput(x$1: org.nlogo.agent.OutputObject,x$2: Boolean): Unit = ???
 
 
@@ -67,9 +66,30 @@ class JFXGUIWorkspace(world: World,
     println(ex.getMessage)
     ex.printStackTrace()
   }
+
+  def setFrameSkips(i: Int): Unit = {
+    frameSkips.set(i)
+  }
+
+  // counts how many frames to skip between sending each
+  val frameSkips = new AtomicInteger(0)
+  var framesSkipped: Int = 0
+
+  def requestDisplayUpdate(force: Boolean): Unit = {
+    sendWorldUpdate()
+  }
+
   def updateDisplay(haveWorldLockAlready: Boolean): Unit = {
-    println("updateDisplay: " + haveWorldLockAlready)
-    modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
+    sendWorldUpdate()
+  }
+
+  private def sendWorldUpdate(): Unit = {
+    if (frameSkips.intValue <= framesSkipped) {
+      modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
+      framesSkipped = 0
+    } else {
+      framesSkipped += 1
+    }
   }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace
