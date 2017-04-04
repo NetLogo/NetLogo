@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="200.0" type="GridPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button layoutX="150.0" layoutY="12.0" mnemonicParsing="false">
+         <graphic>
+            <Polygon stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <points>
+                  <Double fx:value="18.0" />
+                  <Double fx:value="18.0" />
+                  <Double fx:value="18.0" />
+                  <Double fx:value="-18.0" />
+                  <Double fx:value="-15.0" />
+                  <Double fx:value="-2.0" />
+                  <Double fx:value="-15.0" />
+                  <Double fx:value="18.0" />
+                  <Double fx:value="-18.0" />
+                  <Double fx:value="18.0" />
+                  <Double fx:value="-18.0" />
+                  <Double fx:value="-18.0" />
+                  <Double fx:value="-15.0" />
+                  <Double fx:value="-18.0" />
+                  <Double fx:value="-15.0" />
+                  <Double fx:value="2.0" />
+               </points>
+            </Polygon>
+         </graphic>
+      </Button>
+      <Button mnemonicParsing="false" GridPane.columnIndex="2">
+        <graphic>
+          <Polygon stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <points>
+              <Double fx:value="-18.0" />
+              <Double fx:value="18.0" />
+              <Double fx:value="-18.0" />
+              <Double fx:value="-18.0" />
+              <Double fx:value="18.0" />
+              <Double fx:value="0.0" />
+            </points>
+          </Polygon>
+        </graphic>
+      </Button>
+      <Button disable="true" mnemonicParsing="false" GridPane.columnIndex="1">
+        <graphic>
+          <Rectangle arcHeight="5.0" arcWidth="5.0" height="36.0" stroke="#808080" strokeType="INSIDE" width="36.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+        </graphic>
+      </Button>
+      <Slider fx:id="speedSlider" majorTickUnit="5.0" minorTickCount="0" prefHeight="16.0" prefWidth="118.0" snapToTicks="true" value="50.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+   </children>
+</fx:root>

@@ -21,7 +21,7 @@
         <tabs>
           <Tab text="Interface">
                <content>
-                <AnchorPane id="interface-area-pane" fx:id="interfaceArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="650.0" />
+                <AnchorPane id="interface-area-pane" fx:id="interfaceTabArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="650.0" />
                </content>
             </Tab>
         </tabs>

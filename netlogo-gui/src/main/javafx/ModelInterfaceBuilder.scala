@@ -17,10 +17,11 @@ import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledBut
   CompiledMonitor => ApiCompiledMonitor, RunComponent }
 
 object ModelInterfaceBuilder {
-
-  def build(compiledModel: CompiledModel): (Pane, Map[String, Pane with RunComponent]) = {
+  def build(compiledModel: CompiledModel): (InterfaceArea, Map[String, Pane with RunComponent]) = {
     val model = compiledModel.model
-    val interfacePane = new Pane()
+    val speedControl  = new BasicSpeedControl()
+    val interfaceArea = new InterfaceArea(speedControl)
+    val interfacePane = interfaceArea.interfacePane
     val widgetsMap =
       compiledModel.compiledWidgets.flatMap {
         case compiledButton: ApiCompiledButton =>
@@ -54,7 +55,6 @@ object ModelInterfaceBuilder {
           }
         Seq()
       }
-    (interfacePane, widgetsMap.toMap)
+    (interfaceArea, widgetsMap.toMap)
   }
-
 }

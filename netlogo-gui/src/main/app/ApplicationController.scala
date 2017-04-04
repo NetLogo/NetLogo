@@ -15,7 +15,8 @@ import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar ,
 import javafx.scene.layout.{ AnchorPane, Pane }
 import javafx.stage.{ FileChooser, Window }
 
-import org.nlogo.javafx.{ ButtonControl, CompileAll, GraphicsInterface, JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread }
+import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInterface,
+  JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
 import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate }
@@ -53,9 +54,9 @@ class ApplicationController {
   var menuBar: JFXMenuBar = _
 
   @FXML
-  var interfaceArea: AnchorPane = _
+  var interfaceTabArea: AnchorPane = _
 
-  var interfacePane: Pane = _
+  var interfaceArea: InterfaceArea = _
   var compiledModel: CompiledModel = _
 
   var lastWorldTimestamp: Long = 0
@@ -91,19 +92,21 @@ class ApplicationController {
               ApplicationController.this.compiledModel = compiledModel
               val (interfaceWidgetsPane, widgetsMap) =
                 ModelInterfaceBuilder.build(compiledModel)
-              if (interfacePane != null) {
-                interfaceArea.getChildren.remove(interfacePane)
+              if (interfaceArea != null) {
+                interfaceTabArea.getChildren.remove(interfaceArea)
               }
-              interfacePane = interfaceWidgetsPane
-              interfaceArea.getChildren.add(interfaceWidgetsPane)
+              interfaceArea = interfaceWidgetsPane
+              interfaceTabArea.getChildren.add(interfaceWidgetsPane)
+              AnchorPane.setTopAnchor(interfaceArea, 0.0)
+              AnchorPane.setBottomAnchor(interfaceArea, 0.0)
+              AnchorPane.setLeftAnchor(interfaceArea, 0.0)
+              AnchorPane.setRightAnchor(interfaceArea, 0.0)
           }(JavaFXExecutionContext)
         }
       }
     })
   }
 
-
-  import scala.collection.JavaConverters._
 
   class FakeViewSettings(canvas: Canvas, world: World) extends org.nlogo.api.ViewSettings {
     def fontSize: Int = 12
@@ -122,14 +125,13 @@ class ApplicationController {
   def processUpdates(): Unit = {
     filterThread.filteredUpdates.poll() match {
       case WorldUpdate(world: World, _) =>
-        interfacePane.getChildren().asScala.foreach {
-          case c: Canvas =>
-            val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
-            val renderer = new org.nlogo.render.Renderer(world)
-            val settings = new FakeViewSettings(c, world)
-            renderer.paint(graphicsInterface, settings)
-          case _ =>
+        interfaceArea.getViewCanvas.foreach { c =>
+          val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
+          val renderer = new org.nlogo.render.Renderer(world)
+          val settings = new FakeViewSettings(c, world)
+          renderer.paint(graphicsInterface, settings)
         }
+        interfaceArea.ticks.setValue(world.ticks)
       case update if update != null =>
         Option(compiledModel).foreach { model =>
           model.runnableModel.notifyUpdate(update)

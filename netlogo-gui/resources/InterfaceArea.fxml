@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="interfacePane" prefHeight="200.0" prefWidth="200.0" />
+      <VBox fx:id="controlContainer" alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" opacity="0.75" pickOnBounds="false" StackPane.alignment="BOTTOM_CENTER">
+         <children>
+            <ToggleButton fx:id="controlsToggle" alignment="BOTTOM_LEFT" mnemonicParsing="false" text="Show Controls" VBox.vgrow="NEVER" />
+            <HBox fx:id="controlPane" alignment="CENTER" style="-fx-background-color: #EEE;" />
+         </children>
+      </VBox>
+   </children>
+</fx:root>

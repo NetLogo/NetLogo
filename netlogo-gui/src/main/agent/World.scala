@@ -270,6 +270,7 @@ class World2D extends World with CompilationManagement {
 
   def copy(): World = {
     val newWorld = new World2D()
+    newWorld.tickCounter.ticks = tickCounter.ticks
     newWorld.program(program)
     copyDimensions(newWorld)
     copyAgents(newWorld, newWorld)
