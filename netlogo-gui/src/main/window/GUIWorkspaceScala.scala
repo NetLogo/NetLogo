@@ -10,7 +10,7 @@ import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
 import scala.util.{ Failure, Success }
 
-import org.nlogo.agent.World
+import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, LogoException, ModelReader, ModelSettings}
 import org.nlogo.awt.{Hierarchy, UserCancelException}
 import org.nlogo.core.I18N
@@ -21,7 +21,7 @@ import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerF
 import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
 
 abstract class GUIWorkspaceScala(
-  world:                World,
+  override val world:   World with CompilationManagement,
   hubNetManagerFactory: HubNetManagerFactory,
   protected val frame:  Frame,
   externalFileManager:  ExternalFileManager,

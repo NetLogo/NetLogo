@@ -10,7 +10,8 @@ import scala.collection.JavaConverters._
 
 import NetLogoPackaging.RunProcess
 
-object PackageWinAggregate {
+object PackageWinAggregate extends PackageWinAggregate
+trait PackageWinAggregate {
   // we're given a dummy package with a directory structure that look like:
   // dummy
   //  ├── dummy.exe (spaces intact)
@@ -96,7 +97,7 @@ object PackageWinAggregate {
     }.toMap
   }
 
-  private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef], helperBinDirectory: File): Unit = {
+  protected def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef], helperBinDirectory: File): Unit = {
     val allVariables =
       variables ++ app.configurationVariables("windows") +
       ("mainClass"      -> app.mainClass) +
@@ -124,6 +125,22 @@ object PackageWinAggregate {
       sharedAppRoot,
       "Tagging application with versioned description")
     (sharedAppRoot / (app.name + ".exe")).setWritable(false)
+  }
+
+  protected def extractBuildTools(aggregateTarget: File, jdk: BuildJDK): Unit = {
+    // extract IconSwap and download verpatch, used when customizing the executables
+    if (! (aggregateTarget / "IconSwap.exe").exists) {
+      val jfxJar = new java.util.jar.JarFile(file(jdk.javaHome.get) / "lib" / "ant-javafx.jar")
+      val iconSwapEntry = jfxJar.getEntry("com/oracle/tools/packager/windows/IconSwap.exe")
+      val iconSwapStream = jfxJar.getInputStream(iconSwapEntry)
+      IO.transfer(iconSwapStream, aggregateTarget / "IconSwap.exe")
+      iconSwapStream.close()
+      jfxJar.close()
+    }
+
+    if (! (aggregateTarget / "verpatch.exe").exists) {
+      IO.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
+    }
   }
 
   def apply(
@@ -170,19 +187,7 @@ object PackageWinAggregate {
       FileActions.copyAny(f, aggregateWinDir / f.getName)
     }
 
-    // extract IconSwap and download verpatch, used when customizing the executables
-    if (! (aggregateTarget / "IconSwap.exe").exists) {
-      val jfxJar = new java.util.jar.JarFile(file(jdk.javaHome.get) / "lib" / "ant-javafx.jar")
-      val iconSwapEntry = jfxJar.getEntry("com/oracle/tools/packager/windows/IconSwap.exe")
-      val iconSwapStream = jfxJar.getInputStream(iconSwapEntry)
-      IO.transfer(iconSwapStream, aggregateTarget / "IconSwap.exe")
-      iconSwapStream.close()
-      jfxJar.close()
-    }
-
-    if (! (aggregateTarget / "verpatch.exe").exists) {
-      IO.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
-    }
+    extractBuildTools(aggregateTarget, jdk)
 
     // configure each sub application
     subApplications.foreach { app =>

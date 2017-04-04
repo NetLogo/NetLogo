@@ -19,6 +19,10 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 
 import org.picocontainer.adapters.AbstractAdapter
 
+object JavaFXApp extends scala.App {
+  Application.launch(classOf[JavaFXApp])
+}
+
 class JavaFXApp extends Application {
 
   private val pico = new Pico()

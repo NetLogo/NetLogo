@@ -137,7 +137,6 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   def rotate(theta: Double) { g.rotate(theta) }
   def rotate(theta: Double, x: Double, y: Double) { g.rotate(theta, x, y) }
   def rotate(theta: Double, x: Double, y: Double, offset: Double) {
-    println(s"Rotating: $theta ($x, $y) @offset: $offset")
     val offset2 = if (isQuartz) offset - 1 else offset
     g.rotate(theta, x + offset2 / 2, y + offset2 / 2)
   }

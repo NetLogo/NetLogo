@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='NetLogo Multitouch {{version}}' Manufacturer="CCL"
+    Id='{{product}}'
+    UpgradeCode='{{upgradeCode}}'
+    Language='1033' Codepage='1252' Version='{{numericOnlyVersion}}'>
+    <Package Id='*'
+      Keywords='Installer'
+      Description='NetLogo Multitouch {{version}} Installer'
+      Manufacturer='Center for Connected Learning'
+      InstallerVersion='200'
+      Platform='{{platformArch}}'
+      Languages='1033'
+      Compressed='yes'
+      SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='simple.cab' EmbedCab='yes' />
+
+    <Icon Id='ProductIcon' SourceFile='NetLogo.ico' />
+    <Icon Id='ModelIcon'   SourceFile='model.ico' />
+    <Icon Id='BehaviorsearchExperimentIcon' SourceFile='behaviorsearch_model.ico' />
+
+    <Directory Id="TARGETDIR" Name='SourceDir'>
+      <Directory Id='{{targetDirectory}}' Name='PFiles'>
+        <Directory Id='INSTALLDIR' Name='NetLogo Multitouch {{version}}'>
+          {{#components}}
+          <Component Id="{{{componentId}}}" Guid="{{componentGuid}}" Win64="{{win64}}">
+            <File Id="{{{componentId}}}" KeyPath="yes" Source="SourceDir\{{{componentFileName}}}" ProcessorArchitecture="{{platformArch}}" />
+            {{#hasFileAssociation}}
+            <!-- Vista/7 "Set Program access and defaults" -->
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]{{{componentFileName}}},0" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="{{componentFriendlyName}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]{{componentFileName}},1" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
+
+            <!-- Tell windows how to open NetLogo -->
+            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Value="[!{{componentId}}]" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Name="Path" Value="[INSTALLDIR]" Type="string" />
+
+            <ProgId Id="NetLogo.{{fileAssociation}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
+              <Extension Id='{{fileAssociation}}'>
+                <Verb Id='open' Command='Edit with {{componentFriendlyName}} {{numericOnlyVersion}}' Argument='{{launchArgs}}' />
+                <MIME Advertise='yes' ContentType="text/{{fileAssociation}}" Default="yes"/>
+              </Extension>
+            </ProgId>
+            {{/hasFileAssociation}}
+          </Component>
+          {{/components}}
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="STARTMENU_DIR" Name="NetLogo {{version}}">
+          <Component Id="StartMenuFolderElements" Guid="{{startMenuFolderId}}">
+            <RemoveFolder Id="STARTMENU_DIR" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-start-menu-folder" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          {{#components}}
+          <Component Id="{{noSpaceName}}StartMenuShortcut" Guid="{{startMenuShortcutId}}">
+            <Shortcut Id="{{noSpaceName}}Shortcut"
+              Name="{{componentFriendlyName}} {{version}}"
+              Description="{{componentFriendlyName}}"
+              Target="[#{{componentId}}]"
+              WorkingDirectory="INSTALLDIR"/>
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="{{lowerDashName}}-installed" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          {{/components}}
+        </Directory>
+      </Directory>
+      <Directory Id="DesktopFolder" SourceName="Desktop">
+        {{#components}}
+        <Component Id="{{noSpaceName}}DesktopShortcut" Guid="{{desktopShortcutId}}">
+          <Shortcut
+            Id="{{noSpaceName}}DesktopShortcut"
+            Name="{{componentFriendlyName}} {{version}}"
+            Description="{{componentFriendlyName}}"
+            Target="[#{{componentId}}]"
+            WorkingDirectory="INSTALLDIR" />
+          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="{{lowerDashName}}-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+        {{/components}}
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id='NetLogoFeatures'>
+      <ComponentGroupRef Id='NetLogoApp' />
+      <ComponentRef Id='StartMenuFolderElements' />
+      {{#components}}
+      <ComponentRef Id='{{{componentId}}}' />
+      <ComponentRef Id='{{{noSpaceName}}}StartMenuShortcut' />
+      {{/components}}
+    </ComponentGroup>
+
+    <ComponentGroup Id='DesktopShortcuts'>
+      {{#components}}
+      <ComponentRef Id="{{{noSpaceName}}}DesktopShortcut" />
+      {{/components}}
+    </ComponentGroup>
+
+    <Feature Id="BaseInstall" Level='1'>
+      <ComponentGroupRef Id='NetLogoFeatures' />
+    </Feature>
+
+    <Feature Id="Shortcuts" Level='2'>
+      <ComponentGroupRef Id='NetLogoFeatures' />
+      <ComponentGroupRef Id='DesktopShortcuts' />
+    </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id="NETLOGO_STARTMENU_LOCATION" Value="STARTMENU_DIR" />
+    <Property Id="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" Secure="yes" />
+    <Property Id='ARPPRODUCTICON' Value='ProductIcon' />
+
+    <UIRef Id="NetLogoUI" />
+  </Product>
+</Wix>

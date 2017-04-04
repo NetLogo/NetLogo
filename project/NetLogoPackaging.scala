@@ -250,7 +250,7 @@ object NetLogoPackaging {
     },
     packageWinJavafx := {
       val buildJDK = aggregateJDKParser.parsed
-      val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo)
+      val netLogoJar = repackageJar(NetLogoJavaFXApp, WindowsPlatform, netlogo)
       val outDir = target.value / s"packaged-win-demo-${buildJDK.arch}-${buildJDK.version}"
       val srcDir = target.value / s"to-package-win-demo-${buildJDK.arch}-${buildJDK.version}"
       FileActions.createDirectories(srcDir)
@@ -277,12 +277,17 @@ object NetLogoPackaging {
         webTarget.value
       )
 
-      PackageWinAggregate(
+      val buildVariables = Map[String, String](
+        "version"               -> "Alpha 0.0.1",
+        "numericOnlyVersion"    -> "0.0.1",
+        "date"                  -> buildDate.value)
+
+      JavaFXWindowsBuild(
         target.value / s"win-demo-${buildJDK.arch}",
         commonConfig,
         outDir -> "dummy",
-        Seq(NetLogoCoreApp),
-        buildVariables.value)
+        Seq(NetLogoJavaFXApp),
+        buildVariables)
     },
     iconFiles in packageMacAggregate := {
       ((configRoot.value ** "*.icns") +++
