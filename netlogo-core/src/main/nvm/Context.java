@@ -34,6 +34,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public boolean finished = false;
 
+  public boolean ticked = false;
+
   // This constructor is used when a Context spawns a Job which
   // in turn spawns Contexts, such as with _ask. - ST 6/12/06
   public Context(Job job, Agent agent, int ip,
@@ -108,10 +110,11 @@ public final strictfp class Context implements org.nlogo.api.Context {
     int completedSteps = 0;
     if (checkRunnable()) {
       Command command = null;
-      while (completedSteps < steps && !finished) {
+      while (completedSteps < steps && !finished && !ticked) {
         command = runSingleStep(); // this runs "comeUpForAir", which shouldn't be needed here
         completedSteps++;
       }
+      ticked = false;
       if (!finished) {
         return scala.util.Left.<Context, Integer>apply(this);
       }

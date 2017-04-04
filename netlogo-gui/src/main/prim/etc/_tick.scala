@@ -11,6 +11,7 @@ class _tick extends Command {
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.tick(context, this)
+    context.ticked = true
     context.ip = next
   }
 }
