@@ -35,7 +35,7 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts scheduled operation job ahead of adding a job") {
-    assertSortedOrder(StopJob("a", 1), AddJob(null, "abc", 0))
+    assertSortedOrder(StopJob("a", 1), AddJob(null, "abc", 0, 0))
   }
 
   test("job ordering puts the oldest job stop first"){
@@ -43,30 +43,30 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts the oldest add job first"){
-    assertSortedOrder(AddJob(null, "abc", 0), AddJob(null, "abc", 1))
+    assertSortedOrder(AddJob(null, "abc", 0, 0), AddJob(null, "abc", 0, 1))
   }
 
   test("job ordering ranks adding a job and adding a monitor by time"){
-    assertSortedOrder(AddMonitor("abc", null, 0), AddJob(null, "abc", 1))
-    assertSortedOrder(AddJob(null, "abc", 0), AddMonitor("abc", null, 1))
+    assertSortedOrder(AddMonitor(null, "abc", 0), AddJob(null, "abc", 0, 1))
+    assertSortedOrder(AddJob(null, "abc", 0, 0), AddMonitor(null, "abc", 1))
   }
 
   test("job ordering puts run job behind adding a job"){
-    assertSortedOrder(AddJob(null, "abc", 0), RunJob(null, "abc", 1))
+    assertSortedOrder(AddJob(null, "abc", 0, 0), RunJob(null, "abc", 0, 1))
   }
 
   // NOTE: if the job thread is ever expanded to include secondary or intermittent
   // jobs, this ordering should be tweaked
   test("job ordering puts the oldest run job first"){
-    assertSortedOrder(RunJob(null, "abc", 0), RunJob(null, "abc", 1))
+    assertSortedOrder(RunJob(null, "abc", 0, 0), RunJob(null, "abc", 0, 1))
   }
 
   test("job ordering puts an old monitor update ahead of RunJob") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 0, 1))
   }
 
   test("job ordering puts an old job ahead of monitor updates") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 0, 1))
   }
 
   class Subject extends JobScheduler {
@@ -74,29 +74,32 @@ class ScheduledJobThreadTest extends FunSuite {
     val queue = new LinkedBlockingQueue[ScheduledEvent]
     val updates = new LinkedBlockingQueue[ModelUpdate]
     def die(): Unit = {}
+    var setTime: Long = 0
+    override def currentTime = setTime
   }
 
   trait Helper extends Inside {
     val subject = new Subject()
     def firstEvent = subject.queue.peek()
-    var wasRun: Boolean = false
+    var runCount: Int = 0
+    def wasRun: Boolean = runCount > 0
     val DummyOneRunJob = new SuspendableJob {
       def runFor(steps: Int): Option[SuspendableJob] = {
-        wasRun = true
+        runCount += 1
         None
       }
       def runResult(): AnyRef = null
     }
     val DummyKeepRunningJob = new SuspendableJob {
       def runFor(steps: Int): Option[SuspendableJob] = {
-        wasRun = true
+        runCount += 1
         Some(this)
       }
       def runResult(): AnyRef = null
     }
     val DummyErrorJob = new SuspendableJob {
       def runFor(steps: Int): Option[SuspendableJob] = {
-        wasRun = true
+        runCount += 1
         throw new RuntimeException("error!")
       }
       def runResult(): AnyRef = null
@@ -113,11 +116,22 @@ class ScheduledJobThreadTest extends FunSuite {
       assert(! subject.updates.isEmpty)
       inside(subject.updates.peek)(pf)
     }
+    def runEvents(i: Int): Unit = {
+      (1 to i).foreach { i => subject.runEvent() }
+    }
+    def elapse(i: Int): Unit = {
+      subject.setTime += i
+    }
   }
 
   test("adding a job schedules the job to be run") { new Helper {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
-    inside(firstEvent) { case AddJob(_, t, time) => assert(t == jobTag) }
+    inside(firstEvent) { case AddJob(_, t, _, time) => assert(t == jobTag) }
+  } }
+
+  test("jobs can be scheduled with a delay interval between them") { new Helper {
+    val jobTag = subject.scheduleJob(DummyKeepRunningJob, 100)
+    inside(firstEvent) { case AddJob(_, t, delay, _) => assert(delay == 100) }
   } }
 
   test("scheduling an operation schedules it for run") { new Helper {
@@ -133,7 +147,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("running a job addition causes a scheduled job to be added") { new Helper {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
     subject.runEvent()
-    inside(firstEvent) { case RunJob(j, t, time) =>
+    inside(firstEvent) { case RunJob(j, t, _, time) =>
       assert(j == DummyOneRunJob)
       assert(t == jobTag)
     }
@@ -141,18 +155,16 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("Running a job executes the job") { new Helper {
     subject.scheduleJob(DummyOneRunJob)
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assert(wasRun)
     assert(subject.queue.isEmpty)
   } }
 
   test("a job may continue to run by returning a job to continue running") { new Helper {
     val tag = subject.scheduleJob(DummyKeepRunningJob)
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assert(! subject.queue.isEmpty)
-    inside(subject.queue.peek) { case RunJob(job, t, _) =>
+    inside(subject.queue.peek) { case RunJob(job, t, _, _) =>
       assert(job == DummyKeepRunningJob)
       assert(t == tag)
     }
@@ -162,8 +174,7 @@ class ScheduledJobThreadTest extends FunSuite {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
     val stopJob = subject.stopJob(jobTag)
     subject.queue.add(subject.queue.poll()) // swap the order of the job add and job stop
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assert(subject.queue.isEmpty)
     assert(! wasRun)
   } }
@@ -171,9 +182,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("a job stop prevents a scheduled job from being run") { new Helper {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
     val stopJob = subject.stopJob(jobTag)
-    subject.runEvent()
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(3)
     assert(! wasRun)
   } }
 
@@ -186,16 +195,14 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("sends an update when a job finishes") { new Helper {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assert(! subject.updates.isEmpty)
     assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
   } }
 
   test("sends an update when a job errors") { new Helper {
     val jobTag = subject.scheduleJob(DummyErrorJob)
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assertUpdate { case JobErrored(t, _) => assertResult(jobTag)(t) }
   } }
 
@@ -214,9 +221,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("sends an update when a job is stopped") { new Helper {
     val jobTag = subject.scheduleJob(DummyKeepRunningJob)
     subject.stopJob(jobTag)
-    subject.runEvent()
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(3)
     assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
   } }
 
@@ -224,27 +229,56 @@ class ScheduledJobThreadTest extends FunSuite {
     val jobTag = subject.scheduleJob(DummyKeepRunningJob)
     subject.stopJob(jobTag)
     subject.queue.add(subject.queue.poll()) // swap the order of the job add and job stop
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assertUpdate { case JobDone(t) => assertResult(jobTag)(t) }
   } }
 
   test("sends monitor updates") { new Helper {
     subject.registerMonitor("abc", resultJob)
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(2)
     assertUpdate { case MonitorsUpdate(values, _) => assertResult(Try(Double.box(123)))(values("abc")) }
   } }
 
   test("doesn't re-run monitors unless there's new data") { new Helper {
     subject.registerMonitor("abc", resultJob)
-    subject.runEvent()
-    subject.runEvent()
-    subject.runEvent()
+    runEvents(3)
     assert(timesRunResultRun == 1)
   } }
 
-  test("supports a halt operation which clears all existing jobs and monitors") {
+  test("can pause between running a job for an interval") { new Helper {
+    subject.scheduleJob(DummyKeepRunningJob, 100)
+    runEvents(2)
+    assert(subject.queue.isEmpty)
+    elapse(50)
+    runEvents(1)
+    assert(subject.queue.isEmpty)
+    elapse(50)
+    runEvents(1)
+    assert(subject.queue.isEmpty)
+    elapse(50)
+    runEvents(1)
+    assert(!subject.queue.isEmpty)
+    runEvents(1)
+    assert(runCount == 2)
+  } }
+
+  test("jobs can be canceled while suspended") { new Helper {
+    val jobTag = subject.scheduleJob(DummyKeepRunningJob, 100)
+    runEvents(2)
+    assert(subject.queue.isEmpty)
+    subject.stopJob(jobTag)
+    runEvents(1)
+    elapse(101)
+    runEvents(1)
+    assert(subject.queue.isEmpty)
+    assert(runCount == 1)
+  } }
+
+  test("supports an operation to clear all existing jobs and monitors") {
+    pending
+  }
+
+  test("supports halt to immediately stop all tasks in progress") {
     pending
   }
 }
