@@ -30,6 +30,7 @@ object NetLogoPackaging {
   lazy val packageLinuxAggregate   = inputKey[File]("package all linux apps into a single directory")
   lazy val packageMacAggregate     = taskKey[File]("package all mac apps into a dmg")
   lazy val packageWinAggregate     = inputKey[File]("package all win apps into a single directory")
+  lazy val packageWinJavafx        = inputKey[File]("package the javafx demo app into an installer")
   lazy val packagingClasspath      = taskKey[Seq[File]]("Jars to include when packaging")
   lazy val packagingMainJar        = taskKey[File]("Main jar to use when packaging")
   lazy val subApplications         = settingKey[Seq[SubApplication]]("map of names to sub-application")
@@ -245,6 +246,42 @@ object NetLogoPackaging {
         commonConfig,
         outDir -> "dummy",
         subApplications.value,
+        buildVariables.value)
+    },
+    packageWinJavafx := {
+      val buildJDK = aggregateJDKParser.parsed
+      val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo)
+      val outDir = target.value / s"packaged-win-demo-${buildJDK.arch}-${buildJDK.version}"
+      val srcDir = target.value / s"to-package-win-demo-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.createDirectories(srcDir)
+      val mainJar = packagingMainJar.value
+      FileActions.copyFile(mainJar, srcDir / mainJar.getName)
+
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", srcDir, outDir, target.value, mainJar)
+      FileActions.remove(srcDir)
+
+      val bundled = Seq(
+          new ExtensionDir((extensionRoot in netlogo).value),
+          new ModelsDir((modelsDirectory in netlogo).value))
+      val commonConfig = CommonConfiguration(
+        mainJar,
+        "",
+        bundled,
+        packagingClasspath.value,
+        Seq(),
+        (iconFiles in packageWinAggregate).value,
+        aggregateOnlyFiles.value,
+        configRoot.value,
+        "0.0.1",
+        buildJDK,
+        webTarget.value
+      )
+
+      PackageWinAggregate(
+        target.value / s"win-demo-${buildJDK.arch}",
+        commonConfig,
+        outDir -> "dummy",
+        Seq(NetLogoCoreApp),
         buildVariables.value)
     },
     iconFiles in packageMacAggregate := {
