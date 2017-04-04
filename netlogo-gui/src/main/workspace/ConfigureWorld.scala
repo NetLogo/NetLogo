@@ -21,6 +21,7 @@ object ConfigureWorld {
     // TODO: Maybe these should be core.Shapes instead of org.nlogo.shape.VectorShape
     world.turtleShapes.replaceShapes(model.turtleShapes.map(ShapeConverter.baseShapeToShape))
     world.linkShapes.replaceShapes(model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+    compiledModel.runnableModel.modelLoaded()
   }
 
   def setDefaultValues(world: World, widgets: Seq[Widget]): Unit = {

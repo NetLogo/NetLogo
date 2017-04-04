@@ -36,11 +36,17 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
       case cm: CompiledMonitor => cm.procedureTag -> cm
     }.toMap
 
-  monitorRegistry.values.foreach {
-    case cm: CompiledMonitor =>
-      val job =
-        new SuspendableJob(workspace.world.observers, false, cm.procedure, 0, null, workspace.world.mainRNG)
-      scheduledJobThread.registerMonitor(cm.procedureTag, job)
+  def modelLoaded(): Unit = {
+    monitorRegistry.values.foreach {
+      case cm: CompiledMonitor =>
+        val job =
+          new SuspendableJob(workspace.world.observers, false, cm.procedure, 0, null, workspace.world.mainRNG)
+        scheduledJobThread.registerMonitor(cm.procedureTag, job)
+    }
+  }
+
+  def modelUnloaded(): Unit = {
+    // TODO: unload monitors, remove existing jobs here
   }
 
   private def registerTag(componentOpt: Option[RunComponent], action: ModelAction, tag: String): Unit = {

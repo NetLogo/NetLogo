@@ -81,6 +81,9 @@ class ApplicationController {
             }(executionContext)
           openedModel.map {
             compiledModel =>
+              if (ApplicationController.this.compiledModel != null) {
+                compiledModel.runnableModel.modelUnloaded()
+              }
               ConfigureWorld(workspace, compiledModel)
               compiledModel
           }(executionContext).foreach {
