@@ -96,8 +96,6 @@ class LazyAgentSet(printName: String,
   private class FilteringIterator(agentIterator: AgentIterator, others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
     var nextAgent: Agent = null
 
-    var foundContained: Boolean = false
-
     def passesFilters(agent: Agent): Boolean = {
       ! others.contains(agent) && passesWiths(agent)
     }
@@ -105,7 +103,6 @@ class LazyAgentSet(printName: String,
     override def hasNext: Boolean = {
       if (nextAgent == null) {
         var next = true
-        nextAgent = null
 
         while (nextAgent == null && next) {
 
@@ -113,7 +110,7 @@ class LazyAgentSet(printName: String,
 
           if (next) {
             nextAgent = agentIterator.next()
-            if (! passesFilters(nextAgent)) {
+            if (! passesFilters(nextAgent) || nextAgent.id == -1) {
               nextAgent = null
             }
           }

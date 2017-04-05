@@ -1272,18 +1272,12 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           DUP
           ACONST_NULL
           ALOAD 2
-          GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
-          ICONST_1
-          ANEWARRAY org/nlogo/agent/Agent
-          DUP
-          ICONST_0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          AASTORE
-          CHECKCAST [Ljava/lang/Object;
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
+          ASTORE 3
+          GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
+          ALOAD 3
+          INVOKEVIRTUAL scala/collection/immutable/Nil$.$colon$colon (Ljava/lang/Object;)Lscala/collection/immutable/List;
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
           INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
           INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
@@ -12397,23 +12391,17 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           DUP
           ACONST_NULL
           ALOAD 2
-          GETSTATIC scala/collection/immutable/List$.MODULE$ : Lscala/collection/immutable/List$;
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
-          ICONST_1
-          ANEWARRAY org/nlogo/agent/Agent
-          DUP
-          ICONST_0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          AASTORE
-          CHECKCAST [Ljava/lang/Object;
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL scala/collection/immutable/List$.apply (Lscala/collection/Seq;)Lscala/collection/immutable/List;
+          ASTORE 3
+          GETSTATIC scala/collection/immutable/Nil$.MODULE$ : Lscala/collection/immutable/Nil$;
+          ALOAD 3
+          INVOKEVIRTUAL scala/collection/immutable/Nil$.$colon$colon (Ljava/lang/Object;)Lscala/collection/immutable/List;
           GETSTATIC org/nlogo/agent/LazyAgentSet$.MODULE$ : Lorg/nlogo/agent/LazyAgentSet$;
           INVOKEVIRTUAL org/nlogo/agent/LazyAgentSet$.$lessinit$greater$default$4 ()Lscala/collection/immutable/List;
           INVOKESPECIAL org/nlogo/agent/LazyAgentSet.<init> (Ljava/lang/String;Lorg/nlogo/agent/AgentSet;Lscala/collection/immutable/List;Lscala/collection/immutable/List;)V
          L17
-         FRAME SAME1 org/nlogo/agent/AgentSet
+         FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context org/nlogo/agent/AgentSet java/lang/Object org/nlogo/nvm/Context org/nlogo/prim/WithFunction] [org/nlogo/agent/AgentSet]
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
@@ -12466,7 +12454,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
-         FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context java/lang/Boolean org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
+         FRAME FULL [org/nlogo/prim/_asm_procedureoverlapping_report_0 org/nlogo/nvm/Context java/lang/Boolean java/lang/Object org/nlogo/nvm/Context org/nlogo/prim/WithFunction] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
