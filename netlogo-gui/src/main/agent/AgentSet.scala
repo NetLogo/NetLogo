@@ -33,6 +33,7 @@ abstract class AgentSet(
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent]
   def toLogoList: LogoList
+  def getArray: Array[Agent]
 
   ///
 

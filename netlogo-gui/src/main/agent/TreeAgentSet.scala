@@ -145,6 +145,8 @@ extends AgentSet(kind, printName) {
     override def next() = iter.next()
   }
 
+  override def getArray = _agents.values.toArray(new Array[Agent](0))
+
   // returns an Iterator object of the appropriate class
   override def iterator: AgentIterator =
     new Iterator

@@ -49,6 +49,7 @@ class LazyAgentSetBench {
 //    lazyAgentSet = null
 //  }
 
+  // fast
 //  @Benchmark
   def Init_Array() = {
     a = createArrayAgentSet(turtles)
@@ -69,34 +70,14 @@ class LazyAgentSetBench {
     l.count
   }
 
-  @Benchmark
+//  @Benchmark
   def Iter_Array() = {
     a.iterator
   }
 
-  @Benchmark
+//  @Benchmark
   def Iter_Lazy() = {
     l.iterator
-  }
-
-  @Benchmark
-  def ContainsFalse_Array() = {
-    a.contains(aTurtle)
-  }
-
-  @Benchmark
-  def ContainsFalse_Lazy() = {
-    l.contains(aTurtle)
-  }
-
-  @Benchmark
-  def ContainsTrue_Array() = {
-    a.contains(turtles(0))
-  }
-
-  @Benchmark
-  def ContainsTrue_Lazy() = {
-    l.contains(turtles(0))
   }
 
 //  @Benchmark
@@ -119,5 +100,46 @@ class LazyAgentSetBench {
   def next_Lazy() = {
     lit = l.iterator
     lit.next
+  }
+
+  @Benchmark
+  def isEmpty_Array() = {
+    a.isEmpty
+  }
+
+  @Benchmark
+  def isEmpty_Lazy() = {
+    l.isEmpty
+  }
+
+  //medium
+  @Benchmark
+  def ContainsTrue_Array() = {
+    a.contains(turtles(0))
+  }
+
+  @Benchmark
+  def ContainsTrue_Lazy() = {
+    l.contains(turtles(0))
+  }
+
+  @Benchmark
+  def ContainsFalse_Array() = {
+    a.contains(aTurtle)
+  }
+
+  @Benchmark
+  def ContainsFalse_Lazy() = {
+    l.contains(aTurtle)
+  }
+
+  @Benchmark
+  def ContainsSameAgentsTrue_Array() = {
+    a.containsSameAgents(a)
+  }
+
+  @Benchmark
+  def ContainsSameAgentsTrue_Lazy() = {
+    l.containsSameAgents(l)
   }
 }

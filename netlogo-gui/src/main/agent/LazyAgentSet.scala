@@ -29,6 +29,8 @@ class LazyAgentSet(printName: String,
     false
   }
 
+  def getArray = agentSet.getArray
+
   def containsSameAgents(otherSet: api.AgentSet): Boolean =
     otherSet match {
       case l : LazyAgentSet => force().containsSameAgents(l.force())
@@ -36,10 +38,10 @@ class LazyAgentSet(printName: String,
     }
 
   def iterator: AgentIterator =
-    new FilteringIterator(agentSet.iterator, others, withs)
+    new FilteringIterator(agentSet.getArray, others, withs)
 
-  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
-    new FilteringIterator(agentSet.shufflerator(rng), others, withs)
+  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator = null
+//    new FilteringIterator(agentSet.shufflerator(rng), others, withs)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
     force().randomOne(precomputedCount, rng)
@@ -93,8 +95,49 @@ class LazyAgentSet(printName: String,
     forcedSet
   }
 
-  private class FilteringIterator(agentIterator: AgentIterator, others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
+//  private class FilteringIterator(array: Array[Agent], others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
+//    var nextAgent: Agent = null
+//
+//    def passesFilters(agent: Agent): Boolean = {
+//      ! others.contains(agent) && passesWiths(agent)
+//    }
+//
+//    override def hasNext: Boolean = {
+//      if (nextAgent == null) {
+//        var next = true
+//
+//        while (nextAgent == null && next) {
+//
+//          next = agentIterator.hasNext
+//
+//          if (next) {
+//            nextAgent = agentIterator.next()
+//            if (! passesFilters(nextAgent)) {
+//              nextAgent = null
+//            }
+//          }
+//
+//        }
+//
+//        nextAgent != null
+//      } else
+//        true
+//    }
+//
+//    override def next(): Agent = {
+//      if (hasNext) {
+//        val ret = nextAgent
+//        nextAgent = null
+//        ret
+//      } else
+//        agentIterator.next()
+//    }
+//  }
+
+  private class FilteringIterator(array: Array[Agent], others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
     var nextAgent: Agent = null
+    var i = 0
+    val arraySize = array.size
 
     def passesFilters(agent: Agent): Boolean = {
       ! others.contains(agent) && passesWiths(agent)
@@ -102,24 +145,17 @@ class LazyAgentSet(printName: String,
 
     override def hasNext: Boolean = {
       if (nextAgent == null) {
-        var next = true
 
-        while (nextAgent == null && next) {
-
-          next = agentIterator.hasNext
-
-          if (next) {
-            nextAgent = agentIterator.next()
-            if (! passesFilters(nextAgent) || nextAgent.id == -1) {
-              nextAgent = null
-            }
+        while (nextAgent == null || nextAgent.id == -1 || !passesFilters(nextAgent)) {
+          if (i >= arraySize) {
+            nextAgent = null
+            return false
           }
-
+          nextAgent = array(i)
+          i += 1
         }
-
-        nextAgent != null
-      } else
-        true
+      }
+      true
     }
 
     override def next(): Agent = {
@@ -128,9 +164,8 @@ class LazyAgentSet(printName: String,
         nextAgent = null
         ret
       } else
-        agentIterator.next()
+        throw new NoSuchElementException
     }
   }
-
 }
 

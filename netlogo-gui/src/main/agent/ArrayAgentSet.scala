@@ -37,6 +37,8 @@ extends IndexedAgentSet(kind, printName) {
     core.LogoList.fromIterator(freshArray.iterator)
   }
 
+  override def getArray = array
+
   /// counting
 
   override def isEmpty =
