@@ -18,6 +18,8 @@ class LazyAgentSetBench {
 
   var a: IndexedAgentSet = _
   var l: LazyAgentSet = _
+  var ait: AgentIterator = _
+  var lit: AgentIterator = _
   var turtles: Array[Agent] = _
 
   def createArrayAgentSet(array: Array[Agent]) = new ArrayAgentSet(AgentKind.Turtle, null, array)
@@ -35,6 +37,8 @@ class LazyAgentSetBench {
     aTurtle = newTurtle
     a = createArrayAgentSet(turtles)
     l = createLazyAgentSet(turtles)
+    ait = a.iterator
+    lit = l.iterator
     // lazyAgentSet.lazyOther(aTurtle)
   }
 
@@ -62,7 +66,6 @@ class LazyAgentSetBench {
 
 //  @Benchmark
   def Count_Lazy() = {
-//    lazyAgentSet.lazyOther(turtles(0))
     l.count
   }
 
@@ -76,30 +79,45 @@ class LazyAgentSetBench {
     l.iterator
   }
 
-//  @Benchmark
-  def Contains1_Array() = {
-//    var i = 0
-//    val builder = new AgentSetBuilder(AgentKind.Turtle, turtleCount)
-//    while (i < turtleCount) {
-//      builder.add(turtles(i))
-//      i += 1
-//    }
-//    arrayAgentSet = builder.build()
+  @Benchmark
+  def ContainsFalse_Array() = {
     a.contains(aTurtle)
   }
 
-//  @Benchmark
-  def Contains1_Lazy() = {
+  @Benchmark
+  def ContainsFalse_Lazy() = {
     l.contains(aTurtle)
   }
 
   @Benchmark
-  def Contains2_Array() = {
+  def ContainsTrue_Array() = {
     a.contains(turtles(0))
   }
 
   @Benchmark
-  def Contains2_Lazy() = {
+  def ContainsTrue_Lazy() = {
     l.contains(turtles(0))
+  }
+
+//  @Benchmark
+  def hasNext_Array() = {
+    ait.hasNext
+  }
+
+//  @Benchmark
+  def hasNext_Lazy() = {
+    lit.hasNext
+  }
+
+//  @Benchmark
+  def next_Array() = {
+    ait = a.iterator
+    ait.next
+  }
+
+//  @Benchmark
+  def next_Lazy() = {
+    lit = l.iterator
+    lit.next
   }
 }
