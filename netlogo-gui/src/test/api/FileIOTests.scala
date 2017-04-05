@@ -34,6 +34,11 @@ class FileIOTests extends FunSuite {
     val resolved = FileIO.resolvePath("foo.txt", Paths.get("."))
     assertResult(Some(Paths.get(".").toAbsolutePath.getParent.resolve("foo.txt")))(resolved)
   }
+
+  test("resolvePath handles path options") {
+    val resolved = FileIO.resolvePath("foo.txt", Some(Paths.get(".")))
+    assertResult(Some(Paths.get(".").toAbsolutePath.getParent.resolve("foo.txt")))(resolved)
+  }
 }
 
 class FileIOTests2 extends PropSpec with PropertyChecks {

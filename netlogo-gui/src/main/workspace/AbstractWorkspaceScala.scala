@@ -234,7 +234,10 @@ object AbstractWorkspaceTraits {
      */
     @throws(classOf[java.net.MalformedURLException])
     def attachModelDir(filePath: String): String = {
-      FileIO.resolvePath(filePath, Option(getModelPath).flatMap(s => Try(Paths.get(s)).toOption)).toString
+      FileIO.resolvePath(filePath,
+        Option(getModelPath).flatMap(s => Try(Paths.get(s)).toOption))
+          .map(_.toString)
+          .getOrElse(filePath)
     }
   }
 
