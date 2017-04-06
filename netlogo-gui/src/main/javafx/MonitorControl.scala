@@ -3,8 +3,11 @@
 package org.nlogo.javafx
 
 import javafx.fxml.{ FXML, FXMLLoader }
+import javafx.beans.binding.Bindings
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.control.Label
 import javafx.scene.layout.VBox
+import javafx.scene.text.Font
 
 import org.nlogo.core.{ Monitor => CoreMonitor }
 import org.nlogo.internalapi.{ CompiledMonitor => ApiCompiledMonitor, ModelAction, ModelUpdate, RunComponent, RunnableModel }
@@ -19,6 +22,11 @@ class MonitorControl(compiledMonitor: ApiCompiledMonitor) extends VBox {
 
   val monitorModel = compiledMonitor.widget
 
+  val fontSizeProperty = new SimpleDoubleProperty(11.0)
+
+  val fontProperty =
+      Bindings.createObjectBinding({ () => new Font(fontSizeProperty.getValue)}, fontSizeProperty)
+
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("Monitor.fxml"))
     loader.setController(this)
@@ -26,7 +34,10 @@ class MonitorControl(compiledMonitor: ApiCompiledMonitor) extends VBox {
     loader.load()
     setPrefSize(monitorModel.right - monitorModel.left, monitorModel.bottom - monitorModel.top)
     nameLabel.setText(monitorModel.display orElse monitorModel.source getOrElse "")
+    nameLabel.fontProperty.bind(fontProperty)
     valueLabel.setText("0")
+    valueLabel.fontProperty.bind(fontProperty)
+    fontSizeProperty.setValue(monitorModel.fontSize)
     compiledMonitor.onUpdate({ (s: String) =>
       valueLabel.setText(s)
     })
