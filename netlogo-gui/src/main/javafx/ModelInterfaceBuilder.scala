@@ -12,8 +12,10 @@ import org.nlogo.core.{
   I18N, Model, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, CompiledModel,
-  CompiledMonitor => ApiCompiledMonitor, RunComponent }
+import org.nlogo.internalapi.{ AddProcedureRun,
+  CompiledButton => ApiCompiledButton, CompiledModel,
+  CompiledMonitor => ApiCompiledMonitor,
+  CompiledSlider => ApiCompiledSlider, RunComponent }
 
 object ModelInterfaceBuilder {
   def build(compiledModel: CompiledModel): (InterfaceArea, Map[String, Pane with RunComponent]) = {
@@ -35,12 +37,14 @@ object ModelInterfaceBuilder {
           monitor.relocate(m.left, m.top)
           interfacePane.getChildren.add(monitor)
           Seq()
+        case compiledSlider: ApiCompiledSlider =>
+          val slider = new SliderControl(compiledSlider, compiledModel.runnableModel)
+          val s = compiledSlider.widget
+          slider.relocate(s.left, s.top)
+          interfacePane.getChildren.add(slider)
+          Seq()
         case other =>
           other.widget match {
-            case s: CoreSlider  =>
-              val slider = new SliderControl(s, compiledModel.runnableModel)
-              slider.relocate(s.left, s.top)
-              interfacePane.getChildren.add(slider)
             case v: CoreView    =>
               import javafx.scene.paint.Color
               val d = compiledModel.model.view.dimensions

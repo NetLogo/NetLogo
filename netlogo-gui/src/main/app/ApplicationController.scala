@@ -9,14 +9,15 @@ import java.util.concurrent.{ BlockingQueue, LinkedBlockingQueue }
 
 import javafx.application.Platform
 import javafx.fxml.FXML
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ ActionEvent }
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
 import javafx.scene.layout.{ AnchorPane, Pane }
 import javafx.stage.{ FileChooser, Window }
 
 import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInterface,
-  JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread }
+  JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread, Utils },
+    Utils.handler
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
 import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate, WritableGUIWorkspace }
@@ -67,26 +68,25 @@ class ApplicationController {
 
   @FXML
   def initialize(): Unit = {
-    openFile.setOnAction(new EventHandler[ActionEvent] {
-      override def handle(a: ActionEvent): Unit = {
-        val fileChooser = new FileChooser()
-        fileChooser.setTitle("Select a NetLogo model")
-        fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")))
-        val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
-        val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
-        val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
-        selectedFile.foreach { file =>
-          val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
-            .map { m =>
-              CompileAll(m, workspace)
-            }(executionContext)
+    openFile.setOnAction(handler { (a: ActionEvent) =>
+      val fileChooser = new FileChooser()
+      fileChooser.setTitle("Select a NetLogo model")
+      fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.dir")))
+      val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
+      val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
+      val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
+      selectedFile.foreach { file =>
+        val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
+          .map { m =>
+            CompileAll(m, workspace)
+          }(executionContext)
           openedModel.map {
             compiledModel =>
               if (ApplicationController.this.compiledModel != null) {
                 compiledModel.runnableModel.modelUnloaded()
               }
-              ConfigureWorld(workspace, compiledModel)
-              compiledModel
+            ConfigureWorld(workspace, compiledModel)
+            compiledModel
           }(executionContext).foreach {
             compiledModel =>
               ApplicationController.this.compiledModel = compiledModel
@@ -103,7 +103,6 @@ class ApplicationController {
               AnchorPane.setLeftAnchor(interfaceArea, 0.0)
               AnchorPane.setRightAnchor(interfaceArea, 0.0)
           }(JavaFXExecutionContext)
-        }
       }
     })
   }
