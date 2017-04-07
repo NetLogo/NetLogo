@@ -9,21 +9,50 @@ import javafx.beans.property.{ DoubleProperty, SimpleDoubleProperty }
 
 import org.nlogo.api.Approximate.approximate
 
-class SliderData(val inputValue: DoubleProperty, val minimum: Double, val maximum: Double, val increment: Double) {
+class SliderData(
+  val inputValueProperty: DoubleProperty,
+  val minimumProperty:    DoubleProperty,
+  val maximumProperty:    DoubleProperty,
+  val incrementProperty:  DoubleProperty) {
 
-  val value: DoubleProperty =
-    new SimpleDoubleProperty(inputValue.get)
+  def this(initValue: Double, min: Double, max: Double, inc: Double) =
+    this(
+      new SimpleDoubleProperty(initValue),
+      new SimpleDoubleProperty(min),
+      new SimpleDoubleProperty(max),
+      new SimpleDoubleProperty(inc))
 
-  value.bind(new DoubleBinding {
-    super.bind(inputValue)
+  def inputValue: Double = inputValueProperty.get
 
-    override protected def computeValue(): Double = {
-      coerceValue(inputValue.get)
+  val valueProperty: DoubleProperty = new SimpleDoubleProperty(coerceValue(inputValue))
+  def value:         Double         = valueProperty.get
+
+  def minimum   = minimumProperty.get
+  def maximum   = maximumProperty.get
+  def increment = incrementProperty.get
+
+  private var modelValue: Option[Double] = None
+
+  private val valueBinding =
+    new DoubleBinding {
+      super.bind(inputValueProperty, minimumProperty, maximumProperty, incrementProperty)
+
+      override protected def computeValue(): Double = {
+        val r = modelValue.getOrElse(coerceValue(inputValue))
+        modelValue = None
+        r
+      }
     }
-  })
+
+  valueProperty.bind(valueBinding)
 
   override def toString =
-    s"SliderData(${value.get}, $minimum, $maximum, $increment)"
+    s"SliderData(${value}, $minimum, $maximum, $increment)"
+
+  def updateFromModel(fromModel: Double) = {
+    modelValue = Some(fromModel)
+    valueBinding.invalidate()
+  }
 
   private def precisionOf(x: Double): Int = {
     if (x == 0) 0
@@ -53,8 +82,21 @@ class SliderData(val inputValue: DoubleProperty, val minimum: Double, val maximu
   }
 
   private def coerceValue(x: Double): Double = {
-    val max = StrictMath.max(effectiveMaximum, minimum)
-    val min = StrictMath.min(effectiveMaximum, minimum)
-    StrictMath.max(min, StrictMath.min(x, max))
+    if (x > effectiveMaximum) effectiveMaximum
+    else if (x <= minimum) minimum
+    else {
+      val p = precision
+      val value2 = approximate(x, p)
+      val numDivisions = StrictMath.floor((value2 - minimum) / increment)
+      val roundedDown = minimum + (numDivisions * increment)
+      val roundedUp = minimum + ((numDivisions + 1) * increment)
+      if (approximate(roundedUp, p) <= approximate(effectiveMaximum, p)) {
+        if (StrictMath.abs(value2 - roundedDown) < StrictMath.abs(roundedUp - value2))
+          roundedDown
+        else
+          roundedUp
+      }
+      else effectiveMaximum
+    }
   }
 }
