@@ -63,7 +63,7 @@ extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellip
   }
 
   def promptForFilePath(): String = {
-    FileDialog.show(NLogoHierarchy.getFrame(parent),
+    FileDialog.showFiles(NLogoHierarchy.getFrame(parent),
       I18N.gui.get(s"menu.file.export.$taskName"),
       AWTFileDialog.SAVE, suggestedFileName)
   }
@@ -92,7 +92,7 @@ abstract class ExportAction(taskName: String, suggestedFileName: => String, pare
   @throws(classOf[UserCancelException])
   @throws(classOf[IOException])
   def action(): Unit = {
-    val exportPath = FileDialog.show(
+    val exportPath = FileDialog.showFiles(
       parent,
       I18N.gui.get(s"menu.file.export.$taskName"),
       AWTFileDialog.SAVE, suggestedFileName)
@@ -143,7 +143,7 @@ abstract class ImportAction(taskName: String, parent: Component, performImport: 
   @throws(classOf[IOException])
   override def action(): Unit = {
     exception = None
-    val importPath = FileDialog.show(
+    val importPath = FileDialog.showFiles(
         parent, I18N.gui.get(s"menu.file.import.$taskName"), AWTFileDialog.LOAD, null)
 
     ModalProgressTask.onUIThread(frame,

@@ -138,7 +138,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   // Import shapes from another model
   private def importFromModel(): Unit = {
     try {
-      val path = org.nlogo.swing.FileDialog.show(parentFrame, I18N.gui("import.note"), java.awt.FileDialog.LOAD)
+      val path = org.nlogo.swing.FileDialog.showFiles(parentFrame, I18N.gui("import.note"), java.awt.FileDialog.LOAD)
       val modelUri = Paths.get(path).toUri
       modelLoader.readModel(modelUri)
         .map(modelShapes)

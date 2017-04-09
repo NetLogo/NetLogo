@@ -195,7 +195,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       FileDialog.setDirectory(modelTracker.getModelDir)
     }
 
-    var path = FileDialog.show(
+    var path = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName)
     if(! path.endsWith("." + modelSuffix)) {

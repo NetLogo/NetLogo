@@ -70,7 +70,7 @@ class Supervisor(dialog: java.awt.Dialog,
       try { new RunOptionsDialog(dialog, dialogFactory).get }
       catch{ case ex: UserCancelException => return }
     if(options.spreadsheet) {
-      val fileName = org.nlogo.swing.FileDialog.show(
+      val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
       addExporter(new SpreadsheetExporter(
@@ -80,7 +80,7 @@ class Supervisor(dialog: java.awt.Dialog,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
     }
     if(options.table) {
-      val fileName = org.nlogo.swing.FileDialog.show(
+      val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
       addExporter(new TableExporter(

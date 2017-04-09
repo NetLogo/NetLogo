@@ -70,7 +70,7 @@ abstract class GUIWorkspaceScala(
   def handle(e: ExportWidgetEvent): Unit = {
     try {
       val guessedName = guessExportName(e.widget.getDefaultExportName)
-      val exportPath = FileDialog.show(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
+      val exportPath = FileDialog.showFiles(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
       val exportToPath = Future.successful(exportPath)
       e.widget match {
         case pw: PlotWidget =>
@@ -177,7 +177,7 @@ abstract class GUIWorkspaceScala(
   def doExportView(exportee: LocalViewInterface): Unit = {
     val exportPathOption =
       try {
-        Some(FileDialog.show(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE, guessExportName("view.png")))
+        Some(FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE, guessExportName("view.png")))
       } catch {
         case ex: UserCancelException =>
           Exceptions.ignore(ex)
