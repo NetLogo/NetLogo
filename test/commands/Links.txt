@@ -945,4 +945,9 @@ link-resize-world-preserves-directedness-of-breeds
   is-directed-link? directed-edge 0 1 => true
   is-undirected-link? directed-edge 0 1 => false
 
-
+link-clear-links
+  O> crt 4
+  O> ask turtle 0 [ create-links-with other turtles ]
+  O> clear-links
+  count [ link-neighbors ] of turtle 0 => 0
+  count [ my-links ] of turtle 0 => 0

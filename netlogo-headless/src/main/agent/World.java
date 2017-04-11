@@ -779,6 +779,7 @@ public strictfp class World
   }
 
   public void clearLinks() {
+    linkManager().reset();
     for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
@@ -788,7 +789,6 @@ public strictfp class World
     }
     _links.clear();
     nextLinkIndex = 0;
-    linkManager().reset();
   }
 
   public void clearGlobals() {

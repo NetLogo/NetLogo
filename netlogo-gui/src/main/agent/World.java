@@ -892,6 +892,7 @@ public strictfp class World
   }
 
   public void clearLinks() {
+    linkManager.reset();
     if (_program.linkBreeds().nonEmpty()) {
       for (AgentSet linkBreed : linkBreeds.values()) {
         ((TreeAgentSet) linkBreed).clear();
@@ -903,7 +904,6 @@ public strictfp class World
     }
     _links.clear();
     nextLinkIndex = 0;
-    linkManager.reset();
   }
 
   public void clearGlobals() {
