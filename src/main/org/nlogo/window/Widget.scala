@@ -6,7 +6,8 @@ import java.awt.{List=>AWTList, _}
 import event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
 import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
-import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler}
+import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler, ModelSections},
+  ModelSections.Saveable
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 object Widget {
@@ -21,7 +22,7 @@ object Widget {
 abstract class SingleErrorWidget extends Widget with SingleErrorHandler
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler
 
-abstract class Widget extends JPanel {
+abstract class Widget extends JPanel with Saveable {
 
   import Widget.LoadHelper
 

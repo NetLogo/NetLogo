@@ -25,7 +25,7 @@ public strictfp class CompilerManager
     org.nlogo.window.Events.WidgetRemovedEvent.Handler,
     org.nlogo.window.Events.CompileAllEvent.Handler {
 
-  private final GUIWorkspace workspace;
+  private final AbstractWorkspace workspace;
   private final ProceduresInterface proceduresInterface;
 
   public final Set<JobOwner> widgets =
@@ -33,7 +33,7 @@ public strictfp class CompilerManager
   public final Set<InterfaceGlobalWidget> globalWidgets =
       new HashSet<InterfaceGlobalWidget>();
 
-  public CompilerManager(GUIWorkspace workspace, ProceduresInterface proceduresInterface) {
+  public CompilerManager(AbstractWorkspace workspace, ProceduresInterface proceduresInterface) {
     this.workspace = workspace;
     this.proceduresInterface = proceduresInterface;
   }
