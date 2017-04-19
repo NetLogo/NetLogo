@@ -97,6 +97,11 @@ class Statements(file: String, val stmts: Seq[Statement], val nonLocalExit: Bool
     new Statements(file, stmts, nonLocalExit)
 }
 
+object Statement {
+  def unapply(stmt: Statement): Option[(Command, Seq[Expression], SourceLocation)] = 
+    Some((stmt.command, stmt.args, stmt.sourceLocation))
+}
+
 /**
  * represents a NetLogo statement. Statements only have one form: command
  * application.
