@@ -63,12 +63,20 @@ class LazyAgentSet(printName: String,
   }
 
   def passesWiths(agent: Agent): Boolean = {
-    for (filter <- withs) {
-      if (! filter(agent)) {
+    var currWiths = withs
+    while (!currWiths.isEmpty) {
+      if (! currWiths(0)(agent)) {
         return false
       }
+      currWiths = currWiths.tail
     }
     true
+//    for (filter <- withs) {
+//      if (! filter(agent)) {
+//        return false
+//      }
+//    }
+//    true
   }
 
   // assumptions:
