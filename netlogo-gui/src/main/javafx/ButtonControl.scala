@@ -66,22 +66,22 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
 
   def updateReceived(update: ModelUpdate): Unit = {
     update match {
-      case JobDone(t) =>
-        if (stoppingTag.contains(t)) {
-          stoppingTag = None
-        }
-        if (jobTag.contains(t)) {
-          jobTag = None
-          activeProperty.set(false)
-        }
-      case JobErrored(t, _) =>
-        if (stoppingTag.contains(t)) {
-          stoppingTag = None
-        }
-        if (jobTag.contains(t)) {
-          jobTag = None
-          activeProperty.set(false)
-        }
+      case JobDone(t) => jobFinished(t)
+      case JobErrored(t, _) => jobFinished(t)
+      case _ =>
+    }
+  }
+
+  private def jobFinished(t: String): Unit = {
+    if (stoppingTag.contains(t)) {
+      stoppingTag = None
+    }
+    if (jobTag.contains(t)) {
+      jobTag = None
+      activeProperty.set(false)
+    }
+    button match {
+      case t: ToggleButton => t.setSelected(false)
       case _ =>
     }
   }

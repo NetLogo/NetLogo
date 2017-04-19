@@ -4,7 +4,8 @@ package org.nlogo.internalapi
 
 trait SuspendableJob {
   def runFor(steps: Int): Option[SuspendableJob]
-  def runResult():        AnyRef
+  def runResult(): AnyRef
+  def scheduledBy(s: JobScheduler): Unit
 }
 
 trait JobScheduler {
@@ -13,7 +14,9 @@ trait JobScheduler {
   def scheduleJob(job: SuspendableJob, interval: Long): String
   def stopJob(jobTag: String): Unit
   def scheduleOperation(op: () => Unit): String
-  def die()
+  def haltRequested: Boolean
+  def halt(): Unit
+  def die(): Unit
 }
 
 trait SchedulerWorkspace {

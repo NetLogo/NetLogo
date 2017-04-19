@@ -9,7 +9,7 @@ import java.util.concurrent.{ BlockingQueue, LinkedBlockingQueue }
 
 import javafx.application.Platform
 import javafx.fxml.FXML
-import javafx.event.{ ActionEvent }
+import javafx.event.ActionEvent
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
 import javafx.scene.layout.{ AnchorPane, Pane }
@@ -52,6 +52,12 @@ class ApplicationController {
   var openFile: MenuItem = _
 
   @FXML
+  var closeItem: MenuItem = _
+
+  @FXML
+  var haltItem: MenuItem = _
+
+  @FXML
   var menuBar: JFXMenuBar = _
 
   @FXML
@@ -68,45 +74,51 @@ class ApplicationController {
 
   @FXML
   def initialize(): Unit = {
-    openFile.setOnAction(handler { (a: ActionEvent) =>
-      val fileChooser = new FileChooser()
-      fileChooser.setTitle("Select a NetLogo model")
-      fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.dir")))
-      val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
-      val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
-      val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
-      selectedFile.foreach { file =>
-        val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
-          .map { m =>
-            CompileAll(m, workspace)
-          }(executionContext)
-          openedModel.map {
-            compiledModel =>
-              if (ApplicationController.this.compiledModel != null) {
-                compiledModel.runnableModel.modelUnloaded()
-              }
-            ConfigureWorld(workspace, compiledModel)
-            compiledModel
-          }(executionContext).foreach {
-            compiledModel =>
-              ApplicationController.this.compiledModel = compiledModel
-              val (interfaceWidgetsPane, widgetsMap) =
-                ModelInterfaceBuilder.build(compiledModel)
-              if (interfaceArea != null) {
-                interfaceTabArea.getChildren.remove(interfaceArea)
-              }
-              interfaceArea = interfaceWidgetsPane
-              interfaceTabArea.getChildren.add(interfaceWidgetsPane)
-              interfaceArea.registerMouseEventSink(workspace)
-              AnchorPane.setTopAnchor(interfaceArea, 0.0)
-              AnchorPane.setBottomAnchor(interfaceArea, 0.0)
-              AnchorPane.setLeftAnchor(interfaceArea, 0.0)
-              AnchorPane.setRightAnchor(interfaceArea, 0.0)
-          }(JavaFXExecutionContext)
-      }
-    })
+    openFile.setOnAction(handler(openFile _))
+    haltItem.setOnAction(handler(halt _))
   }
 
+  private def openFile(a: ActionEvent): Unit = {
+    val fileChooser = new FileChooser()
+    fileChooser.setTitle("Select a NetLogo model")
+    fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.dir")))
+    val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
+    val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
+    val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
+    selectedFile.foreach { file =>
+      val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
+        .map { m =>
+          CompileAll(m, workspace)
+        }(executionContext)
+        openedModel.map {
+          compiledModel =>
+            if (ApplicationController.this.compiledModel != null) {
+              compiledModel.runnableModel.modelUnloaded()
+            }
+            ConfigureWorld(workspace, compiledModel)
+            compiledModel
+            }(executionContext).foreach {
+              compiledModel =>
+                ApplicationController.this.compiledModel = compiledModel
+                val (interfaceWidgetsPane, widgetsMap) =
+                  ModelInterfaceBuilder.build(compiledModel)
+                if (interfaceArea != null) {
+                  interfaceTabArea.getChildren.remove(interfaceArea)
+                }
+                interfaceArea = interfaceWidgetsPane
+                interfaceTabArea.getChildren.add(interfaceWidgetsPane)
+                interfaceArea.registerMouseEventSink(workspace)
+                AnchorPane.setTopAnchor(interfaceArea, 0.0)
+                AnchorPane.setBottomAnchor(interfaceArea, 0.0)
+                AnchorPane.setLeftAnchor(interfaceArea, 0.0)
+                AnchorPane.setRightAnchor(interfaceArea, 0.0)
+            }(JavaFXExecutionContext)
+    }
+  }
+
+  private def halt(a: ActionEvent): Unit = {
+    workspace.scheduledJobThread.halt()
+  }
 
   class FakeViewSettings(canvas: Canvas, world: World) extends org.nlogo.api.ViewSettings {
     def fontSize: Int = 12

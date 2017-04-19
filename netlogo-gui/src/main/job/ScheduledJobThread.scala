@@ -2,14 +2,17 @@
 
 package org.nlogo.job
 
-import java.util.{ Comparator, UUID }
+import java.util.{ ArrayList => JArrayList, Comparator, UUID }
 import java.util.concurrent.{ BlockingQueue, PriorityBlockingQueue, TimeUnit }
 
+import org.nlogo.api.HaltSignal
 import org.nlogo.internalapi.{ AddProcedureRun, JobScheduler => ApiJobScheduler,
-  JobDone, JobErrored, ModelAction, ModelUpdate, MonitorsUpdate, StopProcedure,
+  JobDone, JobErrored, JobHalted, ModelAction, ModelUpdate, MonitorsUpdate, StopProcedure,
   SuspendableJob, UpdateInterfaceGlobal }
 
+import scala.annotation.tailrec
 import scala.util.{ Failure, Success, Try }
+import scala.collection.JavaConverters._
 import scala.collection.mutable.SortedSet
 import scala.math.Ordering
 
@@ -93,6 +96,10 @@ trait JobScheduler extends ApiJobScheduler {
   // might offer better performance.
   private val suspendedJobs = SortedSet.empty[JobSuspension]
 
+  // haltRequested tracks whether the user has requested a halt.
+  // It is only read from the job thread, but it written from any thread.
+  @volatile var haltRequested: Boolean = false
+
   // NOTE: These are *not* volatile because it should only ever be accessed on the
   // background thread. Do *NOT* modify these from any other thread.
   //
@@ -141,15 +148,21 @@ trait JobScheduler extends ApiJobScheduler {
       case ScheduleOperation(op, tag, _) => runOperation(op, tag)
       case AddMonitor(op, tag, _)        => addMonitor(tag, op)
       case StopJob(cancelTag, time)      => stopList += cancelTag
+      case AddJob(job, tag, interval, _) if stopList.contains(tag) => jobStopped(tag)
       case AddJob(job, tag, interval, _) =>
-        if (stopList.contains(tag)) jobStopped(tag)
-        else                        queue.add(RunJob(job, tag, interval, currentTime))
+        job.scheduledBy(this)
+        queue.add(RunJob(job, tag, interval, currentTime))
       case RunMonitors(updaters, time)   =>
+        pendingMonitors.values.foreach(_.scheduledBy(this))
         val allMonitors = updaters ++ pendingMonitors
         pendingMonitors = Map.empty[String, SuspendableJob]
         runMonitors(allMonitors)
     }
     rescheduleSuspendedJobs()
+  }
+
+  def halt(): Unit = {
+    haltRequested = true
   }
 
   private def rescheduleSuspendedJobs(): Unit = {
@@ -188,16 +201,43 @@ trait JobScheduler extends ApiJobScheduler {
           val reRun = RunJob(j, tag, interval, currentTime)
           if (interval == 0)  queue.add(reRun)
           else                suspendedJobs += JobSuspension(interval, reRun)
+        case Failure(e: RuntimeException with HaltSignal) => jobHalted(tag, e)
         case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
         case Failure(e)                   => throw e
       }
     }
   }
 
+  private def jobHalted(tag: String, e: RuntimeException with HaltSignal): Unit = {
+    updates.add(JobHalted(tag))
+    if (e.haltAll) {
+      haltAllJobs()
+    }
+  }
+
+  protected def haltAllJobs(): Unit = {
+    def haltEvent(s: ScheduledEvent): Unit = {
+      s match {
+        case RunJob(_, t, _, _)         => updates.add(JobHalted(t))
+        case AddJob(_, t, _, _)         => updates.add(JobHalted(t))
+        case ScheduleOperation(_, t, _) => updates.add(JobHalted(t))
+        case _ =>
+      }
+    }
+    suspendedJobs.foreach(s => haltEvent(s.event))
+    suspendedJobs.clear()
+    val queuedTasks = new JArrayList[ScheduledEvent]()
+    queue.drainTo(queuedTasks)
+    queuedTasks.asScala.foreach(haltEvent _)
+    haltRequested = false
+    pendingMonitors = Map.empty[String, SuspendableJob]
+  }
+
   private def runOperation(op: () => Unit, tag: String): Unit =  {
     monitorDataStale = true
     Try(op()) match {
       case Success(())                  => updates.add(JobDone(tag))
+      case Failure(e: RuntimeException with HaltSignal) => jobHalted(tag, e)
       case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
       case Failure(e)                   => throw e
     }
@@ -213,12 +253,28 @@ trait JobScheduler extends ApiJobScheduler {
 
   private def runMonitors(ops: Map[String, SuspendableJob]): Unit = {
     if (monitorDataStale) {
-      val monitorValues = ops.map { case (k, j) => k -> Try(j.runResult()) }.toMap
-      queue.add(RunMonitors(ops, currentTime))
+      val (monitorValues, halted) = runMonitorRec(ops, Map.empty[String, Try[AnyRef]])
       updates.add(MonitorsUpdate(monitorValues, currentTime))
-      monitorDataStale = false
+      if (! halted) {
+        queue.add(RunMonitors(ops, currentTime))
+        monitorDataStale = false
+      }
     } else {
       queue.add(RunMonitors(ops, currentTime + MonitorInterval))
+    }
+  }
+
+  @tailrec
+  private def runMonitorRec(ops: Map[String, SuspendableJob], acc: Map[String, Try[AnyRef]]): (Map[String, Try[AnyRef]], Boolean) = {
+    if (ops.isEmpty) (acc, false)
+    else {
+      val (key, job) = ops.head
+      Try(job.runResult()) match {
+        case Failure(e: RuntimeException with HaltSignal) =>
+          haltAllJobs()
+          (acc, true)
+        case other => runMonitorRec(ops.tail, acc + (key -> other))
+      }
     }
   }
 }
@@ -234,7 +290,6 @@ class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
   setPriority(Thread.NORM_PRIORITY - 1)
   start()
 
-  // TODO: need to implement halt here...
   override def run(): Unit = {
     while (! dying) {
       try {
@@ -245,11 +300,22 @@ class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
           println(e)
           e.printStackTrace()
       }
+      if (haltRequested) {
+        haltAllJobs()
+      }
+    }
+  }
+
+  override def halt(): Unit = {
+    if (! haltRequested) {
+      super.halt()
+      interrupt()
     }
   }
 
   def die(): Unit = {
     dying = true
+    haltRequested = true
     interrupt()
     join()
   }

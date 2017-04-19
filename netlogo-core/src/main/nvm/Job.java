@@ -14,6 +14,11 @@ public abstract strictfp class Job {
 
   abstract boolean exclusive();
 
+  // used in ScheduledJobThread interactions
+  boolean userHasHalted() {
+    return false;
+  }
+
   public final JobOwner owner;                    // public for _updatemonitor
   public byte state = RUNNING;
   public boolean stopping = false;

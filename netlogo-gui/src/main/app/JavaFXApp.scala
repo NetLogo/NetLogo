@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import javafx.application.Application
+import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
 import javafx.scene.{ Group, Scene }
 import javafx.stage.Stage
@@ -13,6 +14,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, M
   Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.internalapi.ModelUpdate
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
+import org.nlogo.javafx.Utils.handler
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.util.Pico
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
@@ -123,6 +125,7 @@ class JavaFXApp extends Application {
     applicationController.executor = threadPool
     applicationController.workspace = workspace
     applicationController.worldUpdates = worldUpdates
+    applicationController.closeItem.setOnAction(handler { (a: ActionEvent) => stop() })
     val scene = new Scene(vBox)
     primaryStage.setScene(scene)
     primaryStage.show()

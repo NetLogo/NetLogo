@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{ AgentIterator, AgentSet }
-import org.nlogo.api.JobOwner
-import org.nlogo.api.MersenneTwisterFast
+import org.nlogo.internalapi.JobScheduler
+import org.nlogo.api.{ JobOwner, MersenneTwisterFast }
 
 class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
   def displayName: String = "Job Owner" // TODO: we may want another button
@@ -23,8 +23,8 @@ class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
 }
 
 // TODO: Note that the interaction between ScheduledJobThread and this class means it is possible to
-// stop this job normally in such a way that the procedure *hasn't finished*. This should be fixed before public
-// release.
+// stop this job normally in such a way that the procedure *hasn't finished*.
+// This should be fixed before public release.
 class SuspendableJob(
   suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, forever: Boolean, agentset: AgentSet, topLevelProcedure: Procedure,
   address: Int, parentContext: Context, random: MersenneTwisterFast)
@@ -49,6 +49,12 @@ class SuspendableJob(
   def this(agentset: AgentSet, forever: Boolean, topLevelProcedure: Procedure,
     address: Int, parentContext: Context, random: MersenneTwisterFast) =
       this(None, forever, agentset, topLevelProcedure, address, parentContext, random)
+
+  var scheduler: JobScheduler = null
+
+  def scheduledBy(s: JobScheduler) = {
+    scheduler = s
+  }
 
   override def exclusive = true
 
@@ -116,4 +122,6 @@ class SuspendableJob(
     new Context(this, agentset.iterator.next(), 0, null)
      .callReporterProcedure(new Activation(topLevelProcedure, null, 0))
 
+  override def userHasHalted(): Boolean =
+    Thread.currentThread.isInterrupted && scheduler.haltRequested
 }

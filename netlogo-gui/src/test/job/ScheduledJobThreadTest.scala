@@ -7,7 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.{ Collections, ArrayList }
 
 import org.nlogo.internalapi.{ ModelAction, UpdateInterfaceGlobal, AddProcedureRun,
-  JobDone, JobErrored, ModelUpdate, MonitorsUpdate, StopProcedure, SuspendableJob }
+  JobDone, JobErrored, JobHalted, JobScheduler => ApiJobScheduler, ModelUpdate, MonitorsUpdate,
+  StopProcedure, SuspendableJob }
+import org.nlogo.nvm.HaltException
 
 import org.scalatest.{ FunSuite, Inside }
 
@@ -78,43 +80,56 @@ class ScheduledJobThreadTest extends FunSuite {
     override def currentTime = setTime
   }
 
+  class DummyJob extends SuspendableJob {
+    var result: AnyRef = null
+    def returning(a: AnyRef): DummyJob = { result = a; this }
+    def runResult(): AnyRef = {
+      runCount += 1
+      whileRunning()
+      result
+    }
+    def scheduledBy(s: ApiJobScheduler) = {}
+    // this is used to simulate another message being enqueued while this job is running
+    var whileRunning: () => Unit = { () => }
+    def onNextRun(f: () => Unit): DummyJob = { whileRunning = f; this }
+    var repeat: Boolean = false
+    def keepRepeating(): DummyJob = { repeat = true; this }
+    var runCount = 0
+    def wasRun = runCount > 0
+    def runFor(steps: Int): Option[SuspendableJob] = {
+      runCount += 1
+      whileRunning()
+      if (repeat) Some(this)
+      else        None
+    }
+    def haltOnNextRun(haltAll: Boolean, andAlso: () => Unit = whileRunning): Unit = {
+      whileRunning = { () =>
+        andAlso()
+        throw new HaltException(haltAll)
+      }
+    }
+  }
+
   trait Helper extends Inside {
     val subject = new Subject()
     def firstEvent = subject.queue.peek()
-    var runCount: Int = 0
-    def wasRun: Boolean = runCount > 0
-    val DummyOneRunJob = new SuspendableJob {
-      def runFor(steps: Int): Option[SuspendableJob] = {
-        runCount += 1
-        None
-      }
-      def runResult(): AnyRef = null
-    }
-    val DummyKeepRunningJob = new SuspendableJob {
-      def runFor(steps: Int): Option[SuspendableJob] = {
-        runCount += 1
-        Some(this)
-      }
-      def runResult(): AnyRef = null
-    }
-    val DummyErrorJob = new SuspendableJob {
-      def runFor(steps: Int): Option[SuspendableJob] = {
-        runCount += 1
-        throw new RuntimeException("error!")
-      }
-      def runResult(): AnyRef = null
-    }
-    var timesRunResultRun = 0
-    val resultJob = new SuspendableJob {
-      def runFor(steps: Int) = None
-      def runResult(): AnyRef = {
-        timesRunResultRun += 1
-        Double.box(123)
-      }
-    }
+    val DummyOneRunJob = new DummyJob()
+    val DummyKeepRunningJob = new DummyJob().keepRepeating()
+    val DummyErrorJob = new DummyJob().onNextRun(() => throw new RuntimeException("error!"))
+    val resultJob = new DummyJob().returning(Double.box(123))
     def assertUpdate[U](pf: PartialFunction[ModelUpdate, U]): U = {
       assert(! subject.updates.isEmpty)
       inside(subject.updates.peek)(pf)
+    }
+    def assertNextUpdate[U](pf: PartialFunction[ModelUpdate, U]): U = {
+      val r = assertUpdate[U](pf)
+      subject.updates.poll
+      r
+    }
+    def assertHasHalted(tags: String*): Unit = {
+      tags.foreach { tag =>
+        assertNextUpdate { case JobHalted(t) => assertResult(tag)(t) }
+      }
     }
     def runEvents(i: Int): Unit = {
       (1 to i).foreach { i => subject.runEvent() }
@@ -156,7 +171,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("Running a job executes the job") { new Helper {
     subject.scheduleJob(DummyOneRunJob)
     runEvents(2)
-    assert(wasRun)
+    assert(DummyOneRunJob.wasRun)
     assert(subject.queue.isEmpty)
   } }
 
@@ -176,14 +191,14 @@ class ScheduledJobThreadTest extends FunSuite {
     subject.queue.add(subject.queue.poll()) // swap the order of the job add and job stop
     runEvents(2)
     assert(subject.queue.isEmpty)
-    assert(! wasRun)
+    assert(! DummyOneRunJob.wasRun)
   } }
 
   test("a job stop prevents a scheduled job from being run") { new Helper {
     val jobTag = subject.scheduleJob(DummyOneRunJob)
     val stopJob = subject.stopJob(jobTag)
     runEvents(3)
-    assert(! wasRun)
+    assert(! DummyOneRunJob.wasRun)
   } }
 
   test("A scheduled operation is run in turn") { new Helper {
@@ -242,7 +257,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("doesn't re-run monitors unless there's new data") { new Helper {
     subject.registerMonitor("abc", resultJob)
     runEvents(3)
-    assert(timesRunResultRun == 1)
+    assert(resultJob.wasRun)
   } }
 
   test("can pause between running a job for an interval") { new Helper {
@@ -259,7 +274,7 @@ class ScheduledJobThreadTest extends FunSuite {
     runEvents(1)
     assert(!subject.queue.isEmpty)
     runEvents(1)
-    assert(runCount == 2)
+    assert(DummyKeepRunningJob.runCount == 2)
   } }
 
   test("jobs can be canceled while suspended") { new Helper {
@@ -271,14 +286,88 @@ class ScheduledJobThreadTest extends FunSuite {
     elapse(101)
     runEvents(1)
     assert(subject.queue.isEmpty)
-    assert(runCount == 1)
+    assert(DummyKeepRunningJob.runCount == 1)
   } }
 
-  test("supports an operation to clear all existing jobs and monitors") {
-    pending
-  }
+  test("when a job throws a HaltException, sends message for that job") { new Helper {
+    val jobTag = subject.scheduleJob(DummyKeepRunningJob, 0)
+    runEvents(2)
+    DummyKeepRunningJob.haltOnNextRun(true)
+    runEvents(1)
+    assertUpdate { case JobHalted(t) => assertResult(jobTag)(t) }
+  } }
 
-  test("supports halt to immediately stop all tasks in progress") {
-    pending
-  }
+  test("when a job throws a HaltException without haltAll, only that job is cancelled") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(DummyKeepRunningJob, 0)
+    val tag2 = subject.scheduleJob(haltingJob, 0)
+    runEvents(4)
+    haltingJob.haltOnNextRun(false)
+    runEvents(2)
+    assertHasHalted(tag2)
+    assert(subject.updates.isEmpty)
+  } }
+
+  test("when a job throws a HaltException with haltAll, other active jobs are cleared") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(DummyKeepRunningJob, 0)
+    val tag2 = subject.scheduleJob(haltingJob, 0)
+    runEvents(4)
+    haltingJob.haltOnNextRun(true)
+    runEvents(2)
+    assertHasHalted(tag2, tag1)
+  } }
+
+  test("when a job throws a HaltException with haltAll, suspended jobs are cleared") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(DummyKeepRunningJob, 100)
+    val tag2 = subject.scheduleJob(haltingJob, 0)
+    runEvents(4)
+    haltingJob.haltOnNextRun(true)
+    runEvents(1)
+    assertHasHalted(tag2, tag1)
+  } }
+
+  test("when a job throws a HaltException with haltAll, monitors are cleared") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(haltingJob, 0)
+    subject.registerMonitor("abc", resultJob)
+    runEvents(4)
+    haltingJob.haltOnNextRun(true)
+    runEvents(1)
+    subject.updates.clear()
+    elapse(101)
+    runEvents(1)
+    assert(subject.updates.isEmpty)
+  } }
+
+  test("when a job throws a HaltException, pending jobs are halted") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(haltingJob, 0)
+    runEvents(1)
+    var tag2 = ""
+    haltingJob.haltOnNextRun(true, { () => tag2 = subject.scheduleJob(DummyKeepRunningJob, 0) })
+    runEvents(1)
+    assertHasHalted(tag1, tag2)
+  } }
+
+  test("after halt clears jobs, resets haltRequested to false") { new Helper {
+    val haltingJob = new DummyJob().keepRepeating()
+    val tag1 = subject.scheduleJob(haltingJob, 0)
+    runEvents(1)
+    subject.halt()
+    haltingJob.haltOnNextRun(true)
+    runEvents(1)
+    assertHasHalted(tag1)
+    assert(! subject.haltRequested)
+  } }
+
+  test("when a monitor throws a HaltException, stops jobs") { new Helper {
+    val haltingMonitor = new DummyJob().returning(Double.box(123))
+    subject.registerMonitor("abc", haltingMonitor)
+    runEvents(1)
+    haltingMonitor.haltOnNextRun(true)
+    runEvents(2)
+    assert(subject.queue.isEmpty)
+  } }
 }

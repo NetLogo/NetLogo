@@ -109,9 +109,8 @@ public final strictfp class Context implements org.nlogo.api.Context {
   scala.util.Either<Context, Integer> runFor(int steps) {
     int completedSteps = 0;
     if (checkRunnable()) {
-      Command command = null;
       while (completedSteps < steps && !finished && !ticked) {
-        command = runSingleStep(); // this runs "comeUpForAir", which shouldn't be needed here
+        runStepScheduled();
         completedSteps++;
       }
       ticked = false;
@@ -145,6 +144,25 @@ public final strictfp class Context implements org.nlogo.api.Context {
       return false;
     }
     return true;
+  }
+
+  Command runStepScheduled() {
+    Command command = activation.code[ip];
+    try {
+      if ((agentBit & command.agentBits) == 0) {
+        command.throwAgentClassException(this, agent.kind());
+      }
+      command.perform(this);
+      checkInterruptStatus();
+      return command;
+    } catch (EngineException ex) {
+      throw ex;
+    } catch (LogoException ex) {
+      EngineException.rethrow(ex, copy(), command);
+    } catch (StackOverflowError ex) {
+      throw new NetLogoStackOverflow(copy(), activation.code[ip], ex);
+    }
+    return null;
   }
 
   Command runSingleStep() {
@@ -317,6 +335,12 @@ public final strictfp class Context implements org.nlogo.api.Context {
     if (Thread.currentThread().isInterrupted()) {
       command.world.comeUpForAir_$eq(false);
       finished = true;
+      throw new HaltException(true);
+    }
+  }
+
+  private void checkInterruptStatus() throws HaltException {
+    if (job.userHasHalted()) {
       throw new HaltException(true);
     }
   }
