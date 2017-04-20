@@ -6,7 +6,8 @@ import org.nlogo.internalapi.{
   CompiledModel, CompiledWidget, CompiledButton => ApiCompiledButton,
   CompiledMonitor => ApiCompiledMonitor, CompiledSlider => ApiCompiledSlider,
   EmptyRunnableModel, AddProcedureRun, ModelAction, ModelUpdate, Monitorable, MonitorsUpdate,
-  NonCompiledWidget, RunnableModel, RunComponent, SchedulerWorkspace, StopProcedure, UpdateInterfaceGlobal }
+  NonCompiledWidget, RunnableModel, RunComponent,
+  SchedulerWorkspace, StopProcedure, TicksCleared, TicksStarted, UpdateInterfaceGlobal }
 
 import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, Monitor => CoreMonitor, NumericInput, Program,
@@ -18,8 +19,6 @@ import scala.util.{ Failure, Success }
 
 class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace, compiledWidgets: Seq[CompiledWidget]) extends RunnableModel  {
   import workspace.scheduledJobThread
-
-  val componentMap = Map.empty[String, RunComponent]
 
   override def submitAction(action: ModelAction): Unit = {
     scheduleAction(action, None)
@@ -100,6 +99,16 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
             v.printStackTrace()
             // println(monitorRegistry.get(k).map(_.procedure.dump))
         }
+      case TicksStarted =>
+        compiledWidgets.foreach {
+          case c: CompiledButton => c.ticksEnabled.set(true)
+          case _ =>
+        }
+      case TicksCleared =>
+        compiledWidgets.foreach {
+          case c: CompiledButton => c.ticksEnabled.set(false)
+          case _ =>
+        }
       case other =>
         taggedComponents.get(update.tag).foreach(_.updateReceived(update))
         taggedComponents -= update.tag
@@ -108,7 +117,9 @@ class CompiledRunnableModel(workspace: AbstractWorkspace with SchedulerWorkspace
 }
 
 case class CompiledButton(val widget: CoreButton, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure)
-  extends ApiCompiledButton
+  extends ApiCompiledButton {
+    val ticksEnabled = new TicksStartedMonitorable
+  }
 
 trait UpdateableMonitorable {
   def procedureTag: String
@@ -117,7 +128,12 @@ trait UpdateableMonitorable {
 }
 
 
-case class CompiledMonitor(val widget: CoreMonitor, val compilerError: Option[CompilerException], val procedureTag: String, val procedure: Procedure, val compiledSource: String)
+case class CompiledMonitor(
+  val widget:         CoreMonitor,
+  val compilerError:  Option[CompilerException],
+  val procedureTag:   String,
+  val procedure:      Procedure,
+  val compiledSource: String)
   extends ApiCompiledMonitor
   with UpdateableMonitorable {
     var updateCallback: (String => Unit) = { (s: String) => }
@@ -128,19 +144,41 @@ case class CompiledMonitor(val widget: CoreMonitor, val compilerError: Option[Co
 
     def defaultValue = "0"
 
+    var currentValue = defaultValue
+
     def update(value: AnyRef): Unit = {
       value match {
-        case s: String => updateCallback(s)
+        case s: String =>
+          currentValue = s
+          updateCallback(s)
         case other     => updateCallback(other.toString)
       }
     }
 }
 
 case class NonCompiledMonitorable[A](val defaultValue: A) extends Monitorable[A] {
+  val currentValue: A = defaultValue
   def onUpdate(callback: A => Unit): Unit = {}
   def compilerError = None
   def procedureTag = ""
 }
+
+class TicksStartedMonitorable extends Monitorable[Boolean] {
+  def defaultValue = false
+  var currentValue = defaultValue
+
+  var updateCallback: (Boolean => Unit) = { (a: Boolean) => }
+
+  def onUpdate(callback: Boolean => Unit): Unit = {
+    updateCallback = callback
+  }
+
+  def set(b: Boolean): Unit = {
+    currentValue = b
+    updateCallback(b)
+  }
+}
+
 case class CompiledMonitorable[A](
   val defaultValue: A,
   val compilerError: Option[CompilerException],
@@ -150,6 +188,8 @@ case class CompiledMonitorable[A](
   extends Monitorable[A]
   with UpdateableMonitorable {
 
+  var currentValue: A = defaultValue
+
   var updateCallback: (A => Unit) = { (a: A) => }
   def onUpdate(callback: A => Unit): Unit = {
     updateCallback = callback
@@ -157,7 +197,9 @@ case class CompiledMonitorable[A](
 
   def update(value: AnyRef): Unit = {
     value match {
-      case a: A  => updateCallback(a)
+      case a: A  =>
+        currentValue = a
+        updateCallback(a)
       case other =>
     }
   }

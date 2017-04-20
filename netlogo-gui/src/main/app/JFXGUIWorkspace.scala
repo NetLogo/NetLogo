@@ -12,7 +12,7 @@ import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface, Susp
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
 import org.nlogo.internalapi.{ JobScheduler, ModelAction, ModelUpdate, RunComponent,
-  WorldUpdate, WritableGUIWorkspace, SchedulerWorkspace }
+  SchedulerWorkspace, TicksCleared, TicksStarted, WorldUpdate, WritableGUIWorkspace }
 
 import java.lang.{ Double => JDouble }
 
@@ -92,6 +92,16 @@ class JFXGUIWorkspace(world: World,
     } else {
       framesSkipped += 1
     }
+  }
+
+  override def resetTicks(context: Context): Unit = {
+    super.resetTicks(context)
+    modelUpdates.offer(TicksStarted)
+  }
+
+  override def clearAll(): Unit = {
+    super.clearAll()
+    modelUpdates.offer(TicksCleared)
   }
 
   // Members declared in org.nlogo.nvm.LoggingWorkspace

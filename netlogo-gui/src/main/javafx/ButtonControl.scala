@@ -55,6 +55,12 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
     button.setOnAction(triggerStart)
     button.onActionProperty.bind(
       Bindings.when(activeProperty).`then`(triggerStop).otherwise(triggerStart))
+    if (buttonModel.disableUntilTicksStart) {
+      button.setDisable(! compiledButton.ticksEnabled.currentValue)
+      compiledButton.ticksEnabled.onUpdate { (enabled) =>
+        button.setDisable(! enabled)
+      }
+    }
   }
 
   def tagAction(action: ModelAction, actionTag: String): Unit = {

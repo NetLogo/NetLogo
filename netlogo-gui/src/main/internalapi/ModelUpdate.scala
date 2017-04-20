@@ -22,8 +22,14 @@ case class JobFinished(tag: String) extends JobDone // finished can mean stopped
 case class JobHalted(tag: String) extends JobDone
 case class JobErrored(tag: String, error: Exception) extends ModelUpdate
 case class MonitorsUpdate(values: Map[String, Try[AnyRef]], time: Long) extends ModelUpdate {
-  def tag = "~monitors-update~"
+  def tag = "~monitors.update"
+}
+case object TicksStarted extends ModelUpdate {
+  def tag = "~world.ticks.started"
+}
+case object TicksCleared extends ModelUpdate {
+  def tag = "~world.ticks.cleared"
 }
 case class WorldUpdate(world: World, time: Long) extends ModelUpdate {
-  def tag = "~world-update~"
+  def tag = "~world.update"
 }
