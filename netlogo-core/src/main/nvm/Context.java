@@ -109,11 +109,10 @@ public final strictfp class Context implements org.nlogo.api.Context {
   scala.util.Either<Context, Integer> runFor(int steps) {
     int completedSteps = 0;
     if (checkRunnable()) {
-      while (completedSteps < steps && !finished && !ticked) {
+      while (completedSteps < steps && !finished) {
         runStepScheduled();
         completedSteps++;
       }
-      ticked = false;
       if (!finished) {
         return scala.util.Left.<Context, Integer>apply(this);
       }

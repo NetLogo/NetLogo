@@ -58,40 +58,10 @@ class SuspendableJob(
 
   override def exclusive = true
 
+  def intact: Boolean = suspendedState.isEmpty
+
   // we are not suspendable. we run to the end and that's it
   override def step() { throw new UnsupportedOperationException() }
-
-  @scala.annotation.tailrec
-  private final def runShuffled(stepsRemaining: Int, agentIterator: AgentIterator): Option[SuspendableJob] = {
-    if (agentIterator.hasNext) {
-      val agent = agentIterator.next()
-      val c = new Context(this, null, 0, null)
-      c.agent = agent
-      c.agentBit = agentset.agentBit
-      c.activation = parentActivation
-      c.ip = address
-      c.finished = false
-      c.activation.binding = c.activation.binding.enterScope()
-      c.runFor(stepsRemaining) match {
-        case Left(continueContext) =>
-          Some(new SuspendableJob(Some((c, agentIterator)), parentActivation, forever, agentset,
-            topLevelProcedure, address, parentContext, random))
-        case Right(completedSteps) =>
-          if (c.activation == parentActivation) {
-            c.activation.binding = c.activation.binding.exitScope()
-          }
-          runShuffled(stepsRemaining - completedSteps, agentIterator)
-      }
-    } else {
-      if (forever) {
-        Some(new SuspendableJob(None, parentActivation, true, agentset, topLevelProcedure,
-          address, parentContext, random))
-      } else {
-        state = Job.DONE
-        None
-      }
-    }
-  }
 
   def runFor(steps: Int): Option[SuspendableJob] = {
     state = Job.RUNNING
@@ -100,22 +70,44 @@ class SuspendableJob(
     // agentset as we're iterating through it, for example if we're iterating through all turtles
     // and one of them hatches; the hatched turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
-    suspendedState match {
-      case Some((ctx, it)) =>
-        ctx.runFor(steps) match {
-          case Left(continueContext) =>
-            Some(new SuspendableJob(Some((ctx, it)), parentActivation, forever, agentset,
-              topLevelProcedure, address, parentContext, random))
-          case Right(completedSteps) =>
-            if (ctx.activation == parentActivation)
-              ctx.activation.binding = ctx.activation.binding.exitScope()
-            runShuffled(steps - completedSteps, it)
-        }
+    (suspendedState match {
+      case Some((ctx, agents)) => runForSteps(ctx, agents, steps)
       case None =>
         val it = agentset.shufflerator(random)
-        runShuffled(steps, it)
+        runForSteps(generateContext(it), it, steps)
+    }) match {
+      case s: Some[SuspendableJob] => s
+      case None if forever         => Some(copy(None))
+      case _                       =>
+        state = Job.DONE
+        None
     }
   }
+
+  @scala.annotation.tailrec
+  private def runForSteps(
+    ctx:         Context,
+    agents:      AgentIterator,
+    targetSteps: Int): Option[SuspendableJob] = {
+    ctx.runFor(targetSteps) match {
+      case Left(continueContext) => Some(copy(Some((ctx, agents))))
+      case Right(completedSteps) =>
+        if (ctx.activation == parentActivation)
+          ctx.activation.binding = ctx.activation.binding.exitScope()
+        if (agents.hasNext)
+          runForSteps(generateContext(agents), agents, targetSteps - completedSteps)
+        else None
+    }
+  }
+
+  private def generateContext(agents: AgentIterator) = {
+    val ctx = new Context(this, agents.next(), address, parentActivation)
+    ctx.activation.binding = ctx.activation.binding.enterScope()
+    ctx
+  }
+
+  def copy(suspendedState: Option[(Context, AgentIterator)]): SuspendableJob =
+    new SuspendableJob(suspendedState, parentActivation, forever, agentset, topLevelProcedure, address, parentContext, random)
 
   // used by Evaluator.MyThunk
   def runResult() =

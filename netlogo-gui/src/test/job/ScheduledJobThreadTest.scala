@@ -26,6 +26,7 @@ class ScheduledJobThreadTest extends FunSuite {
     Collections.sort(a, ScheduledJobThread.PriorityOrder)
     a.asScala
   }
+  val dummyJob = new DummyJob()
 
   def assertSortedOrder(e1: ScheduledEvent, e2: ScheduledEvent): Unit = {
     assert(sortEvents(e1, e2) == Seq(e1, e2))
@@ -37,7 +38,7 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts scheduled operation job ahead of adding a job") {
-    assertSortedOrder(StopJob("a", 1), AddJob(null, "abc", 0, 0))
+    assertSortedOrder(StopJob("a", 1), AddJob(dummyJob, "abc", 0, 0))
   }
 
   test("job ordering puts the oldest job stop first"){
@@ -45,30 +46,30 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts the oldest add job first"){
-    assertSortedOrder(AddJob(null, "abc", 0, 0), AddJob(null, "abc", 0, 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), AddJob(dummyJob, "abc", 0, 1))
   }
 
   test("job ordering ranks adding a job and adding a monitor by time"){
-    assertSortedOrder(AddMonitor(null, "abc", 0), AddJob(null, "abc", 0, 1))
-    assertSortedOrder(AddJob(null, "abc", 0, 0), AddMonitor(null, "abc", 1))
+    assertSortedOrder(AddMonitor(dummyJob, "abc", 0), AddJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), AddMonitor(dummyJob, "abc", 1))
   }
 
   test("job ordering puts run job behind adding a job"){
-    assertSortedOrder(AddJob(null, "abc", 0, 0), RunJob(null, "abc", 0, 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), RunJob(dummyJob, "abc", 0, 1))
   }
 
   // NOTE: if the job thread is ever expanded to include secondary or intermittent
   // jobs, this ordering should be tweaked
   test("job ordering puts the oldest run job first"){
-    assertSortedOrder(RunJob(null, "abc", 0, 0), RunJob(null, "abc", 0, 1))
+    assertSortedOrder(RunJob(dummyJob, "abc", 0, 0), RunJob(dummyJob, "abc", 0, 1))
   }
 
   test("job ordering puts an old monitor update ahead of RunJob") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 0, 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 0, 1))
   }
 
   test("job ordering puts an old job ahead of monitor updates") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(null, "abc", 0, 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 0, 1))
   }
 
   class Subject extends JobScheduler {
@@ -95,6 +96,7 @@ class ScheduledJobThreadTest extends FunSuite {
     var repeat: Boolean = false
     def keepRepeating(): DummyJob = { repeat = true; this }
     var runCount = 0
+    var intact = true
     def wasRun = runCount > 0
     def runFor(steps: Int): Option[SuspendableJob] = {
       runCount += 1
@@ -199,6 +201,19 @@ class ScheduledJobThreadTest extends FunSuite {
     val stopJob = subject.stopJob(jobTag)
     runEvents(3)
     assert(! DummyOneRunJob.wasRun)
+  } }
+
+  test("a stopped job will be run until it finishes intact before stopping") { new Helper {
+    val job = DummyKeepRunningJob
+    val jobTag = subject.scheduleJob(job)
+    job.intact = false
+    runEvents(2) // runs once here
+    subject.stopJob(jobTag)
+    runEvents(2) // runs a second time here
+    job.intact = true
+    runEvents(2) // runs a third time (and finishes intact) here
+    assert(job.runCount == 3)
+    assert(subject.queue.isEmpty)
   } }
 
   test("A scheduled operation is run in turn") { new Helper {

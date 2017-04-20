@@ -21,18 +21,29 @@ object ScheduledJobThread {
     def submissionTime: Long
   }
 
-  case class ScheduleOperation(op: () => Unit, tag: String, submissionTime: Long) extends ScheduledEvent
-  case class StopJob(cancelTag: String, submissionTime: Long) extends ScheduledEvent
+  trait TaggedOperation {
+    def tag: String
+    def stoppable: Boolean
+  }
+
+  case class ScheduleOperation(op: () => Unit, tag: String, submissionTime: Long)           extends ScheduledEvent with TaggedOperation {
+    val stoppable = true
+  }
   // Q: Why not have AddJob and RunJob be the same?
   // A: I don't think that's a bad idea, per se, but I want to allow flexibility in the future.
   //    Having RunJob events created only by the Scheduler allows them
   //    to hold additional information about the job including things
   //    like "how long since it was run last" and "how long is it estimated to run for"
-  //    that 't available when adding the job. RG 3/28/17
-  case class AddJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent
-  case class RunJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent
-  case class AddMonitor(op: SuspendableJob, tag: String, submissionTime: Long) extends ScheduledEvent
-  case class RunMonitors(monitorOps: Map[String, SuspendableJob], submissionTime: Long) extends ScheduledEvent
+  //    that isn't available when adding the job. RG 3/28/17
+  case class AddJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent with TaggedOperation {
+    val stoppable = true
+  }
+  case class RunJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent with TaggedOperation {
+    val stoppable = job.intact
+  }
+  case class StopJob(cancelTag: String, submissionTime: Long)                               extends ScheduledEvent
+  case class AddMonitor(op: SuspendableJob, tag: String, submissionTime: Long)              extends ScheduledEvent
+  case class RunMonitors(monitorOps: Map[String, SuspendableJob], submissionTime: Long)     extends ScheduledEvent
 
   object JobSuspension {
     implicit object SuspensionOrdering extends Ordering[JobSuspension] {
@@ -139,19 +150,13 @@ trait JobScheduler extends ApiJobScheduler {
     queue.add(StopJob(jobTag, currentTime))
   }
 
-  // TODO: This doesn't yet return information about completed jobs
   def runEvent(): Unit = {
     queue.poll(timeout, timeoutUnit) match {
       case null                          => clearStopList()
-      case RunJob(job, tag, interval, _) =>
-        runJob(job, tag, interval)
-      case ScheduleOperation(op, tag, _) => runOperation(op, tag)
-      case AddMonitor(op, tag, _)        => addMonitor(tag, op)
+      case t: TaggedOperation if stopList.contains(t.tag) && t.stoppable => jobCompleted(t.tag)
+      case t: TaggedOperation            => processTask(t)
       case StopJob(cancelTag, time)      => stopList += cancelTag
-      case AddJob(job, tag, interval, _) if stopList.contains(tag) => jobStopped(tag)
-      case AddJob(job, tag, interval, _) =>
-        job.scheduledBy(this)
-        queue.add(RunJob(job, tag, interval, currentTime))
+      case AddMonitor(op, tag, _)        => addMonitor(tag, op)
       case RunMonitors(updaters, time)   =>
         pendingMonitors.values.foreach(_.scheduledBy(this))
         val allMonitors = updaters ++ pendingMonitors
@@ -165,6 +170,16 @@ trait JobScheduler extends ApiJobScheduler {
     haltRequested = true
   }
 
+  def processTask(t: TaggedOperation): Unit = {
+    t match {
+      case RunJob(job, tag, interval, _) => runJob(job, tag, interval)
+      case ScheduleOperation(op, tag, _) => runOperation(op, tag)
+      case AddJob(job, tag, interval, _) =>
+        job.scheduledBy(this)
+        queue.add(RunJob(job, tag, interval, currentTime))
+    }
+  }
+
   private def rescheduleSuspendedJobs(): Unit = {
     val toSchedule = suspendedJobs.takeWhile(_.timeUnsuspended < currentTime)
     toSchedule.foreach {
@@ -176,54 +191,33 @@ trait JobScheduler extends ApiJobScheduler {
 
   private def clearStopList(): Unit = {
     if (suspendedJobs.isEmpty)
-      stopList.foreach(jobStopped)
+      stopList.foreach(jobCompleted)
     else
       suspendedJobs.foreach {
         case js@JobSuspension(_, RunJob(_, t, _, _)) if stopList.contains(t) =>
           suspendedJobs -= js
-          jobStopped(t)
+          jobCompleted(t)
         case _ =>
       }
   }
 
-  private def jobStopped(tag: String): Unit = {
+  private def jobCompleted(tag: String): Unit = {
     stopList -= tag
     updates.add(JobDone(tag))
   }
 
-  private def runJob(job: SuspendableJob, tag: String, interval: Long): Unit = {
-    monitorDataStale = true
-    if (stopList.contains(tag)) jobStopped(tag)
-    else {
-      Try(job.runFor(StepsPerRun)) match {
-        case Success(None)                => updates.add(JobDone(tag))
-        case Success(Some(j))             =>
-          val reRun = RunJob(j, tag, interval, currentTime)
-          if (interval == 0)  queue.add(reRun)
-          else                suspendedJobs += JobSuspension(interval, reRun)
-        case Failure(e: RuntimeException with HaltSignal) => jobHalted(tag, e)
-        case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
-        case Failure(e)                   => throw e
-      }
-    }
-  }
-
   private def jobHalted(tag: String, e: RuntimeException with HaltSignal): Unit = {
     updates.add(JobHalted(tag))
-    if (e.haltAll) {
+    if (e.haltAll)
       haltAllJobs()
-    }
   }
 
   protected def haltAllJobs(): Unit = {
-    def haltEvent(s: ScheduledEvent): Unit = {
+    def haltEvent(s: ScheduledEvent): Unit =
       s match {
-        case RunJob(_, t, _, _)         => updates.add(JobHalted(t))
-        case AddJob(_, t, _, _)         => updates.add(JobHalted(t))
-        case ScheduleOperation(_, t, _) => updates.add(JobHalted(t))
+        case op: TaggedOperation => updates.add(JobHalted(op.tag))
         case _ =>
       }
-    }
     suspendedJobs.foreach(s => haltEvent(s.event))
     suspendedJobs.clear()
     val queuedTasks = new JArrayList[ScheduledEvent]()
@@ -233,15 +227,27 @@ trait JobScheduler extends ApiJobScheduler {
     pendingMonitors = Map.empty[String, SuspendableJob]
   }
 
-  private def runOperation(op: () => Unit, tag: String): Unit =  {
+  private def runTask[T](task: => T, tag: String, handleSuccess: PartialFunction[Try[T], Unit]): Unit = {
     monitorDataStale = true
-    Try(op()) match {
-      case Success(())                  => updates.add(JobDone(tag))
+    val handleFailures: PartialFunction[Try[T], Unit] = {
       case Failure(e: RuntimeException with HaltSignal) => jobHalted(tag, e)
       case Failure(e: RuntimeException) => updates.add(JobErrored(tag, e))
       case Failure(e)                   => throw e
     }
+    (handleSuccess orElse handleFailures).apply(Try(task))
   }
+
+  private def runJob(job: SuspendableJob, tag: String, interval: Long): Unit =
+    runTask[Option[SuspendableJob]](job.runFor(StepsPerRun), tag, {
+      case Success(None)                => jobCompleted(tag)
+      case Success(Some(j))             =>
+        val reRun = RunJob(j, tag, interval, currentTime)
+        if (interval == 0)  queue.add(reRun)
+        else                suspendedJobs += JobSuspension(interval, reRun)
+    })
+
+  private def runOperation(op: () => Unit, tag: String): Unit =
+    runTask[Unit](op(), tag, { case Success(()) => jobCompleted(tag) })
 
   private def addMonitor(tag: String, op: SuspendableJob): Unit = {
     if (monitorsRunning) pendingMonitors += tag -> op
