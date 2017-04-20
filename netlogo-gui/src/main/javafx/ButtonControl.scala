@@ -15,7 +15,9 @@ import javafx.scene.paint.Color
 import java.lang.{ Double => JDouble }
 
 import org.nlogo.core.{ Button => CoreButton }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton, JobDone, JobErrored, ModelAction, ModelUpdate, RunComponent, RunnableModel, StopProcedure }
+import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton,
+  JobDone, JobErrored, JobHalted, ModelAction, ModelUpdate, RunComponent,
+  RunnableModel, StopProcedure }
 
 // TODO: Figure out a way to disable until ticks start (if appropriate)
 class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, foreverInterval: DoubleProperty)
@@ -72,8 +74,20 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
 
   def updateReceived(update: ModelUpdate): Unit = {
     update match {
+      case JobHalted(t) =>
+        popOut()
+        jobFinished(t)
+      case JobErrored(t, _) =>
+        popOut()
+        jobFinished(t)
       case JobDone(t) => jobFinished(t)
-      case JobErrored(t, _) => jobFinished(t)
+      case _ =>
+    }
+  }
+
+  private def popOut(): Unit = {
+    button match {
+      case t: ToggleButton => t.setSelected(false)
       case _ =>
     }
   }
@@ -85,10 +99,6 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
     if (jobTag.contains(t)) {
       jobTag = None
       activeProperty.set(false)
-    }
-    button match {
-      case t: ToggleButton => t.setSelected(false)
-      case _ =>
     }
   }
 

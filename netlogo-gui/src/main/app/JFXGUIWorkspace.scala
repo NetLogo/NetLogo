@@ -69,13 +69,13 @@ class JFXGUIWorkspace(world: World,
     ex.printStackTrace()
   }
 
-  def setFrameSkips(i: Int): Unit = {
-    frameSkips.set(i)
+  def setMaxFPS(i: Int): Unit = {
+    updatesPerSecond.set(i)
   }
 
   // counts how many frames to skip between sending each
-  val frameSkips = new AtomicInteger(0)
-  var framesSkipped: Int = 0
+  val updatesPerSecond = new AtomicInteger(1000)
+  var lastDrawnTime: Long = 0
 
   def requestDisplayUpdate(force: Boolean): Unit = {
     sendWorldUpdate()
@@ -86,11 +86,9 @@ class JFXGUIWorkspace(world: World,
   }
 
   private def sendWorldUpdate(): Unit = {
-    if (frameSkips.intValue <= framesSkipped) {
-      modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis)) // TODO: This should be a copy of world
-      framesSkipped = 0
-    } else {
-      framesSkipped += 1
+    if ((1000 / updatesPerSecond.get) < (System.currentTimeMillis - lastDrawnTime)) {
+      modelUpdates.offer(WorldUpdate(world.copy, System.currentTimeMillis))
+      lastDrawnTime = System.currentTimeMillis
     }
   }
 

@@ -151,7 +151,7 @@ class ApplicationController {
       case _ =>
     }
     if (workspace != null && interfaceArea != null) {
-      workspace.setFrameSkips(interfaceArea.speedControl.frameSkips.getValue)
+      workspace.setMaxFPS(interfaceArea.speedControl.updatesPerSecond.getValue)
     }
     if (filterThread.filteredUpdates.peek != null) {
       Platform.runLater(new Runnable() {

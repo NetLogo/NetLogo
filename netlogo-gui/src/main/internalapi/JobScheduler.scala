@@ -27,5 +27,5 @@ trait JobScheduler {
 
 trait SchedulerWorkspace {
   def scheduledJobThread: JobScheduler
-  def setFrameSkips(i: Int): Unit
+  def setMaxFPS(i: Int): Unit
 }
