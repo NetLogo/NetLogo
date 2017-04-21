@@ -10,8 +10,9 @@ import javafx.stage.Stage
 
 import org.nlogo.api._
 import org.nlogo.agent.{ World, World2D }
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
-  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList,
+  Model, Nobody, Shape, Token, Widget => CoreWidget },
+    Shape.{ LinkShape, VectorShape }
 import org.nlogo.internalapi.ModelUpdate
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.javafx.Utils.handler
@@ -117,7 +118,7 @@ class JavaFXApp extends Application {
 
   override def start(primaryStage: Stage): Unit = {
     import javafx.scene.layout.{ HBox, VBox }
-    val loader = new FXMLLoader(getClass.getClassLoader.getResource("Application.fxml"))
+    val loader = new FXMLLoader(getClass.getClassLoader.getResource("Application.fxml"), I18N.gui.defaultBundle)
     val vBox = loader.load().asInstanceOf[VBox]
     applicationController = loader.getController.asInstanceOf[ApplicationController]
     applicationController.modelLoader = pico.getComponent(classOf[ModelLoader])

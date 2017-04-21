@@ -11,6 +11,8 @@ import javafx.collections.FXCollections
 import javafx.scene.layout.{ GridPane }
 import javafx.scene.control.{ Label, Slider }
 
+import org.nlogo.core.I18N
+
 import Utils.changeListener
 
 class BasicSpeedControl extends GridPane {
@@ -54,7 +56,7 @@ class BasicSpeedControl extends GridPane {
   val ticks = new SimpleLongProperty(-1)
 
   locally {
-    val loader = new FXMLLoader(getClass.getClassLoader.getResource("BasicSpeedControl.fxml"))
+    val loader = new FXMLLoader(getClass.getClassLoader.getResource("BasicSpeedControl.fxml"), I18N.gui.defaultBundle)
     loader.setController(this)
     loader.setRoot(this)
     loader.load()

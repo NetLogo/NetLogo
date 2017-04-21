@@ -21,9 +21,9 @@
       <Slider fx:id="speedSlider" majorTickUnit="5.0" minorTickCount="0" prefHeight="16.0" prefWidth="118.0" snapToTicks="true" value="50.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
       <AnchorPane prefHeight="25.0" prefWidth="314.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
          <children>
-            <Label fx:id="normalSpeed" layoutX="60.0" layoutY="4.0" text="normal speed" />
-            <Label fx:id="slower" layoutX="12.0" layoutY="4.0" text="slower" visible="false" />
-            <Label fx:id="faster" layoutX="153.0" layoutY="4.0" text="faster" visible="false" />
+            <Label fx:id="normalSpeed" layoutX="60.0" layoutY="4.0" text="%tabs.run.speedslider.normalspeed" />
+            <Label fx:id="slower" layoutX="12.0" layoutY="4.0" text="%tabs.run.speedslider.slower" visible="false" />
+            <Label fx:id="faster" layoutX="153.0" layoutY="4.0" text="%tabs.run.speedslider.faster" visible="false" />
          </children>
       </AnchorPane>
       <Label text="Ticks:" GridPane.columnIndex="1" />

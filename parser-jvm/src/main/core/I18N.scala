@@ -62,7 +62,7 @@ object I18N {
     // we need to fall back and use the english string instead of erroring.
     // its very possible (and in fact in most cases, likely) that the
     // defaultBundle IS the english bundle, but that is ok.
-    private var defaultBundle = getBundle(defaultLocale)
+    var defaultBundle = getBundle(defaultLocale)
     private val englishBundle = getBundle(Locale.US)
     def getBundle(locale: Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key: String)(implicit prefix: Prefix) = get(prefix.name + "." + key)

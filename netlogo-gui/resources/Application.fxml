@@ -9,22 +9,22 @@
    <children>
       <MenuBar fx:id="menuBar">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="%menu.file">
             <items>
-              <MenuItem id="open-menu" fx:id="openFile" mnemonicParsing="false" text="Open..." />
-                  <MenuItem id="menu-close" fx:id="closeItem" mnemonicParsing="false" text="Close" />
+              <MenuItem id="open-menu" fx:id="openFile" mnemonicParsing="false" text="%menu.file.open" />
+                  <MenuItem id="menu-close" fx:id="closeItem" mnemonicParsing="false" text="%common.buttons.exit" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Run">
+            <Menu mnemonicParsing="false" text="%tabs.run">
                <items>
-                  <MenuItem id="open-menu" fx:id="haltItem" mnemonicParsing="false" text="Halt" />
+                  <MenuItem id="open-menu" fx:id="haltItem" mnemonicParsing="false" text="%common.buttons.halt" />
                </items>
             </Menu>
         </menus>
       </MenuBar>
       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="621.0" prefWidth="650.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Interface">
+          <Tab text="%tabs.run">
                <content>
                 <AnchorPane id="interface-area-pane" fx:id="interfaceTabArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="650.0" />
                </content>
