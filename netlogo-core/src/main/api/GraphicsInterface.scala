@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 // so we can mock Graphics2D for testing
-
 trait GraphicsInterface {
   def antiAliasing(on: Boolean)
   def draw(shape: java.awt.Shape)
@@ -37,5 +36,10 @@ trait GraphicsInterface {
   def drawCircle(x: Double, y: Double, xDiamter: Double, yDiameter: Double, scale: Double, angle: Double)
   def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double)
   def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double)
-  def getFontMetrics: java.awt.FontMetrics
+  def getFontMetrics: FontMetrics
+}
+
+trait FontMetrics {
+  def stringWidth(s: String): Int
+  def getHeight(s: String): Int
 }

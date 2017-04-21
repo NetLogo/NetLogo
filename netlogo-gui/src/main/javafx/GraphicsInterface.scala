@@ -6,10 +6,10 @@ import java.awt.geom.AffineTransform
 import java.awt.image.{ AffineTransformOp, BufferedImage }
 
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.text.{ Font, Text }
 import javafx.embed.swing.SwingFXUtils
 
-import org.nlogo.api.{ GraphicsInterface => ApiGraphicsInterface }
-
+import org.nlogo.api.{ FontMetrics, GraphicsInterface => ApiGraphicsInterface }
 
 class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
   // TODO: I believe scale is correcting for the size ratio of Shape.Width. I'm not sure context.scale accounts for this properly...
@@ -79,6 +79,7 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
     context.restore()
   }
 
+
   def fill(shape: java.awt.Shape): Unit = {
     // println(s"filling arbitrary shape")
     ???
@@ -110,7 +111,21 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
     context.fillRect(x, y, width, height)
   }
 
-  def getFontMetrics: java.awt.FontMetrics = ???
+
+  class FontMetricsWrapper(font: Font) extends FontMetrics {
+    val text = new Text("")
+    text.setFont(font)
+    def stringWidth(s: String): Int = {
+      text.setText(s)
+      text.getLayoutBounds.getWidth.toInt
+    }
+    def getHeight(s: String): Int = {
+      text.setText(s)
+      text.getLayoutBounds.getHeight.toInt
+    }
+  }
+  def getFontMetrics: FontMetrics =
+    new FontMetricsWrapper(context.getFont)
 
   def location(x: Double,y: Double): String = {
     s"(${context.getTransform.getTx + x} , ${context.getTransform.getTy + y})"

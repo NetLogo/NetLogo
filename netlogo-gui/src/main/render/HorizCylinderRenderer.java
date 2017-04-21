@@ -46,7 +46,7 @@ public strictfp class HorizCylinderRenderer extends AbstractTopologyRenderer {
     double x = graphicsX(xcor + (0.5 * size), patchSize);
     double y = graphicsY(ycor - (0.5 * size), patchSize);
 
-    int labelHeight = g.getFontMetrics().getHeight();
+    int labelHeight = g.getFontMetrics().getHeight(label);
 
     g.setColor(org.nlogo.api.Color.getColor(color));
 

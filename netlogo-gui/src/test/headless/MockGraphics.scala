@@ -6,7 +6,7 @@ import java.awt.{ Composite, FontMetrics }
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import collection.mutable.ListBuffer
-import org.nlogo.api.GraphicsInterface
+import org.nlogo.api.{ GraphicsInterface, Graphics2DWrapper }
 import org.nlogo.util.MockSuite
 
 object MockGraphics {
@@ -131,7 +131,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
 
   private var fm: Option[FontMetrics] = None
   private def setFontMetrics(fm: FontMetrics){ this.fm = Option(fm) }
-  def getFontMetrics: FontMetrics = fm.get
+  def getFontMetrics: org.nlogo.api.FontMetrics = new Graphics2DWrapper.FontMetricsWrapper(fm.get)
   def allowingLabels(labelSize:LabelSize){
     import mockTest._
     val mockFontMetrics = mock[FontMetrics]

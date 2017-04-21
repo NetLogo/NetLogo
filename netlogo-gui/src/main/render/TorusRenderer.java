@@ -67,7 +67,7 @@ public strictfp class TorusRenderer extends AbstractTopologyRenderer {
     double y = graphicsY(ycor - (0.5 * size), patchSize);
 
     int labelWidth = g.getFontMetrics().stringWidth(label);
-    int labelHeight = g.getFontMetrics().getHeight();
+    int labelHeight = g.getFontMetrics().getHeight(label);
 
     g.setColor(org.nlogo.api.Color.getColor(color));
 

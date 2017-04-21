@@ -2,11 +2,19 @@
 
 package org.nlogo.api
 
-import java.awt.Graphics2D
+import java.awt.{ FontMetrics => AwtFontMetrics, Graphics2D }
 import scala.util.Properties.isMac
 import org.nlogo.core.Shape
 
 // implements GraphicsInterface, wrapper around Graphics2D
+object Graphics2DWrapper {
+  class FontMetricsWrapper(awtMetrics: AwtFontMetrics) extends FontMetrics {
+    def stringWidth(s: String): Int = awtMetrics.stringWidth(s)
+    def getHeight(s: String): Int   = awtMetrics.getHeight
+  }
+}
+
+import Graphics2DWrapper._
 
 class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false) extends GraphicsInterface {
 
@@ -190,5 +198,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int) { g.fillPolygon(xcors, ycors, length) }
   def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int) { g.drawPolyline(xcors, ycors, length) }
   def dispose() { g.dispose() }
-  override def getFontMetrics = g.getFontMetrics
+  override def getFontMetrics = {
+    new FontMetricsWrapper(g.getFontMetrics)
+  }
 }
