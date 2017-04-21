@@ -7,10 +7,12 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.fxml.{ FXML, FXMLLoader }
-import javafx.scene.control.{ ToggleButton }
+import javafx.scene.control.ToggleButton
 import javafx.scene.layout.{ HBox, Pane, StackPane, VBox }
 
 import java.lang.{ Boolean => JBoolean }
+
+import Utils.changeListener
 
 import scala.collection.JavaConverters._
 
@@ -53,13 +55,11 @@ class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
       Bindings.when(controlsShowing).`then`(hideControls).otherwise(showControls))
     controlsToggle.textProperty.bind(
       Bindings.when(controlsShowing).`then`("Hide Controls").otherwise("Show Controls"))
-    controlsShowing.addListener(new ChangeListener[JBoolean] {
-      override def changed(observable: ObservableValue[_ <: JBoolean], oldValue: JBoolean, newValue: JBoolean): Unit = {
-        if (newValue.booleanValue) {
-          controlPane.getChildren.add(speedControl)
-        } else {
-          controlPane.getChildren.remove(speedControl)
-        }
+    controlsShowing.addListener(changeListener { (newValue: JBoolean) =>
+      if (newValue.booleanValue) {
+        controlPane.getChildren.add(speedControl)
+      } else {
+        controlPane.getChildren.remove(speedControl)
       }
     })
   }
