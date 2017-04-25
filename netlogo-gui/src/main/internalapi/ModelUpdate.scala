@@ -21,6 +21,15 @@ sealed trait JobDone extends ModelUpdate
 case class JobFinished(tag: String) extends JobDone // finished can mean stopped or completed
 case class JobHalted(tag: String) extends JobDone
 case class JobErrored(tag: String, error: Exception) extends ModelUpdate
+case class UpdateSuccess(update: UpdateVariable) extends ModelUpdate {
+  def tag = "~world.variable.updated.success"
+}
+case class UpdateFailure(update: UpdateVariable, actualValue: AnyRef) extends ModelUpdate {
+  def tag = "~world.variable.updated.failure"
+}
+case class UpdateError(update: UpdateVariable, error: AnyRef) extends ModelUpdate {
+  def tag = "~world.variable.updated.error"
+}
 case class MonitorsUpdate(values: Map[String, Try[AnyRef]], time: Long) extends ModelUpdate {
   def tag = "~monitors.update"
 }

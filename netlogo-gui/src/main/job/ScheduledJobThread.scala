@@ -6,9 +6,8 @@ import java.util.{ ArrayList => JArrayList, Comparator, UUID }
 import java.util.concurrent.{ BlockingQueue, PriorityBlockingQueue, TimeUnit }
 
 import org.nlogo.api.HaltSignal
-import org.nlogo.internalapi.{ AddProcedureRun, JobScheduler => ApiJobScheduler,
-  JobDone, JobErrored, JobHalted, ModelAction, ModelUpdate, MonitorsUpdate, StopProcedure,
-  SuspendableJob, UpdateInterfaceGlobal }
+import org.nlogo.internalapi.{ JobScheduler => ApiJobScheduler, JobDone, JobErrored,
+  JobHalted, ModelOperation, ModelUpdate, MonitorsUpdate, SuspendableJob, TaggedTask }
 
 import scala.annotation.tailrec
 import scala.util.{ Failure, Success, Try }
@@ -17,16 +16,16 @@ import scala.collection.mutable.SortedSet
 import scala.math.Ordering
 
 object ScheduledJobThread {
-  sealed trait ScheduledEvent {
+  sealed trait ScheduledTask extends TaggedTask {
     def submissionTime: Long
-  }
-
-  trait TaggedOperation {
     def tag: String
     def stoppable: Boolean
   }
 
-  case class ScheduleOperation(op: () => Unit, tag: String, submissionTime: Long)           extends ScheduledEvent with TaggedOperation {
+  case class ScheduleOperation(op: ModelOperation, tag: String, submissionTime: Long) extends ScheduledTask {
+    val stoppable = true
+  }
+  case class ScheduleArbitraryAction(op: () => Unit, tag: String, submissionTime: Long) extends ScheduledTask {
     val stoppable = true
   }
   // Q: Why not have AddJob and RunJob be the same?
@@ -35,15 +34,23 @@ object ScheduledJobThread {
   //    to hold additional information about the job including things
   //    like "how long since it was run last" and "how long is it estimated to run for"
   //    that isn't available when adding the job. RG 3/28/17
-  case class AddJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent with TaggedOperation {
+  case class AddJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledTask {
     val stoppable = true
   }
-  case class RunJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledEvent with TaggedOperation {
+  case class RunJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledTask {
     val stoppable = job.intact
   }
-  case class StopJob(cancelTag: String, submissionTime: Long)                               extends ScheduledEvent
-  case class AddMonitor(op: SuspendableJob, tag: String, submissionTime: Long)              extends ScheduledEvent
-  case class RunMonitors(monitorOps: Map[String, SuspendableJob], submissionTime: Long)     extends ScheduledEvent
+  case class StopJob(cancelTag: String, submissionTime: Long)                               extends ScheduledTask {
+    val tag = cancelTag + "-stop"
+    val stoppable = false
+  }
+  case class AddMonitor(op: SuspendableJob, tag: String, submissionTime: Long)              extends ScheduledTask {
+    val stoppable = false
+  }
+  case class RunMonitors(monitorOps: Map[String, SuspendableJob], submissionTime: Long)     extends ScheduledTask {
+    val tag = "runmonitors"
+    val stoppable = false
+  }
 
   object JobSuspension {
     implicit object SuspensionOrdering extends Ordering[JobSuspension] {
@@ -54,14 +61,15 @@ object ScheduledJobThread {
       }
     }
   }
-  case class JobSuspension(interval: Long, event: ScheduledEvent) {
+  case class JobSuspension(interval: Long, event: ScheduledTask) {
     val timeUnsuspended = event.submissionTime + interval
   }
 
-  object PriorityOrder extends Comparator[ScheduledEvent] {
+  object PriorityOrder extends Comparator[ScheduledTask] {
     // lower means "first" or higher priority
-    def basePriority(e: ScheduledEvent): Int = {
+    def basePriority(e: ScheduledTask): Int = {
       e match {
+        case ScheduleArbitraryAction(_, _, _) => 0
         case ScheduleOperation(_, _, _) => 0
         case StopJob(_, _)              => 1
         case AddJob(_, _, _, _)         => 2
@@ -70,7 +78,7 @@ object ScheduledJobThread {
         case RunMonitors(_, _)          => 3
       }
     }
-    def compare(e1: ScheduledEvent, e2: ScheduledEvent): Int = {
+    def compare(e1: ScheduledTask, e2: ScheduledTask): Int = {
       val p1 = basePriority(e1)
       val p2 = basePriority(e2)
       if (p1 < p2) -1
@@ -92,10 +100,14 @@ trait JobScheduler extends ApiJobScheduler {
 
   def timeoutUnit: TimeUnit = TimeUnit.MILLISECONDS
 
+  type Task = ScheduledTask
+
+  def handleModelOperation: ModelOperation => Try[ModelUpdate]
+
   // queue contains *inbound* information about tasks the jobs queue is expected
   // to perform. This variable is written to by any thread and read by the job
   // thread. Note that the job thread itself writes to this frequently.
-  def queue: BlockingQueue[ScheduledEvent]
+  def queue: BlockingQueue[ScheduledTask]
 
   // updates contains *outbound* information about the state of the enqueued jobs
   // this variable is typically written to on the event thread and read elsewhere
@@ -124,23 +136,20 @@ trait JobScheduler extends ApiJobScheduler {
 
   def currentTime: Long = System.currentTimeMillis
 
-  def scheduleJob(job: SuspendableJob): String = {
-    scheduleJob(job, 0)
-  }
+  private def generateJobTag = UUID.randomUUID.toString
 
-  def scheduleJob(job: SuspendableJob, interval: Long): String = {
-    val jobTag = UUID.randomUUID.toString
-    val e = AddJob(job, jobTag, interval, currentTime)
-    queue.add(e)
-    jobTag
-  }
+  def createJob(job: SuspendableJob): ScheduledTask = createJob(job, 0)
 
-  def scheduleOperation(op: () => Unit): String = {
-    val jobTag = UUID.randomUUID.toString
-    val e = ScheduleOperation(op, jobTag, currentTime)
-    queue.add(e)
-    jobTag
-  }
+  def createJob(job: SuspendableJob, interval: Long): ScheduledTask =
+    AddJob(job, generateJobTag, interval, currentTime)
+
+  def createOperation(op: ModelOperation): ScheduledTask =
+    ScheduleOperation(op, generateJobTag, currentTime)
+
+  def createOperation(op: () => Unit): ScheduledTask =
+    ScheduleArbitraryAction(op, generateJobTag, currentTime)
+
+  def queueTask(a: Task): Unit = { queue.add(a) }
 
   def registerMonitor(name: String, op: SuspendableJob): Unit = {
     queue.add(AddMonitor(op, name, currentTime))
@@ -150,18 +159,11 @@ trait JobScheduler extends ApiJobScheduler {
     queue.add(StopJob(jobTag, currentTime))
   }
 
-  def runEvent(): Unit = {
+  def stepTask(): Unit = {
     queue.poll(timeout, timeoutUnit) match {
       case null                          => clearStopList()
-      case t: TaggedOperation if stopList.contains(t.tag) && t.stoppable => jobCompleted(t.tag)
-      case t: TaggedOperation            => processTask(t)
-      case StopJob(cancelTag, time)      => stopList += cancelTag
-      case AddMonitor(op, tag, _)        => addMonitor(tag, op)
-      case RunMonitors(updaters, time)   =>
-        pendingMonitors.values.foreach(_.scheduledBy(this))
-        val allMonitors = updaters ++ pendingMonitors
-        pendingMonitors = Map.empty[String, SuspendableJob]
-        runMonitors(allMonitors)
+      case t: ScheduledTask if t.stoppable && stopList.contains(t.tag) => jobCompleted(t.tag)
+      case t => processTask(t)
     }
     rescheduleSuspendedJobs()
   }
@@ -170,13 +172,21 @@ trait JobScheduler extends ApiJobScheduler {
     haltRequested = true
   }
 
-  def processTask(t: TaggedOperation): Unit = {
+  def processTask(t: ScheduledTask): Unit = {
     t match {
       case RunJob(job, tag, interval, _) => runJob(job, tag, interval)
-      case ScheduleOperation(op, tag, _) => runOperation(op, tag)
+      case ScheduleArbitraryAction(op, tag, _) => runArbitraryAction(op, tag)
+      case ScheduleOperation(op, tag, _) => runOperation(op)
       case AddJob(job, tag, interval, _) =>
         job.scheduledBy(this)
         queue.add(RunJob(job, tag, interval, currentTime))
+      case StopJob(cancelTag, time)      => stopList += cancelTag
+      case AddMonitor(op, tag, _)        => addMonitor(tag, op)
+      case RunMonitors(updaters, time)   =>
+        pendingMonitors.values.foreach(_.scheduledBy(this))
+        val allMonitors = updaters ++ pendingMonitors
+        pendingMonitors = Map.empty[String, SuspendableJob]
+        runMonitors(allMonitors)
     }
   }
 
@@ -213,16 +223,16 @@ trait JobScheduler extends ApiJobScheduler {
   }
 
   protected def haltAllJobs(): Unit = {
-    def haltEvent(s: ScheduledEvent): Unit =
+    def haltTask(s: ScheduledTask): Unit =
       s match {
-        case op: TaggedOperation => updates.add(JobHalted(op.tag))
+        case op: ScheduledTask => updates.add(JobHalted(op.tag))
         case _ =>
       }
-    suspendedJobs.foreach(s => haltEvent(s.event))
+    suspendedJobs.foreach(s => haltTask(s.event))
     suspendedJobs.clear()
-    val queuedTasks = new JArrayList[ScheduledEvent]()
+    val queuedTasks = new JArrayList[ScheduledTask]()
     queue.drainTo(queuedTasks)
-    queuedTasks.asScala.foreach(haltEvent _)
+    queuedTasks.asScala.foreach(haltTask _)
     haltRequested = false
     pendingMonitors = Map.empty[String, SuspendableJob]
   }
@@ -246,8 +256,13 @@ trait JobScheduler extends ApiJobScheduler {
         else                suspendedJobs += JobSuspension(interval, reRun)
     })
 
-  private def runOperation(op: () => Unit, tag: String): Unit =
+  private def runArbitraryAction(op: () => Unit, tag: String): Unit =
     runTask[Unit](op(), tag, { case Success(()) => jobCompleted(tag) })
+
+  private def runOperation(op: ModelOperation): Unit = {
+    monitorDataStale = true
+    handleModelOperation(op).foreach(updates.add _)
+  }
 
   private def addMonitor(tag: String, op: SuspendableJob): Unit = {
     if (monitorsRunning) pendingMonitors += tag -> op
@@ -285,11 +300,11 @@ trait JobScheduler extends ApiJobScheduler {
   }
 }
 
-class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
+class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate], val handleModelOperation: (ModelOperation => Try[ModelUpdate]))
   extends Thread(null, null, "ScheduledJobThread", JobThread.stackSize * 1024 * 1024)
   with JobScheduler {
 
-  val queue = new PriorityBlockingQueue[ScheduledEvent](100, ScheduledJobThread.PriorityOrder)
+  val queue = new PriorityBlockingQueue[ScheduledTask](100, ScheduledJobThread.PriorityOrder)
 
   @volatile private var dying = false
 
@@ -299,7 +314,7 @@ class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate])
   override def run(): Unit = {
     while (! dying) {
       try {
-        runEvent()
+        stepTask()
       } catch {
         case i: InterruptedException =>
         case e: Exception =>

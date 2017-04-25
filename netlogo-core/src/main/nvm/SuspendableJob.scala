@@ -76,8 +76,8 @@ class SuspendableJob(
         val it = agentset.shufflerator(random)
         runForSteps(generateContext(it), it, steps)
     }) match {
-      case s: Some[SuspendableJob] => s
-      case None if forever         => Some(copy(None))
+      case Left(s: SuspendableJob) => Some(s)
+      case Right(false) if forever => Some(copy(None))
       case _                       =>
         state = Job.DONE
         None
@@ -88,15 +88,15 @@ class SuspendableJob(
   private def runForSteps(
     ctx:         Context,
     agents:      AgentIterator,
-    targetSteps: Int): Option[SuspendableJob] = {
+    targetSteps: Int): Either[SuspendableJob, Boolean] = {
     ctx.runFor(targetSteps) match {
-      case Left(continueContext) => Some(copy(Some((ctx, agents))))
+      case Left(continueContext) => Left(copy(Some((ctx, agents))))
       case Right(completedSteps) =>
         if (ctx.activation == parentActivation)
           ctx.activation.binding = ctx.activation.binding.exitScope()
         if (agents.hasNext)
           runForSteps(generateContext(agents), agents, targetSteps - completedSteps)
-        else None
+        else Right(ctx.stopping)
     }
   }
 

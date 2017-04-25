@@ -6,13 +6,13 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.atomic.{ AtomicBoolean, AtomicReference, AtomicInteger }
 
 import org.nlogo.core.Femto
-import org.nlogo.agent.World
+import org.nlogo.agent.{ ModelOperations, World }
 import org.nlogo.api.{ControlSet, Exceptions, FileIO, JobOwner, ModelSettings}
 import org.nlogo.nvm.{ Context, Instruction, PresentationCompilerInterface, SuspendableJob }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.javafx.DummyJobOwner
-import org.nlogo.internalapi.{ JobScheduler, ModelAction, ModelUpdate, RunComponent,
-  SchedulerWorkspace, TicksCleared, TicksStarted, WorldUpdate, WritableGUIWorkspace }
+import org.nlogo.internalapi.{ JobScheduler, ModelUpdate, SchedulerWorkspace,
+  TicksCleared, TicksStarted, WorldUpdate, WritableGUIWorkspace }
 
 import java.lang.{ Double => JDouble }
 
@@ -21,7 +21,9 @@ class JFXGUIWorkspace(world: World,
   modelUpdates: BlockingQueue[ModelUpdate])
   extends AbstractWorkspaceScala(world, null) with SchedulerWorkspace with WritableGUIWorkspace {
 
-    val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread", modelUpdates)
+    val worldOperations = new ModelOperations(world)
+
+    val scheduledJobThread = Femto.get[JobScheduler]("org.nlogo.job.ScheduledJobThread", modelUpdates, worldOperations)
 
 
   // Members declared in org.nlogo.workspace.AbstractWorkspace

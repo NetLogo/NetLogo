@@ -3,9 +3,8 @@
 package org.nlogo.compile.api
 
 import org.nlogo.core.{
-  Command => CoreCommand, Reporter => CoreReporter, Instantiator,
-  SourceLocation
-}
+  Command => CoreCommand, Reporter => CoreReporter, Femto, Instantiator,
+  SourceLocation }
 import org.nlogo.nvm.{ Command, Reporter }
 
 class ReporterBuilder {
@@ -28,6 +27,18 @@ class ReporterBuilder {
 
   def withArg(a: Expression): ReporterBuilder = {
     args :+= a
+    this
+  }
+
+  def constInt(i: Int): ReporterBuilder =
+    const(Double.box(i), "_constdouble")
+
+  def constString(s: String): ReporterBuilder =
+    const(s, "_conststring")
+
+  def const(a: AnyRef, primConstClass: String): ReporterBuilder = {
+    coreRep = Femto.get[CoreReporter](Class.forName(s"org.nlogo.core.prim._const"), a)
+    rep = Femto.get[Reporter](Class.forName(s"org.nlogo.prim.$primConstClass"), a)
     this
   }
 
@@ -67,16 +78,37 @@ trait StatementsBuilderBase {
   def statementEtc(name: String, args: Seq[Expression]): ThisBuilder =
     statementEtc(name, name, args)
 
-  def statementEtc(coreName: String, primName: String, args: Seq[Expression]): ThisBuilder = {
-    val core = Instantiator.newInstance[CoreCommand](Class.forName(s"org.nlogo.core.prim.$coreName"))
-    val prim = Instantiator.newInstance[Command](Class.forName(s"org.nlogo.prim.$primName"))
+  def statementEtc(coreName: String, primName: String, args: Seq[Expression]): ThisBuilder =
+    statementByName(s"org.nlogo.core.prim.$coreName", s"org.nlogo.prim.$primName", args)
+
+  private def statementByName(
+    coreClassName: String,
+    primClassName: String,
+    args: Seq[Expression] = Seq()): ThisBuilder = {
+    val core = Instantiator.newInstance[CoreCommand](Class.forName(coreClassName))
+    val prim = Instantiator.newInstance[Command](Class.forName(primClassName))
     stmts :+= new Statement(core, prim, args, loc)
     thisBuilder
   }
 
+  def statementEtc(coreName: String, primName: String, args: Seq[Expression]): ThisBuilder =
+    statementByName(s"org.nlogo.core.prim.$coreName", s"org.nlogo.prim.$primName", args)
+
   def build: Statements = new Statements(stmts, loc)
 
   def buildBlock: CommandBlock = new CommandBlock(build, loc)
+
+  def stop =
+    statementEtc("_stop", "etc._stop", Seq())
+
+  def report(value: Expression): ThisBuilder =
+    statementEtc("_report", "etc._report", Seq(value))
+
+  def done: ThisBuilder =
+    statementByName("org.nlogo.core.prim._done", "org.nlogo.prim._done")
+
+  def returnreport: ThisBuilder =
+    statementByName("org.nlogo.core.prim._done", "org.nlogo.prim._returnreport")
 }
 
 class StatementsBuilder extends StatementsBuilderBase {

@@ -28,6 +28,10 @@ trait CompilationManagement extends CoreWorld { this: AgentManagement =>
   def program: Program = _program
   def oldProgram: Program = _oldProgram
 
+  def program_=(p: Program): Unit = {
+    program(p)
+  }
+
   def program(program: Program): Unit = {
     if (program == null) {
       throw new IllegalArgumentException("World.program cannot be set to null")

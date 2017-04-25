@@ -14,12 +14,22 @@ trait SuspendableJob {
   def scheduledBy(s: JobScheduler): Unit
 }
 
+trait TaggedTask {
+  def tag: String
+}
+
 trait JobScheduler {
-  def registerMonitor(name: String, job: SuspendableJob): Unit
-  def scheduleJob(job: SuspendableJob): String
-  def scheduleJob(job: SuspendableJob, interval: Long): String
+  type Task <: TaggedTask
+
+  def createJob(job: SuspendableJob, interval: Long): Task
+  def createJob(job: SuspendableJob): Task
+  def createOperation(op: ModelOperation): Task
+  def createOperation(op: () => Unit): Task
   def stopJob(jobTag: String): Unit
-  def scheduleOperation(op: () => Unit): String
+  def registerMonitor(name: String, job: SuspendableJob): Unit
+
+  def queueTask(a: Task): Unit
+
   def haltRequested: Boolean
   def halt(): Unit
   def die(): Unit

@@ -16,16 +16,13 @@ import javafx.scene.input.TouchEvent
 
 import com.sun.javafx.scene.control.skin.SliderSkin
 
-import org.nlogo.internalapi.{ CompiledSlider => ApiCompiledSlider, Monitorable,
-  RunComponent, RunnableModel, UpdateInterfaceGlobal }
+import org.nlogo.internalapi.{ CompiledSlider => ApiCompiledSlider, Monitorable }
 
 import org.nlogo.core.{ Slider => CoreSlider }
 import Utils.{ changeListener, handler }
 
-// TODO: This only allows for sliders with constant mins and maxes
-class SliderControl(compiledSlider: ApiCompiledSlider, runnableModel: RunnableModel)
-  extends GridPane
-  with RunComponent {
+class SliderControl(compiledSlider: ApiCompiledSlider)
+  extends GridPane {
 
   @FXML
   var slider: Slider = _
@@ -38,9 +35,37 @@ class SliderControl(compiledSlider: ApiCompiledSlider, runnableModel: RunnableMo
 
   val model = compiledSlider.widget
 
-  val currentValue = new AtomicReference[JDouble](Double.box(model.default))
+  val data = new SliderData(
+    compiledSlider.value.currentValue,
+    compiledSlider.min.currentValue,
+    compiledSlider.max.currentValue,
+    compiledSlider.inc.currentValue)
 
-  protected var actionTags = Set.empty[String]
+  var lastValue: Double = model.default
+
+  protected val updateValueFromUI = changeListener { (n: Number) =>
+    val d = n.doubleValue
+    if (! updatingFromModel) {
+      data.inputValueProperty.set(d)
+      slider.valueProperty.setValue(data.value)
+      if (lastValue != data.value) {
+        lastValue = data.value
+        compiledSlider.setValue(data.value)
+      }
+    } else if (! slider.isValueChanging) {
+      lastValue = n.doubleValue
+    }
+  }
+
+  // This variable and all it represents are disgusting.
+  // Just like the feedback around slider values in NetLogo.
+  private var updatingFromModel: Boolean = false
+
+  protected def updateValueFromModel(updatedValue: Double): Unit = {
+    updatingFromModel = true
+    slider.setValue(updatedValue)
+    updatingFromModel = false
+  }
 
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("Slider.fxml"))
@@ -53,32 +78,23 @@ class SliderControl(compiledSlider: ApiCompiledSlider, runnableModel: RunnableMo
     slider.setMinorTickCount(0)
 
     bindSliderToLabel(slider, valueLabel)
-    slider.valueProperty.setValue(compiledSlider.value.defaultValue)
-    compiledSlider.value.onUpdate(updateValue _)
-    bindPropertyToMonitorable(slider.minProperty,           compiledSlider.min)
-    bindPropertyToMonitorable(slider.maxProperty,           compiledSlider.max)
-    bindPropertyToMonitorable(slider.majorTickUnitProperty, compiledSlider.inc)
+    compiledSlider.value.onUpdate(updateValueFromModel _)
 
-    slider.valueProperty.addListener(changeListener {
-      (o: ObservableValue[_ <: Number], oldValue: Number, newValue: Number) =>
-        if (! slider.isValueChanging) {
-        currentValue.set(Double.box(newValue.doubleValue))
-        model.variable.foreach { variableName =>
-          runnableModel.submitAction(UpdateInterfaceGlobal(variableName.toUpperCase, currentValue))
-        }
-      }
-    })
+    slider.valueProperty.setValue(compiledSlider.value.defaultValue)
+    slider.valueProperty.addListener(updateValueFromUI)
+
+    slider.majorTickUnitProperty.bind(data.incrementProperty)
+    slider.minProperty.bind(data.minimumProperty)
+    slider.maxProperty.bind(data.maximumProperty)
+
+    bindPropertyToMonitorable(data.minimumProperty, compiledSlider.min)
+    bindPropertyToMonitorable(data.maximumProperty, compiledSlider.max)
+    bindPropertyToMonitorable(data.incrementProperty, compiledSlider.inc)
   }
 
   protected def bindPropertyToMonitorable(d: DoubleProperty, m: Monitorable[Double]): Unit = {
     d.setValue(m.defaultValue)
     m.onUpdate({ updated => d.setValue(updated) })
-  }
-
-  protected def updateValue(updatedValue: Double): Unit = {
-    if (! slider.isValueChanging && actionTags.isEmpty) {
-      slider.setValue(updatedValue)
-    }
   }
 
   protected def bindSliderToLabel(s: Slider, l: Label): Unit = {
@@ -99,13 +115,5 @@ class SliderControl(compiledSlider: ApiCompiledSlider, runnableModel: RunnableMo
         l.textProperty.setValue(newValue.toString.take(5) + model.units.map(" " + _).getOrElse(""))
     })
     l.setText(s.getValue.toString.take(5) + model.units.map(" " + _).getOrElse(""))
-  }
-
-  def tagAction(action: org.nlogo.internalapi.ModelAction,actionTag: String): Unit = {
-    actionTags = actionTags + actionTag
-  }
-
-  def updateReceived(update: org.nlogo.internalapi.ModelUpdate): Unit = {
-    actionTags = actionTags - update.tag
   }
 }

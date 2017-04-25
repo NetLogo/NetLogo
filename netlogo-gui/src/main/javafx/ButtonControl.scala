@@ -8,20 +8,14 @@ import javafx.beans.property.{ DoubleProperty, ObjectProperty, SimpleBooleanProp
 import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.fxml.{ FXML, FXMLLoader }
 import javafx.scene.control.{ ButtonBase, ToggleButton }
-import javafx.scene.image.ImageView
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.{ Background, BackgroundFill, StackPane }
-import javafx.scene.paint.Color
+import javafx.scene.layout.StackPane
 import java.lang.{ Double => JDouble }
 
 import org.nlogo.core.{ Button => CoreButton }
-import org.nlogo.internalapi.{ AddProcedureRun, CompiledButton => ApiCompiledButton,
-  JobDone, JobErrored, JobHalted, ModelAction, ModelUpdate, RunComponent,
-  RunnableModel, StopProcedure }
+import org.nlogo.internalapi.{ CompiledButton => ApiCompiledButton }
 
-// TODO: Figure out a way to disable until ticks start (if appropriate)
-class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableModel, foreverInterval: DoubleProperty)
-  extends StackPane with RunComponent {
+class ButtonControl(compiledButton: ApiCompiledButton, foreverInterval: DoubleProperty)
+  extends StackPane {
 
   @FXML
   var button: ButtonBase = _
@@ -35,16 +29,17 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
 
   val triggerStart = new EventHandler[ActionEvent] {
     def handle(e: ActionEvent): Unit = {
-      activeProperty.set(true)
-      startProcedureRun(foreverInterval.doubleValue)
+      compiledButton.start(foreverInterval.longValue)
     }
   }
 
   val triggerStop = new EventHandler[ActionEvent] {
     def handle(e: ActionEvent): Unit = {
-      jobTag.foreach { tag => runnableModel.submitAction(StopProcedure(tag), ButtonControl.this) }
+      compiledButton.stop()
     }
   }
+
+  var requeueAtInterval = Option.empty[Long]
 
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource(
@@ -63,60 +58,38 @@ class ButtonControl(compiledButton: ApiCompiledButton, runnableModel: RunnableMo
         button.setDisable(! enabled)
       }
     }
+    compiledButton.isRunning.onUpdate(runningChanged _)
+    compiledButton.isRunning.onError(runningErrored _)
+    foreverInterval.addListener(new ChangeListener[Number] {
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        if (compiledButton.isRunning.currentValue) {
+          requeueAtInterval = Some(newValue.longValue)
+          compiledButton.stop()
+        }
+      }
+    })
   }
 
-  def tagAction(action: ModelAction, actionTag: String): Unit = {
-    action match {
-      case AddProcedureRun(_, _, _) => jobTag = Some(actionTag)
-      case _ =>
+  def runningChanged(isRunning: Boolean) = {
+    if (! isRunning && requeueAtInterval.nonEmpty) {
+      compiledButton.start(requeueAtInterval.get)
+      requeueAtInterval = None
+    } else {
+      activeProperty.set(isRunning)
+      if (! isRunning)
+        popOut()
     }
   }
 
-  def updateReceived(update: ModelUpdate): Unit = {
-    update match {
-      case JobHalted(t) =>
-        popOut()
-        jobFinished(t)
-      case JobErrored(t, _) =>
-        popOut()
-        jobFinished(t)
-      case JobDone(t) => jobFinished(t)
-      case _ =>
-    }
-  }
-
-  private def popOut(): Unit = {
+  def popOut(): Unit = {
     button match {
       case t: ToggleButton => t.setSelected(false)
       case _ =>
     }
   }
 
-  private def jobFinished(t: String): Unit = {
-    if (stoppingTag.contains(t)) {
-      stoppingTag = None
-    }
-    if (jobTag.contains(t)) {
-      jobTag = None
-      activeProperty.set(false)
-    }
-  }
-
-  foreverInterval.addListener(new ChangeListener[Number] {
-    override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-      if (activeProperty.getValue.booleanValue) {
-        for {
-          tag <- jobTag
-        } {
-          stoppingTag = Some(tag)
-          runnableModel.submitAction(StopProcedure(tag), ButtonControl.this)
-          startProcedureRun(newValue.doubleValue)
-        }
-      }
-    }
-  })
-
-  private def startProcedureRun(interval: Double): Unit = {
-    runnableModel.submitAction(AddProcedureRun(compiledButton.procedureTag, buttonModel.forever, interval.toLong), this)
+  def runningErrored(e: Exception) = {
+    println("button errored: " + e)
+    e.printStackTrace()
   }
 }

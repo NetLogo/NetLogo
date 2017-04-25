@@ -11,5 +11,5 @@ trait Monitorable[A] {
   // this callback will be called on the JavaFX UI thread when the value changes
   def onUpdate(callback: A => Unit): Unit
 
-  // TODO: This may need an onError callback as well?
+  def onError(callback: Exception => Unit): Unit
 }

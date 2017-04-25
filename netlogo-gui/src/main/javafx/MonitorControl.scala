@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 
 import org.nlogo.core.{ Monitor => CoreMonitor }
-import org.nlogo.internalapi.{ CompiledMonitor => ApiCompiledMonitor, ModelAction, ModelUpdate, RunComponent, RunnableModel }
+import org.nlogo.internalapi.{ CompiledMonitor => ApiCompiledMonitor, ModelUpdate }
 
 class MonitorControl(compiledMonitor: ApiCompiledMonitor) extends VBox {
 

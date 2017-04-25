@@ -19,6 +19,22 @@ import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststri
   _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
   _return, _returnreport, _setletvariable }
 
+import scala.collection.immutable.ListMap
+
+object NvmTests {
+  private lazy val stuffer = new ArgumentStuffer()
+  lazy val workspace = new org.nlogo.nvm.DummyWorkspace()
+
+  def assembleProcedure(proc: Procedure, statements: StatementsBuilderBase): Unit = {
+    val procDef = new ProcedureDefinition(proc, statements.build)
+    procDef.accept(stuffer)
+    new Assembler().assemble(procDef)
+    proc.init(workspace)
+  }
+}
+
+import NvmTests.{ assembleProcedure, workspace }
+
 // Q: Why is there an nvm test in the compile package?
 // A: Because much of nvm's behavior depends on the prim
 //    package and `nvm` may not depend on `prim`. Perhaps
@@ -57,9 +73,7 @@ class NvmTests extends FunSuite {
     def syntax = Syntax.commandSyntax()
   }
 
-  private lazy val stuffer = new ArgumentStuffer()
   trait Helper {
-    lazy val workspace = new org.nlogo.nvm.DummyWorkspace()
     lazy val world = new org.nlogo.agent.World2D()
     lazy val owner = new SimpleJobOwner("Test", world.mainRNG, AgentKind.Observer)
     var probes = Seq.empty[_probe]
@@ -91,13 +105,6 @@ class NvmTests extends FunSuite {
       world.mainRNG.setSeed(0)
       exclusiveJob(proc).run()
       probes.foreach(_.verify())
-    }
-
-    def assembleProcedure(proc: Procedure, statements: StatementsBuilder): Unit = {
-      val procDef = new ProcedureDefinition(proc, statements.build)
-      procDef.accept(stuffer)
-      new Assembler().assemble(procDef)
-      proc.init(workspace)
     }
 
     def exclusiveJob(proc: Procedure): ExclusiveJob =
@@ -232,7 +239,7 @@ class NvmTests extends FunSuite {
       new ReporterBuilder() {
         withReporter(_corelessthan(), new _lessthan())
         withArg(getB)
-        withArg(constInt(3))
+        withArg(_.constInt(3))
       }
 
     val procedureBody = new StatementsBuilder() {
@@ -394,16 +401,8 @@ class NvmTests extends FunSuite {
         Seq(block.buildBlock, errorBlock.buildBlock))
     }
 
-    def report(value: Expression): StatementsBuilder = {
-      statementEtc("_report", "etc._report", Seq(value))
-    }
-
     def probe(cmd: Command): StatementsBuilder =
       statement(_probesyntax(), cmd)
-
-    def done = statement(_coredone(),    new _done())
-
-    def returnreport = statement(_coredone(), new _returnreport())
 
     def end  = statement(_corereturn(),  new _return())
   }
