@@ -58,6 +58,27 @@ StrPosition2
 StrPosition3
   position "ron" "string" => false
 
+StrInsert1
+  insert-item -1 "hello" "Q" => ERROR -1 isn't greater than or equal to zero.
+
+StrInsert2
+  insert-item 3 "me" "X" => ERROR Can't find element 3 of the string me, which is only of length 2.
+
+StrInsert3
+  insert-item 2 "me" 2 => ERROR INSERT-ITEM expected input to be a string but got the number 2 instead.
+
+StrInsert4
+  insert-item 0 "" "K" => "K"
+
+StrInsert5
+  insert-item 3 "bit" "s" => "bits"
+
+StrInsert6
+  insert-item 1 "bit" "l" => "blit"
+
+StrInsert7
+  insert-item 1 "bit" "abb" => "babbit"
+
 StrRemove1
   remove "r" "string" => "sting"
 

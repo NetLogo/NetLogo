@@ -4,7 +4,7 @@ import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
-import Testing.testTempDirectory
+import Testing.{ testTempDirectory, testChecksumsClass }
 
 
 // these settings are common to ALL BUILDS
@@ -95,6 +95,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(shareSourceDirectory("netlogo-core"): _*).
    settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
+             Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
              Packaging.settings ++
              Running.settings ++
              Dump.settings ++
@@ -116,6 +117,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
     javaOptions     += "-Dnetlogo.docs.dir=" + (baseDirectory.value.getParentFile / "docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
+    testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
     resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
@@ -165,6 +167,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(mockDependencies: _*).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
+  settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
   settings(Depend.dependTask: _*).
   settings(Extensions.settings: _*).
   settings(publicationSettings("NetLogoHeadless"): _*).
@@ -187,6 +190,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
+    testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
     excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
     all := { val _ = (
       (packageBin in Compile).value,

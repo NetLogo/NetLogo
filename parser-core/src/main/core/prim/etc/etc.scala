@@ -409,6 +409,12 @@ case class _importpatchcolors() extends Command {
       right = List(Syntax.StringType),
       agentClassString = "O---")
 }
+case class _insertitem() extends Reporter with Pure {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.ListType | Syntax.StringType, Syntax.WildcardType),
+      ret = Syntax.ListType | Syntax.StringType)
+}
 case class _inspect() extends Command {
   override def syntax =
     Syntax.commandSyntax(
