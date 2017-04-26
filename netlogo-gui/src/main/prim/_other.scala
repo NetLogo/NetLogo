@@ -7,6 +7,7 @@ import org.nlogo.api.Dump
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{Context, Reporter}
 import org.nlogo.nvm.RuntimePrimitiveException
+import java.util.ArrayList
 
 class _other extends Reporter {
 
@@ -20,6 +21,9 @@ class _other extends Reporter {
       sourceSet
     } else {
       new LazyAgentSet(null, sourceSet, context.agent :: Nil)
+//      val others = new ArrayList[Agent]
+//      others.add(context.agent)
+//      new LazyAgentSet(null, sourceSet, others)
     }
   }
 }

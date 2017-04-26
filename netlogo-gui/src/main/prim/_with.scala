@@ -2,6 +2,8 @@
 
 package org.nlogo.prim
 
+import java.util.ArrayList
+
 import org.nlogo.agent.{Agent, AgentSet, LazyAgentSet}
 import org.nlogo.api.Dump
 import org.nlogo.core.I18N
@@ -26,6 +28,9 @@ class _with extends Reporter {
       sourceSet.asInstanceOf[LazyAgentSet].lazyWith(filter)
       sourceSet
     } else {
+//      val withs = new ArrayList[(Agent) => Boolean]()
+//      withs.add(filter)
+//      new LazyAgentSet(null, sourceSet, withs = withs)
       new LazyAgentSet(null, sourceSet, withs = List(filter))
     }
   }

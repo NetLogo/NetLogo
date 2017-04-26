@@ -39,7 +39,8 @@ class LazyAgentSetBench {
     l = createLazyAgentSet(turtles)
     ait = a.iterator
     lit = l.iterator
-    // lazyAgentSet.lazyOther(aTurtle)
+    l.lazyOther(turtles(500))
+    l.lazyWith((x: Agent) => x.id%5 == 0)
   }
 
 //  @TearDown(Level.Iteration)
@@ -50,53 +51,53 @@ class LazyAgentSetBench {
 //  }
 
   // fast
-//  @Benchmark
+  @Benchmark
   def Init_Array() = {
     a = createArrayAgentSet(turtles)
   }
 
-//  @Benchmark
+  @Benchmark
   def Init_Lazy() = {
     l = createLazyAgentSet(turtles)
   }
 
-//  @Benchmark
+  @Benchmark
   def Count_Array() = {
     a.count
   }
 
-//  @Benchmark
+  @Benchmark
   def Count_Lazy() = {
     l.count
   }
 
-//  @Benchmark
+  @Benchmark
   def Iter_Array() = {
     a.iterator
   }
 
-//  @Benchmark
+  @Benchmark
   def Iter_Lazy() = {
     l.iterator
   }
 
-//  @Benchmark
+  @Benchmark
   def hasNext_Array() = {
     ait.hasNext
   }
 
-//  @Benchmark
+  @Benchmark
   def hasNext_Lazy() = {
     lit.hasNext
   }
 
-//  @Benchmark
+  @Benchmark
   def next_Array() = {
     ait = a.iterator
     ait.next
   }
 
-//  @Benchmark
+  @Benchmark
   def next_Lazy() = {
     lit = l.iterator
     lit.next
