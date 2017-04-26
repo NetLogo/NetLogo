@@ -2,10 +2,15 @@
 
 package org.nlogo.agent
 
+import java.util
+
 import org.nlogo.core.LogoList
 import org.nlogo.{api, core}
 
 import scala.collection.mutable
+import java.util.ArrayList
+
+import org.nlogo.api.MersenneTwisterFast
 
 class LazyAgentSet(printName: String,
                    val agentSet: AgentSet,
@@ -40,8 +45,8 @@ class LazyAgentSet(printName: String,
   def iterator: AgentIterator =
     new FilteringIterator(agentSet.getArray, others, withs)
 
-  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator = null
-//    new FilteringIterator(agentSet.shufflerator(rng), others, withs)
+  def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
+    new FilteringShufflerator(agentSet.getArray, rng)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
     force().randomOne(precomputedCount, rng)
@@ -56,13 +61,22 @@ class LazyAgentSet(printName: String,
 
   def lazyOther(agent: Agent): Unit = {
     others = agent :: others
+//    others.add(0, agent)
   }
 
   def lazyWith(filter: (Agent) => Boolean): Unit = {
     withs = withs :+ filter
+//    withs.add(filter)
   }
 
   def passesWiths(agent: Agent): Boolean = {
+//    for (i <- 0 until withs.size()) {
+//      if (! withs.get(i)(agent)) {
+//        return false
+//      }
+//    }
+//    true
+
     var currWiths = withs
     while (!currWiths.isEmpty) {
       if (! currWiths(0)(agent)) {
@@ -71,12 +85,6 @@ class LazyAgentSet(printName: String,
       currWiths = currWiths.tail
     }
     true
-//    for (filter <- withs) {
-//      if (! filter(agent)) {
-//        return false
-//      }
-//    }
-//    true
   }
 
   // assumptions:
@@ -103,45 +111,50 @@ class LazyAgentSet(printName: String,
     forcedSet
   }
 
-//  private class FilteringIterator(array: Array[Agent], others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
-//    var nextAgent: Agent = null
-//
-//    def passesFilters(agent: Agent): Boolean = {
-//      ! others.contains(agent) && passesWiths(agent)
-//    }
-//
-//    override def hasNext: Boolean = {
-//      if (nextAgent == null) {
-//        var next = true
-//
-//        while (nextAgent == null && next) {
-//
-//          next = agentIterator.hasNext
-//
-//          if (next) {
-//            nextAgent = agentIterator.next()
-//            if (! passesFilters(nextAgent)) {
-//              nextAgent = null
-//            }
-//          }
-//
-//        }
-//
-//        nextAgent != null
-//      } else
-//        true
-//    }
-//
-//    override def next(): Agent = {
-//      if (hasNext) {
-//        val ret = nextAgent
-//        nextAgent = null
-//        ret
-//      } else
-//        agentIterator.next()
-//    }
-//  }
+  private class FilteringShufflerator(array: Array[Agent], rng: MersenneTwisterFast) extends AgentIterator {
+    private[this] var i = 0
+    private[this] val copy = array.clone
+    private[this] var nextOne: Agent = null
 
+    def passesFilters(agent: Agent): Boolean = {
+      ! others.contains(agent) && passesWiths(agent)
+    }
+
+    while (i < copy.length && copy(i) == null)
+      i += 1
+    fetch()
+    override def hasNext =
+      nextOne != null
+    override def next(): Agent = {
+      val result = nextOne
+      fetch()
+      result
+    }
+    private def fetch() {
+      if (i >= copy.length)
+        nextOne = null
+      else {
+        if (i < copy.length - 1) {
+          val r = i + rng.nextInt(copy.length - i)
+          nextOne = copy(r)
+          copy(r) = copy(i)
+        }
+        else
+          nextOne = copy(i)
+        i += 1
+        // we could have a bunch of different Shufflerator subclasses
+        // the same way we have Iterator subclasses in order to avoid
+        // having to do both checks, but I'm not
+        // sure it's really worth the effort - ST 3/15/06
+        if (nextOne == null || nextOne.id == -1 || !passesFilters(nextOne))
+          fetch()
+      }
+    }
+  }
+
+
+  // put in object LazyAgentSet
+  // LazyIterator super class?
   private class FilteringIterator(array: Array[Agent], others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
     var nextAgent: Agent = null
     var i = 0

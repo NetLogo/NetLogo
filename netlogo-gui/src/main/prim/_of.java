@@ -9,12 +9,13 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
+import org.nlogo.nvm.AcceptsLazy;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _of
-    extends Reporter {
+    extends Reporter implements AcceptsLazy {
 
 
   @Override
