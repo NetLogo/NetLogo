@@ -24,7 +24,16 @@ class LazyAgentSet(printName: String,
     !iterator.hasNext
   }
 
-  def count = force().count
+  def count = {
+    var result = 0
+    val iter = iterator
+    while (iter.hasNext) {
+      iter.next()
+      result += 1
+    }
+    result
+
+  }
 
   def contains(a: api.Agent): Boolean = {
     val it = iterator
@@ -70,10 +79,12 @@ class LazyAgentSet(printName: String,
   }
 
   def passesWiths(agent: Agent): Boolean = {
-//    for (i <- 0 until withs.size()) {
+//    var i = 0
+//    while (i < withs.size)
 //      if (! withs.get(i)(agent)) {
 //        return false
 //      }
+//      i += 1
 //    }
 //    true
 

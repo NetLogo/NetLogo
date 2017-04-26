@@ -15,7 +15,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _of
-    extends Reporter implements AcceptsLazy {
+    extends Reporter {
 
 
   @Override
