@@ -86,6 +86,10 @@ class ScheduledJobThreadTest extends FunSuite {
     assertSortedOrder(RunJob(dummyJob, "abc", 0, 0), RunJob(dummyJob, "abc", 0, 1))
   }
 
+  test("job ordering puts a clear all ahead of an operation") {
+    assertSortedOrder(ClearAll(0), ScheduleOperation(UpdateVariable("FOO", AgentKind.Observer, 1, "abc", "def"), "update-foo", 0))
+  }
+
   test("job ordering puts an old monitor update ahead of RunJob") {
     assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 0, 1))
   }
@@ -420,5 +424,17 @@ class ScheduledJobThreadTest extends FunSuite {
     scheduleOperation(update)
     runTasks(3)
     assert(subject.processedOperations.contains(update))
+  } }
+
+  test("supports an operation to clear all jobs and pending jobs") { new Helper {
+    subject.registerMonitor("abc", resultJob)
+    scheduleJob(DummyKeepRunningJob, 100)
+    runTasks(4)
+    subject.clearJobsAndMonitors()
+    runTasks(2)
+    assert(subject.queue.isEmpty)
+    elapse(101)
+    runTasks(1)
+    assert(subject.queue.isEmpty)
   } }
 }

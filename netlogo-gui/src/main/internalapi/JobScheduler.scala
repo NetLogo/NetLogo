@@ -28,11 +28,13 @@ trait JobScheduler {
   def stopJob(jobTag: String): Unit
   def registerMonitor(name: String, job: SuspendableJob): Unit
 
+
   def queueTask(a: Task): Unit
 
   def haltRequested: Boolean
   def halt(): Unit
   def die(): Unit
+  def clearJobsAndMonitors(): Unit
 }
 
 trait SchedulerWorkspace {

@@ -15,15 +15,18 @@ case class CompiledModel(
 
     def modelUnloaded(): Unit = {
       compiledWidgets.foreach(_.modelUnloaded())
+      interfaceControl.clearAll()
     }
   }
 
 trait InterfaceControl {
   def notifyUpdate(update: ModelUpdate): Unit
+  def clearAll(): Unit
 }
 
 object EmptyRunnableModel extends InterfaceControl {
   def notifyUpdate(update: ModelUpdate): Unit = {}
   def modelLoaded(): Unit = {}
   def modelUnloaded(): Unit = {}
+  def clearAll(): Unit = {}
 }

@@ -52,6 +52,11 @@ object ScheduledJobThread {
     val stoppable = false
   }
 
+  case class ClearAll(submissionTime: Long) extends ScheduledTask {
+    val tag = "clear-all"
+    val stoppable = false
+  }
+
   object JobSuspension {
     implicit object SuspensionOrdering extends Ordering[JobSuspension] {
       def compare(x: JobSuspension, y: JobSuspension): Int = {
@@ -69,13 +74,14 @@ object ScheduledJobThread {
     // lower means "first" or higher priority
     def basePriority(e: ScheduledTask): Int = {
       e match {
-        case ScheduleArbitraryAction(_, _, _) => 0
-        case ScheduleOperation(_, _, _) => 0
-        case StopJob(_, _)              => 1
-        case AddJob(_, _, _, _)         => 2
-        case AddMonitor(_, _, _)        => 2
-        case RunJob(_, _, _, _)         => 3
-        case RunMonitors(_, _)          => 3
+        case ClearAll(_)                      => 0
+        case ScheduleOperation(_, _, _)       => 1
+        case ScheduleArbitraryAction(_, _, _) => 1
+        case StopJob(_, _)                    => 2
+        case AddJob(_, _, _, _)               => 3
+        case AddMonitor(_, _, _)              => 3
+        case RunJob(_, _, _, _)               => 4
+        case RunMonitors(_, _)                => 4
       }
     }
     def compare(e1: ScheduledTask, e2: ScheduledTask): Int = {
@@ -159,6 +165,10 @@ trait JobScheduler extends ApiJobScheduler {
     queue.add(StopJob(jobTag, currentTime))
   }
 
+  def clearJobsAndMonitors(): Unit = {
+    queue.add(ClearAll(currentTime))
+  }
+
   def stepTask(): Unit = {
     queue.poll(timeout, timeoutUnit) match {
       case null                          => clearStopList()
@@ -172,8 +182,16 @@ trait JobScheduler extends ApiJobScheduler {
     haltRequested = true
   }
 
+  private def clearAll(): Unit = {
+    queue.clear()
+    pendingMonitors = Map.empty[String, SuspendableJob]
+    stopList = Set.empty[String]
+    suspendedJobs.clear()
+  }
+
   def processTask(t: ScheduledTask): Unit = {
     t match {
+      case ClearAll(_) => clearAll()
       case RunJob(job, tag, interval, _) => runJob(job, tag, interval)
       case ScheduleArbitraryAction(op, tag, _) => runArbitraryAction(op, tag)
       case ScheduleOperation(op, tag, _) => runOperation(op)

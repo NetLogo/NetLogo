@@ -120,4 +120,12 @@ class WidgetActions(workspace: Workspace, scheduler: JobScheduler) extends Inter
     monitorsByTag += (r.procedureTag -> r)
     scheduler.registerMonitor(r.procedureTag, job)
   }
+
+  def clearAll(): Unit = {
+    scheduler.clearJobsAndMonitors()
+    widgetsByJobTag.clear()
+    monitorsByTag.clear()
+    staticMonitorables.clear()
+    pendingUpdates.clear()
+  }
 }

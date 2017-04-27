@@ -21,7 +21,9 @@ import
   org.scalatest.FunSuite
 
 import
-  scala.collection.JavaConverters.collectionAsScalaIterableConverter
+  scala.{ collection, reflect },
+    collection.JavaConverters.collectionAsScalaIterableConverter,
+    reflect.ClassTag
 
 class WidgetActionsTest extends FunSuite {
   trait Helper {
@@ -36,6 +38,15 @@ class WidgetActionsTest extends FunSuite {
     }
     val dummyProcedure = procedure(new StatementsBuilder() { done })
     val errorProcedure = procedure(new StatementsBuilder() {})
+    val report1Procedure = {
+      val ast = new StatementsBuilder {
+        report((new ReporterBuilder() { constInt(1) }).build)
+      }
+      procedure(ast, true)
+    }
+    def report1Monitorable[A : ClassTag](default: A) =
+      new CompiledMonitorable[A](
+        default, None, "monitor-procedure", report1Procedure, "report 1")
     val scheduler = new SimpleScheduler()
     val actions = new WidgetActions(ws, scheduler)
     var error: Exception = null
@@ -110,12 +121,7 @@ class WidgetActionsTest extends FunSuite {
   } }
 
   test("WidgetActions.addMonitor registers a monitor with the job thread") { new Helper {
-    val ast = new StatementsBuilder {
-      report((new ReporterBuilder() { constInt(1) }).build)
-    }
-    val reporterProcedure = procedure(ast, true)
-    val m = new CompiledMonitorable[JDouble](
-      Double.box(0.0), None, "monitor-procedure", reporterProcedure, "report 1")
+    val m = report1Monitorable[JDouble](Double.box(0.0))
     actions.addMonitorable(m)
     runTasks(5)
     assert(m.currentValue == Double.box(1.0))
@@ -136,15 +142,9 @@ class WidgetActionsTest extends FunSuite {
   } }
 
   test("widget actions handles variable updates") { new Helper {
-    val ast = new StatementsBuilder {
-      report((new ReporterBuilder() { constInt(1) }).build)
-    }
-    val reporterProcedure = procedure(ast, true)
-    val m = new CompiledMonitorable[Double](
-      0.0, None, "monitor-procedure", reporterProcedure, "report 1")
+    val m = report1Monitorable[Double](0.0)
     val slider = new CompiledSlider(
-      Slider(Some("FOO")),
-      m,
+      Slider(Some("FOO")), m,
       NonCompiledMonitorable[Double](0.0),
       NonCompiledMonitorable[Double](100.0),
       NonCompiledMonitorable[Double](1.0),
