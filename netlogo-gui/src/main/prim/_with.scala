@@ -28,10 +28,10 @@ class _with extends Reporter {
       sourceSet.asInstanceOf[LazyAgentSet].lazyWith(filter)
       sourceSet
     } else {
-//      val withs = new ArrayList[(Agent) => Boolean]()
-//      withs.add(filter)
-//      new LazyAgentSet(null, sourceSet, withs = withs)
-      new LazyAgentSet(null, sourceSet, withs = List(filter))
+      val withs = new ArrayList[(Agent) => Boolean]()
+      withs.add(filter)
+      new LazyAgentSet(null, sourceSet, withs = withs)
+//      new LazyAgentSet(null, sourceSet, withs = List(filter))
     }
   }
 }

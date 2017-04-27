@@ -14,8 +14,8 @@ import org.nlogo.api.MersenneTwisterFast
 
 class LazyAgentSet(printName: String,
                    val agentSet: AgentSet,
-                   private var others: List[Agent] = List(),
-                   private var withs: List[(Agent) => Boolean] = List())
+                   private var others: ArrayList[Agent] = new ArrayList(),
+                   private var withs: ArrayList[(Agent) => Boolean] = new ArrayList())
   extends AgentSet(agentSet.kind, printName) {
 
   var forcedSet : AgentSet = null
@@ -58,7 +58,7 @@ class LazyAgentSet(printName: String,
     new FilteringShufflerator(agentSet.getArray, rng)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
-    force().randomOne(precomputedCount, rng)
+    force().randomOne(precomputedCount, rng) // precomputedCount is wrong??
 
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
     force().randomTwo(precomputedCount, rng)
@@ -69,33 +69,33 @@ class LazyAgentSet(printName: String,
   def toLogoList: LogoList = force().toLogoList
 
   def lazyOther(agent: Agent): Unit = {
-    others = agent :: others
-//    others.add(0, agent)
+//    others = agent :: others
+    others.add(agent)
   }
 
   def lazyWith(filter: (Agent) => Boolean): Unit = {
-    withs = withs :+ filter
-//    withs.add(filter)
+//    withs = withs :+ filter
+    withs.add(filter)
   }
 
   def passesWiths(agent: Agent): Boolean = {
-//    var i = 0
-//    while (i < withs.size)
-//      if (! withs.get(i)(agent)) {
-//        return false
-//      }
-//      i += 1
-//    }
-//    true
-
-    var currWiths = withs
-    while (!currWiths.isEmpty) {
-      if (! currWiths(0)(agent)) {
+    var i = 0
+    while (i < withs.size) {
+      if (! withs.get(i)(agent)) {
         return false
       }
-      currWiths = currWiths.tail
+      i += 1
     }
     true
+
+//    var currWiths = withs
+//    while (!currWiths.isEmpty) {
+//      if (! currWiths(0)(agent)) {
+//        return false
+//      }
+//      currWiths = currWiths.tail
+//    }
+//    true
   }
 
   // assumptions:
@@ -166,7 +166,7 @@ class LazyAgentSet(printName: String,
 
   // put in object LazyAgentSet
   // LazyIterator super class?
-  private class FilteringIterator(array: Array[Agent], others: List[Agent], withs: List[Agent => Boolean]) extends AgentIterator {
+  private class FilteringIterator(array: Array[Agent], others: ArrayList[Agent], withs: ArrayList[Agent => Boolean]) extends AgentIterator {
     var nextAgent: Agent = null
     var i = 0
     val arraySize = array.size
