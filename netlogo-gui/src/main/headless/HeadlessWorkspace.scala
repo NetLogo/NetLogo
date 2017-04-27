@@ -107,34 +107,18 @@ class HeadlessWorkspace(
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
-with org.nlogo.workspace.Controllable
-with org.nlogo.workspace.WorldLoaderInterface
+with HeadlessWorkspaceBase
 with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
 
-  /**
-   * Has a model been opened in this workspace?
-   */
-  var modelOpened = false
-
   val outputAreaBuffer = new StringBuilder
-
-  /**
-   * If true, don't send anything to standard output.
-   */
-  var silent = false
 
   /**
    * Internal use only.
    */
   override def isHeadless = true
-
-  /**
-   * Internal use only.
-   */
-  var compilerTestingMode = false
 
   /**
    * Internal use only.
@@ -153,32 +137,6 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def waitForQueuedEvents() { }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(worldSize: Int) {
-    initForTesting(worldSize, "")
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(worldSize: Int, modelString: String) {
-    if (Version.is3D)
-      initForTesting(new WorldDimensions3D(
-          -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
-          modelString)
-    else
-      initForTesting(-worldSize, worldSize, -worldSize, worldSize, modelString)
-  }
-
-  /**
-   * Internal use only.
-   */
-  def initForTesting(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int, source: String) {
-    initForTesting(new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor), source)
-  }
 
   /**
    * Internal use only.
@@ -238,35 +196,8 @@ with org.nlogo.api.ViewSettings {
     clearDrawing()
   }
 
-  private var _frameRate = 0.0
-  override def frameRate = _frameRate
-  override def frameRate(frameRate: Double) { _frameRate = frameRate }
-
-  private var _tickCounterLabel = "ticks"
-  override def tickCounterLabel = _tickCounterLabel
-  override def tickCounterLabel(s: String) { _tickCounterLabel = tickCounterLabel }
-
-  private var _showTickCounter = true
-  override def showTickCounter = _showTickCounter
-  override def showTickCounter(showTickCounter: Boolean) { _showTickCounter = showTickCounter }
-
-  override def getMinimumWidth = 0
-  override def insetWidth = 0
-  override def computePatchSize(width: Int, numPatches: Int): Double =
-    width / numPatches
-  override def calculateHeight(worldHeight: Int, patchSize: Double) =
-    (worldHeight * patchSize).toInt
-  def calculateWidth(worldWidth: Int, patchSize: Double): Int =
-    (worldWidth * patchSize).toInt
-  override def resizeView() { }
   override def viewWidth = world.worldWidth
   override def viewHeight = world.worldHeight
-  override def patchSize(patchSize: Double) {
-    world.patchSize(patchSize)
-    renderer.resetCache(patchSize)
-    renderer.trailDrawer.rescaleDrawing()
-  }
-  override def patchSize = world.patchSize
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) {
     world.changeTopology(wrapX, wrapY)
     renderer.changeTopology(wrapX, wrapY)
@@ -277,11 +208,6 @@ with org.nlogo.api.ViewSettings {
   override def viewOffsetX = world.observer.followOffsetX
   override def viewOffsetY = world.observer.followOffsetY
   override def updateMode(updateMode: UpdateMode) { }
-  override def setSize(x: Int, y: Int) { }
-  override def clearTurtles() {
-    if (!compilerTestingMode)
-      world.clearTurtles()
-  }
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
     if (!silent)
       println(agent)

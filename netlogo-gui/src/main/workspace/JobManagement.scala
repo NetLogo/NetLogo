@@ -10,6 +10,8 @@ trait JobManagement extends AbstractWorkspace {
   val jobManager: JobManagerInterface =
     Femto.get[JobManagerInterface]("org.nlogo.job.JobManager", this, world, world)
 
+  val evaluator: Evaluator = new EvaluatorImpl(this)
+
   @throws(classOf[InterruptedException])
   abstract override def dispose(): Unit = {
     super.dispose()

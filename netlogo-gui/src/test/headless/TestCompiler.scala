@@ -7,8 +7,8 @@ import org.nlogo.core.{ CompilerException, I18N }
 
 class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
-  var workspace: HeadlessWorkspace = _
-  override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
+  var workspace: HeadlessSingleThreadWorkspace = _
+  override def beforeEach() { workspace = HeadlessSingleThreadWorkspace.newInstance }
   override def afterEach() { workspace.dispose() }
 
   def declare(source:String) {

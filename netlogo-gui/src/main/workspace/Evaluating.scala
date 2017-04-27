@@ -12,7 +12,7 @@ import scala.collection.mutable.WeakHashMap
 trait Evaluating { this: AbstractWorkspace with JobManagement =>
   var lastLogoException: LogoException = null
 
-  private[workspace] val evaluator = new Evaluator(this)
+  def evaluator: Evaluator
 
   // this is used to cache the compiled code used by the "run"
   // and "runresult" prims - ST 6/7/07

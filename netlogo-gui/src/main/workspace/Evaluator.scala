@@ -10,47 +10,52 @@ import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
 import scala.collection.immutable.Vector
 import scala.util.Try
 
-class Evaluator(workspace: AbstractWorkspace with JobManagement) {
+trait Evaluator {
+  def defaultAgentSet: AgentSet
+  def defaultWaitForCompletion: Boolean
 
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner,
                        source: String,
-                       agentSet: AgentSet = workspace.world.observers,
-                       waitForCompletion: Boolean = true) = {
-    val procedure = invokeCompiler(source, None, true, agentSet.kind)
-    workspace.jobManager.addJob(
-      workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
-      waitForCompletion)
-  }
+                       agentSet: AgentSet = defaultAgentSet,
+                       waitForCompletion: Boolean = defaultWaitForCompletion): Unit
 
   @throws(classOf[CompilerException])
-  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
-    val procedure = invokeCompiler(source, None, false, agents.kind)
-    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
-  }
+  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = defaultAgentSet): Object
 
   @throws(classOf[CompilerException])
-  def compileCommands(source: String, agentClass: AgentKind): Procedure =
-    invokeCompiler(source, None, true, agentClass)
+  def compileCommands(source: String, agentClass: AgentKind): Procedure
 
-  @throws(classOf[CompilerException])
-  def compileReporter(source: String) =
-    invokeCompiler(source, None, false, AgentKind.Observer)
+  def compileReporter(source: String): Procedure
 
   /**
    * @return whether the code did a "stop" at the top level
    */
-  def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
-    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, procedure)
-    workspace.jobManager.addJob(job, true)
-    job.stopping
-  }
+  def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean
 
-  def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
-    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
+  def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef
 
-  ///
+  @throws(classOf[CompilerException])
+  def compileForRun(source: String, context: Context,reporter: Boolean): Procedure
 
+  @throws(classOf[CompilerException])
+  def makeReporterThunk(source: String, agent: Agent, owner: JobOwner): ReporterLogoThunk
+
+  @throws(classOf[CompilerException])
+  def makeCommandThunk(source: String, agent: Agent, owner: JobOwner): CommandLogoThunk
+
+  @throws(classOf[CompilerException])
+  def invokeCompilerForRun(
+    source: String,
+    agentClass: AgentKind,
+    callingProcedure: Procedure,
+    reporter: Boolean): Procedure
+
+  @throws(classOf[CompilerException])
+  def readFromString(string: String): AnyRef
+}
+
+abstract class AbstractEvaluator(workspace: AbstractWorkspace) extends Evaluator {
   @throws(classOf[CompilerException])
   def compileForRun(source: String, context: Context,reporter: Boolean) =
     invokeCompilerForRun(source, context.agent.kind, context.activation.procedure, reporter)
@@ -152,7 +157,7 @@ class Evaluator(workspace: AbstractWorkspace with JobManagement) {
 
 
   @throws(classOf[CompilerException])
-  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, agentClass: AgentKind) = {
+  protected def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, agentClass: AgentKind) = {
     val wrappedSource = Evaluator.getHeader(agentClass, commands) + source + Evaluator.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
@@ -164,6 +169,48 @@ class Evaluator(workspace: AbstractWorkspace with JobManagement) {
   @throws(classOf[CompilerException])
   def readFromString(string: String) =
     workspace.compiler.readFromString(string, workspace.world, workspace.getExtensionManager)
+}
+
+class EvaluatorImpl(workspace: AbstractWorkspace with JobManagement) extends AbstractEvaluator(workspace) {
+  def defaultAgentSet: AgentSet = workspace.world.observers
+  def defaultWaitForCompletion: Boolean = true
+
+  @throws(classOf[CompilerException])
+  def evaluateCommands(owner: JobOwner,
+                       source: String,
+                       agentSet: AgentSet = defaultAgentSet,
+                       waitForCompletion: Boolean = defaultWaitForCompletion) = {
+    val procedure = invokeCompiler(source, None, true, agentSet.kind)
+    workspace.jobManager.addJob(
+      workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
+      waitForCompletion)
+  }
+
+  @throws(classOf[CompilerException])
+  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
+    val procedure = invokeCompiler(source, None, false, agents.kind)
+    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
+  }
+
+  @throws(classOf[CompilerException])
+  def compileCommands(source: String, agentClass: AgentKind): Procedure =
+    invokeCompiler(source, None, true, agentClass)
+
+  @throws(classOf[CompilerException])
+  def compileReporter(source: String) =
+    invokeCompiler(source, None, false, AgentKind.Observer)
+
+  /**
+   * @return whether the code did a "stop" at the top level
+   */
+  def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
+    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, procedure)
+    workspace.jobManager.addJob(job, true)
+    job.stopping
+  }
+
+  def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
+    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
 }
 
 
