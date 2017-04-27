@@ -227,14 +227,15 @@ class AgentSetTests extends FunSuite {
       a.lazyOther(t1)
       assertResult(true)(createArrayAgentSet(Array(t2)).containsSameAgents(a.force()))
     }
-    test(header + "2 other") {
-      val t1 = makeTurtle()
-      val t2 = makeTurtle()
-      val a = createLazyAgentSet(Array(t1,t2))
-      a.lazyOther(t1)
-      a.lazyOther(t2)
-      assertResult(true)(createArrayAgentSet(Array()).containsSameAgents(a.force()))
-    }
+    // Assumption: a single LazyAgentSet will only ever need/have up to 1 other.
+//    test(header + "2 other") {
+//      val t1 = makeTurtle()
+//      val t2 = makeTurtle()
+//      val a = createLazyAgentSet(Array(t1,t2))
+//      a.lazyOther(t1)
+//      a.lazyOther(t2)
+//      assertResult(true)(createArrayAgentSet(Array()).containsSameAgents(a.force()))
+//    }
     test(header + "irrelevant other") {
       val t1 = makeTurtle()
       val t2 = makeTurtle()

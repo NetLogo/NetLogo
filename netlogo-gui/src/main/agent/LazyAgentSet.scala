@@ -14,7 +14,7 @@ import org.nlogo.api.MersenneTwisterFast
 
 class LazyAgentSet(printName: String,
                    val agentSet: AgentSet,
-                   private var others: ArrayList[Agent] = new ArrayList(),
+                   private var other: Agent = null,
                    private var withs: ArrayList[(Agent) => Boolean] = new ArrayList())
   extends AgentSet(agentSet.kind, printName) {
 
@@ -52,7 +52,7 @@ class LazyAgentSet(printName: String,
     }
 
   def iterator: AgentIterator =
-    new FilteringIterator(agentSet.getArray, others, withs)
+    new FilteringIterator(agentSet.getArray)
 
   def shufflerator(rng: api.MersenneTwisterFast): AgentIterator =
     new FilteringShufflerator(agentSet.getArray, rng)
@@ -70,7 +70,13 @@ class LazyAgentSet(printName: String,
 
   def lazyOther(agent: Agent): Unit = {
 //    others = agent :: others
-    others.add(agent)
+
+//    others.add(agent)
+
+    if (other == null)
+      other = agent
+    else
+      throw new IllegalStateException()
   }
 
   def lazyWith(filter: (Agent) => Boolean): Unit = {
@@ -106,7 +112,7 @@ class LazyAgentSet(printName: String,
   // 5. once a lazy agent set is forced, it will never need to be forced again.
   def force(): AgentSet = {
     if (forcedSet == null) {
-      if (others.isEmpty && withs.isEmpty) {
+      if (other == null && withs.isEmpty) {
         forcedSet = agentSet
       }
       else {
@@ -128,7 +134,7 @@ class LazyAgentSet(printName: String,
     private[this] var nextOne: Agent = null
 
     def passesFilters(agent: Agent): Boolean = {
-      ! others.contains(agent) && passesWiths(agent)
+      (other == null || other.id != agent.id) && passesWiths(agent)
     }
 
     while (i < copy.length && copy(i) == null)
@@ -166,13 +172,13 @@ class LazyAgentSet(printName: String,
 
   // put in object LazyAgentSet
   // LazyIterator super class?
-  private class FilteringIterator(array: Array[Agent], others: ArrayList[Agent], withs: ArrayList[Agent => Boolean]) extends AgentIterator {
+  private class FilteringIterator(array: Array[Agent]) extends AgentIterator {
     var nextAgent: Agent = null
     var i = 0
     val arraySize = array.size
 
     def passesFilters(agent: Agent): Boolean = {
-      ! others.contains(agent) && passesWiths(agent)
+      (other == null || other.id != agent.id) && passesWiths(agent)
     }
 
     override def hasNext: Boolean = {

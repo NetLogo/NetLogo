@@ -21,9 +21,12 @@ class _other extends Reporter {
       sourceSet
     } else {
 //      new LazyAgentSet(null, sourceSet, context.agent :: Nil)
-      val others = new ArrayList[Agent]
-      others.add(context.agent)
-      new LazyAgentSet(null, sourceSet, others)
+
+//      val others = new ArrayList[Agent]
+//      others.add(context.agent)
+//      new LazyAgentSet(null, sourceSet, others)
+
+      new LazyAgentSet(null, sourceSet, context.agent)
     }
   }
 }
