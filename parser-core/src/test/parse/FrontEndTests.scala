@@ -58,10 +58,16 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("infix show misparse") {
     runFailure("show * 5 5", "Missing input on the left.", 5, 6)
   }
+  */
+  test("shows errors when verbatim code blocks don't match 1") {
+    runFailure("__ignore __block [ abc", "No closing bracket for this open bracket.", 17, 18)
+  }
+  test("shows errors when verbatim code blocks don't match 2") {
+    runFailure("__ignore __block [ (abc ]", "Expected close paren here", 24, 25)
+  }
   test("dangling argument errors as expected command") {
     runFailure("let _x 2 show 2 _x", "Expected command.", 16, 18)
   }
-  */
   test("run with no arguments") {
     runFailure("run", "RUN expected at least 1 input, a string or anonymous command and any input.", 0, 3)
   }
@@ -225,6 +231,9 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("ParseDiffuse") {
     testParse("clear-all diffuse pcolor 1",
       "_clearall()[] _diffuse()[_patchvariable(2)[], _const(1.0)[]]")
+  }
+  test("ParseCodeBlock") {
+    runTest("__ignore __block [ abc ]", "_ignore()[_block()[`[ abc ]`[]]]")
   }
 
   // in SetBreed2, we are checking that since no singular form of `fish`
