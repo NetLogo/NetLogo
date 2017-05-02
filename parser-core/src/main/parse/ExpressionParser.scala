@@ -5,7 +5,7 @@ package org.nlogo.parse
 import org.nlogo.core,
   core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, Syntax, Token, TokenType },
     prim.Lambda,
-    Fail.{ cTry, fail },
+    Fail.{ fail },
     Syntax.compatible
 
 import scala.annotation.tailrec
@@ -130,8 +130,7 @@ object ExpressionParser {
             else
               Success((stmt.changeLocation(pg.location), groups.tail, newScope))
         }
-      case Atom(token) if token.tpe == TokenType.Command =>
-        val coreCommand = token.value.asInstanceOf[core.Command]
+      case Atom(token@Token(_, TokenType.Command, coreCommand: core.Command)) =>
         val nameToken = groups.tail.headOption match {
           case Some(Atom(t)) if t.tpe != TokenType.Eof => Some(t)
           case _ => None
@@ -155,22 +154,6 @@ object ExpressionParser {
           case _ => fail(ExpectedCommand, token)
         }
     }
-  }
-
-  private def parsePotentiallyVariadicArgumentList(
-    syntax: Syntax,
-    variadicContext: Boolean,
-    app: core.Application,
-    groups: Seq[SyntaxGroup],
-    scope: SymbolTable): ParseResult[Seq[core.Expression]] = {
-    val untypedArgs =
-      if (variadicContext && syntax.isVariadic) parseVarArgs(syntax, app.sourceLocation, app.instruction.displayName, groups, scope)
-      else                                      parseArguments(syntax, app.sourceLocation, app.instruction.displayName, groups, scope)
-
-      for {
-        (parsedArgs, remainingGroups) <- untypedArgs
-        typedExpressions              <- resolveTypes(syntax, parsedArgs, app.sourceLocation, app.instruction.displayName, scope)
-      } yield (typedExpressions, remainingGroups)
   }
 
   private def traverse[A](elems: Seq[Try[A]]): Try[Seq[A]] = {
@@ -263,7 +246,6 @@ object ExpressionParser {
     }
   }
 
-  var timesCalled = 0
   /**
    * parses arguments for commands and reporters. Arguments consist of some number of expressions
    * (possibly 0). The number is dictated by the syntax of the head instruction of the application
@@ -278,10 +260,10 @@ object ExpressionParser {
     scope: SymbolTable): ParseResult[Seq[core.Expression]] = {
     import syntax.{ right, takesOptionalCommandBlock }
     val parsedArgs =
-      (0 until syntax.rightDefault).foldLeft(Try((List.empty[core.Expression], groups))) { (t: Try[(List[core.Expression], Seq[SyntaxGroup])], i: Int) =>
+      (0 until syntax.rightDefault).foldLeft(Try((List.empty[core.Expression], groups))) { (t: ParseResult[List[core.Expression]], i: Int) =>
         t.flatMap {
           case (acc, gs) =>
-            parseArgExpression(syntax, gs, sourceLocation, displayName, right(i min (right.size - 1)), scope).map {
+            parseArgExpression(gs, right(i min (right.size - 1)), scope, syntax, sourceLocation, displayName).map {
               case (exp, restOfGroups) => (exp :: acc, restOfGroups)
             }
         }
@@ -297,7 +279,7 @@ object ExpressionParser {
           newGroups.headOption match {
             case Some(b@BracketGroup(_, _, _)) =>
               for {
-                (cmdBlock, restGroups) <- parseArgExpression(syntax, Seq(b), sourceLocation, displayName, right.last, scope)
+                (cmdBlock, restGroups) <- parseArgExpression(Seq(b), right.last, scope, syntax, sourceLocation, displayName)
               } yield (args :+ cmdBlock, newGroups.tail)
             case other =>
               Success((args :+ {
@@ -323,8 +305,8 @@ object ExpressionParser {
     sourceLocation: SourceLocation,
     displayName: String,
     groups: Seq[SyntaxGroup],
-    scope: SymbolTable): Try[(Seq[core.Expression], Seq[SyntaxGroup])] = {
-      def parseArgument(groups: Seq[SyntaxGroup], goalTypes: List[Int], scope: SymbolTable, parsedArgs: Try[Seq[core.Expression]]): Try[(Seq[core.Expression], Seq[SyntaxGroup])] =
+    scope: SymbolTable): ParseResult[Seq[core.Expression]] = {
+      def parseArgument(groups: Seq[SyntaxGroup], goalTypes: List[Int], scope: SymbolTable, parsedArgs: Try[Seq[core.Expression]]): ParseResult[Seq[core.Expression]] =
         groups.headOption match {
           // corresponds to end of parentheses
           case None                => parsedArgs.map(as => (as, Seq.empty[SyntaxGroup]))
@@ -336,7 +318,7 @@ object ExpressionParser {
               fail(InvalidVariadicContext, sourceLocation)
           case other =>
             parsedArgs.flatMap { args =>
-              parseArgExpression(syntax, groups, sourceLocation, displayName, goalTypes.head, scope).flatMap {
+              parseArgExpression(groups, goalTypes.head, scope, syntax, sourceLocation, displayName).flatMap {
                 case (newExp: core.Expression, remainingGroups: Seq[SyntaxGroup]) =>
                   val newGoals = if (goalTypes.tail.nonEmpty) goalTypes.tail else goalTypes
                   parseArgument(remainingGroups, newGoals, scope, Success(args :+ newExp))
@@ -346,27 +328,20 @@ object ExpressionParser {
     parseArgument(groups, syntax.right, scope, Success(Seq()))
   }
 
-  /**
-   * a wrapper around parseExpressionInternal for parsing expressions in argument position. Argument
-   * expressions can never be variadic, so we don't need that arg.
-   *
-   * @param tokens     the input token stream
-   * @param precedence the precedence of the operator currently on top of
-   *                   the "stack"
-   * @param app        the Application we're currently parsing args for.
-   *                   Used to generate nice error messages.
-   */
-  private def parseArgExpression(
-      syntax:         Syntax,
-      groups:         Seq[SyntaxGroup],
-      sourceLocation: SourceLocation,
-      displayName:    String, // app.instruction.displayName
-      goalType:       Int,
-      scope:          SymbolTable): ParseResult[core.Expression] = {
-    parseExpressionInternal(groups, false, syntax.precedence, goalType, scope) recoverWith {
-      case e@(_: UnexpectedTokenException | _: MissingPrefixException) =>
-        fail(missingInput(syntax, displayName, 0), sourceLocation)
-    }
+  private def parsePotentiallyVariadicArgumentList(
+    syntax: Syntax,
+    variadicContext: Boolean,
+    app: core.Application,
+    groups: Seq[SyntaxGroup],
+    scope: SymbolTable): ParseResult[Seq[core.Expression]] = {
+    val untypedArgs =
+      if (variadicContext && syntax.isVariadic) parseVarArgs(syntax, app.sourceLocation, app.instruction.displayName, groups, scope)
+      else                                      parseArguments(syntax, app.sourceLocation, app.instruction.displayName, groups, scope)
+
+      for {
+        (parsedArgs, remainingGroups) <- untypedArgs
+        typedExpressions              <- resolveTypes(syntax, parsedArgs, app.sourceLocation, app.instruction.displayName, scope)
+      } yield (typedExpressions, remainingGroups)
   }
 
   /**
@@ -405,12 +380,12 @@ object ExpressionParser {
    */
   private def resolveType(goalType: Int, originalArg: core.Expression, instruction: String, scope: SymbolTable): Try[core.Expression] = {
     // now that we know the type, finish parsing any blocks
-    for {
-      arg <- originalArg match {
-        case block: DelayedBlock => parseDelayedBlock(block, goalType, scope)
-        case _                   => Try(originalArg)
-      }
-      resolved <- cTry(compatible(goalType, arg.reportedType), arg, {
+    (originalArg match {
+      case block: DelayedBlock => parseDelayedBlock(block, goalType, scope)
+      case _                   => Try(originalArg)
+    }).flatMap { arg =>
+      if (compatible(goalType, arg.reportedType)) Success(arg)
+      else {
         // remove reference type from message unless it's part of the goalType, confusing to see
         // "expected a variable or a number"
         val displayedReportedType = {
@@ -419,10 +394,35 @@ object ExpressionParser {
           else
             arg.reportedType
         }
-        s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
-      },
-      arg)
-    } yield resolved
+        val message =
+          s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
+        fail(message, arg)
+      }
+    }
+  }
+
+  /**
+   * a wrapper around parseExpressionInternal for parsing expressions in argument position. Argument
+   * expressions can never be variadic, so we don't need that arg.
+   *
+   * @param tokens     the input token stream
+   * @param precedence the precedence of the operator currently on top of
+   *                   the "stack"
+   * @param app        the Application we're currently parsing args for.
+   *                   Used to generate nice error messages.
+   */
+  private def parseArgExpression(
+      groups:         Seq[SyntaxGroup],
+      goalType:       Int,
+      scope:          SymbolTable,
+      syntax:         Syntax,
+      sourceLocation: SourceLocation,
+      displayName:    String // app.instruction.displayName
+      ): ParseResult[core.Expression] = {
+    parseExpressionInternal(groups, goalType, false, syntax.precedence, scope) recoverWith {
+      case e@(_: UnexpectedTokenException | _: MissingPrefixException) =>
+        fail(missingInput(syntax, displayName, 0), sourceLocation)
+    }
   }
 
   /**
@@ -434,8 +434,8 @@ object ExpressionParser {
    * @param tokens   the input token stream
    * @param variadic whether to treat this expression as possibly variadic
    */
-  def parseExpression(groups: Seq[SyntaxGroup], variadic: Boolean, goalType: Int, scope: SymbolTable): ParseResult[core.Expression] = {
-    parseExpressionInternal(groups, variadic, MinPrecedence, goalType, scope) recoverWith {
+  def parseExpression(groups: Seq[SyntaxGroup], goalType: Int, scope: SymbolTable, variadic: Boolean): ParseResult[core.Expression] = {
+    parseExpressionInternal(groups, goalType, variadic, MinPrecedence, scope) recoverWith {
       case e: MissingPrefixException   => fail(MissingInputOnLeft, e.token)
       case e: UnexpectedTokenException => fail(ExpectedReporter, e.token)
     }
@@ -461,9 +461,9 @@ object ExpressionParser {
    */
   private def parseExpressionInternal(
       groups: Seq[SyntaxGroup],
+      goalType: Int,
       variadic: Boolean,
       precedence: Int,
-      goalType: Int,
       scope: SymbolTable): ParseResult[core.Expression] = {
     val wantAnyLambda = goalType == (Syntax.ReporterType | Syntax.CommandType)
     val wantReporterLambda = wantAnyLambda || goalType == Syntax.ReporterType
@@ -484,7 +484,7 @@ object ExpressionParser {
           // TOOD: Not sure how this works with SyntaxGroups
           // we also special case an out-of-place command, since this is what the command center does
           // if you leave off a final paren (because of the __done at the end).
-          parseExpression(inner, true, goalType, scope).flatMap {
+          parseExpression(inner, goalType, scope, true).flatMap {
             case (arg, remainingGroups) =>
               if (remainingGroups.isEmpty) Success((arg, remainingGroups))
               else fail(ExpectedCloseParen, remainingGroups.head.start)
@@ -654,16 +654,18 @@ object ExpressionParser {
       }).flatMap {
         case (stmts, rest) =>
           // if we haven't gotten everything, we complain
-          cTry(rest.isEmpty, stmts, ExpectedCommand, block.openBracket)
+          if (!rest.isEmpty) fail(ExpectedCommand, block.openBracket)
+          else               Success(stmts)
       }
     }
 
     def reporterApp(block: DelayedBlock, expressionGoal: Int, scope: SymbolTable): Try[core.ReporterApp] = {
-      parseExpression(block.bodyGroups, false, expressionGoal, scope).flatMap {
+      parseExpression(block.bodyGroups, expressionGoal, scope, false).flatMap {
         case (exp, remainingGroups) =>
           resolveType(Syntax.WildcardType, exp, null, scope).flatMap {
             case (expr: core.ReporterApp) =>
-              cTry(remainingGroups.isEmpty, expr, ExpectedCloseBracket, block.openBracket)
+              if (! remainingGroups.isEmpty) fail(ExpectedCloseBracket, block.openBracket)
+              else                           Success(expr)
             case (other: core.Expression) => fail(ExpectedCommand, other)
           }
       }
