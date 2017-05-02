@@ -10,14 +10,6 @@ import org.nlogo.core.TokenDSL._
 import PrimDSL._
 
 class ArrowLambdaScoperTests extends FunSuite {
-  test("non-blocks return None") {
-    assert(scope(Seq()).isEmpty)
-    assert(scope(Seq(`[`)).isEmpty)
-    assert(scope(Seq(`[`, id("foo"))).isEmpty)
-    assert(scope(Seq(`[`, `[`, id("foo"))).isEmpty)
-    assert(scope(Seq(`]`)).isEmpty)
-  }
-
   test("blocks with no arrow return None") {
     assert(scope(Seq(`[`, `]`)).isEmpty)
     assert(scope(Seq(`[`, `[`, `]`, `]`)).isEmpty)
@@ -49,30 +41,30 @@ class ArrowLambdaScoperTests extends FunSuite {
 
   test("a block binds the bound id in each occurence in the body") {
     testScopes(Seq(`[`, `[`, unid("foo"), `]`, `->`, unid("foo"), `]`),
-      Seq("FOO"), Seq(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test"))),
+      Seq("FOO"), Seq(Atom(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test")))),
       SymbolTable("FOO" -> SymbolType.LambdaVariable))
   }
 
   test("an unbracketed block binds the bound id in each occurence in the body") {
     testScopes(Seq(`[`, unid("foo"), `->`, unid("foo"), `]`),
-      Seq("FOO"), Seq(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test"))),
+      Seq("FOO"), Seq(Atom(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test")))),
       SymbolTable("FOO" -> SymbolType.LambdaVariable))
   }
 
   test("a block with body returns its body") {
-    testScopes(Seq(`[`, `[`, `]`, `->`, lit(2), `]`), Seq(), Seq(lit(2)))
+    testScopes(Seq(`[`, `[`, `]`, `->`, lit(2), `]`), Seq(), Seq(Atom(lit(2))))
   }
 
   test("a block with no arguments before the arrow returns the body") {
     testScopes(Seq(`[`, `->`, `]`), Seq(), Seq())
   }
 
-  test("a block with an arrow in the argument list errors") {
-    intercept[CompilerException] { scope(Seq(`[`, `[`, `->`, `]`, `]`)) }
+  test("a block with an arrow in the argument list returns that it is not a lambda block") {
+    assert(scope(Seq(`[`, `[`, `->`, `]`, `]`)).isEmpty)
   }
 
-  test("a block with multiple arguments without brackets errors") {
-    intercept[CompilerException] { scope(Seq(`[`, unid("foo"), unid("baz"), `->`, `]`)) }
+  test("a block with more than two groups before arrow errors") {
+    intercept[CompilerException] { scope(Seq(`[`, `[`, `]`, unid("abc"), `->`, `]`)) }
   }
 
   test("a block with a literal in the argument list errors") {
@@ -94,10 +86,12 @@ class ArrowLambdaScoperTests extends FunSuite {
     "MEAN" -> SymbolType.PrimitiveReporter,
     "BAR"  -> SymbolType.GlobalVariable)
 
-  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Arguments, Seq[Token], SymbolTable)] =
-    ArrowLambdaScoper(ts, testSymbols ++ otherSymbols)
+  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Arguments, Seq[SyntaxGroup], SymbolTable)] = {
+    val groups = ExpressionParser.groupSyntax(ts.iterator.buffered).get.head.asInstanceOf[BracketGroup]
+    ArrowLambdaScoper(groups, testSymbols ++ otherSymbols)
+  }
 
-  def testScopes(toks: Seq[Token], expectedArgs: Seq[String], expectedBody: Seq[Token], expectedSymbols: SymbolTable = SymbolTable.empty) = {
+  def testScopes(toks: Seq[Token], expectedArgs: Seq[String], expectedBody: Seq[SyntaxGroup], expectedSymbols: SymbolTable = SymbolTable.empty) = {
     val res = scope(toks)
     assert(res.isDefined)
     res.foreach {

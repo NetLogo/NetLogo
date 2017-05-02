@@ -10,17 +10,28 @@ import PrimDSL._
 class DelayedBlockTests extends FunSuite {
   val openBracket  = new Token("[", TokenType.OpenBracket, null)(SourceLocation(5, 6, "file.nlogo"))
   val closeBracket = new Token("]", TokenType.CloseBracket, null)(SourceLocation(14, 15, "file.nlogo"))
-  val unterminatedTokens = Seq(unid("foo"), unid("bar"), closeBracket)
-  val arrowTokens = Seq(`[`, unid("foo"), `]`, `->`, unid("foo"), closeBracket)
+  val unterminatedTokens =
+    BracketGroup(Seq(Atom(unid("foo")), Atom(unid("bar"))), openBracket, closeBracket)
+  val arrowTokens =
+    BracketGroup(Seq(
+      BracketGroup(Seq(Atom(unid("foo"))), `[`, `]`),
+      Atom(`->`),
+      Atom(unid("foo"))),
+      openBracket,
+      closeBracket)
 
-  lazy val delayBlock = DelayedBlock(openBracket, unterminatedTokens, SymbolTable.empty)
-  lazy val arrowBlock = DelayedBlock(openBracket, arrowTokens,        SymbolTable.empty)
+  lazy val delayBlock = DelayedBlock(unterminatedTokens, SymbolTable.empty)
+  lazy val arrowBlock = DelayedBlock(arrowTokens,        SymbolTable.empty)
 
   def arrow(args: Seq[String], body: Seq[Token]): DelayedBlock =
-    DelayedBlock(openBracket, (`[` +: args.map(unid)) ++ Seq(`]`, `->`) ++ (body :+ `]`), SymbolTable.empty)
+    DelayedBlock(BracketGroup(
+      Seq(
+        BracketGroup(args.map(unid).map(Atom.apply _), `[`, `]`),
+        Atom(`->`)) ++ body.map(Atom.apply _),
+    openBracket, closeBracket), SymbolTable.empty)
 
   def anyBlock(body: Seq[Token]): DelayedBlock =
-    DelayedBlock(openBracket, body :+ `]`, SymbolTable.empty)
+    DelayedBlock(BracketGroup(body.map(Atom.apply _), openBracket, `]`), SymbolTable.empty)
 
   def command(text: String): Token =
     Token(text, TokenType.Command, null)(SourceLocation(0, 0, "test"))
@@ -29,7 +40,7 @@ class DelayedBlockTests extends FunSuite {
   test("start matches openBracket") { assert(delayBlock.start == openBracket.start) }
   test("end matches last unterminated token") { assert(delayBlock.end == closeBracket.end) }
 
-  test("tokens is unterminated tokens with Eof at end") {
+  test("tokens is all tokens unterminated tokens with Eof at end") {
     assert(delayBlock.tokens.last.tpe == TokenType.Eof)
   }
 
@@ -46,7 +57,7 @@ class DelayedBlockTests extends FunSuite {
   test("when a block is an arrow, allows access to tokens before arrow and after arrow") {
     testArrowBlock(arrowBlock, { alb =>
       assert(alb.argNames == Seq("FOO"))
-      assert(alb.bodyTokens == Seq(lamvar("foo")))
+      assert(alb.bodyGroups == Seq(Atom(lamvar("foo"))))
     })
   }
 
