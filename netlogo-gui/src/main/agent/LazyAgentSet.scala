@@ -121,7 +121,8 @@ class LazyAgentSet(printName: String,
       else {
         //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
         val it = iterator
-        val l = new AgentSetBuilder(kind)
+        val l = new AgentSetBuilder(kind, agentSet.getArray.size)
+//        val l = new AgentSetBuilder(kind)
         while (it.hasNext) {
           l.add(it.next())
         }
