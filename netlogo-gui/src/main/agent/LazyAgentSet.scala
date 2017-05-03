@@ -61,13 +61,17 @@ class LazyAgentSet(printName: String,
     new FilteringShufflerator(agentSet.getArray, rng)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
-    force().randomOne(precomputedCount, rng) // precomputedCount is wrong??
+    // precomputedCount is wrong?? -> Divison model error
+        force().randomOne(forcedSet.getArray.size, rng)
+//    force().randomOne(precomputedCount, rng)
 
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomTwo(precomputedCount, rng)
+    force().randomTwo(forcedSet.getArray.size, rng)
+//    force().randomTwo(precomputedCount, rng)
 
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
+    force().randomSubsetGeneral(resultSize, forcedSet.getArray.size, rng)
+//    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
 
   def toLogoList: LogoList = force().toLogoList
 
