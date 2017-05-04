@@ -28,6 +28,11 @@ SortByDoesntExposeAgentsetOrder
   O> crt 3
   length remove-duplicates n-values 200 [sort-by [false] turtles] => 6
 
+SortByBadReporter
+  O> crt 3
+  sort-by [who] turtles => ERROR this code can't be run by the observer, only a turtle
+  sort-by [2] turtles => ERROR SORT-BY expected input to be a TRUE/FALSE but got the number 2 instead.
+
 SortingListsOfAgents_2D
   O> crt 5
   map [[t] -> [who] of t] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
