@@ -351,6 +351,41 @@ object ExpressionParser {
     }
   }
 
+  private def parseArguments2(groups: Seq[SyntaxGroup], parseContext: ParseContext, argContext: ArgumentParseContext): RemainingParseResult[Seq[core.Expression]] = {
+    import argContext.syntax.{ right, rightDefault, takesOptionalCommandBlock }
+
+    def parseArgAt(index: Int)(acc: List[core.Expression], gs: Seq[SyntaxGroup]): RemainingParseResult[List[core.Expression]] = {
+      // note: we accumulate arguments in backwards order and reverse them later
+      parseExpressionInternal(gs, parseContext.withVariadic(false), argContext.parseArgumentContext(index))
+        .mapResult(_ :: acc)
+        .recoverWith {
+          case e: MissingPrefixFailure   => fail(MissingInputOnLeft, e.token)
+          case e: UnexpectedTokenFailure =>
+            fail(argContext.missingInput(0), argContext.sourceLocation)
+        }
+    }
+
+    def parseArgumentRec(i: Int, acc: RemainingParseResult[List[core.Expression]]): RemainingParseResult[List[core.Expression]] = {
+      if (i == rightDefault) {
+        val completedExps =
+          if (! takesOptionalCommandBlock) acc
+          else acc.flatMap {
+              case (args, newGroups) =>
+                newGroups.headOption match {
+                  case Some(b@BracketGroup(_, _, _)) => parseArgAt(i)(args, newGroups)
+                  // synthetic block so later phases of compilation have consistent number of arguments
+                  case other => SuccessfulParse((syntheticCommandBlock(args, argContext.sourceLocation) :: args, newGroups))
+                }
+            }
+        completedExps.mapResult(_.reverse)
+      } else {
+        acc.flatMap((parseArgAt(i) _).tupled)
+      }
+    }
+
+    parseArgumentRec(0, ParseResult((Nil, groups)))
+  }
+
   /**
    * parses arguments for commands and reporters. Arguments consist of some number of expressions
    * (possibly 0). The number is dictated by the syntax of the head instruction of the application
@@ -512,6 +547,10 @@ object ExpressionParser {
     }
   }
 
+  // Here's a weird solution to the infix-parsing problem:
+  // * When we encounter a missing prefix failure
+  // * Try to resolve the types of the argument, if you can, ...
+
   private def parseCompletely(
     groups: Seq[SyntaxGroup],
     failureMessage: String,
@@ -569,7 +608,6 @@ object ExpressionParser {
           case (e, remainingGroups2) => (rApp.withArguments(e), remainingGroups2)
         }
     }
-    println("parsing exp starting with: " + groups.head + " want reporter lambda? " + wantReporterLambda)
     val expr: RemainingParseResult[core.Expression] =
       groups.head match {
         case ParenGroup(inner, open, close) =>
@@ -624,7 +662,6 @@ object ExpressionParser {
         expr.flatMap {
           case (e, groups) => parseMore(e, groups, precedence, scope)
         }
-    println("result of parsing exp: " + groups.head + " is " + r)
     r
   }
 
@@ -717,9 +754,6 @@ object ExpressionParser {
                     .mapResult(typedArgs =>
                         rApp.copy(args = typedArgs, location = rApp.sourceLocation.copy(end = typedArgs.last.end)))
                 parseMoreRec(newExpr)
-              case Some(Atom(token@Token(_, TokenType.Reporter, coreReporter: core.Reporter))) if coreReporter.syntax.isInfix =>
-                println("infix: " + coreReporter + " with lhs: " + expr)
-                tExpr
               case _ => tExpr
             }
         }
