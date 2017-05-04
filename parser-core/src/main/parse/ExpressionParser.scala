@@ -315,7 +315,7 @@ object ExpressionParser {
         val argsWithTypes = formalTypes zip untypedArgs
         traverse(argsWithTypes.map((typeArg _).tupled))
       }
-    } else if (untypedArgs.size <= repeatedIndex) {
+    } else if (untypedArgs.size < repeatedIndex) {
       fail(argContext.missingInput(index), location)
     } else {
       val zippedArgs = (formalTypes zip untypedArgs)
