@@ -76,7 +76,7 @@ class TokenLexer {
       p => punctuation.get(p).map(tpe => (p, tpe, null)))
 
   def string: (LexPredicate, TokenGenerator) =
-    (chain('"', stringLexer, '"') , tokenizeString)
+    (chain('"', stringLexer, '"'), tokenizeString)
 
   def stringLexer: LexPredicate =
     withFeedback[Option[Char]](Some('"')) {
