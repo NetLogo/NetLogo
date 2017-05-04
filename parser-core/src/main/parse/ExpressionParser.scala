@@ -94,6 +94,13 @@ object ExpressionParser {
   private class UnexpectedTokenFailure(val token: Token) extends
     ParseFailure("Unexpected token", token.start, token.end, token.filename)
 
+  private object TypeMismatch {
+    def unapply(t: TypeMismatch): Option[(Int, Int)] = Some((t.expectedType, t.actualType))
+  }
+
+  private class TypeMismatch(val arg: core.Expression, message: String, val expectedType: Int, val actualType: Int) extends
+    ParseFailure(message, arg.start, arg.end, arg.filename)
+
   case class SuccessfulParse[A](val parsed: A) extends ParseResult[A] {
     def flatMap[B](f: A => ParseResult[B]): ParseResult[B] = f(parsed)
     def map[B](f: A => B): ParseResult[B] = new SuccessfulParse(f(parsed))
@@ -109,6 +116,18 @@ object ExpressionParser {
     fail(message, location.start, location.end, location.filename)
   def fail(message: String, start: Int, end: Int, filename: String): FailedParse =
     FailedParse(ParseFailure(message, start, end, filename))
+
+
+  implicit class RichRemainingParseResult[A](p: RemainingParseResult[A]) {
+    def mapGroups(f: Seq[SyntaxGroup] => Seq[SyntaxGroup]): RemainingParseResult[A] =
+      p.map(((r: A, gs: Seq[SyntaxGroup]) => (r, f(gs))).tupled)
+    def mapResult[B](f: A => B): RemainingParseResult[B] =
+      p.map(((r: A, gs: Seq[SyntaxGroup]) => (f(r), gs)).tupled)
+    def setRest(gs: Seq[SyntaxGroup]): RemainingParseResult[A] =
+      mapGroups(_ => gs)
+    def setResult[B](b: B): RemainingParseResult[B] =
+      mapResult(_ => b)
+  }
 
   /**
    * parses a procedure. Procedures are a bunch of statements (not a block of statements, that's
@@ -243,6 +262,11 @@ object ExpressionParser {
     }
   }
 
+
+  private def liftResolveTypes(argContext: ArgumentParseContext, scope: SymbolTable)(
+      untypedArgs: Seq[core.Expression], remainingGroups: Seq[SyntaxGroup]): RemainingParseResult[Seq[core.Expression]] = {
+        resolveTypes(untypedArgs, argContext, scope).map(typedArgs => (typedArgs, remainingGroups))
+  }
   /**
    * resolves the types of all arguments in a given application.  See comments for resolveType() for
    * an explanation of terminology.  This is a slightly ugly bit of code. The ugliness comes from
@@ -330,41 +354,36 @@ object ExpressionParser {
   /**
    * parses arguments for commands and reporters. Arguments consist of some number of expressions
    * (possibly 0). The number is dictated by the syntax of the head instruction of the application
-   * whose arguments we're parsing. We expect exactly that number of args.  Type resolution is then
-   * performed.
+   * whose arguments we're parsing.
    */
   private def parseArguments(groups: Seq[SyntaxGroup], parseContext: ParseContext, argContext: ArgumentParseContext): RemainingParseResult[Seq[core.Expression]] = {
-    val sourceLocation = argContext.sourceLocation
-
     import argContext.syntax.{ right, rightDefault, takesOptionalCommandBlock }
-    val parsedArgs =
-      (0 until rightDefault).foldLeft(ParseResult((List.empty[core.Expression], groups))) { (t: RemainingParseResult[List[core.Expression]], i: Int) =>
-        t.flatMap {
-          case (acc, gs) =>
-            parseArgExpression(gs, i min right.size - 1, parseContext, argContext).map {
-              case (exp, restOfGroups) => (exp :: acc, restOfGroups)
-            }
-        }
-      }
-      .map {
-        case (args, restOfGroups) => (args.reverse, restOfGroups)
-      }
 
-    if (! takesOptionalCommandBlock) parsedArgs
-    else {
-      parsedArgs.flatMap {
-        case (args, newGroups) =>
-          newGroups.headOption match {
-            case Some(b@BracketGroup(_, _, _)) =>
-              parseArgExpression(Seq(b), right.size - 1, parseContext, argContext).map {
-                case (cmdBlock, restGroups) => (args :+ cmdBlock, newGroups.tail)
-              }
-            case other =>
-              // synthetic block so later phases of compilation have consistent number of arguments
-              SuccessfulParse((args :+ syntheticCommandBlock(args, sourceLocation), newGroups))
-          }
+    def parseArgAt(index: Int)(acc: List[core.Expression], gs: Seq[SyntaxGroup]): RemainingParseResult[List[core.Expression]] = {
+      parseArgExpression(gs, index, parseContext, argContext).map {
+        case (exp, rest) => (exp :: acc, rest)
       }
     }
+
+    val parsedArgs =
+      (0 until rightDefault).foldLeft(ParseResult((List.empty[core.Expression], groups))) { (parseResult, i) =>
+        parseResult.flatMap((parseArgAt(i min right.size - 1) _).tupled)
+      }
+
+    val argsInReverse =
+      if (! takesOptionalCommandBlock) parsedArgs
+      else
+        parsedArgs.flatMap {
+          case (args, newGroups) =>
+            newGroups.headOption match {
+              case Some(b@BracketGroup(_, _, _)) =>
+                parseArgAt(right.size - 1)(args, Seq(b))
+                  .map { case (args, restGroups) => (args, newGroups.tail) }
+              // synthetic block so later phases of compilation have consistent number of arguments
+              case other => SuccessfulParse((syntheticCommandBlock(args, argContext.sourceLocation) :: args, newGroups))
+            }
+        }
+    argsInReverse.map { case (args, restOfGroups) => (args.reverse, restOfGroups) }
   }
 
   private def syntheticCommandBlock(args: Seq[core.Expression], location: SourceLocation): core.CommandBlock = {
@@ -411,12 +430,7 @@ object ExpressionParser {
     val untypedArgs =
       if (parseContext.variadic && argContext.variadic) parseVarArgs(groups, parseContext, argContext)
       else                                              parseArguments(groups, parseContext, argContext)
-    untypedArgs.flatMap {
-      case (parsedArgs, remainingGroups) =>
-        resolveTypes(parsedArgs, argContext, parseContext.scope).map { typedExpressions =>
-          (typedExpressions, remainingGroups)
-        }
-    }
+    untypedArgs.flatMap((liftResolveTypes(argContext, parseContext.scope) _).tupled)
   }
 
   /**
@@ -471,7 +485,7 @@ object ExpressionParser {
         }
         val message =
           s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
-        fail(message, arg)
+        FailedParse(new TypeMismatch(arg, message, goalType, arg.reportedType))
       }
     }
   }
@@ -492,7 +506,8 @@ object ExpressionParser {
       parseContext: ParseContext,
       argContext:   ArgumentParseContext): RemainingParseResult[core.Expression] = {
     parseExpressionInternal(groups, parseContext.withVariadic(false), argContext.parseArgumentContext(argIndex)) recoverWith {
-      case e@(_: UnexpectedTokenFailure | _: MissingPrefixFailure) =>
+      case e: MissingPrefixFailure   => fail(MissingInputOnLeft, e.token)
+      case e: UnexpectedTokenFailure =>
         fail(argContext.missingInput(0), argContext.sourceLocation)
     }
   }
@@ -554,6 +569,7 @@ object ExpressionParser {
           case (e, remainingGroups2) => (rApp.withArguments(e), remainingGroups2)
         }
     }
+    println("parsing exp starting with: " + groups.head + " want reporter lambda? " + wantReporterLambda)
     val expr: RemainingParseResult[core.Expression] =
       groups.head match {
         case ParenGroup(inner, open, close) =>
@@ -601,9 +617,15 @@ object ExpressionParser {
               FailedParse(new UnexpectedTokenFailure(token))
           }
       }
-    expr.flatMap {
-      case (e, groups) => parseMore(e, groups, precedence, scope)
-    }
+    val r =
+      if (compatible(goalType, Syntax.SymbolType))
+        expr
+      else
+        expr.flatMap {
+          case (e, groups) => parseMore(e, groups, precedence, scope)
+        }
+    println("result of parsing exp: " + groups.head + " is " + r)
+    r
   }
 
   private def syntheticVariables(count: Int, token: Token, scope: SymbolTable): (Seq[String], Seq[core.ReporterApp]) = {
@@ -688,14 +710,16 @@ object ExpressionParser {
             groups.headOption match {
               case Some(Atom(token@Token(_, TokenType.Reporter, coreReporter: core.Reporter))) if continueParsing(coreReporter) =>
                 val rApp = reporterToApp(expr, coreReporter, token)
-                val newExpr = parseArguments(groups.tail, ParseContext(false, scope), ArgumentParseContext(rApp)).flatMap {
-                  case (untypedArgs, remainingGroups) =>
-                    resolveTypes(expr +: untypedArgs, ArgumentParseContext(rApp), scope).map {
-                      typedArgs =>
-                        (rApp.copy(args = typedArgs, location = rApp.sourceLocation.copy(end = typedArgs.last.end)), remainingGroups)
-                    }
-                }
+                val newExpr =
+                  parseArguments(groups.tail, ParseContext(false, scope), ArgumentParseContext(rApp))
+                    .mapResult(expr +: _)
+                    .flatMap((liftResolveTypes(ArgumentParseContext(rApp), scope) _).tupled)
+                    .mapResult(typedArgs =>
+                        rApp.copy(args = typedArgs, location = rApp.sourceLocation.copy(end = typedArgs.last.end)))
                 parseMoreRec(newExpr)
+              case Some(Atom(token@Token(_, TokenType.Reporter, coreReporter: core.Reporter))) if coreReporter.syntax.isInfix =>
+                println("infix: " + coreReporter + " with lhs: " + expr)
+                tExpr
               case _ => tExpr
             }
         }

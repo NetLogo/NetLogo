@@ -58,9 +58,8 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     // here the error is at TokenType.Eof - ST 9/29/14
     runFailure("let", "LET expected 2 inputs, a variable name and any input.", 0, 3)
   }
-  /*
   test("infix let misparse") {
-    runFailure("let x * 5 5", "Missing input on the left.", 4, 5)
+    runFailure("let x * 5 5", "Missing input on the left.", 6, 7)
   }
   test("infix set misparse") {
     runFailure("let x 0 set x * 5 5", "Missing input on the left.", 14, 15)
@@ -68,7 +67,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("infix show misparse") {
     runFailure("show * 5 5", "Missing input on the left.", 5, 6)
   }
-  */
   test("shows errors when verbatim code blocks don't match 1") {
     runFailure("__ignore __block [ abc", "No closing bracket for this open bracket.", 17, 18)
   }
@@ -88,6 +86,9 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("foreach [ x -> show x ]", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
   }
   test("map with no arguments") {
+    runFailure("show map", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
+  }
+  test("map with bad first argument") {
     runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
   }
   test("unknown reporter failure") {
