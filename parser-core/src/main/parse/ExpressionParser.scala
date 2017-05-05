@@ -135,16 +135,14 @@ object ExpressionParser {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
     val buffered = tokens.buffered
     val head = buffered.head
+    val groupedSyntax = groupSyntax(buffered)
     val statementList =
-      groupSyntax(buffered).flatMap { groupedTokens =>
+      groupedSyntax.flatMap { groupedTokens =>
         parseStatements(groupedTokens, ParseContext(false, scope), TokenType.Eof, parseStatement(_, _)).map(_._1)
       }.get
 
-    // tryStatementList.failed.foreach(_.printStackTrace())
     val stmts = new core.Statements(head.filename, statementList, false)
-    val end =
-      if (head.end < Int.MaxValue) head.start
-      else stmts.end
+    val end = groupedSyntax.get.last.start.start // set the end as the start of the end token
     new core.ProcedureDefinition(procedureDeclaration, stmts, end)
   }
 
