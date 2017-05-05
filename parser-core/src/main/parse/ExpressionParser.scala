@@ -129,10 +129,52 @@ object ExpressionParser {
       mapResult(_ => b)
   }
 
+  sealed trait Partial
+
+  case class PartialCommand(cmd: core.Command, tok: Token) extends Partial
+  case class PartialStatements(stmts: core.Statements) extends Partial
+  case class PartialProcDef(pd: core.ProcedureDefinition) extends Partial
+  case class PartialReporterApp(app: core.ReporterApp) extends Partial
+  case class PartialReporter(rep: core.Reporter, tok: Token) extends Partial
+
+  // def runShiftReduce(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
+  def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
+    def reduce(stack: List[Partial], stackTop: Option[SyntaxGroup]): List[Partial] = {
+
+      stack.dropRight(1)
+    }
+
+    @tailrec
+    def runRec(stack: List[Partial], groups: Seq[SyntaxGroup], scope: SymbolTable): RemainingParseResult[Partial] = {
+      if (groups.isEmpty && stack.length == 1) SuccessfulParse((stack.head, Seq()))
+      else if (groups.isEmpty) runRec(reduce(stack, None), groups, scope)
+      else {
+        groups.head match {
+          case Atom(Token(_, TokenType.Eof, _)) =>
+            runRec(stack, groups.tail, scope)
+          case Atom(token@Token(_, TokenType.Command, cmd: core.Command)) =>
+            runRec(PartialCommand(cmd, token) :: stack, groups.tail, scope)
+          case Atom(token@Token(_, TokenType.Literal, literalVal)) =>
+            val coreReporter = new core.prim._const(token.value)
+            token.refine(coreReporter)
+            val newReporterApp = new core.ReporterApp(coreReporter, token.sourceLocation)
+            runRec(PartialReporterApp(newReporterApp) :: stack, groups.tail, scope)
+          case o => throw new NotImplementedError(s"can't parse $o yet")
+        }
+      }
+    }
+
+    runRec(Nil, groupSyntax(tokens.buffered).get, scope) match {
+      case SuccessfulParse((PartialProcDef(pd), _)) => pd
+      case _ => throw new Error("bad parse!?")
+    }
+  }
+
   /**
    * parses a procedure. Procedures are a bunch of statements (not a block of statements, that's
    * something else), and so are parsed as such. */
-  def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
+  def applyOld(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
+  // def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
     val buffered = tokens.buffered
     val head = buffered.head
     val groupedSyntax = groupSyntax(buffered)
@@ -347,41 +389,6 @@ object ExpressionParser {
       }
       resolvedNonRepeatingArgs.map(_ ++ scala.collection.immutable.Seq[core.Expression](typedArgs: _*).drop(repeatedIndex))
     }
-  }
-
-  private def parseArguments2(groups: Seq[SyntaxGroup], parseContext: ParseContext, argContext: ArgumentParseContext): RemainingParseResult[Seq[core.Expression]] = {
-    import argContext.syntax.{ right, rightDefault, takesOptionalCommandBlock }
-
-    def parseArgAt(index: Int)(acc: List[core.Expression], gs: Seq[SyntaxGroup]): RemainingParseResult[List[core.Expression]] = {
-      // note: we accumulate arguments in backwards order and reverse them later
-      parseExpressionInternal(gs, parseContext.withVariadic(false), argContext.parseArgumentContext(index))
-        .mapResult(_ :: acc)
-        .recoverWith {
-          case e: MissingPrefixFailure   => fail(MissingInputOnLeft, e.token)
-          case e: UnexpectedTokenFailure =>
-            fail(argContext.missingInput(0), argContext.sourceLocation)
-        }
-    }
-
-    def parseArgumentRec(i: Int, acc: RemainingParseResult[List[core.Expression]]): RemainingParseResult[List[core.Expression]] = {
-      if (i == rightDefault) {
-        val completedExps =
-          if (! takesOptionalCommandBlock) acc
-          else acc.flatMap {
-              case (args, newGroups) =>
-                newGroups.headOption match {
-                  case Some(b@BracketGroup(_, _, _)) => parseArgAt(i)(args, newGroups)
-                  // synthetic block so later phases of compilation have consistent number of arguments
-                  case other => SuccessfulParse((syntheticCommandBlock(args, argContext.sourceLocation) :: args, newGroups))
-                }
-            }
-        completedExps.mapResult(_.reverse)
-      } else {
-        acc.flatMap((parseArgAt(i) _).tupled)
-      }
-    }
-
-    parseArgumentRec(0, ParseResult((Nil, groups)))
   }
 
   /**
