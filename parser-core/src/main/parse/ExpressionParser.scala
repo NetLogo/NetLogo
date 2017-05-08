@@ -130,6 +130,7 @@ object ExpressionParser {
     // Primacy gives the order in which partials ought to be reduced.
     // Where possible, we collapse a command to statement before parsing the next command
     def primacy: Int
+    def needsArguments: Boolean = false
   }
 
   case class PartialProcDef(pd: core.ProcedureDefinition) extends Partial {
@@ -143,9 +144,13 @@ object ExpressionParser {
   }
   case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial {
     val primacy = 5
+    override def needsArguments =
+      cmd.syntax.totalDefault < args.length
   }
-  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, argsSoFar: Seq[core.Expression]) extends Partial {
+  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial {
     val primacy = 4
+    override def needsArguments =
+      rep.syntax.totalDefault < args.length
   }
   // this one is particularly odd, a raw command can *sometimes* end up being an Argument,
   // but sometimes ends up being the start of a statement
@@ -158,6 +163,9 @@ object ExpressionParser {
   case class PartialDelayedBlock(db: DelayedBlock) extends Partial {
     val primacy = 2
   }
+  case class PartialInfixReporter(rep: core.Reporter, tok: Token) extends Partial {
+    val primacy = 1
+  }
   case class PartialReporter(rep: core.Reporter, tok: Token) extends Partial {
     val primacy = 1
   }
@@ -169,50 +177,54 @@ object ExpressionParser {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
     def reduce(stack: List[Partial]): List[Partial] = {
       println(stack.reverse.mkString("//"))
-      // TODO: use build-in list pattern extractors
       val secondFromTop = if (stack.length < 2) None else stack(1)
-      (secondFromTop, stack.head) match {
-        case (None, PartialStatement(stmt)) =>
-          PartialStatements(new core.Statements(procedureDeclaration.filename, Seq(stmt))) :: stack.tail
-        case (PartialStatements(stmts), PartialStatement(s)) =>
+      stack match {
+        case PartialStatement(stmt) :: Nil =>
+          PartialStatements(new core.Statements(procedureDeclaration.filename, Seq(stmt))) :: Nil
+        case PartialStatement(s) :: PartialStatements(stmts) :: rest =>
           // end *may* not be correct here when there is a block
-          PartialStatements(stmts.copy(stmts = stmts.stmts :+ s)) :: stack.tail.tail
-        case (None, PartialStatements(stmts)) =>
-          PartialProcDef(new core.ProcedureDefinition(procedureDeclaration, stmts, 100)) :: stack.tail
+          PartialStatements(stmts.copy(stmts = stmts.stmts :+ s)) :: rest
+        case PartialStatements(stmts) :: Nil =>
           // TODO: 100 is not really the end, just not sure how we'll get the number yet.
-        case (_, PartialReporter(rep, tok)) =>
+          PartialProcDef(new core.ProcedureDefinition(procedureDeclaration, stmts, 100)) :: Nil
+        case PartialReporter(rep, tok) :: rest =>
           if (rep.syntax.rightDefault == 0)
-            PartialReporterApp(new core.ReporterApp(rep, Seq(), tok.sourceLocation)) :: stack.tail
+            PartialReporterApp(new core.ReporterApp(rep, Seq(), tok.sourceLocation)) :: rest
           else
-            PartialReporterAndArgs(rep, tok, Seq()) :: stack.tail
-        case (None, p@PartialCommand(cmd, tok)) =>
-          PartialCommandAndArgs(cmd, tok, Seq()) :: stack.tail
-        case (_, PartialCommandAndArgs(cmd, tok, args)) if cmd.syntax.rightDefault <= args.length =>
-            resolveTypes(args, ArgumentParseContext(cmd, tok.sourceLocation), scope) match {
-              case f: FailedParse => List(PartialError(f))
-              case SuccessfulParse(typedArgs) =>
-                val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
-                PartialStatement(new core.Statement(cmd, typedArgs, loc)) :: stack.tail
-            }
-        case (PartialCommandAndArgs(cmd, tok, args), PartialReporterApp(arg)) =>
-          reduce(PartialCommandAndArgs(cmd, tok, args :+ arg) :: stack.tail.tail)
-        case (PartialCommand(cmd, tok), PartialReporterApp(app)) =>
-          reduce(PartialCommandAndArgs(cmd, tok, Seq(app)) :: stack.tail.tail)
-        case (PartialReporter(rep, tok), ra@PartialReporterApp(_)) =>
-          ra :: PartialReporterAndArgs(rep, tok, Seq()) :: stack.tail.tail
-        case (PartialReporterAndArgs(rep, tok, args), PartialReporterApp(app)) =>
+            PartialReporterAndArgs(rep, tok, Seq()) :: rest
+        case PartialCommand(cmd, tok) :: Nil =>
+          PartialCommandAndArgs(cmd, tok, Seq()) :: Nil
+        case PartialCommandAndArgs(cmd, tok, args) :: rest =>
+          resolveTypes(args, ArgumentParseContext(cmd, tok.sourceLocation), scope) match {
+            case f: FailedParse => List(PartialError(f))
+            case SuccessfulParse(typedArgs) =>
+              val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
+              PartialStatement(new core.Statement(cmd, typedArgs, loc)) :: rest
+          }
+        case PartialInfixReporter(iRep, iTok) :: PartialReporterApp(app) :: rest =>
+          PartialReporterAndArgs(iRep, iTok, Seq(app)) :: rest
+        case PartialInfixReporter(iRep, iTok) :: rest =>
+          List(PartialError(fail(ArgumentParseContext(iRep, iTok.sourceLocation).missingInput(0), iTok.sourceLocation)))
+        case PartialReporterApp(arg) :: PartialCommandAndArgs(cmd, tok, args) :: rest =>
+          PartialCommandAndArgs(cmd, tok, args :+ arg) :: rest
+        case PartialReporterApp(app) :: PartialCommand(cmd, tok) :: rest =>
+          PartialCommandAndArgs(cmd, tok, Seq(app)) :: rest
+        case (ra@PartialReporterApp(_)) :: PartialReporter(rep, tok) :: rest =>
+          ra :: PartialReporterAndArgs(rep, tok, Seq()) :: rest
+        case PartialReporterApp(app) :: PartialReporterAndArgs(rep, tok, args) :: rest =>
           // we aren't yet handling variadics properly
-          PartialReporterAndArgs(rep, tok, args :+ app) :: stack.tail.tail
-        case (_, PartialReporterAndArgs(rep, tok, args)) if rep.syntax.rightDefault <= args.length =>
+          PartialReporterAndArgs(rep, tok, args :+ app) :: rest
+        case PartialReporterAndArgs(rep, tok, args) :: rest if rep.syntax.rightDefault <= args.length =>
           resolveTypes(args, ArgumentParseContext(rep, tok.sourceLocation), scope) match {
             case f: FailedParse => List(PartialError(f))
             case SuccessfulParse(typedArgs) =>
               val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
-              PartialReporterApp(new core.ReporterApp(rep, typedArgs, loc)) :: stack.tail
+              PartialReporterApp(new core.ReporterApp(rep, typedArgs, loc)) :: rest
           }
-        case (PartialCommand(cmd, tok), PartialDelayedBlock(db)) => // I'm a bit worried about this, actually...
+        // this will eventually need to recur on DelayedBlock
+        case PartialDelayedBlock(db) :: PartialCommand(cmd, tok) :: rest =>
           val blockResult = parseDelayedBlock(db, cmd.syntax.right.head, scope).get
-          PartialCommandAndArgs(cmd, tok, Seq(blockResult)) :: stack.tail
+          PartialCommandAndArgs(cmd, tok, Seq(blockResult)) :: rest
         case _ => List(PartialError(fail("unknown parse for: " + stack.reverse.mkString(" // "), SourceLocation(0, 0, ""))))
       }
     }
@@ -222,9 +234,12 @@ object ExpressionParser {
       (p, g) match {
         case (_, pg: ParenGroup)   => true
         case (_, bg: BracketGroup) => true
-        case (_, Atom(token@Token(_, TokenType.Command, _)))  => stackPrimacy > 6
-        case (_, Atom(token@Token(_, TokenType.Reporter, _))) => stackPrimacy > 3
-        case (_, Atom(token@Token(_, TokenType.Literal, _)))  => stackPrimacy > 2
+        case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
+          stackPrimacy > 6
+        case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) =>
+          p.needsArguments || rep.syntax.isInfix || stackPrimacy > 3
+        case (p, Atom(token@Token(_, TokenType.Literal, _))) =>
+          p.needsArguments || stackPrimacy > 2
         case o => throw new NotImplementedError(s"shift precedence undefined for $o")
       }
     }
@@ -238,6 +253,8 @@ object ExpressionParser {
           token.refine(coreReporter)
           val newReporterApp = new core.ReporterApp(coreReporter, token.sourceLocation)
           PartialReporterApp(newReporterApp)
+        case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) if rep.syntax.isInfix =>
+          PartialInfixReporter(rep, token)
         case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) =>
           PartialReporter(rep, token)
         case bg: BracketGroup =>
@@ -268,10 +285,11 @@ object ExpressionParser {
         stack.headOption match {
           case Some(PartialError(failure: FailedParse)) => failure
           case Some(p) =>
-            if (shouldShift(p, groups.head))
+            if (shouldShift(p, groups.head)) {
               runRec(shift(groups.head) :: stack, groups.tail, scope)
-            else
+            } else {
               runRec(reduce(stack), groups, scope)
+            }
           case None =>
             runRec(shift(groups.head) :: stack, groups.tail, scope)
         }

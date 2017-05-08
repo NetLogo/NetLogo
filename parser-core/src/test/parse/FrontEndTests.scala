@@ -148,7 +148,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("let x 0 set x * 5 5", "Missing input on the left.", 14, 15)
   }
   test("infix show misparse") {
-    runFailure("show * 5 5", "Missing input on the left.", 5, 6)
+    runFailure("show * 5 5", "* expected a number on the left", 5, 6)
   }
   test("shows errors when verbatim code blocks don't match 1") {
     runFailure("__ignore __block [ abc", "No closing bracket for this open bracket.", 17, 18)
