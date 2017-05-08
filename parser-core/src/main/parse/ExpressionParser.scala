@@ -187,6 +187,8 @@ object ExpressionParser {
         case PartialStatements(stmts) :: Nil =>
           // TODO: 100 is not really the end, just not sure how we'll get the number yet.
           PartialProcDef(new core.ProcedureDefinition(procedureDeclaration, stmts, 100)) :: Nil
+        case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
+          List(PartialError(fail(ExpectedCommand, tok)))
         case PartialReporter(rep, tok) :: rest =>
           if (rep.syntax.rightDefault == 0)
             PartialReporterApp(new core.ReporterApp(rep, Seq(), tok.sourceLocation)) :: rest
@@ -234,6 +236,8 @@ object ExpressionParser {
       (p, g) match {
         case (_, pg: ParenGroup)   => true
         case (_, bg: BracketGroup) => true
+        case (PartialCommandAndArgs(cmd: core.Command, _, args), _) =>
+          cmd.syntax.totalDefault > args.length
         case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
           stackPrimacy > 6
         case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) =>
