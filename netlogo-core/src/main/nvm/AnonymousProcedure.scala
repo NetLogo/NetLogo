@@ -30,7 +30,7 @@ sealed trait AnonymousProcedure {
           ((kind == AgentKind.Patch) && agentClassString.contains('P')) ||
           ((kind == AgentKind.Link) && agentClassString.contains('L')))) {
       val instruction = context.activation.procedure.code(context.ip)
-      val allowedKinds = agentClassString.map {
+      val allowedKinds = agentClassString.collect {
         case 'O' => AgentKind.Observer
         case 'T' => AgentKind.Turtle
         case 'P' => AgentKind.Patch
