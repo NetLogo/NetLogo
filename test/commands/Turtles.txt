@@ -204,9 +204,3 @@ HatchInheritShape
   T> set shape "circle"
   T> hatch 1
   [shape] of turtles => ["circle" "circle"]
-
-ForwardLessThanOne1
-  O> crt 1 [ set heading 45 ]
-  T> repeat 3 [ fd 0.3 ]
-  [pxcor] of turtle 0 => 1
-  [pycor] of turtle 0 => 1

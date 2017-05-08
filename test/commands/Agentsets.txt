@@ -345,21 +345,3 @@ SelfUpdatesCorrectlyAfterException
   to-report selfish-self let my-who who carefully [ ask other turtles [ error "Derp" ] ] [ ] report who end
   O> crt 2
   [selfish-self] of turtle 0 => 0
-
-AnyOtherTest
-  any? other turtles => false
-  O> create-turtles 1
-  [any? other turtles] of turtles => [false]
-  O> create-turtles 3
-  any? other turtles => true
-  any? other links => false
-  [any? other turtles] of turtles => [true true true true]
-
-CountOtherTest
-  count other turtles => 0
-  O> create-turtles 1
-  [count other turtles] of turtles => [0]
-  O> create-turtles 3
-  count other turtles => 4
-  [count other turtles] of turtles => [3 3 3 3]
-

@@ -27,6 +27,14 @@ import PrimitiveMungersTests._
 
 class PrimitiveMungersTests extends FunSuite with Inside {
 
+  trait TestCommand {
+    val command = new DummyCommand()
+  }
+
+  trait TestReporter {
+    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
+  }
+
   def newMatch(a: AstNode): Match = {
     new Match(a)
   }
@@ -44,83 +52,89 @@ class PrimitiveMungersTests extends FunSuite with Inside {
   }
 
   test("match.command returns the statement command") {
-    val command = new DummyCommand()
-    val m = newMatch(statement(new DummyCoreCommand(), command))
-    assert(m.command == command)
+    new TestCommand {
+      val m = newMatch(statement(new DummyCoreCommand(), command))
+      assert(m.command == command)
+    }
   }
 
   test("match.replace replaces the root instruction") {
-    val command = new DummyCommand()
-    val m = newMatch(statement(new DummyCoreCommand(), command))
-    val command2 = new DummyCommand()
-    m.replace(command2)
-    assert(m.command eq command2)
+    new TestCommand {
+      val m = newMatch(statement(new DummyCoreCommand(), command))
+      val command2 = new DummyCommand()
+      m.replace(command2)
+      assert(m.command eq command2)
+    }
   }
 
   test("match.strip removes each argument to the node") {
-    val command = new DummyCommand()
-    val m = newMatch(statement(new DummyCoreCommand(), command, constNum))
-    m.strip()
-    inside(m.node) { case s: Statement => assert(s.args.length == 0) }
+    new TestCommand {
+      val m = newMatch(statement(new DummyCoreCommand(), command, constNum))
+      m.strip()
+      inside(m.node) { case s: Statement => assert(s.args.length == 0) }
+    }
   }
 
   test("matchEmptyCommandBlockIsLastArg matches empty blocks") {
-    val command = new DummyCommand()
-    val emptyBlock = new StatementsBuilder { }
-    val m = newMatch(statement(new DummyCoreCommand(Syntax.CommandBlockType), command, emptyBlock.buildBlock))
-    m.matchEmptyCommandBlockIsLastArg
-  }
-
-  test("matchEmptyCommandBlockIsLastArg fails on non-empty block") {
-    val command = new DummyCommand()
-    val emptyBlock = new StatementsBuilder {
-      statement(new DummyCoreCommand(), new DummyCommand())
-    }
-    val m = newMatch(statement(new DummyCoreCommand(Syntax.CommandBlockType), command, emptyBlock.buildBlock))
-    intercept[MatchFailedException] {
+    new TestCommand {
+      val emptyBlock = new StatementsBuilder { }
+      val m = newMatch(statement(new DummyCoreCommand(Syntax.CommandBlockType), command, emptyBlock.buildBlock))
       m.matchEmptyCommandBlockIsLastArg
     }
   }
 
+  test("matchEmptyCommandBlockIsLastArg fails on non-empty block") {
+    new TestCommand {
+      val emptyBlock = new StatementsBuilder {
+        statement(new DummyCoreCommand(), new DummyCommand())
+      }
+      val m = newMatch(statement(new DummyCoreCommand(Syntax.CommandBlockType), command, emptyBlock.buildBlock))
+      intercept[MatchFailedException] {
+        m.matchEmptyCommandBlockIsLastArg
+      }
+    }
+  }
+
   test("matchArg fails when there are no arguments") {
-    val command = new DummyCommand()
-    val m = newMatch(statement(new DummyCoreCommand(), command, constNum))
-    m.strip() //no more args
-    intercept[MatchFailedException] {
-      m.matchArg(0)
+    new TestCommand {
+      val m = newMatch(statement(new DummyCoreCommand(), command, constNum))
+      m.strip() //no more args
+      intercept[MatchFailedException] {
+        m.matchArg(0)
+      }
     }
   }
 
   test("matchArg succeeds when there is an argument at its index") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    m.matchArg(0)
+    new TestCommand with TestReporter {
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      m.matchArg(0)
+    }
   }
 
   test("matchArg fails when there is no argument at its index") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    intercept[MatchFailedException] {
-      m.matchArg(1)
+    new TestCommand with TestReporter{
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      intercept[MatchFailedException] {
+        m.matchArg(1)
+      }
     }
   }
 
   test("matchArg fails when class is not reporter") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    intercept[MatchFailedException] {
-      m.matchArg(0, classOf[DummyCommand])
+    new TestCommand with TestReporter {
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      intercept[MatchFailedException] {
+        m.matchArg(0, classOf[DummyCommand])
+      }
     }
   }
 
   test("matchArg passes when class is reporter") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    m.matchArg(0, classOf[DummyReporter])
+    new TestCommand with TestReporter {
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      m.matchArg(0, classOf[DummyReporter])
+    }
   }
 
   test("match.reporter returns the ReporterApp reporter") {
@@ -130,43 +144,44 @@ class PrimitiveMungersTests extends FunSuite with Inside {
   }
 
   test("match.replace uses new class arguments") {
-    val command = new DummyCommand()
-    val m = newMatch(statement(new DummyCoreCommand(), command))
-    m.replace(classOf[DummyCommand])
+    new TestCommand {
+      val m = newMatch(statement(new DummyCoreCommand(), command))
+      m.replace(classOf[DummyCommand])
+    }
   }
 
   test("addArg passes when argument is added") {
-    val command = new DummyCommand()
-    val reporter = new DummyReporter()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(constNum)
-    m.addArg(classOf[DummyReporter], testReporter)
+    new TestCommand with TestReporter {
+      val reporter = new DummyReporter()
+      val m = newMatch(constNum)
+      m.addArg(classOf[DummyReporter], testReporter)
+    }
   }
 
   test("graftArg passes when argument is added") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    val m2 = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    m.graftArg(m2.matchArg(0))
-    m.matchArg(1)
+    new TestCommand with TestReporter {
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      val m2 = newMatch(statement(new DummyCoreCommand(), command, constNum))
+      m.graftArg(m2.matchArg(0))
+      assert(m.matchArg(1).reporter == constNum.reporter)
+    }
   }
 
   test("removeLastArg fails when argument is removed") {
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-    m.removeLastArg
-    intercept[MatchFailedException] {
-      m.matchArg(0, classOf[DummyCommand])
+    new TestCommand with TestReporter {
+      val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
+      m.removeLastArg
+      intercept[MatchFailedException] {
+        m.matchArg(0, classOf[DummyCommand])
+      }
     }
   }
 
   test("matchReporterBlock passes when reporter block is matched") {
-    val repBlock = new ReporterBuilder { }
-    val command = new DummyCommand()
-    val testReporter = repApp(new DummyCoreReporter(), new DummyReporter())
-    val m = newMatch(repBlock.buildBlock)
-    m.matchReporterBlock
+    new TestCommand with TestReporter {
+      val repBlock = new ReporterBuilder { }
+      val m = newMatch(repBlock.buildBlock)
+      m.matchReporterBlock
+    }
   }
 } 
