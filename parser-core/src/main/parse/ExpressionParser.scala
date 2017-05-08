@@ -217,6 +217,42 @@ object ExpressionParser {
       }
     }
 
+    def shouldShift(p: Partial, g: SyntaxGroup): Boolean = {
+      val stackPrimacy = p.primacy
+      (p, g) match {
+        case (_, pg: ParenGroup)   => true
+        case (_, bg: BracketGroup) => true
+        case (_, Atom(token@Token(_, TokenType.Command, _)))  => stackPrimacy > 6
+        case (_, Atom(token@Token(_, TokenType.Reporter, _))) => stackPrimacy > 3
+        case (_, Atom(token@Token(_, TokenType.Literal, _)))  => stackPrimacy > 2
+        case o => throw new NotImplementedError(s"shift precedence undefined for $o")
+      }
+    }
+
+    def shift(g: SyntaxGroup): Partial = {
+      g match {
+        case Atom(token@Token(_, TokenType.Command, cmd: core.Command)) =>
+          PartialCommand(cmd, token)
+        case Atom(token@Token(_, TokenType.Literal, literalVal)) =>
+          val coreReporter = new core.prim._const(token.value)
+          token.refine(coreReporter)
+          val newReporterApp = new core.ReporterApp(coreReporter, token.sourceLocation)
+          PartialReporterApp(newReporterApp)
+        case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) =>
+          PartialReporter(rep, token)
+        case bg: BracketGroup =>
+          PartialDelayedBlock(DelayedBlock(bg, scope))
+        case ParenGroup(inner, start, end) =>
+          val intermediateResult = runRec(Nil, inner, scope)
+          intermediateResult match {
+            case SuccessfulParse((p, Seq())) => p
+            case SuccessfulParse((p, Seq(g, _*))) => PartialError(fail(ExpectedCommand, g.location))
+            case f: FailedParse => PartialError(f)
+          }
+        case other => throw new NotImplementedError(s"shift undefined for $other")
+      }
+    }
+
     def runRec(stack: List[Partial], groups: Seq[SyntaxGroup], scope: SymbolTable): RemainingParseResult[Partial] = {
       if (groups.isEmpty) {
         if (stack.length > 1)
@@ -231,43 +267,19 @@ object ExpressionParser {
       } else {
         stack.headOption match {
           case Some(PartialError(failure: FailedParse)) => failure
-          case _ =>
-            val stackPrimacy = stack.headOption.map(_.primacy).getOrElse(8)
-            groups.head match {
-              case Atom(Token(_, TokenType.Eof, _)) =>
-                runRec(stack, groups.tail, scope)
-              case Atom(token@Token(_, TokenType.Command, cmd: core.Command)) if stackPrimacy > 6 =>
-                runRec(PartialCommand(cmd, token) :: stack, groups.tail, scope)
-              case Atom(token@Token(_, TokenType.Command, cmd: core.Command)) =>
-                runRec(reduce(stack), groups, scope)
-              case Atom(token@Token(_, TokenType.Literal, literalVal)) if stackPrimacy > 2 =>
-                val coreReporter = new core.prim._const(token.value)
-                token.refine(coreReporter)
-                val newReporterApp = new core.ReporterApp(coreReporter, token.sourceLocation)
-                runRec(PartialReporterApp(newReporterApp) :: stack, groups.tail, scope)
-              case Atom(token@Token(_, TokenType.Literal, literalVal)) =>
-                runRec(reduce(stack), groups, scope)
-              case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) if stackPrimacy > 3 =>
-                runRec(PartialReporter(rep, token) :: stack, groups.tail, scope)
-              case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) =>
-                runRec(PartialReporter(rep, token) :: stack, groups.tail, scope)
-              case bg: BracketGroup =>
-                runRec(PartialDelayedBlock(DelayedBlock(bg, scope)) :: stack, groups.tail, scope)
-              case ParenGroup(inner, start, end) =>
-                val intermediateResult = runRec(Nil, inner, scope)
-                intermediateResult match {
-                  case SuccessfulParse((p, Seq())) =>
-                    runRec(p :: stack, groups.tail, scope)
-                  case SuccessfulParse((p, Seq(g, _*))) => fail(ExpectedCommand, g.location)
-                  case other => other
-                }
-              case o => throw new NotImplementedError(s"can't parse $o yet")
-            }
+          case Some(p) =>
+            if (shouldShift(p, groups.head))
+              runRec(shift(groups.head) :: stack, groups.tail, scope)
+            else
+              runRec(reduce(stack), groups, scope)
+          case None =>
+            runRec(shift(groups.head) :: stack, groups.tail, scope)
         }
       }
     }
 
-    runRec(Nil, groupSyntax(tokens.buffered).get, scope).get match {
+    //.init to avoid Eof awkwardness
+    runRec(Nil, groupSyntax(tokens.buffered).get.init, scope).get match {
       case (PartialError(f), _)=> throw f.failure.toException
       case (PartialProcDef(pd), _) => pd
       case other => throw new Error("bad parse?! " + other)

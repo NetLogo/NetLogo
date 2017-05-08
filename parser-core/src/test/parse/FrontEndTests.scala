@@ -21,6 +21,89 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_ignore()[_round()[_const(0.5)[]]] " +
       "_fd()[_const(5.0)[]]")
   }
+  test("lambda parse") {
+    testParse("__ignore [[x] -> x + x]",
+      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
+  }
+  test("unbracketed lambda parse") {
+    testParse("__ignore [x -> x + x]",
+      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
+  }
+  test("unbracketed nested lambda parse") {
+    testParse("__ignore [x -> [y ->  x / y ]]",
+      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
+  }
+  test("unbracketed zero-argument lambda parse") {
+    testParse("__ignore [ -> 4]",
+      "_ignore()[_reporterlambda()[_const(4)[]]]")
+  }
+  test("nested lambda parse") {
+    testParse("__ignore [[x] -> [[y] ->  x / y ]]",
+      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
+  }
+  test("lambda parse with map") {
+    testParse("__ignore map [[x] -> x] [1 2 3]",
+      "_ignore()[_map()[_reporterlambda(X)[_lambdavariable(X)[]], _const([1, 2, 3])[]]]")
+  }
+  test("lambda parse with foreach") {
+    testParse("foreach [1 2 3] [[x] -> __ignore x]",
+      "_foreach()[_const([1, 2, 3])[], _commandlambda(X)[[_ignore()[_lambdavariable(X)[]]]]]")
+  }
+  test("DoParseVariadic") {
+    testParse("__ignore list 1 2",
+      "_ignore()[_list()[_const(1)[], _const(2)[]]]")
+  }
+  test("DoParseVariadic2") {
+    testParse("__ignore (list 1 2 3)",
+      "_ignore()[_list()[_const(1)[], _const(2)[], _const(3)[]]]")
+  }
+  test("DoParseMap") {
+    testParse("__ignore map [[x] -> round x] [1.2 1.7 3.2]",
+      "_ignore()[_map()[_reporterlambda(X)[_round()[_lambdavariable(X)[]]], _const([1.2, 1.7, 3.2])[]]]")
+  }
+  test("DoParseMapShortSyntax") {
+    testParse("__ignore map round [1.2 1.7 3.2]",
+      "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
+  }
+  test("ParseConstantInteger") {
+    testParse("__ignore 5",
+      "_ignore()[_const(5.0)[]]")
+  }
+  test("ParseConstantList") {
+    testParse("__ignore [5]",
+      "_ignore()[_const([5.0])[]]")
+  }
+  test("ParseConstantListWithSublists") {
+    testParse("__ignore [[1] [2]]",
+      "_ignore()[_const([[1.0], [2.0]])[]]")
+  }
+  test("ParseConstantListInsideLambda1") {
+    testParse("__ignore n-values 10 [[]]",
+      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([])[]]]]")
+  }
+  test("ParseConstantListInsideLambda2") {
+    testParse("__ignore n-values 10 [[5]]",
+      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([5.0])[]]]]")
+  }
+  test("ParseDiffuse") {
+    testParse("diffuse pcolor 1",
+      "_diffuse()[_patchvariable(2)[], _const(1.0)[]]")
+  }
+  test("ParseCodeBlock") {
+    testParse("__ignore __block [ abc ]", "_ignore()[_block()[`[ abc ]`[]]]")
+  }
+
+  // in SetBreed2, we are checking that since no singular form of `fish`
+  // is provided and it defaults to `turtle`, that the primitive `turtle`
+  // isn't mistaken for a singular form and parsed as `_breedsingular` - ST 4/12/14
+  test("SetBreed1") {
+    testParse("__ignore turtle 0",
+      "_ignore()[_turtle()[_const(0.0)[]]]")
+  }
+  test("SetBreed2") {
+    testParse("__ignore turtle 0",
+      "_ignore()[_turtle()[_const(0.0)[]]]")
+  }
   test("DoParseBadCommand1") {
     runFailure("__ignore 1 2 3", "Expected command.", 11, 12)
   }
@@ -119,34 +202,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("error-message used outside of carefully") {
     runFailure("let foo error-message", "error-message cannot be used outside of CAREFULLY.", 8, 21)
   }
-  test("lambda parse") {
-    testParse("__ignore [[x] -> x + x]",
-      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
-  }
-  test("unbracketed lambda parse") {
-    testParse("__ignore [x -> x + x]",
-      "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
-  }
-  test("unbracketed nested lambda parse") {
-    testParse("__ignore [x -> [y ->  x / y ]]",
-      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
-  }
-  test("unbracketed zero-argument lambda parse") {
-    testParse("__ignore [ -> 4]",
-      "_ignore()[_reporterlambda()[_const(4)[]]]")
-  }
-  test("nested lambda parse") {
-    testParse("__ignore [[x] -> [[y] ->  x / y ]]",
-      "_ignore()[_reporterlambda(X)[_reporterlambda(Y)[_div()[_lambdavariable(X)[], _lambdavariable(Y)[]]]]]")
-  }
-  test("lambda parse with map") {
-    testParse("__ignore map [[x] -> x] [1 2 3]",
-      "_ignore()[_map()[_reporterlambda(X)[_lambdavariable(X)[]], _const([1, 2, 3])[]]]")
-  }
-  test("lambda parse with foreach") {
-    testParse("foreach [1 2 3] [[x] -> __ignore x]",
-      "_foreach()[_const([1, 2, 3])[], _commandlambda(X)[[_ignore()[_lambdavariable(X)[]]]]]")
-  }
   test("lambda argument name is a literal") {
     runFailure("__ignore [[2] -> 2]", "Expected a variable name here", 11, 12)
   }
@@ -164,22 +219,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   }
   test("invalidLambda4") {
     runFailure("__ignore [ foo bar -> ]", "An anonymous procedures of two or more arguments must enclose its argument list in brackets", 11, 18)
-  }
-  test("DoParseVariadic") {
-    testParse("__ignore list 1 2",
-      "_ignore()[_list()[_const(1)[], _const(2)[]]]")
-  }
-  test("DoParseVariadic2") {
-    testParse("__ignore (list 1 2 3)",
-      "_ignore()[_list()[_const(1)[], _const(2)[], _const(3)[]]]")
-  }
-  test("DoParseMap") {
-    testParse("__ignore map [[x] -> round x] [1.2 1.7 3.2]",
-      "_ignore()[_map()[_reporterlambda(X)[_round()[_lambdavariable(X)[]]], _const([1.2, 1.7, 3.2])[]]]")
-  }
-  test("DoParseMapShortSyntax") {
-    testParse("__ignore map round [1.2 1.7 3.2]",
-      "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("DoParseForeach") {
     runFailure("foreach [1 2 3] [__ignore ?]", "Nothing named ? has been defined.", 26, 27)
@@ -224,45 +263,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("ParseExpressionWithInfixAndPrefix") {
     testParse("__ignore round 5.2 + log 64 2 * log 64 2 - random 2",
       "_ignore()[_minus()[_plus()[_round()[_const(5.2)[]], _mult()[_log()[_const(64.0)[], _const(2.0)[]], _log()[_const(64.0)[], _const(2.0)[]]]], _random()[_const(2.0)[]]]]")
-  }
-  test("ParseConstantInteger") {
-    testParse("__ignore 5",
-      "_ignore()[_const(5.0)[]]")
-  }
-  test("ParseConstantList") {
-    testParse("__ignore [5]",
-      "_ignore()[_const([5.0])[]]")
-  }
-  test("ParseConstantListWithSublists") {
-    testParse("__ignore [[1] [2]]",
-      "_ignore()[_const([[1.0], [2.0]])[]]")
-  }
-  test("ParseConstantListInsideLambda1") {
-    testParse("__ignore n-values 10 [[]]",
-      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([])[]]]]")
-  }
-  test("ParseConstantListInsideLambda2") {
-    testParse("__ignore n-values 10 [[5]]",
-      "_ignore()[_nvalues()[_const(10.0)[], _reporterlambda()[_const([5.0])[]]]]")
-  }
-  test("ParseDiffuse") {
-    testParse("clear-all diffuse pcolor 1",
-      "_clearall()[] _diffuse()[_patchvariable(2)[], _const(1.0)[]]")
-  }
-  test("ParseCodeBlock") {
-    testParse("__ignore __block [ abc ]", "_ignore()[_block()[`[ abc ]`[]]]")
-  }
-
-  // in SetBreed2, we are checking that since no singular form of `fish`
-  // is provided and it defaults to `turtle`, that the primitive `turtle`
-  // isn't mistaken for a singular form and parsed as `_breedsingular` - ST 4/12/14
-  test("SetBreed1") {
-    testParse("__ignore turtle 0",
-      "_ignore()[_turtle()[_const(0.0)[]]]")
-  }
-  test("SetBreed2") {
-    testParse("__ignore turtle 0",
-      "_ignore()[_turtle()[_const(0.0)[]]]")
   }
 
   /// duplicate name tests
