@@ -132,16 +132,16 @@ object ExpressionParser {
     // Primacy gives the order in which partials ought to be reduced.
     // Where possible, we collapse a command to statement before parsing the next command
     def primacy: Int
-    def needsArguments: Boolean = false
+    def needsArguments = false
   }
 
-  object ArgumentPartial {
-    def unapply(p: Partial): Option[(core.Syntax, Seq[core.Expression])] =
-      p match {
-        case PartialCommandAndArgs(cmd, _, args) => Some((cmd.syntax, args))
-        case PartialReporterAndArgs(rep, _, args) => Some((rep.syntax, args))
-        case _ => None
-      }
+  trait ArgumentPartial extends Partial {
+    def syntax: core.Syntax
+    def args: Seq[core.Expression]
+    def precedence = syntax.precedence
+    override def needsArguments = syntax.totalDefault > args.length
+    def neededArgument: Int = if (needsArguments) syntax.allArgs(args.length) else 0
+    def withArgument(arg: core.Expression): ArgumentPartial
   }
 
   object PartialInstruction {
@@ -160,20 +160,28 @@ object ExpressionParser {
   case class PartialStatement(stmt: core.Statement) extends Partial {
     val primacy = 6
   }
-  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial {
+  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial with ArgumentPartial {
     val primacy = 5
-    override def needsArguments =
-      cmd.syntax.totalDefault > args.length
+    def syntax = cmd.syntax
+    def withArgument(arg: core.Expression): ArgumentPartial =
+      copy(args = args :+ arg)
   }
-  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial {
+  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial with ArgumentPartial {
     val primacy = 4
-    override def needsArguments =
-      rep.syntax.totalDefault > args.length
+    def syntax = rep.syntax
+    def withArgument(arg: core.Expression): ArgumentPartial =
+      copy(args = args :+ arg)
   }
   // this one is particularly odd, a raw command can *sometimes* end up being an Argument,
   // but sometimes ends up being the start of a statement
   case class PartialCommand(cmd: core.Command, tok: Token) extends Partial {
     val primacy = 3
+  }
+  case class PartialReporterBlock(block: core.ReporterBlock) extends Partial {
+    val primacy = 2
+  }
+  case class PartialCommandBlock(block: core.CommandBlock) extends Partial {
+    val primacy = 2
   }
   case class PartialReporterApp(app: core.ReporterApp) extends Partial {
     val primacy = 2
@@ -214,16 +222,19 @@ object ExpressionParser {
           PartialStatements(stmts.copy(stmts = stmts.stmts :+ s)) :: rest
         case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
           List(PartialError(fail(ExpectedCommand, tok)))
-        case PartialInstruction(rep: core.Reporter, tok) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if
-          ap.needsArguments && (parentSyntax.allArgs(parentArgs.length) == Syntax.ReporterType) =>
+        case PartialInstruction(rep: core.Reporter, tok) :: (ap: ArgumentPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
           // this handles concise reporters
-          (processReporter(rep, tok, Seq(), parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
-        case PartialCommand(cmd, tok) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if
-          ap.needsArguments && (parentSyntax.allArgs(parentArgs.length) == Syntax.CommandType) =>
-          (cmdToReporterApp(cmd, tok, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
-        case PartialReporterAndArgs(rep, tok, args) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if rep.syntax.totalDefault <= args.length && parentSyntax.totalDefault > 0 =>
-          (processReporter(rep, tok, args, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
-        case PartialReporter(rep, tok) :: rest => PartialReporterAndArgs(rep, tok, Seq()) :: rest
+          (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        case PartialReporterBlock(block) :: (ap: ArgumentPartial) :: rest                 if compatible(ap.neededArgument, Syntax.ReporterBlockType) =>
+          ap.withArgument(block) :: rest
+        case PartialCommandBlock(block) :: (ap: ArgumentPartial) :: rest                  if compatible(ap.neededArgument, Syntax.CommandBlockType) =>
+          ap.withArgument(block) :: rest
+        case PartialCommand(cmd, tok) :: (ap: ArgumentPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
+          (cmdToReporterApp(cmd, tok, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        case PartialReporterAndArgs(rep, tok, args) :: (ap: ArgumentPartial) :: rest      if ap.needsArguments =>
+          (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        case PartialReporter(rep, tok) :: rest =>
+          PartialReporterAndArgs(rep, tok, Seq()) :: rest
         case PartialCommandAndArgs(cmd, tok, args) :: rest =>
           val (p, newScope) = processStatement(cmd, tok, args, scope)
           (p :: rest, ctx.copy(scope = newScope))
@@ -243,12 +254,14 @@ object ExpressionParser {
         case PartialCommand(cmd, tok) :: rest =>
           PartialCommandAndArgs(cmd, tok, Seq()) :: rest
           // this will eventually need to recur on DelayedBlock
-        case PartialDelayedBlock(db) :: (pc@ArgumentPartial(parentSyntax, parentArgs)) :: rest if parentSyntax.totalDefault > parentArgs.length =>
-          processDelayedBlock(db, parentSyntax.allArgs(parentArgs.length), scope) :: pc :: rest
-        case PartialReporterAndArgs(rep, tok, args) :: Nil if rep.syntax.totalDefault <= args.length => // this case comes up when parsing a reporter lambda (and probably blocks)
-          (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx)
+        case PartialDelayedBlock(db) :: (pc: ArgumentPartial) :: rest if pc.needsArguments =>
+          processDelayedBlock(db, pc.neededArgument, scope) :: pc :: rest
+        case (pr@PartialReporterAndArgs(rep, tok, args)) :: Nil if ! pr.needsArguments => // this case comes up when parsing a reporter lambda (and probably blocks)
+          (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx.copy(precedence = Syntax.CommandPrecedence))
         case PartialDelayedBlock(db) :: Nil => // this case comes up for reporter lambda (and possibly reporter blocks)
           processDelayedBlock(db, Syntax.WildcardType, scope) :: Nil
+        case PartialReporterApp(app) :: Nil =>
+          List(PartialError(fail(ExpectedCommand, app.sourceLocation)))
         case _ => List(PartialError(fail("unknown parse for: " + stack.reverse.mkString(" // "), SourceLocation(0, 0, ""))))
       }
   }
@@ -267,6 +280,7 @@ object ExpressionParser {
       case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
         stackPrimacy > 6
       case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) if rep.syntax.isInfix =>
+        println("precedence: " + c.precedence + " vs " + rep.syntax.precedence)
         (c.precedence < rep.syntax.precedence) && (p.needsArguments || stackPrimacy > 1)
       case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) =>
         p.needsArguments || stackPrimacy > 3
@@ -435,12 +449,32 @@ object ExpressionParser {
       processCommandLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
     else if (compatible(goalType, Syntax.ListType))
       processLiteralList(block)
+    else if (compatible(goalType, Syntax.ReporterBlockType))
+      processReporterBlock(block, scope)
+    else if (compatible(goalType, Syntax.CommandBlockType))
+      processCommandBlock(block, scope)
     else
       PartialError(fail("only reporter arrow lambdas are handled", block))
     /*
     else if (block.isArrowLambda && block.isCommand)
       buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].argNames)
     */
+  }
+
+  def processReporterBlock(block: DelayedBlock, scope: SymbolTable): Partial = {
+    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, scope), _.isInstanceOf[PartialReporterApp]).flatMap {
+      case (PartialReporterApp(app), remainingGroups) =>
+        resolveType(Syntax.WildcardType, app, null, scope).map[Partial] {
+          case (expr: core.ReporterApp) =>
+            PartialReporterBlock(new core.ReporterBlock(expr, block.group.location))
+          case (other: core.Expression) =>
+            PartialError(fail(ExpectedReporter, other))
+        }
+      case (other, remainingGroups) => fail(ExpectedCommand, remainingGroups.head.start)
+    } match {
+      case f: FailedParse => PartialError(f)
+      case SuccessfulParse(partial) => partial
+    }
   }
 
   def processReporterLambda(block: ArrowLambdaBlock, scope: SymbolTable): Partial = {
@@ -455,6 +489,17 @@ object ExpressionParser {
             PartialError(fail(ExpectedCommand, other))
         }
       case (other, remainingGroups) => fail(ExpectedCommand, remainingGroups.head.start)
+    } match {
+      case f: FailedParse => PartialError(f)
+      case SuccessfulParse(partial) => partial
+    }
+  }
+
+  def processCommandBlock(block: DelayedBlock, scope: SymbolTable): Partial = {
+    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, block.internalScope), _.isInstanceOf[PartialStatements]).flatMap {
+      case (PartialStatements(stmts), remainingGroups) if remainingGroups.isEmpty =>
+        SuccessfulParse(PartialCommandBlock(commandBlockWithStatements(block.group.location, stmts.stmts)))
+      case (_, remainingGroups) => fail(ExpectedCommand, remainingGroups.head.start)
     } match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(partial) => partial
