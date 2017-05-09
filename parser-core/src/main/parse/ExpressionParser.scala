@@ -184,13 +184,16 @@ object ExpressionParser {
     val primacy = -1
   }
 
+  case class ParsingContext(precedence: Int, scope: SymbolTable)
+
   // def runShiftReduce(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
-    def reduce(stack: List[Partial], scope: SymbolTable): (List[Partial], SymbolTable) = {
+    def reduce(stack: List[Partial], ctx: ParsingContext): (List[Partial], ParsingContext) = {
       // I hope both of these two lines are only temporary
       import scala.language.implicitConversions
-      implicit def partialListToTuple(l: List[Partial]): (List[Partial], SymbolTable) = (l, scope)
+      implicit def partialListToTuple(l: List[Partial]): (List[Partial], ParsingContext) = (l, ctx)
 
+      // println("context precedence: " + ctx.precedence)
       println(stack.reverse.mkString("//"))
 
       val secondFromTop = if (stack.length < 2) None else stack(1)
@@ -206,14 +209,15 @@ object ExpressionParser {
         case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
           List(PartialError(fail(ExpectedCommand, tok)))
         case PartialReporterAndArgs(rep, tok, args) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest
-          if rep.syntax.rightDefault <= args.length && parentSyntax.totalDefault > 0 =>
-            processReporter(rep, tok, args, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest
+          if rep.syntax.totalDefault <= args.length && parentSyntax.totalDefault > 0 =>
+            (processReporter(rep, tok, args, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest,
+              ctx.copy(precedence = parentSyntax.precedence))
         case PartialReporter(rep, tok) :: rest => PartialReporterAndArgs(rep, tok, Seq()) :: rest
         case PartialCommandAndArgs(cmd, tok, args) :: rest =>
           val (p, newScope) = processStatement(cmd, tok, args, scope)
-          (p :: rest, newScope)
+          (p :: rest, ctx.copy(scope = newScope))
         case PartialInfixReporter(iRep, iTok) :: PartialReporterApp(app) :: rest =>
-          PartialReporterAndArgs(iRep, iTok, Seq(app)) :: rest
+          (PartialReporterAndArgs(iRep, iTok, Seq(app)) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
         case PartialInfixReporter(iRep, iTok) :: rest =>
           List(PartialError(fail(ArgumentParseContext(iRep, iTok.sourceLocation).missingInput(0), iTok.sourceLocation)))
         case PartialReporterApp(arg) :: PartialCommandAndArgs(cmd, tok, args) :: rest =>
@@ -235,7 +239,7 @@ object ExpressionParser {
       }
     }
 
-    def shouldShift(p: Partial, g: SyntaxGroup): Boolean = {
+    def shouldShift(p: Partial, g: SyntaxGroup, c: ParsingContext): Boolean = {
       val stackPrimacy = p.primacy
       (p, g) match {
         case (_, pg: ParenGroup)   => true
@@ -246,15 +250,17 @@ object ExpressionParser {
           rep.syntax.totalDefault > args.length
         case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
           stackPrimacy > 6
+        case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) if rep.syntax.isInfix =>
+          (c.precedence < rep.syntax.precedence) && (p.needsArguments || stackPrimacy > 1)
         case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) =>
-          p.needsArguments || rep.syntax.isInfix || stackPrimacy > 3
+          p.needsArguments || stackPrimacy > 3
         case (p, Atom(token@Token(_, TokenType.Literal, _))) =>
           p.needsArguments || stackPrimacy > 3
         case o => throw new NotImplementedError(s"shift precedence undefined for $o")
       }
     }
 
-    def shift(g: SyntaxGroup): Partial = {
+    def shift(g: SyntaxGroup, ctx: ParsingContext): Partial = {
       g match {
         case Atom(token@Token(_, TokenType.Command, cmd: core.Command)) =>
           PartialCommand(cmd, token)
@@ -269,7 +275,7 @@ object ExpressionParser {
         case bg: BracketGroup =>
           PartialDelayedBlock(DelayedBlock(bg, scope))
         case ParenGroup(inner, start, end) =>
-          val intermediateResult = runRec(Nil, inner, scope)
+          val intermediateResult = runRec(Nil, inner, ctx)
           intermediateResult match {
             case SuccessfulParse((p, Seq())) => p
             case SuccessfulParse((p, Seq(g, _*))) => PartialError(fail(ExpectedCommand, g.location))
@@ -279,41 +285,41 @@ object ExpressionParser {
       }
     }
 
-    def runRec(stack: List[Partial], groups: Seq[SyntaxGroup], scope: SymbolTable): RemainingParseResult[Partial] = {
+    def runRec(stack: List[Partial], groups: Seq[SyntaxGroup], ctx: ParsingContext): RemainingParseResult[Partial] = {
       stack.headOption match {
         case Some(PartialError(failure)) => failure
         case _ =>
           if (groups.isEmpty) {
             if (stack.length > 1) {
-              val (newStack, newScope) = reduce(stack, scope)
-              runRec(newStack, groups, newScope)
+              val (newStack, newCtx) = reduce(stack, ctx)
+              runRec(newStack, groups, newCtx)
             } else {
               stack.headOption match {
                 case Some(ppd: PartialProcDef)   => SuccessfulParse((ppd, Seq()))
                 case Some(_)                     =>
-                  val (newStack, newScope) = reduce(stack, scope)
-                  runRec(newStack, groups, newScope)
+                  val (newStack, newCtx) = reduce(stack, ctx)
+                  runRec(newStack, groups, newCtx)
                 case None                        => fail("Parse error, trying to reduce empty stack!", new core.SourceLocation(0, 12040192, ""))
               }
             }
           } else {
             stack.headOption match {
               case Some(p) =>
-                if (shouldShift(p, groups.head)) {
-                  runRec(shift(groups.head) :: stack, groups.tail, scope)
+                if (shouldShift(p, groups.head, ctx)) {
+                  runRec(shift(groups.head, ctx) :: stack, groups.tail, ctx)
                 } else {
-                  val (newStack, newScope) = reduce(stack, scope)
-                  runRec(newStack, groups, newScope)
+                  val (newStack, newCtx) = reduce(stack, ctx)
+                  runRec(newStack, groups, newCtx)
                 }
               case None =>
-                runRec(shift(groups.head) :: stack, groups.tail, scope)
+                runRec(shift(groups.head, ctx) :: stack, groups.tail, ctx)
             }
           }
       }
     }
 
     //.init to avoid Eof awkwardness
-    runRec(Nil, groupSyntax(tokens.buffered).get.init, scope).get match {
+    runRec(Nil, groupSyntax(tokens.buffered).get.init, ParsingContext(Syntax.CommandPrecedence, scope)).get match {
       case (PartialError(f), _)=> throw f.failure.toException
       case (PartialProcDef(pd), _) => pd
       case other => throw new Error("bad parse?! " + other)
