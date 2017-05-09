@@ -260,10 +260,16 @@ object ExpressionParser {
         case PartialDelayedBlock(db) :: Nil => // this case comes up for reporter lambda (and possibly reporter blocks)
           processDelayedBlock(db, Syntax.WildcardType, scope) :: Nil
         case PartialReporterApp(app) :: Nil =>
-          List(PartialError(fail(ExpectedCommand, app.sourceLocation)))
+          List(PartialError(fail(ExpectedCommand, app.reporter.token.sourceLocation)))
         case _ => List(PartialError(fail("unknown parse for: " + stack.reverse.mkString(" // "), SourceLocation(0, 0, ""))))
       }
   }
+
+  // Things remaining as of 5/10/17:
+  // * Variadic parsing
+  // * handling `of` and `with`
+  // * Miscellaneous error handling
+  // * Coherency / simplicity
 
   def shouldShift(p: Partial, g: SyntaxGroup, c: ParsingContext): Boolean = {
     val stackPrimacy = p.primacy
