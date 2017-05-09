@@ -226,10 +226,12 @@ object ExpressionParser {
         case PartialCommand(cmd, tok) :: rest =>
           PartialCommandAndArgs(cmd, tok, Seq()) :: rest
           // this will eventually need to recur on DelayedBlock
+        case PartialDelayedBlock(db) :: (pc@ArgumentPartial(parentSyntax, parentArgs)) :: rest if parentSyntax.totalDefault > parentArgs.length =>
+          processDelayedBlock(db, parentSyntax.allArgs(parentArgs.length), scope) :: pc :: rest
         case PartialReporterAndArgs(rep, tok, args) :: Nil if rep.syntax.totalDefault <= args.length => // this case comes up when parsing a reporter lambda (and probably blocks)
           (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx)
-        case PartialDelayedBlock(db) :: (pc@PartialCommand(cmd, tok)) :: rest =>
-          processDelayedBlock(db, cmd.syntax.right.head, scope) :: pc :: rest
+        case PartialDelayedBlock(db) :: Nil => // this case comes up for reporter lambda (and possibly reporter blocks)
+          processDelayedBlock(db, Syntax.WildcardType, scope) :: Nil
         case _ => List(PartialError(fail("unknown parse for: " + stack.reverse.mkString(" // "), SourceLocation(0, 0, ""))))
       }
   }
@@ -238,11 +240,13 @@ object ExpressionParser {
     val stackPrimacy = p.primacy
     (p, g) match {
       case (_, pg: ParenGroup)   => true
-      case (_, bg: BracketGroup) => true
       case (PartialCommandAndArgs(cmd: core.Command, _, args), _) =>
         cmd.syntax.totalDefault > args.length
       case (PartialReporterAndArgs(rep: core.Reporter, _, args), _) =>
         rep.syntax.totalDefault > args.length
+      case (db: PartialDelayedBlock, bg: BracketGroup) => false
+      case (_, bg: BracketGroup) =>
+        stackPrimacy > 3
       case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
         stackPrimacy > 6
       case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) if rep.syntax.isInfix =>
@@ -387,6 +391,8 @@ object ExpressionParser {
   def processDelayedBlock(block: DelayedBlock, goalType: Int, scope: SymbolTable): Partial = {
     if (block.isArrowLambda && ! block.isCommand)
       processReporterLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
+    else if (compatible(goalType, Syntax.ListType))
+      processLiteralList(block)
     else
       PartialError(fail("only reporter arrow lambdas are handled", block))
     /*
@@ -410,6 +416,29 @@ object ExpressionParser {
     } match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(partial) => partial
+    }
+  }
+
+  // TODO: this is an innefficient and inelegant solution which transforms a higher-information
+  // data stracture (List[SyntaxGroup]) to a lower (Iterator[Token]), and uses Exceptions for flow
+  // control (within LiteralParser)
+  def processLiteralList(block: DelayedBlock): Partial = {
+    // It's OK to pass the NullImportHandler here because this code is only used when
+    // parsing literal lists while compiling code.
+    // When reading lists from export files and such LiteralParser is used
+    // via Compiler.readFromString. ev 3/20/08, RG 08/09/16
+
+    ParseResult.fromTry(
+      Try {
+        // this token-iterator may need adjustment...
+        val (list, closeBracket) =
+          new LiteralParser(NullImportHandler).parseLiteralList(block.openBracket, block.group.allTokens.drop(1).iterator)
+        val tmp = new core.prim._const(list)
+        tmp.token = new Token("", TokenType.Literal, null)(block.group.location)
+        new core.ReporterApp(tmp, block.group.location)
+      }) match {
+      case f: FailedParse => PartialError(f)
+      case SuccessfulParse(partial) => PartialReporterApp(partial)
     }
   }
 
