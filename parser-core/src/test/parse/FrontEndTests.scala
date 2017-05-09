@@ -21,8 +21,8 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_ignore()[_round()[_const(0.5)[]]] " +
       "_fd()[_const(5.0)[]]")
   }
-  test("lambda parse") {
-    testParse("__ignore [[x] -> x + x]",
+  test("basic lambda parse") {
+    runTest("__ignore [[x] -> x + x]",
       "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
   }
   test("unbracketed lambda parse") {
