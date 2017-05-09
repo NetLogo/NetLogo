@@ -95,6 +95,9 @@ case class Syntax private(
   def totalDefault =
     rightDefault + (if (isInfix) 1 else 0)
 
+  def totalCount =
+    if (isInfix) 1 + right.length else right.length
+
   def takesOptionalCommandBlock =
     right.lastOption.exists(compatible(_, OptionalType))
 
