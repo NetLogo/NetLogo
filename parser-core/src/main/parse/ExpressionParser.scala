@@ -144,6 +144,16 @@ object ExpressionParser {
       }
   }
 
+  object PartialInstruction {
+    def unapply(p: Partial): Option[(core.Instruction, core.Token)] =
+      p match {
+        case PartialReporter(rep, tok) => Some((rep, tok))
+        case PartialCommand(cmd, tok) => Some((cmd, tok))
+        case PartialInfixReporter(rep, tok) => Some((rep, tok))
+        case _ => None
+      }
+  }
+
   case class PartialStatements(stmts: core.Statements) extends Partial {
     val primacy = 7
   }
@@ -153,12 +163,12 @@ object ExpressionParser {
   case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial {
     val primacy = 5
     override def needsArguments =
-      cmd.syntax.totalDefault < args.length
+      cmd.syntax.totalDefault > args.length
   }
   case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial {
     val primacy = 4
     override def needsArguments =
-      rep.syntax.totalDefault < args.length
+      rep.syntax.totalDefault > args.length
   }
   // this one is particularly odd, a raw command can *sometimes* end up being an Argument,
   // but sometimes ends up being the start of a statement
@@ -204,6 +214,13 @@ object ExpressionParser {
           PartialStatements(stmts.copy(stmts = stmts.stmts :+ s)) :: rest
         case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
           List(PartialError(fail(ExpectedCommand, tok)))
+        case PartialInstruction(rep: core.Reporter, tok) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if
+          ap.needsArguments && (parentSyntax.allArgs(parentArgs.length) == Syntax.ReporterType) =>
+          // this handles concise reporters
+          (processReporter(rep, tok, Seq(), parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
+        case PartialCommand(cmd, tok) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if
+          ap.needsArguments && (parentSyntax.allArgs(parentArgs.length) == Syntax.CommandType) =>
+          (cmdToReporterApp(cmd, tok, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
         case PartialReporterAndArgs(rep, tok, args) :: (ap@ArgumentPartial(parentSyntax, parentArgs)) :: rest if rep.syntax.totalDefault <= args.length && parentSyntax.totalDefault > 0 =>
           (processReporter(rep, tok, args, parentSyntax.allArgs(parentArgs.length), scope) :: ap :: rest, ctx.copy(precedence = parentSyntax.precedence))
         case PartialReporter(rep, tok) :: rest => PartialReporterAndArgs(rep, tok, Seq()) :: rest
@@ -353,6 +370,9 @@ object ExpressionParser {
         val symbol = new core.prim._symbol()
         tok.refine(symbol)
         SuccessfulParse(new core.ReporterApp(symbol, tok.sourceLocation))
+      } else if (goalType == Syntax.ReporterType) {
+        val rApp = new core.ReporterApp(rep, tok.sourceLocation)
+        SuccessfulParse(expandConciseReporterLambda(rApp, rep, scope))
       } else {
         rep match {
           case s: core.prim._symbol =>
@@ -376,15 +396,35 @@ object ExpressionParser {
         }
       }
 
+    // NOTE: We removed argument typing, we may need to re-add it
     newRepApp match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(repApp) =>
-      resolveTypes(args, ArgumentParseContext(repApp.reporter, tok.sourceLocation), scope) match {
-        case f: FailedParse => PartialError(f)
-        case SuccessfulParse(typedArgs) =>
-          val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
-          PartialReporterApp(repApp)
-      }
+        val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
+        PartialReporterApp(repApp)
+    }
+  }
+
+  def cmdToReporterApp(cmd: core.Command, tok: Token, goalType: Int, scope: SymbolTable): Partial = {
+    if (! cmd.syntax.canBeConcise) // this error may need to be one of two different things, depending on parent context
+      PartialError(fail(ExpectedReporter, tok))
+    else {
+      val (varNames, varApps) = syntheticVariables(cmd.syntax.totalDefault, tok, scope)
+      val stmtArgs =
+        if (cmd.syntax.takesOptionalCommandBlock)
+          // synthesize an empty block so that later phases of compilation will be dealing with a
+          // consistent number of arguments - ST 3/4/08
+          varApps :+ new core.CommandBlock(new core.Statements(tok.filename), tok.sourceLocation, synthetic = true)
+        else varApps
+
+      val lambda = new core.prim._commandlambda(varNames, synthetic = true)
+      lambda.token = tok
+
+      val stmt = new core.Statement(cmd, stmtArgs, tok.sourceLocation)
+
+      val commandBlock = commandBlockWithStatements(tok.sourceLocation, Seq(stmt), synthetic = true)
+
+      PartialReporterApp(new core.ReporterApp(lambda, Seq(commandBlock), tok.sourceLocation))
     }
   }
 
