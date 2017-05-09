@@ -391,6 +391,8 @@ object ExpressionParser {
   def processDelayedBlock(block: DelayedBlock, goalType: Int, scope: SymbolTable): Partial = {
     if (block.isArrowLambda && ! block.isCommand)
       processReporterLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
+    else if (block.isArrowLambda)
+      processCommandLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
     else if (compatible(goalType, Syntax.ListType))
       processLiteralList(block)
     else
@@ -413,6 +415,22 @@ object ExpressionParser {
             PartialError(fail(ExpectedCommand, other))
         }
       case (other, remainingGroups) => fail(ExpectedCommand, remainingGroups.head.start)
+    } match {
+      case f: FailedParse => PartialError(f)
+      case SuccessfulParse(partial) => partial
+    }
+  }
+
+  def processCommandLambda(block: ArrowLambdaBlock, scope: SymbolTable): Partial = {
+    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, block.internalScope), _.isInstanceOf[PartialStatements]).flatMap {
+      case (PartialStatements(stmts), remainingGroups) if remainingGroups.isEmpty =>
+        val lambda = new core.prim._commandlambda(block.argNames, false)
+        lambda.token = block.openBracket
+        val blockArg = commandBlockWithStatements(block.group.location, stmts.stmts)
+        val ra = new core.ReporterApp(lambda, Seq(blockArg), block.group.location)
+        SuccessfulParse(PartialReporterApp(ra))
+      case (PartialStatements(stmts), remainingGroups) => fail(ExpectedCommand, remainingGroups.head.start)
+      case (other, remainingGroups)                    => fail(ExpectedCommand, block.sourceLocation)
     } match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(partial) => partial
