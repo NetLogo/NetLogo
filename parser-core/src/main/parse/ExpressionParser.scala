@@ -333,8 +333,8 @@ object ExpressionParser {
         case l @ core.prim._let(Some(let)) =>
           SuccessfulParse((l, scope.addSymbol(let.name.toUpperCase, LocalVariable(let))))
         case l @ core.prim._let(None) =>
-          args.head match {
-            case core.ReporterApp(name: core.prim._symbol, _, _) =>
+          args.headOption match {
+            case Some(core.ReporterApp(name: core.prim._symbol, _, _)) =>
               val properName = name.token.text.toUpperCase
               scope.get(properName)
                 .map(tpe => fail("There is already a " + SymbolType.typeName(tpe) + " called " + properName, name.token))
@@ -342,7 +342,8 @@ object ExpressionParser {
                   val newLet = core.Let(properName)
                   SuccessfulParse((l.copy(let = newLet), scope.addSymbol(properName, LocalVariable(newLet))))
                 }
-            case other => fail("expected letname, found: " + other, other)
+            case Some(other) => fail("expected letname, found: " + other, other)
+            case None => SuccessfulParse((l, scope)) // this failure is handled below
           }
         case other => SuccessfulParse((other, scope))
       }

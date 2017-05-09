@@ -138,7 +138,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("]", "Expected command.", 0, 1)
   }
   test("missing name after let") {
-    // here the error is at TokenType.Eof - ST 9/29/14
     runFailure("let", "LET expected 2 inputs, a variable name and any input.", 0, 3)
   }
   test("infix let misparse") {
