@@ -82,4 +82,8 @@ object SymbolType {
   def alreadyDefinedException(symType: SymbolType, t: Token): Nothing = {
     exception("There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase, t)
   }
+
+  def alreadyDefinedMessage(symType: SymbolType, t: Token): String = {
+    "There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase
+  }
 }

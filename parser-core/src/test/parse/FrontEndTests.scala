@@ -142,10 +142,10 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("let", "LET expected 2 inputs, a variable name and any input.", 0, 3)
   }
   test("infix let misparse") {
-    runFailure("let x * 5 5", "Missing input on the left.", 6, 7)
+    runFailure("let x * 5 5", "* expected a number on the left", 6, 7)
   }
   test("infix set misparse") {
-    runFailure("let x 0 set x * 5 5", "Missing input on the left.", 14, 15)
+    runFailure("let x 0 set x * 5 5", "* expected a number on the left", 14, 15)
   }
   test("infix show misparse") {
     runFailure("show * 5 5", "* expected a number on the left", 5, 6)

@@ -78,6 +78,9 @@ case class Syntax private(
   def minimum =
     minimumOption.getOrElse(dfault)
 
+  def allArgs =
+    if (isInfix) left +: right else right
+
   /**
    * returns the number of args this instruction takes on the right
    * by default.
