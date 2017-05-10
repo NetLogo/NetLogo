@@ -128,7 +128,7 @@ object ExpressionParser {
       mapResult(_ => b)
   }
 
-  // Should Partials include scope?????
+  // Should Partials include scope and variadicity?????
 
   sealed trait Partial {
     // Primacy gives the order in which partials ought to be reduced.
@@ -244,7 +244,7 @@ object ExpressionParser {
       case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
       case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.SymbolType =>
-        (PartialReporterApp(processSymbol(tok)) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        (ap.withArgument(processSymbol(tok)) :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> ConciseReporter | ConciseCommand | RepApp | ReporterBlock | CommandBlock
       case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
         (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
