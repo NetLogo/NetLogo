@@ -226,7 +226,7 @@ object ExpressionParser {
     import ctx.scope
 
     // println("context precedence: " + ctx.precedence)
-    // println(stack.reverse.mkString("//"))
+    println(stack.reverse.mkString("//"))
 
     stack match {
       // Stmts -> Stmt | Stmts Stmt
@@ -254,8 +254,8 @@ object ExpressionParser {
         (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       case PartialReporter(rep, tok) :: rest =>
         PartialReporterAndArgs(rep, tok, Seq()) :: rest
-      case PartialReporterApp(app) :: PartialCommand(cmd, tok) :: rest =>
-        PartialCommandAndArgs(cmd, tok, Seq(app)) :: rest
+      case (ra: PartialReporterApp) :: PartialCommand(cmd, tok) :: rest =>
+        ra :: PartialCommandAndArgs(cmd, tok, Seq()) :: rest
       case PartialReporterApp(app) :: PartialReporterAndArgs(rep, tok, args) :: rest =>
         // we aren't yet handling variadics properly
         PartialReporterAndArgs(rep, tok, args :+ app) :: rest
@@ -327,6 +327,9 @@ object ExpressionParser {
       case Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter)) =>
         PartialReporter(rep, token)
       case bg: BracketGroup =>
+        println(ctx.scope.get("BAZ"))
+        val db = DelayedBlock(bg, ctx.scope)
+        println(db)
         PartialDelayedBlock(DelayedBlock(bg, ctx.scope))
       case ParenGroup(inner, start, end) =>
         val intermediateResult = runRec(Nil, inner, ctx, _ => true)
@@ -474,7 +477,6 @@ object ExpressionParser {
         else varApps
 
       val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
-
       lambda.token = tok
 
       val stmt = new core.Statement(cmd, stmtArgs, tok.sourceLocation)
@@ -1115,8 +1117,8 @@ object ExpressionParser {
     }
     val varApps = varNames.map { vn =>
       val lv = new core.prim._lambdavariable(vn, synthetic = true)
-      lv.token = token
-      new core.ReporterApp(lv, SourceLocation(token.start, token.end, token.filename))
+      lv.token = Token(vn, TokenType.Reporter, lv)(token.sourceLocation)
+      new core.ReporterApp(lv, lv.token.sourceLocation)
     }
     (varNames, varApps)
   }

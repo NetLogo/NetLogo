@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core._,
-  org.nlogo.core.prim.{_let, _letvariable},
+  org.nlogo.core.prim.{_commandlambda, _let, _letvariable, _reporterlambda},
   Fail._
 
 // This ensures that no statements of the form `let x x` are allowed in the AST.
@@ -29,6 +29,18 @@ class LetVerifier extends AstVisitor {
           currentLet.isEmpty || (currentLet.get ne l.let),
           I18N.errors.getN("compiler.LetVariable.notDefined", l.token.text.toUpperCase),
           l.token)
+      case lambda: _reporterlambda =>
+        currentLet.foreach { let =>
+          lambda.arguments.argumentTokens.foreach { t =>
+            cAssert(let.name != t.text.toUpperCase, SymbolType.alreadyDefinedMessage(SymbolType.LocalVariable(let), t), t)
+          }
+        }
+      case lambda: _commandlambda =>
+        currentLet.foreach { let =>
+          lambda.arguments.argumentTokens.foreach { t =>
+            cAssert(let.name != t.text.toUpperCase, SymbolType.alreadyDefinedMessage(SymbolType.LocalVariable(let), t), t)
+          }
+        }
       case _ =>
     }
     super.visitReporterApp(app)
