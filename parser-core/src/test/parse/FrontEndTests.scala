@@ -165,7 +165,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("run", "RUN expected at least 1 input, a string or anonymous command and any input.", 0, 3)
   }
   test("foreach with no list") {
-    runFailure("foreach [ x -> show x ]", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
+    runFailure("foreach [ x -> show x ]", "FOREACH expected this input to be a list, but got an anonymous command instead", 8, 23)
   }
   test("map with no arguments") {
     runFailure("show map", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)

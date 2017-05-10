@@ -248,17 +248,17 @@ object ExpressionParser {
       case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
         (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> CommandBlock | ReporterBlock | RepApp | ConciseCommand | ConciseReporter
-      case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest if compatible(ap.neededArgument, arg.providedArgument) =>
-        ap.withArgument(arg.expression) :: rest
+      case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
+        resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope) match {
+          case f: FailedParse       => List(PartialError(f))
+          case SuccessfulParse(exp) => ap.withArgument(exp) :: rest
+        }
       case PartialReporterAndArgs(rep, tok, args) :: (ap: ApplicationPartial) :: rest      if ap.needsArguments =>
         (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       case PartialReporter(rep, tok) :: rest =>
         PartialReporterAndArgs(rep, tok, Seq()) :: rest
       case (ra: PartialReporterApp) :: PartialCommand(cmd, tok) :: rest =>
         ra :: PartialCommandAndArgs(cmd, tok, Seq()) :: rest
-      case PartialReporterApp(app) :: PartialReporterAndArgs(rep, tok, args) :: rest =>
-        // we aren't yet handling variadics properly
-        PartialReporterAndArgs(rep, tok, args :+ app) :: rest
       case PartialReporterApp(app) :: rest =>
         List(PartialError(fail(ExpectedCommand, app.reporter.token)))
       case PartialCommandAndArgs(cmd, tok, args) :: rest =>
