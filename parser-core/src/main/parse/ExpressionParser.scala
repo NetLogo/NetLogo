@@ -484,7 +484,9 @@ object ExpressionParser {
   }
 
   def processReporterBlock(block: DelayedBlock, scope: SymbolTable): Partial = {
-    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, scope), _.isInstanceOf[PartialReporterApp]).flatMap {
+    println("processing reporter block")
+    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, block.internalScope),
+      _.isInstanceOf[PartialReporterApp]).flatMap {
       case (PartialReporterApp(app), remainingGroups) =>
         resolveType(Syntax.WildcardType, app, null, scope).map[Partial] {
           case (expr: core.ReporterApp) =>
@@ -500,7 +502,8 @@ object ExpressionParser {
   }
 
   def processReporterLambda(block: ArrowLambdaBlock, scope: SymbolTable): Partial = {
-    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, scope), _.isInstanceOf[PartialReporterApp]).flatMap {
+    runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, block.internalScope),
+      _.isInstanceOf[PartialReporterApp]).flatMap {
       case (PartialReporterApp(app), remainingGroups) =>
         resolveType(Syntax.WildcardType, app, null, scope).map[Partial] {
           case (expr: core.ReporterApp) =>
