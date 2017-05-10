@@ -455,7 +455,9 @@ object ExpressionParser {
   }
 
   def processDelayedBlock(block: DelayedBlock, goalType: Int, scope: SymbolTable): Partial = {
-    if (block.isArrowLambda && ! block.isCommand)
+    if (compatible(goalType, Syntax.CodeBlockType))
+      processCodeBlock(block)
+    else if (block.isArrowLambda && ! block.isCommand)
       processReporterLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
     else if (block.isArrowLambda)
       processCommandLambda(block.asInstanceOf[ArrowLambdaBlock], scope) // TODO: switch this to a `case`?
@@ -466,7 +468,7 @@ object ExpressionParser {
     else if (compatible(goalType, Syntax.CommandBlockType))
       processCommandBlock(block, scope)
     else
-      PartialError(fail("only reporter arrow lambdas are handled", block))
+      PartialError(fail(s"Expected ${core.TypeNames.aName(goalType)} here, rather than a list or block.", block))
   }
 
   def processReporterBlock(block: DelayedBlock, scope: SymbolTable): Partial = {
@@ -519,6 +521,17 @@ object ExpressionParser {
         case f: FailedParse => PartialError(f)
         case SuccessfulParse(partial) => partial
       }
+  }
+
+  private def processCodeBlock(block: DelayedBlock): Partial = {
+    val tokens = block match {
+      case alb: ArrowLambdaBlock => alb.allTokens
+      case adl: AmbiguousDelayedBlock => adl.tokens
+    }
+
+    val tmp = new core.prim._constcodeblock(tokens.tail.dropRight(2))
+    tmp.token = tokens.head
+    PartialReporterApp(new core.ReporterApp(tmp, SourceLocation(tokens.head.start, block.end, tokens.head.filename)))
   }
 
   def processCommandLambda(block: ArrowLambdaBlock, scope: SymbolTable): Partial = {
