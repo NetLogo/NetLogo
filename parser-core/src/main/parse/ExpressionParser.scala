@@ -243,14 +243,16 @@ object ExpressionParser {
       // Error(ExpectedCommand) -> Stmt id
       case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
-
+      case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.SymbolType =>
+        (PartialReporterApp(processSymbol(tok)) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> ConciseReporter | ConciseCommand | RepApp | ReporterBlock | CommandBlock
       case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
-        // this handles concise reporters
         (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> ConciseCommand | ConciseReporter | RepApp | ReporterBlock | CommandBlock
       case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
         (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+      case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest =>
+        List(PartialError(fail(ExpectedCloseParen, tok)))
       // Arg -> CommandBlock | ReporterBlock | RepApp | ConciseCommand | ConciseReporter
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
         resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope) match {
@@ -417,13 +419,17 @@ object ExpressionParser {
     }
   }
 
+  def processSymbol(tok: Token): core.ReporterApp = {
+    val symbol = new core.prim._symbol()
+    tok.refine(symbol)
+    new core.ReporterApp(symbol, tok.sourceLocation)
+  }
+
   def processReporter(rep: core.Reporter, tok: Token, args: Seq[core.Expression], goalType: Int, scope: SymbolTable): Partial = {
     val newRepApp: ParseResult[core.ReporterApp] =
-      if (compatible(goalType, Syntax.SymbolType)) {
-        val symbol = new core.prim._symbol()
-        tok.refine(symbol)
-        SuccessfulParse(new core.ReporterApp(symbol, tok.sourceLocation))
-      } else if (goalType == Syntax.ReporterType) {
+      if (compatible(goalType, Syntax.SymbolType))
+        SuccessfulParse(processSymbol(tok))
+      else if (goalType == Syntax.ReporterType) {
         val rApp = new core.ReporterApp(rep, tok.sourceLocation)
         SuccessfulParse(expandConciseReporterLambda(rApp, rep, scope))
       } else {
