@@ -181,7 +181,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     runFailure("__ignore ()", "Expected reporter.", 9, 11)
   }
   test("map with bad first argument") {
-    runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
+    runFailure("show map 1 + 2", "+ expected a number on the left", 11, 12)
   }
   test("unknown reporter failure") {
     runFailure("crt foo", "Nothing named FOO has been defined.", 4, 7)

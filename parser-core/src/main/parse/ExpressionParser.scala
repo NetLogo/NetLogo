@@ -428,7 +428,9 @@ object ExpressionParser {
 
   def processReporter(rep: core.Reporter, tok: Token, args: Seq[core.Expression], goalType: Int, scope: SymbolTable): Partial = {
     val newRepApp: ParseResult[core.ReporterApp] =
-      if (compatible(goalType, Syntax.SymbolType))
+      if (rep.isInstanceOf[core.prim._const])
+        SuccessfulParse(new core.ReporterApp(rep, tok.sourceLocation))
+      else if (compatible(goalType, Syntax.SymbolType))
         SuccessfulParse(processSymbol(tok))
       else if (goalType == Syntax.ReporterType) {
         val rApp = new core.ReporterApp(rep, tok.sourceLocation)
