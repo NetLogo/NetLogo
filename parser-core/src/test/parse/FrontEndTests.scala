@@ -65,6 +65,10 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     testParse("__ignore map round [1.2 1.7 3.2]",
       "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
+  test("UnaryMinus") {
+    runTest("__ignore - 5",
+      "_ignore()[_unaryminus()[_const(5.0)[]]]")
+  }
   test("ParseConstantInteger") {
     testParse("__ignore 5",
       "_ignore()[_const(5.0)[]]")
@@ -182,6 +186,9 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   // TODO: These are not great error messages - should mention unclosed parentheses
   test("list missing close paren") {
     runFailure("show (list 1 2", "No closing parenthesis for this open parenthesis.", 5, 6)
+  }
+  test("list with too many arguments (no parens)") {
+    runFailure("show list 1 2 3", "Expected command.", 14, 15)
   }
   test("expects parenthesized expressions to contain only one statement") {
     runFailure("(show list 1 2 show 3)", "Expected a closing parenthesis here.", 15, 19)
