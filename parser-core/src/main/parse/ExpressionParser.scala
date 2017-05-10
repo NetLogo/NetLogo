@@ -135,6 +135,7 @@ object ExpressionParser {
     // Where possible, we collapse a command to statement before parsing the next command
     def primacy: Int
     def needsArguments = false
+    def neededArgument: Int = 0
   }
 
   trait ApplicationPartial extends Partial {
@@ -143,7 +144,7 @@ object ExpressionParser {
     def instruction: core.Instruction
     def precedence = syntax.precedence
     override def needsArguments = syntax.totalCount > args.length
-    def neededArgument: Int =
+    override def neededArgument: Int =
       if (needsArguments) syntax.allArgs(args.length)
       else if (isVariadic) syntax.right.last
       else 0
@@ -311,7 +312,7 @@ object ExpressionParser {
       case (_, Atom(token@Token(_, TokenType.Command, cmd: core.Command))) =>
         stackPrimacy > 6
       case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) if rep.syntax.isInfix =>
-        (c.precedence < rep.syntax.precedence) && (p.needsArguments || stackPrimacy > 1)
+        (c.precedence < rep.syntax.precedence) && ((p.needsArguments && compatible(p.neededArgument, rep.syntax.ret)) || stackPrimacy > 1)
       case (p, Atom(token@Token(_, TokenType.Reporter, rep: core.Reporter))) =>
         p.needsArguments || stackPrimacy > 3
       case (p, Atom(token@Token(_, TokenType.Literal, _))) =>

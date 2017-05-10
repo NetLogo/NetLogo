@@ -32,6 +32,7 @@ trait FrontEndMain extends NetLogoParser {
 
     val letVerifier = new LetVerifier
     topLevelDefs.foreach(letVerifier.visitProcedureDefinition)
+    topLevelDefs.foreach(SetVerifier.visitProcedureDefinition)
 
     new AgentTypeChecker(topLevelDefs).check()  // catch agent type inconsistencies
 
