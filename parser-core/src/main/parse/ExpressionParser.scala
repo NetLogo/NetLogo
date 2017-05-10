@@ -434,11 +434,12 @@ object ExpressionParser {
         }
       }
 
+
     // NOTE: We removed argument typing, we may need to re-add it
     newRepApp match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(repApp) =>
-        resolveTypes(args, ArgumentParseContext(rep, tok.sourceLocation), scope) match {
+        resolveTypes(repApp.args, ArgumentParseContext(repApp.reporter, repApp.sourceLocation), scope) match {
           case f: FailedParse => PartialError(f)
           case SuccessfulParse(typedArgs) =>
             val start = args.headOption
@@ -763,8 +764,10 @@ object ExpressionParser {
     val typedArgs = scala.collection.mutable.Seq[core.Expression](untypedArgs: _*)
     val formalTypes = if (syntax.isInfix) syntax.left +: syntax.right else syntax.right
 
-    def typeArg(i: Int, arg: core.Expression): ParseResult[core.Expression] =
+    def typeArg(i: Int, arg: core.Expression): ParseResult[core.Expression] = {
+      println("typing arg: " + arg)
       resolveType(i, arg, displayName, scope)
+    }
 
     var index = 0
     val types = syntax.right
@@ -784,6 +787,7 @@ object ExpressionParser {
           formalTypes
         }
 
+        println("HERE:" + argContext)
       if (untypedArgs.length < checkedTypes.length)
         fail(argContext.missingInput(untypedArgs.length), location)
       else {
@@ -942,26 +946,25 @@ object ExpressionParser {
    * expected to be. The caller should replace the expr it passed in with the one returned,
    * as it may be different.
    */
-  private def resolveType(goalType: Int, originalArg: core.Expression, instruction: String, scope: SymbolTable): ParseResult[core.Expression] = {
-    // now that we know the type, finish parsing any blocks
-    (originalArg match {
-      case block: DelayedBlock => parseDelayedBlock(block, goalType, scope)
-      case _                   => SuccessfulParse(originalArg)
-    }).flatMap { arg =>
-      if (compatible(goalType, arg.reportedType)) SuccessfulParse(arg)
-      else {
-        // remove reference type from message unless it's part of the goalType, confusing to see
-        // "expected a variable or a number"
-        val displayedReportedType = {
-          if ((goalType & Syntax.ReferenceType) == 0 && ((arg.reportedType & ~Syntax.ReferenceType) != 0))
-            arg.reportedType & ~Syntax.ReferenceType
-          else
-            arg.reportedType
-        }
-        val message =
-          s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
-        FailedParse(new TypeMismatch(arg, message, goalType, arg.reportedType))
+  private def resolveType(goalType: Int, arg: core.Expression, instruction: String, scope: SymbolTable): ParseResult[core.Expression] = {
+    if (goalType == Syntax.ReporterType) {
+      arg match {
+        case ra: core.ReporterApp => SuccessfulParse(ra)
+        case _ => fail(ExpectedReporter, arg)
       }
+    } else if (compatible(goalType, arg.reportedType)) SuccessfulParse(arg)
+    else {
+      // remove reference type from message unless it's part of the goalType, confusing to see
+      // "expected a variable or a number"
+      val displayedReportedType = {
+        if ((goalType & Syntax.ReferenceType) == 0 && ((arg.reportedType & ~Syntax.ReferenceType) != 0))
+          arg.reportedType & ~Syntax.ReferenceType
+        else
+          arg.reportedType
+      }
+      val message =
+        s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
+      FailedParse(new TypeMismatch(arg, message, goalType, arg.reportedType))
     }
   }
 

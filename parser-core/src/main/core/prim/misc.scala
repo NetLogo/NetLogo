@@ -392,7 +392,7 @@ case class _reporterlambda(
 
   override def syntax = {
     Syntax.reporterSyntax(
-      right = List(Syntax.CodeBlockType, Syntax.ReporterType),
+      right = List(Syntax.ReporterType),
       ret = Syntax.ReporterType)
   }
 
