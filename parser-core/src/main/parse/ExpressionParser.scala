@@ -140,9 +140,11 @@ object ExpressionParser {
   trait ArgumentPartial extends Partial {
     def syntax: core.Syntax
     def args: Seq[core.Expression]
+    def instruction: core.Instruction
     def precedence = syntax.precedence
     override def needsArguments = syntax.totalCount > args.length
     def neededArgument: Int = if (needsArguments) syntax.allArgs(args.length) else 0
+    def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
     def withArgument(arg: core.Expression): ArgumentPartial
   }
 
@@ -167,12 +169,14 @@ object ExpressionParser {
     def syntax = cmd.syntax
     def withArgument(arg: core.Expression): ArgumentPartial =
       copy(args = args :+ arg)
+    def instruction = cmd
   }
   case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial with ArgumentPartial {
     val primacy = 4
     def syntax = rep.syntax
     def withArgument(arg: core.Expression): ArgumentPartial =
       copy(args = args :+ arg)
+    def instruction = rep
   }
   // this one is particularly odd, a raw command can *sometimes* end up being an Argument,
   // but sometimes ends up being the start of a statement
@@ -229,7 +233,7 @@ object ExpressionParser {
         case PartialCommandBlock(block) :: (ap: ArgumentPartial) :: rest                  if compatible(ap.neededArgument, Syntax.CommandBlockType) =>
           ap.withArgument(block) :: rest
         case PartialCommand(cmd, tok) :: (ap: ArgumentPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
-          (cmdToReporterApp(cmd, tok, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+          (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
         case PartialReporterAndArgs(rep, tok, args) :: (ap: ArgumentPartial) :: rest      if ap.needsArguments =>
           (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
         case PartialReporter(rep, tok) :: rest =>
@@ -431,9 +435,12 @@ object ExpressionParser {
     }
   }
 
-  def cmdToReporterApp(cmd: core.Command, tok: Token, goalType: Int, scope: SymbolTable): Partial = {
+  def cmdToReporterApp(cmd: core.Command, tok: Token, goalType: Int, parseContext: ArgumentParseContext, scope: SymbolTable): Partial = {
     if (! cmd.syntax.canBeConcise) // this error may need to be one of two different things, depending on parent context
-      PartialError(fail(ExpectedReporter, tok))
+      if (parseContext.instruction.isInstanceOf[core.Reporter])
+        PartialError(fail(ExpectedReporter, tok))
+      else
+        PartialError(fail(parseContext.missingInput(0), parseContext.location))
     else {
       val (varNames, varApps) = syntheticVariables(cmd.syntax.totalDefault, tok, scope)
       val stmtArgs =
