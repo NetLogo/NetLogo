@@ -296,7 +296,8 @@ object ExpressionParser {
   def shouldShift(p: Partial, g: SyntaxGroup, c: ParsingContext): Boolean = {
     val stackPrimacy = p.primacy
     (p, g) match {
-      case (_, pg: ParenGroup)   => true
+      case (_, pg: ParenGroup) =>
+        pg.innerGroups.headOption.map(headGroup => shouldShift(p, headGroup, c)).getOrElse(true)
       case (ap: ApplicationPartial, _) =>
         ap.needsArguments
       case (db: PartialDelayedBlock, bg: BracketGroup) => false
