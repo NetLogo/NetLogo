@@ -36,7 +36,7 @@ class PrimitiveMungersTests extends FunSuite with Inside {
   }
 
   def newMatch(a: AstNode): Match = {
-    new Match(a)
+    Match(a)
   }
 
   val constNum = {
