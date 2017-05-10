@@ -25,17 +25,13 @@ class LazyAgentSet(printName: String,
   }
 
   def count = {
-    if (!kind.mortal)
-      force().count
-    else {
-      var result = 0
-      val iter = iterator
-      while (iter.hasNext) {
-        iter.next()
-        result += 1
-      }
-      result
+    var result = 0
+    var iter = iterator
+    while (iter.hasNext) {
+      iter.next()
+      result += 1
     }
+    result
   }
 
   def contains(a: api.Agent): Boolean = {
