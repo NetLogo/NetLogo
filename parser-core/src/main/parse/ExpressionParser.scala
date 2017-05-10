@@ -137,7 +137,7 @@ object ExpressionParser {
     def needsArguments = false
   }
 
-  trait ArgumentPartial extends Partial {
+  trait ApplicationPartial extends Partial {
     def syntax: core.Syntax
     def args: Seq[core.Expression]
     def instruction: core.Instruction
@@ -145,7 +145,11 @@ object ExpressionParser {
     override def needsArguments = syntax.totalCount > args.length
     def neededArgument: Int = if (needsArguments) syntax.allArgs(args.length) else 0
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
-    def withArgument(arg: core.Expression): ArgumentPartial
+    def withArgument(arg: core.Expression): ApplicationPartial
+  }
+
+  trait ArgumentPartial extends Partial {
+    def expression: core.Expression
   }
 
   object PartialInstruction {
@@ -164,17 +168,17 @@ object ExpressionParser {
   case class PartialStatement(stmt: core.Statement) extends Partial {
     val primacy = 6
   }
-  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial with ArgumentPartial {
+  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial with ApplicationPartial {
     val primacy = 5
     def syntax = cmd.syntax
-    def withArgument(arg: core.Expression): ArgumentPartial =
+    def withArgument(arg: core.Expression): ApplicationPartial =
       copy(args = args :+ arg)
     def instruction = cmd
   }
-  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial with ArgumentPartial {
+  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial with ApplicationPartial {
     val primacy = 4
     def syntax = rep.syntax
-    def withArgument(arg: core.Expression): ArgumentPartial =
+    def withArgument(arg: core.Expression): ApplicationPartial =
       copy(args = args :+ arg)
     def instruction = rep
   }
@@ -183,14 +187,17 @@ object ExpressionParser {
   case class PartialCommand(cmd: core.Command, tok: Token) extends Partial {
     val primacy = 3
   }
-  case class PartialReporterBlock(block: core.ReporterBlock) extends Partial {
+  case class PartialReporterBlock(block: core.ReporterBlock) extends ArgumentPartial {
     val primacy = 2
+    def expression = block
   }
-  case class PartialCommandBlock(block: core.CommandBlock) extends Partial {
+  case class PartialCommandBlock(block: core.CommandBlock) extends ArgumentPartial {
     val primacy = 2
+    def expression = block
   }
-  case class PartialReporterApp(app: core.ReporterApp) extends Partial {
+  case class PartialReporterApp(app: core.ReporterApp) extends ArgumentPartial {
     val primacy = 2
+    def expression = app
   }
   case class PartialDelayedBlock(db: DelayedBlock) extends Partial {
     val primacy = 2
@@ -225,24 +232,29 @@ object ExpressionParser {
           PartialStatements(stmts.copy(stmts = stmts.stmts :+ s)) :: rest
         case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
           List(PartialError(fail(ExpectedCommand, tok)))
-        case PartialInstruction(rep: core.Reporter, tok) :: (ap: ArgumentPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
+        case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
           // this handles concise reporters
           (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
-        case PartialReporterBlock(block) :: (ap: ArgumentPartial) :: rest                 if compatible(ap.neededArgument, Syntax.ReporterBlockType) =>
+        case PartialReporterBlock(block) :: (ap: ApplicationPartial) :: rest                 if compatible(ap.neededArgument, Syntax.ReporterBlockType) =>
           ap.withArgument(block) :: rest
-        case PartialCommandBlock(block) :: (ap: ArgumentPartial) :: rest                  if compatible(ap.neededArgument, Syntax.CommandBlockType) =>
+        case PartialCommandBlock(block) :: (ap: ApplicationPartial) :: rest                  if compatible(ap.neededArgument, Syntax.CommandBlockType) =>
           ap.withArgument(block) :: rest
-        case PartialCommand(cmd, tok) :: (ap: ArgumentPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
+        case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
           (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
-        case PartialReporterAndArgs(rep, tok, args) :: (ap: ArgumentPartial) :: rest      if ap.needsArguments =>
+        case PartialReporterAndArgs(rep, tok, args) :: (ap: ApplicationPartial) :: rest      if ap.needsArguments =>
           (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
         case PartialReporter(rep, tok) :: rest =>
           PartialReporterAndArgs(rep, tok, Seq()) :: rest
         case PartialCommandAndArgs(cmd, tok, args) :: rest =>
           val (p, newScope) = processStatement(cmd, tok, args, scope)
           (p :: rest, ctx.copy(scope = newScope))
-        case PartialInfixReporter(iRep, iTok) :: PartialReporterApp(app) :: rest =>
-          (PartialReporterAndArgs(iRep, iTok, Seq(app)) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
+        case PartialInfixReporter(iRep, iTok) :: (arg: ArgumentPartial) :: rest =>
+          (PartialReporterAndArgs(iRep, iTok, Seq(arg.expression)) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
+        case (ir@PartialInfixReporter(iRep, iTok)) :: PartialDelayedBlock(block) :: rest =>
+          processDelayedBlock(block, iRep.syntax.left, scope) match {
+            case p: PartialError => p :: rest
+            case other => ir :: other :: rest
+          }
         case PartialInfixReporter(iRep, iTok) :: rest =>
           List(PartialError(fail(ArgumentParseContext(iRep, iTok.sourceLocation).missingInput(0), iTok.sourceLocation)))
         case PartialReporterApp(arg) :: PartialCommandAndArgs(cmd, tok, args) :: rest =>
@@ -257,7 +269,7 @@ object ExpressionParser {
         case PartialCommand(cmd, tok) :: rest =>
           PartialCommandAndArgs(cmd, tok, Seq()) :: rest
           // this will eventually need to recur on DelayedBlock
-        case PartialDelayedBlock(db) :: (pc: ArgumentPartial) :: rest if pc.needsArguments =>
+        case PartialDelayedBlock(db) :: (pc: ApplicationPartial) :: rest if pc.needsArguments =>
           processDelayedBlock(db, pc.neededArgument, scope) :: pc :: rest
         case (pr@PartialReporterAndArgs(rep, tok, args)) :: Nil if ! pr.needsArguments => // this case comes up when parsing a reporter lambda (and probably blocks)
           (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx.copy(precedence = Syntax.CommandPrecedence))
@@ -279,7 +291,7 @@ object ExpressionParser {
     val stackPrimacy = p.primacy
     (p, g) match {
       case (_, pg: ParenGroup)   => true
-      case (ap: ArgumentPartial, _) =>
+      case (ap: ApplicationPartial, _) =>
         ap.needsArguments
       case (db: PartialDelayedBlock, bg: BracketGroup) => false
       case (_, bg: BracketGroup) =>
@@ -426,12 +438,16 @@ object ExpressionParser {
     newRepApp match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(repApp) =>
-        val start = args.headOption
-          .map(_.sourceLocation.start min tok.start)
-          .getOrElse(tok.start)
-        val end = args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end)
-        val loc = SourceLocation(start, end, tok.filename)
-        PartialReporterApp(repApp.copy(location = loc))
+        resolveTypes(args, ArgumentParseContext(rep, tok.sourceLocation), scope) match {
+          case f: FailedParse => PartialError(f)
+          case SuccessfulParse(typedArgs) =>
+            val start = args.headOption
+              .map(_.sourceLocation.start min tok.start)
+              .getOrElse(tok.start)
+            val end = args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end)
+            val loc = SourceLocation(start, end, tok.filename)
+            PartialReporterApp(repApp.copy(args = typedArgs, location = loc))
+        }
     }
   }
 
