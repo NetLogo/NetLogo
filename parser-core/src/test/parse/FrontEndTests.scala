@@ -170,6 +170,9 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("map with no arguments") {
     runFailure("show map", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
   }
+  test("errors on empty parens") {
+    runFailure("__ignore ()", "Expected reporter.", 9, 11)
+  }
   test("map with bad first argument") {
     runFailure("show map 1 + 2", "MAP expected at least 2 inputs, an anonymous reporter and a list.", 5, 8)
   }
