@@ -66,7 +66,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("UnaryMinus") {
-    runTest("__ignore - 5",
+    runTest("__ignore (- 5)",
       "_ignore()[_unaryminus()[_const(5.0)[]]]")
   }
   test("ParseConstantInteger") {

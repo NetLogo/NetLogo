@@ -280,6 +280,10 @@ object ExpressionParser {
           case p: PartialError => p :: rest
           case other => ir :: other :: rest
         }
+      case PartialInfixReporter(iRep: core.prim._minus, iTok) :: rest if ctx.variadic =>
+        val rep = new core.prim._unaryminus()
+        iTok.refine(rep)
+        PartialReporter(rep, iTok) :: rest
       case PartialInfixReporter(iRep, iTok) :: rest =>
         List(PartialError(fail(ArgumentParseContext(iRep, iTok.sourceLocation).missingInput(0), iTok.sourceLocation)))
       case PartialCommand(cmd, tok) :: rest =>
@@ -341,7 +345,7 @@ object ExpressionParser {
           case _ => fail(ExpectedCommand, pg.location)
         }
         // failing with ExpectedCommand may not be appropriate here...
-        val intermediateResult = runRec(Nil, inner, ctx.copy(variadic = true), _ => true, error)
+        val intermediateResult = runRec(Nil, inner, ctx.copy(variadic = true), p => p.isInstanceOf[PartialReporterApp] || p.isInstanceOf[PartialStatement], error)
         intermediateResult match {
           case SuccessfulParse((p, Seq())) => p
           case SuccessfulParse((p, Seq(g, _*))) => PartialError(fail(ExpectedCommand, g.location))
