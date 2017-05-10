@@ -143,9 +143,13 @@ object ExpressionParser {
     def instruction: core.Instruction
     def precedence = syntax.precedence
     override def needsArguments = syntax.totalCount > args.length
-    def neededArgument: Int = if (needsArguments) syntax.allArgs(args.length) else 0
+    def neededArgument: Int =
+      if (needsArguments) syntax.allArgs(args.length)
+      else if (isVariadic) syntax.right.last
+      else 0
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
     def withArgument(arg: core.Expression): ApplicationPartial
+    def isVariadic = syntax.isVariadic
   }
 
   trait ArgumentPartial extends Partial {
@@ -253,7 +257,7 @@ object ExpressionParser {
           case f: FailedParse       => List(PartialError(f))
           case SuccessfulParse(exp) => ap.withArgument(exp) :: rest
         }
-      case PartialReporterAndArgs(rep, tok, args) :: (ap: ApplicationPartial) :: rest      if ap.needsArguments =>
+      case PartialReporterAndArgs(rep, tok, args) :: (ap: ApplicationPartial) :: rest if ap.needsArguments || ap.isVariadic =>
         (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       case PartialReporter(rep, tok) :: rest =>
         PartialReporterAndArgs(rep, tok, Seq()) :: rest
@@ -299,7 +303,7 @@ object ExpressionParser {
       case (_, pg: ParenGroup) =>
         pg.innerGroups.headOption.map(headGroup => shouldShift(p, headGroup, c)).getOrElse(stackPrimacy > 3)
       case (ap: ApplicationPartial, _) =>
-        ap.needsArguments
+        ap.needsArguments || ap.isVariadic
       case (db: PartialDelayedBlock, bg: BracketGroup) => false
       case (_, bg: BracketGroup) =>
         stackPrimacy > 3
