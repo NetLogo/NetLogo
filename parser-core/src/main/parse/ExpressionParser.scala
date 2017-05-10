@@ -422,7 +422,11 @@ object ExpressionParser {
     newRepApp match {
       case f: FailedParse => PartialError(f)
       case SuccessfulParse(repApp) =>
-        val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
+        val start = args.headOption
+          .map(_.sourceLocation.start min tok.start)
+          .getOrElse(tok.start)
+        val end = args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end)
+        val loc = SourceLocation(start, end, tok.filename)
         PartialReporterApp(repApp.copy(location = loc))
     }
   }

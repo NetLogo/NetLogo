@@ -263,7 +263,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
     testParse("__ignore round 5.2 + log 64 2 * log 64 2 - random 2",
       "_ignore()[_minus()[_plus()[_round()[_const(5.2)[]], _mult()[_log()[_const(64.0)[], _const(2.0)[]], _log()[_const(64.0)[], _const(2.0)[]]]], _random()[_const(2.0)[]]]]")
   }
-
   /// duplicate name tests
 
   test("findIncludes lists all includes when there is a valid includes statement") {
