@@ -10,7 +10,6 @@ import org.nlogo.core,
 import SymbolType.LocalVariable
 
 import scala.annotation.tailrec
-import collection.mutable.Buffer
 
 import scala.util.{ Failure, Success, Try }
 
@@ -19,11 +18,6 @@ import scala.util.{ Failure, Success, Try }
  */
 
 object ExpressionParser {
-
-  /**
-   * one less than the lowest valid operator precedence. See Syntax.
-   */
-  private val MinPrecedence = -1
 
   case class ParseContext(variadic: Boolean, scope: SymbolTable) {
     def withVariadic(v: Boolean) = copy(variadic = v)
@@ -41,13 +35,6 @@ object ExpressionParser {
   }
 
   case class ExpressionParseContext(goalType: Int, precedence: Int)
-
-  private def isEnd(g: SyntaxGroup, end: TokenType): Boolean = {
-    g match {
-      case Atom(a) => a.tpe == end
-      case _ => false
-    }
-  }
 
   type RemainingParseResult[A] = ParseResult[(A, Seq[SyntaxGroup])]
 
@@ -86,12 +73,6 @@ object ExpressionParser {
       if (f.isDefinedAt(failure)) f(failure)
       else this
   }
-
-  private class MissingPrefixFailure(val token: Token) extends
-    ParseFailure("Missing prefix", token.start, token.end, token.filename)
-
-  private class UnexpectedTokenFailure(val token: Token) extends
-    ParseFailure("Unexpected token", token.start, token.end, token.filename)
 
   private object TypeMismatch {
     def unapply(t: TypeMismatch): Option[(Int, Int)] = Some((t.expectedType, t.actualType))
@@ -153,8 +134,7 @@ object ExpressionParser {
       (neededArgument == Syntax.CommandType) ||
         (neededArgument == Syntax.ReporterType) ||
         (neededArgument == (Syntax.ReporterType | Syntax.CommandType)) ||
-        (neededArgument == Syntax.SymbolType) ||
-        (neededArgument == Syntax.ReferenceType)
+        (neededArgument == Syntax.SymbolType)
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
     def withArgument(arg: core.Expression): ApplicationPartial
     def isVariadic = syntax.isVariadic
@@ -238,7 +218,7 @@ object ExpressionParser {
     import ctx.scope
 
     // println("context precedence: " + ctx.precedence)
-    // println(stack.reverse.mkString("//"))
+    println(stack.reverse.mkString("//"))
 
     stack match {
       // Stmts -> Stmt | Stmts Stmt
@@ -251,14 +231,29 @@ object ExpressionParser {
       // Error(ExpectedCommand) -> Stmt id
       case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
-      case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.SymbolType =>
+      case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest                if ap.neededArgument == Syntax.SymbolType =>
         (ap.withArgument(processSymbol(tok)) :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> ConciseReporter | ConciseCommand | RepApp | ReporterBlock | CommandBlock
-      case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
-        (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+      case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.needsSymbolicArgument =>
+        println("HERE!")
+        if (ap.neededArgument == Syntax.CommandType)
+          (PartialReporterAndArgs(rep, tok, Seq()) :: ap :: rest, ctx.copy(precedence = rep.syntax.precedence))
+        else {
+          val conciseInstruction =
+            processConciseInstruction(rep, tok, ap.neededArgument, ap.parseContext, scope) match {
+              case f: FailedParse => PartialError(f)
+              case SuccessfulParse(app) => PartialReporterApp(app)
+            }
+          (conciseInstruction :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        }
       // Arg -> ConciseCommand | ConciseReporter | RepApp | ReporterBlock | CommandBlock
       case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.needsSymbolicArgument =>
-        (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+        val newPartial = cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) match {
+          case f: FailedParse => PartialError(f)
+          case SuccessfulParse(app) => PartialReporterApp(app)
+        }
+
+        (newPartial :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> CommandBlock | ReporterBlock | RepApp | ConciseCommand | ConciseReporter
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
         resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope) match {
@@ -293,7 +288,7 @@ object ExpressionParser {
         List(PartialError(fail(ArgumentParseContext(iRep, iTok.sourceLocation).missingInput(0), iTok.sourceLocation)))
       case PartialCommand(cmd, tok) :: rest =>
         PartialCommandAndArgs(cmd, tok, Seq()) :: rest
-      case PartialDelayedBlock(db) :: (pc: ApplicationPartial) :: rest if pc.needsArguments =>
+      case PartialDelayedBlock(db) :: (pc: ApplicationPartial) :: rest if pc.needsArguments || (pc.isVariadic && ctx.variadic) =>
         processDelayedBlock(db, pc.neededArgument, scope) :: pc :: rest
       case (pr@PartialReporterAndArgs(rep, tok, args)) :: Nil if ! pr.needsArguments => // this case comes up when parsing reporter lambda (and probably blocks)
         (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx.copy(precedence = Syntax.CommandPrecedence))
@@ -477,16 +472,25 @@ object ExpressionParser {
     new core.ReporterApp(symbol, tok.sourceLocation)
   }
 
+  def processConciseInstruction(instruction: core.Instruction, tok: Token, goalType: Int, parseContext: ArgumentParseContext, scope: SymbolTable): ParseResult[core.ReporterApp] = {
+    instruction match {
+      case rep: core.Reporter =>
+        val rApp = new core.ReporterApp(rep, tok.sourceLocation)
+        SuccessfulParse(expandConciseReporterLambda(rApp, rep, scope))
+      case cmd: core.Command =>
+        cmdToReporterApp(cmd, tok, goalType, parseContext, scope)
+    }
+  }
+
   def processReporter(rep: core.Reporter, tok: Token, args: Seq[core.Expression], goalType: Int, scope: SymbolTable): Partial = {
     val newRepApp: ParseResult[core.ReporterApp] =
       if (rep.isInstanceOf[core.prim._const])
         SuccessfulParse(new core.ReporterApp(rep, tok.sourceLocation))
       else if (compatible(goalType, Syntax.SymbolType))
         SuccessfulParse(processSymbol(tok))
-      else if (goalType == Syntax.ReporterType) {
-        val rApp = new core.ReporterApp(rep, tok.sourceLocation)
-        SuccessfulParse(expandConciseReporterLambda(rApp, rep, scope))
-      } else {
+      else if (goalType == Syntax.ReporterType)
+        processConciseInstruction(rep, tok, goalType, ArgumentParseContext(rep, tok.sourceLocation), scope)
+      else {
         rep match {
           case s: core.prim._symbol =>
             scope.get(s.token.text.toUpperCase)
@@ -527,12 +531,12 @@ object ExpressionParser {
     }
   }
 
-  def cmdToReporterApp(cmd: core.Command, tok: Token, goalType: Int, parseContext: ArgumentParseContext, scope: SymbolTable): Partial = {
+  def cmdToReporterApp(cmd: core.Command, tok: Token, goalType: Int, parseContext: ArgumentParseContext, scope: SymbolTable): ParseResult[core.ReporterApp] = {
     if (! cmd.syntax.canBeConcise) // this error may need to be one of two different things, depending on parent context
       if (parseContext.instruction.isInstanceOf[core.Reporter])
-        PartialError(fail(ExpectedReporter, tok))
+        fail(ExpectedReporter, tok)
       else
-        PartialError(fail(parseContext.missingInput(0), parseContext.location))
+        fail(parseContext.missingInput(0), parseContext.location)
     else {
       val (varNames, varApps) = syntheticVariables(cmd.syntax.totalDefault, tok, scope)
       val stmtArgs =
@@ -549,7 +553,7 @@ object ExpressionParser {
 
       val commandBlock = commandBlockWithStatements(tok.sourceLocation, Seq(stmt), synthetic = true)
 
-      PartialReporterApp(new core.ReporterApp(lambda, Seq(commandBlock), tok.sourceLocation))
+      SuccessfulParse(new core.ReporterApp(lambda, Seq(commandBlock), tok.sourceLocation))
     }
   }
 
@@ -915,32 +919,6 @@ object ExpressionParser {
     new core.ReporterApp(lambda, Seq(rApp.withArguments(varApps)), reporter.token.sourceLocation)
   }
 
-
-  // expand e.g. "foreach xs print" -> "foreach xs [[x] -> print x]"
-  private def expandConciseCommandLambda(token: Token, scope: SymbolTable): ParseResult[core.ReporterApp] = {
-    val coreCommand = token.value.asInstanceOf[core.Command]
-    if (! coreCommand.syntax.canBeConcise)
-      FailedParse(new UnexpectedTokenFailure(token))
-    else {
-      val (varNames, varApps) = syntheticVariables(coreCommand.syntax.totalDefault, coreCommand.token, scope)
-      val stmtArgs =
-        if (coreCommand.syntax.takesOptionalCommandBlock)
-          // synthesize an empty block so that later phases of compilation will be dealing with a
-          // consistent number of arguments - ST 3/4/08
-          varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
-        else varApps
-
-      val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
-      lambda.token = token
-
-      val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)
-
-      val commandBlock = commandBlockWithStatements(token.sourceLocation, Seq(stmt), synthetic = true)
-
-      SuccessfulParse(new core.ReporterApp(lambda, Seq(commandBlock), token.sourceLocation))
-    }
-  }
-
   private def commandBlockWithStatements(sourceLocation: SourceLocation, stmts: Seq[core.Statement], synthetic: Boolean = false) = {
     val statements = new core.Statements(sourceLocation.filename, stmts)
     new core.CommandBlock(statements, sourceLocation, synthetic)
@@ -952,10 +930,10 @@ object ExpressionParser {
   // private val ExpectedCloseBracket = "Expected closing bracket."
   private val ExpectedCloseParen = "Expected a closing parenthesis here."
   private val ExpectedReporter = "Expected reporter."
-  private val InvalidVariadicContext =
-    "To use a non-default number of inputs, you need to put parentheses around this."
+  // private val InvalidVariadicContext =
+  //   "To use a non-default number of inputs, you need to put parentheses around this."
   // private val MissingCloseBracket = "No closing bracket for this open bracket."
   // private val MissingCloseParen = "No closing parenthesis for this open parenthesis."
-  private val MissingInputOnLeft = "Missing input on the left."
+  // private val MissingInputOnLeft = "Missing input on the left."
 
 }

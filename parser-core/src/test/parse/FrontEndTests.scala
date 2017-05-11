@@ -30,7 +30,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_const(1)[]]]]]] _fd()[_const(1)[]]")
   }
   test("DoParseOptionalBlock") {
-    runTest("crt 10 ", "_createturtles()[_const(10)[], []]")
+    testParse("crt 10 ", "_createturtles()[_const(10)[], []]")
   }
   test("parseSymbolUnknownName") {
     testParse("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")

@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ AstVisitor, Fail, I18N, Reporter, ReporterApp, Statement, TypeNames, Variable },
-  org.nlogo.core.prim.{ _set, _let, _letvariable, _reporterlambda},
+  org.nlogo.core.prim._set,
   Fail._
 
 object SetVerifier extends AstVisitor {
