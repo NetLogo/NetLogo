@@ -152,6 +152,7 @@ object ExpressionParser {
     def needsSymbolicArgument: Boolean =
       (neededArgument == Syntax.CommandType) ||
         (neededArgument == Syntax.ReporterType) ||
+        (neededArgument == (Syntax.ReporterType | Syntax.CommandType)) ||
         (neededArgument == Syntax.SymbolType) ||
         (neededArgument == Syntax.ReferenceType)
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
@@ -256,7 +257,7 @@ object ExpressionParser {
       case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.ReporterType =>
         (processReporter(rep, tok, Seq(), ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> ConciseCommand | ConciseReporter | RepApp | ReporterBlock | CommandBlock
-      case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
+      case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.needsSymbolicArgument =>
         (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Arg -> CommandBlock | ReporterBlock | RepApp | ConciseCommand | ConciseReporter
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
@@ -614,10 +615,9 @@ object ExpressionParser {
   def processCommandBlock(block: DelayedBlock, scope: SymbolTable): Partial = {
     if (block.bodyGroups.isEmpty) {
       val file = block.group.start.filename
-      PartialCommandBlock(
-      new core.CommandBlock(
+      PartialCommandBlock(new core.CommandBlock(
         new core.Statements(file),
-        SourceLocation(block.group.start.start, block.group.end.end, file), true))
+        SourceLocation(block.group.start.start, block.group.end.end, file)))
     } else
       runRec(Nil, block.bodyGroups, ParsingContext(Syntax.CommandPrecedence, block.internalScope, false),
         _.isInstanceOf[PartialStatements],
