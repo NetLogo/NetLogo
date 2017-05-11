@@ -354,7 +354,7 @@ case class _patches() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.PatchsetType)
 }
-case class _patchvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable {
+case class _patchvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable with Variable {
   override def syntax =
     Syntax.reporterSyntax(
       ret = returnType | Syntax.ReferenceType,
