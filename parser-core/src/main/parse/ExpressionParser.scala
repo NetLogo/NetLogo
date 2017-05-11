@@ -148,6 +148,12 @@ object ExpressionParser {
       if (needsArguments) syntax.allArgs(args.length)
       else if (isVariadic) syntax.right.last
       else 0
+    // This imposes a restriction on the compiler - concise primitives cannot be in a variadic position
+    def needsSymbolicArgument: Boolean =
+      (neededArgument == Syntax.CommandType) ||
+        (neededArgument == Syntax.ReporterType) ||
+        (neededArgument == Syntax.SymbolType) ||
+        (neededArgument == Syntax.ReferenceType)
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
     def withArgument(arg: core.Expression): ApplicationPartial
     def isVariadic = syntax.isVariadic
@@ -231,7 +237,7 @@ object ExpressionParser {
     import ctx.scope
 
     // println("context precedence: " + ctx.precedence)
-    println(stack.reverse.mkString("//"))
+    // println(stack.reverse.mkString("//"))
 
     stack match {
       // Stmts -> Stmt | Stmts Stmt
@@ -252,8 +258,6 @@ object ExpressionParser {
       // Arg -> ConciseCommand | ConciseReporter | RepApp | ReporterBlock | CommandBlock
       case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.neededArgument == Syntax.CommandType =>
         (cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
-      case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest =>
-        List(PartialError(fail(ExpectedCloseParen, tok)))
       // Arg -> CommandBlock | ReporterBlock | RepApp | ConciseCommand | ConciseReporter
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
         resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope) match {
@@ -298,18 +302,55 @@ object ExpressionParser {
     }
   }
 
-  // Things remaining as of 5/10/17:
-  // * Variadic parsing
+  // Things remaining as of 5/11/17:
   // * handling `of` and `with`
   // * Coherency / simplicity
+  def canProvide(g: SyntaxGroup) = {
+    g match {
+      case b: BracketGroup =>
+        Syntax.CommandType | Syntax.CommandBlockType |
+        Syntax.ReporterBlockType | Syntax.ReporterType |
+        Syntax.ListType | Syntax.CodeBlockType
+      case p: ParenGroup => Syntax.WildcardType
+      case a: Atom       =>
+        a.token.tpe match {
+          case TokenType.Reporter  => Syntax.WildcardType
+          case TokenType.Literal   => Syntax.ReadableType
+          case TokenType.Ident     => Syntax.WildcardType
+          case TokenType.Extension => Syntax.WildcardType
+          case _ => Syntax.VoidType
+        }
+    }
+  }
+
+  def canBeSymbolic(g: SyntaxGroup) = {
+    g match {
+      case a: Atom =>
+        a.token.tpe match {
+          case TokenType.Reporter | TokenType.Command | TokenType.Ident => true
+          case _ => false
+        }
+      case _ => false
+    }
+  }
+
+  def isCommand(g: SyntaxGroup): Boolean = {
+    g match {
+      case Atom(Token(_, TokenType.Command, _)) => true
+      case p: ParenGroup => isCommand(p.innerGroups.head)
+      case _ => false
+    }
+  }
 
   def shouldShift(p: Partial, g: SyntaxGroup, c: ParsingContext): Boolean = {
     val stackPrimacy = p.primacy
     (p, g) match {
       case (_, pg: ParenGroup) =>
         pg.innerGroups.headOption.map(headGroup => shouldShift(p, headGroup, c)).getOrElse(stackPrimacy > 3)
-      case (ap: ApplicationPartial, _) =>
-        ap.needsArguments || (ap.isVariadic && (c.variadic || ap.args.length < ap.syntax.rightDefault))
+      case (ap: ApplicationPartial, g) if ap.needsSymbolicArgument && canBeSymbolic(g) =>
+        true
+      case (ap: ApplicationPartial, _) if ! isCommand(g) =>
+        ap.needsArguments || (ap.isVariadic && (c.variadic || ap.args.length < ap.syntax.rightDefault)) && compatible(ap.neededArgument, canProvide(g))
       case (db: PartialDelayedBlock, bg: BracketGroup) => false
       case (_, bg: BracketGroup) =>
         stackPrimacy > 3
@@ -345,9 +386,12 @@ object ExpressionParser {
           case _ => fail(ExpectedCommand, pg.location)
         }
         // failing with ExpectedCommand may not be appropriate here...
-        val intermediateResult = runRec(Nil, inner, ctx.copy(variadic = true), p => p.isInstanceOf[PartialReporterApp] || p.isInstanceOf[PartialStatement], error)
+        val intermediateResult = runRec(Nil, inner, ctx.copy(variadic = true), p => p.isInstanceOf[PartialReporterApp] || p.isInstanceOf[PartialStatements], error)
         intermediateResult match {
-          case SuccessfulParse((p, Seq())) => p
+          case SuccessfulParse((PartialStatements(stmts), Seq())) =>
+            if (stmts.stmts.length == 1) PartialStatement(stmts.stmts.head)
+            else PartialError(fail(ExpectedCloseParen, stmts.stmts(1).command.token))
+          case SuccessfulParse((p: PartialReporterApp, Seq())) => p
           case SuccessfulParse((p, Seq(g, _*))) => PartialError(fail(ExpectedCommand, g.location))
           case f: FailedParse => PartialError(f)
         }

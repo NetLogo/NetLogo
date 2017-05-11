@@ -21,6 +21,23 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_ignore()[_round()[_const(0.5)[]]] " +
       "_fd()[_const(5.0)[]]")
   }
+  test("DoParseEmpty") {
+    testParse("", "")
+  }
+  test("DoParseParens1") {
+    testParse("run [ show (word \"a\" \"1\") ] fd 1",
+      "_run()[_commandlambda()[[_show()[_word()[_const(a)[], " +
+      "_const(1)[]]]]]] _fd()[_const(1)[]]")
+  }
+  test("parseSymbolUnknownName") {
+    testParse("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
+  test("parseSymbolKnownName1") {
+    testParse("report __symbol turtles", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
+  test("parseSymbolKnownName2") {
+    testParse("report __symbol turtle", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
+  }
   test("basic lambda parse") {
     testParse("__ignore [[x] -> x + x]",
       "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")
@@ -66,7 +83,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_ignore()[_map()[_reporterlambda(_0)[_round()[_lambdavariable(_0)[]]], _const([1.2, 1.7, 3.2])[]]]")
   }
   test("UnaryMinus") {
-    runTest("__ignore (- 5)",
+    testParse("__ignore (- 5)",
       "_ignore()[_unaryminus()[_const(5.0)[]]]")
   }
   test("ParseConstantInteger") {
