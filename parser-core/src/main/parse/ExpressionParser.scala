@@ -375,12 +375,14 @@ object ExpressionParser {
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
 
     //.init to avoid Eof awkwardness
-    val groupedTokens = groupSyntax(tokens.buffered).get.init
-    runRec(Nil, groupedTokens, ParsingContext(Syntax.CommandPrecedence, scope, false), _.isInstanceOf[PartialStatements],
+    val groupedTokens = groupSyntax(tokens.buffered).get
+    runRec(Nil, groupedTokens.init, ParsingContext(Syntax.CommandPrecedence, scope, false), _.isInstanceOf[PartialStatements],
       SuccessfulParse(PartialStatements(new core.Statements(procedureDeclaration.filename, Seq())))).get match {
       case (PartialError(f), _)         => throw f.failure.toException
       case (PartialStatements(stmts), _) =>
-        new core.ProcedureDefinition(procedureDeclaration, stmts, groupedTokens.last.end.end)
+        val tokenEnd = groupedTokens.lastOption.map(_.end.start).getOrElse(Int.MaxValue)
+        val end = if (tokenEnd < Int.MaxValue) tokenEnd else stmts.end
+        new core.ProcedureDefinition(procedureDeclaration, stmts, end)
       case other                        => throw new Error("bad parse?! " + other)
     }
   }
