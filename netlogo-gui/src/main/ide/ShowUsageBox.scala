@@ -159,9 +159,12 @@ class ShowUsageBox(colorizer: Colorizer) {
   }
   class LineNumberRenderer extends DefaultTableCellRenderer {
     override def setValue(value: AnyRef) = {
-      setText((document.offsetToLine(value.asInstanceOf[Token].start) + 1).toString)
-      setHorizontalAlignment(SwingConstants.RIGHT)
-      setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
+      if (value != null) {
+        setText((document.offsetToLine(value.asInstanceOf[Token].start) + 1).toString)
+        setHorizontalAlignment(SwingConstants.RIGHT)
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
+      } else
+        super.setValue(null)
     }
   }
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
