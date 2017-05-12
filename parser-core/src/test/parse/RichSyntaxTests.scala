@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Expression, ReporterApp, SourceLocation, Syntax, Token, TokenType }
+import org.nlogo.core.{ Expression, ReporterApp, SourceLocation, Syntax }
 import org.nlogo.core.prim.{ _const }
 import org.scalatest.FunSuite
 

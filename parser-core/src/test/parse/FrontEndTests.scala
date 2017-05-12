@@ -30,7 +30,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
       "_const(1)[]]]]]] _fd()[_const(1)[]]")
   }
   test("DoParseRunResult") {
-    runTest("report (runresult \"0.5\")", "_report()[_runresult()[_const(0.5)[]]]", "to-report foo ")
+    testParse("report (runresult \"0.5\")", "_report()[_runresult()[_const(0.5)[]]]", "to-report foo ")
   }
   test("DoParseOptionalBlock") {
     testParse("crt 10 ", "_createturtles()[_const(10)[], []]")

@@ -26,7 +26,7 @@ object RichSyntax {
   // This is a linear state machine, until it reaches the repeatable argument, at which point it
   // simply verifies.
   //
-  // In mode 3a, only the arguments following the repeatable argument are entirely deterministic.
+  // In mode 2a, only the arguments following the repeatable argument are entirely deterministic.
   // Once the first argument has been seen which cannot be repeatable, the rest of the types
   // are entirely determined.
 }
