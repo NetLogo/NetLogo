@@ -299,8 +299,14 @@ object ExpressionParser {
   }
 
   // Things remaining as of 5/11/17:
-  // * handling `of` and `with`
-  // * Coherency / simplicity
+  // * Finish RichSyntax to get simpler syntax information (maybe rename it, too)
+  //   * remove resolveTypes
+  //   * performing typing on the fly
+  // * Instead of a single shouldShift / shift / reduce, we may need three with overlap
+  //   - Seeking reporter (in variadic)
+  //   - Seeking statements (in blocks)
+  //   - Seeking statement (in variadic)
+
   def canProvide(g: SyntaxGroup) = {
     g match {
       case b: BracketGroup =>
