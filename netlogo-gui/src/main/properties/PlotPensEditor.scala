@@ -213,7 +213,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       setOpaque(true)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
-        setBackground(value.asInstanceOf[ColorInfo].color)
+        if (value != null) {
+          setBackground(value.asInstanceOf[ColorInfo].color)
+        }
         this
       }
     }
@@ -234,8 +236,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       def getCellEditorValue = currentColor
 
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
-        currentColor = value.asInstanceOf[ColorInfo]
-        button.setBackground(currentColor.color)
+        if (value != null) {
+          currentColor = value.asInstanceOf[ColorInfo]
+          button.setBackground(currentColor.color)
+        }
         button
       }
     }
