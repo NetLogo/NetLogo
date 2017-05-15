@@ -65,11 +65,9 @@ class RichSyntaxTests extends FunSuite {
     assertResult(Some(Syntax.NumberType))(syntax.nextArgumentType)
   } }
 
-  // there are three options here:
-  // 1. Throw an exception
-  // 2. Return a RichSyntax indicating an exception in the future
-  // 3. Return a failed parseResult
   test("withArgument passes in bad type") {
+    rich(Syntax.commandSyntax())
+    assertResult(FailedParse(TooManyArguments))(withArgument(constString))
     pending
   }
 

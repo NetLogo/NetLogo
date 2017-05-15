@@ -43,7 +43,7 @@ object ExpressionParser {
     def unapply(t: TypeMismatch): Option[(Int, Int)] = Some((t.expectedType, t.actualType))
   }
 
-  private class TypeMismatch(val arg: core.Expression, message: String, val expectedType: Int, val actualType: Int) extends
+  class TypeMismatch(val arg: core.Expression, message: String, val expectedType: Int, val actualType: Int) extends
     ParseFailure(message, arg.start, arg.end, arg.filename)
 
   implicit class RichParseResult[A](p: ParseResult[A]) {
@@ -306,8 +306,17 @@ object ExpressionParser {
   //
   // Steps in refactor:
   //  [x] Begin with "Goal" - which abstracts over the concepts of "finish" and "what to do when empty"
-  //  * Once we have shrunk reduce, we can start working on shrinking shift / shouldShift as well. These will be more complex, especially shift because it contains a recursive call
   //  * We should resolveTypes as we parse, not in one swoop at the end. This will (hopefully) simplify typing as well as making parsing more clear.
+  //    - Note that the arguments expected are determined by the syntax and variadic context
+  //      of the syntax primitive.
+  //    - Note also that only in variadic contexts (and too a lesser extent, for
+  //      optional arguments) can the argument types not be fully enumerated at the time
+  //      the applied primitive is recognized.
+  //    - Once we have a complete list of arguments, we no longer need to account for variadicity
+  //      in shouldShift, shift, or reduce. This will substantially simplify the code in these
+  //      methods
+  //  * It's probably worth cleaning up the miscellaneous constructor methods in this class,
+  //    perhaps moving them to another class if we can find a way to do so.
   //  * Questions:
   //    - Do we need to introduce a "context" abstraction?
   //    - We only privilege the syntax of the first primitive in a variadic context. How can we communicate this effectively?

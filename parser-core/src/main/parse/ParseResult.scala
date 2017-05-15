@@ -67,3 +67,20 @@ case class SuccessfulParse[A](val parsed: A) extends ParseResult[A] {
   def recoverWith[B >: A](f: PartialFunction[ParseFailure, ParseResult[B]]): ParseResult[A] =
     this
 }
+
+/*
+object TypeMismatch {
+  def unapply(t: TypeMismatch): Option[(Int, Int)] = Some((t.expectedType, t.actualType))
+}
+
+object TypeMismatch {
+  def message(instructionName: String, expectedType: Int, actualType: Int): String =
+    s"$instructionName expected this input to be ${TypeNames.aName(expectedType)}, but got ${TypeNames.aName(displayedReportedType)} instead"
+}
+
+
+class TypeMismatch(val arg: core.Expression, message: String, val expectedType: Int, val actualType: Int) extends
+  ParseFailure(message, arg.start, arg.end, arg.filename) {
+
+  }
+  */
