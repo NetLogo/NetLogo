@@ -65,7 +65,7 @@ with WindowEvents.CompiledEvent.Handler {
 
   private object OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
     override def actionPerformed(e: ActionEvent) = ignoring(classOf[UserCancelException]) {
-      val path = SwingFileDialog.show(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
+      val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')
       if(path.endsWith(".nls"))
         tabs.openExternalFile(path)

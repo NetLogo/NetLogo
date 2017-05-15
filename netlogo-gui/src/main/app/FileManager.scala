@@ -112,7 +112,7 @@ object FileManager {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
-      val importPath = org.nlogo.swing.FileDialog.show(
+      val importPath = org.nlogo.swing.FileDialog.showFiles(
           parent, I18N.gui.get("menu.file.import.hubNetClientInterface"), java.awt.FileDialog.LOAD, null);
       val choice =
           OptionDialog.showMessage(frame,
@@ -145,7 +145,7 @@ object FileManager {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
-      val exportPath = FileDialog.show(
+      val exportPath = FileDialog.showFiles(
         parent, I18N.gui.get("menu.file.saveAsNetLogoWeb.dialog"),
         AWTFileDialog.SAVE, suggestedFileName)
 
@@ -373,7 +373,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   private def userChooseLoadPath(): String = {
-    FileDialog.show(parent, I18N.gui.get("menu.file.open"), AWTFileDialog.LOAD, null)
+    FileDialog.showFiles(parent, I18N.gui.get("menu.file.open"), AWTFileDialog.LOAD, null)
   }
 
   private class Saver(val thunk: () => Try[URI]) extends Runnable {

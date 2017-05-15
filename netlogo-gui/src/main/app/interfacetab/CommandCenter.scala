@@ -117,7 +117,7 @@ class CommandCenter(workspace: AbstractWorkspace,
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
         addActionListener(() =>
           try {
-            val filename = SwingFileDialog.show(
+            val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
               workspace.guessExportName("command center output.txt"))
             ModalProgressTask.onBackgroundThreadWithUIData(

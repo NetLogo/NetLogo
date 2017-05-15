@@ -27,7 +27,7 @@ class _usernewfile extends Reporter {
               try {
                 gw.view.mouseDown(false)
                 FileDialog.setDirectory(workspace.fileManager.prefix)
-                FileDialog.show(gw.getFrame, "Choose File", java.awt.FileDialog.SAVE)
+                FileDialog.showFiles(gw.getFrame, "Choose File", java.awt.FileDialog.SAVE)
               }
               catch {
                 case _: UserCancelException =>

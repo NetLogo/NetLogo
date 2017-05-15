@@ -2,8 +2,10 @@
 
 package org.nlogo.prim.gui
 
+import java.lang.{ Boolean => JBoolean }
+import java.io.File
+
 import org.nlogo.api.{ ReporterRunnable}
-import org.nlogo.core.Syntax
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
@@ -23,20 +25,16 @@ class _userdirectory extends Reporter {
     workspace match {
       case gw: GUIWorkspace =>
         gw.updateUI()
-        result = gw.waitForResult(
-          new ReporterRunnable[AnyRef] {
-            override def run() =
-              try {
-                gw.view.mouseDown(false)
-                FileDialog.setDirectory(workspace.fileManager.prefix)
-                FileDialog.show(gw.getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
-                                true) + // directories only please
-                  java.io.File.separatorChar
-              }
-              catch {
-                case _: UserCancelException =>
-                  java.lang.Boolean.FALSE
-              }})
+        result = gw.waitForResult(() =>
+          try {
+            gw.view.mouseDown(false)
+            FileDialog.setDirectory(workspace.fileManager.prefix)
+            FileDialog.showDirectories(gw.getFrame, "Choose Directory") + File.separatorChar
+          }
+          catch {
+            case _: UserCancelException =>
+              JBoolean.FALSE
+          })
       case _ =>
         throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")

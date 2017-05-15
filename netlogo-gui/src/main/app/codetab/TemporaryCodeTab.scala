@@ -137,7 +137,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix
 
     val newFileName = appendIfNecessary(filenameForDisplay, ".nls")
-    val path = SwingFileDialog.show(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
+    val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nls")
   }
 
