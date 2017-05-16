@@ -128,6 +128,7 @@ class JavaFXApp extends Application {
     applicationController.worldUpdates = worldUpdates
     applicationController.closeItem.setOnAction(handler { (a: ActionEvent) => stop() })
     val scene = new Scene(vBox)
+    scene.getStylesheets.add("netlogo-javafx.css")
     primaryStage.setScene(scene)
     primaryStage.show()
   }

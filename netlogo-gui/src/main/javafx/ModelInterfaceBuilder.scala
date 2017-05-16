@@ -6,6 +6,7 @@ import javafx.fxml.FXML
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.control.{ Button, ScrollPane, Slider }
 import javafx.scene.layout.Pane
+import javafx.scene.text.Text
 import javafx.stage.{ FileChooser, Window }
 
 import org.nlogo.core.{
@@ -51,6 +52,10 @@ object ModelInterfaceBuilder {
               val gc = c.getGraphicsContext2D
               gc.setFill(Color.BLACK)
               gc.fillRect(0, 0, c.getWidth, c.getHeight)
+            case coreText: CoreTextBox =>
+              val t = new TextBox(coreText)
+              t.relocate(coreText.left, coreText.top)
+              interfacePane.getChildren.add(t)
             case _ =>
           }
       }
