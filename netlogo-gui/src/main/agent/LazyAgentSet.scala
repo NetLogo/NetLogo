@@ -123,7 +123,7 @@ class LazyAgentSet(printName: String,
         val it = iterator
         val s = agentSet.getArray.size
         val threshold = 8
-        val l = new AgentSetBuilder(kind, if (s <= 8) s else 8)
+        val l = new AgentSetBuilder(kind, if (s <= threshold) s else threshold)
 //        if (s > threshold) {
 //          val l = new AgentSetBuilder(kind, threshold)
 //        } else {
