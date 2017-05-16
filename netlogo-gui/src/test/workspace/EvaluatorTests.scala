@@ -9,7 +9,7 @@ class EvaluatorTests extends fixture.FunSuite {
   type FixtureParam = Evaluator
 
   override def withFixture(test: OneArgTest): Outcome = {
-   test(new Evaluator(new DummyAbstractWorkspace))
+   test(new EvaluatorImpl(new DummyAbstractWorkspace))
  }
 
   test("Illegal to have empty source for a reporter thunk"){ e =>

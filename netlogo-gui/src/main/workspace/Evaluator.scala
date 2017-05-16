@@ -53,6 +53,8 @@ trait Evaluator {
 
   @throws(classOf[CompilerException])
   def readFromString(string: String): AnyRef
+
+  private[workspace] def withContext(context: Context)(f: => Unit): Unit
 }
 
 abstract class AbstractEvaluator(workspace: AbstractWorkspace) extends Evaluator {
