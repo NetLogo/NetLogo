@@ -43,6 +43,10 @@ object ModelInterfaceBuilder {
           interfacePane.getChildren.add(slider)
         case other =>
           other.widget match {
+            case c: CoreChooser =>
+              val chooser = new ChooserControl(c)
+              chooser.relocate(c.left, c.top)
+              interfacePane.getChildren.add(chooser)
             case v: CoreView    =>
               import javafx.scene.paint.Color
               val d = compiledModel.model.view.dimensions
