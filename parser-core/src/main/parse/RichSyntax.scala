@@ -2,10 +2,85 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Expression, Syntax }
+import
+  org.nlogo.core.{ Expression, Syntax },
+    Syntax.compatible
 
 object RichSyntax {
-  def apply(syntax: Syntax, arguments: Seq[Expression]): RichSyntax = new RichSyntax(syntax, arguments)
+  def apply(syntax: Syntax, variadic: Boolean, arguments: List[Expression]): RichSyntax = new RichSyntax(syntax, variadic, arguments)
+
+  sealed trait ArgumentType
+  case object NoMoreArguments extends ArgumentType
+  case class Argument(tpe: Int) extends ArgumentType
+  case class MaybeArgument(tpe: Int) extends ArgumentType
+  case class OneOfArgument(tpeA: Int, tpeB: Int) extends ArgumentType
+
+  private def removeRepeatableModifier(i: Int): Int =
+    i & (~ Syntax.RepeatableType)
+
+  sealed trait ArgumentRecognizer {
+    def withArgument(arg: Expression): ArgumentRecognizer
+    def withArguments(arg: Seq[Expression]): ArgumentRecognizer
+    def recognizedArgument: ArgumentType
+  }
+
+  case object FinishedRecognizer extends ArgumentRecognizer {
+    def withArgument(arg: Expression) = this
+    def withArguments(arg: Seq[Expression]): ArgumentRecognizer = this
+    def recognizedArgument: ArgumentType = NoMoreArguments
+  }
+
+  case class NormalRecognizer(_tpe: Int, next: ArgumentRecognizer) extends ArgumentRecognizer {
+    val tpe = removeRepeatableModifier(_tpe)
+
+    def withArgument(arg: Expression): ArgumentRecognizer =
+      // TODO: check that arg satisfies types
+      next
+
+    def withArguments(args: Seq[Expression]): ArgumentRecognizer =
+      if (args.isEmpty) this
+      // TODO: check that args.head satisfies types
+      else next.withArguments(args.tail)
+
+    def recognizedArgument: ArgumentType =
+      if ((tpe & Syntax.OptionalType) != 0)
+        MaybeArgument(tpe)
+      else
+        Argument(tpe)
+  }
+
+  // this is only used in a *variadic* context.
+  // Syntaxes with defaultOption, etc. will be turned into NormalRecognizers
+  case class FinalVariadicRecognizer(_tpe: Int) extends ArgumentRecognizer {
+    val tpe = removeRepeatableModifier(_tpe)
+    def withArgument(arg: Expression): ArgumentRecognizer = this
+    def withArguments(args: Seq[Expression]): ArgumentRecognizer = this
+    def recognizedArgument: ArgumentType = MaybeArgument(tpe)
+  }
+
+  case class NonFinalVariadicRecognizer(_tpe: Int, next: ArgumentRecognizer) extends ArgumentRecognizer {
+    val tpe = removeRepeatableModifier(_tpe)
+
+    def withArgument(arg: Expression): ArgumentRecognizer =
+      if (compatible(arg.reportedType, tpe))
+        this
+      else
+        next.withArgument(arg)
+
+    def withArguments(args: Seq[Expression]): ArgumentRecognizer =
+      if (args.isEmpty) this
+      else if (compatible(args.head.reportedType, tpe)) withArguments(args.tail)
+      else next.withArguments(args)
+
+    def recognizedArgument: ArgumentType =
+      next.recognizedArgument match {
+        case NoMoreArguments => Argument(tpe)
+        case Argument(otherTpe) => OneOfArgument(tpe, otherTpe)
+        case MaybeArgument(otherTpe) => OneOfArgument(tpe, otherTpe)
+        case OneOfArgument(otherTpe, _) => OneOfArgument(tpe, otherTpe) // this shouldn't happen
+      }
+  }
+
 
   // syntaxes with defaults and variadics are bimodal.
   //
@@ -31,21 +106,48 @@ object RichSyntax {
   // are entirely determined.
 }
 
-class RichSyntax(syntax: Syntax, arguments: Seq[Expression]) {
+import RichSyntax._
+
+class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[Expression]) {
   lazy val allArgs = syntax.left +: syntax.right
 
   val argCount = arguments.length
 
-  def nextArgumentType: Option[Int] =
-    if (syntax.isInfix && arguments.length < allArgs.length)
-      Some(allArgs(arguments.length))
-    else if (syntax.isVariadic && argCount >= syntax.right.length)
-      syntax.right.find(a => (a & Syntax.RepeatableType) != 0).map(_ & (~ Syntax.RepeatableType))
-    else if (arguments.length >= syntax.right.length)
-      None
+  private def removeRepeatableModifier(i: Int): Int =
+    i & (~ Syntax.RepeatableType)
+
+  private def isRepeatable(i: Int): Boolean =
+    (i & Syntax.RepeatableType) != 0
+
+  def transformToRecognizerNormal(tpes: List[Int], countRemaining: Int): ArgumentRecognizer = {
+    if (tpes.isEmpty) FinishedRecognizer
+    else if (isRepeatable(tpes.head) && countRemaining > tpes.length)
+      NormalRecognizer(tpes.head, transformToRecognizerNormal(tpes, countRemaining - 1))
     else
-      Some(syntax.right(arguments.length) & (~ Syntax.RepeatableType))
+      NormalRecognizer(tpes.head, transformToRecognizerNormal(tpes.tail, countRemaining - 1))
+  }
+
+  def transformToRecognizerVariadic(tpes: List[Int]): ArgumentRecognizer = {
+    if (tpes.isEmpty) FinishedRecognizer
+    else if (isRepeatable(tpes.head) && tpes.length == 1)
+      FinalVariadicRecognizer(tpes.head)
+    else if (isRepeatable(tpes.head))
+      NonFinalVariadicRecognizer(tpes.head, transformToRecognizerVariadic(tpes.tail))
+    else
+      NormalRecognizer(tpes.head, transformToRecognizerVariadic(tpes.tail))
+  }
+
+  def nextArgumentType: ArgumentType = {
+    if (syntax.isInfix && arguments.length < allArgs.length)
+      Argument(allArgs(arguments.length))
+    else {
+      val rec =
+        if (variadic) transformToRecognizerVariadic(syntax.right)
+        else          transformToRecognizerNormal(syntax.right, syntax.rightDefault)
+      rec.withArguments(arguments).recognizedArgument
+    }
+  }
 
   def withArgument(arg: Expression): RichSyntax =
-    new RichSyntax(syntax, arguments :+ arg)
+    new RichSyntax(syntax, variadic, arguments :+ arg)
 }
