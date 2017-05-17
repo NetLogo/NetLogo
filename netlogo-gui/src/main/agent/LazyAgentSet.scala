@@ -58,13 +58,43 @@ class LazyAgentSet(printName: String,
     new FilteringShufflerator(agentSet.getArray, rng)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
-    force().randomOne(precomputedCount, rng) // precomputedCount is wrong??
+//    force().randomOne(precomputedCount, rng) // precomputedCount is wrong??
+  {
+    val forcedSet = force().getArray
+    forcedSet(rng.nextInt(forcedSet.size))
+  }
 
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomTwo(precomputedCount, rng)
+//    force().randomTwo(precomputedCount, rng)
+  {
+    val forcedSet = force().getArray
+    val fsize = forcedSet.size
+    val (smallRandom, bigRandom) = {
+      val r1 = rng.nextInt(precomputedCount)
+      val r2 = rng.nextInt(precomputedCount - 1)
+      if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
+    }
+    Array(forcedSet(smallRandom), forcedSet(bigRandom))
+  }
 
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
+//    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
+  {
+    val forcedSet = force().getArray
+    val fsize = forcedSet.size
+    val result = new Array[Agent](resultSize)
+
+    var i, j = 0
+    while (j < resultSize) {
+      if (rng.nextInt(fsize - i) < resultSize - j) {
+        result(j) = forcedSet(i)
+        j += 1
+      }
+      i += 1
+    }
+
+    result
+  }
 
   def toLogoList: LogoList = force().toLogoList
 
@@ -93,15 +123,6 @@ class LazyAgentSet(printName: String,
       i += 1
     }
     true
-
-//    var currWiths = withs
-//    while (!currWiths.isEmpty) {
-//      if (! currWiths(0)(agent)) {
-//        return false
-//      }
-//      currWiths = currWiths.tail
-//    }
-//    true
   }
 
   // assumptions:
@@ -114,9 +135,7 @@ class LazyAgentSet(printName: String,
     if (forcedSet == null) {
       if (other == null && withs.isEmpty) {
         forcedSet = agentSet
-      }
-      else {
-        //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
+      } else {
         val it = iterator
         val l = new AgentSetBuilder(kind)
         while (it.hasNext) {
