@@ -464,7 +464,9 @@ case class _turtleorlinkvariable(varName: String, returnType: Int = Syntax.Wildc
   override def syntax =
     Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "-T-L")
 }
-case class _turtlevariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter {
+case class _turtlevariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable {
+  def makeReference =
+    new Reference(AgentKind.Turtle, vn, this)
   override def syntax =
     Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "-T--")
 }

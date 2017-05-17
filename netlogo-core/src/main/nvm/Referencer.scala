@@ -8,3 +8,8 @@ trait Referencer extends Command {
   def referenceIndex: Int
   def applyReference(ref: Reference): Command
 }
+
+trait ReferencerReporter extends Reporter {
+  def referenceIndex: Int
+  def applyReference(ref: Reference): Reporter
+}

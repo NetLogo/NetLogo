@@ -285,6 +285,7 @@ R __patchcol _patchcol
 R __patchrow _patchrow
 R __processors etc._processors
 R __random-state etc._randomstate
+R __reference etc._reference
 R __stack-trace etc._stacktrace
 R __symbol etc._symbol
 R __to-string etc._tostring

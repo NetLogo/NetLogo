@@ -203,6 +203,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_range number,list,OTPL,None,10,1,1
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
                      |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
+                     |_reference variable,list,OTPL,None,10,1,1
                      |_remainder number/number,number,OTPL,None,10,2,2
                      |_remove anything/string or list,string or list,OTPL,None,10,2,2
                      |_removeduplicates list,list,OTPL,None,10,1,1

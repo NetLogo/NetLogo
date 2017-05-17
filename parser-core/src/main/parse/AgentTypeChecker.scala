@@ -111,13 +111,22 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       val r = app.reporter
       agentClassString = typeCheck(r, agentClassString)
 
+      val allSyntax = if (r.syntax.isInfix) r.syntax.left +: r.syntax.right else r.syntax.right
+      // NOTE: This technique is not sophisticated enough to correctly agent-type check
+      // reference types when the syntax specifies variadic arguments
+      // - RG 5/19/2017
+      val referenceIndex = allSyntax.indexWhere(tpe => Syntax.compatible(Syntax.ReferenceType, tpe))
+      val nonReferentialArgs =
+        app.args.zipWithIndex
+          .filter { case (arg, i) => i != referenceIndex }
+          .map(_._1)
       val visitor = new AgentTypeCheckerVisitor("OTPL")
       if (r.isInstanceOf[_commandlambda] || r.isInstanceOf[_reporterlambda])
         visitor.visitExpression(app.args.head)
       else if(r.syntax.blockAgentClassString.isDefined)
-        chooseVisitorAndContinue(r.syntax.blockAgentClassString.get, app.args)
+        chooseVisitorAndContinue(r.syntax.blockAgentClassString.get, nonReferentialArgs)
       else
-        super.visitReporterApp(app)
+        nonReferentialArgs.foreach(visitExpression)
 
       r match {
         case (_: _commandlambda | _: _reporterlambda) =>
