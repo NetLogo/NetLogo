@@ -8,9 +8,15 @@ import javafx.scene.layout.GridPane
 import javafx.util.StringConverter
 
 import org.nlogo.core.{ Chooser => CoreChooser, Chooseable, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString }
+import org.nlogo.internalapi.{ CompiledChooser => ApiCompiledChooser }
 import org.nlogo.api.Dump
 
-class ChooserControl(chooser: CoreChooser) extends GridPane {
+import Utils.changeListener
+
+class ChooserControl(compiledChooser: ApiCompiledChooser) extends GridPane {
+  val chooser = compiledChooser.widget
+
+  private var updatingFromModel: Boolean = false
 
   @FXML
   var label: Label = _
@@ -20,7 +26,7 @@ class ChooserControl(chooser: CoreChooser) extends GridPane {
 
   val converter =
     new StringConverter[Chooseable] {
-      def fromString(s: String) = ???
+      def fromString(s: String) = ChooseableString(s)
       def toString(c: Chooseable): String =
         c match {
           case ChooseableBoolean(b) => b.toString
@@ -28,6 +34,12 @@ class ChooserControl(chooser: CoreChooser) extends GridPane {
           case ChooseableString(s)  => s
           case ChooseableList(l)    => Dump.logoObject(l, true, false)
         }
+    }
+
+  protected val updateValueFromUI =
+    changeListener { (c: Chooseable) =>
+      if (! updatingFromModel)
+        compiledChooser.setValue(c)
     }
 
   locally {
@@ -41,6 +53,14 @@ class ChooserControl(chooser: CoreChooser) extends GridPane {
     choice.setConverter(converter)
     choice.getItems.addAll(chooser.choices: _*)
     choice.setValue(chooser.choices(chooser.currentChoice))
+    choice.valueProperty.addListener(updateValueFromUI)
+    compiledChooser.value.onUpdate(updateValueFromModel _)
+  }
+
+  protected def updateValueFromModel(updatedValue: Chooseable): Unit = {
+    updatingFromModel = true
+    choice.setValue(updatedValue)
+    updatingFromModel = false
   }
 }
 

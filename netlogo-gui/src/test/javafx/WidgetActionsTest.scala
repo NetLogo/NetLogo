@@ -9,7 +9,7 @@ import
 
 import
   org.nlogo.{ compile, core, internalapi, job, nvm },
-    core.{ Button, Femto, Slider },
+    core.{ Button, Chooseable, ChooseableDouble, Chooser, Femto, Slider },
     internalapi.{ ModelUpdate, TicksCleared, TicksStarted },
     nvm.{ Command, DummyWorkspace, Procedure },
     compile.{ api, NvmTests },
@@ -141,7 +141,7 @@ class WidgetActionsTest extends FunSuite {
     assert(error != null)
   } }
 
-  test("widget actions handles variable updates") { new Helper {
+  test("widget actions handles variable updates for sliders") { new Helper {
     val m = report1Monitorable[Double](0.0)
     val slider = new CompiledSlider(
       Slider(Some("FOO")), m,
@@ -155,5 +155,16 @@ class WidgetActionsTest extends FunSuite {
     slider.setValue(Double.box(3.0))
     runTasks(2)
     assert(slider.value.currentValue == 3.0)
+  } }
+
+  test("widget actions handles variable updates for choosers") { new Helper {
+    val m = new MappedMonitorable(report1Monitorable[AnyRef](Double.box(1.0)), Chooseable.apply _)
+    val chooser = new CompiledChooser(Chooser(Some("BAR")), m, actions)
+    chooser.modelLoaded()
+    runTasks(3)
+    assert(chooser.value.currentValue == ChooseableDouble(1.0))
+    chooser.setValue(ChooseableDouble(2.0))
+    runTasks(3)
+    assert(chooser.value.currentValue == ChooseableDouble(2.0))
   } }
 }

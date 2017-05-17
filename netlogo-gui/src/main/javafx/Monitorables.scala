@@ -68,6 +68,48 @@ case class CompiledMonitorable[A](
   }
 }
 
+case class MappedMonitorable[A, B](
+  val defaultValue: B,
+  val compilerError: Option[CompilerException],
+  val procedureTag: String,
+  val procedure: Procedure,
+  val compiledSource: String,
+  transform: A => B)(implicit ct: ClassTag[A]) extends Monitorable[B] with ReporterMonitorable {
+
+  def this(c: CompiledMonitorable[A], transform: A => B)(implicit ct: ClassTag[A]) =
+    this(transform(c.defaultValue), c.compilerError, c.procedureTag, c.procedure, c.compiledSource, transform)
+
+  var currentValue: B = defaultValue
+
+  var updateCallback: (B => Unit) = { (b: B) => }
+  var errorCallback: (Exception => Unit) = { (e: Exception) => }
+
+  def onUpdate(callback: B => Unit): Unit = {
+    updateCallback = callback
+  }
+
+  def onError(callback: Exception => Unit): Unit = {
+    errorCallback = callback
+  }
+
+  def update(value: AnyRef): Unit = {
+    value match {
+      case a: A  =>
+        currentValue = transform(a)
+        updateCallback(currentValue)
+      case other =>
+    }
+  }
+
+  override def update(tryValue: Try[AnyRef]): Unit = {
+    tryValue match {
+      case Success(s) => update(s)
+      case Failure(e: Exception) => errorCallback(e)
+      case Failure(e) => throw e
+    }
+  }
+}
+
 case class NonCompiledMonitorable[A](val defaultValue: A) extends Monitorable[A] {
   val currentValue: A = defaultValue
   def onUpdate(callback: A => Unit): Unit = {}

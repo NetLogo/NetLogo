@@ -14,9 +14,10 @@ import org.nlogo.core.{
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.internalapi.{
-  CompiledButton => ApiCompiledButton, CompiledModel,
+  CompiledButton  => ApiCompiledButton, CompiledModel,
+  CompiledChooser => ApiCompiledChooser,
   CompiledMonitor => ApiCompiledMonitor,
-  CompiledSlider => ApiCompiledSlider }
+  CompiledSlider  => ApiCompiledSlider }
 
 object ModelInterfaceBuilder {
   def build(compiledModel: CompiledModel): (InterfaceArea) = {
@@ -41,12 +42,13 @@ object ModelInterfaceBuilder {
           val s = compiledSlider.widget
           slider.relocate(s.left, s.top)
           interfacePane.getChildren.add(slider)
+        case compiledChooser: ApiCompiledChooser =>
+          val chooser = new ChooserControl(compiledChooser)
+          val c = compiledChooser.widget
+          chooser.relocate(c.left, c.top)
+          interfacePane.getChildren.add(chooser)
         case other =>
           other.widget match {
-            case c: CoreChooser =>
-              val chooser = new ChooserControl(c)
-              chooser.relocate(c.left, c.top)
-              interfacePane.getChildren.add(chooser)
             case v: CoreView    =>
               import javafx.scene.paint.Color
               val d = compiledModel.model.view.dimensions

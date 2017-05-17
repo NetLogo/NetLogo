@@ -9,7 +9,7 @@ import org.nlogo.internalapi.{
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.World
 import org.nlogo.internalapi.{ ModelUpdate, Monitorable, MonitorsUpdate, SchedulerWorkspace }
-import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooser => CoreChooser,
+import org.nlogo.core.{ AgentKind, Button => CoreButton, Chooseable, Chooser => CoreChooser,
   CompilerException, InputBox => CoreInputBox, Model, Monitor => CoreMonitor, NumericInput, NumberParser, Program,
   Slider => CoreSlider, StringInput, Switch => CoreSwitch, Widget }
 import org.nlogo.nvm.{ CompilerResults, ConcurrentJob, ExclusiveJob, Procedure, SuspendableJob }
@@ -111,14 +111,22 @@ object CompileAll {
           },
           proc => CompiledMonitor(m, None, tag, proc, source, widgetActions))
         } getOrElse NonCompiledWidget(widget)
+      case c: CoreChooser =>
+        val name = s"__chooser-${c.hashCode}"
+        val default = c.choices(c.currentChoice)
+        val source = c.variable.getOrElse("0")
+        val procSource = decorateMonitorSource(source, name)
+        val monitorable = compileCode(procSource, name).fold({
+          case e: CompilerException =>
+            MappedMonitorable[AnyRef, Chooseable](default, Some(e), "", null, procSource, Chooseable.apply _)
+          case other => throw other
+        },
+        proc => MappedMonitorable[AnyRef, Chooseable](default, None, name, proc, procSource, Chooseable.apply _))
+        new CompiledChooser(c, monitorable, widgetActions)
       case s: CoreSlider =>
-        def decorateSource(body: String, name: String): String = {
-          // I'm not sure that __done is needed here
-          s"to-report $name [] __observercode report (\n$body\n) __done end"
-        }
         def makeCompiledMonitorable(monitorType: String, default: Double, source: String): CompiledMonitorable[Double] = {
           val name = s"__slider-${s.hashCode}-${monitorType}"
-          val procSource = decorateSource(source, name)
+          val procSource = decorateMonitorSource(source, name)
           compileCode(procSource, name).fold({
             case e: CompilerException =>
               CompiledMonitorable[Double](default, Some(e), "", null, procSource)
@@ -144,4 +152,10 @@ object CompileAll {
       case _ => NonCompiledWidget(widget)
     }
   }
+
+  private def decorateMonitorSource(body: String, name: String): String = {
+    // I'm not sure that __done is needed here
+    s"to-report $name [] __observercode report (\n$body\n) __done end"
+  }
+
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.internalapi
 
-import org.nlogo.core.{ Button, CompilerException, Monitor, Slider, Widget }
+import org.nlogo.core.{ Button, Chooseable, Chooser, CompilerException, Monitor, Slider, Widget }
 
 sealed trait CompiledWidget {
   def widget: Widget
@@ -57,8 +57,8 @@ trait CompiledSlider extends CompiledWidget {
 
   /** Monitorable for the value of the slider
    *
-   *  Any thrown when the slider is updated will be propagated through the onError
-   *  callback of the value monitorable.
+   *  Exceptions thrown when the slider is updated will be
+   *  propagated through the onError callback of the `value` monitorable.
    */
   def value: Monitorable[Double]
   def min:   Monitorable[Double]
@@ -70,6 +70,19 @@ trait CompiledSlider extends CompiledWidget {
    * @param update The value to which the slider ought to be updated
    */
   def setValue(update: Double): Unit
+}
+
+trait CompiledChooser extends CompiledWidget {
+  def widget: Chooser
+
+  /** Monitorable for the value of the chooser */
+  def value: Monitorable[Chooseable]
+
+  /** Updates the value of the chooser.
+   *
+   * @param update The value to which the chooser ought to be updated
+   */
+  def setValue(update: Chooseable): Unit
 }
 
 case class NonCompiledWidget(val widget: Widget) extends CompiledWidget {
