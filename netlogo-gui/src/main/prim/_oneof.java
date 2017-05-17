@@ -24,11 +24,11 @@ public final strictfp class _oneof
       return list.get(context.job.random.nextInt(size));
     } else if (obj instanceof AgentSet) {
       AgentSet agents = (AgentSet) obj;
-//      int count = agents.count();
-      if (agents.isEmpty()) {
+      int count = agents.count();
+      if (count == 0) {
         return org.nlogo.core.Nobody$.MODULE$;
       } else {
-        return agents.randomOne(-1, context.job.random);
+        return agents.randomOne(count, context.job.random);
       }
     } else {
       throw new ArgumentTypeException

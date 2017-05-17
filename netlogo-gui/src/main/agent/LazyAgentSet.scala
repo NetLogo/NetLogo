@@ -26,12 +26,13 @@ class LazyAgentSet(printName: String,
 
   def count = {
     var result = 0
-    var iter = iterator
+    val iter = iterator
     while (iter.hasNext) {
       iter.next()
       result += 1
     }
     result
+
   }
 
   def contains(a: api.Agent): Boolean = {
@@ -57,17 +58,13 @@ class LazyAgentSet(printName: String,
     new FilteringShufflerator(agentSet.getArray, rng)
 
   def randomOne(precomputedCount: Int, rng: api.MersenneTwisterFast): Agent =
-    // precomputedCount is wrong?? -> Divison model error
-        force().randomOne(forcedSet.getArray.size, rng)
-//    force().randomOne(precomputedCount, rng)
+    force().randomOne(precomputedCount, rng) // precomputedCount is wrong??
 
   def randomTwo(precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomTwo(forcedSet.getArray.size, rng)
-//    force().randomTwo(precomputedCount, rng)
+    force().randomTwo(precomputedCount, rng)
 
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: api.MersenneTwisterFast): Array[Agent] =
-    force().randomSubsetGeneral(resultSize, forcedSet.getArray.size, rng)
-//    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
+    force().randomSubsetGeneral(resultSize, precomputedCount, rng)
 
   def toLogoList: LogoList = force().toLogoList
 
@@ -121,14 +118,7 @@ class LazyAgentSet(printName: String,
       else {
         //unrolled buffer/mutable buffer.toArray, pre allocate array to count size
         val it = iterator
-        val s = agentSet.getArray.size
-        val threshold = 8
-        val l = new AgentSetBuilder(kind, if (s <= threshold) s else threshold)
-//        if (s > threshold) {
-//          val l = new AgentSetBuilder(kind, threshold)
-//        } else {
-//          val l = new AgentSetBuilder(kind, s)
-//        }
+        val l = new AgentSetBuilder(kind)
         while (it.hasNext) {
           l.add(it.next())
         }

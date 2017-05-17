@@ -284,12 +284,11 @@ class AgentSetTests extends FunSuite {
       assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
       assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
       assertResult(true)(Array(t1, t2).contains(a.randomOne(2, world.mainRNG())))
-      // force only occurs once
-//      t1.die()
-//      assertResult(t2)(a.randomOne(1, world.mainRNG()))
-//      assertResult(t2)(a.randomOne(1, world.mainRNG()))
-//      assertResult(t2)(a.randomOne(1, world.mainRNG()))
-//      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      t1.die()
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
+      assertResult(t2)(a.randomOne(1, world.mainRNG()))
 //      assertThrows[Exception] {
 //        a.randomOne(2, 1)
 //      }
