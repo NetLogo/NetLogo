@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.nlogo.app.ApplicationController">
+<VBox fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.nlogo.app.ApplicationController">
    <children>
       <MenuBar fx:id="menuBar">
         <menus>
@@ -18,6 +18,7 @@
             <Menu mnemonicParsing="false" text="%tabs.run">
                <items>
                   <MenuItem id="open-menu" fx:id="haltItem" mnemonicParsing="false" text="%common.buttons.halt" />
+                  <MenuItem id="open-menu" fx:id="enterKioskMode" mnemonicParsing="false" text="%menu.run.enterKioskMode" />
                </items>
             </Menu>
         </menus>

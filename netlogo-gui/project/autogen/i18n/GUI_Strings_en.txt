@@ -133,6 +133,8 @@ menu.help.introToABM = Introduction to Agent-Based Modeling
 menu.help.donate = Donate
 menu.help.aboutVersion = About {0}…
 
+menu.run.enterKioskMode = Activate Kiosk Mode
+
 tabs.run = Interface
 tabs.run.editButton = Edit
 tabs.run.editButton.tooltip = edit selected interface items

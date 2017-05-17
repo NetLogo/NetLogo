@@ -75,4 +75,8 @@ class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
     getViewCanvas.foreach(_.attachToWorkspace(workspace))
 
   val ticks = speedControl.ticks
+
+  def activateKioskMode(): Unit = {
+    controlContainer.setVisible(false)
+  }
 }

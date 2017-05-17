@@ -12,7 +12,7 @@ import javafx.fxml.FXML
 import javafx.event.ActionEvent
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.{ Alert, Button, ButtonType, MenuBar => JFXMenuBar , MenuItem, TabPane }
-import javafx.scene.layout.{ AnchorPane, Pane }
+import javafx.scene.layout.{ AnchorPane, Pane, VBox }
 import javafx.stage.{ FileChooser, Window }
 
 import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInterface,
@@ -58,7 +58,13 @@ class ApplicationController {
   var haltItem: MenuItem = _
 
   @FXML
+  var enterKioskMode: MenuItem = _
+
+  @FXML
   var menuBar: JFXMenuBar = _
+
+  @FXML
+  var pane: VBox = _
 
   @FXML
   var interfaceTabArea: AnchorPane = _
@@ -76,6 +82,7 @@ class ApplicationController {
   def initialize(): Unit = {
     openFile.setOnAction(handler(openFile _))
     haltItem.setOnAction(handler(halt _))
+    enterKioskMode.setOnAction(handler(activateKioskMode _))
   }
 
   private def openFile(a: ActionEvent): Unit = {
@@ -118,6 +125,16 @@ class ApplicationController {
 
   private def halt(a: ActionEvent): Unit = {
     workspace.scheduledJobThread.halt()
+  }
+
+  private def activateKioskMode(a: ActionEvent): Unit = {
+    // don't activate kiosk mode unless there's a model loaded, why would anyone
+    // want a kiosk of NetLogo with no model?
+    if (interfaceArea != null) {
+      interfaceArea.activateKioskMode()
+      pane.getChildren.remove(menuBar)
+      menuBar.setVisible(false)
+    }
   }
 
   class FakeViewSettings(canvas: Canvas, world: World) extends org.nlogo.api.ViewSettings {
