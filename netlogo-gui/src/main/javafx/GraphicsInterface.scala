@@ -33,7 +33,9 @@ class GraphicsInterface(context: GraphicsContext) extends ApiGraphicsInterface {
     image match {
       case bufferedImage: BufferedImage =>
         val xform = new AffineTransform()
-        xform.setToScale(width / bufferedImage.getWidth, height / bufferedImage.getHeight)
+        xform.setToScale(
+          width.toDouble  / bufferedImage.getWidth.toDouble,
+          height.toDouble / bufferedImage.getHeight.toDouble)
 
         val xformOp = new AffineTransformOp(xform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR)
 

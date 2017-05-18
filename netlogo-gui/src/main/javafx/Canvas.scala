@@ -17,11 +17,13 @@ class Canvas(val view: View)
   import view.dimensions
 
   val canvas =
-    new JFXCanvas(dimensions.width * dimensions.patchSize, dimensions.height * dimensions.patchSize)
+    new JFXCanvas(
+      (dimensions.width * dimensions.patchSize).round.toInt,
+      (dimensions.height * dimensions.patchSize).round.toInt)
 
   locally {
     getChildren.add(canvas)
-    setPrefSize(view.right - view.left, view.bottom - view.top)
+    setPrefSize(canvas.getWidth, canvas.getHeight)
     val gc = getGraphicsContext2D
     gc.setFill(Color.BLACK)
     gc.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
