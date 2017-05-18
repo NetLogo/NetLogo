@@ -9,7 +9,7 @@ import java.util.{ Collections, ArrayList }
 import org.nlogo.core.AgentKind
 import org.nlogo.internalapi.{ JobDone, JobErrored, JobHalted,
   JobScheduler => ApiJobScheduler, ModelUpdate, ModelOperation,
-  MonitorsUpdate, SuspendableJob, UpdateVariable, UpdateSuccess }
+  MonitorsUpdate, SuspendableJob, TicksStarted, UpdateVariable, UpdateSuccess }
 import org.nlogo.nvm.HaltException
 
 import org.scalatest.{ FunSuite, Inside }
@@ -115,17 +115,22 @@ class ScheduledJobThreadTest extends FunSuite {
     var runCount = 0
     var intact = true
     def wasRun = runCount > 0
-    def runFor(steps: Int): Option[SuspendableJob] = {
+    def runFor(steps: Int): Either[ModelUpdate, Option[SuspendableJob]] = {
       runCount += 1
       whileRunning()
-      if (repeat) Some(this)
-      else        None
+      if (repeat) Right(Some(this))
+      else        Right(None)
     }
     def haltOnNextRun(haltAll: Boolean, andAlso: () => Unit = whileRunning): Unit = {
       whileRunning = { () =>
         andAlso()
         throw new HaltException(haltAll)
       }
+    }
+    var tag: String = ""
+    def tag(t: String) = {
+      tag = t
+      this
     }
   }
 
@@ -135,6 +140,10 @@ class ScheduledJobThreadTest extends FunSuite {
     val DummyOneRunJob = new DummyJob()
     val DummyKeepRunningJob = new DummyJob().keepRepeating()
     val DummyErrorJob = new DummyJob().onNextRun(() => throw new RuntimeException("error!"))
+    val DummyUpdateJob = new DummyJob() {
+      override def runFor(steps: Int): Either[ModelUpdate, Option[SuspendableJob]] =
+        Left(TicksStarted)
+    }
     val resultJob = new DummyJob().returning(Double.box(123))
     def scheduleOperation(op: ModelOperation): String = {
       val createdTask = subject.createOperation(op)
@@ -436,5 +445,12 @@ class ScheduledJobThreadTest extends FunSuite {
     elapse(101)
     runTasks(1)
     assert(subject.queue.isEmpty)
+  } }
+
+  test("after a job asks for an update to be sent, the update is sent and the job is removed") { new Helper {
+    val jobTag = scheduleJob(DummyUpdateJob)
+    runTasks(2)
+    assert(subject.queue.isEmpty)
+    assertUpdate { case TicksStarted => }
   } }
 }

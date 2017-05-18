@@ -146,8 +146,13 @@ trait JobScheduler extends ApiJobScheduler {
 
   def createJob(job: SuspendableJob): ScheduledTask = createJob(job, 0)
 
-  def createJob(job: SuspendableJob, interval: Long): ScheduledTask =
-    AddJob(job, generateJobTag, interval, currentTime)
+  def createJob(job: SuspendableJob, interval: Long): ScheduledTask = {
+    if (job.tag == "") {
+      val tag = generateJobTag
+      AddJob(job.tag(tag), tag, interval, currentTime)
+    } else
+      AddJob(job, job.tag, interval, currentTime)
+  }
 
   def createOperation(op: ModelOperation): ScheduledTask =
     ScheduleOperation(op, generateJobTag, currentTime)
@@ -266,12 +271,13 @@ trait JobScheduler extends ApiJobScheduler {
   }
 
   private def runJob(job: SuspendableJob, tag: String, interval: Long): Unit =
-    runTask[Option[SuspendableJob]](job.runFor(StepsPerRun), tag, {
-      case Success(None)                => jobCompleted(tag)
-      case Success(Some(j))             =>
+    runTask[Either[ModelUpdate, Option[SuspendableJob]]](job.runFor(StepsPerRun), tag, {
+      case Success(Right(None))    => jobCompleted(tag)
+      case Success(Right(Some(j))) =>
         val reRun = RunJob(j, tag, interval, currentTime)
         if (interval == 0)  queue.add(reRun)
         else                suspendedJobs += JobSuspension(interval, reRun)
+      case Success(Left(update)) => updates.add(update)
     })
 
   private def runArbitraryAction(op: () => Unit, tag: String): Unit =

@@ -7,6 +7,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.GUIWorkspace
+import org.nlogo.internalapi.ShowMessage
 
 class _usermessage extends Command {
 
@@ -28,10 +29,14 @@ class _usermessage extends Command {
             }}).booleanValue
         if(canceled)
           throw new org.nlogo.nvm.HaltException(true)
+        context.ip = next
+      case _: org.nlogo.internalapi.WritableGUIWorkspace =>
+        // this is here to differentiate JavaFX from Swing
+        context.job.displayUI(ShowMessage(message), context, next)
       case _ =>
         // if not in GUI, just do nothing
+        context.ip = next
     }
-    context.ip = next
   }
 
 }

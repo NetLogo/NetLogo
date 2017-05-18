@@ -86,4 +86,6 @@ public abstract strictfp class Job {
     return buf.toString();
   }
 
+  public void displayUI(org.nlogo.internalapi.UIDisplay display, Context ctx, int continueIp) { }
+
 }

@@ -42,3 +42,6 @@ case object TicksCleared extends ModelUpdate {
 case class WorldUpdate(world: World, time: Long) extends ModelUpdate {
   def tag = "~world.update"
 }
+case class RequestUIAction(request: UIRequest) extends ModelUpdate {
+  def tag = "~ui.request"
+}

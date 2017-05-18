@@ -20,7 +20,8 @@ import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInte
     Utils.handler
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
-import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, SchedulerWorkspace, WorldUpdate, WritableGUIWorkspace }
+import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, RequestUIAction,
+  SchedulerWorkspace, ShowMessage, UIRequest, WorldUpdate, WritableGUIWorkspace }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
@@ -161,6 +162,21 @@ class ApplicationController {
           renderer.paint(graphicsInterface, settings)
         }
         interfaceArea.ticks.setValue(world.ticks)
+      case RequestUIAction(UIRequest(display, continue)) =>
+        display match {
+          case ShowMessage(message) =>
+            val alert = new Alert(Alert.AlertType.INFORMATION, message,
+              ButtonType.OK,
+              new ButtonType(I18N.gui.get("common.buttons.halt")))
+            alert.setTitle("User Message")
+            alert.setHeaderText("")
+            val res = alert.showAndWait()
+            if (! res.isPresent || (res.get == ButtonType.OK)) {
+              val jobThread = workspace.scheduledJobThread
+              val t = jobThread.createJob(continue)
+              jobThread.queueTask(t)
+            }
+        }
       case update if update != null =>
         Option(compiledModel).foreach { model =>
           model.interfaceControl.notifyUpdate(update)

@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{ AgentIterator, AgentSet }
-import org.nlogo.internalapi.JobScheduler
+import org.nlogo.internalapi.{ JobScheduler, ModelUpdate, RequestUIAction, UIDisplay, UIRequest }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast }
 
 class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
@@ -27,7 +27,7 @@ class DummyJobOwner(val random: MersenneTwisterFast) extends JobOwner {
 // This should be fixed before public release.
 class SuspendableJob(
   suspendedState: Option[(Context, AgentIterator)], parentActivation: Activation, forever: Boolean, agentset: AgentSet, topLevelProcedure: Procedure,
-  address: Int, parentContext: Context, random: MersenneTwisterFast)
+  address: Int, parentContext: Context, random: MersenneTwisterFast, jobTag: String)
   extends Job(new DummyJobOwner(random), agentset, topLevelProcedure, address, parentContext, random)
   with org.nlogo.internalapi.SuspendableJob {
 
@@ -40,7 +40,7 @@ class SuspendableJob(
         new Activation(topLevelProcedure, null, address)
       else
         parentContext.activation
-    }, forever, agentset, topLevelProcedure, address, parentContext, random)
+    }, forever, agentset, topLevelProcedure, address, parentContext, random, "")
 
   def this(agentset: AgentSet, topLevelProcedure: Procedure,
     address: Int, parentContext: Context, random: MersenneTwisterFast) =
@@ -63,22 +63,23 @@ class SuspendableJob(
   // we are not suspendable. we run to the end and that's it
   override def step() { throw new UnsupportedOperationException() }
 
-  def runFor(steps: Int): Option[SuspendableJob] = {
+  def runFor(steps: Int): Either[ModelUpdate, Option[SuspendableJob]] = {
     state = Job.RUNNING
     // Note that this relies on shufflerators making a copy, which might change in a future
     // implementation. The cases where it matters are those where something happens that changes the
     // agentset as we're iterating through it, for example if we're iterating through all turtles
     // and one of them hatches; the hatched turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
-    (suspendedState match {
+    val res = (suspendedState match {
       case Some((ctx, agents)) => runForSteps(ctx, agents, steps)
       case None =>
         val it = agentset.shufflerator(random)
         runForSteps(generateContext(it), it, steps)
-    }) match {
+    })
+    res.right.map {
       case Left(s: SuspendableJob) => Some(s)
       case Right(false) if forever => Some(copy(None))
-      case _                       =>
+      case Right(_)                       =>
         state = Job.DONE
         None
     }
@@ -88,15 +89,25 @@ class SuspendableJob(
   private def runForSteps(
     ctx:         Context,
     agents:      AgentIterator,
-    targetSteps: Int): Either[SuspendableJob, Boolean] = {
+    targetSteps: Int): Either[ModelUpdate, Either[SuspendableJob, Boolean]] = {
     ctx.runFor(targetSteps) match {
-      case Left(continueContext) => Left(copy(Some((ctx, agents))))
+      case Left(continueContext) => Right(Left(copy(Some((ctx, agents)))))
       case Right(completedSteps) =>
-        if (ctx.activation == parentActivation)
-          ctx.activation.binding = ctx.activation.binding.exitScope()
-        if (agents.hasNext)
-          runForSteps(generateContext(agents), agents, targetSteps - completedSteps)
-        else Right(ctx.stopping)
+        if (uiDisplayParameters.nonEmpty) {
+          val Some((display, continueIp)) = uiDisplayParameters
+          val newContext = ctx.copy
+          newContext.finished = false
+          newContext.ip = continueIp
+          // we pass `agents`, the active agent is captured in the context
+          val newJob = copy(Some((newContext, agents)))
+          Left(RequestUIAction(UIRequest(display, newJob)))
+        } else {
+          if (ctx.activation == parentActivation)
+            ctx.activation.binding = ctx.activation.binding.exitScope()
+          if (agents.hasNext)
+            runForSteps(generateContext(agents), agents, targetSteps - completedSteps)
+          else Right(Right(ctx.stopping))
+        }
     }
   }
 
@@ -106,8 +117,12 @@ class SuspendableJob(
     ctx
   }
 
-  def copy(suspendedState: Option[(Context, AgentIterator)]): SuspendableJob =
-    new SuspendableJob(suspendedState, parentActivation, forever, agentset, topLevelProcedure, address, parentContext, random)
+  def copy(suspendedState: Option[(Context, AgentIterator)] = suspendedState, jobTag: String = jobTag): SuspendableJob =
+    new SuspendableJob(suspendedState, parentActivation, forever, agentset, topLevelProcedure, address, parentContext, random, jobTag)
+
+  def tag(t: String): SuspendableJob =
+    copy(jobTag = t)
+  def tag: String = jobTag
 
   // used by Evaluator.MyThunk
   def runResult() =
@@ -116,4 +131,11 @@ class SuspendableJob(
 
   override def userHasHalted(): Boolean =
     Thread.currentThread.isInterrupted && scheduler.haltRequested
+
+  var uiDisplayParameters = Option.empty[(UIDisplay, Int)]
+
+  override def displayUI(display: UIDisplay, ctx: Context, continueIp: Int): Unit = {
+    uiDisplayParameters = Some((display, continueIp))
+    ctx.finished = true
+  }
 }
