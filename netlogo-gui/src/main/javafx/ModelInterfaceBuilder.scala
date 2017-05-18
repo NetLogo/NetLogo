@@ -24,44 +24,39 @@ object ModelInterfaceBuilder {
     val model = compiledModel.model
     val speedControl  = new BasicSpeedControl()
     val interfaceArea = new InterfaceArea(speedControl)
-    val interfacePane = interfaceArea.interfacePane
     val widgetsMap =
       compiledModel.compiledWidgets.foreach {
         case compiledButton: ApiCompiledButton =>
           val button = new ButtonControl(compiledButton, speedControl.foreverInterval)
           val b = compiledButton.widget
           button.relocate(b.left, b.top)
-          interfacePane.getChildren.add(button)
+          interfaceArea.addControl(button)
         case compiledMonitor: ApiCompiledMonitor =>
           val monitor = new MonitorControl(compiledMonitor)
           val m = compiledMonitor.widget
           monitor.relocate(m.left, m.top)
-          interfacePane.getChildren.add(monitor)
+          interfaceArea.addControl(monitor)
         case compiledSlider: ApiCompiledSlider =>
           val slider = new SliderControl(compiledSlider)
           val s = compiledSlider.widget
           slider.relocate(s.left, s.top)
-          interfacePane.getChildren.add(slider)
+          interfaceArea.addControl(slider)
         case compiledChooser: ApiCompiledChooser =>
           val chooser = new ChooserControl(compiledChooser)
           val c = compiledChooser.widget
           chooser.relocate(c.left, c.top)
-          interfacePane.getChildren.add(chooser)
+          interfaceArea.addControl(chooser)
         case other =>
           other.widget match {
             case v: CoreView    =>
-              import javafx.scene.paint.Color
               val d = compiledModel.model.view.dimensions
               val c = new Canvas(model.view)
               c.relocate(v.left, v.top)
-              interfacePane.getChildren.add(c)
-              val gc = c.getGraphicsContext2D
-              gc.setFill(Color.BLACK)
-              gc.fillRect(0, 0, c.getWidth, c.getHeight)
+              interfaceArea.addControl(c)
             case coreText: CoreTextBox =>
               val t = new TextBox(coreText)
               t.relocate(coreText.left, coreText.top)
-              interfacePane.getChildren.add(t)
+              interfaceArea.addControl(t)
             case _ =>
           }
       }

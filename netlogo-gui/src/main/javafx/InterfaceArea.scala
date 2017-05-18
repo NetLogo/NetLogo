@@ -7,8 +7,8 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.fxml.{ FXML, FXMLLoader }
-import javafx.scene.control.ToggleButton
-import javafx.scene.layout.{ HBox, Pane, StackPane, VBox }
+import javafx.scene.control.{ ScrollPane, ToggleButton }
+import javafx.scene.layout.{ HBox, Pane, Region, StackPane, VBox }
 
 import java.lang.{ Boolean => JBoolean }
 
@@ -29,7 +29,9 @@ class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
   var controlsToggle: ToggleButton = _
 
   @FXML
-  var interfacePane: Pane = _
+  var scrollPane: ScrollPane = _
+
+  var interfacePane: Pane = new Pane()
 
   val controlsShowing = new SimpleBooleanProperty(false)
 
@@ -62,9 +64,14 @@ class InterfaceArea(val speedControl: BasicSpeedControl) extends StackPane {
         controlPane.getChildren.remove(speedControl)
       }
     })
+    scrollPane.setContent(interfacePane)
   }
 
   controlContainer.opacityProperty.bind(Bindings.when(controlsShowing).`then`(1).otherwise(0.75))
+
+  def addControl(region: Region): Unit = {
+    interfacePane.getChildren.add(region)
+  }
 
   def getViewCanvas: Option[Canvas] =
     interfacePane.getChildren().asScala.collect {

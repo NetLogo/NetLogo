@@ -157,7 +157,7 @@ class ApplicationController {
         interfaceArea.getViewCanvas.foreach { c =>
           val graphicsInterface = new GraphicsInterface(c.getGraphicsContext2D)
           val renderer = new org.nlogo.render.Renderer(world)
-          val settings = new FakeViewSettings(c, world)
+          val settings = new FakeViewSettings(c.canvas, world)
           renderer.paint(graphicsInterface, settings)
         }
         interfaceArea.ticks.setValue(world.ticks)

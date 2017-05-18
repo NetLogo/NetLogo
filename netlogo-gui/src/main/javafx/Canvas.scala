@@ -5,19 +5,36 @@ package org.nlogo.javafx
 import javafx.event.EventHandler
 import javafx.scene.canvas.{ Canvas => JFXCanvas }
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.Pane
+import javafx.scene.paint.Color
 
 import org.nlogo.core.View
 import org.nlogo.internalapi.WritableGUIWorkspace
 
 class Canvas(val view: View)
-  extends JFXCanvas(view.dimensions.width * view.dimensions.patchSize, view.dimensions.height * view.dimensions.patchSize) {
+  extends Pane {
+
+  import view.dimensions
+
+  val canvas =
+    new JFXCanvas(dimensions.width * dimensions.patchSize, dimensions.height * dimensions.patchSize)
+
+  locally {
+    getChildren.add(canvas)
+    setPrefSize(view.right - view.left, view.bottom - view.top)
+    val gc = getGraphicsContext2D
+    gc.setFill(Color.BLACK)
+    gc.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
+  }
 
   def attachToWorkspace(workspace: WritableGUIWorkspace): Unit = {
-    addEventFilter(MouseEvent.ANY, new ViewMouseHandler(view, this, workspace))
+    addEventFilter(MouseEvent.ANY, new ViewMouseHandler(view, canvas, workspace))
   }
+
+  def getGraphicsContext2D = canvas.getGraphicsContext2D
 }
 
-class ViewMouseHandler(view: View, canvas: Canvas, workspace: WritableGUIWorkspace) extends EventHandler[MouseEvent] {
+class ViewMouseHandler(view: View, canvas: JFXCanvas, workspace: WritableGUIWorkspace) extends EventHandler[MouseEvent] {
   import view.dimensions
 
   // TODO: This doesn't handle altered world perspectives
