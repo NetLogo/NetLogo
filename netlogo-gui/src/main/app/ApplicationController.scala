@@ -85,6 +85,7 @@ class ApplicationController {
     interfaceTabArea.getChildren.add(_interfaceArea)
     _interfaceArea.registerMouseEventSink(workspace)
     _interfaceArea.speedControl.foreverInterval
+    workspace.scheduledJobThread.setRunInterval(_interfaceArea.speedControl.foreverInterval.get.toLong)
     _interfaceArea.speedControl.foreverInterval.addListener(speedListener)
   }
 

@@ -9,6 +9,7 @@ object Running {
     javaOptions in run ++= Seq(
       "-XX:-OmitStackTraceInFastThrow",  // issue #104
       "-Xmx1024m",
+      "-Dnetlogo.run.speed.default=40",
       "-Dfile.encoding=UTF-8",
       "-Dapple.awt.graphics.UseQuartz=true") ++
     (if(System.getProperty("os.name").startsWith("Mac"))

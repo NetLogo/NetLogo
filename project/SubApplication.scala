@@ -36,7 +36,7 @@ object NetLogoCoreApp extends SubApplication {
 object NetLogoJavaFXApp extends SubApplication {
   override def name          = "NetLogo Multitouch"
   override def jarName       = "NetLogo"
-  override def jvmOptions    = Seq()
+  override def jvmOptions    = Seq("-Dnetlogo.run.speed.default=40")
   override def jvmArguments  = Seq()
   override def mainClass     = "org.nlogo.app.JavaFXApp"
   override def iconName      = "Multitouch"

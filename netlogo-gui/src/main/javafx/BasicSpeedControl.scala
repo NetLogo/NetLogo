@@ -18,7 +18,7 @@ import Utils.changeListener
 class BasicSpeedControl extends GridPane {
   val HalfStepCount = 5
   val DelayIntervalPerPosition =
-    FXCollections.observableIntegerArray(1000, 500, 200, 50, 10, 0)
+    FXCollections.observableIntegerArray(1000, 500, 200, 50, 25, 0)
   val MaxFPSPerPosition = FXCollections.observableIntegerArray(1000, 100, 25, 20, 10, 5)
 
   // The SpeedSlider value property ranges between 0 and 100 (it's currently set to snap to intervals of 10,
@@ -78,5 +78,7 @@ class BasicSpeedControl extends GridPane {
     updatesPerSecond.bind(
       Bindings.integerValueAt(MaxFPSPerPosition,
         Bindings.max(0, speedSlider.valueProperty.divide(10).subtract(5))))
+
+    speedSlider.setValue(System.getProperty("netlogo.run.speed.default", "50").toInt)
   }
 }
