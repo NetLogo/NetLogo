@@ -14,8 +14,7 @@ import java.lang.{ Double => JDouble }
 import org.nlogo.core.{ Button => CoreButton }
 import org.nlogo.internalapi.{ CompiledButton => ApiCompiledButton }
 
-class ButtonControl(compiledButton: ApiCompiledButton, foreverInterval: DoubleProperty)
-  extends StackPane {
+class ButtonControl(compiledButton: ApiCompiledButton) extends StackPane {
 
   @FXML
   var button: ButtonBase = _
@@ -29,7 +28,7 @@ class ButtonControl(compiledButton: ApiCompiledButton, foreverInterval: DoublePr
 
   val triggerStart = new EventHandler[ActionEvent] {
     def handle(e: ActionEvent): Unit = {
-      compiledButton.start(foreverInterval.longValue)
+      compiledButton.start()
     }
   }
 
@@ -38,8 +37,6 @@ class ButtonControl(compiledButton: ApiCompiledButton, foreverInterval: DoublePr
       compiledButton.stop()
     }
   }
-
-  var requeueAtInterval = Option.empty[Long]
 
   locally {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource(
@@ -60,25 +57,12 @@ class ButtonControl(compiledButton: ApiCompiledButton, foreverInterval: DoublePr
     }
     compiledButton.isRunning.onUpdate(runningChanged _)
     compiledButton.isRunning.onError(runningErrored _)
-    foreverInterval.addListener(new ChangeListener[Number] {
-      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-        if (compiledButton.isRunning.currentValue) {
-          requeueAtInterval = Some(newValue.longValue)
-          compiledButton.stop()
-        }
-      }
-    })
   }
 
   def runningChanged(isRunning: Boolean) = {
-    if (! isRunning && requeueAtInterval.nonEmpty) {
-      compiledButton.start(requeueAtInterval.get)
-      requeueAtInterval = None
-    } else {
-      activeProperty.set(isRunning)
-      if (! isRunning)
-        popOut()
-    }
+    activeProperty.set(isRunning)
+    if (! isRunning)
+      popOut()
   }
 
   def popOut(): Unit = {

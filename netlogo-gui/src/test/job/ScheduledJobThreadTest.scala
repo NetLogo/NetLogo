@@ -60,7 +60,7 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts scheduled operation job ahead of adding a job") {
-    assertSortedOrder(StopJob("a", 1), AddJob(dummyJob, "abc", 0, 0))
+    assertSortedOrder(StopJob("a", 1), AddJob(dummyJob, "abc", 0))
   }
 
   test("job ordering puts the oldest job stop first"){
@@ -68,22 +68,22 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts the oldest add job first"){
-    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), AddJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0), AddJob(dummyJob, "abc", 1))
   }
 
   test("job ordering ranks adding a job and adding a monitor by time"){
-    assertSortedOrder(AddMonitor(dummyJob, "abc", 0), AddJob(dummyJob, "abc", 0, 1))
-    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), AddMonitor(dummyJob, "abc", 1))
+    assertSortedOrder(AddMonitor(dummyJob, "abc", 0), AddJob(dummyJob, "abc", 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0), AddMonitor(dummyJob, "abc", 1))
   }
 
   test("job ordering puts run job behind adding a job"){
-    assertSortedOrder(AddJob(dummyJob, "abc", 0, 0), RunJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(AddJob(dummyJob, "abc", 0), RunJob(dummyJob, "abc", 1))
   }
 
   // NOTE: if the job thread is ever expanded to include secondary or intermittent
   // jobs, this ordering should be tweaked
   test("job ordering puts the oldest run job first"){
-    assertSortedOrder(RunJob(dummyJob, "abc", 0, 0), RunJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(RunJob(dummyJob, "abc", 0), RunJob(dummyJob, "abc", 1))
   }
 
   test("job ordering puts a clear all ahead of an operation") {
@@ -91,11 +91,11 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts an old monitor update ahead of RunJob") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 1))
   }
 
   test("job ordering puts an old job ahead of monitor updates") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 0, 1))
+    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 1))
   }
 
   class DummyJob extends SuspendableJob {
@@ -155,12 +155,25 @@ class ScheduledJobThreadTest extends FunSuite {
       subject.queueTask(createdTask)
       createdTask.tag
     }
-    def scheduleJob(j: SuspendableJob): String = scheduleJob(j, 0)
-    def scheduleJob(j: SuspendableJob, interval: Long): String = {
-      val createdTask = subject.createJob(j, interval)
+    def scheduleJob(j: SuspendableJob): String = {
+      val createdTask = subject.createJob(j)
       subject.queueTask(createdTask)
       createdTask.tag
     }
+
+    def scheduleJob(j: SuspendableJob, interval: Long): String = {
+      setInterval(interval)
+      val createdTask = subject.createJob(j)
+      subject.queueTask(createdTask)
+      createdTask.tag
+    }
+
+    def setInterval(interval: Long): Unit = {
+      subject.setRunInterval(interval)
+      runTasks(1)
+      subject.updates.poll
+    }
+
     def assertUpdate[U](pf: PartialFunction[ModelUpdate, U]): U = {
       assert(! subject.updates.isEmpty)
       inside(subject.updates.peek)(pf)
@@ -185,12 +198,7 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("adding a job schedules the job to be run") { new Helper {
     val jobTag = scheduleJob(DummyOneRunJob)
-    inside(firstTask) { case AddJob(_, t, _, time) => assert(t == jobTag) }
-  } }
-
-  test("jobs can be scheduled with a delay interval between them") { new Helper {
-    val jobTag = scheduleJob(DummyKeepRunningJob, 100)
-    inside(firstTask) { case AddJob(_, t, delay, _) => assert(delay == 100) }
+    inside(firstTask) { case AddJob(_, t, time) => assert(t == jobTag) }
   } }
 
   test("scheduling an operation schedules it for run") { new Helper {
@@ -206,7 +214,7 @@ class ScheduledJobThreadTest extends FunSuite {
   test("running a job addition causes a scheduled job to be added") { new Helper {
     val jobTag = scheduleJob(DummyOneRunJob)
     runTasks(1)
-    inside(firstTask) { case RunJob(j, t, _, time) =>
+    inside(firstTask) { case RunJob(j, t, time) =>
       assert(j == DummyOneRunJob)
       assert(t == jobTag)
     }
@@ -223,7 +231,7 @@ class ScheduledJobThreadTest extends FunSuite {
     val tag = scheduleJob(DummyKeepRunningJob)
     runTasks(2)
     assert(! subject.queue.isEmpty)
-    inside(subject.queue.peek) { case RunJob(job, t, _, _) =>
+    inside(subject.queue.peek) { case RunJob(job, t, _) =>
       assert(job == DummyKeepRunningJob)
       assert(t == tag)
     }
@@ -318,7 +326,8 @@ class ScheduledJobThreadTest extends FunSuite {
   } }
 
   test("can pause between running a job for an interval") { new Helper {
-    scheduleJob(DummyKeepRunningJob, 100)
+    setInterval(100)
+    scheduleJob(DummyKeepRunningJob)
     runTasks(2)
     assert(subject.queue.isEmpty)
     elapse(50)
@@ -335,7 +344,8 @@ class ScheduledJobThreadTest extends FunSuite {
   } }
 
   test("jobs can be canceled while suspended") { new Helper {
-    val jobTag = scheduleJob(DummyKeepRunningJob, 100)
+    setInterval(100)
+    val jobTag = scheduleJob(DummyKeepRunningJob)
     runTasks(2)
     assert(subject.queue.isEmpty)
     subject.stopJob(jobTag)
@@ -347,7 +357,7 @@ class ScheduledJobThreadTest extends FunSuite {
   } }
 
   test("when a job throws a HaltException, sends message for that job") { new Helper {
-    val jobTag = scheduleJob(DummyKeepRunningJob, 0)
+    val jobTag = scheduleJob(DummyKeepRunningJob)
     runTasks(2)
     DummyKeepRunningJob.haltOnNextRun(true)
     runTasks(1)
@@ -356,8 +366,8 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("when a job throws a HaltException without haltAll, only that job is cancelled") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(DummyKeepRunningJob, 0)
-    val tag2 = scheduleJob(haltingJob, 0)
+    val tag1 = scheduleJob(DummyKeepRunningJob)
+    val tag2 = scheduleJob(haltingJob)
     runTasks(4)
     haltingJob.haltOnNextRun(false)
     runTasks(2)
@@ -367,8 +377,8 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("when a job throws a HaltException with haltAll, other active jobs are cleared") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(DummyKeepRunningJob, 0)
-    val tag2 = scheduleJob(haltingJob, 0)
+    val tag1 = scheduleJob(DummyKeepRunningJob)
+    val tag2 = scheduleJob(haltingJob)
     runTasks(4)
     haltingJob.haltOnNextRun(true)
     runTasks(2)
@@ -377,17 +387,18 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("when a job throws a HaltException with haltAll, suspended jobs are cleared") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(DummyKeepRunningJob, 100)
-    val tag2 = scheduleJob(haltingJob, 0)
-    runTasks(4)
+    setInterval(100)
+    val tag1 = scheduleJob(DummyKeepRunningJob)
+    runTasks(2)
+    val tag2 = scheduleJob(haltingJob)
     haltingJob.haltOnNextRun(true)
-    runTasks(1)
+    runTasks(3)
     assertHasHalted(tag2, tag1)
   } }
 
   test("when a job throws a HaltException with haltAll, monitors are cleared") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(haltingJob, 0)
+    val tag1 = scheduleJob(haltingJob)
     subject.registerMonitor("abc", resultJob)
     runTasks(4)
     haltingJob.haltOnNextRun(true)
@@ -400,17 +411,17 @@ class ScheduledJobThreadTest extends FunSuite {
 
   test("when a job throws a HaltException, pending jobs are halted") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(haltingJob, 0)
+    val tag1 = scheduleJob(haltingJob)
     runTasks(1)
     var tag2 = ""
-    haltingJob.haltOnNextRun(true, { () => tag2 = scheduleJob(DummyKeepRunningJob, 0) })
+    haltingJob.haltOnNextRun(true, { () => tag2 = scheduleJob(DummyKeepRunningJob) })
     runTasks(1)
     assertHasHalted(tag1, tag2)
   } }
 
   test("after halt clears jobs, resets haltRequested to false") { new Helper {
     val haltingJob = new DummyJob().keepRepeating()
-    val tag1 = scheduleJob(haltingJob, 0)
+    val tag1 = scheduleJob(haltingJob)
     runTasks(1)
     subject.halt()
     haltingJob.haltOnNextRun(true)
@@ -436,8 +447,9 @@ class ScheduledJobThreadTest extends FunSuite {
   } }
 
   test("supports an operation to clear all jobs and pending jobs") { new Helper {
+    setInterval(100)
     subject.registerMonitor("abc", resultJob)
-    scheduleJob(DummyKeepRunningJob, 100)
+    scheduleJob(DummyKeepRunningJob)
     runTasks(4)
     subject.clearJobsAndMonitors()
     runTasks(2)

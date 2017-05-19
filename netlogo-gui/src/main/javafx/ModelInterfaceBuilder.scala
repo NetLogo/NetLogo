@@ -27,7 +27,7 @@ object ModelInterfaceBuilder {
     val widgetsMap =
       compiledModel.compiledWidgets.foreach {
         case compiledButton: ApiCompiledButton =>
-          val button = new ButtonControl(compiledButton, speedControl.foreverInterval)
+          val button = new ButtonControl(compiledButton)
           val b = compiledButton.widget
           button.relocate(b.left, b.top)
           interfaceArea.addControl(button)

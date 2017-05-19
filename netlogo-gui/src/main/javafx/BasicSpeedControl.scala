@@ -16,9 +16,9 @@ import org.nlogo.core.I18N
 import Utils.changeListener
 
 class BasicSpeedControl extends GridPane {
-  val SecondsDelayWhenSpeedAtZero = 1
-  val MillisPerSecond = 1000
   val HalfStepCount = 5
+  val DelayIntervalPerPosition =
+    FXCollections.observableIntegerArray(1000, 500, 200, 50, 10, 0)
   val MaxFPSPerPosition = FXCollections.observableIntegerArray(1000, 100, 25, 20, 10, 5)
 
   // The SpeedSlider value property ranges between 0 and 100 (it's currently set to snap to intervals of 10,
@@ -71,14 +71,9 @@ class BasicSpeedControl extends GridPane {
     slower.visibleProperty.bind(Bindings.lessThanOrEqual(speedSlider.valueProperty, 30))
     faster.visibleProperty.bind(Bindings.greaterThanOrEqual(speedSlider.valueProperty, 70))
 
-    speedSlider.valueProperty.addListener(changeListener { (newValue: Number) =>
-      if (! speedSlider.isValueChanging) {
-        val delayInMillis = SecondsDelayWhenSpeedAtZero * MillisPerSecond
-        foreverInterval.set(
-          0d max (delayInMillis -
-            (delayInMillis * newValue.doubleValue / (HalfStepCount * 10))))
-      }
-    })
+    foreverInterval.bind(
+      Bindings.integerValueAt(DelayIntervalPerPosition,
+        Bindings.min(5, speedSlider.valueProperty.divide(10))))
 
     updatesPerSecond.bind(
       Bindings.integerValueAt(MaxFPSPerPosition,

@@ -34,10 +34,10 @@ object ScheduledJobThread {
   //    to hold additional information about the job including things
   //    like "how long since it was run last" and "how long is it estimated to run for"
   //    that isn't available when adding the job. RG 3/28/17
-  case class AddJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledTask {
+  case class AddJob(job: SuspendableJob, tag: String, submissionTime: Long) extends ScheduledTask {
     val stoppable = true
   }
-  case class RunJob(job: SuspendableJob, tag: String, interval: Long, submissionTime: Long) extends ScheduledTask {
+  case class RunJob(job: SuspendableJob, tag: String, submissionTime: Long) extends ScheduledTask {
     val stoppable = job.intact
   }
   case class StopJob(cancelTag: String, submissionTime: Long)                               extends ScheduledTask {
@@ -78,9 +78,9 @@ object ScheduledJobThread {
         case ScheduleOperation(_, _, _)       => 1
         case ScheduleArbitraryAction(_, _, _) => 1
         case StopJob(_, _)                    => 2
-        case AddJob(_, _, _, _)               => 3
+        case AddJob(_, _, _)                  => 3
         case AddMonitor(_, _, _)              => 3
-        case RunJob(_, _, _, _)               => 4
+        case RunJob(_, _, _)                  => 4
         case RunMonitors(_, _)                => 4
       }
     }
@@ -129,6 +129,11 @@ trait JobScheduler extends ApiJobScheduler {
   // It is only read from the job thread, but it written from any thread.
   @volatile var haltRequested: Boolean = false
 
+  // foreverInterval gives the interval (in milliseconds) that forever buttons
+  // should be paused between being re-run. This variable should only be set
+  // on the job thread, the `setRunInterval` method queues an action to set it.
+  private var foreverInterval: Long = 0
+
   // NOTE: These are *not* volatile because it should only ever be accessed on the
   // background thread. Do *NOT* modify these from any other thread.
   //
@@ -144,14 +149,12 @@ trait JobScheduler extends ApiJobScheduler {
 
   private def generateJobTag = UUID.randomUUID.toString
 
-  def createJob(job: SuspendableJob): ScheduledTask = createJob(job, 0)
-
-  def createJob(job: SuspendableJob, interval: Long): ScheduledTask = {
+  def createJob(job: SuspendableJob): ScheduledTask = {
     if (job.tag == "") {
       val tag = generateJobTag
-      AddJob(job.tag(tag), tag, interval, currentTime)
+      AddJob(job.tag(tag), tag, currentTime)
     } else
-      AddJob(job, job.tag, interval, currentTime)
+      AddJob(job, job.tag, currentTime)
   }
 
   def createOperation(op: ModelOperation): ScheduledTask =
@@ -159,6 +162,9 @@ trait JobScheduler extends ApiJobScheduler {
 
   def createOperation(op: () => Unit): ScheduledTask =
     ScheduleArbitraryAction(op, generateJobTag, currentTime)
+
+  def setRunInterval(l: Long): Unit =
+    queueTask(ScheduleArbitraryAction(() => foreverInterval = l, generateJobTag, currentTime))
 
   def queueTask(a: Task): Unit = { queue.add(a) }
 
@@ -197,12 +203,12 @@ trait JobScheduler extends ApiJobScheduler {
   def processTask(t: ScheduledTask): Unit = {
     t match {
       case ClearAll(_) => clearAll()
-      case RunJob(job, tag, interval, _) => runJob(job, tag, interval)
+      case RunJob(job, tag, _) => runJob(job, tag)
       case ScheduleArbitraryAction(op, tag, _) => runArbitraryAction(op, tag)
       case ScheduleOperation(op, tag, _) => runOperation(op)
-      case AddJob(job, tag, interval, _) =>
+      case AddJob(job, tag, _) =>
         job.scheduledBy(this)
-        queue.add(RunJob(job, tag, interval, currentTime))
+        queue.add(RunJob(job, tag, currentTime))
       case StopJob(cancelTag, time)      => stopList += cancelTag
       case AddMonitor(op, tag, _)        => addMonitor(tag, op)
       case RunMonitors(updaters, time)   =>
@@ -227,7 +233,7 @@ trait JobScheduler extends ApiJobScheduler {
       stopList.foreach(jobCompleted)
     else
       suspendedJobs.foreach {
-        case js@JobSuspension(_, RunJob(_, t, _, _)) if stopList.contains(t) =>
+        case js@JobSuspension(_, RunJob(_, t, _)) if stopList.contains(t) =>
           suspendedJobs -= js
           jobCompleted(t)
         case _ =>
@@ -270,13 +276,15 @@ trait JobScheduler extends ApiJobScheduler {
     (handleSuccess orElse handleFailures).apply(Try(task))
   }
 
-  private def runJob(job: SuspendableJob, tag: String, interval: Long): Unit =
+  private def runJob(job: SuspendableJob, tag: String): Unit =
     runTask[Either[ModelUpdate, Option[SuspendableJob]]](job.runFor(StepsPerRun), tag, {
       case Success(Right(None))    => jobCompleted(tag)
       case Success(Right(Some(j))) =>
-        val reRun = RunJob(j, tag, interval, currentTime)
-        if (interval == 0)  queue.add(reRun)
-        else                suspendedJobs += JobSuspension(interval, reRun)
+        val reRun = RunJob(j, tag, currentTime)
+        if (foreverInterval == 0)
+          queue.add(reRun)
+        else
+          suspendedJobs += JobSuspension(foreverInterval, reRun)
       case Success(Left(update)) => updates.add(update)
     })
 

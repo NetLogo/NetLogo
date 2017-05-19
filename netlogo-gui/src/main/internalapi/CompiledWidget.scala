@@ -22,12 +22,10 @@ trait CompiledButton extends CompiledWidget {
 
   /** Causes the job thread to enqueue a task for this button at the given interval
    *
-   * @param component The RunComponent to which return updates will be passed
-   * @param interval The number of milliseconds to delay between repeating this job
    * @throws IllegalStateException if the job is already running
    */
   @throws(classOf[IllegalStateException])
-  def start(interval: Long = 0): Unit
+  def start(): Unit
 
   /** Causes the job thread to stop running the task for this button
    *

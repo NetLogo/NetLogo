@@ -17,7 +17,7 @@ import javafx.stage.{ FileChooser, Window }
 
 import org.nlogo.javafx.{ ButtonControl, CompileAll, InterfaceArea, GraphicsInterface,
   JavaFXExecutionContext, ModelInterfaceBuilder, OpenModelUI , UpdateFilterThread, Utils },
-    Utils.handler
+    Utils.{ changeListener, handler }
 import org.nlogo.api.ModelLoader
 import org.nlogo.agent.World
 import org.nlogo.internalapi.{ CompiledModel, ModelUpdate, RequestUIAction,
@@ -70,7 +70,26 @@ class ApplicationController {
   @FXML
   var interfaceTabArea: AnchorPane = _
 
-  var interfaceArea: InterfaceArea = _
+  private var _interfaceArea: InterfaceArea = _
+
+  val speedListener = changeListener { (newValue: Number) =>
+    workspace.scheduledJobThread.setRunInterval(newValue.longValue)
+  }
+
+  def interfaceArea_=(i: InterfaceArea): Unit = {
+    if (_interfaceArea != null) {
+      interfaceTabArea.getChildren.remove(_interfaceArea)
+      _interfaceArea.speedControl.foreverInterval.removeListener(speedListener)
+    }
+    _interfaceArea = i
+    interfaceTabArea.getChildren.add(_interfaceArea)
+    _interfaceArea.registerMouseEventSink(workspace)
+    _interfaceArea.speedControl.foreverInterval
+    _interfaceArea.speedControl.foreverInterval.addListener(speedListener)
+  }
+
+  def interfaceArea: InterfaceArea = _interfaceArea
+
   var compiledModel: CompiledModel = _
 
   var lastWorldTimestamp: Long = 0
@@ -110,12 +129,7 @@ class ApplicationController {
                 ApplicationController.this.compiledModel = compiledModel
                 val interfaceWidgetsPane =
                   ModelInterfaceBuilder.build(compiledModel)
-                if (interfaceArea != null) {
-                  interfaceTabArea.getChildren.remove(interfaceArea)
-                }
                 interfaceArea = interfaceWidgetsPane
-                interfaceTabArea.getChildren.add(interfaceWidgetsPane)
-                interfaceArea.registerMouseEventSink(workspace)
                 AnchorPane.setTopAnchor(interfaceArea, 0.0)
                 AnchorPane.setBottomAnchor(interfaceArea, 0.0)
                 AnchorPane.setLeftAnchor(interfaceArea, 0.0)

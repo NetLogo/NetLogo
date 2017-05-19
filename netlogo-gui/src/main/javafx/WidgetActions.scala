@@ -25,11 +25,11 @@ class WidgetActions(workspace: Workspace, scheduler: JobScheduler) extends Inter
   val staticMonitorables = WeakHashMap.empty[String, Seq[StaticMonitorable]]
   val pendingUpdates     = WeakHashMap.empty[UpdateVariable, ReporterMonitorable]
 
-  def run(button: CompiledButton, interval: Long): Unit = {
+  def run(button: CompiledButton): Unit = {
     if (button.taskTag.isEmpty) {
       val job =
         new SuspendableJob(workspace.world.observers, button.widget.forever, button.procedure, 0, null, workspace.world.mainRNG)
-      val task = scheduler.createJob(job, interval)
+      val task = scheduler.createJob(job)
       button.taskTag = Some(task.tag)
       widgetsByJobTag(task.tag) = button
       button.isRunning.set(true)
