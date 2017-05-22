@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
+import org.nlogo.core.{ CompilationEnvironment, CompilerException, DummyCompilationEnvironment }
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
@@ -28,7 +28,12 @@ class DefaultCompilerServices(compiler: CompilerInterface with AuxiliaryCompiler
   def readFromString(source: String) =
     compiler.readFromString(source)
   def isConstant(s: String) =
-    compiler.isValidIdentifier(s)
+    try {
+      compiler.readFromString(s)
+      true
+    } catch {
+      case e: CompilerException => false
+    }
   def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s)
   def isReporter(s: String) =
