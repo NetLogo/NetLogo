@@ -9,6 +9,6 @@ import org.nlogo.compile.api.{ Match, RewritingReporterMunger }
 object Constants extends RewritingReporterMunger {
   val clazz = classOf[_const]
   def munge(root: Match) {
-    root.replace(Literals.makeLiteralReporter(root.report))
+    root.replace(Literals.makeLiteralReporter(root.reporter.asInstanceOf[_const].value))
   }
 }

@@ -22,7 +22,7 @@ package optimize {
   object Fd1 extends RewritingCommandMunger {
     val clazz = classOf[_fd]
     def munge(root: Match) {
-      if(root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue == 1) {
+      if (root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue == 1) {
         root.strip()
         root.replace(classOf[_fd1])
       }
