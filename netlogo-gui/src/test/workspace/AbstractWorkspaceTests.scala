@@ -2,10 +2,10 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.{ FunSuite, BeforeAndAfterEach }
+import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
 import AbstractWorkspace._
 
-class AbstractWorkspaceTests extends FunSuite with BeforeAndAfterEach {
+class AbstractWorkspaceTests extends FunSuite with BeforeAndAfterEach with OneInstancePerTest {
   val workspace = new DummyAbstractWorkspace
   override def afterEach() { workspace.dispose() }
 ///
@@ -28,5 +28,17 @@ class AbstractWorkspaceTests extends FunSuite with BeforeAndAfterEach {
   test("GuessExportName5") {
     workspace.setModelPath("foo")
     assertResult("foo graphics.png")(workspace.guessExportName("graphics.png"))
+  }
+  test("AttachModelDir1") {
+    workspace.setModelPath("/tmp/foo.nlogo")
+    assertResult("/tmp/abc.txt")(workspace.attachModelDir("abc.txt"))
+  }
+  test("AttachModelDir2") {
+    workspace.setModelPath("/tmp/foo.nlogo")
+    assertResult("/usr/abc.txt")(workspace.attachModelDir("/usr/abc.txt"))
+  }
+  test("AttachModelDir3") {
+    val home = System.getProperty("user.home")
+    assertResult(s"$home/abc.txt")(workspace.attachModelDir("abc.txt"))
   }
 }
