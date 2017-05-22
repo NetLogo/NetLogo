@@ -202,6 +202,7 @@ R __dump1 etc._dump1
 R __nano-time etc._nanotime
 R __processors etc._processors
 R __random-state etc._randomstate
+R __reference etc._reference
 R __stack-trace etc._stacktrace
 R __symbol etc._symbolstring
 R __to-string etc._tostring

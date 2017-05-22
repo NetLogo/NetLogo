@@ -841,6 +841,12 @@ case class _reduce() extends Reporter {
       right = List(Syntax.ReporterType, Syntax.ListType),
       ret = Syntax.WildcardType)
 }
+case class _reference() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.ReferenceType),
+      ret = Syntax.ListType)
+}
 case class _reloadextensions() extends Command {
   override def syntax =
     Syntax.commandSyntax(

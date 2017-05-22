@@ -1,0 +1,18 @@
+TestPatchReferences
+  patches-own [foos]
+  __reference pxcor  => ["PATCH" 0 "PXCOR"]
+  __reference pycor  => ["PATCH" 1 "PYCOR"]
+  __reference pcolor => ["PATCH" 2 "PCOLOR"]
+  __reference foos   => ["PATCH" 5 "FOOS"]
+  O> show __reference not-a-var => COMPILER ERROR Nothing named NOT-A-VAR has been defined.
+
+TestTurtleReferences
+  turtles-own [foos]
+  __reference xcor => ["TURTLE" 3 "XCOR"]
+  __reference ycor => ["TURTLE" 4 "YCOR"]
+  __reference foos => ["TURTLE" 13 "FOOS"]
+
+TestObserverReferences
+  globals [foo bar]
+  __reference foo => ["OBSERVER" 0 "FOO"]
+  __reference bar => ["OBSERVER" 1 "BAR"]
