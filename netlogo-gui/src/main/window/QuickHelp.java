@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Path;
 
 final strictfp class QuickHelp<TokenType> {
 
@@ -46,15 +47,14 @@ final strictfp class QuickHelp<TokenType> {
     return words;
   }
 
-  private static String docPath(String docName) {
-    return System.getProperty("netlogo.docs.dir", "docs") + "/" + docName;
+  private static Path docPath(String docName) {
+    return org.nlogo.swing.BrowserLauncher.docPath(docName);
   }
 
   private static void openDictionary(java.awt.Component comp, String theWord,
                                      Map<String, String> words) {
     String theFile = words.get(theWord);
-    org.nlogo.swing.BrowserLauncher.openURL
-        (comp, docPath("dict/" + theFile), true);
+    org.nlogo.swing.BrowserLauncher.openPath(comp, docPath("dict/" + theFile), null);
   }
 
   public static void doHelp(java.awt.Component comp, String token) {
@@ -84,7 +84,7 @@ final strictfp class QuickHelp<TokenType> {
       if (0 == javax.swing.JOptionPane.showConfirmDialog
           (comp, I18N.guiJ().getN("tabs.code.rightclick.quickhelp.notfound", token.toUpperCase()),
            "NetLogo", javax.swing.JOptionPane.YES_NO_OPTION)) {
-        org.nlogo.swing.BrowserLauncher.openURL(comp, docPath("index2.html"), true);
+        org.nlogo.swing.BrowserLauncher.openPath(comp, docPath("index2.html"), null);
       }
     }
   }

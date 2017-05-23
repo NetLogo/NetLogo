@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URI;
 
 public strictfp class UploadSuccessDialog extends JDialog {
 
@@ -86,7 +87,8 @@ public strictfp class UploadSuccessDialog extends JDialog {
   }
 
   private void onOpenModel() {
-    BrowserLauncher.openURL(frame, uploadedModelURL, false);
+    URI uri = BrowserLauncher.makeURI(frame, uploadedModelURL);
+    BrowserLauncher.openURI(frame, uri);
     dispose();
   }
 

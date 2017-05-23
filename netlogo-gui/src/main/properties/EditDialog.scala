@@ -4,11 +4,12 @@ package org.nlogo.properties
 
 // An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
 
+import javax.swing.JButton
+
 import org.nlogo.core.{ I18N, TokenType }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
-import javax.swing.JButton
-import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}
+import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}, BrowserLauncher.docPath
 import org.nlogo.api.CompilerServices
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
@@ -65,9 +66,12 @@ trait EditDialog extends javax.swing.JDialog {
   val cancelButton = RichJButton(I18N.gui.get("common.buttons.cancel")){ cancel(target) }
   val helpButton = RichJButton(I18N.gui.get("common.buttons.help")){
     val link = target.helpLink.getOrElse("")
-    val mainLink = if(link.contains('#')) link.takeWhile(_!='#') else link
-    val anchor = if(link.contains('#')) link.dropWhile(_!='#') else ""
-    BrowserLauncher.openURL(this, mainLink, anchor, true)
+    val splitLink = link.split("#")
+    val (mainLink, anchor) =
+      if (splitLink.length > 1) (splitLink(0), splitLink(1))
+      else                      (splitLink.head, "")
+    val path = docPath(mainLink)
+    BrowserLauncher.openPath(this, path, anchor)
   }
 
   private val buttons: List[JButton] = List(
