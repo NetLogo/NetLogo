@@ -35,7 +35,6 @@ case class NumericInput(value: Double, label: NumericInput.NumericKind) extends 
   def name = label.display
   def constraint = NumericInputConstraintSpecification(name, value)
   def default = NumericInput(0, label)
-  def multiline = false
   def asString = value.toString
   def defaultString = value.toString
 }
@@ -76,7 +75,6 @@ object InputBox {
 sealed trait BoxedValue {
   def name: String
   def constraint: ConstraintSpecification
-  def multiline: Boolean
   def default: BoxedValue
   def asString: String
   def defaultString: String
@@ -98,7 +96,10 @@ case class InputBox(variable: Option[String],
     case StringInput(value, _, _) => value
   }
 
-  def multiline = boxedValue.multiline
+  def multiline = boxedValue match {
+    case NumericInput(_, _) => false
+    case StringInput(_, _, multiline) => multiline
+  }
 
   override def constraint = boxedValue.constraint
 }
