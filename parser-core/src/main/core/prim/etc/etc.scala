@@ -396,7 +396,8 @@ case class _ifelsevalue() extends Reporter with Pure {
         Syntax.BooleanType,
         Syntax.ReporterBlockType,
         Syntax.ReporterBlockType),
-      ret = Syntax.WildcardType)
+      ret = Syntax.WildcardType,
+      precedence = Syntax.NormalPrecedence - 7)
 }
 case class _ignore() extends Command {
   override def syntax =

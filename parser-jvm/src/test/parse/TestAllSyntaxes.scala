@@ -78,7 +78,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_hsb number/number/number,list,OTPL,None,10,3,3
-                     |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,None,10,3,3
+                     |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,None,3,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,12,2,2
                      |_inlinkfrom agent,agent,-T--,None,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,None,10,1,1
