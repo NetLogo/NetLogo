@@ -482,7 +482,7 @@ object InputBoxReader extends BaseWidgetReader {
     StringLine())    // inputboxtype
 
   def asList(inputbox: InputBox) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.variable,
-    inputbox.boxedValue.asString, (), inputbox.boxedValue.multiline, inputbox.boxedValue.name)
+    inputbox.boxedValue.asString, (), inputbox.multiline, inputbox.boxedValue.name)
   def asWidget(vals: List[Any], literalParser: LiteralParser): InputBox = {
 
     val List((), left: Int, top: Int, right: Int, bottom: Int, variable: Option[String] @unchecked, value: String,
