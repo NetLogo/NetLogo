@@ -337,14 +337,17 @@ class App extends
           pico.getComponent(classOf[EditDialogFactoryInterface]))
       }
     }
+
+    val compilerServices =
+      new DefaultCompilerServices(pico.getComponent(classOf[org.nlogo.nvm.PresentationCompilerInterface]))
+    val hnEditorFactory = new EditorFactory(compilerServices)
+
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.gui.HubNetManagerFactory",
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
+            new ConstantParameter(hnEditorFactory), new ComponentParameter(),
             new ComponentParameter()))
     pico.addComponent(interfaceFactory)
-    val editorFactory = new EditorFactory(pico.getComponent(classOf[CompilerServices]))
-    pico.addComponent(editorFactory)
     pico.addComponent(new MenuBarFactory())
 
     val controlSet = new AppControlSet()
@@ -398,7 +401,7 @@ class App extends
       }
     }
 
-    editorFactory.useExtensionManager(workspace.getExtensionManager)
+    hnEditorFactory.useExtensionManager(workspace.getExtensionManager)
 
     pico.addComponent(new EditorColorizer(workspace))
 
