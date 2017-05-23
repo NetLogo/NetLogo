@@ -15,22 +15,21 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclaration
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.window.{ EditorColorizer, DefaultEditorFactory }
+import org.nlogo.window.DefaultEditorFactory
 
 import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices, optionalExtensionManager: Option[ExtensionManager]) extends DefaultEditorFactory(compiler) {
-  def this(compiler: CompilerServices) = this(compiler, None)
-  def this(compiler: CompilerServices, extensionManager: ExtensionManager) = this(compiler, Some(extensionManager))
-
+class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager) extends DefaultEditorFactory(compiler) {
   System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
     "org.nlogo.ide.NetLogoTokenMakerFactory")
-  optionalExtensionManager.foreach(useExtensionManager)
+  useExtensionManager(extensionManager)
+
+  def autoSuggestAction =
+    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(compiler.dialect, extensionManager))
 
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
-    val codeCompletionPopup = new CodeCompletionPopup
     val showUsageBox = new ShowUsageBox(colorizer)
     val shiftTabAction = new ShiftActions.LeftTab()
     val actions = Seq[Action](
@@ -43,7 +42,7 @@ class EditorFactory(compiler: CompilerServices, optionalExtensionManager: Option
       .withContextActions(actions)
       .addKeymap(
         KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
-        new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+        autoSuggestAction)
       .addKeymap(
         KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK), shiftTabAction)
       .withLineNumbers(

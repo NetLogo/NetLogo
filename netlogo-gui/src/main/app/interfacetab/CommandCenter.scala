@@ -18,8 +18,7 @@ import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
   InterfaceColors, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
-class CommandCenter(workspace: AbstractWorkspace,
-                    locationToggleAction: Action) extends JPanel
+class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   with Zoomable with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.ZoomedEvent.Handler {
@@ -35,6 +34,16 @@ class CommandCenter(workspace: AbstractWorkspace,
     override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
+  private val locationToggleButton =
+    new JButton() {
+      setText("")
+      setFocusable(false)
+      setVisible(false)
+      // this is very ad hoc. we want to save vertical screen real estate and also keep the
+      // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
+      override def getInsets = new Insets(2, 4, 3, 4)
+    }
+
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
     setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
@@ -43,16 +52,6 @@ class CommandCenter(workspace: AbstractWorkspace,
     //NORTH
     //-----------------------------------------
     val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
-
-    val locationToggleButton =
-      if(locationToggleAction == null) null
-      else new JButton(locationToggleAction) {
-        setText("")
-        setFocusable(false)
-        // this is very ad hoc. we want to save vertical screen real estate and also keep the
-        // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
-        override def getInsets = new Insets(2, 4, 3, 4)
-      }
 
     val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
       setFocusable(false)
@@ -78,7 +77,7 @@ class CommandCenter(workspace: AbstractWorkspace,
     northPanel.add(Box.createGlue)
     Fonts.adjustDefaultFont(titleLabel)
     titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
-    if(locationToggleButton != null) northPanel.add(locationToggleButton)
+    northPanel.add(locationToggleButton)
     northPanel.add(clearButton)
     resizeNorthPanel()
 
@@ -101,6 +100,15 @@ class CommandCenter(workspace: AbstractWorkspace,
     southPanel.add(historyPanel, BorderLayout.EAST)
     add(southPanel, BorderLayout.SOUTH)
   }
+
+  private[interfacetab] def locationToggleAction_=(a: Action): Unit = {
+    locationToggleButton.setAction(a)
+    locationToggleButton.setText("")
+    locationToggleButton.setVisible(a != null)
+  }
+
+  private[interfacetab] def locationToggleAction: Action =
+    locationToggleButton.getAction
 
   override def getMinimumSize =
     new Dimension(0, 2 + northPanel.getMinimumSize.height +

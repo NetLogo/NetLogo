@@ -25,8 +25,7 @@ import org.nlogo.window.Events._
 import org.nlogo.window.{ EditDialogFactoryInterface, Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class Tabs(val workspace:       GUIWorkspace,
-           monitorManager:      AgentMonitorManager,
-           dialogFactory:       EditDialogFactoryInterface,
+           val interfaceTab:    InterfaceTab,
            private var menu:    MenuBar,
            externalFileManager: ExternalFileManager)
   extends JTabbedPane(SwingConstants.TOP)
@@ -72,7 +71,6 @@ class Tabs(val workspace:       GUIWorkspace,
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
 
-  val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val codeTab = new MainCodeTab(workspace, this, menu)
   var externalFileTabs = Set.empty[TemporaryCodeTab]

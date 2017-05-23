@@ -21,13 +21,14 @@ class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup) 
     editorArea.getDocument().addDocumentListener(autoSuggestDocumentListener)
   }
 }
+
 class AutoSuggestDocumentListener(codeCompletionPopup: CodeCompletionPopup) extends DocumentListener {
   override def changedUpdate(e: DocumentEvent): Unit = {
-}
+  }
   override def insertUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.fireUpdatePopup(Some(e))
-}
+    codeCompletionPopup.fireUpdatePopup(Some(e))
+  }
   override def removeUpdate(e: DocumentEvent): Unit = {
-  codeCompletionPopup.fireUpdatePopup(Some(e))
-}
+    codeCompletionPopup.fireUpdatePopup(Some(e))
+  }
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ CompilationEnvironment, DummyCompilationEnvironment }
+import org.nlogo.core.{ CompilationEnvironment, Dialect, DummyCompilationEnvironment }
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
@@ -13,6 +13,7 @@ import scala.collection.immutable.ListMap
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
 class DefaultCompilerServices(compiler: CompilerInterface with AuxiliaryCompilerInterface) extends CompilerServices {
+  def dialect: Dialect = compiler.defaultDialect
   def emptyProgram = Program.fromDialect(compiler.defaultDialect)
   def autoConvert(modelVersion: String)(source: String) = source
   def readNumberFromString(source: String) =

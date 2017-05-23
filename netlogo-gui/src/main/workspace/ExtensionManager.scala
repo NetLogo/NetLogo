@@ -261,6 +261,12 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   def cachedType(name: String): Option[TokenType] = typeCache.get(name.toUpperCase)
 
+  def extensionCommandNames: Set[String] =
+    typeCache.filter(_._2 == TokenType.Command).map(_._1).toSet
+
+  def extensionReporterNames: Set[String] =
+    typeCache.filter(_._2 == TokenType.Reporter).map(_._1).toSet
+
   /**
    * Returns a String describing all the loaded extensions.
    */

@@ -28,7 +28,8 @@ import InterfaceTab._
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
-                   dialogFactory: EditDialogFactoryInterface) extends JPanel
+                   dialogFactory: EditDialogFactoryInterface,
+                   val commandCenter: CommandCenter) extends JPanel
   with LoadBeginEvent.Handler
   with OutputEvent.Handler
   with Enable2DEvent.Handler
@@ -38,7 +39,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
-  val commandCenter = new CommandCenter(workspace, new CommandCenterLocationToggleAction)
+  commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
   activeMenuActions =
