@@ -25,14 +25,18 @@ class LazyAgentSet(printName: String,
   }
 
   def count = {
-    var result = 0
-    val iter = iterator
-    while (iter.hasNext) {
-      iter.next()
-      result += 1
-    }
-    result
+    if (forcedSet != null) {
+      forcedSet.getArray.size
+    } else {
 
+      var result = 0
+      val iter = iterator
+      while (iter.hasNext) {
+        iter.next()
+        result += 1
+      }
+      result
+    }
   }
 
   def contains(a: api.Agent): Boolean = {
@@ -70,8 +74,8 @@ class LazyAgentSet(printName: String,
     val forcedSet = force().getArray
     val fsize = forcedSet.size
     val (smallRandom, bigRandom) = {
-      val r1 = rng.nextInt(precomputedCount)
-      val r2 = rng.nextInt(precomputedCount - 1)
+      val r1 = rng.nextInt(fsize)
+      val r2 = rng.nextInt(fsize - 1)
       if (r2 >= r1) (r1, r2 + 1) else (r2, r1)
     }
     Array(forcedSet(smallRandom), forcedSet(bigRandom))
