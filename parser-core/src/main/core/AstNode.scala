@@ -143,6 +143,11 @@ class CommandBlock(val statements: Statements, val sourceLocation: SourceLocatio
   }
 }
 
+object ReporterBlock {
+  def unapply(block: ReporterBlock): Option[(ReporterApp, SourceLocation)] =
+    Some((block.app, block.sourceLocation))
+}
+
 /**
  * represents a block containing exactly one expression. Called a reporter
  * block rather than an expression block for consistency with usual NetLogo
