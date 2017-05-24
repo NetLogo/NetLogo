@@ -27,8 +27,9 @@ class LazyAgentSet(printName: String,
   def count = {
     if (forcedSet != null) {
       forcedSet.getArray.size
+    } else if (other == null && withs.isEmpty) {
+      agentSet.count
     } else {
-
       var result = 0
       val iter = iterator
       while (iter.hasNext) {
