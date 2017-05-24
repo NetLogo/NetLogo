@@ -375,40 +375,4 @@ public abstract strictfp class AbstractWorkspace
   public org.nlogo.api.MersenneTwisterFast mainRNG() {
     return _world.mainRNG();
   }
-
-  public Double readNumberFromString(String source)
-      throws CompilerException {
-    return compiler().readNumberFromString(source, _world, getExtensionManager());
-  }
-
-  public boolean isConstant(String s) {
-    try {
-      compiler().readFromString(s);
-      return true;
-    }
-    catch(CompilerException e) {
-      return false;
-    }
-  }
-
-  public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s);
-  }
-
-  public Token[] tokenizeForColorization(String s) {
-    return compiler().tokenizeForColorization(s, getExtensionManager());
-  }
-
-  public scala.collection.Iterator<Token> tokenizeForColorizationIterator(String s) {
-    return compiler().tokenizeForColorizationIterator(s, getExtensionManager());
-  }
-
-  public Token getTokenAtPosition(String s, int pos) {
-    return compiler().getTokenAtPosition(s, pos);
-  }
-
-  public scala.collection.immutable.Map<String, org.nlogo.core.ProcedureSyntax> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source);
-  }
-
 }

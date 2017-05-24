@@ -2,32 +2,42 @@
 
 package org.nlogo.ide
 
-import org.nlogo.core.DefaultTokenMapper
-
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.{ HashMap, ListBuffer }
+
+import org.nlogo.core.Dialect
+import org.nlogo.nvm.ExtensionManager
+
+object AutoSuggest {
+  def apply(dialect: Dialect, extensionManager: Option[ExtensionManager]): AutoSuggest = {
+    val commandNames = dialect.tokenMapper.allCommandNames
+    val reporterNames = dialect.tokenMapper.allReporterNames
+    val extensionPrimNames =
+      extensionManager.map { ex =>
+      { () => (ex.extensionCommandNames ++ ex.extensionReporterNames).map(_.toLowerCase) }
+      }.getOrElse({() => Set.empty[String]})
+    new AutoSuggest(commandNames ++ reporterNames, extensionPrimNames)
+  }
+}
 
 /**
-  * Builds the trie from commands and reporters and provides fuctions to get suggestions.
-  * Special care should be taken as everything is inserted and retrieved in lower case.
-  */
-class AutoSuggest {
-  val commandNames = DefaultTokenMapper.allCommandNames
-  val reporterNames = DefaultTokenMapper.allReporterNames
+ * Builds the trie from commands and reporters and provides fuctions to get suggestions.
+ * Special care should be taken as everything is inserted and retrieved in lower case.
+ */
+class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set[String]) {
   val EDIT_WEIGHT_ADD = 1
   val EDIT_WEIGHT_REMOVE = 1
   val EDIT_WEIGHT_REPLACE = 1
 
   val trie = new TrieNode()
-  for(commandName <- commandNames) {
-    trie.append(commandName.toLowerCase)
-  }
-  for(reporterName <- reporterNames) {
-    trie.append(reporterName.toLowerCase)
+
+  var extensionPrims = Set.empty[String]
+
+  for(name <- primitiveNames) {
+    trie.append(name.toLowerCase)
   }
 
   def editDistance(s1: String, s2: String): Int = {
@@ -44,6 +54,13 @@ class AutoSuggest {
       memo((s1,s2))
     }
     stringDistance(s1.toLowerCase.toList, s2.toLowerCase.toList)
+  }
+
+  // reloads extension primitives
+  def refresh(): Unit = {
+    extensionPrims.foreach(trie.remove)
+    extensionPrims = extensionPrimNames()
+    extensionPrims.foreach(trie.append)
   }
 
   def getSuggestions(word: String): Seq[String] = {

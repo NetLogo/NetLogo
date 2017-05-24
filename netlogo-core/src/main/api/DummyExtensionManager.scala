@@ -17,5 +17,7 @@ class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionMana
   override def loadedExtensions = java.util.Collections.emptyList[ClassManager]
   override def dumpExtensions: String = unsupported
   override def dumpExtensionPrimitives(): String = unsupported
+  def extensionCommandNames: Set[String] = Set.empty[String]
+  def extensionReporterNames: Set[String] = Set.empty[String]
   private def unsupported = throw new UnsupportedOperationException
 }

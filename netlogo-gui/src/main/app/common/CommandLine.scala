@@ -49,7 +49,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyBaseClass: AgentKind = AgentKind.Observer
   private var history: List[ExecutionString] = List()
 
-  val codeCompletionPopup = new CodeCompletionPopup()
+  val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
   val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
     -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 

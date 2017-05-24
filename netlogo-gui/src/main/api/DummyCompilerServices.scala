@@ -2,11 +2,12 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
+import org.nlogo.core.{ CompilerException, Dialect, NetLogoCore, ProcedureSyntax, Token }
 
 // just enough functionality to make the tests pass
 
 class DummyCompilerServices extends CompilerServices {
+  def dialect: Dialect = NetLogoCore
   private def unsupported = throw new UnsupportedOperationException
   def readFromString(s: String): AnyRef =
     try { s.toDouble: java.lang.Double }

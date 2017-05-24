@@ -18,4 +18,14 @@ trait ExtensionManager extends ApiExtensionManager {
    * the extension lifecycle hooks. It is cleared when clearAll is run.
    */
   def cachedType(name: String): Option[TokenType]
+
+  /**
+   * Return cached lists of the names of extension primitives
+   * (commands and reporters respectively)
+   *
+   * These are cached so that they can be run without interrupting
+   * the extension lifecycle hooks.
+   */
+  def extensionCommandNames:  Set[String]
+  def extensionReporterNames: Set[String]
 }

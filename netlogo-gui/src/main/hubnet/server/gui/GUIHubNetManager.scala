@@ -21,7 +21,6 @@ import java.awt.Component
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
-                       editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
                        loader: ModelLoader,
@@ -56,7 +55,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
-    clientApp.startup(editorFactory, "", host.orNull, connectionManager.port, true,
+    clientApp.startup("", host.orNull, connectionManager.port, true,
       isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
   }
 

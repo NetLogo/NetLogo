@@ -2,22 +2,35 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component, Dimension, GraphicsEnvironment}
+import java.awt.{Color, Component, Dimension, Font, GraphicsEnvironment}
 import java.awt.event._
 import javax.swing._
 import javax.swing.event.DocumentEvent
 import javax.swing.text.JTextComponent
 
-import org.nlogo.core.{DefaultTokenMapper, Femto, Token, TokenizerInterface}
+import org.nlogo.awt.Fonts
+import org.nlogo.core.{DefaultTokenMapper, Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
+import org.nlogo.nvm.ExtensionManager
 import org.nlogo.window.SyntaxColors
 import org.nlogo.editor.EditorArea
 
-case class CodeCompletionPopup() {
+object CodeCompletionPopup {
+  def apply() =
+    new CodeCompletionPopup(AutoSuggest(NetLogoCore, None))
+  def apply(dialect: Dialect) =
+    new CodeCompletionPopup(AutoSuggest(dialect, None),
+      new SuggestionListRenderer(dialect, None))
+  def apply(dialect: Dialect, extensionManager: ExtensionManager) =
+    new CodeCompletionPopup(AutoSuggest(dialect, Some(extensionManager)),
+      new SuggestionListRenderer(dialect, Some(extensionManager)))
+}
+
+case class CodeCompletionPopup(autoSuggest: AutoSuggest,
+  listRenderer: SuggestionListRenderer = new SuggestionListRenderer(NetLogoCore, None)) {
   // To control when the popup has to automatically show
   var isPopupEnabled = false
   // To store the last value user selected
   var lastSuggested = ""
-  val autoSuggest = new AutoSuggest()
   val dlm = new DefaultListModel[String]()
   val suggestionDisplaylist = new JList[String](dlm)
   val scrollPane = new JScrollPane(suggestionDisplaylist)
@@ -38,7 +51,8 @@ case class CodeCompletionPopup() {
       suggestionDisplaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
       suggestionDisplaylist.setVisibleRowCount(10)
-      suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer(eA))
+      listRenderer.font = eA.getFont
+      suggestionDisplaylist.setCellRenderer(listRenderer)
 
       suggestionDisplaylist.addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent): Unit = {
@@ -107,6 +121,7 @@ case class CodeCompletionPopup() {
   def displayPopup(): Unit = {
     for{eA <- editorArea} {
       isPopupEnabled = true
+      autoSuggest.refresh()
       val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
       val position = tokenOption.map(_.start).getOrElse(eA.getCaretPosition)
       fireUpdatePopup(None)
@@ -200,16 +215,24 @@ case class CodeCompletionPopup() {
   *
   * @param editorArea
   */
-class SuggestionListRenderer(editorArea: JTextComponent) extends ListCellRenderer[String]{
+class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[ExtensionManager]) extends ListCellRenderer[String]{
+
+  var font: Font = Fonts.monospacedFont
 
   override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
-    val label = new JLabel(value.asInstanceOf[String])
-    label.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]).isEmpty) SyntaxColors.REPORTER_COLOR
-    else SyntaxColors.COMMAND_COLOR)
+    val label = new JLabel(value)
+
+    val fgColor =
+      if (dialect.tokenMapper.getCommand(value).nonEmpty ||
+        extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command))
+        SyntaxColors.COMMAND_COLOR
+      else
+        SyntaxColors.REPORTER_COLOR
+    label.setForeground(fgColor)
     label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
     label.setOpaque(true)
     label.setBorder(BorderFactory.createEmptyBorder())
-    label.setFont(editorArea.getFont)
+    label.setFont(font)
     label
   }
 }
