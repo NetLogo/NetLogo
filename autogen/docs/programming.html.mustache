@@ -1806,9 +1806,6 @@ ask turtles [ set shape one-of shapes ]
       <li>Continuous updates can confuse the user of your model by letting
       them see model states they aren't supposed to see, which may be
       misleading.
-      <li>Increased speed. Updating the view takes time, so if one update
-      per tick is enough, then enforcing there is only one update per tick
-      will make your model faster.
       <li>Since <code>setup</code> buttons don't advance the tick counter,
       they are unaffected by the speed slider; this is normally the desired
       behavior.
@@ -1831,6 +1828,14 @@ ask turtles [ set shape one-of shapes ]
       agents moving one at a time. Don't forget to change back to
       tick-based updates when you are done, as the choice of update mode is
       saved with the model.
+    <p>
+      Changing the update mode also affects model speed.  Updating the view
+      takes time; often enforcing a single update per tick (by using tick-based
+      updates) will make your model faster. On the other hand, continuous
+      updates will be faster when running a single tick is faster than drawing
+      a frame of the model. Most models run faster under tick-based updates,
+      but for an example of a model which is faster with continuous updates
+      see the "Heroes and Cowards" library model.
     <h3>
       Frame rate
     </h3>
