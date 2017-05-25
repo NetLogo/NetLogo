@@ -104,8 +104,11 @@ strictfp public class ModelsLibraryDialog
   Action communityAction =
       new AbstractAction(I18N.guiJ().get("modelsLibrary.community")) {
         public void actionPerformed(ActionEvent e) {
-          org.nlogo.swing.BrowserLauncher.openURL
-              (me, "http://ccl.northwestern.edu/netlogo/models/community/", false);
+          URI uri =
+            org.nlogo.swing.BrowserLauncher.makeURI(me, "http://ccl.northwestern.edu/netlogo/models/community/");
+          if (uri != null) {
+            org.nlogo.swing.BrowserLauncher.openURI(me, uri);
+          }
         }
       };
 
@@ -563,10 +566,17 @@ strictfp public class ModelsLibraryDialog
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        if (e.getURL() == null) {
+        URI toOpen = null;
+        try {
+          if (e.getURL() != null) {
+            toOpen = e.getURL().toURI();
+          }
+        } catch (java.net.URISyntaxException ue) {
+        }
+        if (toOpen == null) {
           JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-          BrowserLauncher.openURL(this, e.getURL().toString(), false);
+          BrowserLauncher.openURI(this, toOpen);
         }
       }
     }

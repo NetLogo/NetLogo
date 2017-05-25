@@ -179,7 +179,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     response match {
       case 0 => true
       case 1 =>
-        BrowserLauncher.openURL(owner, I18N.gui.get("file.open.transitionGuide.url"), false)
+        BrowserLauncher.openURI(owner, new URI(I18N.gui.get("file.open.transitionGuide.url")))
         showVersionWarningAndGetResponse(version)
       case 2 => false
     }

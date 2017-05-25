@@ -167,7 +167,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
   }
-  override def helpLink = Some("docs/programming.html#plotting")
+  override def helpLink = Some("programming.html#plotting")
   def propertySet = Properties.plot
   def showLegend = legend.open
   def showLegend(open: Boolean){ legend.open=open }

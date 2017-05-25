@@ -115,7 +115,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
-    javaOptions     += "-Dnetlogo.docs.dir=" + (baseDirectory.value.getParentFile / "docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
     testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",

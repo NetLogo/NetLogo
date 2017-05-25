@@ -3,6 +3,7 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList, StringTokenizer }
+import java.net.URI
 import java.nio.file.Paths
 
 import org.apache.log4j.xml.DOMConfigurator
@@ -12,6 +13,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, Widget => CoreWidget }
 import org.nlogo.log.Logger
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.swing.BrowserLauncher
 
 import scala.collection.JavaConverters._
 
@@ -31,8 +33,7 @@ class InterfaceComponent(frame: java.awt.Frame)
 extends AppletPanel(frame,
                     new java.awt.event.MouseAdapter {
                       override def mouseClicked(e: java.awt.event.MouseEvent) {
-                        org.nlogo.swing.BrowserLauncher.openURL(
-                          frame, "http://ccl.northwestern.edu/netlogo/", false)
+                        BrowserLauncher.openURI(frame, new URI("http://ccl.northwestern.edu/netlogo/"))
                       }},
                     false)
 with Event.LinkChild {

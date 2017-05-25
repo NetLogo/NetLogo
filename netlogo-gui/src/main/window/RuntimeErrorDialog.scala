@@ -7,6 +7,7 @@ import java.awt.event.{ ActionEvent, ActionListener, ItemEvent, ItemListener }
 import java.util.{ ArrayList => JArrayList }
 import java.util.{ List => JList }
 import java.lang.OutOfMemoryError
+import java.nio.file.Path
 
 import javax.swing.{ JButton, JCheckBox, JComponent }
 
@@ -251,13 +252,10 @@ class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.
 
   override def makeButtons(): Seq[JComponent] = {
     val openFAQ = new JButton(I18N.gui.get("error.dialog.openFAQ"))
-    val baseFaqUrl: String = {
-      val docRoot = System.getProperty("netlogo.docs.dir", "docs")
-      docRoot + "/faq.html"
-    }
+    val baseFaqUrl: Path = BrowserLauncher.docPath("faq.html")
     openFAQ.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        BrowserLauncher.openURL(owner, baseFaqUrl, "#howbig", true)
+        BrowserLauncher.openPath(owner, baseFaqUrl, "howbig")
       }
     })
     super.makeButtons() :+ openFAQ
