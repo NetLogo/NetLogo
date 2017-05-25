@@ -7,7 +7,7 @@ org.nlogo.agent.Agent.rgbListSizeError.3or4 = Una lista rgb debe contener 3 o 4 
 org.nlogo.agent.Agent.rgbValueError = valores RGB debe 0-255
 
 org.nlogo.agent.BooleanConstraint.bool = El valor debe ser un valor lógico.
-org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = No se puede mover la tortuga más allá del borde del mundo.
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = No se puede mover la tortuga más allá del borde del mundo.
 
 # El valor debe ser uno de: ["Hola" 5 [1 2 3]]
 org.nlogo.agent.ChooserConstraint.invalidValue = El valor debe ser uno de: {0}

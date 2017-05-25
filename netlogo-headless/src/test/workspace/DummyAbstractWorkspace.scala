@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, World }
+import org.nlogo.agent.{ Agent, World2D }
 import org.nlogo.nvm, nvm.CompilerInterface
 import org.nlogo.api
 import org.nlogo.core, org.nlogo.core.{File, Model}
@@ -12,7 +12,7 @@ import org.nlogo.core, org.nlogo.core.{File, Model}
  */
 
 class DummyAbstractWorkspace
-extends AbstractWorkspace(new World)
+extends AbstractWorkspace(new World2D)
 {
   dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException

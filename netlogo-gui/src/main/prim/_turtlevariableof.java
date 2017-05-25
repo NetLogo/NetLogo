@@ -27,7 +27,7 @@ public final strictfp class _turtlevariableof
     Object agentOrSet = args[0].report(context);
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
-      if (agent.id == -1) {
+      if (agent.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
@@ -70,7 +70,7 @@ public final strictfp class _turtlevariableof
   public Object report_1(final Context context, Object agentOrSet) throws LogoException {
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
-      if (agent.id == -1) {
+      if (agent.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
@@ -101,7 +101,7 @@ public final strictfp class _turtlevariableof
 
   public Object report_2(final Context context, Agent agent)
       throws LogoException {
-    if (agent.id == -1) {
+    if (agent.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }

@@ -31,7 +31,7 @@ public final strictfp class _face
       throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (target.id == -1) {
+    if (target.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
     }

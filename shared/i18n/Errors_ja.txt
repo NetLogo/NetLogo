@@ -8,7 +8,7 @@ org.nlogo.agent.Agent.rgbValueError = RGB変数は0から255までの値であ�
 org.nlogo.agent.Agent.shapeUndefined = \"{0}\" は定義済みの形状ではありません。
 
 org.nlogo.agent.BooleanConstraint.bool = 値はブール変数である必要があります。
-org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = タートルをワールドの外側に移動させることはできません。
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = タートルをワールドの外側に移動させることはできません。
 
 # Value must be one of: ["Hello" 5 [1 2 3]]
 org.nlogo.agent.ChooserConstraint.invalidValue = 値は {0} の要素のうちの1つである必要があります。

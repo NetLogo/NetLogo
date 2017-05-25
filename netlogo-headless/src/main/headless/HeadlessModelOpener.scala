@@ -4,7 +4,7 @@ package org.nlogo.headless
 import org.nlogo.workspace
 import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint}
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
 import org.nlogo.core.{ model, Button, CompilerException, ConstraintSpecification, LogoList, Model,
   Monitor, Program, Shape, ShapeParser },
@@ -58,7 +58,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     parseShapes(model.turtleShapes, model.linkShapes)
 
     ws.init()
-    ws.world.program(results.program)
+    ws.world.asInstanceOf[CompilationManagement].program = results.program
 
     // test code is mixed with actual code here, which is a bit funny.
     if (ws.compilerTestingMode)
@@ -100,7 +100,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
       }
-      ws.world.observer().setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+      ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
 
     ws.command(interfaceGlobalCommands)

@@ -22,7 +22,7 @@ public final strictfp class _facenowrap
   public void perform(final Context context)
       throws LogoException {
     org.nlogo.agent.Agent agentToFace = argEvalAgent(context, 0);
-    if (agentToFace.id == -1) {
+    if (agentToFace.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agentToFace.classDisplayName()));
     }

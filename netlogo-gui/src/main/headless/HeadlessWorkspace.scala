@@ -12,8 +12,8 @@ import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ AutoConvertable, ComponentSerialization, Version, ModelLoader, RendererInterface,
   WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
   NetLogoThreeDDialect, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
-import org.nlogo.agent.{ World, World3D }
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Program, UpdateMode, WorldDimensions }
+import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
@@ -40,7 +40,7 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
+    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
@@ -105,7 +105,7 @@ object HeadlessWorkspace {
  * HeadlessWorkspace.newInstance instead.
  */
 class HeadlessWorkspace(
-  _world: World,
+  _world: World with CompilationManagement,
   val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
@@ -192,13 +192,16 @@ with org.nlogo.api.ViewSettings {
     world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     import collection.JavaConverters._
-    val results = compiler.compileProgram(
-      source, world.newProgram(Seq[String]()),
+    val dialect =
+      if (Version.is3D) NetLogoThreeDDialect
+      else NetLogoLegacyDialect
+    val newProgram = Program.fromDialect(dialect)
+    val results = compiler.compileProgram(source, newProgram,
       getExtensionManager, getCompilationEnvironment)
     procedures = results.proceduresMap
     codeBits.clear()
     init()
-    world.program(results.program)
+    _world.program = results.program
     world.realloc()
 
     // setup some test plots.
@@ -351,8 +354,8 @@ with org.nlogo.api.ViewSettings {
 
   /// world importing error handling
 
-  var importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler =
-    new org.nlogo.agent.Importer.ErrorHandler {
+  var importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler =
+    new org.nlogo.agent.ImporterJ.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(
           "got a " + (if (fatalError) "" else "non") +

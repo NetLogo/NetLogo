@@ -15,7 +15,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     // the default error handler just spits something to stdout or stderr or somewhere.
     // we want to fail hard. - ST 7/21/10
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           sys.error(title + " / " + errorDetails + " / " + fatalError)
       }
@@ -212,7 +212,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     test("testImportInvalidSize", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
             {
               assert(!fatalError)
@@ -229,7 +229,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     test("testImportDrawingIncompleteData", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
             assert(!fatalError)
             assertResult("Error Importing Drawing")(title)
@@ -247,34 +247,34 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testCommand("export-world \"" + filename + "\"")
     testCommand("import-world \"" + filename + "\"")
     testReporter("subject", "nobody")
-    assertResult(workspace.world.observer().perspective())(Perspective.Observe)
+    assertResult(workspace.world.observer.perspective)(Perspective.Observe)
     testCommand("crt 1")
     testCommand("watch turtle 0")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "0")
-    assertResult(workspace.world.observer().perspective())(Perspective.Watch(workspace.world.turtles.agents.iterator.next))
+    assertResult(workspace.world.observer.perspective)(Perspective.Watch(workspace.world.turtles.agents.iterator.next))
     testCommand("crt 1")
     testCommand("follow turtle 1")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective())(Perspective.Follow(workspace.world.turtles.agents.asScala.iterator.toSeq(1), 5))
+    assertResult(workspace.world.observer.perspective)(Perspective.Follow(workspace.world.turtles.agents.asScala.iterator.toSeq(1), 5))
     testCommand("ride turtle 1")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    assertResult(workspace.world.observer().perspective())(Perspective.Ride(workspace.world.turtles.agents.asScala.iterator.toSeq(1)))
+    assertResult(workspace.world.observer.perspective)(Perspective.Ride(workspace.world.turtles.agents.asScala.iterator.toSeq(1)))
   }
 
   if(!Version.is3D)
     test("testNonExistentPlot", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
             assertResult("Error Importing Plots")(title)
@@ -290,7 +290,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     test("testNonExistentPen", SlowTest.Tag) {
       workspace.open("test/import/plot-simple.nlogo")
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String,
                         fatalError: Boolean) =
             {
@@ -430,7 +430,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     test("ImportWrongOrder", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
               assert(fatalError)
               assertResult("Fatal Error- Incorrect Structure For Import File")(title)
@@ -454,7 +454,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       workspace.initForTesting(35, FileIO.fileToString("test/import/trailing-commas.nlogo"))
       val errorNumber = Array(0)
       workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
+        new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
             assertResult("Warning: Too Many Values For Agent")(title)

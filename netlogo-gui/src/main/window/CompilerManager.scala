@@ -2,8 +2,8 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.CompilerException
-import org.nlogo.api.{ JobOwner, SourceOwner }
+import org.nlogo.core.{ CompilerException, Program }
+import org.nlogo.api.{ AgentException, Exceptions, JobOwner, LogoException, SourceOwner, ValueConstraint }
 import org.nlogo.nvm.CompilerResults
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.Event.LinkChild
@@ -11,14 +11,11 @@ import org.nlogo.window.Events.{
   CompileMoreSourceEvent, CompiledEvent, InterfaceGlobalEvent,
   LoadBeginEvent, LoadEndEvent, RemoveAllJobsEvent,
   WidgetAddedEvent, WidgetRemovedEvent, CompileAllEvent }
-import org.nlogo.api.AgentException
-import org.nlogo.api.ValueConstraint
-import org.nlogo.api.Exceptions
-import org.nlogo.api.LogoException
 
 import scala.collection.mutable.HashSet
 
 class CompilerManager(val workspace: AbstractWorkspace,
+  val world: org.nlogo.agent.World with org.nlogo.agent.CompilationManagement = null,
   val proceduresInterface: ProceduresInterface,
   eventRaiser: (Event, Object) => Unit = (e:Event, o:Object) => e.raise(o))
     extends LinkChild
@@ -49,22 +46,21 @@ class CompilerManager(val workspace: AbstractWorkspace,
     // we can't clear all here because globals and such might not be allocated yet
     // however, we're about to change the program in world, which can be needed to
     // clear the turtles. ev 1/17/07
-    workspace.world.clearLinks()
+    world.clearLinks()
     // not really clear on why the rigmarole here with two different
     // Program objects is necessary, but when I tried using the same
     // one, I got ClassCastExceptions when I tried to open the
     // Capacitance model - ST 12/5/07
-    workspace.world.program(workspace.world.newProgram)
-    workspace.world.rememberOldProgram()
-    val program = workspace.world.newProgram
-    workspace.world.program(program)
-    workspace.world.setUpShapes(true)
+    world.program(Program.fromDialect(workspace.dialect))
+    world.rememberOldProgram()
+    world.program(Program.fromDialect(workspace.dialect))
+    world.setUpShapes(true)
   }
 
   def handle(e: LoadEndEvent): Unit = {
     isLoading = false
     compileAll()
-    workspace.world.clearAll()
+    world.clearAll()
   }
 
   def handle(e: CompileMoreSourceEvent): Unit = {
@@ -78,15 +74,15 @@ class CompilerManager(val workspace: AbstractWorkspace,
         val displayName = Some.apply(owner.classDisplayName)
         val results =
           workspace.compiler.compileMoreCode(owner.source,
-            displayName, workspace.world.program,
+            displayName, world.program,
             workspace.procedures, workspace.getExtensionManager,
             workspace.getCompilationEnvironment);
         results.head.init(workspace)
         results.head.owner = owner
-        raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))
+        raiseEvent(new CompiledEvent(owner, world.program, results.head, null))
       } catch {
         case error: CompilerException =>
-          raiseEvent(new CompiledEvent(owner, workspace.world.program, null, error))
+          raiseEvent(new CompiledEvent(owner, world.program, null, error))
       }
     }
   }
@@ -98,9 +94,9 @@ class CompilerManager(val workspace: AbstractWorkspace,
       compileAll()
     // this check is needed because it might be a brand new widget
     // that doesn't have a variable yet - ST 3/3/04
-    else if (workspace.world.observerOwnsIndexOf(widget.name.toUpperCase) != -1) {
+    else if (world.observerOwnsIndexOf(widget.name.toUpperCase) != -1) {
       if (e.updating) {
-        widget.valueObject(workspace.world.getObserverVariableByName(widget.name))
+        widget.valueObject(world.getObserverVariableByName(widget.name))
       }
       // note that we do this even if e.updating() is true -- that's because
       // the widget may not have accepted the new value as is - ST 8/17/03
@@ -109,10 +105,10 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
         // Only set the global if the value has changed.  This prevents
         // us from firing our constraint code all the time.
-        if (widgetValue ne workspace.world.getObserverVariableByName(widget.name)) {
+        if (widgetValue ne world.getObserverVariableByName(widget.name)) {
           // so that we do not interrupt without-interruption
-          workspace.world.synchronized {
-            workspace.world.setObserverVariableByName(widget.name, widgetValue)
+          world.synchronized {
+            world.setObserverVariableByName(widget.name, widgetValue)
           }
         }
       } catch {
@@ -163,7 +159,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   private def compileAll(): Unit = {
     raiseEvent(new RemoveAllJobsEvent())
-    workspace.world.displayOn(true)
+    world.displayOn(true)
     // We can't compile the Code tab until the contents of
     // InterfaceGlobals is known, which won't happen until the
     // widgets are loaded, which happens later.  So the isLoading
@@ -174,8 +170,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
     if (!isLoading) {
       var proceed = compileProcedures()
       if (proceed) {
-        workspace.world.realloc()
-        workspace.world.rememberOldProgram()
+        world.realloc()
+        world.rememberOldProgram()
         setGlobalVariables() // also updates constraints
         compileWidgets()
       } else {
@@ -189,8 +185,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
   }
 
   private def compileProcedures(): Boolean = {
-    val program = workspace.world.newProgram(getGlobalVariableNames)
-    workspace.world.program(program)
+    val program = Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames)
+    world.program(program)
     try {
       val owners =
         if (workspace.aggregateManager != null)
@@ -212,7 +208,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         procedure.owner = owner
       }
       workspace.init()
-      workspace.world.program(results.program)
+      world.program(results.program)
       raiseEvent(new CompiledEvent(proceduresInterface, results.program, null, null))
       true
     } catch {
@@ -230,7 +226,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
   private def setGlobalVariables(): Unit = {
     globalWidgets.foreach { widget =>
       try {
-        workspace.world.setObserverVariableByName(widget.name, widget.valueObject)
+        world.setObserverVariableByName(widget.name, widget.valueObject)
       } catch {
         case ex@(_: AgentException | _: LogoException) =>
           throw new IllegalStateException(ex)
@@ -249,24 +245,24 @@ class CompilerManager(val workspace: AbstractWorkspace,
         Some(s"${owner.classDisplayName} '${owner.displayName}'")
       val results: CompilerResults =
         workspace.compiler.compileMoreCode(owner.source, displayName,
-          workspace.world.program, workspace.procedures,
+          world.program, workspace.procedures,
           workspace.getExtensionManager, workspace.getCompilationEnvironment)
 
       if (!results.proceduresMap.isEmpty && results.proceduresMap != workspace.procedures) {
         results.head.init(workspace)
         results.head.owner = owner
-        raiseEvent(new CompiledEvent(owner, workspace.world.program, results.head, null))
+        raiseEvent(new CompiledEvent(owner, world.program, results.head, null))
       }
       None
     } catch {
-      case error: CompilerException => Some(new CompiledEvent(owner, workspace.world.program, null, error))
+      case error: CompilerException => Some(new CompiledEvent(owner, world.program, null, error))
     }
   }
 
   private def compileWidgets(): Unit = {
     // handle special case where there are no more widgets.
     if (widgets.isEmpty) {
-      raiseEvent(new CompiledEvent(null, workspace.world.program, null, null))
+      raiseEvent(new CompiledEvent(null, world.program, null, null))
     } else {
       val errorEvents = widgets.foldLeft(Seq[CompiledEvent]()) {
         case (errors, widget) if ! widget.isCommandCenter =>

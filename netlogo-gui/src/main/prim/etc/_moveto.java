@@ -23,7 +23,7 @@ public final strictfp class _moveto
   public void perform(final org.nlogo.nvm.Context context)
       throws LogoException {
     Agent otherAgent = argEvalAgent(context, 0);
-    if (otherAgent.id == -1) {
+    if (otherAgent.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", otherAgent.classDisplayName()));
     }

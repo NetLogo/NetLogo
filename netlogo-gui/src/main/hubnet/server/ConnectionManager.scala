@@ -385,14 +385,14 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   def incrementalViewUpdate() {
     // update the entire world if the patches have changed (do to a world resizing)
-    doViewUpdate(lastPatches != world.patches())
+    doViewUpdate(lastPatches != world.patches)
   }
 
   private def doViewUpdate(resetWorld:Boolean) {
     if (resetWorld) {
       // create a new world buffer, which will force a full update.
       worldBuffer = new ServerWorld(worldProps)
-      lastPatches = world.patches()
+      lastPatches = world.patches
     }
     val buf = worldBuffer.updateWorld(world, resetWorld)
     if (!buf.isEmpty) broadcastMessage(new ViewUpdate(buf.toByteArray))

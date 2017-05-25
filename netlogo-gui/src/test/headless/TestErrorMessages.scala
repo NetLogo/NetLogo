@@ -7,7 +7,7 @@ package org.nlogo.headless
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
 import org.scalatest.{ FunSuite, BeforeAndAfter, BeforeAndAfterAll, OneInstancePerTest }
-import org.nlogo.core.{ CompilerException, Model, View }
+import org.nlogo.core.{ CompilerException, Model, Program, View }
 import org.nlogo.api.{ Version, WorldDimensions3D }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
@@ -49,8 +49,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {
       compiler.compileProgram(
-        "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
-        workspace.world.newProgram(Seq[String]()),
+        "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]", newProgram,
         workspace.getExtensionManager, workspace.getCompilationEnvironment)
     }
     assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)

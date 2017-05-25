@@ -18,7 +18,7 @@ import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
 import org.nlogo.core.UpdateModeJ;
-import org.nlogo.agent.Importer;
+import org.nlogo.agent.ImporterJ;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EditorWorkspace;
@@ -57,7 +57,6 @@ public abstract strictfp class AbstractWorkspace
   protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
     evaluator = new Evaluator(this);
-    world.compiler_$eq(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     extensionManager = new ExtensionManager(this, new JarLoader(this));
@@ -258,7 +257,7 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract void clearAll();
 
-  protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();
+  protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
 
   public void importWorld(String filename)
       throws java.io.IOException {
@@ -287,14 +286,14 @@ public abstract strictfp class AbstractWorkspace
             stringReader(), new java.io.BufferedReader(reader));
   }
 
-  private final Importer.StringReader stringReader() {
-    return new Importer.StringReader() {
+  private final ImporterJ.StringReader stringReader() {
+    return new ImporterJ.StringReader() {
       public Object readFromString(String s)
-          throws Importer.StringReaderException {
+          throws ImporterJ.StringReaderException {
         try {
           return compiler().readFromString(s, _world, extensionManager);
         } catch (CompilerException ex) {
-          throw new Importer.StringReaderException
+          throw new ImporterJ.StringReaderException
               (ex.getMessage());
         }
       }

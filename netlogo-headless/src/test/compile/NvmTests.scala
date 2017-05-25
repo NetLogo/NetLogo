@@ -64,7 +64,7 @@ class NvmTests extends FunSuite {
 
   trait Helper {
     lazy val workspace = new org.nlogo.nvm.DummyWorkspace()
-    lazy val world = new org.nlogo.agent.World()
+    lazy val world = new org.nlogo.agent.World2D()
     lazy val owner = new SimpleJobOwner("Test", world.mainRNG, AgentKind.Observer)
 
     val a = new Let("a")

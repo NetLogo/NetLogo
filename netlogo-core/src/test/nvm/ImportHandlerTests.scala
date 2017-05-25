@@ -7,7 +7,7 @@ import java.util.{ List => JList }
 import org.scalatest.FunSuite
 
 import org.nlogo.{ api, agent, core },
-  agent.{ AgentSet, World, DummyLiteralParser },
+  agent.{ AgentSet, World2D, DummyLiteralParser },
   api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager },
   core.{ ExtensionObject, File, ErrorSource, Primitive, TokenDSL}
 
@@ -34,7 +34,7 @@ class ImportHandlerTests extends FunSuite {
   }
 
   def defaultWorld: api.World = {
-    val world = new World()
+    val world = new World2D()
     world.createPatches(-10, 10, -10, 10)
     world.realloc()
     world

@@ -23,7 +23,7 @@ public strictfp class _hubnetsendwatch
             hubNetManager().get().sendAgentPerspective
                 (client,
                     PerspectiveJ.WATCH,
-                    agent.kind(), agent.id, ((world.worldWidth() - 1) / 2), false);
+                    agent.kind(), agent.id(), ((world.worldWidth() - 1) / 2), false);
           }
         });
     context.ip = next;

@@ -23,7 +23,7 @@ public final strictfp class _distance extends Reporter {
       throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (otherAgent.id == -1) {
+    if (otherAgent.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", otherAgent.classDisplayName()));
     }

@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.Assertions
-import org.nlogo.agent.Agent
+import org.nlogo.agent.{ Agent, CompilationManagement }
 import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, WorldDimensions3D }
 import org.nlogo.core.{ AgentKind, CompilerException, Model, Program, WorldDimensions }
 import org.nlogo.nvm.PresentationCompilerInterface
@@ -19,8 +19,10 @@ trait AbstractTestLanguage extends Assertions {
 
   import AbstractTestLanguage._
 
-  val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler",
-    if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+  lazy val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+
+  val compiler =
+    Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", dialect)
 
   lazy val workspace: HeadlessWorkspace = {
     val ws = HeadlessWorkspace.newInstance
@@ -38,16 +40,17 @@ trait AbstractTestLanguage extends Assertions {
         new WorldDimensions(-5, 5, -5, 5), "")
   }
 
+  def newProgram: Program = Program.fromDialect(dialect)
+
   def defineProcedures(source: String) {
     val results = {
       import collection.JavaConverters._
       compiler.compileProgram(
-        HeadlessWorkspace.TestDeclarations + source,
-        workspace.world.newProgram(Seq[String]()),
+        HeadlessWorkspace.TestDeclarations + source, newProgram,
         workspace.getExtensionManager(), workspace.getCompilationEnvironment)
     }
     workspace.setProcedures(results.proceduresMap)
-    workspace.world.program(results.program)
+    workspace.world.asInstanceOf[CompilationManagement].program(results.program)
     workspace.init()
     workspace.world.realloc()
   }
@@ -61,7 +64,7 @@ trait AbstractTestLanguage extends Assertions {
     val actualResult = workspace.evaluateReporter(owner,
       if (mode == NormalMode) reporter
       else ("runresult \"" + org.nlogo.api.StringUtils.escapeString(reporter) + "\""),
-      workspace.world.observer())
+      workspace.world.observer)
     if(workspace.lastLogoException != null)
       throw workspace.lastLogoException
     // To be as safe as we can, let's do two separate checks here...  we'll compare the results both
@@ -112,7 +115,7 @@ trait AbstractTestLanguage extends Assertions {
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
-      workspace.world.agentKindToAgentSet(agentClass), true)
+      workspace.world.agentSetOfKind(agentClass), true)
     if(workspace.lastLogoException != null)
       throw workspace.lastLogoException
   }

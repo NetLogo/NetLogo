@@ -66,9 +66,6 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
 with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
-
-  world.parser_=(this)
-
   val fileManager: FileManager = new DefaultFileManager(this)
 
   /**

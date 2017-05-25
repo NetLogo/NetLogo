@@ -6,7 +6,7 @@ package org.nlogo.app
 import javax.swing.{ JOptionPane, JMenu }
 import java.awt.event.ActionEvent
 
-import org.nlogo.agent.{ Agent, World, World3D }
+import org.nlogo.agent.{ Agent, World, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
@@ -347,7 +347,7 @@ class App extends
 
     val controlSet = new AppControlSet()
 
-    val world = if(Version.is3D) new World3D() else new World()
+    val world = if(Version.is3D) new World3D() else new World2D()
 
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world,
@@ -413,7 +413,7 @@ class App extends
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, tabs.codeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
     org.nlogo.api.Exceptions.setHandler(this)
@@ -1008,7 +1008,7 @@ class App extends
   @throws(classOf[CompilerException])
   def report(source: String): Object = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
-    workspace.evaluateReporter(owner, source, workspace.world.observer())
+    workspace.evaluateReporter(owner, source, workspace.world.observer)
   }
 
   /**

@@ -10,7 +10,7 @@ import java.util.{ ArrayList, List => JList }
 import org.nlogo.api.{ ControlSet, LogoException, ModelType, NetLogoLegacyDialect, Version, SimpleJobOwner }
 import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Implicits.thunk2runnable
-import org.nlogo.agent.{ World, World3D }
+import org.nlogo.agent.{ World, World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
@@ -48,7 +48,7 @@ with ControlSet {
   RuntimeErrorDialog.init(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
-  protected val world = if(Version.is3D) new World3D() else new World
+  protected val world = if(Version.is3D) new World3D() else new World2D()
   val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
   protected val liteEditorFactory = new DefaultEditorFactory(workspace)
@@ -62,7 +62,7 @@ with ControlSet {
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
   addLinkComponent(procedures)
-  addLinkComponent(new CompilerManager(workspace, procedures))
+  addLinkComponent(new CompilerManager(workspace, world, procedures))
   addLinkComponent(new CompiledEvent.Handler {
     override def handle(e: CompiledEvent) {
       if (e.error != null)

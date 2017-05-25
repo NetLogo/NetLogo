@@ -38,14 +38,14 @@ public final strictfp class _setdefaultshape
         throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape", shape));
       }
-      world.turtleBreedShapes.setBreedShape(breed, checkedShape);
+      world.turtleBreedShapes().setBreedShape(breed, checkedShape);
     } else if (breed.kind() == AgentKindJ.Link()) {
       String checkedShape = world.checkLinkShapeName(shape);
       if (checkedShape == null) {
         throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape", shape));
       }
-      world.linkBreedShapes.setBreedShape(breed, checkedShape);
+      world.linkBreedShapes().setBreedShape(breed, checkedShape);
     }
     context.ip = next;
   }

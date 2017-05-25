@@ -22,7 +22,7 @@ public final strictfp class _of
     Object agentOrSet = args[1].report(context);
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
-      if (agent.id == -1) {
+      if (agent.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }

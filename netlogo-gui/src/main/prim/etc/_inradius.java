@@ -33,7 +33,7 @@ public final strictfp class _inradius extends Reporter {
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
     }
     List<Agent> result =
-        world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, true);
+        world.inRadiusOrCone().inRadius(context.agent, sourceSet, radius, true);
     return AgentSet.fromArray(sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

@@ -22,13 +22,13 @@ class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorksp
     Given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     And("a subscriber to mice")
-    val miceSub = new SimpleChangeEventCounter(ws.world.getBreeds.get("MICE"))
+    val miceSub = new SimpleChangeEventCounter(ws.world.getBreed("MICE"))
     And("a subscriber to frogs")
-    val frogSub = new SimpleChangeEventCounter(ws.world.getBreeds.get("FROGS"))
+    val frogSub = new SimpleChangeEventCounter(ws.world.getBreed("FROGS"))
     And("a subscriber to links")
     val linksSub = new SimpleChangeEventCounter(ws.world.links)
     And("a subscriber to undirected-links")
-    val undirLinksSub = new SimpleChangeEventCounter(ws.world.getLinkBreeds.get("UNDIRECTED-EDGES"))
+    val undirLinksSub = new SimpleChangeEventCounter(ws.world.getLinkBreed("UNDIRECTED-EDGES"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 

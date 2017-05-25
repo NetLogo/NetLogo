@@ -8,7 +8,7 @@ package org.nlogo.headless
 
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
-    agent.{ Agent, World },
+    agent.{ Agent, World, World2D },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
     core.{ model, AgentKind, CompilerException, CompilerUtilitiesInterface, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
       model.ModelReader,
@@ -36,7 +36,7 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
-    val world = new World
+    val world = new World2D
     Femto.get(subclass, world,
       Femto.scalaSingleton[CompilerInterface](
         "org.nlogo.compile.Compiler"),
