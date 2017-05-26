@@ -75,7 +75,7 @@ DropGivenShapeAfterSwitchingBreeds
   O> create-apples 1 [ set shape "car" set breed grapes ]
   [shape] of grape 0 => "default"
 
-BreedsOwnVariableInitialization
+BreedsOwnVariableInitialization_2D
   breed [apples apple]
   undirected-link-breed [bananas banana]
   turtles-own [tvar]
@@ -94,5 +94,27 @@ BreedsOwnVariableInitialization
   [tvar] of apple 3 => 0
   [avar] of apple 3 => 0
   O> ask patch 0 0 [ sprout-apples 1 ]
+  [tvar] of apple 4 => 0
+  [avar] of apple 4 => 0
+
+BreedsOwnVariableInitialization_3D
+  breed [apples apple]
+  undirected-link-breed [bananas banana]
+  turtles-own [tvar]
+  apples-own [avar]
+  patches-own [pvar]
+  links-own [lvar]
+  bananas-own [bvar]
+  O> create-apples 1
+  [tvar] of apple 0 => 0
+  [avar] of apple 0 => 0
+  [pvar] of patch 0 0 0 => 0
+  O> create-apples 1 [ create-banana-with apple 0 ]
+  [lvar] of banana 0 1 => 0
+  [bvar] of banana 0 1 => 0
+  O> create-turtles 1 [ hatch-apples 1 ]
+  [tvar] of apple 3 => 0
+  [avar] of apple 3 => 0
+  O> ask patch 0 0 0 [ sprout-apples 1 ]
   [tvar] of apple 4 => 0
   [avar] of apple 4 => 0

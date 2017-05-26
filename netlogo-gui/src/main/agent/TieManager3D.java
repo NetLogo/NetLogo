@@ -113,15 +113,13 @@ public strictfp class TieManager3D
       if (!myTies.isEmpty()) {
         // create a matrix transform for translating the location
         // of leaf turtles
-        Matrix3D htrans = new Matrix3D();
         Matrix3D ptrans = new Matrix3D();
         Matrix3D rtrans = new Matrix3D();
         double dh = Turtle.subtractHeadings(newHeading, oldHeading);
         double dp = Turtle.subtractHeadings(newPitch, oldPitch);
         double dr = Turtle.subtractHeadings(newRoll, oldRoll);
 
-
-        htrans.zrot(-dh); // this transform method takes degrees, not radians
+        Matrix3D htrans = Rotations3D.zrot(-dh); // this transform method takes degrees, not radians
         Vect[] vects = Vect.toVectors(newHeading, oldPitch, 0);
         ptrans.vrot(0, 0, 0,
             vects[1].x(), vects[1].y(), vects[1].z(), StrictMath.toRadians(dp));

@@ -4,7 +4,7 @@ SortNonDestructive
   sort g => [1 2 3 4 5]
   g => [5 4 3 2 1]
 
-SortNonDestructiveOnAgentsets
+SortNonDestructiveOnAgentsets_2D
   globals [g]
   O> crt 100
   O> foreach reverse sort turtles [[x] -> ask x [ move-to patch 1 0 ] ]
@@ -41,7 +41,8 @@ SortingListsOfAgents_2D
 SortingListsOfAgents_3D
   O> crt 5
   map [[t] -> [who] of t] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
-  map [[p] -> list [pxcor] of p [pycor] of p] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
+  map [[p] -> (list [pxcor] of p [pycor] of p [pzcor] of p)] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1 0] [1 1 0] [-1 -1 0] [1 -1 0]]
+  sublist map [[p] -> (list [pxcor] of p [pycor] of p [pzcor] of p)] sort patches 0 5 => [[-5 5 5] [-4 5 5] [-3 5 5] [-2 5 5] [-1 5 5]]
 
 SortingListsOfLinks
   directed-link-breed [directed-edges directed-edge]

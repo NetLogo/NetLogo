@@ -52,6 +52,21 @@ public strictfp class Matrix3D {
   }
 
   /**
+   * Create a new matrix with transform specified in row-major order
+   */
+  public Matrix3D(double[] xs, double[] ys, double[] zs) {
+    xx = xs[0];
+    xy = xs[1];
+    xz = xs[2];
+    yx = ys[0];
+    yy = ys[1];
+    yz = ys[2];
+    zx = zs[0];
+    zy = zs[1];
+    zz = zs[2];
+  }
+
+  /**
    * Scale by f in all dimensions
    */
   public void scale(double f) {

@@ -7,7 +7,7 @@ package org.nlogo.compile
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected in
 // StructureParser. - ST 2/21/08, 1/21/09
 
-import org.nlogo.api.{ ExtensionManager, Version }
+import org.nlogo.api.{ ExtensionManager, NetLogoThreeDDialect, Version }
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, CommandMunger, DefaultAstVisitor,
   FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ProcedureDefinition, ReporterMunger }
 import org.nlogo.core.{ Dialect, Program }

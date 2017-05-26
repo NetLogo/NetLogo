@@ -116,7 +116,7 @@ TieMultipleWithSameTurtle_2D
   [(word xcor ", " ycor)] of turtle 0 => "1, 0"
 
 
-TieRotationAtWrappedEdge
+TieRotationAtWrappedEdge_2D
   O> resize-world -5 5 -5 5
   O> crt 2
   O> ask turtle 0 [ setxy 1 0 set heading 90 ]
@@ -164,7 +164,7 @@ TieRotationAtWrappedEdge
   [ycor]    of turtle 1 => -4
   [heading] of turtle 1 => 90
 
-MovingStrangely
+MovingStrangely_2D
   O> resize-world -14 14 -14 14
   O> crt 1
   O> ask turtle 0 [ setxy 2.5088750128719646 -13.91688134099136 ]

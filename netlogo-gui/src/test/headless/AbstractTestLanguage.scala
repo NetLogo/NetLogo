@@ -53,7 +53,7 @@ trait AbstractTestLanguage extends Assertions {
   }
 
   def openModel(model: Model): Unit = {
-    workspace.openModel(model)
+    workspace.openModel(model.copy(version = Version.version))
   }
 
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
