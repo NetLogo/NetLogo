@@ -101,9 +101,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   def showControlCenter() {
-    controlCenter =
-      new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
-    controlCenter.pack()
+    if (controlCenter == null) {
+      controlCenter =
+        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
+      controlCenter.pack()
+    }
     controlCenter.setVisible(true)
   }
 
