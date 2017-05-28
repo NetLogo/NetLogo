@@ -118,7 +118,13 @@ class Tabs(val workspace:       GUIWorkspace,
   def handle(e: AboutToCloseFilesEvent) =
     OfferSaveExternalsDialog.offer(externalFileTabs filter (_.saveNeeded), this)
 
-  def handle(e: LoadBeginEvent) = setSelectedComponent(interfaceTab)
+  def handle(e: LoadBeginEvent) = {
+    setSelectedComponent(interfaceTab)
+    externalFileTabs foreach { tab =>
+      externalFileManager.remove(tab)
+      closeExternalFile(tab.filename)
+    }
+  }
 
   def handle(e: RuntimeErrorEvent) =
      if(!e.jobOwner.isInstanceOf[MonitorWidget])
