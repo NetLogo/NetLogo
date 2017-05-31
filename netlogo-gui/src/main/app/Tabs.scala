@@ -172,6 +172,7 @@ class Tabs(val workspace:       GUIWorkspace,
         if (!tab.isDefined && e.error != null) {
           openExternalFile(filename)
           tab = getTabWithFilename(Right(filename))
+          tab.get.handle(e) // it was late to the party, let it handle the event too
         }
         if (e.error != null) setSelectedComponent(tab.get)
         recolorTab(tab.get, e.error != null)
