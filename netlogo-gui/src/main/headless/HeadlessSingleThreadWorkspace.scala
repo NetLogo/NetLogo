@@ -47,7 +47,7 @@ class HeadlessSingleThreadWorkspace(
   with ViewSettings {
     */
 
-    val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+    override val dialect = if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
 
     // this is a blatant hack that makes it possible to test the new stack trace stuff.
     // lastErrorReport gives more information than the regular exception that gets
