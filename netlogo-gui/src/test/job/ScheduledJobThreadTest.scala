@@ -91,11 +91,11 @@ class ScheduledJobThreadTest extends FunSuite {
   }
 
   test("job ordering puts an old monitor update ahead of RunJob") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 1))
+    assertSortedOrder(RunMonitors(Seq.empty[(String, SuspendableJob)], 0), RunJob(dummyJob, "abc", 1))
   }
 
   test("job ordering puts an old job ahead of monitor updates") {
-    assertSortedOrder(RunMonitors(Map.empty[String, SuspendableJob], 0), RunJob(dummyJob, "abc", 1))
+    assertSortedOrder(RunMonitors(Seq.empty[(String, SuspendableJob)], 0), RunJob(dummyJob, "abc", 1))
   }
 
   class DummyJob extends SuspendableJob {
@@ -322,7 +322,18 @@ class ScheduledJobThreadTest extends FunSuite {
   test("doesn't re-run monitors unless there's new data") { new Helper {
     subject.registerMonitor("abc", resultJob)
     runTasks(3)
-    assert(resultJob.wasRun)
+    assertResult(1)(resultJob.runCount)
+  } }
+
+  test("pauses for MonitorInterval between running monitors") { new Helper {
+    subject.registerMonitor("abc", resultJob)
+    runTasks(3)
+    scheduleOperation({() => })
+    runTasks(3)
+    assertResult(1)(resultJob.runCount)
+    elapse(subject.MonitorInterval + 1)
+    runTasks(2)
+    assertResult(2)(resultJob.runCount)
   } }
 
   test("can pause between running a job for an interval") { new Helper {

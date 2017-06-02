@@ -2,7 +2,7 @@
 
 package org.nlogo.job
 
-import java.util.{ ArrayList => JArrayList, Comparator, UUID }
+import java.util.{ ArrayList => JArrayList, Comparator, TreeSet, UUID }
 import java.util.concurrent.{ BlockingQueue, PriorityBlockingQueue, TimeUnit }
 
 import org.nlogo.api.HaltSignal
@@ -47,7 +47,8 @@ object ScheduledJobThread {
   case class AddMonitor(op: SuspendableJob, tag: String, submissionTime: Long)              extends ScheduledTask {
     val stoppable = false
   }
-  case class RunMonitors(monitorOps: Map[String, SuspendableJob], submissionTime: Long)     extends ScheduledTask {
+
+  case class RunMonitors(monitorOps: Seq[(String, SuspendableJob)], submissionTime: Long)     extends ScheduledTask {
     val tag = "runmonitors"
     val stoppable = false
   }
@@ -58,7 +59,7 @@ object ScheduledJobThread {
   }
 
   object JobSuspension {
-    implicit object SuspensionOrdering extends Ordering[JobSuspension] {
+    val comparator = new Comparator[JobSuspension] {
       def compare(x: JobSuspension, y: JobSuspension): Int = {
         if (x.timeUnsuspended < y.timeUnsuspended) -1
         else if (x.timeUnsuspended > y.timeUnsuspended) 1
@@ -100,7 +101,7 @@ import ScheduledJobThread._
 
 trait JobScheduler extends ApiJobScheduler {
   val StepsPerRun = 100
-  val MonitorInterval = 100
+  val MonitorInterval = 35
 
   def timeout = 50
 
@@ -123,7 +124,7 @@ trait JobScheduler extends ApiJobScheduler {
   // be modified by the job thread (and is therefore private).
   // A scala collection was chosen for convenience reasons, a Java collection
   // might offer better performance.
-  private val suspendedJobs = SortedSet.empty[JobSuspension]
+  private val suspendedJobs = new TreeSet(JobSuspension.comparator)
 
   // haltRequested tracks whether the user has requested a halt.
   // It is only read from the job thread, but it written from any thread.
@@ -141,7 +142,7 @@ trait JobScheduler extends ApiJobScheduler {
   // if we're ever in a situation where this is going to be non-empty or have more than a few
   // elements, consider using java collections instead
   private var stopList        = Set.empty[String]
-  private var pendingMonitors = Map.empty[String, SuspendableJob]
+  private var pendingMonitors = Seq.empty[(String, SuspendableJob)]
   private var monitorsRunning = false
   private var monitorDataStale = true
 
@@ -195,7 +196,7 @@ trait JobScheduler extends ApiJobScheduler {
 
   private def clearAll(): Unit = {
     queue.clear()
-    pendingMonitors = Map.empty[String, SuspendableJob]
+    pendingMonitors = Seq.empty[(String, SuspendableJob)]
     stopList = Set.empty[String]
     suspendedJobs.clear()
   }
@@ -212,32 +213,50 @@ trait JobScheduler extends ApiJobScheduler {
       case StopJob(cancelTag, time)      => stopList += cancelTag
       case AddMonitor(op, tag, _)        => addMonitor(tag, op)
       case RunMonitors(updaters, time)   =>
-        pendingMonitors.values.foreach(_.scheduledBy(this))
-        val allMonitors = updaters ++ pendingMonitors
-        pendingMonitors = Map.empty[String, SuspendableJob]
+        val (allMonitors, newPendingMonitors) =
+          if (pendingMonitors.isEmpty)
+            (updaters, pendingMonitors)
+          else {
+            pendingMonitors.foreach(_._2.scheduledBy(this))
+            (updaters ++ pendingMonitors, Seq.empty[(String, SuspendableJob)])
+          }
+        pendingMonitors = newPendingMonitors
         runMonitors(allMonitors)
     }
   }
 
   private def rescheduleSuspendedJobs(): Unit = {
-    val toSchedule = suspendedJobs.takeWhile(_.timeUnsuspended < currentTime)
-    toSchedule.foreach {
-      case s@JobSuspension(i, e) =>
-        queue.add(e)
-        suspendedJobs -= s
+    val toSchedule = suspendedJobs.iterator
+    var timeUnsuspended = 0L
+    var toRemove = List.empty[JobSuspension]
+    while (toSchedule.hasNext && timeUnsuspended < currentTime) {
+      val js = toSchedule.next()
+      timeUnsuspended = js.timeUnsuspended
+      if (timeUnsuspended < currentTime) {
+        queue.add(js.event)
+        toRemove = js :: toRemove
+      }
     }
+    toRemove.foreach(suspendedJobs.remove)
   }
 
   private def clearStopList(): Unit = {
     if (suspendedJobs.isEmpty)
       stopList.foreach(jobCompleted)
-    else
-      suspendedJobs.foreach {
-        case js@JobSuspension(_, RunJob(_, t, _)) if stopList.contains(t) =>
-          suspendedJobs -= js
-          jobCompleted(t)
-        case _ =>
+    else {
+      val iter = suspendedJobs.iterator
+      var toRemove = List.empty[JobSuspension]
+      while (iter.hasNext) {
+        val js = iter.next()
+        js.event match {
+          case RunJob(_, t, _) if stopList.contains(t) =>
+            toRemove = js :: toRemove
+            jobCompleted(t)
+          case _ =>
+        }
       }
+      toRemove.foreach(suspendedJobs.remove)
+    }
   }
 
   private def jobCompleted(tag: String): Unit = {
@@ -257,13 +276,14 @@ trait JobScheduler extends ApiJobScheduler {
         case op: ScheduledTask => updates.add(JobHalted(op.tag))
         case _ =>
       }
-    suspendedJobs.foreach(s => haltTask(s.event))
+    val iter = suspendedJobs.iterator
+    while (iter.hasNext) { haltTask(iter.next().event) }
     suspendedJobs.clear()
     val queuedTasks = new JArrayList[ScheduledTask]()
     queue.drainTo(queuedTasks)
     queuedTasks.asScala.foreach(haltTask _)
     haltRequested = false
-    pendingMonitors = Map.empty[String, SuspendableJob]
+    pendingMonitors = Seq.empty[(String, SuspendableJob)]
   }
 
   private def runTask[T](task: => T, tag: String, handleSuccess: PartialFunction[Try[T], Unit]): Unit = {
@@ -284,7 +304,7 @@ trait JobScheduler extends ApiJobScheduler {
         if (foreverInterval == 0)
           queue.add(reRun)
         else
-          suspendedJobs += JobSuspension(foreverInterval, reRun)
+          suspendedJobs.add(JobSuspension(foreverInterval, reRun))
       case Success(Left(update)) => updates.add(update)
     })
 
@@ -297,14 +317,14 @@ trait JobScheduler extends ApiJobScheduler {
   }
 
   private def addMonitor(tag: String, op: SuspendableJob): Unit = {
-    if (monitorsRunning) pendingMonitors += tag -> op
+    if (monitorsRunning) pendingMonitors = (tag -> op) +: pendingMonitors
     else {
-      queue.add(RunMonitors(Map(tag -> op), currentTime))
+      queue.add(RunMonitors(Seq(tag -> op), currentTime))
       monitorsRunning = true
     }
   }
 
-  private def runMonitors(ops: Map[String, SuspendableJob]): Unit = {
+  private def runMonitors(ops: Seq[(String, SuspendableJob)]): Unit = {
     if (monitorDataStale) {
       val (monitorValues, halted) = runMonitorRec(ops, Map.empty[String, Try[AnyRef]])
       updates.add(MonitorsUpdate(monitorValues, currentTime))
@@ -313,12 +333,12 @@ trait JobScheduler extends ApiJobScheduler {
         monitorDataStale = false
       }
     } else {
-      queue.add(RunMonitors(ops, currentTime + MonitorInterval))
+      suspendedJobs.add(JobSuspension(MonitorInterval, RunMonitors(ops, currentTime)))
     }
   }
 
   @tailrec
-  private def runMonitorRec(ops: Map[String, SuspendableJob], acc: Map[String, Try[AnyRef]]): (Map[String, Try[AnyRef]], Boolean) = {
+  private def runMonitorRec(ops: Seq[(String, SuspendableJob)], acc: Map[String, Try[AnyRef]]): (Map[String, Try[AnyRef]], Boolean) = {
     if (ops.isEmpty) (acc, false)
     else {
       val (key, job) = ops.head
@@ -350,7 +370,6 @@ class ScheduledJobThread(val updates: BlockingQueue[ModelUpdate], val handleMode
       } catch {
         case i: InterruptedException =>
         case e: Exception =>
-          println(e)
           e.printStackTrace()
       }
       if (haltRequested) {
