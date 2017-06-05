@@ -1806,9 +1806,6 @@ ask turtles [ set shape one-of shapes ]
       <li>Continuous updates can confuse the user of your model by letting
       them see model states they aren't supposed to see, which may be
       misleading.
-      <li>Increased speed. Updating the view takes time, so if one update
-      per tick is enough, then enforcing there is only one update per tick
-      will make your model faster.
       <li>Since <code>setup</code> buttons don't advance the tick counter,
       they are unaffected by the speed slider; this is normally the desired
       behavior.
@@ -1831,6 +1828,14 @@ ask turtles [ set shape one-of shapes ]
       agents moving one at a time. Don't forget to change back to
       tick-based updates when you are done, as the choice of update mode is
       saved with the model.
+    <p>
+      Changing the update mode also affects model speed.  Updating the view
+      takes time; often enforcing a single update per tick (by using tick-based
+      updates) will make your model faster. On the other hand, continuous
+      updates will be faster when running a single tick is faster than drawing
+      a frame of the model. Most models run faster under tick-based updates,
+      but for an example of a model which is faster with continuous updates
+      see the "Heroes and Cowards" library model.
     <h3>
       Frame rate
     </h3>
@@ -2870,17 +2875,14 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       These primitives require anonymous procedures as input: <code>foreach</code>,
       <code>map</code>, <code>reduce</code>, <code>filter</code>, <code>n-values</code>,
       <code>sort-by</code>. When calling these primitives, using an <code>-&gt;</code> is optional
-      if your anonymous procedure takes no arguments.
-      For example one may write simply <code>foreach mylist [ print ]</code>
+      if your anonymous procedure contains a single primitive which
+      has requires no more inputs than are are provided by the primitive.
+      For example one may write simply <code>foreach mylist print</code>
       instead of <code>foreach mylist [ [x] -&gt; print x ]</code>, though the latter
-      is also accepted. Additionally, while brackets around argument names are required
-      for anonymous procedures of two or more arguments, they may be omitted for
-      anonymous procedures of one or zero arguments. So <code>foreach mylist [ x -&gt; print x ]</code>
-      is equivalent to <code>foreach mylist [ [x] -&gt; print x ]</code>.
-    <p>
-      <b>Note</b>: brackets around arguments were <b>always required</b> in NetLogo 6.0.0.
-      If you copy and paste code into NetLogo 6.0.0 using anonymous procedures with
-      unbracketed arguments, the code will not compile until you have added the brackets.
+      is also accepted. Depending on the anonymous procedure,
+      various parts of the anonymous procedure syntax can be omitted.
+      For a summary of optional syntax, see
+      <a href="#anonymous-procedure-syntax-options">the table below</a>.
     <p>
       The <code>run</code> command accepts anonymous commands as well as strings.
     <p>
@@ -2985,6 +2987,92 @@ foreach [1 2 3 4] [ print ? ]
           accepts an anonymous procedure as input, it must be called as e.g.
           <code>p [ -&gt; ...  ]</code> not <code>p [ ... ]</code>.</li>
       </ul>
+    <h3 id="anonymous-procedure-syntax-options">
+      What is Optional?
+    </h3>
+    <p>
+      There are several different ways of writing anonymous procedures which allow users to omit
+      part or all of the anonymous procedure syntax.
+      These are summarized in the table below.
+      <table class="line-border anon-procedure-table">
+        <thead>
+          <tr>
+            <th scope="col">What is the anonymous procedure like?</th>
+            <th scope="col">What can be left out?</th>
+            <th scope="col">Examples</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>The anonymous procedure is a single primitive</td>
+            <td>
+              <ul>
+                <li>input names</li>
+                <li>arrow</li>
+                <li>block brackets</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="no-bullets">
+                <li><code>foreach mylist stamp  ; no inputs</code></li>
+                <li><code>foreach mylist print  ; single input</code></li>
+                <li><code>(foreach xs ys setxy) ; multiple inputs</code></li>
+                <li><code>map round [1.3 2.4 3.5] ; reporter, single input</code></li>
+                <li><code>(map + [1 2 3] [4 5 6]) ; reporter, multiple inputs</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>The anonymous procedure takes no inputs</td>
+            <td>
+              <ul>
+                <li>input names</li>
+                <li>arrow</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="no-bullets">
+                <li><code>foreach mylist [ print "abc" ]</code></li>
+                <li><code>map [ 4 ] mylist</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>The anonymous procedure has zero or one input(s)</td>
+            <td>
+              <ul>
+                <li>brackets around input names</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="no-bullets">
+                <li><code>foreach mylist [ -&gt; stamp ] ; no inputs</code></li>
+                <li><code>foreach mylist [ x -&gt; print x ] ; single input</code></li>
+                <li><code>foreach mylist [ x -&gt; rt x fd x ] ; multiple primitives, single input</code></li>
+                <li><code>map [ -&gt; world-width ] mylist ; reporter, no inputs</code></li>
+                <li><code>map [ x -&gt; x ^ 2 ] mylist ; reporter, single input</code></li> </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Anonymous procedure takes more than one input</td>
+            <td>
+              <ul>
+                <li>nothing</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="no-bullets">
+                <li><code>(foreach xs ys [ [ x y ] -&gt; setx x + y ])</code></li>
+                <li><code>(map [ [ x y ] -&gt; x mod round y ] xs ys)</code></li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <p>
+      <b>Note</b>: brackets around input names were <b>always required</b> in NetLogo 6.0.0.
+      If you copy and paste code into NetLogo 6.0.0 using anonymous procedures with
+      unbracketed input names, the code will not compile until you add the brackets.
     <h3>
       Code example
     </h3>

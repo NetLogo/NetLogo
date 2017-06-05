@@ -1190,9 +1190,9 @@ if is-turtle? turtle 0 [ ... ]
       procedure that contains only the foreach, for example:
     <pre>
 to test
-  foreach [1 2 3] [
-    if ? = 2 [ stop ]
-    print ?
+  foreach [1 2 3] [ i -&gt;
+    if i = 2 [ stop ]
+    print i
   ]
 end
 </pre>

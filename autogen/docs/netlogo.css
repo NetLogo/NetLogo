@@ -237,3 +237,20 @@ h5.minor-section-header {
   margin-top: 0.75em;
   margin-bottom: 0.75em;
 }
+
+ul.no-bullets {
+  list-style-type: none;
+}
+
+table.line-border {
+  border-collapse: collapse;
+}
+
+table.line-border > tbody > tr {
+  border-top: solid black 1px;
+}
+
+.anon-procedure-table > thead > tr > th, .anon-procedure-table > tbody > tr > td {
+  padding-left: 10px;
+  padding-right: 10px;
+}
