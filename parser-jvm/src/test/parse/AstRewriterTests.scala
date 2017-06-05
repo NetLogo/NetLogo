@@ -139,6 +139,7 @@ class AstRewriterTests extends FunSuite {
   testLambda("foreach [1 2 3] [ x -> show x ]", "foreach [1 2 3] [ x -> show x ]")
   testLambda("foreach [1 2 3] [ -> show 4 ]", "foreach [1 2 3] [ -> show 4 ]")
   testLambda("__ignore runresult [2 < (3 + pi)]", "__ignore runresult [2 < (3 + pi)]")
+  testLambda("show filter [ ?1 -> ?1 < 3 ] [1 3 2]", "show filter [? < 3] [1 3 2]")
 
   test("add extension") {
     assertResult("extensions [foo]")(addExtension("", "foo"))
@@ -234,6 +235,15 @@ class AstRewriterTests extends FunSuite {
     test("lambda-izes " + body + " to " + changedBody) {
       val lambdaized = lambdaize(preamble + body + postamble)
       assertResult(preamble + changedBody + postamble, s"""expected: "$preamble$changedBody$postamble", got: "$lambdaized"""")(lambdaized)
+      try {
+        val co = compilationOp(lambdaized)
+        val op = co.copy(containingProgram =
+          co.containingProgram.copy(dialect = new LambdaConversionDialect(co.containingProgram.dialect)))
+        FrontEnd.frontEnd(op)
+      } catch {
+        case ex: CompilerException =>
+          fail(s"expected converted source: '$lambdaized' to compile, errored with: " + ex.getMessage)
+      }
     }
   }
 }
