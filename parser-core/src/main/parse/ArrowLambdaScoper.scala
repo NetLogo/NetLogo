@@ -63,7 +63,7 @@ object ArrowLambdaScoper {
     def gatherArgumentToArrow(arg: Token, toks: Seq[Token], usedNames: SymbolTable): Option[(Seq[String], Seq[Token], SymbolTable)] = {
       val tok = toks.head
       if (tok.isArrow) {
-        if (arg.tpe == TokenType.Ident || arg.value.isInstanceOf[_unknownidentifier])
+        if (arg.tpe == TokenType.Ident || arg.value.isInstanceOf[_unknownidentifier] || arg.value.isInstanceOf[LambdaTokenMapper._taskvariable])
           Some((Seq(arg.text.toUpperCase), toks.tail, usedNames))
         else
           exception(s"Expected a variable name here", arg)
