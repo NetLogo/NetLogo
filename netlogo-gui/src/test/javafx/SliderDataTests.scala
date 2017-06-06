@@ -130,11 +130,10 @@ class SliderDataTests extends FunSuite {
     assertResult(2)(s.currentValue)
   } }
 
-  // don't know whether this is right or not
   test("only updates after model updates are finished") { new StateTest {
     s.valueSendStarted("abc")
     s.valueReceivedFromModel(2)
-    assertResult(0)(s.currentValue)
+    assertResult(2)(s.currentValue)
     s.valueSendFinished("abc")
     assertResult(2)(s.currentValue)
   } }
