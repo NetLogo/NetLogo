@@ -41,13 +41,15 @@ class UpdateFilterThreadTests extends FunSuite with Inside {
     assert(subject.filteredUpdates.size == 1)
   } }
 
-  test("sends another world update if the interval has elapsed") { new Helper {
+  test("sends a new world update (removing the old one) once the interval has elapsed") { new Helper {
     updates.add(WorldUpdate(null, 1234))
     subject.step()
+    assert(subject.filteredUpdates.size == 1)
     elapse(100)
-    updates.add(WorldUpdate(null, 1234))
+    updates.add(WorldUpdate(null, 1334))
     subject.step()
-    assert(subject.filteredUpdates.size == 2)
+    assert(subject.filteredUpdates.size == 1)
+    assert(subject.filteredUpdates.poll == WorldUpdate(null, 1334))
   } }
 
   test("forwards the latest world update if the interval has elapsed and another message is sent") { new Helper {
@@ -59,7 +61,7 @@ class UpdateFilterThreadTests extends FunSuite with Inside {
     elapse(50)
     updates.add(JobDone("abc"))
     subject.step()
-    assert(subject.filteredUpdates.size == 3)
+    assert(subject.filteredUpdates.size == 2)
   } }
 
   test("runs the process callback when it receives a message") { new Helper {
@@ -88,5 +90,4 @@ class UpdateFilterThreadTests extends FunSuite with Inside {
     subject.step()
     assert(subject.filteredUpdates.size == 1)
   } }
-
 }

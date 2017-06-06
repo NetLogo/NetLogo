@@ -21,28 +21,40 @@ trait UpdateFilter {
 
   var lastProcessRun: Long = -1000
 
-  var latestWorldUpdate:   (Long, Option[WorldUpdate])    = (-1000, None)
-  var latestMonitorUpdate: (Long, Option[MonitorsUpdate]) = (-1000, None)
+  class Updater[T <: ModelUpdate] {
+    var lastUpdateTime = -1000L
+    var latestStoredUpdate = Option.empty[T]
+    var latestSentUpdate = Option.empty[T]
+
+    def dueForUpdate: Boolean =
+      currentTime - lastUpdateTime > updateInterval
+
+    def registerNewUpdate(t: T) =
+      latestStoredUpdate = Some(t)
+
+    def sendUpdates() =
+      if (dueForUpdate) {
+        latestStoredUpdate.foreach { u =>
+          lastUpdateTime = currentTime
+          filteredUpdates.add(u)
+          latestSentUpdate.foreach(filteredUpdates.remove)
+          latestSentUpdate = Some(u)
+        }
+      }
+  }
+
+  val worldUpdater = new Updater[WorldUpdate]
+  val monitorUpdater = new Updater[MonitorsUpdate]
+  val allUpdaters = Seq(worldUpdater, monitorUpdater)
 
   def step(): Unit = {
     worldUpdates.poll(updateInterval, TimeUnit.MILLISECONDS) match {
-      case wu@WorldUpdate(_, _)    => latestWorldUpdate   = (latestWorldUpdate._1,   Some(wu))
-      case mu@MonitorsUpdate(_, _) => latestMonitorUpdate = (latestMonitorUpdate._1, Some(mu))
+      case wu@WorldUpdate(_, _)    => worldUpdater.registerNewUpdate(wu)
+      case mu@MonitorsUpdate(_, _) => monitorUpdater.registerNewUpdate(mu)
       case other if other != null  => filteredUpdates.add(other)
       case _ =>
     }
-    if (currentTime - latestWorldUpdate._1 > updateInterval) {
-      latestWorldUpdate._2.foreach { wu =>
-        filteredUpdates.add(wu)
-        latestWorldUpdate = (currentTime, None)
-      }
-    }
-    if (currentTime - latestMonitorUpdate._1 > updateInterval) {
-      latestMonitorUpdate._2.foreach { mu =>
-        filteredUpdates.add(mu)
-        latestMonitorUpdate = (currentTime, None)
-      }
-    }
+    allUpdaters.foreach(_.sendUpdates())
     if (currentTime - lastProcessRun > updateInterval) {
       processUpdates()
       lastProcessRun = currentTime
