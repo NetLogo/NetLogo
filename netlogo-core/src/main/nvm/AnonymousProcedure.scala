@@ -182,8 +182,10 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
         throw ex
     }
     finally {
+      val result = context.activation.result
       context.finished = context.agent.id == -1
       context.activation = oldActivation
+      context.activation.result = result
     }
     // note that it's up to the caller to restore context.ip and catch NonLocalExit.  (it would be
     // nice if that handling could be encapsulated here instead, but I couldn't figure out how to do
