@@ -46,11 +46,11 @@ pipeline {
   post {
     failure {
       library 'netlogo-shared'
-      sendNotifications('NetLogo/NetLogo', 'SUCCESS')
+      sendNotifications('NetLogo/NetLogo', 'FAILURE')
     }
     success {
       library 'netlogo-shared'
-      sendNotifications('NetLogo/NetLogo', 'FAILED')
+      sendNotifications('NetLogo/NetLogo', 'SUCCESS')
     }
     unstable {
       library 'netlogo-shared'
