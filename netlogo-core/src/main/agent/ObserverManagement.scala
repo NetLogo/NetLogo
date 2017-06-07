@@ -55,6 +55,7 @@ trait ObserverManagement extends WorldKernel {
   def followOffsetX: Double = observer.followOffsetX
   def followOffsetY: Double = observer.followOffsetY
 
+
   def clearGlobals(): Unit = {
     var j = program.interfaceGlobals.size
     while (j < observer.variables.length) {
@@ -67,10 +68,5 @@ trait ObserverManagement extends WorldKernel {
       }
       j += 1
     }
-  }
-
-  def clearObserverPosition(): Unit = {
-    observer.updatePosition()
-    observer.resetPerspective()
   }
 }

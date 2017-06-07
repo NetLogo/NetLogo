@@ -2,11 +2,13 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, Shape, ShapeListTracker }
+import org.nlogo.core.{ AgentKind, Program, Shape, ShapeList, ShapeListTracker }
+
+import java.lang.{ Double => JDouble }
 
 import java.util.{ HashMap => JHashMap, Map => JMap }
 
-import World.NegativeOneInt
+import World.{ NegativeOneInt, Zero }
 
 trait LinkManagement extends WorldKernel {
   def program: Program
@@ -24,11 +26,12 @@ trait LinkManagement extends WorldKernel {
   // 3 element list. ev 5/1/08
   private var _nextLinkIndex: Long = 0
 
-  var linkBreeds: JMap[String, TreeAgentSet] = new JHashMap[String, TreeAgentSet]()
+  private[agent] var linkBreeds: JMap[String, TreeAgentSet] = new JHashMap[String, TreeAgentSet]()
   def linkShapeList = linkShapes.shapeList
 
   def linksOwnIndexOf(name: String): Int = program.linksOwn.indexOf(name)
   def linksOwnNameAt(index: Int): String = program.linksOwn(index)
+  def linkBreedAgents: JMap[String, TreeAgentSet] = linkBreeds
   def getLinkBreed(breedName: String): AgentSet = linkBreeds.get(breedName)
   def isLinkBreed(breed: AgentSet): Boolean =
     program.linkBreeds.isDefinedAt(breed.printName)
@@ -36,10 +39,8 @@ trait LinkManagement extends WorldKernel {
     breed != links && linkBreedsOwnIndexOf(breed, name) != -1
   def linkBreedsOwnNameAt(breed: AgentSet, index: Int): String =
     program.linkBreeds(breed.printName).owns(index - program.linksOwn.size)
-  def linkBreedsOwnIndexOf(breed: AgentSet, name: String): Int = {
-    if (breed == null) throw new IllegalArgumentException("invalid breed")
+  def linkBreedsOwnIndexOf(breed: AgentSet, name: String): Int =
     breedsOwnCache.getOrDefault(breed.printName + "~" + name, NegativeOneInt).intValue
-  }
   def getLinkBreedSingular(breed: AgentSet): String =
     if (breed == links)
       "LINK"

@@ -102,8 +102,8 @@ class HeadlessSingleThreadWorkspace(
       renderer.trailDrawer.clearDrawing()
     }
     def importDrawing(x$1: org.nlogo.core.File): Unit = ???
-    var importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler {
+    var importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler {
         override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
           System.err.println(
             "got a " + (if (fatalError) "" else "non") +

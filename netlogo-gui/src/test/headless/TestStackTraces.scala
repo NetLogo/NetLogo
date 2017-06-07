@@ -69,8 +69,9 @@ error while observer running __BOOM
       """|stack overflow (recursion too deep)
          |  error while observer running RUN""".stripMargin))
     trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
-        assert(l === "  called by run" ||
-          l === "  called by procedure OVERFLOW-RUN"))
+        assert(l === "  called by procedure OVERFLOW-RUN" ||
+          l === "  called by (anonymous command from: procedure OVERFLOW-RUN: [overflow-run])" ||
+          l === "  called by (anonymous command from: procedure OVERFLOW-RUN: [run [ [] -> overflow-run ]])"))
   }
 
   testModel("stack overflow - reporter", Model(code)) {
@@ -91,6 +92,7 @@ error while observer running __BOOM
          |  error while observer running FOREACH""".stripMargin))
     trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
         assert(l === "  called by foreach" ||
+          l == "  called by (anonymous command from: procedure OVERFLOW-FOREACH: [overflow-foreach])" ||
           l === "  called by procedure OVERFLOW-FOREACH"))
   }
 }

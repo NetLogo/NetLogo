@@ -33,7 +33,7 @@ class World3D extends World
         new Link3D(world, src, dest, breed)
     })
 
-  override val tieManager = new TieManager3D(this, linkManager)
+  override val tieManager: TieManager3D = new TieManager3D(this, linkManager)
   val inRadiusOrCone = new InRadiusOrCone3D(this)
 
   _mayHavePartiallyTransparentObjects = false;
@@ -57,16 +57,17 @@ class World3D extends World
   def maxPzcorBoxed   = _maxPzcorBoxed
   def minPzcorBoxed   = _minPzcorBoxed
 
-  topology = new Torus3D(this)
+  _topology = new Torus3D(this)
+  createPatches(_minPxcor, _maxPxcor, _minPycor, _maxPycor, _minPzcor, _maxPzcor)
 
   override protected def createObserver(): Observer = new Observer3D(this)
 
   def changeTopology(xWrapping: Boolean, yWrapping: Boolean): Unit = {
-    topology = new Torus3D(this)
+    _topology = new Torus3D(this)
   }
 
   def changeTopology(xWrapping: Boolean, yWrapping: Boolean, zWrapping: Boolean): Unit = {
-    topology = new Torus3D(this)
+    _topology = new Torus3D(this)
   }
 
   def shortestPathZ(z1: Double, z2: Double): Double =
@@ -93,9 +94,9 @@ class World3D extends World
   def wrapZ(z: Double): Double =
     Topology.wrap(z, _minPzcor - 0.5, _maxPzcor + 0.5)
 
-  def roundZ(z: Double): Int = {
+  def roundZ(_z: Double): Int = {
     // floor() is slow so we don't use it
-    val wrappedZ = topology.asInstanceOf[Topology3D].wrapZ(z)
+    val z = topology.asInstanceOf[Topology3D].wrapZ(_z)
 
     if (z > 0) {
       (z + 0.5).toInt
@@ -114,11 +115,11 @@ class World3D extends World
     val wrappedZ = Topology.wrap(z, _minPzcor - 0.5, _maxPzcor + 0.5);
 
     def roundBase(base: Double): Int =
-      if (base >0) {
+      if (base > 0) {
         (base + 0.5).toInt
       } else {
         val intPart = base.toInt
-        val fractPart = intPart - x
+        val fractPart = intPart - base
         if (fractPart > 0.5) intPart - 1 else intPart
       }
 
@@ -255,9 +256,9 @@ class World3D extends World
   }
 
   @throws(classOf[java.io.IOException])
-  def importWorld(errorHandler: org.nlogo.agent.Importer.ErrorHandler,
+  def importWorld(errorHandler: org.nlogo.agent.ImporterJ.ErrorHandler,
     importerUser: ImporterUser,
-    stringReader: org.nlogo.agent.Importer.StringReader,
+    stringReader: org.nlogo.agent.ImporterJ.StringReader,
     reader: java.io.BufferedReader): Unit =
     new Importer3D(errorHandler, this, importerUser, stringReader).importWorld(reader)
 

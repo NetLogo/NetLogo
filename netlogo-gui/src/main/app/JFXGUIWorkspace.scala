@@ -40,7 +40,7 @@ class JFXGUIWorkspace(world: World,
     // drawings not supported
   }
   override def importDrawing(x$1: org.nlogo.core.File): Unit = ???
-  override def importerErrorHandler(): org.nlogo.agent.Importer.ErrorHandler = ???
+  override def importerErrorHandler(): org.nlogo.agent.ImporterJ.ErrorHandler = ???
   def magicOpen(x$1: String): Unit = ???
   def open(x$1: String): Unit = ???
   def openString(x$1: String): Unit = ???

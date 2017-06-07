@@ -189,7 +189,7 @@ class LinkManagerImpl[W <: World](world: W, linkFactory: LinkFactory[W]) extends
       result(i) = links(i).otherEnd(turtle)
       i += 1
     }
-    if ((linkBreed eq world.links) && (world.linkBreeds.size > 1)) result.distinct else result
+    if ((linkBreed eq world.links) && (world.linkBreedAgents.size > 1)) result.distinct else result
   }
 
   def dummyLink(end1: Turtle, end2: Turtle, breed: AgentSet): DummyLink = {

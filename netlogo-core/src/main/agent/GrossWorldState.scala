@@ -2,12 +2,11 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ Color, TrailDrawerInterface }
+import org.nlogo.api.TrailDrawerInterface
 
 // The vars and methods in this track the rendering state of the world.
-// They should be considered transient.  Their values should *not* effect
-// world equality.
-trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
+// They should be considered transient and equality should not take them into account.
+trait GrossWorldState extends WorldKernel { this: CoreWorld =>
   // possibly need another array for 3D colors
   // since it seems messy to collapse 3D array into 2D
   protected var _patchColors: Array[Int] = _
@@ -15,6 +14,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
 
   // this is used by the OpenGL texture code to decide whether
   // it needs to make a new texture or not - ST 2/9/05
+  protected var _patchColorsDirty: Boolean = true
   def patchColorsDirty: Boolean = _patchColorsDirty
   private[agent] def patchColorsDirty(dirty: Boolean): Unit = { _patchColorsDirty = dirty }
   def markPatchColorsDirty(): Unit = { _patchColorsDirty = true }
@@ -22,6 +22,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
 
   // performance optimization -- avoid drawing an all-black bitmap if we
   // could just paint one big black rectangle
+  protected var _patchesAllBlack = true
   def patchesAllBlack: Boolean = _patchesAllBlack
   private[agent] def patchesAllBlack(areBlack: Boolean): Unit = { _patchesAllBlack = areBlack }
 
@@ -57,6 +58,17 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
     _mayHavePartiallyTransparentObjects = false
   }
 
+  // This is a flag that the engine checks in its tightest innermost loops
+  // to see if maybe it should stop running NetLogo code for a moment
+  // and do something like halt or update the display.  It doesn't
+  // particularly make sense to keep it in World, but since the check
+  // occurs in inner loops, we want to put in a place where the engine
+  // can get to it very quickly.  And since every Instruction has a
+  // World object in it, the engine can always get to World quickly.
+  //  - ST 1/10/07
+  @volatile
+  var comeUpForAir: Boolean = false  // NOPMD pmd doesn't like 'volatile'
+
   private var _displayOn: Boolean = true
   def displayOn = _displayOn
   def displayOn(displayOn: Boolean): Unit = {
@@ -84,15 +96,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
     other._mayHavePartiallyTransparentObjects = _mayHavePartiallyTransparentObjects
     other._patchScratch = _patchScratch
     other._patchesWithLabels = _patchesWithLabels
-    other.patchesAllBlack(_patchesAllBlack)
-    other.patchColorsDirty(_patchColorsDirty)
-  }
-
-  def patchChangedColorAt(patchId: Int, color: Double): Unit = {
-    _patchColors(patchId) = Color.getARGBbyPremodulatedColorNumber(color)
-    _patchColorsDirty = true
-    if (color != 0.0) {
-      _patchesAllBlack = false
-    }
+    other._patchesAllBlack = _patchesAllBlack
+    other._patchColorsDirty = _patchColorsDirty
   }
 }

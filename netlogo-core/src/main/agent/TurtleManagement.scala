@@ -2,16 +2,15 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, ShapeList, ShapeListTracker }
+import org.nlogo.core.{ AgentKind, Program, Shape, ShapeList, ShapeListTracker }
 
 import java.lang.{ Double => JDouble }
 
 import java.util.{ HashMap => JHashMap, Map => JMap }
 
-import World.NegativeOneInt
+import World.{ NegativeOneInt, Zero }
 
 trait TurtleManagement extends WorldKernel { this: CoreWorld =>
-  def clearObserverPosition(): Unit
   def program: Program
   protected def breedsOwnCache: JHashMap[String, Integer]
 
@@ -24,10 +23,10 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
 
   private var _nextTurtleIndex: Long = 0
 
-  protected val _turtles: TreeAgentSet = new TreeAgentSet(AgentKind.Turtle, "TURTLES")
+  protected var _turtles: TreeAgentSet = null
   def turtles: TreeAgentSet = _turtles
 
-  var breeds: JMap[String, TreeAgentSet] = new JHashMap[String, TreeAgentSet]()
+  private[agent] var breeds: JMap[String, TreeAgentSet] = new JHashMap[String, TreeAgentSet]()
 
   protected val lineThicknesses: JMap[Agent, JDouble] = new JHashMap[Agent, JDouble]()
 
@@ -36,6 +35,7 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
   def turtlesOwnNameAt(index: Int): String = program.turtlesOwn(index)
   def turtlesOwnIndexOf(name: String): Int = program.turtlesOwn.indexOf(name)
 
+  def breedAgents: JMap[String, TreeAgentSet] = breeds
   def getBreed(breedName: String): TreeAgentSet = breeds.get(breedName)
   def isBreed(breed: AgentSet): Boolean =
     program.breeds.isDefinedAt(breed.printName)
@@ -94,7 +94,7 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
 
   def clearTurtles(): Unit = {
     if (program.breeds.nonEmpty) {
-      val breedIterator = breeds.values.iterator
+      var breedIterator = breeds.values.iterator
       while (breedIterator.hasNext) {
         breedIterator.next().asInstanceOf[TreeAgentSet].clear()
       }
@@ -112,14 +112,12 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
       patchIter.next().asInstanceOf[Patch].clearTurtles()
     }
     _nextTurtleIndex = 0
-    clearObserverPosition()
   }
 
   def getVariablesArraySize(turtle: org.nlogo.api.Turtle, breed: org.nlogo.api.AgentSet): Int = {
     if (breed == _turtles) {
       program.turtlesOwn.size
     } else {
-      if (breed == null) throw new IllegalArgumentException("invalid breed")
       val breedOwns = program.breeds(breed.printName).owns
       program.turtlesOwn.size + breedOwns.size
     }

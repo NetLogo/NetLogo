@@ -21,8 +21,8 @@ public strictfp class Turtle2D
   // that the slot is open.  --mas 12/18/01
   Turtle2D(World world, long id) {
     this(world, world.turtles(), World.Zero(), World.Zero(), false);
-    setId(id);
-    _world.turtles().add(this);
+    _id_$eq(id);
+    world().turtles().add(this);
   }
 
   Turtle2D(World world) {
@@ -40,7 +40,7 @@ public strictfp class Turtle2D
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = _world.getPatchAt(xcor + dx, ycor + dy);
+    Patch target = world().getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
@@ -85,7 +85,7 @@ public strictfp class Turtle2D
     if (currentPatch == null) {
       //turtles cannot leave the world, so xcor and ycor will always be valid
       //so assume we dont have to access the Topologies
-      currentPatch = ((World2D) _world).getPatchAtWrap(xcor, ycor);
+      currentPatch = ((World2D) world()).getPatchAtWrap(xcor, ycor);
     }
     return currentPatch;
   }
@@ -108,7 +108,7 @@ public strictfp class Turtle2D
 
   void drawLine(double x0, double y0, double x1, double y1) {
     if (!penMode().equals(PEN_UP) && (x0 != x1 || y0 != y1)) {
-      ((World2D) _world).drawLine(x0, y0, x1, y1, _variables[VAR_COLOR], penSize(), penMode());
+      ((World2D) world()).drawLine(x0, y0, x1, y1, variables()[VAR_COLOR], penSize(), penMode());
     }
   }
 
@@ -122,14 +122,14 @@ public strictfp class Turtle2D
     if (x != oldX || y != oldY) {
       this.xcor = x;
       this.ycor = y;
-      _variables[VAR_XCOR] = p._variables[Patch.VAR_PXCOR];
-      _variables[VAR_YCOR] = p._variables[Patch.VAR_PYCOR];
-      Observer observer = _world.observer();
+      variables()[VAR_XCOR] = p.variables()[Patch.VAR_PXCOR];
+      variables()[VAR_YCOR] = p.variables()[Patch.VAR_PYCOR];
+      Observer observer = world().observer();
       if (this == observer.targetAgent()) {
         observer.updatePosition();
       }
-      if (_world.tieManager().hasTies()) {
-        _world.tieManager().turtleMoved(this, x, y, oldX, oldY);
+      if (world().tieManager().hasTies()) {
+        world().tieManager().turtleMoved(this, x, y, oldX, oldY);
       }
     }
   }
@@ -145,7 +145,7 @@ public strictfp class Turtle2D
 
   public void face(Agent agent, boolean wrap) {
     try {
-      heading(_world.protractor().towards(this, agent, wrap));
+      heading(world().protractor().towards(this, agent, wrap));
     } catch (AgentException ex) {
       // AgentException here means we tried to calculate the heading from
       // an agent to itself, or to an agent at the exact same position.
@@ -193,7 +193,7 @@ public strictfp class Turtle2D
     if (h < 0 || h >= 360) {
       h = ((h % 360) + 360) % 360;
     }
-    return _world.protractor().getPatchAtHeadingAndDistance(this, h, distance);
+    return world().protractor().getPatchAtHeadingAndDistance(this, h, distance);
   }
 
   public void turnRight(double delta) {

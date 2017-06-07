@@ -22,7 +22,7 @@ class ModelOperations(world: World) extends (ModelOperation => Try[ModelUpdate])
         else {
           val current = world.observer.variables(varIndex)
           if (current == expected) {
-            world.observer.setObserverVariable(varIndex, update)
+            world.observer.setVariable(varIndex, update)
             UpdateSuccess(uv)
           } else {
             UpdateFailure(uv, current)
