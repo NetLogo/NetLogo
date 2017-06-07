@@ -2,6 +2,7 @@
 
 package org.nlogo.javafx
 
+import javafx.application.Platform
 import javafx.event.{ Event, EventHandler }
 import javafx.beans.value.{ ChangeListener, ObservableValue }
 import javafx.beans.property.{ DoubleProperty, SimpleDoubleProperty }
@@ -9,6 +10,11 @@ import javafx.beans.property.{ DoubleProperty, SimpleDoubleProperty }
 import org.nlogo.internalapi.Monitorable
 
 object Utils {
+  def runLater(f: () => Unit): Unit = {
+    Platform.runLater(new Runnable() {
+      override def run(): Unit = { f() }
+    })
+  }
   def handler[T <: Event](f: T => Unit): EventHandler[T] = {
     new EventHandler[T]() {
       override def handle(event: T): Unit = {
@@ -39,6 +45,7 @@ object Utils {
       m.onUpdate({ updated => p.setValue(updated) })
       p
     }
-
   }
+
+
 }

@@ -15,7 +15,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList,
     Shape.{ LinkShape, VectorShape }
 import org.nlogo.internalapi.ModelUpdate
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
-import org.nlogo.javafx.Utils.handler
+import org.nlogo.javafx.{ InterfaceArea, Utils }, Utils.handler
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.util.Pico
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
@@ -24,6 +24,20 @@ import org.picocontainer.adapters.AbstractAdapter
 
 object JavaFXApp extends scala.App {
   Application.launch(classOf[JavaFXApp])
+
+  var application: JavaFXApp = null
+
+  def addUIHook(name: String, hookIn: InterfaceArea => Unit, hookOut: () => Unit): Unit = {
+    if (application != null && application.applicationController != null) {
+      application.applicationController.addHook(name, hookIn, hookOut)
+    }
+  }
+
+  def removeUIHook(name: String): Unit = {
+    if (application != null && application.applicationController != null) {
+      application.applicationController.removeHook(name)
+    }
+  }
 }
 
 class JavaFXApp extends Application {
@@ -114,6 +128,7 @@ class JavaFXApp extends Application {
     pico.addComponent(classOf[JavaFXApp], this)
 
     threadPool = java.util.concurrent.Executors.newFixedThreadPool(2)
+    JavaFXApp.application = this
   }
 
   override def start(primaryStage: Stage): Unit = {

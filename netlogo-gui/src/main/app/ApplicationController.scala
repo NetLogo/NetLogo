@@ -7,7 +7,6 @@ import java.util.concurrent.Executor
 
 import java.util.concurrent.{ BlockingQueue, LinkedBlockingQueue }
 
-import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.event.ActionEvent
 import javafx.scene.canvas.Canvas
@@ -26,6 +25,7 @@ import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ConfigureWorld }
 
+import scala.collection.mutable.{ Map => MutableMap }
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
@@ -125,18 +125,34 @@ class ApplicationController {
             }
             ConfigureWorld(workspace, compiledModel)
             compiledModel
-            }(executionContext).foreach {
-              compiledModel =>
-                ApplicationController.this.compiledModel = compiledModel
-                val interfaceWidgetsPane =
-                  ModelInterfaceBuilder.build(compiledModel)
-                interfaceArea = interfaceWidgetsPane
-                AnchorPane.setTopAnchor(interfaceArea, 0.0)
-                AnchorPane.setBottomAnchor(interfaceArea, 0.0)
-                AnchorPane.setLeftAnchor(interfaceArea, 0.0)
-                AnchorPane.setRightAnchor(interfaceArea, 0.0)
-            }(JavaFXExecutionContext)
+        }(executionContext).foreach {
+          compiledModel =>
+            ApplicationController.this.compiledModel = compiledModel
+            val interfaceWidgetsPane =
+              ModelInterfaceBuilder.build(compiledModel)
+            interfaceArea = interfaceWidgetsPane
+            uiHooks.map(_._2._1).foreach(_.apply(interfaceArea))
+            AnchorPane.setTopAnchor(interfaceArea, 0.0)
+            AnchorPane.setBottomAnchor(interfaceArea, 0.0)
+            AnchorPane.setLeftAnchor(interfaceArea, 0.0)
+            AnchorPane.setRightAnchor(interfaceArea, 0.0)
+        }(JavaFXExecutionContext)
     }
+  }
+
+  val uiHooks: MutableMap[String, (InterfaceArea => Unit, () => Unit)] =
+    MutableMap.empty[String, (InterfaceArea => Unit, () => Unit)]
+
+  def addHook(name: String, hookIn: InterfaceArea => Unit, hookOut: () => Unit): Unit = {
+    uiHooks += ((name, (hookIn, hookOut)))
+    if (interfaceArea != null)
+      Utils.runLater(() => hookIn(interfaceArea))
+  }
+
+  def removeHook(name: String): Unit = {
+    val hookOut = uiHooks.get(name).map(_._2).getOrElse({() => })
+    Utils.runLater(() => hookOut())
+    uiHooks -= name
   }
 
   private def halt(a: ActionEvent): Unit = {
@@ -202,11 +218,7 @@ class ApplicationController {
       workspace.setMaxFPS(interfaceArea.speedControl.updatesPerSecond.getValue)
     }
     if (filterThread.filteredUpdates.peek != null) {
-      Platform.runLater(new Runnable() {
-        override def run(): Unit = {
-          processUpdates()
-        }
-      })
+      Utils.runLater(processUpdates _)
     }
   }
 
