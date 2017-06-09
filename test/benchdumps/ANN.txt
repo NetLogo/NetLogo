@@ -806,7 +806,7 @@ reporter procedure APPLY-REALS:[INPUT]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 3
                 ALOAD 3
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L0
@@ -912,10 +912,11 @@ reporter procedure APPLY-REALS:[INPUT]{OTPL}:
                 ARETURN
         _asm_procedureapplyreals_observervariable_4 "output-node-list" => Object
              L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_procedureapplyreals_observervariable_4.world : Lorg/nlogo/agent/World;
+              INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
               ICONST_3
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+              INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
              L1
               ARETURN
           ALOAD 0
@@ -1126,10 +1127,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
       _first "first layers" Object => Object
         _observervariable:LAYERS "layers" => Object
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_ask_4.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L1
           ASTORE 2
           ALOAD 2
@@ -1227,7 +1229,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 3
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_ask_4.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1247,7 +1249,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L11
@@ -1435,11 +1437,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_9.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_4
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           GOTO L5
          L2
@@ -1559,10 +1562,11 @@ procedure CLICK-INPUT:[]{OTPL}:
         _asm_procedureclickinput_first_3 "first layers" Object => Object
           _observervariable:LAYERS "layers" => Object
              L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_procedureclickinput_first_3.world : Lorg/nlogo/agent/World;
+              INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
               ICONST_1
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+              INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
              L1
               ASTORE 2
               ALOAD 2
@@ -1741,7 +1745,7 @@ procedure CLICK-INPUT:[]{OTPL}:
           ALOAD 3
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureclickinput_ask_2.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1761,7 +1765,7 @@ procedure CLICK-INPUT:[]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L5
@@ -1995,7 +1999,7 @@ reporter procedure GET-BIASES:[]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 3
                 ALOAD 3
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L0
@@ -2335,7 +2339,7 @@ reporter procedure GET-OUTPUT:[]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 3
                 ALOAD 3
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L0
@@ -2496,10 +2500,11 @@ reporter procedure GET-OUTPUT:[]{OTPL}:
                 ARETURN
         _asm_proceduregetoutput_observervariable_2 "output-node-list" => Object
              L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduregetoutput_observervariable_2.world : Lorg/nlogo/agent/World;
+              INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
               ICONST_3
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+              INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
              L1
               ARETURN
           ALOAD 0
@@ -2615,7 +2620,7 @@ reporter procedure GET-WEIGHTS:[]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L0
@@ -2944,10 +2949,11 @@ procedure PROPOGATE:[]{OTPL}:
       _asm_procedurepropogate_butfirst_0 "but-first layers" Object => Object
         _observervariable:LAYERS "layers" => Object
            L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_procedurepropogate_butfirst_0.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
             ICONST_1
-            INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+            INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ASTORE 2
             ALOAD 2
@@ -3084,7 +3090,7 @@ procedure PROPOGATE:[]{OTPL}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_propogate_anonymouscommand1ask1updateactivation_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -3104,7 +3110,7 @@ procedure PROPOGATE:[]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -3224,7 +3230,7 @@ procedure RANDOMIZE-WEIGHTS:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomizeweights_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -3351,7 +3357,7 @@ procedure RANDOMIZE-WEIGHTS:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomizeweights_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -3801,10 +3807,11 @@ procedure SET-BIAS:[B]{-T--}:
                 ARETURN
           _asm_proceduresetbias_observervariable_2 "input-node-list" => Object
                L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_proceduresetbias_observervariable_2.world : Lorg/nlogo/agent/World;
+                INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_2
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+                INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
@@ -4148,7 +4155,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -4168,7 +4175,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -4274,10 +4281,11 @@ procedure SET-INPUT:[INPUT]{OTPL}:
   ])"
       _asm_proceduresetinput_observervariable_0 "input-node-list" => Object
            L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_proceduresetinput_observervariable_0.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
             ICONST_2
-            INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+            INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
       _asm_proceduresetinput_procedurevariable_1 "input" => Object
@@ -4345,7 +4353,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -4365,7 +4373,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -4726,7 +4734,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -4746,7 +4754,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -4871,11 +4879,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
          L4
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_2.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           GOTO L5
          L2
@@ -5248,10 +5257,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
       _asm_proceduresetup_butfirst_15 "but-first layers" Object => Object
         _observervariable:LAYERS "layers" => Object
            L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_butfirst_15.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
             ICONST_1
-            INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+            INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ASTORE 2
             ALOAD 2
@@ -5336,10 +5346,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
       _asm_proceduresetup_butlast_16 "but-last layers" Object => Object
         _observervariable:LAYERS "layers" => Object
            L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_butlast_16.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
             ICONST_1
-            INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+            INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ASTORE 2
             ALOAD 2
@@ -5438,10 +5449,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
           _observervariable:LAYERS "layers" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_17.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           ASTORE 2
           ALOAD 2
@@ -5625,11 +5637,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
          FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_17.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           GOTO L20
          L2
@@ -5655,10 +5668,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
         _last "last layers"
           _asm_proceduresetup_observervariable_19 "layers" => Object
                L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_proceduresetup_observervariable_19.world : Lorg/nlogo/agent/World;
+                INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+                INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
                L1
                 ARETURN
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -5783,11 +5797,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
          FRAME SAME1 org/nlogo/core/LogoList
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_18.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           GOTO L14
          L2
@@ -5852,10 +5867,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 // parameter final  context
                 // parameter final  value
                L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1let1letlengthlayersletnoturtlescrtlayersizesetlay$05ef47d605b7a2d05912dab76b091cda$_let_1.world : Lorg/nlogo/agent/World;
+                INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_1
-                INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+                INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
                L1
                 ASTORE 2
                 ALOAD 2
@@ -6306,10 +6322,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                     ARETURN
               _asm_setup_anonymouscommand1let1letlengthlayersletnoturtlescrtlayersizesetlay$05ef47d605b7a2d05912dab76b091cda$_observervariable_13 "layers" => Object
                    L0
-                    ALOAD 1
-                    GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                    ALOAD 0
+                    GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1let1letlengthlayersletnoturtlescrtlayersizesetlay$05ef47d605b7a2d05912dab76b091cda$_observervariable_13.world : Lorg/nlogo/agent/World;
+                    INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                     ICONST_1
-                    INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+                    INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
                    L1
                     ARETURN
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -6320,11 +6337,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L3
                 ASTORE 2
                L0
-                ALOAD 1
-                GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+                ALOAD 0
+                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1let1letlengthlayersletnoturtlescrtlayersizesetlay$05ef47d605b7a2d05912dab76b091cda$_setobservervariable_11.world : Lorg/nlogo/agent/World;
+                INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_1
                 ALOAD 2
-                INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+                INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
                L1
                 GOTO L4
                L2
@@ -6396,7 +6414,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1let205i05layersizemaxpycors$7ae1007da3741b69ba94c1268c800197$_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -6416,7 +6434,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -6898,7 +6916,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ALOAD 3
                 ALOAD 0
                 GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_ask_0.world : Lorg/nlogo/agent/World;
-                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+                INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -6918,7 +6936,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 4
                 ALOAD 4
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L6
@@ -7038,10 +7056,11 @@ procedure SETUP-TESTING:[]{O---}:
       _runresult "runresult enter-layers"
         _asm_proceduresetuptesting_observervariable_1 "enter-layers" => Object
              L0
-              ALOAD 1
-              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduresetuptesting_observervariable_1.world : Lorg/nlogo/agent/World;
+              INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
               ICONST_0
-              INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+              INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
              L1
               ARETURN
          L0
@@ -7324,7 +7343,7 @@ procedure UPDATE-ACTIVATION:[INCOMING]{-T--}:
                 CHECKCAST org/nlogo/agent/Agent
                 ASTORE 3
                 ALOAD 3
-                GETFIELD org/nlogo/agent/Agent.id : J
+                INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                 LDC -1
                 LCMP
                 IFNE L5
