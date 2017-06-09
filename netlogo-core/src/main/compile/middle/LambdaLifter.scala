@@ -37,7 +37,8 @@ class LambdaLifter(lambdaNumbers: Iterator[Int]) extends AstTransformer {
         val formals = c.argumentNames.map(n => Let(n))
         val name = "__lambda-" + lambdaNumbers.next()
         c.proc = new nvm.LiftedLambda(
-          name, c.token, parent = p, lambdaFormals = formals, closedLets = resolveClosedVariables(c.closedVariables))
+          name, c.token, c.argTokens, parent = p, lambdaFormals = formals,
+          closedLets = resolveClosedVariables(c.closedVariables))
         c.proc.pos = expr.start
         c.proc.end = expr.end
         p.addChild(c.proc)

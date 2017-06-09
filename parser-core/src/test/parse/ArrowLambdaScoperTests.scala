@@ -94,7 +94,7 @@ class ArrowLambdaScoperTests extends FunSuite {
     "MEAN" -> SymbolType.PrimitiveReporter,
     "BAR"  -> SymbolType.GlobalVariable)
 
-  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Seq[String], Seq[Token], SymbolTable)] =
+  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Seq[Token], Seq[Token], SymbolTable)] =
     ArrowLambdaScoper(ts, testSymbols ++ otherSymbols)
 
   def testScopes(toks: Seq[Token], expectedArgs: Seq[String], expectedBody: Seq[Token], expectedSymbols: SymbolTable = SymbolTable.empty) = {
@@ -102,7 +102,7 @@ class ArrowLambdaScoperTests extends FunSuite {
     assert(res.isDefined)
     res.foreach {
       case (args, body, symbols) =>
-        assertResult(expectedArgs)(args)
+        assertResult(expectedArgs)(args.map(_.text.toUpperCase))
         assertResult(expectedBody)(body)
         expectedSymbols.foreach {
           case (key, symType) =>

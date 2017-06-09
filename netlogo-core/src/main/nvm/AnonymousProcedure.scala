@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.api, api.{ AnonymousProcedure => ApiLambda }
-import org.nlogo.core.{ AgentKind, Let, I18N, Syntax }
+import org.nlogo.core.{ AgentKind, Let, I18N, Token, Syntax }
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -63,6 +63,18 @@ object AnonymousProcedure {
     letBindings.foreach(lb => binding.let(lb.let, lb.value))
     binding
   }
+
+  def displayString(procedureType: String, arguments: Seq[Token], body: String): String = {
+    val argsString =
+      if (arguments.isEmpty)
+        ""
+      else if (arguments.length == 1)
+        s"${arguments.head.text} -> "
+      else
+        s"${arguments.map(_.text).mkString("[", " ", "]")} -> "
+
+    s"(anonymous $procedureType: [ $argsString$body ])"
+  }
 }
 
 import AnonymousProcedure._
@@ -71,12 +83,17 @@ import AnonymousProcedure._
 // To run it, we swap closed-over variables into the context,
 // bind actuals to formals, call report(), then unswap.
 
-case class AnonymousReporter(body: Reporter, formals: Array[Let], binding: Binding, locals: Array[AnyRef])
+case class AnonymousReporter(
+  body:           Reporter,
+  formals:        Array[Let],
+  binding:        Binding,
+  locals:         Array[AnyRef],
+  argumentTokens: Seq[Token])
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
   def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, letBindingsToBinding(allLets), locals)
+    this(body, formals, letBindingsToBinding(allLets), locals, Seq.empty[Token])
     System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
   }
 
@@ -86,7 +103,10 @@ case class AnonymousReporter(body: Reporter, formals: Array[Let], binding: Bindi
       ret = Syntax.WildcardType,
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = body.agentClassString)
-  override def toString = "(anonymous reporter: [ " + body.fullSource + " ])"
+
+  override def toString =
+    AnonymousProcedure.displayString("reporter", argumentTokens, body.fullSource)
+
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
     context match {
       case e: ExtensionContext => report(e.nvmContext, args)

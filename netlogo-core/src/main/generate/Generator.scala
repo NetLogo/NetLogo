@@ -3,7 +3,7 @@
 package org.nlogo.generate
 
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter, Thunk }
+import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, LiftedLambda, Procedure, Reporter, Thunk }
 import org.apache.commons.codec.digest.DigestUtils
 
 object Generator {
@@ -67,13 +67,17 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       // While user code will almost never have these, anonymous procedures return
       // their entire body as their displayName. RG 2/27/17
       val displayName = {
-        val baseDisplayName = procedure.displayName.toLowerCase
+        val baseDisplayName =
+          procedure match {
+            case ll: LiftedLambda => s"${ll.parent.name.toLowerCase}_${ll.displayName.toLowerCase}"
+            case _                => procedure.displayName.toLowerCase
+          }
         if (baseDisplayName.length <= 100) baseDisplayName
         else s"${baseDisplayName.take(100)}$$${DigestUtils.md5Hex(baseDisplayName)}$$"
       }
       val pName = displayName.filter(Character.isJavaIdentifierPart).mkString
 
-      "_asm" + "_" + pName + cName.substring(cName.lastIndexOf('.') + 1) + "_" + nextCustomClassNumUID()
+      "_asm_" + pName + cName.substring(cName.lastIndexOf('.') + 1) + "_" + nextCustomClassNumUID()
     }
     val fullClassName = "org/nlogo/prim/" + className
     def generate(): A = {

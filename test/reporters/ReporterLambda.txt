@@ -223,3 +223,8 @@ AlternateReporterSyntaxesSupported
   zero-argument-arrow-omitted => 3
   one-argument-bracketed => [2 3 4]
   one-argument-unbracketed => [3 4 5]
+
+PrintReporterLambda
+  (word [ -> 5 ]) => "(anonymous reporter: [ 5 ])"
+  (word [ a -> a ]) => "(anonymous reporter: [ a -> a ])"
+  (word [ [a b] -> a + b ]) => "(anonymous reporter: [ [a b] -> a + b ])"

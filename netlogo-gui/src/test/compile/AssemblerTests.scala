@@ -13,6 +13,7 @@ class AssemblerTests extends FunSuite {
     val procdefs = TestHelper.compiledProcedures(keyword + " foo " + source + "\nend", program)
     assertResult(1)(procdefs.size)
     val procedure = procdefs.head.procedure
+    procedure.displayName = "procedure FOO"
     for (procdef <- procdefs) {
       procdef.accept(new ArgumentStuffer)
       new Assembler().assemble(procdef)

@@ -8,7 +8,13 @@ object DelayedBlock {
   def apply(openBracket: Token, unterminatedTokens: Seq[Token], scope: SymbolTable): DelayedBlock = {
     ArrowLambdaScoper(openBracket +: unterminatedTokens, scope) match {
       case Some((args, body, symbols)) =>
-        new ArrowLambdaBlock(openBracket, args, body, unterminatedTokens.last, openBracket +: unterminatedTokens :+ Token.Eof, symbols)
+        new ArrowLambdaBlock(
+          openBracket,
+          args,
+          body,
+          unterminatedTokens.last,
+          openBracket +: unterminatedTokens :+ Token.Eof,
+          symbols)
       case None =>
         new AmbiguousDelayedBlock(openBracket, unterminatedTokens, scope)
     }
@@ -25,16 +31,24 @@ trait DelayedBlock extends Expression {
 }
 
 class ArrowLambdaBlock(
-  val openBracket: Token,
-  val argNames: Seq[String],
-  val bodyTokens: Seq[Token],
-  closingBracket: Token,
-  val allTokens: Seq[Token],
-  val internalScope: SymbolTable,
+  val openBracket:    Token,
+  val argTokens:      Seq[Token],
+  val bodyTokens:     Seq[Token],
+  closingBracket:     Token,
+  val allTokens:      Seq[Token],
+  val internalScope:  SymbolTable,
   val sourceLocation: SourceLocation) extends DelayedBlock {
 
-  def this(openBracket: Token, argNames: Seq[String], bodyTokens: Seq[Token], closingBracket: Token, allTokens: Seq[Token], internalScope: SymbolTable) =
-      this(openBracket, argNames, bodyTokens, closingBracket,
+    val argNames = argTokens.map(_.text.toUpperCase)
+
+  def this(
+    openBracket:    Token,
+    argTokens:      Seq[Token],
+    bodyTokens:     Seq[Token],
+    closingBracket: Token,
+    allTokens:      Seq[Token],
+    internalScope:  SymbolTable) =
+      this(openBracket, argTokens, bodyTokens, closingBracket,
         allTokens, internalScope,openBracket.sourceLocation.copy(end = closingBracket.end))
 
   val isArrowLambda = true
@@ -46,18 +60,35 @@ class ArrowLambdaBlock(
     .map(_.tpe == TokenType.Command).getOrElse(true)
 
   override def changeLocation(newLocation: SourceLocation): ArrowLambdaBlock =
-    new ArrowLambdaBlock(openBracket, argNames, bodyTokens, closingBracket, allTokens, internalScope, newLocation)
+    new ArrowLambdaBlock(
+      openBracket,
+      argTokens,
+      bodyTokens,
+      closingBracket,
+      allTokens,
+      internalScope,
+      newLocation)
 }
 
 /**
  * represents a block whose contents we have not yet parsed. Since correctly parsing a block required
  * knowing its expected type, we have to do it in two passes. It will eventually be resolved into
  * an ReporterBlock, CommandBlock or a literal list. */
-class AmbiguousDelayedBlock(val openBracket: Token, unterminatedTokens: Seq[Token], val internalScope: SymbolTable, val sourceLocation: SourceLocation)
+class AmbiguousDelayedBlock(
+  val openBracket:    Token,
+  unterminatedTokens: Seq[Token],
+  val internalScope:  SymbolTable,
+  val sourceLocation: SourceLocation)
   extends DelayedBlock {
-    def this(openBracket: Token, unterminatedTokens: Seq[Token], internalScope: SymbolTable) =
-      this(openBracket, unterminatedTokens, internalScope,
-        openBracket.sourceLocation.copy(end = unterminatedTokens.lastOption.map(_.end) getOrElse openBracket.end))
+    def this(
+      openBracket: Token,
+      unterminatedTokens: Seq[Token],
+      internalScope: SymbolTable) =
+      this(openBracket,
+        unterminatedTokens,
+        internalScope,
+        openBracket.sourceLocation.copy(end = unterminatedTokens.lastOption.map(_.end)
+          .getOrElse(openBracket.end)))
 
   lazy val tokens = openBracket +: unterminatedTokens :+ Token.Eof
 

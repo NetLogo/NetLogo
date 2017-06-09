@@ -5,12 +5,15 @@ package org.nlogo.nvm
 import org.nlogo.core.{ ClosedVariable, Let, StructureDeclarations, Token, prim => coreprim }
 
 final class LiftedLambda(
-  name:          String,
-  nameToken:     Token,
-  val parent:        Procedure,
-  val lambdaFormals: Seq[Let],
-  val closedLets:    Set[Let]
-  ) extends Procedure(false, name, nameToken, Seq.empty[Token], null) {
+  name:               String,
+  nameToken:          Token,
+  argTokens:          Seq[Token],
+  val parent:         Procedure,
+  val lambdaFormals:  Seq[Let],
+  val closedLets:     Set[Let]
+  ) extends Procedure(false, name, nameToken, argTokens, null) {
+
+    args = Vector[String]()
 
     val lambdaFormalsArray: Array[Let] = lambdaFormals.toArray[Let]
 
@@ -21,17 +24,6 @@ final class LiftedLambda(
         case parentLambda: LiftedLambda => parentLambda.getLambdaFormal(name)
         case _ => None
       })
-
-    override lazy val displayName = {
-      def topParent(p: Procedure): Procedure =
-        p match {
-          case ll: LiftedLambda => topParent(ll.parent)
-          case _ => p
-        }
-
-      val sourceCode = code.map(_.fullSource).filterNot(_ == null).mkString("[", " ", "]")
-      "(anonymous command from: " + topParent(parent).displayName + ": " + sourceCode + ")"
-    }
 
     override def dump: String = {
       val buf = new StringBuilder
