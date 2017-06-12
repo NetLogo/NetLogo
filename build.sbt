@@ -51,7 +51,6 @@ lazy val scalatestSettings = Seq(
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
     "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
-    // scalatest doesn't yet play nice with scalacheck 1.13.0
     "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   )
 )

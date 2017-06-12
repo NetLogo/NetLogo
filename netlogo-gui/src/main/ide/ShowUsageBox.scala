@@ -103,7 +103,7 @@ class ShowUsageBox(colorizer: Colorizer) {
           usageTable.setDefaultRenderer(classOf[String], new LineRenderer(Some(token.text)))
           usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
           usageTable.setFillsViewportHeight(true)
-          usageBox.setSize(usageTable.getPreferredSize)
+          usageBox.pack()
           usageTable.validate()
           usageBox.setLocation(popupLocation)
           usageBox.setVisible(true)
