@@ -161,7 +161,8 @@ class Evaluator(workspace: AbstractWorkspace) {
       Some(if(reporter) "runresult" else "run"),
       workspace.world.program, workspace.procedures,
       workspace.getExtensionManager,
-      workspace.compilationEnvironment)
+      workspace.compilationEnvironment,
+      workspace.flags)
     results.head.init(workspace)
     results.head
   }

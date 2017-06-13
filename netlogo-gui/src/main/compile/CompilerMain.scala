@@ -11,7 +11,7 @@ import org.nlogo.api.{ ExtensionManager, Version }
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, CommandMunger, DefaultAstVisitor,
   FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ProcedureDefinition, ReporterMunger }
 import org.nlogo.core.{ Dialect, Program }
-import org.nlogo.nvm.{ CompilerFlags, GeneratorInterface, Procedure }
+import org.nlogo.nvm.{ CompilerFlags, GeneratorInterface, Optimizations => NvmOptimizations, Procedure }
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, FrontEndInterface, FrontEndProcedure, Femto }
 import scala.collection.immutable.ListMap
 import scala.collection.JavaConversions._
@@ -48,7 +48,12 @@ private object CompilerMain {
       feStructureResults.includedSources.map(i =>
           (i -> compilationEnv.getSource(compilationEnv.resolvePath(i))))
 
-    val allDefs = middleEnd.middleEnd(bridged, sources, compilationEnv, getOptimizations(CompilerFlags(), feStructureResults.program.dialect))
+    // NOTE: This only provides a list of optimizations to run.
+    // The optimization system property (in api.Version) controls
+    // whether those are actually turned on.
+    val flags = CompilerFlags(optimizations = NvmOptimizations.guiOptimizations)
+
+    val allDefs = middleEnd.middleEnd(bridged, sources, compilationEnv, getOptimizations(flags, feStructureResults.program.dialect))
 
     val newProcedures =
       allDefs
@@ -82,22 +87,15 @@ private object CompilerMain {
   }
 
   private def getOptimizations(flags: CompilerFlags, dialect: Dialect): Optimizations =
-    if (flags.useOptimizer) {
-      val commandOpts =
-        Seq("Fd1", "FdLessThan1", "HatchFast", "CroFast", "CrtFast", "SproutFast")
-          .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
-          .map(className => Femto.scalaSingleton[CommandMunger](className))
-      val reporterOpts =
-        Seq("PatchAt", "With", "OneOfWith", "Nsum", "Nsum4", "CountWith", "OtherWith",
-          "WithOther", "AnyOther", "AnyOtherWith", "CountOther", "CountOtherWith", "AnyWith1",
-          "AnyWith2", "AnyWith3", "AnyWith4", "AnyWith5", "RandomConst")
-          .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
-          .map(className => Femto.scalaSingleton[ReporterMunger](className))
-      val netLogoSpecificOptimizations =
-        Seq("DialectPatchVariableDouble", "DialectTurtleVariableDouble")
-          .map(opt => s"org.nlogo.compile.optimize.$opt")
-          .map(className => Femto.get[ReporterMunger](className, dialect))
-      Optimizations(commandOpts, reporterOpts ++ netLogoSpecificOptimizations)
-    } else
+    if (flags.useOptimizer)
+      flags.optimizations.foldLeft(Optimizations.none) {
+        case (opts, (NvmOptimizations.Reporter, klass)) =>
+          opts.copy(reporterOptimizations = Femto.scalaSingleton[ReporterMunger](klass) +: opts.reporterOptimizations)
+        case (opts, (NvmOptimizations.DialectReporter, klass)) =>
+          opts.copy(reporterOptimizations = Femto.get[ReporterMunger](klass, dialect) +: opts.reporterOptimizations)
+        case (opts, (NvmOptimizations.Command, klass)) =>
+          opts.copy(commandOptimizations = Femto.scalaSingleton[CommandMunger](klass) +: opts.commandOptimizations)
+      }
+    else
       Optimizations.none
 }

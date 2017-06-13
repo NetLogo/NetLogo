@@ -51,7 +51,7 @@ trait Match {
   def command: Command = throw new MatchFailedException
 
   def reporter: Reporter = throw new MatchFailedException
-    
+
   def matchEmptyCommandBlockIsLastArg: Match = throw new MatchFailedException
 
   def matchArg(index: Int): Match = throw new MatchFailedException

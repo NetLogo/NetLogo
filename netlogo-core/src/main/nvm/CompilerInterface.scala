@@ -63,4 +63,4 @@ case class CompilerFlags(
   foldConstants: Boolean = true,
   useGenerator: Boolean = Version.useGenerator,
   useOptimizer: Boolean = Version.useOptimizer,
-  optimizations: Seq[String] = Seq.empty[String])
+  optimizations: Optimizations.OptimizationList = Optimizations.empty)
