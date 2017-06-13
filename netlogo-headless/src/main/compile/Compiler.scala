@@ -4,8 +4,8 @@ package org.nlogo.compile
 
 import org.nlogo.{ api => nlogoApi, core, nvm },
   nlogoApi.{ ExtensionManager, SourceOwner },
-  core.{ CompilationEnvironment, CompilationOperand, Femto, CompilerUtilitiesInterface, FrontEndInterface, Program},
-  nvm.{ CompilerFlags, CompilerResults, Procedure },
+  core.{ CompilationEnvironment, CompilationOperand, CompilerUtilitiesInterface, Femto, FrontEndInterface, NetLogoCore, Program },
+  nvm.{ CompilerFlags, CompilerResults, Optimizations => NvmOptimizations, Procedure },
     Procedure.{ ProceduresMap, NoProcedures }
 
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, BackEndInterface,
@@ -52,34 +52,30 @@ object Compiler extends nvm.CompilerInterface {
     backEnd.backEnd(allDefs, structureResults.program, compilationEnvironment.profilingEnabled, flags)
   }
 
+  val defaultCompilerFlags =
+    CompilerFlags(optimizations = NvmOptimizations.headlessOptimizations)
+
   def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
     val allSources =
       Map("" -> source) ++ additionalSources.map(additionalSource => additionalSource.classDisplayName -> additionalSource.innerSource).toMap
     val (topLevelDefs, structureResults) =
       frontEnd.frontEnd(CompilationOperand(allSources, extensionManager, compilationEnv, program, Procedure.NoProcedures, subprogram = false))
     val bridged = bridge(structureResults, Procedure.NoProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
-    val allDefs = middleEnd.middleEnd(bridged, allSources, compilationEnv, getOptimizations(CompilerFlags()))
+    val allDefs = middleEnd.middleEnd(bridged, allSources, compilationEnv, getOptimizations(defaultCompilerFlags))
     backEnd.backEnd(allDefs, structureResults.program, compilationEnv.profilingEnabled, CompilerFlags())
   }
 
   private def getOptimizations(flags: nvm.CompilerFlags): Optimizations =
-    if (flags.useOptimizer) {
-      val commandOpt =
-        Seq("Fd1", "FdLessThan1", "HatchFast", "SproutFast", "CrtFast", "CroFast")
-          .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
-          .map(className => Femto.scalaSingleton[CommandMunger](className))
-      val reporterOpt =
-        Seq("PatchAt", "With", "OneOfWith", "Nsum", "Nsum4", "CountWith", "OtherWith",
-          "WithOther", "AnyOther", "AnyOtherWith", "CountOther", "CountOtherWith", "AnyWith1",
-          "AnyWith2", "AnyWith3", "AnyWith4", "AnyWith5", "PatchVariableDouble",
-          "TurtleVariableDouble", "RandomConst")
-          .map(opt => s"org.nlogo.compile.middle.optimize.$opt")
-          .map(className => Femto.scalaSingleton[ReporterMunger](className))
-      val headlessSpecificOptimizations = Seq("Constants", "InRadiusBoundingBox")
-        .map(opt => s"org.nlogo.compile.optimize.$opt")
-        .map(className => Femto.scalaSingleton[ReporterMunger](className))
-      Optimizations(commandOpt, reporterOpt ++ headlessSpecificOptimizations)
-    } else
+    if (flags.useOptimizer)
+      flags.optimizations.foldLeft(Optimizations.none) {
+        case (opts, (NvmOptimizations.Reporter, klass)) =>
+          opts.copy(reporterOptimizations = Femto.scalaSingleton[ReporterMunger](klass) +: opts.reporterOptimizations)
+        case (opts, (NvmOptimizations.DialectReporter, klass)) =>
+          opts.copy(reporterOptimizations = Femto.get[ReporterMunger](klass, NetLogoCore) +: opts.reporterOptimizations)
+        case (opts, (NvmOptimizations.Command, klass)) =>
+          opts.copy(commandOptimizations = Femto.scalaSingleton[CommandMunger](klass) +: opts.commandOptimizations)
+      }
+    else
       Optimizations.none
 
   def makeLiteralReporter(value: AnyRef): nvm.Reporter =
