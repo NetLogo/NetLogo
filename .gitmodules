@@ -68,3 +68,6 @@
 [submodule "behaviorsearch"]
 	path = behaviorsearch
 	url = https://github.com/NetLogo/behaviorsearch.git
+[submodule "extensions/touch"]
+	path = extensions/touch
+	url = git@github.com:NetLogo/Touch-Extension
