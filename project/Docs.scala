@@ -71,6 +71,7 @@ object Docs {
         "rnd"      -> "Rnd",
         "sound"    -> "Sound",
         "table"    -> "Table",
+        "touch"    -> "Touch",
         "vid"      -> "Vid",
         "view2.5d" -> "View2.5D"
       )

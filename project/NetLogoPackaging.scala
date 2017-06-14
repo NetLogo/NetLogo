@@ -272,14 +272,14 @@ object NetLogoPackaging {
         (iconFiles in packageWinAggregate).value,
         aggregateOnlyFiles.value,
         configRoot.value,
-        "0.0.4",
+        "0.0.5",
         buildJDK,
         webTarget.value
       )
 
       val buildVariables = Map[String, String](
-        "version"               -> "Alpha 0.0.4",
-        "numericOnlyVersion"    -> "0.0.4",
+        "version"               -> "Alpha 0.0.5",
+        "numericOnlyVersion"    -> "0.0.5",
         "date"                  -> buildDate.value)
 
       JavaFXWindowsBuild(
