@@ -87,6 +87,9 @@ class ApplicationController {
     _interfaceArea.speedControl.foreverInterval
     workspace.scheduledJobThread.setRunInterval(_interfaceArea.speedControl.foreverInterval.get.toLong)
     _interfaceArea.speedControl.foreverInterval.addListener(speedListener)
+    // NOTE: This needs to be runLater because we have to allow JavaFX to
+    // draw the interface before the height and width is non-zero.
+    Utils.runLater(() => uiHooks.map(_._2._1).foreach(_.apply(interfaceArea)))
   }
 
   def interfaceArea: InterfaceArea = _interfaceArea
@@ -131,12 +134,12 @@ class ApplicationController {
             val interfaceWidgetsPane =
               ModelInterfaceBuilder.build(compiledModel)
             interfaceArea = interfaceWidgetsPane
-            uiHooks.map(_._2._1).foreach(_.apply(interfaceArea))
             AnchorPane.setTopAnchor(interfaceArea, 0.0)
             AnchorPane.setBottomAnchor(interfaceArea, 0.0)
             AnchorPane.setLeftAnchor(interfaceArea, 0.0)
             AnchorPane.setRightAnchor(interfaceArea, 0.0)
         }(JavaFXExecutionContext)
+
     }
   }
 
