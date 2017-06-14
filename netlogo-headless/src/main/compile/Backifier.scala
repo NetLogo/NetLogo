@@ -61,11 +61,11 @@ class Backifier(
       case core.prim._const(value) =>
         new prim._const(value)
 
-      case core.prim._commandlambda(args, _, closedLambdaVariables) =>
-        new prim._commandlambda(args, null, closedLambdaVariables) // LambdaLifter will fill in
+      case core.prim._commandlambda(args, argTokens, _, closedLambdaVariables) =>
+        new prim._commandlambda(args, argTokens, null, closedLambdaVariables) // LambdaLifter will fill in
 
-      case core.prim._reporterlambda(args, _, closedLambdaVariables) =>
-        new prim._reporterlambda(args, closedLambdaVariables)
+      case core.prim._reporterlambda(args, argTokens, _, closedLambdaVariables) =>
+        new prim._reporterlambda(args, argTokens, closedLambdaVariables)
 
       case core.prim._externreport(_) =>
         new prim._externreport(

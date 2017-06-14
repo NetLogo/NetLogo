@@ -16,6 +16,7 @@ class AssemblerTests extends FunSuite {
     assertResult(1)(defs.size)
     for (procdef <- defs) {
       procdef.accept(new ArgumentStuffer)
+      procdef.procedure.displayName = "procedure FOO"
       new Assembler().assemble(procdef)
     }
     defs.head.procedure

@@ -30,8 +30,8 @@ class ClosedVariableFinder(lambdaVarNames: Seq[String]) extends AstFolder[Set[Cl
       case _letvariable(let)                   => closedVars + ClosedLet(let)
       case _lambdavariable(name, _) if ! lambdaVarNames.contains(name) =>
         closedVars + ClosedLambdaVariable(name)
-      case _reporterlambda(_, _, reporterLets) => closedVars ++ reporterLets
-      case _commandlambda(_, _, reporterLets)  => closedVars ++ reporterLets
+      case _reporterlambda(_, _, _, reporterLets) => closedVars ++ reporterLets
+      case _commandlambda(_, _, _, reporterLets)  => closedVars ++ reporterLets
       case _                                   => super.visitReporterApp(app)
     }
   }

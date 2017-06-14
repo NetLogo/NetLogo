@@ -3,8 +3,9 @@
 package org.nlogo.compile.middle
 
 import org.nlogo.core.{ CompilationEnvironment, Syntax, Token }
-import org.nlogo.nvm.Instruction
-import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, ReporterApp, ReporterBlock, Statement }
+import org.nlogo.nvm.{ AnonymousProcedure, Instruction, LiftedLambda, Procedure }
+import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, ProcedureDefinition,
+  ReporterApp, ReporterBlock, Statement }
 
 import scala.util.Try
 
@@ -14,6 +15,16 @@ import scala.util.Try
 private class SourceTagger(existingSources: Map[String, String], compilationEnvironment: CompilationEnvironment) extends DefaultAstVisitor {
   var sources: Map[String, String] = Map(existingSources.toSeq: _*)
   var internalSources = Seq[String]()
+
+  override def visitProcedureDefinition(proc: ProcedureDefinition): Unit = {
+    super.visitProcedureDefinition(proc)
+    proc.procedure.displayName = proc.procedure match {
+      case ll: LiftedLambda =>
+        val bodySource = proc.statements.stmts.map(_.command.fullSource).filterNot(_ == null).mkString(" ")
+        AnonymousProcedure.displayString("command", ll.argTokens, bodySource)
+      case p                => p.baseDisplayName.getOrElse(procedureDisplayName(p))
+    }
+  }
 
   private def captureInternalSources(f: () => Unit): Seq[String] = {
     var tmpSources = internalSources
@@ -97,5 +108,14 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
       syntaxComponents.mkString("(", " ", ")")
     else
       syntaxComponents.mkString(" ")
+  }
+
+  private def procedureDisplayName(p: Procedure): String = {
+    val nameAndFile =
+      Option(p.filename)
+        .filter(_.nonEmpty)
+        .map(filename => s"${p.name} ($filename)")
+        .getOrElse(p.name)
+    s"procedure $nameAndFile"
   }
 }

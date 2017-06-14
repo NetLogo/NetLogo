@@ -19,7 +19,7 @@ class Procedure(
   val nameToken:            Token,
   val argTokens:            Seq[Token],
   val procedureDeclaration: StructureDeclarations.Procedure,
-  baseDisplayName:          Option[String] = None) extends ProcedureJ with FrontEndProcedure {
+  val baseDisplayName:      Option[String] = None) extends ProcedureJ with FrontEndProcedure {
 
     args = argTokens.map(_.text).toVector
 
@@ -37,7 +37,8 @@ class Procedure(
     var size = 0
     var owner: SourceOwner = null
 
-    lazy val displayName = buildDisplayName(baseDisplayName)
+    // This is filled in by SourceTagger
+    var displayName = baseDisplayName.getOrElse("")
 
     protected var children = collection.mutable.Buffer[Procedure]()
 

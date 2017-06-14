@@ -454,7 +454,7 @@ object ExpressionParser {
    */
   private def expandConciseReporterLambda(rApp: core.ReporterApp, reporter: core.Reporter, scope: SymbolTable): core.ReporterApp = {
     val (varNames, varApps) = syntheticVariables(reporter.syntax.totalDefault, reporter.token, scope)
-    val lambda = new core.prim._reporterlambda(varNames, synthetic = true)
+    val lambda = new core.prim._reporterlambda(varNames, Seq.empty[Token], synthetic = true)
     lambda.token = reporter.token
     new core.ReporterApp(lambda, Seq(rApp.withArguments(varApps)), reporter.token.sourceLocation)
   }
@@ -472,7 +472,7 @@ object ExpressionParser {
         varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
       else varApps
 
-    val lambda = new core.prim._commandlambda(varNames, synthetic = true)
+    val lambda = new core.prim._commandlambda(varNames, Seq.empty[Token], synthetic = true)
     lambda.token = token
 
     val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)
@@ -589,14 +589,14 @@ object ExpressionParser {
 
     val listNotWanted = ! compatible(goalType, Syntax.ListType)
 
-    def buildReporterLambda(argNames: Seq[String]) = {
+    def buildReporterLambda(argTokens: Seq[Token]) = {
       val (expr, closeBracket) = reporterApp(tokens, Syntax.WildcardType, block.internalScope)
-      val lambda = new core.prim._reporterlambda(argNames, false)
+      val lambda = new core.prim._reporterlambda(argTokens.map(_.text.toUpperCase), argTokens, false)
       lambda.token = block.openBracket
       new core.ReporterApp(lambda, Seq(expr), SourceLocation(block.openBracket.start, closeBracket.end, block.filename))
     }
 
-    def buildCommandLambda(argNames: Seq[String]) = {
+    def buildCommandLambda(argNames: Seq[Token]) = {
       val (stmtList, closeBracket) = statementList(tokens, block.internalScope)
       val lambda = new core.prim._commandlambda(argNames, false)
       lambda.token = block.openBracket
@@ -608,9 +608,9 @@ object ExpressionParser {
     if (compatible(goalType, Syntax.CodeBlockType))
       parseCodeBlock(block, tokens)
     else if (block.isArrowLambda && ! block.isCommand)
-      buildReporterLambda(block.asInstanceOf[ArrowLambdaBlock].argNames)
+      buildReporterLambda(block.asInstanceOf[ArrowLambdaBlock].argTokens)
     else if (block.isArrowLambda && block.isCommand)
-      buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].argNames)
+      buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].argTokens)
     else if (compatible(goalType, Syntax.ReporterBlockType)) {
       val (expr, lastToken) = reporterApp(tokens, goalType, scope)
       new core.ReporterBlock(expr, SourceLocation(block.openBracket.start, lastToken.end, lastToken.filename))
