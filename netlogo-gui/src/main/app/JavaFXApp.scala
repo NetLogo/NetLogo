@@ -152,8 +152,17 @@ class JavaFXApp extends Application {
     primaryStage.show()
     Option(getParameters.getNamed.get("model"))
       .flatMap(modelName => Try(Paths.get(modelName)).toOption)
-      .foreach(modelToLoad =>
-          Utils.runLater(() => applicationController.loadModel(modelToLoad.toUri)))
+      .foreach { modelToLoad =>
+        Utils.runLater { () =>
+          applicationController.loadModel(modelToLoad.toUri)
+        }
+      }
+    Option(System.getProperty("org.nlogo.startup.mode"))
+      .filter(_ == "kiosk")
+      .foreach { _ =>
+        applicationController.addHook("kioskMode", _.activateKioskMode(), { () => })
+        Utils.runLater(() => applicationController.activateKioskMode())
+      }
   }
 
   override def stop(): Unit = {

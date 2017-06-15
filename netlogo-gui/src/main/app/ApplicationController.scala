@@ -106,7 +106,7 @@ class ApplicationController {
   def initialize(): Unit = {
     openFile.setOnAction(handler(handleOpenFileAction _))
     haltItem.setOnAction(handler(halt _))
-    enterKioskMode.setOnAction(handler(activateKioskMode _))
+    enterKioskMode.setOnAction(handler(handleKioskMode _))
   }
 
   private def handleOpenFileAction(a: ActionEvent): Unit = {
@@ -165,14 +165,18 @@ class ApplicationController {
     workspace.scheduledJobThread.halt()
   }
 
-  private def activateKioskMode(a: ActionEvent): Unit = {
+  private def handleKioskMode(a: ActionEvent): Unit = {
     // don't activate kiosk mode unless there's a model loaded, why would anyone
     // want a kiosk of NetLogo with no model?
     if (interfaceArea != null) {
       interfaceArea.activateKioskMode()
-      pane.getChildren.remove(menuBar)
-      menuBar.setVisible(false)
+      activateKioskMode()
     }
+  }
+
+  def activateKioskMode(): Unit = {
+    pane.getChildren.remove(menuBar)
+    menuBar.setVisible(false)
   }
 
   class FakeViewSettings(canvas: Canvas, world: World) extends org.nlogo.api.ViewSettings {
