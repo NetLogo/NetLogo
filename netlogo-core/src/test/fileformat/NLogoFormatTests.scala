@@ -78,6 +78,7 @@ class NLogoFormatIOTest extends FunSuite {
 }
 
 class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
+  if (canTestConversions) {
   import AutoConversionList.ConversionList
 
   def testLoader: ModelLoader =
@@ -118,6 +119,7 @@ class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
     val conversions = AutoConversionList.conversions.map(_._2)
     val rereadModel = tryReadAndConvertModel(m, conversions)
     assert(rereadModel.hasErrors)
+  }
   }
 }
 

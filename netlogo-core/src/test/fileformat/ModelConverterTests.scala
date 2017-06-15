@@ -13,6 +13,7 @@ import org.scalatest.FunSuite
 import scala.util.Try
 
 class ModelConverterTests extends FunSuite with ConversionHelper {
+  if (canTestConversions) {
   test("if the model is empty, returns the model") {
     val model = Model()
     assertResult(model)(convert(model))
@@ -114,37 +115,37 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
   test("handles the conversion of movie prims") {
     val originalSource =
       """|to start
-         |  movie-start user-new-file
-         |end
-         |to go
-         |  if movie-status != "" [
-         |    movie-grab-view
-         |  ]
-         |end
-         |to finish
-         |  movie-close
-         |end
-         |to abort
-         |  movie-cancel
-         |end""".stripMargin
+    |  movie-start user-new-file
+    |end
+    |to go
+    |  if movie-status != "" [
+    |    movie-grab-view
+    |  ]
+    |end
+    |to finish
+    |  movie-close
+    |end
+    |to abort
+    |  movie-cancel
+    |end""".stripMargin
     val convertedSource =
       """|extensions [vid]
-         |globals [_recording-save-file-name]
-         |to start
-         |  set _recording-save-file-name user-new-file
-         |  vid:start-recorder
-         |end
-         |to go
-         |  if vid:recorder-status != "" [
-         |    vid:record-view
-         |  ]
-         |end
-         |to finish
-         |  vid:save-recording _recording-save-file-name
-         |end
-         |to abort
-         |  vid:reset-recorder
-         |end""".stripMargin
+    |globals [_recording-save-file-name]
+    |to start
+    |  set _recording-save-file-name user-new-file
+    |  vid:start-recorder
+    |end
+    |to go
+    |  if vid:recorder-status != "" [
+    |    vid:record-view
+    |  ]
+    |end
+    |to finish
+    |  vid:save-recording _recording-save-file-name
+    |end
+    |to abort
+    |  vid:reset-recorder
+    |end""".stripMargin
     val model = Model(code = originalSource)
     val changes = Seq[SourceRewriter => String](
       _.addGlobal("_recording-save-file-name"),
@@ -164,42 +165,42 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
   test("doesn't try to convert movie prims if they're all commented out") {
     val originalSource =
       """|to maybe-error
-         |  ; movie-cancel; movie stuff
-         |  ; movie-start "kinomodel2.mov"
-         |  ; movie-set-frame-rate 10
-         |  ; repeat 365 * 3
-         |  ; [  go
-         |  ;   movie-grab-view
-         |  ; ]
-         |end""".stripMargin
+    |  ; movie-cancel; movie stuff
+    |  ; movie-start "kinomodel2.mov"
+    |  ; movie-set-frame-rate 10
+    |  ; repeat 365 * 3
+    |  ; [  go
+    |  ;   movie-grab-view
+    |  ; ]
+    |end""".stripMargin
     val conversionSet = AutoConversionList.conversions
       .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
       .map(_._2)
-    val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
-    assertResult(originalSource)(convert(Model(code = originalSource), conversionSet: _*).code)
+      val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
+      assertResult(originalSource)(convert(Model(code = originalSource), conversionSet: _*).code)
   }
 
   test("converts movie prims in the presence of tasks") {
     val originalSource =
       """|to start
-         |  movie-start user-new-file
-         |end
-         |to test-task
-         |  (run (task [show ?1]) 3)
-         |end""".stripMargin
+    |  movie-start user-new-file
+    |end
+    |to test-task
+    |  (run (task [show ?1]) 3)
+    |end""".stripMargin
     val convertedSource =
       """|extensions [vid]
-         |globals [_recording-save-file-name]
-         |to start
-         |  set _recording-save-file-name user-new-file
-         |  vid:start-recorder
-         |end
-         |to test-task
-         |  (run ([ ?1 -> show ?1 ]) 3)
-         |end""".stripMargin
-      val conversionSet = AutoConversionList.conversions
-        .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
-        .map(_._2)
+    |globals [_recording-save-file-name]
+    |to start
+    |  set _recording-save-file-name user-new-file
+    |  vid:start-recorder
+    |end
+    |to test-task
+    |  (run ([ ?1 -> show ?1 ]) 3)
+    |end""".stripMargin
+    val conversionSet = AutoConversionList.conversions
+      .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
+      .map(_._2)
       val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
       assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet: _*).code)
   }
@@ -207,24 +208,24 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head
     val targets = Seq("?1")
     val model = Model(code = """|to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end
-                                |to baz show is-reporter-task? 1 show is-command-task? task tick end""".stripMargin)
+      |to baz show is-reporter-task? 1 show is-command-task? task tick end""".stripMargin)
     val converted = convert(model, conversionSet)
     val expectedResult = """|to foo run [ [] ->  clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [ [?1 ?2] -> ?1 > ?2 ] [1 2 3] end
-                            |to baz show is-anonymous-reporter? 1 show is-anonymous-command? [ [] -> tick ] end""".stripMargin
+    |to baz show is-anonymous-reporter? 1 show is-anonymous-command? [ [] -> tick ] end""".stripMargin
     assertResult(expectedResult)(converted.code)
   }
 
   test("handles models with trailing comments properly") {
     val originalSource =
       """|to abort
-         |  movie-cancel
-         |end
-         |; comment at end""".stripMargin
+    |  movie-cancel
+    |end
+    |; comment at end""".stripMargin
     val expectedSource =
       """|to abort
-         |  vid:reset-recorder
-         |end
-         |; comment at end""".stripMargin
+    |  vid:reset-recorder
+    |end
+    |; comment at end""".stripMargin
 
     val model = Model(code = originalSource)
     val changes = Seq[SourceRewriter => String](_.replaceCommand("movie-cancel" -> "vid:reset-recorder"))
@@ -237,16 +238,16 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     writeNls("foo.nls", "to bar bk 1 end")
     val originalSource =
       """|__includes [ "foo.nls" ]
-         |to foo
-         |  bar
-         |  fd 1
-         |end""".stripMargin
+    |to foo
+    |  bar
+    |  fd 1
+    |end""".stripMargin
     val expectedSource =
       """|__includes [ "foo.nls" ]
-         |to foo
-         |  bar
-         |  rt 90
-         |end""".stripMargin
+    |to foo
+    |  bar
+    |  rt 90
+    |end""".stripMargin
     val model = Model(code = originalSource)
     val converted = convert(model, conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd")))
     assertResult(expectedSource)(converted.code)
@@ -255,10 +256,10 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
   test("won't convert a model with an un-locatable included file") {
     val originalSource =
       """|__includes [ "bar.nls" ]
-         |to foo
-         |  bar
-         |  fd 1
-         |end""".stripMargin
+    |to foo
+    |  bar
+    |  fd 1
+    |end""".stripMargin
     val model = Model(code = originalSource)
     val conversions = Seq[SourceRewriter => String](_.replaceCommand("fd" -> "rt 90"))
     tryConvert(model,
@@ -266,5 +267,6 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
         case ErroredConversion(_, error) => assert(error.errors.exists(_.getMessage.contains("bar.nls")))
         case _ => fail("converted model with unidentified includes")
       }
+  }
   }
 }

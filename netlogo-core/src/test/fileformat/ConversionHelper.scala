@@ -14,6 +14,7 @@ import scala.util.Try
 trait ConversionHelper {
   val compilationEnvironment = FooCompilationEnvironment
   val extensionManager = VidExtensionManager
+  val canTestConversions = NetLogoLegacyDialect.isAvailable
   val tempDir = Files.createTempDirectory("ConversionTest")
   val modelPath = Files.createTempFile(tempDir, "ConversionTest", ".nlogo") // this is only used for includes file testing
 
