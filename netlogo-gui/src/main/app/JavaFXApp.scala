@@ -2,6 +2,8 @@
 
 package org.nlogo.app
 
+import java.nio.file.Paths
+
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.FXMLLoader
@@ -22,8 +24,10 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 
 import org.picocontainer.adapters.AbstractAdapter
 
+import scala.util.Try
+
 object JavaFXApp extends scala.App {
-  Application.launch(classOf[JavaFXApp])
+  Application.launch(classOf[JavaFXApp], args: _*)
 
   var application: JavaFXApp = null
 
@@ -146,6 +150,10 @@ class JavaFXApp extends Application {
     scene.getStylesheets.add("netlogo-javafx.css")
     primaryStage.setScene(scene)
     primaryStage.show()
+    Option(getParameters.getNamed.get("model"))
+      .flatMap(modelName => Try(Paths.get(modelName)).toOption)
+      .foreach(modelToLoad =>
+          Utils.runLater(() => applicationController.loadModel(modelToLoad.toUri)))
   }
 
   override def stop(): Unit = {

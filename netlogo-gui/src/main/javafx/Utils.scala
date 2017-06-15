@@ -15,6 +15,7 @@ object Utils {
       override def run(): Unit = { f() }
     })
   }
+
   def handler[T <: Event](f: T => Unit): EventHandler[T] = {
     new EventHandler[T]() {
       override def handle(event: T): Unit = {

@@ -104,43 +104,46 @@ class ApplicationController {
 
   @FXML
   def initialize(): Unit = {
-    openFile.setOnAction(handler(openFile _))
+    openFile.setOnAction(handler(handleOpenFileAction _))
     haltItem.setOnAction(handler(halt _))
     enterKioskMode.setOnAction(handler(activateKioskMode _))
   }
 
-  private def openFile(a: ActionEvent): Unit = {
+  private def handleOpenFileAction(a: ActionEvent): Unit = {
     val fileChooser = new FileChooser()
     fileChooser.setTitle("Select a NetLogo model")
     fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.dir")))
     val selectedFile = Option(fileChooser.showOpenDialog(menuBar.getScene.getWindow))
-    val executionContext = ExecutionContext.fromExecutor(executor, e => System.err.println("exception in background thread: " + e.getMessage))
-    val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
-    selectedFile.foreach { file =>
-      val openedModel = openModelUI(file.toURI, modelLoader, modelConverter)
-        .map { m =>
-          CompileAll(m, workspace)
-        }(executionContext)
-        openedModel.map {
-          compiledModel =>
-            if (ApplicationController.this.compiledModel != null) {
-              compiledModel.modelUnloaded()
-            }
-            ConfigureWorld(workspace, compiledModel)
-            compiledModel
-        }(executionContext).foreach {
-          compiledModel =>
-            ApplicationController.this.compiledModel = compiledModel
-            val interfaceWidgetsPane =
-              ModelInterfaceBuilder.build(compiledModel)
-            interfaceArea = interfaceWidgetsPane
-            AnchorPane.setTopAnchor(interfaceArea, 0.0)
-            AnchorPane.setBottomAnchor(interfaceArea, 0.0)
-            AnchorPane.setLeftAnchor(interfaceArea, 0.0)
-            AnchorPane.setRightAnchor(interfaceArea, 0.0)
-        }(JavaFXExecutionContext)
+    selectedFile.map(_.toURI).foreach(loadModel _)
+  }
 
+  def loadModel(modelUri: URI): Unit = {
+    def compileModel(m: Model): CompiledModel = CompileAll(m, workspace)
+    def configureWorld(compiledModel: CompiledModel): CompiledModel = {
+      if (ApplicationController.this.compiledModel != null) {
+        compiledModel.modelUnloaded()
+      }
+      ConfigureWorld(workspace, compiledModel)
+      compiledModel
     }
+    def buildAndConfigureInterface(compiledModel: CompiledModel): Unit = {
+      ApplicationController.this.compiledModel = compiledModel
+      val interfaceWidgetsPane =
+        ModelInterfaceBuilder.build(compiledModel)
+      interfaceArea = interfaceWidgetsPane
+      AnchorPane.setTopAnchor(interfaceArea, 0.0)
+      AnchorPane.setBottomAnchor(interfaceArea, 0.0)
+      AnchorPane.setLeftAnchor(interfaceArea, 0.0)
+      AnchorPane.setRightAnchor(interfaceArea, 0.0)
+    }
+    val executionContext =
+      ExecutionContext.fromExecutor(executor,
+        e => System.err.println("exception in background thread: " + e.getMessage))
+    val openModelUI = new OpenModelUI(executionContext, menuBar.getScene.getWindow)
+    openModelUI(modelUri, modelLoader, modelConverter)
+      .map(compileModel _)(executionContext)
+      .map(configureWorld _)(executionContext)
+      .foreach(buildAndConfigureInterface _)(JavaFXExecutionContext)
   }
 
   val uiHooks: MutableMap[String, (InterfaceArea => Unit, () => Unit)] =

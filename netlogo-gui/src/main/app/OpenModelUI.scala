@@ -28,7 +28,7 @@ class OpenModelUI(backgroundContext: ExecutionContext, window: Window)
   def controllerExecutionContext: ExecutionContext = JavaFXExecutionContext
 
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
-    val alert = new Alert(Alert.AlertType.ERROR, I18N.gui.getN("file.open.error.unableToOpen"), ButtonType.CLOSE)
+    val alert = new Alert(Alert.AlertType.ERROR, I18N.gui.getN("file.open.error.unableToOpen", Paths.get(uri).toString, exception.getMessage), ButtonType.CLOSE)
     alert.showAndWait()
   }
   // this callback returns either None (indicating cancellation) or the Model that should be opened
