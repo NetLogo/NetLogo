@@ -117,18 +117,24 @@ object ExpressionParser {
   case class PartialStatement(stmt: core.Statement) extends Partial {
     val primacy = 6
   }
-  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, args: Seq[core.Expression]) extends Partial with ApplicationPartial {
+  case class PartialCommandAndArgs(cmd: core.Command, tok: Token, richSyntax: RichSyntax) extends Partial with ApplicationPartial {
+    def this(cmd: core.Command, tok: Token, variadic: Boolean = false) =
+      this(cmd, tok, RichSyntax(cmd.syntax, variadic))
     val primacy = 5
     def syntax = cmd.syntax
+    def args = richSyntax.typedArguments.map(_._1)
     def withArgument(arg: core.Expression): ApplicationPartial =
-      copy(args = args :+ arg)
+      copy(richSyntax = richSyntax.withArgument(arg))
     def instruction = cmd
   }
-  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, args: Seq[core.Expression]) extends Partial with ApplicationPartial {
+  case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, richSyntax: RichSyntax) extends Partial with ApplicationPartial {
+    def this(rep: core.Reporter, tok: Token, variadic: Boolean = false) =
+      this(rep, tok, RichSyntax(rep.syntax, variadic))
     val primacy = 4
     def syntax = rep.syntax
+    def args = richSyntax.typedArguments.map(_._1)
     def withArgument(arg: core.Expression): ApplicationPartial =
-      copy(args = args :+ arg)
+      copy(richSyntax = richSyntax.withArgument(arg))
     def instruction = rep
   }
   case class PartialReporterBlock(block: core.ReporterBlock) extends ArgumentPartial {
@@ -232,15 +238,15 @@ object ExpressionParser {
         resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope)
           .toPartial(ap.withArgument _) :: rest
       // ApplicationArgs RepArgs -> App
-      case PartialReporterAndArgs(rep, tok, args) :: (ap: ApplicationPartial) :: rest if ap.needsArguments || (ap.isVariadic && (ctx.variadic || ap.args.length < ap.syntax.rightDefault)) =>
-        (processReporter(rep, tok, args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
+      case (pr@PartialReporterAndArgs(rep, tok, _)) :: (ap: ApplicationPartial) :: rest if ap.needsArguments || (ap.isVariadic && (ctx.variadic || ap.args.length < ap.syntax.rightDefault)) =>
+        (processReporter(rep, tok, pr.args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // CmdArgs -> Stmt
-      case PartialCommandAndArgs(cmd, tok, args) :: rest =>
-        val (p, newScope) = processStatement(cmd, tok, args, scope)
+      case (pr@PartialCommandAndArgs(cmd, tok, _)) :: rest =>
+        val (p, newScope) = processStatement(cmd, tok, pr.args, scope)
         (p :: rest, ctx.copy(scope = newScope))
       // | ReporterArgs -> RepApp
-      case (pr@PartialReporterAndArgs(rep, tok, args)) :: Nil if ! pr.needsArguments =>
-        (processReporter(rep, tok, args, Syntax.WildcardType, scope) :: Nil, ctx.copy(precedence = Syntax.CommandPrecedence))
+      case (pr@PartialReporterAndArgs(rep, tok, _)) :: Nil if ! pr.needsArguments =>
+        (processReporter(rep, tok, pr.args, Syntax.WildcardType, scope) :: Nil, ctx.copy(precedence = Syntax.CommandPrecedence))
       // Stmt unknownid -> Error(ExpectedCommand)
       case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
@@ -257,7 +263,7 @@ object ExpressionParser {
         (conciseInstruction :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Reporter -> ApplicationArgs
       case PartialReporter(rep, tok) :: rest =>
-        PartialReporterAndArgs(rep, tok, Seq()) :: rest
+        new PartialReporterAndArgs(rep, tok, ctx.variadic) :: rest
       // ApplicationArgs CmdName -> ApplicationArgs
       case PartialCommand(cmd, tok) :: (ap: ApplicationPartial) :: rest                    if ap.needsSymbolicArgument =>
         val newPartial = cmdToReporterApp(cmd, tok, ap.neededArgument, ap.parseContext, scope)
@@ -266,16 +272,16 @@ object ExpressionParser {
         (newPartial :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // Cmd -> CmdArgs
       case PartialCommand(cmd, tok) :: rest =>
-        PartialCommandAndArgs(cmd, tok, Seq()) :: rest
+        new PartialCommandAndArgs(cmd, tok) :: rest
       // | RepApp Eof -> Error(ExpectedCommand)
       case PartialReporterApp(app) :: Nil =>
         List(PartialError(fail(ExpectedCommand, app.reporter.token)))
       // Stmt ReporterArgs -> Error(ExpectedCommand)
-      case PartialReporterAndArgs(_, tok, _) :: (_: PartialStatement | _: PartialStatements) :: rest =>
+      case PartialReporterAndArgs(_, tok, args) :: (_: PartialStatement | _: PartialStatements) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
       // Arg Infix -> RepArgs
       case PartialInfixReporter(iRep, iTok) :: (arg: ArgumentPartial) :: rest =>
-        (PartialReporterAndArgs(iRep, iTok, Seq(arg.expression)) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
+        (new PartialReporterAndArgs(iRep, iTok, ctx.variadic).withArgument(arg.expression) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
       // Block Infix -> Arg Infix
       case (ir@PartialInfixReporter(iRep, iTok)) :: PartialDelayedBlock(block) :: rest =>
         processDelayedBlock(block, iRep.syntax.left, scope) match {
@@ -309,7 +315,7 @@ object ExpressionParser {
   //  * We should resolveTypes as we parse, not in one swoop at the end. This will (hopefully) simplify typing as well as making parsing more clear.
   //    - Note that the arguments expected are determined by the syntax and variadic context
   //      of the syntax primitive.
-  //    - Note also that only in variadic contexts (and too a lesser extent, for
+  //    - Note also that only in variadic contexts (and to a lesser extent, for
   //      optional arguments) can the argument types not be fully enumerated at the time
   //      the applied primitive is recognized.
   //    - Once we have a complete list of arguments, we no longer need to account for variadicity
