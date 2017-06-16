@@ -399,7 +399,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_rideme ,-T--,None,0,0,0
                     |_right number,-T--,None,0,1,1
                     |_run string or anonymous command/anything,OTPL,None,0,1,1
-                    |_set variable name/anything,OTPL,None,0,2,2
+                    |_set anything/anything,OTPL,None,0,2,2
                     |_setcurdir string,OTPL,None,0,1,1
                     |_setcurrentplot string,OTPL,None,0,1,1
                     |_setcurrentplotpen string,OTPL,None,0,1,1
