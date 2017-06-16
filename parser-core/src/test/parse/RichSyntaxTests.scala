@@ -25,8 +25,9 @@ class RichSyntaxTests extends FunSuite {
 
   trait Helper {
     var syntax: RichSyntax = null
-    def rich(s: Syntax, variadic: Boolean = false, args: List[Expression] = Nil): RichSyntax = {
-      syntax = RichSyntax(s, variadic, args)
+    def typedArguments = syntax.typedArguments
+    def rich(s: Syntax, variadic: Boolean = false): RichSyntax = {
+      syntax = RichSyntax(s, variadic)
       syntax
     }
     def withArgument(arg: Expression) = {
@@ -41,6 +42,7 @@ class RichSyntaxTests extends FunSuite {
   test("basic command syntax") { new Helper {
     rich(Syntax.commandSyntax())
     assertNextArg(NoMoreArguments)
+    assertResult(Seq.empty[(Expression, Int)])(typedArguments)
   } }
 
   test("one-argument command syntax") { new Helper {
@@ -48,6 +50,8 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(Argument(Syntax.NumberType))
     withArgument(constTwo)
     assertNextArg(NoMoreArguments)
+    assertResult(constTwo)(typedArguments.head._1)
+    assertResult(List(constTwo -> Syntax.NumberType))(typedArguments)
   } }
 
   test("infix reporter syntax") { new Helper {
@@ -57,6 +61,8 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(Argument(Syntax.StringType))
     withArgument(constString)
     assertNextArg(NoMoreArguments)
+    assertResult(List(constTwo -> Syntax.NumberType, constString -> Syntax.StringType))(
+      typedArguments)
   } }
 
   test("variadic reporter syntax") { new Helper {
@@ -64,6 +70,7 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(MaybeArgument(Syntax.NumberType))
     withArgument(constTwo)
     assertNextArg(MaybeArgument(Syntax.NumberType))
+    assertResult(List(constTwo -> Syntax.NumberType))(typedArguments)
   } }
 
   test("variadic reporter syntax with variadics after other args") { new Helper {
@@ -73,6 +80,8 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(MaybeArgument(Syntax.NumberType))
     withArgument(constTwo)
     assertNextArg(MaybeArgument(Syntax.NumberType))
+    assertResult(List(constString -> Syntax.StringType, constTwo -> Syntax.NumberType))(
+      typedArguments)
   } }
 
   test("variadic reporter in non-variadic context") { new Helper {
@@ -90,6 +99,9 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(Argument(Syntax.WildcardType))
     withArgument(constString)
     assertNextArg(NoMoreArguments)
+    val stringWithType = constString -> Syntax.StringType
+    assertResult(List(stringWithType, stringWithType, stringWithType))(
+      typedArguments)
   } }
 
   test("variadic reporter with repeated type first argument (non-variadic context)") { new Helper {
@@ -111,10 +123,6 @@ class RichSyntaxTests extends FunSuite {
   } }
 
   test("variadic infix reporter") {
-    pending
-  }
-
-  test("properly matches core.Expressions to their type") {
     pending
   }
 

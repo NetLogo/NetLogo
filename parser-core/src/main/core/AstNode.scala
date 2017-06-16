@@ -215,4 +215,15 @@ class ReporterApp(var reporter: Reporter, val args: Seq[Expression], val sourceL
 
   def copy(reporter: Reporter = reporter, args: Seq[Expression] = args, location: SourceLocation = sourceLocation): ReporterApp =
     new ReporterApp(reporter, args, location)
+
+  override def equals(other: Any): Boolean = {
+    other match {
+      case otherRa: ReporterApp =>
+        (otherRa eq this) ||
+        otherRa.reporter == reporter &&
+        otherRa.args == args &&
+        otherRa.sourceLocation == sourceLocation
+      case _ => false
+    }
+  }
 }

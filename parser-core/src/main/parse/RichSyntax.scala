@@ -7,7 +7,8 @@ import
     Syntax.compatible
 
 object RichSyntax {
-  def apply(syntax: Syntax, variadic: Boolean, arguments: List[Expression]): RichSyntax = new RichSyntax(syntax, variadic, arguments)
+  def apply(syntax: Syntax, variadic: Boolean): RichSyntax =
+    new RichSyntax(syntax, variadic, Nil)
 
   sealed trait ArgumentType
   case object NoMoreArguments extends ArgumentType
@@ -108,7 +109,7 @@ object RichSyntax {
 
 import RichSyntax._
 
-class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[Expression]) {
+class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression, Int)]) {
   lazy val allArgs = syntax.left +: syntax.right
 
   val argCount = arguments.length
@@ -144,10 +145,20 @@ class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[Expression])
       val rec =
         if (variadic) transformToRecognizerVariadic(syntax.right)
         else          transformToRecognizerNormal(syntax.right, syntax.rightDefault)
-      rec.withArguments(arguments).recognizedArgument
+      rec.withArguments(arguments.map(_._1)).recognizedArgument
     }
   }
 
-  def withArgument(arg: Expression): RichSyntax =
-    new RichSyntax(syntax, variadic, arguments :+ arg)
+  def withArgument(arg: Expression): RichSyntax = {
+    val assignedType = nextArgumentType match {
+      case NoMoreArguments =>
+        throw new IllegalStateException(s"additional unwanted argument: $arg")
+      case Argument(tpe) => arg.reportedType & tpe
+      case MaybeArgument(tpe) => arg.reportedType & tpe
+      case OneOfArgument(tpeA, tpeB) => arg.reportedType & (tpeA | tpeB)
+    }
+    new RichSyntax(syntax, variadic, arguments :+ (arg -> assignedType))
+  }
+
+  def typedArguments: Seq[(Expression, Int)] = arguments
 }
