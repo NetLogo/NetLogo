@@ -92,7 +92,7 @@ object ExpressionParser {
         (neededArgument == (Syntax.ReporterType | Syntax.CommandType)) ||
         (neededArgument == Syntax.SymbolType)
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
-    def withArgument(arg: core.Expression): ApplicationPartial
+    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial]
     def isVariadic = syntax.isVariadic
   }
 
@@ -123,8 +123,8 @@ object ExpressionParser {
     val primacy = 5
     def syntax = cmd.syntax
     def args = richSyntax.typedArguments.map(_._1)
-    def withArgument(arg: core.Expression): ApplicationPartial =
-      copy(richSyntax = richSyntax.withArgument(arg))
+    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial] =
+      richSyntax.withArgument(arg).map(s => copy(richSyntax = s))
     def instruction = cmd
   }
   case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, richSyntax: RichSyntax) extends Partial with ApplicationPartial {
@@ -133,8 +133,8 @@ object ExpressionParser {
     val primacy = 4
     def syntax = rep.syntax
     def args = richSyntax.typedArguments.map(_._1)
-    def withArgument(arg: core.Expression): ApplicationPartial =
-      copy(richSyntax = richSyntax.withArgument(arg))
+    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial] =
+      richSyntax.withArgument(arg).map(s => copy(richSyntax = s))
     def instruction = rep
   }
   case class PartialReporterBlock(block: core.ReporterBlock) extends ArgumentPartial {
@@ -236,7 +236,7 @@ object ExpressionParser {
       // ApplicationArgs Exp -> ApplicationArgs
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
         resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope)
-          .toPartial(ap.withArgument _) :: rest
+          .toPartial(a => ap.withArgument(a).toPartial(identity)) :: rest
       // ApplicationArgs RepArgs -> App
       case (pr@PartialReporterAndArgs(rep, tok, _)) :: (ap: ApplicationPartial) :: rest if ap.needsArguments || (ap.isVariadic && (ctx.variadic || ap.args.length < ap.syntax.rightDefault)) =>
         (processReporter(rep, tok, pr.args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
@@ -253,7 +253,7 @@ object ExpressionParser {
       // ApplicationArgs Sym -> ApplicationArgs
       case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest                if ap.neededArgument == Syntax.SymbolType =>
         // we add the symbol onto the argument here because we never want an infix operator assuming it's the left argument
-        (ap.withArgument(processSymbol(tok)) :: rest, ctx.copy(precedence = ap.precedence))
+        (ap.withArgument(processSymbol(tok)).toPartial(identity) :: rest, ctx.copy(precedence = ap.precedence))
       // ApplicationArgs RepName -> ApplicationArgs RepApp
       case PartialInstruction(rep: core.Reporter, tok) :: (ap: ApplicationPartial) :: rest if ap.needsSymbolicArgument && ap.neededArgument == Syntax.ReporterType =>
         val conciseInstruction =
@@ -281,7 +281,7 @@ object ExpressionParser {
         List(PartialError(fail(ExpectedCommand, tok)))
       // Arg Infix -> RepArgs
       case PartialInfixReporter(iRep, iTok) :: (arg: ArgumentPartial) :: rest =>
-        (new PartialReporterAndArgs(iRep, iTok, ctx.variadic).withArgument(arg.expression) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
+        (new PartialReporterAndArgs(iRep, iTok, ctx.variadic).withArgument(arg.expression).toPartial(identity) :: rest, ctx.copy(precedence = iRep.syntax.precedence))
       // Block Infix -> Arg Infix
       case (ir@PartialInfixReporter(iRep, iTok)) :: PartialDelayedBlock(block) :: rest =>
         processDelayedBlock(block, iRep.syntax.left, scope) match {

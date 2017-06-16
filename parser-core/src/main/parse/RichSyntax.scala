@@ -3,18 +3,49 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ Expression, Syntax },
+  org.nlogo.core.{ Expression, Syntax, TypeNames },
     Syntax.compatible
+
+import
+  ParseResult.fail
 
 object RichSyntax {
   def apply(syntax: Syntax, variadic: Boolean): RichSyntax =
     new RichSyntax(syntax, variadic, Nil)
 
-  sealed trait ArgumentType
-  case object NoMoreArguments extends ArgumentType
-  case class Argument(tpe: Int) extends ArgumentType
-  case class MaybeArgument(tpe: Int) extends ArgumentType
-  case class OneOfArgument(tpeA: Int, tpeB: Int) extends ArgumentType
+  sealed trait ArgumentType {
+    def matches(t: Int): Boolean
+    def intersection(t: Int): Int
+    def goal: Int
+  }
+  case object NoMoreArguments extends ArgumentType {
+    def matches(t: Int): Boolean = false
+    def intersection(t: Int): Int = 0
+    def goal = 0
+  }
+  case class Argument(tpe: Int) extends ArgumentType {
+    def matches(t: Int): Boolean = compatible(t, tpe)
+    def intersection(t: Int): Int = t & tpe
+    def goal = tpe
+  }
+  case class MaybeArgument(tpe: Int) extends ArgumentType {
+    def matches(t: Int): Boolean = compatible(t, tpe)
+    def intersection(t: Int): Int = t & tpe
+    def goal = tpe
+  }
+  case class OneOfArgument(tpeA: Int, tpeB: Int) extends ArgumentType {
+    def matches(t: Int): Boolean =
+      compatible(t, tpeA) || compatible(t, tpeB)
+    def intersection(t: Int): Int = {
+      val compatibleA = compatible(t, tpeA)
+      val compatibleB = compatible(t, tpeB)
+
+      if (compatibleA && compatibleB) t & (tpeA | tpeB)
+      else if (compatibleA)           t & tpeA
+      else                            t & tpeB
+    }
+    def goal = tpeA | tpeB
+  }
 
   private def removeRepeatableModifier(i: Int): Int =
     i & (~ Syntax.RepeatableType)
@@ -149,15 +180,19 @@ class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression,
     }
   }
 
-  def withArgument(arg: Expression): RichSyntax = {
+  def withArgument(arg: Expression): ParseResult[RichSyntax] = {
     val assignedType = nextArgumentType match {
-      case NoMoreArguments =>
-        throw new IllegalStateException(s"additional unwanted argument: $arg")
-      case Argument(tpe) => arg.reportedType & tpe
-      case MaybeArgument(tpe) => arg.reportedType & tpe
-      case OneOfArgument(tpeA, tpeB) => arg.reportedType & (tpeA | tpeB)
+      case NoMoreArguments => fail(s"additional unwanted argument: $arg", arg.sourceLocation)
+      case other           =>
+        if (other.matches(arg.reportedType))
+          SuccessfulParse(other.intersection(arg.reportedType))
+        else
+          fail(
+            s"... expected this input to be ${TypeNames.aName(other.goal)}, but got ${TypeNames.aName(arg.reportedType)} instead", arg.sourceLocation)
     }
-    new RichSyntax(syntax, variadic, arguments :+ (arg -> assignedType))
+    assignedType.map { tpe =>
+      new RichSyntax(syntax, variadic, arguments :+ (arg -> tpe))
+    }
   }
 
   def typedArguments: Seq[(Expression, Int)] = arguments

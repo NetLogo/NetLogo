@@ -25,14 +25,21 @@ class RichSyntaxTests extends FunSuite {
 
   trait Helper {
     var syntax: RichSyntax = null
+    var failure = Option.empty[ParseFailure]
     def typedArguments = syntax.typedArguments
     def rich(s: Syntax, variadic: Boolean = false): RichSyntax = {
       syntax = RichSyntax(s, variadic)
       syntax
     }
     def withArgument(arg: Expression) = {
-      syntax = syntax.withArgument(arg)
-      syntax
+      syntax.withArgument(arg) match {
+        case SuccessfulParse(s: RichSyntax) => syntax = s
+        case FailedParse(f) => failure = Some(f)
+      }
+    }
+    def assertFailure(fail: ParseFailure): Unit = {
+      assert(failure.nonEmpty)
+      assertResult(fail)(failure.get)
     }
     def assertNextArg(aType: ArgumentType): Unit = {
       assertResult(aType)(syntax.nextArgumentType)
@@ -122,9 +129,17 @@ class RichSyntaxTests extends FunSuite {
     assertNextArg(NoMoreArguments)
   } }
 
-  test("variadic infix reporter") {
-    pending
-  }
+  test("given an extra argument, returns an error") { new Helper {
+    rich(Syntax.commandSyntax())
+    withArgument(constTwo)
+    assertFailure(ParseFailure("additional unwanted argument: _const(2.0)[]", 0, 0, ""))
+  } }
+
+  test("given an argument of the wrong type, returns an error") { new Helper {
+    rich(Syntax.commandSyntax(right = List(Syntax.NumberType)))
+    withArgument(constString)
+    assertFailure(ParseFailure("... expected this input to be a number, but got a string instead", 0, 0, ""))
+  } }
 
   /* We don't expect the typer to be in charge of passing arguments on to itself
   test("withArgument passes in bad type") {
