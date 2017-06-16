@@ -380,3 +380,13 @@ PatchRegionTest
   sort testrow 0 = (list (patch 0 1) (patch 0 0) (patch 0 -1)) => true
   O> random-seed 0
   sort patches with [pxcor = random 3] = (list (patch 1 1) (patch 0 -1)) => true
+
+OtherWithOptsShowCorrectErrorName
+  O> random-seed 0
+  O> crt 2 [ set color 5 ]
+  [ other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  [ any? other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  [ count other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  any? turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 0), but got 5 instead.
+  count turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 0), but got 5 instead.
+  one-of turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
