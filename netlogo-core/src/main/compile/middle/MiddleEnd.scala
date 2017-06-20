@@ -4,7 +4,7 @@ package org.nlogo.compile
 package middle
 
 import org.nlogo.{ core, nvm }
-import org.nlogo.core.CompilationEnvironment
+import org.nlogo.core.{ CompilationEnvironment, Program }
 import org.nlogo.compile.api.{ MiddleEndInterface, Optimizations, ProcedureDefinition }
 
 object MiddleEnd extends MiddleEndInterface {
@@ -14,6 +14,7 @@ object MiddleEnd extends MiddleEndInterface {
   // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
   def middleEnd(
     defs: Seq[ProcedureDefinition],
+    program: Program,
     sources: Map[String, String],
     compilationEnvironment: CompilationEnvironment,
     optimizations: Optimizations): Seq[ProcedureDefinition] = {
@@ -34,6 +35,7 @@ object MiddleEnd extends MiddleEndInterface {
     val transformedProcedures = allDefs.map(transformProcedure)
 
     val sourceTagger = new SourceTagger(sources, compilationEnvironment)
+    val setVisitor   = new SetVisitor(program)
 
     for(procdef <- transformedProcedures) {
       procdef.accept(sourceTagger)
@@ -42,7 +44,7 @@ object MiddleEnd extends MiddleEndInterface {
       procdef.accept(new LambdaVariableVisitor)      // handle _lambdavariable
       procdef.accept(new LocalsVisitor(alteredLets)) // convert _let/_repeat to _locals
       procdef.accept(new RepeatVisitor)              // convert _repeat to use local variable
-      procdef.accept(new SetVisitor)                 // convert _set to specific setters
+      procdef.accept(setVisitor)                     // convert _set to specific setters
     }
 
     if (optimizations.nonEmpty)

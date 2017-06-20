@@ -53,7 +53,12 @@ private object CompilerMain {
     // whether those are actually turned on.
     val flags = CompilerFlags(optimizations = NvmOptimizations.guiOptimizations)
 
-    val allDefs = middleEnd.middleEnd(bridged, sources, compilationEnv, getOptimizations(flags, feStructureResults.program.dialect))
+    val allDefs = middleEnd.middleEnd(
+      bridged,
+      feStructureResults.program,
+      sources,
+      compilationEnv,
+      getOptimizations(flags, feStructureResults.program.dialect))
 
     val newProcedures =
       allDefs

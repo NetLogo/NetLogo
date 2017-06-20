@@ -4,8 +4,9 @@ package org.nlogo.compile
 package middle
 
 import org.scalatest.FunSuite
+import org.nlogo.api.NetLogoLegacyDialect
 import org.nlogo.agent.{ Link, Patch, Turtle }
-import org.nlogo.core.{CompilerException, Let, SourceLocation}
+import org.nlogo.core.{CompilerException, Let, Program, SourceLocation}
 import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
 import org.nlogo.compile.api.{ ReporterApp, Statement }
@@ -16,7 +17,7 @@ class SetVisitorTests extends FunSuite {
     val args = Seq(new ReporterApp(null, r, emptyLocation),
       new ReporterApp(null, new _constdouble(Double.box(5)), emptyLocation))
     val stmt = new Statement(null, new _set, args, emptyLocation)
-    stmt.accept(new SetVisitor)
+    stmt.accept(new SetVisitor(Program.fromDialect(NetLogoLegacyDialect)))
     assertResult(setterClass.getName.substring("org.nlogo.prim.".length) + ":" + spec + "[_constdouble:5.0[]]")(
       stmt.toString)
   }

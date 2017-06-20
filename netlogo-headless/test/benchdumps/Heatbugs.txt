@@ -371,37 +371,61 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           // parameter final  context
           // parameter final  value
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
+          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+         L2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_4.kept2_value : Ljava/lang/Double;
-         L4
+         L3
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+         L0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+          GETSTATIC org/nlogo/agent/Turtle.BIT : I
+          ILOAD 4
+          IF_ICMPNE L4
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          GETSTATIC org/nlogo/agent/Link.BIT : I
+          ILOAD 4
+          IF_ICMPNE L6
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L6
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-         L1
           GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_4 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_4 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [I]
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [5]_asm_proceduresetup_setturtlevariable_5 "set size 1.75" Object => void
       _constdouble:1.75 "1.75" => Double

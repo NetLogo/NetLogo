@@ -3085,31 +3085,58 @@ procedure SETUP:[]{O---}:
           DLOAD 2
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L7
+            8: L8
+            default: L9
+         L7
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L8
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L9
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L7
+         FRAME SAME
+          GOTO L10
          L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_1 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L7
+         L10
          FRAME SAME
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L8
+         L11
           RETURN
 [4]_asm_proceduresetup_setxy_2 "setxy random-float world-width random-float world-height" double,double => void
       _randomfloat "random-float world-width" double => double

@@ -5826,31 +5826,58 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Object org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedureprintblock_setturtleorlinkvariable_1 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [2]_asm_procedureprintblock_goto_2 => void
          L0
@@ -5870,31 +5897,58 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Object org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedureprintblock_setturtleorlinkvariable_3 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [4]_asm_procedureprintblock_setturtlevariable_4 "set heading 90" Object => void
       _constdouble:90.0 "90" => Double

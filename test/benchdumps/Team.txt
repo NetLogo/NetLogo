@@ -1092,31 +1092,58 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_4.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_4 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [4]_asm_procedurecolorcollaborations_goto_5 => void
          L0
@@ -1472,31 +1499,58 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_7.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_7 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           BIPUSH 7
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [7]_asm_procedurecolorcollaborations_goto_8 => void
          L0
@@ -1513,31 +1567,58 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_9.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_9 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           BIPUSH 9
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [9]_asm_procedurecolorcollaborations_goto_10 => void
          L0
@@ -1554,31 +1635,58 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           GETFIELD org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_11.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecolorcollaborations_setturtleorlinkvariable_11 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           BIPUSH 11
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [11]_asm_procedurecolorcollaborations_done_12 => void
           // parameter final  context
@@ -4261,31 +4369,58 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_procedurego_setturtleorlinkvariable_2.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [3]_asm_procedurego_setturtlevariable_3 "set size 0.9" Object => void
       _constdouble:0.9 "0.9" => Double
@@ -5102,31 +5237,58 @@ procedure MAKE-NEWCOMER:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduremakenewcomer_setturtleorlinkvariable_1.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L5
+            8: L6
+            default: L7
+         L5
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L7
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L5
+         FRAME SAME
+          GOTO L8
          L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduremakenewcomer_setturtleorlinkvariable_1 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
+         L8
          FRAME SAME
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L9
           RETURN
 [2]_asm_proceduremakenewcomer_setturtlevariable_2 "set size 1.8" Object => void
       _constdouble:1.8 "1.8" => Double
@@ -6662,31 +6824,58 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           INVOKEVIRTUAL org/nlogo/prim/etc/_ifelsevalue.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L3
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+         L0
+          ILOAD 4
+          LOOKUPSWITCH
+            2: L4
+            8: L5
+            default: L6
+         L4
+         FRAME APPEND [java/lang/Object org/nlogo/agent/Agent I]
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L5
+         FRAME SAME
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L1
+         L6
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
          L1
-          GOTO L4
+         FRAME SAME
+          GOTO L7
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurepickteammembers_setturtleorlinkvariable_19 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
-          ASTORE 3
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L4
+         L7
          FRAME SAME
           ALOAD 1
           BIPUSH 15
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L5
+         L8
           RETURN
 [15]_asm_procedurepickteammembers_done_23 => void
           // parameter final  context
