@@ -12,6 +12,7 @@ class RichSyntaxTests extends FunSuite {
   def location = SourceLocation(0, 0, "")
   def constTwo = new ReporterApp(_const(Double.box(2.0)), Seq(), location)
   def constString = new ReporterApp(_const("abc"), Seq(), location)
+  def numericVariable = new ReporterApp(_turtlevariable(5, Syntax.NumberType), Seq(), location)
 
   val variadicReporterSyntax =
     Syntax.reporterSyntax(right = List(Syntax.StringType, Syntax.NumberType | Syntax.RepeatableType), ret = Syntax.StringType)
@@ -28,7 +29,7 @@ class RichSyntaxTests extends FunSuite {
     var failure = Option.empty[ParseFailure]
     def typedArguments = syntax.typedArguments
     def rich(s: Syntax, variadic: Boolean = false): RichSyntax = {
-      syntax = RichSyntax(s, variadic)
+      syntax = RichSyntax("FOO", s, variadic)
       syntax
     }
     def withArgument(arg: Expression) = {
@@ -138,7 +139,17 @@ class RichSyntaxTests extends FunSuite {
   test("given an argument of the wrong type, returns an error") { new Helper {
     rich(Syntax.commandSyntax(right = List(Syntax.NumberType)))
     withArgument(constString)
-    assertFailure(ParseFailure("... expected this input to be a number, but got a string instead", 0, 0, ""))
+    assertFailure(ParseFailure("FOO expected this input to be a number, but got a string instead", 0, 0, ""))
+  } }
+
+  test("given an argument of a type which can be a variable, returns an error without mentioning that") { new Helper {
+    rich(Syntax.commandSyntax(right = List(Syntax.StringType)))
+    withArgument(numericVariable)
+    assertFailure(ParseFailure("FOO expected this input to be a string, but got a number instead", 0, 0, ""))
+  } }
+
+  test("has a method to test for missing inputs") { new Helper {
+    pending
   } }
 
   /* We don't expect the typer to be in charge of passing arguments on to itself

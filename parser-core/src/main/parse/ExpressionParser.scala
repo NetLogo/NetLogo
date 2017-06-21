@@ -77,6 +77,7 @@ object ExpressionParser {
 
   trait ApplicationPartial extends Partial {
     def syntax: core.Syntax
+    def richSyntax: RichSyntax
     def args: Seq[core.Expression]
     def instruction: core.Instruction
     def precedence = syntax.precedence
@@ -85,6 +86,7 @@ object ExpressionParser {
       if (needsArguments) syntax.allArgs(args.length)
       else if (isVariadic) syntax.right.last
       else 0
+    def nextArgumentType: RichSyntax.ArgumentType = richSyntax.nextArgumentType
     // This imposes a restriction on the compiler - concise primitives cannot be in a variadic position
     def needsSymbolicArgument: Boolean =
       (neededArgument == Syntax.CommandType) ||
@@ -92,7 +94,7 @@ object ExpressionParser {
         (neededArgument == (Syntax.ReporterType | Syntax.CommandType)) ||
         (neededArgument == Syntax.SymbolType)
     def parseContext = ArgumentParseContext(instruction, instruction.token.sourceLocation)
-    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial]
+    def withArgument(arg: core.Expression): ParseResult[_ <: ApplicationPartial]
     def isVariadic = syntax.isVariadic
   }
 
@@ -119,21 +121,21 @@ object ExpressionParser {
   }
   case class PartialCommandAndArgs(cmd: core.Command, tok: Token, richSyntax: RichSyntax) extends Partial with ApplicationPartial {
     def this(cmd: core.Command, tok: Token, variadic: Boolean = false) =
-      this(cmd, tok, RichSyntax(cmd.syntax, variadic))
+      this(cmd, tok, RichSyntax(cmd.displayName, cmd.syntax, variadic))
     val primacy = 5
     def syntax = cmd.syntax
     def args = richSyntax.typedArguments.map(_._1)
-    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial] =
+    def withArgument(arg: core.Expression): ParseResult[PartialCommandAndArgs] =
       richSyntax.withArgument(arg).map(s => copy(richSyntax = s))
     def instruction = cmd
   }
   case class PartialReporterAndArgs(rep: core.Reporter, tok: Token, richSyntax: RichSyntax) extends Partial with ApplicationPartial {
     def this(rep: core.Reporter, tok: Token, variadic: Boolean = false) =
-      this(rep, tok, RichSyntax(rep.syntax, variadic))
+      this(rep, tok, RichSyntax(rep.displayName, rep.syntax, variadic))
     val primacy = 4
     def syntax = rep.syntax
     def args = richSyntax.typedArguments.map(_._1)
-    def withArgument(arg: core.Expression): ParseResult[ApplicationPartial] =
+    def withArgument(arg: core.Expression): ParseResult[PartialReporterAndArgs] =
       richSyntax.withArgument(arg).map(s => copy(richSyntax = s))
     def instruction = rep
   }
@@ -235,14 +237,13 @@ object ExpressionParser {
     val pf: PartialFunction[List[Partial], (List[Partial], ParsingContext[A])] = {
       // ApplicationArgs Exp -> ApplicationArgs
       case (arg: ArgumentPartial) :: (ap: ApplicationPartial) :: rest =>
-        resolveType(ap.neededArgument, arg.expression, ap.instruction.displayName, ctx.scope)
-          .toPartial(a => ap.withArgument(a).toPartial(identity)) :: rest
+        ap.withArgument(arg.expression).toPartial(identity) :: rest
       // ApplicationArgs RepArgs -> App
       case (pr@PartialReporterAndArgs(rep, tok, _)) :: (ap: ApplicationPartial) :: rest if ap.needsArguments || (ap.isVariadic && (ctx.variadic || ap.args.length < ap.syntax.rightDefault)) =>
         (processReporter(rep, tok, pr.args, ap.neededArgument, scope) :: ap :: rest, ctx.copy(precedence = ap.precedence))
       // CmdArgs -> Stmt
       case (pr@PartialCommandAndArgs(cmd, tok, _)) :: rest =>
-        val (p, newScope) = processStatement(cmd, tok, pr.args, scope)
+        val (p, newScope) = processStatement(pr, scope)
         (p :: rest, ctx.copy(scope = newScope))
       // | ReporterArgs -> RepApp
       case (pr@PartialReporterAndArgs(rep, tok, _)) :: Nil if ! pr.needsArguments =>
@@ -251,7 +252,7 @@ object ExpressionParser {
       case PartialReporter(rep: core.prim._unknownidentifier, tok) :: PartialStatement(_) :: rest =>
         List(PartialError(fail(ExpectedCommand, tok)))
       // ApplicationArgs Sym -> ApplicationArgs
-      case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest                if ap.neededArgument == Syntax.SymbolType =>
+      case PartialInstruction(ins, tok) :: (ap: ApplicationPartial) :: rest if ap.neededArgument == Syntax.SymbolType =>
         // we add the symbol onto the argument here because we never want an infix operator assuming it's the left argument
         (ap.withArgument(processSymbol(tok)).toPartial(identity) :: rest, ctx.copy(precedence = ap.precedence))
       // ApplicationArgs RepName -> ApplicationArgs RepApp
@@ -457,42 +458,45 @@ object ExpressionParser {
     }
   }
 
-  def processStatement(cmd: core.Command, tok: Token, args: Seq[core.Expression], scope: SymbolTable): (Partial, SymbolTable) = {
-    // this is the work currently done by LetScoper...
-    val parseLetAndScope =
-      cmd match {
-        case l @ core.prim._let(Some(let)) =>
-          SuccessfulParse((l, scope.addSymbol(let.name.toUpperCase, LocalVariable(let))))
-        case l @ core.prim._let(None) =>
-          args.headOption match {
-            case Some(core.ReporterApp(name: core.prim._symbol, _, _)) =>
-              val properName = name.token.text.toUpperCase
-              scope.get(properName)
-                .map(tpe => fail("There is already a " + SymbolType.typeName(tpe) + " called " + properName, name.token))
-                .getOrElse {
-                  val newLet = core.Let(properName)
-                  SuccessfulParse((l.copy(let = newLet), scope.addSymbol(properName, LocalVariable(newLet))))
-                }
-            case Some(other) => fail("expected letname, found: " + other, other)
-            case None => SuccessfulParse((l, scope)) // this failure is handled below
-          }
-        case other => SuccessfulParse((other, scope))
+  def processStatement(pr: PartialCommandAndArgs, scope: SymbolTable): (Partial, SymbolTable) = {
+    import pr.{ cmd, tok, args }
+    val argsWithOptional =
+      pr.nextArgumentType match {
+        case RichSyntax.MaybeArgument(Syntax.CommandBlockType) =>
+          pr.withArgument(syntheticCommandBlock(args, cmd.token.sourceLocation))
+        case _ => SuccessfulParse(pr)
       }
-    val allArgs =
-      if (cmd.syntax.takesOptionalCommandBlock && args.length == cmd.syntax.right.length - 1) {
-        args :+ syntheticCommandBlock(args, cmd.token.sourceLocation)
-      } else
-        args
 
-    parseLetAndScope match {
+    processMaybeLet(pr, scope).flatMap {
+      case (cmd, scope) => argsWithOptional.map(args => (cmd, scope, args))
+    } match {
       case f: FailedParse => (PartialError(f), scope)
-      case SuccessfulParse((newCmd, newScope)) =>
-        resolveTypes(allArgs, ArgumentParseContext(newCmd, tok.sourceLocation), scope) match {
-          case f: FailedParse => (PartialError(f), scope)
-          case SuccessfulParse(typedArgs) =>
-            val loc = SourceLocation(tok.start, args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
-            (PartialStatement(new core.Statement(newCmd, typedArgs, loc)), newScope)
+      case SuccessfulParse((newCmd, newScope, pr)) =>
+        val loc = SourceLocation(tok.start, pr.args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
+        (PartialStatement(new core.Statement(newCmd, pr.args, loc)), newScope)
+    }
+  }
+
+  // this is the work currently done by LetScoper...
+  def processMaybeLet(pr: PartialCommandAndArgs, scope: SymbolTable): ParseResult[(core.Command, SymbolTable)] = {
+    import pr.{ cmd, args }
+    cmd match {
+      case l @ core.prim._let(Some(let)) =>
+        SuccessfulParse((l, scope.addSymbol(let.name.toUpperCase, LocalVariable(let))))
+      case l @ core.prim._let(None) =>
+        args.headOption match {
+          case Some(core.ReporterApp(name: core.prim._symbol, _, _)) =>
+            val properName = name.token.text.toUpperCase
+            scope.get(properName)
+              .map(tpe => fail(s"There is already a ${SymbolType.typeName(tpe)} called " + properName, name.token))
+              .getOrElse {
+                val newLet = core.Let(properName)
+                SuccessfulParse((l.copy(let = newLet), scope.addSymbol(properName, LocalVariable(newLet))))
+              }
+          case Some(other) => fail(s"expected letname, found: ${other}", other)
+          case None => SuccessfulParse((l, scope)) // this failure is handled below
         }
+      case other => SuccessfulParse((other, scope))
     }
   }
 

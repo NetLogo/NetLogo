@@ -10,8 +10,8 @@ import
   ParseResult.fail
 
 object RichSyntax {
-  def apply(syntax: Syntax, variadic: Boolean): RichSyntax =
-    new RichSyntax(syntax, variadic, Nil)
+  def apply(name: String, syntax: Syntax, variadic: Boolean): RichSyntax =
+    new RichSyntax(syntax, variadic, Nil, name)
 
   sealed trait ArgumentType {
     def matches(t: Int): Boolean
@@ -76,7 +76,7 @@ object RichSyntax {
 
     def recognizedArgument: ArgumentType =
       if ((tpe & Syntax.OptionalType) != 0)
-        MaybeArgument(tpe)
+        MaybeArgument(tpe & ~ Syntax.OptionalType)
       else
         Argument(tpe)
   }
@@ -140,7 +140,7 @@ object RichSyntax {
 
 import RichSyntax._
 
-class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression, Int)]) {
+class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression, Int)], primName: String) {
   lazy val allArgs = syntax.left +: syntax.right
 
   val argCount = arguments.length
@@ -186,12 +186,19 @@ class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression,
       case other           =>
         if (other.matches(arg.reportedType))
           SuccessfulParse(other.intersection(arg.reportedType))
-        else
+        else {
+          val displayedReportedType = {
+            if ((other.goal & Syntax.ReferenceType) == 0 && (arg.reportedType & ~Syntax.ReferenceType) != 0)
+              arg.reportedType & ~ Syntax.ReferenceType
+            else
+              arg.reportedType
+          }
           fail(
-            s"... expected this input to be ${TypeNames.aName(other.goal)}, but got ${TypeNames.aName(arg.reportedType)} instead", arg.sourceLocation)
+            s"$primName expected this input to be ${TypeNames.aName(other.goal)}, but got ${TypeNames.aName(displayedReportedType)} instead", arg.sourceLocation)
+        }
     }
     assignedType.map { tpe =>
-      new RichSyntax(syntax, variadic, arguments :+ (arg -> tpe))
+      new RichSyntax(syntax, variadic, arguments :+ (arg -> tpe), primName)
     }
   }
 
