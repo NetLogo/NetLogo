@@ -590,7 +590,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -749,7 +749,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1

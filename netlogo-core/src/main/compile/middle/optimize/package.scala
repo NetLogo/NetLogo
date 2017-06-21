@@ -154,6 +154,7 @@ package optimize {
       root.replace(classOf[_countwith])
       root.graftArg(arg0.matchArg(0))
       root.graftArg(arg0.matchArg(1))
+      root.reporter.token = arg0.reporter.token
     }
   }
   // _other(_with(*, *)) => _otherwith(*, *)
@@ -166,6 +167,7 @@ package optimize {
       root.replace(classOf[_otherwith])
       root.graftArg(arg0.matchArg(0))
       root.graftArg(arg0.matchArg(1))
+      root.reporter.token = arg0.reporter.token
     }
   }
   object WithOther extends RewritingReporterMunger {
@@ -198,6 +200,7 @@ package optimize {
       root.replace(classOf[_anyotherwith])
       root.graftArg(arg.matchArg(0))
       root.graftArg(arg.matchArg(1))
+      root.reporter.token = arg.reporter.token
     }
   }
   // _count(_other(*)) => _countother(*)
@@ -219,6 +222,7 @@ package optimize {
       root.replace(classOf[_countotherwith])
       root.graftArg(arg.matchArg(0))
       root.graftArg(arg.matchArg(1))
+      root.reporter.token = arg.reporter.token
     }
   }
   // _any(_with) => _anywith

@@ -794,7 +794,7 @@ procedure DO-PLOTTING:[]{OTPL}:
             ANEWARRAY java/lang/Object
             DUP
             ICONST_0
-            LDC "COUNT"
+            LDC "WITH"
             AASTORE
             DUP
             ICONST_1
@@ -944,7 +944,7 @@ procedure DO-PLOTTING:[]{OTPL}:
             ANEWARRAY java/lang/Object
             DUP
             ICONST_0
-            LDC "COUNT"
+            LDC "WITH"
             AASTORE
             DUP
             ICONST_1
@@ -1094,7 +1094,7 @@ procedure DO-PLOTTING:[]{OTPL}:
             ANEWARRAY java/lang/Object
             DUP
             ICONST_0
-            LDC "COUNT"
+            LDC "WITH"
             AASTORE
             DUP
             ICONST_1

@@ -1806,7 +1806,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -2087,7 +2087,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -2368,7 +2368,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -2649,7 +2649,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -7579,7 +7579,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             ANEWARRAY java/lang/Object
             DUP
             ICONST_0
-            LDC "OTHER"
+            LDC "WITH"
             AASTORE
             DUP
             ICONST_1
