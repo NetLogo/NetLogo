@@ -26,7 +26,7 @@ trait FrontEndMain extends NetLogoParser {
     import compilationOperand.{ extensionManager, oldProcedures }
     val (rawProcDefs, structureResults) = basicParse(compilationOperand)
 
-    val topLevelDefs = transformers.foldLeft(rawProcDefs) {
+    val topLevelDefs = transformers(compilationOperand).foldLeft(rawProcDefs) {
       case (defs, transform) => defs.map(transform.visitProcedureDefinition)
     }
 
@@ -42,8 +42,8 @@ trait FrontEndMain extends NetLogoParser {
     (verifiedDefs, structureResults)
   }
 
-  private def transformers: Seq[AstTransformer] = {
-    Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger)
+  private def transformers(compilationOperand: CompilationOperand): Seq[AstTransformer] = {
+    Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger, new SourceTagger(compilationOperand))
   }
 
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {

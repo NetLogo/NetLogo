@@ -2,7 +2,9 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Expression, SourceLocation, Token, TokenType }
+import
+  org.nlogo.core.{ prim, Expression, SourceLocation, Token, TokenType },
+    prim.Lambda
 
 object DelayedBlock {
   def apply(openBracket: Token, unterminatedTokens: Seq[Token], scope: SymbolTable): DelayedBlock = {
@@ -32,23 +34,23 @@ trait DelayedBlock extends Expression {
 
 class ArrowLambdaBlock(
   val openBracket:    Token,
-  val argTokens:      Seq[Token],
+  val arguments:      Lambda.Arguments,
   val bodyTokens:     Seq[Token],
   closingBracket:     Token,
   val allTokens:      Seq[Token],
   val internalScope:  SymbolTable,
   val sourceLocation: SourceLocation) extends DelayedBlock {
 
-    val argNames = argTokens.map(_.text.toUpperCase)
+    val argNames = arguments.argumentNames
 
   def this(
     openBracket:    Token,
-    argTokens:      Seq[Token],
+    arguments:      Lambda.Arguments,
     bodyTokens:     Seq[Token],
     closingBracket: Token,
     allTokens:      Seq[Token],
     internalScope:  SymbolTable) =
-      this(openBracket, argTokens, bodyTokens, closingBracket,
+      this(openBracket, arguments, bodyTokens, closingBracket,
         allTokens, internalScope,openBracket.sourceLocation.copy(end = closingBracket.end))
 
   val isArrowLambda = true
@@ -62,7 +64,7 @@ class ArrowLambdaBlock(
   override def changeLocation(newLocation: SourceLocation): ArrowLambdaBlock =
     new ArrowLambdaBlock(
       openBracket,
-      argTokens,
+      arguments,
       bodyTokens,
       closingBracket,
       allTokens,
@@ -71,7 +73,7 @@ class ArrowLambdaBlock(
 }
 
 /**
- * represents a block whose contents we have not yet parsed. Since correctly parsing a block required
+ * represents a block whose contents we have not yet parsed. Since correctly parsing a block requires
  * knowing its expected type, we have to do it in two passes. It will eventually be resolved into
  * an ReporterBlock, CommandBlock or a literal list. */
 class AmbiguousDelayedBlock(

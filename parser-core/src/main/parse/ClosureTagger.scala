@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.prim.{ _commandlambda, _lambdavariable, _letvariable, _reporterlambda }
+import org.nlogo.core.prim.{ _commandlambda, _lambdavariable, _letvariable, _reporterlambda, Lambda }
 import org.nlogo.core.{ AstFolder, AstTransformer, ClosedLet, ClosedLambdaVariable, ClosedVariable, Let, ProcedureDefinition, ReporterApp }
 
 class ClosureTagger extends AstTransformer {
@@ -27,12 +27,11 @@ class ClosureTagger extends AstTransformer {
 class ClosedVariableFinder(lambdaVarNames: Seq[String]) extends AstFolder[Set[ClosedVariable]] {
   override def visitReporterApp(app: ReporterApp)(implicit closedVars: Set[ClosedVariable]): Set[ClosedVariable] = {
     app.reporter match {
-      case _letvariable(let)                   => closedVars + ClosedLet(let)
+      case _letvariable(let)          => closedVars + ClosedLet(let)
       case _lambdavariable(name, _) if ! lambdaVarNames.contains(name) =>
         closedVars + ClosedLambdaVariable(name)
-      case _reporterlambda(_, _, _, reporterLets) => closedVars ++ reporterLets
-      case _commandlambda(_, _, _, reporterLets)  => closedVars ++ reporterLets
-      case _                                   => super.visitReporterApp(app)
+      case Lambda(_, _, reporterLets) => closedVars ++ reporterLets
+      case _                          => super.visitReporterApp(app)
     }
   }
 }

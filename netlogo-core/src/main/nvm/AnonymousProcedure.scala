@@ -64,17 +64,8 @@ object AnonymousProcedure {
     binding
   }
 
-  def displayString(procedureType: String, arguments: Seq[Token], body: String): String = {
-    val argsString =
-      if (arguments.isEmpty)
-        ""
-      else if (arguments.length == 1)
-        s"${arguments.head.text} -> "
-      else
-        s"${arguments.map(_.text).mkString("[", " ", "]")} -> "
-
-    s"(anonymous $procedureType: [ $argsString$body ])"
-  }
+  def displayString(procedureType: String, source: String): String =
+    s"(anonymous $procedureType: $source)"
 }
 
 import AnonymousProcedure._
@@ -88,12 +79,12 @@ case class AnonymousReporter(
   formals:        Array[Let],
   binding:        Binding,
   locals:         Array[AnyRef],
-  argumentTokens: Seq[Token])
+  source:         String)
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
   def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, letBindingsToBinding(allLets), locals, Seq.empty[Token])
+    this(body, formals, letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
   }
 
@@ -105,7 +96,7 @@ case class AnonymousReporter(
       agentClassString = body.agentClassString)
 
   override def toString =
-    AnonymousProcedure.displayString("reporter", argumentTokens, body.fullSource)
+    AnonymousProcedure.displayString("reporter", source)
 
   def report(context: api.Context, args: Array[AnyRef]): AnyRef =
     context match {
@@ -132,12 +123,17 @@ case class AnonymousReporter(
 // on the context, finally restoring some state on the way out (including a dead-agent check).
 // We may throw NonLocalExit if _report or _stop is called.
 
-case class AnonymousCommand(procedure: LiftedLambda, formals: Array[Let], binding: Binding, locals: Array[AnyRef])
+case class AnonymousCommand(
+  procedure: LiftedLambda,
+  formals:   Array[Let],
+  binding:   Binding,
+  locals:    Array[AnyRef],
+  source:    String)
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
   @deprecated("Construct an anonymous command using Binding instead of List[LetBinding]", "6.0.1")
   def this(procedure: LiftedLambda, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(procedure, formals, letBindingsToBinding(allLets), locals)
+    this(procedure, formals, letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Commands using a list of bindings is deprecated, please update")
   }
 
@@ -145,7 +141,8 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
     Syntax.commandSyntax(
       right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
       agentClassString = procedure.agentClassString)
-  override def toString = procedure.displayName
+  override def toString =
+    AnonymousProcedure.displayString("command", source)
   // anonymous commands are allowed to take more than the number of arguments (hence repeatable-type)
   def perform(context: api.Context, args: Array[AnyRef]) {
     context match {

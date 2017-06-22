@@ -27,7 +27,7 @@ class LambdaLifter(lambdaNumbers: Iterator[Int]) extends AstTransformer {
 
   override def visitReporterApp(expr: ReporterApp): ReporterApp = {
     expr.reporter match {
-      case r: _reporterlambda=>
+      case r: _reporterlambda =>
         lambdaStack = Right(r)::lambdaStack
         val res = super.visitReporterApp(expr)
         lambdaStack = lambdaStack.tail
@@ -38,7 +38,7 @@ class LambdaLifter(lambdaNumbers: Iterator[Int]) extends AstTransformer {
         val name = "__lambda-" + lambdaNumbers.next()
         c.proc = new nvm.LiftedLambda(
           name, c.token, c.argTokens, parent = p, lambdaFormals = formals,
-          closedLets = resolveClosedVariables(c.closedVariables))
+          closedLets = resolveClosedVariables(c.closedVariables), c.source)
         c.proc.pos = expr.start
         c.proc.end = expr.end
         p.addChild(c.proc)

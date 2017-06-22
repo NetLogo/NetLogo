@@ -9,13 +9,19 @@ import scala.collection.JavaConversions._
 
 class _reporterlambda(
   argumentNames:       Seq[String],
-  argumentTokens:      Seq[Token],
-  val closedVariables: Set[ClosedVariable]) extends Reporter {
+  val closedVariables: Set[ClosedVariable],
+  lambdaSource:        String) extends Reporter {
+    source = lambdaSource
 
   val formals: Seq[Let] = argumentNames.map(name => new Let(name))
   def formalsArray: Array[Let] = formals.toArray
 
   override def report(c: Context): AnyRef = {
-    AnonymousReporter(body = args(0), formals = formalsArray, binding = c.activation.binding, locals = c.activation.args, argumentTokens = argumentTokens)
+    AnonymousReporter(
+      body           = args(0),
+      formals        = formalsArray,
+      binding        = c.activation.binding,
+      locals         = c.activation.args,
+      source         = lambdaSource)
   }
 }

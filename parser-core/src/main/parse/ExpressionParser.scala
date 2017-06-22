@@ -3,7 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{FrontEndProcedure, Fail, I18N, SourceLocation, StructureDeclarations, Syntax, Token, TokenType},
+  core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, StructureDeclarations, Syntax, Token, TokenType },
+    prim.Lambda,
     Fail.{ cAssert, exception },
     Syntax.compatible
 
@@ -454,7 +455,7 @@ object ExpressionParser {
    */
   private def expandConciseReporterLambda(rApp: core.ReporterApp, reporter: core.Reporter, scope: SymbolTable): core.ReporterApp = {
     val (varNames, varApps) = syntheticVariables(reporter.syntax.totalDefault, reporter.token, scope)
-    val lambda = new core.prim._reporterlambda(varNames, Seq.empty[Token], synthetic = true)
+    val lambda = new core.prim._reporterlambda(Lambda.ConciseArguments(varNames))
     lambda.token = reporter.token
     new core.ReporterApp(lambda, Seq(rApp.withArguments(varApps)), reporter.token.sourceLocation)
   }
@@ -472,7 +473,7 @@ object ExpressionParser {
         varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
       else varApps
 
-    val lambda = new core.prim._commandlambda(varNames, Seq.empty[Token], synthetic = true)
+    val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
     lambda.token = token
 
     val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)
@@ -589,16 +590,16 @@ object ExpressionParser {
 
     val listNotWanted = ! compatible(goalType, Syntax.ListType)
 
-    def buildReporterLambda(argTokens: Seq[Token]) = {
+    def buildReporterLambda(args: Lambda.Arguments) = {
       val (expr, closeBracket) = reporterApp(tokens, Syntax.WildcardType, block.internalScope)
-      val lambda = new core.prim._reporterlambda(argTokens.map(_.text.toUpperCase), argTokens, false)
+      val lambda = new core.prim._reporterlambda(args)
       lambda.token = block.openBracket
       new core.ReporterApp(lambda, Seq(expr), SourceLocation(block.openBracket.start, closeBracket.end, block.filename))
     }
 
-    def buildCommandLambda(argNames: Seq[Token]) = {
+    def buildCommandLambda(args: Lambda.Arguments) = {
       val (stmtList, closeBracket) = statementList(tokens, block.internalScope)
-      val lambda = new core.prim._commandlambda(argNames, false)
+      val lambda = new core.prim._commandlambda(args)
       lambda.token = block.openBracket
       val blockArg = commandBlockWithStatements(
         SourceLocation(block.openBracket.start, closeBracket.end, block.filename), stmtList)
@@ -608,9 +609,9 @@ object ExpressionParser {
     if (compatible(goalType, Syntax.CodeBlockType))
       parseCodeBlock(block, tokens)
     else if (block.isArrowLambda && ! block.isCommand)
-      buildReporterLambda(block.asInstanceOf[ArrowLambdaBlock].argTokens)
+      buildReporterLambda(block.asInstanceOf[ArrowLambdaBlock].arguments)
     else if (block.isArrowLambda && block.isCommand)
-      buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].argTokens)
+      buildCommandLambda(block.asInstanceOf[ArrowLambdaBlock].arguments)
     else if (compatible(goalType, Syntax.ReporterBlockType)) {
       val (expr, lastToken) = reporterApp(tokens, goalType, scope)
       new core.ReporterBlock(expr, SourceLocation(block.openBracket.start, lastToken.end, lastToken.filename))
@@ -619,9 +620,9 @@ object ExpressionParser {
       commandBlockWithStatements(lastToken.sourceLocation.copy(start = block.openBracket.start), stmtList)
     }
     else if (compatible(goalType, Syntax.ReporterType) && !block.isCommand && listNotWanted)
-      buildReporterLambda(Seq())
+      buildReporterLambda(Lambda.NoArguments(false))
     else if (compatible(goalType, Syntax.CommandType) && block.isCommand && listNotWanted)
-      buildCommandLambda(Seq())
+      buildCommandLambda(Lambda.NoArguments(false))
     else if (compatible(goalType, Syntax.ListType)) {
       // It's OK to pass the NullImportHandler here because this code is only used when
       // parsing literal lists while compiling code.

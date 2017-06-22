@@ -98,7 +98,7 @@ class Statements(file: String, val stmts: Seq[Statement], val nonLocalExit: Bool
 }
 
 object Statement {
-  def unapply(stmt: Statement): Option[(Command, Seq[Expression], SourceLocation)] = 
+  def unapply(stmt: Statement): Option[(Command, Seq[Expression], SourceLocation)] =
     Some((stmt.command, stmt.args, stmt.sourceLocation))
 }
 
