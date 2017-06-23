@@ -1,49 +1,39 @@
-<!DOCTYPE html>
-<title>
-  NetLogo {{version}} User Manual: Interface Guide
-</title>
-<link rel="stylesheet" href="netlogo.css" type="text/css">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type="text/css">
   .interfacetable > tbody > tr > td {
     padding-top: 0.75em;
     padding-bottom: 0.75em;
   }
 </style>
-<h1>
-  Interface Guide
-</h1>
-{{> versionTag.html }}
-<p>
-  This section of the manual explains the function of each element in
-  NetLogo's user interface.
-<p>
-  In NetLogo, you have the choice of viewing models found in the Models
-  Library, adding to existing models, or creating your own models. The
-  NetLogo interface was designed to meet all these needs.
-<p>
-  The interface can be divided into two main parts: NetLogo menus, and
-  the main NetLogo window. The main window is divided into tabs.
-<ul>
-  <li><a href="#menus">Menus</a></li>
-  <li><a href="#tabs">Tabs</a></li>
-  <li><a href="#i18n">International usage</a></li>
-</ul>
-<h2>
-  <a>Menus</a>
-</h2>
-<p id="menus">
-  On a Mac, if you are running the NetLogo application, the menu bar is
-  located at the top of the screen. On other platforms, the menu bar is
-  found at the top of the NetLogo window.
+
+{{> header.html}}
+
+This section of the manual explains the function of each element in NetLogo's
+user interface.
+
+In NetLogo, you have the choice of viewing models found in the Models Library,
+adding to existing models, or creating your own models. The NetLogo interface
+was designed to meet all these needs.
+
+The interface can be divided into two main parts: NetLogo menus, and the main
+NetLogo window. The main window is divided into tabs.
+
+- [Menus](#menus)
+- [Tabs](#tabs)
+- [International Usage](#i18n)
+
+## <a id="menus">Menus</a>
+
+On a Mac, if you are running the NetLogo application, the menu bar is located at
+the top of the screen. On other platforms, the menu bar is found at the top of
+the NetLogo window.
 <p class="screenshot">
   <img alt="screen shot" src="images/interface/image001.gif">
-<p>
-  The functions available from the menus in the menubar are listed in
-  the following chart.
-<h4>
-  Chart: NetLogo menus
-</h4>
+
+The functions available from the menus in the menubar are listed in the
+following chart.
+
+#### Chart: NetLogo menus
+
 <table border="1" style='border-collapse:collapse; border:none' class="interfacetable" >
   <tbody>
   <tr>
@@ -520,64 +510,56 @@
       </tr>
   </tbody>
 </table>
-<h2>
-  <a>Tabs</a>
-</h2>
-<p id="tabs">
-  At the top of NetLogo's main window are three tabs labeled
-  &quot;Interface&quot;, &quot;Info&quot; and &quot;Code&quot; . Only
-  one tab at a time can be visible, but you can switch between them by
-  clicking on the tabs at the top of the window.
+
+## <a id="tabs">Tabs</a>
+
+At the top of NetLogo's main window are three tabs labeled "Interface", "Info"
+and "Code". Only one tab at a time can be visible, but you can switch between
+them by clicking on the tabs at the top of the window.
 <p class="screenshot">
   <img alt="screen shot" src="images/interface/interfacetoolbar.gif">
-<p>
-  Right below the row of tabs is a toolbar containing a row of
-  controls. The controls available vary from tab to tab.
-<h2>
-  <a>International Usage</a>
-</h2>
-<h3>
-  Character sets
-</h3>
-<p id="i18n">
-  NetLogo always saves and loads models in the UTF-8 character
-  encoding, which includes a wide range of international characters.
-<p>
-  If you are in a locale other than U.S. English, let us know if you
-  have any trouble using your local character set.
-<p>
-  The <a href="transition.html">Transition Guide</a> has advice on
-  converting models containing international characters from earlier
-  NetLogo versions.
-<h3>
-  Languages
-</h3>
-<p>
-  Most of NetLogo's GUI, and some of its error messages, are now
-  &quot;internationalized&quot;. This means that it is now possible to
-  display NetLogo in different languages.
-<p>
-  We say &quot;possible&quot; here because the current release of
-  NetLogo only supports English, Spanish, Chinese, Russian, and Japanese.
-<p>
-  The work on internationalization is not complete. We are asking for
-  help from the user community in helping us localize items such as the
-  menus and error messages.
-<h4>
-  Default language
-</h4>
-<p>
-  By default, NetLogo uses the same language your operating system is
-  set to, if available. (If unavailable, you get English.)
-<p>
-  You can record a preference for a different language by changing the
-  "User Interface Language" option in the preferences dialog. Once a new
-  language is chosen you will have to restart NetLogo.
-<h3>
-  Support for translators
-</h3>
-<p>
-  We hope NetLogo will become available in many different languages. If
-  you would like to translate NetLogo to your language, see <a href="https://github.com/NetLogo/NetLogo/wiki/Localization" target="_blank">this wiki
-  page</a> for instructions.
+
+Right below the row of tabs is a toolbar containing a row of controls. The
+controls available vary from tab to tab.
+
+## <a id="i18n">International Usage</a>
+
+### Character sets
+
+NetLogo always saves and loads models in the UTF-8 character encoding, which
+includes a wide range of international characters.
+
+If you are in a locale other than U.S. English, let us know if you have any
+trouble using your local character set.
+
+The [Transition Guide](transition.html) has advice on converting models
+containing international characters from earlier NetLogo versions.
+
+### Languages
+
+Most of NetLogo's GUI, and some of its error messages, are now
+"internationalized". This means that it is now possible to display NetLogo in
+different languages.
+
+We say "possible" here because the current release of NetLogo only supports
+English, Spanish, Chinese, Russian, and Japanese.
+
+The work on internationalization is not complete. We are asking for help from
+the user community in helping us localize items such as the menus and error
+messages.
+
+#### Default language
+
+By default, NetLogo uses the same language your operating system is set to, if
+available. (If unavailable, you get English.)
+
+You can record a preference for a different language by changing the
+"User Interface Language" option in the preferences dialog. Once a new language
+is chosen you will have to restart NetLogo.
+
+### Support for translators
+
+We hope NetLogo will become available in many different languages. If you would
+like to translate NetLogo to your language, see
+[this wiki page](https://github.com/NetLogo/NetLogo/wiki/Localization) for instructions.
 

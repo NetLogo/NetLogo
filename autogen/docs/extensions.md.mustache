@@ -1,0 +1,58 @@
+{{> header.html}}
+
+NetLogo allows users to write new commands and reporters in Java and other
+languages and use them in their models. This section of the User Manual
+introduces this facility and shows how to use an extension in your model once
+you have obtained or made one.
+
+Extensions created by members of the NetLogo community are available from
+https://github.com/NetLogo/NetLogo/wiki/Extensions.
+
+For information on creating your own extensions, go
+[here](https://github.com/NetLogo/NetLogo/wiki/Extensions-API).
+
+## Using Extensions
+
+To use an extension in a model, add the
+[`extensions`](dictionary.html#extensions) keyword at the beginning of the Code
+tab, before declaring any breeds or variables.
+
+After [`extensions`](dictionary.html#extensions) comes a list of extension names
+in square brackets. For example:
+
+    extensions [sound speech]
+
+Using [`extensions`](dictionary.html#extensions) tells NetLogo to find and open
+the specified extension and makes the custom commands and reporters found in the
+extension available to the current model. You can use these commands and
+reporters just as if they were built-in NetLogo primitives.
+
+### Where extensions are located
+
+NetLogo will look for extensions in several places:
+
+1. In the folder of the current model.
+2. The extensions folder located with the NetLogo installation. For typical
+   NetLogo installations:
+
+    - On Mac OS X: `/Applications/NetLogo {{version}}/extensions`
+    - On 64-bit Windows with 64-bit NetLogo or 32-bit Windows with 32-bit
+      NetLogo: `C:\Program Files\NetLogo {{version}}\app\extensions`
+    - On 64-bit Windows with 32-bit NetLogo:
+      `C:\Program Files (x86)\NetLogo {{version}}\app\extensions`
+    - On Linux: the `app/extensions` subdirectory of the NetLogo directory
+      extracted from the installation `.tgz`
+
+Each NetLogo extension consists of a folder with the same name as the extension,
+entirely in lower case. This folder must contain a JAR file with the same name
+as the folder. For example, the `sound` extension is stored in a folder called
+`sound` with a file inside called `sound.jar`.
+
+To install a NetLogo extension for use by any model, put the extension's folder
+in the NetLogo extensions directory. Or, you can just keep the extension's
+folder in the same folder as the model that uses it.
+
+Some extensions depend on additional files. These files will be in the
+extension's folder along with the JAR file. The folder may also contain other
+files such as documentation and example models.
+

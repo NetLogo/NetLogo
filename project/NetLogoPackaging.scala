@@ -135,7 +135,8 @@ object NetLogoPackaging {
 
       val vars = buildVariables.value ++ downloadSizes ++
         downloadLocations.map(t => (t._1, t._2.getName))
-      Mustache.betweenDirectories(webSource, webTarget.value, vars)
+      Mustache.betweenDirectories(webSource, webTarget.value,
+        Map("index" -> "NetLogo {{version}} Downloads"), vars)
     },
     generateLocalWebsite := {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)

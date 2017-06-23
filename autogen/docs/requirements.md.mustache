@@ -1,0 +1,74 @@
+{{> header.html}}
+
+NetLogo runs on almost any current computer.
+
+If you have any trouble with NetLogo not working, see
+[Contacting Us](contact.html).
+
+## Application Requirements
+
+### Windows
+
+NetLogo runs on Windows 10, Windows 8, Windows 7 and Vista. NetLogo 5.2.1 was
+the last version to support Windows XP and Windows 2000.
+
+The NetLogo installer for Windows includes Java 8 for NetLogo's private use
+only. Other programs on your computer are not affected.
+
+### Mac OS X
+
+Mac OS X 10.8.3 or newer is required. (NetLogo 5.1 was the last version to
+support 10.5 and 10.4; NetLogo 5.2.1 was the last version to support 10.6 and
+10.7)
+
+The NetLogo application contains a distribution of the Java 8 runtime for
+NetLogo's private use only. Other programs on your computer will not be
+affected.
+
+### Linux
+
+NetLogo should work on standard Debian-based and Red Hat-based Linux
+distributions. The NetLogo tarball includes a copy of the Java 8 runtime.
+
+Start NetLogo by running the provided `NetLogo` executable.
+
+<h2>
+  <a name="threed">3D Requirements</a>
+</h2>
+
+Occasionally an older, less powerful system is not able to use the 3D view or
+NetLogo 3D. Try it and see.
+
+Some systems can use 3D but can't switch to full-screen mode. It depends on the
+graphics card or controller. (For example, the ATI Radeon IGP 345 and
+Intel 82845 probably will not work.)
+
+## 32-bit or 64-bit?
+<!-- this needs to be kept in sync with dist/index.html and dist/windows.html -->
+
+For most users on Linux or Windows, the 32-bit version of NetLogo is the
+simplest way to a working NetLogo installation. Advanced users will want to
+understand the advantages of 64-bit NetLogo as well as how to determine whether
+their machine meets the requirements.
+
+The primary advantage of the 64-bit version is the ability to add additional
+heap space by changing the "-Xmx" JVM option. For more information, see
+[How big can my model be](faq.html#howbig). You may also find it helpful to
+browse
+[Oracle's documentation on the performance characteristics of the 64-bit JVM](http://www.oracle.com/technetwork/java/hotspotfaq-138619.html#64bit_performance)
+
+To run 64-bit NetLogo, you must be running 64-bit Windows. To determine whether
+your version of Windows is 64-bit, see
+[Is my PC running the 32-bit or 64-bit version of Windows](http://windows.microsoft.com/en-us/windows7/find-out-32-or-64-bit)
+if you're using Windows Vista, or Windows 7, or
+[Which Windows operating system am I running?](http://windows.microsoft.com/en-us/windows/which-operating-system)
+if you are running any other version of Windows.
+
+For Linux users, the easiest way to determine whether your operating system is
+64-bit is checking the output of
+
+    uname -m
+
+If the output shows "x86_64" or "amd64", you should be able to run the 64-bit
+version.
+
