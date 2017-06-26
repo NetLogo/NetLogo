@@ -557,7 +557,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       NumericInput(num.doubleValue, NumericInput.NumberLabel)
     }
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.ZERO
+    override def defaultValue = org.nlogo.agent.World.Zero
   }
 
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
@@ -600,6 +600,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
     override def changeVisible = false
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.ZERO
+    override def defaultValue = org.nlogo.agent.World.Zero
   }
 }

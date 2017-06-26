@@ -27,7 +27,7 @@ public final strictfp class _turtleson
     List<Turtle> resultList = new ArrayList<Turtle>();
     if (agentOrSet instanceof Turtle) {
       Turtle turtle = (Turtle) agentOrSet;
-      if (turtle.id == -1) {
+      if (turtle.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
       }

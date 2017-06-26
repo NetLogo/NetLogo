@@ -12,7 +12,7 @@ case class LabProtocol(name: String,
                     timeLimit: Int,
                     exitCondition: String,
                     metrics: List[String],
-                    valueSets: List[ValueSet])
+                    valueSets: List[RefValueSet])
 {
   def countRuns = repetitions * valueSets.map(_.toList.size).product
 
@@ -20,10 +20,16 @@ case class LabProtocol(name: String,
   // Iterator here so that each combination we generate can be garbage collected when we're done
   // with it, instead of them all being held in memory until the end of the experiment.
   // - ST 5/1/08, see bug #63 - ST 2/28/12
+  @deprecated("6.0.2", "use AnyRefSettingsIterator instead")
   type SettingsIterator = Iterator[List[(String, Any)]]
 
-  def elements: SettingsIterator = {
-    def combinations(sets: List[ValueSet]): SettingsIterator =
+  @deprecated("6.0.2", "use refElements instead")
+  def elements: SettingsIterator = refElements
+
+  type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
+
+  def refElements: AnyRefSettingsIterator = {
+    def combinations(sets: List[RefValueSet]): AnyRefSettingsIterator =
       sets match {
         case Nil => Iterator(Nil)
         case set::sets =>

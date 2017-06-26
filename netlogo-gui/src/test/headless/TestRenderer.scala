@@ -151,10 +151,10 @@ class TestColorRendering extends AbstractTestRenderer {
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
       import collection.JavaConverters._
-      for (shape <- workspace.world.turtleShapeList().shapes)
-        workspace.world.turtleShapes().removeShape(shape)
+      for (shape <- workspace.world.turtleShapeList.shapes)
+        workspace.world.turtleShapes.removeShape(shape)
       // add one non-recolorable shape
-      shapes.foreach(workspace.world.turtleShapes().add)
+      shapes.foreach(workspace.world.turtleShapes.add)
     }
     // test that the entire world is a particular color.
     def testColors(r: Int, g: Int, b: Int, a: Int = 255) {

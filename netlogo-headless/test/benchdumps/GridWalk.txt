@@ -235,7 +235,7 @@ procedure SETUP:[]{O---}:
            L0
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetup_oneof_1.world : Lorg/nlogo/agent/World;
-            INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
            L1
             ASTORE 2
             ALOAD 2
@@ -247,7 +247,7 @@ procedure SETUP:[]{O---}:
             GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
             GOTO L3
            L2
-           FRAME APPEND [org/nlogo/agent/AgentSet I]
+           FRAME APPEND [org/nlogo/agent/IndexedAgentSet I]
             ALOAD 2
             ILOAD 3
             ALOAD 1
@@ -299,7 +299,7 @@ procedure SETUP:[]{O---}:
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_face_2 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L6
           ASTORE 2
           ALOAD 2
@@ -311,7 +311,7 @@ procedure SETUP:[]{O---}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L8
          L7
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_face_2 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I] []
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_face_2 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -449,7 +449,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -512,7 +512,7 @@ procedure GO:[]{O---}:
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurego_face_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L6
           ASTORE 2
           ALOAD 2
@@ -524,7 +524,7 @@ procedure GO:[]{O---}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L8
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_face_1 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_face_1 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I] []
           ALOAD 2
           ILOAD 3
           ALOAD 1

@@ -92,7 +92,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   // this method runs only until a command switches
   void stepConcurrent() {
-    if (agent.id() == -1) // is our agent dead?
+    if (agent._id == -1) // is our agent dead?
     {
       finished = true;
       return;
@@ -120,7 +120,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   // this method runs until the context is finished
   void runExclusive() {
-    if (agent.id() == -1) // is our agent dead?
+    if (agent._id == -1) // is our agent dead?
     {
       finished = true;
       return;
@@ -182,7 +182,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
     // - ST 6/27/05, 1/10/07
-    if (agent.id() == -1) {
+    if (agent._id == -1) {
       finished = true;
     }
   }

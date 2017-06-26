@@ -14,7 +14,7 @@ org.nlogo.agent.ChooserConstraint.invalidValue = Value must be one of: {0}
 org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = The following file is not in a supported image format: {0}
 
 org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
-org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
 
 org.nlogo.agent.Turtle.patchBeyondLimits = Cannot get patch beyond limits of current world.
 org.nlogo.agent.Turtle.cantChangeWho = You can''t change a turtle''s ID number.
@@ -199,3 +199,5 @@ compiler.LocalsVisitor.notDefined = Nothing named {0} has been defined.
 compiler.LetVariable.notDefined = Nothing named {0} has been defined.
 compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
+
+fileformat.invalidversion = Invalid NetLogo file. Expected "{0}" formatted model to have version compatible with {1}, but this model had version {2}

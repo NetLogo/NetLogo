@@ -441,7 +441,7 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_4.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -948,7 +948,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureupdatevariables_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1376,7 +1376,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -1575,7 +1575,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -1774,7 +1774,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          LDC "COUNT"
+          LDC "WITH"
           AASTORE
           DUP
           ICONST_1
@@ -2414,7 +2414,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -2500,7 +2500,7 @@ procedure GO:[]{O---}:
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -2784,7 +2784,7 @@ procedure GO:[]{O---}:
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_12.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
          L1
           ASTORE 2
           ALOAD 1
@@ -2807,11 +2807,11 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-         FRAME APPEND [org/nlogo/agent/AgentSet]
+         FRAME APPEND [org/nlogo/agent/IndexedAgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_12.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -4224,7 +4224,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
          L8
          FRAME SAME
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
          L9
           ASTORE 2
           ALOAD 2
@@ -4236,7 +4236,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
           GOTO L11
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_setturtlevariable_1 org/nlogo/nvm/Context org/nlogo/agent/AgentSet I org/nlogo/agent/AgentIterator] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurecheckforcollision_setturtlevariable_1 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I org/nlogo/agent/AgentIterator] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -9102,7 +9102,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetnewspeedandheadings_ask_13.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -11127,7 +11127,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetnewspeedandheadings_ask_28.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -11596,7 +11596,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_ask_1.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -11683,37 +11683,61 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           // parameter final  context
           // parameter final  context
           // parameter final  value
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
+          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+         L2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_2.kept2_value : Ljava/lang/Double;
-         L4
+         L3
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+         L0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+          GETSTATIC org/nlogo/agent/Turtle.BIT : I
+          ILOAD 4
+          IF_ICMPNE L4
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          GETSTATIC org/nlogo/agent/Link.BIT : I
+          ILOAD 4
+          IF_ICMPNE L6
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L6
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-         L1
           GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_2 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [I]
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [3]_asm_procedurerecolorturtle_done_3 => void
           // parameter final  context
@@ -12012,7 +12036,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_ask_6.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -12099,37 +12123,61 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           // parameter final  context
           // parameter final  context
           // parameter final  value
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
+          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+         L2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_7.kept2_value : Ljava/lang/Double;
-         L4
+         L3
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+         L0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+          GETSTATIC org/nlogo/agent/Turtle.BIT : I
+          ILOAD 4
+          IF_ICMPNE L4
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          GETSTATIC org/nlogo/agent/Link.BIT : I
+          ILOAD 4
+          IF_ICMPNE L6
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L6
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-         L1
           GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_7 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_7 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [I]
           ALOAD 1
           BIPUSH 8
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [8]_asm_procedurerecolorturtle_done_8 => void
           // parameter final  context
@@ -12190,7 +12238,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_ask_10.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -12277,37 +12325,61 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           // parameter final  context
           // parameter final  context
           // parameter final  value
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
+          TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
+         L2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_11.kept2_value : Ljava/lang/Double;
-         L4
+         L3
           ASTORE 2
-         L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+         L0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
+          ISTORE 4
+          GETSTATIC org/nlogo/agent/Turtle.BIT : I
+          ILOAD 4
+          IF_ICMPNE L4
+          ALOAD 3
+          ICONST_1
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
+          GETSTATIC org/nlogo/agent/Link.BIT : I
+          ILOAD 4
+          IF_ICMPNE L6
+          ALOAD 3
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
+          GOTO L5
+         L6
+         FRAME SAME
+          ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-         L1
           GOTO L5
-         L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_11 org/nlogo/nvm/Context java/lang/Double] [org/nlogo/api/AgentException]
-          ASTORE 3
+         L1
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_setturtleorlinkvariable_11 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
+          ASTORE 5
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 3
+          ALOAD 5
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [I]
           ALOAD 1
           BIPUSH 12
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [12]_asm_procedurerecolorturtle_done_12 => void
           // parameter final  context
@@ -12714,7 +12786,7 @@ procedure MAKE-BOX:[]{OTPL}:
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
          L1
           ASTORE 2
           ALOAD 1
@@ -12737,11 +12809,11 @@ procedure MAKE-BOX:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-         FRAME APPEND [org/nlogo/agent/AgentSet]
+         FRAME APPEND [org/nlogo/agent/IndexedAgentSet]
           ALOAD 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP

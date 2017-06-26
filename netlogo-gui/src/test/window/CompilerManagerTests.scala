@@ -5,7 +5,7 @@ package org.nlogo.window
 import org.scalatest.FunSuite
 import org.nlogo.core.Femto
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
-import org.nlogo.agent.World
+import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
 import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent }
@@ -28,13 +28,18 @@ class CompilerManagerTests extends FunSuite {
     override def compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
   }
 
+  def manager(workspace: AbstractWorkspace, procedures: DummyProcedures, eventSink: (Event, Object) => Unit): CompilerManager = {
+    new CompilerManager(workspace,
+      workspace.world.asInstanceOf[World with CompilationManagement],
+      procedures, eventSink)
+  }
+
   def testCompilerManager(run: (CompilerManager) => Unit)(
       assertions: (AbstractWorkspace, CompilerManager, Seq[Event]) => Unit): Unit = {
         val procedures = new DummyProcedures()
         val workspace = newWorkspace
         var events: Seq[Event] = Seq()
-        val compilerManager = new CompilerManager(workspace, procedures,
-          ((e, o) => (events = events :+ e)))
+        val compilerManager = manager(workspace, procedures, ((e, o) => (events = events :+ e)))
         run(compilerManager)
         assertions(workspace, compilerManager, events)
       }
@@ -45,7 +50,7 @@ class CompilerManagerTests extends FunSuite {
     var events = Seq.empty[Event]
     lazy val workspace = newWorkspace
     lazy val procedures = new DummyProcedures()
-    lazy val compilerManager = new CompilerManager(workspace, procedures, ((e, o) => events = events :+ e))
+    lazy val compilerManager = manager(workspace, procedures, ((e, o) => events = events :+ e))
     def loadWidgets(): Unit = {
       compilerManager.proceduresInterface.innerSource = source
       compilerManager.handle(new LoadBeginEvent())

@@ -18,8 +18,12 @@ trait FrontMiddleBridgeInterface {
 }
 
 trait MiddleEndInterface {
-  def middleEnd(defs: Seq[ProcedureDefinition], sources: Map[String, String],
-    environment: CompilationEnvironment, optimizations: Optimizations): Seq[ProcedureDefinition]
+  def middleEnd(
+    defs:          Seq[ProcedureDefinition],
+    program:       Program,
+    sources:       Map[String, String],
+    environment:   CompilationEnvironment,
+    optimizations: Optimizations): Seq[ProcedureDefinition]
 }
 
 trait BackEndInterface {

@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet, ValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
 import java.awt.{GridBagConstraints,Window}
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
 import collection.JavaConverters._
@@ -62,10 +62,12 @@ class ProtocolEditable(protocol: LabProtocol,
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
   var valueSets =  {
-    def setString(valueSet: ValueSet) =
+    def setString(valueSet: RefValueSet) =
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
          case evs: EnumeratedValueSet =>
+           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
+         case evs: RefEnumeratedValueSet =>
            evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
@@ -91,7 +93,7 @@ class ProtocolEditable(protocol: LabProtocol,
             compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
           } }
         catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-        for(o <- list.toList) yield {
+        for (o <- list.toList) yield {
           o.asInstanceOf[LogoList].toList match {
             case List(variableName: String, more: LogoList) =>
               more.toList match {
@@ -107,7 +109,7 @@ class ProtocolEditable(protocol: LabProtocol,
               }
             case List(variableName: String, more@_*) =>
               if(more.isEmpty) {complain("Expected a value for variable " + variableName); return None}
-              new EnumeratedValueSet(variableName, more.toList)
+              new RefEnumeratedValueSet(variableName, more.toList)
             case _ =>
               complain("Invalid format"); return None
           }}

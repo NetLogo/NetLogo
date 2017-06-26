@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import java.io.ByteArrayInputStream
 import org.nlogo.core.LiteralParser
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
 import scala.language.implicitConversions
@@ -69,7 +69,7 @@ class LabLoader(literalParser: LiteralParser) {
           literalParser.readFromString(
             elem.getAttributes.getNamedItem("value").getNodeValue)
         }
-        new EnumeratedValueSet(e.getAttribute("variable"), values.toList)
+        new RefEnumeratedValueSet(e.getAttribute("variable"), values.toList)
       }
       for{e <- element.getChildNodes
         valueSet <- e.getNodeName match {

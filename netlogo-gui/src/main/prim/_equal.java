@@ -70,15 +70,15 @@ public final strictfp class _equal
   }
 
   public boolean report_11(Context context, Turtle arg0, Turtle arg1) {
-    return arg0.id == arg1.id;
+    return arg0.id() == arg1.id();
   }
 
   public boolean report_12(Context context, Patch arg0, Patch arg1) {
-    return arg0.id == arg1.id;
+    return arg0.id() == arg1.id();
   }
 
   public boolean report_13(Context context, Link arg0, Link arg1) {
-    return arg0.id == arg1.id;
+    return arg0.id() == arg1.id();
   }
 
 }

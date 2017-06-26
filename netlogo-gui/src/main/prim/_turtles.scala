@@ -11,5 +11,5 @@ class _turtles extends Reporter {
   override def report(context: Context): AnyRef =
     report_1(context)
   def report_1(context: Context): AgentSet =
-    world.turtles()
+    world.turtles
 }

@@ -22,13 +22,13 @@ public final strictfp class _isbreed
     Object thing = args[0].report(context);
     if (thing instanceof Turtle) {
       Turtle turtle = (Turtle) thing;
-      return (turtle.id != -1 &&
+      return (turtle.id() != -1 &&
           turtle.getBreed() == world.getBreed(breedName))
           ? Boolean.TRUE
           : Boolean.FALSE;
     } else if (thing instanceof Link) {
       Link link = (Link) thing;
-      return (link.id != -1 &&
+      return (link.id() != -1 &&
           link.getBreed() == world.getLinkBreed(breedName))
           ? Boolean.TRUE
           : Boolean.FALSE;

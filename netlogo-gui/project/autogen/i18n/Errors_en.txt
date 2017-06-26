@@ -8,7 +8,7 @@ org.nlogo.agent.Agent.rgbValueError = RGB values must be 0-255
 org.nlogo.agent.Agent.shapeUndefined = \"{0}\" is not a currently defined shape.
 
 org.nlogo.agent.BooleanConstraint.bool = Value must be a boolean.
-org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world's edge.
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world's edge.
 
 # Value must be one of: ["Hello" 5 [1 2 3]]
 org.nlogo.agent.ChooserConstraint.invalidValue = Value must be one of: {0}

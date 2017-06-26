@@ -2,12 +2,13 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.Turtle;
-import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
+import org.nlogo.api.LogoException;
+import org.nlogo.agent.AgentSetBuilder;
+import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.TreeAgentSet;
+import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Command;
 
 public final strictfp class _hatch
@@ -46,7 +47,7 @@ public final strictfp class _hatch
           workspace.joinForeverButtons(child);
         }
       } else {
-        AgentSet breed = world.getBreed(breedName);
+        TreeAgentSet breed = world.getBreed(breedName);
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.hatch();
           child.setBreed(breed);

@@ -107,7 +107,7 @@ extends Event.LinkChild with Event.LinkParent
     var window: AgentMonitorWindow = null
     var agent = a0
     if(agent == null && (agentKind == AgentKind.Observer))
-      agent = workspace.world.observer()
+      agent = workspace.world.observer
     if(agent != null)
       window = monitorWindows.get(agent).orNull
     else if(agentKind == AgentKind.Turtle)

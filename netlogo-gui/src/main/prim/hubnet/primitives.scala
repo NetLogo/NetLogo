@@ -196,7 +196,7 @@ class _hubnetresetperspective extends Command with HubNetPrim {
         override def run() {
           hubNetManager.foreach(_.sendAgentPerspective(
             client, world.observer.perspective.export,
-            agentKind, id, (world.worldWidth() - 1) / 2, true))
+            agentKind, id, (world.worldWidth - 1) / 2, true))
         }})
     context.ip = next
   }

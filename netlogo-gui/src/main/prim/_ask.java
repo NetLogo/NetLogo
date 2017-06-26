@@ -49,7 +49,7 @@ public final strictfp class _ask
       }
     } else if (target instanceof Agent) {
       Agent agent = (Agent) target;
-      if (agent.id == -1) {
+      if (agent.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
@@ -79,7 +79,7 @@ public final strictfp class _ask
 
   public void perform_3(Context context, Agent agent)
       throws LogoException {
-    if (agent.id == -1) {
+    if (agent.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }

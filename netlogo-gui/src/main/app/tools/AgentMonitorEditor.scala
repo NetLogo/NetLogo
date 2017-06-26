@@ -219,7 +219,7 @@ with WindowEvents.JobRemovedEvent.Handler
       if(agent == null || agent.id == -1)
         // this is so you can still enter expressions into the who field of dead/empty turtle
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
-        workspace.world.observers()
+        workspace.world.observers
       else {
         AgentSet.fromAgent(agent)
       }
@@ -415,7 +415,7 @@ with WindowEvents.JobRemovedEvent.Handler
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseAgentSet(text: String): AgentSet =
     if(text.equalsIgnoreCase("LINKS"))
-      workspace.world.links()
+      workspace.world.links
     else {
       val breed = workspace.world.getLinkBreed(text.toUpperCase)
       if(breed == null)

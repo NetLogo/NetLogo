@@ -4,6 +4,7 @@ import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
+import Dump.dumpClassName
 import Testing.{ testTempDirectory, testChecksumsClass }
 
 
@@ -173,6 +174,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(JFlexRunner.settings: _*).
   settings(includeProject(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
+  settings(Dump.settings: _*).
   settings(
     name          := "NetLogoHeadless",
     version       := "6.0.1",
@@ -190,6 +192,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
+    dumpClassName                := "org.nlogo.headless.misc.Dump",
     excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
     all := { val _ = (
       (packageBin in Compile).value,

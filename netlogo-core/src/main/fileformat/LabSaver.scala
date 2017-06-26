@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
 import javax.xml.transform
 import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
@@ -88,6 +88,13 @@ object LabSaver {
             elementWithAttributes("value",
                                   attributes(("value", Dump.logoObject(
                                     value.asInstanceOf[AnyRef],true,false))))
+          hd.endElement("", "", "enumeratedValueSet")
+        case enumeratedValueSet: RefEnumeratedValueSet =>
+          hd.startElement("", "", "enumeratedValueSet",
+            attributes(("variable", valueSet.variableName)))
+          for (value <- enumeratedValueSet)
+            elementWithAttributes("value",
+              attributes(("value", Dump.logoObject(value, true, false))))
           hd.endElement("", "", "enumeratedValueSet")
       }
     hd.endElement("", "", "experiment")

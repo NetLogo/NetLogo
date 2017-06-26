@@ -8,7 +8,7 @@ package org.nlogo.headless
 
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
-    agent.{ Agent, World },
+    agent.{ Agent, World, World2D },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
     core.{ model, AgentKind, CompilerException, CompilerUtilitiesInterface, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
       model.ModelReader,
@@ -36,7 +36,7 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
-    val world = new World
+    val world = new World2D
     Femto.get(subclass, world,
       Femto.scalaSingleton[CompilerInterface](
         "org.nlogo.compile.Compiler"),
@@ -47,10 +47,7 @@ object HeadlessWorkspace {
   def newLab: LabInterface = {
     val utilities: CompilerUtilitiesInterface =
       Femto.scalaSingleton("org.nlogo.parse.CompilerUtilities")
-    // kludgy, use AnyRef here because ProtocolLoader doesn't implement an interface - ST 4/25/13
-    val protocolLoader: AnyRef =
-      Femto.get("org.nlogo.lab.ProtocolLoader", utilities)
-    Femto.get("org.nlogo.lab.Lab", protocolLoader)
+    Femto.get("org.nlogo.lab.Lab")
   }
 
 }

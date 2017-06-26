@@ -49,14 +49,13 @@ public final strictfp class _patchset
             (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
       }
     }
-    return AgentSet.fromArray( AgentKindJ.Patch(), resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
+    return AgentSet.fromArray(AgentKindJ.Patch(), resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Patch> result)
       throws LogoException {
-    for (Iterator<Object> iter = tempList.javaIterator();
-         iter.hasNext();) {
-      Object obj = iter.next();
+    for (int i = 0; i < tempList.length(); i++) {
+      Object obj = tempList.apply(i);
       if (obj instanceof Patch) {
         result.add((Patch) obj);
       } else if (obj instanceof AgentSet) {

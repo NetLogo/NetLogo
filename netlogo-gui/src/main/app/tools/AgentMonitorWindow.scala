@@ -157,7 +157,7 @@ with WindowEvents.LoadBeginEvent.Handler
       val turtleVars = workspace.world.program.turtlesOwn
       val allVars: Seq[String] =
         Option(agent) match {
-          case Some(t: Turtle) if t.getBreed != workspace.world.turtles() =>
+          case Some(t: Turtle) if t.getBreed != workspace.world.turtles =>
             turtleVars ++ workspace.world.program.breeds.get(t.getBreed.printName).map(_.owns).getOrElse(Seq())
           case _ => turtleVars
         }
@@ -180,7 +180,7 @@ with WindowEvents.LoadBeginEvent.Handler
       val linkVars = workspace.world.program.linksOwn
       val allVars: Seq[String] =
         Option(agent) match {
-          case Some(l: Link) if l.getBreed != workspace.world.links() =>
+          case Some(l: Link) if l.getBreed != workspace.world.links =>
             linkVars ++ workspace.world.program.linkBreeds
               .get(l.getBreed.printName)
               .map(_.owns)

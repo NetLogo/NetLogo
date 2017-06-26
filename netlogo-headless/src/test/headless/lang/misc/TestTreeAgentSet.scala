@@ -27,13 +27,13 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
     Given("a subscriber to turtles")
     val turtlesSub = new SimpleChangeEventCounter(ws.world.turtles)
     And("a subscriber to mice")
-    val miceSub = new SimpleChangeEventCounter(ws.world.breedAgents.get("MICE"))
+    val miceSub = new SimpleChangeEventCounter(ws.world.getBreed("MICE"))
     And("a subscriber to frogs")
-    val frogSub = new SimpleChangeEventCounter(ws.world.breedAgents.get("FROGS"))
+    val frogSub = new SimpleChangeEventCounter(ws.world.getBreed("FROGS"))
     And("a subscriber to links")
     val linksSub = new SimpleChangeEventCounter(ws.world.links)
     And("a subscriber to undirected-links")
-    val undirLinksSub = new SimpleChangeEventCounter(ws.world.linkBreedAgents.get("UNDIRECTED-EDGES"))
+    val undirLinksSub = new SimpleChangeEventCounter(ws.world.getLinkBreed("UNDIRECTED-EDGES"))
 
     val allSubs = Seq(turtlesSub, miceSub, frogSub, linksSub, undirLinksSub)
 

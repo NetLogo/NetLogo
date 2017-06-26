@@ -29,7 +29,7 @@ public final strictfp class _setobservervariable
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     try {
-      context.agent.setObserverVariable(vn, args[0].report(context));
+      world.observer().setVariable(vn, args[0].report(context));
     } catch (org.nlogo.api.AgentException ex) {
       throw new org.nlogo.nvm.RuntimePrimitiveException
           (context, this, ex.getMessage());
@@ -39,7 +39,7 @@ public final strictfp class _setobservervariable
 
   public void perform_1(final org.nlogo.nvm.Context context, Object arg0) throws LogoException {
     try {
-      context.agent.setObserverVariable(vn, arg0);
+      world.observer().setVariable(vn, arg0);
     } catch (org.nlogo.api.AgentException ex) {
       throw new org.nlogo.nvm.RuntimePrimitiveException
           (context, this, ex.getMessage());

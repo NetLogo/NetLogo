@@ -689,7 +689,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private double lastTicksListenersHeard = -1.0;
 
   private void notifyListeners() {
-    double ticks = world().tickCounter.ticks();
+    double ticks = world().tickCounter().ticks();
     if (ticks != lastTicksListenersHeard) {
       lastTicksListenersHeard = ticks;
       listenerManager.tickCounterChanged(ticks);
@@ -834,7 +834,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         agents == null) {
       JobWidget widget = (JobWidget) owner;
       if (widget.useAgentClass()) {
-        agents = world().agentKindToAgentSet(widget.kind());
+        agents = world().agentSetOfKind(widget.kind());
       }
     }
     if (owner.ownsPrimaryJobs()) {
@@ -874,7 +874,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, con);
+      world().observer().setConstraint(index, con);
     }
   }
 
@@ -883,7 +883,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, e.constraint);
+      world().observer().setConstraint(index, e.constraint);
     }
   }
 
@@ -892,7 +892,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
 
     if (index != -1) {
-      world().observer().variableConstraint(index, e.constraint);
+      world().observer().setConstraint(index, e.constraint);
     }
   }
 
@@ -900,13 +900,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(org.nlogo.window.Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
-          (world().observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this);
+          (world().observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this, this);
       e.slider.removeAllErrors();
       e.slider.setSliderConstraint(con);
       // now we set the constraint in the observer, so that it is enforced.
       int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
       if (index != -1) {
-        world().observer().variableConstraint(index, con);
+        world().observer().setConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
@@ -919,7 +919,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(org.nlogo.window.Events.RemoveConstraintEvent e) {
     int index = world().observerOwnsIndexOf(e.varname.toUpperCase());
     if (index != -1) {
-      world().observer().variableConstraint(index, null);
+      world().observer().setConstraint(index, null);
     }
   }
 
@@ -983,8 +983,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// importing
 
   @Override
-  protected org.nlogo.agent.Importer.ErrorHandler importerErrorHandler() {
-    return new org.nlogo.agent.Importer.ErrorHandler() {
+  protected org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler() {
+    return new org.nlogo.agent.ImporterJ.ErrorHandler() {
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
         org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
