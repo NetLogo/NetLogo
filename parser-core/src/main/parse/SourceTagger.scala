@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ prim, Dump, LogoList },
+  org.nlogo.core.{ prim, Application, CommandBlock, Dump, LogoList },
     prim.{ _commandlambda, _const, _lambdavariable, _reporterlambda, Lambda }
 
 import
@@ -43,12 +43,12 @@ class LambdaWhitespace(startNode: ReporterApp) extends FormattingWhitespace {
   def get(path: AstPath, placement: WhiteSpace.Placement): Option[String] = None
   def backMargin(path: AstPath): String =
     path.components.lastOption match {
-      case Some(AstPath.CmdBlk(_)) =>
+      case Some(AstPath.CmdBlk(b)) =>
         path.`../`.traverse(startNode) match {
           case Some(ReporterApp(c: _commandlambda, _, _)) => " "
-          case _ => " ]"
+          case other => " ]"
         }
-      case _ => " "
+      case other => " "
     }
   def content(path: AstPath): String =
     path.traverse(startNode) match {
@@ -64,9 +64,14 @@ class LambdaWhitespace(startNode: ReporterApp) extends FormattingWhitespace {
     path.components.lastOption match {
       case Some(AstPath.Stmt(_)) => " "
       case Some(AstPath.RepArg(_)) => " "
-      case Some(AstPath.CmdBlk(_)) =>
+      case Some(AstPath.CmdBlk(i)) =>
         path.`../`.traverse(startNode) match {
           case Some(ReporterApp(c: _commandlambda, _, _)) => ""
+          case Some(app: Application) =>
+            app.args(i) match {
+              case blk: CommandBlock if blk.synthetic => ""
+              case _ => " ["
+            }
           case other => " ["
         }
       case _ => ""

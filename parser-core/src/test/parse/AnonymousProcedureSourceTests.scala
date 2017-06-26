@@ -55,6 +55,9 @@ class AnonymousProcedureSourceTests extends FunSuite with Inside with BaseParser
   test("anonymous command with newlines") {
     assertStringifies(expression("[ -> \nfd 1]"), "[ -> fd 1 ]")
   }
+  test("anonymous command with optional command block") {
+    assertStringifies(expression("[ -> crt 1 ]"), "[ -> crt 1 ]")
+  }
   test("concise anonymous command") {
     assertStringifies(
       expression("fd", expIndex = 1, preamble = "to __test foreach [] "),
