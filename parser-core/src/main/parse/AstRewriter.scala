@@ -37,7 +37,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
     rewrite(Femto.get(className), preserveBody _)
   }
 
-  def runVisitor(folder: PositionalAstFolder[Map[AstPath, Formatter.Operation]]): String = {
+  def runVisitor(folder: PositionalAstFolder[AstEdit]): String = {
     rewrite(folder, preserveBody _)
   }
 
@@ -80,7 +80,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
   }
 
   def rewrite(
-    visitor: PositionalAstFolder[Map[AstPath, Formatter.Operation]],
+    visitor: PositionalAstFolder[AstEdit],
     wholeFile: (StructureResults, String, String, String) => String,
     sourceName: String = ""): String = {
 
@@ -94,17 +94,17 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
 
     val procsToRewrite = procs.filter(_.filename == sourceName)
 
-    val operations = procsToRewrite.foldLeft(Map[AstPath, Formatter.Operation]()) {
-      case (dels, proc) => visitor.visitProcedureDefinition(proc)(dels)
+    val edit = procsToRewrite.foldLeft(AstEdit(Map[AstPath, AstFormat.Operation](), wsMap)) {
+      case (edit, proc) => visitor.visitProcedureDefinition(proc)(edit)
     }
 
     val headers = fileHeaders.getOrElse("", "")
     val footer = fileFooters.getOrElse("", "")
 
     val eolWhitespace = new Regex("\\s+$")
-    val rewrittenProcedures = format(operations, wsMap, procsToRewrite)
+    val rewrittenProcedures = format(edit, procsToRewrite)
     val rewritten =
-      wholeFile(structureResults, headers, format(operations, wsMap, procsToRewrite), footer)
+      wholeFile(structureResults, headers, rewrittenProcedures, footer)
     rewritten.lines.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
   }
 
@@ -154,14 +154,13 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
   }
 
   def format(
-    operations: Map[AstPath, Formatter.Operation],
-    wsMap: WhitespaceMap,
+    edit: AstEdit,
     procs: Iterable[ProcedureDefinition]): String = {
+      import edit.{ operations, wsMap }
     val formatter = new Formatter
-    val res = procs.filter(p => op.sources.contains(p.procedure.filename)).foldLeft(Formatter.Context("", operations)) {
+    val res = procs.filter(p => op.sources.contains(p.procedure.filename)).foldLeft[AstFormat](Formatter.context("", operations, wsMap = wsMap)) {
       case (acc, proc) =>
-        formatter.visitProcedureDefinition(proc)(
-          acc.copy(instructionToString = Formatter.instructionString _, wsMap = wsMap))
+        formatter.visitProcedureDefinition(proc)(Formatter.context(acc.text, acc.operations, wsMap = wsMap))
     }
     res.text
   }

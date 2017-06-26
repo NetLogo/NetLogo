@@ -102,7 +102,7 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
     val blk = AstPath(Proc("Z"), Stmt(0), RepArg(0), RepBlk(0))
     val word = blk / RepArg(0)
     assert(result.whitespaceMap(word -> Leading) == " (")
-    assert(result.whitespaceMap(blk -> BackMargin) == ") ")
+    assert(result.whitespaceMap(blk -> BackMargin) == ") ]")
     assert(result.whitespaceMap(word / RepArg(1) -> Trailing) == ") ")
   }
 

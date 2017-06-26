@@ -173,11 +173,13 @@ class Backifier(program: Program,
       case core.prim._constcodeblock(toks) =>
         new nvmprim._constcodeblock(toks)
 
-      case core.prim._commandlambda(argNames, argTokens, _, closedLambdaVariables) =>
-        new nvmprim._commandlambda(argNames, argTokens, null, closedLambdaVariables)
+      case core.prim._commandlambda(args, closedVariables, source) =>
+        new nvmprim._commandlambda(
+          args.argumentNames, args.argumentTokens,
+          null, closedVariables, source.getOrElse(""))
 
-      case core.prim._reporterlambda(argNames, argTokens, _, closedLambdaVariables) =>
-        new nvmprim._reporterlambda(argNames, argTokens, closedLambdaVariables)
+      case core.prim._reporterlambda(args, closedVariables, source) =>
+        new nvmprim._reporterlambda(args.argumentNames, closedVariables, source.getOrElse(""))
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(

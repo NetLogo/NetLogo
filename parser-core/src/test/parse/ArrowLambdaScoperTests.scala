@@ -5,7 +5,7 @@ package org.nlogo.parse
 import org.scalatest.FunSuite
 
 import org.nlogo.core.{ CompilerException, SourceLocation, Token, TokenType }
-import org.nlogo.core.prim.{ _procedurevariable, _lambdavariable }
+import org.nlogo.core.prim.{ _procedurevariable, _lambdavariable, Lambda }, Lambda.Arguments
 import org.nlogo.core.TokenDSL._
 import PrimDSL._
 
@@ -94,7 +94,7 @@ class ArrowLambdaScoperTests extends FunSuite {
     "MEAN" -> SymbolType.PrimitiveReporter,
     "BAR"  -> SymbolType.GlobalVariable)
 
-  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Seq[Token], Seq[Token], SymbolTable)] =
+  def scope(ts: Seq[Token], otherSymbols: SymbolTable = SymbolTable.empty): Option[(Arguments, Seq[Token], SymbolTable)] =
     ArrowLambdaScoper(ts, testSymbols ++ otherSymbols)
 
   def testScopes(toks: Seq[Token], expectedArgs: Seq[String], expectedBody: Seq[Token], expectedSymbols: SymbolTable = SymbolTable.empty) = {
@@ -102,7 +102,7 @@ class ArrowLambdaScoperTests extends FunSuite {
     assert(res.isDefined)
     res.foreach {
       case (args, body, symbols) =>
-        assertResult(expectedArgs)(args.map(_.text.toUpperCase))
+        assertResult(expectedArgs)(args.argumentNames)
         assertResult(expectedBody)(body)
         expectedSymbols.foreach {
           case (key, symType) =>

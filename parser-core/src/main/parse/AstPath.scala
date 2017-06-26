@@ -2,8 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstNode, CommandBlock, Expression, ProcedureDefinition,
-  ReporterApp, ReporterBlock, Statement, Statements }
+import org.nlogo.core.{ Application, AstNode, CommandBlock,
+  Expression, ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements }
 
 
 object AstPath {
@@ -42,6 +42,33 @@ case class AstPath(components: Component*) {
 
   def repath(fromRoot: AstPath, toRoot: AstPath): AstPath =
     AstPath((toRoot.components ++ components.drop(fromRoot.components.length)): _*)
+
+  def traverse(astNode: AstNode): Option[AstNode] = {
+    import AstPath._
+    @annotation.tailrec
+    def traverseRec(astNode: AstNode, comps: Seq[Component]): Option[AstNode] = {
+      if (comps.isEmpty) Some(astNode)
+      else (astNode, comps.head) match {
+        case (proc: ProcedureDefinition, Proc(n)) if proc.procedure.name == n =>
+          traverseRec(proc.statements, comps.tail)
+        case (stmts: Statements, Stmt(i)) =>
+          if (i >= stmts.stmts.length) None
+          else traverseRec(stmts.stmts(i), comps.tail)
+        case (app: Application, RepArg(i)) =>
+          if (i >= app.args.length || ! app.args(i).isInstanceOf[ReporterApp]) None
+          else traverseRec(app.args(i), comps.tail)
+        case (app: Application, RepBlk(i)) =>
+          if (i >= app.args.length || ! app.args(i).isInstanceOf[ReporterBlock]) None
+          else traverseRec(app.args(i), comps.tail)
+        case (app: Application, CmdBlk(i)) =>
+          if (i >= app.args.length || ! app.args(i).isInstanceOf[CommandBlock]) None
+          else traverseRec(app.args(i).asInstanceOf[CommandBlock].statements, comps.tail)
+        case (_, _) => None
+      }
+    }
+    traverseRec(astNode, components)
+  }
+
 
   override def toString: String = {
     "AstPath(" + components.mkString(", ") + ")"

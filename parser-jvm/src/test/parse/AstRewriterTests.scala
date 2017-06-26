@@ -24,12 +24,12 @@ class AstRewriterTests extends FunSuite {
     assertPreservesSource("show [pycor] of one-of patches")
     assertPreservesSource("; comment with [\"a list\"] [1 2 3]\n")
     assertPreservesSource("__ignore (list (1 + 1) (2 - 1))")
-    assertPreservesSource("__ignore [[x] -> list (1 + 1) (2 - 1)]")
+    assertPreservesSource("__ignore [ [x] -> list (1 + 1) (2 - 1)]")
     assertPreservesSource("show [ 1 2 3 ]")
     assertPreservesSource("show [ [1] [ 2] [ 3 ] ]")
     assertPreservesSource("show [ blue green yellow ]")
     assertPreservesSource("show (list 1 2 3) ; => [1 2 3]\n")
-    assertPreservesSource("show reduce [[x y] -> x + y] [1 2 3]")
+    assertPreservesSource("show reduce [ [x y] -> x + y] [1 2 3]")
     assertPreservesSource("show __block [foo bar baz]")
   }
 
@@ -86,6 +86,7 @@ class AstRewriterTests extends FunSuite {
   }
 
   test("rename command and manipulate arguments") {
+    assertResult("bk 1  forward 1")(replaceCommand("bk 1  fd 1", "fd" -> "forward {0}"))
     assertResult("file-close-all")(replaceCommand("file-close", "file-close" -> "file-close-all"))
     assertResult("fd 1")(replaceCommand("bk 1", "bk" -> "fd 1"))
     assertResult("; bk 1")(replaceCommand("; bk 1\n", "bk" -> "fd 1"))
@@ -134,7 +135,7 @@ class AstRewriterTests extends FunSuite {
   testLambda("show is-list? [ [] -> tick ]", "show is-list? task [tick]")
   testLambda("let a-value 1 let a-task [ [] -> a-value ]", "let a-value 1 let a-task task [a-value]")
   testLambda("baz ([ [] ->  fd 1 ]) ([ [?1 ?2] -> bk ?2 ])", "baz (task [ fd 1 ]) (task [ bk ?2 ])", preamble = "TO baz [a b] END TO FOO ")
-  testLambda("show reduce [[x y] -> x + y] [1 2 3]", "show reduce [[x y] -> x + y] [1 2 3]")
+  testLambda("show reduce [ [x y] -> x + y] [1 2 3]", "show reduce [[x y] -> x + y] [1 2 3]")
   testLambda("foreach [1 2 3] [ [x] -> show x ]", "foreach [1 2 3] [ [x] -> show x ]")
   testLambda("foreach [1 2 3] [ x -> show x ]", "foreach [1 2 3] [ x -> show x ]")
   testLambda("foreach [1 2 3] [ -> show 4 ]", "foreach [1 2 3] [ -> show 4 ]")

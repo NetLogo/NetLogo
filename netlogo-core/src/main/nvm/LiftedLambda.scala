@@ -10,8 +10,8 @@ final class LiftedLambda(
   argTokens:          Seq[Token],
   val parent:         Procedure,
   val lambdaFormals:  Seq[Let],
-  val closedLets:     Set[Let]
-  ) extends Procedure(false, name, nameToken, argTokens, null) {
+  val closedLets:     Set[Let],
+  val source:         String) extends Procedure(false, name, nameToken, argTokens, null) {
 
     args = Vector[String]()
 

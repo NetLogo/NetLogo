@@ -74,17 +74,10 @@ case class _carefully() extends Command {
       introducesContext = true)
 }
 case class _commandlambda(
-  argumentNames:   Seq[String],
-  argumentTokens:  Seq[Token],
-  synthetic:       Boolean,
-  closedVariables: Set[ClosedVariable]) extends Lambda with Reporter {
-  def this() = this(Seq(), Seq(), false, Set())
-  def this(arguments: Seq[Token]) =
-    this(arguments.map(_.text.toUpperCase), arguments, false, Set())
-  def this(arguments: Seq[Token], synthetic: Boolean) =
-    this(arguments.map(_.text.toUpperCase), arguments, synthetic, Set())
-  def this(arguments: Seq[String], argumentTokens: Seq[Token], synthetic: Boolean) =
-    this(arguments, argumentTokens, synthetic, Set())
+  arguments:       Lambda.Arguments,
+  closedVariables: Set[ClosedVariable],
+  source:          Option[String]) extends Lambda with Reporter {
+  def this(args: Lambda.Arguments) = this(args, Set(), None)
 
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.CommandType)
@@ -92,13 +85,11 @@ case class _commandlambda(
   override def toString =
     "_commandlambda" + argumentNames.mkString("(", ", ", ")")
 
-  def minArgCount: Int = argumentNames.length
-
   def copy(
-    argumentNames:   Seq[String] = argumentNames,
-    argumentTokens:  Seq[Token] = argumentTokens,
-    closedVariables: Set[ClosedVariable] = closedVariables): _commandlambda = {
-    val ct = new _commandlambda(argumentNames, argumentTokens, synthetic, closedVariables)
+    arguments:       Lambda.Arguments    = arguments,
+    closedVariables: Set[ClosedVariable] = closedVariables,
+    source:          Option[String]      = source): _commandlambda = {
+    val ct = new _commandlambda(arguments, closedVariables, source)
     copyInstruction(ct)
   }
 }
@@ -395,18 +386,11 @@ case class _report() extends Command {
       right = List(Syntax.WildcardType))
 }
 case class _reporterlambda(
-  argumentNames:   Seq[String],
-  argumentTokens:  Seq[Token],
-  synthetic:       Boolean,
-  closedVariables: Set[ClosedVariable]) extends Lambda with Reporter {
+  arguments:       Lambda.Arguments,
+  closedVariables: Set[ClosedVariable],
+  source:          Option[String]) extends Lambda with Reporter {
+  def this(args: Lambda.Arguments) = this(args, Set(), None)
 
-  def this() = this(Seq(), Seq(), false, Set())
-  def this(arguments: Seq[Token]) =
-    this(arguments.map(_.text.toUpperCase), arguments, false, Set())
-  def this(arguments: Seq[Token], synthetic: Boolean) =
-    this(arguments.map(_.text.toUpperCase), arguments, synthetic, Set())
-  def this(arguments: Seq[String], argumentTokens: Seq[Token], synthetic: Boolean) =
-    this(arguments, argumentTokens, synthetic, Set())
   override def syntax = {
     Syntax.reporterSyntax(
       right = List(Syntax.CodeBlockType, Syntax.ReporterType),
@@ -417,10 +401,10 @@ case class _reporterlambda(
     "_reporterlambda" + argumentNames.mkString("(", ", ", ")")
 
   def copy(
-    argumentNames:   Seq[String]         = argumentNames,
-    argumentTokens:  Seq[Token]          = argumentTokens,
-    closedVariables: Set[ClosedVariable] = closedVariables): _reporterlambda = {
-    val cr = new _reporterlambda(argumentNames, argumentTokens, synthetic, closedVariables)
+    arguments:       Lambda.Arguments    = arguments,
+    closedVariables: Set[ClosedVariable] = closedVariables,
+    source:          Option[String]      = source): _reporterlambda = {
+    val cr = new _reporterlambda(arguments, closedVariables, source)
     copyInstruction(cr)
   }
 }

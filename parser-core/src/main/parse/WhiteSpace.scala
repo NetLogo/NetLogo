@@ -24,7 +24,8 @@ object WhiteSpace {
     whitespaceLog: WhitespaceMap,
     lastToken: Option[Token] = None,
     tokenIterators: Map[String, BufferedIterator[Token]] = Map(),
-    lastPosition: Option[(AstPath, SourceLocation)] = None) {
+    lastPosition: Option[(AstPath, SourceLocation)] = None,
+    isAnonymousProcedureBlock: Boolean = false) {
       val whitespaceMap = whitespaceLog.toMap
 
       def addWhitespace(path: AstPath, placement: Placement, newWhiteSpace: String): Context =
@@ -43,6 +44,12 @@ object WhiteSpace {
         copy(lastPosition = lastPosition.map(t => (path, location)))
 
       def lastPath: Option[AstPath] = lastPosition.map(_._1)
+
+      def enterAnonymousProcedure: Context =
+        copy(isAnonymousProcedureBlock = true)
+
+      def exitAnonymousProcedure: Context =
+        copy(isAnonymousProcedureBlock = false)
 
       def debugPrint(s: String): Context = {
         println(s + ":\n" + whitespaceLog.toMap.mkString(s"\n"))
@@ -106,24 +113,28 @@ object WhiteSpace {
         SourceLocation(a.start max a.reporter.token.start, a.reporter.token.end, a.filename)
 
       if (app.reporter.syntax.isInfix) {
-        c.seq(
+        c.exitAnonymousProcedure.seq(
           visitExpression(app.args.head, path, 0)(_),
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           app.args.zipWithIndex.tail.foldLeft(_) {
             case (ctx, (arg, i)) => visitExpression(arg, path, i)(ctx)
           })
       } else if (app.reporter.isInstanceOf[_reporterlambda]) {
-        c.seq(
+        c.enterAnonymousProcedure.seq(
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           arrowFrontMargin(app, path),
           super.visitReporterApp(app, path)(_),
-          tagTrailingWhitespace(app, path))
+          tagTrailingWhitespace(app, path)).exitAnonymousProcedure
       } else if (app.reporter.isInstanceOf[_commandlambda] && app.reporter.asInstanceOf[_commandlambda].argumentNames.nonEmpty) {
-        c.seq(
+        c.enterAnonymousProcedure.seq(
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           arrowFrontMargin(app, path),
           super.visitReporterApp(app, path)(_),
-          tagTrailingWhitespace(app, path))
+          tagTrailingWhitespace(app, path)).exitAnonymousProcedure
+      } else if (app.reporter.isInstanceOf[_commandlambda]) {
+        c.enterAnonymousProcedure.seq(
+          tagLeadingWhitespace(path, reporterSourceLocation(app)),
+          super.visitReporterApp(app, path)(_))
       } else if (app.reporter.isInstanceOf[_const]) {
         c.through(
           sourceToPoint(app.filename, app.start, _ => true),
@@ -132,14 +143,14 @@ object WhiteSpace {
           sourceToPoint(app.filename, app.end, _ => true),
           (content: String) => _.addWhitespace(path, Content, content))
       } else if (app.reporter.isInstanceOf[_constcodeblock]) {
-        c.through(
+        c.exitAnonymousProcedure.through(
           sourceToPoint(app.filename, app.start, _ => true),
           (leading: String) => _.addLeadingWhitespace(path, leading, app.sourceLocation)
         ).through(
           sourceToPoint(app.filename, app.end, _ => true),
           (content: String) => _.addWhitespace(path, Content, content))
       } else {
-        c.seq(
+        c.exitAnonymousProcedure.seq(
           tagLeadingWhitespace(path, reporterSourceLocation(app)),
           super.visitReporterApp(app, path)(_))
       }
@@ -165,18 +176,23 @@ object WhiteSpace {
         super.visitStatement(stmt, path)(_))
     }
 
-    override def visitCommandBlock(blk: CommandBlock, path: AstPath)(implicit c: Context): Context =
-      visitBlock(blk, path, ctx => super.visitCommandBlock(blk, path)(ctx))(c)
-
-    override def visitReporterBlock(blk: ReporterBlock, path: AstPath)(implicit c: Context): Context =
-      visitBlock(blk, path, ctx => super.visitReporterBlock(blk, path)(ctx))(c)
-
-    def visitBlock(blk: AstNode, path: AstPath, superCall: Context => Context)(implicit c: Context): Context =
+    override def visitCommandBlock(blk: CommandBlock, path: AstPath)(implicit c: Context): Context = {
+      val (leadBracket, tailBracket) = if (blk.synthetic || c.isAnonymousProcedureBlock) ("", "") else ("[", "]")
       c.seq(
-        tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename)),
+        tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename), leadBracket),
         removeOpenBracket(blk) _,
-        superCall,
-        tagTrailingWhitespace(blk, path)(_))
+        (c2) => super.visitCommandBlock(blk, path)(c2.exitAnonymousProcedure),
+        tagTrailingWhitespace(blk, path, tailBracket)(_))
+    }
+
+    override def visitReporterBlock(blk: ReporterBlock, path: AstPath)(implicit c: Context): Context = {
+      val (leadBracket, tailBracket) = if (c.isAnonymousProcedureBlock) ("", "") else ("[", "]")
+      c.seq(
+        tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename), leadBracket),
+        removeOpenBracket(blk) _,
+        (c2) => super.visitReporterBlock(blk, path)(c2),
+        tagTrailingWhitespace(blk, path, tailBracket)(_))
+    }
 
     private def removeOpenBracket(blk: SourceLocatable)(c: Context): Context = {
       if (c.tokenIterators(blk.filename).head.tpe == TokenType.OpenBracket)
@@ -184,20 +200,20 @@ object WhiteSpace {
       c
     }
 
-    private def tagTrailingWhitespace(locatable: SourceLocatable, path: AstPath)(c: Context): Context =
+    private def tagTrailingWhitespace(locatable: SourceLocatable, path: AstPath, extra: String = "")(c: Context): Context =
       c.lastPosition.map { p =>
         c.through(
           sourceToPoint(locatable.filename, locatable.end),
           ((backSpace: String) =>
-              _.addWhitespace(path, BackMargin, backSpace)
+              _.addWhitespace(path, BackMargin, backSpace + extra)
                 .addWhitespace(p._1, Trailing, backSpace)
                 .updatePosition(path, locatable.sourceLocation)))
       }.getOrElse(c)
 
-    private def tagLeadingWhitespace(path: AstPath, location: SourceLocation)(c: Context): Context =
+    private def tagLeadingWhitespace(path: AstPath, location: SourceLocation, extra: String = "")(c: Context): Context =
       c.through(
         sourceToPoint(location.filename, location.start),
-        (leading: String) => _.addLeadingWhitespace(path, leading, location)
+        (leading: String) => _.addLeadingWhitespace(path, leading + extra, location)
       ).seq(sourceToPoint(location.filename, location.end)(_)._2)
 
     private def notBracket(t: Token): Boolean =
@@ -243,11 +259,20 @@ case class WhiteSpace(leading: String, trailing: String = "", backMargin: String
 
 import WhiteSpace._
 
+trait FormattingWhitespace {
+  def get(path: AstPath, placement: Placement): Option[String]
+  def leading(path: AstPath): String
+  def frontMargin(path: AstPath): String
+  def content(path: AstPath): String
+  def backMargin(path: AstPath): String
+  def trailing(path: AstPath): String
+}
+
 object WhitespaceMap {
   def empty = new WhitespaceMap(Map())
 }
 
-class WhitespaceMap(ws: Map[(AstPath, Placement), String]) {
+class WhitespaceMap(ws: Map[(AstPath, Placement), String]) extends FormattingWhitespace {
   def addWhitespace(path: AstPath, placement: Placement, s: String): WhitespaceMap =
     if (s != placement.default) copy(ws + ((path, placement) -> s))
     else this

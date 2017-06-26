@@ -21,7 +21,7 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
     proc.procedure.displayName = proc.procedure match {
       case ll: LiftedLambda =>
         val bodySource = proc.statements.stmts.map(_.command.fullSource).filterNot(_ == null).mkString(" ")
-        AnonymousProcedure.displayString("command", ll.argTokens, bodySource)
+        AnonymousProcedure.displayString("command", ll.source)
       case p                => p.baseDisplayName.getOrElse(procedureDisplayName(p))
     }
   }
