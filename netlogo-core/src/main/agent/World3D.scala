@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Breed, Program, WorldDimensions }
+import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
 import org.nlogo.api.{ AgentException, Color, ImporterUser,
   NetLogoThreeDDialect, WorldDimensionException, WorldDimensions3D }
 
@@ -14,10 +14,7 @@ import World._
 
 class World3D extends World
   with org.nlogo.api.World3D
-  with CompilationManagement
-  with WatcherManagement {
-
-  private var _program: Program = newProgram
+  with CompilationManagement {
 
   val drawing: Drawing3D = new Drawing3D(this)
 
@@ -28,10 +25,8 @@ class World3D extends World
   private var _patchScratch3d: Array[Array[Array[Double]]] = _
 
   override val linkManager = new LinkManagerImpl(
-    this, new LinkFactory[World3D]() {
-      override def apply(world: World3D, src: Turtle, dest: Turtle, breed: AgentSet): Link =
-        new Link3D(world, src, dest, breed)
-    })
+    this, (world: World3D, src: Turtle, dest: Turtle, breed: AgentSet) =>
+      new Link3D(world, src, dest, breed))
 
   protected val _links: TreeAgentSet = new TreeAgentSet(AgentKind.Link, "LINKS")
 
