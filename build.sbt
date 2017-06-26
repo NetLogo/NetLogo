@@ -56,6 +56,19 @@ lazy val scalatestSettings = Seq(
   )
 )
 
+lazy val flexmarkDependencies = {
+  val flexmarkVersion = "0.20.0"
+  Seq(
+    libraryDependencies ++= Seq(
+      "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
+      )
+    )
+}
+
 lazy val mockDependencies = Seq(
   libraryDependencies ++= Seq(
     "org.jmock" % "jmock" % "2.8.1" % "test",
@@ -93,6 +106,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(includeProject(parserJVM): _*).
    settings(publicationSettings("NetLogo-JVM"): _*).
    settings(shareSourceDirectory("netlogo-core"): _*).
+   settings(flexmarkDependencies).
    settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
              Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
@@ -128,7 +142,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.10",
-      "org.pegdown" % "pegdown" % "1.6.0",
       "org.parboiled" %% "parboiled" % "2.1.3",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",

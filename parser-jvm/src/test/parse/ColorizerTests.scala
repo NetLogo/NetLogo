@@ -49,4 +49,14 @@ class ColorizerTests extends FunSuite {
       Colorizer.toHtml("to foo crt 10 [ set xcor 5 ] end"))
   }
 
+  test("adds breaks for newlines") {
+    assertResult("""<font color="#007f69">to</font>""" +
+      """<font color="#000000"> foo<br /></font>""" +
+      """<font color="#0000aa">crt</font><font color="#000000"> </font>""" +
+      """<font color="#963700">10</font><font color="#000000"> [""" +
+      """<br />]<br /></font>""" +
+      """<font color="#007f69">end</font>""")(
+        Colorizer.toHtml("to foo\ncrt 10 [\n]\nend"))
+  }
+
 }
