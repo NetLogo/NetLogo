@@ -11,10 +11,11 @@ class _reporterlambda(
   argumentNames:       Seq[String],
   val closedVariables: Set[ClosedVariable],
   lambdaSource:        String) extends Reporter {
-    source = lambdaSource
 
-  val formals: Seq[Let] = argumentNames.map(name => new Let(name))
-  def formalsArray: Array[Let] = formals.toArray
+  source = lambdaSource
+
+  val formals: Seq[Let] = argumentNames.map(name => Let(name))
+  val formalsArray: Array[Let] = formals.toArray
 
   override def report(c: Context): AnyRef = {
     AnonymousReporter(

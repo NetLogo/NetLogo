@@ -2,8 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api, api.{ AnonymousProcedure => ApiLambda }
-import org.nlogo.core.{ AgentKind, Let, I18N, Token, Syntax }
+import org.nlogo.api
+import org.nlogo.api.{AnonymousProcedure => ApiLambda}
+import org.nlogo.core.{AgentKind, I18N, Let, Syntax}
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -25,10 +26,11 @@ sealed trait AnonymousProcedure {
   val locals: Array[AnyRef]
   def checkAgentClass(context: Context, agentClassString: String): Unit = {
     val kind = context.agent.kind
-    if (!(((kind == AgentKind.Observer) && agentClassString.contains('O')) ||
-          ((kind == AgentKind.Turtle) && agentClassString.contains('T')) ||
-          ((kind == AgentKind.Patch) && agentClassString.contains('P')) ||
-          ((kind == AgentKind.Link) && agentClassString.contains('L')))) {
+
+    if (!(((kind == AgentKind.Observer) && agentClassString(0) == 'O') ||
+          ((kind == AgentKind.Turtle)   && agentClassString(1) == 'T') ||
+          ((kind == AgentKind.Patch)    && agentClassString(2) == 'P') ||
+          ((kind == AgentKind.Link)     && agentClassString(3) == 'L'))) {
       val instruction = context.activation.procedure.code(context.ip)
       val allowedKinds = agentClassString.collect {
         case 'O' => AgentKind.Observer
@@ -43,7 +45,7 @@ sealed trait AnonymousProcedure {
 
   def bindArgs(b: Binding, args: Array[AnyRef]) {
     var i = 0
-    var n = formals.size
+    val n = formals.length
     while(i < n) {
       b.let(formals(i), args(i))
       i += 1
@@ -66,9 +68,16 @@ object AnonymousProcedure {
 
   def displayString(procedureType: String, source: String): String =
     s"(anonymous $procedureType: $source)"
+
+  // The `right` argument for AnonymousProcedure syntax. AnonymousProcedures
+  // can more arguments than their arity; thus, `RepeatableType` is used.
+  // `minimumOption` is used directly to control arity. This list is constructed
+  // here for performance reasons. -- BCH 6/27/2017
+
+  val rightArgs = List(Syntax.WildcardType | Syntax.RepeatableType)
 }
 
-import AnonymousProcedure._
+import org.nlogo.nvm.AnonymousProcedure._
 
 // anonymous reporters are pretty simple.  The body is simply a Reporter.
 // To run it, we swap closed-over variables into the context,
@@ -92,7 +101,9 @@ case class AnonymousReporter(
   val syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
-      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      defaultOption = Some(formals.length),
+      minimumOption = Some(formals.length),
+      right = AnonymousProcedure.rightArgs,
       agentClassString = body.agentClassString)
 
   override def toString =
@@ -139,7 +150,9 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
   val syntax =
     Syntax.commandSyntax(
-      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      defaultOption = Some(formals.length),
+      minimumOption = Some(formals.length),
+      right = AnonymousProcedure.rightArgs,
       agentClassString = procedure.agentClassString)
   override def toString =
     AnonymousProcedure.displayString("command", source)

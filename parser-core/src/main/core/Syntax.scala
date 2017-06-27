@@ -53,8 +53,8 @@ case class Syntax private(
   import Syntax._
 
   require(agentClassString == null ||
-          agentClassString.size == 4)
-  require(blockAgentClassString.forall(s => s.size == 4 || s == "?"))
+          agentClassString.length == 4)
+  require(blockAgentClassString.forall(s => s.length == 4 || s == "?"))
 
   /**
    * indicates whether this instruction should be parsed as infix. Infix
