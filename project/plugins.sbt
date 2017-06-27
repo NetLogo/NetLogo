@@ -62,3 +62,15 @@ libraryDependencies ++= Seq(
   "org.pegdown"                       % "pegdown" % "1.6.0",
   "org.apache.commons"                % "commons-lang3" % "3.1"
 )
+
+{
+  val flexmarkVersion = "0.20.0"
+  libraryDependencies ++= Seq(
+    "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-toc" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
+  )
+}
