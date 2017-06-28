@@ -57,11 +57,24 @@ class Binding(var head: ChildBinding, val parent: Binding, var size: Int = 0) {
   def this() =
     this(EmptyBinding, null)
 
-  def enterScope(): Binding = {
+  def enterScope: Binding = {
     new Binding(EmptyBinding, this)
   }
 
-  def exitScope(): Binding = {
+  def enterScope( lets: Array[Let], values: Array[AnyRef]): Binding = {
+    var childBinding: ChildBinding = EmptyBinding
+    // Note that `values.size` is intentionally allowed to be greater than
+    // `lets.size` for anonymous procedures. -- BCH 06/28/2017
+    var i=0
+    while (i < lets.length) {
+      val let = lets(i)
+      childBinding = BoundLet(let, LetBinding(let, values(i)), childBinding)
+      i += 1
+    }
+    new Binding(childBinding, this)
+  }
+
+  def exitScope: Binding = {
     if (parent == null)
       throw new IllegalStateException("Attempting to exit top-level scope!")
     parent
@@ -80,7 +93,7 @@ class Binding(var head: ChildBinding, val parent: Binding, var size: Int = 0) {
   def let(let: Let, value: AnyRef): Unit = {
     val (removedBindings, didRemove) = removeLet(head, let, EmptyBinding)
     if (! didRemove) { size += 1 }
-    head = new BoundLet(let, LetBinding(let, value), removedBindings)
+    head = BoundLet(let, LetBinding(let, value), removedBindings)
   }
 
   @tailrec

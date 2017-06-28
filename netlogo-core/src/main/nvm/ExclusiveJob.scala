@@ -35,10 +35,10 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
       context.ip = address
       context.finished = false
       val oldActivation = context.activation
-      context.activation.binding = context.activation.binding.enterScope()
+      context.activation.binding = context.activation.binding.enterScope
       context.runExclusive()
       if (context.activation == oldActivation) {
-        context.activation.binding = context.activation.binding.exitScope()
+        context.activation.binding = context.activation.binding.exitScope
       }
     }
   }

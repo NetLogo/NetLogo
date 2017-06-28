@@ -12,18 +12,15 @@ import org.nlogo.core.{AgentKind, I18N, Let, Syntax}
 //
 // anonymous procedure take inputs: <code>[[_1 _2 etc ] -> ... </code> these are passed using Lets.
 //
-// bindArgs binds formal inputs to actual inputs at runtime.  note that it's the caller's
-// responsibility to ensure in advance that there will be enough actuals.  if there are extra
-// actuals, they are ignored. - JC, ST 11/4/10, 2/6/11
-//
 // anonymous procedures may close over two kinds of variables,
 // let variables and procedure parameters (aka "locals"),
 // so we have storage for both of those in the anonymous procedure.
 
 sealed trait AnonymousProcedure {
-  val formals: Array[Let]  // don't mutate please! Array for efficiency
+  val formals: Array[Let] // don't mutate please! Array for efficiency
   val binding: Binding
   val locals: Array[AnyRef]
+
   def checkAgentClass(context: Context, agentClassString: String): Unit = {
     val kind = context.agent.kind
 
@@ -40,15 +37,6 @@ sealed trait AnonymousProcedure {
       }
       throw new RuntimePrimitiveException(context, instruction,
         Instruction.agentKindError(context.agent.kind, allowedKinds))
-    }
-  }
-
-  def bindArgs(b: Binding, args: Array[AnyRef]) {
-    var i = 0
-    val n = formals.length
-    while(i < n) {
-      b.let(formals(i), args(i))
-      i += 1
     }
   }
 }
@@ -118,8 +106,15 @@ case class AnonymousReporter(
     checkAgentClass(context, syntax.agentClassString)
     // We replace this to set the arguments up correctly, the return address shouldn't matter
     val oldActivation = context.activation
-    context.activation = new Activation(oldActivation.procedure, oldActivation.parent, locals, oldActivation.returnAddress, binding)
-    bindArgs(binding, args)
+    context.activation = new Activation(
+      oldActivation.procedure,
+      oldActivation.parent,
+      locals,
+      oldActivation.returnAddress,
+      // Since `enterScope`ed `Binding` is dropped with this new `Activation`
+      // we don't actually need to call `exitScope`. -- BCH 06/28/2017
+      binding.enterScope(formals, args)
+    )
     try {
       body.report(context)
     } finally {
@@ -165,11 +160,17 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
   }
   def perform(context: Context, args: Array[AnyRef]) {
     checkAgentClass(context, syntax.agentClassString)
-    bindArgs(binding, args)
     val oldActivation = context.activation
     // the return address doesn't matter here since we're not actually using
     // _call and _return, we're just executing the body - ST 2/4/11
-    context.activation = new Activation(procedure, oldActivation, locals, 0, binding)
+    context.activation = new Activation(
+      procedure,
+      oldActivation,
+      locals,
+      0,
+      // Since `enterScope`ed `Binding` is dropped with this new `Activation`
+      // we don't actually need to call `exitScope`. -- BCH 06/28/2017
+      binding.enterScope(formals, args))
     context.ip = 0
     try context.runExclusive()
     catch {
