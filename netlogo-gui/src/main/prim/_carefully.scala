@@ -6,7 +6,9 @@ import org.nlogo.api.LogoException
 import org.nlogo.core.Let
 import org.nlogo.nvm.{AssemblerAssistant, Command, Context, CustomAssembled}
 
-final class _carefully(val let: Let) extends Command with CustomAssembled {
+final class _carefully(private[this] val let: Let) extends Command with CustomAssembled {
+
+  def this() = this(null)
 
   override def toString: String = super.toString + ":+" + offset
 

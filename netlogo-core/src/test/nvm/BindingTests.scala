@@ -15,7 +15,7 @@ import
 class BindingTests extends FunSuite with GeneratorDrivenPropertyChecks {
 
   trait BindingTestHelper {
-    val abc = new Let("abc")
+    val abc = Let("abc")
     var binding = new Binding()
   }
 
@@ -75,38 +75,38 @@ class BindingTests extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("enter scope leaves previously defined let variables accessible") { new BindingTestHelper {
     binding.let(abc, Double.box(0))
-    binding = binding.enterScope()
+    binding = binding.enterScope
     assert(binding.getLet(abc) == Double.box(0))
   } }
 
   test("exit scope leaves variables defined in the scope inaccessible") { new BindingTestHelper {
-    binding = binding.enterScope()
+    binding = binding.enterScope
     binding.let(abc, Double.box(0))
-    binding = binding.exitScope()
+    binding = binding.exitScope
     intercept[NoSuchElementException] { binding.getLet(abc) }
     intercept[IllegalStateException] { binding.setLet(abc, Double.box(1)) }
   } }
 
   test("exit scope doesn't clear lets defined before the scope was entered") { new BindingTestHelper {
     binding.let(abc, Double.box(0))
-    binding = binding.enterScope()
-    binding = binding.exitScope()
+    binding = binding.enterScope
+    binding = binding.exitScope
     assert(binding.getLet(abc) == Double.box(0))
   } }
 
   test("lets defined before the scope was entered can be modified") { new BindingTestHelper {
     binding.let(abc, Double.box(0))
-    binding = binding.enterScope()
-    binding = binding.exitScope()
+    binding = binding.enterScope
+    binding = binding.exitScope
     binding.setLet(abc, Double.box(1))
     assert(binding.getLet(abc) == Double.box(1))
   } }
 
   test("lets can be modified from inner contexts") { new BindingTestHelper {
     binding.let(abc, Double.box(0))
-    binding = binding.enterScope()
+    binding = binding.enterScope
     binding.setLet(abc, Double.box(1))
-    binding = binding.exitScope()
+    binding = binding.exitScope
     assert(binding.getLet(abc) == Double.box(1))
   } }
 
@@ -120,7 +120,7 @@ class BindingTests extends FunSuite with GeneratorDrivenPropertyChecks {
   test("allValues returns a list of all Lets and values") { new BindingTestHelper {
     val xyz = Let("xyz")
     binding.let(abc, Double.box(0))
-    binding.enterScope()
+    binding.enterScope
     binding.let(xyz, Double.box(1))
     assertResult(List(xyz -> Double.box(1), abc -> Double.box(0)))(binding.allLets)
   } }

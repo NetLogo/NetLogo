@@ -24,10 +24,10 @@ sealed trait AnonymousProcedure {
   def checkAgentClass(context: Context, agentClassString: String): Unit = {
     val kind = context.agent.kind
 
-    if (!(((kind == AgentKind.Observer) && agentClassString(0) == 'O') ||
-          ((kind == AgentKind.Turtle)   && agentClassString(1) == 'T') ||
-          ((kind == AgentKind.Patch)    && agentClassString(2) == 'P') ||
-          ((kind == AgentKind.Link)     && agentClassString(3) == 'L'))) {
+    if (!(((kind eq AgentKind.Observer) && agentClassString(0) == 'O') ||
+          ((kind eq AgentKind.Turtle)   && agentClassString(1) == 'T') ||
+          ((kind eq AgentKind.Patch)    && agentClassString(2) == 'P') ||
+          ((kind eq AgentKind.Link)     && agentClassString(3) == 'L'))) {
       val instruction = context.activation.procedure.code(context.ip)
       val allowedKinds = agentClassString.collect {
         case 'O' => AgentKind.Observer
