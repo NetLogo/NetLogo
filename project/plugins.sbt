@@ -53,13 +53,12 @@ resolvers += Resolver.url(
   url("http://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
     Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.6.2")
+addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.7.2")
 
 libraryDependencies ++= Seq(
-  "com.github.spullara.mustache.java" % "compiler" % "0.9.3",
-  "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.3",
+  "com.github.spullara.mustache.java" % "compiler" % "0.9.5",
+  "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5",
   "org.jsoup"                         % "jsoup" % "1.8.3",
-  "org.pegdown"                       % "pegdown" % "1.6.0",
   "org.apache.commons"                % "commons-lang3" % "3.1"
 )
 
@@ -67,10 +66,12 @@ libraryDependencies ++= Seq(
   val flexmarkVersion = "0.20.0"
   libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-anchorlink" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-toc" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-tables" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
   )
 }
