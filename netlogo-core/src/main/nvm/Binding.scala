@@ -61,11 +61,11 @@ class Binding(var head: ChildBinding, val parent: Binding, var size: Int = 0) {
     new Binding(EmptyBinding, this)
   }
 
-  def enterScope( lets: Array[Let], values: Array[AnyRef]): Binding = {
+  def enterScope(lets: Array[Let], values: Array[AnyRef]): Binding = {
     var childBinding: ChildBinding = EmptyBinding
     // Note that `values.size` is intentionally allowed to be greater than
     // `lets.size` for anonymous procedures. -- BCH 06/28/2017
-    var i=0
+    var i = 0
     while (i < lets.length) {
       val let = lets(i)
       childBinding = BoundLet(let, LetBinding(let, values(i)), childBinding)
