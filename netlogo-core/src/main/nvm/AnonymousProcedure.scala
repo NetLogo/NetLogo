@@ -2,8 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api, api.{ AnonymousProcedure => ApiLambda }
-import org.nlogo.core.{ AgentKind, Let, I18N, Token, Syntax }
+import org.nlogo.api
+import org.nlogo.api.{AnonymousProcedure => ApiLambda}
+import org.nlogo.core.{AgentKind, I18N, Let, Syntax}
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -11,24 +12,22 @@ import org.nlogo.core.{ AgentKind, Let, I18N, Token, Syntax }
 //
 // anonymous procedure take inputs: <code>[[_1 _2 etc ] -> ... </code> these are passed using Lets.
 //
-// bindArgs binds formal inputs to actual inputs at runtime.  note that it's the caller's
-// responsibility to ensure in advance that there will be enough actuals.  if there are extra
-// actuals, they are ignored. - JC, ST 11/4/10, 2/6/11
-//
 // anonymous procedures may close over two kinds of variables,
 // let variables and procedure parameters (aka "locals"),
 // so we have storage for both of those in the anonymous procedure.
 
 sealed trait AnonymousProcedure {
-  val formals: Array[Let]  // don't mutate please! Array for efficiency
+  val formals: Array[Let] // don't mutate please! Array for efficiency
   val binding: Binding
   val locals: Array[AnyRef]
+
   def checkAgentClass(context: Context, agentClassString: String): Unit = {
     val kind = context.agent.kind
-    if (!(((kind == AgentKind.Observer) && agentClassString.contains('O')) ||
-          ((kind == AgentKind.Turtle) && agentClassString.contains('T')) ||
-          ((kind == AgentKind.Patch) && agentClassString.contains('P')) ||
-          ((kind == AgentKind.Link) && agentClassString.contains('L')))) {
+
+    if (!(((kind eq AgentKind.Observer) && agentClassString(0) == 'O') ||
+          ((kind eq AgentKind.Turtle)   && agentClassString(1) == 'T') ||
+          ((kind eq AgentKind.Patch)    && agentClassString(2) == 'P') ||
+          ((kind eq AgentKind.Link)     && agentClassString(3) == 'L'))) {
       val instruction = context.activation.procedure.code(context.ip)
       val allowedKinds = agentClassString.collect {
         case 'O' => AgentKind.Observer
@@ -38,15 +37,6 @@ sealed trait AnonymousProcedure {
       }
       throw new RuntimePrimitiveException(context, instruction,
         Instruction.agentKindError(context.agent.kind, allowedKinds))
-    }
-  }
-
-  def bindArgs(b: Binding, args: Array[AnyRef]) {
-    var i = 0
-    var n = formals.size
-    while(i < n) {
-      b.let(formals(i), args(i))
-      i += 1
     }
   }
 }
@@ -66,9 +56,16 @@ object AnonymousProcedure {
 
   def displayString(procedureType: String, source: String): String =
     s"(anonymous $procedureType: $source)"
+
+  // The `right` argument for AnonymousProcedure syntax. AnonymousProcedures
+  // can more arguments than their arity; thus, `RepeatableType` is used.
+  // `minimumOption` is used directly to control arity. This list is constructed
+  // here for performance reasons. -- BCH 6/27/2017
+
+  val rightArgs = List(Syntax.WildcardType | Syntax.RepeatableType)
 }
 
-import AnonymousProcedure._
+import org.nlogo.nvm.AnonymousProcedure._
 
 // anonymous reporters are pretty simple.  The body is simply a Reporter.
 // To run it, we swap closed-over variables into the context,
@@ -92,7 +89,9 @@ case class AnonymousReporter(
   val syntax =
     Syntax.reporterSyntax(
       ret = Syntax.WildcardType,
-      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      defaultOption = Some(formals.length),
+      minimumOption = Some(formals.length),
+      right = AnonymousProcedure.rightArgs,
       agentClassString = body.agentClassString)
 
   override def toString =
@@ -107,8 +106,15 @@ case class AnonymousReporter(
     checkAgentClass(context, syntax.agentClassString)
     // We replace this to set the arguments up correctly, the return address shouldn't matter
     val oldActivation = context.activation
-    context.activation = new Activation(oldActivation.procedure, oldActivation.parent, locals, oldActivation.returnAddress, binding)
-    bindArgs(binding, args)
+    context.activation = new Activation(
+      oldActivation.procedure,
+      oldActivation.parent,
+      locals,
+      oldActivation.returnAddress,
+      // Since `enterScope`ed `Binding` is dropped with this new `Activation`
+      // we don't actually need to call `exitScope`. -- BCH 06/28/2017
+      binding.enterScope(formals, args)
+    )
     try {
       body.report(context)
     } finally {
@@ -139,7 +145,9 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
   val syntax =
     Syntax.commandSyntax(
-      right = formals.map(_ => Syntax.WildcardType | Syntax.RepeatableType).toList,
+      defaultOption = Some(formals.length),
+      minimumOption = Some(formals.length),
+      right = AnonymousProcedure.rightArgs,
       agentClassString = procedure.agentClassString)
   override def toString =
     AnonymousProcedure.displayString("command", source)
@@ -152,11 +160,17 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
   }
   def perform(context: Context, args: Array[AnyRef]) {
     checkAgentClass(context, syntax.agentClassString)
-    bindArgs(binding, args)
     val oldActivation = context.activation
     // the return address doesn't matter here since we're not actually using
     // _call and _return, we're just executing the body - ST 2/4/11
-    context.activation = new Activation(procedure, oldActivation, locals, 0, binding)
+    context.activation = new Activation(
+      procedure,
+      oldActivation,
+      locals,
+      0,
+      // Since `enterScope`ed `Binding` is dropped with this new `Activation`
+      // we don't actually need to call `exitScope`. -- BCH 06/28/2017
+      binding.enterScope(formals, args))
     context.ip = 0
     try context.runExclusive()
     catch {
