@@ -18,9 +18,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
   private[this] var cached: AnyRef = null
 
   def get = {
-    if (cached == null)
-      cached = arg.report(context)
-    cached match {
+    unsafeGet match {
       case a: api.Agent if a.id == -1 =>
         cached = Nobody
       case _ =>
@@ -28,9 +26,17 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
     cached
   }
 
+  // This is not safe when the argument might be an agent but is much faster
+  // when we know we don't want an agent. -- BCH 06/28/2017
+  private def unsafeGet = {
+    if (cached == null)
+      cached = arg.report(context)
+    cached
+  }
+
   @throws(classOf[ExtensionException])
   def getAgentSet: api.AgentSet =
-    get match {
+    unsafeGet match {
       case agents: api.AgentSet => agents
       case x =>
         throw new ExtensionException(
@@ -48,7 +54,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getBoolean: java.lang.Boolean =
-    get match {
+    unsafeGet match {
       case b: java.lang.Boolean => b
       case x =>
         throw new ExtensionException(
@@ -57,7 +63,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getBooleanValue: Boolean =
-    get match {
+    unsafeGet match {
       case b: java.lang.Boolean => b.booleanValue
       case x =>
         throw new ExtensionException(
@@ -66,7 +72,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getDoubleValue: Double =
-    get match {
+    unsafeGet match {
       case d: java.lang.Double => d.doubleValue
       case x =>
         throw new ExtensionException(
@@ -75,7 +81,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getIntValue: Int =
-    get match {
+    unsafeGet match {
       case d: java.lang.Double => d.intValue
       case x =>
         throw new ExtensionException(
@@ -84,7 +90,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getList: core.LogoList =
-    get match {
+    unsafeGet match {
       case l: core.LogoList => l
       case x =>
         throw new ExtensionException(
@@ -102,7 +108,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getString: String =
-    get match {
+    unsafeGet match {
       case s: String => s
       case x =>
         throw new ExtensionException(
@@ -129,7 +135,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getReporter: api.AnonymousReporter =
-    get match {
+    unsafeGet match {
       case t: api.AnonymousReporter => t
       case x =>
         throw new ExtensionException(
@@ -138,7 +144,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getCommand: api.AnonymousCommand =
-    get match {
+    unsafeGet match {
       case t: api.AnonymousCommand => t
       case x =>
         throw new ExtensionException(
@@ -148,7 +154,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getCode: JList[Token] =
-    get match {
+    unsafeGet match {
       case t: JList[Token] @unchecked => t
       case x =>
         throw new ExtensionException(
@@ -157,7 +163,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
 
   @throws(classOf[ExtensionException])
   def getSymbol: Token =
-    get match {
+    unsafeGet match {
       case t: Token => t
       case x =>
         throw new ExtensionException(
@@ -173,7 +179,7 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
   def getReference: Reference =
-    get match {
+    unsafeGet match {
       case ref: Reference => ref
       case x =>
         throw new ExtensionException(
