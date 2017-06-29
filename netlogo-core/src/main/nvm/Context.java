@@ -297,7 +297,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
       if (context == null) {
         context = this;
       }
-      activation.code[ip].workspace
+      instruction.workspace
           .runtimeError(job.owner, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,
