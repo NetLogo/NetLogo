@@ -2,24 +2,12 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ AgentException, Color, CompilerServices, ImporterUser,
-  LogoException, MersenneTwisterFast, RandomSeedGenerator,
-  Timer, TrailDrawerInterface, ValueConstraint, Version, WorldDimensionException }
+import java.lang.{Double => JDouble, Integer => JInteger}
+import java.util.{Arrays, List => JList, Map => JMap}
 
-import org.nlogo.core.{ AgentKind, Breed, Dialect, Nobody, Program,
-  Shape, ShapeList, ShapeListTracker, WorldDimensions }
-
-import java.lang.{ Double => JDouble, Integer => JInteger }
-
-import java.util.{ ArrayList => JArrayList, Arrays,
-  HashMap => JHashMap, Iterator => JIterator, List => JList,
-  Map => JMap }
-
-import java.util.concurrent.CopyOnWriteArrayList
-
-import org.nlogo.agent.ImporterJ.{ ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader }
-
-import scala.collection.{ Iterator => SIterator }
+import org.nlogo.agent.ImporterJ.{ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader}
+import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer}
+import org.nlogo.core.{AgentKind, Program, WorldDimensions}
 
 object World {
   val Zero = JDouble.valueOf(0.0)
@@ -45,7 +33,7 @@ object World {
   }
 }
 
-import World._
+import org.nlogo.agent.World._
 
 trait WorldKernel {
   def program: Program
@@ -70,7 +58,7 @@ trait CoreWorld
     val mainRNG: MersenneTwisterFast = new MersenneTwisterFast()
 
     // anything that doesn't and can happen non-deterministically (for example monitor updates)
-    // should happen on the auxillary rng. JobOwners should know which RNG they use.
+    // should happen on the auxiliary rng. JobOwners should know which RNG they use.
     val auxRNG: MersenneTwisterFast = new MersenneTwisterFast()
 
     /// random seed generator
@@ -90,7 +78,7 @@ trait CoreWorld
     private[agent] var _patches: IndexedAgentSet = null
     def patches: IndexedAgentSet = _patches
 
-    protected val _links: TreeAgentSet;
+    protected val _links: TreeAgentSet
     def links: TreeAgentSet = _links
 
     private[agent] var _topology: Topology = _
@@ -153,10 +141,8 @@ class World2D extends World with CompilationManagement {
 
   val linkManager: LinkManager =
     new LinkManagerImpl(this,
-      new LinkFactory[World]() {
-        def apply(world: World, src: Turtle, dest: Turtle, breed: AgentSet): Link = {
-          new Link(world, src, dest, breed)
-        }
+      (world: World, src: Turtle, dest: Turtle, breed: AgentSet) => {
+        new Link(world, src, dest, breed)
       })
   protected val _links: TreeAgentSet = new TreeAgentSet(AgentKind.Link, "LINKS")
 
@@ -219,11 +205,11 @@ class World2D extends World with CompilationManagement {
     topology.diffuse4(param, vn)
 
   def getDimensions: WorldDimensions =
-    new WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor, patchSize, wrappingAllowedInX, wrappingAllowedInY)
+    WorldDimensions(_minPxcor, _maxPxcor, _minPycor, _maxPycor, patchSize, wrappingAllowedInX, wrappingAllowedInY)
 
   // used by Importer and Parser
   def getOrCreateTurtle(id: Long): Turtle = {
-    val turtle = getTurtle(id).asInstanceOf[Turtle]
+    val turtle = getTurtle(id)
     if (turtle == null) {
       val newTurtle = new Turtle2D(this, id)
       nextTurtleIndex(StrictMath.max(nextTurtleIndex, id + 1))
@@ -249,7 +235,7 @@ class World2D extends World with CompilationManagement {
   def getPatchAt(x: Double, y: Double): Patch = {
     val xc = wrapAndRoundX(x)
     val yc = wrapAndRoundY(y)
-    val id = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor)
+    val id = (_worldWidth * (_maxPycor - yc)) + xc - _minPxcor
     getPatch(id)
   }
 
@@ -276,7 +262,7 @@ class World2D extends World with CompilationManagement {
         val fractPart = intPart - wrappedY
         if (fractPart > 0.5) intPart - 1 else intPart
       }
-    val patchid = ((_worldWidth * (maxPy - yc)) + xc - minPx)
+    val patchid = (_worldWidth * (maxPy - yc)) + xc - minPx
     getPatch(patchid)
   }
 
