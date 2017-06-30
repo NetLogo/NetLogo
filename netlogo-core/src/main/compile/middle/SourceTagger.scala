@@ -66,12 +66,12 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
 
   override def visitCommandBlock(blk: CommandBlock): Unit = {
     super.visitCommandBlock(blk)
-    internalSources = internalSources.dropRight(1) :+ ("[ " + internalSources.last + " ]")
+    internalSources = internalSources.dropRight(1) :+ ("[ " + internalSources.lastOption.getOrElse("") + " ]")
   }
 
   override def visitReporterBlock(blk: ReporterBlock): Unit = {
     super.visitReporterBlock(blk)
-    internalSources = internalSources.dropRight(1) :+ ("[ " + internalSources.last + " ]")
+    internalSources = internalSources.dropRight(1) :+ ("[ " + internalSources.lastOption.getOrElse("") + " ]")
   }
 
   private def addInstructionPositions(i: Instruction, start: Int, end: Int): Unit = {
