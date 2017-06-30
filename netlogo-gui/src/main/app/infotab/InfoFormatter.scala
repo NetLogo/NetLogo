@@ -45,7 +45,9 @@ object InfoFormatter {
             replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
             replace("{H3-FONT-SIZE}", fontSize.toString).
-            replace("{BULLET-IMAGE}", getClass.getResource("/system/bullet.png").toString) + "\n-->\n</style>"
+            replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
+            replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
+            replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
 
   def apply(content: String, fontSize: Int = defaultFontSize) = {
     wrapHtml(toInnerHtml(content), fontSize)
