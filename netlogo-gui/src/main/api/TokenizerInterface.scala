@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import org.nlogo.core.Token
-import org.nlogo.core.{ ExtensionManager => CoreExtensionManager }
 
 trait TokenizerInterface {
   def tokenizeRobustly(source: String): Seq[Token]

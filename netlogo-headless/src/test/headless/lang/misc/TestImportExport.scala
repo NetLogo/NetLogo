@@ -5,10 +5,9 @@ package lang
 package misc
 
 import
-  org.nlogo.{ api, agent, core, util, workspace => ws },
+  org.nlogo.{ api, core, util, workspace => ws },
     api.Agent,
     api.FileIO.fileToString,
-    agent.AgentSet,
     core._,
     util.SlowTestTag,
     ws.Checksummer

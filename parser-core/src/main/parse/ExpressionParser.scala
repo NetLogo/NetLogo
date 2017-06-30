@@ -3,12 +3,10 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, StructureDeclarations, Syntax, Token, TokenType },
+  core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, Syntax, Token, TokenType },
     prim.Lambda,
     Fail.{ cAssert, exception },
     Syntax.compatible
-
-import SymbolType._
 
 import scala.annotation.tailrec
 import collection.mutable.Buffer
@@ -349,7 +347,7 @@ object ExpressionParser {
       precedence: Int,
       goalType: Int,
       scope: SymbolTable): core.Expression = {
-    var token = tokens.head
+    val token = tokens.head
     val wantAnyLambda = goalType == (Syntax.ReporterType | Syntax.CommandType)
     val wantReporterLambda = wantAnyLambda || goalType == Syntax.ReporterType
     val wantCommandLambda = wantAnyLambda || goalType == Syntax.CommandType
@@ -404,10 +402,6 @@ object ExpressionParser {
                 // context (the first thing in a set of parens, basically).
                 if (!coreReporter.isInstanceOf[core.prim._minus] || !variadic)
                   throw new MissingPrefixException(token)
-                val unaryMinusSyntax =
-                  Syntax.reporterSyntax(
-                    right = List(Syntax.NumberType),
-                    ret = Syntax.NumberType)
                 val r2 = new core.prim._unaryminus
                 r2.token = token
                 (r2.syntax,

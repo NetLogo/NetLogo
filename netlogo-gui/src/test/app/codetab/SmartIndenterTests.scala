@@ -12,8 +12,6 @@ import scala.util.matching.Regex
 
 object SmartIndenterTests {
   class Scaffold(var text: String) extends EditorAreaInterface {
-    import scala.beans.BeanProperty
-
     private var _caretPosition: Int = 0
     private var selectionStart = 0
     private var selectionEnd = 0
@@ -164,7 +162,6 @@ class SmartIndenterTests extends FunSuite {
     }
 
     test("handleEnter does not mangle next line " + name) {
-      val lineCount = out.lines.length
       val newline = new Regex("\\n")
       for {
         (newLine, i) <- (newline.findAllMatchIn(in).toSeq.zipWithIndex)

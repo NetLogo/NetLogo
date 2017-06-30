@@ -1,6 +1,5 @@
 package org.nlogo.workspace
 
-import java.io.File
 import java.nio.file.Files
 
 class DummyWorkspace extends ExtendableWorkspace {

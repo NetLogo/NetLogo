@@ -2,9 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ OutputDestination}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, Workspace }
+import org.nlogo.api.OutputDestination
+import org.nlogo.nvm.{ Command, Context }
 
 class _outputprint extends Command {
 

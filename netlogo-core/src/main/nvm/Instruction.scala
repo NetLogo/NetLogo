@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, I18N, LogoList, Syntax, Token, TokenHolder }
 import org.nlogo.api.{ AnonymousReporter => ApiAnonymousReporter, AnonymousCommand => ApiAnonymousCommand }
-import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link, World }
+import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link }
 import java.util.{ List => JList }
 
 object Instruction {

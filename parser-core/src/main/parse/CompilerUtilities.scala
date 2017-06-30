@@ -3,8 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{Dialect, DummyExtensionManager, CompilerException, CompilerUtilitiesInterface,
-        Femto, File, FrontEndInterface, ExtensionManager, StructureResults, Program,
+  core.{ DummyExtensionManager, CompilerException, CompilerUtilitiesInterface,
+        File, FrontEndInterface, ExtensionManager, StructureResults, Program,
         LiteralImportHandler, TokenColorizer }
 
 object CompilerUtilities extends CompilerUtilitiesInterface {

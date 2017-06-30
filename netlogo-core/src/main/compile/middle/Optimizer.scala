@@ -3,11 +3,7 @@
 package org.nlogo.compile
 package middle
 
-import org.nlogo.core.Femto
-import org.nlogo.nvm.{ Command, Instruction, Reporter }
-import org.nlogo.compile.api.{ CommandMunger,
-  DefaultAstVisitor, Optimizations, Match, ReporterApp,
-  ReporterMunger, RewritingCommandMunger, RewritingReporterMunger, Statement }
+import org.nlogo.compile.api.{ DefaultAstVisitor, Optimizations, ReporterApp, Statement }
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
 

@@ -2,10 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{AgentSet, Patch}
-import org.nlogo.core.{AgentKind, Syntax}
-import org.nlogo.nvm.{Context, Reporter}
-import org.nlogo.core.Pure
+import org.nlogo.agent.AgentSet
+import org.nlogo.core.{ AgentKind, Pure }
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _ispatchset extends Reporter with Pure {
 

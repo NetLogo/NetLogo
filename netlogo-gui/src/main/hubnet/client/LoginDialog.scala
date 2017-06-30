@@ -8,7 +8,6 @@ import javax.swing.{BorderFactory, Box, BoxLayout, JPanel, JButton, JDialog, JSc
 import javax.swing.event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
 import javax.swing.table.{AbstractTableModel, DefaultTableCellRenderer}
 import org.nlogo.swing.{NonemptyTextFieldButtonEnabler, TextField, TextFieldBox}
-import org.nlogo.swing.Implicits._
 
 abstract class LoginCallback{
   def apply(user:String, host:String, port:Int)

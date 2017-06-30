@@ -4,7 +4,6 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import java.util.{ List => JList, ArrayList }
 import javax.swing.{ AbstractAction, BorderFactory, JButton, JComponent, JDialog,
   JScrollPane, JTextArea }
 

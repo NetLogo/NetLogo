@@ -26,8 +26,6 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   private val clientsPanel: ClientsPanel = new ClientsPanel(server.clients.keys)
   private val messagePanel: MessagePanel = new MessagePanel()
 
-  import org.nlogo.swing.Implicits._
-
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
     getContentPane.setLayout(new BorderLayout())
@@ -173,11 +171,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     // Format for message timestamp
     private val dateFormatter = new SimpleDateFormat(I18N.gui.get("menu.tools.hubnetControlCenter.dateFormat"))
 
+    private val broadcastButton = new JButton(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage")) {addActionListener(MessagePanel.this)}
+    private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton) {
+      addRequiredField(inputField)
+    }
+
     locally {
-      val broadcastButton = new JButton(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage")) {addActionListener(MessagePanel.this)}
-      val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton) {
-        addRequiredField(inputField)
-      }
       setBorder(new EmptyBorder(12, 12, 12, 12))
       setLayout(new BorderLayout(4, 4))
       add(new JPanel(new BorderLayout(8, 8)) {

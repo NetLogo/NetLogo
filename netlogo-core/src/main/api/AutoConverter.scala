@@ -4,8 +4,6 @@ package org.nlogo.api
 
 import org.nlogo.core.{ LiteralParser, Model }
 
-import scala.util.Try
-
 trait AutoConvertable {
   def requiresAutoConversion(original: Model, needsConversion: String => Boolean): Boolean = false
 

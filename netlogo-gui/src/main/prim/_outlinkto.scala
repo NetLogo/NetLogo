@@ -2,9 +2,9 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{Agent, Turtle}
+import org.nlogo.agent.Turtle
 import org.nlogo.core.Nobody
-import org.nlogo.nvm.{Context, Reporter}
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _outlinkto(val breedName: String) extends Reporter {
 

@@ -2,9 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Procedure, Reporter }
-import collection.JavaConverters._
 
 class _dump extends Reporter {
 

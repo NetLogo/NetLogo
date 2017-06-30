@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Frame, Graphics, Graphics2D, List=>AWTList, Point, Rectangle, event },
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, event },
   event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
@@ -24,8 +24,6 @@ abstract class SingleErrorWidget extends Widget with SingleErrorHandler
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler
 
 abstract class Widget extends JPanel {
-
-  import Widget.LoadHelper
 
   type WidgetModel <: CoreWidget
 
@@ -70,7 +68,7 @@ abstract class Widget extends JPanel {
   private def addPopupListeners(component: Component, popupListener: MouseListener): Unit = {
     component.addMouseListener(popupListener)
     if (component.isInstanceOf[Container]) {
-      var container: Container = component.asInstanceOf[Container]
+      val container: Container = component.asInstanceOf[Container]
       for(i<-0 until container.getComponentCount) addPopupListeners(container.getComponent(i), popupListener)
     }
   }
@@ -86,7 +84,7 @@ abstract class Widget extends JPanel {
 
   private def doPopup(e: MouseEvent): Unit = {
     if (hasContextMenu) {
-      var menu: JPopupMenu = new JPopupMenu
+      val menu: JPopupMenu = new JPopupMenu
       populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
       if (menu.getSubElements.length > 0) {
         menu.show(e.getSource.asInstanceOf[Component], e.getX, e.getY)
@@ -111,13 +109,13 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    var g2d: Graphics2D = g.asInstanceOf[Graphics2D]
+    val g2d: Graphics2D = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     super.paintComponent(g)
   }
 
   override def toString: String = {
-    var sup: String = super.toString
+    val sup: String = super.toString
     if (displayName != null && !displayName.equals("")) sup + "(" + displayName + ")"
     else sup
   }
@@ -139,7 +137,7 @@ abstract class Widget extends JPanel {
     if (findWidgetContainer != null) findWidgetContainer.getBoundsString(this)
     else {
       val buf: StringBuilder = new StringBuilder
-      var r: Rectangle = getBounds
+      val r: Rectangle = getBounds
       buf.append(r.x + "\n")
       buf.append(r.y + "\n")
       buf.append((r.x + r.width) + "\n")
@@ -151,7 +149,7 @@ abstract class Widget extends JPanel {
   def getBoundsTuple: (Int, Int, Int, Int) = {
     if (findWidgetContainer != null) findWidgetContainer.getBoundsTuple(this)
     else {
-      var r: Rectangle = getBounds
+      val r: Rectangle = getBounds
       (r.x, r.y, r.x + r.width, r.y + r.height)
     }
   }

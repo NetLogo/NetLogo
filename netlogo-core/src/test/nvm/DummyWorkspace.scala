@@ -2,10 +2,10 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, CompilationEnvironment, TokenType }
+import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World2D}
-import org.nlogo.api.{ JobOwner,
-                      DummyExtensionManager, CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
+import org.nlogo.api.{ JobOwner, CommandRunnable,
+  ReporterRunnable, ImportErrorHandler, OutputDestination}
 import org.nlogo.core.WorldDimensions
 import scala.collection.immutable.ListMap
 

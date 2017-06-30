@@ -33,7 +33,7 @@ trait DummyErrorHandler {
 }
 
 trait MultiErrorHandler {
-  private var errors = scala.collection.mutable.Map[Object, Exception]()
+  private val errors = scala.collection.mutable.Map[Object, Exception]()
   def anyErrors = !errors.isEmpty
   def removeAllErrors() = errors.clear()
   def error(key: Object): Exception = errors.get(key).orNull

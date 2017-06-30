@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{CompilerException, File, FileMode}
+  core.{CompilerException, File}
 
 // This exists to support the file-read primitive, which uses LiteralParser.
 // This tracks the position of the file against the position of the Iterator[token]

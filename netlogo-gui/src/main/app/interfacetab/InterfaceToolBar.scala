@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Frame, SystemColor }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
-import javax.swing.{ JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton,
+import javax.swing.{ JMenuItem, JPopupMenu, ButtonGroup, JToggleButton,
   AbstractAction, Action, ImageIcon }
 
 import scala.collection.mutable

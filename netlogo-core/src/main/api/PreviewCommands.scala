@@ -4,8 +4,6 @@ package org.nlogo.api
 
 import org.nlogo.core.Model
 import org.nlogo.util.Implicits.RichString
-import scala.util.Try
-import java.awt.image.BufferedImage
 
 /**
  * A model's "preview commands" are the commands that are used to

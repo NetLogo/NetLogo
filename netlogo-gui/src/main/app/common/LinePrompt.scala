@@ -6,7 +6,6 @@ import java.awt.{ Color, Dimension, Graphics, Graphics2D, RenderingHints }
 import java.awt.event.{ MouseEvent, MouseListener }
 import javax.swing.{ JComponent, JMenuItem, JPopupMenu }
 
-import org.nlogo.agent.{ Agent, Observer, Turtle, Patch, Link }
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.Implicits._

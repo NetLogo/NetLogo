@@ -18,8 +18,8 @@ import
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
     JobOwner, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
-  core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
-  nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
+  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
+  nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
   plot.{ PlotExporter, PlotManager }
@@ -118,7 +118,6 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
   }
 
   override def getCompilationEnvironment = {
-    import java.io.{ File => JFile }
     import java.net.MalformedURLException
 
     new org.nlogo.core.CompilationEnvironment {

@@ -4,7 +4,6 @@ package org.nlogo.shape
 import org.nlogo.api.GraphicsInterface
 import org.nlogo.core.Shape, Shape.{ Rectangle => BaseRectangle }
 import java.awt.{Point, Color, Rectangle => AwtRectangle}
-import java.util.StringTokenizer
 
 @SerialVersionUID(0L)
 class Rectangle(color: Color) extends Element(color) with BaseRectangle with Cloneable {

@@ -4,8 +4,6 @@ package org.nlogo.compile
 
 import org.nlogo.core.{ CompilerException, Program }
 import org.scalatest.FunSuite
-import org.nlogo.api.DummyExtensionManager
-import org.nlogo.nvm.Procedure
 
 class ConstantFolderTests extends FunSuite {
 

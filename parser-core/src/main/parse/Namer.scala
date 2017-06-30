@@ -3,8 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ Dialect, DummyExtensionManager, ExtensionManager, FrontEndInterface, FrontEndProcedure, Instruction,
-  Program, Token, TokenMapperInterface, TokenType },
+  core.{ Dialect, ExtensionManager, FrontEndInterface, FrontEndProcedure, Instruction,
+  Program, Token, TokenType },
   core.Fail._
 
 /**

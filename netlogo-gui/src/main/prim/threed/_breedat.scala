@@ -2,11 +2,10 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.core.AgentKind
-import org.nlogo.agent.{Agent3D, AgentSet, AgentSetBuilder, ArrayAgentSet, Turtle}
+import org.nlogo.agent.{ Agent3D, AgentSet, AgentSetBuilder }
 import org.nlogo.api.AgentException
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{Context, Reporter}
+import org.nlogo.core.AgentKind
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedat(breedName: String) extends Reporter {
   def this() = this(null)

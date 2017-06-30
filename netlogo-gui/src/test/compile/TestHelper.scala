@@ -2,10 +2,9 @@
 
 package org.nlogo.compile
 
-import org.nlogo.api.{ DummyExtensionManager, TokenizerInterface }
+import org.nlogo.api.DummyExtensionManager
 import org.nlogo.compile.api.{ FrontMiddleBridgeInterface, ProcedureDefinition }
-import org.nlogo.core.{ Femto, FrontEndInterface, FrontEndProcedure, DummyCompilationEnvironment, Program, Token }
-import org.nlogo.nvm.Procedure
+import org.nlogo.core.{ Femto, FrontEndInterface, FrontEndProcedure, Program }
 
 object TestHelper {
   private val frontEnd = Femto.scalaSingleton[FrontEndInterface](

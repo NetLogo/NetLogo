@@ -2,9 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Frame }
-import org.nlogo.awt.Hierarchy.getFrame
-import javax.swing.JOptionPane
+import java.awt.Frame
 
 class InputDialog(owner: Frame, title: String, message: String, i18n: String => String)
 extends UserDialog(owner, title, i18n) {

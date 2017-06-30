@@ -5,7 +5,6 @@ import org.nlogo.api.GraphicsInterface
 import org.nlogo.core.Shape, Shape.{ Line => BaseLine }
 import java.awt.{ Color, Point, Rectangle => AwtRectangle, geom },
   geom.Line2D
-import java.util.StringTokenizer
 
 @SerialVersionUID(0L)
 class Line(color: Color) extends Element(color) with BaseLine with Cloneable {

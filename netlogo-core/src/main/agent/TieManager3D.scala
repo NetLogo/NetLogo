@@ -4,9 +4,7 @@ package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, Matrix3D, Vect }
 
-import java.util.{ Arrays, HashSet, Iterator => JIterator, List => JList, Set => JSet }
-
-import scala.collection.JavaConverters._
+import java.util.Arrays
 
 class TieManager3D(links: TreeAgentSet, linkManager: LinkManager, protractor: Protractor3D)
   extends TieManager(links, linkManager, protractor) {

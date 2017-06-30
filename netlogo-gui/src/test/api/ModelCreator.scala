@@ -7,42 +7,6 @@ import org.nlogo.core
 object ModelCreator extends ModelCreator
 
 trait ModelCreator {
-
-  private val template = """|<<CODE SECTION>>
-                            |@#$#@#$#@
-                            |GRAPHICS-WINDOW
-                            |0
-                            |0
-                            |0
-                            |0
-                            |10
-                            |10
-                            |1.0
-                            |0
-                            |10
-                            |1
-                            |1
-                            |1
-                            |-16
-                            |16
-                            |-16
-                            |16
-                            |
-                            |<<SLIDER SECTION>>
-                            |<<SWITCH SECTION>>
-                            |<<CHOOSER SECTION>>
-                            |<<INPUTBOX SECTION>>
-                            |<<PLOT SECTION>>
-                            |
-                            |@#$#@#$#@
-                            |@#$#@#$#@
-                            |@#$#@#$#@
-                            |NetLogo 6.0
-                            |@#$#@#$#@
-                            |<<PREVIEW SECTION>>
-                            |@#$#@#$#@
-                            |@#$#@#$#@""".stripMargin
-
   //
   // Code to create models
   //

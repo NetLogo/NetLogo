@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import com.jogamp.opengl.{ GL, GL2 }
+import com.jogamp.opengl.GL2
 import com.jogamp.opengl.glu.GLU
 import org.nlogo.api.{ Agent, AgentFollowingPerspective, Constants, Perspective, Turtle, World }
 

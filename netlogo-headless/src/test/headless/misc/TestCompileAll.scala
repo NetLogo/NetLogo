@@ -85,7 +85,6 @@ class TestCompileAll extends FunSuite  {
   def readWriteRead(path: String, text: String) {
     val workspace = HeadlessWorkspace.newInstance
     try {
-      val modelContents = text
       val loader = fileformat.standardLoader(literalParser)
       val model = loader.readModel(text, "nlogo").get
       val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get

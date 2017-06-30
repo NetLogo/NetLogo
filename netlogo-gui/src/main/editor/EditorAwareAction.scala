@@ -5,7 +5,6 @@ package org.nlogo.editor
 import java.awt.Point
 import java.awt.event.{ MouseEvent, MouseListener }
 
-import javax.swing.Action
 import javax.swing.text.JTextComponent
 
 trait EditorAwareAction extends InstallableAction with MouseListener {

@@ -2,9 +2,7 @@
 
 package org.nlogo.gl.view
 
-
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.shape.{ VectorShape, LinkShape }
 import org.nlogo.gl.render.GLViewSettings
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
 import javax.swing.JFrame

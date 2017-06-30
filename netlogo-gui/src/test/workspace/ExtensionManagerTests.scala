@@ -2,8 +2,6 @@
 
 package org.nlogo.workspace
 
-import java.net.URL
-
 import org.nlogo.core.TokenType
 import org.nlogo.api.ExtensionException
 import ExtensionManager.ExtensionLoader

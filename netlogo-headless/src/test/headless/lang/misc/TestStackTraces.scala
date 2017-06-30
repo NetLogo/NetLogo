@@ -25,8 +25,7 @@ the stack traces, not the results.
  */
 
 import org.nlogo.api, api.LogoException
-import org.nlogo.core.{Model, Plot, Pen, View}
-import org.scalatest.FunSuite
+import org.nlogo.core.Model
 
 class TestStackTraces extends FixtureSuite {
 

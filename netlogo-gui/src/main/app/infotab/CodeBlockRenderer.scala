@@ -4,20 +4,16 @@ package org.nlogo.app.infotab
 
 import java.util.{ HashSet => JHashSet, List => JList, Set => JSet }
 
-import com.vladsch.flexmark.ast.{ Block, BlockContent, CodeBlock, Document, FencedCodeBlock,
-  IndentedCodeBlock, Node }
+import com.vladsch.flexmark.ast.{ Block, CodeBlock, FencedCodeBlock, IndentedCodeBlock }
 import com.vladsch.flexmark.html.{ CustomNodeRenderer, HtmlRenderer, HtmlWriter }
-import com.vladsch.flexmark.html.renderer.{ CoreNodeRenderer,
-  NodeRenderer, NodeRendererContext, NodeRenderingHandler, NodeRendererFactory }
+import com.vladsch.flexmark.html.renderer.{ NodeRenderer, NodeRendererContext,
+  NodeRenderingHandler, NodeRendererFactory }
 import com.vladsch.flexmark.parser.Parser
 import com.vladsch.flexmark.parser.block.{ BlockPreProcessor, BlockPreProcessorFactory, ParserState }
-import com.vladsch.flexmark.util.NodeTracker
 import com.vladsch.flexmark.util.sequence.BasedSequence
 import com.vladsch.flexmark.util.options.{ DataHolder, MutableDataHolder }
 
 import org.nlogo.app.common.CodeToHtml
-
-import scala.collection.JavaConverters._
 
 class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRendererExtension {
   class NetLogoCodeBlock(content: BasedSequence, contentLines: JList[BasedSequence]) extends CodeBlock(content, contentLines) {
@@ -25,7 +21,6 @@ class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRen
 
   class NetLogoCodeBlockProcessor(options: DataHolder) extends BlockPreProcessor {
     def preProcess(state: ParserState, block: Block) = {
-      val previous = block.getPrevious
       val replacementNode = block match {
         case i: IndentedCodeBlock =>
           Some(new NetLogoCodeBlock(i.getContentChars, i.getContentLines))

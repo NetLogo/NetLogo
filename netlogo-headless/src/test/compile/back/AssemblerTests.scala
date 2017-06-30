@@ -3,10 +3,8 @@
 package org.nlogo.compile
 package back
 
-import org.nlogo.core.Femto
 import org.scalatest.FunSuite
 import org.nlogo.nvm
-import org.nlogo.api
 
 class AssemblerTests extends FunSuite {
 

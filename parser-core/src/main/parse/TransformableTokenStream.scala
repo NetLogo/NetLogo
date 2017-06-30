@@ -2,8 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core,
-  core.{ Token, TokenType }
+import org.nlogo.core.Token
 
 trait TokenTransformer[A] {
   def initialState: A

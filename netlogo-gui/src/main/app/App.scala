@@ -6,33 +6,30 @@ package org.nlogo.app
 import javax.swing.{ JOptionPane, JMenu }
 import java.awt.event.ActionEvent
 
-import org.nlogo.agent.{ Agent, World, World2D, World3D }
+import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
+import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, LogoList, Model, Nobody,
-  Shape, Token, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
+  Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
 import org.nlogo.log.Logger
-import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
+import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
-import org.nlogo.swing.Implicits.thunk2runnable
 
 import org.picocontainer.adapters.AbstractAdapter
-import org.picocontainer.Characteristics._
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
-import scala.language.postfixOps
 import scala.io.Codec
 /**
  * The main class for the complete NetLogo application.
@@ -398,8 +395,6 @@ class App extends
 
     pico.addComponent(new EditorColorizer(workspace))
 
-    val shapeChangeListener = new ShapeChangeListener(workspace, world)
-
     frame.addLinkComponent(workspace)
 
     frame.addLinkComponent(new ExtensionAssistant(frame))
@@ -554,7 +549,7 @@ class App extends
 
         fileManager.openFromURI(new java.net.URI(commandLineURL), ModelType.Library)
 
-        import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
+        import org.nlogo.awt.EventQueue
 
         Option(System.getProperty(ImportRawWorldURLProp)) map {
           url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
@@ -704,7 +699,7 @@ class App extends
   }
 
   private def magicOpen(name: String) {
-    import collection.JavaConverters._
+    import scala.collection.JavaConverters._
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
@@ -1163,7 +1158,6 @@ class App extends
   def procedureSource:  String =
     tabs.codeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
-    import collection.JavaConverters._
     tabs.interfaceTab.iP.getWidgetsForSaving
   }
   def info:             String =

@@ -2,11 +2,9 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Patch, Turtle }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
-
 // needed by _patchat.optimize() because regular _patchhere is turtle-only
+import org.nlogo.agent.{ Patch, Turtle }
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _patchhereinternal extends Reporter {
 

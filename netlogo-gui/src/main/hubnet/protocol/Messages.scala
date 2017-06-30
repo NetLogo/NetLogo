@@ -4,7 +4,6 @@ package org.nlogo.hubnet.protocol
 
 import org.nlogo.api.{Version, PlotInterface}
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Widget => CoreWidget }
 import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
   ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException,
   Serializable => JSerializable }

@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import java.util.{ List => JList, ArrayList }
-import com.jogamp.opengl.{ GL, GL2 }
+import com.jogamp.opengl.GL2
 
 object Tessellator {
   // see com.jogamp.opengl.glu.GLUtessellatorCallback

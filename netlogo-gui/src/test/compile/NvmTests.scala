@@ -4,26 +4,20 @@ package org.nlogo.compile
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ DummyExtensionManager, NetLogoLegacyDialect, SimpleJobOwner }
-import org.nlogo.compile.api.{ CommandBlock, Expression,
-  ProcedureDefinition, ReporterApp, ReporterBlock,
-  ReporterBuilder, Statement,
-  Statements, StatementsBuilderBase }
-import org.nlogo.core.{
-  AgentKind, Command => CoreCommand, DummyCompilationEnvironment,
-  Let, Instantiator, Program, Reporter => CoreReporter,
+import org.nlogo.api.SimpleJobOwner
+import org.nlogo.compile.api.{ Expression, ProcedureDefinition,
+  ReporterApp, ReporterBuilder, StatementsBuilderBase }
+import org.nlogo.core.{ AgentKind, Command => CoreCommand, Let,
   SourceLocation, Syntax, Token, TokenType, prim => coreprim },
     coreprim.{
       _call => _corecall, _callreport => _corecallreport, _carefully => _corecarefully,
-      _const => _coreconst, _createturtles => _corecrt, _done => _coredone, _equal => _coreequal,
+      _const => _coreconst, _done => _coredone, _equal => _coreequal,
       _lessthan => _corelessthan, _let => _corelet, _letvariable => _coreletvariable,
       _repeat => _corerepeat, _return => _corereturn, _set => _coreset }
-import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure, Reporter }
-import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring, _crtfast,
+import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure }
+import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring,
   _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
   _return, _setletvariable }
-
-import scala.collection.immutable.ListMap
 
 // Q: Why is there an nvm test in the compile package?
 // A: Because much of nvm's behavior depends on the prim

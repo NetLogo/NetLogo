@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ prim, AstNode, CommandBlock, ProcedureDefinition,
+import org.nlogo.core.{ prim, CommandBlock, ProcedureDefinition,
   ReporterApp, ReporterBlock, SourceLocatable, SourceLocation, Statement, Token, TokenType, TokenizerInterface },
   prim.{ _commandlambda, _const, _constcodeblock, _reporterlambda }
 

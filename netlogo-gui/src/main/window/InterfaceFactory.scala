@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import javax.swing.ImageIcon
 import org.nlogo.core.I18N
-import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
+import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox }

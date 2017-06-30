@@ -26,7 +26,7 @@ the stack traces, not the results.
 import org.scalatest.FunSuite
 import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
 import org.nlogo.core.Syntax
-import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader, ExtensionManager}
+import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
 import org.nlogo.core.{WorldDimensions, View, Model}
 
 class TestStackTraces extends AbstractTestModels {

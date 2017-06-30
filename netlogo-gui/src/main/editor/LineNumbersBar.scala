@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Dimension, Font }
+import java.awt.{ Color, Dimension }
 import javax.swing.JTextPane
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.text.{ DefaultCaret, JTextComponent }

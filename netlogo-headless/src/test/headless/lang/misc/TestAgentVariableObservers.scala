@@ -5,8 +5,7 @@ package lang
 package misc
 
 import collection.mutable
-import collection.JavaConverters._
-import org.scalatest.{GivenWhenThen, FunSuite}
+import org.scalatest.GivenWhenThen
 import org.nlogo.agent._
 import org.nlogo.core.Model
 

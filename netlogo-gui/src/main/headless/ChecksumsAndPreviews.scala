@@ -2,10 +2,7 @@
 
 package org.nlogo.headless
 
-import java.io.File
-import java.io.IOException
-
-import org.nlogo.api.{ FileIO, LogoException, Version }
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 

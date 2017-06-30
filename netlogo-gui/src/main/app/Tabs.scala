@@ -15,14 +15,12 @@ import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface, E
   TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
-import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ Printable, PrinterManager, TabsMenu, UserAction }, UserAction.MenuAction
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
-import org.nlogo.window.{ EditDialogFactoryInterface, Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
+import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class Tabs(val workspace:       GUIWorkspace,
            val interfaceTab:    InterfaceTab,

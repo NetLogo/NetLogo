@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.{ LabProtocol, ModelSection }
+import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}

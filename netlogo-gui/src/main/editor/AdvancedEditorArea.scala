@@ -3,7 +3,7 @@
 package org.nlogo.editor
 
 import javax.swing.{ Action, JMenu, JPopupMenu }
-import javax.swing.text.{ AbstractDocument, EditorKit }
+import javax.swing.text.EditorKit
 
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
@@ -56,7 +56,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on
   // MacOS. This also occurs when int'l keyboards enter "^" -- BCH 12/31/2016, RGG 1/3/17
   override def replaceSelection(s: String): Unit = if (s != null) {
-    var selection =
+    val selection =
       s.dropWhile(c => Character.getType(c) == Character.FORMAT)
         .replaceAllLiterally("\t", "  ")
     super.replaceSelection(s)

@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import
   org.nlogo.core.{ AstTransformer, CommandBlock, Fail, I18N,
-                   prim, ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements },
+                   prim, ProcedureDefinition, ReporterApp, Statement },
     Fail._,
     prim.{ _commandlambda, _report, _run, _stop }
 

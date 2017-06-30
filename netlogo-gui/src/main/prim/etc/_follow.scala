@@ -2,11 +2,9 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.agent.Turtle
-import org.nlogo.core.{ I18N, Syntax }
-import org.nlogo.api.{ LogoException, Perspective }
-import org.nlogo.nvm.{ Command, Context}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.Perspective
+import org.nlogo.core.I18N
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _follow extends Command {
 

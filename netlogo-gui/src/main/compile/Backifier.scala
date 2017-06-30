@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import scala.collection.immutable.ListMap
-import org.nlogo.core.{ CompilerException, Fail, I18N, Instantiator, Program, BreedIdentifierHandler }, Fail.exception
+import org.nlogo.core.{ Fail, I18N, Instantiator, Program, BreedIdentifierHandler }, Fail.exception
 import org.nlogo.{ api => nlogoApi, core, nvm, prim => nvmprim }
 
 class Backifier(program: Program,

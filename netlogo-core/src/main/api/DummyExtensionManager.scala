@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.ExtensionObject
-import org.nlogo.core.{ DummyExtensionManager => CoreDummyExtensionManager, ErrorSource, Primitive }
+import org.nlogo.core.{ DummyExtensionManager => CoreDummyExtensionManager }
 
 // This isn't a singleton because in testing contexts it's sometimes useful
 // to override a few methods. - ST 11/5/11

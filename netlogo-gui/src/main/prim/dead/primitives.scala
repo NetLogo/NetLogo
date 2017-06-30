@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.dead
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context, Reporter }
 
 trait DeadCommand extends Command {

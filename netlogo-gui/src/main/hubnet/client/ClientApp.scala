@@ -6,7 +6,7 @@ import java.awt.BorderLayout
 import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
-import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory, EditorFactory }
+import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
 import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports

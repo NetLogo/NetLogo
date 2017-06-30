@@ -5,18 +5,16 @@ package org.nlogo.agent
 import
   java.{ lang, util },
     lang.{ Double => JDouble },
-    util.{ Arrays, HashMap => JHashMap, Map => JMap }
+    util.{ HashMap => JHashMap, Map => JMap }
 
 import
   org.nlogo.{ core, api },
-    core.{ AgentKind, Breed, Nobody, Program, Shape,
-      ShapeList, ShapeListTracker, WorldDimensions },
+    core.{ AgentKind, Nobody, Program,
+      ShapeListTracker, WorldDimensions },
     api.{ AgentException, AgentVariableNumbers, Color }
 
 import
   scala.collection.JavaConverters._
-
-import World.Zero
 
 trait AgentManagement
   extends TurtleManagement
@@ -188,7 +186,6 @@ trait AgentManagement
     copyBreedShapes(breeds,     _.turtleShapes, turtleShapes, _.turtleBreedShapes, turtleBreedShapes)
     copyBreedShapes(linkBreeds, _.linkShapes,   linkShapes,   _.linkBreedShapes,   linkBreedShapes)
 
-    val turtleVariableCount = program.dialect.agentVariables.implicitTurtleVariableTypeMap.size
     // then we recreate all the agents, setting their breed to the breed in the new world.
     // this also causes the agent to be added to its breed.
     val turtleIter = turtles.iterator

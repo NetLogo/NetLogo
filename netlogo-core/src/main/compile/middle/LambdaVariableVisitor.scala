@@ -66,7 +66,7 @@ class LambdaVariableVisitor extends DefaultAstVisitor {
         stmt.args(0) match {
           case ReporterApp(_, lv: prim._lambdavariable, _, _) =>
             val letsForVariable = lambdaStack.flatMap(_.letForName(lv.varName))
-            val newStmt = letsForVariable.headOption match {
+            val newStmt = letsForVariable.headOption match { // TODO: Should we change stmt and make this an argument?????
               case Some(let) =>
                 val newCommand = new prim._setletvariable(let)
                 newCommand.copyMetadataFrom(s)

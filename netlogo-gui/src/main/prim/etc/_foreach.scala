@@ -2,10 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, NonLocalExit, Procedure }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, NonLocalExit, RuntimePrimitiveException }
 
 class _foreach extends Command {
 

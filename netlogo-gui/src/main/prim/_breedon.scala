@@ -2,13 +2,9 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{AgentKind, I18N}
-
-import scala.collection.mutable
-import org.nlogo.agent.{Agent, AgentSet, AgentSetBuilder, ArrayAgentSet, Patch, Turtle}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ArgumentTypeException, Context, Reporter}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.agent.{ Agent, AgentSet, AgentSetBuilder, Patch, Turtle }
+import org.nlogo.core.{ AgentKind, I18N, Syntax }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
 class _breedon(breedName: String) extends Reporter {
 

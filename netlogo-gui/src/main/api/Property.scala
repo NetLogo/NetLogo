@@ -2,7 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.LogoList
 import java.awt.GridBagConstraints
 
 object Property {

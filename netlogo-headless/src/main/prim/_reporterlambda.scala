@@ -2,10 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ ClosedVariable, Let, Token }
+import org.nlogo.core.{ ClosedVariable, Let }
 import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
-
-import scala.collection.JavaConversions._
 
 class _reporterlambda(
   argumentNames:       Seq[String],

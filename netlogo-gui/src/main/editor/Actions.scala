@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action },
   Action.{ ACTION_COMMAND_KEY, NAME }
 import javax.swing.text.DefaultEditorKit,
-  DefaultEditorKit.{ CutAction, CopyAction, PasteAction, InsertContentAction, SelectAllAction }
+  DefaultEditorKit.{ CutAction, CopyAction, PasteAction, InsertContentAction }
 
 import org.nlogo.core.I18N
 

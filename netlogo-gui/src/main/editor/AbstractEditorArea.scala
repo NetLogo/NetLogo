@@ -3,7 +3,7 @@
 package org.nlogo.editor
 
 import javax.swing.{ Action, JViewport, SwingUtilities }
-import javax.swing.text.{ Document, EditorKit, JTextComponent }
+import javax.swing.text.{ EditorKit, JTextComponent }
 
 trait AbstractEditorArea extends JTextComponent {
   def configuration: EditorConfiguration

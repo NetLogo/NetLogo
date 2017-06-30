@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Font }
-import java.awt.event.{ ActionEvent, ActionListener, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, AbstractButton, Action, BoxLayout, JButton, JCheckBox, JPanel, SwingConstants }
+import java.awt.Component
+import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
+import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 
 import org.nlogo.awt.{ ColumnLayout, Fonts => NLogoFonts }
 import org.nlogo.swing.ToolBar.Separator
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.window.Events.{ EditWidgetEvent, LoadEndEvent }
+import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
     extends JPanel with LoadEndEvent.Handler {

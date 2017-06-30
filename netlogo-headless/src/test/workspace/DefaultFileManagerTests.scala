@@ -8,9 +8,9 @@ import
 import
 org.nlogo.{core, agent, api, nvm},
     agent.OutputObject,
-    api.{ExtensionManager => APIExtensionManager, SourceOwner, World},
-    core.{ CompilerException, Dialect, LiteralImportHandler, CompilationEnvironment,
-           CompilerUtilitiesInterface, File, FileMode, FrontEndInterface, Program},
+    api.{ ExtensionManager => APIExtensionManager, SourceOwner },
+    core.{ CompilerException, CompilerUtilitiesInterface, CompilationEnvironment,
+           File, FileMode, FrontEndInterface, LiteralImportHandler, Program},
     nvm.{Procedure, CompilerFlags, CompilerInterface, CompilerResults, Reporter},
       FrontEndInterface.ProceduresMap
 

@@ -188,7 +188,7 @@ TurtleSet_2D
         Command("crt 1"),
         Reporter("[turtle-set self] of turtle 0 = turtles", Success("true"))))
 
-    assert(tests.toString == "List(LanguageTest(test,TurtleSet_2D,List(Command(crt 1,Observer,Success()), Reporter([turtle-set self] of turtle 0 = turtles,Success(true)))))")
+    assert(tests.head == expectedCommandTest)
   }
 }
 

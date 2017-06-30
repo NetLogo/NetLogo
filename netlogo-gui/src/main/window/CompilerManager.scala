@@ -168,7 +168,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     // has loaded, including widgets) will take care of calling
     // this method again. - ST 7/7/06
     if (!isLoading) {
-      var proceed = compileProcedures()
+      val proceed = compileProcedures()
       if (proceed) {
         world.realloc()
         world.rememberOldProgram()

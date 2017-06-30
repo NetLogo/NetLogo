@@ -2,18 +2,15 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
-import java.awt.{List=>AWTList, _}
-import event.{MouseEvent, MouseListener, MouseMotionListener}
-import image.FilteredImageSource
-import org.nlogo.awt.DarkenImageFilter
+import java.awt.{ Color, Cursor, Dimension, Font, Graphics, Graphics2D, RenderingHints }
+import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
+import java.awt.image.FilteredImageSource
 import javax.swing.ImageIcon
-import org.nlogo.api.MersenneTwisterFast
-import org.nlogo.awt.Mouse.hasButton1
-import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
+
+import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
+import org.nlogo.api.{ Editable, MersenneTwisterFast, Options, Version}
+import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{ Editable, Options, Version}
-import scala.language.existentials
 
 object ButtonWidget {
 

@@ -2,8 +2,6 @@
 
 package org.nlogo.window
 
-import javax.swing.text.JTextComponent
-
 import org.nlogo.core.CompilerException
 import org.nlogo.editor.AbstractEditorArea
 

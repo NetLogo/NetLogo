@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{ HubNetInterface, ModelLoader, NetLogoLegacyDialect }
+import org.nlogo.api.{ HubNetInterface, NetLogoLegacyDialect }
 import org.nlogo.fileformat
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory => WSHubNetManagerFactory }
 import org.nlogo.window.{ GUIWorkspace, InterfaceFactory, MenuBarFactory }

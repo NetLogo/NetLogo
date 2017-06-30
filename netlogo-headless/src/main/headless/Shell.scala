@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{CompilerException, Model}
+import org.nlogo.core.CompilerException
 import org.nlogo.api.Version
 import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 

@@ -6,9 +6,6 @@ import java.awt.{ Frame, Window }
 import javax.swing.JDialog
 
 import org.nlogo.awt.EventQueue, EventQueue.mustBeEventDispatchThread
-import org.nlogo.api.Version
-
-import Implicits.thunk2runnable
 
 import scala.concurrent.{ Await, Promise }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }

@@ -3,7 +3,6 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
 class _rollright extends Command {

@@ -31,7 +31,7 @@ class ChooserWidget(val compiler: CompilerServices)
   def valueObject: Object = value
   def valueObject(v: Object) {
     if (v != null) {
-      var newIndex: Int = constraint.indexForValue(v)
+      val newIndex: Int = constraint.indexForValue(v)
       if (newIndex != -1) {index(newIndex)}
     }
   }
@@ -54,13 +54,11 @@ class ChooserWidget(val compiler: CompilerServices)
     name(newName, false)
   }
 
-  def choicesWrapper = {
-    import collection.JavaConverters._
+  def choicesWrapper =
     constraint.acceptedValues.map(v => Dump.logoObject(v, true, false)).mkString("\n")
-  }
 
   def choicesWrapper(choicesString: String) {
-    var obj: Object = compiler.readFromString("[ " + choicesString + " ]")
+    val obj: Object = compiler.readFromString("[ " + choicesString + " ]")
     if (obj.isInstanceOf[LogoList]) { setChoices(obj.asInstanceOf[LogoList]) }
     updateConstraints()
   }
@@ -71,9 +69,9 @@ class ChooserWidget(val compiler: CompilerServices)
   }
 
   def setChoices(list: LogoList): Unit = {
-    var oldValue: Object = value
+    val oldValue: Object = value
     constraint.acceptedValues(list)
-    var newIndex: Int = constraint.indexForValue(oldValue)
+    val newIndex: Int = constraint.indexForValue(oldValue)
     if (newIndex == -1) index(0) else index(newIndex)
   }
 

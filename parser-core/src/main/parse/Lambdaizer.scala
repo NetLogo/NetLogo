@@ -2,10 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstFolder, AstNode, Command, CommandBlock, Dialect, Instruction, Reporter, ReporterApp, ReporterBlock, Statement, Syntax, TokenMapperInterface, prim },
+import org.nlogo.core.{ AstFolder, AstNode, Command, Dialect, Instruction, Reporter, ReporterApp, Syntax, TokenMapperInterface, prim },
   prim.{ _commandlambda, _lambdavariable, _reporterlambda, Lambda }
-
-import WhiteSpace._
 
 import LambdaTokenMapper._
 

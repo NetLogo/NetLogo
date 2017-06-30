@@ -3,9 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.core.Pure
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _isagentset extends Reporter with Pure {
 

@@ -6,7 +6,6 @@ import org.nlogo.hubnet.connection.Streamable
 import org.nlogo.hubnet.protocol._
 import org.nlogo.util.MockSuite
 import org.nlogo.api.Version
-import org.nlogo.hubnet.connection.MessageEnvelope.{EnterMessageEnvelope, ActivityMessageEnvelope}
 
 // tests for the hubnet session behavior on the server side.
 class ServerSideConnectionTests extends MockSuite {

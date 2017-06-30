@@ -3,10 +3,10 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression,
+  org.nlogo.core.{ Command, CommandBlock, Expression,
     Femto, FrontEndProcedure, prim, ProcedureDefinition,
-    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL, TokenType },
-    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop }
+    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL },
+    prim.{ _ask, _carefully, _createturtles => _crt, _fd, _report, _run, _stop }
 
 import
   org.scalacheck.Gen

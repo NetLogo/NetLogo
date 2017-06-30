@@ -8,8 +8,6 @@ import java.awt.{ Font, Insets }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import javax.swing.{ JButton, JMenuItem, JPopupMenu, ImageIcon }
 
-import scala.collection.JavaConverters._
-
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.awt.{ Fonts, Mouse }
 

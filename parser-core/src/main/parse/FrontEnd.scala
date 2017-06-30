@@ -3,9 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{AstTransformer, CompilationOperand, CompilationEnvironment, Dialect, DummyCompilationEnvironment, Femto,
-    ExtensionManager, DummyExtensionManager, NetLogoCore, FrontEndInterface, FrontEndProcedure,
-    Program, TokenizerInterface, ProcedureDefinition, ProcedureSyntax}
+  core.{AstTransformer, CompilationOperand, Dialect, Femto,
+    ExtensionManager, FrontEndInterface,
+    TokenizerInterface }
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -18,12 +18,11 @@ trait FrontEnd extends FrontEndMain
 
 trait FrontEndMain extends NetLogoParser {
 
-  import FrontEndInterface.{ ProceduresMap, FrontEndResults }
+  import FrontEndInterface.FrontEndResults
 
   // entry points
 
   def frontEnd(compilationOperand: CompilationOperand): FrontEndResults = {
-    import compilationOperand.{ extensionManager, oldProcedures }
     val (rawProcDefs, structureResults) = basicParse(compilationOperand)
 
     val topLevelDefs = transformers(compilationOperand).foldLeft(rawProcDefs) {

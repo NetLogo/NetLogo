@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm.Workspace
 import org.nlogo.core.UpdateMode, UpdateMode._
 
 class UpdateManagerTests extends FunSuite {

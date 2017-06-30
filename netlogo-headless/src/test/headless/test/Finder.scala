@@ -3,7 +3,6 @@
 package org.nlogo.headless.test
 
 import java.io.File
-import org.nlogo.util.SlowTestTag
 import org.scalatest.{ FunSuite, Tag }
 
 import

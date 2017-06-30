@@ -4,9 +4,9 @@ package org.nlogo.compile.prim
 
 import org.nlogo.compile.ReplacedPrim
 import org.nlogo.core.{ Command, Reporter, Syntax },
-  Syntax.{ AgentType, AgentsetType, BooleanType, CodeBlockType, ListType, NumberType,
-  NumberBlockType, PatchType, PatchsetType, StringType, SymbolType,
-  TurtleType, ReporterBlockType, ReporterType, WildcardType }
+  Syntax.{ AgentType, AgentsetType, BooleanType, ListType, NumberType,
+  NumberBlockType, PatchType, PatchsetType, StringType,
+  TurtleType, ReporterBlockType, WildcardType }
 
 case class _patchcol() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, right = List(NumberType))

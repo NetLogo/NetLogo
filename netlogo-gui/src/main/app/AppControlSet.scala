@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage
 
 import org.nlogo.api.ControlSet
 import org.nlogo.awt.EventQueue
-import org.nlogo.swing.Implicits.thunk2runnable
 
 import scala.concurrent.{ Future, Promise }
 import scala.util.Try

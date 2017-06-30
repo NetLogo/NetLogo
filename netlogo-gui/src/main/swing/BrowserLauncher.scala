@@ -5,12 +5,11 @@ package org.nlogo.swing
 import java.awt.{ Component, Desktop }
 import java.lang.Process
 import java.io.IOException
-import java.net.{ URI, URISyntaxException, URLEncoder }
+import java.net.{ URI, URISyntaxException }
 import java.nio.file.{ Files, Path, Paths }
 import javax.swing.JOptionPane
 
 object BrowserLauncher {
-  private val redirectUri = docPath("redirect.html").toUri
   private val osName = System.getProperty("os.name")
 
   @deprecated("Use openURI or openPath instead", "6.0.2")

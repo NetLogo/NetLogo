@@ -10,13 +10,9 @@ import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog, JOptionPane
 import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ EventQueue, Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.swing.{ FileDialog, Implicits, ModalProgressTask, UserAction },
-  UserAction.MenuAction,
-  Implicits.thunk2runnable
-import org.nlogo.window.{ ExportControls, GUIWorkspace, SwingUnlockedExecutionContext }
-import org.nlogo.workspace.{ OpenModel, SaveModel, SaveModelAs }
-
-import scala.concurrent.Future
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, UserAction },
+  UserAction.MenuAction
+import org.nlogo.window.ExportControls
 
 object Actions {
   val Ellipsis = '\u2026'

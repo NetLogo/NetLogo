@@ -2,13 +2,9 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.agent.Observer
 import org.nlogo.api.{ CommandRunnable, Dump, HubNetInterface }
-import org.nlogo.core.Syntax
 import org.nlogo.core.{ AgentKind, LogoList }
-import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
-import Syntax._
+import org.nlogo.nvm.{ Command, Context, Instruction, Reporter, RuntimePrimitiveException }
 
 trait HubNetPrim extends Instruction {
   def hubNetManager: Option[HubNetInterface] = workspace.getComponent(classOf[HubNetInterface])
@@ -262,7 +258,7 @@ class _hubnetclearoverrides extends Command with HubNetPrim {
 class _hubnetclearoverride extends Command with HubNetPrim {
 
   override def perform(context: Context) {
-    import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+    import org.nlogo.agent.{ Agent, AgentSet }
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, FontMetrics, Graphics, GridBagConstraints, GridBagLayout }
+import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ ComponentEvent, ComponentListener, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }

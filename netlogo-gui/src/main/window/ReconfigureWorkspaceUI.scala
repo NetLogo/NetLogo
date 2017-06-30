@@ -9,7 +9,7 @@ import java.nio.file.Paths
 import org.nlogo.window.Events.{ AfterLoadEvent, BeforeLoadEvent,
   LoadBeginEvent, LoadEndEvent, LoadModelEvent, LoadWidgetsEvent }
 import org.nlogo.api.{ CompilerServices, ModelType }
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.Model
 
 import scala.util.Try
 

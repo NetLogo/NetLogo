@@ -14,8 +14,6 @@ import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.io.{ IOException, PrintWriter }
 import java.util.{ List => JList }
 
-import org.nlogo.nvm.FileManager
-
 import scala.collection.JavaConverters._
 
 /**

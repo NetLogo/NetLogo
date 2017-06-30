@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Dimension, GridBagConstraints, GridBagLayout, In
 import java.util.{ List => JList }
 import javax.swing.{ JPanel, JScrollPane, JWindow, ScrollPaneConstants }
 
-import org.nlogo.agent.{ Agent, Observer }
+import org.nlogo.agent.Agent
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.AgentKind

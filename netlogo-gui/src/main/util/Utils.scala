@@ -89,7 +89,7 @@ object Utils {
   }
 
   def isSymlink(file: File): Boolean = {
-    val canon = if (file.getParent == null) {
+    val canon = if (file.getParent == null) { // TODO: Use Files.isSymbolicLink instead...
       file
     } else {
       new File(file.getParentFile.getCanonicalFile, file.getName)

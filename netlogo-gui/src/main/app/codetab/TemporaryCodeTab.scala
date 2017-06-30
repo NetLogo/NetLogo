@@ -7,16 +7,15 @@ import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, Model }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, OptionDialog, ToolBarActionButton, UserAction },
+import org.nlogo.core.I18N
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
-import org.nlogo.fileformat, fileformat.SuccessfulConversion
 
 import scala.io.Codec
 import scala.util.control.Exception.ignoring

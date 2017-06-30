@@ -20,8 +20,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
-    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
+    core.{ CompilationOperand, ErrorSource, CompilationEnvironment,
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
 import org.nlogo.nvm.Procedure

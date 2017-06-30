@@ -52,7 +52,7 @@ trait ExportRenderer extends Renderer with GLEventListener {
 
     var p = width * height * 3 // Points to first byte (red) in each row.
     var i = 0   // Index into target int[]
-    var w3 = width * 3    // Number of bytes in each row
+    val w3 = width * 3    // Number of bytes in each row
     for(row <- 0 until height) {
       p -= w3
       var q = p  // Index into ByteBuffer

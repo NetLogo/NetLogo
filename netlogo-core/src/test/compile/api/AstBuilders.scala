@@ -68,7 +68,6 @@ trait StatementsBuilderBase {
     statementEtc(name, name, args)
 
   def statementEtc(coreName: String, primName: String, args: Seq[Expression]): ThisBuilder = {
-    val tokName = coreName.split("_").last
     val core = Instantiator.newInstance[CoreCommand](Class.forName(s"org.nlogo.core.prim.$coreName"))
     val prim = Instantiator.newInstance[Command](Class.forName(s"org.nlogo.prim.$primName"))
     stmts :+= new Statement(core, prim, args, loc)

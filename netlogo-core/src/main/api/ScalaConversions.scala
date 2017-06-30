@@ -6,8 +6,6 @@ import org.nlogo.core.ExtensionObject
 import java.{lang => jl}
 import org.nlogo.core.{ LogoList, Nobody }
 
-import language.implicitConversions
-
 object ScalaConversions {
 
   // implicits so if you want, you can write

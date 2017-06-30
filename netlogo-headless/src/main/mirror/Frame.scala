@@ -3,7 +3,6 @@
 package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
-import java.io.IOException
 
 import org.nlogo.api.PlotAction
 import org.nlogo.drawing.{ DrawingAction, DrawingActionRunner }

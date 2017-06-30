@@ -4,7 +4,7 @@ package org.nlogo.editor
 
 import java.awt.event.{ ActionEvent, KeyEvent }
 
-import javax.swing.{ KeyStroke, InputMap }
+import javax.swing.InputMap
 import javax.swing.text.TextAction
 
 import KeyBinding.{ keystroke, charKeystroke }

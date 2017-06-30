@@ -18,7 +18,7 @@ class NetLogoWebSaverTests extends FunSuite {
   }
 
   test("nlwsaver errors when the template doesn't contain a space for the model") {
-    var saveFunction: String => Unit = { t => }
+    val saveFunction: String => Unit = { t => }
     val saver = new NetLogoWebSaver(emptyTemplateLoader, saveFunction)
     intercept[Exception] {
       saver.save(dummyModel, "model name")
@@ -27,7 +27,7 @@ class NetLogoWebSaverTests extends FunSuite {
 
   test("nlwsaver returns the template filled in with the transformed html file") {
     var savedText = ""
-    var saveFunction: String => Unit = { t => savedText = t }
+    val saveFunction: String => Unit = { t => savedText = t }
     val saver = new NetLogoWebSaver(templateLoader, saveFunction)
     saver.save(dummyModel, "model name")
     assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))
@@ -35,7 +35,7 @@ class NetLogoWebSaverTests extends FunSuite {
 
   test("nlwsaver strips the html suffix off received filenames") {
     var savedText = ""
-    var saveFunction: String => Unit = { t => savedText = t }
+    val saveFunction: String => Unit = { t => savedText = t }
     val saver = new NetLogoWebSaver(templateLoader, saveFunction)
     saver.save(dummyModel, "model name.html")
     assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))

@@ -4,22 +4,12 @@ package org.nlogo.parse
 
 import
   org.nlogo.core.{ prim, Application, CommandBlock, Dump, LogoList },
-    prim.{ _commandlambda, _const, _lambdavariable, _reporterlambda, Lambda }
+    prim.{ _commandlambda, _const, _reporterlambda, Lambda }
 
 import
-  org.nlogo.core.{ AstFolder, AstTransformer, CompilationOperand,
-    ProcedureDefinition, ReporterApp, SourceLocation, Statement }
+  org.nlogo.core.{ AstTransformer, CompilationOperand, ReporterApp }
 
 class SourceTagger(compilationOperand: CompilationOperand) extends AstTransformer {
-  private def getSource(sourceLocation: SourceLocation): String = {
-    val sourceText =
-      compilationOperand.sources.get(sourceLocation.filename).getOrElse {
-        val env = compilationOperand.compilationEnvironment
-        env.getSource(sourceLocation.filename)
-      }
-    sourceText.substring(sourceLocation.start, sourceLocation.end)
-  }
-
   override def visitReporterApp(app: ReporterApp): ReporterApp = {
     app.reporter match {
       case l: Lambda =>

@@ -3,11 +3,10 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ AgentVariableSet, Command, ExtensionManager, Fail, FrontEndInterface, Instruction,
+  core.{ AgentVariableSet, Command, ExtensionManager, FrontEndInterface, Instruction,
     Primitive, PrimitiveCommand, PrimitiveReporter, Program, Reporter,
     Token, TokenMapperInterface, TokenType},
-    FrontEndInterface.ProceduresMap,
-    Fail._
+    FrontEndInterface.ProceduresMap
 
 trait NameHandler extends (Token => Option[(TokenType, core.Instruction)])
 

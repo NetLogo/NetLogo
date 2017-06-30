@@ -123,9 +123,6 @@ trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
 }
 
 object HubNetInterface {
-  import org.nlogo.core.{ LogoList, NamedWidget, Shape, Chooser => CoreChooser,
-    Monitor => CoreMonitor, View => CoreView, Widget => CoreWidget }
-
   trait ClientInterface extends Serializable {
     def containsViewWidget: Boolean
     def containsWidgetTag(tag: String): Boolean

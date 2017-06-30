@@ -9,8 +9,6 @@ import org.nlogo.api.NetLogoLegacyDialect
 import org.nlogo.core.{ Dialect, DummyCompilationEnvironment, DummyExtensionManager,
   Femto, LiteralParser, Model, SourceRewriter }
 
-import scala.util.Try
-
 trait ConversionHelper {
   val compilationEnvironment = FooCompilationEnvironment
   val extensionManager = VidExtensionManager

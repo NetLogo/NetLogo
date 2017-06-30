@@ -8,12 +8,11 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, NetLogoLegacyDialect, Version }
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser, Model, Shape, Widget },
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, Version }
+import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConverters._
-import scala.util.Try
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
   val extensionManager = new DummyExtensionManager()
@@ -79,47 +78,45 @@ class NLogoFormatIOTest extends FunSuite {
 
 class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
   if (canTestConversions) {
-  import AutoConversionList.ConversionList
+    def testLoader: ModelLoader =
+      new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)
+        .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
 
-  def testLoader: ModelLoader =
-    new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)
-      .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
+    def tryReadAndConvertModel(m: Model, conversions: Seq[ConversionSet]): ConversionResult = {
+      val loader = testLoader
+      val readModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
+      tryConvert(readModel, conversions: _*)
+    }
 
-  def tryReadAndConvertModel(m: Model, conversions: Seq[ConversionSet]): ConversionResult = {
-    val loader = testLoader
-    val readModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
-    tryConvert(readModel, conversions: _*)
-  }
+    def readAndConvertModel(m: Model, conversions: Seq[ConversionSet]): Model =
+      tryReadAndConvertModel(m, conversions).model
 
-  def readAndConvertModel(m: Model, conversions: Seq[ConversionSet]): Model =
-    tryReadAndConvertModel(m, conversions).model
+    test("performs listed autoconversions") {
+      val m = Model(code = "to foo fd 1 end")
+      val conversions = Seq(conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "forward {0}")), targets = Seq("fd")))
+      val rereadModel = readAndConvertModel(m, conversions)
+      assertResult("to foo forward 1 end")(rereadModel.code)
+    }
 
-  test("performs listed autoconversions") {
-    val m = Model(code = "to foo fd 1 end")
-    val conversions = Seq(conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "forward {0}")), targets = Seq("fd")))
-    val rereadModel = readAndConvertModel(m, conversions)
-    assertResult("to foo forward 1 end")(rereadModel.code)
-  }
+    test("carries out conversions on behaviorspace operations") {
+      import org.nlogo.api.LabProtocol
+      val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, true, false, 0, "", List(), List())
+      val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
+        .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
 
-  test("carries out conversions on behaviorspace operations") {
-    import org.nlogo.api.LabProtocol
-    val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, true, false, 0, "", List(), List())
-    val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
-      .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
+      val conversions = AutoConversionList.conversions.map(_._2)
+      val rereadModel = readAndConvertModel(m, conversions)
+      assertResult("vid:record-view")(
+        rereadModel.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").get.head.goCommands)
+      assert(rereadModel.code.contains("extensions [vid]"))
+    }
 
-    val conversions = AutoConversionList.conversions.map(_._2)
-    val rereadModel = readAndConvertModel(m, conversions)
-    assertResult("vid:record-view")(
-      rereadModel.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").get.head.goCommands)
-    assert(rereadModel.code.contains("extensions [vid]"))
-  }
-
-  test("returns a failure for a model needing conversion which doesn't compile") {
-    val m = Model(code = "to foo hsb")
-    val conversions = AutoConversionList.conversions.map(_._2)
-    val rereadModel = tryReadAndConvertModel(m, conversions)
-    assert(rereadModel.hasErrors)
-  }
+    test("returns a failure for a model needing conversion which doesn't compile") {
+      val m = Model(code = "to foo hsb")
+      val conversions = AutoConversionList.conversions.map(_._2)
+      val rereadModel = tryReadAndConvertModel(m, conversions)
+      assert(rereadModel.hasErrors)
+    }
   }
 }
 

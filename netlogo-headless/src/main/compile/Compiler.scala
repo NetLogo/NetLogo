@@ -8,7 +8,7 @@ import org.nlogo.{ api => nlogoApi, core, nvm },
   nvm.{ CompilerFlags, CompilerResults, Optimizations => NvmOptimizations, Procedure },
     Procedure.{ ProceduresMap, NoProcedures }
 
-import org.nlogo.compile.api.{ Backifier => BackifierInterface, BackEndInterface,
+import org.nlogo.compile.api.{ BackEndInterface,
   CommandMunger, FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ReporterMunger }
 
 // One design principle here is that calling the compiler shouldn't have any side effects that are

@@ -14,7 +14,6 @@ import java.net.{BindException, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
-import collection.JavaConverters._
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.

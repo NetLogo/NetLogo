@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Color => AwtColor, Font, GridBagConstraints, GridBagLayout }
+import java.awt.{ BorderLayout, Font, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ ActionEvent, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ AbstractAction, JButton, JPanel }
 

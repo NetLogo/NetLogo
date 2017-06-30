@@ -4,11 +4,11 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container,
   ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D,
-  KeyboardFocusManager, Toolkit }
+  KeyboardFocusManager }
 import java.awt.event.ActionEvent
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JComponent,
-  JPanel, JScrollPane, JSplitPane, KeyStroke, ScrollPaneConstants }
+  JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager

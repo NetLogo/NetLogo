@@ -6,8 +6,7 @@ import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, St
 
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
-import org.nlogo.sdm.Translator
-import org.nlogo.core.{ LiteralParser, Model => CoreModel }
+import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization
 

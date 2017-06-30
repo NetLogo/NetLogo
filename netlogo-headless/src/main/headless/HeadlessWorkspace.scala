@@ -10,8 +10,7 @@ import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World, World2D },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
-    core.{ model, AgentKind, CompilerException, CompilerUtilitiesInterface, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
-      model.ModelReader,
+    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
@@ -44,12 +43,7 @@ object HeadlessWorkspace {
         "org.nlogo.render.Renderer", world))
   }
 
-  def newLab: LabInterface = {
-    val utilities: CompilerUtilitiesInterface =
-      Femto.scalaSingleton("org.nlogo.parse.CompilerUtilities")
-    Femto.get("org.nlogo.lab.Lab")
-  }
-
+  def newLab: LabInterface = Femto.get("org.nlogo.lab.Lab")
 }
 
 /**

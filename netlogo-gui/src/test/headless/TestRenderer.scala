@@ -150,7 +150,6 @@ class TestColorRendering extends AbstractTestRenderer {
   class RichWorkspace(workspace: HeadlessWorkspace){
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
-      import collection.JavaConverters._
       for (shape <- workspace.world.turtleShapeList.shapes)
         workspace.world.turtleShapes.removeShape(shape)
       // add one non-recolorable shape

@@ -4,7 +4,7 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
-import org.nlogo.api.{ AgentFollowingPerspective, World, WorldRenderable, Patch, Patch3D, Perspective, DrawingInterface}
+import org.nlogo.api.{ AgentFollowingPerspective, World, WorldRenderable, Patch, Patch3D, DrawingInterface}
 
 private class PatchRenderer(world: World with WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends TextureRenderer(world) {

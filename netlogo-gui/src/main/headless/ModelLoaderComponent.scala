@@ -2,8 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ AutoConvertable, ModelLoader, ComponentSerialization, CompilerServices, ConfigurableModelLoader,
-  NetLogoLegacyDialect, NetLogoThreeDDialect, Workspace }
+import org.nlogo.api.{ ModelLoader, ComponentSerialization, ConfigurableModelLoader }
 
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
@@ -14,7 +13,6 @@ import scala.collection.JavaConverters._
 
 class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
   import org.nlogo.fileformat, fileformat.NLogoFormat
-  import scala.collection.JavaConversions._
 
   def getDescriptor(): String = "ModelLoaderComponent"
 

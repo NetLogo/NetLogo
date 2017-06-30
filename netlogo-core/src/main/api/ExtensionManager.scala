@@ -3,9 +3,8 @@
 package org.nlogo.api
 
 import org.nlogo.core.ExtensionObject
-import java.util.{ List => JList }
 
-import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager, File}
+import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager }
 
 /**
  * <code>ExtensionManager</code> provides some methods that can be used in runOnce

@@ -2,14 +2,12 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ ReporterRunnable}
-import org.nlogo.core.Syntax
-import org.nlogo.awt.UserCancelException
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
-import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspace.isApplet
+import org.nlogo.api.ReporterRunnable
+import org.nlogo.awt.UserCancelException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 import org.nlogo.swing.FileDialog
+import org.nlogo.window.GUIWorkspace
 
 class _userfile extends Reporter {
 

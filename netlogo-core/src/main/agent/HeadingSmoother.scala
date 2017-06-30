@@ -24,7 +24,7 @@ class HeadingSmoother {
   }
 
   private def thirdPersonUpdate(agent: org.nlogo.api.Agent) {
-    var heading = agent match {
+    val heading = agent match {
       case t: org.nlogo.api.Turtle => t.heading
       case _ => 0d
     }
@@ -57,7 +57,7 @@ class HeadingSmoother {
   }
 
   private def firstPersonUpdate(agent: org.nlogo.api.Agent) = {
-    var heading = agent match {
+    val heading = agent match {
       case t: org.nlogo.api.Turtle => t.heading
       case _ => 0d
     }

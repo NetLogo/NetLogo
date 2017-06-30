@@ -10,7 +10,6 @@ class _reference extends Reporter with ReferencerReporter {
   override def referenceIndex = 0
 
   private[this] var reference: Reference = null
-  private[this] var name: String = null
 
   override def applyReference(ref: Reference): Reporter = {
     reference = ref

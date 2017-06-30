@@ -4,9 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _reporterlambda, Lambda }
-
-import WhiteSpace._
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, Lambda }
 
 object Formatter {
 
@@ -37,7 +35,7 @@ object Formatter {
 class Formatter extends PositionalAstFolder[AstFormat] {
   import Formatter.RichFormat
 
-  import Formatter.{ context, deletedInstructionToString }
+  import Formatter.context
 
   override def visitProcedureDefinition(proc: ProcedureDefinition)(c: AstFormat): AstFormat = {
     val position = AstPath(AstPath.Proc(proc.procedure.name.toUpperCase))

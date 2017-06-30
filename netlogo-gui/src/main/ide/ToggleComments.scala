@@ -3,7 +3,6 @@
 package org.nlogo.ide
 
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.Action.ACCELERATOR_KEY
 import javax.swing.text.{ Document, JTextComponent }
 
 import org.nlogo.core.I18N

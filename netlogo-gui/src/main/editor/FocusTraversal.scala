@@ -4,7 +4,7 @@ package org.nlogo.editor
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, MouseEvent, MouseListener }
-import javax.swing.{ AbstractAction, JPopupMenu }
+import javax.swing.AbstractAction
 import javax.swing.text.JTextComponent
 
 trait FocusTraversable extends JTextComponent {

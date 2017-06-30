@@ -5,7 +5,6 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.core.{ Model, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ ModelType, ModelLoader }
 import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
 import org.nlogo.fileformat.ModelConversion

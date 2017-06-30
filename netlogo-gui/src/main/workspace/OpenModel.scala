@@ -6,7 +6,7 @@ import java.net.URI
 import java.nio.file.Paths
 
 import org.nlogo.core.Model
-import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelLoader, Version }
+import org.nlogo.api.{ ModelLoader, Version }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion }
 
 import scala.util.{ Failure, Success, Try }

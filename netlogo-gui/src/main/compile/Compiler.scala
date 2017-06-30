@@ -2,14 +2,12 @@
 
 package org.nlogo.compile
 
-import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
-import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, TokenizerInterface, World }
-import org.nlogo.parse.Namer
-import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure, Workspace }
+import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token }
+import org.nlogo.api.{ SourceOwner, World }
+import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure }
 import org.nlogo.api.ExtensionManager
 
 import scala.collection.immutable.ListMap
-import scala.collection.JavaConversions._
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
@@ -171,21 +169,6 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
     val proceduresListMap = ListMap[String, Procedure](procedures.toSeq: _*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
-  }
-
-  private def resolvePath(filename: String, path: String): String = {
-    val pathFile = new java.io.File(path)
-    val rootFile = new java.io.File(filename)
-    if(pathFile.isAbsolute) path
-    else {
-      val result = new java.io.File(rootFile.getParentFile,path)
-      try result.getCanonicalPath
-      catch {
-        case ex:java.io.IOException =>
-          org.nlogo.api.Exceptions.ignore(ex)
-          result.getPath
-      }
-    }
   }
 
   // used by the indenter. we always use the 2D tokenizer since it doesn't matter in this context

@@ -1,6 +1,6 @@
 package org.nlogo.prim;
 
-import org.nlogo.core.{Syntax, Pure, Token}
+import org.nlogo.core.{Pure, Token}
 import org.nlogo.nvm.{Context, Reporter}
 import scala.collection.JavaConverters._
 import java.util.{ List => JList }

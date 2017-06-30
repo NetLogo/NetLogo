@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}

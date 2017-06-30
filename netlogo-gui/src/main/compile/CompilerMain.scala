@@ -7,16 +7,15 @@ package org.nlogo.compile
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected in
 // StructureParser. - ST 2/21/08, 1/21/09
 
-import org.nlogo.api.{ ExtensionManager, NetLogoThreeDDialect, Version }
+import org.nlogo.api.{ ExtensionManager, Version }
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, CommandMunger, DefaultAstVisitor,
   FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ProcedureDefinition, ReporterMunger }
 import org.nlogo.core.{ Dialect, Program }
 import org.nlogo.nvm.{ CompilerFlags, GeneratorInterface, Optimizations => NvmOptimizations, Procedure }
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, FrontEndInterface, FrontEndProcedure, Femto }
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, FrontEndInterface, Femto }
 import scala.collection.immutable.ListMap
-import scala.collection.JavaConversions._
 
-private object CompilerMain {
+private[compile] object CompilerMain {
 
   val bridge = Femto.scalaSingleton[FrontMiddleBridgeInterface](
     "org.nlogo.compile.middle.FrontMiddleBridge")
@@ -43,10 +42,6 @@ private object CompilerMain {
       frontEnd.frontEnd(CompilationOperand(sources, extensionManager, compilationEnv, program, oldProceduresListMap, subprogram, displayName))
 
     val bridged = bridge(feStructureResults, oldProcedures, topLevelDefs, backifier(feStructureResults.program, extensionManager))
-
-    val allSources = sources ++
-      feStructureResults.includedSources.map(i =>
-          (i -> compilationEnv.getSource(compilationEnv.resolvePath(i))))
 
     // NOTE: This only provides a list of optimizations to run.
     // The optimization system property (in api.Version) controls

@@ -66,10 +66,6 @@ class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceL
    * a List of the actual Statement objects.
    */
   def body: Seq[Statement] = stmts
-  private def recomputeStartAndEnd() {
-    if (stmts.isEmpty) { sourceLocation = sourceLocation.copy(start = 0, end = 0) }
-    else { sourceLocation = sourceLocation.copy(start = stmts(0).start, end = stmts(stmts.size - 1).end) }
-  }
   override def toString = stmts.mkString(" ")
   def accept(v: AstVisitor) { v.visitStatements(this) }
   def copy(stmts: Seq[Statement] = stmts, sourceLocation: SourceLocation = sourceLocation): Statements =

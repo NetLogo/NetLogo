@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
 
 abstract class AbstractWidgetPanel
 extends javax.swing.JLayeredPane

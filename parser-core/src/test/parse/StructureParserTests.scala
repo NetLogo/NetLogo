@@ -2,7 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
+import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
+  CompilerException, Femto, StructureResults}
 import org.scalatest.FunSuite
 
 import org.nlogo._
@@ -263,8 +264,9 @@ class StructureParserTests extends FunSuite {
       ""    -> "to foo bar end",
       "baz" -> "to bar foo end"
     )
-    val result =
+    val results =
       StructureParser.parseSources(
         tokenizer, CompilationOperand(sources, new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
+    assert(results.procedures.contains("FOO") && results.procedures.contains("BAR"))
   }
 }

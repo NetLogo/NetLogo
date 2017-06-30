@@ -3,16 +3,13 @@
 package org.nlogo.ide
 
 import javax.swing.text.Segment
-import java.text.CharacterIterator.DONE
 
 import org.fife.ui.rsyntaxtextarea.{ TokenMakerBase }
 import org.fife.ui.rsyntaxtextarea.{ Token => RstaToken, TokenImpl, TokenTypes }
 
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect }
-import org.nlogo.core.{ Dialect, Femto, Nobody, SourceLocation, Token, TokenizerInterface, TokenType }
+import org.nlogo.core.{ Dialect, Femto, Nobody, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.ExtensionManager
-
-import scala.annotation.tailrec
 
 trait NetLogoTokenMaker extends TokenMakerBase {
   def extensionManager: Option[ExtensionManager]

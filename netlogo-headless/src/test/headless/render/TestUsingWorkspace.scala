@@ -4,8 +4,8 @@ package org.nlogo.headless
 package render
 
 import org.nlogo.api
-import org.nlogo.core.{ShapeParser, Model, View}
-import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
+import org.nlogo.core.{ Model, View }
+import org.nlogo.shape.ShapeConverter
 import org.nlogo.util.MockSuite
 
 trait TestUsingWorkspace extends MockSuite {

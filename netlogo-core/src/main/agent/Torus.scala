@@ -2,8 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.{ api, core },
-  api.AgentException, core.AgentKind
+import org.nlogo.api.AgentException
 
 @annotation.strictfp
 class Torus(_world: World)

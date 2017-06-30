@@ -2,18 +2,15 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
-import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, FileIO, HubNetInterface, LogoException,
-  ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
-  Workspace => APIWorkspace, WorldDimensions3D, Version }
-import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, Widget => CoreWidget, WorldDimensions }
-import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
+import org.nlogo.agent.{ World, Agent, OutputObject }
+import org.nlogo.api.{ Dump, FileIO, HubNetInterface,
+  OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
+import org.nlogo.core.{ Model, View, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
-import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import collection.mutable.WeakHashMap
-import java.net.URL
-import java.io.{ File, IOException, PrintWriter }
+import java.io.IOException
 import java.nio.file.Paths
 
 import scala.util.Try
@@ -119,9 +116,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   }
 
   override def getCompilationEnvironment = {
-    import java.io.{ File => JFile }
-    import java.net.MalformedURLException
-
     new org.nlogo.core.CompilationEnvironment {
       def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled

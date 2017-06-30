@@ -2,10 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.api.{ AgentException, LogoException}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.AgentException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _linkvariable(private[this] val _vn: Int) extends Reporter {
 

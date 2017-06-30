@@ -6,7 +6,7 @@ import collection.mutable.Buffer
 
 import java.io.{ Serializable => JSerializable }
 
-import org.nlogo.core.{ I18N, PlotPenState, PlotPenInterface }
+import org.nlogo.core.{ PlotPenState, PlotPenInterface }
 
 
 object PlotPen {

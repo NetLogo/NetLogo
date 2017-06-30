@@ -13,14 +13,13 @@ import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, H
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
-import org.nlogo.api.{ VersionHistory, ModelSection }
 import org.nlogo.app.common.{ FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, RichJButton },
+  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher },
   BrowserLauncher.docPath
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 

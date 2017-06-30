@@ -3,9 +3,8 @@
 package org.nlogo.fileformat
 
 import org.nlogo.util.Implicits.RichString
-import org.nlogo.util.Implicits.RichStringLike
 import org.nlogo.core.Model
-import org.nlogo.api.{ ComponentSerialization, PreviewCommands, Version }
+import org.nlogo.api.{ ComponentSerialization, PreviewCommands }
 
 import scala.util.Try
 

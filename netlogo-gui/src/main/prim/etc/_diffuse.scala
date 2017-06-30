@@ -3,10 +3,9 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
-import org.nlogo.core.{ I18N, Nobody, Reference, Syntax }
 import org.nlogo.api.{ AgentException, Dump, LogoException, TypeNames }
-import org.nlogo.nvm.{ Command, Context, Referencer }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.core.{ I18N, Nobody, Reference }
+import org.nlogo.nvm.{ Command, Context, Referencer, RuntimePrimitiveException }
 
 class _diffuse extends Command with Referencer {
   this.switches = true

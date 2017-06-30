@@ -4,7 +4,7 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 
-private object Rectangle {
+private[render] object Rectangle {
 
   // symmetric over axes
   def renderRectangularPrism(gl: GL2, edgeX: Float, edgeY: Float, edgeZ: Float, invert: Boolean) {

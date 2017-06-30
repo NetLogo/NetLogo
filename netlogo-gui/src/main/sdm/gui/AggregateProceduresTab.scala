@@ -2,11 +2,9 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.core.{ CompilerException, TokenType}
-import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.core.CompilerException
+import org.nlogo.editor.{ Colorizer, EditorConfiguration }
 import org.nlogo.window.EditorAreaErrorLabel
-import java.awt.event.TextListener
-import java.awt.event.TextEvent
 import java.awt.BorderLayout
 import javax.swing.BorderFactory
 import javax.swing.JScrollPane

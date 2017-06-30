@@ -3,14 +3,10 @@
 package org.nlogo.api
 
 import
-  org.nlogo.core.{ Token, TokenType }
+  org.scalacheck.{ Gen, Shrink }, Gen.{ listOf, oneOf }
 
 import
-  org.scalacheck.{ Arbitrary, Gen, Shrink }, Gen.{ listOf, oneOf }
-
-import
-  org.scalatest.{ FunSuite, prop, PropSpec },
-    prop.GeneratorDrivenPropertyChecks
+  org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 trait ProgramGenerator extends GeneratorDrivenPropertyChecks {
   val breedTypes = Seq("breed", "directed-link-breed", "undirected-link-breed")

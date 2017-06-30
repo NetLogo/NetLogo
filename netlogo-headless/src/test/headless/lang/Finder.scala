@@ -3,18 +3,14 @@
 package org.nlogo.headless
 package lang
 
-import java.io.File
 import org.nlogo.headless.{ LanguageTestTag, test => headlessTest },
-  headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests, ReporterTests, CommandTests,
-                 AbstractFixture, TestMode, Reporter, Command, Declaration, Open, LanguageTest}
+  headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests,
+    ReporterTests, CommandTests, AbstractFixture }
 import org.scalactic.source.Position
-import org.scalatest.{ FunSuite, Tag }
+import org.scalatest.Tag
 
 import
-  org.nlogo.{ api, core, util },
-    api.FileIO.file2String,
-    core.{ Model, Resource },
-    util.SlowTestTag
+  org.nlogo.util.SlowTestTag
 
 trait Finder extends TestFinder {
   override def withFixture[T](name: String)(body: AbstractFixture => T): T =

@@ -2,7 +2,7 @@
 
 package org.nlogo.compile.middle
 
-import org.nlogo.core.{ CompilationEnvironment, Syntax, Token }
+import org.nlogo.core.{ CompilationEnvironment, Syntax }
 import org.nlogo.nvm.{ AnonymousProcedure, Instruction, LiftedLambda, Procedure }
 import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement }
@@ -19,15 +19,13 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
   override def visitProcedureDefinition(proc: ProcedureDefinition): Unit = {
     super.visitProcedureDefinition(proc)
     proc.procedure.displayName = proc.procedure match {
-      case ll: LiftedLambda =>
-        val bodySource = proc.statements.stmts.map(_.command.fullSource).filterNot(_ == null).mkString(" ")
-        AnonymousProcedure.displayString("command", ll.source)
+      case ll: LiftedLambda => AnonymousProcedure.displayString("command", ll.source)
       case p                => p.baseDisplayName.getOrElse(procedureDisplayName(p))
     }
   }
 
   private def captureInternalSources(f: () => Unit): Seq[String] = {
-    var tmpSources = internalSources
+    val tmpSources = internalSources
     internalSources = Seq[String]()
     f()
     val resultingSources = internalSources

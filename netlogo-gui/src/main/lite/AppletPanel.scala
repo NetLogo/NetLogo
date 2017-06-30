@@ -5,18 +5,16 @@ package org.nlogo.lite
 import java.awt.EventQueue.isDispatchThread
 import java.awt.image.BufferedImage
 import java.net.URI
-import java.util.{ ArrayList, List => JList }
 
-import org.nlogo.api.{ ControlSet, LogoException, ModelType, NetLogoLegacyDialect, Version, SimpleJobOwner }
+import org.nlogo.api.{ ControlSet, LogoException, ModelType, Version, SimpleJobOwner }
 import org.nlogo.awt.EventQueue
-import org.nlogo.swing.Implicits.thunk2runnable
-import org.nlogo.agent.{ World, World2D, World3D }
+import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
   ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
-import org.nlogo.workspace.{ OpenModel, OpenModelFromURI }
+import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
 
 import scala.concurrent.{ Future, Promise }

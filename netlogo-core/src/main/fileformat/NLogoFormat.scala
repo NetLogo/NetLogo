@@ -5,11 +5,10 @@ package org.nlogo.fileformat
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.{ CompilationEnvironment, ExtensionManager, Femto, I18N,
-  LiteralParser, Model, Shape, ShapeParser, UpdateMode, View, Widget, WorldDimensions }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
+  UpdateMode, View, Widget, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
-import AutoConversionList.ConversionList
+import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import scala.util.{ Failure, Success, Try }
 import scala.io.{ Codec, Source }, Codec.UTF8
 
@@ -162,8 +161,6 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     showTickCounter = true, frameRate = 30)
 
   object InterfaceComponent extends ComponentSerialization[Array[String], A] {
-    import org.nlogo.fileformat
-
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")

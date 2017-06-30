@@ -2,7 +2,6 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core
 import org.nlogo.core.StringEscaper.unescapeString
 import org.nlogo.core.StringEscaper.escapeString
 import org.nlogo.core._

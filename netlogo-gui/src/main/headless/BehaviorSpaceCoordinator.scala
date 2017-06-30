@@ -5,8 +5,7 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, NetLogoThreeDDialect, Version, Workspace }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.api.{ LabProtocol, Version, Workspace }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat

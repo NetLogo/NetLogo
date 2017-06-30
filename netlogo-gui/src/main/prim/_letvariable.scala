@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ Let, Syntax }
+import org.nlogo.core.Let
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _letvariable(private[this] val _let: Let) extends Reporter {

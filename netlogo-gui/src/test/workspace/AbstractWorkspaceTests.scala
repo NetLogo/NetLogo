@@ -3,7 +3,6 @@
 package org.nlogo.workspace
 
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
-import AbstractWorkspace._
 
 class AbstractWorkspaceTests extends FunSuite with BeforeAndAfterEach with OneInstancePerTest {
   val workspace = new DummyAbstractWorkspace

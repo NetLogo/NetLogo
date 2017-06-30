@@ -2,10 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter, RuntimePrimitiveException }
 
 class _reduce extends Reporter {
 

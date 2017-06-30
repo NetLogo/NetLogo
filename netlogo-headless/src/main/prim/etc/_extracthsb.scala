@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ LogoListBuilder, Color }
+import org.nlogo.api.Color
 import org.nlogo.core.{ LogoList, Pure, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException

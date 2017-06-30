@@ -3,7 +3,6 @@
 package org.nlogo.properties
 
 import org.nlogo.api.{ CompilerServices, Editable }
-import org.nlogo.core.TokenType
 import org.nlogo.editor.Colorizer
 
 // see commentary in EditDialogFactoryInterface

@@ -6,9 +6,8 @@ import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
-import org.nlogo.core.{ model, Button, CompilerException, ConstraintSpecification, LogoList, Model,
-  Monitor, Program, Shape, ShapeParser },
-  model.ModelReader,
+import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification,
+  LogoList, Model, Monitor, Program, Shape },
   ConstraintSpecification._,
   Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 

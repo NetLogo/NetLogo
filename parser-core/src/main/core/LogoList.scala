@@ -2,8 +2,6 @@
 
 package org.nlogo.core
 
-import java.util
-
 import scala.collection
 import scala.language.implicitConversions
 

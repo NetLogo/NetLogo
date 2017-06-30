@@ -11,13 +11,12 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
-import org.nlogo.swing.Implicits._
 import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
 import javax.swing.text.EditorKit
 import javax.swing.KeyStroke.getKeyStroke
-import javax.swing.{JDialog, JOptionPane, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
+import javax.swing.{JDialog, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
 import javax.swing.plaf.basic.BasicButtonUI
 
 object InputBox {

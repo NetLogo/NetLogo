@@ -7,7 +7,7 @@ import org.nlogo.api.{ NetLogoThreeDDialect, NetLogoLegacyDialect, Version }
 import org.nlogo.util.NullAppHandler
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.{ DefaultEditorFactory, VMCheck }
+import org.nlogo.window.VMCheck
 
 /**
  * Creates and runs a hubnet client from the command line.

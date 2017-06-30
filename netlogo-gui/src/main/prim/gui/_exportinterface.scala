@@ -2,10 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ CommandRunnable}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 import org.nlogo.window.GUIWorkspace
 
 class _exportinterface extends Command {

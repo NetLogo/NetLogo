@@ -6,11 +6,11 @@ import java.awt.{ Color, Component, Cursor, Point }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowFocusListener, WindowEvent }
 import javax.swing.{ BorderFactory, JDialog, JEditorPane, JScrollPane, JTable, SwingConstants, UIDefaults, UIManager }
 import javax.swing.table.{ DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer }
-import javax.swing.text.{ BadLocationException, JTextComponent, PlainDocument }
+import javax.swing.text.BadLocationException
 
 import org.nlogo.core.{ Femto, Token, TokenType, TokenizerInterface }
 import org.nlogo.api.Exceptions
-import org.nlogo.editor.{ AbstractEditorArea, Colorizer, EditorArea, HighlightEditorKit, RichDocument }, RichDocument.RichDoc
+import org.nlogo.editor.{ AbstractEditorArea, Colorizer, HighlightEditorKit, RichDocument }, RichDocument.RichDoc
 
 class ShowUsageBox(colorizer: Colorizer) {
 
