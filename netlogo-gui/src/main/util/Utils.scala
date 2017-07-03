@@ -3,6 +3,7 @@
 package org.nlogo.util
 
 import java.io.File
+import java.nio.file.Files
 
 object Utils {
 
@@ -89,11 +90,6 @@ object Utils {
   }
 
   def isSymlink(file: File): Boolean = {
-    val canon = if (file.getParent == null) { // TODO: Use Files.isSymbolicLink instead...
-      file
-    } else {
-      new File(file.getParentFile.getCanonicalFile, file.getName)
-    }
-    file.getAbsolutePath != file.getCanonicalPath
+    Files.isSymbolicLink(file.toPath)
   }
 }
