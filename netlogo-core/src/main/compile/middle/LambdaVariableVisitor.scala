@@ -66,11 +66,12 @@ class LambdaVariableVisitor extends DefaultAstVisitor {
         stmt.args(0) match {
           case ReporterApp(_, lv: prim._lambdavariable, _, _) =>
             val letsForVariable = lambdaStack.flatMap(_.letForName(lv.varName))
-            val newStmt = letsForVariable.headOption match { // TODO: Should we change stmt and make this an argument?????
+            letsForVariable.headOption match {
               case Some(let) =>
                 val newCommand = new prim._setletvariable(let)
                 newCommand.copyMetadataFrom(s)
-                super.visitStatement(stmt.copy(command = newCommand, args = stmt.args.tail))
+                stmt.command = newCommand
+                stmt.removeArgument(0)
               case None =>
                 cAssert(procedure.get.isLambda, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), stmt)
             }
