@@ -23,7 +23,6 @@ class LiteralParser(importHandler: LiteralImportHandler) {
   private val ERR_EXTRA_STUFF_AFTER_LITERAL = "Extra characters after literal."
   private val ERR_EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
   private val ERR_MISSING_CLOSEBRACKET = "No closing bracket for this open bracket."
-  private val ERR_ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
 
   /**
   * reads a literal value from a token vector. The entire vector must denote a single literal

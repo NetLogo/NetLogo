@@ -4,11 +4,9 @@ package org.nlogo
 
 import java.nio.file.Path
 
-import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, ModelLoader, Version }
+import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
 import org.nlogo.core.model.WidgetReader
-
-import scala.util.Try
 
 package object fileformat {
   type ModelConversion = (Model, Path) => ConversionResult

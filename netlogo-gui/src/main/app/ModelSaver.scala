@@ -2,14 +2,8 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ ModelLoader, ModelReader, ModelSections, PreviewCommands, Version}
-import org.nlogo.util.Implicits.RichString
-import org.nlogo.util.Implicits.RichStringLike
-import org.nlogo.core.{ LiteralParser, Model, Shape }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
-import org.nlogo.workspace.AbstractWorkspaceScala
-import collection.JavaConverters._
+import org.nlogo.api.{ ModelLoader, ModelSections, Version}
+import org.nlogo.core.Model
 
 class ModelSaver(model: ModelSections, loader: ModelLoader) {
 

@@ -2,10 +2,9 @@
 
 package org.nlogo.workspace
 
-import java.util.ArrayList
 import org.nlogo.core.{ AgentKind, SourceWrapping }
-import org.nlogo.api.{JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
-import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
+import org.nlogo.api.{JobOwner, ReporterLogoThunk, CommandLogoThunk}
+import org.nlogo.agent.{Agent, AgentSet}
 import org.nlogo.nvm.{ ExclusiveJob, Activation, CompilerFlags,
                        Context, ImportHandler, Procedure, Reporter }
 

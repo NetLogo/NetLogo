@@ -3,9 +3,8 @@
 package org.nlogo.compile
 package back
 
-import org.nlogo.core.{CompilerException, Femto}
+import org.nlogo.core.CompilerException
 import org.scalatest.FunSuite
-import org.nlogo.api
 
 class ConstantFolderTests extends FunSuite {
 

@@ -2,8 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Version }
-import org.nlogo.core.Syntax
+import org.nlogo.api.Version
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _netlogoversion extends Reporter {

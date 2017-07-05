@@ -5,9 +5,8 @@ package org.nlogo.prim
 import org.nlogo.core.AgentKind
 import scala.collection.JavaConverters._
 
-import org.nlogo.agent.{ AgentSet, Patch, Turtle }
+import org.nlogo.agent.{ AgentSet, Patch }
 import org.nlogo.api.{ AgentException}
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedat(breedName: String) extends Reporter {

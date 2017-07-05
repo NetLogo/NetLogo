@@ -3,8 +3,7 @@
 package org.nlogo.compile.api
 
 import org.nlogo.core.{ CompilationEnvironment, StructureResults, Program }
-import org.nlogo.{ core, api => nlogoApi, nvm },
-  nvm.Procedure.ProceduresMap
+import org.nlogo.{ core, nvm }
 
 import scala.collection.immutable.ListMap
 

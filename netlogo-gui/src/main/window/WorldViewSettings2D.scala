@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.agent.World
 import org.nlogo.awt.Hierarchy
 import org.nlogo.swing.{ ModalProgressTask, OptionDialog }
 

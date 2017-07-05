@@ -3,8 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.api.{ Vect }
-import org.nlogo.core.Syntax
+import org.nlogo.api.Vect
 import org.nlogo.nvm.{ Command, Context }
 
 class _tiltup extends Command {

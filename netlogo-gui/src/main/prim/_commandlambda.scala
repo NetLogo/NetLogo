@@ -5,8 +5,6 @@ package org.nlogo.prim
 import org.nlogo.core.{ ClosedVariable, Token }
 import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter }
 
-import scala.collection.JavaConversions._
-
 class _commandlambda(
   val argumentNames:   Seq[String],
   val argTokens:       Seq[Token],

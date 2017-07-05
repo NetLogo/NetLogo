@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, BorderFactory, JWindow, LayoutFocusTraversa
 
 import scala.collection.JavaConverters._
 
-import org.nlogo.agent.{ Agent, Link, Observer, Patch, Turtle }
+import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.{ Utils => SwingUtils, WindowDragger, WindowResizer }
 import org.nlogo.window.{ Event, Events => WindowEvents }

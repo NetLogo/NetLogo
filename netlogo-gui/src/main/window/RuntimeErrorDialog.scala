@@ -4,8 +4,6 @@ package org.nlogo.window
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, ActionListener, ItemEvent, ItemListener }
-import java.util.{ ArrayList => JArrayList }
-import java.util.{ List => JList }
 import java.lang.OutOfMemoryError
 import java.nio.file.Path
 
@@ -14,13 +12,11 @@ import javax.swing.{ JButton, JCheckBox, JComponent }
 import org.nlogo.core.I18N
 import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.nvm.{ Context, Instruction }
-import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.swing.{ BrowserLauncher, MessageDialog }
 import org.nlogo.util.Utils
 import org.nlogo.util.SysInfo
 
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
 
 case class ErrorInfo(var throwable: Throwable, var context: Option[Context] = None, var instruction: Option[Instruction] = None) {
   def ordinaryError: Boolean = throwable.isInstanceOf[LogoException]
@@ -140,7 +136,7 @@ trait RuntimeErrorDialog {
     var lines = 1
     var lineBegin = 0
     var longestLine = 0
-    var text =
+    val text =
         if (showDetails) textWithDetails else textWithoutDetails
 
     var i = 0
@@ -218,8 +214,6 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui
 
 class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
   private val dialogTitle: String = "Runtime Error"
-
-  private var errorMessage: Option[String] = None
 
   def doShow(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
     buildTexts(errorInfo, debuggingInfo)

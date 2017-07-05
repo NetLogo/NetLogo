@@ -3,12 +3,9 @@
 package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, WorldDimensionException }
-import org.nlogo.core.{ Program, WorldDimensions }
-import java.util.{ HashMap => JHashMap, Map => JMap }
+import org.nlogo.core.WorldDimensions
 
-import java.lang.{ Double => JDouble, Integer => JInteger }
-
-import World.NegativeOneInt
+import java.lang.{ Double => JDouble }
 
 trait DimensionManagement { this: WorldJ =>
   def topology: Topology

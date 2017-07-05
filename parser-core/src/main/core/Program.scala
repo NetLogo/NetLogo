@@ -18,7 +18,7 @@ object Program {
 // breeds are ListMaps so the z-order in Renderer can match the definition order
 // - ST 6/9/04, 7/12/12
 
-case class Program private(
+case class Program(
   interfaceGlobals: Seq[String] = Seq(),
   userGlobals: Seq[String] = Seq(),
   turtleVars: ListMap[String, Int] = ListMap(),

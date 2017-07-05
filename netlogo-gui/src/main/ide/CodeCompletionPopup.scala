@@ -9,10 +9,9 @@ import javax.swing.event.DocumentEvent
 import javax.swing.text.JTextComponent
 
 import org.nlogo.awt.Fonts
-import org.nlogo.core.{DefaultTokenMapper, Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
+import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
 import org.nlogo.nvm.ExtensionManager
 import org.nlogo.window.SyntaxColors
-import org.nlogo.editor.EditorArea
 
 object CodeCompletionPopup {
   def apply() =
@@ -100,7 +99,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     */
   def autoCompleteSuggestion(eA: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
     isPopupEnabled = false
-    var suggestion = suggestionDisplaylist.getSelectedValue
+    val suggestion = suggestionDisplaylist.getSelectedValue
     lastSuggested = suggestion
     val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
     for(token <- tokenOption) {

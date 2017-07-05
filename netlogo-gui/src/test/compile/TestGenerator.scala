@@ -141,7 +141,6 @@ class TestGenerator extends FunSuite {
     if(Version.useGenerator)
       test("Correctly generates custom code for or") {
         val emptyProgram = {
-          import collection.JavaConverters._
           Program.empty()
         }
         compiler.compileProgram(

@@ -2,7 +2,9 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ Model, Shape, OptionalSection, Widget }, Shape.{ LinkShape, VectorShape }
+import
+  org.nlogo.core.{ Model, Shape, Widget },
+    Shape.{ LinkShape, VectorShape }
 
 import
   ModelSections._

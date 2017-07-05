@@ -2,12 +2,10 @@
 
 package org.nlogo.prim.file
 
-import org.nlogo.core.{ CompilerException, FileMode }
-import org.nlogo.api.{ OutputDestination }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, Reporter, Workspace }
-import org.nlogo.nvm.RuntimePrimitiveException
 import java.io.IOException
+import org.nlogo.api.OutputDestination
+import org.nlogo.core.{ CompilerException, FileMode }
+import org.nlogo.nvm.{ Command, Context, Reporter, RuntimePrimitiveException }
 
 class _fileatend extends Reporter {
 

@@ -3,7 +3,6 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Frame }
-import java.util.{ Arrays, List }
 import javax.swing.{ JComboBox, JOptionPane }
 
 import scala.collection.JavaConverters._

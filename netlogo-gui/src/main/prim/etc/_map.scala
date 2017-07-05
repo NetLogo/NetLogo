@@ -2,11 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ LogoListBuilder}
-import org.nlogo.core.Syntax
-import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.LogoListBuilder
+import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter, RuntimePrimitiveException }
 
 class _map extends Reporter {
 

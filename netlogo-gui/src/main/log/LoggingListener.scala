@@ -2,7 +2,7 @@
 
 package org.nlogo.log
 
-import org.nlogo.core.{ CompilerException, LogoList }
+import org.nlogo.core.CompilerException
 import org.nlogo.api.NetLogoListener
 import Logger._
 

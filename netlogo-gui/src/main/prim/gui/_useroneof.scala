@@ -2,11 +2,9 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable}
-import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, HaltException, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ Context, HaltException, Reporter, RuntimePrimitiveException }
 import org.nlogo.window.GUIWorkspace
 
 class _useroneof extends Reporter {

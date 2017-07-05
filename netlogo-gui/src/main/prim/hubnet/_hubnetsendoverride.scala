@@ -2,11 +2,9 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
-import org.nlogo.api.{ CommandRunnable, Dump}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.api.{ CommandRunnable, Dump }
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _hubnetsendoverride extends Command with HubNetPrim {
   override def perform(context: Context) {

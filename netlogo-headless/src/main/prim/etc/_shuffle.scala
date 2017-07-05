@@ -11,13 +11,13 @@ import org.nlogo.nvm.{Reporter, Context}
 
 class _shuffle extends Reporter {
   def report(context: Context): AnyRef = {
-    val result: JList[AnyRef] = scala.collection.mutable.MutableList(argEvalList(context, 0).toVector: _*).asJava
+    val result: JList[AnyRef] = MutableList(argEvalList(context, 0).toVector: _*).asJava
     Collections.shuffle(result, context.job.random)
     LogoList.fromJava(result)
   }
 
   def report_1(context: Context, l0: LogoList): LogoList = {
-    val result: JList[AnyRef] = scala.collection.mutable.MutableList(l0.toVector: _*).asJava
+    val result: JList[AnyRef] = MutableList(l0.toVector: _*).asJava
     Collections.shuffle(result, context.job.random)
     LogoList.fromJava(result)
   }

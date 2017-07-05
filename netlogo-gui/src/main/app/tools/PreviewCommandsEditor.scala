@@ -4,7 +4,7 @@ package org.nlogo.app.tools
 
 import java.awt.Frame
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, Action }
+import javax.swing.AbstractAction
 
 import org.nlogo.api.PreviewCommands
 import org.nlogo.core.Model
@@ -32,7 +32,6 @@ object PreviewCommandsEditor {
     }
 }
 
-  import PreviewCommandsEditor._
 class PreviewCommandsEditor(
   owner: Frame,
   workspaceFactory: WorkspaceFactory,

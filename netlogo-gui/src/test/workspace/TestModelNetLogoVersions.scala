@@ -6,7 +6,6 @@ import java.nio.file.Paths
 
 import org.scalatest.FunSuite
 
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Femto, LiteralParser }
 import org.nlogo.api.Version
 import org.nlogo.util.SlowTest
 import org.nlogo.fileformat, fileformat.NLogoThreeDFormat

@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.{ Agent, AgentFollowingPerspective, Perspective }
+import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
 import java.awt.event.{ ActionEvent, ActionListener }
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }

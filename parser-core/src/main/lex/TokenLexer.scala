@@ -2,12 +2,8 @@
 
 package org.nlogo.lex
 
-import java.io.{Reader => JReader, BufferedReader}
-
-import org.nlogo.core.{ NumberParser, SourceLocation, StringEscaper, Token, TokenType }
+import org.nlogo.core.{ NumberParser, StringEscaper, Token, TokenType }
 import LexOperations._
-
-import scala.annotation.tailrec
 
 class TokenLexer {
   import LexOperations.PrefixConversions._

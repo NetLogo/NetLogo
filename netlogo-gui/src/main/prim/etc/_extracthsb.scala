@@ -2,8 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api, api.{ LogoListBuilder, Color },
-  Color.convertGoodHSBListToDumbOldHSBFormat
+import org.nlogo.api,
+  api.Color,
+    Color.convertGoodHSBListToDumbOldHSBFormat
 import org.nlogo.core.{ LogoList, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.core.Pure

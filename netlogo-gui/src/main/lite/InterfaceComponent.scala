@@ -2,7 +2,6 @@
 
 package org.nlogo.lite
 
-import java.util.{ ArrayList, List => JList, StringTokenizer }
 import java.net.URI
 import java.nio.file.Paths
 
@@ -14,8 +13,6 @@ import org.nlogo.core.{ CompilerException, Widget => CoreWidget }
 import org.nlogo.log.Logger
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
 import org.nlogo.swing.BrowserLauncher
-
-import scala.collection.JavaConverters._
 
 /**
  * This component is a wrapper around the contents of the

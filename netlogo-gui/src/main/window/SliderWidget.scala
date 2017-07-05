@@ -6,9 +6,8 @@ import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.core.{ Horizontal, Slider => CoreSlider, Vertical }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
-import org.nlogo.api.{ Dump, Editable, LogoException }
+import org.nlogo.api.{ Dump, Editable }
 import org.nlogo.core.I18N
-import org.nlogo.agent.SliderConstraint.SliderConstraintException
 import org.nlogo.agent.SliderConstraint
 import java.awt.{Graphics, Font}
 

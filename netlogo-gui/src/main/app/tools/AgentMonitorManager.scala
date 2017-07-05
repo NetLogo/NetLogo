@@ -6,7 +6,7 @@ import java.awt.Window
 
 import scala.collection.mutable
 
-import org.nlogo.agent.{ Agent, Observer, Turtle, Patch, Link }
+import org.nlogo.agent.Agent
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler

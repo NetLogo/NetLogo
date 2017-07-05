@@ -4,7 +4,6 @@ package org.nlogo.parse
 
 import org.nlogo.core.CompilationEnvironment
 
-import scala.io.Source
 import scala.util.Try
 
 object IncludeFile {

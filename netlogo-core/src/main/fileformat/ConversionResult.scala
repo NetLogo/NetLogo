@@ -4,8 +4,6 @@ package org.nlogo.fileformat
 
 import org.nlogo.core.Model
 
-import scala.util.{ Failure, Success, Try }
-
 sealed trait ConversionResult {
   def model: Model
   def hasErrors: Boolean

@@ -3,8 +3,8 @@
 package org.nlogo.agent
 
 import java.io.PrintWriter
-import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
-import java.lang.{ Integer => JInteger, Long => JLong }
+import java.util.{ ArrayList, Collections }
+import java.lang.{ Long => JLong }
 import org.nlogo.{ core, api },
   api.Dump,
     Dump.csv,

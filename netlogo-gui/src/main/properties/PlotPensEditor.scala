@@ -5,13 +5,13 @@ package org.nlogo.properties
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
-import java.awt.{List => AWTList, _}
+import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
 
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.swing.{OptionDialog, RichJButton}
+import org.nlogo.swing.RichJButton
 import org.nlogo.editor.{Colorizer, EditorField}
 import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}
 import org.nlogo.window.{ColorDialog, PlotWidget}

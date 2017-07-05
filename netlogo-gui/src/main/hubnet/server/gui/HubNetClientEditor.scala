@@ -3,7 +3,6 @@
 package org.nlogo.hubnet.server.gui
 
 import java.awt.{Dimension, BorderLayout, Component}
-import java.io.{IOException, StringReader, BufferedReader}
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 
 import org.nlogo.api.ModelType

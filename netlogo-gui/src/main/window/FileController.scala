@@ -12,8 +12,7 @@ import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffi
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
-import org.nlogo.swing.{ BrowserLauncher, FileDialog, Implicits, MessageDialog, OptionDialog },
-  Implicits.thunk2runnable
+import org.nlogo.swing.{ BrowserLauncher, FileDialog, MessageDialog, OptionDialog }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
@@ -27,7 +26,7 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
 
   def runOnUIThreadForResult[A](f: () => A): A = {
     import scala.concurrent.{ Await, Promise }
-    import scala.concurrent.duration.{ Duration, MILLISECONDS }
+    import scala.concurrent.duration.Duration
     val promise = Promise[A]()
 
     EventQueue.invokeLater { () =>
@@ -84,8 +83,6 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     showAutoconversionError(res, "model")
 
   def showAutoconversionError(res: FailedConversionResult, base: String): Option[Model] = {
-    val options = Seq(
-      I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
     res.errors.foreach(_.errors.foreach { e =>
       println(e)
       e.printStackTrace()

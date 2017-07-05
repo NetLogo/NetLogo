@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{Agent, World, World2D, World3D}
+import org.nlogo.agent.{World2D, World3D}
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{AggregateManagerInterface, Version}

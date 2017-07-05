@@ -2,9 +2,9 @@
 
 package org.nlogo.app
 
-import java.awt.{ Frame, Toolkit }
-import java.awt.event.{ ActionEvent, InputEvent }
-import javax.swing.{ AbstractAction, Action, JDialog, KeyStroke }
+import java.awt.Frame
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.awt.Positioning

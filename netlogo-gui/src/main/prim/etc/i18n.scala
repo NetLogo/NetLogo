@@ -2,10 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
+import java.util.Locale
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context }
-import java.util.Locale
 
 class _seterrorlocale extends Command {
 

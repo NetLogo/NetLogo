@@ -9,14 +9,14 @@ import javax.swing.{ BorderFactory, JLabel, JPanel, JScrollPane, ScrollPaneConst
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet, Observer, Turtle, Patch, Link }
+import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.awt.Fonts
-import org.nlogo.core.{ AgentKind, I18N, Nobody, TokenType, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.OptionDialog
-import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget, Widget }
+import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends JPanel
 {

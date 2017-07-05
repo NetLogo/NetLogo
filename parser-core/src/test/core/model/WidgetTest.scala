@@ -2,13 +2,12 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ model, TextBox, Output, ChooseableList,
+import org.nlogo.core.{ TextBox, Output, ChooseableList,
   CompilerException, ConstraintSpecification,
   LiteralParser, LogoList, Nobody, NumericInput,
   NumberParser, InputBox, Chooser, ChooseableString, Pen, Plot, Switch,
   Monitor, UpdateMode, View, Horizontal, Button, Slider, StringInput,
   Widget, WorldDimensions },
-  model._,
   ConstraintSpecification.{ BoundedNumericConstraintSpecification, UnboundedNumericConstraintSpecification }
 import org.scalatest.FunSuite
 import scala.reflect.ClassTag

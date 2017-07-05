@@ -4,7 +4,6 @@ package org.nlogo.ide
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.{ HashMap, ListBuffer }
 

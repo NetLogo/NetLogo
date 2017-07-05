@@ -3,16 +3,16 @@
 package org.nlogo.sdm.gui
 
 import javax.swing.{ JFrame, JMenuBar, JMenuItem, WindowConstants }, WindowConstants.HIDE_ON_CLOSE
-import java.awt.{ BorderLayout, Component, Dimension }
+import java.awt.{ Component, Dimension }
 
-import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureEnumeration, Tool, ViewChangeListener }
+import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
 
 import org.jhotdraw.util.{ CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.core.{ CompilerException, I18N, LiteralParser, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
-import org.nlogo.sdm.{ Model, Translator }
+import org.nlogo.sdm.Translator
 import org.nlogo.swing.TabsMenu
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild

@@ -2,10 +2,10 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.{ CompilerException, I18N, Syntax }
-import org.nlogo.api.AnonymousCommand
 import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException,
-  Command, Context, RuntimePrimitiveException, NonLocalExit, Procedure }
+  Command, Context, RuntimePrimitiveException, NonLocalExit }
+import org.nlogo.api.AnonymousCommand
+import org.nlogo.core.{ CompilerException, Syntax }
 
 class _run extends Command {
   override def perform(context: Context) {

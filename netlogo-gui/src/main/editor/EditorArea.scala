@@ -10,13 +10,9 @@ package org.nlogo.editor
 
 import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, InputEvent, KeyEvent, MouseEvent },
-  InputEvent.{ SHIFT_MASK => ShiftKey }
+import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
-import javax.swing.event.UndoableEditEvent
-import javax.swing.undo.AbstractUndoableEdit
-import javax.swing.text.{ AbstractDocument, Document, DefaultEditorKit,
-  TextAction, PlainDocument, BadLocationException }
+import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
 import KeyBinding.keystroke
 
@@ -37,7 +33,7 @@ class EditorArea(val configuration: EditorConfiguration)
   val colorizer = configuration.colorizer
 
   private var indenter: Option[Indenter] = None
-  private var contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
+  private val contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
   contextMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()

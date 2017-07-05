@@ -2,7 +2,6 @@
 
 package org.nlogo.editor
 
-import java.awt.Container
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.text.{ Document, JTextComponent }

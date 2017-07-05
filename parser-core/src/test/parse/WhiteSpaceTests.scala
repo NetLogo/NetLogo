@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment,
-  DummyExtensionManager, ErrorSource, Femto, NetLogoCore, Program, TokenizerInterface }
+  DummyExtensionManager, Femto, NetLogoCore, Program, TokenizerInterface }
 
 import AstPath._
 

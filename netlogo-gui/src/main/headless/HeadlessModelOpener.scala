@@ -2,18 +2,14 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, ConstantSliderConstraint,
-  InputBoxConstraint, NumericConstraint, SliderConstraint}
-import org.nlogo.api.{ FileIO, LogoException, ModelSection,
-                        NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
-import org.nlogo.fileformat
-import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
-import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program, model => coremodel },
-  coremodel.WidgetReader
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement,
+  ConstantSliderConstraint, InputBoxConstraint, NumericConstraint }
+import org.nlogo.api.{ LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect,
+  SourceOwner, ValueConstraint, Version}
+import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
 import org.nlogo.plot.PlotLoader
 import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 import org.nlogo.shape.{LinkShape, VectorShape}
-import org.nlogo.api.StringUtils.escapeString
 import org.nlogo.api.PreviewCommands
 
 import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
@@ -47,8 +43,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read procedures, compile them.
     val results = {
-      import collection.JavaConverters._
-
       val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
@@ -80,7 +74,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   }
 
   private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
-    import collection.JavaConverters._
     ws.world.turtleShapes.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
       ws.world.turtleShapes.add(VectorShape.getDefaultShape)

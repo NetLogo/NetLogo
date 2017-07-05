@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.event.ActionEvent
 import java.beans.PropertyChangeListener
-import javax.swing.{ AbstractAction, Action, KeyStroke}, Action.{ ACCELERATOR_KEY, NAME, SHORT_DESCRIPTION }
+import javax.swing.{ Action, KeyStroke}, Action.ACCELERATOR_KEY
 import UserAction.{ ActionCategoryKey, ActionGroupKey }
 
 /** The purpose of this class is to allow an action which doesn't know about the NetLogo menu system

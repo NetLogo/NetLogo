@@ -7,12 +7,10 @@ import org.scalatest.FunSuite
 import java.net.URI
 import java.nio.file.Path
 
-import org.nlogo.core.{ Shape, Model, Widget }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.Model
 import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
   SuccessfulConversion, ErroredConversion }
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelFormat, Version }
-
-import scala.util.{ Failure, Success, Try }
+import org.nlogo.api.{ ConfigurableModelLoader, Version }
 
 class OpenModelTests extends FunSuite {
   val testURI = new URI("file:///foo.test")

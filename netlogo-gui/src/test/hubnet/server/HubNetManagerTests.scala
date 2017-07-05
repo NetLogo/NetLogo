@@ -2,7 +2,6 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.core.{ DummyExtensionManager, DummyCompilationEnvironment }
 import org.nlogo.api.ConfigurableModelLoader
 import org.nlogo.fileformat.{ defaultConverter, NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.connection.HubNetException

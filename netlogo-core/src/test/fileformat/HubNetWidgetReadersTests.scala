@@ -7,16 +7,12 @@ import org.nlogo.core.{ Button, Chooser, Chooseable, Femto, Horizontal,
   LiteralParser, LogoList, Monitor, Slider, Switch, Vertical, View, Widget,
   WorldDimensions }
 
-import org.nlogo.compile.Compiler
-
-import org.nlogo.core.model.{ SimpleLiteralParser, WidgetReader }
+import org.nlogo.core.model.WidgetReader
 
 import org.scalacheck.{ Arbitrary, Gen }
 
 import org.scalatest.FunSuite
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
-
-import scala.reflect.ClassTag
 
 object HubNetGenerators {
   val genPos = Arbitrary.arbTuple4[Int, Int, Int, Int].arbitrary
@@ -171,7 +167,7 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
 }
 
 object ClassyReader {
-  def apply[A <: WidgetReader, B](reader: WidgetReader)(implicit ev: reader.T =:= B) =
+  def apply[A <: WidgetReader, B](reader: WidgetReader) =
     new ClassyReader(reader)
 }
 

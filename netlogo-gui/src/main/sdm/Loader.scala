@@ -7,8 +7,6 @@ package org.nlogo.sdm
 // loading stuff. we also use this in the applet since we don't want to have to include JHotDraw in
 // the lite jar - ST 1/24/05, 11/11/09, 11/23/11
 
-import org.nlogo.api.CompilerServices
-
 object Loader {
 
   def load(input: String): Option[Model] = {
@@ -163,7 +161,6 @@ class Tokenizer(input: String) {
   def lineNumber = st.lineno
   def hasNext = {
     st.nextToken()
-    val tokenType = st.ttype
     st.pushBack()
     st.ttype != TT_EOF
   }

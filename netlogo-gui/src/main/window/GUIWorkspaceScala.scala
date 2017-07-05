@@ -16,7 +16,6 @@ import org.nlogo.awt.{Hierarchy, UserCancelException}
 import org.nlogo.core.I18N
 import org.nlogo.log.Logger
 import org.nlogo.swing.{FileDialog, ModalProgressTask}
-import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
 import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
@@ -76,7 +75,6 @@ abstract class GUIWorkspaceScala(
         case pw: PlotWidget =>
           new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(pw.plot), exportPath, {() => }).raise(pw)
         case ow: OutputWidget =>
-          import java.util.StringTokenizer
           exportToPath
             .map((filename: String) => (filename, ow.valueText))(SwingUnlockedExecutionContext)
             .onComplete({

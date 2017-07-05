@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ ClosedVariable, Let, StructureDeclarations, Token, prim => coreprim }
+import org.nlogo.core.{ Let, Token }
 
 final class LiftedLambda(
   name:               String,
@@ -27,7 +27,7 @@ final class LiftedLambda(
 
     override def dump: String = {
       val buf = new StringBuilder
-      var displayArgs = args.mkString("[", " ", "]")
+      val displayArgs = args.mkString("[", " ", "]")
       val titleMargin = if (isReporter) "   reporter " else "   "
       buf ++= s"$titleMargin$displayName:${parent.displayName}${displayArgs}{$agentClassString}:\n"
       for (i <- code.indices) {

@@ -3,7 +3,6 @@
 package org.nlogo.lex
 
 import scala.annotation.tailrec
-import org.nlogo.core.TokenType
 
 object LexOperations {
   def characterMatching(f: Char => Boolean): LexPredicate =

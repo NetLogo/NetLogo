@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.api.WorldType, WorldType._
+import org.nlogo.api.WorldType
 import MockGraphics._
 
 class TestPatchLabels extends AbstractTestRenderer {

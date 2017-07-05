@@ -4,16 +4,11 @@ package org.nlogo.compile.middle
 
 import org.nlogo.prim._
 
-import org.nlogo.core.Dialect
 import org.nlogo.{ api => nlogoApi }
 import org.nlogo.agent.Patch
-import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
-import org.nlogo.compile.api.{ CommandMunger,
-  DefaultAstVisitor, Match, ReporterApp,
-  ReporterMunger, RewritingCommandMunger, RewritingReporterMunger, Statement }
-
-import scala.reflect.ClassTag
+import org.nlogo.compile.api.{ Match, ReporterApp,
+  RewritingCommandMunger, RewritingReporterMunger }
 
 // These optimizations are shared between GUI and headless. Any optimizations specific to either
 // should go in the appropriate org.nlogo.compile.optimize package

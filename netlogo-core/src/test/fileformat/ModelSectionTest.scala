@@ -6,9 +6,9 @@ import org.scalatest.FunSuite
 
 import org.nlogo.core.Model
 
-import org.nlogo.api.{ ComponentSerialization, ModelFormat, ModelSection, Version, VersionHistory }
+import org.nlogo.api.{ ComponentSerialization, ModelFormat }
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{ Failure, Success }
 import scala.reflect.ClassTag
 
 trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
@@ -64,7 +64,6 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
     test(s"round-trips $description from serial form to object and back") {
       val s = subject
       val m = s.deserialize(serializedVersion)(new Model()).get
-      val deserialized = modelComponent(m)
       val reserialized = s.serialize(m)
       assert(compareSerialized(serializedVersion, reserialized), s"${displaySerialized(reserialized)} was expected to equal ${displaySerialized(serializedVersion)}")
     }

@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionListener, ActionEvent, FocusEvent, MouseEvent, MouseListener, MouseMotionListener }
+import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.Editable
@@ -13,7 +13,6 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
   InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot,
   Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.DefaultCompilerServices

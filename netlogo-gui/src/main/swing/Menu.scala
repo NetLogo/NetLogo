@@ -2,7 +2,6 @@
 
 package org.nlogo.swing
 
-import java.awt.Component
 import javax.swing.{ Action, JCheckBoxMenuItem, JMenu, JMenuItem }
 import UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
 
@@ -26,8 +25,6 @@ object Menu {
 
   def model(sortOrder: Seq[String]) = new MenuModel[Action, String](sortOrder)
 }
-
-import Menu.menuOrdering
 
 class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu(text) with UserAction.Menu {
 

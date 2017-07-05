@@ -2,13 +2,11 @@
 
 package org.nlogo.agent
 
-import java.util.{ ArrayList => JArrayList, Arrays,
-  HashMap => JHashMap, Iterator => JIterator, List => JList,
-  Map => JMap }
+import java.util.{ HashMap => JHashMap, Map => JMap }
 
 import org.nlogo.{ core, api },
   core.{ AgentKind, Breed, NetLogoCore, Program },
-  api.{ AgentException, CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+  api.{ CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 
 // This trait supports the current (mid-2017) model of interaction between the World and
 // compiler. I think the current model is stateful and gross. That this is a trait

@@ -2,8 +2,6 @@
 
 package org.nlogo.headless
 
-import java.io.IOException
-
 import scala.util.{ Failure, Success, Try }
 
 import org.nlogo.api.{ PreviewCommands, Version }

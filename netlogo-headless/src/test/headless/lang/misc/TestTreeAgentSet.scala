@@ -6,7 +6,6 @@ package misc
 
 import org.nlogo.agent.SimpleChangeEventCounter
 import org.nlogo.agent.TreeAgentSet
-import org.scalatest.FunSuite
 import org.scalatest.GivenWhenThen
 
 class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {

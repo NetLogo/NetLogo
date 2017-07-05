@@ -4,8 +4,6 @@ package org.nlogo.nvm
 
 import org.nlogo.core.Let
 
-import java.util.HashSet
-
 import scala.annotation.tailrec
 
 object Binding {

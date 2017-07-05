@@ -129,9 +129,6 @@ case class Syntax private(
 
 
 object Syntax {
-
-  private def apply = throw new UnsupportedOperationException
-
   def commandSyntax(
     right: List[Int] = List(),
     defaultOption: Option[Int] = None,

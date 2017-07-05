@@ -6,7 +6,7 @@ package org.nlogo.properties
 
 import javax.swing.JButton
 
-import org.nlogo.core.{ I18N, TokenType }
+import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}, BrowserLauncher.docPath

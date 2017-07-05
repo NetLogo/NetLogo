@@ -3,7 +3,6 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
@@ -14,7 +13,6 @@ import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
-import org.nlogo.util.Utils, Utils.reader2String
 
 import java.nio.file.Paths
 import java.net.URI

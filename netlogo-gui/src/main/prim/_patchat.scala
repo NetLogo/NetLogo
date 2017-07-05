@@ -2,9 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.Patch
-import org.nlogo.api.{ AgentException, LogoException}
-import org.nlogo.core.Syntax
+import org.nlogo.api.AgentException
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 

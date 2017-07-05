@@ -3,7 +3,6 @@
 package org.nlogo.prim
 
 import org.nlogo.api.LogoException
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
 
 class _repeatlocal(private[this] val vn: Int) extends Command with CustomAssembled {

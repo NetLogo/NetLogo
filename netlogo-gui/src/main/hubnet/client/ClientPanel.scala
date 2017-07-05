@@ -17,7 +17,6 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.OptionDialog
-import org.nlogo.swing.Implicits._
 import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
 import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
 

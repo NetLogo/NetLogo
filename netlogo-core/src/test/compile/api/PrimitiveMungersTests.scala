@@ -5,7 +5,7 @@ package org.nlogo.compile.api
 import org.nlogo.core.{ Command => CoreCommand, Reporter => CoreReporter,
   SourceLocation, Syntax }
 import org.nlogo.core.prim.{ _const => _coreconst }
-import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
+import org.nlogo.nvm.{ Command, Context, Reporter }
 import org.scalatest.{ FunSuite, Inside }
 
 object PrimitiveMungersTests {
@@ -152,7 +152,6 @@ class PrimitiveMungersTests extends FunSuite with Inside {
 
   test("addArg passes when argument is added") {
     new TestCommand with TestReporter {
-      val reporter = new DummyReporter()
       val m = newMatch(constNum)
       m.addArg(classOf[DummyReporter], testReporter)
     }

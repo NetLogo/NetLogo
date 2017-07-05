@@ -85,12 +85,10 @@ package org.nlogo.parse
 //    seems awkward and confusing.
 
 import org.nlogo.core,
-  core.{ Command, Instruction, Reporter, Token, TokenType, Let, I18N },
+  core.{ Command, Reporter, Token, TokenType, Let },
   core.Fail._
 
 import SymbolType.LocalVariable
-
-import scala.annotation.tailrec
 
 object LetScope {
   def apply(c: Command, nameToken: Option[Token], usedNames: SymbolTable): Option[(Command, SymbolTable)] = {

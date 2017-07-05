@@ -78,7 +78,7 @@ object TextureUtils {
                    colors: Array[Int], _bytes: Array[Byte]): Array[Byte] = {
 
     var i = 0
-    var size = (tileHeight * tileWidth) * 4
+    val size = (tileHeight * tileWidth) * 4
 
     val bytes = Option(_bytes)
                   .filter(_.size == size)

@@ -10,7 +10,6 @@ import org.nlogo.awt.Colors.colorize
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
 import javax.swing.JPopupMenu
-import org.nlogo.agent.Observer
 
 class Picker(view: View) extends PickListener with ActionListener {
 

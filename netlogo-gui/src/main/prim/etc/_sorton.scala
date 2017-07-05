@@ -4,10 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
 import org.nlogo.api.{ LogoListBuilder, TypeNames }
-import org.nlogo.core.Syntax
-import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _sorton extends Reporter {
 

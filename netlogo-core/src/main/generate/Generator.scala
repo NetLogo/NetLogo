@@ -3,7 +3,7 @@
 package org.nlogo.generate
 
 import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, LiftedLambda, Procedure, Reporter, Thunk }
+import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, LiftedLambda, Procedure, Reporter }
 import org.apache.commons.codec.digest.DigestUtils
 
 object Generator {
@@ -42,8 +42,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
   class InstructionGenerator[A <: Instruction](original: A) {
     import org.objectweb.asm
     import asm.Opcodes._
-    import asm.{ ClassReader, ClassWriter, Label, Type }
-    import asm.util.TraceClassVisitor
+    import asm.{ ClassWriter, Label, Type }
     val REPORT_PERFORM_ACCESS_CODES = ACC_PUBLIC + ACC_STRICT + ACC_FINAL
     // this is just used for debugging -- we can get rid of it eventually. it's placed at the end of
     // a method, so that we can measure the length of the bytecode of the generated method, to see

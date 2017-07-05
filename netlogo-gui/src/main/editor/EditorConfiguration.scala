@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.event.InputEvent.{ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, META_DOWN_MASK => MetaKey, SHIFT_DOWN_MASK => ShiftKey}
+import java.awt.event.InputEvent.{ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey}
 import java.awt.event.{KeyEvent, TextEvent, TextListener}
 import java.awt.{Font, GraphicsEnvironment}
 import javax.swing.text.{DefaultEditorKit, TextAction}

@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.prim.{ _commandlambda, _lambdavariable, _letvariable, _reporterlambda, Lambda }
-import org.nlogo.core.{ AstFolder, AstTransformer, ClosedLet, ClosedLambdaVariable, ClosedVariable, Let, ProcedureDefinition, ReporterApp }
+import org.nlogo.core.{ AstFolder, AstTransformer, ClosedLet, ClosedLambdaVariable, ClosedVariable, ReporterApp }
 
 class ClosureTagger extends AstTransformer {
   override def visitReporterApp(app: ReporterApp): ReporterApp = {

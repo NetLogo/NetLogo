@@ -4,24 +4,19 @@ package org.nlogo.compile
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ DummyExtensionManager, SimpleJobOwner }
-import org.nlogo.compile.api.{ BackEndInterface, CommandBlock, Expression,
-  ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements }
-import org.nlogo.core.{
-  AgentKind, Command => CoreCommand, DummyCompilationEnvironment, Femto,
-  Instantiator, Let, Reporter => CoreReporter, SourceLocation, Syntax, Token,
-  TokenType, prim => coreprim },
+import org.nlogo.api.SimpleJobOwner
+import org.nlogo.compile.api.{ BackEndInterface, Expression, ProcedureDefinition,
+  ReporterApp, ReporterBuilder, StatementsBuilderBase }
+import org.nlogo.core.{ AgentKind, Command => CoreCommand, Femto, Let,
+  SourceLocation, Syntax, Token, TokenType, prim => coreprim },
     coreprim.{
       _call => _corecall, _callreport => _corecallreport, _carefully => _corecarefully,
-      _const => _coreconst, _createturtles => _corecrt, _done => _coredone, _equal => _coreequal,
+      _const => _coreconst, _done => _coredone, _equal => _coreequal,
       _lessthan => _corelessthan, _let => _corelet, _letvariable => _coreletvariable,
       _repeat => _corerepeat, _return => _corereturn, _set => _coreset }
-import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure, Reporter }
-import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring, _crtfast,
-  _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
-  _return, _setletvariable }
-
-import scala.collection.immutable.ListMap
+import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure }
+import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring,
+  _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal, _return, _setletvariable }
 
 // Q: Why is there an nvm test in the compile package?
 // A: Because much of nvm's behavior depends on the prim
@@ -376,60 +371,9 @@ class NvmTests extends FunSuite {
     doesNotContainB.verify()
   } }
 
-  class ReporterBuilder {
-    var args = Seq.empty[Expression]
-    var rep: Reporter = null
-    var coreRep: CoreReporter = null
-
-    def withReporter(cr: CoreReporter, r: Reporter): ReporterBuilder = {
-      coreRep = cr
-      rep = r
-      this
-    }
-
-    def withArg(f: ReporterBuilder => ReporterBuilder): ReporterBuilder = {
-      args :+= f(new ReporterBuilder()).build
-      this
-    }
-
-    def withArg(a: Expression): ReporterBuilder = {
-      args :+= a
-      this
-    }
-
-    def reporterAppEtc(coreName: String, primName: String): ReporterBuilder = {
-      coreRep = Instantiator.newInstance[CoreReporter](Class.forName(s"org.nlogo.core.prim.$coreName"))
-      rep = Instantiator.newInstance[Reporter](Class.forName(s"org.nlogo.prim.$primName"))
-      this
-    }
-
-    def build: ReporterApp = new ReporterApp(coreRep, rep, args, loc)
-
-    def buildBlock: ReporterBlock = new ReporterBlock(build, loc)
-  }
-
-  // How to fix dependency problem:
-  // - we need to create nvm
-
-  class StatementsBuilder {
-    var stmts = Seq.empty[Statement]
-    def statement(coreCmd: CoreCommand, cmd: Command, args: Seq[Expression]): StatementsBuilder = {
-      stmts :+= new Statement(coreCmd, cmd, args, loc)
-      this
-    }
-    def statement(coreCmd: CoreCommand, cmd: Command): StatementsBuilder = {
-      stmts :+= new Statement(coreCmd, cmd, Seq.empty[Expression], loc)
-      this
-    }
-    def statementEtc(name: String, args: Seq[Expression]): StatementsBuilder =
-      statementEtc(name, name, args)
-    def statementEtc(coreName: String, primName: String, args: Seq[Expression]): StatementsBuilder = {
-      val tokName = coreName.split("_").last
-      val core = Instantiator.newInstance[CoreCommand](Class.forName(s"org.nlogo.core.prim.$coreName"))
-      val prim = Instantiator.newInstance[Command](Class.forName(s"org.nlogo.prim.$primName"))
-      stmts :+= new Statement(core, prim, args, loc)
-      this
-    }
+  class StatementsBuilder extends StatementsBuilderBase {
+    type ThisBuilder = StatementsBuilder
+    def thisBuilder = this
 
     def let(l: Let, value: Expression): StatementsBuilder =
       statement(_corelet(Some(l)), new _let(l), Seq(value))
@@ -448,8 +392,6 @@ class NvmTests extends FunSuite {
 
     def done = statement(_coredone(),    new _done())
 
-    def build: Statements = new Statements(stmts, loc)
-
-    def buildBlock: CommandBlock = new CommandBlock(build, loc)
+    def end  = statement(_corereturn(),  new _return())
   }
 }

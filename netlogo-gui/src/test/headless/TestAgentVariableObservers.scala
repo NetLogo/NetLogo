@@ -3,8 +3,7 @@
 package org.nlogo.headless
 
 import collection.mutable
-import collection.JavaConverters._
-import org.scalatest.{GivenWhenThen, FunSuite}
+import org.scalatest.GivenWhenThen
 import org.nlogo.agent._
 
 class ObservationQueue extends World.VariableWatcher {

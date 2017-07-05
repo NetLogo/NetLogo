@@ -4,9 +4,7 @@ package org.nlogo.ide
 
 import javax.swing.text.JTextComponent
 
-import org.nlogo.core.TokenType.Ident
 import org.nlogo.core._
-import org.nlogo.editor.EditorArea
 
 import scala.collection.mutable.Map
 

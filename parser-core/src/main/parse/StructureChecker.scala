@@ -98,7 +98,6 @@ object StructureChecker {
   private def checkForBreedPrimsDuplicatingBuiltIn(usage: Occurrence, usedNames: SymbolTable): Unit = {
     usage.declaration match {
       case breed@Breed(_, _, _, _) =>
-        val allBreedPrims = BreedIdentifierHandler.breedCommands(breed) ++ BreedIdentifierHandler.breedReporters(breed)
         val matchedPrimAndType =
           BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase)).map(i => (i, BreedCommand)) ++
         BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase)).map(i => (i, BreedReporter))

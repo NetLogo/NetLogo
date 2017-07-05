@@ -2,11 +2,9 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ Femto, LiteralParser, WorldDimensions }
-import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, Version }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.core.WorldDimensions
+import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.nvm
 
 object Main {
   def main(args: Array[String]) {

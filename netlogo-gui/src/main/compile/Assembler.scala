@@ -7,7 +7,7 @@ package org.nlogo.compile
 // - ST 2/22/08
 
 import org.nlogo.core.{ SourceLocation, Token, TokenType }
-import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
+import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant }
 import org.nlogo.prim.{ _call, _done, _fastrecurse, _goto, _return, _returnreport }
 import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
 

@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.event.KeyEvent
-import javax.swing.JScrollPane
 
 import org.nlogo.editor.{ AbstractEditorArea, Colorizer, EditorConfiguration, EditorScrollPane }
 import org.nlogo.swing.UserAction

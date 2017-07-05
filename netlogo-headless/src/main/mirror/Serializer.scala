@@ -10,7 +10,7 @@ import java.io.{ ByteArrayOutputStream, DataOutputStream, DataOutput,
 
 import collection.immutable.{ ListMap, Vector }
 
-import org.nlogo.{ api, core, shape },
+import org.nlogo.{ core, shape },
   core.{ AgentKind, LogoList, Shape, ShapeList, ShapeParser },
   shape.ShapeConverter
 

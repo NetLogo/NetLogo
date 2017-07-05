@@ -5,7 +5,6 @@ package lang
 package misc
 
 import org.nlogo.api.Version
-import org.scalatest.FunSuite
 import org.nlogo.util.SlowTestTag
 
 class TestCompileBenchmarks extends FixtureSuite  {

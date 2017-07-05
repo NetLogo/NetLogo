@@ -2,7 +2,6 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.Dump
 import org.nlogo.window.{ GUIWorkspace, TickCounterLabel, ViewUpdatePanel }
 import java.awt.BorderLayout
 import javax.swing.JPanel

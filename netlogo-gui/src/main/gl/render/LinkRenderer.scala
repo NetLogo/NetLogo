@@ -2,9 +2,9 @@
 
 package org.nlogo.gl.render
 
-import com.jogamp.opengl.{ GL, GL2 }
+import com.jogamp.opengl.GL2
 import com.jogamp.opengl.glu.GLU
-import org.nlogo.api.{ Agent, AgentFollowingPerspective, Link, Perspective, World }
+import org.nlogo.api.{ Agent, AgentFollowingPerspective, Link, World }
 
 private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
         extends AgentRenderer(world, shapeRenderer) {

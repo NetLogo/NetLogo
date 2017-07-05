@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{DisplaySwitch, PlotWidget, SpeedSliderPanel}
+import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension

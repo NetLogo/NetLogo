@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.text.TextAction
 
-import org.nlogo.editor.EditorArea
-
 class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup) extends TextAction(name) {
   final val autoSuggestDocumentListener = new AutoSuggestDocumentListener(codeCompletionPopup)
 

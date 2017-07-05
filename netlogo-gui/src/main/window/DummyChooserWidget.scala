@@ -78,7 +78,6 @@ class DummyChooserWidget(val compiler: CompilerServices)
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
-    val bounds = getBounds()
     CoreChooser(
       display  = name.potentiallyEmptyStringToOption,
       left     = b._1, top    = b._2,

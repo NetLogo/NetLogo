@@ -2,10 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ Dump}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.Dump
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _error extends Command {
 

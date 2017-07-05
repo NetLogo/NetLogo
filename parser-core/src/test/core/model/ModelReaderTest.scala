@@ -2,7 +2,7 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ Model, View, Slider }
+import org.nlogo.core.{ View, Slider }
 
 import org.scalatest.FunSuite
 

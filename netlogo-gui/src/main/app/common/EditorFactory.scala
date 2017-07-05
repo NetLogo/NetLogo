@@ -4,20 +4,17 @@ package org.nlogo.app.common
 
 import java.util.prefs.Preferences
 import java.awt.Font
-import java.awt.event.{FocusEvent, InputEvent, KeyEvent}
-import javax.swing.{ Action, JScrollPane, KeyStroke, ScrollPaneConstants }
-import javax.swing.text.TextAction
+import java.awt.event.{InputEvent, KeyEvent}
+import javax.swing.{ Action, KeyStroke }
 
-import scala.collection.JavaConversions._
 import org.nlogo.api.{ CompilerServices, Version }
-import org.nlogo.core.I18N
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
-import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
+import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
 import org.nlogo.nvm.ExtensionManager
 import org.nlogo.window.DefaultEditorFactory
 
-import org.fife.ui.rsyntaxtextarea.{ folding, AbstractTokenMakerFactory, TokenMakerFactory },
+import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 

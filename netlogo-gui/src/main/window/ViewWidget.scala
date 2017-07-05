@@ -3,9 +3,9 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, Font, Point, Rectangle }
-import javax.swing.{ JPopupMenu, BorderFactory, JLabel }
+import javax.swing.{ JPopupMenu, BorderFactory }
 
-import org.nlogo.api.{ Approximate, Dump, Version }
+import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ View => CoreView }
 import org.nlogo.window.Events.ResizeViewEvent

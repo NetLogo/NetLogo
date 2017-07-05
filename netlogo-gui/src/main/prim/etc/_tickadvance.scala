@@ -2,10 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Command, Context}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _tickadvance extends Command {
   switches = true

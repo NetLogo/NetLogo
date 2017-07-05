@@ -3,7 +3,6 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Link
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkpitch extends Reporter {

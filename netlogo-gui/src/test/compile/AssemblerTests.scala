@@ -4,7 +4,6 @@ package org.nlogo.compile
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.DummyExtensionManager
 import org.nlogo.core.Program
 
 class AssemblerTests extends FunSuite {

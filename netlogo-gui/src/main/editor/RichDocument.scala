@@ -37,7 +37,6 @@ object RichDocument {
     }
 
     def insertBeforeLinesInRange(startLine: Int, endLine: Int, text: String): Unit = {
-      val lineStart = lineToStartOffset(0)
       val root = document.getDefaultRootElement
       for (line <- (startLine max 0) to (endLine min root.getElementCount - 1)) {
         document.insertString(root.getElement(line).getStartOffset, text, null)

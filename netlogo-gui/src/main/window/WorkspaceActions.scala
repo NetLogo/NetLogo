@@ -2,10 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.Toolkit
-import java.awt.event.{ ActionEvent, InputEvent, KeyEvent }
+import java.awt.event.ActionEvent
 
-import javax.swing.{ AbstractAction, Action, KeyStroke }
+import javax.swing.{ AbstractAction, Action }
 
 import org.nlogo.core.{ I18N, AgentKind }
 import org.nlogo.api.Refreshable

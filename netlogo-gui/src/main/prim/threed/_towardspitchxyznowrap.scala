@@ -2,10 +2,8 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.api.{ AgentException}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.AgentException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _towardspitchxyznowrap extends Reporter {
 

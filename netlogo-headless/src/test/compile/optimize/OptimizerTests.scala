@@ -2,10 +2,7 @@
 
 package org.nlogo.compile.optimize
 
-import org.scalatest.FunSuite
-import org.nlogo.compile.api.{ Optimizations, ProcedureDefinition }
-import org.nlogo.compile.Scaffold
-import org.nlogo.compile.middle.{ AbstractOptimizerTest, Optimizer }
+import org.nlogo.compile.middle.AbstractOptimizerTest
 
 class OptimizerTests extends AbstractOptimizerTest {
   override val OptimizationPrefix = "org.nlogo.compile.optimize"

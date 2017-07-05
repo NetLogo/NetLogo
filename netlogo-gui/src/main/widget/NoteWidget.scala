@@ -5,7 +5,7 @@ package org.nlogo.widget
 import org.nlogo.api.{ Color => NlogoColor, Editable }
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
-import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
+import org.nlogo.window.{ InterfaceColors, SingleErrorWidget }
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 
 class NoteWidget extends SingleErrorWidget with Editable {

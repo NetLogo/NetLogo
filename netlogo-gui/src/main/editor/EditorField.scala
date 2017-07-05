@@ -2,8 +2,6 @@
 
 package org.nlogo.editor
 
-import org.nlogo.core.TokenType
-
 import javax.swing._
 import javax.swing.text.TextAction
 

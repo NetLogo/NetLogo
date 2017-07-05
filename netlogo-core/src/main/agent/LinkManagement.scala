@@ -2,13 +2,11 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, Shape, ShapeList, ShapeListTracker }
-
-import java.lang.{ Double => JDouble }
+import org.nlogo.core.{ AgentKind, Program, Shape, ShapeListTracker }
 
 import java.util.{ HashMap => JHashMap, Map => JMap }
 
-import World.{ NegativeOneInt, Zero }
+import World.NegativeOneInt
 
 trait LinkManagement extends WorldKernel {
   def program: Program

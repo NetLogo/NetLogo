@@ -93,7 +93,7 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
     def precisionHelper(n: Double): Int = {
       val (sWithoutE, eValue) = {
         val s = n.toString
-        var place: Int = s.indexOf('E')
+        val place: Int = s.indexOf('E')
         if (place == -1) (s,0)
         else (s.substring(0,place), s.substring(place + 1).toInt)
       }

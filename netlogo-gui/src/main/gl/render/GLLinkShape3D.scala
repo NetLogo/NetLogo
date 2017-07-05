@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import com.jogamp.opengl.{ GL, GL2 }
+import com.jogamp.opengl.GL2
 import org.nlogo.api.{ Link, Link3D, World, World3D }
 import org.nlogo.shape.LinkShape
 

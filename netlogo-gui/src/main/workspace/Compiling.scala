@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.{ CompilerException, Dialect, ProcedureSyntax, Token }
+import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
 
 // This trait implements all the api.CompilerServices methods *except* readFromString, which
 // is in the Evaluating trait - RG 5/23/2017

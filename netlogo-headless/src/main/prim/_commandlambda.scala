@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ ClosedVariable, Token }
-import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Procedure, Reporter }
+import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter }
 
 class _commandlambda(
   val argumentNames:   Seq[String],

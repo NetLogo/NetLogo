@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 
-import org.nlogo.core.{Dump, CompilerException, LogoList, Token, LiteralImportHandler, StringEscaper},
+import org.nlogo.core.{Dump, CompilerException, LogoList, Token, LiteralImportHandler},
   LiteralImportHandler.Parser
 
 import org.nlogo.core.TestUtils.cleanJsNumbers

@@ -3,7 +3,7 @@
 package org.nlogo.compile
 package middle
 
-import org.nlogo.core.{ ClosedLet, ClosedVariable, I18N, Let }
+import org.nlogo.core.{ ClosedLet, ClosedVariable, Let }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._
 import org.nlogo.compile.api.{ AstFolder, DefaultAstVisitor, ProcedureDefinition, Statement, ReporterApp }
@@ -23,7 +23,6 @@ extends DefaultAstVisitor {
 
   private var procedure: Option[Procedure] = Option.empty[Procedure]
   private var localEligibility: Map[Let, Boolean] = Map()
-  private var askNestingLevel = 0
 
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
     // this transformation only applies to non-lambdas at the moment

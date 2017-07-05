@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
-  core.{ FrontEndProcedure, Let, StructureDeclarations, Syntax, Token },
+  core.{ FrontEndProcedure, StructureDeclarations, Syntax, Token },
   api.SourceOwner
 
 import scala.collection.immutable.ListMap

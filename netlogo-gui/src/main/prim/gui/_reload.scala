@@ -2,9 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Command}
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 import org.nlogo.window.GUIWorkspace
 
 class _reload extends Command {

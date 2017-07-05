@@ -2,12 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstFolder, AstNode, CommandBlock, ReporterApp, ReporterBlock, Statement, prim },
+import org.nlogo.core.{ AstNode, ReporterApp, Statement, prim },
   prim._unknowncommand
-
-import AstFormat.Operation
-
-import WhiteSpace._
 
 import scala.util.matching.Regex
 

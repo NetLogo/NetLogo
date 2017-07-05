@@ -2,9 +2,9 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Dimension, Insets }
+import java.awt.Dimension
 
-import javax.swing.{ AbstractButton, Action, JButton, JComponent, JToggleButton }
+import javax.swing.{ AbstractButton, Action, JButton, JToggleButton }
 import javax.swing.border.Border
 import java.awt.event.{ ActionEvent, ActionListener }
 

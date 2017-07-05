@@ -2,12 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font, FontMetrics }
-import java.io.IOException
-import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font }
+import javax.swing.{ JScrollPane, JTextArea, ScrollPaneConstants }
 
-import org.nlogo.core.{ I18N, FileMode }
-import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
 import org.nlogo.agent.OutputObject
 

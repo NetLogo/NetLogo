@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Component, Font }
+import java.awt.Font
 
 import javax.swing.JScrollPane
 import javax.swing.text.JTextComponent

@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ Context => ApiContext, ExtensionException, LogoException, Version }
+import org.nlogo.api.{ Context => ApiContext, ExtensionException, LogoException }
 
 object EngineException {
   def rethrow(ex: LogoException, context: ApiContext, instruction: Instruction): Unit = {

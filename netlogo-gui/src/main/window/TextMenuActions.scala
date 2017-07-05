@@ -5,9 +5,8 @@ package org.nlogo.window
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.Action, Action.ACCELERATOR_KEY
-import javax.swing.text.{ DefaultEditorKit, Document, JTextComponent },
-  DefaultEditorKit.{ CutAction, CopyAction, PasteAction, InsertContentAction }
+import javax.swing.Action
+import javax.swing.text.{ Document, JTextComponent }
 
 import org.nlogo.api.Refreshable
 import org.nlogo.core.I18N

@@ -23,13 +23,15 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.1",
+  scalaVersion           := "2.12.2",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
     "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint -Xfatal-warnings"
-      .split(" ").toSeq
+      .split(" ").toSeq,
+  // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
+  scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
 )
 
 // These settings are common to all builds that compile against Java

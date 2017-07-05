@@ -5,7 +5,7 @@ package org.nlogo.fileformat
 import java.nio.file.Path
 
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
-  FrontEndInterface, LiteralParser, Model, Program, SourceRewriter, StructureResults, Widget },
+  FrontEndInterface, LiteralParser, Model, Program, SourceRewriter, StructureResults },
   FrontEndInterface.ProceduresMap
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO, Version }
 

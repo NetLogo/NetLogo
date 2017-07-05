@@ -3,14 +3,11 @@
 package org.nlogo.fileformat
 
 
-import org.nlogo.core.{ CompilationOperand, LiteralParser,
-  Model, Program, SourceRewriter }
+import org.nlogo.core.{ Model, SourceRewriter }
 import org.nlogo.core.{ Button, CompilerException, Monitor,
   Pen, Plot, Slider, Switch, View }
 
 import org.scalatest.FunSuite
-
-import scala.util.Try
 
 class ModelConverterTests extends FunSuite with ConversionHelper {
   if (canTestConversions) {
@@ -176,7 +173,6 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     val conversionSet = AutoConversionList.conversions
       .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
       .map(_._2)
-      val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
       assertResult(originalSource)(convert(Model(code = originalSource), conversionSet: _*).code)
   }
 
@@ -201,12 +197,10 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
     val conversionSet = AutoConversionList.conversions
       .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
       .map(_._2)
-      val originalModel = Model(code = originalSource, version = "NetLogo 5.3.1")
       assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet: _*).code)
   }
   test("lambda-izes") {
     val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head
-    val targets = Seq("?1")
     val model = Model(code = """|to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end
       |to baz show is-reporter-task? 1 show is-command-task? task tick end""".stripMargin)
     val converted = convert(model, conversionSet)

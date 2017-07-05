@@ -2,13 +2,13 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, Shape, ShapeList, ShapeListTracker }
+import org.nlogo.core.{ AgentKind, Program, ShapeList, ShapeListTracker }
 
 import java.lang.{ Double => JDouble }
 
 import java.util.{ HashMap => JHashMap, Map => JMap }
 
-import World.{ NegativeOneInt, Zero }
+import World.NegativeOneInt
 
 trait TurtleManagement extends WorldKernel { this: CoreWorld =>
   def clearObserverPosition(): Unit
@@ -94,7 +94,7 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
 
   def clearTurtles(): Unit = {
     if (program.breeds.nonEmpty) {
-      var breedIterator = breeds.values.iterator
+      val breedIterator = breeds.values.iterator
       while (breedIterator.hasNext) {
         breedIterator.next().asInstanceOf[TreeAgentSet].clear()
       }

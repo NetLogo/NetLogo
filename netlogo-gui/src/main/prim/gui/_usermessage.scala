@@ -2,8 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable}
-import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.swing.OptionDialog

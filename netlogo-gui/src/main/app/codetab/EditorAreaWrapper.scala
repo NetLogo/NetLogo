@@ -3,7 +3,7 @@
 package org.nlogo.app.codetab
 
 import org.nlogo.api.EditorAreaInterface
-import org.nlogo.editor.{ AdvancedEditorArea, AbstractEditorArea }
+import org.nlogo.editor.AdvancedEditorArea
 import javax.swing.JTextArea
 import javax.swing.text.{ AbstractDocument, JTextComponent }
 

@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import java.io.PrintWriter
-import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
+import java.util.{ ArrayList, Collections, HashMap => JHashMap }
 import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
 import org.nlogo.api.Dump
 import org.nlogo.core.Nobody

@@ -102,7 +102,6 @@ private class ManagerDialog(manager:       LabManager,
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
-    import collection.JavaConverters._
     editProtocol(
       new LabProtocol(
         "experiment", "setup", "go", "", 1, true, true, 0, "", List("count turtles"),

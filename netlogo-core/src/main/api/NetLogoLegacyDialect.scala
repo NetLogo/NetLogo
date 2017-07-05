@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, NetLogoCore, Resource,
+import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, Resource,
   TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax }
 
 import scala.collection.immutable.ListMap

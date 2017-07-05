@@ -2,11 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstNode, CommandBlock, CompilationOperand,
-  Expression, Femto, FrontEndInterface, FrontEndProcedure, Instruction,
-  ProcedureDefinition, ProcedureSyntax, ReporterApp, ReporterBlock,
-  SourceLocation, SourceRewriter, Statement, Statements, StructureResults,
-  Token, TokenizerInterface, TokenType }
+import org.nlogo.core.{ CompilationOperand, Femto, ProcedureDefinition,
+  ProcedureSyntax, SourceLocation, SourceRewriter, StructureResults, TokenizerInterface }
 
 import scala.util.matching.Regex
 

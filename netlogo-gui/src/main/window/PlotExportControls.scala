@@ -3,13 +3,10 @@
 package org.nlogo.window
 
 import java.awt.Frame
-import javax.swing.JOptionPane
 
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.swing.OptionDialog
-import org.nlogo.swing.Implicits.thunk2runnable
 
 import ExportControls._
 

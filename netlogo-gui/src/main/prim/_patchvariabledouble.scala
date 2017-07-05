@@ -3,10 +3,8 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Patch, Turtle }
-import org.nlogo.api.{ AgentException, LogoException}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.AgentException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _patchvariabledouble extends Reporter {
   private[this] var _vn: Int = 0

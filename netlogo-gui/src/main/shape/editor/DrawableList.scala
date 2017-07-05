@@ -4,8 +4,6 @@ package org.nlogo.shape.editor
 
 import org.nlogo.core.{ I18N, Shape, ShapeList, ShapeListTracker }
 
-import java.util.{ ArrayList => JArrayList, List => JList }
-
 import javax.swing.JOptionPane
 
 import scala.reflect.ClassTag

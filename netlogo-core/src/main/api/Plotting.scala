@@ -2,8 +2,6 @@
 
 package org.nlogo.api
 
-import scala.collection.immutable
-
 trait PlotManagerInterface {
   def nextName: String
   def publish(action: PlotAction)

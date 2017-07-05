@@ -2,9 +2,8 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Let
 import org.nlogo.api.LogoException
-import org.nlogo.core.Syntax
+import org.nlogo.core.Let
 import org.nlogo.nvm.{ Command, Context }
 
 class _let(private[this] val _let: Let) extends Command {

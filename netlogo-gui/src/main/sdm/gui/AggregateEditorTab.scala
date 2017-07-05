@@ -7,7 +7,6 @@ import java.awt.{ BorderLayout, Component }
 import javax.swing.{ JPanel, JScrollPane, ScrollPaneConstants }
 
 import org.nlogo.core.CompilerException
-import org.nlogo.window.ErrorLabel
 
 class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Component) extends JPanel {
   private val errorLabel = new org.nlogo.window.ErrorLabel()

@@ -1,7 +1,7 @@
 package org.nlogo.workspace
 
-import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode }
-import org.nlogo.api.{ FileIO, JobOwner, PreviewCommands, SimpleJobOwner }
+import org.nlogo.core.{ AgentKind, CompilerException, Model }
+import org.nlogo.api.{ FileIO, PreviewCommands, SimpleJobOwner }
 import org.nlogo.nvm.Procedure
 import java.awt.image.BufferedImage
 

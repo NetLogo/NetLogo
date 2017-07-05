@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import javax.swing.{ Action, JMenu, JMenuBar }
+import javax.swing.{ Action, JMenuBar }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
@@ -36,7 +36,7 @@ class MenuBar(isApplicationWide: Boolean)
     }
   }
 
-  private var categoryMenus: Map[String, UserAction.Menu] = Map(
+  private val categoryMenus: Map[String, UserAction.Menu] = Map(
     EditCategory  -> editMenu,
     HelpCategory  -> helpMenu,
     FileCategory  -> fileMenu,

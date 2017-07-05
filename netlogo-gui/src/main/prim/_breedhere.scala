@@ -2,10 +2,9 @@
 
 package org.nlogo.prim
 
+import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Patch, Turtle }
 import org.nlogo.core.AgentKind
-import org.nlogo.agent.{AgentSet, AgentSetBuilder, ArrayAgentSet, Patch, Turtle}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{Context, Reporter}
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedhere(breedName: String) extends Reporter {
 

@@ -13,10 +13,7 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import scala.collection.JavaConverters._
-
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.CodeToHtml
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 

@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.core.{ SourceLocation, Token, TokenType, TokenDSL },
-  TokenDSL.{ `(`, `)`, `[`, `]`, id, lit }
+  TokenDSL.{ `(`, `)`, `[`, `]`, lit }
 import PrimDSL._
 
 class DelayedBlockTests extends FunSuite {

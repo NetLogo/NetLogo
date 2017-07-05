@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import javax.swing.{ JMenu, JMenuBar }
+import javax.swing.JMenu
 
 trait MenuBarFactory {
   def createFileMenu:  JMenu

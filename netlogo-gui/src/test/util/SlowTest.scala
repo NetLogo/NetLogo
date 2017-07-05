@@ -2,7 +2,7 @@
 
 package org.nlogo.util
 
-import org.scalatest.{ FunSuiteLike, Tag => STTag }
+import org.scalatest.{ Tag => STTag }
 
 trait SlowTest
 

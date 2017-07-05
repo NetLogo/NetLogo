@@ -1,11 +1,9 @@
 package org.nlogo.tools
 
 import java.awt.EventQueue
-import java.io.File
 import java.net.URI
 import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
-import scala.sys.process.Process
 import scala.util.{ Failure, Success }
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
@@ -15,7 +13,7 @@ import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
 import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat }
-import org.nlogo.workspace.ModelsLibrary.{ getModelPaths, modelsRoot }
+import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
 
@@ -108,8 +106,6 @@ object ModelResaver {
   }
 
   def traverseModels(modelRoot: Path, resave: Path => Unit): Unit = {
-    import scala.collection.JavaConversions._
-
     Files.walkFileTree(modelRoot, new java.util.HashSet(), Int.MaxValue, new ResaveVisitor(resave))
   }
 

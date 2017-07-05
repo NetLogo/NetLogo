@@ -15,7 +15,7 @@ trait WatcherManagement {
   // I didn't use SimpleChangeEvent here since I wanted the observers to know
   // what the change actually was.
   // -- BCH (4/1/2014)
-  private var variableWatchers: JMap[String, JList[VariableWatcher]] =
+  private val variableWatchers: JMap[String, JList[VariableWatcher]] =
     new JHashMap[String, JList[VariableWatcher]]()
   // this boolean is micro-optimization to make notifying watchers as fast as possible
   private var hasWatchers: Boolean = false

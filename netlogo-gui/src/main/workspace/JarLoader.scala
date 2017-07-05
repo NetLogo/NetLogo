@@ -2,10 +2,10 @@
 
 package org.nlogo.workspace
 
-import java.net.{ URL, MalformedURLException, JarURLConnection, URLClassLoader }
-import java.io.{ File, FileNotFoundException, IOException, PrintWriter }
+import java.net.{ URL, MalformedURLException, JarURLConnection }
+import java.io.{ File, FileNotFoundException, IOException }
 
-import ExtensionManager.{ ExtensionData, ExtensionLoader }
+import ExtensionManager.ExtensionData
 import ExtensionManagerException._
 
 import org.nlogo.api.ClassManager

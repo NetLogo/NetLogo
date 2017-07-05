@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled }
 
 class _observercode extends Command with CustomAssembled {

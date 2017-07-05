@@ -5,11 +5,9 @@ package org.nlogo.app
 /** note that multiple instances of this class may exist as there are now multiple frames that each
  have their own menu bar and menus ev 8/25/05 */
 
-import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
+import javax.swing.Action
 
 import org.nlogo.api.Refreshable
-import org.nlogo.editor.Actions
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Menu, UserAction },
   UserAction.{ EditClipboardGroup, EditFindGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup }

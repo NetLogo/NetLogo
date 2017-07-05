@@ -2,10 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, CompilationEnvironment, CompilerException }
-import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, CommandRunnable,
-  CompilerServices, HubNetInterface, ImporterUser, JobOwner, LogoException, OutputDestination,
-  PreviewCommands, RandomServices, ReporterRunnable, Workspace => ApiWorkspace }
+import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.api.{ Agent => ApiAgent, JobOwner, Workspace => ApiWorkspace }
 
 import org.nlogo.agent.{ Agent, AgentSet, World }
 

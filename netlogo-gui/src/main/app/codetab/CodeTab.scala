@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JPanel }
+import javax.swing.{ AbstractAction, Action, ImageIcon, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }

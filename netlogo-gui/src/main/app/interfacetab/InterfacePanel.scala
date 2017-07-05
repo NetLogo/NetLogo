@@ -2,12 +2,10 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{Cursor, FileDialog => AwtFileDialog}
+import java.awt.Cursor
 import java.awt.image.BufferedImage
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
-import java.io.{ File, FileOutputStream, IOException }
-import java.util.{ArrayList, List => JList}
-import javax.swing.{ Action, JMenuItem, JOptionPane, JPopupMenu }
+import javax.swing.{ JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
@@ -256,7 +254,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override def removeAllWidgets(): Unit = {
     try {
-      val comps = getComponents()
       setVisible(false)
       for (component <- getComponents) {
         component match {

@@ -6,9 +6,6 @@ import
   org.nlogo.core.Let
 
 import
-  org.scalacheck.{ Arbitrary, Gen }, Arbitrary._
-
-import
   org.scalatest.{ FunSuite, prop },
     prop.GeneratorDrivenPropertyChecks
 

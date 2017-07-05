@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.render
 
-import com.jogamp.opengl.{ GL, GL2, GL2ES3 }
+import com.jogamp.opengl.GL2
 import org.nlogo.api.World3D
 
 private class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {

@@ -2,8 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ CompilationEnvironment, Dialect, DummyCompilationEnvironment }
-import org.nlogo.api.{ CompilerServices, Version }
+import org.nlogo.core.{ Dialect, DummyCompilationEnvironment }
+import org.nlogo.api.{ CompilerServices }
 import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
 

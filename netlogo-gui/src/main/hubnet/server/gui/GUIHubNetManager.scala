@@ -4,16 +4,13 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Femto, FileMode, Model, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
+import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.awt.EventQueue.invokeLater
-import org.nlogo.swing.Implicits._
 import org.nlogo.window._
 
 import java.net.InetAddress
@@ -69,7 +66,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
   def load(model: Model) {
-    val hubNetWidgets = model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
+    model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
       _clientEditor.load(hubNetWidgets)
     }
   }

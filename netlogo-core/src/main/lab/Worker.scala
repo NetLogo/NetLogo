@@ -10,8 +10,6 @@ import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
 
-import scala.collection.JavaConverters._
-
 class Worker(val protocol: LabProtocol)
   extends LabInterface.Worker
 {

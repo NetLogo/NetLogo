@@ -5,7 +5,7 @@ package org.nlogo.hubnet.client
 import org.nlogo.hubnet.mirroring._
 import org.nlogo.render.AbstractRenderer
 import org.nlogo.api.{ GraphicsInterface, ViewSettings }
-import org.nlogo.core.{ AgentKind, ShapeList, ShapeListTracker }
+import org.nlogo.core.{ AgentKind, ShapeListTracker }
 
 class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new ShapeListTracker(AgentKind.Turtle), new ShapeListTracker(AgentKind.Link)) {
   import collection.JavaConverters._

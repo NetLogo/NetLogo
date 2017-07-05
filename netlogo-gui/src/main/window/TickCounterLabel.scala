@@ -7,7 +7,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
-import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent, LoadEndEvent }
+import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
   private val TickCounterLabelDefault = "ticks"

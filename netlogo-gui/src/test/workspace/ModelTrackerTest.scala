@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ DummyExtensionManager, ModelType, NetLogoLegacyDialect }
+import org.nlogo.api.{ ModelType, NetLogoLegacyDialect }
 import org.nlogo.core.Femto
 import org.scalatest.FunSuite
 

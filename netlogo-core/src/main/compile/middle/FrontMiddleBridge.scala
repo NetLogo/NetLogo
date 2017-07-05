@@ -4,8 +4,8 @@ package org.nlogo.compile
 package middle
 
 import org.nlogo.core.{FrontEndProcedure, StructureResults}
-import org.nlogo.{ core, api => nlogoApi, nvm },
-  nvm.Procedure.ProceduresMap
+import org.nlogo.{ core, nvm },
+  nvm.Procedure
 import org.nlogo.compile.api.{ Backifier => ApiBackifier, FrontMiddleBridgeInterface, ProcedureDefinition }
 import scala.collection.immutable.ListMap
 
@@ -27,8 +27,8 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
       .map(astBackifier.backify)
       .toSeq
   }
-  private def fromApiProcedure(p: FrontEndProcedure): nvm.Procedure = {
-    val proc = new nvm.Procedure(
+  private def fromApiProcedure(p: FrontEndProcedure): Procedure = {
+    val proc = new Procedure(
       isReporter = p.isReporter,
       name = p.name,
       nameToken = p.nameToken,

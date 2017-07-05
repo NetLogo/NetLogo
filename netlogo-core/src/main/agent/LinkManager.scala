@@ -2,11 +2,6 @@
 
 package org.nlogo.agent
 
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-import java.util.IdentityHashMap
-
-import scala.collection.mutable.ArrayBuffer
 
 // It would be nice to move this to the api package, but it would take a lot of refactoring to make
 // all of the argument types and return types be the api types. - ST 4/11/13

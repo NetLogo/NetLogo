@@ -3,7 +3,7 @@
 package org.nlogo.compile
 package middle
 
-import org.nlogo.{ api, core, nvm },
+import org.nlogo.{ core, nvm },
   nvm.Procedure
 import org.nlogo.compile.api.{ Backifier => ApiBackifier, CommandBlock, Expression, ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements }
 import scala.collection.immutable.ListMap

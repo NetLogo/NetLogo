@@ -10,7 +10,6 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.ModalProgressTask
-import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 

@@ -12,7 +12,7 @@ import org.nlogo.plot.Plot
 import org.nlogo.swing.{ Implicits, UserAction },
   Implicits.thunk2runnable,
   UserAction.{ FileCategory, FileExportSubcategory, FileImportSubcategory, MenuAction }
-import org.nlogo.window.{ Events => WindowEvents, FileController, GUIWorkspace, PlotWidgetExport },
+import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace, PlotWidgetExport },
   WindowEvents.{ ExportPlotEvent }
 
 object FileActions {

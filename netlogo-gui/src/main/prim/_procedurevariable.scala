@@ -2,7 +2,6 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _procedurevariable(private[this] val _vn: Int, val name: String) extends Reporter {
