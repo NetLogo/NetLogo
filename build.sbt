@@ -29,7 +29,9 @@ lazy val scalaSettings = Seq(
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
     "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint -Xfatal-warnings"
-      .split(" ").toSeq
+      .split(" ").toSeq,
+  // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
+  scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
 )
 
 // These settings are common to all builds that compile against Java
