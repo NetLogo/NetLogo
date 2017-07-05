@@ -1,31 +1,22 @@
 import sbt._
 
-import org.pegdown.{ PegDownProcessor, Extensions => PegdownExtensions }
-
 object InfoTabGenerator {
   def apply(model: File): String = {
     val modelText = IO.read(model)
     val info = modelText.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
     val pre = Preprocessor.convert(info)
-    val html = pegdown(pre)
+    val html = Markdown(pre, addTableOfContents = true)
     val r = Postprocessor.convert(html)
     r
   }
 
-  def pegdown(str: String): String = {
-    new PegDownProcessor(PegdownExtensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         PegdownExtensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         PegdownExtensions.HARDWRAPS |         // GitHub flavored newlines
-                         PegdownExtensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
-      .markdownToHtml(str)
-  }
-
   // runs on the wiki text, before it gets converted to HTML
   object Preprocessor {
-    lazy val convert: String => String = List(
-      dropWhatIsItSection,
-      createTOC,
-      insertAIntoHeaders).reduceLeft(_ andThen _)
+    lazy val convert: String => String = List(dropWhatIsItSection, addToc).reduceLeft(_ andThen _)
+
+    private val addToc = (s: String) => {
+      "[TOC]\n" + s
+    }
 
     private val dropWhatIsItSection = (s:String) => {
       s.split("\n").drop(1). // drop the ## WHAT IS IT? line
@@ -70,4 +61,3 @@ object InfoTabGenerator {
     private val rsquoToTick = (s: String) => s.replace("&rsquo;", "&apos;")
   }
 }
-

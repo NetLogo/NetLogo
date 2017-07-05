@@ -203,6 +203,37 @@ Apache Commons Codec (TM) is copyright and trademark 2002-2014 the Apache Softwa
 It is licensed under the Apache 2.0 License. You may obtain a copy of the license at
 http://www.apache.org/licenses/LICENSE-2.0.
 
+### Flexmark
+
+NetLogo uses the Flexmark library (and extensions) for the info tab. The copyright and license are as follows:
+
+> Copyright (c) 2015-2016, Atlassian Pty Ltd
+> All rights reserved.
+>
+> Copyright (c) 2016, Vladimir Schneider,
+> All rights reserved.
+>
+> Redistribution and use in source and binary forms, with or without
+> modification, are permitted provided that the following conditions are met:
+>
+> * Redistributions of source code must retain the above copyright notice, this
+>   list of conditions and the following disclaimer.
+>
+> * Redistributions in binary form must reproduce the above copyright notice,
+>   this list of conditions and the following disclaimer in the documentation
+>   and/or other materials provided with the distribution.
+>
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+> AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+> FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+> CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+> OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 ### JHotDraw
 
 For the system dynamics modeler, NetLogo uses the JHotDraw library:
@@ -1038,29 +1069,26 @@ copyright and license for the library are as follows:
 > ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 > POSSIBILITY OF SUCH DAMAGE.
 
-### Pegdown & Parboiled
+### Parboiled
 
-For the Info tab, NetLogo uses the Pegdown and Parboiled libraries.
+For the Info tab, NetLogo uses the Parboiled library. The copyright and license for Parboiled are as follows:
 
-The copyright and license for Pegdown are as follows:
-
-> pegdown - Copyright (C) 2010-2011 Mathias Doenitz
+> This software is licensed under the Apache 2 license, quoted below.
 >
-> Based on peg-markdown - markdown in c, implemented using PEG grammar
-> Copyright (c) 2008 John MacFarlane (http://github.com/jgm/peg-markdown)
+> Copyright (C) 2009-2013 Mathias Doenitz &lt;http://parboiled2.org&gt;
+> Copyright (C) 2013 Alexander Myltsev
 >
-> pegdown is released under the Apache License 2.0.
-> (http://www.apache.org/licenses/LICENSE-2.0)
-
-The copyright and license for Parboiled are as follows:
-
-> parboiled - Copyright (C) 2009-2011 Mathias Doenitz
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not
+> use this file except in compliance with the License. You may obtain a copy of
+> the License at
 >
-> This product includes software developed by
-> Mathias Doenitz (http://www.parboiled.org/).
+> [http://www.apache.org/licenses/LICENSE-2.0]
 >
-> pegdown is released under the Apache License 2.0.
-> (http://www.apache.org/licenses/LICENSE-2.0)
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+> WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+> License for the specific language governing permissions and limitations under
+> the License.
 
 ### RSyntaxTextArea
 

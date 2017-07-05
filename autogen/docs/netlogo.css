@@ -77,6 +77,12 @@ h3 > a {
   clear: both;
 }
 
+a.section-anchor {
+  text-decoration: none;
+  padding: 0;
+  color: inherit;
+}
+
 .since:before {
   content: "Since ";
 }
