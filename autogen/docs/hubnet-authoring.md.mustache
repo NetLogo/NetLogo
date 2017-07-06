@@ -5,18 +5,8 @@ activities and write your own new ones. It assumes you are familiar with running
 HubNet activities, basic NetLogo code and NetLogo interface elements. For more
 general information about HubNet see the [HubNet Guide](hubnet.html).
 
-- [Coding HubNet activities](primitives.html)
-    - [Setup](#setup)
-    - [Receiving information from clients](#data)
-    - [Sending information to clients](#sending)
-    - [Examples](#ex)
-- [How to make a client interface](#newinterface)
-- [View updates on the clients](#view-updates)
-- [Clicking in the view on clients](#clicking-view)
-- [Customizing the client's view](#customizing)
-- [Plot updates on the clients](#plot-updates)
+[TOC]
 
-<a id="primitives">
 ## Coding HubNet activities
 
 Many HubNet activities will share bits of the same code. That is the code that
@@ -30,7 +20,6 @@ be able to use this activity as a starting point for most projects.
 
 > **Code Example:** Template
 
-<a id="setup">
 ### Setup
 
 To make a NetLogo model into a HubNet activity you must first initialize the
@@ -75,7 +64,6 @@ every time we setup the activity we don't want to kill all the turtles, instead,
 we want to set all the variables back to initial values and notify the clients
 of any changes we make (more on that later).
 
-<a id="data">
 ### Receiving messages from clients
 
 During the activity you will be transferring data between the HubNet clients and
@@ -171,7 +159,6 @@ can execute:
     [ set heading 270
       fd 1 ]
 
-<a id="sending">
 ### Sending messages to clients
 
 As mentioned earlier you can also send values to any interface elements that
@@ -234,14 +221,12 @@ few code examples for different types of data:
     <td>`hubnet-send "teacher" "user-names" [["jimmy" "susie"] ["bob" "george"]]`
 </table>
 
-<a id="ex">
 ### Examples
 
 Study the models in the "HubNet Activities" section of the Models Library to see
 how these primitives are used in practice in the Code tab. Disease is a good one
 to start with.
 
-<a id="newinterface">
 ## How to make a client interface
 
 Open the HubNet Client Editor, found in the Tools Menu. Add any buttons,
@@ -283,7 +268,6 @@ Having more than one interface element with the same tag in the client interface
 will result in unpredictable behavior since it is not clear which element you
 intended to send the information to.
 
-<a id="view-updates">
 ## View updates on the clients
 
 View mirroring lets views of the world be displayed in clients as well on the
@@ -308,7 +292,6 @@ If there is no View in the clients or if the Mirror 2D View on Clients checkbox
 in the HubNet Control Center is not checked, then no view updates are sent to
 the clients.
 
-<a id="clicking-view">
 ## Clicking in the view on clients
 
 If the View is included in the client, two messages are sent to the server every
@@ -325,7 +308,6 @@ was clicked on by the client red, you would use the following NetLogo code:
       [ set pcolor red ]
     ]
 
-<a id="customizing">
 ## Customizing the client's view
 
 When view mirroring is enabled, by default clients see the same view the
@@ -355,7 +337,6 @@ visible or invisible. See the dictionary entries for
 
 > **Code Example:** Client Overrides Example
 
-<a id="plot-updates">
 ## Plot updates on the clients
 
 If plot mirroring is enabled (in the HubNet Control Center) and a plot in the
