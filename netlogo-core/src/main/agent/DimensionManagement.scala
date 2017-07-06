@@ -2,16 +2,11 @@
 
 package org.nlogo.agent
 
+import java.lang.{ Double => JDouble }
+
 import org.nlogo.api.{ AgentException, WorldDimensionException }
-import org.nlogo.core.{ Program, WorldDimensions }
-import java.util.{ HashMap => JHashMap, Map => JMap }
+import org.nlogo.core.WorldDimensions
 
-import java.lang.{ Double => JDouble, Integer => JInteger }
-
-import World.NegativeOneInt
-
-// TODO: There's a lot of repetition in this trait, it should be considered a candidate for code
-// generation
 trait DimensionManagement {
   def topology: Topology
 

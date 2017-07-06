@@ -2,18 +2,14 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ AgentException, Color, CompilerServices, ImporterUser,
-  LogoException, MersenneTwisterFast, RandomSeedGenerator,
-  Timer, TrailDrawerInterface, ValueConstraint, Version, WorldDimensionException }
+import org.nlogo.api.{ AgentException, Color, ImporterUser,
+  MersenneTwisterFast, RandomSeedGenerator, Timer }
 
-import org.nlogo.core.{ AgentKind, Breed, Dialect, Nobody, Program,
-  Shape, ShapeList, ShapeListTracker, WorldDimensions }
+import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
 
 import java.lang.{ Double => JDouble, Integer => JInteger }
 
-import java.util.{ ArrayList => JArrayList, Arrays,
-  HashMap => JHashMap, Iterator => JIterator, List => JList,
-  Map => JMap }
+import java.util.{ Arrays, List => JList, Map => JMap }
 
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -146,7 +142,7 @@ class World2D extends World with CompilationManagement {
         l.setId(newLinkId())
         l
       })
-  val tieManager: TieManager = new TieManager(this, linkManager)
+  val tieManager: TieManager = new TieManager(links, linkManager, protractor)
 
   protected val dimensionVariableNames =
     Seq("MIN-PXCOR", "MAX-PXCOR", "MIN-PYCOR", "MAX-PYCOR", "WORLD-WIDTH", "WORLD-HEIGHT")

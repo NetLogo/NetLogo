@@ -6,9 +6,8 @@ import org.nlogo.api.{ AgentException, CompilerServices, Version }
 
 import org.nlogo.core.{ AgentKind, Breed, Program }
 
-import java.util.{ ArrayList => JArrayList, Arrays,
-  HashMap => JHashMap, Iterator => JIterator, List => JList,
-  Map => JMap }
+import java.util.{ ArrayList => JArrayList, HashMap => JHashMap,
+  List => JList, Map => JMap }
 
 // TODO: I'm creating this trait to support current models of interaction between the compiler
 // and the World. This does not mean I think the current model is actually good in any
