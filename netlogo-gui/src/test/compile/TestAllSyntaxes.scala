@@ -388,7 +388,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_hubnetsendoverride string/agent or agentset/string/reporter block,OTPL,Some(?),0,4,4
                     |_hubnetsendusermessage string or list/anything,OTPL,None,0,2,2
                     |_hubnetsendwatch string/agent,OTPL,None,0,2,2
-                    |_hubnetsetclientinterface string/list,O---,None,0,2,2
                     |_hubnetsethistogramnumbars string/number,OTPL,None,0,2,2
                     |_hubnetsetplotmirroring TRUE/FALSE,OTPL,None,0,1,1
                     |_hubnetsetplotpeninterval string/number,OTPL,None,0,2,2

@@ -4,9 +4,9 @@ package org.nlogo.compile.prim
 
 import org.nlogo.compile.ReplacedPrim
 import org.nlogo.core.{ Command, Reporter, Syntax },
-  Syntax.{ AgentType, AgentsetType, BooleanType, ListType, NumberType,
+  Syntax.{ AgentType, AgentsetType, ListType, NumberType,
   NumberBlockType, PatchType, PatchsetType, StringType,
-  TurtleType, ReporterBlockType, WildcardType }
+  TurtleType, WildcardType }
 
 case class _patchcol() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, right = List(NumberType))
@@ -212,175 +212,91 @@ package dead {
 }
 
 package hubnet {
-  case class _hubnetbroadcast() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, WildcardType))
-  }
-
-  case class _hubnetbroadcastclearoutput() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _hubnetbroadcastmessage() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(WildcardType))
-  }
-
   case class _hubnetbroadcastusermessage() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(WildcardType))
-  }
-
-  case class _hubnetclearoverride() extends Command {
-    def syntax = Syntax.commandSyntax(blockAgentClassString = Some("?"), right = List(StringType, AgentType | AgentsetType, StringType))
-  }
-
-  case class _hubnetclearoverrides() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.WildcardType))
   }
 
   case class _hubnetclearplot() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
-  }
-
-  case class _hubnetclientslist() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = ListType)
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
   }
 
   case class _hubnetcreateclient() extends Command {
     def syntax = Syntax.commandSyntax(agentClassString = "O---")
   }
 
-  case class _hubnetentermessage() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = BooleanType)
-  }
-
-  case class _hubnetexitmessage() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = BooleanType)
-  }
-
-  case class _hubnetfetchmessage() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
   case class _hubnetinqsize() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType)
-  }
-
-  case class _hubnetkickallclients() extends Command {
-    def syntax = Syntax.commandSyntax()
-  }
-
-  case class _hubnetkickclient() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def syntax = Syntax.reporterSyntax(ret = Syntax.NumberType)
   }
 
   case class _hubnetmakeplotnarrowcast() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
-  }
-
-  case class _hubnetmessage() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = WildcardType)
-  }
-
-  case class _hubnetmessagesource() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = StringType)
-  }
-
-  case class _hubnetmessagetag() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = StringType)
-  }
-
-  case class _hubnetmessagewaiting() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = BooleanType)
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
   }
 
   case class _hubnetoutqsize() extends Reporter {
-    def syntax = Syntax.reporterSyntax(ret = NumberType)
+    def syntax = Syntax.reporterSyntax(ret = Syntax.NumberType)
   }
 
   case class _hubnetplot() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.NumberType))
   }
 
   case class _hubnetplotpendown() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
   }
 
   case class _hubnetplotpenup() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
   }
 
   case class _hubnetplotxy() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, NumberType, NumberType))
-  }
-
-  case class _hubnetreset() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---")
-  }
-
-  case class _hubnetresetperspective() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType))
+    def syntax = Syntax.commandSyntax(
+      right = List(
+        Syntax.StringType,
+        Syntax.NumberType,
+        Syntax.NumberType))
   }
 
   case class _hubnetroboclient() extends Command {
-    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(NumberType))
-  }
-
-  case class _hubnetsend() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(ListType | StringType, StringType, WildcardType))
-  }
-
-  case class _hubnetsendclearoutput() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(ListType | StringType))
-  }
-
-  case class _hubnetsendfollow() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, AgentType, NumberType))
+    def syntax = Syntax.commandSyntax(agentClassString = "O---", right = List(Syntax.NumberType))
   }
 
   case class _hubnetsendfromlocalclient() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, StringType, WildcardType))
-  }
-
-  case class _hubnetsendmessage() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(ListType | StringType, WildcardType))
-  }
-
-  case class _hubnetsendoverride() extends Command {
-    def syntax = Syntax.commandSyntax(blockAgentClassString = Some("?"), right = List(StringType, AgentType | AgentsetType, StringType, ReporterBlockType))
+    def syntax = Syntax.commandSyntax(
+      right = List(Syntax.StringType, Syntax.StringType, Syntax.WildcardType))
   }
 
   case class _hubnetsendusermessage() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(ListType | StringType, WildcardType))
-  }
-
-  case class _hubnetsendwatch() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, AgentType))
+    def syntax = Syntax.commandSyntax(
+      right = List(
+        Syntax.ListType | Syntax.StringType,
+        Syntax.WildcardType))
   }
 
   case class _hubnetsethistogramnumbars() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.NumberType))
   }
 
   case class _hubnetsetplotmirroring() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(BooleanType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.BooleanType))
   }
 
   case class _hubnetsetplotpeninterval() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.NumberType))
   }
 
   case class _hubnetsetplotpenmode() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(StringType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.NumberType))
   }
 
   case class _hubnetsetviewmirroring() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(BooleanType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.BooleanType))
   }
 
   case class _hubnetwaitforclients() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(NumberType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.NumberType, Syntax.NumberType))
   }
 
   case class _hubnetwaitformessages() extends Command {
-    def syntax = Syntax.commandSyntax(right = List(NumberType, NumberType))
+    def syntax = Syntax.commandSyntax(right = List(Syntax.NumberType, Syntax.NumberType))
   }
 }

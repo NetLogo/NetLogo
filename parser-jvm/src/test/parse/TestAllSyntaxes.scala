@@ -78,6 +78,13 @@ class TestAllSyntaxes extends FunSuite {
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_hsb number/number/number,list,OTPL,None,10,3,3
+                     |_hubnetclientslist ,list,OTPL,None,10,0,0
+                     |_hubnetentermessage ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_hubnetexitmessage ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_hubnetmessage ,anything,OTPL,None,10,0,0
+                     |_hubnetmessagesource ,string,OTPL,None,10,0,0
+                     |_hubnetmessagetag ,string,OTPL,None,10,0,0
+                     |_hubnetmessagewaiting ,TRUE/FALSE,OTPL,None,10,0,0
                      |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,None,10,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,12,2,2
                      |_inlinkfrom agent,agent,-T--,None,10,1,1
@@ -326,6 +333,22 @@ class TestAllSyntaxes extends FunSuite {
                     |_hideturtle ,-T--,None,0,0,0
                     |_histogram list,OTPL,None,0,1,1
                     |_home ,-T--,None,0,0,0
+                    |_hubnetbroadcast string/anything,OTPL,None,0,2,2
+                    |_hubnetbroadcastclearoutput ,OTPL,None,0,0,0
+                    |_hubnetbroadcastmessage anything,OTPL,None,0,1,1
+                    |_hubnetclearoverride string/agent or agentset/string,OTPL,Some(?),0,3,3
+                    |_hubnetclearoverrides string,OTPL,None,0,1,1
+                    |_hubnetfetchmessage ,OTPL,None,0,0,0
+                    |_hubnetkickallclients ,OTPL,None,0,0,0
+                    |_hubnetkickclient string,OTPL,None,0,1,1
+                    |_hubnetreset ,O---,None,0,0,0
+                    |_hubnetresetperspective string,OTPL,None,0,1,1
+                    |_hubnetsend string or list/string/anything,OTPL,None,0,3,3
+                    |_hubnetsendclearoutput string or list,OTPL,None,0,1,1
+                    |_hubnetsendfollow string/agent/number,OTPL,None,0,3,3
+                    |_hubnetsendmessage string or list/anything,OTPL,None,0,2,2
+                    |_hubnetsendoverride string/agent or agentset/string/reporter block,OTPL,Some(?),0,4,4
+                    |_hubnetsendwatch string/agent,OTPL,None,0,2,2
                     |_if TRUE/FALSE/command block,OTPL,None,0,2,2
                     |_ifelse TRUE/FALSE/command block/command block,OTPL,None,0,3,3
                     |_ignore anything,OTPL,None,0,1,1
