@@ -3,9 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D,
-  KeyboardFocusManager }
-import java.awt.event.ActionEvent
+  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JComponent,
   JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
@@ -68,6 +67,15 @@ class InterfaceTab(workspace: GUIWorkspace,
   splitPane.setOneTouchExpandable(true)
   splitPane.setResizeWeight(1) // give the InterfacePanel all
   add(splitPane, BorderLayout.CENTER)
+
+  object TrackingFocusListener extends FocusListener {
+    var lastFocused = Option.empty[Component]
+    override def focusGained(e: FocusEvent): Unit = {
+      lastFocused = Some(e.getSource.asInstanceOf[Component])
+    }
+    override def focusLost(e: FocusEvent): Unit = { }
+  }
+
   locally {
     import WidgetInfo._
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
@@ -79,6 +87,8 @@ class InterfaceTab(workspace: GUIWorkspace,
         add(viewUpdatePanel)
       }
     }, BorderLayout.NORTH)
+    iP.addFocusListener(TrackingFocusListener)
+    commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
   }
 
   SwingUtils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
@@ -95,19 +105,13 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getInterfacePanel = iP
 
   override def requestFocus() {
-    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
-      iP.requestFocusInWindow()
-    }
+    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
   }
 
   final def handle(e: SwitchedTabsEvent) {
+    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
     if (e.newTab != this) {
-      lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
-        commandCenter else iP
-
       monitorManager.refresh()
-    } else {
-      lastFocusedComponent.requestFocus()
     }
   }
 

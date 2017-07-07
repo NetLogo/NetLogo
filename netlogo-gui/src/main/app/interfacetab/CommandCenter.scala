@@ -116,6 +116,9 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
 
   def repaintPrompt() { prompt.repaint() }
   override def requestFocus() { getDefaultComponentForFocus().requestFocus() }
+  override def requestFocusInWindow(): Boolean = {
+    getDefaultComponentForFocus().requestFocusInWindow()
+  }
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
   private def doPopup(e: MouseEvent) {
