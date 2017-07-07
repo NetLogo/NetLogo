@@ -28,7 +28,11 @@ with NlogoPrintable
 with MenuTab {
   private var _dirty = false
   def dirty = _dirty
-  protected def dirty_=(b: Boolean) = _dirty = b
+
+  protected def dirty_=(b: Boolean) = {
+    CompileAction.setDirty(b)
+    _dirty = b
+  }
 
   private lazy val listener = new TextListener {
     override def textValueChanged(e: TextEvent) = dirty = true
@@ -139,7 +143,7 @@ with MenuTab {
 
   def handle(e: WindowEvents.CompiledEvent) = {
     dirty = false
-    if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
+    if (e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
     text.revalidate()
   }
@@ -178,8 +182,13 @@ with MenuTab {
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
   private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON,
-      new ImageIcon(classOf[CodeTab].getResource("/images/check.gif")))
+    putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource("/images/check-gray.gif")))
     def actionPerformed(e: ActionEvent) = compile()
+    def setDirty(isDirty: Boolean) = {
+      val iconPath =
+        if (isDirty) "/images/check.gif"
+        else         "/images/check-gray.gif"
+      putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource(iconPath)))
+    }
   }
 }
