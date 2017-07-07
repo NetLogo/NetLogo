@@ -26,8 +26,9 @@ pipeline {
         sh 'git submodule update --init'
         sh "./sbt depend"
         sh "./sbt headless/depend"
-        sh "./sbt netlogo/test:fast"
         sh "./sbt parserJS/test"
+        sh "./sbt parserJVM/test"
+        sh "./sbt netlogo/test:fast"
         sh "./sbt nogen netlogo/test:fast"
         sh "./sbt threed netlogo/test:fast"
         sh "./sbt headless/test:fast"

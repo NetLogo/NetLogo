@@ -2,7 +2,7 @@ import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
+import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Dump.dumpClassName
 import Testing.{ testTempDirectory, testChecksumsClass }
@@ -96,33 +96,33 @@ lazy val root =
    aggregate(netlogo, parserJVM)
 
 lazy val netlogo = project.in(file("netlogo-gui")).
-   dependsOn(parserJVM).
-   settings(commonSettings: _*).
-   settings(jvmSettings: _*).
-   settings(scalaSettings: _*).
-   settings(scalatestSettings: _*).
-   settings(NetLogoBuild.settings: _*).
-   settings(JFlexRunner.settings: _*).
-   settings(EventsGenerator.settings: _*).
-   settings(Docs.settings: _*).
-   settings(includeProject(parserJVM): _*).
-   settings(publicationSettings("NetLogo-JVM"): _*).
-   settings(shareSourceDirectory("netlogo-core"): _*).
-   settings(flexmarkDependencies).
-   settings(Defaults.coreDefaultSettings ++
-             Testing.settings ++
-             Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
-             Packaging.settings ++
-             Running.settings ++
-             Dump.settings ++
-             Scaladoc.settings ++
-             ChecksumsAndPreviews.settings ++
-             Extensions.settings ++
-             InfoTab.infoTabTask ++
-             ModelsLibrary.settings ++
-             NativeLibs.nativeLibsTask ++
-             GUISettings.settings ++
-             Depend.dependTask: _*).
+  dependsOn(parserJVM % "test->test;compile->compile").
+  settings(includeInPackaging(parserJVM): _*).
+  settings(commonSettings: _*).
+  settings(jvmSettings: _*).
+  settings(scalaSettings: _*).
+  settings(scalatestSettings: _*).
+  settings(NetLogoBuild.settings: _*).
+  settings(JFlexRunner.settings: _*).
+  settings(EventsGenerator.settings: _*).
+  settings(Docs.settings: _*).
+  settings(publicationSettings("NetLogo-JVM"): _*).
+  settings(shareSourceDirectory("netlogo-core"): _*).
+  settings(flexmarkDependencies).
+  settings(Defaults.coreDefaultSettings ++
+           Testing.settings ++
+           Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
+           Packaging.settings ++
+           Running.settings ++
+           Dump.settings ++
+           Scaladoc.settings ++
+           ChecksumsAndPreviews.settings ++
+           Extensions.settings ++
+           InfoTab.infoTabTask ++
+           ModelsLibrary.settings ++
+           NativeLibs.nativeLibsTask ++
+           GUISettings.settings ++
+           Depend.dependTask: _*).
   settings(
     name := "NetLogo",
     version := "6.0.2-M1",
@@ -187,7 +187,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(Extensions.settings: _*).
   settings(publicationSettings("NetLogoHeadless"): _*).
   settings(JFlexRunner.settings: _*).
-  settings(includeProject(parserJVM): _*).
+  settings(includeInPackaging(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(Dump.settings: _*).
   settings(
