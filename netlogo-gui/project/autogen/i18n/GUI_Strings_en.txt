@@ -103,6 +103,7 @@ menu.tools.linkMonitor = Link Monitor
 menu.tools.closeAllAgentMonitors = Close All Agent Monitors
 menu.tools.closeDeadAgentMonitors = Close Monitors for Dead Agents
 menu.tools.hideCommandCenter = Hide Command Center
+menu.tools.jumpToCommandCenter = Jump to Command Center
 menu.tools.showCommandCenter = Show Command Center
 menu.tools.3DView = 3D View
 menu.tools.3DView.switch = Switch to 3D View

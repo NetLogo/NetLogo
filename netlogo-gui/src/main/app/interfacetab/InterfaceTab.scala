@@ -42,7 +42,8 @@ class InterfaceTab(workspace: GUIWorkspace,
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
   activeMenuActions =
-    WorkspaceActions.interfaceActions(workspace) ++ Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction())
+    WorkspaceActions.interfaceActions(workspace) ++
+    Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction(), new JumpToCommandCenterAction())
 
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
@@ -167,6 +168,18 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
+  private def showCommandCenter(): Unit = {
+    if (splitPane.getLastDividerLocation < maxDividerLocation)
+      splitPane.setDividerLocation(splitPane.getLastDividerLocation)
+    else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
+      splitPane.getOrientation match {
+        case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
+        case _ => // horizontal
+          // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
+          splitPane.setDividerLocation(0.5)
+      }
+  }
+
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
   with MenuAction {
     category    = ToolsCategory
@@ -177,22 +190,28 @@ class InterfaceTab(workspace: GUIWorkspace,
       if (splitPane.getDividerLocation < maxDividerLocation) {
         splitPane.setDividerLocation(maxDividerLocation)
         if (iP.isFocusable) iP.requestFocus()
-      }
-      else {
-        if (splitPane.getLastDividerLocation < maxDividerLocation)
-          splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-        else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-          splitPane.getOrientation match {
-            case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-            case _ => // horizontal
-              // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-              splitPane.setDividerLocation(0.5)
-          }
-          commandCenter.requestFocus()
+      } else {
+        showCommandCenter()
+        commandCenter.requestFocus()
       }
       putValue(Action.NAME,
         if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
         else I18N.gui.get("menu.tools.showCommandCenter"))
+    }
+  }
+
+
+  class JumpToCommandCenterAction extends AbstractAction(I18N.gui.get("menu.tools.jumpToCommandCenter"))
+  with MenuAction {
+    category    = ToolsCategory
+    group       = MenuGroup
+    accelerator = UserAction.KeyBindings.keystroke('C', withMenu = true, withShift = true)
+
+    override def actionPerformed(e: ActionEvent) {
+      if (! commandCenter.getDefaultComponentForFocus.isFocusOwner) {
+        showCommandCenter()
+        commandCenter.requestFocusInWindow()
+      }
     }
   }
 
