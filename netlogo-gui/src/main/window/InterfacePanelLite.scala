@@ -5,16 +5,16 @@ package org.nlogo.window;
 import java.awt.{ Color, Component, Dimension, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
+import java.awt.image.BufferedImage
 import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
 
-import org.nlogo.api.{ CompilerServices, Exceptions, ModelSection, RandomServices, Version, VersionHistory }
+import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
+import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.PlotManager
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable.{ Map => MutableMap }
 
 class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: CompilerServices,
@@ -27,7 +27,6 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
-  private var _hasFocus: Boolean = true
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
   // when the mouse is released from the SliderDragControl
@@ -78,12 +77,10 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
 
   def focusGained(e: FocusEvent): Unit = {
-    _hasFocus = true
     enableButtonKeys(true)
   }
 
   def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
     enableButtonKeys(false)
   }
 
@@ -214,9 +211,13 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Plot"     -> (() => PlotWidget.apply(plotManager)),
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
     "Chooser"  -> (() => new ChooserWidget(compiler)),
-    "InputBox" -> (() => new InputBoxWidget(
-      editorFactory.newEditor(1, 20, true), editorFactory.newEditor(5, 20, false),
-      compiler, this)),
+    "InputBox" -> { () =>
+      val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
+        .withFocusTraversalEnabled(true)
+      val multiLineConfig = editorFactory.defaultConfiguration(5, 20)
+      new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
+       editorFactory.newEditor(multiLineConfig), compiler, this)
+    },
     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
     "Output"   -> (() => new OutputWidget()))
 
@@ -268,4 +269,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
       revalidate()
     }
   }
+
+  def interfaceImage: BufferedImage =
+    Images.paintToImage(this)
 }

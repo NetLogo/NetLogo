@@ -17,6 +17,6 @@ public final strictfp class _randomexponential extends Reporter {
 
   public double report_1(Context context, double d) throws LogoException {
     return validDouble
-        (-d * StrictMath.log(context.job.random.nextDouble()));
+        (-d * StrictMath.log(context.job.random.nextDouble()), context);
   }
 }

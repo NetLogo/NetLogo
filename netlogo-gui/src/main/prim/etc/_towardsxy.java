@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _towardsxy extends Reporter {
@@ -19,9 +19,9 @@ public final strictfp class _towardsxy extends Reporter {
               (context.agent,
                   argEvalDoubleValue(context, 0),
                   argEvalDoubleValue(context, 1),
-                  true)); // true = wrap
+                  true), context); // true = wrap
     } catch (org.nlogo.api.AgentException ex) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, ex.getMessage());
     }
   }

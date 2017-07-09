@@ -3,10 +3,8 @@
 package org.nlogo.compile
 package back
 
-import org.nlogo.core.Femto
 import org.scalatest.FunSuite
 import org.nlogo.nvm
-import org.nlogo.api
 
 class AssemblerTests extends FunSuite {
 
@@ -16,6 +14,7 @@ class AssemblerTests extends FunSuite {
     assertResult(1)(defs.size)
     for (procdef <- defs) {
       procdef.accept(new ArgumentStuffer)
+      procdef.procedure.displayName = "procedure FOO"
       new Assembler().assemble(procdef)
     }
     defs.head.procedure

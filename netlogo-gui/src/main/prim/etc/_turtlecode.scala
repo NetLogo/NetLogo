@@ -2,8 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled }
 
 class _turtlecode extends Command with CustomAssembled {
 

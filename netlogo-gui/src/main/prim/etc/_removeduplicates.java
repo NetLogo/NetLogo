@@ -2,11 +2,11 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.agent.LogoHashObject;
-import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.LogoHashObject;
+import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public final strictfp class _removeduplicates
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
 
 
   @Override

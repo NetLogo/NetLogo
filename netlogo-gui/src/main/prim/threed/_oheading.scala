@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _oheading extends Reporter {

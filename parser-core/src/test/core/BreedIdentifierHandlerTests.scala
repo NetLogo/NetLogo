@@ -88,12 +88,13 @@ class BreedIdentifierHandlerTests extends FunSuite {
 
   test("breedReporters returns reporters for directed links") {
     assertResult(
-      List("IN-CHAIN-FROM", "IN-CHAIN-NEIGHBOR?", "IN-CHAIN-NEIGHBORS", "IS-CHAIN?", "MY-IN-CHAINS", "MY-OUT-CHAINS",
-           "OUT-CHAIN-NEIGHBOR?", "OUT-CHAIN-NEIGHBORS", "OUT-CHAIN-TO")
+      List("IN-CHAIN-FROM", "IN-CHAIN-NEIGHBOR?", "IN-CHAIN-NEIGHBORS", "IS-CHAIN?", "CHAIN-NEIGHBOR?",
+           "CHAIN-NEIGHBORS", "CHAIN-WITH", "MY-IN-CHAINS", "MY-CHAINS", "MY-OUT-CHAINS", "OUT-CHAIN-NEIGHBOR?",
+           "OUT-CHAIN-NEIGHBORS", "OUT-CHAIN-TO")
     )(BreedIdentifierHandler.breedReporters(breed("CHAINS", "CHAIN", isLink = true, isDirected = true)))
   }
   private def breed(plural: String, singular: String, isLink: Boolean = false, isDirected: Boolean = false): StructureDeclarations.Breed = {
-    def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(1, 2, "")
+    def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(SourceLocation(1, 2, ""))
     def dummyIdent(s: String): Identifier = Identifier(s, dummyToken(s))
 
     StructureDeclarations.Breed(dummyIdent(plural), dummyIdent(singular), isLink, isDirected)

@@ -3,16 +3,22 @@
 package org.nlogo.app.infotab
 
 import java.io.InputStream
+import java.util.{ ArrayList => JArrayList }
 
-import org.pegdown.{ PegDownProcessor, Extensions }
+import com.vladsch.flexmark.Extension
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.parser.{ Parser, ParserEmulationProfile }
+import com.vladsch.flexmark.util.options.MutableDataSet
+import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension
+import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import org.nlogo.api.FileIO
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
 object InfoFormatter {
-
-  type MarkDownString = String
+  type Markdown = String
   type HTML = String
   type CSS = String
 
@@ -24,6 +30,7 @@ object InfoFormatter {
   def main(argv: Array[String]) {
     println(apply(read(System.in)))
   }
+
   def read(in: InputStream): String = io.Source.fromInputStream(in).mkString
 
   def styleSheetFile: CSS = FileIO.getResourceAsString("/system/info.css")
@@ -34,22 +41,46 @@ object InfoFormatter {
             replace("{BODY-FONT-SIZE}", fontSize.toString).
             replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
-            replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
+            replace("{H3-FONT-SIZE}", fontSize.toString).
+            replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
+            replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
+            replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
 
-  def toInnerHtml(str: MarkDownString): HTML =
-    new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         Extensions.HARDWRAPS |         // GitHub flavored newlines
-                         Extensions.FENCED_CODE_BLOCKS, // delimit code blocks with ```
-                         MaxParsingTimeMillis)
-      .markdownToHtml(str)
-
-  def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML = {
-    "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
-  }
-
-  def apply(content: String, fontSize: Int = defaultFontSize, attachModelDir: String => String = identity) = {
+  def apply(content: String, fontSize: Int = defaultFontSize) = {
     wrapHtml(toInnerHtml(content), fontSize)
   }
 
+  def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML =
+    "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
+
+  def toInnerHtml(content: String): String = {
+    val extensions = new JArrayList[Extension]()
+    val options = new MutableDataSet()
+
+    options.setFrom(ParserEmulationProfile.PEGDOWN)
+
+    extensions.add(EscapedCharacterExtension.create())
+
+    options.set(HtmlRenderer.SOFT_BREAK, "<br />\n")
+    options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
+
+    extensions.add(TypographicExtension.create())
+    options.set(TypographicExtension.ENABLE_QUOTES, Boolean.box(true))
+    options.set(TypographicExtension.ENABLE_SMARTS, Boolean.box(true))
+
+    extensions.add(AutolinkExtension.create())
+
+    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
+
+    extensions.add(new CodeBlockRenderer())
+
+    options.set(Parser.EXTENSIONS, extensions)
+
+    val opts = options.toImmutable
+
+    val parser = Parser.builder(opts).build()
+    val renderer = HtmlRenderer.builder(opts).build()
+    val document = parser.parse(content)
+    renderer.render(document)
+  }
 }

@@ -2,8 +2,6 @@
 
 package org.nlogo.gl.render
 
-import org.nlogo.api.JavaLibraryPath
-
 object JOGLLoader {
 
   def getVersion(classLoader: ClassLoader) = {

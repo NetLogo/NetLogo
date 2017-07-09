@@ -3,7 +3,6 @@
 package org.nlogo.app.tools
 
 import org.nlogo.api.FileIO
-import scala.io.Source
 
 trait NLWTemplateLoader {
   def loadTemplate(): String

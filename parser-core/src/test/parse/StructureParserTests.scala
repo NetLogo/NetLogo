@@ -2,7 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager, FrontEndInterface, Program, CompilerException, Femto, StructureResults}
+import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
+  CompilerException, Femto, StructureResults}
 import org.scalatest.FunSuite
 
 import org.nlogo._
@@ -191,17 +192,10 @@ class StructureParserTests extends FunSuite {
     expectError("extensions [foo] extensions [bar]",
       "Redeclaration of EXTENSIONS") }
 
-  // https://github.com/NetLogo/NetLogo/issues/348
-  def testTaskVariableMisuse(source: String) {
-    expectError(source,
-      "Names beginning with ? are reserved for use as task inputs")
-  }
-  test("task variable as procedure name") {
-    testTaskVariableMisuse("to ?z end") }
-  test("task variable as procedure input") {
-    testTaskVariableMisuse("to x [?y] end") }
-  test("task variable as agent variable") {
-    testTaskVariableMisuse("turtles-own [?a]") }
+  def arrowError = "-> can only be used to create anonymous procedures"
+  test("misuse of arrow as procedure name") { expectError("to -> end", arrowError) }
+  test("misuse of arrow as argument") { expectError("to x [->] end", arrowError) }
+  test("misuse of arrow as agent variable") { expectError("turtles-own [->]", arrowError) }
 
   test("missing close bracket in last declaration") {
     expectError("turtles-own [",
@@ -270,8 +264,9 @@ class StructureParserTests extends FunSuite {
       ""    -> "to foo bar end",
       "baz" -> "to bar foo end"
     )
-    val result =
+    val results =
       StructureParser.parseSources(
         tokenizer, CompilationOperand(sources, new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
+    assert(results.procedures.contains("FOO") && results.procedures.contains("BAR"))
   }
 }

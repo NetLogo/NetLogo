@@ -17,9 +17,10 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.OptionDialog
-import org.nlogo.swing.Implicits._
-import org.nlogo.window.{ PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
 import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
+
+import scala.concurrent.Future
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -52,9 +53,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handlePlotUpdate(msg: PlotInterface) {
     for (pw <- clientGUI.getInterfaceComponents.collect {case pw: PlotWidget => pw}) {
-      if (pw.plot.name==msg.name) {
+      if (pw.plot.name == msg.name) {
         pw.plot.clear()
         updatePlot(msg.asInstanceOf[org.nlogo.plot.Plot], pw.plot)
+        pw.makeDirty()
         pw.repaintIfNeeded()
       }
     }
@@ -65,8 +67,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     plot2.currentPen = plot2.getPen(plot1.currentPen.get.name)
     plot2.state = plot1.state
     for (pen1 <- plot1.pens) {
-      val pen2 = if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
-      else plot2.getPen(pen1.name).get
+      val pen2 =
+        if (pen1.temporary) plot2.createPlotPen(pen1.name, true)
+        else plot2.getPen(pen1.name).get
       pen2.x = pen1.x
       pen2.color = pen1.color
       pen2.interval = pen1.interval
@@ -85,16 +88,22 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   def handle(e: org.nlogo.window.Events.ExportPlotEvent) {
-    e.whichPlots match {
-      case PlotWidgetExportType.ALL => throw new UnsupportedOperationException("can't export all plots yet.")
-      case _ =>
-        if (e.plot != null) {
-          try new AbstractExporter(e.filename) {
-            override def export(writer: PrintWriter) {
-              new PlotExporter(e.plot, Dump.csv).export(writer)
-            }
-          }.export("plot", "HubNet Client", "")
-          catch {case ex: IOException => org.nlogo.api.Exceptions.handle(ex)}
+    e.plotExport match {
+      case PlotWidgetExport.ExportAllPlots =>
+        throw new UnsupportedOperationException("can't export all plots yet.")
+      case PlotWidgetExport.ExportSinglePlot(plot) =>
+        if (plot != null) {
+          Future.successful(e.exportFilename)
+           .foreach({ filename =>
+             try new AbstractExporter(filename) {
+               override def export(writer: PrintWriter) {
+                 new PlotExporter(plot, Dump.csv).export(writer)
+               }
+             }.export("plot", "HubNet Client", "")
+             catch {
+               case ex: IOException => org.nlogo.api.Exceptions.handle(ex)
+             }
+           })(NetLogoExecutionContext.backgroundExecutionContext)
         }
     }
   }
@@ -260,7 +269,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case Text(content, messageType) => messageType match {
         case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
         case Text.MessageType.USER =>
-          OptionDialog.show(getFrame(this), "User Message", content.toString,
+          OptionDialog.showMessage(getFrame(this), "User Message", content.toString,
             Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")))
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }

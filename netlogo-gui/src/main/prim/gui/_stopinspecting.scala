@@ -2,10 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ LogoException }
-import org.nlogo.core.Syntax
-import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context }
 
 class _stopinspecting extends Command {
 

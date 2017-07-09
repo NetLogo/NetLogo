@@ -4,7 +4,8 @@ package org.nlogo.prim
 
 import org.nlogo.agent.Observer
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, EngineException }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _askconcurrent extends Command with CustomAssembled {
 
@@ -17,11 +18,11 @@ class _askconcurrent extends Command with CustomAssembled {
     val agentset = argEvalAgentSet(context, 0)
     if (!context.agent.isInstanceOf[Observer]) {
       if (agentset eq world.turtles)
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.get(
             "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
       if (agentset eq world.patches)
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.get(
             "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
     }

@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _askconcurrent
     extends Command
@@ -15,8 +15,6 @@ public final strictfp class _askconcurrent
   public _askconcurrent() {
     this.switches = true;
   }
-
-
 
   @Override
   public String toString() {
@@ -28,11 +26,11 @@ public final strictfp class _askconcurrent
     AgentSet agentset = argEvalAgentSet(context, 0);
     if (!(context.agent instanceof org.nlogo.agent.Observer)) {
       if (agentset == world.turtles()) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
       }
       if (agentset == world.patches()) {
-        throw new EngineException
+        throw new RuntimePrimitiveException
             (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
       }
     }

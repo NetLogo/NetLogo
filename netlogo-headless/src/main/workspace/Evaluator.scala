@@ -2,10 +2,9 @@
 
 package org.nlogo.workspace
 
-import java.util.ArrayList
 import org.nlogo.core.{ AgentKind, SourceWrapping }
-import org.nlogo.api.{JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
-import org.nlogo.agent.{Agent, AgentSet, Turtle, Patch, Link}
+import org.nlogo.api.{JobOwner, ReporterLogoThunk, CommandLogoThunk}
+import org.nlogo.agent.{Agent, AgentSet}
 import org.nlogo.nvm.{ ExclusiveJob, Activation, CompilerFlags,
                        Context, ImportHandler, Procedure, Reporter }
 
@@ -43,14 +42,14 @@ class Evaluator(workspace: AbstractWorkspace) {
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
     val job = workspace.jobManager.makeConcurrentJob(
-      owner, workspace.world.kindToAgentSet(owner.kind), workspace, procedure)
+      owner, workspace.world.agentSetOfKind(owner.kind), workspace, procedure)
     workspace.jobManager.addJob(job, true)
     job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
     workspace.jobManager.addReporterJobAndWait(owner,
-      workspace.world.kindToAgentSet(owner.kind), workspace, procedure)
+      workspace.world.agentSetOfKind(owner.kind), workspace, procedure)
 
   ///
 
@@ -161,7 +160,8 @@ class Evaluator(workspace: AbstractWorkspace) {
       Some(if(reporter) "runresult" else "run"),
       workspace.world.program, workspace.procedures,
       workspace.getExtensionManager,
-      workspace.compilationEnvironment)
+      workspace.compilationEnvironment,
+      workspace.flags)
     results.head.init(workspace)
     results.head
   }

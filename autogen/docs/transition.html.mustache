@@ -39,22 +39,158 @@
       <a>Changes for NetLogo 6.0</a>
     </h2>
     <h3>
+      Tasks replaced by Anonymous Procedures
+    </h3>
+    <p>
+      In NetLogo 6.0, tasks have been replaced by anonymous procedures.
+      This means that <code>task</code> is no longer a primitive, it's been replaced
+      by the new <a href="dictionary.html#arrow">arrow syntax</a> for creating
+      anonymous procedures. Similarly, question mark variables like <code>?</code>,
+      <code>?1</code>, and <code>?2</code> are now just ordinary names in NetLogo and can
+      be used to name procedure variables, let variables, or anonymous procedure variables.
+      Finally, <code>is-reporter-task?</code> and <code>is-command-task?</code>
+      have been replaced by <code>is-anonymous-reporter?</code> and
+      <code>is-anonymous-command?</code>.
+    <p>
+      To make this transition easier, we've added an automatic conversion step which
+      should allow most models saved in NetLogo 5 to be converted to use the new syntax
+      automatically. The autoconverter has been a substantial piece of effort and we've
+      tested it on all the models in the models library.
+      To use it, ensure the model compiles and run properly in NetLogo 5 or later,
+      then save it from NetLogo 5 or later.
+      Then, simply open the model in NetLogo 6. If all goes well, you'll see the converter
+      has changed code like <code>task [?1 + ?2]</code> to
+      <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. The question marks are meant to serve
+      as temporary placeholders for conversion.
+      They enable your model to run, but you can (and should) replace these
+      variables with meaningful names.
+      If you open a model with tasks and it has <i>not</i> been converted,
+      the autoconverter wasn't able to convert your model. Rather than attempt to
+      autoconvert your model and break something, the model will open, you will be
+      shown the appropriate errors and given a chance to edit your model.
+    <p>
+      While we have tested the autoconverter thoroughly, we expect there to be some cases it
+      doesn't cover.
+      <ul>
+        <li>If you make use of extensions that aren't yet compiled for NetLogo 6,
+        the autoconverter will not work until those extensions have been updated.</li>
+        <li>If your code uses <code>run</code> or <code>runresult</code> to evaluate
+        strings containing tasks, the autoconverter will not change those strings to
+        be anonymous procedures. To make <code>run</code> and <code>runresult</code> work
+        as expected, look at strings in your model and change any which rely on <code>task</code>
+        or <code>?</code>-variables to instead rely on anonymous procedures</li>
+      </ul>
+      If your model doesn't fall into the above categories and doesn't convert or
+      converts incorrectly, please email our
+      <a href="mailto:ccl-feedback@ccl.northwestern.edu"</a>feedback address</a> and we'll
+      be happy to offer whatever assistance we can.
+
+    <h3>
+      Link reporters overhauled to be more consistent and flexible
+    </h3>
+    <p>
+      In previous versions of NetLogo, link reporters have had a number of
+      inconsistencies regarding directed and undirected links. For example,
+      <code>my-links</code> would report <i>all</i> links connected to a turtle,
+      whereas <code>link-neighbors</code> would only report neighbors connected
+      by <i>undirected</i> links. Furthermore, it was quite difficult to work
+      with models where the links could either be directed or undirected.
+
+    <p>
+      To alleviate these issues, the link primitives have been overhauled in
+      6.0. These changes only affect existing models that use both directed and
+      undirected links while also using the unbreeded link primitives.
+    <p>
+      The changes are as follows:
+      <ul>
+        <li>
+          Link reporters that contain the word &quot;out&quot; now utilize
+          both directed, outgoing links and undirected links. That is, they
+          now specify links that can be used to get from the current node to
+          other nodes. For example, <code>out-link-neighbor?</code> will
+          report <code>true</code> if the current turtle is connected to the
+          given turtle by either an outgoing directed link or an undirected
+          link. If you only want directed, outgoing links, you can use a
+          breed-specific reporter or
+          <code>my-out-links with [ is-directed? self ]</code>.
+          Generally, when working with models that have both directed and undirected links,
+          you will probably want to use the &quot;out&quot;
+          primitives for most things now.
+        </li>
+        <li>
+          Link reporters that contain the word &quot;in&quot; now utilize
+          both directed, incoming links and undirected links. That is, they
+          now specify links that can be used to get to the current node from
+          other nodes. For example, <code>in-link-neighbor?</code> will
+          report <code>true</code> if the current turtle is connected to the
+          given turtle by either an incoming directed link or an undirected
+          link. If you only want directed, incoming links, you can use a
+          breed-specific reporter or
+          <code>my-in-links with [ is-directed? self ]</code>.
+        </li>
+        <li>
+          Link reporters that do not specify &quot;out&quot; or &quot;in&quot;
+          utilize <i>all</i> links.
+        </li>
+      </ul>
+    <p>
+      Furthermore, there are no longer restrictions regarding which reporters
+      can be used with which breeds. For unbreeded links, this makes it
+      possible to use the same primitives regardless of whether your network
+      ends up being directed or undirected.
+    <p>
+      The new behavior (including all changed primitives) is summarized by the
+      following table, where &quot;un&quot; refers to undirected links,
+      &quot;out&quot; refers to directed, outgoing links, and &quot;in&quot;
+      refers to directed, incoming links.
+    <h5>New link reporter behavior</h5>
+      <img src="images/new-link-behavior.png"/>
+    <h5>Old link reporter behavior</h5>
+      <img src="images/old-link-behavior.png"/>
+    <h3>
+      Removal of Applets
+    </h3>
+    <p>
+      Oracle, the company behind Java, has announced that Java applets are deprecated (see
+      <a href="https://blogs.oracle.com/java-platform-group/entry/moving_to_a_plugin_free">this blog post</a>
+      for more information). This comes as the major browsers have removed support for
+      plug-ins (like java applets) or announced that they plan to do so.
+    <p>
+      Instead of using applets to distribute your model, NetLogo offers the option to export
+      to NetLogo Web. While NetLogo Web doesn&apos;t yet offer the full functionality of desktop NetLogo
+      (in particular, extensions aren&apos;t supported), it is now capable of running most of the models
+      in the NetLogo models library and we hope that most model distributors will find that it
+      meets their needs. To export to NetLogo Web, choose the &quot;Save As NetLogo Web&quot; option from
+      the &quot;File&quot; menu.
+    <h3>
+      Changes to the NetLogo User Interface
+    </h3>
+    <p>
+      Users will notice several tweaks to the NetLogo User interface when opening NetLogo 6 for the first time.
+      We've removed the bar border above the view.
+      To open the 3D View in 6.0, you can right click on the view and
+      choose &quot;Switch to 3D View&quot;, or choose the same option from the &quot;Tools&quot; menu.
+      Ticks are now displayed in the interface tab toolbar beneath the speed slider.
+      To adjust the label used for &quot;ticks&quot; and other view properties, you can choose the
+      &quot;Settings&quot; button at the far right of the interface tab toolbar or right-click on the
+      view and choose &quot;Edit...&quot; from the context menu that appears.
+    <h3>
       Nobody Not Permitted as a Chooser Value
     </h3>
     <p>
-    In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
-    Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
-    <code>nobody</code> refers to a non-literal value which
-    isn't supported in choosers. As part of this transition, choosers
-    containing <code>nobody</code> (or <code>nobody</code> within a nested list)
-    will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
-    opened in NetLogo 6.0.
+      In NetLogo 6.0, <code>nobody</code> is no longer a valid chooser value.
+      Just as you can't put <code>turtle 0</code> or <code>turtles</code>,
+      <code>nobody</code> refers to a non-literal value which
+      isn't supported in choosers. As part of this transition, choosers
+      containing <code>nobody</code> (or <code>nobody</code> within a nested list)
+      will have all uses of <code>nobody</code> changed to <code>"nobody"</code> when
+      opened in NetLogo 6.0.
     <h3>
       Breeds must have singular and plural names
     </h3>
     <p>
       In NetLogo 6.0, you must specify both plural and singular breed names.
-      In prior versions, declarations like <code>breed [ mice ]</code> were legal,
+      In prior versions, declarations like <code>breed [mice]</code> were legal,
       but this support has been removed in 6.0. If you have models which use only
       plural breed names, it is recommended that you convert them to specify both
       names before opening in 6.0 since doing so will permit the NetLogo converter
@@ -185,6 +321,17 @@
       The plugin handles fetching the NetLogo jar which extensions compile against as
       well as generation of a jar for the extension containing the appropriate metadata.
     <div id="v52">
+    <h3>
+      Add <code>range</code> primitive
+    </h3>
+    <p id="rangeprim">
+      A new <code>range</code> primitive was added in NetLogo 6. As "range"
+      may appear in existing models as a procedure or variable name, we have
+      added an autoconversion step which will ensure that these models continue
+      to operate immediately upon opening in NetLogo 6. Existing uses of
+      <code>range</code> in models authored before NetLogo 6 will be converted
+      to <code>_range</code> upon first opening in NetLogo 6. Once the model
+      opens, you can rename <code>_range</code> to suit your model.
     <h2>
       <a>Changes for NetLogo 5.2</a>
     </h2>

@@ -25,6 +25,7 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
   // we repaint.  To set or modify the constraints, you use
   // setSliderConstraint, passing in a SliderConstraint object.
   var constraint: SliderConstraint = new ConstantSliderConstraint(minimum, maximum, increment)
+
   setSliderConstraint(constraint)
 
   // constraint runtime errors intentionally not handled here.
@@ -49,16 +50,23 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
       e match {
         case ex: SliderConstraint.ConstraintRuntimeException =>
           errorHandler.error(ex.spec.fieldName, ex)
+        case otherEx =>
+          // If there's a non-constraint error, don't blow up.
+          // Typically, this error is generated when a slider reporter depends on the value
+          // of another slider or a compiled procedure and compilation hasn't quite caught up
+          // with where this event is.
       }
+
+    def ignore(d: Double): Unit = {}
 
     (for {
       min <- con.minimum
       max <- con.maximum
       inc <- con.increment
     } yield resetValues(min, max, inc)).getOrElse {
-      con.minimum.failed.foreach(setError)
-      con.maximum.failed.foreach(setError)
-      con.increment.failed.foreach(setError)
+      con.minimum.fold(setError, ignore)
+      con.maximum.fold(setError, ignore)
+      con.increment.fold(setError, ignore)
       false
     }
   }
@@ -85,7 +93,7 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
     def precisionHelper(n: Double): Int = {
       val (sWithoutE, eValue) = {
         val s = n.toString
-        var place: Int = s.indexOf('E')
+        val place: Int = s.indexOf('E')
         if (place == -1) (s,0)
         else (s.substring(0,place), s.substring(place + 1).toInt)
       }

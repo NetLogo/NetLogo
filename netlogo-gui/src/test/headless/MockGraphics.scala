@@ -2,10 +2,10 @@
 
 package org.nlogo.headless
 
-import java.awt.{List=>AWTList, _}
-import geom.AffineTransform
-import image.BufferedImage
-import collection.mutable.{ListBuffer, Stack}
+import java.awt.{ Composite, FontMetrics }
+import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
+import collection.mutable.ListBuffer
 import org.nlogo.api.GraphicsInterface
 import org.nlogo.util.MockSuite
 
@@ -35,13 +35,13 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
 
   import MockGraphics._
 
-  private var composite: String = "src"
-  private var transforms = new Stack[AffineTransform]()
-  private var antialiasing: Boolean = false
-  private var operations = new ListBuffer[Operation]
-  private var stroke = 1.0
-  private var color = java.awt.Color.black
-  private var transform = new AffineTransform
+  protected var composite: String = "src"
+  protected var transforms = List.empty[AffineTransform]
+  protected var antialiasing: Boolean = false
+  protected var operations = new ListBuffer[Operation]
+  protected var stroke = 1.0
+  protected var color = java.awt.Color.black
+  protected var transform = new AffineTransform
 
   def drawLine(x1: Double, y1: Double, x2: Double, y2: Double) {
     operations += Line(loc(x1, y1),loc(x2, y2))
@@ -98,7 +98,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   }
   private def size(width: Double, height: Double) = Size(transform.getScaleX * width, transform.getScaleY * height)
 
-  def pop{ transform = transforms.pop }
+  def pop{ transform = transforms.head; transforms = transforms.tail }
   def dispose{}
   def setStroke(width: Float, dashes: Array[Float]){ stroke = width }
   def setStroke(width: Double){ stroke = width }
@@ -118,7 +118,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   def scale(x: Double, y: Double, shapeWidth: Double){ transform.scale(x / shapeWidth, y / shapeWidth) }
   def translate(x: Double, y: Double){ transform.translate(x, y) }
   def setInterpolation{}
-  def push{ transforms push transform.clone.asInstanceOf[AffineTransform] }
+  def push{ transforms = transform.clone.asInstanceOf[AffineTransform]::transforms }
 
   def setComposite(comp: Composite){
     composite = if (comp == java.awt.AlphaComposite.Src) "src"

@@ -9,7 +9,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
@@ -20,14 +20,14 @@ public final strictfp class _nof
   public Object report(final Context context) {
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (n > list.size()) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
       }
       if (n == list.size()) {
@@ -40,7 +40,7 @@ public final strictfp class _nof
       // on some turtlesets - ST 11/5/03
       int count = agents.count();
       if (n > count) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
       }
       return agents.randomSubset(n, count, context.job.random);

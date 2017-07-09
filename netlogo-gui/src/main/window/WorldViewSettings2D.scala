@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.agent.World
 import org.nlogo.awt.Hierarchy
 import org.nlogo.swing.{ ModalProgressTask, OptionDialog }
 
@@ -91,7 +90,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         val options = Array[Object](
           I18N.gui.get("view.resize.hubnet.kick"),
           I18N.gui.get("view.resize.hubnet.dontkick"))
-        OptionDialog.show(workspace.getFrame, title, message, options)
+        OptionDialog.showMessage(workspace.getFrame, title, message, options)
       } else
         HubNetIgnore
     }
@@ -104,7 +103,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     val runnable = new RunResize()
     if (showProgress)
-      ModalProgressTask(Hierarchy.getFrame(gWidget),
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
         I18N.gui.get("view.resize.progress"), runnable)
     else
       runnable.run()

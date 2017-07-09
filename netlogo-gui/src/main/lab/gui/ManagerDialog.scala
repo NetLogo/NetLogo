@@ -3,14 +3,15 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol }
-import org.nlogo.window.EditDialogFactoryInterface
-import java.awt.Component
-import javax.swing.{JButton,JDialog,JLabel,JList,JOptionPane,JPanel,JScrollPane,ListCellRenderer}
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
+import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import java.awt.{ Component, Dimension }
+import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
 import org.nlogo.core.I18N
 
-private class ManagerDialog(manager: LabManager,
-                            dialogFactory: EditDialogFactoryInterface)
+private class ManagerDialog(manager:       LabManager,
+                            dialogFactory: EditDialogFactoryInterface,
+                            menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
@@ -73,6 +74,13 @@ private class ManagerDialog(manager: LabManager,
     val maxBounds = getGraphicsConfiguration.getBounds
     setLocation(maxBounds.x + maxBounds.width / 3,
                 maxBounds.y + maxBounds.height / 2)
+
+    // menu - make a file menu available for saving, but don't show it
+    val menus = new JMenuBar() {
+      add(menuFactory.createFileMenu)
+      setPreferredSize(new Dimension(0, 0))
+    }
+    setJMenuBar(menus)
     // misc
     org.nlogo.swing.Utils.addEscKeyAction(this, closeAction)
     getRootPane.setDefaultButton(runButton)
@@ -94,14 +102,13 @@ private class ManagerDialog(manager: LabManager,
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
-    import collection.JavaConverters._
     editProtocol(
       new LabProtocol(
-        "experiment", "setup", "go", "", 1, true, 0, "", List("count turtles"),
+        "experiment", "setup", "go", "", 1, true, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
           manager.workspace.world.program.interfaceGlobals.toList
           .map{case variableName: String =>
-            new EnumeratedValueSet(
+            new RefEnumeratedValueSet(
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }

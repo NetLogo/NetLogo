@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import org.scalatest.FunSuite
-import java.lang.{ Double => JDouble, Integer => JInteger }
 import org.nlogo.core.LogoList
 
 class ScalaConversionsTests extends FunSuite {

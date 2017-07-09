@@ -5,8 +5,6 @@ package org.nlogo.gl.render
 import org.nlogo.shape.Polygon
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 import com.jogamp.opengl.glu.{ GLU, GLUtessellator }
-import com.jogamp.opengl.glu.gl2.GLUgl2
-import java.util.{ List => JList }
 import collection.JavaConverters._
 
 object Polygons {

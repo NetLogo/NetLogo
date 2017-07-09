@@ -17,12 +17,15 @@ common.buttons.exit = Exit
 common.buttons.continue = Continue
 common.buttons.save = Save
 common.buttons.discard = Discard
+common.buttons.dismiss = Dismiss
 common.buttons.halt = Halt
 common.buttons.yes = Yes
 common.buttons.no = No
 
 common.messages.error = Error
 common.messages.warning = Warning
+
+common.menus.empty = <empty>
 
 # GUI
 
@@ -32,9 +35,8 @@ menu.file.open = Open
 menu.file.modelsLibrary = Models Library
 menu.file.uploadMc = Upload To Modeling Commons
 menu.file.save = Save
-menu.file.save.error = Save failed.  Error: {0}
-menu.file.save.confirm = Do you want to save the changes you made to this model?
 menu.file.saveAs = Save As
+menu.file.saveAll = Save All
 menu.file.saveAsNetLogoWeb = Save As NetLogo Web…
 menu.file.saveAsNetLogoWeb.dialog = Saving as NetLogo Web HTML Page
 menu.file.nlw.prompt.fromSave = From last save
@@ -45,9 +47,15 @@ menu.file.nlw.prompt.message.fromSave = Export model from last save or from open
 menu.file.nlw.prompt.message.fromLibrary = Export model from Models Library or open copy?
 menu.file.print = Print…
 menu.file.export = Export
+menu.file.export.failed = Export Failed
 menu.file.export.world = Export World
+menu.file.export.noPlots = There are no plots to export.
 menu.file.export.plot = Export Plot
+menu.file.export.plot.exportFailed = Export of {0} plot to {1} failed: {2}
+menu.file.export.plot.failed = Export Plot Failed
+menu.file.export.plot.whichPlot = Which plot would you like to export?
 menu.file.export.allPlots = Export All Plots
+menu.file.export.allPlots.exportFailed = Export of all plots to {0} failed: {1}
 menu.file.export.view = Export View
 menu.file.export.interface = Export Interface
 menu.file.export.output = Export Output
@@ -63,6 +71,8 @@ menu.file.import.hubNetClientInterface.prompt = Which section would you like to 
 menu.file.import.hubNetClientInterface.fromInterface = Interface Tab
 menu.file.import.hubNetClientInterface.fromClient = HubNet client
 menu.file.quit = Quit
+menu.file.recent = Recent Files
+menu.file.recent.clear = Clear Items
 
 menu.edit = Edit
 menu.edit.cut = Cut
@@ -74,13 +84,14 @@ menu.edit.redo = Redo
 menu.edit.selectAll = Select All
 menu.edit.find = Find…
 menu.edit.findNext = Find Next
-menu.edit.showLineNumbers = Show Line Numbers
 menu.edit.shiftLeft = Shift Left
 menu.edit.shiftRight = Shift Right
+menu.edit.shiftTab = Tab Left
 menu.edit.format = Format
 menu.edit.comment = Comment
 menu.edit.uncomment = Uncomment
 menu.edit.snapToGrid = Snap to Grid
+menu.edit.convertToNetLogoSix = Convert from 5.3.1 to 6.0
 
 menu.tools = Tools
 menu.tools.preferences = Preferences…
@@ -111,13 +122,14 @@ menu.zoom.smaller = Smaller
 menu.tabs = Tabs
 
 menu.help = Help
-menu.help.lookUpInDictionary(F1) = Look Up In Dictionary (F1)
+menu.help.lookUpInDictionary = Look Up In Dictionary
 menu.help.netLogoUserManual = NetLogo User Manual
 menu.help.netLogoDictionary = NetLogo Dictionary
 menu.help.netLogoUsersGroup = NetLogo Users Group
 menu.help.netLogoStackOverflow = NetLogo Q & A - Stack Overflow
 menu.help.introToABM = Introduction to Agent-Based Modeling
 menu.help.donate = Donate
+menu.help.aboutVersion = About {0}…
 
 tabs.run = Interface
 tabs.run.editButton = Edit
@@ -133,10 +145,16 @@ tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
 tabs.run.viewUpdates.dropdown.onticks = on ticks
 tabs.run.viewUpdates.dropdown.continuous = continuous
 tabs.run.viewUpdates.dropdown.tooltip = change view update mode
+tabs.run.widget.edit = Edit…
+tabs.run.widget.export = Export…
+tabs.run.widget.deselect = Deselect
+tabs.run.widget.delete = Delete
+tabs.run.widget.select = Select
 
 tabs.run.speedslider.normalspeed = normal speed
-tabs.run.speedslider.faster = faster
-tabs.run.speedslider.slower = slower
+tabs.run.speedslider.faster      = faster
+tabs.run.speedslider.slower      = slower
+tabs.run.speedslider.tooltip     = Adjust speed of model
 
 tabs.run.widgets.button = Button
 tabs.run.widgets.slider = Slider
@@ -159,21 +177,31 @@ tabs.run.commandcenter.history = History
 tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
 tabs.run.commandcenter.clearHistory = Clear History
 
+tabs.input.export.error = Export failed.  Error:\n{0}
+
 tabs.info = Info
 tabs.info.edit = Edit
 tabs.info.help = Help
 
 tabs.code = Code
+tabs.code.rightclick.jumptodeclaration = Jump To Declaration
 tabs.code.rightclick.quickhelp = Quick Help
 tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo Dictionary.\n \
    Would you like to open the full NetLogo Dictionary?
+tabs.code.rightclick.collapse = Toggle Folds in Selection
 tabs.code.checkButton = Check
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
+tabs.code.includedFiles = Included Files
+tabs.code.includedFiles.new = New Source File
+tabs.code.includedFiles.open = Open Source File
 tabs.code.indentAutomatically = Indent automatically
 
+tabs.external.new = New File {0}
+tabs.external.close = Close
+
 # File and model operations
-file.open.transitionGuide.url = http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html
+file.open.transitionGuide.url = http://ccl.northwestern.edu/netlogo/6.0/docs/transition.html
 file.open.warn.version.newer = You are attempting to open a model \
   that was created in a newer version of NetLogo. \
   (This is {0}; the model was created in {1}.) \
@@ -187,9 +215,32 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
-file.open.error.invalidmodel = The file is not a valid NetLogo model file.
+file.open.warn.autoconversion.model.title = Error Converting Model
+file.open.warn.autoconversion.model.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
+ Would you like to continue opening it? \n
+file.open.warn.autoconversion.model.detail = While running conversion "{0}" on the {1}: {2}
+file.open.warn.autoconversion.model.bestEffort = Open Partially Converted Model
+file.open.warn.autoconversion.model.original = Open Unconverted Model
+file.open.warn.autoconversion.nls.title = Error Converting .nls File
+file.open.warn.autoconversion.nls.error = NetLogo encountered the following errors while trying to automatically convert the nls file from 5.3.1 to 6.0. \
+ Would you like to change the contents of this tab? \n
+file.open.warn.autoconversion.nls.detail = While running conversion "{0}" on this tab: {2}
+file.open.warn.autoconversion.nls.bestEffort = Use Partial Conversion
+file.open.warn.autoconversion.nls.original = Use Original Code
+file.open.error.invalidmodel = This file is not a valid NetLogo model file.
+file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
+file.open.error.external.suffix = Filename must end with ".nls".
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
+file.save.external = Save NetLogo Source File
+file.save.offer.external.filesChanged = The following files has been modified:
+file.save.offer.external.shouldSave = Save?
+file.save.offer.external.filename = File Name
+file.save.offer.external.saveSelected = Save Selected Files
+file.save.offer.external.discardAll = Discard All
+file.save.offer.thisModel = this model
+file.save.offer.confirm = Do you want to save the changes you made to {0}?
+file.save.error = Save failed.  Error: {0}
 file.save.warn.savingInNewerVersion = This model was made with {0}. If you save it in {1} it may not work in the old version anymore.
 file.save.warn.invalidFormat = NetLogo doesn't know how to save in ".{0}" format, please choose a different format.
 
@@ -247,7 +298,6 @@ edit.plot.pen.interval = Interval
 edit.plot.pen.showInLegend = Show in legend
 edit.plot.pen.setupCommands = Pen setup commands
 edit.plot.pen.updateCommands = Pen update commands
-edit.plot.error.dismiss = Dismiss
 edit.plot.error.runtimeError = Runtime Error:
 
 edit.chooser.globalVar = Global variable
@@ -360,6 +410,8 @@ edit.hubnet.view.height = Height (pixels)
 tools.preferences = NetLogo Preferences
 tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
+tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
+tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview
@@ -414,6 +466,14 @@ You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
 
 tools.behaviorSpace.repetitions = Repetitions
 tools.behaviorSpace.repetitions.info = run each combination this many times
+tools.behaviorSpace.sequentialRunOrder = Run combinations in sequential order
+
+# this property extends across several lines, and has HTML breaks in it.
+tools.behaviorSpace.sequentialRunOrder.info = For example, having ["var" 1 2 3] with 2 repetitions, \
+the experiments'' "var" values will be:<br>\
+sequential order: 1, 1, 2, 2, 3, 3<br>\
+alternating order: 1, 2, 3, 1, 2, 3
+
 tools.behaviorSpace.metrics = Measure runs using these reporters:
 # this property has an HTML break in it.
 tools.behaviorSpace.metrics.info = one reporter per line; you may not split a reporter<br>across multiple lines

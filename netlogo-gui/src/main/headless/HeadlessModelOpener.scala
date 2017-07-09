@@ -2,17 +2,14 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, NumericConstraint, SliderConstraint}
-import org.nlogo.api.{ FileIO, LogoException, ModelSection,
-                        NetLogoLegacyDialect, NetLogoThreeDDialect, SourceOwner, ValueConstraint, Version}
-import org.nlogo.fileformat
-import org.nlogo.core.ShapeParser.{ parseVectorShapes, parseLinkShapes }
-import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program, model => coremodel },
-  coremodel.WidgetReader
+import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement,
+  ConstantSliderConstraint, InputBoxConstraint, NumericConstraint }
+import org.nlogo.api.{ LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect,
+  SourceOwner, ValueConstraint, Version}
+import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
 import org.nlogo.plot.PlotLoader
 import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
 import org.nlogo.shape.{LinkShape, VectorShape}
-import org.nlogo.api.StringUtils.escapeString
 import org.nlogo.api.PreviewCommands
 
 import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
@@ -46,14 +43,12 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read procedures, compile them.
     val results = {
-      import collection.JavaConverters._
-
       val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
-    ws.setProcedures(results.proceduresMap)
+    ws.procedures = results.proceduresMap
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
@@ -67,7 +62,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     }
 
     ws.init()
-    ws.world.program(results.program)
+    ws.world.asInstanceOf[CompilationManagement].program(results.program)
 
     // test code is mixed with actual code here, which is a bit funny.
     if (ws.compilerTestingMode)
@@ -79,7 +74,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   }
 
   private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
-    import collection.JavaConverters._
     ws.world.turtleShapes.replaceShapes(turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
       ws.world.turtleShapes.add(VectorShape.getDefaultShape)
@@ -98,6 +92,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     import ConstraintSpecification._
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec match {
+        case BoundedNumericConstraintSpecification(min, default, max, step) =>
+          val constraint = new ConstantSliderConstraint(min.doubleValue, max.doubleValue, step.doubleValue)
+          constraint.defaultValue = default.doubleValue
+          constraint
         case NumericConstraintSpecification(default) => new NumericConstraint(default)
         case ChoiceConstraintSpecification(vals, defaultIndex) => new ChooserConstraint(
           LogoList.fromIterator(vals.iterator),
@@ -107,7 +105,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
       }
-      ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+      ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
 
     ws.command(interfaceGlobalCommands)

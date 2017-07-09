@@ -6,12 +6,12 @@ object Packaging {
 
   val settings = Seq(
     publishArtifact in Test := true,
-    packageOptions <+= dependencyClasspath in Runtime map {
-      classpath =>
-        Package.ManifestAttributes((
-          "Class-Path", classpath.files
-            .map(f => f.getName)
-            .filter(_.endsWith(".jar"))
-            .mkString(" ")))}
+    packageOptions += {
+      Package.ManifestAttributes((
+        "Class-Path", (dependencyClasspath in Runtime).value.files
+          .map(f => f.getName)
+          .filter(_.endsWith(".jar"))
+          .mkString(" ")))
+    }
   )
 }

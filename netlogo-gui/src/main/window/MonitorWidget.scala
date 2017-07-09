@@ -9,7 +9,7 @@ import org.nlogo.nvm.Procedure
 import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
   RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
-import java.awt.event.{ MouseListener, MouseEvent }
+import java.awt.event.MouseEvent
 import java.awt.{ Component, EventQueue,
   Font, Graphics, Dimension, Color => AwtColor }
 import java.util.{ List => JList }
@@ -233,7 +233,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def wrapSource(innerSource: String): Unit = {
     if (innerSource.trim == "") {
-      source(null, "", null)
+      source("", "", "")
       halt()
     } else {
       source(

@@ -3,17 +3,16 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Link
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkpitch extends Reporter {
 
   override def report(context: Context) = {
     val link = context.agent.asInstanceOf[Link]
-    try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true))
+    try newValidDouble(world.protractor.towardsPitch(link.end1, link.end2, true), context)
     catch {
       case e: org.nlogo.api.AgentException =>
-        throw new org.nlogo.nvm.EngineException(
+        throw new org.nlogo.nvm.RuntimePrimitiveException(
           context, this,
           "there is no pitch of a link whose endpoints are in the same position")
     }

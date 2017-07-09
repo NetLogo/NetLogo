@@ -22,7 +22,7 @@ public final strictfp class _observervariable
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) {
-    return context.agent.getObserverVariable(vn);
+    return world.observer().getVariable(vn);
   }
 
   @Override
@@ -34,9 +34,7 @@ public final strictfp class _observervariable
     }
   }
 
-
-
   public Object report_1(final org.nlogo.nvm.Context context) {
-    return context.agent.getObserverVariable(vn);
+    return world.observer().getVariable(vn);
   }
 }

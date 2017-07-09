@@ -4,213 +4,266 @@ package org.nlogo.app.codetab
 
 import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
 import org.nlogo.core.{ Token, TokenType }
-import org.nlogo.editor.IndenterInterface
+import org.nlogo.editor.Indenter
 
 class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
-extends IndenterInterface {
+extends Indenter {
+
+  private val TAB_WIDTH = 2
+
+  // TokenizedLine represents a line that has been tokenized and is ready to be evaluated
+  // for indentation.
+  case class TokenizedLine(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, leadingSpaces: Int, tokens: Seq[Token]) {
+    // bracketDelta lists the change in number of brackets.
+    // "" = 0, "[" = 1, "]" = -1, "[]" = 0, "[[" = 2, &c
+    lazy val bracketDelta = tokens.map(_.tpe).foldLeft(0) {
+      case (i, (TokenType.OpenBracket | TokenType.OpenParen))  => i + 1
+      case (i, (TokenType.CloseBracket | TokenType.CloseParen)) => i - 1
+      case (i, _) => i
+    }
+    // bracketsClosed lists the number of unmatched closing brackets on this line.
+    // "" = 0, "[" = 0, "]" = 1, "[]" = 0, "]]" = 2, "[]]" = 1, &c
+    lazy val bracketsClosed: Int = {
+      val (_, closedCount) = tokens.map(_.tpe).foldLeft((0, 0)) {
+        case ((currentDelta, maxClosed), (TokenType.CloseBracket | TokenType.CloseParen)) =>
+          (currentDelta + 1, maxClosed max (currentDelta + 1))
+        case ((currentDelta, maxClosed), (TokenType.OpenBracket | TokenType.OpenParen)) =>
+          (currentDelta - 1, maxClosed)
+        case ((currentDelta, maxClosed), _) => (currentDelta, maxClosed)
+      }
+      closedCount
+    }
+    lazy val finalCommentStart: Option[Int] =
+      tokens.lastOption.filter(_.tpe == TokenType.Comment).map(_.start - lineStart)
+    lazy val isOnlyComment: Boolean = tokens.length == 1 && tokens.head.tpe == TokenType.Comment
+  }
+
+  // LineIndent and the classes that extend it track operations needing to be performed on
+  // a particular line.
+  sealed trait LineIndent {
+    def lineNum: Int
+    def lineStart: Int
+    def lineEnd: Int
+    def text: String
+    def delta: Int
+  }
+  case class AddIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int) extends LineIndent
+  case class MaintainIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String) extends LineIndent {
+    def delta: Int = 0
+  }
+  case class RemoveIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int) extends LineIndent
 
   /// first, the four handle* methods in IndenterInterface
+  def handleTab() = {
+    code.beginCompoundEdit()
+    val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
+    if (indentations.nonEmpty) {
+      executeIndentations(indentations, Some(code.getCaretPosition))
+    }
+    code.endCompoundEdit()
+  }
 
-  def handleTab() {
-    val line1 = code.offsetToLine(code.getSelectionStart)
-    val line2 = code.offsetToLine(code.getSelectionEnd)
-    (line1 to line2).foreach(indentLine(_))
+  def handleEnter() = {
+    code.beginCompoundEdit()
+    code.replaceSelection("\n")
+    val originalCaretPosition = code.getCaretPosition
+    val line = code.offsetToLine(code.getSelectionEnd)
+    val start = code.lineToStartOffset(line)
+    val end = code.lineToEndOffset(line)
+    // end - 1 because the editor includes newlines as part of the text given in a line
+    val indentations = lineIndentation(start, end - 1)
+    if (indentations.nonEmpty) {
+      executeIndentations(indentations, Some(originalCaretPosition))
+    }
+    code.endCompoundEdit()
   }
-  def handleEnter() {
-    val lineStart = code.lineToStartOffset(code.offsetToLine(code.getSelectionStart))
-    val prevLineText = code.getText(lineStart, code.getSelectionStart - lineStart)
-    val tabDiff = totalValue(prevLineText)
-    if(tabDiff >= 0)
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(prevLineText) + tabDiff * TAB_WIDTH))
-    else
-      code.replaceSelection(
-        "\n" + spaces(countLeadingSpaces(
-          code.getLineOfText(
-            code.offsetToLine(
-              findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-              .start)))))
-  }
-  def handleInsertion(s: String) {
+
+  def handleInsertion(s: String) = {
+    code.beginCompoundEdit()
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
-        handleCloseBracket()
+        indentSelectedLine()
     }
+    code.endCompoundEdit()
   }
-  def handleCloseBracket() {
-    val currentLine = code.offsetToLine(code.getSelectionStart)
-    val lineStart = code.lineToStartOffset(currentLine)
-    val lineEnd = code.lineToEndOffset(currentLine)
-    val text = code.getText(lineStart, lineEnd - lineStart)
-    val textUpToCursor = text.substring(0, code.getSelectionStart - lineStart)
-    val wordUpToCursor = textUpToCursor.trim.toLowerCase
-    if(List("]", ")", "end").contains(wordUpToCursor)) {
-      val lineSpaceCount = countLeadingSpaces(textUpToCursor)
-      val opener = findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
-      val openerLineNum = code.offsetToLine(opener.start)
-      val openerLine = code.getLineOfText(openerLineNum)
-      val spaceDiff = StrictMath.min(lineSpaceCount - countLeadingSpaces(openerLine),
-                                     textUpToCursor.length)
-      if(spaceDiff > 0)
-        code.remove(code.getSelectionStart - wordUpToCursor.length - spaceDiff,
-                    spaceDiff)
-      else if(spaceDiff < 0)
-        code.insertString(code.getSelectionStart - wordUpToCursor.length,
-                          spaces(- spaceDiff))
+
+  def handleCloseBracket() = {
+    code.beginCompoundEdit()
+    code.replaceSelection("]")
+    indentSelectedLine()
+    code.endCompoundEdit()
+  }
+
+  def indentSelectedLine(): Unit = {
+    val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
+    if (indentations.nonEmpty) {
+      executeIndentations(indentations, Some(code.getCaretPosition))
     }
   }
 
   /// private helpers
-
-  private val TAB_WIDTH = 2
-  private def indentLine(lineNum: Int) {
-    val currentLine = code.getLineOfText(lineNum)
-    for(newSpaces <- computeNewSpaces(currentLine, lineNum)) {
-      val oldSpaces = countLeadingSpaces(currentLine)
-      if(newSpaces != oldSpaces) {
-        val lineStart = code.lineToStartOffset(lineNum)
-        if(newSpaces > oldSpaces)
-          code.insertString(lineStart, spaces(newSpaces - oldSpaces))
-        else
-          code.remove(lineStart, oldSpaces - newSpaces)
+  private def executeIndentations(indentations: Seq[LineIndent], caretPosition: Option[Int]): Unit = {
+    val start = indentations.head.lineStart
+    val finish = indentations.last.lineEnd
+    val builder = new StringBuilder(finish - start)
+    indentations.foldLeft(0) { (offset: Int, indent: LineIndent) =>
+      val newOffset = (offset, indent) match {
+        case (offset, AddIndent(_, _, _, text, delta)) =>
+          builder.append(spaces(delta))
+          builder.append(text)
+          (offset + delta)
+        case (offset, RemoveIndent(_, _, _, text, delta)) =>
+          if (text.length > - delta) {
+            builder.append(text.substring(- delta, text.length))
+          }
+          (offset + delta)
+        case (offset, MaintainIndent(_, _, _, text)) =>
+          builder.append(text)
+          offset
       }
+      builder.append("\n")
+      newOffset
+    }
+    // Remove trailing newline
+    builder.delete(builder.length - 1, builder.length)
+    if (caretPosition.isDefined) {
+      caretPosition.foreach { startCaretPosition =>
+        val finalCaretPosition =
+          if (startCaretPosition >= start) {
+            val caretOffset = indentations.foldLeft(0) {
+              case (offset, indent) if indent.lineStart <= startCaretPosition + 1 =>
+                offset + indent.delta
+              case (offset, indent) => offset
+            }
+            startCaretPosition + caretOffset max 0
+          } else {
+            startCaretPosition
+          }
+        code.replace(start, finish - start, builder.toString)
+        code.setCaretPosition(finalCaretPosition)
+      }
+    } else {
+      code.replace(start, finish - start, builder.toString)
     }
   }
 
-  // None return means "leave it where it is"
-  private def computeNewSpaces(currentLine: String,lineNum: Int): Option[Int] = {
-    val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
-    if(token != null && token.tpe == TokenType.CloseBracket) {
-      // first token is close bracket, so find matching opener and set it to the same indent level
-      val opener = findMatchingOpenerBackward(
-        code.getText(0, code.lineToStartOffset(lineNum) + token.start + 1), 0)
-      return Some(countLeadingSpaces(
-        code.getLineOfText(
-          code.offsetToLine(opener.start))))
+  private def lineIndentation(startOffset: Int, endOffset: Int): Seq[LineIndent] = {
+    val endLine = code.offsetToLine(endOffset)
+    // we actually indent to the end of the endLine
+    val endOfEndLine = code.lineToEndOffset(endLine)
+    val tokensFromZero = compiler.tokenizeForColorizationIterator(code.getText(0, endOfEndLine)).buffered
+    val tokLineIter = new TokenLineIterator(tokensFromZero, endLine)
+
+    // this fold has several accumulation variables
+    // _1: List[Int] - indent levels, stored as a stack. Initially empty, changed by the values present in each line
+    // _2: Option[TokenizedLine] - priorLine. The priorLine is sometimes needed to compute line spaces.
+    // _3: Seq[LineIndent] - accumulator of line indents. This is accumulated last->first and reversed after folding
+    val initialFoldParams = (List.empty[Int], Option.empty[TokenizedLine], Seq.empty[LineIndent])
+    val (_, _, lineIndents) = tokLineIter.foldLeft(initialFoldParams)(foldLineIndentations _)
+    lineIndents.reverse.dropWhile(_.lineEnd < startOffset)
+  }
+
+  private def foldLineIndentations(acc: (List[Int], Option[TokenizedLine], Seq[LineIndent]), line: TokenizedLine): (List[Int], Option[TokenizedLine], Seq[LineIndent]) = {
+    val (indentLevels, priorLine, indentAcc) = acc
+    val thisIndent = lineIndentationLevel(indentLevels, line, priorLine, indentAcc.headOption)
+    val newIndentLevels = indentationChange(indentLevels, line, priorLine, indentAcc.headOption)
+    val newIndentAcc: Seq[LineIndent] =
+      if ((thisIndent - line.leadingSpaces) == 0)
+        MaintainIndent(line.lineNum, line.lineStart, line.lineEnd, line.text) +: indentAcc
+      else if (thisIndent - line.leadingSpaces > 0) {
+        AddIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces) +: indentAcc
+      } else
+        RemoveIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces) +: indentAcc
+    (newIndentLevels, Some(line), newIndentAcc)
+  }
+
+  private def lineIndentationLevel(indentLevels: List[Int], line: TokenizedLine, priorLine: Option[TokenizedLine], priorAdjustment: Option[LineIndent]): Int = {
+    val priorIndentLevel = indentLevels.headOption.getOrElse(0)
+    line.tokens.headOption.map(_.tpe) match {
+      case Some(TokenType.Keyword) => 0
+      case Some(TokenType.CloseBracket) if line.bracketDelta == 0 =>
+        (priorIndentLevel - TAB_WIDTH) max 0
+      case Some((TokenType.CloseBracket | TokenType.CloseParen)) if line.bracketDelta < 0 =>
+        if (indentLevels.length > line.bracketsClosed)
+          (indentLevels(line.bracketsClosed) max 0)
+        else
+          (indentLevels.lastOption.getOrElse(2) - TAB_WIDTH)
+      case Some(TokenType.Comment) if line.isOnlyComment =>
+        (for {
+          lastLine <- priorLine
+          adjustment <- priorAdjustment
+          finalCommentStart <- lastLine.finalCommentStart
+        } yield (finalCommentStart + adjustment.delta)).getOrElse(priorIndentLevel)
+      case Some(TokenType.OpenBracket) =>
+        preIndentationAmount(priorIndentLevel, line, priorLine, priorAdjustment)
+          .getOrElse(priorIndentLevel)
+      case _ => priorIndentLevel
     }
-    // keywords should always be at the far left.  go ahead and guess if breed is the first token in
-    // a line that it is the keyword. we do the same thing in EditorColorizer, sort of. I can think
-    // of situations where the breed variable might be the first token in a line, however, they seem
-    // quite unusual and maybe you should be formatting your code differently if you run into such a
-    // situation :) ev 1/22/08
-    if(token != null && (token.tpe == TokenType.Keyword ||
-                         token.text.equalsIgnoreCase("breed")))
-      return Some(0)
-    // if it's not one of the previous two cases the position probably depends at least one line
-    // previous unless it's the first line
-    if(lineNum == 0) return None
-    // find previous line that has a token on it. (ignoring blank lines) if this line does not start
-    // with a comment also ignore lines that do cause they might be weird ev 2/25/08
-    var prevLineNum = lineNum - 1
-    var prevLine = code.getLineOfText(prevLineNum)
-    var tokens = tokenize(prevLine)
-    var i = prevLineNum - 1
-    while(i >= 0 &&
-          (tokens.isEmpty ||
-           ((token == null || token.tpe != TokenType.Comment) &&
-            tokens(0).tpe == TokenType.Comment)))
-    {
-      prevLineNum = i
-      prevLine = code.getLineOfText(prevLineNum)
-      tokens = tokenize(prevLine)
-      i -= 1
+  }
+
+  private def preIndentationAmount(priorIndentLevel: Int, line: TokenizedLine, priorLine: Option[TokenizedLine], priorAdjustment: Option[LineIndent]): Option[Int] = {
+    if (line.leadingSpaces > priorIndentLevel) {
+      for {
+        lineAbove <- priorLine if lineAbove.tokens.headOption.exists(_.tpe == TokenType.Command) && lineAbove.bracketDelta == 0
+        adjustment <- priorAdjustment
+        leadingSpaces = line.leadingSpaces + adjustment.delta
+      } yield {
+        if (leadingSpaces % TAB_WIDTH == 1) leadingSpaces + (leadingSpaces % TAB_WIDTH)
+        else leadingSpaces
+      }
+    } else
+      None
+  }
+
+  private def indentationChange(indentLevels: List[Int], line: TokenizedLine, priorLine: Option[TokenizedLine], priorAdjustment: Option[LineIndent]): List[Int] = {
+    val priorIndentLevel = indentLevels.headOption.getOrElse(0)
+    line.tokens.headOption.map(t => (t.tpe, t.text.toUpperCase)) match {
+      case Some((TokenType.Keyword, ("TO" | "TO-REPORT"))) => List(TAB_WIDTH)
+      case Some((TokenType.Keyword, _)) if line.bracketDelta == 0 => List()
+      case Some((TokenType.OpenBracket, _)) if line.bracketDelta > 0 =>
+        preIndentationAmount(priorIndentLevel, line, priorLine, priorAdjustment)
+          .map(_ + TAB_WIDTH)
+          .map(i => List.fill(line.bracketDelta)(i) ++ indentLevels)
+          .getOrElse(List.fill(line.bracketDelta)(priorIndentLevel + TAB_WIDTH) ++ indentLevels)
+      case Some(_) if line.bracketDelta > 0 => List.fill(line.bracketDelta)(priorIndentLevel + TAB_WIDTH) ++ indentLevels
+      case Some(_) if line.bracketDelta < 0 => indentLevels.drop(- line.bracketDelta)
+      case _ => indentLevels
     }
-    if(tokens.isEmpty) return None
-    // if our line starts with a comment, try to find a comment in prev line to align with
-    if(token != null && token.tpe == TokenType.Comment)
-      getComment(tokens).foreach(tok => return Some(tok.start))
-    var result = countLeadingSpaces(prevLine)
-    // if there is such a previous line if it's got an "opener" that has no closer bump this line in
-    if(totalValue(tokens) > 0)
-      result += TAB_WIDTH
-    else {
-      // finally, first look for the last closing bracket, then find the matching open bracket then
-      // find the previous command that is outside the brackets.
-      findCommandForLastCloser(
-          prevLine, code.lineToStartOffset(prevLineNum),
-          token != null && isOpener(token)).foreach(opener =>
-        result = countLeadingSpaces(
-          code.getLineOfText(
-            code.offsetToLine(opener.start))))
-      // look for the command on the previous line if we've got an opener (closed opener) look to
-      // see where we are in relation to the command if we're indented past the command move to 1
-      // tab stop past if we're before we move to be in line with the command
-      val cmd = findCommand(prevLine)
-      if(token != null && isOpener(token) && cmd.isDefined &&
-         countLeadingSpaces(currentLine) > result)
-           return Some(result + TAB_WIDTH)
+  }
+
+  class TokenLineIterator(tokens: BufferedIterator[Token], endLine: Int) extends Iterator[TokenizedLine] {
+    var currentLine = 0
+    var priorEnd = -1
+    def hasNext = currentLine <= endLine
+    def next(): TokenizedLine = {
+      val lineStart = code.lineToStartOffset(currentLine)
+      val rawEnd = code.lineToEndOffset(currentLine)
+      while (tokens.head.end < lineStart) {
+        tokens.next()
+      }
+      val rawText = code.getText(lineStart, rawEnd - lineStart)
+      val (text, lineEnd) =
+        if (rawText.nonEmpty && rawText.last == '\n')
+          (rawText.substring(0, rawEnd - (lineStart + 1)), rawEnd - 1)
+        else (rawText, rawEnd)
+      val spaces = countLeadingSpaces(text)
+      val tokLine =
+        if (tokens.head.start > lineEnd) {
+          TokenizedLine(currentLine, lineStart, lineEnd, text, spaces, Seq.empty[Token])
+        } else {
+          var lineTokensReversed = Seq.empty[Token]
+          while (tokens.hasNext && tokens.head.start < lineEnd) {
+            lineTokensReversed = tokens.next() +: lineTokensReversed
+          }
+          TokenizedLine(currentLine, lineStart, lineEnd, text, spaces, lineTokensReversed.reverse)
+        }
+      priorEnd = lineEnd
+      currentLine += 1
+      tokLine
     }
-    Some(result)
   }
 
   private def countLeadingSpaces(s: String) = s.takeWhile(_ == ' ').size
-  private def isOnlySpaces(s: String) = s.forall(_ == ' ')
   private def spaces(n: Int) = List.fill(n)(' ').mkString
-  private def totalValue(s: String): Int = totalValue(tokenize(s))
-  private def totalValue(tokens: List[Token]): Int = tokens.map(value).sum
-
-  private def value(tok: Token) =
-    if(isOpener(tok)) 1
-    else if(isCloser(tok)) -1
-    else 0
-
-  private def findMatchingOpenerBackward(s: String, startDiff: Int): Token = {
-    val tokens = tokenize(s)
-    var diff = startDiff
-    var changedDiffYet = false
-    for(tok <- tokens.reverse) {
-      if(isCloser(tok)) {
-        diff += 1
-        changedDiffYet = true
-      }
-      else if(isOpener(tok)) {
-        diff -= 1
-        changedDiffYet = true
-      }
-      if(changedDiffYet && diff == 0)
-        return tok
-    }
-    tokens(0)
-  }
-
-  private def findCommandForLastCloser(line: String, offset: Int, findOpener: Boolean): Option[Token] = {
-    for(tok <- tokenize(line).reverse)
-      if(isCloser(tok)) {
-        val opener = findMatchingOpenerBackward(
-          code.getText(0, tok.start + offset), 1)
-        return Some(if(findOpener) opener
-                    else findCommand(code.getText(0, opener.start)).getOrElse(opener))
-      }
-    None
-  }
-
-  private def findCommand(text: String): Option[Token] = {
-    var diff = 0
-    for(tok <- tokenize(text).reverse) {
-      if(isOpener(tok))
-        diff -= 1
-      else if(isCloser(tok))
-        diff += 1
-      else if(diff == 0 && tok.tpe == TokenType.Command)
-        return Some(tok)
-    }
-    None
-  }
-
-  private def getComment(tokens: List[Token]): Option[Token] =
-    tokens.reverse.find(_.tpe == TokenType.Comment)
-  private def tokenize(line: String) =
-    compiler.tokenizeForColorization(line).toList
-  private def isOpener(t: Token) =
-    t.tpe == TokenType.OpenParen ||
-    t.tpe == TokenType.OpenBracket ||
-    t.tpe == TokenType.Keyword &&
-      (t.text.equalsIgnoreCase("to") || t.text.equalsIgnoreCase("to-report"))
-  private def isCloser(t: Token) =
-    t.tpe == TokenType.CloseParen ||
-    t.tpe == TokenType.CloseBracket ||
-    t.tpe == TokenType.Keyword &&
-      t.text.equalsIgnoreCase("end")
-
 }

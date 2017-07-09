@@ -11,19 +11,19 @@ object Fail {
   // different names for the two methods), but choosing to leave it for now. - ST 10/4/12
 
   // "assert" is in Predef, so...
-  def cAssert(condition: Boolean, desc: =>String, token: Token) {
+  def cAssert(condition: Boolean, desc: =>String, locatable: SourceLocatable) {
     if(!condition)
-      exception(desc, token)
+      exception(desc, locatable)
   }
-  def cAssert(condition: Boolean, desc: =>String, node: AstNode) {
+  def cAssert(condition: Boolean, desc: =>String, location: SourceLocation) {
     if(!condition)
-      exception(desc, node)
+      exception(desc, location)
   }
-  def exception(message: String, start: Int, end: Int, filename: String) =
+  def exception(message: String, locatable: SourceLocatable): Nothing =
+    exception(message, locatable.sourceLocation)
+  def exception(message: String, location: SourceLocation): Nothing =
+    exception(message, location.start, location.end, location.filename)
+  def exception(message: String, start: Int, end: Int, filename: String): Nothing =
     throw new CompilerException(message, start, end, filename)
-  def exception(message: String, token: Token) =
-    throw new CompilerException(message, token.start, token.end, token.filename)
-  def exception(message: String, node: AstNode) =
-    throw new CompilerException(message, node.start, node.end, node.file)
 
 }

@@ -340,3 +340,53 @@ TurtleDiesWhileIteratingOverFilteredAgentset
   O> create-turtles 10 [ __ignore 3 ]
   O> ask turtles with [true] [ let t (turtle random 10) if (t != nobody) [ ask t [die] ] ]
   [who] of turtles => [1 5 9 2 0]
+
+SelfUpdatesCorrectlyAfterException
+  to-report selfish-self let my-who who carefully [ ask other turtles [ error "Derp" ] ] [ ] report who end
+  O> crt 2
+  [selfish-self] of turtle 0 => 0
+
+AnyOtherTest
+  any? other turtles => false
+  O> create-turtles 1
+  [any? other turtles] of turtles => [false]
+  O> create-turtles 3
+  any? other turtles => true
+  any? other links => false
+  [any? other turtles] of turtles => [true true true true]
+
+CountOtherTest
+  count other turtles => 0
+  O> create-turtles 1
+  [count other turtles] of turtles => [0]
+  O> create-turtles 3
+  count other turtles => 4
+  [count other turtles] of turtles => [3 3 3 3]
+
+PatchRegionTest
+  globals [x]
+  patches-own [a]
+  to-report testrow [b] report patches with [pxcor = 0] end
+  O> resize-world -1 1 -1 1
+  sort patches with [pxcor = -10000] => []
+  sort patches with [pycor = -10000] => []
+  sort patches with [pxcor = 0] = (list (patch 0 1) (patch 0 0) (patch 0 -1)) => true
+  sort patches with [pycor = 0] = (list (patch -1 0) (patch 0 0) (patch 1 0)) => true
+  O> set x 0
+  sort patches with [pxcor = x] = (list (patch 0 1) (patch 0 0) (patch 0 -1)) => true
+  sort patches with [pycor = x] = (list (patch -1 0) (patch 0 0) (patch 1 0)) => true
+  P> set a pycor
+  sort patches with [pxcor = a] = (list (patch 1 1) (patch 0 0) (patch -1 -1)) => true
+  sort testrow 0 = (list (patch 0 1) (patch 0 0) (patch 0 -1)) => true
+  O> random-seed 0
+  sort patches with [pxcor = random 3] = (list (patch 1 1) (patch 0 -1)) => true
+
+OtherWithOptsShowCorrectErrorName
+  O> random-seed 0
+  O> crt 2 [ set color 5 ]
+  [ other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  [ any? other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  [ count other turtles with [ color ] ] of turtle 0 => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.
+  any? turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 0), but got 5 instead.
+  count turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 0), but got 5 instead.
+  one-of turtles with [ color ] => ERROR WITH expected a true/false value from (turtle 1), but got 5 instead.

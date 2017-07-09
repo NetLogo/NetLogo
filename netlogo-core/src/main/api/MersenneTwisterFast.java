@@ -268,6 +268,7 @@ public final strictfp class MersenneTwisterFast
     // Due to a bug in java.util.Random clear up to 1.2, we're
     // doing our own Gaussian variable.
     __haveNextNextGaussian = false;
+    __nextNextGaussian = 0;
 
     __mt = new int[N];
 

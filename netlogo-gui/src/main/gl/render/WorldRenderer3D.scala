@@ -4,7 +4,7 @@ package org.nlogo.gl.render
 
 import com.jogamp.opengl.{ GL, GL2 }
 import org.nlogo.api.{ Turtle, Turtle3D, Patch, Patch3D, World, World3D,
-                       Agent, AgentFollowingPerspective, AgentException, Perspective, DrawingInterface }
+                       Agent, AgentFollowingPerspective, AgentException, DrawingInterface }
 
 private class WorldRenderer3D(world: World3D, patchRenderer: PatchRenderer3D,
                               drawing: DrawingInterface, turtleRenderer: TurtleRenderer3D,
@@ -22,12 +22,12 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor - world.followOffsetZ
     val orientation = observer.orientation.get
-    var heading = orientation.heading
+    val heading = orientation.heading
     var pitch   = orientation.pitch
     var roll    = orientation.roll
     var dx      = orientation.dx
     var dy      = orientation.dy
-    var dz      = orientation.dz
+    val dz      = orientation.dz
     val turtleAndDistance = observer.perspective match {
       case afp: AgentFollowingPerspective => Some((afp.targetAgent, afp.followDistance))
       case _ => None
@@ -59,6 +59,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
             catch { case ex: AgentException => 0 }
             roll = 0
         }
+      case _ =>
     }
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)

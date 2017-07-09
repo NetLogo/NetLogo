@@ -49,7 +49,6 @@ class FakeWorld(state: State) extends api.World {
     override val agents = (agentSeq: Iterable[api.Agent]).asJava
     override def printName = unsupported
     override def contains(a: api.Agent) = unsupported
-    override def removableAgents = unsupported
   }
   trait FakeAgent extends api.Agent {
     val vars: Seq[AnyRef]

@@ -2,9 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.Utils
-import collection.JavaConverters._
-
 object ModelReader {
 
   val modelSuffix =

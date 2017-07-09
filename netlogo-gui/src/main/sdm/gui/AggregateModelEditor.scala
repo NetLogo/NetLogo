@@ -3,16 +3,17 @@
 package org.nlogo.sdm.gui
 
 import javax.swing.{ JFrame, JMenuBar, JMenuItem, WindowConstants }, WindowConstants.HIDE_ON_CLOSE
-import java.awt.{ BorderLayout, Component, Dimension }
+import java.awt.{ Component, Dimension }
 
-import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureEnumeration, Tool, ViewChangeListener }
+import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
 
 import org.jhotdraw.util.{ CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
-import org.nlogo.sdm.{ Model, Translator }
+import org.nlogo.sdm.Translator
+import org.nlogo.swing.TabsMenu
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
 
@@ -29,7 +30,7 @@ class AggregateModelEditor(
   colorizer: Colorizer,
   menuBarFactory: MenuBarFactory,
   val drawing: AggregateDrawing,
-  compiler: CompilerServices,
+  compiler: LiteralParser,
   dialogFactory: EditDialogFactoryInterface) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
@@ -81,7 +82,7 @@ class AggregateModelEditor(
     val isOSX = System.getProperty("os.name").startsWith("Mac");
 
     if (isOSX) {
-      menuBar.add(menuBarFactory.createFileMenu());
+      menuBar.add(menuBarFactory.createFileMenu);
     }
 
     val editMenu: CommandMenu = new CommandMenu(I18N.gui.get("menu.edit"))
@@ -91,17 +92,23 @@ class AggregateModelEditor(
     menuBar.add(editMenu)
 
     if (isOSX) {
-      menuBar.add(menuBarFactory.createToolsMenu())
+      menuBar.add(menuBarFactory.createToolsMenu)
       val zoomMenu: JMenuItem =
-        menuBar.add(menuBarFactory.createZoomMenu())
+        menuBar.add(menuBarFactory.createZoomMenu)
       zoomMenu.setEnabled(false)
       menuBar.add(zoomMenu)
     }
 
-    menuBar.add(new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), tabs))
+    menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
 
     if (isOSX) {
-      menuBarFactory.addHelpMenu(menuBar)
+      val helpMenu = menuBarFactory.createHelpMenu
+      menuBar.add(helpMenu)
+      try {
+        menuBar.setHelpMenu(helpMenu)
+      } catch {
+        case e: Error => org.nlogo.api.Exceptions.ignore(e)
+      }
     }
 
     setJMenuBar(menuBar)
@@ -138,7 +145,7 @@ class AggregateModelEditor(
         f match {
           case mef: ModelElementFigure if mef.dirty =>
             new org.nlogo.window.Events.CompileAllEvent().raise(this)
-            new org.nlogo.window.Events.DirtyEvent().raise(this)
+            new org.nlogo.window.Events.DirtyEvent(None).raise(this)
           case _ =>
         }
 

@@ -40,7 +40,7 @@ case class _plotpenshow() extends PlotCommand()
 case class _plotpenhide() extends PlotCommand()
 case class _plotpenreset() extends PlotCommand()
 case class _setplotpenmode() extends PlotCommand(Syntax.NumberType)
-case class _setplotpencolor() extends PlotCommand(Syntax.NumberType)
+case class _setplotpencolor() extends PlotCommand(Syntax.NumberType | Syntax.ListType)
 case class _setcurrentplotpen() extends PlotCommand(Syntax.StringType)
 
 //

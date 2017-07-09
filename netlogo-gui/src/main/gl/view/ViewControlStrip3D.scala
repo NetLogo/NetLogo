@@ -2,7 +2,6 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.Dump
 import org.nlogo.window.{ GUIWorkspace, TickCounterLabel, ViewUpdatePanel }
 import java.awt.BorderLayout
 import javax.swing.JPanel
@@ -11,7 +10,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLa
 
   val displaySwitch = new org.nlogo.window.DisplaySwitch(workspace)
   updateTicks()
-  val controls = new ViewUpdatePanel(workspace, displaySwitch, true, tickCounter)
+  val controls = new ViewUpdatePanel(workspace, displaySwitch, tickCounter)
   org.nlogo.awt.Fonts.adjustDefaultFont(tickCounter)
   setLayout(new java.awt.BorderLayout)
   add(controls, BorderLayout.CENTER)

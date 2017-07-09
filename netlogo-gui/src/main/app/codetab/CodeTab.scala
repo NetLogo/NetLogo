@@ -2,46 +2,70 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Dimension, Graphics }
+import java.awt.{ BorderLayout, Component, Dimension, Graphics, Insets }
 import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel }
+import javax.swing.{ AbstractAction, Action, ImageIcon, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ EditorFactory, Events => AppEvents, FindDialog }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.editor.{ DumbIndenter, LineNumbersBar }
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton }
+import org.nlogo.editor.DumbIndenter
+import org.nlogo.ide.FocusedOnlyAction
+import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
 
-class CodeTab(val workspace: AbstractWorkspace) extends JPanel
-  with ProceduresInterface
-  with ProceduresMenuTarget
-  with AppEvents.SwitchedTabsEvent.Handler
-  with WindowEvents.CompiledEvent.Handler
-  with Zoomable
-  with NlogoPrintable {
+abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
+with ProceduresInterface
+with ProceduresMenuTarget
+with AppEvents.SwitchedTabsEvent.Handler
+with WindowEvents.CompiledEvent.Handler
+with Zoomable
+with NlogoPrintable
+with MenuTab {
+  private var _dirty = false
+  def dirty = _dirty
+  protected def dirty_=(b: Boolean) = _dirty = b
 
-  private val listener = new TextListener {
-    override def textValueChanged(e: TextEvent) {
-      needsCompile()
-      dirty()
-    }
+  private lazy val listener = new TextListener {
+    override def textValueChanged(e: TextEvent) = dirty = true
   }
-  val text = new EditorFactory(workspace).newEditor(100, 100, false, listener, true)
-  text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+
+  lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
+
+  def editorConfiguration =
+    editorFactory.defaultConfiguration(100, 80)
+      .withCurrentLineHighlighted(true)
+      .withListener(listener)
+
+  val text = {
+    val editor = editorFactory.newEditor(editorConfiguration, true)
+    editor.setMargin(new Insets(4, 7, 4, 7))
+    editor
+  }
+
+  lazy val undoAction: Action = {
+    new WrappedAction(text.undoAction,
+      UserAction.EditCategory,
+      UserAction.EditUndoGroup,
+      UserAction.KeyBindings.keystroke('Z', withMenu = true))
+  }
+
+  lazy val redoAction: Action = {
+    new WrappedAction(text.redoAction,
+      UserAction.EditCategory,
+      UserAction.EditUndoGroup,
+      UserAction.KeyBindings.keystroke('Y', withMenu = true))
+  }
+
   override def zoomTarget = text
 
   val errorLabel = new EditorAreaErrorLabel(text)
-  val lineNumbers = new LineNumbersBar(text)
   val toolBar = getToolBar
-  val scrollableEditor = new JScrollPane(
-    text,
-    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
   def program = workspace.world.program
 
@@ -56,32 +80,28 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
     add(codePanel, BorderLayout.CENTER)
   }
 
-  val compileAction: Action = new CompileAction
-
-  private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON,
-      new ImageIcon(classOf[CodeTab].getResource(
-        "/images/check.gif")))
-    def actionPerformed(e: ActionEvent) {
-      new WindowEvents.CompileAllEvent().raise(CodeTab.this)
-    }
-  }
-
   def getToolBar = new ToolBar {
     override def addControls() {
       add(new ToolBarActionButton(FindDialog.FIND_ACTION))
-      add(new ToolBarActionButton(compileAction))
+      add(new ToolBarActionButton(CompileAction))
       add(new ToolBar.Separator)
       add(new ProceduresMenu(CodeTab.this))
+      add(new IncludedFilesMenu(getIncludesTable, tabs))
+      val additionalComps = getAdditionalToolBarComponents
+      if (additionalComps.nonEmpty) {
+        add(new ToolBar.Separator)
+        additionalComps foreach add
+      }
     }
   }
 
-  def dirty() { new WindowEvents.DirtyEvent().raise(this) }
+  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
-  private def needsCompile() {
-    _needsCompile = true
-    compileAction.setEnabled(true)
-  }
+  override val permanentMenuActions =
+    Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
+
+  activeMenuActions =
+    editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction)
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST
@@ -105,67 +125,61 @@ class CodeTab(val workspace: AbstractWorkspace) extends JPanel
 
   def kind = AgentKind.Observer
 
-  protected var _needsCompile = false
-
-  final def handle(e: AppEvents.SwitchedTabsEvent) {
-    if(_needsCompile && e.oldTab == this)
-      recompile()
-  }
+  def handle(e: AppEvents.SwitchedTabsEvent) = if (dirty && e.oldTab == this) compile()
 
   private var originalFontSize = -1
   override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)
-    if(originalFontSize == -1)
+    if (originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-    lineNumbers.setFont(text.getFont)
+    scrollableEditor.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
-  // Error code
-
-  def handle(e: WindowEvents.CompiledEvent) {
-    _needsCompile = false
-    compileAction.setEnabled(e.error != null)
+  def handle(e: WindowEvents.CompiledEvent) = {
+    dirty = false
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
     text.revalidate()
   }
 
-  def recompile() { new WindowEvents.CompileAllEvent().raise(this) }
+  protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
 
-  override def requestFocus() { text.requestFocus() }
+  override def requestFocus(): Unit = text.requestFocus()
 
   def innerSource = text.getText
   def getText = text.getText  // for ProceduresMenuTarget
   def headerSource = ""
   def source = headerSource + innerSource
 
-  override def innerSource_=(s: String): Unit = {
+  override def innerSource_=(s: String) = {
     text.setText(s)
     text.setCaretPosition(0)
+    text.resetUndoHistory()
   }
 
-  def select(start: Int, end: Int) { text.select(start, end) }
+  def select(start: Int, end: Int) = text.select(start, end)
 
   def classDisplayName = "Code"
 
-  /// printing
-
-  // satisfy org.nlogo.swing.Printable
   @throws(classOf[IOException])
-  def print(g: Graphics, pageFormat: PageFormat,pageIndex: Int, printer: PrinterManager): Int =
+  def print(g: Graphics, pageFormat: PageFormat,pageIndex: Int, printer: PrinterManager) =
     printer.printText(g, pageFormat, pageIndex, text.getText)
 
-  def setIndenter(isSmart: Boolean) {
+  def setIndenter(isSmart: Boolean): Unit = {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
   }
-  
-  def lineNumbersVisible = scrollableEditor.getRowHeader != null && scrollableEditor.getRowHeader.getView != null
-  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setRowHeaderView(if(visible) lineNumbers else null)
 
-  def isTextSelected(): Boolean = {
-    text.getSelectedText() != null && !text.getSelectedText().isEmpty()
+  def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
+  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
+
+  def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
+
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+    putValue(Action.SMALL_ICON,
+      new ImageIcon(classOf[CodeTab].getResource("/images/check.gif")))
+    def actionPerformed(e: ActionEvent) = compile()
   }
 }

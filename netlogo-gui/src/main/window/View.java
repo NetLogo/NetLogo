@@ -2,6 +2,7 @@
 
 package org.nlogo.window;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.AgentException;
@@ -10,6 +11,7 @@ import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.awt.ImageSelection;
+import scala.Option;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -43,7 +45,7 @@ public strictfp class View
     mouser = new ViewMouseHandler(this, workspace.world(), this);
     addMouseListener(mouser);
     addMouseMotionListener(mouser);
-    workspace.viewManager.add(this);
+    workspace.viewManager().add(this);
   }
 
   public boolean isHeadless() {
@@ -316,7 +318,7 @@ public strictfp class View
   // for notification from ShapesManager
   public void shapeChanged(org.nlogo.core.Shape shape) {
     dirty = true;
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new org.nlogo.window.Events.DirtyEvent(Option.empty()).raise(this);
     renderer.resetCache(patchSize());
     repaint();
   }
@@ -325,8 +327,6 @@ public strictfp class View
 
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
     setVisible(false);
-    patchSize = 13;
-    zoom = 0;
     renderer = workspace.newRenderer();
   }
 
@@ -380,15 +380,15 @@ public strictfp class View
   }
 
   protected double patchSize = 13.0;
-  private double zoom = 0.0;
+  private double zoom = 1.0;
 
   public double patchSize() {
-    return patchSize + zoom;
+    return patchSize * zoom;
   }
 
   public void visualPatchSize(double patchSize) {
     double oldZoom = zoom;
-    zoom = patchSize - this.patchSize;
+    zoom = patchSize / this.patchSize;
     if (zoom != oldZoom) {
       renderer.resetCache(patchSize());
     }
@@ -410,14 +410,6 @@ public strictfp class View
     this.patchSize = patchSize;
     this.viewWidth = worldWidth;
     this.viewHeight = worldHeight;
-
-    renderer.resetCache(patchSize());
-  }
-
-  public void setSize(int worldWidth, int worldHeight, double viewHeight, double viewWidth, double patchSize) {
-    this.patchSize = patchSize;
-    this.viewWidth = viewWidth;
-    this.viewHeight = viewHeight;
 
     renderer.resetCache(patchSize());
   }
@@ -487,7 +479,7 @@ public strictfp class View
       resetItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
-          workspace.viewManager.incrementalUpdateFromEventThread();
+          workspace.viewManager().incrementalUpdateFromEventThread();
         }
       });
       menu.add(resetItem);
@@ -509,7 +501,7 @@ public strictfp class View
       }
 
       boolean linksAdded = false;
-      for (AgentSet.Iterator links = workspace.world().links().iterator();
+      for (AgentIterator links = workspace.world().links().iterator();
            links.hasNext();) {
         org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
@@ -525,7 +517,7 @@ public strictfp class View
 
       // detect any turtles in the pick-ray
       boolean turtlesAdded = false;
-      for (AgentSet.Iterator turtles = workspace.world().turtles().iterator();
+      for (AgentIterator turtles = workspace.world().turtles().iterator();
            turtles.hasNext();) {
         org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) turtles.next();
         if (!turtle.hidden()) {
@@ -640,7 +632,7 @@ public strictfp class View
       super.menuSelectionChanged(isIncluded);
       if (!submenu) {
         renderer.outlineAgent((isIncluded) ? agent : null);
-        workspace.viewManager.incrementalUpdateFromEventThread();
+        workspace.viewManager().incrementalUpdateFromEventThread();
       }
     }
   }
@@ -659,7 +651,7 @@ public strictfp class View
     public void menuSelectionChanged(boolean isIncluded) {
       super.menuSelectionChanged(isIncluded);
       renderer.outlineAgent((isIncluded) ? agent : null);
-      workspace.viewManager.incrementalUpdateFromEventThread();
+      workspace.viewManager().incrementalUpdateFromEventThread();
     }
   }
 
@@ -690,6 +682,6 @@ public strictfp class View
         throw new IllegalStateException();
     }
 
-    workspace.viewManager.incrementalUpdateFromEventThread();
+    workspace.viewManager().incrementalUpdateFromEventThread();
   }
 }

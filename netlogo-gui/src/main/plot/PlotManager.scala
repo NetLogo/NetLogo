@@ -3,10 +3,10 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{ CommandLogoThunk, LogoThunkFactory, MersenneTwisterFast }
+import org.nlogo.api.{CommandLogoThunk, HaltSignal, LogoThunkFactory, MersenneTwisterFast}
 import org.nlogo.core.CompilerException
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -131,6 +131,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
       val stopped =
         codeType.call(plotThunks(plot)) match {
           case Success(stop) => stop
+          case Failure(e: HaltSignal) => throw e
           case Failure(e: Exception) =>
             plot.runtimeError = Some(e)
             false
@@ -158,11 +159,11 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
         // JC - 3/22/11
         for(pp <- plot.pens; if(!pp.temporary); results <- penThunks.get(pp)) {
           plot.currentPen=pp
-          val callResult = codeType.call(results)
-          callResult.failed.foreach {
-            case e: Exception =>
-              pp.runtimeError = Some(e)
-            case t: Throwable => throw t
+          codeType.call(results) match {
+            case Success(_)            =>
+            case Failure(e: HaltSignal) => throw e
+            case Failure(e: Exception) => pp.runtimeError = Some(e)
+            case Failure(t: Throwable) => throw t
           }
         }
         // restore the currently selected pen

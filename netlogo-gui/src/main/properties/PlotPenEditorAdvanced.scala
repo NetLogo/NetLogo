@@ -2,13 +2,13 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Color, Dimension, GridBagConstraints, GridBagLayout }
+import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
 
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
 
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
 import org.nlogo.swing.OptionDialog
@@ -59,7 +59,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       try {intervalField.getText.toDouble; true}
       catch {
         case ex: NumberFormatException =>
-          OptionDialog.show(org.nlogo.awt.Hierarchy.getWindow(this),
+          OptionDialog.showMessage(org.nlogo.awt.Hierarchy.getWindow(this),
             "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
           false
       }

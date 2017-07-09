@@ -4,7 +4,8 @@ import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeProject, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
-import Testing.testTempDirectory
+import Dump.dumpClassName
+import Testing.{ testTempDirectory, testChecksumsClass }
 
 
 // these settings are common to ALL BUILDS
@@ -22,13 +23,15 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.11.8",
+  scalaVersion           := "2.12.2",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -Xlint -Xfatal-warnings"
-      .split(" ").toSeq
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint -Xfatal-warnings"
+      .split(" ").toSeq,
+  // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
+  scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
 )
 
 // These settings are common to all builds that compile against Java
@@ -50,11 +53,23 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "2.2.6"  % "test",
-    // scalatest doesn't yet play nice with scalacheck 1.13.0
-    "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+    "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   )
 )
+
+lazy val flexmarkDependencies = {
+  val flexmarkVersion = "0.20.0"
+  Seq(
+    libraryDependencies ++= Seq(
+      "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
+      "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
+      )
+    )
+}
 
 lazy val mockDependencies = Seq(
   libraryDependencies ++= Seq(
@@ -93,8 +108,10 @@ lazy val netlogo = project.in(file("netlogo-gui")).
    settings(includeProject(parserJVM): _*).
    settings(publicationSettings("NetLogo-JVM"): _*).
    settings(shareSourceDirectory("netlogo-core"): _*).
+   settings(flexmarkDependencies).
    settings(Defaults.coreDefaultSettings ++
              Testing.settings ++
+             Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
              Packaging.settings ++
              Running.settings ++
              Dump.settings ++
@@ -108,17 +125,17 @@ lazy val netlogo = project.in(file("netlogo-gui")).
              Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.0-M9",
+    version := "6.0.2-M1",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
-    javaOptions     += "-Dnetlogo.docs.dir=" + (baseDirectory.value.getParentFile / "docs").getAbsolutePath.toString,
     unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
+    testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    resourceGenerators in Compile <+= I18n.resourceGeneratorTask,
+    resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
     threed := { System.setProperty("org.nlogo.is3d", "true") },
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies ++= Seq(
@@ -126,8 +143,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.picocontainer" % "picocontainer" % "2.13.6",
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
-      "org.pegdown" % "pegdown" % "1.5.0",
-      "org.parboiled" %% "parboiled-scala" % "1.1.7",
+      "commons-codec" % "commons-codec" % "1.10",
+      "org.parboiled" %% "parboiled" % "2.1.3",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
       "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
@@ -136,16 +153,19 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
-      "com.googlecode.json-simple" % "json-simple" % "1.1.1"
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+      "com.fifesoft" % "rsyntaxtextarea" % "2.6.0"
     ),
     all := {},
-    all <<= all.dependsOn(
-      htmlDocs,
-      packageBin in Test,
-      Extensions.extensions,
-      NativeLibs.nativeLibs,
-      ModelsLibrary.modelIndex,
-      Scaladoc.apiScaladoc)
+    all := {
+      all.dependsOn(
+        htmlDocs,
+        packageBin in Test,
+        Extensions.extensions,
+        NativeLibs.nativeLibs,
+        ModelsLibrary.modelIndex,
+        Scaladoc.apiScaladoc).value
+    }
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
@@ -153,6 +173,8 @@ lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 
 lazy val headless = (project in file ("netlogo-headless")).
   dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
+  enablePlugins(org.nlogo.build.PublishVersioned).
+  settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
   settings(jvmSettings: _*).
@@ -160,25 +182,32 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(mockDependencies: _*).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
+  settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
   settings(Depend.dependTask: _*).
   settings(Extensions.settings: _*).
   settings(publicationSettings("NetLogoHeadless"): _*).
   settings(JFlexRunner.settings: _*).
   settings(includeProject(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
+  settings(Dump.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.0",
-    isSnapshot    := true,
+    version       := "6.0.2-M1",
+    isSnapshot    := false,
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
-    libraryDependencies          += "org.ow2.asm" % "asm-all" % "5.0.4",
-    libraryDependencies          += "org.parboiled" %% "parboiled-scala" % "1.1.7",
+    libraryDependencies          ++= Seq(
+      "org.ow2.asm" % "asm-all" % "5.0.4",
+      "org.parboiled" %% "parboiled" % "2.1.3",
+      "commons-codec" % "commons-codec" % "1.10"
+    ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
+    testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
+    dumpClassName                := "org.nlogo.headless.misc.Dump",
     excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "nw", "palette", "sound"),
     all := { val _ = (
       (packageBin in Compile).value,
@@ -197,16 +226,21 @@ lazy val macApp = project.in(file("mac-app")).
   settings(NativeLibs.cocoaLibsTask).
   settings(Running.settings).
   settings(
+    mainClass in Compile in run           := Some("org.nlogo.app.MacApplication"),
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
-    compile in Compile                    <<= (compile in Compile) dependsOn (packageBin in Compile in netlogo),
+    compile in Compile                    := {
+      ((compile in Compile) dependsOn (packageBin in Compile in netlogo)).value
+    },
     unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
     libraryDependencies                   ++= Seq(
       "net.java.dev.jna" % "jna" % "4.2.2",
       "ca.weblite" % "java-objc-bridge" % "1.0.0"),
     libraryDependencies                   ++= (libraryDependencies in netlogo).value,
     libraryDependencies                   ++= (libraryDependencies in parserJVM).value,
-    run in Compile                        <<= (run in Compile) dependsOn NativeLibs.cocoaLibs,
+    run in Compile                        := {
+      ((run in Compile) dependsOn NativeLibs.cocoaLibs).evaluated
+    },
     javaOptions in run                    += "-Djava.library.path=" + (Seq(
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
@@ -215,7 +249,7 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
-  settings(NetLogoPackaging.settings(netlogo, macApp): _*).
+  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*).
   settings(NetLogoBuild.settings: _*)
 
 lazy val sharedResources = (project in file ("shared")).
@@ -242,9 +276,9 @@ lazy val parser = CrossProject("parser", file("."),
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
   settings(
-    isSnapshot := true,
+    isSnapshot := false,
     name := "parser",
-    version := "0.0.1",
+    version := "0.2.0",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
@@ -254,13 +288,14 @@ lazy val parser = CrossProject("parser", file("."),
       name := "parser-js",
       ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
       resolvers += Resolver.sonatypeRepo("releases"),
+      parallelExecution in Test := false,
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-js"   %%%! "scala-parser-combinators" % "1.0.2",
-          "org.scalatest"  %%%! "scalatest" % "3.0.0-M15" % "test",
+          "org.scala-lang.modules"   %%%! "scala-parser-combinators" % "1.0.5",
+          "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%%! "scalacheck" % "1.12.5" % "test"
+          "org.scalacheck" %%%! "scalacheck" % "1.13.4" % "test"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
@@ -268,7 +303,7 @@ lazy val parser = CrossProject("parser", file("."),
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5"
     )
 
 lazy val parserJVM = parser.jvm
@@ -283,3 +318,9 @@ lazy val parserCore = (project in file("parser-core")).
 lazy val netlogoCore = (project in file("netlogo-core")).
   settings(scalastyleSettings: _*).
   settings(skip in (Compile, compile) := true)
+
+// only exists for packaging
+lazy val behaviorsearchProject: Project =
+  project.in(file("behaviorsearch"))
+    .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
+    .settings(description := "subproject of NetLogo")

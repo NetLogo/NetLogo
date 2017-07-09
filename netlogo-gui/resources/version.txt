@@ -1,12 +1,8 @@
-NetLogo 6.0-M9
-July 20, 2016
-NetLogo 6.0-M8
-NetLogo 6.0-M7
-NetLogo 6.0-M6
-NetLogo 6.0-M5
-NetLogo 6.0-M4
-NetLogo 6.0-M3
-NetLogo 6.0-M2
+NetLogo 6.0.1
+March 20, 2017
+NetLogo 6.0.1-RC1
+NetLogo 6.0.1-M1
+NetLogo 6.0
 NetLogo 5.3.1
 NetLogo 5.3
 NetLogo 5.2.1

@@ -2,9 +2,7 @@
 
 package org.nlogo.workspace
 
-import java.util.ArrayList
-import org.nlogo.agent.ArrayAgentSet
-import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
+import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
@@ -76,8 +74,7 @@ class Evaluator(workspace: AbstractWorkspace) {
       context.job.random = ownerOption.map(_.random).getOrElse(workspace.world.mainRNG.clone)
       val procedureResult = Try {
         context.runExclusiveJob(workspace.world.observers, 0)
-        val stopped = workspace.completedActivations.get(newActivation) != true
-        stopped
+        ! workspace.completedActivations.get(newActivation).contains(true)
       }
       context.activation = oldActivation
       context.job.random = oldRandom
@@ -119,8 +116,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean, val procedure: Procedure) {
-    val agentset = new ArrayAgentSet(agent.kind, 1, false)
-    agentset.add(agent)
+    val agentset = AgentSet.fromAgent(agent)
     procedure.topLevel = false
   }
 
@@ -148,7 +144,7 @@ class Evaluator(workspace: AbstractWorkspace) {
     val results = workspace.compiler.compileMoreCode(
       wrappedSource,
       Some(if(reporter) "runresult" else "run"),
-      workspace.world.program, workspace.getProcedures,
+      workspace.world.program, workspace.procedures,
       workspace.getExtensionManager, workspace.getCompilationEnvironment)
     results.head.init(workspace)
     results.head
@@ -160,7 +156,7 @@ class Evaluator(workspace: AbstractWorkspace) {
     val wrappedSource = Evaluator.getHeader(agentClass, commands) + source + Evaluator.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
-        workspace.getProcedures, workspace.getExtensionManager, workspace.getCompilationEnvironment)
+        workspace.procedures, workspace.getExtensionManager, workspace.getCompilationEnvironment)
     results.head.init(workspace)
     results.head
   }

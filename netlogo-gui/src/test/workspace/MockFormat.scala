@@ -16,7 +16,7 @@ class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat
   def sections(location: java.net.URI): Try[Map[String, String]] =
     error.map(Failure.apply).getOrElse(Success(Map[String, String]()))
   def sectionsFromSource(source: String): Try[Map[String, Section]] =
-    Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
+    error.map(Failure.apply).getOrElse(Success(Map[String, String]()))
   def sectionsToSource(sections: Map[String, Section]): Try[Section] =
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
   def writeSections(sections: Map[String, String], location: URI): Try[URI] =

@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.agent.World
-import org.nlogo.core.{ ShapeEvent, ShapeAdded, ShapeRemoved, AllShapesReplaced }
+import org.nlogo.core.{ ShapeEvent, ShapeAdded, ShapeRemoved }
 
 class ShapeChangeListener(workspace: GUIWorkspace, world: World) {
   private val turtleShapeTracker = world.turtleShapes

@@ -6,7 +6,7 @@ import java.awt.Window
 
 import scala.collection.mutable
 
-import org.nlogo.agent.{ Agent, Observer, Turtle, Patch, Link }
+import org.nlogo.agent.Agent
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
@@ -107,7 +107,7 @@ extends Event.LinkChild with Event.LinkParent
     var window: AgentMonitorWindow = null
     var agent = a0
     if(agent == null && (agentKind == AgentKind.Observer))
-      agent = workspace.world.observer()
+      agent = workspace.world.observer
     if(agent != null)
       window = monitorWindows.get(agent).orNull
     else if(agentKind == AgentKind.Turtle)
@@ -189,4 +189,7 @@ extends Event.LinkChild with Event.LinkParent
       emptyLinkMonitorWindow.setVisible(show)
   }
 
+  def refresh() {
+    monitorWindows.values.foreach(_.refresh())
+  }
 }

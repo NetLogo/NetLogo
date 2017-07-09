@@ -5,41 +5,36 @@ package org.nlogo.fileformat
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.{ CompilationEnvironment, ExtensionManager, Femto, I18N,
-  LiteralParser, Model, Shape, ShapeParser, UpdateMode, View, Widget, WorldDimensions }, Shape.{ LinkShape, VectorShape }
+import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
+  UpdateMode, View, Widget, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ AutoConvertable, AutoConverter, ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
-import AutoConversionList.ConversionList
+import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
 import scala.util.{ Failure, Success, Try }
-import scala.io.Source
+import scala.io.{ Codec, Source }, Codec.UTF8
 
-class NLogoFormat(modelConverter: (Model, Seq[AutoConvertable]) => Model)
+// THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
+class NLogoFormat
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
     val is3DFormat = false
     def name: String = "nlogo"
     def widgetReaders: Map[String, WidgetReader] = Map()
-
-    override def constructModel(components: Seq[ComponentSerialization[Array[String], NLogoFormat]],
-      sections: Map[String, Array[String]]) = {
-      super.constructModel(components, sections).map(modelConverter(_, components))
-    }
-  }
+}
 
 class NLogoFormatException(m: String) extends RuntimeException(m)
 
-trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
+trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelFormat[Array[String], A] {
   def is3DFormat: Boolean
   def name: String
   val Separator = "@#$#@#$#@"
-  val SeparatorRegex = "@#\\$#@#\\$#@"
+  val SeparatorRegex = "(?m)^@#\\$#@#\\$#@$"
 
   def widgetReaders: Map[String, WidgetReader]
 
   def sections(location: URI) =
     Try {
-      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)
-      else Source.fromURI(location)
+      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)(UTF8)
+      else Source.fromURI(location)(UTF8)
       }.flatMap { s =>
         val sections = sectionsFromSource(s.mkString)
         s.close()
@@ -114,8 +109,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
 
   object CodeComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.code"
+    val EndOfLineSpaces = new scala.util.matching.Regex("(?m)[ ]+$", "content")
     override def addDefault = ((m: Model) => m.copy(code = ""))
-    def serialize(m: Model): Array[String] = m.code.lines.map(_.replaceAll("\\s*$", "")).toArray
+    def serialize(m: Model): Array[String] =
+      EndOfLineSpaces.replaceAllIn(m.code, "").lines.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(lines: Array[String]) = { (m: Model) =>
       Try(m.copy(code = lines.mkString("\n")))
@@ -163,9 +160,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] {
     dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
     showTickCounter = true, frameRate = 30)
 
-  object InterfaceComponent extends ComponentSerialization[Array[String], A] with WidgetConverter {
-    import org.nlogo.fileformat
-
+  object InterfaceComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")

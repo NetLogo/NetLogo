@@ -76,7 +76,12 @@ object JavaPackager {
   // Additionally, if the jdk name contains '64', it will be labelled
   // as a 64-bit build. YMMV.
   def linuxPackagerOptions: Seq[BuildJDK] = {
-    val alternatives = Process("update-alternatives --list javapackager".split(" ")).!!
+    val alternatives =
+      try {
+        Process("update-alternatives --list javapackager".split(" ")).!!
+      } catch {
+        case ex: java.lang.RuntimeException => "" // RHEL bugs out with this command, just use path-specified
+      }
     val options = alternatives.split("\n").filterNot(_ == "")
     if (options.size < 2)
       Seq(PathSpecifiedJDK)
@@ -91,6 +96,15 @@ object JavaPackager {
       }
   }
 
+  def repackageJar(app: SubApplication, mainClass: Option[String], sourceJar: File, outDir: File): File =
+    repackageJar(s"${app.jarName}.jar", mainClass, sourceJar, outDir)
+
+  def repackageJar(jarName: String, mainClass: Option[String], sourceJar: File, outDir: File): File = {
+    IO.createDirectory(outDir)
+    val newJarLocation = outDir / jarName
+    packageJar(sourceJar, newJarLocation, mainClass)
+    newJarLocation
+  }
 
   def packageJar(jarFile: File, targetFile: File, mainClass: Option[String]): Unit = {
     import java.util.jar.Manifest
@@ -112,46 +126,97 @@ object JavaPackager {
     IO.delete(tmpDir)
   }
 
-  def apply(
+  def generateStubApplication(
     packagerJDK: BuildJDK,
-    appClass: String,
+    title: String,
     nativeFormat: String,
-    platformJvmOptions: Seq[String],
-    app: SubApplication,
     srcDir: File,
-    srcFiles: Seq[File],
     outDir: File,
     buildDirectory: File,
-    mainJar: File,
-    appVersion: String,
-    jvmOptions: Seq[String] = Seq()) = {
-    val srcFileFilter = new FileFilter {
-      override def accept(f: File): Boolean = srcFiles.contains(f)
-    }
+    mainJar: File) = {
+
+    FileActions.copyFile(mainJar, buildDirectory / mainJar.getName)
+
     val args = Seq[String](packagerJDK.javapackager,
       "-deploy", "-verbose",
-      "-title",    app.name,
-      "-name",     app.name,
-      "-outfile",  app.name,
-      "-appclass", appClass,
+      "-title",    title,
+      "-name",     title,
+      "-outfile",  title,
+      "-appclass", "org.nlogo.app.App",
       "-nosign",
       "-native",   nativeFormat,
       "-outdir",   outDir.getAbsolutePath,
       "-srcdir",   srcDir.getAbsolutePath,
-      "-srcfiles", srcDir.listFiles.map(_.getName).mkString(File.pathSeparator),
-      "-BmainJar=" + mainJar.getName,
-      "-Bclasspath=" + srcDir.listFiles.map(_.getName).filter(_.endsWith(".jar")).mkString(File.pathSeparator),
-      s"-BappVersion=${appVersion}") ++
-    (jvmOptions ++ app.jvmOptions ++ platformJvmOptions).map(s => "-BjvmOptions=" + s) ++
-    app.jvmArguments.flatMap(arg => Seq("-argument", arg)) ++
-    app.jvmProperties.map(p => "-BjvmProperties=" + p._1 + "=" + p._2)
+      "-BmainJar=" + mainJar.getName)
 
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
+    println("running: " + args.mkString(" "))
     val ret = Process(args, buildDirectory, envArgs: _*).!
     if (ret != 0)
       sys.error("packaging failed!")
 
     (outDir / "bundles").listFiles.head
+  }
+
+  /* This function copies the stub application to <specified-directory> / newName.app.
+   * It renames the app and the name, the product stub, and the configuration file to the
+   * appropriate locations, but doesn't alter their contents.
+   * Does not alter the classpath or Info.plist, but deletes the JRE from the copied directory */
+  def copyMacStubApplication(
+    stubBuildDirectory:          File,
+    stubApplicationName:         String,
+    newApplicationDirectory:     File,
+    newApplicationDirectoryName: String,
+    newApplicationName:          String): Unit = {
+      val macRoot = stubBuildDirectory / "bundles" / (stubApplicationName + ".app")
+      val newRoot = newApplicationDirectory / (newApplicationDirectoryName + ".app")
+      FileActions.createDirectories(newRoot)
+      FileActions.copyDirectory((macRoot / "Contents").toPath,
+        (newRoot / "Contents").toPath,
+        p => !p.toString.contains("Java.runtime"))
+      FileActions.moveFile(
+        newRoot / "Contents" / "MacOS" / stubApplicationName,
+        newRoot / "Contents" / "MacOS" / newApplicationName)
+      FileActions.moveFile(
+        newRoot / "Contents" / "Java" / (stubApplicationName + ".cfg"),
+        newRoot / "Contents" / "Java" / (newApplicationName + ".cfg"))
+  }
+
+  def copyWinStubApplications(
+    stubBuildDirectory:      File,
+    stubApplicationName:     String,
+    newApplicationDirectory: File,
+    subApplicationNames:     Seq[String]): Unit = {
+      val winRoot = stubBuildDirectory / "bundles" / stubApplicationName
+      FileActions.createDirectories(newApplicationDirectory)
+      FileActions.copyDirectory(winRoot, newApplicationDirectory)
+      subApplicationNames.foreach { appName =>
+        FileActions.copyFile(winRoot / (stubApplicationName + ".exe"), newApplicationDirectory / (appName + ".exe"))
+        FileActions.copyFile(winRoot / (stubApplicationName + ".ico"), newApplicationDirectory / (appName + ".ico"))
+        FileActions.copyFile(winRoot / "app" / (stubApplicationName + ".cfg"), newApplicationDirectory / "app" / (appName + ".cfg"))
+      }
+      IO.delete(newApplicationDirectory / (stubApplicationName + ".exe"))
+      IO.delete(newApplicationDirectory / (stubApplicationName + ".ico"))
+      IO.delete(newApplicationDirectory / "app" / (stubApplicationName + ".cfg"))
+  }
+
+
+  def copyLinuxStubApplications(
+    stubBuildDirectory:      File,
+    stubApplicationName:     String,
+    newApplicationDirectory: File,
+    subApplicationNames:     Seq[String]): Unit = {
+      val linuxRoot = stubBuildDirectory / "bundles" / stubApplicationName
+      FileActions.createDirectories(newApplicationDirectory)
+      FileActions.copyDirectory(linuxRoot, newApplicationDirectory)
+      subApplicationNames.foreach { appName =>
+        val normalizedAppName = appName.replaceAllLiterally(" ", "")
+        FileActions.copyFile(linuxRoot / stubApplicationName, newApplicationDirectory / normalizedAppName)
+        FileActions.copyFile(linuxRoot / "app" / (stubApplicationName + ".cfg"),
+          newApplicationDirectory / "app" / (normalizedAppName + ".cfg"))
+      }
+      IO.delete(newApplicationDirectory / stubApplicationName)
+      IO.delete(newApplicationDirectory / "app" / (stubApplicationName + ".cfg"))
   }
 }

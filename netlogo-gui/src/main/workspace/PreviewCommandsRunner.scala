@@ -1,8 +1,8 @@
 package org.nlogo.workspace
 
-import org.nlogo.core.{ AgentKind, CompilerException, Model, UpdateMode }
-import org.nlogo.api.{ FileIO, JobOwner, PreviewCommands, SimpleJobOwner }
-import org.nlogo.nvm.{ Procedure, Workspace }
+import org.nlogo.core.{ AgentKind, CompilerException, Model }
+import org.nlogo.api.{ FileIO, PreviewCommands, SimpleJobOwner }
+import org.nlogo.nvm.Procedure
 import java.awt.image.BufferedImage
 
 import scala.util.Try
@@ -22,7 +22,7 @@ object PreviewCommandsRunner {
     model: Model,
     modelPath: String,
     previewCommands: PreviewCommands): PreviewCommandsRunner = {
-    val open = (w: Workspace) => {
+    val open = (w: AbstractWorkspace) => {
       w.openModel(model)
       Option(modelPath).foreach(w.setModelPath)
     }
@@ -37,10 +37,10 @@ object PreviewCommandsRunner {
 
   def initWorkspace(
     workspaceFactory: WorkspaceFactory,
-    openModelIn: Workspace => Unit,
+    openModelIn: AbstractWorkspace => Unit,
     previewCommands: Option[PreviewCommands] = None): AbstractWorkspaceScala = {
 
-    def newWorkspace(openModelIn: Workspace => Unit) = {
+    def newWorkspace(openModelIn: AbstractWorkspace => Unit) = {
       val ws = workspaceFactory.newInstance
       try {
         // set the seed before opening the model so it affects the `startup` procedure
@@ -73,7 +73,7 @@ object PreviewCommandsRunner {
 
   def apply(
     workspaceFactory: WorkspaceFactory,
-    openModelIn: Workspace => Unit,
+    openModelIn: AbstractWorkspace => Unit,
     previewCommands: Option[PreviewCommands] = None): PreviewCommandsRunner = {
 
     val ws = initWorkspace(workspaceFactory, openModelIn, previewCommands)
@@ -97,7 +97,7 @@ object PreviewCommandsRunner {
 }
 
 class PreviewCommandsRunner private (
-  workspace: Workspace,
+  workspace: AbstractWorkspace,
   procedure: Procedure) {
 
   lazy val previewImage: Try[BufferedImage] = Try {

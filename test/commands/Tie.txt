@@ -116,7 +116,7 @@ TieMultipleWithSameTurtle_2D
   [(word xcor ", " ycor)] of turtle 0 => "1, 0"
 
 
-TieRotationAtWrappedEdge
+TieRotationAtWrappedEdge_2D
   O> resize-world -5 5 -5 5
   O> crt 2
   O> ask turtle 0 [ setxy 1 0 set heading 90 ]
@@ -164,7 +164,7 @@ TieRotationAtWrappedEdge
   [ycor]    of turtle 1 => -4
   [heading] of turtle 1 => 90
 
-MovingStrangely
+MovingStrangely_2D
   O> resize-world -14 14 -14 14
   O> crt 1
   O> ask turtle 0 [ setxy 2.5088750128719646 -13.91688134099136 ]
@@ -182,9 +182,11 @@ TransitiveTieMovement
   O> crt 3 [fd 2]
   O> ask turtle 0 [create-link-with turtle 1 [tie]]
   O> ask turtle 2 [create-link-with turtle 1 [tie] rt 2]
-  [xcor] of turtle 0 => -1.3273898427723043
-  [ycor] of turtle 0 =>  1.5421696086189924
-  [xcor] of turtle 1 =>  1.6273471316402237
-  [ycor] of turtle 1 => -1.0719608427613574
-  [xcor] of turtle 2 => -0.38161799075308933
-  [ycor] of turtle 2 =>  1.963254366895328
+  # headless and GUI give *very slightly* different results, owing to nuances of floating-point math
+  # This should obviously be fixed in the future
+  [precision xcor 10] of turtle 0 => -1.3273898428
+  [precision ycor 10] of turtle 0 =>  1.5421696086
+  [precision xcor 10] of turtle 1 =>  1.6273471316
+  [precision ycor 10] of turtle 1 => -1.0719608428
+  [precision xcor 10] of turtle 2 => -0.3816179908
+  [precision ycor 10] of turtle 2 =>  1.9632543669

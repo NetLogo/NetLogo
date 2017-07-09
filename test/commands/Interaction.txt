@@ -29,11 +29,11 @@ Interaction2_2D
   O> ask turtle 2 [ rt 90 ]
   O> ask patch 2 -2 [ set pcolor blue ]
   O> ask turtle 0 [ ask patch-at 1 0 [ set pcolor red ] ]
-  map [[xcor] of ?] sort turtles => [0 0 0]
-  map [[ycor] of ?] sort turtles => [1 0 0]
-  map [[heading] of ?] sort turtles => [0 120 330]
-  map [[color] of ?] sort turtles => [5 55 25]
-  map [[pcolor] of ?] sort patches => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+  map [[t] -> [xcor] of t] sort turtles => [0 0 0]
+  map [[t] -> [ycor] of t] sort turtles => [1 0 0]
+  map [[t] -> [heading] of t] sort turtles => [0 120 330]
+  map [[t] -> [color] of t] sort turtles => [5 55 25]
+  map [[t] -> [pcolor] of t] sort patches => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
 
 Interaction2_3D
   O> cro 3
@@ -42,12 +42,12 @@ Interaction2_3D
   O> ask turtle 2 [ rt 90 ]
   O> ask patch 2 -2 0 [ set pcolor blue ]
   O> ask turtle 0 [ ask patch-at 1 0 0 [ set pcolor red ] ]
-  map [[xcor] of ?] sort turtles => [0 0 0]
-  map [[ycor] of ?] sort turtles => [1 0 0]
-  map [[zcor] of ?] sort turtles => [0 0 0]
-  map [precision [heading] of ? 12 ] sort turtles => [0 120 330]
-  map [[color] of ?] sort turtles => [5 55 25]
-  map [[pcolor] of ?] sort patches with [pzcor = 0] => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+  map [[t] -> [xcor] of t] sort turtles => [0 0 0]
+  map [[t] -> [ycor] of t] sort turtles => [1 0 0]
+  map [[t] -> [zcor] of t] sort turtles => [0 0 0]
+  map [[t] -> precision [heading] of t 12 ] sort turtles => [0 120 330]
+  map [[t] -> [color] of t] sort turtles => [5 55 25]
+  map [[t] -> [pcolor] of t] sort patches with [pzcor = 0] => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
 
 Interaction3a
   O> random-seed 4373
@@ -58,7 +58,7 @@ Interaction3a
   O> ask max-one-of turtles [xcor] [ die ]
   O> ask min-one-of turtles [xcor] [ die ]
   count turtles => 9
-  map [[xcor] of ?] sort turtles => [0 2.938926261462366 4.755282581475767 4.755282581475768 2.9389262614623664 0 -2.938926261462365 -4.755282581475767 -2.938926261462367]
+  map [[t] -> [xcor] of t] sort turtles => [0 2.938926261462366 4.755282581475767 4.755282581475768 2.9389262614623664 0 -2.938926261462365 -4.755282581475767 -2.938926261462367]
 
 Interaction3b
   turtles-own [tvar]
@@ -168,7 +168,7 @@ Interaction11_3D
 
 Interaction12
   O> cro 20 [ fd 5 ]
-  map [[towardsxy 0 0] of ?] sort turtles => [180 198 216 234 252 270 288 306 324 342 0 18 36 54 72 90 108 126 144 162]
+  map [[t] -> [towardsxy 0 0] of t] sort turtles => [180 198 216 234 252 270 288 306 324 342 0 18 36 54 72 90 108 126 144 162]
   remove-duplicates [precision (distancexy 0 0) 15] of turtles => [5]
 
 Interaction13

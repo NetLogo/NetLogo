@@ -4,7 +4,6 @@ package org.nlogo.headless
 package misc
 
 import org.nlogo.workspace.ModelsLibrary
-import org.nlogo.agent.Observer
 import org.nlogo.api.SimpleJobOwner
 
 // This is accessible through the "bench" task in the sbt build.  It makes it convenient

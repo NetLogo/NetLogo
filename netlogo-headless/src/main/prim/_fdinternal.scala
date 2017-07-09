@@ -20,7 +20,7 @@ class _fdinternal(let: Let) extends Command {
 
   def perform_1(context: Context) {
     val turtle = context.agent.asInstanceOf[Turtle]
-    val countdown = context.getLet(let).asInstanceOf[MutableDouble]
+    val countdown = context.activation.binding.getLet(let).asInstanceOf[MutableDouble]
     val distance = countdown.value
     val distanceMagnitude = StrictMath.abs(distance)
     if (distanceMagnitude <= Numbers.Infinitesimal)
@@ -40,5 +40,4 @@ class _fdinternal(let: Let) extends Command {
       }
     }
   }
-
 }

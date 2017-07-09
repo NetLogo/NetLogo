@@ -13,7 +13,7 @@ class _externreport(reporter: api.Reporter) extends nvm.Reporter {
       arguments, new nvm.ExtensionContext(workspace, context))
     catch {
       case ex: api.ExtensionException =>
-        val ee = new nvm.EngineException(
+        val ee = new nvm.RuntimePrimitiveException(
           context, this, "Extension exception: " + ex.getMessage)
         // it might be better to use setCause(), for the long term... but then i think the handler
         // would have to be changed, too.

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="shapeless_2.12-2.3.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_idea/shapeless_2.12-2.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

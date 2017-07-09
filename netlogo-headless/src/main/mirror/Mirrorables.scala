@@ -13,18 +13,20 @@ import org.nlogo.core.AgentVariables.implicitTurtleVariables
 object Mirrorables {
 
   case object Patch extends Kind {
-    object Variables extends Enumeration {
+    object PatchVariables extends Enumeration {
       implicitPatchVariables.foreach(Value)
     }
+    val Variables = PatchVariables
   }
   case object Turtle extends Kind {
-    object Variables extends Enumeration {
+    object TurtleVariables extends Enumeration {
       implicitTurtleVariables.foreach(Value)
       val LineThickness = Value("lineThickness")
     }
+    val Variables = TurtleVariables
   }
   case object Link extends Kind {
-    object Variables extends Enumeration {
+    object LinkVariables extends Enumeration {
       implicitLinkVariables.foreach(Value)
       val Size = Value("size")
       val Heading = Value("heading")
@@ -32,15 +34,17 @@ object Mirrorables {
       val MidpointY = Value("midpointY")
       val IsDirected = Value("isDirected")
     }
+    val Variables = LinkVariables
   }
   case object Observer extends Kind {
-    object Variables extends Enumeration {
+    object ObserverVariables extends Enumeration {
       val TargetAgent = Value("targetAgent")
       val Perspective = Value("perspective")
     }
+    val Variables = ObserverVariables
   }
   case object World extends Kind {
-    object Variables extends Enumeration {
+    object WorldVariables extends Enumeration {
       val Ticks = Value("ticks")
       val PatchesWithLabels = Value("patchesWithLabels")
       val TurtleShapeList = Value("turtleShapeList")
@@ -59,11 +63,13 @@ object Mirrorables {
       val LinkBreeds = Value("linkBreeds")
       val UnbreededLinksAreDirected = Value("unbreededLinksAreDirected")
     }
+    val Variables = WorldVariables
   }
   case object WidgetValue extends Kind {
-    object Variables extends Enumeration {
+    object WidgetVariables extends Enumeration {
       val ValueString = Value("valueString")
     }
+    val Variables = WidgetVariables
   }
 
   implicit def agentKindToMirrorKind(agentKind: core.AgentKind) = agentKind match {

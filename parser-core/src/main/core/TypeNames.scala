@@ -66,12 +66,12 @@ object TypeNames {
       } else if (compatible(LinkType)) {
         subtract(LinkType | NobodyType)
         "link"
-      } else if (compatible(ReporterTaskType)) {
-        subtract(ReporterTaskType)
-        "reporter task"
-      } else if (compatible(CommandTaskType)) {
-        subtract(CommandTaskType)
-        "command task"
+      } else if (compatible(ReporterType)) {
+        subtract(ReporterType)
+        "anonymous reporter"
+      } else if (compatible(CommandType)) {
+        subtract(CommandType)
+        "anonymous command"
       } else if (compatible(NobodyType)) {
         subtract(NobodyType)
         "NOBODY"
@@ -95,7 +95,7 @@ object TypeNames {
         "code block"
       } else if (compatible(SymbolType)) {
         subtract(SymbolType)
-        "symbol"
+        "variable"
       } else
         "(none)"
     remainingMask match {

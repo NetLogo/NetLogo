@@ -5,10 +5,8 @@ package misc
 
 import org.nlogo.api.FileIO
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.nvm.{ LabInterface, Workspace }
-import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTestTag
 
 class TestBehaviorSpace extends FunSuite
@@ -38,7 +36,7 @@ class TestBehaviorSpace extends FunSuite
   def withoutFirst6Lines(s: String) =
     s.split("\n").drop(6).mkString("", "\n", "\n")
   def slurp(path: String) =
-    stripLineFeeds(FileIO.file2String(path))
+    stripLineFeeds(FileIO.fileToString(path))
   def stripLineFeeds(s: String) =
     s.replaceAll("\r\n", "\n")
 

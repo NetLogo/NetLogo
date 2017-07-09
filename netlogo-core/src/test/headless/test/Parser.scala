@@ -2,7 +2,6 @@
 
 package org.nlogo.headless.test
 
-import org.nlogo.core
 import org.nlogo.core.{AgentKind, Keywords}
 
 object Parser {

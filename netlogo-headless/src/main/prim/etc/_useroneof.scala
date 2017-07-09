@@ -10,7 +10,7 @@ class _useroneof extends Reporter {
   override def report(context: Context): AnyRef = {
     val message = Dump.logoObject(args(0).report(context))
     val list = argEvalList(context, 1)
-    workspace.updateUI(context)
+    workspace.updateUI()
     val choice =
       workspace.waitForResult(
         new ReporterRunnable[Option[AnyRef]] {

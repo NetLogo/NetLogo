@@ -9,11 +9,11 @@ public strictfp class HubNetDrawingMessage
 
   public enum Type {LINE, STAMP, CLEAR}
 
-  public HubNetDrawingMessage(Type type) {
+  public HubNetDrawingMessage(HubNetDrawingMessage.Type type) {
     this.type = type;
   }
 
-  public Type getType() {
+  public HubNetDrawingMessage.Type getType() {
     return type;
   }
 }

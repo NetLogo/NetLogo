@@ -16,7 +16,7 @@ public final strictfp class _random extends Reporter {
   }
 
   public double report_1(final Context context, double maxdouble) throws LogoException {
-    long maxlong = validLong(maxdouble);
+    long maxlong = validLong(maxdouble, context);
     if (maxdouble != maxlong) {
       maxlong += (maxdouble >= 0) ? 1 : -1;
     }

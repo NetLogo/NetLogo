@@ -6,15 +6,16 @@ import java.io.{ Serializable => JSerializable }
 import org.nlogo.api.{ Dump, TypeNames }
 import org.nlogo.core.Syntax
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ ArgumentTypeException, Command, Context, EngineException }
+import org.nlogo.nvm.{ ArgumentTypeException, Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
-class _hubnetsend extends Command {
+class _hubnetsend extends Command with HubNetPrim {
 
   override def perform(context: Context) {
     val nodesArg = args(0).report(context)
     val tag = argEvalString(context, 1)
     val message = args(2).report(context)
-    val hubnetManager = workspace.getHubNetManager.get
+    val hubnetManager = hubNetManager.get
     val nodes = new collection.mutable.ArrayBuffer[String]
     nodesArg match {
       case list: LogoList =>
@@ -23,7 +24,7 @@ class _hubnetsend extends Command {
             case s: String =>
               nodes += s
             case _ =>
-              throw new EngineException(
+              throw new RuntimePrimitiveException(
                 context, this,
                 "HUBNET-SEND expected " + TypeNames.aName(Syntax.StringType | Syntax.ListType)
                 + " of strings as the first input, but one item is the "
@@ -38,7 +39,7 @@ class _hubnetsend extends Command {
     message match {
       case m: JSerializable => hubnetManager.send(nodes, tag, m)
       case _                =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this,
           s"""|HUBNET-SEND is unable to send the message $message
               |of type ${TypeNames.name(message)} because it could not be

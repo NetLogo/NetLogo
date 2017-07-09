@@ -8,56 +8,39 @@
 
 package org.nlogo.editor
 
-import javax.swing.AbstractAction
-import javax.swing.Action
-import javax.swing.JMenuItem
-import javax.swing.JPopupMenu
-import javax.swing.KeyStroke
-import javax.swing.JViewport
-import javax.swing.SwingUtilities
-import javax.swing.text.DefaultEditorKit
-import javax.swing.text.TextAction
-import javax.swing.text.PlainDocument
-import javax.swing.text.BadLocationException
+import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.ActionEvent
-import java.awt.event.FocusListener
-import java.awt.event.InputEvent
-import java.awt.event.KeyEvent
-import java.awt.event.MouseEvent
-import java.awt._
+import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
+import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
+import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
+import KeyBinding.keystroke
 
 object EditorArea {
-  def emptyMap = Map[KeyStroke, TextAction]()
-  def defaultSize = new java.awt.Dimension(400, 400)
-  def emptySeq = Seq[Action]()
+  def defaultSize = new Dimension(400, 400)
 }
 
-import EditorArea._
+import EditorArea.defaultSize
 
-class EditorArea(
-  rows: Int,
-  columns: Int,
-  font: java.awt.Font,
-  enableFocusTraversalKeys: Boolean,
-  listener: java.awt.event.TextListener,
-  val colorizer: Colorizer,
-  i18n: String => String,
-  actionMap: Map[KeyStroke, TextAction] = EditorArea.emptyMap,
-  menuItems: Seq[Action] = Seq[Action]())
-  extends AbstractEditorArea
-   with java.awt.event.FocusListener {
+class EditorArea(val configuration: EditorConfiguration)
+  extends JEditorPane
+  with AbstractEditorArea
+  with FocusTraversable
+  with FocusListener {
 
-  private var indenter: IndenterInterface = new DumbIndenter(this)
-  private var contextMenu: JPopupMenu = editorContextMenu(colorizer, i18n)
+  val rows      = configuration.rows
+  val columns   = configuration.columns
+  val colorizer = configuration.colorizer
+
+  private var indenter: Option[Indenter] = None
+  private val contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
+  contextMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
+
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
 
   locally {
-    import java.awt.event.{ KeyEvent => Key }
-    import InputEvent.{ SHIFT_MASK => ShiftKey }
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK)
     addFocusListener(this)
     addCaretListener(bracketMatcher)
@@ -67,43 +50,17 @@ class EditorArea(
     caret.setBlinkRate(blinkRate)
     setCaret(caret)
     setDragEnabled(false)
-    setFocusTraversalKeysEnabled(enableFocusTraversalKeys)
-    if (enableFocusTraversalKeys) {
-      getInputMap.put(keystroke(Key.VK_TAB),           new TransferFocusAction())
-      getInputMap.put(keystroke(Key.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
-    } else {
-      getInputMap.put(keystroke(Key.VK_TAB),           Actions.tabKeyAction)
-      getInputMap.put(keystroke(Key.VK_TAB, ShiftKey), Actions.shiftTabKeyAction)
-    }
-    setFont(font)
-    setEditorKit(new HighlightEditorKit(listener, colorizer))
-    getInputMap.put(keystroke(Key.VK_ENTER), new EnterAction())
 
-    getInputMap.put(charKeystroke(']'), new CloseBracketAction())
-    getDocument.putProperty(PlainDocument.tabSizeAttribute, Int.box(2))
-
-    // on Windows, prevent save() from outputting ^M characters - ST 2/23/04
-    getDocument.putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n")
-    getDocument.addUndoableEditListener(undoManager)
+    undoManager.watch(this)
 
     // add key bindings for undo and redo so they work even in modal dialogs
     val mask: Int = getToolkit.getMenuShortcutKeyMask
-    getKeymap.addActionForKeyStroke(keystroke(Key.VK_Z, mask), UndoManager.undoAction())
-    getKeymap.addActionForKeyStroke(keystroke(Key.VK_Y, mask), UndoManager.redoAction())
 
-    // add key binding, for getting quick "contexthelp", based on where
-    // the cursor is...
-    getInputMap.put(keystroke(Key.VK_F1, 0), Actions.quickHelpAction(colorizer, i18n))
-    actionMap.foreach {
-      case (k, v) => getInputMap.put(k, v)
-    }
+    getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Z, mask), UndoManager.undoAction())
+    getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction())
+
+    configuration.configureEditorArea(this)
   }
-
-  def charKeystroke(char: Char, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(Character.valueOf(char), mask)
-
-  def keystroke(key: Int, mask: Int = 0): KeyStroke =
-    KeyStroke.getKeyStroke(key, mask)
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = g.asInstanceOf[Graphics2D]
@@ -123,29 +80,16 @@ class EditorArea(
     }
   }
 
-  def setIndenter(newIndenter: IndenterInterface): Unit = {
-    indenter = newIndenter
+  def setIndenter(newIndenter: Indenter): Unit = {
+    indenter = Some(newIndenter)
+    newIndenter.addActions(configuration, getInputMap)
   }
 
-  class EnterAction extends TextAction("enter") {
-    def actionPerformed(e: ActionEvent): Unit = {
-      indenter.handleEnter()
-    }
+  override def getActions: Array[Action] = {
+    val extraActions =
+      (configuration.editorOnlyActions :+ new MouseQuickHelpAction(colorizer)).toArray[Action]
+    TextAction.augmentList(super.getActions, extraActions)
   }
-
-  class CloseBracketAction extends TextAction("close-bracket") {
-    def actionPerformed(e: ActionEvent): Unit = {
-      replaceSelection("]")
-      indenter.handleCloseBracket()
-    }
-  }
-
-  override def getActions: Array[Action] =
-    TextAction.augmentList(super.getActions,
-      Array[Action](
-        Actions.commentToggleAction,
-        Actions.shiftLeftAction, Actions.shiftRightAction,
-        Actions.quickHelpAction(colorizer, i18n)))
 
   override def getPreferredScrollableViewportSize: Dimension = {
     val dimension =
@@ -169,14 +113,11 @@ class EditorArea(
     getFontMetrics(getFont).charWidth('m')
 
   private def getRowHeight: Int =
-    return getFontMetrics(getFont).getHeight
+    getFontMetrics(getFont).getHeight
 
-  override def setText(text: String): Unit =
-    // not sure if this really needed - ST 8/27/03
-    if (text != getText()) {
-      super.setText(text)
-      undoManager.discardAllEdits()
-    }
+  def resetUndoHistory() {
+    undoManager.discardAllEdits()
+  }
 
   @throws(classOf[BadLocationException])
   def getLineText(offset: Int): String = {
@@ -188,161 +129,31 @@ class EditorArea(
   }
 
   def indentSelection(): Unit = {
-    indenter.handleTab()
+    indenter.foreach(_.handleTab())
   }
 
-  def lineToStartOffset(doc: PlainDocument, line: Int): Int =
+  def lineToStartOffset(doc: Document, line: Int): Int =
     doc.getDefaultRootElement.getElement(line).getStartOffset
 
-  def lineToEndOffset(doc: PlainDocument, line: Int): Int =
+  def lineToEndOffset(doc: Document, line: Int): Int =
     doc.getDefaultRootElement.getElement(line).getEndOffset
 
-  def offsetToLine(doc: PlainDocument, offset: Int): Int =
+  def offsetToLine(doc: Document, offset: Int): Int =
     doc.getDefaultRootElement.getElementIndex(offset)
 
-  private def currentSelectionProperties: (PlainDocument, Int, Int) = {
-    val doc = getDocument.asInstanceOf[PlainDocument]
-    var currentLine = offsetToLine(doc, getSelectionStart)
-    var endLine     = offsetToLine(doc, getSelectionEnd)
-    // The two following cases are to take care of selections that include
-    // only the very edge of a line of text, either at the top or bottom
-    // of the selection.  Because these lines do not have *any* highlighted
-    // text, it does not make sense to modify these lines. ~Forrest (9/22/2006)
-    if (endLine > currentLine &&
-        getSelectionEnd == lineToStartOffset(doc, endLine)) {
-      endLine -= 1
-    }
-    if (endLine > currentLine &&
-        getSelectionStart == (lineToEndOffset(doc, currentLine) - 1)) {
-      currentLine += 1
-    }
-    (doc, currentLine, endLine)
-  }
+  private var _selectionActive = true
 
-  def insertBeforeEachSelectedLine(insertion: String): Unit = {
-    try {
-      val (doc, currentLine, endLine) = currentSelectionProperties
-
-      for (line <- currentLine to endLine) {
-        doc.insertString(lineToStartOffset(doc, line), insertion, null)
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
-
-  def toggleComment(): Unit = {
-    try {
-      val (doc, startLine, endLine) = currentSelectionProperties
-
-      for(currentLine <- startLine to endLine) {
-        val lineStart = lineToStartOffset(doc, currentLine)
-        val lineEnd = lineToEndOffset(doc, currentLine)
-        val text = doc.getText(lineStart, lineEnd - lineStart)
-        val semicolonPos = text.indexOf(';')
-        val allSpaces = (0 until semicolonPos)
-          .forall(i => Character.isWhitespace(text.charAt(i)))
-        if (!allSpaces || semicolonPos == -1) {
-          insertBeforeEachSelectedLine(";")
-          return
-        }
-      }
-      // Logic to uncomment the selected section
-      for (line <- startLine to endLine) {
-        val lineStart = lineToStartOffset(doc, line)
-        val lineEnd   = lineToEndOffset(doc, line)
-        val text      = doc.getText(lineStart, lineEnd - lineStart)
-        val semicolonPos = text.indexOf(';')
-        if (semicolonPos != -1) {
-          val allSpaces = (0 until semicolonPos)
-            .forall(i => Character.isWhitespace(text.charAt(i)))
-          if (allSpaces)
-            doc.remove(lineStart + semicolonPos, 1)
-        }
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
-
-  def shiftLeft(): Unit = {
-    try {
-      val (doc, currentLine, endLine) = currentSelectionProperties
-
-      for (line <- currentLine to endLine) {
-        val lineStart = lineToStartOffset(doc, line)
-        val lineEnd   = lineToEndOffset(doc, line)
-        val text      = doc.getText(lineStart, lineEnd - lineStart)
-        if (text.length > 0 && text.charAt(0) == ' ')
-          doc.remove(lineStart, 1)
-      }
-    } catch {
-      case ex: BadLocationException => throw new IllegalStateException(ex)
-    }
-  }
-
-  /**
-    * Centers the line containing the position in editorArea.
-    * By default center the line containing the cursor
-    */
-  def centerCursorInScrollPane(position: Int = getCaretPosition): Unit = {
-    val container = SwingUtilities.getAncestorOfClass(classOf[JViewport], this)
-    if (container == null) return
-    try {
-      val r = modelToView(position)
-      val viewport = container.asInstanceOf[JViewport]
-      val extentHeight = viewport.getExtentSize.height
-      val viewHeight = viewport.getViewSize.height
-      val y = (0 max r.y - ((extentHeight - r.height) / 2)) min (viewHeight - extentHeight)
-      viewport.setViewPosition(new Point(0, y))
-    } catch {
-      case ex: BadLocationException =>
-    }
-  }
-
-
-  /// select-all-on-focus stuff copied from org.nlogo.swing.TextField
-
-  private var mouseEvent = false
-
-  private var selectionActive = true
+  def selectionActive = _selectionActive
 
   def setSelection(s: Boolean): Unit = {
-    selectionActive = s
+    _selectionActive = s
   }
 
-  def focusGained(fe: java.awt.event.FocusEvent): Unit = {
-    if (!mouseEvent && enableFocusTraversalKeys && selectionActive) {
-      // this is like selectAll(), but it leaves the
-      // caret at the beginning rather than the start;
-      // this prevents the enclosing scrollpane from
-      // scrolling to the end to make the caret
-      // visible; it's nicer to keep the scroll at the
-      // start - ST 12/20/04
-      setCaretPosition(getText().length)
-      moveCaretPosition(0)
-    }
-    Actions.setEnabled(true)
-    UndoManager.setCurrentManager(undoManager)
-  }
+  def focusGained(fe: java.awt.event.FocusEvent): Unit = { }
 
   def focusLost(fe: java.awt.event.FocusEvent): Unit = {
-    // On Windows (and perhaps Linux? not sure), putting
-    // the focus elsewhere leaves the text selected in the
-    // now-unfocused field.  This causes the text to be drawn
-    // in different colors even though the selection isn't
-    // visible.  I suppose we could make HighlightView smarter
-    // about that, but instead let's just force the Mac-like
-    // behavior and be done with it for now - ST 11/3/03
-    if (enableFocusTraversalKeys)
-      select(0, 0)
-    mouseEvent = fe.isTemporary
     bracketMatcher.focusLost(this)
     colorizer.reset()
-    if (!fe.isTemporary) {
-      Actions.setEnabled(false)
-      UndoManager.setCurrentManager(null)
-    }
   }
 
   // this is used for quick help, when QH is triggered
@@ -352,10 +163,7 @@ class EditorArea(
 
   def getMousePos: Int = mousePos
 
-  override def processMouseEvent(me: java.awt.event.MouseEvent): Unit = {
-    if (me.getID == java.awt.event.MouseEvent.MOUSE_PRESSED) {
-      mouseEvent = true
-    }
+  override def processMouseEvent(me: MouseEvent): Unit = {
     if (me.isPopupTrigger() && ! contextMenu.isShowing()) {
       mousePos = caret.getMousePosition(me)
       doPopup(me)
@@ -363,23 +171,21 @@ class EditorArea(
       super.processMouseEvent(me)
   }
 
-  private class EditorContextMenu(colorizer: Colorizer, i18n: String => String) extends JPopupMenu {
+  private def doPopup(e: MouseEvent): Unit = {
+    contextMenu.show(this, e.getX, e.getY)
+  }
 
-    val copyItem  = new JMenuItem(Actions.COPY_ACTION)
-    val cutItem   = new JMenuItem(Actions.CUT_ACTION)
-    val pasteItem = new JMenuItem(Actions.PASTE_ACTION)
+  private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
+    val copyItem  = new JMenuItem(Actions.CopyAction)
+    val cutItem   = new JMenuItem(Actions.CutAction)
+    val pasteItem = new JMenuItem(Actions.PasteAction)
 
     locally {
       add(copyItem)
-      Actions.COPY_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.copy"))
       add(cutItem)
-      Actions.CUT_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.cut"))
       add(pasteItem)
-      Actions.PASTE_ACTION.putValue(Action.NAME, i18n.apply("menu.edit.paste"))
       addSeparator()
-      add(new JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)))
-      for(item <- menuItems) {
-        item.putValue("editor", EditorArea.this)
+      for (item <- configuration.contextActions) {
         add(new JMenuItem(item))
       }
     }
@@ -387,26 +193,18 @@ class EditorArea(
     override def show(invoker: Component, x: Int, y: Int): Unit = {
       val text = EditorArea.this.getSelectedText
       val isTextSelected = Option(text).exists(_.length > 0)
+      val point = new Point(invoker.getLocationOnScreen)
       copyItem.setEnabled(isTextSelected)
       cutItem.setEnabled(isTextSelected)
       pasteItem.setEnabled(
         Toolkit.getDefaultToolkit.getSystemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor))
-      val point = new Point(invoker.getLocationOnScreen)
       point.translate(x, y)
-      for(item <- menuItems){
-        item.putValue("cursorLocation", mousePos)
-        item.putValue("popupLocation", point)
+      configuration.contextActions.foreach {
+        case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
+        case _ =>
       }
       super.show(invoker, x, y)
     }
-  }
-
-  private def editorContextMenu(colorizer: Colorizer, i18n: String => String): JPopupMenu = {
-    new EditorContextMenu(colorizer, i18n)
-  }
-
-  private def doPopup(e: MouseEvent): Unit = {
-    contextMenu.show(this, e.getX, e.getY)
   }
 
   override def replaceSelection(s: String): Unit = {
@@ -416,7 +214,7 @@ class EditorArea(
     if (s == null) {
       super.replaceSelection(s)
     } else {
-    var selection = s
+      var selection = s
       // on Macs we're having problems with pasted text from other
       // apps having some weird nonstandard character at the
       // beginning we need to ignore - ST 1/3/06
@@ -428,7 +226,7 @@ class EditorArea(
       // and smartTabbing isn't happy with them. ~Forrest (10/4/2006)
       selection = selection.replaceAllLiterally("\t", "  ")
       super.replaceSelection(selection)
-      indenter.handleInsertion(selection)
+      indenter.foreach(_.handleInsertion(selection))
     }
   }
 
@@ -456,18 +254,6 @@ class EditorArea(
     }
   }
 
-  ///
-
-  protected class TransferFocusAction extends AbstractAction {
-    def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-      transferFocus()
-    }
-  }
-
-  protected class TransferFocusBackwardAction extends AbstractAction {
-    def actionPerformed(e: java.awt.event.ActionEvent): Unit = {
-      transferFocusBackward()
-    }
-  }
-
+  def undoAction = UndoManager.undoAction
+  def redoAction = UndoManager.redoAction
 }

@@ -2,13 +2,13 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Dimension, Font }
+import java.awt.{ Color, Dimension }
 import javax.swing.JTextPane
 import javax.swing.event.{ DocumentEvent, DocumentListener }
-import javax.swing.text.DefaultCaret
+import javax.swing.text.{ DefaultCaret, JTextComponent }
 
-class LineNumbersBar(editor: EditorArea) extends JTextPane with DocumentListener {
-  var previousLastLineNumber = -1
+class LineNumbersBar(editor: JTextComponent) extends JTextPane with DocumentListener {
+  private var previousLinesCount = -1
 
   updateNumbers()
   setEnabled(false)
@@ -18,10 +18,10 @@ class LineNumbersBar(editor: EditorArea) extends JTextPane with DocumentListener
   editor.getDocument.addDocumentListener(this)
 
   def updateNumbers() = {
-    val lastLineNumber = editor.getText().count(_=='\n') + 1
-    if(lastLineNumber != previousLastLineNumber) {
-      setText(1 to lastLineNumber mkString("\n"))
-      previousLastLineNumber = lastLineNumber
+    val linesCount = editor.getText().count(_=='\n') + 1
+    if(linesCount != previousLinesCount) {
+      setText(1 to linesCount mkString("\n"))
+      previousLinesCount = linesCount
     }
   }
 

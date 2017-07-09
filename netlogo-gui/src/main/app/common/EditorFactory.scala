@@ -2,52 +2,88 @@
 
 package org.nlogo.app.common
 
+import java.util.prefs.Preferences
 import java.awt.Font
-import java.awt.event.{ FocusEvent, InputEvent, KeyEvent }
+import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
-import javax.swing.text.TextAction
 
-import scala.collection.JavaConversions._
+import org.nlogo.api.{ CompilerServices, Version }
+import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
+  NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
+import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
+import org.nlogo.nvm.ExtensionManager
+import org.nlogo.window.DefaultEditorFactory
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.awt.Fonts
-import org.nlogo.core.I18N
-import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, ShowUsageBox, ShowUsageBoxAction }
-import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory => WindowEditorFactory }
+import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
+  folding.FoldParserManager
+import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices) extends WindowEditorFactory {
-  def newEditor(cols: Int, rows: Int, enableFocusTraversal: Boolean): CodeEditor =
-    newEditor(cols, rows, enableFocusTraversal, null, false)
-  def newEditor(cols: Int,
-                rows: Int,
-                enableFocusTraversal: Boolean,
-                listener: java.awt.event.TextListener,
-                isApp: Boolean): CodeEditor =
-  {
-    val font = new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12)
-    val colorizer = new EditorColorizer(compiler)
-    val codeCompletionPopup = new CodeCompletionPopup
-    val showUsageBox = new ShowUsageBox
-    val actions = Seq[Action](new ShowUsageBoxAction(showUsageBox))
-    val actionMap = Map(
-      KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK) ->
-        new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager) extends DefaultEditorFactory(compiler) {
+  System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
+    "org.nlogo.ide.NetLogoTokenMakerFactory")
+  useExtensionManager(extensionManager)
 
-    class MyCodeEditor
-    extends CodeEditor(rows, cols, font, enableFocusTraversal,
-                       listener, colorizer, I18N.gui.get _, actionMap, actions)
-    {
-      override def focusGained(fe: FocusEvent) {
-        super.focusGained(fe)
-        if(isApp && rows > 1)
-          FindDialog.watch(this)
-      }
-      override def focusLost(fe: FocusEvent) {
-        super.focusLost(fe)
-        if(isApp && !fe.isTemporary)
-          FindDialog.dontWatch(this)
-      }
-    }
-    new MyCodeEditor
+  def autoSuggestAction =
+    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(compiler.dialect, extensionManager))
+
+  override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
+    val showUsageBox = new ShowUsageBox(colorizer)
+    val shiftTabAction = new ShiftActions.LeftTab()
+    val actions = Seq[Action](
+      new ToggleComments(),
+      new ShiftActions.Left(),
+      new ShiftActions.Right(),
+      new ShowUsageBoxAction(showUsageBox),
+      new JumpToDeclarationAction())
+    super.defaultConfiguration(rows, cols)
+      .withContextActions(actions)
+      .addKeymap(
+        KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
+        autoSuggestAction)
+      .addKeymap(
+        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK), shiftTabAction)
+      .withLineNumbers(
+        Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
+      .forThreeDLanguage(Version.is3D)
   }
+
+  def newEditor(configuration: EditorConfiguration, isApp: Boolean): AbstractEditorArea = {
+    val editor = newEditor(configuration)
+
+    if (isApp && configuration.rows > 1)
+      editor.addFocusListener(new FindDialog.FocusListener)
+
+    editor
+  }
+
+ def useExtensionManager(extensionManager: ExtensionManager): Unit = {
+   val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[NetLogoTokenMakerFactory]
+   tmf.extensionManager = Some(extensionManager)
+ }
+
+  override def newEditor(configuration: EditorConfiguration): AbstractEditorArea = {
+    // This is a proxy for advanced editor fixtures required only by the main code tab
+    // - RG 10/28/16
+    if (configuration.highlightCurrentLine) {
+      FoldParserManager.get.addFoldParserMapping("netlogo", new NetLogoFoldParser())
+      FoldParserManager.get.addFoldParserMapping("netlogo3d", new NetLogoFoldParser())
+      new AdvancedEditorArea(configuration)
+    } else
+      super.newEditor(configuration)
+  }
+
+  override def scrollPane(editor: AbstractEditorArea): EditorScrollPane =
+    editor match {
+      case aea: AdvancedEditorArea =>
+        val sp = new RTextScrollPane(aea) with EditorScrollPane {
+          def lineNumbersEnabled = getLineNumbersEnabled
+          override def setFont(f: Font) = {
+            super.setFont(f)
+            Option(getGutter).foreach(_.setLineNumberFont(f))
+          }
+        }
+        sp.setLineNumbersEnabled(editor.configuration.showLineNumbers)
+        sp
+      case _ => super.scrollPane(editor)
+    }
 }

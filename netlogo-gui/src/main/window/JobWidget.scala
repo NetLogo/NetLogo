@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.agent.AgentSet
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast }
 import org.nlogo.core.AgentKind
 import org.nlogo.nvm.Procedure

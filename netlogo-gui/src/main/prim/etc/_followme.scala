@@ -3,9 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Turtle
+import org.nlogo.api.Perspective
 import org.nlogo.nvm.{ Command, Context }
-import org.nlogo.api.{ Perspective}
-import org.nlogo.core.Syntax
 
 class _followme extends Command {
 

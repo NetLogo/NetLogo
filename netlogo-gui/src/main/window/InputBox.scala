@@ -11,13 +11,12 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
-import org.nlogo.swing.Implicits._
 import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
 import javax.swing.text.EditorKit
 import javax.swing.KeyStroke.getKeyStroke
-import javax.swing.{JDialog, JOptionPane, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
+import javax.swing.{JDialog, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
 import javax.swing.plaf.basic.BasicButtonUI
 
 object InputBox {
@@ -64,6 +63,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // a String in the value field.  ev 8/13/06
   protected var text = ""
   protected var value: Option[AnyRef] = Option.empty[AnyRef]
+  def valueText = text
   def valueObject = value.orNull
   def valueObject(value: AnyRef) {valueObject(value, false)}
   def valueObject(value: Any, raiseEvent: Boolean) {
@@ -232,7 +232,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
         msg = "Expected reporter."
-      org.nlogo.swing.OptionDialog.show(frame, "Invalid input for a " + inputType,
+      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid input for a " + inputType,
         msg, Array(I18N.gui.get("common.buttons.ok")))
     }
   }
@@ -358,15 +358,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def hasContextMenu = true
   override def zoomSubcomponents = true
   override def getMaximumSize = null
-
-  override def export(exportPath: String) {
-    try org.nlogo.api.FileIO.writeFile(exportPath, text, true)
-    catch {
-      case ex: java.io.IOException =>
-        JOptionPane.showMessageDialog(this,
-          "Export failed.  Error:\n" + ex.getMessage, "Export Failed", JOptionPane.ERROR_MESSAGE)
-    }
-  }
 
   protected class NLButton(title:String) extends JButton(title) {
     setFont(new Font(platformFont,Font.PLAIN, 10))
@@ -565,7 +556,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       NumericInput(num.doubleValue, NumericInput.NumberLabel)
     }
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.ZERO
+    override def defaultValue = org.nlogo.agent.World.Zero
   }
 
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
@@ -608,6 +599,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
     override def changeVisible = false
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.ZERO
+    override def defaultValue = org.nlogo.agent.World.Zero
   }
 }

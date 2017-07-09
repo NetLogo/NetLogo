@@ -26,7 +26,7 @@ class _setobservervariable(_vn: Int) extends Command {
   def perform_1(context: Context, arg0: AnyRef) {
     try world.observer.setVariable(_vn, arg0)
     catch { case ex: AgentException =>
-      throw new org.nlogo.nvm.EngineException(
+      throw new org.nlogo.nvm.RuntimePrimitiveException(
         context, this, ex.getMessage) }
     context.ip = next
   }

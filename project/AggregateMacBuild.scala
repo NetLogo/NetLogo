@@ -1,13 +1,13 @@
 import sbt._
 
+import java.io.File
 import java.nio.file.{ Files, Path }
 import java.io.IOException
 
 import NetLogoPackaging.RunProcess
 
-object AggregateMacBuild extends PackageAction.AggregateBuild {
-  // each application maps to the root of the build product
-  // in mac, the build product is a that looks like:
+object PackageMacAggregate {
+  // we're given a dummy package with a directory structure that looks like:
   // Product Name.app (spaces intact)
   // └── Contents
   //     ├── Info.plist
@@ -23,6 +23,8 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   //     │   └── Java.runtime
   //     └── Resources
   //         └── NetLogo.icns
+  //
+  // A main jar, common configuration, and several sub-applications.
   //
   // Our goal is to get a directory
   // mac-full
@@ -41,107 +43,130 @@ object AggregateMacBuild extends PackageAction.AggregateBuild {
   // |           └── NetLogo.icns
   // ├── Product 2.app (same as product 1)
   // ├── Java
-  // │   ├── All dependency jars
-  // |   └── links to extensions, models, etc.
+  // |   └── All dependency jars
   // └── Java.runtime (contains JRE)
-  val contentDirs = Seq("extensions", "models", "docs")
   val libraryDirs = Seq("natives")
 
-  private def postProcessSubApplication(aggregateMacDir: File)(app: SubApplication, image: File, version: String): Unit = {
-    val name = image.getName.split('.')
-    val aggregatedAppDir = aggregateMacDir / (name(0) + " " + version + ".app")
-    Process(Seq("bash",
-      (image.getParentFile.getParentFile.getParentFile / "package" / "macosx" / (app.name + "-post-image.sh")).getAbsolutePath, image.getAbsolutePath)).!!
-
-    def copyToNewPath(fileName: String) = {
-      val sourceFile = image / "Contents" / fileName
-      val destFile = aggregatedAppDir / "Contents" / fileName
-      FileActions.copyAny(sourceFile.toPath, destFile.toPath)
-    }
-
-    def createRelativeSymlink(linkLocation: File, linkTarget: File): Unit = {
-      val linkPath = linkLocation.toPath
-      val linkTargetPath = linkTarget.toPath
-      Files.createSymbolicLink(linkPath, linkPath.getParent.relativize(linkTargetPath))
-    }
-
-    def alterCfgContents(cfgFile: File, app: SubApplication): Seq[String] = {
-      val sharedRootPath = "$APPDIR/../.."
-      val lines = IO.readLines(cfgFile).toSeq
-      lines.flatMap { l =>
-        if (l.startsWith("app.classpath")) {
-          val classpathJars = l.split("=")(1).split(":").toSet + s"${app.jarName}.jar"
-          val newClasspath  = classpathJars.map(jar => s"$sharedRootPath/Java/$jar").mkString(":")
-          Seq(s"app.classpath=$newClasspath")
-        } else if (l.startsWith("app.runtime"))
-          Seq(s"app.runtime=$sharedRootPath/JRE")
-        else if (l == "[JVMOptions]")
-          "[JVMOptions]" +: contentDirs.map(d => s"-Dnetlogo.$d.dir=$sharedRootPath/$d")
-        else
-          Seq(l)
+  // assumes subApplicationDir is {<app.name>.app as copied by JavaPackager.copyMacStubApplication
+  private def configureSubApplication(subApplicationDir: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
+    // add runtimeFiles "natives"
+    common.runtimeFiles.foreach { d =>
+      d.fileMappings.foreach {
+        case (f, p) =>
+          val newPath = subApplicationDir / "Contents" / "Java" / p
+          if (! newPath.getParentFile.isDirectory)
+            FileActions.createDirectories(newPath.getParentFile)
+          FileActions.copyAny(f, newPath)
       }
     }
 
-    val javaDir = aggregatedAppDir / "Contents" / "Java"
-    IO.createDirectory(javaDir)
+    // add icon, remove dummy icon
+    common.icons
+      .filter(f => app.allIcons.exists(iconName => f.getName.startsWith(iconName)))
+      .foreach { f => FileActions.copyAny(f, subApplicationDir / "Contents" / "Resources" / f.getName) }
+    FileActions.remove(subApplicationDir / "Contents" / "Resources" / "dummy.icns")
 
-    Seq("MacOS", "Resources", "Info.plist", "PkgInfo").map(copyToNewPath)
-    (aggregatedAppDir / "Contents" / "MacOS" / app.name).setExecutable(true)
+    val allVariables =
+      variables ++ app.configurationVariables("macosx") +
+      ("mainClass" -> app.mainClass) +
+      ("classpathJars" ->
+        common.classpath
+          .sortBy(_.getName)
+          .map(f => s"$$APPDIR/../../Java/${f.getName}")
+          .mkString(File.pathSeparator))
 
-    libraryDirs.foreach(d => copyToNewPath(s"Java/$d"))
+    app.additionalArtifacts(common.configRoot).foreach { f =>
+      FileActions.copyFile(f, subApplicationDir / "Contents" / "Java" / f.getName)
+    }
 
-    (image / "Contents" / "Java" * (- ("*.jar" || DirectoryFilter))).get.foreach(f => FileActions.copyFile(f, javaDir / f.getName))
-    val cfgFile = image / "Contents" / "Java" / (app.name + ".cfg")
-    IO.writeLines(javaDir / (app.name + ".cfg"), alterCfgContents(cfgFile, app))
+    // rewrite configuration file
+    Mustache(common.configRoot / "shared" / "macosx" / "NetLogo.cfg.mustache",
+      subApplicationDir / "Contents" / "Java" / (app.name + ".cfg"), allVariables)
+
+    // rewrite Info.plist
+    Mustache(common.configRoot / "shared" / "macosx" / "Info.plist.mustache",
+      subApplicationDir / "Contents" / "Info.plist", allVariables)
+
+    // add PkgInfo
+    Mustache(common.configRoot / "shared" / "macosx" / "image" / "Contents" / "PkgInfo.mustache",
+      subApplicationDir / "Contents" / "Resources" / "PkgInfo", allVariables)
+
   }
 
   def apply(
-    aggregateTarget: File,
-    configurationDirectory: File,
-    buildJDK: BuildJDK,
-    buildsMap: Map[SubApplication, File],
-    variables: Map[String, String],
-    additionalFiles: Seq[File]): File = {
+    aggregateTarget:        File,
+    commonConfig:           CommonConfiguration,
+    appSpecificConfig:      Map[SubApplication, Map[String, AnyRef]],
+    stubApplicationAndName: (File, String),
+    subApplications:        Seq[SubApplication],
+    variables:              Map[String, String]): File = {
+      import commonConfig.webDirectory
 
     val version = variables("version")
+    val buildName = s"NetLogo-$version"
+    // create aggregate directory for this build
     val aggregateMacDir = aggregateTarget / "NetLogo Bundle" / s"NetLogo $version"
     IO.delete(aggregateMacDir)
-    val baseImage = buildsMap.head._2
+    IO.createDirectory(aggregateMacDir)
+    IO.createDirectory(aggregateMacDir / "JRE")
+
+    // copy in JRE
+    FileActions.copyDirectory(stubApplicationAndName._1 / "bundles" / (stubApplicationAndName._2 + ".app") / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
+
+    // add java jars
+    // this is wrong, may need further adjustment
     val sharedJars = aggregateMacDir / "Java"
-    val buildName = s"NetLogo-$version"
-    IO.createDirectory(sharedJars)
-    FileActions.copyDirectory(baseImage / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
-
-    additionalFiles.foreach { f => FileActions.copyAny(f, aggregateMacDir / f.getName) }
-
-    contentDirs.foreach { subdir =>
-      FileActions.copyDirectory(baseImage / "Contents" / "Java" / subdir, aggregateMacDir / subdir)
+    JavaPackager.repackageJar("netlogo-mac-app.jar", Some(commonConfig.launcherClass), commonConfig.mainJar,  sharedJars)
+    commonConfig.classpath.foreach { jar =>
+      FileActions.copyFile(jar, sharedJars / jar.getName)
     }
 
-    buildsMap.foreach {
-      case (app, image) =>
-        (image / "Contents" / "Java" * "*.jar").get.foreach(f => FileActions.copyFile(f, sharedJars / f.getName))
+    // add bundled directories
+    commonConfig.bundledDirs.filterNot(d => libraryDirs.contains(d.directoryName)).foreach { d =>
+      d.fileMappings.foreach {
+        case (f, p) =>
+          val targetFile = aggregateMacDir / p
+          if (! targetFile.getParentFile.isDirectory) {
+            FileActions.createDirectories(targetFile.getParentFile)
+          }
+          FileActions.copyFile(f, aggregateMacDir / p)
+      }
     }
 
-    buildsMap.foreach {
-      case (app, image) => postProcessSubApplication(aggregateMacDir)(app, image, version)
+    commonConfig.rootFiles.foreach { f =>
+      FileActions.copyAny(f, aggregateMacDir / f.getName)
     }
 
-    val apps = buildsMap.map(_._2).map(f => (aggregateMacDir / (f.getName.split('.')(0) + " " + version + ".app")).getAbsolutePath)
+    // copy stub for each application and post-process
+    subApplications.foreach { app =>
+      val appName = s"${app.name} $version"
+      JavaPackager.copyMacStubApplication(stubApplicationAndName._1, stubApplicationAndName._2,
+        aggregateMacDir, appName, app.name)
+      configureSubApplication(aggregateMacDir / (appName + ".app"), app, commonConfig, variables ++ appSpecificConfig(app))
+    }
 
+    // build and sign
     (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
+
+    val apps = subApplications.map(a => s"${a.name} $version.app")
+      .map(n => aggregateMacDir / n)
+      .map(_.getAbsolutePath)
 
     RunProcess(Seq("codesign", "--deep", "-s", "Developer ID Application") ++ apps, "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "380m",
+        "-size", "450m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
-    RunProcess(Seq("codesign", "-s", "Developer ID Application") :+ (buildName + ".dmg"), aggregateTarget, "codesigning dmg")
+    val dmgName = buildName + ".dmg"
+    RunProcess(Seq("codesign", "-s", "Developer ID Application") :+ dmgName, aggregateTarget, "codesigning dmg")
 
-    aggregateTarget / (buildName + ".dmg")
+    FileActions.createDirectory(webDirectory)
+    FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)
+
+    webDirectory / dmgName
   }
 }

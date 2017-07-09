@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.ImportPatchColors.importPatchColors
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context}
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _importpatchcolors extends Command {
 
@@ -17,7 +18,7 @@ class _importpatchcolors extends Command {
       world, true)
     catch {
       case ex: java.io.IOException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, token.text + ": " + ex.getMessage)
     }
     context.ip = next

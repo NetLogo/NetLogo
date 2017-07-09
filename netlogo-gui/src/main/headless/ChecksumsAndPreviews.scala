@@ -2,19 +2,14 @@
 
 package org.nlogo.headless
 
-import java.io.File
-import java.io.IOException
-
-import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
-
-import javax.imageio.ImageIO
 
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
+    List("ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
          "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
@@ -58,7 +53,7 @@ object ChecksumsAndPreviews {
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
         println("making preview for: " + path)
-        ImageIO.write(runner.previewImage.get, "PNG", new File(previewPath))
+        FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
       } catch {
         case _: PreviewCommandsRunner.NonCompilableCommandsException =>
           println("skipping: " + path + "\n  (non-compilable preview commands)")
@@ -87,7 +82,10 @@ object ChecksumsAndPreviews {
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
-          "/CODE EXAMPLES/SOUND/"))
+          "/ART/GENJAM - DUPLE.NLOGO",
+          "/EXTENSIONS EXAMPLES/SOUND/"),
+        Some("it uses the vid extension") -> List(
+          "/EXTENSIONS EXAMPLES/VID/"))
       slice <- slices
       if path.toUpperCase.containsSlice(slice)
     } yield {

@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
-import org.nlogo.core.Nobody
+import org.nlogo.core.{ Nobody, Reference }
 import org.nlogo.{ api, core, nvm }
 
 class _diffuse extends DiffuseCommand {
@@ -15,9 +15,17 @@ class _diffuse4 extends DiffuseCommand {
     world.diffuse4(amount, reference.vn)
 }
 
-abstract class DiffuseCommand extends nvm.Command {
-
+abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
   switches = true
+
+  override def referenceIndex: Int = 0
+
+  override def applyReference(ref: Reference): nvm.Command = {
+    reference = ref
+    this
+  }
+
+  protected var reference: Reference = null
 
   override def toString =
     super.toString +
@@ -31,13 +39,13 @@ abstract class DiffuseCommand extends nvm.Command {
   override def perform(context: nvm.Context) {
     val amount = argEvalDoubleValue(context, 0)
     if (amount < 0.0 || amount > 1.0)
-      throw new nvm.EngineException(
+      throw new nvm.RuntimePrimitiveException(
         context, this, core.I18N.errors.getN(
           "org.nlogo.prim.$common.paramOutOfBounds", Double.box(amount)))
     try diffuse(amount)
     catch {
       case ex: api.AgentException =>
-        throw new nvm.EngineException(context, this, ex.getMessage)
+        throw new nvm.RuntimePrimitiveException(context, this, ex.getMessage)
       case ex: PatchException =>
         val value: AnyRef = ex.patch.getPatchVariable(reference.vn)
         val bad =
@@ -45,7 +53,7 @@ abstract class DiffuseCommand extends nvm.Command {
             "NOBODY"
           else
             "the " + api.TypeNames.name(value) + " " + api.Dump.logoObject(value)
-        throw new nvm.EngineException(
+        throw new nvm.RuntimePrimitiveException(
           context, this,
           s"${ex.patch} should contain a number in the ${world.patchesOwnNameAt(reference.vn)} " +
             s" variable, but contains $bad instead"

@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
 import org.nlogo.nvm.Procedure
@@ -24,34 +24,25 @@ trait Evaluating { this: AbstractWorkspace =>
     evaluator.makeCommandThunk(source, world.observer,
       new SimpleJobOwner(jobOwnerName, rng, AgentKind.Observer))
   @throws(classOf[CompilerException])
-  def evaluateCommands(owner: JobOwner, source: String) {
+  def evaluateCommands(owner: JobOwner, source: String)  = {
     evaluator.evaluateCommands(owner, source)
   }
   @throws(classOf[CompilerException])
-  def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) {
+  def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) = {
     evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
   }
   @throws(classOf[CompilerException])
-  def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
-    waitForCompletion: Boolean) {
-      val agents = new ArrayAgentSet(agent.kind, 1, false)
-      agents.add(agent)
-      evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
-  }
+  def evaluateCommands(owner: JobOwner, source: String, agent: Agent, waitForCompletion: Boolean) =
+    evaluator.evaluateCommands(owner, source, AgentSet.fromAgent(agent), waitForCompletion)
   @throws(classOf[CompilerException])
-  def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
-    waitForCompletion: Boolean) {
+  def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet, waitForCompletion: Boolean) =
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
-  }
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String) =
     evaluator.evaluateReporter(owner, source, world.observers)
   @throws(classOf[CompilerException])
-  def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
-    val agents = new ArrayAgentSet(agent.kind, 1, false)
-    agents.add(agent)
-    evaluator.evaluateReporter(owner, source, agents)
-  }
+  def evaluateReporter(owner: JobOwner, source: String, agent: Agent) =
+    evaluator.evaluateReporter(owner, source, AgentSet.fromAgent(agent))
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
     evaluator.evaluateReporter(owner, source, agents)

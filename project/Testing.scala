@@ -10,11 +10,17 @@ object Testing {
   lazy val extensionTests = taskKey[Unit]("extension tests")
   lazy val crawl    = taskKey[Unit]("extremely slow tests")
 
-  lazy val tr = inputKey[Unit]("org.nlogo.headless.TestReporters")
-  lazy val tc = inputKey[Unit]("org.nlogo.headless.TestCommands")
-  lazy val te = inputKey[Unit]("org.nlogo.headless.TestExtensions")
-  lazy val tm = inputKey[Unit]("org.nlogo.headless.TestModels")
-  lazy val ts = inputKey[Unit]("org.nlogo.headless.TestChecksums")
+  lazy val testReportersClass  = settingKey[String]("class used to run reporter tests")
+  lazy val testCommandsClass   = settingKey[String]("class used to run command tests")
+  lazy val testExtensionsClass = settingKey[String]("class used to run extensions tests")
+  lazy val testModelsClass     = settingKey[String]("class used to run model tests")
+  lazy val testChecksumsClass  = settingKey[String]("class used to run checksum tests")
+
+  lazy val tr = inputKey[Unit]("run reporter tests")
+  lazy val tc = inputKey[Unit]("run command tests")
+  lazy val te = inputKey[Unit]("run extension tests")
+  lazy val tm = inputKey[Unit]("run model tests")
+  lazy val ts = inputKey[Unit]("run checksum tests")
 
   lazy val testTempDirectory = settingKey[File]("Temp directory for tests to write files to")
 
@@ -40,22 +46,44 @@ object Testing {
       (testOnly in Test).toTask(" -- -n org.nlogo.util.SlowTestTag -l org.nlogo.headless.LanguageTestTag -l org.nlogo.util.ExtensionTestTag").value
     })
 
+  def useLanguageTestPrefix(prefix: String) =
+    inConfig(Test)(
+      Seq(
+        testReportersClass  := prefix + "Reporters",
+        testCommandsClass   := prefix + "Commands",
+        testExtensionsClass := prefix + "Extensions",
+        testModelsClass     := prefix + "Models")
+    )
+
   val settings = suiteSettings ++
     inConfig(Test)(
       Seq(
         testTempDirectory := file("tmp"),
-        testOnly <<= testOnly dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) },
-        test     <<= test     dependsOn Def.task{ IO.createDirectory(testTempDirectory.value) }) ++
+        testOnly := {
+          IO.createDirectory(testTempDirectory.value)
+          testOnly.evaluated
+        },
+        test     := {
+          IO.createDirectory(testTempDirectory.value)
+          test.value
+        },
+        ts := keyValueTest(testModelsClass, "model").evaluated
+      ) ++
       testKeys.flatMap(key =>
           Defaults.defaultTestTasks(key) ++
           Defaults.testTaskOptions(key)) ++
-      Seq(tr, tc, te, tm).flatMap(key =>
-          Seq(key := taggedTest(key.key.description.get).evaluated)) ++
-      Seq(ts).flatMap(key =>
-          Seq(key := keyValueTest(key.key.description.get, "model").evaluated)))
+      (Map(
+        tr -> testReportersClass,
+        tc -> testCommandsClass,
+        te -> testExtensionsClass,
+        tm -> testModelsClass).flatMap {
+          case (ik, classNameSetting) =>
+            Seq[Setting[_]](ik := taggedTest(classNameSetting).evaluated)
+        }))
 
-  def taggedTest(name: String): Def.Initialize[InputTask[Unit]] =
+  def taggedTest(className: SettingKey[String]): Def.Initialize[InputTask[Unit]] =
     Def.inputTaskDyn {
+      val name = className.value
       val args = Def.spaceDelimited("<arg>").parsed
       val scalaTestArgs =
         if (args.isEmpty) ""
@@ -63,8 +91,9 @@ object Testing {
       (testOnly in Test).toTask(s" $name$scalaTestArgs")
     }
 
-  def keyValueTest(name: String, key: String): Def.Initialize[InputTask[Unit]] =
+  def keyValueTest(className: SettingKey[String], key: String): Def.Initialize[InputTask[Unit]] =
     Def.inputTaskDyn {
+      val name = className.value
       val args = Def.spaceDelimited("<arg>").parsed
       val scalaTestArgs =
         if (args.isEmpty)

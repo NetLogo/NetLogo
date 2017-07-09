@@ -24,7 +24,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
     } }.export("world",modelFileName,"")
   }
 
-  def exportWorld(writer:PrintWriter){
+  def exportWorld(writer:PrintWriter) {
     world.exportWorld(writer,true)
     exportDrawingToCSV(writer)
     exportOutputAreaToCSV(writer)
@@ -51,6 +51,15 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         new PlotExporter(plotManager.getPlot(plotName),Dump.csv).export(writer)
       }
     }.export("plot",modelFileName,"")
+  }
+
+  def exportInterfaceGlobals(writer: PrintWriter): Unit = {
+    writer.println(Dump.csv.header("MODEL SETTINGS"))
+    val globals = world.program.interfaceGlobals
+    writer.println(Dump.csv.variableNameRow(globals))
+    val values = globals.map(globalName => world.getObserverVariableByName(globalName))
+    writer.println(Dump.csv.dataRow(values))
+    writer.println()
   }
 
   @throws(classOf[IOException])

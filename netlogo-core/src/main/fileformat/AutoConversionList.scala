@@ -2,30 +2,32 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.core.SourceRewriter
+import org.nlogo.core.{ Dialect, Femto, SourceRewriter }
 
 case class ConversionSet(
+  conversionName:       String,
   codeTabConversions:   Seq[SourceRewriter => String] = Seq(),
   otherCodeConversions: Seq[SourceRewriter => String] = Seq(),
-  targets:              Seq[String] = Seq())
+  targets:              Seq[String] = Seq(),
+  conversionDialect:    Dialect => Dialect = identity)
 
 
 object AutoConversionList {
   type ConversionList = Seq[(String, ConversionSet)]
 
-  def changeAllCode(changes: Seq[SourceRewriter => String], targets: Seq[String]): ConversionSet = {
-    ConversionSet(changes, changes, targets)
+  def changeAllCode(name: String, changes: Seq[SourceRewriter => String], targets: Seq[String]): ConversionSet = {
+    ConversionSet(name, changes, changes, targets)
   }
 
   lazy val conversions: ConversionList = Seq(
     "NetLogo 5.2" -> {
-      changeAllCode(Seq(_.replaceToken("hsb", "__hsb-old")), Seq("hsb"))
+      changeAllCode("hsb correction", Seq(_.replaceToken("hsb", "__hsb-old")), Seq("hsb"))
     },
     "NetLogo 5.2" -> {
-      changeAllCode(Seq(_.replaceToken("extract-hsb", "__extract-hsb-old")), Seq("extract-hsb"))
+      changeAllCode("extract-hsb correction", Seq(_.replaceToken("extract-hsb", "__extract-hsb-old")), Seq("extract-hsb"))
     },
     "NetLogo 5.2" -> {
-      changeAllCode(Seq(_.replaceToken("approximate-hsb", "__approximate-hsb-old")), Seq("approximate-hsb"))
+      changeAllCode("approximate-hsb correction", Seq(_.replaceToken("approximate-hsb", "__approximate-hsb-old")), Seq("approximate-hsb"))
     },
     "NetLogo 6.0-M9" -> {
       val CommandReplacements = Seq(
@@ -49,10 +51,21 @@ object AutoConversionList {
         _.addGlobal("_recording-save-file-name"),
         _.addExtension("vid"))
 
-      ConversionSet(codeTabOnlyReplacements ++ sharedTransformations, sharedTransformations, targets)
+      ConversionSet("movie prims to vid extension", codeTabOnlyReplacements ++ sharedTransformations, sharedTransformations, targets)
     },
     "NetLogo 6.0-M9" -> {
-      changeAllCode(Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
+      changeAllCode("remove hubnet-set-client-interface", Seq(_.remove("hubnet-set-client-interface")), Seq("hubnet-set-client-interface"))
+    },
+    "NetLogo 6.0-RC1" -> {
+      val targets = Seq("task", "?", "?1", "?2", "?3", "?4", "?5", "?6", "?7", "?8", "?9")
+      val conversions = Seq[SourceRewriter => String](
+        _.replaceToken("is-reporter-task?", "is-anonymous-reporter?"),
+        _.replaceToken("is-command-task?",  "is-anonymous-command?"),
+        _.customRewrite("org.nlogo.parse.Lambdaizer"))
+      ConversionSet("replace tasks with anonymous procedures", conversions, conversions, targets, (d: Dialect) => Femto.get[Dialect]("org.nlogo.parse.LambdaConversionDialect", d))
+    },
+    "NetLogo 6.0-BETA2" -> {
+      changeAllCode("rename range to _range", Seq(_.replaceToken("range", "_range")), Seq("range"))
     }
     )
 }

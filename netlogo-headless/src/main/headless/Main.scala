@@ -2,11 +2,9 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ Femto, LiteralParser, WorldDimensions }
-import org.nlogo.api.{ APIVersion, LabProtocol, ModelLoader, Version }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.core.WorldDimensions
+import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.nvm
 
 object Main {
   class CancelException extends RuntimeException
@@ -26,7 +24,13 @@ object Main {
       w.open(settings.modelPath)
       w
     }
-    BehaviorSpaceCoordinator.selectProtocol(settings, newWorkspace) match {
+    val openWs = newWorkspace
+    val proto = try {
+      BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
+    } finally {
+      openWs.dispose()
+    }
+    proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
         lab.run(settings, protocol, newWorkspace _)

@@ -4,7 +4,6 @@ package org.nlogo.workspace
 
 import java.net.URL
 
-import org.nlogo.api.ClassManager
 import ExtensionManager.ExtensionData
 
 import org.scalatest.FunSuite

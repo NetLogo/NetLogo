@@ -52,7 +52,7 @@ PatchSet2_2D
   patches = (patch-set patch 0 0 patches) => true
   patches = (patch-set patch 0 0 sort patches) => true
   (patch-set sort turtles patch 0 0) => ERROR List inputs to PATCH-SET must only contain patch, patch agentset, or list elements.  The list [(turtle 0)] contained (turtle 0) which is NOT a patch or patch agentset.
-  map [[pxcor] of ?] sort-by [[pxcor] of ?1 < [pxcor] of ?2] (patch-set patch 3 0 patch 1 0 patch 2 0) => [1 2 3]
+  map [[x] -> [pxcor] of x] sort-by [[x y] -> [pxcor] of x < [pxcor] of y] (patch-set patch 3 0 patch 1 0 patch 2 0) => [1 2 3]
   count (patch-set patch 0 0 patch 0 0) => 1
 
 PatchSet2_3D
@@ -64,7 +64,7 @@ PatchSet2_3D
   patches = (patch-set patch 0 0 0 patches) => true
   patches = (patch-set patch 0 0 0 sort patches) => true
   (patch-set sort turtles patch 0 0 0) => ERROR List inputs to PATCH-SET must only contain patch, patch agentset, or list elements.  The list [(turtle 0)] contained (turtle 0) which is NOT a patch or patch agentset.
-  map [[pxcor] of ?] sort-by [[pxcor] of ?1 < [pxcor] of ?2] (patch-set patch 3 0 1 patch 1 0 2 patch 2 0 3) => [1 2 3]
+  map [[x] -> [pxcor] of x] sort-by [[x y] -> [pxcor] of x < [pxcor] of y] (patch-set patch 3 0 1 patch 1 0 2 patch 2 0 3) => [1 2 3]
   count (patch-set patch 0 0 0 patch 0 0 0) => 1
 
 EmptyPatchSet

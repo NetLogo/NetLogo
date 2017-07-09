@@ -2,32 +2,30 @@
 
 package org.nlogo.app
 
+import java.awt.Component
+import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
+import javax.swing.{AbstractAction, Action, JOptionPane}
+
+import org.nlogo.api.ModelType
+import org.nlogo.core.I18N
+import org.nlogo.swing.UserAction, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
 
-import org.nlogo.core.I18N
-import org.nlogo.api
-import org.nlogo.window
-
-import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
-import javax.swing.JMenuItem
-import javax.swing.JOptionPane
-
-case class ModelEntry(path: String, modelType: api.ModelType) {
+case class ModelEntry(path: String, modelType: ModelType) {
   def this(line: String) {
     this(line.drop(1), (line(0) match {
-                          case 'N' => api.ModelType.Normal
-                          case 'L' => api.ModelType.Library
-                          case _ => api.ModelType.Normal // This case is only for malformed prefs, which will bork later. FD 5/29/14
+                          case 'N' => ModelType.Normal
+                          case 'L' => ModelType.Library
+                          case _ => ModelType.Normal // This case is only for malformed prefs, which will bork later. FD 5/29/14
     }))
   }
 
   override def toString(): String =
     (modelType match {
-      case api.ModelType.Normal => "N"
-      case api.ModelType.Library => "L"
-      case api.ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
+      case ModelType.Normal => "N"
+      case ModelType.Library => "L"
+      case ModelType.New => throw new RuntimeException("Cannot add new file to menu!")
      }) + path
 }
 
@@ -40,25 +38,39 @@ object OpenRecentFileAction {
     else
       path
   }
+
+  val FilesGroup = "org.nlogo.app.OpenRecentFileAction.FilesGroup"
 }
 
-import OpenRecentFileAction.trimForDisplay
+import OpenRecentFileAction._
 
-class OpenRecentFileAction(modelEntry: ModelEntry, fileMenu: FileMenu) extends AbstractAction(trimForDisplay(modelEntry.path)) {
+class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, index: Int)
+  extends AbstractAction(trimForDisplay(modelEntry.path))
+  with MenuAction {
+
+    category    = UserAction.FileCategory
+    subcategory = UserAction.FileRecentSubcategory
+    group       = FilesGroup
+    rank        = index.toDouble
+
   override def actionPerformed(e: ActionEvent): Unit = {
-    open(modelEntry)
+    val sourceComponent = e.getSource match {
+      case component: Component => component
+      case _ => null
+    }
+    open(modelEntry, sourceComponent)
   }
 
-  def open(modelEntry: ModelEntry): Unit = {
+  def open(modelEntry: ModelEntry, source: Component): Unit = {
     try {
-      fileMenu.offerSave()
-      fileMenu.openFromPath(modelEntry.path, modelEntry.modelType)
+      fileManager.aboutToCloseFiles()
+      fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
     } catch {
       case ex: org.nlogo.awt.UserCancelException =>
         org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException => {
         JOptionPane.showMessageDialog(
-          fileMenu,
+          source,
           ex.getMessage,
           I18N.gui.get("common.messages.error"),
           JOptionPane.ERROR_MESSAGE)
@@ -106,26 +118,31 @@ class RecentFiles {
   }
 }
 
-class RecentFilesMenu(frame: AppFrame, fileMenu: FileMenu)
-  extends org.nlogo.swing.Menu("Recent Files")
-  with ModelSavedEvent.Handler
+class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
+  extends ModelSavedEvent.Handler
   with BeforeLoadEvent.Handler {
 
   val recentFiles = new RecentFiles
-  refreshMenu()
-  frame.addLinkComponent(this)
+  private var currentActions = Seq.empty[Action]
+  private var menu = Option.empty[ActionMenu]
+
+  def setMenu(newMenu: ActionMenu): Unit = {
+    menu.foreach(oldMenu => currentActions.foreach(oldMenu.revokeAction))
+    menu = Some(newMenu)
+    refreshMenu()
+  }
 
   // Add models to list when the current model is saved
   def handle(e: ModelSavedEvent) {
     for (p <- Option(e.modelPath)) {
-      recentFiles.add(ModelEntry(p, api.ModelType.Normal))
+      recentFiles.add(ModelEntry(p, ModelType.Normal))
       refreshMenu()
     }
   }
 
   // Add models to list when new models are opened
   def handle(e: BeforeLoadEvent) {
-    if (e.modelType != api.ModelType.New) {
+    if (e.modelType != ModelType.New) {
       for (p <- e.modelPath) {
         recentFiles.add(ModelEntry(p, e.modelType))
         refreshMenu()
@@ -133,25 +150,42 @@ class RecentFilesMenu(frame: AppFrame, fileMenu: FileMenu)
     }
   }
 
+  def computeActions: Seq[Action] = {
+    val fileActions =
+    if (recentFiles.models.isEmpty) Seq(EmptyAction)
+    else (for ((modelEntry, i) <- recentFiles.models.zipWithIndex)
+      yield new OpenRecentFileAction(modelEntry, fileManager, i))
+    fileActions :+ new ClearItems()
+  }
+
   def refreshMenu() {
-    getMenuComponents.foreach {
-      case j: JMenuItem => j.getActionListeners.foreach {
-        case o: OpenRecentFileAction => j.removeActionListener(o)
-        case _ =>
-      }
-      case _ =>
+    val oldActions = currentActions
+    currentActions = computeActions
+    menu.foreach { m =>
+      oldActions.foreach(m.revokeAction)
+      currentActions.foreach(m.offerAction)
     }
-    removeAll()
-    if (recentFiles.models.isEmpty)
-      addMenuItem("<empty>").setEnabled(false)
-    else {
-      for (modelEntry <- recentFiles.models)
-        addMenuItem(new OpenRecentFileAction(modelEntry, fileMenu))
-      addSeparator()
-      addMenuItem("Clear Items", () => {
-        recentFiles.clear
-        refreshMenu()
-      })
+  }
+
+  object EmptyAction extends AbstractAction(I18N.gui.get("common.menus.empty"))
+  with MenuAction {
+    category    = UserAction.FileCategory
+    subcategory = UserAction.FileRecentSubcategory
+    group       = FilesGroup
+    setEnabled(false)
+
+    override def actionPerformed(e: ActionEvent): Unit = {}
+  }
+
+  class ClearItems extends AbstractAction(I18N.gui.get("menu.file.recent.clear"))
+  with MenuAction {
+    category    = UserAction.FileCategory
+    subcategory = UserAction.FileRecentSubcategory
+    group       = "org.nlogo.app.RecentFilesMenu.ClearItems"
+
+    def actionPerformed(e: ActionEvent): Unit = {
+      recentFiles.clear()
+      refreshMenu()
     }
   }
 }

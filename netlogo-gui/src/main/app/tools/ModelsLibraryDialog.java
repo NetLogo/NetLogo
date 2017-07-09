@@ -104,8 +104,11 @@ strictfp public class ModelsLibraryDialog
   Action communityAction =
       new AbstractAction(I18N.guiJ().get("modelsLibrary.community")) {
         public void actionPerformed(ActionEvent e) {
-          org.nlogo.swing.BrowserLauncher.openURL
-              (me, "http://ccl.northwestern.edu/netlogo/models/community/", false);
+          URI uri =
+            org.nlogo.swing.BrowserLauncher.makeURI(me, "http://ccl.northwestern.edu/netlogo/models/community/");
+          if (uri != null) {
+            org.nlogo.swing.BrowserLauncher.openURI(me, uri);
+          }
         }
       };
 
@@ -138,7 +141,7 @@ strictfp public class ModelsLibraryDialog
 
     final SearchableModelTree[] smt = new SearchableModelTree[1];
     if (ModelsLibrary.needsModelScan() || smt[0] == null) {
-      org.nlogo.swing.ModalProgressTask.apply(
+      org.nlogo.swing.ModalProgressTask.onUIThread(
         parent, I18N.guiJ().get("modelsLibrary.loading"),
         new Runnable() {
           public void run() {
@@ -351,14 +354,15 @@ strictfp public class ModelsLibraryDialog
               // immediately.
               return;
             }
-            // There is a very small chance that the number of rows
-            // has changed in between our call to getRowCount above
-            // and here. But the chance is very small and if we do
-            // throw a NullPointerException it's not really a big
-            // deal since the thread is going to die anyway once it
-            // notices that the searchText has changed, so I just
-            // don't think it's worth synchronizing. ER - 12/02/07
+            // There is a chance that the number of rows has changed
+            // in between our call to getRowCount above and here.
+            // Since this thread is going to die anyway, we just
+            // null-check and allow later threads to do their job.
+            // ER - 12/02/07, RG 5/4/17
             final javax.swing.tree.TreePath path = tree.getPathForRow(i);
+            if (path == null) {
+              return;
+            }
             Node node = (Node) path.getLastPathComponent();
             if (node.isFolder()) {
               try {
@@ -562,10 +566,17 @@ strictfp public class ModelsLibraryDialog
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        if (e.getURL() == null) {
+        URI toOpen = null;
+        try {
+          if (e.getURL() != null) {
+            toOpen = e.getURL().toURI();
+          }
+        } catch (java.net.URISyntaxException ue) {
+        }
+        if (toOpen == null) {
           JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-          BrowserLauncher.openURL(this, e.getURL().toString(), false);
+          BrowserLauncher.openURI(this, toOpen);
         }
       }
     }

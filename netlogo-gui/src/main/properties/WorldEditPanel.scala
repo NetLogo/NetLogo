@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ I18N, TokenType }
+import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import javax.swing.border.TitledBorder
 import org.nlogo.window.{WorldViewSettings, OriginConfiguration}

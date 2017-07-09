@@ -1,0 +1,345 @@
+*ToString1
+  (word [ -> fd 5 ]) => "(anonymous command: [ -> fd 5 ])"
+
+*ToString2
+  (word [[x] -> ask turtles [ set color red] ]) => "(anonymous command: [ [x] -> ask turtles [ set color red ] ])"
+
+*ToString3
+  (word [ x -> print x]) => "(anonymous command: [ x -> print x ])"
+
+*ToString4
+  (word [ -> print 5]) => "(anonymous command: [ -> print 5 ])"
+
+*ToString5
+  (word [ x -> (foreach [1 2] [3 4] [ -> __ignore x + x])]) => "(anonymous command: [ x -> foreach [1 2] [3 4] [ -> __ignore x + x ] ])"
+
+*ToString6
+  (word [ [a b] -> rt a fd b ]) => "(anonymous command: [ [a b] -> rt a fd b ])"
+
+*ToString7
+  to foo end
+  (word [ -> foo]) => "(anonymous command: [ -> foo ])"
+
+CallTask
+  globals [ glob1 ]
+  O> run [set glob1 5]
+  glob1 => 5
+
+NestedCallTask
+  globals [ glob1 ]
+  O> run [ run [ set glob1 5 ] ]
+  glob1 => 5
+
+CallTaskAgainAndAgain
+  globals [ glob1 glob2 ]
+  O> set glob1 [ -> set glob2 glob2 + 5]
+  O> run glob1
+  glob2 => 5
+  O> run glob1
+  glob2 => 10
+  O> run glob1 run glob1 run glob1
+  glob2 => 25
+
+EasyForeach
+  globals [ glob1 ]
+  O> foreach [1 2 3] [ set glob1 glob1 + 1 ]
+  glob1 => 3
+
+HarderForeach
+  globals [ glob1 ]
+  O> foreach [1 2 3] [ x -> set glob1 glob1 + x ]
+  glob1 => 6
+
+NestedForeach1
+  globals [ glob1 ]
+  O> foreach [1 2 3] [ foreach [1 2 3] [ set glob1 glob1 + 1 ] ]
+  glob1 => 9
+
+NestedForeach2
+  globals [ glob1 ]
+  O> foreach [1 2 3] [ foreach [10 20 30] [ x -> set glob1 glob1 + x ] ]
+  glob1 => 180
+
+NestedForeach3
+  globals [ glob1 ]
+  O> foreach [1 2 3] [ y -> __let x y foreach [10 20 30] [ z -> set glob1 glob1 + x + z ] ]
+  glob1 => 198
+
+NestedForeach4
+  to-report nest let result [] foreach [true false] [ a -> let a' a foreach [true false] [ b -> let b' b set result lput (list a' b') result ]] report result end
+  nest => [[true true] [true false] [false true] [false false]]
+
+OutOfOrderArgsForeach
+  globals [ glob1 ]
+  O> set glob1 (list)
+  O> (foreach [1 2 3] [4 5 6] [[x y] -> set glob1 (fput y glob1) set glob1 (fput x glob1) ])
+  glob1 => [3 6 2 5 1 4]
+
+CloseOverUnoptimizedLet
+  globals [ glob1 glob2 ]
+  O> __let x 5 set glob1 [ -> set glob2 x ]
+  O> run glob1
+  glob2 => 5
+
+CloseOverOptimizedLet
+  globals [ glob1 glob2 ]
+  O> let x 5 set glob1 [ -> set glob2 x ]
+  O> run glob1
+  glob2 => 5
+
+CloseOverProcedureVariable
+  globals [ glob1 ]
+  to-report foo [x] report [ -> set glob1 x] end
+  O> run foo 10
+  glob1 => 10
+
+*WrongTypeOfTask1
+  O> __ignore runresult [ -> __ignore 5] => COMPILER ERROR RUNRESULT expected this input to be a string or anonymous reporter, but got an anonymous command instead
+
+WrongTypeOfTask2
+  O> run [ -> 5] => COMPILER ERROR RUN expected this input to be a string or anonymous command, but got an anonymous reporter instead
+
+NotEnoughInputs
+  O> run [ x -> __ignore x] => ERROR anonymous procedure expected 1 input, but only got 0
+
+NotEnoughInputsForeach
+  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR anonymous procedure expected 2 inputs, but only got 1
+
+command-and-reporter-tasks-close-over-same-let-variable
+  globals [ glob1 glob2 glob3 ]
+  to-report make-account let balance 0 report list [ -> balance] [ x -> set balance balance + x ] end
+  O> set glob1 make-account
+  O> set glob2 item 0 glob1
+  O> set glob3 item 1 glob1
+  runresult glob2 => 0
+  O> (run glob3 10)
+  runresult glob2 => 10
+  O> (run glob3 20)
+  runresult glob2 => 30
+  O> set glob1 make-account
+  runresult (item 0 glob1) => 0
+  runresult glob2 => 30
+
+command-and-reporter-tasks-close-over-same-procedure-input
+  globals [ glob1 glob2 glob3 ]
+  to-report make-account [balance] report list [ -> balance] [ x -> set balance balance + x ] end
+  O> set glob1 make-account 100
+  O> set glob2 item 0 glob1
+  O> set glob3 item 1 glob1
+  runresult glob2 => 100
+  O> (run glob3 10)
+  runresult glob2 => 110
+  O> (run glob3 20)
+  runresult glob2 => 130
+  O> set glob1 make-account 50
+  runresult (item 0 glob1) => 50
+  runresult glob2 => 130
+
+*command-task-stack-trace
+  O> run [ -> print __boom] => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by (anonymous command: [ -> print __boom ])\
+    called by procedure __EVALUATOR
+
+*command-task-in-command-task-stack-trace
+  O> run [run [print __boom]] => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by (anonymous command: [ print __boom ])\
+    called by (anonymous command: [ run [ print __boom ] ])\
+    called by procedure __EVALUATOR
+
+turtle-executing-command-task
+  O> crt 1 let f [ -> set label "hi"] ask turtle 0 [run f]
+  [label] of turtle 0 => "hi"
+
+turtle-executing-command-task-2
+  O> crt 1 let f [ -> set xcor 2] ask turtle 0 [run f]
+  [xcor] of turtle 0 => 2
+
+turtle-executing-command-task-3
+  O> crt 1 let f [ -> set plabel "hi"] ask turtle 0 [run f]
+  [plabel] of turtle 0 => "hi"
+
+patch-executing-command-task
+  globals [ glob1 ]
+  O> set glob1 one-of patches
+  O> let f [ -> set plabel "hi"] ask glob1 [run f]
+  [plabel] of glob1 => "hi"
+
+link-executing-command-task
+  O> crt 2 ask turtle 0 [create-link-with turtle 1] let f [ -> set label "hi"] ask link 0 1 [run f]
+  [label] of link 0 1 => "hi"
+
+deeply-nested-with-all-agent-types
+  globals [ glob1 ]
+  to-report f [x] report [ -> ask turtle 0 [run x] ] end
+  to-report g [x] report [ -> ask link 0 1 [run x] ] end
+  to-report h [x] report [ -> ask glob1 [run x] ] end
+  to-report i report [ -> set plabel "wow!" ] end
+  to go crt 2 ask turtle 0 [create-link-with turtle 1] run f (g (h i)) end
+  O> set glob1 one-of patches
+  O> go
+  [plabel] of glob1 => "wow!"
+
+is-it-or-isnt-it
+  is-anonymous-command? 5 => false
+  is-anonymous-command? [ -> print timer] => true
+  is-anonymous-command? [ -> timer] => false
+
+dont-close-over-current-agent
+  globals [ glob1 glob2 ]
+  O> crt 2
+  O> ask turtle 0 [ set glob1 [ -> set glob2 who ] ]
+  O> ask turtle 1 [ run glob1 ]
+  glob2 => 1
+
+concise-syntax-1
+  O> cro 1
+  T> foreach [0.5 0.5 0.5] fd
+  [ycor] of turtle 0 => 1.5
+
+concise-syntax-2
+  O> crt 5
+  count turtles => 5
+  T> foreach [1] die
+  count turtles => 0
+
+concise-syntax-3
+  O> foreach [1 2 3] crt
+  count turtles => 6
+
+concise-syntax-4
+  globals [ glob1 ]
+  to foo set glob1 glob1 + 1 end
+  O> foreach [1 1 1] foo
+  glob1 => 3
+
+concise-syntax-5
+  globals [ glob1 ]
+  to foo [x] set glob1 glob1 + x end
+  O> foreach [1 2 3] foo
+  glob1 => 6
+
+concise-syntax-6
+  globals [ glob1 ]
+  O> set glob1 [ x -> crt x]
+  O> foreach [1 2 3] glob1
+  count turtles => 6
+
+concise-syntax-7
+  O> (foreach [1 2 3] [9 9 9] crt)
+  count turtles => 6
+
+concise-syntax-8
+  globals [ glob1 ]
+  to foo [x] ask x [ set glob1 glob1 + who ] end
+  O> crt 5
+  O> foreach sort turtles foo
+  glob1 => 10
+
+the-killing-task
+  globals [ glob1 ]
+  O> set glob1 [ -> ask turtle 0 [ die ] ]
+  O> crt 1
+  T> run glob1  __stdout who  error "oops"
+
+foreach-multiple-lists
+  globals [glob1]
+  O> set glob1 []
+  O> (foreach [1 2] [10 20] [100 200] [[x y z] -> set glob1 lput (list x y z) glob1 ])
+  glob1 => [[1 10 100] [2 20 200]]
+
+foreach-multiple-lists-length-mismatch
+  globals [glob1]
+  O> (foreach [1 2] [10 20] [100 200 300] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+  O> (foreach [1 2 3] [10 20] [100 200] [ ]) => ERROR All the list arguments to FOREACH must be the same length.
+
+empty-command-task-1
+  globals [ glob1 ]
+  O> set glob1 [ -> ]
+  is-anonymous-command? glob1 => true
+  O> run glob1  set glob1 5
+  glob1 => 5
+
+empty-command-task-2
+  O> foreach [1 2 3] [ ]
+
+command-task-body-may-have-different-agent-type
+  is-anonymous-command? [ -> die] => true
+
+command-task-body-gets-agent-type-check
+  O> __ignore [ -> hatch 1 sprout 1] => COMPILER ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
+
+command-task-closes-over-let-inside-task-of-different-agent
+  globals [ glob1 ]
+  O> __let z 0 crt 1 [ set glob1 [ -> __ignore z ] ]
+  O> run glob1
+
+foreach-plus-recursion
+  turtles-own [tvar]
+  to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [ t -> ask t [ explore ] ] ] end
+  O> ask patches [ sprout 1 ]
+  O> ask one-of turtles [ explore ]
+  any? turtles with [tvar = 0] => false
+
+ForeachWithRecursionAndLet
+  to-report add [l] let ret 0 foreach l [  x -> ifelse is-list? x [ set ret ret + add x ] [ set ret ret + x ] ] report ret end
+  add [[1 2] [[3 4] 5]] => 15
+
+allow-task-variable-access-inside-reporter-block
+  globals [glob1]
+  O> crt 10
+  O> foreach [7] [ i -> set glob1 first [who] of turtles with [who = i] ]
+  glob1 => 7
+
+LoopBindings1
+  globals [glob1 lambdas]
+  O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput [  -> set bar bar + 1 set glob1 bar ] lambdas ]
+  O> foreach lambdas [  l -> run l ]
+  glob1 => 1
+
+LoopBindings2
+  globals [glob1 lambdas]
+  O> set lambdas [] repeat 5 [ let bar 0 set lambdas lput (runresult [ [bar'] -> [  -> set glob1 bar' + 1 ] ] bar) lambdas set bar 4 ]
+  O> foreach lambdas [  l -> run l ]
+  glob1 => 1
+
+LoopBindings3
+  globals [glob1 lambdas]
+  O> set lambdas [] let bar 0 repeat 5 [ set lambdas lput [  -> set bar bar + 1 set glob1 bar ] lambdas ]
+  O> foreach lambdas [  l -> run l ]
+  glob1 => 5
+
+StopFromLambda1
+  to-report stopper report [ -> stop] end
+  to foo (run stopper) end
+  O> foo
+
+StopFromLambda2
+  globals [globstop]
+  to make-stop-glob set globstop [ -> stop] end
+  to-report baz make-stop-glob run globstop report 5 end
+  O> show baz => ERROR STOP is not allowed inside TO-REPORT.
+
+ReportFromLambda1
+  to-report stopper report [ -> report 5] end
+  to-report foo (run stopper) end
+  foo => 5
+
+ReportFromLambda2
+  globals [globrep]
+  to make-rep-glob set globrep [ -> report 5] end
+  to baz make-rep-glob run globrep end
+  O> baz => ERROR REPORT can only be used inside TO-REPORT.
+
+AlternateSyntaxesSupported
+  to zero-argument-bracketed run [ [] -> show "abc" ] end
+  to zero-argument-unbracketed run [ -> show "abc" ] end
+  to zero-argument-arrow-omitted run [ show "abc" ] end
+  to one-argument-bracketed foreach [ 1 2 3 ] [ [i] -> show i ] end
+  to one-argument-unbracketed foreach [ 1 2 3 ] [ i -> show i ] end
+  O> zero-argument-bracketed
+  O> zero-argument-unbracketed
+  O> zero-argument-arrow-omitted
+  O> one-argument-bracketed
+  O> one-argument-unbracketed

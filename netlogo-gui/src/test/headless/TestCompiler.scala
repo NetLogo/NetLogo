@@ -3,7 +3,6 @@
 package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.Version
 import org.nlogo.core.{ CompilerException, I18N }
 
 class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
@@ -182,7 +181,6 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
 
   test("isReporter on user-defined procedures") {
     workspace.initForTesting(5, "to foo end to-report bar [] report 5 end")
-    import collection.JavaConverters._
     assertResult(false) { workspace.isReporter("foo") }
     assertResult(true) { workspace.isReporter("bar") }
   }

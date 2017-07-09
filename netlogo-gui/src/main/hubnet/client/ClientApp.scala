@@ -2,15 +2,14 @@
 
 package org.nlogo.hubnet.client
 
-import org.nlogo.swing.Implicits._
-import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
-import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
-import org.nlogo.hubnet.connection.Ports
+import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
-import javax.swing.{WindowConstants, JFrame}
+import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
+import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
+import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
+import org.nlogo.hubnet.connection.Ports
 
 /**
  * The HubNet client.
@@ -19,7 +18,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], editorFactory: EditorFactory, workspace: CompilerServices) {
+  def mainHelper(args: Array[String], workspace: CompilerServices) {
     try {
       val app = new ClientApp()
       org.nlogo.swing.Utils.setSystemLookAndFeel()
@@ -45,7 +44,7 @@ object ClientApp {
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
         else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
       }
-      app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
+      app.startup(userid, hostip, port, false, isRoboClient, waitTime, workspace)
     } catch {
       case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)
     }
@@ -64,8 +63,9 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     setResizable(false)
   }
 
-  def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
+  def startup(userid: String, hostip: String,
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices): Unit = {
+    val editorFactory = new DefaultEditorFactory(compiler)
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {
@@ -78,8 +78,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       getContentPane.setLayout(new BorderLayout())
       loginDialog = new LoginDialog(this, userid, hostip, port, false)
       clientPanel =
-        if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, workspace)
-        else new ClientPanel(editorFactory, this, workspace)
+        if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, compiler)
+        else new ClientPanel(editorFactory, this, compiler)
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
       pack()
@@ -123,7 +123,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   private def login(userid: String, hostip: String, port: Int) {
     var exs: Option[String] = None
-    ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
+    ModalProgressTask.onUIThread(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
     })
     exs match {
@@ -139,7 +139,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   def showExitMessage(title: String, message: String): Boolean = {
     EventQueue.mustBeEventDispatchThread()
     val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
-    0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
+    0 == OptionDialog.showMessage(loginDialog, "Confirm " + title, message, buttons)
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
@@ -147,7 +147,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (isLocal) this.dispose()
     else {
       if (connected) {
-        OptionDialog.show(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+        OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
         dispose()
         doLogin()
         ()
@@ -157,7 +157,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String) {
     EventQueue.mustBeEventDispatchThread()
-    OptionDialog.show(ClientApp.this, "Login Failed",
+    OptionDialog.showMessage(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
     loginDialog.setVisible(true)
   }

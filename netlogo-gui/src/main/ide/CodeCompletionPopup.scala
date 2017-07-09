@@ -2,34 +2,47 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component, Dimension}
+import java.awt.{Color, Component, Dimension, Font, GraphicsEnvironment}
 import java.awt.event._
 import javax.swing._
 import javax.swing.event.DocumentEvent
+import javax.swing.text.JTextComponent
 
-import org.nlogo.core.{DefaultTokenMapper, Femto, Token, TokenizerInterface}
+import org.nlogo.awt.Fonts
+import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
+import org.nlogo.nvm.ExtensionManager
 import org.nlogo.window.SyntaxColors
-import org.nlogo.editor.EditorArea
 
-case class CodeCompletionPopup() {
+object CodeCompletionPopup {
+  def apply() =
+    new CodeCompletionPopup(AutoSuggest(NetLogoCore, None))
+  def apply(dialect: Dialect) =
+    new CodeCompletionPopup(AutoSuggest(dialect, None),
+      new SuggestionListRenderer(dialect, None))
+  def apply(dialect: Dialect, extensionManager: ExtensionManager) =
+    new CodeCompletionPopup(AutoSuggest(dialect, Some(extensionManager)),
+      new SuggestionListRenderer(dialect, Some(extensionManager)))
+}
+
+case class CodeCompletionPopup(autoSuggest: AutoSuggest,
+  listRenderer: SuggestionListRenderer = new SuggestionListRenderer(NetLogoCore, None)) {
   // To control when the popup has to automatically show
   var isPopupEnabled = false
   // To store the last value user selected
   var lastSuggested = ""
-  val autoSuggest = new AutoSuggest()
   val dlm = new DefaultListModel[String]()
   val suggestionDisplaylist = new JList[String](dlm)
   val scrollPane = new JScrollPane(suggestionDisplaylist)
   val window = new JDialog()
   window.setUndecorated(true)
   window.add(scrollPane)
-  window.setSize(new Dimension(150, 200))
-  var editorArea: Option[EditorArea] = None
+  window.setMinimumSize(new Dimension(150, 210))
+  var editorArea: Option[JTextComponent] = None
 
   scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
 
-  def init(editorArea: EditorArea, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
+  def init(editorArea: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
     if(this.editorArea.isDefined)
       return
     this.editorArea = Some(editorArea)
@@ -37,8 +50,9 @@ case class CodeCompletionPopup() {
       suggestionDisplaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
       suggestionDisplaylist.setVisibleRowCount(10)
-      suggestionDisplaylist.setCellRenderer(new SuggestionListRenderer(eA))
-      
+      listRenderer.font = eA.getFont
+      suggestionDisplaylist.setCellRenderer(listRenderer)
+
       suggestionDisplaylist.addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent): Unit = {
           autoCompleteSuggestion(eA, autoSuggestDocumentListener)
@@ -83,9 +97,9 @@ case class CodeCompletionPopup() {
     * @param eA
     * @param autoSuggestDocumentListener
     */
-  def autoCompleteSuggestion(eA: EditorArea, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
+  def autoCompleteSuggestion(eA: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
     isPopupEnabled = false
-    var suggestion = suggestionDisplaylist.getSelectedValue
+    val suggestion = suggestionDisplaylist.getSelectedValue
     lastSuggested = suggestion
     val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
     for(token <- tokenOption) {
@@ -106,11 +120,28 @@ case class CodeCompletionPopup() {
   def displayPopup(): Unit = {
     for{eA <- editorArea} {
       isPopupEnabled = true
+      autoSuggest.refresh()
       val tokenOption = getTokenTillPosition(eA.getText(), eA.getCaretPosition)
       val position = tokenOption.map(_.start).getOrElse(eA.getCaretPosition)
+      fireUpdatePopup(None)
+      placeWindowOnScreen(eA, position)
+    }
+  }
+
+  /**
+    * Sets the location at which the window will be displayed
+    * @param eA
+    * @param position
+    */
+  def placeWindowOnScreen(eA: JTextComponent, position: Int): Unit = {
+    val screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode.getHeight
+    if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView(position).y +
+      eA.getFont.getSize > screenHeight) {
+      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
+        (eA.getLocationOnScreen.y + eA.modelToView(position).y - window.getSize.getHeight).toInt)
+    } else {
       window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
         eA.getLocationOnScreen.y + eA.modelToView(position).y + eA.getFont.getSize)
-      fireUpdatePopup(None)
     }
   }
 
@@ -138,6 +169,7 @@ case class CodeCompletionPopup() {
     */
   def updatePopup(position: Int): Unit = {
     for{eA <- editorArea} {
+      dlm.removeAllElements()
       if (isPopupEnabled ) {
         val tokenOption = getTokenTillPosition(eA.getText(), position)
         var list = Seq[String]()
@@ -148,12 +180,10 @@ case class CodeCompletionPopup() {
             // popup not to be diplayed after user hits the enter key
             if (!token.text.equals(lastSuggested)) {
               list = autoSuggest.getSuggestions(word)
-              dlm.removeAllElements()
               list.foreach(dlm.addElement(_))
               if (!list.isEmpty) {
                 lastSuggested = ""
                 window.validate()
-                window.setVisible(true)
                 // Required to keep the caret in the editorArea visible
                 eA.getCaret.setVisible(true)
                 suggestionDisplaylist.setSelectedIndex(0)
@@ -165,8 +195,10 @@ case class CodeCompletionPopup() {
               window.setVisible(false)
             }
           case None => window.setVisible(false)
+            isPopupEnabled = false
         }
       }
+      window.setVisible(!dlm.isEmpty)
     }
   }
 
@@ -182,16 +214,24 @@ case class CodeCompletionPopup() {
   *
   * @param editorArea
   */
-class SuggestionListRenderer(editorArea: EditorArea) extends ListCellRenderer[String]{
+class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[ExtensionManager]) extends ListCellRenderer[String]{
+
+  var font: Font = Fonts.monospacedFont
 
   override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
-    val label = new JLabel(value.asInstanceOf[String])
-    label.setForeground(if (DefaultTokenMapper.getCommand(value.asInstanceOf[String]).isEmpty) SyntaxColors.REPORTER_COLOR
-    else SyntaxColors.COMMAND_COLOR)
+    val label = new JLabel(value)
+
+    val fgColor =
+      if (dialect.tokenMapper.getCommand(value).nonEmpty ||
+        extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command))
+        SyntaxColors.COMMAND_COLOR
+      else
+        SyntaxColors.REPORTER_COLOR
+    label.setForeground(fgColor)
     label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
     label.setOpaque(true)
     label.setBorder(BorderFactory.createEmptyBorder())
-    label.setFont(editorArea.getFont)
+    label.setFont(font)
     label
   }
 }

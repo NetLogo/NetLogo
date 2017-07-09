@@ -6,14 +6,28 @@ import org.nlogo.core.{ Button, Model, Monitor, Plot, Slider, Widget }
 
 import org.nlogo.api.{ AutoConvertable, AutoConverter }
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
 trait WidgetConverter extends AutoConvertable {
+  def componentDescription: String = "NetLogo interface"
+
   override def requiresAutoConversion(original: Model, needsConversion: String => Boolean): Boolean =
     original.widgets.exists(widgetNeedsConversion(needsConversion))
 
-  override def autoConvert(original: Model, autoConverter: AutoConverter): Model =
-    original.copy(widgets = original.widgets.map(convertWidget(autoConverter)))
+  override def autoConvert(original: Model, autoConverter: AutoConverter): Either[(Model, Seq[Exception]), Model] = {
+    val (widgets, errors) =
+      original.widgets.foldLeft((Seq.empty[Widget], Seq.empty[Exception])) {
+        case ((ws, es), w) => convertWidget(autoConverter)(w) match {
+          case Failure(e: Exception) => (ws :+ w, es :+ e)
+          case Failure(t)            => throw t
+          case Success(w)            => (ws :+ w, es)
+        }
+      }
+    if (errors.isEmpty)
+      Right(original.copy(widgets = widgets))
+    else
+      Left((original.copy(widgets = widgets), errors))
+  }
 
   private def widgetNeedsConversion(needsConversion: String => Boolean)(w: Widget): Boolean =
     w match {
@@ -28,7 +42,7 @@ trait WidgetConverter extends AutoConvertable {
       case _ => false
     }
 
-  private def convertWidget(autoConverter: AutoConverter)(w: Widget): Widget = {
+  private def convertWidget(autoConverter: AutoConverter)(w: Widget): Try[Widget] = {
     Try {
       w match {
         case cWidget@(_: Button | _: Plot) =>
@@ -37,6 +51,8 @@ trait WidgetConverter extends AutoConvertable {
           rWidget.convertSource(autoConverter.convertReporterExpression _)
         case _ => w
       }
-    } getOrElse w
+    }
   }
 }
+
+object WidgetConverter extends WidgetConverter

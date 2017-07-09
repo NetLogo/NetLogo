@@ -3,7 +3,6 @@
 package org.nlogo.workspace
 
 import java.net.URI
-import java.nio.file.Paths
 
 import org.nlogo.core.Model
 import org.nlogo.api.{ ModelLoader, ModelType, Version }

@@ -3,7 +3,6 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.Version
 import org.nlogo.util.SlowTestTag
 import org.nlogo.workspace.Checksummer
 import org.scalatest.{ FunSuite, Args, Status, SucceededStatus }

@@ -2,13 +2,13 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.api.{ HubNetInterface, ModelLoader, NetLogoLegacyDialect }
+import org.nlogo.api.HubNetInterface
 import org.nlogo.fileformat
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 
 class HeadlessHubNetManagerFactory extends HubNetManagerFactory {
-  def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface =
-    new HeadlessHubNetManager(workspace,
-      fileformat.standardLoader(workspace,
-        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)))
+  def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface = {
+    val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, fileformat.defaultAutoConvertables) _
+    new HeadlessHubNetManager(workspace, fileformat.standardLoader(workspace), converter(workspace.world.program.dialect))
+  }
 }

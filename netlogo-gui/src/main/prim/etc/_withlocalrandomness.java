@@ -3,6 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -26,12 +27,9 @@ public final strictfp class _withlocalrandomness
 
   public void perform_1(final Context context)
       throws LogoException {
-    AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet(context.agent.kind(), 1, false);
-    agentset.add(context.agent);
     org.nlogo.api.MersenneTwisterFast random = context.job.random;
     context.job.random = world.mainRNG().clone();
-    context.runExclusiveJob(agentset, next);
+    context.runExclusiveJob(AgentSet.fromAgent(context.agent), next);
     context.job.random = random;
     context.ip = offset;
   }

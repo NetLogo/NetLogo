@@ -7,14 +7,15 @@ package back
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below
 // - ST 2/22/08
 
-import org.nlogo.core.{ Token, TokenType }
-import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant, Procedure }
+import org.nlogo.core.{ SourceLocation, Token, TokenType }
+import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
+import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
 
 /**
  * fills the code array of the Procedure object with Commands.
  */
-private class Assembler {
+private[compile] class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
   def assemble(procdef: ProcedureDefinition) {
     val proc = procdef.procedure
@@ -22,11 +23,11 @@ private class Assembler {
     val ret =
       if (proc.isReporter)
         new _returnreport
-      else if (proc.isTask)
+      else if (proc.isLambda)
         new _done
       else
         new _return
-    ret.token = new Token("END", TokenType.Keyword, ret)(proc.end, proc.end, proc.filename)
+    ret.token = new Token("END", TokenType.Keyword, ret)(SourceLocation(proc.end, proc.end, proc.filename))
     code += ret
     for ((cmd, n) <- code.toList.zipWithIndex) {
       cmd.next = n + 1

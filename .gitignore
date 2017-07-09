@@ -43,6 +43,9 @@ tmp/
 /build/
 /.idea/workspace.xml
 /.idea/tasks.xml
+/.idea/codeStyleSettings.xml
+/.idea/uiDesigner.xml
+/.idea/misc.xml
 /lib/
 /netlogo-gui/lib/
 /natives/

@@ -24,7 +24,9 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
 
   private def broadcastToClients(a: Any) { broadcastToClients(a, currentPlot.name) }
   private def broadcastToClients(a: Any, plotName: String) {
-    if (broadcastEnabled && isBroadcast(plotName)) connectionManager.broadcastPlotControl(a,plotName)
+    if (broadcastEnabled && isBroadcast(plotName)) {
+      connectionManager.broadcastPlotControl(a,plotName)
+    }
   }
   private def broadcastWidgetToClients(a: Any, widgetName: String) {
     if (broadcastEnabled && isBroadcast(widgetName)) connectionManager.broadcast(widgetName, a)
@@ -48,7 +50,10 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
 
   // called when a new client logs in and needs to be brought up to date
   def sendPlots(client:String) {
-    if (broadcastEnabled) for(p<-plots; if (isBroadcast(p.name))) connectionManager.sendPlot(client, p)
+    if (broadcastEnabled)
+      for(p<-plots; if (isBroadcast(p.name))) {
+        connectionManager.sendPlot(client, p)
+      }
   }
 
   /**
@@ -84,7 +89,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def autoPlotOn(flag: Boolean) {if (flag) broadcastToClients('n') else broadcastToClients('f')}
   // Sends a java.lang.Short, which is the current plot-pen-mode
   def plotPenMode(plotPenMode: Int) {broadcastToClients(plotPenMode.toShort)}
-  def plot(x: Double, y: Double) {broadcastToClients(new HubNetPlotPoint(x, y))}
+  def plot(x: Double, y: Double) { broadcastToClients(new HubNetPlotPoint(x, y)) }
   // Sends the org.nlogo.hubnet.HubNetPlotPoint plotted to a single client
   def narrowcastPlot(clientId: String, y: Double) {sendToClient(clientId, new HubNetPlotPoint(y))}
   // Sends the org.nlogo.hubnet.HubNetPlotPoint plotted to a single client

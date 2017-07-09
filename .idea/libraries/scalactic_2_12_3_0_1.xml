@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="scalactic_2.12-3.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_idea/scalactic_2.12-3.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

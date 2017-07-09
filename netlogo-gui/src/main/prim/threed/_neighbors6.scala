@@ -2,8 +2,7 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.agent.{ Turtle, Patch3D }
-import org.nlogo.core.Syntax
+import org.nlogo.agent.{ Patch3D, Turtle }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _neighbors6 extends Reporter {

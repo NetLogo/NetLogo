@@ -3,8 +3,7 @@
 package org.nlogo.headless
 
 import collection.mutable
-import collection.JavaConverters._
-import org.scalatest.{GivenWhenThen, FunSuite}
+import org.scalatest.GivenWhenThen
 import org.nlogo.agent._
 
 class ObservationQueue extends World.VariableWatcher {
@@ -16,7 +15,7 @@ class ObservationQueue extends World.VariableWatcher {
 
 class SelfDestroyer extends World.VariableWatcher {
   var triggered = 0
-  def update(agent: Agent, variableName: String, value: scala.Any) = {
+  def update(agent: Agent, variableName: String, value: AnyRef) = {
     triggered += 1
     agent.world.deleteWatcher(variableName, this)
   }

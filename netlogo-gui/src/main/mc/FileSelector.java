@@ -58,7 +58,7 @@ public strictfp class FileSelector extends JPanel {
       public void actionPerformed(ActionEvent actionEvent) {
         try {
 
-          filePath = FileDialog.show(Hierarchy.getFrame(FileSelector.this), "Select image to use as preview image", java.awt.FileDialog.LOAD);
+          filePath = FileDialog.showFiles(Hierarchy.getFrame(FileSelector.this), "Select image to use as preview image", java.awt.FileDialog.LOAD);
           resizeSelectedFileLabel();
         } catch(UserCancelException e) {
           //We don't care if the user cancels (filePath just stays null), so we can ignore this exception

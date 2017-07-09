@@ -19,10 +19,13 @@ class StartupDialog(parent: Frame) extends JDialog(parent, true) {
   override def getName = nameField.getText
   def isDiscoverySelected = discoveryCheckBox.isSelected
 
-  locally {
-    val okButton = new JButton("Start"){ addActionListener(() => StartupDialog.this.setVisible(false)) }
-    nameField.addActionListener(() => okButton.doClick())
+  private val okButton = new JButton("Start"){ addActionListener(() => StartupDialog.this.setVisible(false)) }
+  nameField.addActionListener(() => okButton.doClick())
 
+    // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
+  private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton){addRequiredField(nameField)}
+
+  locally {
     val content = new JPanel(){
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       setBorder(new border.EmptyBorder(8, 8, 8, 8))
@@ -33,9 +36,6 @@ class StartupDialog(parent: Frame) extends JDialog(parent, true) {
       add(Box.createVerticalStrut(12))
       add(new JPanel(new FlowLayout(FlowLayout.RIGHT)){add(okButton)}, BorderLayout.SOUTH)
     }
-
-    // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
-    val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton){addRequiredField(nameField)}
 
     getRootPane.setDefaultButton(okButton)
     setContentPane(content)

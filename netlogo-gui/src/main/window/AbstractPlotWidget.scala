@@ -3,17 +3,16 @@
 package org.nlogo.window
 
 import javax.swing.JLabel
-import org.nlogo.swing.VTextIcon
+import java.awt.{ Dimension, Font, Graphics, Insets, GridBagConstraints, GridBagLayout }
 
 import org.nlogo.api.Editable
 import org.nlogo.core.I18N
 import org.nlogo.core.{ Pen => CorePen, Plot => CorePlot }
-import org.nlogo.core.model.WidgetReader
 import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
+import org.nlogo.swing.VTextIcon
 
 import java.awt.GridBagConstraints.REMAINDER
-import java.awt.{List=>AWTList, _}
-import image.BufferedImage
+import java.awt.image.BufferedImage
 import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
@@ -167,7 +166,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
   }
-  override def helpLink = Some("docs/programming.html#plotting")
+  override def helpLink = Some("programming.html#plotting")
   def propertySet = Properties.plot
   def showLegend = legend.open
   def showLegend(open: Boolean){ legend.open=open }

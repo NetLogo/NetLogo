@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ ReporterRunnable}
-import org.nlogo.core.Syntax
-import org.nlogo.awt.UserCancelException
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
-import org.nlogo.window.GUIWorkspace
+import java.lang.{ Boolean => JBoolean }
+import java.io.File
 import org.nlogo.workspace.AbstractWorkspace.isApplet
+import org.nlogo.awt.UserCancelException
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 import org.nlogo.swing.FileDialog
+import org.nlogo.window.GUIWorkspace
 
 class _userdirectory extends Reporter {
 
@@ -16,28 +16,24 @@ class _userdirectory extends Reporter {
 
   override def report(context: Context) = {
     if (isApplet)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, "You cannot choose a directory from an applet.")
     var result: AnyRef = null
     workspace match {
       case gw: GUIWorkspace =>
         gw.updateUI()
-        result = gw.waitForResult(
-          new ReporterRunnable[AnyRef] {
-            override def run() =
-              try {
-                gw.view.mouseDown(false)
-                FileDialog.setDirectory(workspace.fileManager.prefix)
-                FileDialog.show(gw.getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
-                                true) + // directories only please
-                  java.io.File.separatorChar
-              }
-              catch {
-                case _: UserCancelException =>
-                  java.lang.Boolean.FALSE
-              }})
+        result = gw.waitForResult(() =>
+          try {
+            gw.view.mouseDown(false)
+            FileDialog.setDirectory(workspace.fileManager.prefix)
+            FileDialog.showDirectories(gw.getFrame, "Choose Directory") + File.separatorChar
+          }
+          catch {
+            case _: UserCancelException =>
+              JBoolean.FALSE
+          })
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
     result match {
@@ -47,7 +43,7 @@ class _userdirectory extends Reporter {
         b
       case s: String =>
         if(!new java.io.File(s).exists)
-          throw new EngineException(
+          throw new RuntimePrimitiveException(
             context, this, "This directory doesn't exist")
         result
     }

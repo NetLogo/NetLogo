@@ -9,14 +9,14 @@ import javax.swing.{ BorderFactory, JLabel, JPanel, JScrollPane, ScrollPaneConst
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet, Observer, Turtle, Patch, Link }
+import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.awt.Fonts
-import org.nlogo.core.{ AgentKind, I18N, Nobody, TokenType, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.OptionDialog
-import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget, Widget }
+import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends JPanel
 {
@@ -145,7 +145,7 @@ with WindowEvents.JobRemovedEvent.Handler
 
   private val editor = new EditorField(
     17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12),
-    true, new EditorColorizer(workspace), I18N.gui.get _)
+    true, new EditorColorizer(workspace))
   editor.setFont(editor.getFont.deriveFont(10f))
   add(new JScrollPane(editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
@@ -191,7 +191,7 @@ with WindowEvents.JobRemovedEvent.Handler
     if(e.sourceOwner == this) {
       error(e.error)
       if(error != null) {
-        OptionDialog.show(
+        OptionDialog.showMessage(
           workspace.getFrame, I18N.gui.get("common.messages.error"), error.getMessage, Array(I18N.gui.get("common.buttons.ok")))
         setEnabled(true)
         editor.setText(get)
@@ -219,11 +219,9 @@ with WindowEvents.JobRemovedEvent.Handler
       if(agent == null || agent.id == -1)
         // this is so you can still enter expressions into the who field of dead/empty turtle
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
-        workspace.world.observers()
+        workspace.world.observers
       else {
-        val agentset = new ArrayAgentSet(agent.kind, 1, false)
-        agentset.add(agent)
-        agentset
+        AgentSet.fromAgent(agent)
       }
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
@@ -417,7 +415,7 @@ with WindowEvents.JobRemovedEvent.Handler
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseAgentSet(text: String): AgentSet =
     if(text.equalsIgnoreCase("LINKS"))
-      workspace.world.links()
+      workspace.world.links
     else {
       val breed = workspace.world.getLinkBreed(text.toUpperCase)
       if(breed == null)

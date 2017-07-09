@@ -42,7 +42,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler {
   }
 
   def go(path: String) {
-    import org.nlogo.util.Utils.{ unescapeSpacesInURL, url2String }
+    import org.nlogo.util.Utils.unescapeSpacesInURL
     Exceptions.handling(classOf[java.io.IOException], classOf[RuntimeException]) {
       try {
         var name = getParameter("DefaultModel")

@@ -9,7 +9,9 @@ import java.awt.geom.PathIterator
 import java.awt.geom.Point2D
 import java.awt.geom.Ellipse2D
 import java.awt.Point
-import org.nlogo.core.{ShapeParser, Shape}, Shape.{ LinkShape => BaseLinkShape }
+import
+  org.nlogo.core.Shape,
+    Shape.{ LinkShape => BaseLinkShape }
 
 @SerialVersionUID(0L)
 object LinkShape {

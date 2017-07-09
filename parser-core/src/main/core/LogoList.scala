@@ -2,8 +2,6 @@
 
 package org.nlogo.core
 
-import java.util
-
 import scala.collection
 import scala.language.implicitConversions
 
@@ -53,6 +51,8 @@ class LogoList private (private val v: Vector[AnyRef])
   override def reverse = new LogoList(v.reverse)
   def replaceItem(index: Int, obj: AnyRef) =
     new LogoList(v.updated(index, obj))
+  def insertItem(index: Int, obj: AnyRef, elt: AnyRef) =
+    new LogoList(v.patch(index, Seq(elt), 0))
   def logoSublist(start: Int, stop: Int) =
     new LogoList(v.slice(start, stop))
   def butFirst = new LogoList(v.tail)

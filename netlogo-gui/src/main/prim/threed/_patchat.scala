@@ -3,8 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Agent3D
-import org.nlogo.api.{ AgentException}
-import org.nlogo.core.Syntax
+import org.nlogo.api.AgentException
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 

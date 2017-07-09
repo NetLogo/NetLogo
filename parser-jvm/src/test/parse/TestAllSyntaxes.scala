@@ -30,6 +30,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_all agentset/TRUE/FALSE block,TRUE/FALSE,OTPL,Some(?),10,2,2
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
                      |_any agentset,TRUE/FALSE,OTPL,None,10,1,1
+                     |_applyresult anonymous reporter/list,anything,OTPL,None,10,2,2
                      |_approximatehsb number/number/number,number,OTPL,None,10,3,3
                      |_approximatergb number/number/number,number,OTPL,None,10,3,3
                      |_asin number,number,OTPL,None,10,1,1
@@ -70,24 +71,33 @@ class TestAllSyntaxes extends FunSuite {
                      |_fileread ,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,0,0
                      |_filereadchars number,string,OTPL,None,10,1,1
                      |_filereadline ,string,OTPL,None,10,0,0
-                     |_filter reporter task/list,list,OTPL,None,10,2,2
+                     |_filter anonymous reporter/list,list,OTPL,None,10,2,2
                      |_first string or list,anything,OTPL,None,10,1,1
                      |_floor number,number,OTPL,None,10,1,1
                      |_fput anything/list,list,OTPL,None,10,2,2
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_hsb number/number/number,list,OTPL,None,10,3,3
+                     |_hubnetclientslist ,list,OTPL,None,10,0,0
+                     |_hubnetentermessage ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_hubnetexitmessage ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_hubnetmessage ,anything,OTPL,None,10,0,0
+                     |_hubnetmessagesource ,string,OTPL,None,10,0,0
+                     |_hubnetmessagetag ,string,OTPL,None,10,0,0
+                     |_hubnetmessagewaiting ,TRUE/FALSE,OTPL,None,10,0,0
                      |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,None,10,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,12,2,2
                      |_inlinkfrom agent,agent,-T--,None,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,None,10,1,1
                      |_inlinkneighbors ,agentset,-T--,None,10,0,0
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,None,12,1,1
+                     |_insertitem number/string or list/anything,string or list,OTPL,None,10,3,3
                      |_int number,number,OTPL,None,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,None,10,1,1
+                     |_isanonymouscommand anything,TRUE/FALSE,OTPL,None,10,1,1
+                     |_isanonymousreporter anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isboolean anything,TRUE/FALSE,OTPL,None,10,1,1
-                     |_iscommandtask anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isdirectedlink anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_islink anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_islinkset anything,TRUE/FALSE,OTPL,None,10,1,1
@@ -95,7 +105,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_isnumber anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_ispatch anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_ispatchset anything,TRUE/FALSE,OTPL,None,10,1,1
-                     |_isreportertask anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isstring anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isturtle anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_isturtleset anything,TRUE/FALSE,OTPL,None,10,1,1
@@ -118,7 +127,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_ln number,number,OTPL,None,10,1,1
                      |_log number/number,number,OTPL,None,10,2,2
                      |_lput anything/list,list,OTPL,None,10,2,2
-                     |_map reporter task/list,list,OTPL,None,10,2,2
+                     |_map anonymous reporter/list,list,OTPL,None,10,2,2
                      |_max list,number,OTPL,None,10,1,1
                      |_maxnof number/agentset/number block,agentset,OTPL,Some(?),10,3,3
                      |_maxoneof agentset/number block,agent,OTPL,Some(?),10,2,2
@@ -157,7 +166,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_not TRUE/FALSE,TRUE/FALSE,OTPL,None,10,1,1
                      |_notequal anything,anything,TRUE/FALSE,OTPL,None,5,1,1
                      |_noturtles ,turtle agentset,OTPL,None,10,0,0
-                     |_nvalues number/reporter task,list,OTPL,None,10,2,2
+                     |_nvalues number/anonymous reporter,list,OTPL,None,10,2,2
                      |_of reporter block,agent or agentset,anything,OTPL,Some(?),11,1,1 [RIGHT ASSOCIATIVE]
                      |_oneof list or agentset,anything,OTPL,None,10,1,1
                      |_or TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
@@ -198,8 +207,10 @@ class TestAllSyntaxes extends FunSuite {
                      |_randomstate ,string,OTPL,None,10,0,0
                      |_randomxcor ,number,OTPL,None,10,0,0
                      |_randomycor ,number,OTPL,None,10,0,0
+                     |_range number,list,OTPL,None,10,1,1
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
-                     |_reduce reporter task/list,anything,OTPL,None,10,2,2
+                     |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
+                     |_reference variable,list,OTPL,None,10,1,1
                      |_remainder number/number,number,OTPL,None,10,2,2
                      |_remove anything/string or list,string or list,OTPL,None,10,2,2
                      |_removeduplicates list,list,OTPL,None,10,1,1
@@ -208,7 +219,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_reverse string or list,string or list,OTPL,None,10,1,1
                      |_rgb number/number/number,list,OTPL,None,10,3,3
                      |_round number,number,OTPL,None,10,1,1
-                     |_runresult string or reporter task/anything,anything,OTPL,None,10,1,1
+                     |_runresult string or anonymous reporter/anything,anything,OTPL,None,10,1,1
                      |_scalecolor number/number/number/number,number,OTPL,None,10,4,4
                      |_self ,agent,-TPL,None,10,0,0
                      |_sentence anything,list,OTPL,None,10,2,0
@@ -217,7 +228,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_shuffle list,list,OTPL,None,10,1,1
                      |_sin number,number,OTPL,None,10,1,1
                      |_sort list or agentset,list,OTPL,None,10,1,1
-                     |_sortby reporter task/list or agentset,list,OTPL,Some(?),10,2,2
+                     |_sortby anonymous reporter/list or agentset,list,OTPL,Some(?),10,2,2
                      |_sorton reporter block/agentset,list,OTPL,Some(?),10,2,2
                      |_sqrt number,number,OTPL,None,10,1,1
                      |_stacktrace ,string,OTPL,None,10,0,0
@@ -227,9 +238,8 @@ class TestAllSyntaxes extends FunSuite {
                      |_substring string/number/number,string,OTPL,None,10,3,3
                      |_subtractheadings number/number,number,OTPL,None,10,2,2
                      |_sum list,number,OTPL,None,10,1,1
-                     |_symbolstring symbol,string,OTPL,None,10,1,1
+                     |_symbolstring variable,string,OTPL,None,10,1,1
                      |_tan number,number,OTPL,None,10,1,1
-                     |_task reporter task or command task,reporter task or command task,OTPL,None,10,1,1
                      |_ticks ,number,OTPL,None,10,0,0
                      |_timer ,number,OTPL,None,10,0,0
                      |_tostring anything,string,OTPL,None,10,1,1
@@ -256,7 +266,8 @@ class TestAllSyntaxes extends FunSuite {
                      |_worldwidth ,number,OTPL,None,10,0,0
                      |_wrapcolor number,number,OTPL,None,10,1,1
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
-  val COMMANDS = """|_ask agent or agentset/command block,OTPL,Some(?),0,2,2
+  val COMMANDS = """|_apply anonymous command/list,OTPL,None,0,2,2
+                    |_ask agent or agentset/command block,OTPL,Some(?),0,2,2
                     |_askconcurrent agentset/command block,OTPL,Some(?),0,2,2
                     |_autoplotoff ,OTPL,None,0,0,0
                     |_autoploton ,OTPL,None,0,0,0
@@ -315,13 +326,29 @@ class TestAllSyntaxes extends FunSuite {
                     |_filewrite number or TRUE/FALSE or string or list or NOBODY,OTPL,None,0,1,1
                     |_follow turtle,O---,None,0,1,1
                     |_followme ,-T--,None,0,0,0
-                    |_foreach list/command task,OTPL,None,0,2,2
+                    |_foreach list/anonymous command,OTPL,None,0,2,2
                     |_foreverbuttonend ,OTPL,None,0,0,0
                     |_hatch number/command block (optional),-T--,Some(-T--),0,2,2
                     |_hidelink ,---L,None,0,0,0
                     |_hideturtle ,-T--,None,0,0,0
                     |_histogram list,OTPL,None,0,1,1
                     |_home ,-T--,None,0,0,0
+                    |_hubnetbroadcast string/anything,OTPL,None,0,2,2
+                    |_hubnetbroadcastclearoutput ,OTPL,None,0,0,0
+                    |_hubnetbroadcastmessage anything,OTPL,None,0,1,1
+                    |_hubnetclearoverride string/agent or agentset/string,OTPL,Some(?),0,3,3
+                    |_hubnetclearoverrides string,OTPL,None,0,1,1
+                    |_hubnetfetchmessage ,OTPL,None,0,0,0
+                    |_hubnetkickallclients ,OTPL,None,0,0,0
+                    |_hubnetkickclient string,OTPL,None,0,1,1
+                    |_hubnetreset ,O---,None,0,0,0
+                    |_hubnetresetperspective string,OTPL,None,0,1,1
+                    |_hubnetsend string or list/string/anything,OTPL,None,0,3,3
+                    |_hubnetsendclearoutput string or list,OTPL,None,0,1,1
+                    |_hubnetsendfollow string/agent/number,OTPL,None,0,3,3
+                    |_hubnetsendmessage string or list/anything,OTPL,None,0,2,2
+                    |_hubnetsendoverride string/agent or agentset/string/reporter block,OTPL,Some(?),0,4,4
+                    |_hubnetsendwatch string/agent,OTPL,None,0,2,2
                     |_if TRUE/FALSE/command block,OTPL,None,0,2,2
                     |_ifelse TRUE/FALSE/command block/command block,OTPL,None,0,3,3
                     |_ignore anything,OTPL,None,0,1,1
@@ -371,7 +398,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_ride turtle,O---,None,0,1,1
                     |_rideme ,-T--,None,0,0,0
                     |_right number,-T--,None,0,1,1
-                    |_run string or command task/anything,OTPL,None,0,1,1
+                    |_run string or anonymous command/anything,OTPL,None,0,1,1
                     |_set anything/anything,OTPL,None,0,2,2
                     |_setcurdir string,OTPL,None,0,1,1
                     |_setcurrentplot string,OTPL,None,0,1,1
@@ -380,7 +407,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_sethistogramnumbars number,OTPL,None,0,1,1
                     |_setlinethickness number,-T--,None,0,1,1
                     |_setpatchsize number,O---,None,0,1,1
-                    |_setplotpencolor number,OTPL,None,0,1,1
+                    |_setplotpencolor number or list,OTPL,None,0,1,1
                     |_setplotpeninterval number,OTPL,None,0,1,1
                     |_setplotpenmode number,OTPL,None,0,1,1
                     |_setplotxrange number/number,OTPL,None,0,2,2

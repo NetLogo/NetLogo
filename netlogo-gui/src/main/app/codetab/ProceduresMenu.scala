@@ -4,8 +4,6 @@ package org.nlogo.app.codetab
 
 import javax.swing.{ JMenuItem, JPopupMenu }
 
-import scala.collection.JavaConverters._
-
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.ToolBarMenu

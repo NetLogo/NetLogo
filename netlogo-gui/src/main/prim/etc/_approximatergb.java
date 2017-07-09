@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _approximatergb extends Reporter implements Pure {
@@ -33,6 +33,6 @@ public final strictfp class _approximatergb extends Reporter implements Pure {
             ((0xff << 24) +
                 (StrictMath.round(r) << 16) +
                 (StrictMath.round(g) << 8) +
-                (StrictMath.round(b))));
+                (StrictMath.round(b))), context);
   }
 }

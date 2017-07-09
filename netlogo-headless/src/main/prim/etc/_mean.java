@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _mean extends Reporter implements Pure {
@@ -21,17 +21,17 @@ public final strictfp class _mean extends Reporter implements Pure {
   public double report_1(Context context, LogoList list) {
     double sum = 0;
     if (list.isEmpty()) {
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
     for (Object elt : list.toJava()) {
       if (!(elt instanceof Double)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
                 Dump.logoObject(elt), TypeNames.name(elt)));
       }
       sum += ((Double) elt).doubleValue();
     }
-    return validDouble(sum / list.size());
+    return validDouble(sum / list.size(), context);
   }
 }

@@ -2,14 +2,14 @@
 
 package org.nlogo.gl.render
 
-import com.jogamp.opengl.{ GL2, GL2ES3 }
+import com.jogamp.opengl.GL2
 import com.jogamp.opengl.util.gl2.GLUT
 import com.jogamp.opengl.fixedfunc.{ GLLightingFunc => GLL }
 import org.nlogo.api.World
 
 abstract private class AgentRenderer(val world: World, val shapeRenderer: ShapeRenderer)
 
-private object AgentRenderer {
+private[render] object AgentRenderer {
 
   val glut = new GLUT()
 

@@ -4,15 +4,13 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Femto, FileMode, Model, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
+import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
+import org.nlogo.fileformat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.util.Utils, Utils.reader2String
 import org.nlogo.awt.EventQueue.invokeLater
-import org.nlogo.swing.Implicits._
 import org.nlogo.window._
 
 import java.net.InetAddress
@@ -20,10 +18,11 @@ import java.awt.Component
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
-                       editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
-                       loader: ModelLoader) extends HubNetManager(workspace, loader) with ViewInterface {
+                       loader: ModelLoader,
+                       modelConverter: ModelConversion)
+  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -53,7 +52,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
-    clientApp.startup(editorFactory, "", host.orNull, connectionManager.port, true,
+    clientApp.startup("", host.orNull, connectionManager.port, true,
       isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
   }
 
@@ -67,7 +66,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
   def load(model: Model) {
-    val hubNetWidgets = model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
+    model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
       _clientEditor.load(hubNetWidgets)
     }
   }
@@ -99,9 +98,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   }
 
   def showControlCenter() {
-    controlCenter =
-      new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
-    controlCenter.pack()
+    if (controlCenter == null) {
+      controlCenter =
+        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
+      controlCenter.pack()
+    }
     controlCenter.setVisible(true)
   }
 

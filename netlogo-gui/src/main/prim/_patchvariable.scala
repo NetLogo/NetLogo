@@ -2,14 +2,11 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.Patch
-import org.nlogo.api.{ AgentException, LogoException}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.api.AgentException
 import org.nlogo.core.{ AgentKind, Reference, Referenceable }
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _patchvariable(private[this] val _vn: Int) extends Reporter with Referenceable {
-
 
   override def toString: String =
     s"${super.toString}:${if (world == null) vn else world.patchesOwnNameAt(vn)}"
@@ -22,7 +19,7 @@ class _patchvariable(private[this] val _vn: Int) extends Reporter with Reference
     try {
       context.agent.getPatchVariable(_vn)
     } catch {
-      case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+      case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 
   def vn = _vn

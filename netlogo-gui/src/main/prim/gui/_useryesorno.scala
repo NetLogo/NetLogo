@@ -2,10 +2,9 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable}
-import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
+import org.nlogo.nvm.{ Context, HaltException, Reporter, RuntimePrimitiveException }
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.GUIWorkspace
 
@@ -34,7 +33,7 @@ class _useryesorno extends Reporter {
               }}})
         Option(result).getOrElse(throw new HaltException(true))
       case _ =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
 }

@@ -3,12 +3,13 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.ReporterRunnable
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 class _userfile extends Reporter {
 
   override def report(context: Context): AnyRef = {
-    workspace.updateUI(context)
+    workspace.updateUI()
     val result: Option[String] =
       workspace.waitForResult(
         new ReporterRunnable[Option[String]] {
@@ -20,7 +21,7 @@ class _userfile extends Reporter {
         java.lang.Boolean.FALSE
       case Some(path) =>
         if (!new java.io.File(path).exists)
-          throw new EngineException(
+          throw new RuntimePrimitiveException(
             context, this, "This file doesn't exist")
         path
     }

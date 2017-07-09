@@ -2,11 +2,10 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ AgentException, LogoException, LogoListBuilder}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
+import org.nlogo.api.{ AgentException, LogoListBuilder }
+import org.nlogo.core.{ I18N, LogoList, Syntax }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
 class _linkvariableof(private[this] val _vn: Int) extends Reporter {
 
@@ -17,12 +16,12 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
   override def report(context: Context): AnyRef = args(0).report(context) match {
     case agent: Agent =>
       if (agent.id == -1)
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
       try {
         agent.getLinkVariable(_vn)
       } catch {
-        case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+        case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
       }
     case sourceSet: AgentSet =>
       val result = new LogoListBuilder
@@ -31,7 +30,7 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
         while (itr.hasNext)
           result.add(itr.next().getLinkVariable(_vn))
       } catch {
-        case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+        case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
       }
       result.toLogoList
     case agentOrSet =>
@@ -42,12 +41,12 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
   def report_1(context: Context, agentOrSet: AnyRef): AnyRef = agentOrSet match {
     case agent: Agent =>
       if (agent.id == -1)
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
           I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
       try {
         agent.getLinkVariable(_vn)
       } catch {
-        case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+        case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
       }
     case sourceSet: AgentSet =>
       val result = new LogoListBuilder
@@ -56,7 +55,7 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
         while (itr.hasNext)
           result.add(itr.next().getLinkVariable(_vn))
       } catch {
-        case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+        case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
       }
       result.toLogoList
     case _ =>
@@ -66,12 +65,12 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
 
   def report_2(context: Context, agent: Agent): AnyRef = {
     if (agent.id == -1)
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
     try {
       agent.getLinkVariable(_vn)
     } catch {
-      case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+      case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
   }
 
@@ -82,7 +81,7 @@ class _linkvariableof(private[this] val _vn: Int) extends Reporter {
       while (itr.hasNext)
         result.add(itr.next().getLinkVariable(_vn))
     } catch {
-      case ex: AgentException => throw new EngineException(context, this, ex.getMessage)
+      case ex: AgentException => throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     result.toLogoList
   }

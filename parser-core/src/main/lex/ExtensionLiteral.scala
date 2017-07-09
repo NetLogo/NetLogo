@@ -2,7 +2,7 @@
 
 package org.nlogo.lex
 
-import org.nlogo.core.{ Token, TokenType }
+import org.nlogo.core.{ SourceLocation, Token, TokenType }
 
 class ExtensionLiteral(start: Int, filename: String) {
 
@@ -17,8 +17,7 @@ class ExtensionLiteral(start: Int, filename: String) {
 
   def token(): Token = {
     val text = builder.toString
-    Token(text, TokenType.Extension, text)(
-      start, start + text.size, filename)
+    Token(text, TokenType.Extension, text)(SourceLocation(start, start + text.size, filename))
   }
 
 }

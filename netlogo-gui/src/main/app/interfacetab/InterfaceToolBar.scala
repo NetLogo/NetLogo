@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Frame, SystemColor }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
-import javax.swing.{ JMenuItem, JPopupMenu, JButton, ButtonGroup, JToggleButton,
+import javax.swing.{ JMenuItem, JPopupMenu, ButtonGroup, JToggleButton,
   AbstractAction, Action, ImageIcon }
 
 import scala.collection.mutable
@@ -48,6 +48,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(true)
     setBackground(SystemColor.window)
   }
+
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))

@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet, ValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
 import java.awt.{GridBagConstraints,Window}
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
 import collection.JavaConverters._
@@ -32,6 +32,8 @@ class ProtocolEditable(protocol: LabProtocol,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
          Property("repetitions", Property.Integer, I18N.gui("repetitions"),
                   "<html>"+I18N.gui("repetitions.info")+"</html>"),
+         Property("sequentialRunOrder", Property.Boolean, I18N.gui("sequentialRunOrder"),
+                  "<html>"+ I18N.gui("sequentialRunOrder.info") +"</html>"),
          Property("metrics", Property.ReporterOrEmpty,
                   I18N.gui("metrics"),
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
@@ -54,15 +56,18 @@ class ProtocolEditable(protocol: LabProtocol,
   var goCommands = protocol.goCommands
   var finalCommands = protocol.finalCommands
   var repetitions = protocol.repetitions
+  var sequentialRunOrder = protocol.sequentialRunOrder
   var runMetricsEveryStep = protocol.runMetricsEveryStep
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
   var valueSets =  {
-    def setString(valueSet: ValueSet) =
+    def setString(valueSet: RefValueSet) =
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
          case evs: EnumeratedValueSet =>
+           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
+         case evs: RefEnumeratedValueSet =>
            evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
@@ -79,7 +84,7 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, runMetricsEveryStep,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
@@ -88,7 +93,7 @@ class ProtocolEditable(protocol: LabProtocol,
             compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
           } }
         catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-        for(o <- list.toList) yield {
+        for (o <- list.toList) yield {
           o.asInstanceOf[LogoList].toList match {
             case List(variableName: String, more: LogoList) =>
               more.toList match {
@@ -103,7 +108,8 @@ class ProtocolEditable(protocol: LabProtocol,
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
-              new EnumeratedValueSet(variableName, more.toList)
+              if(more.isEmpty) {complain("Expected a value for variable " + variableName); return None}
+              new RefEnumeratedValueSet(variableName, more.toList)
             case _ =>
               complain("Invalid format"); return None
           }}

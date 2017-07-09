@@ -2,40 +2,34 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Cursor, FileDialog => AwtFileDialog }
-import java.awt.event.{ ActionListener, ActionEvent, KeyEvent, KeyListener, FocusEvent, MouseEvent }
-import java.io.IOException
-import java.util.{ ArrayList, List => JList }
+import java.awt.Cursor
+import java.awt.image.BufferedImage
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
+import javax.swing.{ JMenuItem, JPopupMenu }
 
-import javax.imageio.ImageIO
-import javax.swing.{ JMenuItem, JPopupMenu, JOptionPane }
-
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, CodeEditor,
-  EditorColorizer, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget,
-  JobWidget, MonitorWidget, OutputWidget, PlotWidget, SliderWidget,
-  ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry }
-import org.nlogo.api.{ Editable, Exceptions, ModelSection, Version, VersionHistory }
-import org.nlogo.awt.{ Fonts, Hierarchy, Images, UserCancelException }
-import org.nlogo.core.{ AgentKind, I18N, View => CoreView, Widget => CoreWidget,
-  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+import org.nlogo.api.{ Editable, Exceptions, Version }
+import org.nlogo.app.common.{ FileActions, UndoRedoActions },
+  FileActions.ExportInterfaceAction
+import org.nlogo.awt.Images
+import org.nlogo.core.{
+  AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
-  Switch => CoreSwitch, TextBox => CoreTextBox }
+  TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
+import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.Logger
-import org.nlogo.swing.{ FileDialog => SwingFileDialog }
-import org.nlogo.swing.ModalProgressTask
-import org.nlogo.window.ChooserWidget
-import org.nlogo.window.Events.{ CompileAllEvent, CompileMoreSourceEvent,
-  EditWidgetEvent, ExportInterfaceEvent, LoadWidgetsEvent, RemoveConstraintEvent,
-  WidgetRemovedEvent }
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
+  GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
+  PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadBeginEvent, LoadWidgetsEvent,
+    RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
-
-import scala.collection.JavaConverters._
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
+  with FocusListener
   with KeyListener
   with LoadWidgetsEvent.Handler
-  with ExportInterfaceEvent.Handler {
+  with UndoRedoActions {
 
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
@@ -46,16 +40,16 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   viewWidget.asInstanceOf[Widget].deleteable = false
   addKeyListener(this)
   addMouseListener(this)
+  addFocusListener(this)
 
   ///
 
   override def focusGained(e: FocusEvent): Unit = {
-    _hasFocus = true
+    UndoManager.setCurrentManager(WidgetActions.undoManager)
     enableButtonKeys(true)
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
     enableButtonKeys(false)
   }
 
@@ -95,21 +89,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   val exportItem: JMenuItem = {
-    val exportAction = new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        try {
-          exportInterface()
-        } catch  {
-          case ex: IOException =>
-            JOptionPane.showMessageDialog(InterfacePanel.this, ex.getMessage(),
-              I18N.gui.get("common.messages.error"), JOptionPane.ERROR_MESSAGE)
-        }
-      }
-    }
-    val exportItem = new JMenuItem(
-      I18N.gui.get("menu.file.export.interface"))
-    exportItem.addActionListener(exportAction)
-    exportItem
+    val exportAction =
+      new ExportInterfaceAction(workspace, this)
+    new JMenuItem(exportAction)
   }
 
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget, x: Int, y: Int)
@@ -117,17 +99,22 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     addActionListener(this)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      val widget = makeWidget(coreWidget)
-      val wrapper = addWidget(widget, x, y, true, false)
-      revalidate()
-      wrapper.selected(true)
-      wrapper.foreground()
-      wrapper.isNew(true)
-      new EditWidgetEvent(null).raise(InterfacePanel.this)
-      newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-      wrapper.isNew(false)
-      newWidget = null
+      WidgetActions.addWidget(InterfacePanel.this, coreWidget, x, y)
     }
+  }
+
+  override def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
+    val widget = makeWidget(coreWidget)
+    val wrapper = addWidget(widget, x, y, true, false)
+    revalidate()
+    wrapper.selected(true)
+    wrapper.foreground()
+    wrapper.isNew(true)
+    new EditWidgetEvent(null).raise(InterfacePanel.this)
+    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    wrapper.isNew(false)
+    newWidget = null
+    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -148,9 +135,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
       case i: CoreInputBox =>
-        val font = Fonts.monospacedFont
-        val textArea = new CodeEditor(1, 20, font, true, null, new EditorColorizer(workspace), I18N.gui.fn)
-        val dialogTextArea = new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn)
+        val textArea       = new EditorArea(textEditorConfiguration)
+        val dialogTextArea = new EditorArea(dialogEditorConfiguration)
+
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
@@ -161,15 +148,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     var needsRecompile: Boolean = false
     for (wrapper <- hitList) {
       removeWidget(wrapper)
-      wrapper.widget match {
-        // this ensures that the right thing happens if we delete
-        // a button or monitor that doesn't compile; we need to remove it
-        // from the errors tab - ST 12/17/04
-        case jobWidget: JobWidget =>
-          jobWidget.innerSource = ""
-          new CompileMoreSourceEvent(jobWidget).raise(this)
-        case _ =>
-      }
       wrapper.widget match {
         case _: InterfaceGlobalWidget => needsRecompile = true
         case _ =>
@@ -182,7 +160,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (needsRecompile) {
       new CompileAllEvent().raise(this)
     }
-    loseFocusIfAppropriate()
   }
 
   override protected def removeWidget(wrapper: WidgetWrapper): Unit = {
@@ -253,45 +230,30 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       super.contains(w)
 
   override def handle(e: WidgetRemovedEvent): Unit = {
-  }
-
-  def handle(e: ExportInterfaceEvent): Unit = {
-    try ImageIO.write(Images.paintToImage(this), "png", e.stream)
-    catch {
-      case ex: IOException =>
-        e.exceptionBox(0) = ex
+    // We use `raiseLater` to ensure that the WidgetRemovedEvent
+    // propagates to the Compiler.
+    if ((e.widget.findWidgetContainer eq this) && ! unloading) {
+      new CompileAllEvent().raiseLater(this)
     }
   }
 
-  @throws(classOf[java.io.IOException])
-  private def exportInterface(): Unit = {
-    try {
-      val exportPath = SwingFileDialog.show(this,
-        I18N.gui.get("dialog.interface.export.file"),
-        AwtFileDialog.SAVE,
-        workspace.guessExportName("interface.png"))
-      var exception = Option.empty[IOException]
-      val runExport = new Runnable() {
-        def run(): Unit = {
-          try workspace.exportInterface(exportPath)
-          catch {
-            case ex: IOException => exception = Some(ex)
-          }}}
-      ModalProgressTask(Hierarchy.getFrame(this),
-        I18N.gui.get("dialog.interface.export.task"), runExport)
-      exception.foreach(e => throw e)
-    } catch {
-      case ex: UserCancelException => Exceptions.ignore(ex)
-    }
-  }
+  def interfaceImage: BufferedImage =
+    Images.paintToImage(this)
 
   def handle(e: LoadWidgetsEvent): Unit = {
     loadWidgets(e.widgets)
   }
 
+  private var unloading = false
+
+  override def handle(e: LoadBeginEvent): Unit = {
+    unloading = true
+    super.handle(e)
+    unloading = false
+  }
+
   override def removeAllWidgets(): Unit = {
     try {
-      val comps = getComponents()
       setVisible(false)
       for (component <- getComponents) {
         component match {
@@ -308,16 +270,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   /// buttons
-
-  override def isFocusable: Boolean =
-    getComponents.collect {
-      case w: WidgetWrapper => w.widget
-    }.exists {
-      case _: InputBoxWidget => true
-      case b: ButtonWidget   =>
-        b.actionKey != '\u0000' && b.actionKey != ' '
-      case _ => false
-    }
 
   private def findActionButton(key: Char): ButtonWidget = {
     import java.lang.Character.toUpperCase

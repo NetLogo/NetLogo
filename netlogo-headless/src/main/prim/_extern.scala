@@ -16,7 +16,7 @@ class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled
       arguments, new nvm.ExtensionContext(workspace, context))
     catch {
       case ex: api.ExtensionException =>
-        val le = new nvm.EngineException(
+        val le = new nvm.RuntimePrimitiveException(
           context, this, "Extension exception: " + ex.getMessage)
       // it might be better to use setCause(), for the long term... but then i think the handler
       // would have to be changed, too.

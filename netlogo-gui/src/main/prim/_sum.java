@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
@@ -27,6 +27,6 @@ public final strictfp class _sum extends Reporter implements Pure {
         sum += ((Double) elt).doubleValue();
       }
     }
-    return validDouble(sum);
+    return validDouble(sum, context);
   }
 }

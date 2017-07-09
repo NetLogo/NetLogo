@@ -9,7 +9,7 @@ import org.nlogo.api.ValueConstraint
  */
 class NumericConstraint(var defaultValue: java.lang.Double) extends ValueConstraint {
 
-  def this() = this(World.ZERO)
+  def this() = this(World.Zero)
 
   @throws(classOf[ValueConstraint.Violation])
   def assertConstraint(value: AnyRef) {

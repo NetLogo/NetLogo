@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.core.CompilerException;
@@ -18,19 +18,24 @@ import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
 import org.nlogo.core.UpdateModeJ;
-import org.nlogo.agent.Importer;
+import org.nlogo.agent.ImporterJ;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.EditorWorkspace;
 import org.nlogo.nvm.FileManager;
 import org.nlogo.nvm.Job;
 import org.nlogo.nvm.JobManagerInterface;
+import org.nlogo.nvm.LoggingWorkspace;
 import org.nlogo.nvm.MutableLong;
+import org.nlogo.nvm.PresentationCompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
+    EditorWorkspace,
     ExtendableWorkspace,
+    LoggingWorkspace,
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 
@@ -43,12 +48,7 @@ public abstract strictfp class AbstractWorkspace
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
-  private final WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes =
-      new WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>>(); // public for _every
-
-  public WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes() {
-    return lastRunTimes;
-  }
+  public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
   //public final WorldLoader worldLoader ;
 
@@ -57,7 +57,6 @@ public abstract strictfp class AbstractWorkspace
   protected AbstractWorkspace(org.nlogo.agent.World world) {
     this._world = world;
     evaluator = new Evaluator(this);
-    world.compiler_$eq(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     extensionManager = new ExtensionManager(this, new JarLoader(this));
@@ -145,23 +144,15 @@ public abstract strictfp class AbstractWorkspace
     return file.toURL();
   }
 
-  /// procedures
+  public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
+  public abstract void setProcedures(scala.collection.immutable.ListMap<String, Procedure> procedures);
 
-  private Map<String, Procedure> procedures = new HashMap<String, Procedure>();
+  public abstract void init();
 
-  public Map<String, Procedure> getProcedures() {
-    return procedures;
-  }
+  @Override
+  public abstract PresentationCompilerInterface compiler();
 
-  public void setProcedures(Map<String, Procedure> procedures) {
-    this.procedures = procedures;
-  }
-
-  public void init() {
-    for (Procedure procedure : procedures.values()) {
-      procedure.init(this);
-    }
-  }
+  public abstract AggregateManagerInterface aggregateManager();
 
   /// methods that may be called from the job thread by prims
 
@@ -183,14 +174,16 @@ public abstract strictfp class AbstractWorkspace
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
                                  boolean reporter)
       throws CompilerException {
-    String key = source + "@" + context.activation.procedure.args().size() +
+    String key = source + "@" + context.activation.procedure().args().size() +
         "@" + context.agentBit;
-    Procedure proc = codeBits.get(key);
-    if (proc == null) {
-      proc = evaluator.compileForRun(source, context, reporter);
+    scala.Option<Procedure> storedProc = codeBits.get(key);
+    if (storedProc.isEmpty()) {
+      Procedure proc = evaluator.compileForRun(source, context, reporter);
       codeBits.put(key, proc);
+      return proc;
+    } else {
+      return storedProc.get();
     }
-    return proc;
   }
 
   /// misc
@@ -223,6 +216,10 @@ public abstract strictfp class AbstractWorkspace
 
   // called when the engine comes up for air
   public abstract void breathe();
+
+  public void breathe(org.nlogo.nvm.Context context) {
+    breathe();
+  }
 
   /// output
 
@@ -258,24 +255,9 @@ public abstract strictfp class AbstractWorkspace
         throws java.io.IOException;
   }
 
-  protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
-    writer.println(Dump.csv().header("MODEL SETTINGS"));
-    scala.collection.Seq<String> globals = _world.program().interfaceGlobals();
-    writer.println(Dump.csv().variableNameRow(globals));
-    Object[] values = new Object[globals.size()];
-    int i = 0;
-    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
-      values[i] =
-          _world.getObserverVariableByName(iter.next());
-    }
-    writer.println(Dump.csv().dataRow(values));
-    writer.println();
-  }
-
-
   public abstract void clearAll();
 
-  protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();
+  protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
 
   public void importWorld(String filename)
       throws java.io.IOException {
@@ -304,14 +286,14 @@ public abstract strictfp class AbstractWorkspace
             stringReader(), new java.io.BufferedReader(reader));
   }
 
-  private final Importer.StringReader stringReader() {
-    return new Importer.StringReader() {
+  private final ImporterJ.StringReader stringReader() {
+    return new ImporterJ.StringReader() {
       public Object readFromString(String s)
-          throws Importer.StringReaderException {
+          throws ImporterJ.StringReaderException {
         try {
           return compiler().readFromString(s, _world, extensionManager);
         } catch (CompilerException ex) {
-          throw new Importer.StringReaderException
+          throw new ImporterJ.StringReaderException
               (ex.getMessage());
         }
       }
@@ -385,27 +367,6 @@ public abstract strictfp class AbstractWorkspace
 
   /// BehaviorSpace
 
-  public String getSource(String filename)
-      throws java.io.IOException {
-    if (filename.equals("aggregate")) {
-      return aggregateManager().innerSource();
-    }
-    // when we stick a string into a JTextComponent, \r\n sequences
-    // on Windows will get translated to just \n.  This is a problem
-    // because when an error occurs we want to highlight the location
-    // using the token location information recorded by the tokenizer,
-    // but the removal of the \r characters will throw off that information.
-    // So we do the stripping of \r here, *before* we run the tokenizer,
-    // and that avoids the problem. - ST 9/14/04
-
-    final org.nlogo.core.File sourceFile;
-
-    sourceFile = new org.nlogo.api.LocalFile(filename);
-    sourceFile.open(FileModeJ.READ());
-    String source = org.nlogo.util.Utils.reader2String(sourceFile.reader());
-    return source.replaceAll("\r\n", "\n");
-  }
-
   public org.nlogo.api.MersenneTwisterFast auxRNG() {
     return _world.auxRNG();
   }
@@ -413,52 +374,4 @@ public abstract strictfp class AbstractWorkspace
   public org.nlogo.api.MersenneTwisterFast mainRNG() {
     return _world.mainRNG();
   }
-
-  public Object readNumberFromString(String source)
-      throws CompilerException {
-    return compiler().readNumberFromString(source, _world, getExtensionManager());
-  }
-
-  public void checkReporterSyntax(String source)
-      throws CompilerException {
-    compiler().checkReporterSyntax
-        (source, _world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
-  }
-
-  public void checkCommandSyntax(String source)
-      throws CompilerException {
-    compiler().checkCommandSyntax
-        (source, _world.program(), getProcedures(), getExtensionManager(), false, getCompilationEnvironment());
-  }
-
-  public boolean isConstant(String s) {
-    try {
-      compiler().readFromString(s);
-      return true;
-    }
-    catch(CompilerException e) {
-      return false;
-    }
-  }
-
-  public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s);
-  }
-
-  public boolean isReporter(String s) {
-    return compiler().isReporter(s, _world.program(), getProcedures(), getExtensionManager(), getCompilationEnvironment());
-  }
-
-  public Token[] tokenizeForColorization(String s) {
-    return compiler().tokenizeForColorization(s, getExtensionManager());
-  }
-
-  public Token getTokenAtPosition(String s, int pos) {
-    return compiler().getTokenAtPosition(s, pos);
-  }
-
-  public scala.collection.immutable.Map<String, org.nlogo.core.ProcedureSyntax> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source);
-  }
-
 }

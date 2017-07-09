@@ -2,18 +2,23 @@
 
 package org.nlogo.lite
 
-import java.util.{ ArrayList, List => JList }
+import java.awt.EventQueue.isDispatchThread
+import java.awt.image.BufferedImage
+import java.net.URI
 
-import org.nlogo.api.{ LogoException, ModelType, NetLogoLegacyDialect, Version, SimpleJobOwner }
-import org.nlogo.agent.{ World, World3D }
+import org.nlogo.api.{ ControlSet, LogoException, ModelType, Version, SimpleJobOwner }
+import org.nlogo.awt.EventQueue
+import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager, LinkRoot,
-  InterfacePanelLite, InvalidVersionException, ReconfigureWorkspaceUI, NetLogoListenerManager, RuntimeErrorDialog }
+import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
+  DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
+  ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
-import org.nlogo.workspace.OpenModel
+import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
 
-import java.net.URI
+import scala.concurrent.{ Future, Promise }
+import scala.util.Try
 
 /**
  * The superclass of org.nlogo.lite.InterfaceComponent.  Also used by org.nlogo.lite.Applet.
@@ -26,7 +31,8 @@ abstract class AppletPanel(
 extends javax.swing.JPanel
 with org.nlogo.api.Exceptions.Handler
 with Event.LinkParent
-with LinkRoot {
+with LinkRoot
+with ControlSet {
 
   /**
    * The NetLogoListenerManager stored in this field can be used to add and remove NetLogoListeners,
@@ -40,10 +46,10 @@ with LinkRoot {
   RuntimeErrorDialog.init(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
-  protected val world = if(Version.is3D) new World3D() else new World
-  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
+  protected val world = if(Version.is3D) new World3D() else new World2D()
+  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
-  protected val liteEditorFactory = new LiteEditorFactory(workspace)
+  protected val liteEditorFactory = new DefaultEditorFactory(workspace)
 
   val iP = createInterfacePanel(workspace)
 
@@ -54,7 +60,7 @@ with LinkRoot {
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
   addLinkComponent(procedures)
-  addLinkComponent(new CompilerManager(workspace, procedures))
+  addLinkComponent(new CompilerManager(workspace, world, procedures))
   addLinkComponent(new CompiledEvent.Handler {
     override def handle(e: CompiledEvent) {
       if (e.error != null)
@@ -207,10 +213,40 @@ with LinkRoot {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
-    val loader =
-      fileformat.standardLoader(workspace.compiler.utilities,
-        fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect))
-    val modelOpt = OpenModel(uri, controller, loader, Version)
+    val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
+      workspace, fileformat.defaultAutoConvertables) _
+    val loader = fileformat.standardLoader(workspace.compiler.utilities)
+    val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
+  }
+
+  def userInterface: Future[BufferedImage] = {
+    if (isDispatchThread)
+      Promise.fromTry(Try(iP.interfaceImage)).future
+    else {
+      val promise = Promise[BufferedImage]()
+      EventQueue.invokeLater { () =>
+        promise.complete(Try(iP.interfaceImage))
+        ()
+      }
+      promise.future
+    }
+  }
+
+  def userOutput: Future[String] = {
+    def findOutput(ipl: InterfacePanelLite): String =
+      ipl.getComponents.collect {
+        case ow: OutputWidget => ow.valueText
+      }.headOption.getOrElse("")
+    if (isDispatchThread)
+      Promise.fromTry(Try(findOutput(iP))).future
+    else {
+      val promise = Promise[String]()
+      EventQueue.invokeLater { () =>
+        promise.complete(Try(findOutput(iP)))
+        ()
+      }
+      promise.future
+    }
   }
 }

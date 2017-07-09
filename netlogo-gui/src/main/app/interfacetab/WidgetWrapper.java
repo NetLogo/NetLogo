@@ -2,8 +2,10 @@
 
 package org.nlogo.app.interfacetab;
 
+import org.nlogo.core.I18N;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
+import scala.Option;
 
 import java.awt.Dimension;
 
@@ -584,12 +586,12 @@ public strictfp class WidgetWrapper
       return;
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
-        interfacePanel().dropSelectedWidgets();
+        WidgetActions.moveWidgets(interfacePanel);
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW
           || mouseMode() == MouseMode.SE || mouseMode() == MouseMode.SW
           || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W
           || mouseMode() == MouseMode.E || mouseMode() == MouseMode.N) {
-        doDrop();
+        WidgetActions.resizeWidget(this);
       }
       mouseMode(MouseMode.IDLE);
     }
@@ -597,7 +599,7 @@ public strictfp class WidgetWrapper
 
   void doDrop() {
     selected(true, true); // 2nd true = change was temporary
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new org.nlogo.window.Events.DirtyEvent(Option.empty()).raise(this);
     ((WidgetPanel) getParent()).zoomer().updateZoomInfo(widget);
   }
 
@@ -875,7 +877,7 @@ public strictfp class WidgetWrapper
 
     if (widget().getEditable() instanceof org.nlogo.api.Editable) {
       javax.swing.JMenuItem editItem =
-          new javax.swing.JMenuItem("Edit...");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.edit"));
       editItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -890,7 +892,7 @@ public strictfp class WidgetWrapper
 
     if (selected()) {
       javax.swing.JMenuItem unselectItem =
-          new javax.swing.JMenuItem("Unselect");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.deselect"));
       unselectItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -901,7 +903,7 @@ public strictfp class WidgetWrapper
       menu.add(unselectItem);
     } else {
       javax.swing.JMenuItem selectItem =
-          new javax.swing.JMenuItem("Select");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.select"));
       selectItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -913,11 +915,11 @@ public strictfp class WidgetWrapper
     }
     if (widget().deleteable()) {
       javax.swing.JMenuItem deleteItem =
-          new javax.swing.JMenuItem("Delete");
+          new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.delete"));
       deleteItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              interfacePanel().deleteWidget(WidgetWrapper.this);
+              WidgetActions.removeWidget(interfacePanel(), WidgetWrapper.this);
             }
           });
       menu.add(new javax.swing.JPopupMenu.Separator());
@@ -928,20 +930,11 @@ public strictfp class WidgetWrapper
       location = widget().populateContextMenu(menu, p, source);
       if (widget().exportable()) {
         javax.swing.JMenuItem exportItem =
-            new javax.swing.JMenuItem("Export...");
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.export"));
         exportItem.addActionListener
             (new java.awt.event.ActionListener() {
               public void actionPerformed(java.awt.event.ActionEvent e) {
-                try {
-                  String exportPath = org.nlogo.swing.FileDialog.show
-                      (widget(), "Export",
-                          java.awt.FileDialog.SAVE,
-                          interfacePanel.workspace().guessExportName
-                              (widget.getDefaultExportName()));
-                  widget().export(exportPath);
-                } catch (org.nlogo.awt.UserCancelException uce) {
-                  org.nlogo.api.Exceptions.ignore(uce);
-                }
+                new org.nlogo.window.Events.ExportWidgetEvent(widget()).raise(WidgetWrapper.this);
               }
             });
         menu.add(exportItem);

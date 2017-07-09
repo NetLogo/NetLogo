@@ -2,9 +2,8 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.agent.{ Protractor3D, Patch3D, Turtle3D }
-import org.nlogo.api.{ AgentException}
-import org.nlogo.core.Syntax
+import org.nlogo.agent.{ Patch3D, Protractor3D, Turtle3D }
+import org.nlogo.api.AgentException
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 

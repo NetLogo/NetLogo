@@ -8,10 +8,7 @@ object Mustache {
 
     val mustache = IO.reader(sourceFile)(mf.compile(_, sourceFile.getName))
 
-    Using.fileWriter()(destFile) { wrtr =>
-      println("rendering: " + sourceFile.getName)
-      mustache.execute(wrtr, variables.asJava)
-    }
+    Using.fileWriter()(destFile) { wrtr => mustache.execute(wrtr, variables.asJava) }
   }
 
   def betweenDirectories(source: File, target: File, variables: Map[String, Object]): Seq[File] = {

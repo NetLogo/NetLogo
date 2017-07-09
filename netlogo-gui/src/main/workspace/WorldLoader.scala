@@ -2,9 +2,8 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.{ I18N, WorldDimensions }
-import org.nlogo.api.{ VersionHistory, WorldDimensions3D }
-import org.nlogo.core.{ UpdateMode, View => CoreView }
+import org.nlogo.core.WorldDimensions
+import org.nlogo.core.{ View => CoreView }
 
 class WorldLoader {
   def load(view: CoreView, worldInterface: WorldLoaderInterface) {

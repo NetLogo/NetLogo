@@ -2,12 +2,14 @@
 
 package org.nlogo.app
 
-import org.nlogo.util.SysInfo
-import org.nlogo.api.{FileIO, APIVersion, Version}
-import org.nlogo.swing.Implicits._
 import java.awt._
 import event._
 import javax.swing._
+import java.net.URI
+
+import org.nlogo.util.SysInfo
+import org.nlogo.api.{FileIO, APIVersion, Version}
+import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{BrowserLauncher, RichAction, IconHolder}
 
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
@@ -52,7 +54,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       setHorizontalAlignment(SwingConstants.CENTER)
       addMouseListener(new MouseAdapter() {
         override def mouseClicked(e: MouseEvent) {
-          BrowserLauncher.openURL(AboutWindow.this, "http://ccl.northwestern.edu/netlogo/", false)
+          BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
         }
       })
     }

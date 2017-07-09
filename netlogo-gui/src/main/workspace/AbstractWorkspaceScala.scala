@@ -2,20 +2,18 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet, OutputObject}
-import org.nlogo.api.{ PlotInterface, Dump, CommandLogoThunk, HubNetInterface, LogoException,
-  ReporterLogoThunk, JobOwner, ModelType, OutputDestination, SimpleJobOwner, PreviewCommands,
-  Workspace => APIWorkspace, WorldDimensions3D, Version }
-import org.nlogo.core.{ AgentKind, CompilerException, LiteralParser, Model, View, Widget => CoreWidget, WorldDimensions }
-import org.nlogo.nvm.{ Activation, CompilerInterface, FileManager, Instruction, EngineException, Context, Procedure, Tracer }
-import org.nlogo.plot.{ PlotExporter, PlotManager }
+import org.nlogo.agent.{ World, Agent, OutputObject }
+import org.nlogo.api.{ Dump, FileIO, HubNetInterface,
+  OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
+import org.nlogo.core.{ Model, View, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
+import org.nlogo.nvm.RuntimePrimitiveException
 
-import java.util.WeakHashMap
-import java.net.URL
-import java.io.File
+import collection.mutable.WeakHashMap
+import java.io.IOException
 import java.nio.file.Paths
 
-import java.io.{IOException,PrintWriter}
+import scala.util.Try
 
 import AbstractWorkspaceTraits._
 
@@ -28,8 +26,11 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with APIConformant with Benchmarking
   with Checksums with Evaluating
   with ModelTracker
+  with Procedures
+  with Compiling
   with BehaviorSpaceInformation
   with Traceable with HubNetManager
+  with Components
   with ExtendableWorkspaceMethods with Exporting
   with Plotting {
 
@@ -39,6 +40,10 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   var previewCommands: PreviewCommands = PreviewCommands.Default
 
+  // used by `_every`
+  val lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]] =
+    new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]()
+
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
   // the version of EngineException that takes an instruction is to be *very strongly* preferred.
@@ -47,7 +52,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   // JC 5/19/10
   def tick(context: Context, originalInstruction: Instruction) {
     if(world.tickCounter.ticks == -1)
-      throw new EngineException(context, originalInstruction,
+      throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)
@@ -87,23 +92,40 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     plotRNG.setSeed(seed)
   }
 
-  override def getCompilationEnvironment = {
-    import java.io.{ File => JFile }
-    import java.net.MalformedURLException
+  @throws(classOf[IOException])
+  def getSource(filename: String): String = {
+    // this `filename ==` feels very hacky. We should look for a way to pass
+    // in source-providing components without needing to special-case them
+    // here - RG 12/19/16
+    if (filename == "aggregate") {
+      aggregateManager.innerSource
+    } else {
+      // when we stick a string into a JTextComponent, \r\n sequences
+      // on Windows will get translated to just \n.  This is a problem
+      // because when an error occurs we want to highlight the location
+      // using the token location information recorded by the tokenizer,
+      // but the removal of the \r characters will throw off that information.
+      // So we do the stripping of \r here, *before* we run the tokenizer,
+      // and that avoids the problem. - ST 9/14/04
 
+      val sourceFile = new org.nlogo.api.LocalFile(filename)
+      sourceFile.open(org.nlogo.core.FileMode.Read)
+      val source = org.nlogo.api.FileIO.reader2String(sourceFile.reader)
+      source.replaceAll("\r\n", "\n")
+    }
+  }
+
+  override def getCompilationEnvironment = {
     new org.nlogo.core.CompilationEnvironment {
       def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
       def resolvePath(path: String): String = {
         try {
-          val r = Paths.get(attachModelDir(path)).toFile
-          try {
-            r.getCanonicalPath
-          } catch {
-            case ex: IOException => r.getPath
-          }
+          val modelPath = Option(AbstractWorkspaceScala.this.getModelPath)
+            .flatMap(s => Try(Paths.get(s)).toOption)
+          FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
         } catch {
-          case ex: MalformedURLException =>
+          case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
@@ -191,17 +213,28 @@ object AbstractWorkspaceTraits {
      */
     @throws(classOf[java.net.MalformedURLException])
     def attachModelDir(filePath: String): String = {
-      if (new File(filePath).isAbsolute)
-        filePath
-      else {
-        val defaultPath = Paths.get(System.getProperty("user.home"))
-        val modelParentPath =
-          Option(getModelPath).map(s => Paths.get(s)).map(_.getParent)
-            .getOrElse(defaultPath)
-        val attachedPath = modelParentPath.resolve(filePath)
+      FileIO.resolvePath(filePath,
+        Option(getModelPath).flatMap(s => Try(Paths.get(s)).toOption))
+          .map(_.toString)
+          .getOrElse(filePath)
+    }
+  }
 
-        attachedPath.toAbsolutePath.toString
-      }
+  trait Procedures { this: AbstractWorkspace =>
+    private var _procedures: Procedure.ProceduresMap = Procedure.NoProcedures
+
+    override def procedures: Procedure.ProceduresMap = _procedures
+
+    def procedures_=(procs: Procedure.ProceduresMap): Unit = {
+      _procedures = procs
+    }
+
+    override def setProcedures(procs: Procedure.ProceduresMap): Unit = {
+      _procedures = procs
+    }
+
+    override def init(): Unit = {
+      procedures.values.foreach(_.init(this))
     }
   }
 
@@ -238,26 +271,23 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait HubNetManager extends AbstractWorkspace { this: AbstractWorkspaceScala =>
+  trait HubNetManager extends AbstractWorkspace with Components { self: AbstractWorkspaceScala =>
     def hubNetManagerFactory: HubNetManagerFactory
-
-    private var _hubNetManager = Option.empty[HubNetInterface]
 
     private var _hubNetRunning: Boolean = false
 
-    def hubNetManager = _hubNetManager
+    if (hubNetManagerFactory != null) {
+      addLifecycle(
+        new ComponentLifecycle[HubNetInterface] {
+          val klass = classOf[HubNetInterface]
 
-    @throws(classOf[InterruptedException])
-    abstract override def dispose(): Unit = {
-      super.dispose()
-      hubNetManager.foreach(_.disconnect())
-    }
+          override def create(): Option[HubNetInterface] =
+            Some(hubNetManagerFactory.newInstance(self))
 
-    def getHubNetManager: Option[HubNetInterface] = {
-      if (hubNetManager.isEmpty && hubNetManagerFactory != null) {
-        _hubNetManager = Some(hubNetManagerFactory.newInstance(this))
-      }
-      _hubNetManager
+          override def dispose(hubNet: HubNetInterface): Unit = {
+            hubNet.disconnect()
+          }
+        })
     }
 
     def hubNetRunning = _hubNetRunning
@@ -265,5 +295,10 @@ object AbstractWorkspaceTraits {
     def hubNetRunning_=(running: Boolean): Unit = {
       _hubNetRunning = running;
     }
+
+    def hubNetManager = getHubNetManager
+
+    def getHubNetManager: Option[HubNetInterface] =
+      getComponent(classOf[HubNetInterface])
   }
 }

@@ -12,11 +12,9 @@ public final strictfp class _setprocedurevariable
   private final String name;
 
   public _setprocedurevariable(_procedurevariable original) {
-    vn = original.vn;
-    name = original.name;
+    vn = original.vn();
+    name = original.name();
   }
-
-
 
   @Override
   public String toString() {

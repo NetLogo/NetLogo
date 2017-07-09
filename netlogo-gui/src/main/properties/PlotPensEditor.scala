@@ -5,13 +5,13 @@ package org.nlogo.properties
 import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
-import java.awt.{List => AWTList, _}
+import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
 
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.swing.{OptionDialog, RichJButton}
+import org.nlogo.swing.RichJButton
 import org.nlogo.editor.{Colorizer, EditorField}
 import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}
 import org.nlogo.window.{ColorDialog, PlotWidget}
@@ -120,7 +120,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     // but for now I'll leave it. It would seem weird to have two pens named "turtles"
     // but also weird to allow for one pen to have no name, but only one.
     if((names.toSet - "").size  < (names.toList.filterNot(_ == "")).size){
-      org.nlogo.swing.OptionDialog.show(frame, "Invalid Entry", "Pens list contains duplicate names.",
+      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid Entry", "Pens list contains duplicate names.",
         Array(I18N.gui.get("common.buttons.ok")))
       None
     } else Some(table.getPlotPens)
@@ -213,7 +213,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       setOpaque(true)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
-        setBackground(value.asInstanceOf[ColorInfo].color)
+        if (value != null) {
+          setBackground(value.asInstanceOf[ColorInfo].color)
+        }
         this
       }
     }
@@ -234,8 +236,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       def getCellEditorValue = currentColor
 
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
-        currentColor = value.asInstanceOf[ColorInfo]
-        button.setBackground(currentColor.color)
+        if (value != null) {
+          currentColor = value.asInstanceOf[ColorInfo]
+          button.setBackground(currentColor.color)
+        }
         button
       }
     }
@@ -316,7 +320,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellRenderer extends TableCellRenderer {
       val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, font, true, colorizer, I18N.gui.get _)
+      val editor = new EditorField(30, font, true, colorizer)
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         // This null check is from strange behavior in java
@@ -331,7 +335,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
       val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, goodFont, true, colorizer, I18N.gui.get _)
+      val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
         editor

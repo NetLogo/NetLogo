@@ -2,14 +2,13 @@
 
 package org.nlogo.workspace
 
-import java.net.URL
-
+import org.nlogo.core.TokenType
 import org.nlogo.api.ExtensionException
 import ExtensionManager.ExtensionLoader
 
 import org.scalatest.{ BeforeAndAfter, FunSuite }
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   before {
@@ -56,13 +55,13 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   test("loadedExtensions returns empty list when no extensions loaded") {
-    assert(emptyManager.loadedExtensions.isEmpty)
+    assert(emptyManager.loadedExtensions.asScala.isEmpty)
   }
 
   test("loadedExtensions returns a list of extensions when extensions loaded") {
     new WithLoadedArrayExtension {
-      assert(loadedManager.loadedExtensions.nonEmpty)
-      assert(loadedManager.loadedExtensions.head.getClass.getCanonicalName == "org.nlogo.extensions.array.ArrayExtension")
+      assert(loadedManager.loadedExtensions.asScala.nonEmpty)
+      assert(loadedManager.loadedExtensions.asScala.head.getClass.getCanonicalName == "org.nlogo.extensions.array.ArrayExtension")
     }
   }
 
@@ -114,6 +113,21 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   test("readFromString proxies through to workspace") {
     assert(emptyManager.readFromString("foobar") == "foobar")
   }
+
+  test("loading extension caches the types of replaced identifiers") { new WithLoadedArrayExtension {
+    assert(loadedManager.cachedType("ARRAY:SET") === Some(TokenType.Command))
+    assert(loadedManager.cachedType("ARRAY:ITEM") === Some(TokenType.Reporter))
+  } }
+
+  test("clearAll() leaves type cache in place") { new WithLoadedArrayExtension {
+    loadedManager.clearAll()
+    assert(loadedManager.cachedType("ARRAY:SET") === Some(TokenType.Command))
+  } }
+
+  test("reset() clears type cache") { new WithLoadedArrayExtension {
+    loadedManager.reset()
+    assert(loadedManager.cachedType("ARRAY:SET") === None)
+  } }
 
   test("clearAll runs clearAll on all jars") {
     new InMemoryExtensionTest {
@@ -168,7 +182,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     new WithLoadedArrayExtension {
       loadedManager.reset()
       assert(! loadedManager.anyExtensionsLoaded)
-      assert(loadedManager.loadedExtensions.isEmpty)
+      assert(loadedManager.loadedExtensions.asScala.isEmpty)
     }
   }
 
@@ -180,7 +194,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     new WithLoadedArrayExtension {
       loadedManager.startFullCompilation()
       loadedManager.finishFullCompilation()
-      assert(loadedManager.loadedExtensions.isEmpty)
+      assert(loadedManager.loadedExtensions.asScala.isEmpty)
     }
   }
 
@@ -189,19 +203,27 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       loadedManager.startFullCompilation()
       loadedManager.importExtension("array", errorSource)
       loadedManager.finishFullCompilation()
-      assert(loadedManager.loadedExtensions.toSeq.length == 1)
+      assert(loadedManager.loadedExtensions.asScala.toSeq.length == 1)
+    }
+  }
+
+  test("finishFullCompilation clears cached primitives when extension aren't used") {
+    new WithLoadedArrayExtension {
+      loadedManager.startFullCompilation()
+      loadedManager.finishFullCompilation()
+      assert(loadedManager.cachedType("ARRAY:SET").isEmpty)
     }
   }
 
   test("importExtensionData takes an extension name, a bunch of data, and an importHandler, and imports the world for an extension") {
     new WithLoadedArrayExtension {
-      loadedManager.importExtensionData("array", List(Array("{{array: 0: 0 0 0 0 0}}")), null)
+      loadedManager.importExtensionData("array", List(Array("{{array: 0: 0 0 0 0 0}}")).asJava, null)
     }
   }
 
   test("importExtensionData errors with ExtensionException if the named extension can't be loaded") {
     intercept[ExtensionException] {
-      emptyManager.importExtensionData("notfound", List[Array[String]](), null)
+      emptyManager.importExtensionData("notfound", List[Array[String]]().asJava, null)
     }
   }
 

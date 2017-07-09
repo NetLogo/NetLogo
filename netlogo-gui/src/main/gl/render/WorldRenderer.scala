@@ -5,7 +5,7 @@ package org.nlogo.gl.render
 import com.jogamp.opengl.{ GL, GL2, GL2GL3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
 import org.nlogo.api.{ World, Agent, AgentFollowingPerspective, Patch,
-    Patch3D, Turtle, Perspective, DrawingInterface, AgentException }
+    Patch3D, Turtle, DrawingInterface, AgentException }
 
 private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
                             drawing: DrawingInterface, turtleRenderer: TurtleRenderer,
@@ -29,7 +29,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     var y = observer.oycor - world.followOffsetY
     var z = observer.ozcor
     val orientation = observer.orientation.get
-    var heading = orientation.heading
+    val heading = orientation.heading
     var pitch   = orientation.pitch
     val agentAndDist = observer.perspective match {
       case afp: AgentFollowingPerspective => Some((afp.targetAgent, afp.followDistance))

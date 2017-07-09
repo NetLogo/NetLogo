@@ -35,7 +35,7 @@ public final strictfp class _fdinternal
 
   public void perform_1(Context context) {
     Turtle turtle = (Turtle) context.agent;
-    MutableDouble countdown = (MutableDouble) context.getLet(let);
+    MutableDouble countdown = (MutableDouble) context.activation.binding.getLet(let);
     double distance = countdown.value();
     double distanceMagnitude = StrictMath.abs(distance);
     if (distanceMagnitude <= org.nlogo.api.Constants.Infinitesimal()) {

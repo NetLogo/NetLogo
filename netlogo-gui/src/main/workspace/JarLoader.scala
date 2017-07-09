@@ -2,10 +2,10 @@
 
 package org.nlogo.workspace
 
-import java.net.{ URL, MalformedURLException, JarURLConnection, URLClassLoader }
-import java.io.{ File, FileNotFoundException, IOException, PrintWriter }
+import java.net.{ URL, MalformedURLException, JarURLConnection }
+import java.io.{ File, FileNotFoundException, IOException }
 
-import ExtensionManager.{ ExtensionData, ExtensionLoader }
+import ExtensionManager.ExtensionData
 import ExtensionManagerException._
 
 import org.nlogo.api.ClassManager
@@ -30,11 +30,11 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
       val version       = Option(attr.getValue("NetLogo-Extension-API-Version"))
       // note - the prefix is not really used anywhere, the extensionName drives the behavior.
       // But no assertion is ever made that prefix == extensionName
-      val prefix        = Option(attr.getValue("Extension-Name")).getOrElse(throw new ExtensionManagerException(NoExtensionName))
-      val classMangName = Option(attr.getValue("Class-Manager")).getOrElse(throw new ExtensionManagerException(NoClassManager))
+      val prefix        = Option(attr.getValue("Extension-Name")).getOrElse(throw new ExtensionManagerException(NoExtensionName(extensionName)))
+      val classMangName = Option(attr.getValue("Class-Manager")).getOrElse(throw new ExtensionManagerException(NoClassManager(extensionName)))
 
       ExtensionData(extensionName, fileURL, prefix, classMangName, version, connection.getLastModified)
-    }.getOrElse(throw new ExtensionManagerException(NoManifest))
+    }.getOrElse(throw new ExtensionManagerException(NoManifest(extensionName)))
   }
 
   def extensionClassLoader(fileURL: URL, parentLoader: ClassLoader): ClassLoader = {
@@ -48,7 +48,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
       classLoader.loadClass(data.classManagerName).newInstance match {
         case cm: ClassManager => cm
         case _                =>
-          throw new ExtensionManagerException(InvalidClassManager)
+          throw new ExtensionManagerException(InvalidClassManager(data.extensionName))
       }
     } catch {
       case ex: ClassNotFoundException =>

@@ -67,7 +67,7 @@ import org.nlogo.core,
   core.{AstVisitor, Fail, Instruction,
         ProcedureDefinition, ReporterApp, Statement, Syntax,
         prim, CommandBlock, Expression, ReporterBlock},
-    prim.{_reportertask, _commandtask, _call, _callreport, _task},
+    prim.{_call, _callreport, _commandlambda, _reporterlambda },
     Fail._
 
 class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
@@ -111,16 +111,25 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       val r = app.reporter
       agentClassString = typeCheck(r, agentClassString)
 
+      val allSyntax = if (r.syntax.isInfix) r.syntax.left +: r.syntax.right else r.syntax.right
+      // NOTE: This technique is not sophisticated enough to correctly agent-type check
+      // reference types when the syntax specifies variadic arguments
+      // - RG 5/19/2017
+      val referenceIndex = allSyntax.indexWhere(tpe => Syntax.compatible(Syntax.ReferenceType, tpe))
+      val nonReferentialArgs =
+        app.args.zipWithIndex
+          .filter { case (arg, i) => i != referenceIndex }
+          .map(_._1)
       val visitor = new AgentTypeCheckerVisitor("OTPL")
-      if(r.isInstanceOf[_commandtask] || r.isInstanceOf[_reportertask]) {
+      if (r.isInstanceOf[_commandlambda] || r.isInstanceOf[_reporterlambda])
         visitor.visitExpression(app.args.head)
-      } else if(r.syntax.blockAgentClassString.isDefined)
-        chooseVisitorAndContinue(r.syntax.blockAgentClassString.get, app.args)
+      else if(r.syntax.blockAgentClassString.isDefined)
+        chooseVisitorAndContinue(r.syntax.blockAgentClassString.get, nonReferentialArgs)
       else
-        super.visitReporterApp(app)
+        nonReferentialArgs.foreach(visitExpression)
 
       r match {
-        case (_: _commandtask | _: _reportertask) =>
+        case (_: _commandlambda | _: _reporterlambda) =>
           r.blockAgentClassString = Some(visitor.agentClassString)
         case _ =>
           r.agentClassString = agentClassString

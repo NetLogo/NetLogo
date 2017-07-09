@@ -8,25 +8,25 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _replaceitem
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     int index = argEvalIntValue(context, 0);
     Object obj = args[1].report(context);
     Object elt = args[2].report(context);
     if (index < 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
     }
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (index >= list.size()) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
                 index, Dump.logoObject(list), list.size()));
       }
@@ -37,7 +37,7 @@ public final strictfp class _replaceitem
         throw new ArgumentTypeException
             (context, this, 2, Syntax.StringType(), elt);
       } else if (index >= string.length()) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
                 index, Dump.logoObject(string), string.length()));
       }

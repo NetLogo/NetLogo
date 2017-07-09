@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="ChooseStartMenuLocation">Start menu entry name:</String>
+  <String Id="ShouldInstallDesktopShortcut">Add desktop shortcuts?</String>
+  <String Id="ShortcutDialogTitle">{\WixUI_Font_Title}NetLogo Shortcuts</String>
+  <String Id="ShortcutDialogDescription">Select shortcut locations</String>
+</WixLocalization>

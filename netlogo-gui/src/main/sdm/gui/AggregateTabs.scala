@@ -3,11 +3,10 @@
 package org.nlogo.sdm.gui
 
 import java.awt.{ Color, Component }
-import javax.swing.{ JPanel, JTabbedPane, SwingConstants }
+import javax.swing.{ JTabbedPane, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
-import org.nlogo.core.{ CompilerException, I18N, TokenType }
-import org.nlogo.editor.Colorizer
+import org.nlogo.core.{ CompilerException, I18N }
 
 object AggregateTabs {
   private val ErrorColor: Color = Color.RED

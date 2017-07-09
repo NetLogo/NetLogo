@@ -53,7 +53,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
       in.readObject()
     }
     try{
-      val version = sendAndReceive(Version.version)
+      sendAndReceive(Version.version)
       val response = sendAndReceive(new HandshakeFromClient(userId, clientType))
       val result = response match {
         case h: HandshakeFromServer =>

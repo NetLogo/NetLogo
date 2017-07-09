@@ -37,6 +37,7 @@ object TestCompileAll {
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
+      path.endsWith("5.x.nlogo") || // explicitly 5.x models
       path.endsWith(".nlogo3d")
   }
 
@@ -61,7 +62,7 @@ object TestCompileAll {
 class TestCompileAll extends FunSuite  {
   for {
     path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
-    text <- TestCompileAll.goodModel(FileIO.file2String(path))
+    text <- TestCompileAll.goodModel(FileIO.fileToString(path))
   }  {
       test("compile: " + path, SlowTestTag) {
         compile(path, text)
@@ -71,10 +72,10 @@ class TestCompileAll extends FunSuite  {
       }
     }
 
-  for(path <- ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions"))
+  for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTestTag) {
       val workspace = HeadlessWorkspace.newInstance
-      val version = ModelReader.parseModel(FileIO.file2String(path), workspace.parser, Map()).version
+      val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version
       assert(Version.compatibleVersion(version))
     }
 
@@ -84,7 +85,6 @@ class TestCompileAll extends FunSuite  {
   def readWriteRead(path: String, text: String) {
     val workspace = HeadlessWorkspace.newInstance
     try {
-      val modelContents = text
       val loader = fileformat.standardLoader(literalParser)
       val model = loader.readModel(text, "nlogo").get
       val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get

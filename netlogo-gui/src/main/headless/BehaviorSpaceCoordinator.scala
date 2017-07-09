@@ -5,9 +5,9 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, ModelLoader, NetLogoLegacyDialect, NetLogoThreeDDialect, Workspace }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.api.{ LabProtocol, Version, Workspace }
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
 import scala.util.{ Failure, Success }
 
@@ -52,10 +52,14 @@ object BehaviorSpaceCoordinator {
   }
 
   private def modelAtPath(path: String, workspace: Workspace): Model = {
-    val twoDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoLegacyDialect)
-    val threeDConverter = fileformat.ModelConverter(workspace.getExtensionManager, workspace.getCompilationEnvironment, NetLogoThreeDDialect)
-    val loader = fileformat.standardLoader(literalParser, twoDConverter, threeDConverter)
+    val allAutoConvertables = fileformat.defaultAutoConvertables :+
+      Femto.scalaSingleton[org.nlogo.api.AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
+    val converter =
+      fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, literalParser, allAutoConvertables) _
+    val loader = fileformat.standardLoader(literalParser)
+    val modelConverter = converter(workspace.world.program.dialect)
 
+    OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)

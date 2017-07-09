@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _usernewfile extends Reporter {
 
   override def report(context: Context): AnyRef = {
-    workspace.updateUI(context)
+    workspace.updateUI()
     val result: Option[String] =
       workspace.waitForResult(
         new ReporterRunnable[Option[String]] {

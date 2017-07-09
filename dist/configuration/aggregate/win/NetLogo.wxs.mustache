@@ -18,133 +18,85 @@
 
     <Icon Id='ProductIcon' SourceFile='NetLogo.ico' />
     <Icon Id='ModelIcon'   SourceFile='model.ico' />
+    <Icon Id='BehaviorsearchExperimentIcon' SourceFile='behaviorsearch_model.ico' />
 
     <Directory Id="TARGETDIR" Name='SourceDir'>
       <Directory Id='{{targetDirectory}}' Name='PFiles'>
         <Directory Id='INSTALLDIR' Name='NetLogo {{version}}'>
-          <Component Id="HubNet_Client.exe" Guid="{{hubNetClientExecutableId}}" Win64="{{win64}}">
-            <File Id="HubNet_Client.exe" KeyPath="yes" Source="SourceDir\HubNet Client.exe" ProcessorArchitecture="{{platformArch}}" />
-          </Component>
-          <Component Id="NetLogo.exe" Guid="{{nlogoExecutableId}}" Win64="{{win64}}">
-            <File Id="NetLogo.exe" KeyPath="yes" Source="SourceDir\NetLogo.exe" ProcessorArchitecture="{{platformArch}}" />
-
+          {{#components}}
+          <Component Id="{{{componentId}}}" Guid="{{componentGuid}}" Win64="{{win64}}">
+            <File Id="{{{componentId}}}" KeyPath="yes" Source="SourceDir\{{{componentFileName}}}" ProcessorArchitecture="{{platformArch}}" />
+            {{#hasFileAssociation}}
             <!-- Vista/7 "Set Program access and defaults" -->
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]NetLogo.exe,0" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="NetLogo" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]NetLogo.exe,1" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".nlogo" Value="NetLogo.nlogo" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/nlogo" Value="NetLogo.nlogo" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]NetLogo.exe&quot; --launch &quot;%1&quot;" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]{{{componentFileName}}},0" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="{{componentFriendlyName}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]{{componentFileName}},1" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
 
             <!-- Tell windows how to open NetLogo -->
-            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\NetLogo.exe" Value="[!NetLogo.exe]" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\NetLogo.exe" Name="Path" Value="[INSTALLDIR]" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Value="[!{{componentId}}]" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Name="Path" Value="[INSTALLDIR]" Type="string" />
 
-            <ProgId Id="NetLogo.nlogo" Description="NetLogo Model" Advertise="yes" Icon="ModelIcon">
-              <Extension Id='nlogo'>
-                <Verb Id='open' Command='Edit with NetLogo {{numericOnlyVersion}}' Argument='--launch "%1"' />
-                <MIME Advertise='yes' ContentType="text/nlogo" Default="yes"/>
+            <ProgId Id="NetLogo.{{fileAssociation}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
+              <Extension Id='{{fileAssociation}}'>
+                <Verb Id='open' Command='Edit with {{componentFriendlyName}} {{numericOnlyVersion}}' Argument='{{launchArgs}}' />
+                <MIME Advertise='yes' ContentType="text/{{fileAssociation}}" Default="yes"/>
               </Extension>
             </ProgId>
+            {{/hasFileAssociation}}
           </Component>
-          <Component Id="NetLogo_3D.exe" Guid="{{nlogo3DExecutableId}}" Win64="{{win64}}">
-            <File Id="NetLogo_3D.exe" KeyPath="yes" Source="SourceDir\NetLogo 3D.exe" ProcessorArchitecture="{{platformArch}}" />
-
-            <!-- Vista/7 "Set Program access and defaults" -->
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]NetLogo 3D.exe,0" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="NetLogo 3D" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]NetLogo 3D.exe,1" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".nlogo" Value="NetLogo.nlogo3d" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/nlogo3d" Value="NetLogo.nlogo" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]NetLogo 3D.exe&quot; --launch &quot;%1&quot;" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo 3D {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
-
-            <!-- Tell windows how to open NetLogo 3D -->
-            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\NetLogo 3D.exe" Value="[!NetLogo_3D.exe]" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\NetLogo 3D.exe" Name="Path" Value="[INSTALLDIR]" Type="string" />
-
-            <ProgId Id="NetLogo.nlogo3d" Description="NetLogo 3D Model" Advertise="yes" Icon="ModelIcon">
-              <Extension Id='nlogo3d'>
-                <Verb Id='open' Command='Edit with NetLogo 3D {{numericOnlyVersion}}' Argument='--launch "%1"' />
-                <MIME Advertise='yes' ContentType="text/nlogo3d" Default="yes"/>
-              </Extension>
-            </ProgId>
-          </Component>
+          {{/components}}
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="STARTMENU_DIR" Name="NetLogo {{version}}">
-          <Component Id="NetLogoStartMenuShortcut" Guid="{{NetLogoStartMenuShortcutId}}">
-            <Shortcut Id="NetLogoShortcut"
-              Name="NetLogo {{version}}"
-              Description="NetLogo"
-              Target="[#NetLogo.exe]"
-              WorkingDirectory="INSTALLDIR"/>
+          <Component Id="StartMenuFolderElements" Guid="{{startMenuFolderId}}">
             <RemoveFolder Id="STARTMENU_DIR" On="uninstall"/>
-            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-installed" Type="integer" Value="1" KeyPath="yes" />
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-start-menu-folder" Type="integer" Value="1" KeyPath="yes" />
           </Component>
-          <Component Id="NetLogo3DStartMenuShortcut" Guid="{{NetLogo3DStartMenuShortcutId}}">
-            <Shortcut Id="NetLogo3DShortcut"
-              Name="NetLogo 3D {{version}}"
-              Description="NetLogo 3D"
-              Target="[#NetLogo_3D.exe]"
+          {{#components}}
+          <Component Id="{{noSpaceName}}StartMenuShortcut" Guid="{{startMenuShortcutId}}">
+            <Shortcut Id="{{noSpaceName}}Shortcut"
+              Name="{{componentFriendlyName}} {{version}}"
+              Description="{{componentFriendlyName}}"
+              Target="[#{{componentId}}]"
               WorkingDirectory="INSTALLDIR"/>
-            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-3d-installed" Type="integer" Value="1" KeyPath="yes" />
+            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="{{lowerDashName}}-installed" Type="integer" Value="1" KeyPath="yes" />
           </Component>
-          <Component Id="HubNetClientStartMenuShortcut" Guid="{{HubNetClientStartMenuShortcutId}}">
-            <Shortcut Id="HubNetClientShortcut"
-              Name="HubNet Client {{version}}"
-              Description="HubNet Client"
-              Target="[#HubNet_Client.exe]"
-              WorkingDirectory="INSTALLDIR"/>
-            <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="hubnet-client-installed" Type="integer" Value="1" KeyPath="yes" />
-          </Component>
+          {{/components}}
         </Directory>
       </Directory>
       <Directory Id="DesktopFolder" SourceName="Desktop">
-        <Component Id="NetLogoDesktopShortcut" Guid="{{NetLogoDesktopShortcutId}}">
+        {{#components}}
+        <Component Id="{{noSpaceName}}DesktopShortcut" Guid="{{desktopShortcutId}}">
           <Shortcut
-            Id="NetLogoDesktopShortcut"
-            Name="NetLogo {{version}}"
-            Description="NetLogo"
-            Target="[#NetLogo.exe]"
+            Id="{{noSpaceName}}DesktopShortcut"
+            Name="{{componentFriendlyName}} {{version}}"
+            Description="{{componentFriendlyName}}"
+            Target="[#{{componentId}}]"
             WorkingDirectory="INSTALLDIR" />
-          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
+          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="{{lowerDashName}}-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
         </Component>
-        <Component Id="NetLogo3DDesktopShortcut" Guid="{{NetLogo3DDesktopShortcutId}}">
-          <Shortcut Id="NetLogo3DDesktopShortcut"
-            Name="NetLogo 3D {{version}}"
-            Description="NetLogo 3D"
-            Target="[#NetLogo_3D.exe]"
-            WorkingDirectory="INSTALLDIR"/>
-          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="netlogo-3d-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
-        </Component>
-        <Component Id="HubNetClientDesktopShortcut" Guid="{{HubNetClientDesktopShortcutId}}">
-          <Shortcut Id="HubNetClientDesktopShortcut"
-            Name="HubNet Client {{version}}"
-            Description="HubNet Client"
-            Target="[#HubNet_Client.exe]"
-            WorkingDirectory="INSTALLDIR"/>
-          <RegistryValue Root="HKCU" Key="Software\NetLogo\NetLogo {{version}}" Name="hubnet-client-desktop-shortcut" Type="integer" Value="1" KeyPath="yes" />
-        </Component>
+        {{/components}}
       </Directory>
     </Directory>
 
     <ComponentGroup Id='NetLogoFeatures'>
       <ComponentGroupRef Id='NetLogoApp' />
-      <ComponentRef Id='NetLogoStartMenuShortcut' />
-      <ComponentRef Id='NetLogo3DStartMenuShortcut' />
-      <ComponentRef Id='HubNetClientStartMenuShortcut' />
-      <ComponentRef Id='NetLogo.exe' />
-      <ComponentRef Id='NetLogo_3D.exe' />
-      <ComponentRef Id='HubNet_Client.exe' />
+      <ComponentRef Id='StartMenuFolderElements' />
+      {{#components}}
+      <ComponentRef Id='{{{componentId}}}' />
+      <ComponentRef Id='{{{noSpaceName}}}StartMenuShortcut' />
+      {{/components}}
     </ComponentGroup>
 
     <ComponentGroup Id='DesktopShortcuts'>
-      <ComponentRef Id="NetLogoDesktopShortcut" />
-      <ComponentRef Id="NetLogo3DDesktopShortcut" />
-      <ComponentRef Id="HubNetClientDesktopShortcut" />
+      {{#components}}
+      <ComponentRef Id="{{{noSpaceName}}}DesktopShortcut" />
+      {{/components}}
     </ComponentGroup>
 
     <Feature Id="BaseInstall" Level='1'>

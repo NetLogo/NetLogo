@@ -2,29 +2,26 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Rectangle, Point, Graphics }
-import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener,
-  MouseMotionListener, FocusListener, FocusEvent }
+import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
+import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
-import scala.collection.JavaConverters._
-
-import org.nlogo.api.{ Editable, Version }
-import org.nlogo.awt.{ Mouse => NlogoMouse, Fonts => NlogoFonts }
-import org.nlogo.core.{ I18N, Widget => CoreWidget,
-  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
-  Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider,
-  Switch => CoreSwitch, TextBox => CoreTextBox, View => CoreView }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
+import org.nlogo.api.Editable
+import org.nlogo.app.common.EditorFactory
+import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
+import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
+  InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot,
+  Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
+  View => CoreView, Widget => CoreWidget }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, CodeEditor,
-  DummyButtonWidget, DummyChooserWidget, DummyInputBoxWidget, DummyMonitorWidget,
-  DummyPlotWidget, DummySliderWidget, DummyViewWidget, EditorColorizer,
-  GUIWorkspace, OutputWidget, PlotWidget, Widget, WidgetContainer, WidgetRegistry }
-import org.nlogo.window.Events.{ DirtyEvent,
-  EditWidgetEvent, WidgetEditedEvent, WidgetRemovedEvent, LoadBeginEvent, ZoomedEvent }
+import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
+  GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
+  DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
+  PlotWidget },
+    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent,
+      WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -41,17 +38,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetContainer
     with MouseListener
     with MouseMotionListener
-    with FocusListener
     with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler {
 
   import WidgetPanel.GridSnap
 
-  private[app] var _hasFocus: Boolean = false
   protected var selectionRect: Rectangle = null // convert to Option?
   protected var widgetCreator: WidgetCreator = null
-  protected var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
+  var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
   private var view: Widget = null // convert to Option?
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
@@ -75,12 +70,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
 
+  protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
+
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
   setBackground(AwtColor.WHITE)
   addMouseListener(this)
   addMouseMotionListener(this)
-  addFocusListener(this)
   setAutoscrolls(true)
   glassPane.setOpaque(false)
   glassPane.setVisible(false)
@@ -93,16 +89,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     requestFocusInWindow()
   }
 
-  def focusGained(e: FocusEvent): Unit = {
-    _hasFocus = true
-  }
-
-  def focusLost(e: FocusEvent): Unit = {
-    _hasFocus = false
-  }
-
   override def getMinimumSize: Dimension =
-    new java.awt.Dimension(0, 0)
+    new Dimension(0, 0)
 
   override def getPreferredSize: Dimension = {
     var maxX = 0
@@ -153,7 +141,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
 
-  protected def selectedWrappers: Seq[WidgetWrapper] =
+  def selectedWrappers: Seq[WidgetWrapper] =
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }
@@ -202,7 +190,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     new Point(x, y)
   }
 
-  protected def dropSelectedWidgets(): Unit = {
+  def dropSelectedWidgets(): Unit = {
     widgetsBeingDragged.foreach(_.doDrop())
     widgetsBeingDragged = Seq()
     setForegroundWrapper()
@@ -273,7 +261,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (widgetCreator != null) {
           val widget = widgetCreator.getWidget
           if (widget != null) {
-            addWidget(widget, e.getX, e.getY, true, false)
+            WidgetActions.addWidget(this, widget, e.getX, e.getY)
             revalidate()
           }
         }
@@ -291,11 +279,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
     val plot = menuItem("plot", CorePlot(None))
     val menuItems = Seq(
-      menuItem("button", CoreButton(None, 0, 0, 0, 0)),
-      menuItem("slider", CoreSlider(None)),
-      menuItem("switch", CoreSwitch(None)),
+      menuItem("button",  CoreButton(None, 0, 0, 0, 0)),
+      menuItem("slider",  CoreSlider(None)),
+      menuItem("switch",  CoreSwitch(None)),
       menuItem("chooser", CoreChooser(None)),
-      menuItem("input", CoreInputBox(None)),
+      menuItem("input",   CoreInputBox(None)),
       menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
       menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)))
@@ -317,7 +305,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): Unit = {
+  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
     val widget = makeWidget(coreWidget)
     val wrapper = addWidget(widget, x, y, true, false)
     revalidate()
@@ -328,6 +316,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
     wrapper.isNew(false)
     newWidget = null // TODO: new widget set somewhere else and nulled here, gross
+    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -351,16 +340,24 @@ class WidgetPanel(val workspace: GUIWorkspace)
           val names = workspace.plotManager.getPlotNames
           DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
         case i: CoreInputBox =>
-          val font = NlogoFonts.monospacedFont
           new DummyInputBoxWidget(
-            new CodeEditor(1, 20, font, true,  null, new EditorColorizer(workspace), I18N.gui.fn),
-            new CodeEditor(5, 20, font, false, null, new EditorColorizer(workspace), I18N.gui.fn),
+            new EditorArea(textEditorConfiguration),
+            new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>
           throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }
   }
+
+  protected def textEditorConfiguration: EditorConfiguration =
+    editorFactory.defaultConfiguration(1, 20)
+      .withFont(NlogoFonts.monospacedFont)
+      .withFocusTraversalEnabled(true)
+
+  protected def dialogEditorConfiguration: EditorConfiguration =
+    editorFactory.defaultConfiguration(5, 20)
+      .withFont(NlogoFonts.monospacedFont)
 
   def mouseReleased(e: MouseEvent): Unit =
     if (e.isPopupTrigger)
@@ -411,7 +408,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     selectedWrappers.foreach(_.selected(false))
   }
 
-  protected def addWidget(widget: Widget, x: Int, y: Int,
+  def addWidget(widget: Widget, x: Int, y: Int,
     select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
     val size = widget.getSize()
     val wrapper = new WidgetWrapper(widget, this)
@@ -449,6 +446,22 @@ class WidgetPanel(val workspace: GUIWorkspace)
     wrapper
   }
 
+  def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper ={
+    widgetWrapper.setVisible(false)
+    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
+    // that method looks at its parent and sees if it's an InterfacePanel
+    // and zooms accordingly - ST 6/16/02
+    add(widgetWrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
+    moveToFront(widgetWrapper)
+    widgetWrapper.validate()
+    widgetWrapper.setVisible(true)
+
+    zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
+    new CompileAllEvent().raise(this)
+    Logger.logAddWidget(widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
+    widgetWrapper
+  }
+
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
     target match {
       case comp: Component if comp.getParent.isInstanceOf[WidgetWrapper] =>
@@ -460,10 +473,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       revalidate()
     }
     setForegroundWrapper()
-    // this doesn't do anything on the Mac, presumably because the focus doesn't never
-    // actually returns to us after the edit dialog closed because isFocusable() is
-    // already false, but just in case it's needed on some VM... - ST 8/6/04
-    loseFocusIfAppropriate()
   }
 
   def deleteSelectedWidgets(): Unit = {
@@ -471,10 +480,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper => w.selected && w.widget.deleteable
       case _ => false
     }
-    deleteWidgets(hitList)
+    WidgetActions.removeWidgets(this, hitList)
   }
 
-  protected def deleteWidget(target: WidgetWrapper): Unit =
+  def deleteWidget(target: WidgetWrapper): Unit =
     deleteWidgets(Seq(target))
 
   private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
@@ -483,7 +492,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     revalidate()
     repaint() // you wouldn't think this'd be necessary, but without it
     // the widget didn't visually disappear - ST 6/23/03
-    loseFocusIfAppropriate()
   }
 
   protected def removeWidget(wrapper: WidgetWrapper): Unit = {
@@ -521,7 +529,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def handle(e: WidgetEditedEvent): Unit = {
-    new DirtyEvent().raise(this)
+    new DirtyEvent(None).raise(this)
     zoomer.updateZoomInfo(e.widget)
   }
 
@@ -616,21 +624,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (changed)
       component.setSize(size)
   }
-
-  /// buttons
-
-  protected def loseFocusIfAppropriate(): Unit = {
-    if (_hasFocus && !isFocusable)
-      transferFocus()
-  }
-
-  override def isFocusable: Boolean =
-    getComponents.exists {
-      case w: WidgetWrapper if w.widget.isInstanceOf[ButtonWidget] =>
-        val key = w.widget.asInstanceOf[ButtonWidget].actionKey
-        key != '\u0000' && key != ' '
-      case _ => false
-    }
 
   /// dispatch WidgetContainer methods
 

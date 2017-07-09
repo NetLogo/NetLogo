@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import org.nlogo.core.ExtensionObject
-import org.nlogo.core.{ DummyExtensionManager => CoreDummyExtensionManager, ErrorSource, Primitive }
+import org.nlogo.core.{ DummyExtensionManager => CoreDummyExtensionManager }
 
 // This isn't a singleton because in testing contexts it's sometimes useful
 // to override a few methods. - ST 11/5/11
@@ -17,5 +17,7 @@ class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionMana
   override def loadedExtensions = java.util.Collections.emptyList[ClassManager]
   override def dumpExtensions: String = unsupported
   override def dumpExtensionPrimitives(): String = unsupported
+  def extensionCommandNames: Set[String] = Set.empty[String]
+  def extensionReporterNames: Set[String] = Set.empty[String]
   private def unsupported = throw new UnsupportedOperationException
 }

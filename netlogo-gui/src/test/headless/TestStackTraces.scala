@@ -9,10 +9,11 @@ Don't add any more tests here; add them there instead.
 
 Here is an example from CommandTasks:
 
+
 *command-task-stack-trace
-   O> run task [print __boom] => STACKTRACE boom!\
+  O> run [[] -> print __boom] => STACKTRACE boom!\
    error while observer running __BOOM\
-     called by (command task from: procedure __EVALUATOR)\
+     called by (anonymous command from: procedure __EVALUATOR)\
      called by procedure __EVALUATOR
 
 notice the * at the start of the test name. this is to prevent it from
@@ -25,7 +26,7 @@ the stack traces, not the results.
 import org.scalatest.FunSuite
 import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
 import org.nlogo.core.Syntax
-import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader, ExtensionManager}
+import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
 import org.nlogo.core.{WorldDimensions, View, Model}
 
 class TestStackTraces extends AbstractTestModels {
@@ -35,8 +36,11 @@ class TestStackTraces extends AbstractTestModels {
   /// run/runresult tests
 
   val code =
-    "to-report foo report bar end " +
-    "to-report bar report __boom end"
+    """|to-report foo report bar end
+       |to-report bar report __boom end
+       |to-report overflow report runresult "runresult \"overflow\"" end
+       |to overflow-run run [ [] -> run [ [] -> overflow-run ] ] end
+       |to overflow-foreach foreach [1 2 3] [ [i] -> overflow-foreach ] end""".stripMargin
 
   testModel("error inside run", Model(code)) {
     intercept[LogoException] { observer >> "__ignore runresult \"foo\"" }
@@ -59,6 +63,36 @@ error while observer running __BOOM
   called by procedure __EVALUATOR""")
   }
 
+  testModel("stack overflow - command", Model(code)) {
+    intercept[LogoException] { observer >> "overflow-run" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running RUN""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by run" ||
+          l === "  called by procedure OVERFLOW-RUN"))
+  }
+
+  testModel("stack overflow - reporter", Model(code)) {
+    intercept[LogoException] { observer >> "show overflow" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running REPORT""".stripMargin))
+    trace.lines.drop(2).take(100).foreach(l =>
+        assert(l === "  called by runresult" ||
+          l === "  called by procedure OVERFLOW"))
+  }
+
+
+  testModel("stack overflow - foreach", Model(code)) {
+    intercept[LogoException] { observer >> "overflow-foreach" }
+    assert(trace.take(2000).startsWith(
+      """|stack overflow (recursion too deep)
+         |  error while observer running FOREACH""".stripMargin))
+    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+        assert(l === "  called by foreach" ||
+          l === "  called by procedure OVERFLOW-FOREACH"))
+  }
 }
 
 class TestExtensionStackTraces extends FunSuite {

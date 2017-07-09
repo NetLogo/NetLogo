@@ -9,7 +9,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _oneof
@@ -21,7 +21,7 @@ public final strictfp class _oneof
       LogoList list = (LogoList) obj;
       int size = list.size();
       if (size == 0) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
       }
       return list.get(context.job.random.nextInt(size));
@@ -53,7 +53,7 @@ public final strictfp class _oneof
   public Object report_2(Context context, LogoList list) throws LogoException {
     int size = list.size();
     if (size == 0) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
     }
     return list.get(context.job.random.nextInt(size));
@@ -64,7 +64,7 @@ public final strictfp class _oneof
       LogoList list = (LogoList) obj;
       int size = list.size();
       if (size == 0) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
       }
       return list.get(context.job.random.nextInt(size));

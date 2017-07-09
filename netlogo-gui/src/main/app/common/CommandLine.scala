@@ -2,17 +2,18 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Dimension, Font }
-import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
-import javax.swing.{ JScrollPane, ScrollPaneConstants }
+import java.awt.{BorderLayout, Dimension}
+import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
+import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
-import org.nlogo.agent.{ Agent, ArrayAgentSet, OutputObject }
-import org.nlogo.awt.Fonts
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, TokenType, Widget => CoreWidget }
+import org.nlogo.agent.{Agent, AgentSet, OutputObject}
+import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
-import org.nlogo.nvm.Workspace
-import org.nlogo.window.{ CommandCenterInterface, EditorColorizer,
-  Events => WindowEvents, JobWidget, Widget }
+import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
+
+import scala.collection.immutable.List
 
 object CommandLine {
   val PROMPT = ">"
@@ -29,7 +30,7 @@ object CommandLine {
 class CommandLine(commandCenter: CommandCenterInterface,
                      echoCommandsToOutput: Boolean,
                      fontSize: Int,
-                     workspace: Workspace)
+                     workspace: AbstractWorkspace)
     extends JobWidget(workspace.world.mainRNG)
     with ActionListener
     with KeyListener
@@ -48,11 +49,15 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyBaseClass: AgentKind = AgentKind.Observer
   private var history: List[ExecutionString] = List()
 
+  val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
+  val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
+    -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+
   val textField: EditorField =
-    new EditorField(30,
-      new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12),
-      false, new EditorColorizer(workspace),
-      I18N.gui.fn)
+    new org.nlogo.editor.EditorField(30,
+      new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
+        java.awt.Font.PLAIN, 12),
+      true, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
 
@@ -70,10 +75,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
   def agent(agent: Agent): Unit = {
     this.agent = agent
   }
-
-  ///
-
-  ///
 
   // I have no idea why, but at least on Macs, without this our minimum
   // height is larger than our preferred height, which doesn't make sense
@@ -188,8 +189,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                       false, true).raise(this)
             }
             if (agent != null) {
-              val agentSet = new ArrayAgentSet(kind, 1, false)
-              agentSet.add(agent)
+              val agentSet = AgentSet.fromAgent(agent)
               agents(agentSet)
             }
             new WindowEvents.AddJobEvent(this, agents, procedure).raise(this)

@@ -2,17 +2,34 @@
 
 package org.nlogo.api
 
+import java.awt.image.BufferedImage
+import java.io.{ FileOutputStream, File }
+import java.nio.file.{ InvalidPathException, Path, Paths }
+import javax.imageio.ImageIO
+
 import org.nlogo.core.FileMode
+
+import scala.io.Codec
 
 object FileIO {
 
   @throws(classOf[java.io.IOException])
+  @deprecated("Use fileToString and specify codec", "6.0.1")
   def file2String(path: String) =
     io.Source.fromFile(path).mkString
 
   @throws(classOf[java.io.IOException])
+  @deprecated("Use fileToString and specify codec", "6.0.1")
   def file2String(file: java.io.File) =
     io.Source.fromFile(file).mkString
+
+  @throws(classOf[java.io.IOException])
+  def fileToString(file: java.io.File)(implicit codec: Codec) =
+    io.Source.fromFile(file)(codec).mkString
+
+  @throws(classOf[java.io.IOException])
+  def fileToString(path: String)(implicit codec: Codec) =
+    io.Source.fromFile(path)(codec).mkString
 
   @throws(classOf[java.io.IOException])
   def url2String(sampleURL: String): String = {
@@ -58,6 +75,18 @@ object FileIO {
   }
 
   @throws(classOf[java.io.IOException])
+  def writeImageFile(image: BufferedImage, filename: String, format: String): Unit = {
+    // there's a form of ImageIO.write that just takes a filename, but
+    // if we use that when the filename is invalid (e.g. refers to
+    // a directory that doesn't exist), we get an IllegalArgumentException
+    // instead of an IOException, so we make our own OutputStream
+    // so we get the proper exceptions. - ST 8/19/03, 11/26/03
+    val stream = new FileOutputStream(new File(filename))
+    ImageIO.write(image, format, stream)
+    stream.close()
+  }
+
+  @throws(classOf[java.io.IOException])
   def reader2String(reader: java.io.Reader): String =
     reader2String(reader, 8192) // arbitrary default
 
@@ -95,4 +124,20 @@ object FileIO {
     finally file.close(false)
   }
 
+  def resolvePath(name: String): Option[Path] = resolvePath(name, None)
+
+  def resolvePath(name: String, peerFile: Path): Option[Path] = resolvePath(name, Some(peerFile))
+
+  def resolvePath(name: String, peerFile: Option[Path]): Option[Path] = {
+    try {
+      val path = Paths.get(name)
+      if (path.isAbsolute)
+        Some(path)
+      else
+        (peerFile.flatMap(p => Option(p.toAbsolutePath.getParent).map(_.resolve(name))) orElse
+          Some(Paths.get(System.getProperty("user.home"), name))).map(_.toAbsolutePath)
+    } catch {
+      case e: InvalidPathException => None
+    }
+  }
 }

@@ -1,3 +1,4 @@
+C __apply etc._apply
 C __bench gui._bench
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
@@ -125,22 +126,6 @@ C histogram plot._histogram
 C histogram-from dead._histogramfrom
 C home etc._home
 C ht etc._hideturtle
-C hubnet-broadcast hubnet._hubnetbroadcast
-C hubnet-broadcast-clear-output hubnet._hubnetbroadcastclearoutput
-C hubnet-broadcast-message hubnet._hubnetbroadcastmessage
-C hubnet-clear-override hubnet._hubnetclearoverride
-C hubnet-clear-overrides hubnet._hubnetclearoverrides
-C hubnet-fetch-message hubnet._hubnetfetchmessage
-C hubnet-kick-all-clients hubnet._hubnetkickallclients
-C hubnet-kick-client hubnet._hubnetkickclient
-C hubnet-reset hubnet._hubnetreset
-C hubnet-reset-perspective hubnet._hubnetresetperspective
-C hubnet-send hubnet._hubnetsend
-C hubnet-send-clear-output hubnet._hubnetsendclearoutput
-C hubnet-send-follow hubnet._hubnetsendfollow
-C hubnet-send-message hubnet._hubnetsendmessage
-C hubnet-send-override hubnet._hubnetsendoverride
-C hubnet-send-watch hubnet._hubnetsendwatch
 C hubnet-set-client-interface dead._hubnetsetclientinterface
 C if etc._if
 C if-else etc._ifelse
@@ -261,6 +246,8 @@ R = _equal
 R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
+R -> _lambdaargs
+R __apply-result etc._applyresult
 R __block etc._block
 R __boom etc._boom
 R __check-syntax etc._checksyntax
@@ -282,6 +269,7 @@ R __patchcol _patchcol
 R __patchrow _patchrow
 R __processors etc._processors
 R __random-state etc._randomstate
+R __reference etc._reference
 R __stack-trace etc._stacktrace
 R __symbol etc._symbol
 R __to-string etc._tostring
@@ -340,13 +328,6 @@ R floor etc._floor
 R fput etc._fput
 R hsb etc._hsb
 R __hsb-old etc._hsbold
-R hubnet-clients-list hubnet._hubnetclientslist
-R hubnet-enter-message? hubnet._hubnetentermessage
-R hubnet-exit-message? hubnet._hubnetexitmessage
-R hubnet-message hubnet._hubnetmessage
-R hubnet-message-source hubnet._hubnetmessagesource
-R hubnet-message-tag hubnet._hubnetmessagetag
-R hubnet-message-waiting? hubnet._hubnetmessagewaiting
 R ifelse-value etc._ifelsevalue
 R in-cone etc._incone
 R in-cone-nowrap etc._inconenowrap
@@ -355,6 +336,7 @@ R in-link-neighbor? _inlinkneighbor
 R in-link-neighbors _inlinkneighbors
 R in-radius etc._inradius
 R in-radius-nowrap etc._inradiusnowrap
+R insert-item etc._insertitem
 R int etc._int
 R is-agent? etc._isagent
 R is-agentset? etc._isagentset
@@ -470,6 +452,7 @@ R random-pzcor threed._randompzcor
 R random-xcor etc._randomxcor
 R random-ycor etc._randomycor
 R random-zcor threed._randomzcor
+R range etc._range
 R read-from-string etc._readfromstring
 R reduce etc._reduce
 R remainder etc._remainder

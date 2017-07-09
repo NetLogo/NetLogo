@@ -54,7 +54,7 @@ FileReadWrite_2D
   O> file-close
   O> file-delete glob1
   O> file-open glob1
-  O> file-write map [[pcolor] of ?] sort patches
+  O> file-write map [[p] -> [pcolor] of p] sort patches
   O> file-write "Once upon a time"
   O> file-write "[1 2 3]"
   O> file-write "true 5"
@@ -91,7 +91,7 @@ FileReadWrite_3D
   O> file-close
   O> file-delete glob1
   O> file-open glob1
-  O> file-write map [[pcolor] of ?] sort patches
+  O> file-write map [[p] -> [pcolor] of p] sort patches
   O> file-write "Once upon a time"
   O> file-write "[1 2 3]"
   O> file-write "true 5"
@@ -137,7 +137,7 @@ FileReadSmallFileOfNumbers
   O> if ( file-exists? "tmp/File/file-io-testing.txt" ) [ file-delete "tmp/File/file-io-testing.txt" ]
   O> file-open glob3
   O> set glob2 []
-  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> foreach glob1 [[xs] -> set glob2 sentence glob2 xs foreach xs [[x] -> file-type (word x " ") ] file-print "" ]
   O> file-close
   O> file-open glob3
   O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]
@@ -149,11 +149,11 @@ FileReadLargeFileOfNumbers1
   globals [ glob1 glob2 glob3 ]
   O> __mkdir "tmp/File"
   O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
-  O> set glob1 n-values 100 [n-values 50 [?]]
+  O> set glob1 n-values 100 [n-values 50 [[x] -> x]]
   O> if ( file-exists? glob3 ) [ file-delete glob3 ]
   O> file-open glob3
   O> set glob2 []
-  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> foreach glob1 [[xs] -> set glob2 sentence glob2 xs foreach xs [[x] -> file-type (word x " ") ] file-print "" ]
   O> file-close
   O> file-open glob3
   O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]
@@ -254,7 +254,7 @@ FileReadLargeFileOfNumbers2
   O> if ( file-exists? glob3 ) [ file-delete glob3 ]
   O> file-open glob3
   O> set glob2 []
-  O> foreach glob1 [ set glob2 sentence glob2 ? foreach ? [ file-type (word ? " ") ] file-print "" ]
+  O> foreach glob1 [[xs] -> set glob2 sentence glob2 xs foreach xs [[x] -> file-type (word x " ") ] file-print "" ]
   O> file-close
   O> file-open glob3
   O> while [not file-at-end?] [ if file-read != first glob2 [ stop ] set glob2 butfirst glob2 ]

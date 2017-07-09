@@ -4,9 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
 import org.nlogo.api.{ LogoListBuilder, TypeNames }
-import org.nlogo.core.Syntax
-import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _sorton extends Reporter {
 
@@ -43,7 +41,7 @@ class _sorton extends Reporter {
           case (a1: Agent, a2: Agent) =>
             a1.compareTo(a2)
           case (o1: AnyRef, o2: AnyRef) =>
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, _sorton.this ,
               "SORT-ON works on numbers, strings, or agents of the same type, " +
               "but not on " + TypeNames.aName(o1) + " and " + TypeNames.aName(o2))

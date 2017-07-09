@@ -7,14 +7,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 import java.util.Iterator;
 
 import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsendclearoutput
-    extends org.nlogo.nvm.Command {
+    extends HubNetCommand {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     Object clients = args[0].report(context);
@@ -25,7 +25,7 @@ public final strictfp class _hubnetsendclearoutput
            nodesIter.hasNext();) {
         Object node = nodesIter.next();
         if (!(node instanceof String)) {
-          throw new EngineException
+          throw new RuntimePrimitiveException
               (context, this, "HUBNET-SEND expected "
                   + TypeNames.aName(Syntax.StringType() | Syntax.ListType())
                   + " of strings as the first input, but one item is the "
@@ -42,7 +42,7 @@ public final strictfp class _hubnetsendclearoutput
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    workspace.getHubNetManager().get().clearText(asScalaBuffer(nodes));
+    hubNetManager().get().clearText(asScalaBuffer(nodes));
     context.ip = next;
   }
 

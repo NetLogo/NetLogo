@@ -3,8 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.World3D
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _resizeworld extends Command {
 
@@ -29,7 +28,7 @@ class _resizeworld extends Command {
     val oldMaxZ = workspace.world.asInstanceOf[World3D].maxPzcor
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0 || newMinZ > 0 || newMaxZ < 0)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this,
         "You must include the point (0, 0, 0) in the world.")
     if (oldMinX != newMinX || oldMaxX != newMaxX ||

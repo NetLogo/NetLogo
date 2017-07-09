@@ -14,7 +14,6 @@ import java.net.{BindException, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
-import collection.JavaConverters._
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
@@ -259,7 +258,8 @@ class ConnectionManager(val connection: ConnectionInterface,
   def isSupportedClientType(clientType:String): Boolean =
     clientInterfaceMap.isDefinedAt(clientType)
 
-  def isValidTag(tag:String) = clientInterfaceSpec.containsWidgetTag(tag)
+  def isValidTag(tag:String) =
+    clientInterfaceSpec.containsWidgetTag(tag)
 
   @throws(classOf[HubNetException])
   def broadcast(tag:String, message:Any) = {
@@ -384,14 +384,14 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   def incrementalViewUpdate() {
     // update the entire world if the patches have changed (do to a world resizing)
-    doViewUpdate(lastPatches != world.patches())
+    doViewUpdate(lastPatches != world.patches)
   }
 
   private def doViewUpdate(resetWorld:Boolean) {
     if (resetWorld) {
       // create a new world buffer, which will force a full update.
       worldBuffer = new ServerWorld(worldProps)
-      lastPatches = world.patches()
+      lastPatches = world.patches
     }
     val buf = worldBuffer.updateWorld(world, resetWorld)
     if (!buf.isEmpty) broadcastMessage(new ViewUpdate(buf.toByteArray))

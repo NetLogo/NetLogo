@@ -20,8 +20,8 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ CompilationOperand, ErrorSource, ExtensionManager, BreedIdentifierHandler, CompilationEnvironment,
-    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, TokenMapperInterface, StructureDeclarations, StructureResults},
+    core.{ CompilationOperand, ErrorSource, CompilationEnvironment,
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, StructureResults},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
@@ -47,7 +47,7 @@ object StructureParser {
             cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
             includeFile(compilationEnvironment, suppliedPath) match {
               case Some((path, fileContents)) =>
-                parseOne(tokenizer, structureParser, fileContents, suppliedPath,
+                parseOne(tokenizer, structureParser, fileContents, path,
                   results.copy(includes = results.includes.tail,
                     includedSources = results.includedSources :+ suppliedPath))
               case None =>
@@ -84,9 +84,9 @@ object StructureParser {
       structureParser.parse(tokens, oldResults)
     }
 
-  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolType.SymbolTable = {
+  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
     val symTable =
-      SymbolType.emptySymbolTable
+      SymbolTable.empty
         .addSymbols(program.dialect.tokenMapper.allCommandNames, SymbolType.PrimitiveCommand)
         .addSymbols(program.dialect.tokenMapper.allReporterNames, SymbolType.PrimitiveReporter)
         .addSymbols(program.globals, SymbolType.GlobalVariable)

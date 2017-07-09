@@ -44,7 +44,7 @@ object StructureConverter {
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
     val proc = new RawProcedure(p, displayName)
     (proc, p.tokens.drop(2).init :+
-      new Token("", TokenType.Eof, "")(p.tokens.last.start, p.tokens.last.end, p.tokens.last.filename))
+      new Token("", TokenType.Eof, "")(p.tokens.last.sourceLocation))
   }
 
   def updateProgram(program: Program, declarations: Seq[Declaration]): Program = {

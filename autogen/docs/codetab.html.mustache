@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<title>
+  NetLogo {{version}} User Manual: Code Tab Guide
+</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<h1>
+  Code Tab Guide
+</h1>
+{{> versionTag.html }}
+<p id="procedures">
+  The Code tab is where the code for the model is stored. Commands you
+  only want to use immediately go in the Command Center; commands you
+  want to save and use later, over and over again, are found in the
+  Code tab.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/codetab.gif">
+<p>
+  To determine if the code has any errors, you may press the
+  &quot;Check&quot; button. If there are any syntax errors, the Code
+  tab will turn red, the code that contains the error will be
+  highlighted, and an error message will appear.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/codetaberror.gif">
+<p>
+  Switching tabs also causes the code to be checked, so if you just
+  switch tabs, pressing the Check button first isn't necessary.
+<p>
+  To find a fragment of code in the procedures, click on the
+  &quot;Find&quot; button in the Code toolbar and the Find dialog will
+  appear.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/image028.gif">
+<p>
+  You may enter a word or phrase to find, and optionally also a new
+  word or phrase to replace it with. The &quot;Ignore case&quot;
+  checkbox controls whether the capitalization must be the same to
+  indicate a match.
+<p>
+  If the &quot;Wrap around&quot; checkbox is checked, the entire Code
+  tab will be checked for the phrase, starting at the cursor position.
+  When it reaches the end it will return to the top, otherwise only the
+  area from the cursor position to the end of the Code tab will be
+  searched. The &quot;Next&quot; and &quot;Previous&quot; buttons will
+  move down and up to find another occurrence of the search phrase.
+<p>
+  &quot;Replace&quot; changes the currently selected phrase with the
+  replace phrase and &quot;Replace &amp; Find&quot; changes the
+  selected phrase and moves to the next occurrence. &quot;Replace
+  All&quot; will change all instances of the find phrase in the search
+  area with the replace phrase.
+<p>
+  To find a particular procedure definition in your code, use the
+  &quot;Procedures&quot; popup menu in the Code tab. The menu lists all
+  procedures in alphabetical order.
+<p>
+  The &quot;Shift Left&quot;, &quot;Shift Right&quot;,
+  &quot;Comment&quot;, and &quot;Uncomment&quot; items on the Edit menu
+  are used in the Code tab to change the indentation level of your code
+  or add and remove semicolons, which mark comments, from sections of
+  code.
+<p>
+  For more information about writing procedures, read <a href="tutorial3.html">Tutorial #3: Procedures</a> and the <a href="programming.html">Programming Guide</a>.
+<h2>
+  <a>Included Files Menu</a>
+</h2>
+<p id="includes">
+  <strong>Caution:</strong> The includes facility is new and experimental.
+<p>
+  When you add the <a href="dictionary.html#includes">__includes</a>
+  keyword to a model a menu to the right of the procedures menu
+  appears. This is the "Included Files" menu which lists all the NetLogo source
+  files (.nls) included in this file. You can make this menu always visible
+  using the Preferences dialog.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/includesmenu.gif">
+<p>
+  You can choose a file name from the menu to open a tab for that file,
+  or you can open a new or existing file using New Source File and Open
+  Source File, respectively.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/includesmenuopen.gif">
+<p>
+  Once you've opened new tabs they become accessible from the Tabs
+  menu, and you can use the keyboard to move from tab to tab (Command +
+  number on Mac, Control + number on other operating systems).
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/tabsmenu.gif">
+<h2>
+  Automatic indentation
+</h2>
+<p>
+  When the Indent Automatically checkbox is selected, NetLogo will
+  automatically attempt to align your code in a logically structured
+  format. For example, when you open a set of square brackets
+  &quot;[&quot; (perhaps after an <code>if</code> statement), NetLogo will
+  automatically add spaces so that the following lines of code are two
+  spaces further indented than the bracket. When you close the square
+  brackets the closing bracket will be lined up with the matching open
+  bracket.
+<p class="screenshot">
+  <img alt="screen shot" src="images/interface/tabified-code.gif">
+<p>
+  NetLogo will try to indent the code as you type, but you can also
+  press the tab key anywhere on any line to ask NetLogo to indent the
+  line immediately. Or, you can select a whole region of code and press
+  the tab key to re-indent all of it.

@@ -85,84 +85,46 @@ package org.nlogo.parse
 //    seems awkward and confusing.
 
 import org.nlogo.core,
-  core.{ Token, TokenType, Let, I18N },
+  core.{ Command, Reporter, Token, TokenType, Let },
   core.Fail._
 
-import scala.annotation.tailrec
+import SymbolType.LocalVariable
 
-class LetScoper(usedNames: Map[String, SymbolType]) {
-
-  // Environment encapsulates state, namely, what variables are currently in scope.
-  // Each List[Let] is a scope; we have a List[List[Let]] because scopes nest.
-  // We push() to start a new scope when we see an open square bracket, then pop()
-  // when we reach the corresponding close bracket.
-  object Environment {
-    private var lets = List[List[Let]]()
-    def push(): Unit =
-      lets +:= Nil
-    def add(name: String): Let = {
-      val let = Let(name)
-      lets = (let +: lets.head) +: lets.tail
-      let
-    }
-    def get(name: String): Option[Let] =
-      lets.flatten.find(_.name == name)
-    def pop(): Unit =
-      lets = lets match {
-        case Nil => Nil
-        case hd::tail => tail
-      }
-    def used: Map[String, SymbolType] =
-      lets.flatten
-        .map(_.name -> SymbolType.LocalVariable)
-        .toMap
-  }
-
-  // begin with an initial empty scope, for the top level of the procedure
-  Environment.push()
-
-  // We require a BufferedIterator so we can peek ahead one token
-  // the tailrec annotation prevents StackOverflowErrors, when compiling the "Continental Divide" Model
-  @tailrec final def apply(tokens: BufferedIterator[Token], accTokens: Seq[Token]=Seq()): Iterator[Token] =
-    if (tokens.hasNext)
-      apply(tokens, accTokens :+ next(tokens))
-    else
-      accTokens.iterator
-
-  // we look for this in the input:
-  //   Command(_let) Reporter(_letname) ...
-  //     make Let from _letname, stuff into _let
-  //   Reporter(_letvariable)
-  //     stuff Let into _letvariable
-
-  def next(iter: BufferedIterator[Token]): Token =
-    iter.next() match {
-      case t @ Token(_, TokenType.OpenBracket, _) =>
-        Environment.push()
-        t
-      case t @ Token(_, TokenType.CloseBracket, _) =>
-        Environment.pop()
-        t
-      case t @ Token(_, TokenType.Command, l: core.prim._let) =>
-        val nameToken = iter.head
-        val name = nameToken.text.toUpperCase
-        for (tpe <- (usedNames ++ Environment.used).get(name))
-          exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
-        cAssert(nameToken.tpe == TokenType.Reporter,
-           "Expected variable name here", nameToken)
-        cAssert(!name.startsWith("?"),
-          "Names beginning with ? are reserved for use as task inputs", nameToken)
-        val let = Environment.add(name)
-        t.refine(l.copy(let = let))
-      case t @ Token(_, TokenType.Reporter, l: core.prim._unknownidentifier) =>
-        Environment.get(t.text.toUpperCase) match {
-          case Some(let) => t.refine(core.prim._letvariable(let))
-          // if no let is defined, we infer a symbol here.
-          // ExpressionParser verifies that that is correct
-          case None      => t.refine(core.prim._symbol())
+object LetScope {
+  def apply(c: Command, nameToken: Option[Token], usedNames: SymbolTable): Option[(Command, SymbolTable)] = {
+    c match {
+      case l @ core.prim._let(None) =>
+        nameToken match {
+          case Some(nameToken @ Token(text, TokenType.Reporter, _)) =>
+            val name = text.toUpperCase
+            val newLet = Let(name)
+            for (tpe <- usedNames.get(name))
+              exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
+            Some((l.copy(let = newLet), usedNames.addSymbol(name, LocalVariable(newLet))))
+          case Some(otherToken) =>
+            exception("Expected variable name here", otherToken)
+          case _ => None
         }
-      case t =>
-        t
+      case l @ core.prim._let(Some(let)) =>
+        Some((c, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let))))
+      case _ => None
     }
+  }
+}
 
+object LetVariableScope {
+  def apply(r: Reporter, t: Token, usedNames: SymbolTable): Option[(Reporter, SymbolTable)] = {
+    r match {
+      case u @ core.prim._unknownidentifier() =>
+        val newInstruction =
+          usedNames.get(t.text.toUpperCase).collect {
+            case LocalVariable(let) =>
+              val newLetVariable = core.prim._letvariable(let)
+              newLetVariable.token = t
+              newLetVariable
+          }
+        newInstruction.map(i => (i, usedNames))
+      case _ => None
+    }
+  }
 }

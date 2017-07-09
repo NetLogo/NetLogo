@@ -44,18 +44,19 @@
             <a href="#X">X</a>
             <a href="#Y">Y</a>
             <!--<a href="#Z">Z</a>-->
-            <a href="#ops">?</a>
+            <a href="#ops">-></a>
           </span>
         </div>
       </div>
       <div class="block">
         <div class="smallfont centertext tocborder inlineblock">
-          Categories: <a href="#turtlegroup">Turtle</a> -
-          <a href="#patchgroup">Patch</a> - <a href="#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
-          - <a href="#taskgroup">Task</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a> - <a href="#perspectivegroup">Perspective</a>
+          Categories: <a href="#turtlegroup">Turtle</a> - <a href="#patchgroup">Patch</a> - <a href="#linkgroup">Links</a>
+          - <a href="#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
+          - <a href="#anonproceduresgroup">Anonymous Procedures</a> - <a href="#controlgroup">Control/Logic</a> - <a href="#worldgroup">World</a>
           <br>
+          <a href="#perspectivegroup">Perspective</a> -
           <a href="#iogroup">Input/Output</a> - <a href="#fileiogroup">File</a> - <a href="#listsgroup">List</a> -
-          <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a> - <a href="#linkgroup">Links</a>
+          <a href="#stringgroup">String</a> - <a href="#mathematicalgroup">Math</a> - <a href="#plottinggroup">Plotting</a>
           - <a href="#systemgroup">System</a> - <a href="#hubnetgroup">HubNet</a>
         </div>
       </div>
@@ -206,6 +207,70 @@ Go figure! - ST 12/2/04
       <a href="#turtles-here">turtles-here</a>
       <!-- ======================================== -->
     <h3>
+      Link-related
+    </h3>
+    <p id="linkgroup">
+      <a href="#both-ends">both-ends</a>
+      <a href="#clear-links">clear-links</a>
+      <a href="#create-link">create-&lt;breed&gt;-from</a>
+      <a href="#create-link">create-&lt;breeds&gt;-from</a>
+      <a href="#create-link">create-&lt;breed&gt;-to</a>
+      <a href="#create-link">create-&lt;breeds&gt;-to</a>
+      <a href="#create-link">create-&lt;breed&gt;-with</a>
+      <a href="#create-link">create-&lt;breeds&gt;-with</a>
+      <a href="#create-link">create-link-from</a>
+      <a href="#create-link">create-links-from</a>
+      <a href="#create-link">create-link-to</a>
+      <a href="#create-link">create-links-to</a>
+      <a href="#create-link">create-link-with</a>
+      <a href="#create-link">create-links-with</a>
+      <a href="#die">die</a>
+      <a href="#hide-link">hide-link</a>
+      <a href="#in-link-neighbor">in-&lt;breed&gt;-neighbor?</a>
+      <a href="#in-link-neighbors">in-&lt;breed&gt;-neighbors</a>
+      <a href="#in-link-from">in-&lt;breed&gt;-from</a>
+      <a href="#in-link-neighbor">in-link-neighbor?</a>
+      <a href="#in-link-neighbors">in-link-neighbors</a>
+      <a href="#in-link-from">in-link-from</a>
+      <a href="#is-of-type">is-directed-link?</a>
+      <a href="#is-of-type">is-link?</a>
+      <a href="#is-of-type">is-link-set?</a>
+      <a href="#is-of-type">is-<i>&lt;link-breed&gt;</i>?</a>
+      <a href="#is-of-type">is-undirected-link?</a>
+      <a href="#layout-radial">layout-radial</a>
+      <a href="#layout-spring">layout-spring</a>
+      <a href="#layout-tutte">layout-tutte</a>
+      <a href="#link-neighbor">&lt;breed&gt;-neighbor?</a>
+      <a href="#link-neighbors">&lt;breed&gt;-neighbors</a>
+      <a href="#link-with">&lt;breed&gt;-with</a>
+      <a href="#link-heading">link-heading</a>
+      <a href="#link-length">link-length</a>
+      <a href="#link-neighbor">link-neighbor?</a>
+      <a href="#link">link</a>
+      <a href="#links">links</a>
+      <a href="#links-own">links-own</a>
+      <a href="#links-own">&lt;link-breeds&gt;-own</a>
+      <a href="#link-neighbors">link-neighbors</a>
+      <a href="#link-with">link-with</a>
+      <a href="#my-links">my-&lt;breeds&gt;</a>
+      <a href="#my-in-links">my-in-&lt;breeds&gt;</a>
+      <a href="#my-in-links">my-in-links</a>
+      <a href="#my-links">my-links</a>
+      <a href="#my-out-links">my-out-&lt;breeds&gt;</a>
+      <a href="#my-out-links">my-out-links</a>
+      <a href="#no-links">no-links</a>
+      <a href="#other-end">other-end</a>
+      <a href="#out-link-neighbor">out-&lt;breed&gt;-neighbor?</a>
+      <a href="#out-link-neighbors">out-&lt;breed&gt;-neighbors</a>
+      <a href="#out-link-to">out-&lt;breed&gt;-to</a>
+      <a href="#out-link-neighbor">out-link-neighbor?</a>
+      <a href="#out-link-neighbors">out-link-neighbors</a>
+      <a href="#out-link-to">out-link-to</a>
+      <a href="#show-link">show-link</a>
+      <a href="#tie">tie</a>
+      <a href="#untie">untie</a>
+      <!-- ======================================== -->
+    <h3>
       <a>Agentset</a>
     </h3>
     <p id="agentsetgroup">
@@ -308,20 +373,20 @@ Go figure! - ST 12/2/04
       <a href="#xor">xor</a>
       <!-- ======================================== -->
     <h3>
-      Task
+      Anonymous Procedures
     </h3>
-    <p id="taskgroup">
+    <p id="anonproceduresgroup">
+      <a href="#arrow">-&gt; (anonymous procedure)</a>
       <a href="#filter">filter</a>
       <a href="#foreach">foreach</a>
-      <a href="#is-of-type">is-command-task?</a>
-      <a href="#is-of-type">is-reporter-task?</a>
+      <a href="#is-of-type">is-anonymous-command?</a>
+      <a href="#is-of-type">is-anonymous-reporter?</a>
       <a href="#map">map</a>
       <a href="#n-values">n-values</a>
       <a href="#reduce">reduce</a>
       <a href="#run">run</a>
       <a href="#run">runresult</a>
       <a href="#sort-by">sort-by</a>
-      <a href="#task">task</a>
       <!-- ======================================== -->
     <h3>
       World
@@ -469,6 +534,7 @@ Go figure! - ST 12/2/04
       <a href="#foreach">foreach</a>
       <a href="#fput">fput</a>
       <a href="#histogram">histogram</a>
+      <a href="#insert-item">insert-item</a>
       <a href="#is-of-type">is-list?</a>
       <a href="#item">item</a>
       <a href="#last">last</a>
@@ -485,6 +551,7 @@ Go figure! - ST 12/2/04
       <a href="#of">of</a>
       <a href="#position">position</a>
       <a href="#one-of">one-of</a>
+      <a href="#range">range</a>
       <a href="#reduce">reduce</a>
       <a href="#remove">remove</a>
       <a href="#remove-duplicates">remove-duplicates</a>
@@ -507,6 +574,7 @@ Go figure! - ST 12/2/04
       <a href="#but-first-and-last">but-last</a>
       <a href="#empty">empty?</a>
       <a href="#first">first</a>
+      <a href="#insert-item">insert-item</a>
       <a href="#is-of-type">is-string?</a>
       <a href="#item">item</a>
       <a href="#last">last</a>
@@ -601,69 +669,6 @@ Go figure! - ST 12/2/04
       <a href="#update-plots">update-plots</a>
       <!-- ======================================== -->
     <h3>
-      Links
-    </h3>
-    <p id="linkgroup">
-      <a href="#both-ends">both-ends</a>
-      <a href="#clear-links">clear-links</a>
-      <a href="#create-link">create-&lt;breed&gt;-from</a>
-      <a href="#create-link">create-&lt;breeds&gt;-from</a>
-      <a href="#create-link">create-&lt;breed&gt;-to</a>
-      <a href="#create-link">create-&lt;breeds&gt;-to</a>
-      <a href="#create-link">create-&lt;breed&gt;-with</a>
-      <a href="#create-link">create-&lt;breeds&gt;-with</a>
-      <a href="#create-link">create-link-from</a>
-      <a href="#create-link">create-links-from</a>
-      <a href="#create-link">create-link-to</a>
-      <a href="#create-link">create-links-to</a>
-      <a href="#create-link">create-link-with</a>
-      <a href="#create-link">create-links-with</a>
-      <a href="#die">die</a>
-      <a href="#hide-link">hide-link</a>
-      <a href="#in-link-neighbor">in-&lt;breed&gt;-neighbor?</a>
-      <a href="#in-link-neighbors">in-&lt;breed&gt;-neighbors</a>
-      <a href="#in-link-from">in-&lt;breed&gt;-from</a>
-      <a href="#in-link-neighbor">in-link-neighbor?</a>
-      <a href="#in-link-neighbors">in-link-neighbors</a>
-      <a href="#in-link-from">in-link-from</a>
-      <a href="#is-of-type">is-directed-link?</a>
-      <a href="#is-of-type">is-link?</a>
-      <a href="#is-of-type">is-link-set?</a>
-      <a href="#is-of-type">is-undirected-link?</a>
-      <a href="#layout-radial">layout-radial</a>
-      <a href="#layout-spring">layout-spring</a>
-      <a href="#layout-tutte">layout-tutte</a>
-      <a href="#link-neighbor">&lt;breed&gt;-neighbor?</a>
-      <a href="#link-neighbors">&lt;breed&gt;-neighbors</a>
-      <a href="#link-with">&lt;breed&gt;-with</a>
-      <a href="#link-heading">link-heading</a>
-      <a href="#link-length">link-length</a>
-      <a href="#link-neighbor">link-neighbor?</a>
-      <a href="#link">link</a>
-      <a href="#links">links</a>
-      <a href="#links-own">links-own</a>
-      <a href="#links-own">&lt;link-breeds&gt;-own</a>
-      <a href="#link-neighbors">link-neighbors</a>
-      <a href="#link-with">link-with</a>
-      <a href="#my-links">my-&lt;breeds&gt;</a>
-      <a href="#my-in-links">my-in-&lt;breeds&gt;</a>
-      <a href="#my-in-links">my-in-links</a>
-      <a href="#my-links">my-links</a>
-      <a href="#my-out-links">my-out-&lt;breeds&gt;</a>
-      <a href="#my-out-links">my-out-links</a>
-      <a href="#no-links">no-links</a>
-      <a href="#other-end">other-end</a>
-      <a href="#out-link-neighbor">out-&lt;breed&gt;-neighbor?</a>
-      <a href="#out-link-neighbors">out-&lt;breed&gt;-neighbors</a>
-      <a href="#out-link-to">out-&lt;breed&gt;-to</a>
-      <a href="#out-link-neighbor">out-link-neighbor?</a>
-      <a href="#out-link-neighbors">out-link-neighbors</a>
-      <a href="#out-link-to">out-link-to</a>
-      <a href="#show-link">show-link</a>
-      <a href="#tie">tie</a>
-      <a href="#untie">untie</a>
-      <!-- ======================================== -->
-    <h3>
       BehaviorSpace
     </h3>
     <p id="behaviorspacegroup">
@@ -730,7 +735,7 @@ Go figure! - ST 12/2/04
         <a>Other</a>
       </h3>
       <p id="other-variables">
-      <a href="#ques">?</a>
+      <a href="#arrow">-&gt;</a>
       <!-- ======================================== -->
       <!-- ======================================== -->
       <!-- ======================================== -->
@@ -1025,6 +1030,12 @@ show 5 * 6 + 6 / 3
 show 5 * (6 + 6) / 3
 =&gt; 20
 </pre>
+      <p>
+        Many extension objects may be tested for equality and inequality
+        using = and !=.
+        For instance, the array, matrix, and table objects returned by their
+        respective extensions may be compared for equality / inequality.
+        Extension objects may not be tested using &lt;, &gt;, &lt;=, or &gt;=.
     </div>
     <div class="dict_entry" id="asin">
       <h3>
@@ -1096,9 +1107,9 @@ ask turtle 4 [ rt 90 ]
       </h4>
       <p>
         Reports a subset of the given agentset that includes only the
-        agents on the patches the given distances away from this agent. The
-        distances are specified as a list of two-item lists, where the two
-        items are the x and y offsets.
+        agents on the patches at the given coordinates (relative to this
+        agent). The coordinates are specified as a list of two-item lists,
+        where the two items are the x and y offsets.
       <p>
         If the caller is the observer, then the points are measured
         relative to the origin, in other words, the points are taken as
@@ -1110,7 +1121,7 @@ ask turtle 4 [ rt 90 ]
       <pre>
 ask turtles at-points [[2 4] [1 2] [10 15]]
   [ fd 1 ]  ;; only the turtles on the patches at the
-            ;; distances (2,4), (1,2) and (10,15),
+            ;; coordinates (2,4), (1,2) and (10,15),
             ;; relative to the caller, move
 </pre>
     </div>
@@ -2090,12 +2101,12 @@ ask turtles [ show max-one-of turtles [distance myself] ]
         <a>distancexy<span class="since">1.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">distancexy <i>xcor</i> <i>ycor</i></span>
+        <span class="prim_example">distancexy <i>x</i> <i>y</i></span>
         <img alt="Turtle Command" src="images/turtle.gif"> <img alt="Patch Command" src="images/patch.gif">
       </h4>
       <p>
-        Reports the distance from this agent to the point (<i>xcor</i>,
-        <i>ycor</i>).
+        Reports the distance from this agent to the point (<i>x</i>,
+        <i>y</i>).
       <p>
         The distance from a patch is measured from the center of the patch.
         Turtles and patches use the wrapped distance (around the edges of
@@ -2484,7 +2495,7 @@ show extract-rgb cyan
         <a>facexy<span class="since">3.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">facexy <i>number</i> <i>number</i></span>
+        <span class="prim_example">facexy <i>x</i> <i>y</i></span>
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
@@ -2828,23 +2839,24 @@ ask turtles
         <a>filter<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">filter <i>reporter-task</i> <i>list</i></span>
+        <span class="prim_example">filter <i>reporter</i> <i>list</i></span>
       </h4>
       <p>
         Reports a list containing only those items of <i>list</i> for which
-        the task reports true -- in other words, the items satisfying the
-        given condition.
+        the reporter reports true -- in other words, the items satisfying the
+        given condition. <i>reporter</i> may be an anonymous reporter or the
+        name of a reporter.
       <pre>
 show filter is-number? [1 &quot;2&quot; 3]
 =&gt; [1 3]
-show filter [? &lt; 3] [1 3 2]
+show filter [ i -&gt; i &lt; 3 ] [1 3 2]
 =&gt; [1 2]
-show filter [first ? != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
+show filter [ s -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
 =&gt; [&quot;hi&quot; &quot;everyone&quot;]
 </pre>
       <p>
         See also <a href="#map">map</a>, <a href="#reduce">reduce</a>,
-        <a href="#ques">?</a>.
+        <a href="#arrow">-> (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="first">
       <h3>
@@ -2887,10 +2899,16 @@ show floor -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Similar to ride, but, in the 3D view, the observer's vantage
+        Similar to ride, but, in the 3D view, the observer&apos;s vantage
         point is behind and above <i>turtle</i>.
       <p>
-        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>follow</code> will alter the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        the followed turtle instead.
+      <p>
+        See also <a href="#follow-me">follow-me</a>, <a href="#ride">ride</a>,
+        <a href="#reset-perspective">reset-perspective</a>, <a href="#watch">watch</a>, <a href="#subject">subject</a>.
       </div>
     <div class="dict_entry" id="follow-me">
       <h3>
@@ -2903,6 +2921,11 @@ show floor -4.5
       <p>
         Asks the observer to follow this turtle.
       <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>follow-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>, highlighting
+        this turtle instead.
+      <p>
         See also <a href="#follow">follow</a>.
       </div>
     <div class="dict_entry" id="foreach">
@@ -2910,40 +2933,43 @@ show floor -4.5
         <a>foreach<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">foreach <i>list</i> <i>command-task</i></span>
-        <span class="prim_example">(foreach <i>list1</i> ... <i>command-task</i>)</span>
+        <span class="prim_example">foreach <i>list</i> <i>command</i></span>
+        <span class="prim_example">(foreach <i>list1</i> ... <i>command</i>)</span>
       </h4>
       <p>
-        With a single list, runs the task for each item of <i>list</i>.
+        With a single list, runs the command for each item of <i>list</i>.
+        <i>command</i> may be the name of a command, or an anonymous command
+        created with <a href="#arrow">-&gt;</a>.
       <pre>
 foreach [1.1 2.2 2.6] show
 =&gt; 1.1
 =&gt; 2.2
 =&gt; 2.6
-foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
+foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round x) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
 =&gt; 2.6 -&gt; 3
 </pre>
       <p>
-        With multiple lists, runs <i>command-task</i> for each group of items
-        from each list. So, they are run once for the first items, once for
+        With multiple lists, runs <i>command</i> for each group of items
+        from each list.
+        So, they are run once for the first items, once for
         the second items, and so on. All the lists must be the same length.
       <p>
         Some examples make this clearer:
       <pre>
 (foreach [1 2 3] [2 4 6]
-   [ show word &quot;the sum is: &quot; (?1 + ?2) ])
+   [ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
 =&gt; &quot;the sum is: 3&quot;
 =&gt; &quot;the sum is: 6&quot;
 =&gt; &quot;the sum is: 9&quot;
 (foreach list (turtle 1) (turtle 2) [3 4]
-  [ ask ?1 [ fd ?2 ] ])
+  [ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
 ;; turtle 1 moves forward 3 patches
 ;; turtle 2 moves forward 4 patches
 </pre>
       <p>
-        See also <a href="#map">map</a>, <a href="#ques">?</a>.
+        See also <a href="#map">map</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="forward">
       <h3>
@@ -3470,6 +3496,11 @@ histogram [color] of turtles
         <i>agent</i> showing a <i>radius</i> sized Moore neighborhood
         around the agent.
       <p>
+        A client may only watch or follow a single subject.
+        Calling <code>hubnet-send-follow</code> will alter the highlight created by
+        prior calls to <code>hubnet-send-watch</code>, highlighting
+        the followed agent instead.
+      <p>
         See also: <a href="#hubnet-send-watch">hubnet-send-watch</a>,
         <a href="#hubnet-reset-perspective">hubnet-reset-perspective</a>
       </div>
@@ -3524,6 +3555,10 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
       <p>
         Tells the client associated with <i>client-name</i> to watch
         <i>agent</i>.
+      <p>
+        A client may only watch or follow a single subject.
+        Calling <code>hubnet-send-watch</code> will undo perspective changes caused
+        by prior calls to <code>hubnet-send-follow</code>.
       <p>
         See also: <a href="#hubnet-send-follow">hubnet-send-follow</a>,
         <a href="#hubnet-reset-perspective">hubnet-reset-perspective</a>
@@ -3610,7 +3645,7 @@ ask patches [
 ;; the right half turns blue
 show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
 =&gt; [0 0 0 0 0 1 1 1 1 1]
-show reduce [ifelse-value (?1 &gt; ?2) [?1] [?2]]
+show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
   [1 3 2 5 3 8 3 2 1]
 =&gt; 8
 </pre>
@@ -3766,7 +3801,9 @@ ask turtles
       </h4>
       <p>
         Reports true if there is a directed link going from <i>turtle</i>
-        to the caller.
+        to the caller or an undirected link connecting <i>turtle</i> to the
+        caller. You can think of this as "is there a link I can use to get from
+        <i>turtle</i> to the caller?"
       <pre>
 crt 2
 ask turtle 0 [
@@ -3791,8 +3828,10 @@ ask turtle 1 [
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Reports the agentset of all the turtles that have directed links
-        coming from them to the caller.
+        Reports the agentset of all the turtles that have directed links coming
+        from them to the caller as well as all turtles that have an undirected
+        link connecting them with the caller. You can think of this as "all the
+        turtles that can get to the caller using a link."
       <pre>
 crt 4
 ask turtle 0 [ create-links-to other turtles ]
@@ -3810,8 +3849,11 @@ ask turtle 1 [ ask in-link-neighbors [ set color blue ] ] ;; turtle 0 turns blue
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Report the directed link from <i>turtle</i> to the caller. If no
-        link exists then it reports nobody.
+        Reports a directed link from <i>turtle</i> to the caller or an
+        undirected link connecting the two. If no link exists then it
+        reports nobody. If more than one such link exists, reports a
+        random one. You can think of this as "give me a link that I can use
+        to travel from <i>turtle</i> to the caller."
       <pre>
 crt 2
 ask turtle 0 [ create-link-to turtle 1 ]
@@ -3823,7 +3865,7 @@ ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
       </div>
     <div class="dict_entry" id="includes">
       <h3>
-        <a>__includes</a>
+        <a>__includes<span class="since">4.0</span></a>
       </h3>
       <h4>
         <span class="prim_example">__includes [ <i>filename</i> ... ]</span>
@@ -3856,6 +3898,31 @@ ask turtles
 ;; each turtle makes a red &quot;splotch&quot; around itself
 </pre>
     </div>
+
+    <div class="dict_entry" id="insert-item">
+      <h3>
+        <a>insert-item<span class="since">6.0.1</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example">insert-item <i>index list value</i></span>
+        <span class="prim_example">insert-item <i>index string1 string2</i></span>
+      </h4>
+      <p>
+        On a list, inserts an item in that list. <i>index</i> is the index
+        where the item will be inserted. The first item has an index of 0. 
+        (The 6th item in a list would have an index of 5.)
+      <p>
+        Likewise for a string, but all characters in a multiple-character <i>string2</i> 
+        are inserted at <i>index</i>.
+      <pre>
+show insert-item 2 [2 7 4 5] 15
+=&gt; [2 7 15 4 5]
+show insert-item 2 &quot;cat&quot; &quot;re&quot;
+=&gt; &quot;caret&quot;
+</pre>
+    </div>
+
+
     <div class="dict_entry" id="inspect">
       <h3>
         <a>inspect<span class="since">1.1</span></a>
@@ -3896,8 +3963,9 @@ show int -3.5
       <h3>
         <a>is-agent?<span class="since">1.2.1</span></a>
         <a>is-agentset?<span class="since">1.2.1</span></a>
+        <a>is-anonymous-command?<span class="since">6.0</span></a>
+        <a>is-anonymous-reporter?<span class="since">6.0</span></a>
         <a>is-boolean?<span class="since">1.2.1</span></a>
-        <a>is-command-task?<span class="since">5.0</span></a>
         <a>is-directed-link?<span class="since">4.0</span></a>
         <a>is-link?<span class="since">4.0</span></a>
         <a>is-link-set?<span class="since">4.0</span></a>
@@ -3905,7 +3973,6 @@ show int -3.5
         <a>is-number?<span class="since">1.2.1</span></a>
         <a>is-patch?<span class="since">1.2.1</span></a>
         <a>is-patch-set?<span class="since">4.0</span></a>
-        <a>is-reporter-task?<span class="since">5.0</span></a>
         <a>is-string?<span class="since">1.0</span></a>
         <a>is-turtle?<span class="since">1.2.1</span></a>
         <a>is-turtle-set?<span class="since">4.0</span></a>
@@ -3914,9 +3981,11 @@ show int -3.5
       <h4>
         <span class="prim_example">is-agent? <i>value</i></span>
         <span class="prim_example">is-agentset? <i>value</i></span>
+        <span class="prim_example">is-anonymous-command? <i>value</i></span>
+        <span class="prim_example">is-anonymous-reporter? <i>value</i></span>
         <span class="prim_example">is-boolean? <i>value</i></span>
         <span class="prim_example">is-<i>&lt;breed&gt;</i>? <i>value</i></span>
-        <span class="prim_example">is-command-task? <i>value</i></span>
+        <span class="prim_example">is-<i>&lt;link-breed&gt;</i>? <i>value</i></span>
         <span class="prim_example">is-directed-link? <i>value</i></span>
         <span class="prim_example">is-link? <i>value</i></span>
         <span class="prim_example">is-link-set? <i>value</i></span>
@@ -3924,7 +3993,6 @@ show int -3.5
         <span class="prim_example">is-number? <i>value</i></span>
         <span class="prim_example">is-patch? <i>value</i></span>
         <span class="prim_example">is-patch-set? <i>value</i></span>
-        <span class="prim_example">is-reporter-task? <i>value</i></span>
         <span class="prim_example">is-string? <i>value</i></span>
         <span class="prim_example">is-turtle? <i>value</i></span>
         <span class="prim_example">is-turtle-set? <i>value</i></span>
@@ -4074,7 +4142,7 @@ layout-circle turtles 10
 ;; in order by who number
 layout-circle sort turtles 10
 ;; in order by size
-layout-circle sort-by [[size] of ?1 &lt; [size] of ?2] turtles 10
+layout-circle sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles 10
 </pre>
     </div>
     <div class="dict_entry" id="layout-radial">
@@ -4265,7 +4333,8 @@ if prey != nobody
         <a>link<span class="since">4.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">link <i>end1</i> <i>end2</i> &lt;breed&gt; <i>end1</i> <i>end2</i></span>
+        <span class="prim_example">link <i>end1</i> <i>end2</i></span>
+        <span class="prim_example">&lt;breed&gt; <i>end1</i> <i>end2</i></span>
       </h4>
       <p>
         Given the who numbers of the endpoints, reports the link connecting
@@ -4491,16 +4560,17 @@ set mylist lput 42 mylist
           <a>map<span class="since">1.3</span></a>
         </h3>
         <h4>
-          <span class="prim_example">map <i>reporter-task</i> <i>list</i></span>
-          <span class="prim_example">(map <i>reporter-task</i> <i>list1</i> ...)</span>
+          <span class="prim_example">map <i>reporter</i> <i>list</i></span>
+          <span class="prim_example">(map <i>reporter</i> <i>list1</i> ...)</span>
         </h4>
         <p>
-          With a single <i>list</i>, the given task is run for each item in
+          With a single <i>list</i>, the given reporter is run for each item in
           the list, and a list of the results is collected and reported.
+          <i>reporter</i> may be an anonymous reporter or the name of a reporter.
         <pre>
 show map round [1.1 2.2 2.7]
 =&gt; [1 2 3]
-show map [? * ?] [1 2 3]
+show map [ i -&gt; i * i ] [1 2 3]
 =&gt; [1 4 9]
 </pre>
         <p>
@@ -4513,11 +4583,11 @@ show map [? * ?] [1 2 3]
         <pre>
 show (map + [1 2 3] [2 4 6])
 =&gt; [3 6 9]
-show (map [?1 + ?2 = ?3] [1 2 3] [2 4 6] [3 5 9])
+show (map [ [a b c] -&gt; a + b = c ] [1 2 3] [2 4 6] [3 5 9])
 =&gt; [true false true]
 </pre>
         <p>
-          See also <a href="#foreach">foreach</a>, <a href="#ques">?</a>.
+        See also <a href="#foreach">foreach</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
         </div>
       <div class="dict_entry" id="max">
         <h3>
@@ -4915,8 +4985,13 @@ move-to max-one-of turtles [size]
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports an agentset of all links connected to the
-          caller, regardless of directedness.
+          Reports an agentset of all links connected to the caller of
+          the corresponding breed, regardless of directedness.
+          Generally, you might consider using
+          <a href="#my-out-links"><code>my-out-links</code></a> instead
+          of this primitive, as it works well for either directed or
+          undirected networks (since it excludes directed, incoming
+          links).
         <pre>
 crt 5
 ask turtle 0
@@ -4931,6 +5006,8 @@ ask turtle 1
 ]
 end
 </pre>
+        If you only want the undirected links connected to a node, you
+        can do <code>my-links with [ not is-directed-link? self ]</code>.
       </div>
       <div class="dict_entry" id="my-in-links">
         <h3>
@@ -4944,7 +5021,9 @@ end
         </h4>
         <p>
           Reports an agentset of all the directed links coming in from
-          other nodes to the caller.
+          other nodes to the caller as well as all undirected links
+          connected to the caller. You can think of this as "all links
+          that you can use to travel <i>to</i> this node".
         <pre>
 crt 5
 ask turtle 0
@@ -4970,7 +5049,9 @@ ask turtle 1
         </h4>
         <p>
           Reports an agentset of all the directed links going out from the
-          caller to other nodes.
+          caller to other nodes as well as undirected links connected to the
+          caller. You can think of this as "all links you can use to travel
+          <i>from</i> this node".
         <pre>
 crt 5
 ask turtle 0
@@ -5056,26 +5137,27 @@ ask n-of 50 patches [ set pcolor green ]
           <a>n-values<span class="since">2.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">n-values <i>size</i> <i>reporter-task</i></span>
+          <span class="prim_example">n-values <i>size</i> <i>reporter</i></span>
         </h4>
         <p>
           Reports a list of length <i>size</i> containing values computed
-          by repeatedly running the task.
+          by repeatedly running the reporter. <i>reporter</i> may be an anonymous
+          reporter or the name of a reporter.
         <p>
-          If the task accepts inputs, the input will be the number of the
+          If the reporter accepts inputs, the input will be the number of the
           item currently being computed, starting from zero.
         <pre>
 show n-values 5 [1]
 =&gt; [1 1 1 1 1]
-show n-values 5 [?]
+show n-values 5 [ i -&gt; i ]
 =&gt; [0 1 2 3 4]
 show n-values 3 turtle
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-show n-values 5 [? * ?]
+show n-values 5 [ x -&gt; x * x ]
 =&gt; [0 1 4 9 16]
 </pre>
         <p>
-          See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">?</a>.
+        See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#ques">-&gt; (anonymous procedure)</a>, <a href="#range">range</a>.
         </div>
       <div class="dict_entry" id="neighbors">
         <h3>
@@ -5112,7 +5194,8 @@ ask neighbors4 [ set pcolor red ]
         </h4>
         <p>
           Reports the agentset of all turtles found at the other end of
-          undirected links connected to this turtle.
+          any links (undirected or directed, incoming or outgoing)
+          connected to this turtle.
         <pre>
 crt 3
 ask turtle 0
@@ -5138,8 +5221,8 @@ end
           <img alt="Turtle Command" src="images/turtle.gif">
         </h4>
         <p>
-          Reports true if there is an undirected link between <i>turtle</i>
-          and the caller.
+          Reports true if there is a link (either directed or undirected,
+          incoming or outgoing) between <i>turtle</i> and the caller.
         <pre>
 crt 2
 ask turtle 0
@@ -5432,7 +5515,9 @@ ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
       </h4>
       <p>
         Reports true if there is a directed link going from the caller to
-        <i>turtle</i>.
+        <i>turtle</i> or if there is an undirected link connecting the caller
+        with <i>turtle</i>. You can think of this as "can I get from the caller
+        to <i>turtle</i> using a link?"
       <pre>
 crt 2
 ask turtle 0 [
@@ -5458,7 +5543,8 @@ ask turtle 1 [
       </h4>
       <p>
         Reports the agentset of all the turtles that have directed links
-        from the caller.
+        from the caller, or undirected links with the caller. You can think
+        of this as "who can I get to from the caller using a link?"
       <pre>
 crt 4
 ask turtle 0
@@ -5485,8 +5571,11 @@ end
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Reports the directed link from the caller to <i>turtle</i>. If no
-        link exists then it reports nobody.
+        Reports a directed link from the caller to <i>turtle</i> or an
+        undirected link connecting the two. If no link exists then it
+        reports nobody. If more than one such link exists, reports a
+        random one. You can think of this as "give me a link that I can use
+        to travel from the caller to <i>turtle</i>."
       <pre>
 crt 2
 ask turtle 0 [
@@ -6221,6 +6310,32 @@ ask turtles [
       <p>
         See also <a href="#random-pcor">random-pxcor</a>, <a href="#random-pcor">random-pycor</a>.
       </div>
+    <div class="dict_entry" id="range">
+      <h3>
+        <a>range<span class="since">6.0</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example">range <i>stop</i></span>
+        <span class="prim_example">(range <i>start</i> <i>stop</i>)</span>
+        <span class="prim_example">(range <i>start</i> <i>stop</i> <i>step</i>)</span>
+      </h4>
+      <p>
+        Generates a list of numbers, starting at <i>start</i>, ending before
+        <i>stop</i>, counting by <i>step</i>. <i>start</i> defaults to 0 and
+        <i>step</i> defaults to 1.
+        <pre>
+show range 5
+=&gt; [0 1 2 3 4]
+show (range 2 5)
+=&gt; [2 3 4]
+show (range 2 5 0.5)
+=&gt; [2 2.5 3 3.5 4 4.5]
+show (range 10 0 -1)
+=&gt; [10 9 8 7 6 5 4 3 2 1]
+</pre>
+      <p>
+      See also <a href="#n-values">n-values</a>
+    </div>
     <div class="dict_entry" id="read-from-string">
       <h3>
         <a>read-from-string<span class="since">1.1</span></a>
@@ -6251,16 +6366,18 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
         <a>reduce<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">reduce <i>reporter-task</i> <i>list</i></span>
+        <span class="prim_example">reduce <i>reporter</i> <i>list</i></span>
       </h4>
       <p>
-        Reduces a list from left to right using the given task, resulting
-        in a single value. This means, for example, that <code>reduce [?1 +
-        ?2] [1 2 3 4]</code> is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
+        Reduces a list from left to right using the given reporter, resulting
+        in a single value. This means, for example, that <code>reduce
+          [ [a b] -&gt; a + b] [1 2 3 4]</code>
+        is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
         <i>list</i> has a single item, that item is reported. It is an
-        error to reduce an empty list.
+        error to reduce an empty list. <i>reporter</i> may be an anonymous
+        reporter or the name of a reporter.
       <p>
-        The first input passed to the task is the result so far, and the
+        The first input passed to the reporter is the result so far, and the
         second input is the next item in the list.
       <p>
         Since it can be difficult to develop an intuition about what
@@ -6272,15 +6389,15 @@ show reduce + [1 2 3]
 =&gt; 6
 show reduce - [1 2 3]
 =&gt; -4
-show reduce [?2 - ?1] [1 2 3]
+show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far ] [1 2 3]
 =&gt; 2
-show reduce [?1] [1 2 3]
+show reduce [ [result-so-far ignored-item] -&gt; result-so-far ] [1 2 3]
 =&gt; 1
-show reduce [?2] [1 2 3]
+show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
 =&gt; 3
 show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
-show reduce [fput ?2 ?1] (fput [] [1 2 3 4 5])
+show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
 </pre>
       <p>
@@ -6289,7 +6406,7 @@ show reduce [fput ?2 ?1] (fput [] [1 2 3 4 5])
 ;; find the longest string in a list
 to-report longest-string [strings]
   report reduce
-    [ifelse-value (length ?1 &gt;= length ?2) [?1] [?2]]
+    [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
     strings
 end
 
@@ -6299,7 +6416,7 @@ show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
 ;; count the number of occurrences of an item in a list
 to-report occurrences [x the-list]
   report reduce
-    [ifelse-value (?2 = x) [?1 + 1] [?1]] (fput 0 the-list)
+    [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
 end
 
 show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
@@ -6307,13 +6424,15 @@ show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
 
 ;; evaluate the polynomial, with given coefficients, at x
 to-report evaluate-polynomial [coefficients x]
-  report reduce [(x * ?1) + ?2] coefficients
+  report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
 end
 
 ;; evaluate 3x^2 + 2x + 1 at x = 4
 show evaluate-polynomial [3 2 1] 4
 =&gt; 57
 </pre>
+      <p>
+      See also <a href="#filter">filter</a>, <a href="#arrow">-&gt; (anonymous procedure</a>.
     </div>
     <div class="dict_entry" id="remainder">
       <h3>
@@ -6388,7 +6507,7 @@ set mylist remove-duplicates mylist
         For a list, reports a copy of <i>list</i> with the item at the
         given index removed.
       <p>
-        For strings, reports a copy of <i>string2</i> with the character at
+        For strings, reports a copy of <i>string</i> with the character at
         the given index removed.
       <p>
         Note that the indices begin from 0, not 1. (The first item is item
@@ -6483,7 +6602,7 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       <p>
         Normally <code>reset-ticks</code> goes at the end of a setup procedure.
       <p>
-        See also <a href="#clear-ticks">clear-ticks</a>, <a href="#tick">tick</a>, <a href="#ticks">ticks</a>, <a href="#tick-advance">tick-advance</a>, <a href="#setup-plots">setup-plots</a>. <a href="#update-plots">update-plots</a>.
+        See also <a href="#clear-ticks">clear-ticks</a>, <a href="#tick">tick</a>, <a href="#ticks">ticks</a>, <a href="#tick-advance">tick-advance</a>, <a href="#setup-plots">setup-plots</a>, <a href="#update-plots">update-plots</a>.
       </div>
     <div class="dict_entry" id="reset-timer">
       <h3>
@@ -6567,6 +6686,11 @@ show reverse &quot;live&quot;
         3D view it is as if looking through the eyes of the turtle. If the
         turtle dies, the perspective resets to the default.
       <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting the ridden turtle instead.
+      <p>
         See also <a href="#reset-perspective">reset-perspective</a>,
         <a href="#watch">watch</a>, <a href="#follow">follow</a>, <a href="#subject">subject</a>.
       </div>
@@ -6580,6 +6704,11 @@ show reverse &quot;live&quot;
       </h4>
       <p>
         Asks the observer to ride this turtle.
+      <p>
+        The observer may only watch or follow a single subject.
+        Calling <code>ride-me</code> will remove the highlight created by
+        prior calls to <code>watch</code> and <code>watch-me</code>,
+        highlighting this turtle instead.
       <p>
         See also <a href="#ride">ride</a>.
       </div>
@@ -6637,19 +6766,19 @@ show round -4.5
         <a>runresult<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">run <i>command-task</i></span>
-        <span class="prim_example">(run <i>command-task</i> <i>input1</i> ...)</span>
+        <span class="prim_example">run <i>command</i></span>
+        <span class="prim_example">(run <i>command</i> <i>input1</i> ...)</span>
         <span class="prim_example">run <i>string</i></span>
-        <span class="prim_example">runresult <i>reporter-task</i></span>
-        <span class="prim_example">(runresult <i>reporter-task</i> <i>input1</i> ...)</span>
+        <span class="prim_example">runresult <i>reporter</i></span>
+        <span class="prim_example">(runresult <i>reporter</i> <i>input1</i> ...)</span>
         <span class="prim_example">runresult <i>string</i></span>
       </h4>
       <p>
-        The <code>run</code> form expects a command task or a string containing
-        commands. This agent then runs them.
+        The <code>run</code> form expects the name of a command, an anonymous command,
+        or a string containing commands. This agent then runs them.
       <p>
-        The <code>runresult</code> form expects a reporter task or a string
-        containing a reporter. This agent runs it and reports the result.
+        The <code>runresult</code> form expects the name of a reporter, an anonymous reporter,
+        or a string containing a reporter. This agent runs it and reports the result.
       <p>
         Note that you can't use <code>run</code> to define or redefine
         procedures. If you care about performance, note that the code must
@@ -6657,25 +6786,27 @@ show round -4.5
         are cached by NetLogo and thus using <code>run</code> on the same
         string over and over is much faster than running different strings.
         The first run, though, will be many times slower than
-        running the same code directly, or in a command task.
+        running the same code directly, or in an anonymous command.
       <p>
-        Tasks are recommended over strings whenever possible. (An example
-        of when you must use strings is if you accept pieces of code from
-        the user of your model.)
+        Anonymous procedures are recommended over strings whenever possible.
+        (An example of when you must use strings is if you accept pieces
+        of code from the user of your model.)
       <p>
-        Tasks may freely read and/or set local variables and procedure
-        inputs. Trying to do the same with strings may or may not work and
-        should not be relied on.
+        Anonymous procedures may freely read and/or set local variables
+        and procedure inputs. Trying to do the same with strings may
+        or may not work and should not be relied on.
       <p>
-        When using tasks, you can provide them with inputs, if you surround
-        the entire call with parentheses. For example:
+        When using anonymous procedures, you can provide them with inputs,
+        if you surround the entire call with parentheses. For example:
       <pre>
-(run task [ crt ?1 [ fd ?2 ] ] 10 5)
+(run [ [turtle-count step-count] -&gt; crt turtle-count [ fd step-count ] ] 10 5)
 ;; creates 10 turtles and move them forward 5 steps
-show (runresult task [ ?1 + ?2 ] 10 5)
+show (runresult [ [a b] -&gt; a + b ] 10 5)
 =&gt; 15
 ;; adds 10 and 5
 </pre>
+        <p>
+        See also <a href="foreach">foreach</a>, <a href="arrow">-> (anonymous procedure)</a>.
       </div><!-- ======================================== -->
     </div>
     <h2>
@@ -7246,19 +7377,35 @@ show sin 270
         Or, if the input is an agentset or a list containing at least one
         agent, a sorted list of agents (never an agentset) is reported;
         non-agents are ignored. Agents are sorted in the same order the
-        &lt; operator uses.
+        &lt; operator uses. (Patches are sorted with the top left-most patch first
+        and the bottom right-most patch last, turtles are sorted by <code>who</code>
+        number).
       <pre>
 show sort [3 1 4 2]
 =&gt; [1 2 3 4]
+show sort [2 1 "a"]
+=&gt; [1 2]
+show sort (list "a" "c" "b" (patch 0 0))
+=&gt; ["a" "b" "c"]
+show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
+=&gt; [(patch 0 1) (patch 0 0) (patch 1 0)]
+
+;; label patches with numbers in left-to-right, top-to-bottom order
 let n 0
-foreach sort patches [
-  ask ? [
+foreach sort patches [ the-patch -&gt;
+  ask the-patch [
     set plabel n
     set n n + 1
   ]
 ]
-;; patches are labeled with numbers in left-to-right,
-;; top-to-bottom order
+
+;; some additional examples to clarify behavior in strange cases
+show sort (list patch 0 0 patch 0 1 patch 1 0 turtle 0 turtle 1) ; turtles are always sorted lower than patches
+=&gt; [(turtle 0) (turtle 1) (patch 0 1) (patch 0 0) (patch 1 0)]
+show sort (list nobody false true) ; booleans and nobody cannot be sorted
+=&gt; []
+show sort (list [1 2 3] turtles) ; lists and agentsets are not included if they are inside a list passed to sort
+=&gt; []
 </pre>
       <p>
         See also <a href="#sort-by">sort-by</a>, <a href="#sort-on">sort-on</a>.
@@ -7268,17 +7415,18 @@ foreach sort patches [
         <a>sort-by<span class="since">1.3</span></a>
       </h3>
       <h4>
-        <span class="prim_example">sort-by <i>reporter-task</i> <i>list</i></span>
-        <span class="prim_example">sort-by <i>reporter-task</i> <i>agentset</i></span>
+        <span class="prim_example">sort-by <i>reporter</i> <i>list</i></span>
+        <span class="prim_example">sort-by <i>reporter</i> <i>agentset</i></span>
       </h4>
       <p>
         If the input is a list, reports a new list containing the same
         items as the input list, in a sorted order defined by the boolean
-        reporter task.
+        reporter. <i>reporter</i> may be an anonymous reporter or
+        the name of a reporter.
       <p>
-        The two inputs to the reporter task are the values being compared.
-        The task should report true if <code>?1</code> comes strictly before
-        <code>?2</code> in the desired sort order, and false otherwise.
+      The two inputs to <i>reporter</i> are the values being compared.
+        The reporter should report true if the first argument comes strictly before
+        the second in the desired sort order, and false otherwise.
       <p>
         If the input is an agentset or a list of agents, reports a list
         (never an agentset) of agents.
@@ -7291,11 +7439,11 @@ show sort-by &lt; [3 1 4 2]
 =&gt; [1 2 3 4]
 show sort-by &gt; [3 1 4 2]
 =&gt; [4 3 2 1]
-show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
+show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2 ] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
 </pre>
       <p>
-        See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>.
+      See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>, <a href="#arrow">-> (anonymous procedure)</a>.
       </div>
     <div class="dict_entry" id="sort-on">
       <h3>
@@ -7317,7 +7465,7 @@ show sort-on [who] turtles
 show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
-  [ ask ? [ do-something ] ]
+  [ the-turtle -&gt; ask the-turtle [ do-something ] ]
 ;; turtles run &quot;do-something&quot; one at a time, in
 ;; ascending order by size
 </pre>
@@ -7589,23 +7737,6 @@ show sum [energy] of turtles
         Reports the tangent of the given angle. Assumes the angle is given
         in degrees.
       </div>
-    <div class="dict_entry" id="task">
-      <h3>
-        <a>task<span class="since">5.0</span></a>
-      </h3>
-      <h4>
-        <span class="prim_example">task [ <i>commands</i> ]</span>
-        <span class="prim_example">task [ <i>reporter</i> ]</span>
-        <span class="prim_example">task <i>command-name</i></span>
-        <span class="prim_example">task <i>reporter-name</i></span>
-      </h4>
-      <p>
-        Creates and reports a task, either a command task or a reporter
-        task, depending on the input.
-      <p>
-        See the <a href="programming.html#tasks">Tasks section</a> of the
-        Programming Guide for details.
-      </div>
     <div class="dict_entry" id="thickness">
       <h3>
         <a>thickness</a>
@@ -7860,7 +7991,8 @@ set heading towards turtle 1
         <a>turtle<span class="since">1.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">turtle <i>number</i> &lt;breed&gt; <i>number</i></span>
+        <span class="prim_example">turtle <i>number</i></span>
+        <span class="prim_example">&lt;breed&gt; <i>number</i></span>
       </h4>
       <p>
         Reports the turtle with the given who number, or <a href="#nobody">nobody</a> if there is no such turtle. For breeded
@@ -8237,6 +8369,9 @@ file-open user-new-file
       <pre>
 show user-input &quot;What is your name?&quot;
 </pre>
+      <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-message">
       <h3>
@@ -8246,12 +8381,18 @@ show user-input &quot;What is your name?&quot;
         <span class="prim_example">user-message <i>value</i></span>
       </h4>
       <p>
-        Opens a dialog with <i>value</i> displayed as the message.
+        Opens a dialog with <i>value</i> displayed as the message to the user.
       <p>
         <i>value</i> may be of any type, but is typically a string.
-      <pre>
+        <pre>
 user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 </pre>
+        <p>
+        Note that if a user closes the <code>user-message</code> dialog
+        with the &quot;X&quot; in the corner, the behavior will be the same as if they had clicked &quot;OK&quot;.
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-one-of">
       <h3>
@@ -8272,6 +8413,9 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
 if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-yes-or-no">
       <h3>
@@ -8289,6 +8433,9 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
 if user-yes-or-no? &quot;Set up the model?&quot;
   [ setup ]
 </pre>
+        <p>
+        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        Programming Guide for additional details.
     </div><!-- ======================================== -->
   </div>
     <h2>
@@ -8356,7 +8503,13 @@ repeat 10 [ fd 1 wait 0.5 ]
         Puts a spotlight on <i>agent</i>. In the 3D view the observer will
         also turn to face the subject.
       <p>
-        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>, <a href="#watch-me">watch-me</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch-me">watch-me</a>.
       </div>
     <div class="dict_entry" id="watch-me">
       <h3>
@@ -8369,7 +8522,13 @@ repeat 10 [ fd 1 wait 0.5 ]
       <p>
         Asks the observer to watch this agent.
       <p>
-        See also <a href="#watch">watch</a>.
+        The observer may only watch or follow a single subject.
+        Calling <code>watch</code> will undo perspective changes caused
+        by prior calls to <code>follow</code>, <code>follow-me</code>,
+        <code>ride</code>, and <code>ride-me</code>.
+      <p>
+        See also <a href="#follow">follow</a>, <a href="#subject">subject</a>, <a href="#reset-perspective">reset-perspective</a>,
+        <a href="#ride">ride</a>, <a href="#ride-me">ride-me</a>, <a href="#watch">watch</a>.
       </div>
     <div class="dict_entry" id="while">
       <h3>
@@ -8471,8 +8630,9 @@ show count patches with [pcolor = red]
         <img alt="Turtle Command" src="images/turtle.gif">
       </h4>
       <p>
-        Report the undirected link between <i>turtle</i> and the caller. If
-        no link exists then it reports nobody.
+        Reports a link between <i>turtle</i> and the caller (directed or
+        undirected, incoming or outgoing). If no link exists then it reports
+        nobody. If more than one such link exists, reports a random one.
       <pre>
 crt 2
 ask turtle 0 [
@@ -8745,32 +8905,31 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
       </div><!-- ======================================== -->
     </div>
     <h2>
-      <a>?</a>
+      <a>-&gt;</a>
     </h2><!-- ======================================== -->
     <div id="ops">
-    <div class="dict_entry" id="ques">
-      <h3>
-        <a>?</a>
-        <a>?1</a>
-        <a>?2</a>
-        <a>?3</a>
-      </h3>
-      <h4>
-        <span class="prim_example">?, ?1, ?2, ?3, ...</span>
-      </h4>
-      <p>
-        These special variable names refer to the inputs to a task, in
-        order by number.
-      <p>
-        <code>?</code> is always equivalent to <code>?1</code>.
-      <p>
-        You may not set these variables, and you may not use them except in
-        the context of a task.
-      <p>
-        Tasks are commonly used with the primitives <a href="#foreach">foreach</a>, <a href="#map">map</a>, <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#sort-by">sort-by</a>, and <a href="#n-values">n-values</a>. See
+      <div class="dict_entry" id="arrow">
+        <h3>
+          <a>-><span class="since">6.0</span></a>
+        </h3>
+        <h4>
+          <span class="prim_example">[ [<i>args</i>] -> <i>commands</i> ]</span>
+          <span class="prim_example">[ [<i>args</i>] -> <i>reporter</i> ]</span>
+        </h4>
+        <p>
+        Creates and reports an anonymous procedure - a command or reporter
+        - depending on the input. Within <i>commands</i> or <i>reporter</i> the listed
+        <i>args</i> may be used just as you would use <code>let</code> or procedure variables.
+        The variable names in <i>args</i> have the same restrictions
+        as variable names of commands and reporters. In addition, they must not match the name of
+        any let or procedure variable in their procedure.
+        <p>
+        Anonymous procedures are commonly used with the primitives
+        <a href="#foreach">foreach</a>, <a href="#map">map</a>, <a href="#reduce">reduce</a>,
+        <a href="#filter">filter</a>, <a href="#sort-by">sort-by</a>, and <a href="#n-values">n-values</a>. See
         those entries for example usage.
-      <p>
-        See the <a href="programming.html#tasks">Tasks section</a> of the
-        Programming Guide for more details.
+        <p>
+        See the <a href="programming.html#anonymous-procedures">Anonymous Procedures section</a> of the
+        Programming Guide for details.
       </div>
-
+    </div>

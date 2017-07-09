@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.window.GUIWorkspace
 

@@ -10,5 +10,5 @@ class _precision extends Reporter with Pure {
     newValidDouble(
       org.nlogo.api.Approximate.approximate(
         argEvalDoubleValue(context, 0),
-        argEvalIntValue(context, 1)))
+        argEvalIntValue(context, 1)), context)
 }

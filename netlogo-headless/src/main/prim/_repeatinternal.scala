@@ -17,7 +17,7 @@ class _repeatinternal (_offset: Int, let: Let) extends Command {
   }
 
   def perform_1(context: Context) {
-    val counter = context.getLet(let).asInstanceOf[MutableLong]
+    val counter = context.activation.binding.getLet(let).asInstanceOf[MutableLong]
     if (counter.value <= 0)
       context.ip = next
     else {

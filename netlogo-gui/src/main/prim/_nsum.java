@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
@@ -11,13 +12,16 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _nsum extends Reporter {
   public int vn;
 
-
+  public _nsum(int vn) {
+    super();
+    this.vn = vn;
+  }
 
   @Override
   public String toString() {
@@ -40,16 +44,16 @@ public final strictfp class _nsum extends Reporter {
       patch = (Patch) context.agent;
     }
     double sum = 0;
-    for (AgentSet.Iterator it = patch.getNeighbors().iterator(); it.hasNext();) {
+    for (AgentIterator it = patch.getNeighbors().iterator(); it.hasNext();) {
       Object value = ((Patch) it.next()).getPatchVariable(vn);
       if (!(value instanceof Double)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
                 Dump.logoObject(value).toString(), TypeNames.name(value)));
       }
 
       sum += ((Double) value).doubleValue();
     }
-    return validDouble(sum);
+    return validDouble(sum, context);
   }
 }

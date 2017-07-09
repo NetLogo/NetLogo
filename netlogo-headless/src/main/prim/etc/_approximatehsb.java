@@ -12,7 +12,7 @@ public final strictfp class _approximatehsb extends Reporter implements Pure {
     return validDouble(report_1(context,
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1),
-        argEvalDoubleValue(context, 2)));
+        argEvalDoubleValue(context, 2)), context);
   }
 
   public double report_1(Context context, double h, double s, double b) {

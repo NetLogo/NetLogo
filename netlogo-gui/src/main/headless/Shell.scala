@@ -5,7 +5,6 @@ package org.nlogo.headless
 import org.nlogo.api.Version
 import org.nlogo.core.{ CompilerException, Model }
 import java.io.{ BufferedReader, InputStreamReader }
-import org.nlogo.util.Utils.url2String
 
 object Shell {
 
@@ -41,7 +40,7 @@ object Shell {
         println("COMPILER ERROR: " + ex.getMessage)
         ex.printStackTrace()
       case ex: org.nlogo.nvm.EngineException =>
-        val msg = ex.context.buildRuntimeErrorMessage(ex.instruction, ex)
+        val msg = ex.runtimeErrorMessage
         println("RUNTIME ERROR: " + msg)
         ex.printStackTrace()
       case ex: org.nlogo.api.LogoException =>

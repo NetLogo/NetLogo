@@ -2,7 +2,7 @@
 //
 package org.nlogo.workspace
 
-import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive }
+import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import java.net.URL
 
 import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
@@ -13,9 +13,7 @@ import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.io.{ Closeable, IOException, PrintWriter }
 import java.util.{ List => JList }
 
-import org.nlogo.nvm.FileManager
-
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -76,15 +74,26 @@ object ExtensionManager {
     var classManager: ClassManager = null
     var loaded: Boolean = false
 
-    def load(instantiatedClassManager: ClassManager): Unit = {
+    def load(instantiatedClassManager: ClassManager, extensionManager: ExtensionManager): Unit = {
       loaded = true
       classManager = instantiatedClassManager
       classManager.load(primManager)
+      primManager.importedPrimitives.foreach {
+        case (name, p)  => extensionManager.cacheType(primName(name), p)
+      }
+    }
+
+    private def primName(name: String): String = {
+      if (primManager.autoImportPrimitives) name.toUpperCase
+      else s"${extensionName.toUpperCase}:${name.toUpperCase}"
     }
 
     def unload(extensionManager: ExtensionManager) = {
       loaded = false
       try {
+        primManager.importedPrimitives.foreach {
+          case (name, p) => extensionManager.removeCachedType(primName(name))
+        }
         classManager.unload(extensionManager)
       } catch {
         case ex: Exception => org.nlogo.api.Exceptions.ignore(ex)
@@ -110,14 +119,15 @@ import ExtensionManager._
 class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoader) extends NvmExtensionManager {
   import ExtensionManagerException._
 
-  private var loaders  = Seq[ExtensionLoader](loader)
-  private var jars     = Map[URL, JarContainer]()
-  private var liveJars = Set[JarContainer]()
+  private var loaders   = Seq[ExtensionLoader](loader)
+  private var jars      = Map[URL, JarContainer]()
+  private var liveJars  = Set[JarContainer]()
+  private var typeCache = Map[String, TokenType]()
 
   def anyExtensionsLoaded: Boolean = jars.nonEmpty
 
   def loadedExtensions: JIterable[ClassManager] =
-    asJavaIterable(jars.values.map(_.classManager))
+    jars.values.map(_.classManager).asJava
 
   private var obj: AnyRef = null
 
@@ -163,8 +173,11 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
         theJarContainer = Some(initializeJarContainer(myClassLoader, data))
       } else if (theJarContainer.isEmpty)
         theJarContainer = Some(initializeJarContainer(myClassLoader, data))
-      if (needsLoad)
-        theJarContainer.foreach(_.load(classManager))
+      if (needsLoad) {
+        theJarContainer.foreach { container =>
+          container.load(classManager, this)
+        }
+      }
       theJarContainer.foreach(liveJars += _)
     } catch {
       case ex @ (_: ExtensionManagerException | _: ExtensionException) =>
@@ -199,10 +212,11 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def readFromString(source: String): AnyRef =
     workspace.readFromString(source)
 
-  def clearAll(): Unit =
+  def clearAll(): Unit = {
     for (jar <- jars.values) {
       jar.classManager.clearAll
     }
+  }
 
   @throws(classOf[CompilerException])
   def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
@@ -228,8 +242,28 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     }
     jars.values.filter(liveJars.contains)
       .filter(isRelevantJar)
-      .map(_.primManager.getPrimitive(primName)).headOption.orNull
+      .flatMap(jar => Option(jar.primManager.getPrimitive(primName))).headOption.orNull
   }
+
+  private def cacheType(name: String, primitive: Primitive): Unit = {
+    primitive match {
+      case _: PrimitiveCommand  => typeCache += (name -> TokenType.Command)
+      case _: PrimitiveReporter => typeCache += (name -> TokenType.Reporter)
+      case _ =>
+    }
+  }
+
+  private def removeCachedType(name: String): Unit = {
+    typeCache -= name
+  }
+
+  def cachedType(name: String): Option[TokenType] = typeCache.get(name.toUpperCase)
+
+  def extensionCommandNames: Set[String] =
+    typeCache.filter(_._2 == TokenType.Command).map(_._1).toSet
+
+  def extensionReporterNames: Set[String] =
+    typeCache.filter(_._2 == TokenType.Reporter).map(_._1).toSet
 
   /**
    * Returns a String describing all the loaded extensions.
@@ -247,7 +281,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def dumpExtensionPrimitives: String = tabulate(
     Seq("EXTENSION", "PRIMITIVE", "TYPE"),
     { jarContainer =>
-      jarContainer.primManager.getPrimitiveNames.map { n =>
+      jarContainer.primManager.getPrimitiveNames.asScala.map { n =>
         val p = jarContainer.primManager.getPrimitive(n)
         Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
       }.toSeq

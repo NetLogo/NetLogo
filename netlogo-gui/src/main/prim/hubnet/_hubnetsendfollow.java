@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 
 public strictfp class _hubnetsendfollow
-    extends org.nlogo.nvm.Command {
+    extends HubNetCommand {
 
 
   @Override
@@ -21,9 +21,9 @@ public strictfp class _hubnetsendfollow
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
           public void run() {
-            workspace.getHubNetManager().get().sendAgentPerspective
+            hubNetManager().get().sendAgentPerspective
                 (client,
-                    PerspectiveJ.FOLLOW, agent.kind(), agent.id, radius, false);
+                    PerspectiveJ.FOLLOW, agent.kind(), agent.id(), radius, false);
           }
         });
     context.ip = next;

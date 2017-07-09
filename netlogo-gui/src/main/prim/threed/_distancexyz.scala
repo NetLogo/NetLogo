@@ -3,7 +3,6 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Protractor3D
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _distancexyz extends Reporter {
@@ -15,5 +14,5 @@ class _distancexyz extends Reporter {
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1),
         argEvalDoubleValue(context, 2),
-        true)) // wrap = true
+        true), context) // wrap = true
 }

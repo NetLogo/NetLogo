@@ -8,6 +8,7 @@ import org.scalatest.exceptions.TestFailedException
 import org.nlogo.api, api.AgentVariableNumbers
 import org.nlogo.core._
 import org.nlogo.mirror._, Mirroring._, Mirrorables._
+import org.nlogo.drawing.DrawingAction.{ ClearDrawing, DrawLine }
 
 class TestMirroring extends FixtureSuite {
 
@@ -175,6 +176,32 @@ class TestMirroring extends FixtureSuite {
     assertResult(Change(AgentVariableNumbers.VAR_LLABEL, "(link 0 1)")) {
       u5.changes(0)._2.head
     }
+  }
+
+  test("drawing events when turtle can move") { implicit fixture =>
+
+    import fixture.workspace
+
+    val drawingActionBuffer = new api.ActionBuffer(workspace.drawingActionBroker)
+    drawingActionBuffer.activate()
+
+    workspace.openModel(Model(widgets = List(View.square(5))))
+    workspace.command("random-seed 0 crt 1 [ set heading 0 pen-down fd 1 ]")
+    assertResult(drawingActionBuffer.grab())(Vector(ClearDrawing, DrawLine(0, 0, 0, 1, Int.box(25), 1, "down")))
+
+  }
+
+  test("no drawing events when turtle can't move") { implicit fixture =>
+
+    import fixture.workspace
+
+    val drawingActionBuffer = new api.ActionBuffer(workspace.drawingActionBroker)
+    drawingActionBuffer.activate()
+
+    workspace.openModel(Model(widgets = List(View(dimensions = WorldDimensions(0, 0, 0, 0, 12, false, false)))))
+    workspace.command("random-seed 0 crt 1 [ set heading 0 pen-down fd 1 ]")
+    assertResult(drawingActionBuffer.grab())(Vector(ClearDrawing))
+
   }
 
 }

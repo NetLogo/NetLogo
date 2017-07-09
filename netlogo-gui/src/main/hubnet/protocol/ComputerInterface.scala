@@ -4,7 +4,7 @@ package org.nlogo.hubnet.protocol
 
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ LogoList, NamedWidget, Shape, Chooser => CoreChooser,
-  Monitor => CoreMonitor, View => CoreView, Widget => CoreWidget }
+  Monitor => CoreMonitor, Plot => CorePlot, View => CoreView, Widget => CoreWidget }
 
 @SerialVersionUID(1)
 case class ComputerInterface(
@@ -24,6 +24,7 @@ case class ComputerInterface(
           c.display.getOrElse("")
         case m: CoreMonitor => m.display.getOrElse("")
         case w: NamedWidget => w.varName
+        case p: CorePlot    => p.display.getOrElse("")
         case w: CoreWidget  => w.getClass.getSimpleName.toUpperCase
       }.toList
 

@@ -12,7 +12,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public final strictfp class _atpoints
     LogoList points = argEvalList(context, 1);
     for (Object elt : points.toJava()) {
       if (!validateListEntry(elt)) {
-        throw new EngineException(context, this, I18N.errorsJ().getN(
+        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().getN(
             "org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
     }
@@ -116,13 +116,13 @@ public final strictfp class _atpoints
             y = (Double) it2.next();
             break;
           default:
-            throw new EngineException(context, this,
+            throw new RuntimePrimitiveException(context, this,
                 I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
         }
         j++;
       }
       if (x == null || y == null) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
       try {

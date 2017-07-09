@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _precision extends Reporter implements Pure {
@@ -16,6 +16,6 @@ public final strictfp class _precision extends Reporter implements Pure {
     double d = argEvalDoubleValue(context, 0);
     int numberOfPlaces = argEvalIntValue(context, 1);
     return validDouble(org.nlogo.api.Approximate.approximate
-        (d, numberOfPlaces));
+        (d, numberOfPlaces), context);
   }
 }

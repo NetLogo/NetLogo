@@ -16,6 +16,6 @@ public final strictfp class _randomfloat extends Reporter {
   }
 
   public double report_1(Context context, double d) throws LogoException {
-    return validDouble(d * context.job.random.nextDouble());
+    return validDouble(d * context.job.random.nextDouble(), context);
   }
 }

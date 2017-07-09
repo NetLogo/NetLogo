@@ -19,10 +19,160 @@ to go
 ++]
 end
 
+IfMultiBracket1
+to foo
+  let abc 0
+  if true
+  [
+    set abc
+    [
+      1 2 3
+    ]
+  ]
+end
+
+IfMultiBracket2
+to foo
+  let abc 0
+  if true [
+    set abc
+    [
+      1 2 3
+    ]
+  ]
+end
+
+IfMultiBracket3
+to foo
+  let abc 0
+  if true [
+    set abc [
+      1 2 3
+    ]
+  ]
+end
+
+IfMultiBracket4
+to foo
+  let abc 0
+  if true [
+    set abc [
+      1 2 3
+  ] ]
+end
+
+IfElseMultiBracket1
+to foo
+  let abc 0
+  ifelse true [
+    set abc [
+      1 2 3
+    ]
+  ] [
+    set abc [
+      4 5 6
+    ]
+  ]
+end
+
+IfElseMultiBracket2
+to foo
+  let abc 0
+  ifelse true [
+    set abc [1 2 3]
+  ] [
+    set abc [4 5 6]
+  ]
+end
+
+IfElseMultiBracket3
+to foo
+  let abc 0
+  ifelse true [ set abc [
+    1 2 3
+  ] ] [ set abc [
+    4 5 6
+  ] ]
+end
+
+IfElseMultiBracket4
+to foo
+  let abc 0
+  ifelse true [
+    set abc [
+      1 2 3
+--  ] ] [
+    set abc [
+      4 5 6
+  ] ]
+end
+
+IfElseMultiBracket5
+to foo
+  let abc 0
+  ifelse true [ set abc [
+    1 2 3 ]
+  ] [
+++  set abc [4 5 6]
+  ]
+end
+
+# I'm not certain this should be normative
+# This behavior wasn't specified prior to 6.0.1 and could probably change
+IfElseMultiBracket6
+to foo
+  let abc 0
+  ifelse true [ set abc
+    [
+      1 2 3
+----  ] ] [
+    set abc [4 5 6]
+  ]
+end
+
 IfPreindented
 to go
   if true
     [show 1]
+end
+
+IfPreindentedWithPriorLineMessedUp
+to go
+-  if true
+-    [show 1]
+end
+
+IfPreindentedMessedUpWithBlock
+to go
+-  if true
+-    [
+-      rt 90
+-      fd 1 ]
+end
+
+TopLineComment
+; comment at top
+; and second line
+to foo end
+
+FunctionAfterGlobals
+globals [
+++abc
+]
+to foo [def]
+-  do-something
+end
+
+## This behavior wasn't specified prior to 6.0.1 and could probably be changed
+WeirdLists
+to initialise-globals [globals-not-to-be-initialised]
++ if not member? "foo" globals-not-to-be-initialised
++ [set the-army-camps [["bar" [["bar a" 42.30 -89.09 50000 500]
+--    ["bar b" 45.17 -122.56 40000 400]]]
++++ ["baz"
+      [["baz a" 47.4 1.63 2000000 100000]]]
+++++]
+++]
 end
 
 IfElseOneLine
@@ -39,6 +189,15 @@ to go
 ++++show 1
 ++]
 ++[
+++++show 2
+++]
+end
+
+IfElseMultiLineCompact
+to go
+++ifelse true [
+++++show 1
+++] [
 ++++show 2
 ++]
 end
@@ -63,6 +222,25 @@ let my-list
 ++[0 2]
 ]
 
+MultiLineVariadicCommand
+(foreach
+++list1
+++list2
+++[ [x y] ->
+++++foo x y
+++]
+)
+
+AnonymousProcedure
+let func [ [x] ->
+++x + 1
+]
+
+AnonymousProcedureComment
+let func [ [x] -> ;; this does stuff
+++x + 1
+]
+
 Comments1
 ask turtles [ fd 1 ] ;; I am a comment
 +++++++++++++++++++++;;me too
@@ -73,15 +251,22 @@ to foo ; comment
 + ask turtles [ fd 1 ]
 end
 
+Comments3
+--to foo ; comment
++++++++; comment
++ ask turtles [ fd 1 ]
+end
+
 EndKeywordShouldCloseAllOpeners
 to foo
 ++ask [ [ [ [
 end
 to bar
 
-MultiLineLiteralList1
-let triangle [[75]
-  [95 64] [17 47 82]]
+WayIndentedComment
+ask turtles [ ;; This does crazy stuff!
+++fd 10       ;; Forward 10! Wow!
+]
 
 Hatch1
 if true
@@ -108,24 +293,11 @@ if true
 #    <-- line with only some spaces on it
 #++foo
 
-#IfElseYetAnotherStyle
-#to bar
-#++ifelse foo [
-#++++x
-#++] [
-#++++y
-#++]
-#end
 
 #MultiLineCommand
 #let digit-sum carry +
 #++read-from-string item ? n1 +
 #++read-from-string item ? n2
-
-#WayIndentedCommands
-#ask turtles [ fd 1
-#++++++++++++++fd 10
-#]
 
 #CommentLinesOneStandaloneOneNot
 #to eat-grass  ;; sheep procedure
@@ -133,13 +305,23 @@ if true
 
 #
 # These are even more ambitious.
-#
+# Fixing these requires lots of special casing with anonymous procedures and non-bracket openers
 
-#MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#WayIndentedCommands
+#ask turtles [ fd 1
+#++++++++++++++fd 10
+#]
+
+#ArgIndentMatchingMultilineStatment -- is this ideal?
+#let foo (list 1
+#++++++++++++++2
+#++++++++++++++3)
+
+#MultiLineLiteralList1 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let triangle [[75]
 #              [95 64] [17 47 82]]
 
-#MultiLineLiteralList3 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
 #let x [[1 2 [3 31 32
 #             4 5]
 #        6]

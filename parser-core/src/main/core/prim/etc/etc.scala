@@ -19,6 +19,17 @@ case class _acos() extends Reporter with Pure {
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
 }
+case class _apply() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(Syntax.CommandType, Syntax.ListType))
+}
+case class _applyresult() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.ReporterType, Syntax.ListType),
+      ret = Syntax.WildcardType)
+}
 case class _asin() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
@@ -318,7 +329,7 @@ case class _filewrite() extends Command {
 case class _filter() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.ListType),
       ret = Syntax.ListType)
 }
 case class _floor() extends Reporter with Pure {
@@ -337,12 +348,12 @@ case class _foreach() extends Command {
     Syntax.commandSyntax(
       right = List(
         Syntax.RepeatableType | Syntax.ListType,
-        Syntax.CommandTaskType),
+        Syntax.CommandType),
       defaultOption = Some(2))
 }
 case class _foreverbuttonend() extends Command {
   override def syntax =
-    Syntax.commandSyntax()
+    Syntax.commandSyntax(canBeConcise = false)
 }
 case class _fput() extends Reporter with Pure {
   override def syntax =
@@ -398,6 +409,12 @@ case class _importpatchcolors() extends Command {
       right = List(Syntax.StringType),
       agentClassString = "O---")
 }
+case class _insertitem() extends Reporter with Pure {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.ListType | Syntax.StringType, Syntax.WildcardType),
+      ret = Syntax.ListType | Syntax.StringType)
+}
 case class _inspect() extends Command {
   override def syntax =
     Syntax.commandSyntax(
@@ -427,7 +444,7 @@ case class _isboolean() extends Reporter with Pure {
       right = List(Syntax.WildcardType),
       ret = Syntax.BooleanType)
 }
-case class _iscommandtask() extends Reporter with Pure {
+case class _isanonymouscommand() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(Syntax.WildcardType),
@@ -475,7 +492,7 @@ case class _ispatchset() extends Reporter with Pure {
       right = List(Syntax.WildcardType),
       ret = Syntax.BooleanType)
 }
-case class _isreportertask() extends Reporter with Pure {
+case class _isanonymousreporter() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(Syntax.WildcardType),
@@ -520,7 +537,8 @@ case class _link() extends Reporter {
 case class _linkcode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "---L")
+      agentClassString = "---L",
+      canBeConcise = false)
 }
 case class _linklength() extends Reporter {
   override def syntax =
@@ -552,7 +570,7 @@ case class _lput() extends Reporter with Pure {
 case class _map() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.RepeatableType | Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.RepeatableType | Syntax.ListType),
       ret = Syntax.ListType,
       defaultOption = Some(2))
 }
@@ -656,13 +674,14 @@ case class _noturtles() extends Reporter {
 case class _nvalues() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.NumberType, Syntax.ReporterTaskType),
+      right = List(Syntax.NumberType, Syntax.ReporterType),
       ret = Syntax.ListType)
 }
 case class _observercode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "O---")
+      agentClassString = "O---",
+      canBeConcise = false)
 }
 case class _patch() extends Reporter {
   override def syntax =
@@ -673,7 +692,8 @@ case class _patch() extends Reporter {
 case class _patchcode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "--P-")
+      agentClassString = "--P-",
+      canBeConcise = false)
 }
 case class _patchhere() extends Reporter {
   override def syntax =
@@ -801,6 +821,14 @@ case class _randomycor() extends Reporter {
     Syntax.reporterSyntax(
       ret = Syntax.NumberType)
 }
+case class _range() extends Reporter with Pure {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType | Syntax.RepeatableType),
+      defaultOption = Option(1),
+      minimumOption = Option(1),
+      ret = Syntax.ListType)
+}
 case class _readfromstring() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
@@ -810,8 +838,14 @@ case class _readfromstring() extends Reporter {
 case class _reduce() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType),
+      right = List(Syntax.ReporterType, Syntax.ListType),
       ret = Syntax.WildcardType)
+}
+case class _reference() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.ReferenceType),
+      ret = Syntax.ListType)
 }
 case class _reloadextensions() extends Command {
   override def syntax =
@@ -853,7 +887,7 @@ case class _runresult() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(
-        Syntax.StringType | Syntax.ReporterTaskType,
+        Syntax.StringType | Syntax.ReporterType,
         Syntax.RepeatableType | Syntax.WildcardType),
       ret = Syntax.WildcardType,
       defaultOption = Some(1))
@@ -908,7 +942,7 @@ case class _sin() extends Reporter with Pure {
 case class _sortby() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.ReporterTaskType, Syntax.ListType | Syntax.AgentsetType),
+      right = List(Syntax.ReporterType, Syntax.ListType | Syntax.AgentsetType),
       ret = Syntax.ListType,
       blockAgentClassString = Option("?"))
 }
@@ -1010,7 +1044,8 @@ case class _tostring() extends Reporter with Pure {
 case class _turtlecode() extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      agentClassString = "-T--")
+      agentClassString = "-T--",
+      canBeConcise = false)
 }
 case class _untie() extends Command {
   override def syntax =

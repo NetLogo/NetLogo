@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _scalecolor extends Reporter implements Pure {
@@ -53,6 +53,6 @@ public final strictfp class _scalecolor extends Reporter implements Pure {
     } else if (perc < 0) {
       perc = 0;
     }
-    return validDouble(color + perc);
+    return validDouble(color + perc, context);
   }
 }

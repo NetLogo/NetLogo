@@ -3,8 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.{ Observer3D, Turtle3D }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _setxyz extends Command {
   switches = true
@@ -33,7 +32,7 @@ class _setxyz extends Command {
         }
         catch {
           case _: org.nlogo.api.AgentException =>
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, this,
               "The point [ "
               + newx.doubleValue + " , "

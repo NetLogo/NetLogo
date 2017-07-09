@@ -5,8 +5,7 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, ModelLoader, Workspace }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.api.{ LabProtocol, Workspace }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.fileformat
 import scala.util.{ Failure, Success }

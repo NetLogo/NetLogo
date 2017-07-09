@@ -2,31 +2,24 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
-import org.nlogo.api.{ CommandRunnable, Dump}
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.api.{ CommandRunnable, Dump }
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
-class _hubnetsendoverride extends Command {
-
-
-
+class _hubnetsendoverride extends Command with HubNetPrim {
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)
 
     val set = target match {
-      case a: Agent =>
-        val aas = new ArrayAgentSet(a.kind, 1, false)
-        aas.add(a)
-        aas
+      case a: Agent => AgentSet.fromAgent(a)
       case as: AgentSet => as
       case _ => throw new IllegalStateException("cant happen...")
     }
 
-    if(!workspace.getHubNetManager.get.isOverridable(set.kind, varName))
-      throw new EngineException(context, this,
+    if(!hubNetManager.get.isOverridable(set.kind, varName))
+      throw new RuntimePrimitiveException(context, this,
         "you cannot override " + varName)
 
     val freshContext = new Context(context, set)
@@ -49,7 +42,7 @@ class _hubnetsendoverride extends Command {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      def run() { workspace.getHubNetManager.foreach(
+      def run() { hubNetManager.foreach(
       _.sendOverrideList(client, set.kind, varName, overrides.toMap)) }
     })
     context.ip = next

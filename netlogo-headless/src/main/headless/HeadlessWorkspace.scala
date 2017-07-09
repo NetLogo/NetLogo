@@ -8,16 +8,17 @@ package org.nlogo.headless
 
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
-    agent.{ Agent, World },
+    agent.{ Agent, World, World2D },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
-    core.{ model, AgentKind, CompilerException, CompilerUtilitiesInterface, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
-      model.ModelReader,
+    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
 
 import java.nio.file.Paths
+
+import scala.io.Codec
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -34,7 +35,7 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
-    val world = new World
+    val world = new World2D
     Femto.get(subclass, world,
       Femto.scalaSingleton[CompilerInterface](
         "org.nlogo.compile.Compiler"),
@@ -42,15 +43,7 @@ object HeadlessWorkspace {
         "org.nlogo.render.Renderer", world))
   }
 
-  def newLab: LabInterface = {
-    val utilities: CompilerUtilitiesInterface =
-      Femto.scalaSingleton("org.nlogo.parse.CompilerUtilities")
-    // kludgy, use AnyRef here because ProtocolLoader doesn't implement an interface - ST 4/25/13
-    val protocolLoader: AnyRef =
-      Femto.get("org.nlogo.lab.ProtocolLoader", utilities)
-    Femto.get("org.nlogo.lab.Lab", protocolLoader)
-  }
-
+  def newLab: LabInterface = Femto.get("org.nlogo.lab.Lab")
 }
 
 /**
@@ -78,7 +71,7 @@ class HeadlessWorkspace(
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 
-  override def parser = compiler.utilities
+  def parser = compiler.utilities
 
   def isHeadless = true
 
@@ -190,7 +183,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
     if (!compilerTestingMode)
       world.clearTurtles()
   }
-  override def inspectAgent(agent: Agent, radius: Double) {
+  def inspectAgent(agent: Agent, radius: Double) {
     if (!silent)
       println(agent)
   }
@@ -324,7 +317,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(context: Context, force: Boolean) { }
+  override def requestDisplayUpdate(force: Boolean) { }
 
   /**
    * Internal use only.
@@ -376,7 +369,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   @throws(classOf[java.io.IOException])
   override def open(path: String) {
     setModelPath(path)
-    val modelContents = FileIO.file2String(path)
+    val modelContents = FileIO.fileToString(path)(Codec.UTF8)
     try loader.readModel(Paths.get(path).toUri).foreach(openModel)
     catch {
       case ex: CompilerException =>

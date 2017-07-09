@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.api.{ Agent, AgentFollowingPerspective, Perspective }
+import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
 import java.awt.event.{ ActionEvent, ActionListener }
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
@@ -60,7 +60,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
                                     I18N.gui.get("common.buttons.cancel"))
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
         if (!isWindows || view.viewManager.warned ||
-          (0 == org.nlogo.swing.OptionDialog.show(
+          (0 == org.nlogo.swing.OptionDialog.showMessage(
             view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options))) {
           view.viewManager.setFullscreen(true)
           view.viewManager.warned = true

@@ -6,32 +6,35 @@ import java.awt.{ Font, Dimension, BorderLayout, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
+import java.nio.file.Path
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon,
   JEditorPane, JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
-import org.nlogo.api.{ VersionHistory, ModelSection }
-import org.nlogo.app.common.FindDialog
+import org.nlogo.app.common.{ FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, RichJButton }
+  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher },
+  BrowserLauncher.docPath
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
-class InfoTab(attachModelDir: String => String) extends JPanel with
-        DocumentListener with Printable with HyperlinkListener with
-        WindowEvents.LoadModelEvent.Handler with
-        WindowEvents.ZoomedEvent.Handler with
-        Zoomable {
+class InfoTab(attachModelDir: String => String)
+  extends JPanel
+  with DocumentListener
+  with MenuTab
+  with Printable
+  with HyperlinkListener
+  with UndoRedoActions
+  with WindowEvents.LoadModelEvent.Handler
+  with WindowEvents.ZoomedEvent.Handler
+  with Zoomable {
 
-  val baseDocUrl: String = {
-    val docRoot = System.getProperty("netlogo.docs.dir", "docs")
-    docRoot + "/infotab.html"
-  }
+  val baseDocPath: Path = docPath("infotab.html")
 
   private val undoManager = new UndoManager
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
@@ -64,7 +67,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
   }
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
-    BrowserLauncher.openURL(this, baseDocUrl, "#information", true))
+    BrowserLauncher.openPath(this, baseDocPath, "information"))
   helpButton.setIcon(new ImageIcon(classOf[FindDialog].getResource("/images/questionmark.gif")))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
@@ -90,6 +93,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
       }
     }, BorderLayout.NORTH)
     add(scrollPane,BorderLayout.CENTER)
+    activeMenuActions = Seq(undoAction, redoAction)
   }
 
   private def resetBorders() {
@@ -169,11 +173,11 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
           """The URL you just clicked is invalid. This could
             |mean that it is formatted incorrectly. Click Help
             |to see documentation on using URLs in the Info Tab.""".stripMargin
-        val selection = OptionDialog.show(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
+        val selection = OptionDialog.showMessage(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
           Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")))
-        if(selection == 1 /*Help*/) BrowserLauncher.openURL(this, baseDocUrl, "#infotabLinks", true)
+        if(selection == 1 /*Help*/) BrowserLauncher.openPath(this, baseDocPath, "links")
       }
-      else BrowserLauncher.openURL(this, e.getURL.toString, false)
+      else BrowserLauncher.openURI(this, e.getURL.toURI)
     }
   }
 
@@ -181,7 +185,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
   def changedUpdate(e: DocumentEvent) { changed() }
   def insertUpdate(e: DocumentEvent) { changed() }
   def removeUpdate(e: DocumentEvent) { changed() }
-  private def changed() { new org.nlogo.window.Events.DirtyEvent().raise(this) }
+  private def changed() { new org.nlogo.window.Events.DirtyEvent(None).raise(this) }
 
   /// Printing
   def print(g: Graphics, pageFormat: PageFormat, pageIndex: Int, printer: PrinterManager) = {

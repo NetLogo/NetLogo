@@ -138,29 +138,29 @@ trait Argument {
   def getLink: Link
 
   /**
-   * Returns the argument as a <code>org.nlogo.api.ReporterTask</code>.
+   * Returns the argument as a [[org.nlogo.api.AnonymousReporter]].
    *
-   * @throws api.ExtensionException if the argument is not a <code>ReporterTask</code>
+   * @throws api.ExtensionException if the argument is not an <code>AnonymousReporter</code>
    * @throws api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
-  def getReporterTask: ReporterTask
+  def getReporter: AnonymousReporter
 
   /**
-   * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
+   * Returns the argument as a [[org.nlogo.api.AnonymousCommand]].
    *
-   * @throws api.ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws api.ExtensionException if the argument is not an <code>AnonymousCommand</code>
    * @throws api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
-  def getCommandTask: CommandTask
+  def getCommand: AnonymousCommand
 
   /**
-   * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
+   * Returns the argument as a <code>java.utilList[Token]</code>.
    *
-   * @throws api.ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws api.ExtensionException if the argument is not a valid block of tokens
    * @throws api.LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])

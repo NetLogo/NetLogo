@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ DummyExtensionManager, ModelType, NetLogoLegacyDialect }
+import org.nlogo.api.{ ModelType, NetLogoLegacyDialect }
 import org.nlogo.core.Femto
 import org.scalatest.FunSuite
 
@@ -10,7 +10,7 @@ class ModelTrackerTest extends FunSuite {
   class Subject(modelType: ModelType, modelName: String) extends ModelTracker {
     _modelFileName = modelName
     setModelType(modelType)
-    def compiler = Femto.get("org.nlogo.compiler.Compiler", NetLogoLegacyDialect)
+    def compiler = Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
     def getExtensionManager = null
   }
 

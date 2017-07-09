@@ -12,7 +12,7 @@ import
   org.nlogo.{ agent, core, nvm },
     agent.{ Agent, AgentSet },
     core.{ AgentKind, I18N },
-    nvm.{ Context, EngineException, Instruction, Reporter }
+    nvm.{ Context, RuntimePrimitiveException, Instruction, Reporter }
 
 // These classes are purposely written to delegate, rather than inherit, for the sake of performance --JAB (6/20/14)
 
@@ -43,10 +43,10 @@ private object InRadiusOps {
     val radius    = instr.argEvalDoubleValue(context, 1)
 
     if (sourceSet.kind == AgentKind.Link)
-      throw new EngineException(context, instr, I18N.errorsJ.get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"))
+      throw new RuntimePrimitiveException(context, instr, I18N.errorsJ.get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"))
 
     if (radius < 0)
-      throw new EngineException(context, instr, I18N.errorsJ.getN("org.nlogo.prim.etc.$common.noNegativeRadius", instr.displayName))
+      throw new RuntimePrimitiveException(context, instr, I18N.errorsJ.getN("org.nlogo.prim.etc.$common.noNegativeRadius", instr.displayName))
 
     val result = findAgentsInRadius(context.agent, sourceSet, radius, true)
     AgentSet.fromArray(sourceSet.kind, result.toArray(new Array[Agent](result.size)))

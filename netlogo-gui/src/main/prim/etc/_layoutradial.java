@@ -10,7 +10,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _layoutradial
     extends Command {
@@ -29,7 +29,7 @@ public final strictfp class _layoutradial
     try {
       org.nlogo.agent.Layouts.radial(world, nodeset, linkset, root);
     } catch (org.nlogo.api.AgentException e) {
-      throw new EngineException(context, this, e.getMessage());
+      throw new RuntimePrimitiveException(context, this, e.getMessage());
     }
     context.ip = next;
   }

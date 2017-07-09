@@ -24,7 +24,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public boolean isDead() {
-    return (agent != null && agent.id == -1);
+    return (agent != null && agent.id() == -1);
   }
 
   private Agent agent;
@@ -157,6 +157,10 @@ public strictfp class AgentMonitorView
           }
         }
       };
+
+  public void close() {
+    workspace.viewManager().remove(this);
+  }
 
   private void doPopup(java.awt.event.MouseEvent e) {
     javax.swing.JPopupMenu menu = new org.nlogo.swing.WrappingPopupMenu();

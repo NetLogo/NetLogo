@@ -2,17 +2,17 @@
 
 package org.nlogo.parse
 
-import scala.collection.immutable.HashMap
+import org.nlogo.core.{ Fail, Let, Token }, Fail.exception
 
 sealed trait SymbolType
 
 object SymbolType {
-  type SymbolTable = HashMap[String, SymbolType]
   trait Variable
   case object PrimitiveCommand extends SymbolType
   case object PrimitiveReporter extends SymbolType
   case object GlobalVariable extends SymbolType with Variable
-  case object LocalVariable extends SymbolType with Variable
+  case class LocalVariable(let: Let) extends SymbolType with Variable
+  case object LambdaVariable extends SymbolType with Variable
   case object TurtleBreed extends SymbolType
   case object TurtleBreedSingular extends SymbolType
   case object LinkBreed extends SymbolType
@@ -23,6 +23,7 @@ object SymbolType {
   case object BreedCommand extends SymbolType
   case object BreedReporter extends SymbolType
   case object ProcedureSymbol extends SymbolType
+  case object ProcedureVariable extends SymbolType with Variable
   case class BreedVariable(breedName: String) extends SymbolType with Variable
   case class LinkBreedVariable(breedName: String) extends SymbolType with Variable
 
@@ -43,14 +44,10 @@ object SymbolType {
       case PrimitiveReporter    => "primitive reporter"
       case BreedCommand         => "breed command"
       case BreedReporter        => "breed reporter"
-      case LocalVariable        => "local variable here"
+      case LocalVariable(_)     => "local variable here"
+      case LambdaVariable       => "local variable here"
+      case ProcedureVariable    => "local variable here"
     }
-
-  implicit class RichHashMap(l: HashMap[String, SymbolType]) {
-    def addSymbols(symbols: Iterable[String], tpe: SymbolType): SymbolTable = {
-      l ++ symbols.map(_.toUpperCase -> tpe).toMap
-    }
-  }
 
   implicit object SymbolTypeOrdering extends Ordering[SymbolType] {
     // defines which symbols should be authoritative in saying "there is already an..."
@@ -69,7 +66,9 @@ object SymbolType {
         case BreedVariable(n)     => 7
         case LinkBreedVariable(n) => 7
         case ProcedureSymbol      => 9
-        case LocalVariable        => 10
+        case LocalVariable(_)     => 10
+        case LambdaVariable       => 10
+        case ProcedureVariable    => 10
       }
 
     override def compare(s1: SymbolType, s2: SymbolType): Int = {
@@ -80,5 +79,7 @@ object SymbolType {
     }
   }
 
-  def emptySymbolTable = new HashMap[String, SymbolType]()
+  def alreadyDefinedException(symType: SymbolType, t: Token): Nothing = {
+    exception("There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase, t)
+  }
 }

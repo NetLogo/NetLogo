@@ -18,9 +18,9 @@ import
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
     JobOwner, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
-  core.{ CompilationEnvironment, CompilerUtilitiesInterface, Dialect, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
-  nvm.{ Activation, Command, Context, EngineException, FileManager, ImportHandler,
-    Instruction, Job, MutableLong, Procedure, Workspace },
+  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
+  nvm.{ Activation, Command, Context, FileManager, ImportHandler,
+    Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
   plot.{ PlotExporter, PlotManager }
 
@@ -65,10 +65,7 @@ extends api.LogoThunkFactory with LiteralParser
 with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
 with Compiling with Profiling with Extensions with BehaviorSpace with Paths with Checksums
 with RunCache with Jobs with Warning with OutputArea with Importing
-with ExtendableWorkspace with ExtensionCompilationEnvironment {
-
-  world.parser_=(this)
-
+with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
 
   /**
@@ -89,18 +86,18 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
   // JC 5/19/10
   def tick(context: Context, originalInstruction: Instruction) {
     if(world.tickCounter.ticks == -1)
-      throw new EngineException(context, originalInstruction,
+      throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)
-    requestDisplayUpdate(context, true)
+    requestDisplayUpdate(true)
   }
 
   def resetTicks(context: Context) {
     world.tickCounter.reset()
     setupPlots(context)
     updatePlots(context)
-    requestDisplayUpdate(context, true)
+    requestDisplayUpdate(true)
   }
 
   def clearTicks() {
@@ -121,7 +118,6 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment {
   }
 
   override def getCompilationEnvironment = {
-    import java.io.{ File => JFile }
     import java.net.MalformedURLException
 
     new org.nlogo.core.CompilationEnvironment {
@@ -168,7 +164,7 @@ object AbstractWorkspaceTraits {
     // beware! this should be used everywhere the workspace invokes the compiler, but I doubt that's
     // been achieved. for now, we're only sure that it is used in enough places for the Tortoise
     // docking tests to pass. - ST 10/24/13
-    var flags = nvm.CompilerFlags()
+    var flags = nvm.CompilerFlags(optimizations = nvm.Optimizations.headlessOptimizations)
 
     override def readNumberFromString(source: String) =
       compiler.utilities.readNumberFromString(
@@ -703,5 +699,17 @@ object AbstractWorkspaceTraits {
         }
       }
     }
+  }
+
+  trait APIConformant {
+    var _behaviorSpaceExperimentName: String = ""
+    def behaviorSpaceExperimentName(name: String): Unit = {
+      _behaviorSpaceExperimentName = name
+    }
+    def behaviorSpaceExperimentName: String = _behaviorSpaceExperimentName
+    def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A] = None
+    def inspectAgent(agent: org.nlogo.api.Agent,radius: Double): Unit = { }
+    def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
+    def stopInspectingDeadAgents(): Unit = { }
   }
 }

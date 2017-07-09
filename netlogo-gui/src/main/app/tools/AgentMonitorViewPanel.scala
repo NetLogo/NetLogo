@@ -17,7 +17,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
   val view = new AgentMonitorView(workspace)
   setLayout(new BorderLayout)
   add(view, BorderLayout.CENTER)
-  view.setSize(workspace.world.worldWidth(), workspace.world.worldHeight(), 255 / workspace.world.worldWidth())
+  view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255 / workspace.world.worldWidth)
   view.applyNewFontSize(workspace.view.fontSize, 0)
   private val watchButton = new JButton(new WatchMeAction)
   watchButton.setFont(new Font(Fonts.platformFont, Font.PLAIN, 10))
@@ -50,16 +50,36 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
     zoomer.setValue(StrictMath.round(radius * 100).toInt)
   }
 
+  override def setEnabled(enablement: Boolean): Unit = {
+    val wasEnabled = isEnabled
+    super.setEnabled(enablement)
+    if (! enablement && wasEnabled) {
+      val grayPanel = new JPanel()
+      grayPanel.setPreferredSize(view.getPreferredSize)
+      remove(view)
+      add(grayPanel, BorderLayout.CENTER)
+    }
+  }
+
+  def refresh(): Unit = {
+    repaint()
+    revalidate()
+  }
+
+  def close(): Unit = {
+    view.close()
+  }
+
   private class WatchMeAction extends AbstractAction("watch-me") {
     override def actionPerformed(e: ActionEvent) {
-      workspace.world.observer().setPerspective(Perspective.Watch(view.agent))
+      workspace.world.observer.setPerspective(Perspective.Watch(view.agent))
       workspace.view.discardOffscreenImage()
       workspace.viewManager.getPrimary.incrementalUpdateFromEventThread()
     }
   }
 
   private class ZoomSlider(view: AgentMonitorView)
-  extends javax.swing.JSlider(0, ((workspace.world.worldWidth() - 1) / 2) * 100, (view.radius() * 100).toInt)
+  extends javax.swing.JSlider(0, ((workspace.world.worldWidth - 1) / 2) * 100, (view.radius() * 100).toInt)
   with MouseWheelListener
   {
     addMouseWheelListener(this)

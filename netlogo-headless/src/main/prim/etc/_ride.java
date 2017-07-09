@@ -6,7 +6,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _ride
     extends Command {
@@ -19,7 +19,7 @@ public final strictfp class _ride
   public void perform(final org.nlogo.nvm.Context context) {
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id() == -1) {
-      throw new EngineException(context, this,
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
     world.observer().setPerspective(PerspectiveJ.create(PerspectiveJ.RIDE, turtle));

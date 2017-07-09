@@ -2,17 +2,11 @@
 
 package org.nlogo.lex
 
-import java.io.{Reader => JReader, BufferedReader}
-
 import org.nlogo.core.{ NumberParser, StringEscaper, Token, TokenType }
-import TokenLexer.WrappedInput
 import LexOperations._
-
-import scala.annotation.tailrec
 
 class TokenLexer {
   import LexOperations.PrefixConversions._
-  import TokenLexer._
   import Charset.validIdentifierChar
 
   private val punctuation = Map(
@@ -25,11 +19,12 @@ class TokenLexer {
     "]" -> TokenType.CloseBracket
   )
 
+  def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
+    Seq(extensionLiteral, punct, comment, numericLiteral, string, ident, illegalCharacter)
+
   def apply(input: WrappedInput): (Token, WrappedInput) = {
-    val (wsCount, remainder) = fastForwardWhitespace(input)
     if (input.hasNext) {
-      val r = Seq(extensionLiteral, punct, comment, numericLiteral, string, ident, illegalCharacter)
-        .foldLeft((Option.empty[Token], input)) {
+      val r = lexerOrdering.foldLeft((Option.empty[Token], input)) {
         case ((Some(token), remaining), (prefixDetector, tokenizer)) => (Some(token), remaining)
         case ((None,        remaining), (prefixDetector, tokenizer)) =>
           remaining.assembleToken(prefixDetector, tokenizer)
@@ -63,7 +58,7 @@ class TokenLexer {
       case _                             => ((None, 0), Error)
     }
 
-    def apply(c: Char): DetectorStates =
+    def apply(c: Char): LexStates =
       detectEnd(c)
   }
 
@@ -77,14 +72,15 @@ class TokenLexer {
       p => punctuation.get(p).map(tpe => (p, tpe, null)))
 
   def string: (LexPredicate, TokenGenerator) =
-    (chain('"', stringLexer, '"') , tokenizeString)
+    (chain('"', stringLexer, '"'), tokenizeString)
 
   def stringLexer: LexPredicate =
     withFeedback[Option[Char]](Some('"')) {
-      case (Some('\\'), '"') => (Some('"'), Accept)
-      case (Some('\\'), '\\') => (None, Accept)
-      case (_, '"') => (Some('"'), Finished)
-      case (_, c) => (Some(c), Accept)
+      case (Some('\\'), '"')  => (Some('"'), Accept)
+      case (Some('\\'), '\\') => (None,      Accept)
+      case (_, '"')           => (Some('"'), Finished)
+      case (_, '\n')          => (None,      Error)
+      case (_, c)             => (Some(c),   Accept)
     }
 
   def comment: (LexPredicate, TokenGenerator) =
@@ -142,7 +138,7 @@ class TokenLexer {
       case _ => false
     }
     try {
-      if (stringText.last != '"' || lastCharEscaped)
+      if (stringText.length == 1 || stringText.last != '"' || lastCharEscaped)
         Some((s"""$stringText""", TokenType.Bad, "Closing double quote is missing"))
       else {
         val unescapedText = StringEscaper.unescapeString(stringText.drop(1).dropRight(1))
@@ -152,105 +148,18 @@ class TokenLexer {
       case ex: IllegalArgumentException => Some(( s"""$stringText""", TokenType.Bad, "Illegal character after backslash"))
     }
   }
+}
 
-  def wrapInput(reader: JReader, filename: String): WrappedInput =
-    reader match {
-      case br: BufferedReader => new BufferedInputWrapper(br, 0, filename)
-      case r => new BufferedInputWrapper(reader, 0, filename)
-    }
-
-  class AutoGrowingBufferedReader(reader: BufferedReader) {
-    private var markSize: Int = 65536
-    private var remainingMark: Int = 0
-
-    def mark(): Unit = {
-      reader.mark(markSize)
-      remainingMark = markSize
-    }
-
-    def reset(): Unit = {
-      reader.reset()
-      remainingMark = markSize
-    }
-
-    def skip(l: Long): Unit = {
-      reader.skip(l)
-      remainingMark -= l.toInt
-    }
-
-    def read(): Int = {
-      if (remainingMark == 0) {
-        reader.reset()
-        reader.mark(markSize * 2)
-        reader.skip(markSize)
-        remainingMark = markSize
-        markSize = markSize * 2
-      }
-      val i = reader.read()
-      remainingMark -= 1
-      i
-    }
-  }
-
-  class BufferedInputWrapper(buffReader: AutoGrowingBufferedReader, var offset: Int, val filename: String) extends WrappedInput {
-    def this(input: BufferedReader, offset: Int, filename: String) = {
-      this(new AutoGrowingBufferedReader(input), offset, filename)
-    }
-    def this(input: JReader, offset: Int, filename: String) = {
-      this(new BufferedReader(input, 65536), offset, filename)
-    }
-
-    def nextChar: Option[Char] = {
-      val readChar = buffReader.read()
-      if (readChar == -1)
-        None
-      else
-        Some(readChar.asInstanceOf[Char])
-    }
-
-    @tailrec private def longestPrefixTail(p: LexPredicate, acc: String): String =
-      nextChar match {
-        case Some(c) if p(c).continue => longestPrefixTail(p, acc + c)
-        case _ => acc
-      }
-
-    override def hasNext: Boolean = {
-      buffReader.mark()
-      val r = buffReader.read() != -1
-      buffReader.reset()
-      r
-    }
-
-    override def assembleToken(p: LexPredicate, f: TokenGenerator): Option[(Token, WrappedInput)] = {
-      val originalOffset = offset
-      val (prefix, remainder) = longestPrefix(p)
-      (prefix match {
-        case "" => None
-        case nonEmptyString => f(nonEmptyString).map {
-          case (text, tpe, tval) => (new Token(text, tpe, tval)(originalOffset, remainder.offset, filename), this)
-        }
-      }) orElse {
-        buffReader.reset()
-        offset = originalOffset
-        None
-      }
-    }
-
-    override def longestPrefix(f: LexPredicate): (String, WrappedInput) = {
-      buffReader.mark()
-      val (a, b) = (longestPrefixTail(f, ""), this)
-      buffReader.reset()
-      buffReader.skip(a.length) // we always go "one too far", so we have to backup
-      offset += a.length
-      (a, b)
-    }
+trait StandardLexer extends TokenLexer {
+  override def apply(input: WrappedInput): (Token, WrappedInput) = {
+    val (wsCount, remainder) = fastForwardWhitespace(input)
+    super.apply(remainder)
   }
 }
 
-object StandardLexer extends TokenLexer {}
+object StandardLexer extends StandardLexer
 
-object WhitespaceSkippingLexer extends TokenLexer {
-
+object WhitespaceSkippingLexer extends StandardLexer {
   override def apply(input: WrappedInput): (Token, WrappedInput) = {
     val (t, endOfToken) = super.apply(input)
     val (_, beginningOfNextToken) = fastForwardWhitespace(endOfToken)
@@ -258,12 +167,10 @@ object WhitespaceSkippingLexer extends TokenLexer {
   }
 }
 
-object TokenLexer {
-  trait WrappedInput {
-    def hasNext: Boolean
-    def offset: Int
-    def filename: String
-    def longestPrefix(f: LexPredicate): (String, WrappedInput)
-    def assembleToken(p: LexPredicate, f: TokenGenerator): Option[(Token, WrappedInput)]
-  }
+object WhitespaceTokenizingLexer extends TokenLexer {
+  override def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
+    whitespace +: super.lexerOrdering
+
+  def whitespace: (LexPredicate, TokenGenerator) =
+    (oneOrMore(Character.isWhitespace _), (s) => if (s.nonEmpty) Some((s, TokenType.Whitespace, s)) else None)
 }

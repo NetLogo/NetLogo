@@ -2,9 +2,10 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ AgentSet, Link }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Context, Pure, Reporter }
+import org.nlogo.agent.{AgentSet}
+import org.nlogo.core.{AgentKind}
+import org.nlogo.nvm.{Context, Reporter}
+import org.nlogo.core.Pure
 
 class _islinkset extends Reporter with Pure {
 
@@ -12,7 +13,7 @@ class _islinkset extends Reporter with Pure {
     Boolean.box(
       args(0).report(context) match {
         case set: AgentSet =>
-          set.`type` eq classOf[Link]
+          set.kind == AgentKind.Link
         case _ =>
           false
       })

@@ -2,13 +2,14 @@
 
 package org.nlogo.prim
 
-import org.nlogo.core.Let
+import org.nlogo.core.{ Let, Token }
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
 
-class _repeat extends Command with CustomAssembled {
+class _repeat(_token: Token) extends Command with CustomAssembled {
+  token_=(_token)
 
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
-  private[this] val _let = Let()
+  private[this] val _let = Let(s"~${_token.text}_${_token.start}")
   def let = _let
 
   override def perform(context: Context) {
@@ -16,7 +17,7 @@ class _repeat extends Command with CustomAssembled {
   }
 
   def perform_1(context: Context, d0: Double) {
-    context.let(_let, new MutableLong(validLong(d0)))
+    context.activation.binding.let(_let, new MutableLong(validLong(d0, context)))
     context.ip = offset
   }
 

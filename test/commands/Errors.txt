@@ -17,7 +17,6 @@ CarefullyStackInteraction1
   O> carefully [ __ignore __boom ] [ repeat 2 [ set glob1 fput error-message glob1] ]
   length glob1 => 2
   item 0 glob1 = item 1 glob1 => true
-
 CarefullyStackInteraction2
   globals [ glob1 ]
   O> set glob1 []
@@ -60,5 +59,17 @@ carefully-with-error-and-message
 NotSettable
   O> set timer 5 => COMPILER ERROR This isn't something you can use "set" on.
 
-task-variable-not-in-task
-  O> __ignore ?1 => COMPILER ERROR This special variable isn't defined here.
+CarefullyWithLambda1
+  to guarded-runresult-error runresult-carefully [ [] -> errant-runresult ] 0 end
+  to-report errant-runresult report runresult "not-a-reporter" end
+  to runresult-carefully [ lambda r ] carefully [ __ignore runresult lambda ] [ set r error-message ] end
+  O> guarded-runresult-error
+
+CarefullyWithLambda2
+  to-report guarded-runresult-error report runresult-carefully [ [] -> errant-runresult ] end
+  to-report errant-runresult report runresult "not-a-reporter" end
+  to-report runresult-carefully [ lambda ] let r 0 carefully [ set r runresult lambda ] [ set r error-message ] report r end
+  guarded-runresult-error => "Nothing named NOT-A-REPORTER has been defined."
+
+CarefullyEmpty
+  O> carefully [] []

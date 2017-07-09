@@ -67,7 +67,7 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     // Output data rows
     // Get pen data lists, put them in a list,
     // and transpose that list into a 2 dimensional array
-    var penDataListsList = Buffer[Seq[PlotPoint]]()
+    val penDataListsList = Buffer[Seq[PlotPoint]]()
     var maxPenDataListSize = 0
     for (pen <- plot.pens) {
       var penDataList = pen.points

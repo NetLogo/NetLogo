@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="javax.media:jmf:2.1.1e" type="repository">
-    <properties maven-id="javax.media:jmf:2.1.1e" />
+  <library name="javax.media:jmf:2.1.1e">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib_idea/jmf-2.1.1e.jar!/" />
     </CLASSES>

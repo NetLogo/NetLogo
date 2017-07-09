@@ -70,4 +70,4 @@ AskAllPatches
 AskWithCarefullyWithRunresult
   globals [ zero ]
   to careful-run [t] ask turtles [ carefully [ show runresult t ] [] ] end
-  O> crt 2 careful-run task [1 / zero]
+  O> crt 2 careful-run [[] -> 1 / zero]

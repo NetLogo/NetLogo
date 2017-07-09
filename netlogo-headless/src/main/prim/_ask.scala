@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.agent.{ Agent, AgentSet, Observer }
 import org.nlogo.core.{ I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, AssemblerAssistant, Command, Context,
-                       CustomAssembled, EngineException }
+                       CustomAssembled, RuntimePrimitiveException }
 
 class _ask extends Command with CustomAssembled {
 
@@ -23,18 +23,18 @@ class _ask extends Command with CustomAssembled {
       case agents: AgentSet =>
         if (!context.agent.isInstanceOf[Observer]) {
           if (agents eq world.turtles)
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, this, I18N.errors.get(
                 "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
           if (agents eq world.patches)
-            throw new EngineException(
+            throw new RuntimePrimitiveException(
               context, this, I18N.errors.get(
                 "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
         }
         agents
       case agent: Agent =>
         if (agent.id == -1)
-          throw new EngineException(
+          throw new RuntimePrimitiveException(
             context, this, I18N.errors.getN(
               "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
         AgentSet.fromAgent(agent)
@@ -49,11 +49,11 @@ class _ask extends Command with CustomAssembled {
   def perform_2(context: Context, agents: AgentSet) {
     if (!context.agent.isInstanceOf[Observer]) {
       if (agents eq world.turtles)
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.get(
             "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
       if (agents eq world.patches)
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, I18N.errors.get(
             "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
     }
@@ -63,7 +63,7 @@ class _ask extends Command with CustomAssembled {
 
   def perform_3(context: Context, agent: Agent) {
     if (agent.id == -1)
-      throw new EngineException(
+      throw new RuntimePrimitiveException(
         context, this, I18N.errors.getN(
           "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
     context.runExclusiveJob(AgentSet.fromAgent(agent), next)

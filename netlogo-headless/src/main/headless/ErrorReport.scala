@@ -8,7 +8,6 @@ import org.nlogo.nvm.{ EngineException, Instruction, Context }
 case class ErrorReport(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception) {
   lazy val stackTrace =
     Some(ex).collect{
-      case ee: EngineException =>
-        context.buildRuntimeErrorMessage(ee.instruction, ee)
+      case ee: EngineException => ee.runtimeErrorMessage
     }
 }

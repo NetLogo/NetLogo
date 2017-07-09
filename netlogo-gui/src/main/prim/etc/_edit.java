@@ -7,7 +7,8 @@ import org.nlogo.api.OutputDestinationJ;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.EditorWorkspace;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 /**
  * makes current model be TYPE_NORMAL. useful for CCL users wanting
@@ -21,9 +22,9 @@ public final strictfp class _edit
   public void perform(final Context context) throws LogoException {
     String path = null;
     try {
-      path = workspace.convertToNormal();
+      path = ((EditorWorkspace) workspace).convertToNormal();
     } catch (java.io.IOException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     workspace.outputObject
         ("Now editing: " + path,

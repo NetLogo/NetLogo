@@ -9,6 +9,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
+import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -18,7 +19,7 @@ import java.util.Iterator;
 
 public final strictfp class _member
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     Object obj = args[1].report(context);
@@ -39,10 +40,10 @@ public final strictfp class _member
       Agent agent = argEvalAgent(context, 0);
       AgentSet agentset = (AgentSet) obj;
       if (agent instanceof Turtle) {
-        if (agent.id == -1) {
+        if (agent.id() == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Turtle.class) {
+        if (agentset.kind() != AgentKindJ.Turtle()) {
           return Boolean.FALSE;
         }
         if (agentset == world.turtles()) {
@@ -55,10 +56,10 @@ public final strictfp class _member
         }
       }
       if (agent instanceof Link) {
-        if (agent.id == -1) {
+        if (agent.id() == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Link.class) {
+        if (agentset.kind() != AgentKindJ.Link()) {
           return Boolean.FALSE;
         }
         if (agentset == world.links()) {
@@ -70,7 +71,7 @@ public final strictfp class _member
               Boolean.FALSE;
         }
       } else if (agent instanceof Patch) {
-        if (agentset.type() != Patch.class) {
+        if (agentset.kind() != AgentKindJ.Patch()) {
           return Boolean.FALSE;
         }
         if (agentset == world.patches()) {

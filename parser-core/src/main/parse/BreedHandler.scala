@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{BreedIdentifierHandler, Instruction, Program, Token, TokenType}
+import org.nlogo.core.{BreedIdentifierHandler, Program, Token}
 
 // go thru our breed prim handlers, if one triggers, return the result
 class BreedHandler(program: Program) extends NameHandler {

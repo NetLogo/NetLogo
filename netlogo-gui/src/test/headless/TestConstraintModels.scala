@@ -82,7 +82,7 @@ class TestConstraintModels extends AbstractTestModels {
     checkError("set number \"show 1\"")
 
 
-    reporter("colors") -> org.nlogo.agent.World.ZERO
+    reporter("colors") -> org.nlogo.agent.World.Zero
     observer>>"set colors 5"
     reporter("colors") -> reporter("5")
     observer>>"set colors max-pxcor"
@@ -118,11 +118,11 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModelFile("Slider Constraint Constructor", "test/constraint/density-slider.nlogo") {
     var con = SliderConstraint.makeSliderConstraint(
-      world.observer(), "0", "100", "1", 50d, "", workspace)
+      world.observer, "0", "100", "1", 50d, "", workspace, workspace)
     assert(con.isInstanceOf[ConstantSliderConstraint])
     con = SliderConstraint.makeSliderConstraint(
-      world.observer(), "min-pxcor", "max-pxcor", "1",
-      50d, "", workspace)
+      world.observer, "min-pxcor", "max-pxcor", "1",
+      50d, "", workspace, workspace)
     assert(con.isInstanceOf[DynamicSliderConstraint])
   }
 
@@ -155,7 +155,7 @@ class TestConstraintModels extends AbstractTestModels {
 
     observer>>"setup"
     val index = world.observerOwnsIndexOf("X-LOC")
-    val con = world.observer().variableConstraint(index).asInstanceOf[NumericConstraint]
+    val con = world.observer.constraint(index).asInstanceOf[NumericConstraint]
 
     // the maximum should be 40
     var coerced = con.coerceValue(Double.box(41)).asInstanceOf[java.lang.Double]

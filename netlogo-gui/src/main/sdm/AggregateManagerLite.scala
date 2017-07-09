@@ -2,14 +2,14 @@
 
 package org.nlogo.sdm
 
-import org.nlogo.core.{ Model => CoreModel }
-import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
+import org.nlogo.core.{ LiteralParser, Model => CoreModel }
+import org.nlogo.api.AggregateManagerInterface
 
 class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
 
-  def load(model: CoreModel, compiler: CompilerServices) {
+  def load(model: CoreModel, compiler: LiteralParser) {
     model.optionalSectionValue[Model]("org.nlogo.modelsection.systemdynamics")
       .foreach { (m: Model) =>
         source = new Translator(m, compiler).source

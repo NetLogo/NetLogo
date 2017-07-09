@@ -6,8 +6,9 @@ import org.nlogo.core.{ AgentKind, Model, WorldDimensions }
 import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Command,
   Reporter, Compile, Success, CompileError, RuntimeError, StackTrace }
 import org.scalatest.{FunSuite, Tag}
+import org.scalatest.exceptions.TestFailedException
 import org.nlogo.api.{SimpleJobOwner, Version, WorldDimensions3D}
-import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.FileIO.fileToString
 import java.io.File
 import org.nlogo.util.{Utils, SlowTest}
 
@@ -65,25 +66,35 @@ object TestLanguage {
               workspace.open(path)
             // need to handle declarations
             case Command(command, kind, result) =>
-              result match {
-                case Success(_) =>
-                  testCommand(command, kind, mode)
-                case RuntimeError(message) =>
-                  testCommandError(command, message, kind, mode)
-                case CompileError(message) =>
-                  testCommandCompilerErrorMessage(command, message, kind)
-                case StackTrace(stackTrace) =>
-                  testCommandErrorStackTrace(command, stackTrace, kind, mode)
+              try {
+                result match {
+                  case Success(_) =>
+                    testCommand(command, kind, mode)
+                  case RuntimeError(message) =>
+                    testCommandError(command, message, kind, mode)
+                  case CompileError(message) =>
+                    testCommandCompilerErrorMessage(command, message, kind)
+                  case StackTrace(stackTrace) =>
+                    testCommandErrorStackTrace(command, stackTrace, kind, mode)
+                }
+              } catch {
+                case ex: TestFailedException => throw ex
+                case ex: Exception => throw new LanguageTestException(command, ex)
               }
             case Reporter(reporter, result) =>
-              result match {
-                case Success(res) =>
-                  testReporter(reporter, res, mode)
-                case RuntimeError(error) =>
-                  testReporterError(reporter, error, mode)
-                case StackTrace(error) =>
-                  testReporterErrorStackTrace(reporter, error, mode)
-                case o => throw new RuntimeException("Invalid result for reporter: " + o)
+              try {
+                result match {
+                  case Success(res) =>
+                    testReporter(reporter, res, mode)
+                  case RuntimeError(error) =>
+                    testReporterError(reporter, error, mode)
+                  case StackTrace(error) =>
+                    testReporterErrorStackTrace(reporter, error, mode)
+                  case o => throw new RuntimeException("Invalid result for reporter: " + o)
+                }
+              } catch {
+                case ex: TestFailedException => throw ex
+                case ex: Exception => throw new LanguageTestException(reporter, ex)
               }
             case Compile(CompileError(error)) =>
               testCompilerError(new Model(code = decls, widgets = StandardWidgets), error)
@@ -152,7 +163,7 @@ object TestParser {
         f.getParentFile.getName
       else
         f.getName.replace(".txt", "")
-    parseString(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
+    parseString(suiteName, preprocessStackTraces(fileToString(f.getAbsolutePath)))
   }
   def parseString(suiteName: String, s: String): List[LanguageTest] = {
     Parser.parse(suiteName, s)
@@ -177,6 +188,14 @@ TurtleSet_2D
         Command("crt 1"),
         Reporter("[turtle-set self] of turtle 0 = turtles", Success("true"))))
 
-    assert(tests.toString == "List(LanguageTest(test,TurtleSet_2D,List(Command(crt 1,Observer,Success()), Reporter([turtle-set self] of turtle 0 = turtles,Success(true)))))")
+    assert(tests.head == expectedCommandTest)
   }
+}
+
+class LanguageTestException (line: String, cause: Exception)
+extends Exception("The test errored on the following line: " + line, cause) {
+  // This just eliminates the stack trace of LanguageTestException. It still
+  // contains the stacktrace of the cause, which is what you care about.
+  // -- BCH 11/1/2016
+  setStackTrace(Array())
 }

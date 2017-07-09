@@ -10,7 +10,6 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.ModalProgressTask
-import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
@@ -42,7 +41,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
       def run(): Unit = {
         runnableCommands match {
           case Some(runnable) =>
-            ModalProgressTask(getFrame(PreviewPanel.this), "Running Preview Commands", runnable)
+            ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), "Running Preview Commands", runnable)
             runnable.result.foreach {
               _ match {
                 case Success(image) => showImage(image)
@@ -62,7 +61,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
         putValue(Action.NAME, "Load Manual Preview Image")
         showText(wrap(imagePath.getOrElse("Unknown manual preview image path.")))
         imagePath.foreach { path =>
-          ModalProgressTask(getFrame(PreviewPanel.this), "Loading Manual Preview Image", () => {
+          ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), "Loading Manual Preview Image", () => {
             try {
               showImage(ImageIO.read(new File(path)))
               putValue(Action.NAME, "Reload Manual Preview Image")

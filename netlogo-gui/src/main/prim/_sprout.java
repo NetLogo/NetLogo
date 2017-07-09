@@ -2,11 +2,8 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.*;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
-import org.nlogo.agent.Patch;
-import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -41,14 +38,12 @@ public final strictfp class _sprout
     int numberOfTurtles = argEvalIntValue(context, 0);
     org.nlogo.api.MersenneTwisterFast random = context.job.random;
     if (numberOfTurtles > 0) {
-      AgentSet agentset =
-          new ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles,
-              false);
+      AgentSetBuilder agentSetBuilder = new AgentSetBuilder(AgentKindJ.Turtle(), numberOfTurtles);
       if (breedName == NO_BREED) {
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.sprout
               (random.nextInt(14), random.nextInt(360), world.turtles());
-          agentset.add(child);
+          agentSetBuilder.add(child);
           workspace.joinForeverButtons(child);
         }
       } else {
@@ -56,11 +51,11 @@ public final strictfp class _sprout
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.sprout
               (random.nextInt(14), random.nextInt(360), breed);
-          agentset.add(child);
+          agentSetBuilder.add(child);
           workspace.joinForeverButtons(child);
         }
       }
-      context.runExclusiveJob(agentset, next);
+      context.runExclusiveJob(agentSetBuilder.build(), next);
     }
     context.ip = offset;
   }

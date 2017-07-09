@@ -9,7 +9,7 @@ import org.nlogo.core.CompilerException
 class LoggerTests extends FunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
   val logger = new Logger("esther")
-  DOMConfigurator.configure("dist/netlogo_logging.xml")
+  DOMConfigurator.configure("dist/configuration/NetLogo Logging/netlogo_logging.xml")
   new java.io.File("tmp").mkdir()
   new java.io.File("tmp/LoggerTests").mkdir()
   logger.changeLogDirectory(new java.io.File("tmp/LoggerTests").getCanonicalPath)
@@ -19,7 +19,7 @@ class LoggerTests extends FunSuite {
     logger.close()
     assertResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
-    val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n" )
+    val log = org.nlogo.api.FileIO.fileToString(file).replaceAll("\r\n", "\n" )
     val timestamp = log.substring(log.indexOf("timestamp=\"") + 11, log.indexOf("\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
@@ -37,7 +37,7 @@ class LoggerTests extends FunSuite {
     logger.close()
     assertResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
-    val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
+    val log = org.nlogo.api.FileIO.fileToString(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
@@ -55,7 +55,7 @@ class LoggerTests extends FunSuite {
     logger.close()
     assertResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
-    val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
+    val log = org.nlogo.api.FileIO.fileToString(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
@@ -73,7 +73,7 @@ class LoggerTests extends FunSuite {
     logger.close()
     assertResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
-    val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
+    val log = org.nlogo.api.FileIO.fileToString(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +

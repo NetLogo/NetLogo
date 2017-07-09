@@ -5,7 +5,6 @@ import java.awt.geom.Ellipse2D
 
 import org.nlogo.api.GraphicsInterface
 import java.awt.{ Color, Point, Rectangle => AwtRectangle }
-import java.util.StringTokenizer
 
 import org.nlogo.core.Shape, Shape.{ Circle => BaseCircle }
 

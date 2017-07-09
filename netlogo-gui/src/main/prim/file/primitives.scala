@@ -2,11 +2,10 @@
 
 package org.nlogo.prim.file
 
-import org.nlogo.core.{ CompilerException, FileMode }
-import org.nlogo.api.{ OutputDestination }
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{ Command, Context, EngineException, Reporter, Workspace }
 import java.io.IOException
+import org.nlogo.api.OutputDestination
+import org.nlogo.core.{ CompilerException, FileMode }
+import org.nlogo.nvm.{ Command, Context, Reporter, RuntimePrimitiveException }
 
 class _fileatend extends Reporter {
 
@@ -14,7 +13,7 @@ class _fileatend extends Reporter {
     try Boolean.box(workspace.fileManager.eof)
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 }
 
@@ -26,7 +25,7 @@ class _fileclose extends Command {
         workspace.fileManager.closeCurrentFile()
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     context.ip = next
   }
@@ -38,7 +37,7 @@ class _filecloseall extends Command {
     try workspace.fileManager.closeAllFiles()
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     context.ip = next
   }
@@ -53,11 +52,11 @@ class _filedelete extends Command {
         workspace.fileManager.attachPrefix(argString))
     catch {
       case ex: java.net.MalformedURLException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, argString +
           " is not a valid path name: " + ex.getMessage)
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     context.ip = next
   }
@@ -73,11 +72,11 @@ class _fileexists extends Reporter {
           workspace.fileManager.attachPrefix(argString)))
     catch {
       case ex: java.net.MalformedURLException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, argString +
             " is not a valid path name: " + ex.getMessage)
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
   }
 }
@@ -90,7 +89,7 @@ class _fileflush extends Command {
         workspace.fileManager.flushCurrentFile()
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     context.ip = next
   }
@@ -106,7 +105,7 @@ class _fileopen extends Command {
         argEvalString(context, 0))
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     context.ip = next
   }
@@ -120,7 +119,7 @@ class _fileprint extends Command {
         org.nlogo.core.FileMode.Append)
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     workspace.outputObject(
       args(0).report(context), null, true, false,
@@ -135,14 +134,14 @@ class _fileread extends Reporter {
     try workspace.fileManager.read(world)
     catch {
       case ex: CompilerException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this,
           ex.getMessage + workspace.fileManager.getErrorInfo)
       case ex: java.io.EOFException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "The end of file has been reached")
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 }
 
@@ -152,10 +151,10 @@ class _filereadchars extends Reporter {
     try workspace.fileManager.readChars(argEvalIntValue(context, 0))
     catch {
       case _: java.io.EOFException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "The end of file has been reached")
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 }
 
@@ -165,10 +164,10 @@ class _filereadline extends Reporter {
     try workspace.fileManager.readLine()
     catch {
       case _: java.io.EOFException =>
-        throw new EngineException(
+        throw new RuntimePrimitiveException(
           context, this, "The end of file has been reached")
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
 }
 
@@ -180,7 +179,7 @@ class _fileshow extends Command {
       workspace.fileManager.ensureMode(FileMode.Append)
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, context.agent, true, true,
                            OutputDestination.File)
@@ -195,7 +194,7 @@ class _filetype extends Command {
     try workspace.fileManager.ensureMode(FileMode.Append)
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, null, false, false,
                            OutputDestination.File)
@@ -211,7 +210,7 @@ class _filewrite extends Command {
       workspace.fileManager.ensureMode(FileMode.Append)
     catch {
       case ex: IOException =>
-        throw new EngineException(context, this, ex.getMessage)
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
     }
     workspace.outputObject(s, null, false, true,
                            OutputDestination.File)

@@ -34,7 +34,7 @@ class Supervisor(dialog: java.awt.Dialog,
       override def runtimeError(w: Workspace, runNumber: Int, e: Throwable) {
         e match {
           case ee: EngineException =>
-            val msg = ee.context.buildRuntimeErrorMessage(ee.instruction,ee)
+            val msg = ee.runtimeErrorMessage
             System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
             ee.printStackTrace(System.err)
           case le: LogoException =>
@@ -70,7 +70,7 @@ class Supervisor(dialog: java.awt.Dialog,
       try { new RunOptionsDialog(dialog, dialogFactory).get }
       catch{ case ex: UserCancelException => return }
     if(options.spreadsheet) {
-      val fileName = org.nlogo.swing.FileDialog.show(
+      val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
       addExporter(new SpreadsheetExporter(
@@ -80,7 +80,7 @@ class Supervisor(dialog: java.awt.Dialog,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
     }
     if(options.table) {
-      val fileName = org.nlogo.swing.FileDialog.show(
+      val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
       addExporter(new TableExporter(
@@ -125,7 +125,13 @@ class Supervisor(dialog: java.awt.Dialog,
     worker.abort()
     workspace.jobManager.haltPrimary()
     workerThread.interrupt()
-    while(workerThread.isAlive) Thread.sleep(100)
+    while(workerThread.isAlive) {
+      try {
+        Thread.sleep(100)
+      } catch {
+        case e: InterruptedException => // ignore
+      }
+    }
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable { def run() {
         workspace.jobManager.haltPrimary()
@@ -140,17 +146,17 @@ class Supervisor(dialog: java.awt.Dialog,
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     t match {
       case ex: CompilerException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to syntax error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))
       case ex: LogoException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to runtime error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))
       case ex: java.io.IOException =>
-        org.nlogo.swing.OptionDialog.show(
+        org.nlogo.swing.OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to I/O error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok")))

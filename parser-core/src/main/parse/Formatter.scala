@@ -4,77 +4,78 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandtask, _const, _reportertask, _taskvariable }
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, Lambda }
 
 object Formatter {
 
-  type Operation = (Formatter, AstNode, AstPath, Context) => Context
-  case class Context(
-    text: String,
-    operations: Map[AstPath, Operation],
+  def context(
+    text:                String,
+    operations:          Map[AstPath, AstFormat.Operation],
     instructionToString: Instruction => String = instructionString _,
-    wsMap: Map[AstPath, WhiteSpace] = Map()) {
-      def appendText(t: String): Context = copy(text = text + t)
-    }
+    wsMap:               FormattingWhitespace  = WhitespaceMap.empty): AstFormat =
+      AstFormat(text, operations, instructionString, wsMap)
 
   def instructionString(i: Instruction): String =
     i match {
       case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
       case r: _const        => r.token.text
-      case r: _reportertask => ""
-      case r: _commandtask  => ""
-      case v: _taskvariable if v.synthetic => ""
+      case r: _commandlambda => ""
+      case v: _lambdavariable if v.synthetic => ""
       case r                => r.token.text
     }
 
   def deletedInstructionToString(i: Instruction): String = ""
+
+  implicit class RichFormat(a: AstFormat) {
+    def appendText(t: String): AstFormat =
+      a.copy(text = a.text + t)
+  }
 }
 
-class Formatter
-  extends PositionalAstFolder[Formatter.Context] {
+class Formatter extends PositionalAstFolder[AstFormat] {
+  import Formatter.RichFormat
 
-  import Formatter.{ Context, deletedInstructionToString }
+  import Formatter.context
 
-  override def visitProcedureDefinition(proc: ProcedureDefinition)(c: Context): Context = {
-    val procWhitespace = c.wsMap(AstPath(AstPath.Proc(proc.procedure.name.toUpperCase)))
-    super.visitProcedureDefinition(proc)(c.appendText(procWhitespace.leading))
-      .appendText(procWhitespace.backMargin)
-      .appendText(procWhitespace.trailing)
+  override def visitProcedureDefinition(proc: ProcedureDefinition)(c: AstFormat): AstFormat = {
+    val position = AstPath(AstPath.Proc(proc.procedure.name.toUpperCase))
+    super.visitProcedureDefinition(proc)(c.appendText(c.wsMap.leading(position)))
+      .appendText(c.wsMap.backMargin(position))
+      .appendText(c.wsMap.trailing(position))
   }
 
-  override def visitCommandBlock(block: CommandBlock, position: AstPath)(implicit c: Context): Context = {
+  override def visitCommandBlock(block: CommandBlock, position: AstPath)(implicit c: AstFormat): AstFormat = {
+    def beginSyntheticBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.leading(p)
+    def closeSyntheticBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.backMargin(p)
+
     if (block.synthetic && block.statements.stmts.isEmpty)
-      c
+      c.appendText(c.wsMap.leading(position))
     else if (block.synthetic)
-      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1), _.leading, _.backMargin)
+      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1),
+        beginSyntheticBlock _, closeSyntheticBlock _)
     else
       visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1))
   }
 
-  override def visitReporterBlock(block: ReporterBlock, position: AstPath)(implicit c: Context): Context = {
+  override def visitReporterBlock(block: ReporterBlock, position: AstPath)(implicit c: AstFormat): AstFormat = {
     visitBlock(block, position, c1 => super.visitReporterBlock(block, position)(c1))
   }
 
-  private def normalBeginBlock(ws: WhiteSpace): String =
-    ws.leading + "["
+  private def normalBeginBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.leading(p)
+  private def normalEndBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.backMargin(p)
 
-  private def normalEndBlock(ws: WhiteSpace): String =
-    ws.backMargin + "]"
-
-  private def visitBlock(block: AstNode, position: AstPath, visit: Context => Context,
-    beginBlock: WhiteSpace => String = normalBeginBlock _,
-    endBlock:   WhiteSpace => String = normalEndBlock _)
-    (implicit c: Context): Context = {
+  private def visitBlock(block: AstNode, position: AstPath, visit: AstFormat => AstFormat,
+    beginBlock: FormattingWhitespace => AstPath => String = normalBeginBlock _,
+    endBlock:   FormattingWhitespace => AstPath => String = normalEndBlock _)
+    (implicit c: AstFormat): AstFormat = {
     c.operations.get(position)
       .map(op => op(this, block, position, c.appendText(leadingWhitespace(position))))
       .getOrElse {
-        val ws = c.wsMap(position)
-        visit(c.appendText(beginBlock(ws)))
-          .appendText(endBlock(ws))
+        visit(c.appendText(beginBlock(c.wsMap)(position))).appendText(endBlock(c.wsMap)(position))
       }
   }
 
-  override def visitStatement(stmt: Statement, position: AstPath)(implicit c: Context): Context = {
+  override def visitStatement(stmt: Statement, position: AstPath)(implicit c: AstFormat): AstFormat = {
     c.operations.get(position)
       .map(op => op(this, stmt, position, c))
       .getOrElse {
@@ -84,9 +85,7 @@ class Formatter
       }
   }
 
-  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit c: Context): Context = {
-    import org.nlogo.core.prim._reportertask
-
+  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit c: AstFormat): AstFormat = {
     c.operations.get(position)
       .map(op => op(this, app, position, c))
       .getOrElse {
@@ -97,14 +96,35 @@ class Formatter
             app.args.zipWithIndex.tail.foldLeft(c2.appendText(ws + c.instructionToString(i))) {
               case (ctx, (arg, i)) => visitExpression(arg, position, i)(ctx)
             }
-          case (false, r: _reportertask) if r.synthetic =>
-            super.visitReporterApp(app, position)(c.appendText(leadingWhitespace(position)))
-          case (false, _: _reportertask) =>
-            val c2 = super.visitReporterApp(app, position)(Context("", c.operations, wsMap = c.wsMap))
-            if (c.text.last == ' ')
-              c.appendText("[" + c2.text + "]")
-            else
-              c.appendText(" [" + c2.text + "]")
+          case (_, b: _constcodeblock) =>
+            super.visitReporterApp(app, position)(
+              c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
+          case (false, con: _const) =>
+            super.visitReporterApp(app, position)(
+              c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
+          case (false, l: Lambda) =>
+            val frontPadding = if (c.text.lastOption.forall(_ == ' ')) "" else " "
+            val body =
+              super.visitReporterApp(app, position)(context("", c.operations, wsMap = c.wsMap)).text
+            val args = l.arguments match {
+              case Lambda.NoArguments(true)        => "[ ->"
+              case Lambda.NoArguments(false)       => "["
+              case Lambda.ConciseArguments(_)      => ""
+              case Lambda.UnbracketedArgument(t)   => s"[ ${t.text} ->"
+              case Lambda.BracketedArguments(args) => s"[ [${args.map(_.text).mkString(" ")}] ->"
+            }
+            val arrowSpace = if (args.endsWith(">") && ! body.startsWith(" ")) " " else ""
+            val backMargin = c.wsMap.backMargin(position)
+            val close = l.arguments match {
+              case Lambda.ConciseArguments(_) => ""
+              case _                          => "]"
+            }
+            val backMargin2 =
+              if (body.lastOption.contains(' ') && backMargin.headOption.contains(' '))
+                backMargin.drop(1)
+              else
+                backMargin
+            c.appendText(frontPadding + args + arrowSpace + body + backMargin2 + close)
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)
@@ -112,6 +132,5 @@ class Formatter
       }
   }
 
-  private def leadingWhitespace(path: AstPath)(implicit c: Context): String =
-    c.wsMap.get(path).map(_.leading).getOrElse("")
+  private def leadingWhitespace(path: AstPath)(implicit c: AstFormat): String = c.wsMap.leading(path)
 }

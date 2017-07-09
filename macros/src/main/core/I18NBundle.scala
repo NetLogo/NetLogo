@@ -15,10 +15,11 @@ object I18NBundle {
     // Limitation - this is US-only at the moment
     // It can be made more robust, but we need some way to feed in
     // the current locale that doesn't rely on java.util.Locale
-    import scala.collection.JavaConversions._
+    import scala.collection.JavaConverters._
     val bundle = ResourceBundle.getBundle("Errors", Locale.US)
     val localizedStringMap = bundle
       .keySet
+      .asScala
       .map(k => q"$k -> ${bundle.getString(k)}")
     q"Map(..$localizedStringMap)"
   }

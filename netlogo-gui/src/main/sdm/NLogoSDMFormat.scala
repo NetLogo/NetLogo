@@ -2,10 +2,6 @@
 
 package org.nlogo.sdm
 
-import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, StringReader }
-
-import org.jhotdraw.util.{ StorableInput, StorableOutput }
-
 import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization

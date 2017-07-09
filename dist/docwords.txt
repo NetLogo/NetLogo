@@ -122,6 +122,7 @@ Gephi
 Gephi's
 GetMap
 GitHub
+Gluegen
 Gnomonic
 GoGo
 GoGoMonitor
@@ -163,6 +164,7 @@ InterfaceComponent
 Iogear
 Iterable
 JARs
+JCodec
 JDK
 JHotDraw
 JOGL
@@ -176,6 +178,7 @@ JTS
 JVM
 Jama
 JavaScript
+JogAmp
 JpegImagesToMovie
 Jython
 Kalimba
@@ -399,6 +402,7 @@ amongst
 api
 app
 appender
+arduino
 args
 argv
 artisticlicense
@@ -799,6 +803,7 @@ runtime
 runtimes
 sandpile
 sawtooth
+sbt
 scala
 scalable
 scalac
@@ -900,6 +905,7 @@ var
 variadic
 versa
 vertices
+vid
 vmoptions
 wav
 webcams

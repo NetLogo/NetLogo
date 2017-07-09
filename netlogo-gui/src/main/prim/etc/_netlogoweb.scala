@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.nvm.{ Context, Reporter }
-import org.nlogo.core.Syntax
 
 class _netlogoweb extends Reporter {
 

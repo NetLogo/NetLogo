@@ -10,7 +10,10 @@ import scala.reflect.ClassTag
 
 class FormatterPair[A, B <: ModelFormat[A, B]](
   val modelFormat: B,
-  val serializers: Seq[ComponentSerialization[A, B]]) {
+  val serializers: Seq[ComponentSerialization[A, B]])(implicit aTag: ClassTag[A]) {
+    def serializationClass = aTag.runtimeClass
+    def formatClass = modelFormat.getClass
+
     def addSerializer(s: ComponentSerialization[A, B]): FormatterPair[A, B] =
       new FormatterPair[A, B](modelFormat, serializers :+ s)
 
@@ -85,20 +88,30 @@ trait ModelLoader {
 }
 
 class ConfigurableModelLoader(val formats: Seq[FormatterPair[_, _]] = Seq()) extends ModelLoader {
-  def addFormat[A, B <: ModelFormat[A, B]](f: B): ConfigurableModelLoader =
+  def addFormat[A, B <: ModelFormat[A, B]](f: B)(implicit aTag: ClassTag[A]): ConfigurableModelLoader =
     new ConfigurableModelLoader(formats :+ new FormatterPair[A, B](f, Seq()))
 
   def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])(
-    implicit matchingFormat: ClassTag[FormatterPair[A, B]]): ConfigurableModelLoader =
+    implicit aTag:  ClassTag[A],
+    bTag:           ClassTag[B],
+    matchingFormat: ClassTag[FormatterPair[A, B]]): ConfigurableModelLoader =
       new ConfigurableModelLoader(formats.map {
-        case matchingFormat(fp) => fp.addSerializers(ss)
-        case v => v
+        case matchingFormat(fp) if fp.serializationClass == aTag.runtimeClass &&
+        fp.formatClass == bTag.runtimeClass =>
+          fp.addSerializers(ss)
+        case f => f
       })
 
   def addSerializer[A, B <: ModelFormat[A, B]](s: ComponentSerialization[A, B])(
-    implicit matchingFormat: ClassTag[FormatterPair[A, B]]): ConfigurableModelLoader =
-      new ConfigurableModelLoader(formats.map {
-        case matchingFormat(fp) => fp.addSerializer(s)
-        case v => v
+    implicit aTag:  ClassTag[A],
+    bTag:           ClassTag[B],
+    matchingFormat: ClassTag[FormatterPair[A, B]]): ConfigurableModelLoader =
+      new ConfigurableModelLoader(formats.map { formatPair =>
+        formatPair match {
+          case matchingFormat(fp) if fp.serializationClass == aTag.runtimeClass
+            && fp.formatClass == bTag.runtimeClass =>
+            fp.addSerializer(s)
+          case v => v
+        }
       })
 }

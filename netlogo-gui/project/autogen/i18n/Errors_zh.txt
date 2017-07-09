@@ -8,7 +8,7 @@ org.nlogo.agent.Agent.rgbValueError = RGB值必须在0-255之间
 org.nlogo.agent.Agent.shapeUndefined = \"{0}\" 形状未定义
 
 org.nlogo.agent.BooleanConstraint.bool = 必须是布尔值.
-org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = 海龟不能运动到世界外.
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = 海龟不能运动到世界外.
 
 # Value must be one of: ["Hello" 5 [1 2 3]]
 org.nlogo.agent.ChooserConstraint.invalidValue = 值必须从以下列表中选择: {0}

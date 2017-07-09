@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ CompilerException, LogoList }
+import org.nlogo.core.CompilerException
 
 /**
  * A host application should implement this interface in order to be notified of events occurring

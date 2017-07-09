@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm.gui;
 
+import scala.Option;
+
 strictfp class AggregateUndoableTool
     extends org.jhotdraw.util.UndoableTool
     implements org.nlogo.window.Event.LinkChild {
@@ -19,6 +21,6 @@ strictfp class AggregateUndoableTool
   @Override
   public void mouseDrag(java.awt.event.MouseEvent e, int x, int y) {
     super.mouseDrag(e, x, y);
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new org.nlogo.window.Events.DirtyEvent(Option.empty()).raise(this);
   }
 }

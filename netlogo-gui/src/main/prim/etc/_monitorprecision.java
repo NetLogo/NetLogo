@@ -20,6 +20,6 @@ public final strictfp class _monitorprecision
     }
     return newValidDouble
         (org.nlogo.api.Approximate.approximate
-            (((Double) value).doubleValue(), numberOfPlaces));
+            (((Double) value).doubleValue(), numberOfPlaces), context);
   }
 }

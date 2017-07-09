@@ -13,19 +13,20 @@ object Dump {
     "dump",
     "dump compiled models (dump Fire, dump bench, dump all, dump <path>)")
 
-  lazy val settings = Seq(
-    dump <<= dumpTask)
+  lazy val dumpClassName = SettingKey[String]("class used to dump bytecode")
 
-  lazy val dumpTask = Def.inputTask {
+  lazy val settings = Seq(
+    dumpClassName := "org.nlogo.headless.Dump",
+    dump := {
       val args   = spaceDelimited("").parsed
       val loader = (testLoader in Test).value
       // oh god, I hope this doesn't break something. it doesn't work without it, the bytecode
       // generator can't load classes - ST 6/29/12
       Thread.currentThread.setContextClassLoader(loader)
-      loader.loadClass("org.nlogo.headless.Dump")
+      loader.loadClass(dumpClassName.value)
         .getMethod("main", classOf[Array[String]])
         .invoke(null, args.toArray)
-      ()
-  }
+        ()
+    })
 
 }

@@ -1,0 +1,13 @@
+apply-distributes-list-items-in-order
+# the use of a command block is deliberate here as it checks that the ip is updated correctly.
+  O> __apply [ [num col] -> crt num [ set color col ] ] [ 10 5 ]
+  count turtles => 10
+  [ color ] of one-of turtles => 5
+
+apply-takes-empty-list
+  O> __apply [ crt 1 ] []
+  count turtles => 1
+
+apply-gets-angry
+  O> __apply [ [num col] -> crt num [ set color col ] ] [ 10 ] => ERROR anonymous procedure expected 2 inputs, but only got 1
+  O> __apply [ [num] -> crt num ] [] => ERROR anonymous procedure expected 1 input, but only got 0

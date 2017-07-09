@@ -11,8 +11,8 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Pure;
+import org.nlogo.nvm.RuntimePrimitiveException;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _greaterthan
@@ -39,11 +39,11 @@ public final strictfp class _greaterthan
     if (o1 instanceof Agent && o2 instanceof Agent) {
       Agent a1 = (Agent) o1;
       Agent a2 = (Agent) o2;
-      if (a1.getAgentBit() == a2.getAgentBit()) {
+      if (a1.agentBit() == a2.agentBit()) {
         return a1.compareTo(a2) > 0;
       }
     }
-    throw new EngineException
+    throw new RuntimePrimitiveException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
             TypeNames.aName(o1), TypeNames.aName(o2)));
   }
@@ -72,7 +72,7 @@ public final strictfp class _greaterthan
     if (arg1 instanceof Double) {
       return arg0 > ((Double) arg1).doubleValue();
     }
-    throw new EngineException
+    throw new RuntimePrimitiveException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
             TypeNames.aName(arg0), TypeNames.aName(arg1))
         );
@@ -82,7 +82,7 @@ public final strictfp class _greaterthan
     if (arg0 instanceof Double) {
       return ((Double) arg0).doubleValue() > arg1;
     }
-    throw new EngineException
+    throw new RuntimePrimitiveException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
             TypeNames.aName(arg0), TypeNames.aName(arg1))
         );

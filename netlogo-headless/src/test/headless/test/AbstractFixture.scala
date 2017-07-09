@@ -4,7 +4,6 @@ package org.nlogo.headless.test
 
 import org.nlogo.core.Model
 import org.nlogo.{api, core}
-import org.scalatest.Assertions
 
 // implemented by HeadlessWorkspace in org.nlogo.headless.lang, implemented
 // elsewhere by Tortoise - ST 8/28/13, RG 1/26/15

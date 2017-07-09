@@ -16,42 +16,299 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
-      Version 6.0 (Mid-2016)
+      Version 6.0.1 (March 2017)
     </h2>
+
     <h3>Feature Changes</h3>
-      <ul>
-        <li>NetLogo and its extensions are now compiled against Java 8 and Scala 2.11.</li>
-        <li>NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode</li>
-        <li>The look and feel of NetLogo on Mac OS X has changed significantly. NetLogo is now using the Oracle-supplied Java look and feel as opposed to a third-party look and feel used in prior versions.</li>
-        <li>Plot pen colors can be set to an RGB list, just a other color-related variables in NetLogo</li>
-        <li>Line numbering can be toggled in the NetLogo Editor by choosing "Edit" &gt; "Show Line Numbers".</li>
-        <li>Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu.</li>
-        <li>NetLogo can export code to HTML with code-colorization by choosing "Export Code" in the "Export" section of the "File" menu.</li>
-        <li>The NetLogo editor now offers autocompletion support. Simply press the Control Key and the Spacebar at the same time while typing a word and you will see a list of similar NetLogo primitives as suggestions.</li>
-      </ul>
-    <h3>Language Changes</h3>
-      <ul>
-        <li>Compiler support for plural-only breed names (e.g. <code>breed [ mice ]</code>) has been removed.</li>
-        <li>The compiler detects a greater number of type errors, for instance <code>not pxcor</code> now raises a compiler error instead of erroring at runtime.</li>
-        <li>The <code>hubnet-set-client-interface</code> primitive has been removed.</li>
-        <li>The various prims starting with <code>movie-</code> have been removed, as has the movie encoder. <a href="transition.html#movie-to-vie">The transition guide</a> provides more details and information.</li>
-        <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms).</li>
-        <li>The string representation of a task displays the body of the task</li>
-      </ul>
+    <ul>
+      <li>
+        Brackets are required around anonymous procedure reporters only when there are two or more arguments.
+        For instance <code>[ [x] -&gt; x ]</code> can now be written <code>[ x -&gt; x ]</code>.
+        Note this change makes it possible to create models in NetLogo 6.0.1 that will not run in NetLogo 6.0.
+        If you plan to use your model in NetLogo 6.0, be sure to include brackets around anonymous procedure arguments.
+        For a short period after the release, models which use unbracketed lambda arguments may not work on netlogoweb.org.
+      </li>
+    </ul>
+
+    <h3>Bugfixes</h3>
+    <ul>
+      <li>The NetLogo code editor navigates and indents models much more quickly and efficiently than in NetLogo 6.0.</li>
+      <li>The NetLogo 5-to-6 autoconverter now ignores commented-out code.</li>
+      <li>The behavior of layout-radial in NetLogo 6 did not match the 5.3.1 behavior. This has been corrected and layout-radial should be identical between NetLogo 6.0.1 and NetLogo 5.3.1</li>
+      <li>NetLogo 6 raised a NullPointerException when numbers became too large for NetLogo to handle. This is now properly displayed to the user as a number out of bounds error.</li>
+      <li>Improved performance of models which use <code>let</code> and anonymous procedures together.</li>
+      <li>Reloading a model now clears global variables.</li>
+      <li>Clearer warning dialogs when opening an older version of a NetLogo 2D file in NetLogo 3D.</li>
+      <li>Using <code>foreach</code> improperly in the Command Center will display the same error as it would if used improperly in the code tab.</li>
+      <li>Extremely long anonymous procedures no longer cause an exception when compiled.</li>
+      <li><code>in-radius</code> is no longer pathologically slow on agentsets created using <code>with</code>.</li>
+    </ul>
+
     <h3>Extension Changes</h3>
+    <ul>
+      <li>A new primitive, <code>table:values</code> has been added to the table extension.</li>
+      <li>The R extension has been updated to take full advantage of the JavaGD R library using <code>r:setPlotDevice</code>.</li>
+      <li>Users can now supply a path to the R extension by configuring the value of r.lib.paths in the user.properties file.</li>
+      <li>Fixed a LevelSpace bug preventing interactive models from using nls files.</li>
+      <li>Fixed a LevelSpace bug causing NetLogo to lock up when trying to load a nonexistent file as an interactive model.</li>
+    </ul>
+
+    <h3>Documentation Changes</h3>
+    <ul>
+      <li>The system dynamics tutorial now instructs the user to set the <code>dt</code> to a value which gives stable behavior</li>
+      <li>The documentation for <code>follow</code>, <code>ride</code>, and <code>watch</code> has been clarified to indicate that calling one undoes highlights and perspective changes caused by the other</li>
+      <li>The documentation for <code>=</code> and <code>!=</code> indicates that they work with extension objects.</li>
+      <li>Several examples have been added to <code>sort</code> clarifying the behavior of <code>sort</code> on lists featuring different types of objects.</li>
+      <li>A new <a href="programming.html#user-interaction">section on User Interface primitives</a> has been added to the programming guide which discusses the behavior of the &quot;Halt&quot; button in the various user interaction dialogs.</li>
+      <li>Incorrect example code for <code>foreach</code> and <code>reduce</code> has been corrected.</li>
+    </ul>
+
+    <h3>Models</h3>
+    <p>All models have been updated to reflect the new optional nature of brackets for zero/one argument anonymous procedures. This resulted in changes to 108 models.</p>
+
+    <p>All models have been updated to reflect the availability of the new range primitive. This resulted in changes to 12 models.</p>
+
+    <h4>New Sample Model</h4>
+    <ul>
+      <li>GenJam - Duple</li>
+    </ul>
+
+    <h4>New Curricular Model</h4>
+
+    <ul>
+      <li>
+        Lattice Land curriculum:
+        <ul>
+          <li>Lattice Land Explore</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Revised Sample Models</h4>
+
+    <ul>
+      <li>PD 2 Person Iterated: info tab updates and extensive fixes for the code.</li>
+      <li>Party: fixed bug where a monitor covered a plot.</li>
+      <li>Signaling Game: info tab updates.</li>
+    </ul>
+
+    <h4>Revised Curricular Models</h4>
+
+    <ul>
+      <li>
+        GenEvo curriculum:
+        <ul>
+          <li>GenEvo 1 Genetic Switch: info tab updates and new graduated method of displaying lacZ concentration.</li>
+          <li>GenEvo 2 Genetic Drift: info tab updates and interface tweaks. New model preview.</li>
+          <li>GenEvo 3 Genetic Drift and Natural Selection: info tab updates and interface tweaks.</li>
+          <li>GenEvo 4 Competition: info tab updates.</li>
+          <li>Genetic Switch - Synthetic Biology has been renamed and is now Synthetic Biology - Genetic Switch. It also received info tab updates and a few interface changes.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>
+      Version 6.0 (December 2016)
+    </h2>
+
+    <h3>Feature Changes</h3>
+
+    <ul>
+      <li>The NetLogo code editor now offers autocompletion support. Simply press the Control key and the spacebar at the same time while typing a word and you will see a list of similar NetLogo primitives as suggestions.</li>
+      <li>The NetLogo code editor offers the option to "fold" procedures to make navigating large models simpler.</li>
+      <li>NetLogo supports multi-level agent-based modeling with the LevelSpace extension</li>
+      <li>Line numbering can be enabled in the NetLogo code editor by choosing "Show Line Numbers" from the "Preferences" dialog. This dialog can be opened by selecting "NetLogo" &gt; "Preferences" in Mac, or "Tools" &gt; "Preferences" on Linux or Windows.</li>
+      <li>The view resizing arrows have been removed and the tick counter has been relocated under the speed slider.</li>
+      <li>When editing NetLogo code, users can right-click a variable name or primitive and choose "Show Usage" to see all usages of that name in the file.</li>
+      <li>When editing NetLogo code, users can right-click a variable name and choose "Jump to Declaration" to see where in the file that variable is declared.</li>
+      <li>The NetLogo interface editor now supports "Undo" for widget addition, deletion, and movement.</li>
+      <li>NetLogo can export code to HTML with code-colorization by choosing "Export Code" in the "Export" section of the "File" menu.</li>
+      <li>The look and feel of NetLogo on Mac OS X has changed significantly. NetLogo is now using the Oracle-supplied Java look and feel as opposed to a third-party look and feel used in prior versions.</li>
+      <li>Plots use a random number generator independent of the main-model random number generator.</li>
+      <li>Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu. Those commands generate the preview image that appears when you upload your model to the Modeling Commons.</li>
+      <li>NetLogo displays a more helpful error message when a program fails due to an "out of memory" error.</li>
+      <li>NetLogo and its bundled extensions are now compiled against Java 8 and Scala 2.12.</li>
+      <li>NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode.</li>
+    </ul>
+
+    <h3>Bugfixes</h3>
+
+    <ul>
+      <li>
+      <code>*-link-neighbor?</code> primitives now work the same way for breeded and unbreeded links.</li>
+      <li>Resizing the world in NetLogo 3D no longer causes a black view. </li>
+      <li>Fixed error caused by right-clicking a widget while dragging. </li>
+      <li>Improved error message when a user-defined procedure shadows a breed procedure.</li>
+      <li>
+      <code>neighbors4</code> and <code>neighbors</code> no longer report agentsets containing the same patch more than once.</li>
+    </ul>
+
+    <h3>Language Changes</h3>
+
+    <ul>
+      <li>Support for plural-only breed names (e.g., <code>breed [mice]</code>) has been removed. Write <code>breed [mice mouse]</code> instead.</li>
+      <li>Tasks have been replaced by anonymous procedures. Tasks made use of <code>?</code> variables which were confusing for novices and difficult to read for experts. Additionally, tasks could not refer to the task variables of a containing task. Anonymous procedures may have named arguments which can be accessed by inner anonymous tasks. Upon first opening a NetLogo 5 model in NetLogo 6, tasks like <code>task [ ?1 + ?2 ]</code> will be automatically converted to <code>[ [?1 ?2] -&gt; ?1 + ?2 ]</code>. See the <a href="transition.html">the transition guide</a> for more information.</li>
+      <li>Link reporters have been overhauled to be more consistent and flexible</li>
+      <li>The <code>task</code> primitive is no longer supported.</li>
+      <li>Breed names that conflict with language primitives are now disallowed. For instance, <code>breed [strings string]</code> is now disallowed since it makes <code>is-string?</code> ambiguous.</li>
+      <li>The compiler errors on duplicated breed singular names. </li>
+      <li>The compiler detects a greater number of type errors, for instance <code>not pxcor</code> now raises a compiler error instead of erroring at runtime.</li>
+      <li>
+      <code>set-plot-pen-color</code> now accepts RGB lists as arguments.</li>
+      <li>The <code>hubnet-set-client-interface</code> primitive has been removed. </li>
+      <li>The various primitives starting with <code>movie-</code> have been removed, as has the movie encoder. They have been replaced with the new <code>vid</code> extension. <a href="transition.html">The transition guide</a> provides more details and information.</li>
+      <li>The <code>__change-language</code> primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms). </li>
+      <li>The string representation of anonymous procedures displays the body of the anonymous procedure.</li>
+    </ul>
+
+    <h3>Extension Changes</h3>
+
+    <ul>
+      <li>NetLogo 6.0 comes with three new, bundled extensions: LevelSpace <code>ls</code>, the <code>vid</code> extension for video manipulation, and the enhanced visualization extension <code>view2.5d</code>.</li>
+      <li> <code>ls</code> enables multi-level agent-based modeling in NetLogo.</li>
+      <li>The Extensions API has been updated from 5.0 to 6.0. This means that all non-bundled extensions will need to be updated to use the new API. Extensions written for NetLogo 5 <em>will not</em> work in NetLogo 6. If you're an extension author, see <a href="https://github.com/NetLogo/NetLogo/wiki/Hexy-Extension-Transition-Guide">the extension author transition guide for 6.0</a> for more information. If you regularly use extensions you may want to contact their authors to inform them a new version of NetLogo is on the way and they may want to update their extensions.</li>
+      <li>
+      <code>arduino:get</code> (in the arduino extension) correctly reports values from Windows 64-bit machines. In prior versions it would only report some values correctly.</li>
+      <li>Several new features have been added to the <code>nw</code> extension:
+
       <ul>
-        <li>The Extensions API has been updated from 5.0 to 6.0. See <a href="transition.html#extensions60">the transition guide</a>
-        for more information.</li>
-        <li>The <code>qtj</code> extension is no longer bundled with NetLogo. Users are encouraged to make use of the new <a href="vid.html">vid extension</a>.</li>
-        <li>The new <code>vid</code> extension is now bundled with NetLogo, combining features of the late <code>qtj</code> extension and the movie prims</li>
-        <li>The <code>network</code> extension is no longer bundled with NetLogo. Users are encouraged to use the <a href="nw.html">nw extension</a>, which has been bundled with NetLogo for some time.</li>
-        <li>The <code>gogo-serial</code> extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer <code>gogo</code> extension, which uses HID to communicate with the gogo board.</li>
+        <li>Added community detection using the Louvain method</li>
+        <li>Added modularity measurement</li>
+        <li>Added Watts-Strogatz small-world network generation</li>
+        <li>Made other network generation algorithms easier to layout</li>
+        <li>Weighted primitives now take symbolic variable names instead of strings. See <a href="transition.html">the transition guide</a> for more information.</li>
       </ul>
+      </li>
+      <li>The <code>qtj</code> extension is no longer bundled with NetLogo. Users are encouraged to make use of the <a href="vid.html">new <code>vid</code> extension</a>.</li>
+      <li>The new <code>vid</code> extension is now bundled with NetLogo, combining features of the late <code>qtj</code> extension and the movie primitives.</li>
+      <li>The network extension is no longer bundled with NetLogo. Users are encouraged to use the <code>nw</code> extension (<a href="nw.html">https://ccl.northwestern.edu/netlogo/docs/nw.html</a>), which has been bundled with NetLogo for some time.</li>
+      <li>The <code>gogo-serial</code> extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer <code>gogo</code> extension, which uses HID to communicate with the GoGo board. </li>
+    </ul>
+
+    <h3>Operating System Support</h3>
+    <ul>
+      <li>NetLogo will now be used to open <code>.nlogo</code> links in PowerPoint and other programs on Microsoft Windows.</li>
+      <li>The NetLogo binaries on Mac OS X are installed as runnable by any user. </li>
+      <li>NetLogo in Mac OS X will not use "App Nap" while running. This keeps simulations running at full speed when NetLogo is in the background.</li>
+      <li>The NetLogo controlling API has changed since NetLogo 5. Programs that rely on the controlling API (such as BehaviorSearch) will not work until they have been changed to match the new API.</li>
+    </ul>
+
+    <h3>Documentation Changes</h3>
+    <ul>
+      <li>New documentation for anonymous procedures</li>
+      <li>The NetLogo tutorial screenshots have been updated to correspond to the new Mac OS X Look and Feel.</li>
+      <li>The NetLogo dictionary displays the version in which each primitive was introduced next to that primitive.</li>
+      <li>A Spanish translation of the NetLogo dictionary is available <a href="diccionario.pdf">here</a></li>
+      </li>
+    </ul>
+
     <h3>Internationalization Changes</h3>
+
+    <ul>
+      <li>A new Spanish translation of the NetLogo dictionary is available <a href="diccionario.pdf">as part of the NetLogo manual</a>.</li>
+      <li>Language preferences can be changed by using the new "Preferences" menu instead of the <code>__change-language</code> primitive. </li>
+      <li>A Japanese localization for NetLogo is now available and included with the standard download.</li>
+      <li>The Chinese translation for NetLogo has been updated.</li>
+    </ul>
+
+    <h3>Models</h3>
+
+    <h4>New Sample Models:</h4>
+
+    <ul>
+      <li>Kicked Rotator</li>
+      <li>Kicked Rotators</li>
+      <li>Mammoths, a legacy StarLogoT model, has been converted to NetLogo.</li>
+    </ul>
+
+    <h4>New Curricular Models:</h4>
+
+    <ul>
+      <li>GenEvo 1 Genetic Switch<br>
+      </li>
+      <li>GenEvo 2 Genetic Drift</li>
+      <li>GenEvo 3 Genetic Drift and Natural Selection</li>
+      <li>GenEvo 4 Competition</li>
+    </ul>
+
+    <h4>New Code Examples:</h4>
+
+    <ul>
+      <li>Movie Playing Example (<code>vid</code> extension)</li>
+      <li>Movie Recording Example (<code>vid</code> extension)</li>
+      <li>Video Camera Example (<code>vid</code> extension)</li>
+      <li>Network Extension General Demo (<code>nw</code> extension)</li>
+      <li>Model Interactions Example (<code>ls</code> extension)</li>
+      <li>Model Loader Example (<code>ls</code> extension)</li>
+      <li>Model Visualizer and Plotter Example (<code>ls</code> extension)</li>
+    </ul>
+
+    <h4>Promoted Models (improved and no longer "unverified"):</h4>
+
+    <ul>
+      <li>ProbLab Genetics</li>
+      <li>Traffic 2 Lanes</li>
+    </ul>
+
+    <h4>Revised Sample Models:</h4>
+
+    <ul>
+      <li>Giant Component: added text in the info tab.</li>
+      <li>Team Assembly: removed unused switch widget.</li>
+      <li>Traffic Basic, Traffic Grid, Traffic Intersection: revised info tab.</li>
+      <li>Voting: stopped the model when voting stabilizes.</li>
+      <li>Wealth Distribution: fixed typos in info tab, improved code formatting.</li>
+    </ul>
+
+    <h4>Revised HubNet Activities:</h4>
+
+    <ul>
+      <li>Bug Hunters Competition HubNet, Critter Designers HubNet, Fish Spotters HubNet: removed unnecessary call to <code>hubnet-set-client-interface</code>.</li>
+      <li>Gridlock HubNet, Gridlock Alternate HubNet: revised info tab.</li>
+    </ul>
+
+    <h4>Revised Curricular Models:</h4>
+
+    <ul>
+      <li>DNA Replication Fork: fixed a a monitor and runtime error when using a time limit.</li>
+    </ul>
+
+    <h4>Revised IABM models:</h4>
+
+    <ul>
+      <li>Agentset Efficiency: clarified description of <code>go-2</code> in info tab.</li>
+      <li>Agentset Ordering: fixed typos in into tab.</li>
+      <li>Arduino Example: improved model to demonstrate both directions of communication with the Arduino.</li>
+      <li>Heroes and Cowards: removed extra text in info tab.</li>
+      <li>Preferential Attachment Simple: removed extra pen in plot and extra "layout" button.</li>
+      <li>Random Network: made sure that the number of links is never too big for the number of nodes.</li>
+      <li>Segregation Simple Extension 1, 2 and 3: fixed <code>number-of-ethnicities</code> slider to avoid runtime errors.</li>
+      <li>Traffic Basic Adaptive Individuals, Traffic Basic Utility, Traffic Grid Goal: revised info tab.</li>
+      <li>Traffic Basic Adaptive: revised info tab, clarified comment in <code>adaptive-go</code> procedure.</li>
+      <li>Voting Component Verification: stopped the model when voting stabilizes.</li>
+      <li>Voting Sensitivity Analysis: improved code for stopping the model when voting stabilizes.</li>
+    </ul>
+
+    <h4>Revised Code Examples:</h4>
+
+    <ul>
+      <li>GoGoMonitorSerial, GoGoMonitorSimpleSerial: removed the models, as the <code>gogo-serial</code> and <code>qtj</code> extensions are no longer bundled.</li>
+      <li>Random Network Example: made sure that the number of links is never too big for the number of nodes.</li>
+      <li>Since the QuickTime extension (<code>qtj</code>) has been replaced by the <code>vid</code> extension, the following models have been converted to use the <code>vid</code> extension:
+
       <ul>
-        <li>A Japanese translation for NetLogo is now available and included with the standard download.</li>
-        <li>The Chinese translation for NetLogo has been updated.</li>
+        <li>Movie Example, replaced by Movie Recording Example</li>
+        <li>QuickTime Movie Example, replaced by Movie Playing Example</li>
+        <li>QuickTime Camera Example, replaced by Video Camera Example</li>
       </ul>
+      </li>
+    </ul>
+
+    <h4>Demoted model:</h4>
+
+    <ul>
+      <li>El Farol Network Congestion, a previously "unverified" model, has been moved to the NetLogo User Community Models</li>
+    </ul>
     <h2>
       Version 5.3.1 (February 2016)
     </h2>

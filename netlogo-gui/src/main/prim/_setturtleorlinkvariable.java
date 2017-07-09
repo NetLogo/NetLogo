@@ -4,51 +4,55 @@ package org.nlogo.prim;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.LogoException;
+import org.nlogo.agent.Agent;
+import org.nlogo.agent.Link;
+import org.nlogo.agent.Turtle;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _setturtleorlinkvariable
     extends Command {
-  String varName = "";
+  final String varName;
+  final int vnTurtle;
+  final int vnLink;
 
-  public _setturtleorlinkvariable(_turtleorlinkvariable original) {
-    varName = original.varName;
+  public _setturtleorlinkvariable(String varName, int vnTurtle, int vnLink) {
+    this.varName = varName;
+    this.vnTurtle = vnTurtle;
+    this.vnLink = vnLink;
     this.switches = true;
   }
 
-
-
   @Override
   public String toString() {
-    if (world != null) {
-      return super.toString() + ":" + varName;
-    } else {
-      return super.toString() + ":" + varName;
-    }
+    return super.toString() + ":" + varName;
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
-    Object value = args[0].report(context);
-    try {
-      context.agent.setTurtleOrLinkVariable(varName, value);
-    } catch (AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
-    }
-    context.ip = next;
+  public void perform(final Context context) throws LogoException {
+    perform_1(context, args[0].report(context));
   }
 
   public void perform_1(final Context context, Object value) throws LogoException {
+    Agent agent = context.agent;
+    int agentBit = agent.agentBit();
     try {
-      context.agent.setTurtleOrLinkVariable(varName, value);
+      switch (agentBit) {
+        case Turtle.BIT:
+          agent.setTurtleVariable(vnTurtle, value);
+          break;
+        case Link.BIT:
+          agent.setLinkVariable(vnLink, value);
+          break;
+        default:
+          agent.setTurtleOrLinkVariable(varName, value);
+          break;
+      }
     } catch (AgentException ex) {
-      throw new EngineException(context, this, ex.getMessage());
+      throw new RuntimePrimitiveException(context, this, ex.getMessage());
     }
     context.ip = next;
   }
-
-
 }

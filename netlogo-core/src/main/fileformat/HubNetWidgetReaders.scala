@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.parboiled.scala._
+import org.parboiled2._
 import org.nlogo.api.Dump
 import org.nlogo.core.{ Button, Chooseable, Chooser, Direction,
   Horizontal, LiteralParser, LogoList, Monitor, Slider, Switch,
@@ -11,7 +11,7 @@ import org.nlogo.core.model.WidgetReader
 
 import scala.reflect.ClassTag
 
-import ParboiledWidgetParser.{ restoreLines, stripLines }
+import ParsingStringUtils.{ restoreLines, stripLines }
 
 object HubNetWidgetReaders {
   def saveNillableString(s: String): String =
@@ -32,8 +32,9 @@ object HubNetWidgetReaders {
 
 import HubNetWidgetReaders._
 
-object HubNetSwitchReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
-  class SwitchParser extends Parser with ParboiledWidgetParser.RichRule {
+object HubNetSwitchReader extends BaseWidgetParser with ConstWidgetParser with WidgetReader {
+  class SwitchParser(val input: ParserInput)
+    extends Parser with DefaultRule with BaseWidgetParser.RichRule {
     def parserToSwitch(
       pos: (Int, Int, Int, Int),
       name: Option[String],
@@ -52,24 +53,20 @@ object HubNetSwitchReader extends DefaultParboiledWidgetParser with ConstantRule
       NillableString ~ NewLine ~
       BooleanDigit ~ NewLine ~
       IgnoredLine ~
-      IgnoredText ~~> parserToSwitch _
+      IgnoredText ~> parserToSwitch _
     }
 
     def SwitchHeader: Rule0 = rule { "SWITCH" }
 
+    def defaultRule = HubNetSwitch
   }
 
-  def parser = new SwitchParser {
-    override val buildParseTree = true
-  }
-
+  type InternalParser = SwitchParser
   type T = Switch
-
   type ParsedWidget = Switch
 
+  def parserFromString(s: String) = new SwitchParser(s)
   def classTag: ClassTag[T] = ClassTag(classOf[Switch])
-
-  override def parseRule = parser.HubNetSwitch
 
   def format(switch: T): String = {
     Seq(
@@ -87,11 +84,12 @@ object HubNetSwitchReader extends DefaultParboiledWidgetParser with ConstantRule
   }
 }
 
-object HubNetViewReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
-  class ViewParser extends Parser with ParboiledWidgetParser.RichRule {
+object HubNetViewReader extends BaseWidgetParser with ConstWidgetParser with WidgetReader {
+  class ViewParser(val input: ParserInput)
+  extends Parser with DefaultRule with BaseWidgetParser.RichRule {
     def parserToView(
       pos: (Int, Int, Int, Int),
-      dim: List[Int],
+      dim: Seq[Int],
       maxPy: Int): View = {
         View(
           left = pos._1, top = pos._2, right = pos._3, bottom = pos._4,
@@ -101,25 +99,23 @@ object HubNetViewReader extends DefaultParboiledWidgetParser with ConstantRuleWi
     def HubNetView: Rule1[View] = rule {
       ViewHeader ~ NewLine ~
       PositionInformation ~
-      nTimes(12, IgnoredLine) ~
-      nTimes(3, IntValue ~ NewLine) ~
-      IntValue ~~> parserToView _
+      12.times(IgnoredLine) ~
+      3.times(IntValue ~ NewLine) ~
+      IntValue ~> parserToView _
     }
 
     def ViewHeader: Rule0 = rule { "VIEW" }
+
+    def defaultRule = HubNetView
   }
 
-  def parser = new ViewParser {
-    override val buildParseTree = true
-  }
+  def parserFromString(s: String) = new ViewParser(s)
 
+  type InternalParser = ViewParser
   type T = View
-
   type ParsedWidget = View
 
   def classTag: ClassTag[T] = ClassTag(classOf[View])
-
-  override def parseRule = parser.HubNetView
 
   def format(view: T): String = {
     Seq(
@@ -148,8 +144,9 @@ object HubNetViewReader extends DefaultParboiledWidgetParser with ConstantRuleWi
   }
 }
 
-object HubNetButtonReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
-  class ButtonParser extends Parser with ParboiledWidgetParser.RichRule {
+object HubNetButtonReader extends BaseWidgetParser with ConstWidgetParser with WidgetReader {
+  class ButtonParser(val input: ParserInput)
+  extends Parser with DefaultRule with BaseWidgetParser.RichRule {
     def parserToButton(
       pos: (Int, Int, Int, Int),
       name: Option[String],
@@ -167,24 +164,22 @@ object HubNetButtonReader extends DefaultParboiledWidgetParser with ConstantRule
       ButtonHeader ~ NewLine ~
       PositionInformation ~
       NillableString ~ NewLine ~
-      nTimes(6, IgnoredLine) ~
-      NillableString ~~> parserToButton _
+      6.times(IgnoredLine) ~
+      NillableString ~> parserToButton _
     }
 
     def ButtonHeader: Rule0 = rule { "BUTTON" }
+
+    override def defaultRule = HubNetButton
   }
 
-  def parser = new ButtonParser {
-    override val buildParseTree = true
-  }
+  def parserFromString(s: String) = new ButtonParser(s)
 
+  type InternalParser = ButtonParser
   type T = Button
-
   type ParsedWidget = Button
 
   def classTag: ClassTag[T] = ClassTag(classOf[Button])
-
-  override def parseRule = parser.HubNetButton
 
   def format(button: T): String = {
     val savedActionKey = button.actionKey.map(_.toString).getOrElse("NIL")
@@ -206,8 +201,9 @@ object HubNetButtonReader extends DefaultParboiledWidgetParser with ConstantRule
   }
 }
 
-object HubNetMonitorReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
-  class MonitorParser extends Parser with ParboiledWidgetParser.RichRule {
+object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with WidgetReader {
+  class MonitorParser(val input: ParserInput) extends Parser
+  with DefaultRule with BaseWidgetParser.RichRule {
     def parserToMonitor(
       pos: (Int, Int, Int, Int),
       name: Option[String],
@@ -226,23 +222,21 @@ object HubNetMonitorReader extends DefaultParboiledWidgetParser with ConstantRul
       NillableString ~ NewLine ~
       NillableString ~ NewLine ~
       IntValue ~ NewLine ~
-      IntDigits ~~> parserToMonitor _
+      IntDigits ~> parserToMonitor _
     }
 
     def MonitorHeader: Rule0 = rule { "MONITOR" }
+
+    override def defaultRule = HubNetMonitor
   }
 
-  def parser = new MonitorParser {
-    override val buildParseTree = true
-  }
+  def parserFromString(s: String) = new MonitorParser(s)
 
+  type InternalParser = MonitorParser
   type T = Monitor
-
   type ParsedWidget = Monitor
 
   def classTag: ClassTag[T] = ClassTag(classOf[Monitor])
-
-  override def parseRule = parser.HubNetMonitor
 
   def format(monitor: T): String = {
     Seq(
@@ -259,15 +253,16 @@ object HubNetMonitorReader extends DefaultParboiledWidgetParser with ConstantRul
 }
 
 
-object HubNetSliderReader extends DefaultParboiledWidgetParser with ConstantRuleWidgetParser with WidgetReader {
-  class SliderParser extends Parser with ParboiledWidgetParser.RichRule {
+object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with WidgetReader {
+  class SliderParser(val input: ParserInput) extends Parser
+    with DefaultRule with BaseWidgetParser.RichRule {
     def parserToSlider(
       pos: (Int, Int, Int, Int),
       name: Option[String],
-      sliderParams: List[Double],
+      sliderParams: Seq[Double],
       units: Option[String],
       direction: Direction): Slider = {
-        val List(min, max, value, inc) = sliderParams
+        val Seq(min, max, value, inc) = sliderParams
         Slider(
           display = name.map(restoreLines),
           left = pos._1, top = pos._2,
@@ -286,10 +281,10 @@ object HubNetSliderReader extends DefaultParboiledWidgetParser with ConstantRule
       PositionInformation ~
       NillableString ~ NewLine ~
       IgnoredLine ~
-      nTimes(4, DoubleValue ~ NewLine) ~
+      4.times(DoubleValue ~ NewLine) ~
       IgnoredLine ~
       NillableString ~ NewLine ~
-      Direction ~~> parserToSlider _
+      Direction ~> parserToSlider _
     }
 
     def Direction: Rule1[Direction] = rule {
@@ -297,19 +292,18 @@ object HubNetSliderReader extends DefaultParboiledWidgetParser with ConstantRule
     }
 
     def SliderHeader: Rule0 = rule { "SLIDER" }
+
+    def defaultRule = HubNetSlider
   }
 
-  def parser = new SliderParser {
-    override val buildParseTree = true
-  }
+  def parserFromString(s: String) = new SliderParser(s)
 
+  type InternalParser = SliderParser
   type T = Slider
-
   type ParsedWidget = Slider
 
   def classTag: ClassTag[T] = ClassTag(classOf[Slider])
 
-  override def parseRule = parser.HubNetSlider
 
   def format(slider: T): String = {
     val savedName = slider.variable.map(stripLines).getOrElse("NIL")
@@ -333,9 +327,10 @@ object HubNetSliderReader extends DefaultParboiledWidgetParser with ConstantRule
   }
 }
 
-object HubNetChooserReader extends DefaultParboiledWidgetParser with WidgetReader {
+object HubNetChooserReader extends BaseWidgetParser with WidgetReader {
 
-  class ChooserParser(literalParser: Option[LiteralParser]) extends Parser with ParboiledWidgetParser.RichRule {
+  class ChooserParser(val input: ParserInput, literalParser: Option[LiteralParser]) extends Parser with DefaultRule
+    with BaseWidgetParser.RichRule {
     def parserToChooser(
       pos: (Int, Int, Int, Int),
       name: Option[String], choices: List[Chooseable],
@@ -354,12 +349,12 @@ object HubNetChooserReader extends DefaultParboiledWidgetParser with WidgetReade
       NillableString ~ NewLine ~
       IgnoredLine ~
       LogoListRule ~ NewLine ~
-      NonNegativeIntValue ~~> parserToChooser _
+      NonNegativeIntValue ~> parserToChooser _
     }
 
     def LogoListRule: Rule1[List[Chooseable]] =
       rule {
-        StringRule ~~> { (s: String) =>
+        StringRule ~> { (s: String) =>
           literalParser.map { p =>
               val escapedValues = restoreLines(s)
               p.readFromString(s"[$escapedValues]") match {
@@ -371,22 +366,24 @@ object HubNetChooserReader extends DefaultParboiledWidgetParser with WidgetReade
       }
 
     def NonNegativeIntValue: Rule1[Int] =
-      rule { oneOrMore(Digit) ~> (_.toInt) }
+      rule { capture(oneOrMore(Digit)) ~> ((_: String).toInt) }
 
     def ChooserHeader: Rule0 = rule { "CHOOSER" }
+
+    def defaultRule = HubNetChooser
   }
 
+  type InternalParser = ChooserParser
   type T = Chooser
-
   type ParsedWidget = Chooser
 
   def classTag: ClassTag[T] = ClassTag(classOf[Chooser])
 
-  def validatingParseRule(lines: List[String]): Rule1[this.ParsedWidget] =
-    new ChooserParser(None).HubNetChooser
+  def validatingParser(lines: List[String]): InternalParser =
+    new ChooserParser(lines.mkString("\n"), None)
 
-  def parsingRule(lines: List[String], literalParser: LiteralParser): Rule1[this.ParsedWidget] =
-    new ChooserParser(Some(literalParser)).HubNetChooser
+  def parser(lines: List[String], literalParser: LiteralParser): InternalParser =
+    new ChooserParser(lines.mkString("\n"), Some(literalParser))
 
   def format(chooser: T): String = {
     val savedVarName = saveNillableString(stripLines(chooser.varName))

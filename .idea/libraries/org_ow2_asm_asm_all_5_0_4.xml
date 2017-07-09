@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="org.ow2.asm:asm-all:5.0.4" type="repository">
-    <properties maven-id="org.ow2.asm:asm-all:5.0.4" />
+  <library name="org.ow2.asm:asm-all:5.0.4">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib_idea/asm-all-5.0.4.jar!/" />
     </CLASSES>

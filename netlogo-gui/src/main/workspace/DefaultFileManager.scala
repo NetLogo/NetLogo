@@ -17,12 +17,16 @@ import
 
 private[workspace] final class DefaultFileManager(private val workspace: ModelTracker) extends FileManager {
 
-  private            var openFiles:   Map[String, File] = Map[String, File]()
-  private[workspace] var currentFile: Option[File]      = None
-  private[workspace] var prefix:      String            = ""
+  private            var openFiles:    Map[String, File] = Map[String, File]()
+  private[workspace] var _currentFile: Option[File]      = None
+  private[workspace] var _prefix:      String            = ""
+
+  def currentFile: Option[File] = _currentFile
+
+  def prefix: String = _prefix
 
   def getErrorInfo: String =
-    currentFile.map {
+    _currentFile.map {
       file =>
 
         val position = file.pos
@@ -55,7 +59,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
     new LocalFile(filename)
 
   def setPrefix(setPrefix: String): Unit = {
-    prefix =
+    _prefix =
       if (setPrefix == "")
         ""
       else {
@@ -69,17 +73,17 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def setPrefix(newPrefix: URL): Unit = {
-    prefix = newPrefix.toString
+    _prefix = newPrefix.toString
   }
 
   def attachPrefix(filename: String): String =
-    if (new JFile(filename).isAbsolute || prefix == "")
+    if (new JFile(filename).isAbsolute || _prefix == "")
       filename
     else
       relativeToAbsolute(filename)
 
   def hasCurrentFile: Boolean =
-    currentFile.flatMap(f => openFiles.get(f.getAbsolutePath)).nonEmpty
+    _currentFile.flatMap(f => openFiles.get(f.getAbsolutePath)).nonEmpty
 
   def findOpenFile(filename: String): Option[File] = {
     val newFile = new JFile(filename)
@@ -87,7 +91,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def ensureMode(openMode: FileMode): Unit = {
-    currentFile.fold(throwNoOpenFile())(throwOnBadFileMode(_, openMode))
+    _currentFile.fold(throwNoOpenFile())(throwOnBadFileMode(_, openMode))
   }
 
   def fileExists(filePath: String): Boolean =
@@ -112,7 +116,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def openFile(newFileName: String): Unit = {
-    currentFile = Option(attachPrefix(newFileName)).map {
+    _currentFile = Option(attachPrefix(newFileName)).map {
       fullFileName =>
         findOpenFile(fullFileName) orElse {
           val createdFile = new LocalFile(fullFileName)
@@ -123,12 +127,12 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def flushCurrentFile(): Unit = {
-    currentFile.fold(throw new IOException("There is no file to flush"))(_.flush())
+    _currentFile.fold(throw new IOException("There is no file to flush"))(_.flush())
   }
 
   def closeCurrentFile(): Unit = {
-    currentFile.fold(throw new IOException("There is no file to close"))(closeFile)
-    currentFile = None
+    _currentFile.fold(throw new IOException("There is no file to close"))(closeFile)
+    _currentFile = None
   }
 
   def readLine(): String = {
@@ -144,7 +148,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
       else
         acc
 
-    currentFile.map(asReadableFile _                  andThen
+    _currentFile.map(asReadableFile _                  andThen
                     asFileNotAtEof                    andThen
                     (new BufferedFileCharIterator(_)) andThen
                     (readToNewLineOrEof(_)))
@@ -154,7 +158,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
 
   def readChars(num: Int): String = {
     val takeCharsFromFile = (file: File) => new BufferedFileCharIterator(file).take(num).mkString
-    currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen takeCharsFromFile).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen takeCharsFromFile).getOrElse(throwNoOpenFile())
   }
 
   def read(world: World): AnyRef = {
@@ -169,19 +173,19 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
           throw ex
       }
     }
-    currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen readLiteral).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen readLiteral).getOrElse(throwNoOpenFile())
   }
 
   def eof: Boolean =
-    currentFile.map(asReadableFile _ andThen updateFileEof andThen (_.eof)).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile _ andThen updateFileEof andThen (_.eof)).getOrElse(throwNoOpenFile())
 
   def closeAllFiles(): Unit = {
     openFiles.values foreach closeFile
-    currentFile = None
+    _currentFile = None
   }
 
   def writeOutputObject(oo: OutputObject): Unit = {
-    currentFile.fold(throw new IOException)(_.getPrintWriter.print(oo.get))
+    _currentFile.fold(throw new IOException)(_.getPrintWriter.print(oo.get))
   }
 
   def handleModelChange(): Unit = {
@@ -239,7 +243,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   private def relativeToAbsolute(newPath: String): String =
-    try new JFile(s"$prefix$separatorChar$newPath").getCanonicalPath
+    try new JFile(s"${_prefix}$separatorChar$newPath").getCanonicalPath
     catch {
       case ex: IOException => throw new IllegalStateException(ex)
     }

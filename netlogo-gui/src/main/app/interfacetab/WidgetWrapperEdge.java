@@ -16,7 +16,7 @@ strictfp class WidgetWrapperEdge
   private final int eastBorder;
   private final int westBorder;
 
-  WidgetWrapperEdge(Type type, int eastBorder, int westBorder, boolean handles) {
+  WidgetWrapperEdge(WidgetWrapperEdge.Type type, int eastBorder, int westBorder, boolean handles) {
     this.type = type;
     this.eastBorder = eastBorder;
     this.westBorder = westBorder;

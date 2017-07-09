@@ -9,7 +9,7 @@ class _usermessage extends Command {
 
   override def perform(context: Context) {
     val message = Dump.logoObject(args(0).report(context))
-    workspace.updateUI(context)
+    workspace.updateUI()
     val canceled = workspace.waitForResult(
       new ReporterRunnable[Boolean] {
         override def run() =

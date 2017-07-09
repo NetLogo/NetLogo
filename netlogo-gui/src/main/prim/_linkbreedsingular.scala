@@ -2,9 +2,6 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ AgentSet, Link }
-import org.nlogo.api.{ LogoException}
-import org.nlogo.core.Syntax
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 

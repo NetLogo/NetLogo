@@ -1,9 +1,8 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Argument
-import org.nlogo.core.Syntax
-import org.nlogo.nvm.{Reporter, Pure, Context}
 import scala.collection.JavaConverters._
+import org.nlogo.core.Pure
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _block extends Reporter with Pure {
 

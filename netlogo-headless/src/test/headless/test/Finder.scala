@@ -3,12 +3,11 @@
 package org.nlogo.headless.test
 
 import java.io.File
-import org.nlogo.util.SlowTestTag
 import org.scalatest.{ FunSuite, Tag }
 
 import
   org.nlogo.{ api, core },
-    api.FileIO.file2String,
+    api.FileIO.fileToString,
     core.{ Model, Resource }
 
 /// top level entry points
@@ -42,7 +41,7 @@ abstract class ExtensionTests extends Finder {
           .getOrElse(throw new RuntimeException("Invalid extensions dir!"))
       filesInDir(extensionsDir)
         .iterator
-        .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
+        .map(f => (suiteName(f), fileToString(f.getAbsolutePath)))
     }
   }
 }
@@ -67,7 +66,7 @@ trait Finder extends FunSuite  {
         .filterNot(_.getName.containsSlice("SDM"))
         .filterNot(_.getName.containsSlice("HubNet"))
         .iterator
-        .map(f => (suiteName(f), file2String(f.getAbsolutePath)))
+        .map(f => (suiteName(f), fileToString(f.getAbsolutePath)))
   }
 
   case class TxtsInResources(path: String) extends Iterable[(String, String)] {

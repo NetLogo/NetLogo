@@ -11,7 +11,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Nobody$;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _notequal
@@ -70,15 +70,15 @@ public final strictfp class _notequal
   }
 
   public boolean report_11(Context context, Turtle arg0, Turtle arg1) {
-    return arg0.id != arg1.id;
+    return arg0.id() != arg1.id();
   }
 
   public boolean report_12(Context context, Patch arg0, Patch arg1) {
-    return arg0.id != arg1.id;
+    return arg0.id() != arg1.id();
   }
 
   public boolean report_13(Context context, Link arg0, Link arg1) {
-    return arg0.id != arg1.id;
+    return arg0.id() != arg1.id();
   }
 
 }

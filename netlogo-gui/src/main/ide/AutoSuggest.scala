@@ -2,66 +2,72 @@
 
 package org.nlogo.ide
 
-import org.nlogo.core.DefaultTokenMapper
-
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.immutable.TreeSet
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.WeakHashMap
+import scala.collection.mutable.{ HashMap, ListBuffer }
+
+import org.nlogo.core.Dialect
+import org.nlogo.nvm.ExtensionManager
+
+object AutoSuggest {
+  def apply(dialect: Dialect, extensionManager: Option[ExtensionManager]): AutoSuggest = {
+    val commandNames = dialect.tokenMapper.allCommandNames
+    val reporterNames = dialect.tokenMapper.allReporterNames
+    val extensionPrimNames =
+      extensionManager.map { ex =>
+      { () => (ex.extensionCommandNames ++ ex.extensionReporterNames).map(_.toLowerCase) }
+      }.getOrElse({() => Set.empty[String]})
+    new AutoSuggest(commandNames ++ reporterNames, extensionPrimNames)
+  }
+}
 
 /**
-  * Builds the trie from commands and reporters and provides fuctions to get suggestions.
-  * Special care should be taken as everything is inserted and retrieved in lower case.
-  */
-class AutoSuggest {
-  val commandNames = DefaultTokenMapper.allCommandNames
-  val reporterNames = DefaultTokenMapper.allReporterNames
-  val EDIT_WEIGHT = 1
+ * Builds the trie from commands and reporters and provides fuctions to get suggestions.
+ * Special care should be taken as everything is inserted and retrieved in lower case.
+ */
+class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set[String]) {
+  val EDIT_WEIGHT_ADD = 1
+  val EDIT_WEIGHT_REMOVE = 1
+  val EDIT_WEIGHT_REPLACE = 1
 
   val trie = new TrieNode()
-  for(commandName <- commandNames) {
-    trie.append(commandName.toLowerCase)
-  }
-  for(reporterName <- reporterNames) {
-    trie.append(reporterName.toLowerCase)
+
+  var extensionPrims = Set.empty[String]
+
+  for(name <- primitiveNames) {
+    trie.append(name.toLowerCase)
   }
 
   def editDistance(s1: String, s2: String): Int = {
-    val memo = WeakHashMap[(List[Char],List[Char]),Int]()
+    val memo = HashMap[(List[Char],List[Char]),Int]()
     def min(a:Int, b:Int, c:Int) = a min b min c
     def stringDistance(s1: List[Char], s2: List[Char]): Int = {
       if (memo.contains((s1,s2)) == false)
         memo((s1,s2)) = (s1, s2) match {
           case (_, Nil) => s1.length
           case (Nil, _) => s2.length
-          case (c1::t1, c2::t2)  => min(stringDistance(t1,s2) + EDIT_WEIGHT, stringDistance(s1,t2) + EDIT_WEIGHT,
-            stringDistance(t1,t2) + (if (c1==c2) 0 else EDIT_WEIGHT))
+          case (c1::t1, c2::t2)  => min(stringDistance(t1,s2) + EDIT_WEIGHT_ADD, stringDistance(s1,t2) + EDIT_WEIGHT_REMOVE,
+            stringDistance(t1,t2) + (if (c1==c2) 0 else EDIT_WEIGHT_REPLACE))
         }
       memo((s1,s2))
     }
     stringDistance(s1.toLowerCase.toList, s2.toLowerCase.toList)
   }
 
+  // reloads extension primitives
+  def refresh(): Unit = {
+    extensionPrims.foreach(trie.remove)
+    extensionPrims = extensionPrimNames()
+    extensionPrims.foreach(trie.append)
+  }
+
   def getSuggestions(word: String): Seq[String] = {
-    val eD = if(word.length >= 2) 1 else 0
-
-    var toHitList = Seq[String]()
-    for(i <- 0 to eD) {
-      toHitList ++= trie.findByLength(word, word.length + i)
+    var suggestions = trie.findByPrefix(word)
+    if(word.length > 1) {
+      trie.findByAcronym(word).foreach(suggestion => suggestions ++= trie.findByPrefix(suggestion))
     }
-    toHitList = for(token <- toHitList if editDistance(token, word) <= eD) yield token
-    toHitList.sortBy(editDistance(_, word))
-    var suggestionList = TreeSet[String]()
-    for(token <- toHitList) {
-      if (!token.equals("")) {
-        suggestionList ++= trie.findByPrefix(token)
-      }
-    }
-    suggestionList.toSeq
-      .sortBy(editDistance(_, word))
-
+    suggestions
   }
 
   /**
@@ -131,6 +137,27 @@ class AutoSuggest {
       }
 
       helper(0, this, new ListBuffer[String]())
+    }
+
+    def findByAcronym(acronym: String): scala.collection.Seq[String] = {
+      def helper(currentIndex: Int, node: TrieNode, items: ListBuffer[String], previousDash: Boolean, word: String): ListBuffer[String] = {
+        if(currentIndex == acronym.length){
+          items += word
+        } else {
+          node.children.foreach {
+            case child =>
+              if (previousDash) {
+                if (child._1.toLower == acronym(currentIndex).toLower) {
+                  helper(currentIndex + 1, child._2, items, child._1 == '-', word + child._1)
+                }
+              } else {
+                helper(currentIndex, child._2, items, child._1 == '-', word + child._1)
+              }
+          }
+          items
+        }
+      }
+      helper(0, this, new ListBuffer[String](), true, "")
     }
 
     def findByLength(prefix: String, length: Int): scala.collection.Seq[String] = {

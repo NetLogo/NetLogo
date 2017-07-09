@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Reporter;
 
@@ -40,14 +40,15 @@ public final strictfp class _callreport
 
   @Override
   public Object report(Context context) throws LogoException {
-    Activation newActivation =
-        new Activation(procedure, context.activation, context.ip);
+    Object[] callArgs = new Object[procedure.size()];
     for (int i = 0; i < (procedure.args().size() - procedure.localsCount()); i++) {
-      newActivation.args[i] = args[i].report(context);
+      callArgs[i] = args[i].report(context);
     }
+    Activation newActivation =
+        new Activation(procedure, context.activation, callArgs, context.ip);
     Object result = context.callReporterProcedure(newActivation);
     if (result == null) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, "the " + procedure.name() + " procedure failed to report a result");
     }
     return result;

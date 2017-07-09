@@ -3,7 +3,6 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.core.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _dz extends Reporter {
@@ -11,7 +10,7 @@ class _dz extends Reporter {
   override def report(context: Context) = {
     val turtle = context.agent.asInstanceOf[Turtle3D]
     val value = turtle.dz
-    validDouble(value)
+    validDouble(value, context)
     Double.box(
       if (StrictMath.abs(value) < 3.2e-15)
         0

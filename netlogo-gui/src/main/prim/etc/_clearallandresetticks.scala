@@ -2,10 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Syntax
+// true here because resetTicks calls other code
 import org.nlogo.nvm.{ Command, Context }
 
-// true here because resetTicks calls other code
 class _clearallandresetticks extends Command {
 
 

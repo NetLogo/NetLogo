@@ -3,9 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{AstTransformer, CompilationOperand, CompilationEnvironment, Dialect, DummyCompilationEnvironment, Femto,
-    ExtensionManager, DummyExtensionManager, NetLogoCore, FrontEndInterface, FrontEndProcedure,
-    Program, TokenizerInterface, ProcedureDefinition, ProcedureSyntax}
+  core.{AstTransformer, CompilationOperand, Dialect, Femto,
+    ExtensionManager, FrontEndInterface,
+    TokenizerInterface }
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -18,25 +18,22 @@ trait FrontEnd extends FrontEndMain
 
 trait FrontEndMain extends NetLogoParser {
 
-  import FrontEndInterface.{ ProceduresMap, FrontEndResults }
+  import FrontEndInterface.FrontEndResults
 
   // entry points
 
   def frontEnd(compilationOperand: CompilationOperand): FrontEndResults = {
-    import compilationOperand.{ extensionManager, oldProcedures }
     val (rawProcDefs, structureResults) = basicParse(compilationOperand)
 
-    val topLevelDefs = transformers.foldLeft(rawProcDefs) {
+    val topLevelDefs = transformers(compilationOperand).foldLeft(rawProcDefs) {
       case (defs, transform) => defs.map(transform.visitProcedureDefinition)
     }
+
 
     val letVerifier = new LetVerifier
     topLevelDefs.foreach(letVerifier.visitProcedureDefinition)
 
     new AgentTypeChecker(topLevelDefs).check()  // catch agent type inconsistencies
-
-    val verifier = new TaskVariableVerifier
-    topLevelDefs.foreach(verifier.visitProcedureDefinition)
 
     val cfVerifier = new ControlFlowVerifier
     val verifiedDefs = topLevelDefs.map(cfVerifier.visitProcedureDefinition)
@@ -44,17 +41,16 @@ trait FrontEndMain extends NetLogoParser {
     (verifiedDefs, structureResults)
   }
 
-  private def transformers: Seq[AstTransformer] = {
-    Seq(
-      new TaskSpecializer,
-      new TaskVariableVerifier,
-      new LetReducer,
-      new CarefullyVisitor
-    )
+  private def transformers(compilationOperand: CompilationOperand): Seq[AstTransformer] = {
+    Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger, new SourceTagger(compilationOperand))
   }
 
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
+  }
+
+  def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
+    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
   }
 
   def findIncludes(source: String): Seq[String] = {

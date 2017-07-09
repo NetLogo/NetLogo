@@ -33,7 +33,7 @@ resolvers += Resolver.url(
     url("http://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
         Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.8")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.18")
 
 addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
 
@@ -48,10 +48,30 @@ resolvers += Resolver.url(
 
 addSbtPlugin("org.nlogo" % "publish-versioned-plugin" % "2.0")
 
+resolvers += Resolver.url(
+  "NetLogo-JVM",
+  url("http://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
+    Resolver.ivyStylePatterns)
+
+addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.7.2")
+
 libraryDependencies ++= Seq(
-  "com.github.spullara.mustache.java" % "compiler" % "0.9.1",
-  "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.1",
+  "com.github.spullara.mustache.java" % "compiler" % "0.9.5",
+  "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5",
   "org.jsoup"                         % "jsoup" % "1.8.3",
-  "org.pegdown"                       % "pegdown" % "1.1.0",
   "org.apache.commons"                % "commons-lang3" % "3.1"
 )
+
+{
+  val flexmarkVersion = "0.20.0"
+  libraryDependencies ++= Seq(
+    "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-anchorlink" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-toc" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-tables" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
+  )
+}

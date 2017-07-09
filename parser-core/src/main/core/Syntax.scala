@@ -46,14 +46,15 @@ case class Syntax private(
   isRightAssociative: Boolean, // only relevant if infix
   agentClassString: String,
   blockAgentClassString: Option[String],
-  introducesContext: Boolean)
+  introducesContext: Boolean,
+  canBeConcise: Boolean)
 {
 
   import Syntax._
 
   require(agentClassString == null ||
-          agentClassString.size == 4)
-  require(blockAgentClassString.forall(s => s.size == 4 || s == "?"))
+          agentClassString.length == 4)
+  require(blockAgentClassString.forall(s => s.length == 4 || s == "?"))
 
   /**
    * indicates whether this instruction should be parsed as infix. Infix
@@ -128,16 +129,14 @@ case class Syntax private(
 
 
 object Syntax {
-
-  private def apply = throw new UnsupportedOperationException
-
   def commandSyntax(
     right: List[Int] = List(),
     defaultOption: Option[Int] = None,
     minimumOption: Option[Int] = None, // minimum number of args might be different than the default
     agentClassString: String = "OTPL",
     blockAgentClassString: Option[String] = None,
-    introducesContext: Boolean = false
+    introducesContext: Boolean = false,
+    canBeConcise: Boolean = true
   ): Syntax =
     new Syntax(
       precedence = CommandPrecedence,
@@ -149,7 +148,8 @@ object Syntax {
       isRightAssociative = false,
       agentClassString = agentClassString,
       blockAgentClassString = blockAgentClassString,
-      introducesContext = introducesContext || blockAgentClassString.nonEmpty
+      introducesContext = introducesContext || blockAgentClassString.nonEmpty,
+      canBeConcise = canBeConcise
   )
 
   def reporterSyntax(
@@ -172,7 +172,8 @@ object Syntax {
     isRightAssociative = isRightAssociative,
     agentClassString = agentClassString,
     blockAgentClassString = blockAgentClassString,
-    introducesContext = blockAgentClassString.nonEmpty
+    introducesContext = blockAgentClassString.nonEmpty,
+    canBeConcise = true
   )
 
   /** <i>Unsupported. Do not use.</i> */
@@ -238,14 +239,14 @@ object Syntax {
   val LinkType = 1024
 
   /**
-   * Type constant for command tasks. *
+   * Type constant for anonymous commands / "command lambdas". *
    */
-  val CommandTaskType = 2048
+  val CommandType = 2048
 
   /**
-   * Type constant for reporter tasks. *
+   * Type constant for anonymous reporters / "reporter lambdas". *
    */
-  val ReporterTaskType = 4096
+  val ReporterType = 4096
 
   /**
    * Type constant for set of agents.
@@ -264,7 +265,7 @@ object Syntax {
    * this type is also used to identify extension types
    */
   val WildcardType = NumberType | BooleanType | StringType | ListType | AgentType |
-      AgentsetType | NobodyType | CommandTaskType | ReporterTaskType
+      AgentsetType | NobodyType | CommandType | ReporterType
 
   val ReferenceType = 8192
   /**

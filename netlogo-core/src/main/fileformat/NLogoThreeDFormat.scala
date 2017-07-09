@@ -2,13 +2,11 @@
 
 package org.nlogo.fileformat
 
-import java.net.URI
-
-import org.nlogo.api.{ AutoConvertable, ModelFormat, WorldDimensions3D }
-import org.nlogo.core.{ Model, View, UpdateMode }
+import org.nlogo.api.{ ModelFormat, WorldDimensions3D }
+import org.nlogo.core.{ View, UpdateMode }
 import org.nlogo.core.model.WidgetReader
 
-class NLogoThreeDFormat(modelConverter: (Model, Seq[AutoConvertable]) => Model)
+class NLogoThreeDFormat
   extends ModelFormat[Array[String], NLogoThreeDFormat]
   with AbstractNLogoFormat[NLogoThreeDFormat] {
     val is3DFormat = true

@@ -1,114 +1,152 @@
 <!DOCTYPE html>
 <title>
-      NetLogo {{version}} User Manual
-    </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-body { background: rgb(166,172,255) }
-    p.headings { font-size: 80% ; }
-    </style>
-    <div class="headerbanner">
-      <span class="block offwhitetext xlargefont bold">NetLogo</span>
-      <span class="block offwhitetext xlargefont bold">User&nbsp;Manual</span>
-      <span class="block offwhitetext largefont bold">version&nbsp;{{version}}</span>
-      <span class="block offwhitetext largefont bold">{{date}}</span>
-    </div>
-    <p style="margin-bottom: 0em;">
-        <span class="block xsmallfont"><b>Release Notes</b></span>
-        <span class="block xsmallfont"><b><a href="versions.html"     target="entry">What's&nbsp;New?</a></b></span>
-        <span class="block xsmallfont"><b><a href="requirements.html" target="entry">System&nbsp;Requirements</a></b></span>
-        <span class="block xsmallfont"><b><a href="contact.html"      target="entry">Contacting&nbsp;Us</a></b></span>
-        <span class="block xsmallfont"><b><a href="copyright.html"    target="entry">Copyright&nbsp;/&nbsp;License</a></b></span>
-    <hr>
-    <p class="headings">
-      <b>Introduction</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="whatis.html" target="entry">What&nbsp;is&nbsp;NetLogo?</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="sample.html" target="entry">Sample&nbsp;Model:&nbsp;Party</a></b>
-    <p class="headings">
-      <b>Learning&nbsp;NetLogo</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="tutorial1.html" target="entry">Tutorial&nbsp;#1:&nbsp;Models</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="tutorial2.html" target="entry">Tutorial&nbsp;#2:&nbsp;Commands</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="tutorial3.html" target="entry">Tutorial&nbsp;#3:&nbsp;Procedures</a></b>
-    <p class="headings">
-      <b>Reference</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="interface.html" target="entry">Interface&nbsp;Guide</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="infotab.html" target="entry">Info
-      Tab&nbsp;Guide</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="programming.html" target="entry">Programming&nbsp;Guide</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="transition.html" target="entry">Transition&nbsp;Guide</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="dictionary.html" target="entry">NetLogo&nbsp;Dictionary</a></b>
-    <p class="headings">
-      <b>Features</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="shapes.html" target="entry">Shapes&nbsp;Editor</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="behaviorspace.html" target="entry">BehaviorSpace</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="systemdynamics.html" target="entry">System Dynamics</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="hubnet.html" target="entry">HubNet</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="hubnet-authoring.html" target="entry">HubNet Authoring</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="logging.html" target="entry">Logging</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="controlling.html" target="entry">Controlling</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="mathematica.html" target="entry">Mathematica Link</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="3d.html" target="entry">NetLogo
-      3D</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="modelingcommons.html" target="entry">Save to Modeling Commons</a></b>
-    <p class="headings">
-      <b>Extensions</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="extensions.html" target="entry">Extensions Guide</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="arraystables.html" target="entry">Arrays &amp; Tables</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="csv.html" target="entry">CSV</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="nw.html" target="entry">Networks</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="palette.html" target="entry">Palette</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="matrix.html" target="entry">Matrices</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="sound.html" target="entry">Sound</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="netlogolab.html" target="entry">Robotics/NetLogoLab</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="profiler.html" target="entry">Profiler</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="gis.html" target="entry">GIS</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="bitmap.html" target="entry">Bitmap</a></b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="video.html" target="entry">QuickTime</a></b>
-    <p class="headings">
-      <b>FAQ</b>
-      <br>
-      &nbsp;&nbsp;&nbsp;<b><a href="faq.html" target="entry">Frequently
-      Asked Questions</a></b>
-    <p class="headings">
-      <i>manual&nbsp;in&nbsp;<a target="_blank" href="NetLogo%20User%20Manual.pdf">printable&nbsp;form</a>&nbsp;(PDF)</i>
-    <p class="headings">
-      &nbsp;
-    <p class="headings">
-      <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/cc-by-sa-3.0.png"></a>
-      <br>
-      <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">The NetLogo User Manual</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://ccl.northwestern.edu/netlogo/" property="cc:attributionName" rel="cc:attributionURL" target="_blank">Uri Wilensky</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank">Creative Commons
-      Attribution-ShareAlike 3.0 Unported License</a>.
+  NetLogo {{version}} User Manual
+</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+  body { background: rgb(166,172,255) }
+  p.headings { font-size: 80% ; }
+
+  div.heading-section {
+    font-size: 80%;
+  }
+
+  div.bottom-section {
+    margin-top: 2em;
+  }
+
+  div.headerbanner {
+    background-color: #2D002D;
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+  }
+
+  ul.small-items {
+    margin-bottom: 0em;
+    display: block;
+    font-size: x-small;
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+  }
+
+  ul.small-items > li {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  ul.heading-items {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 15px;
+    list-style: none;
+  }
+
+  ul.heading-items > li {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  
+  ul.interface-items {
+    padding-left: 15px;
+    list-style: none;
+  }
+
+  .heading-title {
+    display: block;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+</style>
+<div class="headerbanner">
+  <span class="block offwhitetext xlargefont bold">NetLogo</span>
+  <span class="block offwhitetext xlargefont bold nowrap">User Manual</span>
+  <span class="block offwhitetext largefont bold nowrap">version {{version}}</span>
+  <span class="block offwhitetext bold nowrap">{{date}}</span>
+</div>
+<div style="margin-bottom: 0em; margin-top: .25em;">
+  <ul class="small-items">
+    <li><a href="versions.html"     target="entry">Release Notes</a></li>
+    <li><a href="requirements.html" target="entry">System Requirements</a></li>
+    <li><a href="contact.html"      target="entry">Contacting Us</a></li>
+    <li><a href="copyright.html"    target="entry">Copyright / License</a></li>
+  </ul>
+</div>
+<hr>
+<div class="heading-section">
+  <span class="heading-title">Introduction</span>
+  <ul class="heading-items">
+    <li><a href="whatis.html" target="entry">What is NetLogo?</a></li>
+    <li><a href="sample.html" target="entry">Sample Model: Party</a></li>
+  </ul>
+</div>
+<div class="heading-section">
+  <span class="heading-title">Learning NetLogo</span>
+  <ul class="heading-items">
+    <li><a href="tutorial1.html" target="entry">Tutorial #1: Models</a></li>
+    <li><a href="tutorial2.html" target="entry">Tutorial #2: Commands</a></li>
+    <li><a href="tutorial3.html" target="entry">Tutorial #3: Procedures</a></li>
+  </ul>
+</div>
+<div class="heading-section">
+  <span class="heading-title">Reference</span>
+  <ul class="heading-items">
+    <li><a href="interface.html" target="entry">Interface Guide</a>
+      <ul class="interface-items">
+        <li><a href="interfacetab.html" target="entry">Interface Tab Guide</a></li>
+        <li><a href="infotab.html" target="entry">Info Tab Guide</a></li>
+        <li><a href="codetab.html" target="entry">Code Tab Guide</a></li>
+      </ul>
+    </li>
+    <li><a href="programming.html" target="entry">Programming Guide</a></li>
+    <li><a href="transition.html" target="entry">Transition Guide</a></li>
+    <li><a href="dictionary.html" target="entry">NetLogo Dictionary</a></li>
+    <li>(<a href="diccionario.pdf" target="entry">en Español</a>)</li>
+  </ul>
+</div>
+<div class="heading-section">
+  <span class="heading-title">Features</span>
+  <ul class="heading-items">
+    <li><a href="shapes.html" target="entry">Shapes Editor</a></li>
+    <li><a href="behaviorspace.html" target="entry">BehaviorSpace</a></li>
+    <li><a href="systemdynamics.html" target="entry">System Dynamics</a></li>
+    <li><a href="hubnet.html" target="entry">HubNet</a></li>
+    <li><a href="hubnet-authoring.html" target="entry">HubNet Authoring</a></li>
+    <li><a href="logging.html" target="entry">Logging</a></li>
+    <li><a href="controlling.html" target="entry">Controlling</a></li>
+    <li><a href="mathematica.html" target="entry">Mathematica Link</a></li>
+    <li><a href="3d.html" target="entry">NetLogo 3D</a></li>
+    <li><a href="modelingcommons.html" target="entry">Save to Modeling Commons</a></li>
+  </ul>
+</div>
+<div class="heading-section">
+  <span class="heading-title">Extensions</span>
+  <ul class="heading-items">
+    <li><a href="extensions.html" target="entry">Extensions Guide</a></li>
+    {{#documentedExtensions}}
+    <li><a href="{{_1}}.html" target="entry">{{_2}}</a></li>
+    {{/documentedExtensions}}
+  </ul>
+</div>
+<div class="heading-section">
+  <span class="heading-title">FAQ</span>
+  <ul class="heading-items">
+    <li><a href="faq.html" target="entry">Frequently Asked Questions</a>
+  </ul>
+</div>
+<div class="heading-section">
+  <strong><em>manual in <a target="_blank" href="NetLogo%20User%20Manual.pdf">printable form</a> (PDF)</em></strong>
+</div>
+<div class="heading-section bottom-section">
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/cc-by-sa-3.0.png"></a>
+  <br>
+  <strong>
+    <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">The NetLogo User Manual</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://ccl.northwestern.edu/netlogo/" property="cc:attributionName" rel="cc:attributionURL" target="_blank">Uri Wilensky</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank">Creative Commons
+    Attribution-ShareAlike 3.0 Unported License</a>.
+  </strong>
+</div>
 

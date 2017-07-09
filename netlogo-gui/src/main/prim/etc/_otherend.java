@@ -7,7 +7,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _otherend
@@ -21,14 +21,14 @@ public final strictfp class _otherend
     if (context.agent instanceof Link) {
       link = (Link) context.agent;
       if (!(context.myself() instanceof Turtle)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd"));
       }
       node = (Turtle) context.myself();
     } else {
       node = (Turtle) context.agent;
       if (!(context.myself() instanceof Link)) {
-        throw new EngineException(context, this,
+        throw new RuntimePrimitiveException(context, this,
             I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd"));
       }
       link = (Link) context.myself();
@@ -43,7 +43,7 @@ public final strictfp class _otherend
       return dest;
     }
 
-    throw new EngineException(context, this,
+    throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.prim.etc._otherend.incorrectLink", node.toString(), link.toString()));
   }
 }

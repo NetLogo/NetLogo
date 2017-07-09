@@ -68,3 +68,8 @@ SumOf4
   mean [lvar] of directed-edge 0 1 => 2
   min [lvar] of directed-edge 0 1 => 1
   max [lvar] of directed-edge 0 1 => 3
+
+SumOfExceedsNumericRange
+  turtles-own [ n ]
+  O> crt 10000 [ set n e ^ 706 ]
+  sum [ n ] of turtles => ERROR math operation produced a number too large for NetLogo

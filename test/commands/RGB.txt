@@ -1,14 +1,14 @@
 ColorValuesInvariantOnTripThroughRGB
   globals [ glob1 ]
   to-report round-trip [col] let vals extract-rgb col report approximate-rgb (item 0 vals) (item 1 vals) (item 2 vals) end
-  O> set glob1 n-values 1400 [? / 10]
-  glob1 = map [round-trip ?] glob1 => true
+  O> set glob1 n-values 1400 [[x] -> x / 10]
+  glob1 = map [[x] -> round-trip x] glob1 => true
 
 ColorValuesInvariantOnTripThroughHSB
   globals [ glob1 ]
   to-report round-trip [col] let vals extract-hsb col report approximate-hsb (item 0 vals) (item 1 vals) (item 2 vals) end
-  O> set glob1 n-values 1400 [? / 10]
-  glob1 = map [round-trip ?] glob1 => true
+  O> set glob1 n-values 1400 [[x] -> x / 10]
+  glob1 = map [[x] -> round-trip x] glob1 => true
 
 PatchesRGBColor_2D
   globals [ glob1 ]

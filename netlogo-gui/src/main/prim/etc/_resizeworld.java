@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _resizeworld
     extends Command {
@@ -30,7 +30,7 @@ public final strictfp class _resizeworld
     final int oldMaxY = workspace.world().maxPycor();
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
     }
 

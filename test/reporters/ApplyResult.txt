@@ -1,0 +1,9 @@
+apply-result-distributes-list-items-in-order
+  __apply-result [ [x y] -> x ^ y ] [3 2] => 9
+
+apply-result-takes-empty-list
+  __apply-result [ 5 ] [] => 5
+
+apply-result-gets-angry
+  __apply-result [ [num col] -> num * col ] [ 10 ] => ERROR anonymous procedure expected 2 inputs, but only got 1
+  __apply-result [ [num] -> num ] [] => ERROR anonymous procedure expected 1 input, but only got 0

@@ -59,19 +59,20 @@ the "Credits and References" section of each model's Info tab.
 
 ## Acknowledgments
 
-The CCL gratefully acknowledges almost two decades of support for our
-NetLogo work. Much of that support came from the National Science
-Foundation -- grant numbers REC-9814682 and REC-0126227, with further
-support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
-DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
-DRL-RED-9552950, DRL-REC-9632612, DRL-DRK12-1020101, IIS-1441552,
-CNS-1441016, CNS-1441041, IIS-1438813, and REC-1343873.  Additional
-support came from the Spencer Foundation, Texas Instruments, the
-Brady Fund, and the Northwestern Institute on Complex Systems.
+The CCL gratefully acknowledges two decades of support for our NetLogo work.
+The original support came from the National Science Foundation -- grant numbers
+REC-9814682 and REC-0126227. Further support has come from REC-0003285, REC-0115699,
+DRL-0196044, CCF-ITR-0326542, DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316,
+IIS-0713619, DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101, IIS-1441552,
+CNS-1441016, CNS-1441041, CNS-1138461, IIS-1438813, IIS-1147621, DRL-REC-1343873,
+IIS-1438813, IIS-1441552, CNS-1441041, IIS-1546120, DRL-1546122, DRL-1614745
+and DRL-1640201. Additional support came from the Spencer Foundation,
+Texas Instruments, the Brady Fund, the Murphy fund,
+and the Northwestern Institute on Complex Systems.
 
 ## License
 
-NetLogo  
+NetLogo
 Copyright (C) 1999-2016 Uri Wilensky
 
 This program is free software; you can redistribute it and/or
@@ -194,6 +195,44 @@ that code is as follows:
 > supporting documentation.  CERN makes no representations about the
 > suitability of this software for any purpose.  It is provided "as is"
 > without expressed or implied warranty.
+
+### Apache Commons Codec (TM)
+
+The NetLogo compiler uses a digest method from the Apache Commons Codec (TM) library.
+Apache Commons Codec (TM) is copyright and trademark 2002-2014 the Apache Software Foundation.
+It is licensed under the Apache 2.0 License. You may obtain a copy of the license at
+http://www.apache.org/licenses/LICENSE-2.0.
+
+### Flexmark
+
+NetLogo uses the Flexmark library (and extensions) for the info tab. The copyright and license are as follows:
+
+> Copyright (c) 2015-2016, Atlassian Pty Ltd
+> All rights reserved.
+>
+> Copyright (c) 2016, Vladimir Schneider,
+> All rights reserved.
+>
+> Redistribution and use in source and binary forms, with or without
+> modification, are permitted provided that the following conditions are met:
+>
+> * Redistributions of source code must retain the above copyright notice, this
+>   list of conditions and the following disclaimer.
+>
+> * Redistributions in binary form must reproduce the above copyright notice,
+>   this list of conditions and the following disclaimer in the documentation
+>   and/or other materials provided with the distribution.
+>
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+> AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+> FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+> CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+> OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ### JHotDraw
 
@@ -1030,26 +1069,190 @@ copyright and license for the library are as follows:
 > ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 > POSSIBILITY OF SUCH DAMAGE.
 
-### Pegdown & Parboiled
+### Parboiled
 
-For the Info tab, NetLogo uses the Pegdown and Parboiled libraries.
+For the Info tab, NetLogo uses the Parboiled library. The copyright and license for Parboiled are as follows:
 
-The copyright and license for Pegdown are as follows:
-
-> pegdown - Copyright (C) 2010-2011 Mathias Doenitz
+> This software is licensed under the Apache 2 license, quoted below.
 >
-> Based on peg-markdown - markdown in c, implemented using PEG grammar
-> Copyright (c) 2008 John MacFarlane (http://github.com/jgm/peg-markdown)
+> Copyright (C) 2009-2013 Mathias Doenitz &lt;http://parboiled2.org&gt;
+> Copyright (C) 2013 Alexander Myltsev
 >
-> pegdown is released under the Apache License 2.0.
-> (http://www.apache.org/licenses/LICENSE-2.0)
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not
+> use this file except in compliance with the License. You may obtain a copy of
+> the License at
+>
+> [http://www.apache.org/licenses/LICENSE-2.0]
+>
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+> WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+> License for the specific language governing permissions and limitations under
+> the License.
 
-The copyright and license for Parboiled are as follows:
+### RSyntaxTextArea
 
-> parboiled - Copyright (C) 2009-2011 Mathias Doenitz
+The NetLogo editor uses the RSyntaxTextArea library.
+
+The copyright and license for RSyntaxTextArea are as follows:
+
+> Copyright (c) 2012, Robert Futrell
+> All rights reserved.
 >
-> This product includes software developed by
-> Mathias Doenitz (http://www.parboiled.org/).
+> Redistribution and use in source and binary forms, with or without
+> modification, are permitted provided that the following conditions are met:
+>     * Redistributions of source code must retain the above copyright
+>       notice, this list of conditions and the following disclaimer.
+>     * Redistributions in binary form must reproduce the above copyright
+>       notice, this list of conditions and the following disclaimer in the
+>       documentation and/or other materials provided with the distribution.
+>     * Neither the name of the author nor the names of its contributors may
+>       be used to endorse or promote products derived from this software
+>       without specific prior written permission.
 >
-> pegdown is released under the Apache License 2.0.
-> (http://www.apache.org/licenses/LICENSE-2.0)
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+> ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+> WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+> DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+> ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+### Apache HTTPClient and JSON.simple
+
+For the Modeling Commons functionality, Netlogo uses the Apache HTTPClient and JSON.simple libraries.
+
+The copyright and license for Apache HTTPClient are as follows:
+
+> Copyright (c) 1999-2015 The Apache Software Foundation. All Rights Reserved.
+>
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+>
+>     http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+The copyright and license for JSON.simple are as follows:
+
+> Copyright (c) Yidong Fang
+>
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+>
+>     http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+### JCodec
+
+The NetLogo vid extension makes use of the JCodec library.
+The copyright and license for JCodec are as follows:
+
+>  Redistribution  and  use  in   source  and   binary   forms,  with  or  without
+>  modification, are permitted provided  that the following  conditions  are  met:
+>
+>  Redistributions of  source code  must  retain the above  copyright notice, this
+>  list of conditions and the following disclaimer. Redistributions in binary form
+>  must  reproduce  the above  copyright notice, this  list of conditions  and the
+>  following disclaimer in the documentation and/or other  materials provided with
+>  the distribution.
+>
+>  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+>  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE  IMPLIED
+>  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS  FOR  A  PARTICULAR  PURPOSE  ARE
+>  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+>  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL DAMAGES
+>  (INCLUDING,  BUT NOT LIMITED TO,  PROCUREMENT OF SUBSTITUTE GOODS  OR SERVICES;
+>  LOSS OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+>  ANY  THEORY  OF  LIABILITY,  WHETHER  IN  CONTRACT,  STRICT LIABILITY,  OR TORT
+>  (INCLUDING  NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE USE OF THIS
+>  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Webcam capture
+
+The NetLogo vid extension makes use of the Webcam-capture library.
+The copyright and license for Webcam-capture are as follows:
+
+> The MIT License (MIT)
+>
+> Copyright (c) 2012 - 2015 Bartosz Firyn and Contributors
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
+### Guava
+
+The NetLogo ls extension makes use of the Guava library.
+
+Guava is released under the Apache License 2.0 (<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a>)
+
+### Gephi
+
+The nw extension makes use of the Gephi library.
+Gephi is licensed under the following terms:
+
+>  Gephi Dual License Header and License Notice
+>
+>  The Gephi Consortium elects to use only the GNU General Public License version 3 (GPL) for any software where a choice of GPL license versions are made available with the language indicating that GPLv3 or any later version may be used, or where a choice of which version of the GPL is applied is unspecified.
+>
+>  For more information on the license please see: the Gephi License FAQs.
+>
+>  License headers are available on http://www.opensource.org/licenses/CDDL-1.0 and http://www.gnu.org/licenses/gpl.html.
+
+
+### R Extension
+
+The R extension is licensed under the following terms:
+
+>   The R extension is Copyright (C) 2009-2016 Jan C. Thiele and
+>   Copyright (C) 2016 Uri Wilensky / The Center for Connected Learning.
+>
+>   NetLogo-R-Extension is free software; you can redistribute it and/or
+>   modify it under the terms of the GNU General Public License
+>   as published by the Free Software Foundation; either version 2
+>   of the License, or (at your option) any later version.
+>
+>   This program is distributed in the hope that it will be useful,
+>   but WITHOUT ANY WARRANTY; without even the implied warranty of
+>   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>   GNU General Public License for more details.
+>
+>   You should have received a copy of the GNU General Public License
+>   along with NetLogo-R-Extension (located in GPL.txt). If not, see <http://www.gnu.org/licenses/>.
+
+### JNA
+
+The R extension makes use of the JNA library, licensed under the following terms:
+
+>   This copy of JNA is licensed under the
+>   Apache (Software) License, version 2.0 ("the License").
+>   See the License for details about distribution rights, and the
+>   specific rights regarding derivate works.
+>
+>   You may obtain a copy of the License at:
+>
+>   http://www.apache.org/licenses/
+
+### Java-Objective-C Bridge
+
+NetLogo on Mac OS X makes use of the Java-Objective-C Bridge library.
+This library was created by Steve Hannah and is distributed under the Apache 2.0 license,
+available at [https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0).

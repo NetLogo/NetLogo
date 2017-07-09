@@ -2,8 +2,9 @@
 
 package org.nlogo.api
 
-import org.scalatest.{ FunSuite, PropSpec }
+import java.nio.file.{ Files, Paths }
 
+import org.scalatest.{ FunSuite, PropSpec }
 import org.scalatest.prop.PropertyChecks
 
 class FileIOTests extends FunSuite {
@@ -11,6 +12,32 @@ class FileIOTests extends FunSuite {
     val expected = "\nNetLogo author: Uri Wilensky"
     assert(FileIO.getResourceAsString("/system/about.txt").take(expected.size) ===
       expected)
+  }
+
+  test("locateFile finds a file with an absolute path") {
+    val tempFile = Files.createTempFile("filetest", ".tmp")
+    assertResult(Some(tempFile))(FileIO.resolvePath(tempFile.toAbsolutePath.toString))
+  }
+
+  test("locateFile tries to resolve a file relative to the peerFile path, if provided") {
+    val tempFile = Files.createTempFile("filetest", ".tmp")
+    val peerFile = Files.createTempFile("filetestpeer", ".tmp")
+    assertResult(Some(tempFile))(FileIO.resolvePath(tempFile.getName(tempFile.getNameCount - 1).toString, peerFile))
+  }
+
+  test("if locateFile can't resolve relative to peerFile, resolves relative to user.home system property") {
+    val fileInHome = Paths.get(System.getProperty("user.home"), "foo.txt")
+    assertResult(Some(fileInHome))(FileIO.resolvePath("foo.txt"))
+  }
+
+  test("locateFile returns absolute paths") {
+    val resolved = FileIO.resolvePath("foo.txt", Paths.get("."))
+    assertResult(Some(Paths.get(".").toAbsolutePath.getParent.resolve("foo.txt")))(resolved)
+  }
+
+  test("resolvePath handles path options") {
+    val resolved = FileIO.resolvePath("foo.txt", Some(Paths.get(".")))
+    assertResult(Some(Paths.get(".").toAbsolutePath.getParent.resolve("foo.txt")))(resolved)
   }
 }
 
@@ -24,5 +51,4 @@ class FileIOTests2 extends PropSpec with PropertyChecks {
       (ns, bufferSize) =>
         assertResult(ns)(
           FileIO.reader2String(new java.io.StringReader(ns), bufferSize)))}
-
 }

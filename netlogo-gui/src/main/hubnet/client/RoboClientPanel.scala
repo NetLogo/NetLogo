@@ -27,7 +27,6 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   private class RoboWidgetControl extends Thread("RoboWidgetControl Thread") {
     import org.nlogo.awt.EventQueue.invokeAndWait
-    import org.nlogo.swing.Implicits._
     import org.nlogo.window.{ButtonWidget, SliderWidget, Widget}
     import org.nlogo.widget.SwitchWidget
 

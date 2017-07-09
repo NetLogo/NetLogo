@@ -11,6 +11,7 @@ section of a NetLogo model file.
 <!ATTLIST experiment
   name CDATA ""
   repetitions CDATA "1"
+  sequentialRunOrder (true|false) "true"
   runMetricsEveryStep (true|false) "true">
 
 <!ELEMENT setup (#PCDATA)>

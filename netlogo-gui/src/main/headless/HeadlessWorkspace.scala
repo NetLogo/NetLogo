@@ -8,19 +8,17 @@ import java.nio.file.Paths
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ ComponentSerialization, Version, ModelLoader, RendererInterface,
+import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
   WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
-  NetLogoThreeDDialect, SimpleJobOwner, HubNetInterface, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, UpdateMode, WorldDimensions }
-import org.nlogo.agent.{ World, World3D }
-import org.nlogo.nvm.{ LabInterface,
-                       Workspace, DefaultCompilerServices, CompilerInterface }
+  NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Program, UpdateMode, WorldDimensions }
+import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
+import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat, fileformat.NLogoFormat
 import org.nlogo.util.Pico
-import org.picocontainer.Parameter
-import org.picocontainer.parameters.ComponentParameter
+
+import scala.io.Codec
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -38,8 +36,8 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
-    pico.add("org.nlogo.compiler.Compiler")
+    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
+    pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
@@ -54,7 +52,7 @@ object HeadlessWorkspace {
 
   def newLab: LabInterface = {
     val pico = new Pico
-    pico.add("org.nlogo.compiler.Compiler")
+    pico.add("org.nlogo.compile.Compiler")
     if (Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
@@ -103,8 +101,8 @@ object HeadlessWorkspace {
  * HeadlessWorkspace.newInstance instead.
  */
 class HeadlessWorkspace(
-  _world: World,
-  val compiler: CompilerInterface,
+  _world: World with CompilationManagement,
+  val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory)
@@ -189,14 +187,16 @@ with org.nlogo.api.ViewSettings {
     world.turtleShapes.add(org.nlogo.shape.VectorShape.getDefaultShape)
     world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
-    import collection.JavaConverters._
-    val results = compiler.compileProgram(
-      source, world.newProgram(Seq[String]()),
+    val dialect =
+      if (Version.is3D) NetLogoThreeDDialect
+      else NetLogoLegacyDialect
+    val newProgram = Program.fromDialect(dialect)
+    val results = compiler.compileProgram(source, newProgram,
       getExtensionManager, getCompilationEnvironment)
-    setProcedures(results.proceduresMap)
+    procedures = results.proceduresMap
     codeBits.clear()
     init()
-    world.program(results.program)
+    _world.program = results.program
     world.realloc()
 
     // setup some test plots.
@@ -303,10 +303,8 @@ with org.nlogo.api.ViewSettings {
     renderer.trailDrawer.clearDrawing()
   }
   override def exportDrawing(filename: String, format: String) {
-    val stream = new java.io.FileOutputStream(new java.io.File(filename))
-    javax.imageio.ImageIO.write(
-      renderer.trailDrawer.getAndCreateDrawing(true), format, stream)
-    stream.close()
+    FileIO.writeImageFile(
+      renderer.trailDrawer.getAndCreateDrawing(true), filename, format)
   }
   override def exportDrawingToCSV(writer: java.io.PrintWriter) {
     renderer.trailDrawer.exportDrawingToCSV(writer)
@@ -351,8 +349,8 @@ with org.nlogo.api.ViewSettings {
 
   /// world importing error handling
 
-  var importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler =
-    new org.nlogo.agent.Importer.ErrorHandler {
+  var importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler =
+    new org.nlogo.agent.ImporterJ.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(
           "got a " + (if (fatalError) "" else "non") +
@@ -378,14 +376,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   override def exportView(filename: String, format: String) {
-    // there's a form of ImageIO.write that just takes a filename, but if we use that when the
-    // filename is invalid (e.g. refers to a directory that doesn't exist), we get an
-    // IllegalArgumentException instead of an IOException, so we make our own OutputStream so we get
-    // the proper exceptions. - ST 8/19/03
-    val image = renderer.exportView(this)
-    val stream = new java.io.FileOutputStream(new java.io.File(filename))
-    javax.imageio.ImageIO.write(image, format, stream)
-    stream.close()
+    FileIO.writeImageFile(renderer.exportView(this), filename, format)
   }
 
   /**
@@ -481,9 +472,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    val twodConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoLegacyDialect)
-    val threedConverter = fileformat.ModelConverter(getExtensionManager, getCompilationEnvironment, NetLogoThreeDDialect)
-    fileformat.standardLoader(compiler.utilities, twodConverter, threedConverter)
+    fileformat.standardLoader(compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
   }
@@ -498,19 +487,18 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   override def open(path: String) {
-    setModelPath(path)
     try {
-      loader.readModel(Paths.get(path).toUri).foreach { m =>
-        setModelType(ModelType.Normal)
-        fileManager.handleModelChange()
-        openModel(m)
-      }
+      val m = loader.readModel(Paths.get(path).toUri).get
+      setModelPath(path)
+      setModelType(ModelType.Normal)
+      fileManager.handleModelChange()
+      openModel(m)
     }
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
         if (compilerTestingMode &&
-            FileIO.file2String(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
+            FileIO.fileToString(path)(Codec.UTF8).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
           System.out.println("ignored compile error: " + path)
         else throw ex
     }

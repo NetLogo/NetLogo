@@ -8,5 +8,5 @@ class _randomexponential extends Reporter {
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
   def report_1(context: Context, d: Double): Double =
-    validDouble(-d * StrictMath.log(context.job.random.nextDouble))
+    validDouble(-d * StrictMath.log(context.job.random.nextDouble), context)
 }

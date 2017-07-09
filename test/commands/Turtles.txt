@@ -89,25 +89,25 @@ Turtles5Torus
   O> __change-topology true true
   O> cro 4
   T> fd 5.5
-  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 -5.5] [-5.5 0] [0 -5.5] [-5.5 0]]
+  map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 -5.5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5Box_2D
   O> __change-topology false false
   O> cro 4
   T> fd 5.5
-  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [5 0] [0 -5.5] [-5.5 0]]
+  map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 5] [5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5VCylind_2D
   O> __change-topology true false
   O> cro 4
   T> fd 5.5
-  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 5] [-5.5 0] [0 -5.5] [-5.5 0]]
+  map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5HCylind_2D
   O> __change-topology false true
   O> cro 4
   T> fd 5.5
-  map [list [xcor] of ? [ycor] of ?] sort turtles => [[0 -5.5] [5 0] [0 -5.5] [-5.5 0]]
+  map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 -5.5] [5 0] [0 -5.5] [-5.5 0]]
 
 # because the order of summing can vary according to whether
 # the optimizer is on, we can only insist on a certain number

@@ -3,10 +3,11 @@
 package org.nlogo.app
 
 import
+  javax.swing.JOptionPane,
+  java.net.URI,
   org.nlogo.workspace.ExtensionManager,
   org.nlogo.window.Events.CompiledEvent,
-  org.nlogo.swing.BrowserLauncher.openURL,
-  javax.swing.JOptionPane
+  org.nlogo.swing.BrowserLauncher.openURI
 
 // A helpful personal assistant who listens for "extension not found" compiler errors and offers to
 // take you to the extension download page.
@@ -14,12 +15,12 @@ import
 class ExtensionAssistant(parent: java.awt.Component)
 extends CompiledEvent.Handler {
 
-  val ExtensionsURL =
-    "https://github.com/NetLogo/NetLogo/wiki/Extensions"
+  val ExtensionsURI =
+    new URI("https://github.com/NetLogo/NetLogo/wiki/Extensions")
 
   def handle(e: CompiledEvent) {
     if (isTrigger(e) && confirmOpen())
-      openURL(parent, ExtensionsURL, false)
+      openURI(parent, ExtensionsURI)
   }
 
   def confirmOpen(): Boolean =

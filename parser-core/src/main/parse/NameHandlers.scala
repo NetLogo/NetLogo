@@ -3,11 +3,10 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ AgentVariableSet, Command, ExtensionManager, Fail, FrontEndInterface, Instruction,
+  core.{ AgentVariableSet, Command, ExtensionManager, FrontEndInterface, Instruction,
     Primitive, PrimitiveCommand, PrimitiveReporter, Program, Reporter,
     Token, TokenMapperInterface, TokenType},
-    FrontEndInterface.ProceduresMap,
-    Fail._
+    FrontEndInterface.ProceduresMap
 
 trait NameHandler extends (Token => Option[(TokenType, core.Instruction)])
 
@@ -80,27 +79,6 @@ class ExtensionPrimitiveHandler(extensionManager: ExtensionManager) extends Name
       case r: PrimitiveReporter =>
         new core.prim._externreport(r.getSyntax)
     }
-}
-
-// default number is 1 (i.e., if they just use "?")
-// if it's more than just "?", it needs to be an integer.
-object TaskVariableHandler extends NameHandler {
-  override def apply(token: Token) =
-    Some(token.value.asInstanceOf[String])
-      .filter(_.startsWith("?"))
-      .map{ident =>
-        val varNumber =
-          if(ident.length == 1)
-            1
-          else
-            try Integer.parseInt(ident.substring(1))
-            catch { case e: NumberFormatException =>
-              exception(InvalidTaskVariable, token) }
-        cAssert(varNumber > 0, InvalidTaskVariable, token)
-        (TokenType.Reporter, new core.prim._taskvariable(varNumber))
-    }
-  val InvalidTaskVariable =
-    "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
 }
 
 class AgentVariableReporterHandler(program: Program) extends NameHandler {

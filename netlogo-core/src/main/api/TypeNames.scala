@@ -42,10 +42,10 @@ object TypeNames {
         core.TypeNames.name(PatchType)
       case _: org.nlogo.api.Link =>
         core.TypeNames.name(LinkType)
-      case _: ReporterTask =>
-        core.TypeNames.name(ReporterTaskType)
-      case _: CommandTask =>
-        core.TypeNames.name(CommandTaskType)
+      case _: AnonymousReporter =>
+        core.TypeNames.name(ReporterType)
+      case _: AnonymousCommand =>
+        core.TypeNames.name(CommandType)
       case null =>
         "null"
       case _ =>
@@ -65,10 +65,10 @@ object TypeNames {
       PatchType
     else if (classOf[Link].isAssignableFrom(clazz))
       LinkType
-    else if (classOf[ReporterTask].isAssignableFrom(clazz))
-      ReporterTaskType
-    else if (classOf[CommandTask].isAssignableFrom(clazz))
-      CommandTaskType
+    else if (classOf[AnonymousReporter].isAssignableFrom(clazz))
+      ReporterType
+    else if (classOf[AnonymousCommand].isAssignableFrom(clazz))
+      CommandType
     else if (classOf[String].isAssignableFrom(clazz))
       StringType
     else if (classOf[java.lang.Double].isAssignableFrom(clazz) || clazz == java.lang.Double.TYPE)

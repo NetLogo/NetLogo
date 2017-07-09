@@ -2,9 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.agent.{ LinkManager, Turtle }
+import org.nlogo.agent.Turtle
 import org.nlogo.core.Nobody
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkwith(val breedName: String) extends Reporter {
 
@@ -21,13 +21,13 @@ class _linkwith(val breedName: String) extends Reporter {
         world.links
       else
         world.getLinkBreed(breedName)
-    for(err <- LinkManager.mustNotBeDirected(breed))
-      throw new EngineException(context, this, err)
-    val link = world.linkManager.findLinkEitherWay(parent, target, breed, true)
-    if (link == null)
+    val links = world.linkManager.linksWith(parent, target, breed)
+    if (links.isEmpty)
       Nobody
+    else if (links.size == 1) // Avoid needlessly invoking the RNG
+      links.head
     else
-      link
+      links(context.getRNG.nextInt(links.size))
   }
 
 }

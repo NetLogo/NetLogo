@@ -645,7 +645,7 @@ public strictfp class ClientWorld
     }
   }
 
-  private static class TurtleKey {
+  static class TurtleKey {
     long who;
     int breedIndex;
 

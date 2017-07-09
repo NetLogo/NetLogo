@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
 import javax.xml.transform
 import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
@@ -39,7 +39,8 @@ object LabSaver {
   }
   def attributes(specs: (String,String)*) = {
     val result = new AttributesImpl
-    for((name,value) <- specs)
+    for((name,value) <- specs if name != "sequentialRunOrder" || 
+        (name == "sequentialRunOrder" && value == "false"))
       result.addAttribute("", "", name, "CDATA", value)
     result
   }
@@ -56,6 +57,7 @@ object LabSaver {
     hd.startElement("", "", "experiment",
                     attributes(("name", protocol.name),
                                ("repetitions", protocol.repetitions.toString),
+                               ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
                                ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
     if(protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
@@ -86,6 +88,13 @@ object LabSaver {
             elementWithAttributes("value",
                                   attributes(("value", Dump.logoObject(
                                     value.asInstanceOf[AnyRef],true,false))))
+          hd.endElement("", "", "enumeratedValueSet")
+        case enumeratedValueSet: RefEnumeratedValueSet =>
+          hd.startElement("", "", "enumeratedValueSet",
+            attributes(("variable", valueSet.variableName)))
+          for (value <- enumeratedValueSet)
+            elementWithAttributes("value",
+              attributes(("value", Dump.logoObject(value, true, false))))
           hd.endElement("", "", "enumeratedValueSet")
       }
     hd.endElement("", "", "experiment")

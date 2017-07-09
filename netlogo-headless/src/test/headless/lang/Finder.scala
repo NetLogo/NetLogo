@@ -3,17 +3,14 @@
 package org.nlogo.headless
 package lang
 
-import java.io.File
 import org.nlogo.headless.{ LanguageTestTag, test => headlessTest },
-  headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests, ReporterTests, CommandTests,
-                 AbstractFixture, TestMode, Reporter, Command, Declaration, Open, LanguageTest}
-import org.scalatest.{ FunSuite, Tag }
+  headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests,
+    ReporterTests, CommandTests, AbstractFixture }
+import org.scalactic.source.Position
+import org.scalatest.Tag
 
 import
-  org.nlogo.{ api, core, util },
-    api.FileIO.file2String,
-    core.{ Model, Resource },
-    util.SlowTestTag
+  org.nlogo.util.SlowTestTag
 
 trait Finder extends TestFinder {
   override def withFixture[T](name: String)(body: AbstractFixture => T): T =
@@ -23,12 +20,12 @@ trait Finder extends TestFinder {
 }
 
 trait TaggedLanguageTest extends Finder {
-  override def test(name: String, otherTags: Tag*)(testFun: => Unit) =
+  override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) =
     super.test(name, (LanguageTestTag +: otherTags):_*)(testFun)
 }
 
 trait TaggedSlowTest extends Finder {
-  override def test(name: String, otherTags: Tag*)(testFun: => Unit) = {
+  override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) = {
     super.test(name, (SlowTestTag +: otherTags):_*)(testFun)
   }
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody, TokenType }
+import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}
@@ -131,7 +131,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // the error to pop up twice. - JC 4/9/10
       val value = editor.get
       if(!value.isDefined && !editor.handlesOwnErrors)
-        org.nlogo.swing.OptionDialog.show(frame,
+        org.nlogo.swing.OptionDialog.showMessage(frame,
           "Invalid Entry", "Invalid value for " + editor.accessor.displayName,
           Array(I18N.gui.get("common.buttons.ok")))
       value.isDefined

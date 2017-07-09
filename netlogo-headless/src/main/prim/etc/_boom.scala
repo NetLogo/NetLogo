@@ -2,12 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.nvm.{ Context, EngineException, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 // In testing I sometimes use this as an example of an unrejiggered primitive, so don't rejigger it
 // (unless you go find and change those test cases). - ST 2/6/09
 
 class _boom extends Reporter {
   override def report(context: Context): AnyRef =
-    throw new EngineException(context, this, "boom!")
+    throw new RuntimePrimitiveException(context, this, "boom!")
 }

@@ -6,7 +6,7 @@ package org.nlogo.headless
 // they go beyond the capabilities of the txt-based stuff.  (In the long run, perhaps
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
-import org.scalatest.{ FunSuite, BeforeAndAfter, BeforeAndAfterAll, OneInstancePerTest }
+import org.scalatest.{ FunSuite, BeforeAndAfter, BeforeAndAfterAll }
 import org.nlogo.core.{ CompilerException, Model, View }
 import org.nlogo.api.{ Version, WorldDimensions3D }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
@@ -36,7 +36,7 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
     assertResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    assertResult("frog 1")(ex.context.agent.toString)
+    assertResult("frog 1")(ex.context.getAgent.toString)
   }
   test("argumentTypeException") {
     testCommand("set glob1 [1.4]")
@@ -44,13 +44,12 @@ class TestErrorMessages extends FunSuite with AbstractTestLanguage with BeforeAn
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
     assertResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    assertResult("POSITION")(ex.instruction.token.text.toUpperCase)
+    assertResult("POSITION")(ex.responsibleInstruction.get.token.text.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {
       compiler.compileProgram(
-        "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]",
-        workspace.world.newProgram(Seq[String]()),
+        "breed [hunters hunter] hunters-own [fear] hunters-own [loathing]", newProgram,
         workspace.getExtensionManager, workspace.getCompilationEnvironment)
     }
     assertResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)

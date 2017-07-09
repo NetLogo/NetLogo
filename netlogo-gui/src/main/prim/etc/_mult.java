@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Pure;
+import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _mult extends Reporter implements Pure {
@@ -19,6 +19,6 @@ public final strictfp class _mult extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double arg0, double arg1) throws LogoException {
-    return validDouble(arg0 * arg1);
+    return validDouble(arg0 * arg1, context);
   }
 }

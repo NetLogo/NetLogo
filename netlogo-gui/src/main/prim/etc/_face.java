@@ -9,7 +9,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _face
     extends Command {
@@ -28,11 +28,11 @@ public final strictfp class _face
   public void perform_1(final Context context, Agent target)
       throws LogoException {
     if (target instanceof org.nlogo.agent.Link) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (target.id == -1) {
-      throw new EngineException(context, this,
+    if (target.id() == -1) {
+      throw new RuntimePrimitiveException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
     }
     if (context.agent instanceof Turtle) {

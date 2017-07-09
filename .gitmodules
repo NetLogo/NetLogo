@@ -56,3 +56,15 @@
 	path = extensions/view2.5d
 	url = https://github.com/NetLogo/View2.5D.git
 	branch = hexy
+[submodule "extensions/ls"]
+	path = extensions/ls
+    url = https://github.com/NetLogo/LevelSpace.git
+[submodule "extensions/r"]
+	path = extensions/r
+	url = https://github.com/NetLogo/R-Extension.git
+[submodule "extensions/rnd"]
+	path = extensions/rnd
+	url = https://github.com/NetLogo/Rnd-Extension.git
+[submodule "behaviorsearch"]
+	path = behaviorsearch
+	url = https://github.com/NetLogo/behaviorsearch.git

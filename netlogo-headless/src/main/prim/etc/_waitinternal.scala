@@ -11,7 +11,7 @@ class _waitinternal(let: Let) extends Command {
     perform_1(context)
   }
   def perform_1(context: Context) {
-    if (System.nanoTime >= context.getLet(let).asInstanceOf[MutableLong].value)
+    if (System.nanoTime >= context.activation.binding.getLet(let).asInstanceOf[MutableLong].value)
       context.ip = next
   }
 }

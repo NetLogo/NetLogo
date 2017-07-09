@@ -9,32 +9,39 @@ import javax.swing.{ Action, Box, BoxLayout, JButton, JLabel, JMenuItem, JPanel,
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
-import org.nlogo.awt.{ Fonts, UserCancelException }
+import org.nlogo.awt.{ Fonts, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.editor.Actions
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichAction }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
-  InterfaceColors, OutputArea, Zoomable }
-import org.nlogo.workspace.AbstractWorkspace
+  InterfaceColors, OutputArea, TextMenuActions, Zoomable }
+import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
-class CommandCenter(workspace: AbstractWorkspace,
-                    locationToggleAction: Action) extends JPanel
+class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   with Zoomable with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.ZoomedEvent.Handler {
 
   // true = echo commands to output
-  private val commandLine = new CommandLine(this, true, 12, workspace)
+  val commandLine = new CommandLine(this, true, 12, workspace)
   private val prompt = new LinePrompt(commandLine)
   private val northPanel = new JPanel
   private val southPanel = new JPanel
-  val output = new OutputArea(commandLine){
-    text.addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
-      override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
-    })
-  }
+  val output = OutputArea.withNextFocus(commandLine)
+  output.text.addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+    override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+  })
+
+  private val locationToggleButton =
+    new JButton() {
+      setText("")
+      setFocusable(false)
+      setVisible(false)
+      // this is very ad hoc. we want to save vertical screen real estate and also keep the
+      // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
+      override def getInsets = new Insets(2, 4, 3, 4)
+    }
 
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
@@ -44,16 +51,6 @@ class CommandCenter(workspace: AbstractWorkspace,
     //NORTH
     //-----------------------------------------
     val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
-
-    val locationToggleButton =
-      if(locationToggleAction == null) null
-      else new JButton(locationToggleAction) {
-        setText("")
-        setFocusable(false)
-        // this is very ad hoc. we want to save vertical screen real estate and also keep the
-        // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
-        override def getInsets = new Insets(2, 4, 3, 4)
-      }
 
     val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
       setFocusable(false)
@@ -79,7 +76,7 @@ class CommandCenter(workspace: AbstractWorkspace,
     northPanel.add(Box.createGlue)
     Fonts.adjustDefaultFont(titleLabel)
     titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
-    if(locationToggleButton != null) northPanel.add(locationToggleButton)
+    northPanel.add(locationToggleButton)
     northPanel.add(clearButton)
     resizeNorthPanel()
 
@@ -103,6 +100,15 @@ class CommandCenter(workspace: AbstractWorkspace,
     add(southPanel, BorderLayout.SOUTH)
   }
 
+  private[interfacetab] def locationToggleAction_=(a: Action): Unit = {
+    locationToggleButton.setAction(a)
+    locationToggleButton.setText("")
+    locationToggleButton.setVisible(a != null)
+  }
+
+  private[interfacetab] def locationToggleAction: Action =
+    locationToggleButton.getAction
+
   override def getMinimumSize =
     new Dimension(0, 2 + northPanel.getMinimumSize.height +
       output.getMinimumSize.height +
@@ -114,15 +120,17 @@ class CommandCenter(workspace: AbstractWorkspace,
 
   private def doPopup(e: MouseEvent) {
     new JPopupMenu{
-      add(new JMenuItem(Actions.COPY_ACTION))
-      Actions.COPY_ACTION.putValue(Action.NAME, I18N.gui.get("menu.edit.copy"))
+      add(new JMenuItem(TextMenuActions.CopyAction))
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
         addActionListener(() =>
-          try output.export(
-            SwingFileDialog.show(
+          try {
+            val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
-              workspace.guessExportName("command center output.txt")))
-          catch {
+              workspace.guessExportName("command center output.txt"))
+            ModalProgressTask.onBackgroundThreadWithUIData(
+              Hierarchy.getFrame(output), I18N.gui.get("dialog.interface.export.task"),
+              () => output.valueText, (text: String) => ExportOutput.silencingErrors(filename, text))
+          } catch {
             case uce: UserCancelException => Exceptions.ignore(uce)
           }
         )

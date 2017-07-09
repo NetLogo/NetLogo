@@ -2,9 +2,7 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, LiteralParser, Widget => CoreWidget }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ FileIO, ModelSection }
+import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
 import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.headless.TestUsingWorkspace
@@ -14,13 +12,9 @@ import java.nio.file.Paths
 
 import org.nlogo.util.ClassLoaderObjectInputStream
 
-import TestUtils._
-
 import org.scalatest.FunSuite
 
 class TestClientInterface extends TestUsingWorkspace {
-
-  import org.scalatest.Assertions._
 
   implicit class RoundTrip[T](t: T) {
     def writeThenRead: T = roundTripSerialization(t)
@@ -44,7 +38,6 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   testUsingWorkspace("legit ComputerInterface is serializable"){ workspace =>
-    import collection.JavaConverters._
     val model = "test/hubnet/client-interface.nlogo"
     val parsedWidgets = getClientWidgets(model, workspace)
     val ci = new ComputerInterface(parsedWidgets,

@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _distancenowrap extends Reporter {
@@ -20,11 +20,11 @@ public final strictfp class _distancenowrap extends Reporter {
 
   public double report_1(Context context, Agent arg0) throws LogoException {
     if (arg0 instanceof org.nlogo.agent.Link) {
-      throw new EngineException
+      throw new RuntimePrimitiveException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (arg0.id == -1) {
-      throw new EngineException(context, this,
+    if (arg0.id() == -1) {
+      throw new RuntimePrimitiveException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", arg0.classDisplayName()));
     }
     return world.protractor().distance(context.agent, arg0, false); // false = don't wrap

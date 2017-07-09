@@ -2,8 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, ReporterRunnable}
-import org.nlogo.core.Syntax
+import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.swing.OptionDialog
@@ -23,7 +22,7 @@ class _usermessage extends Command {
             override def run = {
               gw.view.mouseDown(false)
               Boolean.box(1 ==
-                OptionDialog.show(gw.getFrame, "User Message", message,
+                OptionDialog.showMessage(gw.getFrame, "User Message", message,
                                   Array(I18N.gui.get("common.buttons.ok"),
                                         I18N.gui.get("common.buttons.halt"))))
             }}).booleanValue

@@ -3,16 +3,16 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ Command, CommandBlock, CompilerException, Expression,
+  org.nlogo.core.{ Command, CommandBlock, Expression,
     Femto, FrontEndProcedure, prim, ProcedureDefinition,
-    Statement, Statements, StructureDeclarations, Token, TokenType },
-    prim.{ _ask, _carefully, _createturtles => _crt, etc, _fd, _report, _run, _stop }
+    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL },
+    prim.{ _ask, _carefully, _createturtles => _crt, _fd, _report, _run, _stop }
 
 import
   org.scalacheck.Gen
 
 import
-  org.scalatest.{ FunSuite, prop, PropSpec },
+  org.scalatest.{ FunSuite, prop },
     prop.GeneratorDrivenPropertyChecks
 
 class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyChecks {
@@ -43,7 +43,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   test("reporter procedures are non-local exit") {
-    forAll(generateProcedure(genNestingPrim, Gen.const(cmd("report")), true)) { pd =>
+    forAll(generateProcedure(genNestingPrim, Gen.const(_report()), true)) { pd =>
       val newPd = (new ControlFlowVerifier).visitProcedureDefinition(pd)
       assert(newPd.nonLocalExit)
       assert(newPd.statements.nonLocalExit)
@@ -51,28 +51,32 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   def stmt(prim: Command, args: Expression*) =
-    new Statement(prim, 0, 0, "foo.nlogo", args)
+    new Statement(prim, args, SourceLocation(0, 0, "foo.nlogo"))
 
-  def cmd(name: String): Command =
-    try {
-      Femto.get[Command](s"org.nlogo.core.prim._$name")
-    } catch {
-      case e: ClassNotFoundException =>
-        Femto.get[Command](s"org.nlogo.core.prim.etc._$name")
-    }
+  def _if: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._if")
+
+  def _ifelse: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._ifelse")
+
+  def _foreach: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._foreach")
+
+  def _die: Command =
+    Femto.get[Command]("org.nlogo.core.prim.etc._die")
 
   val genNestingPrim: Gen[Command] =
-    Gen.oneOf(cmd("if"), cmd("ifelse"), cmd("foreach"))
+    Gen.oneOf(_if, _ifelse, _foreach)
 
   val genContextPrim: Gen[Command] =
     Gen.oneOf(_ask(), _carefully())
 
   //prims that are none of nesting, non-local-exit, nor context-creating
   val genericPrim: Gen[Command] =
-    Gen.oneOf(cmd("die"), _crt("TURTLE"), _fd())
+    Gen.oneOf(_die, _crt("TURTLE"), _fd())
 
   val commandNonLocalExits =
-    Gen.oneOf(cmd("stop"), cmd("run"))
+    Gen.oneOf(_stop(), _run())
 
   def statements(stmts: Seq[Statement]): Statements =
     new Statements("abc").copy(stmts = stmts)
@@ -85,7 +89,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
 
   def nestedStatements(ctxPrimGen: Gen[Command], nestedPrimGen: Gen[Command]): Gen[Statements] = {
     def commandBlock(stmts: Statements): CommandBlock =
-      new CommandBlock(stmts, 0, 0, "abc")
+      new CommandBlock(stmts, SourceLocation(0, 0, "abc"))
 
     def inBlockContext(ctxPrim: Command, block: Statements): Statements =
       statements(Seq(stmt(ctxPrim, commandBlock(block))))
@@ -105,7 +109,7 @@ class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyCheck
     def isReporter: Boolean = reporterProcedure
     def displayName: String = "foobar"
     def filename: String = "foo.nlogo"
-    def nameToken: Token = new Token("foobar", TokenType.Ident, null)(0, 0, "")
+    def nameToken: Token = TokenDSL.id("foobar")
     def argTokens: Seq[Token] = Seq()
     def dump: String = "TEST FRONTENDPROCEDURE"
   }

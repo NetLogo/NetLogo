@@ -3,12 +3,10 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.agent.{ Turtle, Link }
+import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
-class _setturtleorlinkvariable(_varName: String) extends Command {
-
-  def this(original: _turtleorlinkvariable) = this(original.varName)
-
+class _setturtleorlinkvariable(_varName: String, _vnTurtle: Int, _vnLink: Int) extends Command {
   switches = true
 
   override def toString =
@@ -23,10 +21,17 @@ class _setturtleorlinkvariable(_varName: String) extends Command {
   }
 
   def perform_1(context: Context, value: AnyRef) {
-    try context.agent.setTurtleOrLinkVariable(_varName, value)
-    catch { case ex: AgentException =>
-      throw new EngineException(context, this, ex.getMessage) }
+    val a = context.agent
+    try {
+      a.agentBit match {
+        case Turtle.BIT => a.setTurtleVariable(_vnTurtle, value)
+        case Link.BIT   => a.setLinkVariable(_vnLink, value)
+        case _ => a.setTurtleOrLinkVariable(_varName, value)
+      }
+    } catch {
+      case ex: AgentException =>
+        throw new RuntimePrimitiveException(context, this, ex.getMessage)
+    }
     context.ip = next
   }
-
 }

@@ -9,7 +9,7 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _fput
     extends Reporter
-    implements org.nlogo.nvm.Pure {
+    implements org.nlogo.core.Pure {
 
 
   @Override
