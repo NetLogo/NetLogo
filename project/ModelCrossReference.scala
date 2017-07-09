@@ -34,6 +34,7 @@ object ModelCrossReference {
   ( "Sample Models/Biology/Evolution", "Altruism*",          "Sample Models/Social Science"),
   ( "Sample Models/Biology/Evolution", "Cooperation*",       "Sample Models/Social Science"),
   ( "Sample Models/Biology/Evolution/Unverified", "Divide*", "Sample Models/Social Science/Unverified"),
+  ( "Sample Models/Social Science", "Ethnocentrism*",        "Sample Models/Biology/Evolution"),
   ( "Sample Models/System Dynamics/Unverified", "Tabonuco*", "Sample Models/Biology/Unverified"),
 
   ( "Sample Models/Mathematics/Probability/ProbLab", new SimpleFileFilter(_.isFile), "Curricular Models/ProbLab"), // copy the files, but not the Unverified folder
