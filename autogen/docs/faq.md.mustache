@@ -107,24 +107,24 @@ please contact Uri Wilensky at [uri@northwestern.edu](mailto:uri@northwestern.ed
 
 The source code is
 [on GitHub, here](https://github.com/NetLogo/NetLogo). Development discussion is
-on the [netlogo-devel](http://groups.google.com/group/netlogo-devel) group.
+on the [netlogo-devel](https://groups.google.com/group/netlogo-devel) group.
 
 The User Manual is published under a Creative Commons Attribution-ShareAlike
-license ([CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)).
+license ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)).
 
 Source code for all of the extensions bundled with NetLogo is
 [on GitHub, here](https://github.com/NetLogo/). Most of the extensions are in
-the public domain ([CC0 notice](http://creativecommons.org/about/cc0)). Other
+the public domain ([CC0 notice](https://creativecommons.org/about/cc0)). Other
 extensions are released under open source licenses. See each extension's README
 for details.
 
 The Code Examples in the Models Library are in the public domain
-([CC0 notice](http://creativecommons.org/about/cc0)).
+([CC0 notice](https://creativecommons.org/about/cc0)).
 
 The rest of the models in the Models Library are provided under a variety of
 licenses. Some are public domain and some are open source, but most are under
 the Creative Commons Attribution-ShareAlike license
-([CC BY-NC-SA](http://creativecommons.org/licenses/by-nc-sa/3.0/)), which is not
+([CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/3.0/)), which is not
 an open source license, though the models are free for noncommercial
 distribution and use.
 
@@ -137,7 +137,7 @@ The models are in a public Git repository
 
 We offer workshops from time to time. If a workshop has been scheduled, we will
 announce it on the
-[NetLogo Users Group](http://groups.yahoo.com/group/netlogo-users/).
+[NetLogo Users Group](https://groups.yahoo.com/group/netlogo-users/).
 
 ### Are there any NetLogo textbooks?
 
@@ -195,7 +195,7 @@ and our
 [list of references to NetLogo in outside works](http://ccl.northwestern.edu/netlogo/references.shtml).
 
 You might also ask the question on the
-[NetLogo Users Group](http://groups.yahoo.com/group/netlogo-users/) and/or search past messages on the group.
+[NetLogo Users Group](https://groups.yahoo.com/group/netlogo-users/) and/or search past messages on the group.
 
 ### Are NetLogo models runs scientifically reproducible?
 
@@ -327,14 +327,14 @@ the path of your preferred Java Runtime.
 We bundle Oracle's Java runtime when using NetLogo on Linux. If you would like
 to change the version of linux used, you can modify the .cfg files to point to a
 different version of java (see
-[How big can my model be?](#howbig) for more information).
+[How big can my model be?](#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)
+for more information).
 
 In theory, any Java 8 or later runtime will run NetLogo. In practice, some Java
 implementations aren't high enough quality. Recent versions of OpenJDK should
 work; older ones may not. GNU libgcj does not work.
 
-Ubuntu users should consult
-[http://help.ubuntu.com/community/Java](http://help.ubuntu.com/community/Java).
+Ubuntu users should consult https://help.ubuntu.com/community/Java.
 
 ### When I try to install NetLogo on Windows, I see "Windows protected your PC"
 
@@ -367,8 +367,9 @@ the added installation difficulty soon!
 A nearly certain fix is to use a text editor to edit the NetLogo.cfg file,
 changing 1024m to a smaller number, like 512m. This should permit NetLogo to
 start, although the lower heap size limit may affect your ability to run models
-with many agents. See [How big can my model be?](#howbig) for information on
-model size and how to edit the cfg file.
+with many agents. See
+[How big can my model be?](#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)
+for information on model size and how to edit the cfg file.
 
 If running with the lower heap size limit is unacceptable, read on.
 
@@ -377,7 +378,7 @@ memory. Upgrading to a newer version of Windows may help.
 
 Running Windows in 64-bit mode instead of 32-bit mode may also help. Double
 check that Windows is actually running in 64-bit mode; see
-[Microsoft's FAQ page on 64-bit Windows](http://windows.microsoft.com/en-US/windows-vista/32-bit-and-64-bit-Windows-frequently-asked-questions).
+[Microsoft's FAQ page on 64-bit Windows](https://windows.microsoft.com/en-US/windows-vista/32-bit-and-64-bit-Windows-frequently-asked-questions).
 
 ### NetLogo won't start on Mac OS Sierra (or later)
 
@@ -452,7 +453,7 @@ splitting the runs across clusters, so you'll need to arrange that yourself.
 
 Various users are already using NetLogo on clusters, with a variety of hardware
 and software. You can seek them out on the
-[NetLogo Users Group](http://groups.yahoo.com/group/netlogo-users/).
+[NetLogo Users Group](https://groups.yahoo.com/group/netlogo-users/).
 
 ### Is there any way to recover lost work if NetLogo crashes or freezes?
 
@@ -518,6 +519,7 @@ model exceeds that limit, you'll get an OutOfMemoryError dialog.
 If you are using BehaviorSpace, note that doing runs in parallel will multiply
 your RAM usage accordingly.
 
+<a id="where-is-cfg-file"></a>
 Each platform contains ".cfg" files containing JVM settings. There is one cfg
 file for each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.)
 Although the file location varies by platform, the process for changing it is
@@ -588,7 +590,7 @@ make some changes to the code. Usually the most obvious opportunity for speedup
 is that you're doing too many computations that involve all the turtles or all
 the patches. Often this can be reduced by reworking the model so that it does
 less computation per time step. The members of the
-[NetLogo Users Group](http://groups.yahoo.com/group/netlogo-users/) may be able
+[NetLogo Users Group](https://groups.yahoo.com/group/netlogo-users/) may be able
 to help with this.
 
 The [profiler extension](profiler.html) is useful for identifying which parts of
@@ -773,7 +775,7 @@ Lists in earlier versions of NetLogo (4.1 and 4.0) were simple singly-linked
 lists and therefore these operations took linear time. The data structure
 underlying NetLogo's lists now is the immutable Vector class from the Scala
 collections library. It uses 32-wide
-[hash array mapped tries](http://en.wikipedia.org/wiki/Hash_array_mapped_trie),
+[hash array mapped tries](https://en.wikipedia.org/wiki/Hash_array_mapped_trie),
 as implemented by Tiark Rompf, based in part on work by Phil Bagwell and Rich
 Hickey.
 
@@ -876,7 +878,7 @@ more specific clearing commands to clear only what you want cleared.
 ### Why are some of my results cut off in Excel?
 
 In some versions of Excel, spreadsheets can't have more than 256 columns. (See
-[a Microsoft support article](http://office.microsoft.com/en-us/assistance/HA010548191033.aspx)
+[a Microsoft support article](https://office.microsoft.com/en-us/assistance/HA010548191033.aspx)
 on the subject.)
 
 Possible workarounds include:

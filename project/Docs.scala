@@ -16,6 +16,7 @@ object Docs {
   lazy val extensionDocConfigFile = settingKey[File]("extension documentation config file")
   lazy val extensionDocs          = taskKey[Seq[File]]("generate extension documentation")
   lazy val extensionDocsGen       = taskKey[ExtensionDocs]("extension docs object used to build extension documentation")
+  lazy val testDocLinks           = taskKey[Map[String, Seq[String]]]("check for broken links in the documentation")
 
   lazy val settings = Seq(
     javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
@@ -75,6 +76,15 @@ object Docs {
     },
     extensionDocsGen := {
       new ExtensionDocs(extensionRoot.value, extensionDocConfigFile.value)
+    },
+    testDocLinks := {
+      val res = NetLogoDocsTest(docsRoot.value.getAbsoluteFile)
+      res.foreach {
+        case (file, links) =>
+          println(file)
+          links.foreach { link => println(s"\t$link") }
+      }
+      res
     }
   )
 }

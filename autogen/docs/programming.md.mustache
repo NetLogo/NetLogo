@@ -280,7 +280,7 @@ setting up, to start the tick counter.
 
 If your model is set to use tick-based updates, then the
 [`tick`](dictionary.html#tick) command will usually also update the view. See
-the later section, [View Updates](#updates).
+the later section, [View Updates](#view-updates).
 
 ### When to tick
 
@@ -743,7 +743,7 @@ its whole life. Let's change a random wolf into a sheep:
 
 The [`set-default-shape`](dictionary.html#set-default-shape) primitive is useful
 for associating certain turtle shapes with certain breeds. See the section on
-shapes [below](#shapes).
+shapes [below](#turtle-shapes).
 
 Who numbers are assigned irrespective of breeds. If you already have a `frog 0`,
 then the first mouse will be `mouse 1`, not `mouse 0`, since the who number 0 is
@@ -1213,7 +1213,7 @@ make a changed version.
 
 The actual data structure used is the immutable Vector class from the Scala
 collections library. These are 32-wide
-[hash array mapped tries](http://en.wikipedia.org/wiki/Hash_array_mapped_trie),
+[hash array mapped tries](https://en.wikipedia.org/wiki/Hash_array_mapped_trie),
 as implemented by Tiark Rompf, based in part on work by Phil Bagwell and Rich
 Hickey.
 
@@ -1516,7 +1516,7 @@ the speed slider).
 
 ### Tick-based updates
 
-As discussed above in the [Tick Counter](#ticks) section, in many NetLogo
+As discussed above in the [Tick Counter](#tick-counter) section, in many NetLogo
 models, time passes in discrete steps, called "ticks". Typically, you want the
 view to update once per tick, between ticks. That's the default behavior with
 tick-based updates.
@@ -1743,8 +1743,9 @@ If you want to remove only the points that a particular pen has drawn, use
 When a whole plot is cleared, or when a pen is reset, that doesn't just remove
 the data that has been plotted. It also restores the plot or pen to its default
 settings, as they were specified in the Interface tab when the plot was created
-or last edited. Therefore, the effects of such commands as `set-plot-x-range`
-and `set-plot-pen-color` are only temporary.
+or last edited. Therefore, the effects of such commands as
+`set-plot-background-color`, `set-plot-x-range` and `set-plot-pen-color` are
+only temporary.
 
 #### Ranges and auto scaling
 
@@ -1908,7 +1909,7 @@ sequences:
 This section is about output to the screen. Output to the screen can also be
 later saved to a file using the [`export-output`](dictionary.html#export-cmds)
 command. If you need a more flexible method of writing data to external files,
-see the next section, [File I/O](#fileio).
+see the next section, [File I/O](#file-io).
 
 The basic commands for generating output to the screen in NetLogo are
 [`print`](dictionary.html#print), [`show`](dictionary.html#show),
@@ -2042,12 +2043,12 @@ your code to operate on.
 
 This section describes how to capture an ".mp4" movie of a NetLogo model.
 
-First, use the [`vid:start-recorder`](vid.html#vidstart-recorder) command to
+First, use the [`vid:start-recorder`](vid.html#vid:start-recorder) command to
 start the video recorder.
 
 To add a frame to your movie, use either
-[`vid:record-view`](vid.html#vidrecord-view) or
-[`vid:record-interface`](vid.html#vidrecord-interface), depending on whether you
+[`vid:record-view`](vid.html#vid:record-view) or
+[`vid:record-interface`](vid.html#vid:record-interface), depending on whether you
 want the movie to show just the current view, or the entire Interface tab. In a
 single movie, the resolution will be one of the following:
 
@@ -2065,7 +2066,7 @@ the recording it will be scaled to fit which can result in images which look
 blurry or out-of-focus.
 
 When you're done adding frames, use
-[`vid:save-recording`](vid.html#vidsave-recording). The filename you provide
+[`vid:save-recording`](vid.html#vid:save-recording). The filename you provide
 should end with `.mp4`, the extension for MP4-encoded movies (playable in
 QuickTime and other programs).
 
@@ -2086,18 +2087,18 @@ A movie will play back at 25 frames per second. To make the movie playback
 faster or slower, consider using a video postprocessing tool.
 
 To check whether or not you are recording, call
-[`vid:recorder-status`](vid.html#vidrecorder-status), which reports a string
+[`vid:recorder-status`](vid.html#vid:recorder-status), which reports a string
 that describes the state of the current recorder.
 
 To throw away the movie currently being recorded, call
-[`vid:reset-recorder`](vid.html#vidreset-recorder).
+[`vid:reset-recorder`](vid.html#vid:reset-recorder).
 
 > **Code Example:** Movie Example
 
 Movies generated when running headless, or by background runs in a parallel
 BehaviorSpace experiment may use only `vid:record-view` primitive. Movies
 generated in NetLogo GUI may also use `vid:record-interface` and
-[`vid:record-source`](vid.html#vidrecord-source).
+[`vid:record-source`](vid.html#vid:record-source).
 
 NetLogo movies are exported as H.264-encoded MP4 files. To play an MP4 movie,
 you can use [the VLC Player](http://www.videolan.org/vlc/index.html), a free

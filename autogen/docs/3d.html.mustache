@@ -656,8 +656,8 @@ ask link 0 1 [ print link-pitch ]
         Note: You can set the size of the world only by editing the view --
         these are reporters which cannot be set.
       <p>
-        See also <a href="#max-pcor">max-pxcor</a>, <a href="#max-pcor">max-pycor</a>, <a href="#max-pcor">min-pxcor</a>,
-        <a href="#max-pcor">min-pycor</a>, and <a href="#world-depth">world-depth</a>.
+        See also <a href="dictionary.html#max-pcor">max-pxcor</a>, <a href="dictionary.html#max-pcor">max-pycor</a>, <a href="dictionary.html#min-pcor">min-pxcor</a>,
+        <a href="dictionary.html#min-pcor">min-pycor</a>, and <a href="#world-depth">world-depth</a>.
       </div>
     <div class="dict_entry" id="neighbors-3d">
       <h3>
@@ -707,7 +707,7 @@ ask neighbors6 [ set pcolor red ]
         an absolute north pole (parallel to the positive z-axis) the roll
         will never change.
       <p>
-        See also <a href="#setxyz">setxyz</a>, <a href="#face">face</a> and
+        See also <a href="#setxyz">setxyz</a>, <a href="#face-3d">face</a> and
         <a href="#zoom">zoom</a>
       </div>
     <div class="dict_entry" id="observer-cors">
@@ -843,7 +843,7 @@ set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
         <span class="prim_example">random-pzcor</span>
       </h4>
       <p>
-        Reports a random integer ranging from min-pzcor to max-pxcor
+        Reports a random integer ranging from min-pzcor to max-pzcor
         inclusive.
       <pre>
 ask turtles [
@@ -852,7 +852,7 @@ ask turtles [
 ]
 </pre>
       <p>
-        See also <a href="#random-pcor">random-pxcor</a>, <a href="#random-pcor">random-pycor</a>.
+        See also <a href="dictionary.html#random-pcor">random-pxcor</a>, <a href="dictionary.html#random-pcor">random-pycor</a>.
       </div>
     <div class="dict_entry" id="random-zcor">
       <h3>
@@ -963,7 +963,7 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
       <pre>
 setxyz 0 0 0
 ;; agent moves to the middle of the center patch
-</pre>See also <a href="#face">face</a>
+</pre>See also <a href="#face-3d">face</a>
     </div>
     <div class="dict_entry" id="tilt-cmds">
       <h3>
@@ -1043,7 +1043,7 @@ setxyz 0 0 0
       </h4>
       <p>
         3D versions of <a href="dictionary.html#turtles-at">turtles-at</a>
-        and <a href="dictionary.htnl#turtles-at">breeds-at</a>.
+        and <a href="dictionary.html#turtles-at">breeds-at</a>.
       <p>
         Reports an agentset containing the turtles on the patch (dx, dy,
         dz) from the caller (including the caller itself if it's a

@@ -5,7 +5,7 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
-  ast.{ AutoLink, Document, Link, InlineLinkNode, Node },
+  ast.{ AutoLink, Node },
   ext.{ anchorlink, autolink, escaped, tables, toc, typographic },
     anchorlink.AnchorLinkExtension,
     autolink.AutolinkExtension,
@@ -13,19 +13,37 @@ import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
     tables.TablesExtension,
     toc.TocExtension,
     typographic.TypographicExtension,
-  html.{ AttributeProvider, CustomNodeRenderer, HtmlRenderer, HtmlWriter,
-         IndependentAttributeProviderFactory, renderer },
-    renderer.{ AttributablePart, LinkType, NodeRenderer, NodeRenderingHandler,
-               NodeRendererContext, NodeRendererFactory },
-  parser.{ Parser, ParserEmulationProfile, block },
-    block.{ NodePostProcessor, NodePostProcessorFactory },
-  util.{ NodeTracker, options, sequence },
+  html.{ AttributeProvider, HtmlRenderer, IndependentAttributeProviderFactory,
+         LinkResolver, LinkResolverFactory, renderer },
+    renderer.{ AttributablePart, LinkStatus, NodeRendererContext, ResolvedLink },
+  parser.{ Parser, ParserEmulationProfile },
   util.html.Attributes,
-    options.{ DataHolder, MutableDataHolder, MutableDataSet },
-    sequence.BasedSequence
+  util.options.MutableDataSet
 
 object Markdown {
-  def options(addTableOfContents: Boolean, manualizeLinks: Boolean, extName: Option[String]): MutableDataSet = {
+  def apply(
+    str:                String,
+    addTableOfContents: Boolean = true,
+    manualizeLinks:     Boolean = true,
+    extName:            Option[String] = None): String = {
+
+    val opts = options(addTableOfContents)
+    val parser = Parser.builder(opts).build()
+    val renderer = {
+      val builder = HtmlRenderer.builder(opts)
+      builder.attributeProviderFactory(AutolinkAttributeProvider.Factory)
+      if (manualizeLinks)
+        builder.linkResolverFactory(ManualLinkResolver.Factory)
+      extName foreach { ext =>
+        builder.linkResolverFactory(new GitHubStyleLinkResolver.Factory(ext))
+      }
+      builder.build()
+    }
+    val document = parser.parse(str)
+    renderer.render(document)
+  }
+
+  private def options(addTableOfContents: Boolean): MutableDataSet = {
     val extensions = new JArrayList[Extension]()
     val options = new MutableDataSet()
 
@@ -41,7 +59,6 @@ object Markdown {
     options.set(TypographicExtension.ENABLE_SMARTS, Boolean.box(true))
 
     extensions.add(AutolinkExtension.create())
-    extensions.add(AutolinkTargetExtension)
 
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
@@ -49,10 +66,6 @@ object Markdown {
 
     if (addTableOfContents)
       extensions.add(TocExtension.create())
-    if (manualizeLinks)
-      extensions.add(ManualLinkExtension)
-    if (extName.nonEmpty)
-      extensions.add(new GitHubStyleLinkExtension(extName.get))
     extensions.add(AnchorLinkExtension.create())
     options.set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "section-anchor")
 
@@ -61,274 +74,58 @@ object Markdown {
     options
   }
 
-  def apply(
-    str:                String,
-    addTableOfContents: Boolean = true,
-    manualizeLinks:     Boolean = true,
-    extName:            Option[String] = None): String = {
+  object AutolinkAttributeProvider extends AttributeProvider {
+    override def setAttributes(node: Node, part: AttributablePart, attributes: Attributes) =
+      if (node.isInstanceOf[AutoLink] && part == AttributablePart.LINK)
+        attributes.replaceValue("target", "_blank")
 
-    val opts = options(addTableOfContents, manualizeLinks, extName)
-    val parser = Parser.builder(opts).build()
-    val renderer = HtmlRenderer.builder(opts).build()
-    val document = parser.parse(str)
-    renderer.render(document)
-  }
-
-  object AutolinkTargetExtension extends HtmlRenderer.HtmlRendererExtension {
-    override def rendererOptions(options: MutableDataHolder): Unit = {}
-
-    override def extend(rendererBuilder: HtmlRenderer.Builder, rendererType: String) =
-      rendererBuilder.attributeProviderFactory(new IndependentAttributeProviderFactory {
-        override def create(context: NodeRendererContext) = AutolinkAttributeProvider
-      })
-
-    object AutolinkAttributeProvider extends AttributeProvider {
-      override def setAttributes(node: Node, part: AttributablePart, attributes: Attributes) =
-        if (node.isInstanceOf[AutoLink] && part == AttributablePart.LINK)
-          attributes.replaceValue("target", "_blank")
+    object Factory extends IndependentAttributeProviderFactory {
+      override def create(context: NodeRendererContext) = AutolinkAttributeProvider
     }
   }
 
-  // this extension relativizes links when they appear in the manual.
-  // "http://ccl.northwestern.edu/netlogo/docs/x/y/z" is transformed to "/x/y/z"
-  object ManualLinkExtension extends Parser.ParserExtension with HtmlRenderer.HtmlRendererExtension {
-    def extend(builder: Parser.Builder): Unit = {
-      builder.postProcessorFactory(ManualLinkPostProcessorFactory)
-    }
+  /** Relativizes links when they appear in the manual.
+   *  "http://ccl.northwestern.edu/netlogo/docs/x/y/z" is transformed to "x/y/z"
+   */
+  object ManualLinkResolver extends LinkResolver {
+    val nlDocURL = new Regex("(?:https?://)ccl.northwestern.edu/netlogo/docs/")
 
-    def rendererOptions(options: MutableDataHolder): Unit = {}
-    def parserOptions(options: MutableDataHolder): Unit = {}
+    override def resolveLink(node: Node, context: NodeRendererContext, link: ResolvedLink) =
+      if (nlDocURL.findPrefixMatchOf(link.getUrl.toString).nonEmpty)
+        link.withStatus(LinkStatus.VALID).withUrl(nlDocURL.replaceFirstIn(link.getUrl, ""))
+      else if (Try(new URI(link.getUrl).getHost != null).toOption.getOrElse(false))
+        link.withStatus(LinkStatus.VALID).withTarget("_blank")
+      else
+        link
 
-    def extend(builder: HtmlRenderer.Builder, rendererType: String): Unit = {
-      if (rendererType == "HTML")
-        builder.nodeRendererFactory(ManualLinkNodeRendererFactory)
-    }
-
-    class ManualLink(other: Link, docUrlString: String) extends InlineLinkNode(
-      other.getChars,
-      other.getTextOpeningMarker,
-      other.getText,
-      other.getTextClosingMarker,
-      other.getLinkOpeningMarker,
-      other.getUrl.subSequence(docUrlString.length),
-      other.getTitleOpeningMarker,
-      other.getTitle,
-      other.getTitleClosingMarker,
-      other.getLinkClosingMarker) {
-
-      override def setTextChars(textChars: BasedSequence): Unit = {
-        val textCharsLength = textChars.length
-        textOpeningMarker = textChars.subSequence(0, 1)
-        text = textChars.subSequence(1, textCharsLength - 1).trim
-        textClosingMarker = textChars.subSequence(textCharsLength - 1, textCharsLength)
-      }
-    }
-
-    class ExternalLink(other: Link) extends InlineLinkNode(
-      other.getChars,
-      other.getTextOpeningMarker,
-      other.getText,
-      other.getTextClosingMarker,
-      other.getLinkOpeningMarker,
-      other.getUrl,
-      other.getTitleOpeningMarker,
-      other.getTitle,
-      other.getTitleClosingMarker,
-      other.getLinkClosingMarker) {
-
-      override def setTextChars(textChars: BasedSequence): Unit = {
-        val textCharsLength = textChars.length
-        textOpeningMarker = textChars.subSequence(0, 1)
-        text = textChars.subSequence(1, textCharsLength - 1).trim
-        textClosingMarker = textChars.subSequence(textCharsLength - 1, textCharsLength)
-      }
-    }
-
-    object ManualLinkPostProcessorFactory extends NodePostProcessorFactory(false) {
-      addNodes(classOf[Link])
-
-      def create(document: Document): NodePostProcessor = ManualLinkPostProcessor
-    }
-
-    object ManualLinkPostProcessor extends NodePostProcessor {
-      val nlDocURL = new Regex("(?:https?://)ccl.northwestern.edu/netlogo/docs/")
-
-      def process(tracker: NodeTracker, node: Node): Unit = {
-        val maybeNewNode =
-          node match {
-            case link: Link if nlDocURL.findPrefixMatchOf(link.getUrl).nonEmpty =>
-              for {
-                m <- nlDocURL.findPrefixMatchOf(link.getUrl)
-              } yield new ManualLink(link, m.matched)
-            case link: Link if Try(new URI(link.getUrl.toString).getHost != null).toOption.getOrElse(false) =>
-              Some(new ExternalLink(link))
-            case _ => None
-          }
-        maybeNewNode.foreach { newNode =>
-          newNode.takeChildren(node)
-          node.insertBefore(newNode)
-          node.unlink()
-          tracker.nodeRemoved(node)
-          tracker.nodeAddedWithChildren(newNode)
-        }
-      }
-    }
-
-    object ManualLinkNodeRendererFactory extends NodeRendererFactory {
-      override def create(options: DataHolder): NodeRenderer = ManualLinkRenderer
-    }
-
-    object ManualLinkRenderer extends NodeRenderer {
-      override def getNodeRenderingHandlers: JSet[NodeRenderingHandler[_]] = {
-        val set = new JHashSet[NodeRenderingHandler[_]]()
-        set.add(new NodeRenderingHandler[ManualLink](
-          classOf[ManualLink],
-          new CustomNodeRenderer[ManualLink]() {
-            override def render(node: ManualLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-              ManualLinkRenderer.this.render(node, context, html)
-            }
-          }))
-        set.add(new NodeRenderingHandler[ExternalLink](
-          classOf[ExternalLink],
-          new CustomNodeRenderer[ExternalLink]() {
-            override def render(node: ExternalLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-              ManualLinkRenderer.this.render(node, context, html)
-            }
-          }))
-        set
-      }
-
-      def render(node: ManualLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-        if (context.isDoNotRenderLinks) {
-          context.renderChildren(node)
-        } else {
-          val resolvedLink = context.resolveLink(LinkType.LINK, node.getUrl.unescape, null)
-          html.attr("href", resolvedLink.getUrl)
-          if (node.getTitle.isNotNull) {
-            html.attr("title", node.getTitle.unescape)
-          }
-          html.srcPos(node.getChars).withAttr(resolvedLink).tag("a")
-          context.renderChildren(node)
-          html.tag("/a")
-        }
-      }
-
-      def render(node: ExternalLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-        if (context.isDoNotRenderLinks) {
-          context.renderChildren(node)
-        } else {
-          val resolvedLink = context.resolveLink(LinkType.LINK, node.getUrl.unescape, null)
-          html.attr("href", resolvedLink.getUrl)
-          if (node.getTitle.isNotNull) {
-            html.attr("title", node.getTitle.unescape)
-          }
-          html.attr("target", "_blank")
-          html.srcPos(node.getChars).withAttr(resolvedLink).tag("a")
-          context.renderChildren(node)
-          html.tag("/a")
-        }
-      }
+    object Factory extends LinkResolverFactory {
+      def getBeforeDependents = null
+      def getAfterDependents  = null
+      def affectsGlobalScope  = false
+      def create(context: NodeRendererContext) = ManualLinkResolver
     }
   }
 
-  // this extension changes extension section links using the github convention
-  // <ext-name><prim-name> to use the flexmark-linking convention <ext-name>:<prim-name>
-  class GitHubStyleLinkExtension(extName: String)
-    extends Parser.ParserExtension with HtmlRenderer.HtmlRendererExtension {
-
-    def extend(builder: Parser.Builder): Unit = {
-      builder.postProcessorFactory(GitHubStyleLinkPostProcessorFactory)
-    }
-
-    def rendererOptions(options: MutableDataHolder): Unit = {}
-    def parserOptions(options: MutableDataHolder): Unit = {}
-
-    def extend(builder: HtmlRenderer.Builder, rendererType: String): Unit = {
-      if (rendererType == "HTML")
-        builder.nodeRendererFactory(GitHubStyleLinkNodeRendererFactory)
-    }
-
-    class GitHubStyleLink(other: Link) extends InlineLinkNode(
-      other.getChars,
-      other.getTextOpeningMarker,
-      other.getText,
-      other.getTextClosingMarker,
-      other.getLinkOpeningMarker,
-      other.getUrl,
-      other.getTitleOpeningMarker,
-      other.getTitle,
-      other.getTitleClosingMarker,
-      other.getLinkClosingMarker) {
-
-      override def setTextChars(textChars: BasedSequence): Unit = {
-        val textCharsLength = textChars.length
-        textOpeningMarker = textChars.subSequence(0, 1)
-        text = textChars.subSequence(1, textCharsLength - 1).trim
-        textClosingMarker = textChars.subSequence(textCharsLength - 1, textCharsLength)
-      }
-    }
-
-    object GitHubStyleLinkPostProcessorFactory extends NodePostProcessorFactory(false) {
-      addNodes(classOf[Link])
-
-      def create(document: Document): NodePostProcessor = GitHubStyleLinkPostProcessor
-    }
-
-    object GitHubStyleLinkPostProcessor extends NodePostProcessor {
-      val extAnchorURL = new Regex(s"#${extName}")
-
-        def process(tracker: NodeTracker, node: Node): Unit = {
-          node match {
-            case link: Link if extAnchorURL.findPrefixMatchOf(link.getUrl).nonEmpty =>
-              for {
-                m <- extAnchorURL.findPrefixMatchOf(link.getUrl)
-                } {
-                  val manualLink = new GitHubStyleLink(link)
-                  manualLink.takeChildren(node)
-                  node.insertBefore(manualLink)
-                  node.unlink()
-                  tracker.nodeRemoved(node)
-                  tracker.nodeAddedWithChildren(manualLink)
-                }
-            case _ =>
-          }
-        }
-    }
-
-    object GitHubStyleLinkNodeRendererFactory extends NodeRendererFactory {
-      override def create(options: DataHolder): NodeRenderer = GitHubStyleLinkRenderer
-    }
-
-    object GitHubStyleLinkRenderer extends NodeRenderer {
-      override def getNodeRenderingHandlers: JSet[NodeRenderingHandler[_]] = {
-        val set = new JHashSet[NodeRenderingHandler[_]]()
-        set.add(new NodeRenderingHandler[GitHubStyleLink](
-          classOf[GitHubStyleLink],
-          new CustomNodeRenderer[GitHubStyleLink]() {
-            override def render(node: GitHubStyleLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-              GitHubStyleLinkRenderer.this.render(node, context, html)
-            }
-          }))
-        set
-      }
-
-      def render(node: GitHubStyleLink, context: NodeRendererContext, html: HtmlWriter): Unit = {
-        if (context.isDoNotRenderLinks) {
-          context.renderChildren(node)
-        } else {
-          val url = node.getUrl.unescape
-          val fixedUrl =
-            url.replaceAllLiterally(s"#$extName", s"#$extName:").replaceAllLiterally("::", ":")
-          val resolvedLink = context.resolveLink(LinkType.LINK, fixedUrl, null)
-          html.attr("href", resolvedLink.getUrl)
-          if (node.getTitle.isNotNull) {
-            html.attr("title", node.getTitle.unescape)
-          }
-          html.srcPos(node.getChars).withAttr(resolvedLink).tag("a")
-          context.renderChildren(node)
-          html.tag("/a")
-        }
-      }
+  /** Changes extension section links using the github convention
+   *  <ext-name><prim-name> to use the flexmark-linking convention <ext-name>:<prim-name>
+   */
+  class GitHubStyleLinkResolver(extName: String) extends LinkResolver {
+    val extAnchorPrefix = s"#$extName"
+    
+    override def resolveLink(node: Node, context: NodeRendererContext, link: ResolvedLink) =
+      if (link.getUrl.startsWith(extAnchorPrefix))
+        link.withStatus(LinkStatus.VALID)
+            .withUrl(link.getUrl.replaceAllLiterally(extAnchorPrefix, extAnchorPrefix + ':'))
+      else
+        link
+  }
+  
+  object GitHubStyleLinkResolver {
+    class Factory(extName: String) extends LinkResolverFactory {
+      def getBeforeDependents = null
+      def getAfterDependents  = null
+      def affectsGlobalScope  = false
+      def create(context: NodeRendererContext) = new GitHubStyleLinkResolver(extName)
     }
   }
 }
