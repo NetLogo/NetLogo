@@ -300,3 +300,9 @@ package hubnet {
     def syntax = Syntax.commandSyntax(right = List(Syntax.NumberType, Syntax.NumberType))
   }
 }
+
+package plot {
+  case class _setplotbackgroundcolor() extends Command {
+    def syntax = Syntax.commandSyntax(right = List(Syntax.NumberType | Syntax.ListType))
+  }
+}

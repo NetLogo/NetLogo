@@ -33,28 +33,25 @@ object NetLogoBuild {
         .stripPrefix("NetLogo ")
     })
 
-  def includeProject(project: Project): Seq[Setting[_]] = Seq(
-    sources in Compile                      ++= (sources in (project, Compile)).value,
-    sources in Test                         ++= (sources in (project, Test)).value,
-    unmanagedResourceDirectories in Compile += (baseDirectory in project).value / "resources" / "main"
-    ) ++ Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
+  def includeInPackaging(project: Project): Seq[Setting[_]] =
+    Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       mappings in Compile ++= {
         val existingMappings = (mappings in Compile).value.map(_._2)
         val newMappings = (mappings in Compile in project).value
         newMappings.filterNot(n => existingMappings.contains(n._2))
       }))
 
-    def shareSourceDirectory(path: String): Seq[Setting[_]] = {
-      Seq(
-        unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / path / "src" / "main",
-        unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / path / "src" / "test"
-        ) ++ Seq(Compile, Test).map(config =>
-          excludeFilter in unmanagedSources in config := {
-            (excludeFilter in unmanagedSources in config).value ||
-            new SimpleFileFilter({ f =>
-              ! f.isDirectory &&
-              Path.rebase(baseDirectory.value.getParentFile / path, baseDirectory.value)(f).map(_.exists).getOrElse(false)
-            })
+  def shareSourceDirectory(path: String): Seq[Setting[_]] = {
+    Seq(
+      unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / path / "src" / "main",
+      unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / path / "src" / "test"
+      ) ++ Seq(Compile, Test).map(config =>
+        excludeFilter in unmanagedSources in config := {
+          (excludeFilter in unmanagedSources in config).value ||
+          new SimpleFileFilter({ f =>
+            ! f.isDirectory &&
+            Path.rebase(baseDirectory.value.getParentFile / path, baseDirectory.value)(f).map(_.exists).getOrElse(false)
           })
-    }
+        })
+  }
 }
