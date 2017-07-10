@@ -3,9 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D,
-  KeyboardFocusManager }
-import java.awt.event.ActionEvent
+  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JComponent,
   JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
@@ -43,7 +42,8 @@ class InterfaceTab(workspace: GUIWorkspace,
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
   activeMenuActions =
-    WorkspaceActions.interfaceActions(workspace) ++ Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction())
+    WorkspaceActions.interfaceActions(workspace) ++
+    Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction(), new JumpToCommandCenterAction())
 
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
@@ -68,6 +68,15 @@ class InterfaceTab(workspace: GUIWorkspace,
   splitPane.setOneTouchExpandable(true)
   splitPane.setResizeWeight(1) // give the InterfacePanel all
   add(splitPane, BorderLayout.CENTER)
+
+  object TrackingFocusListener extends FocusListener {
+    var lastFocused = Option.empty[Component]
+    override def focusGained(e: FocusEvent): Unit = {
+      lastFocused = Some(e.getSource.asInstanceOf[Component])
+    }
+    override def focusLost(e: FocusEvent): Unit = { }
+  }
+
   locally {
     import WidgetInfo._
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
@@ -79,6 +88,8 @@ class InterfaceTab(workspace: GUIWorkspace,
         add(viewUpdatePanel)
       }
     }, BorderLayout.NORTH)
+    iP.addFocusListener(TrackingFocusListener)
+    commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
   }
 
   SwingUtils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
@@ -95,19 +106,13 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getInterfacePanel = iP
 
   override def requestFocus() {
-    if(iP.isFocusable && splitPane.getDividerLocation >= maxDividerLocation) {
-      iP.requestFocusInWindow()
-    }
+    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
   }
 
   final def handle(e: SwitchedTabsEvent) {
+    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
     if (e.newTab != this) {
-      lastFocusedComponent = if(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == commandCenter.commandLine.textField)
-        commandCenter else iP
-
       monitorManager.refresh()
-    } else {
-      lastFocusedComponent.requestFocus()
     }
   }
 
@@ -163,6 +168,18 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
+  private def showCommandCenter(): Unit = {
+    if (splitPane.getLastDividerLocation < maxDividerLocation)
+      splitPane.setDividerLocation(splitPane.getLastDividerLocation)
+    else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
+      splitPane.getOrientation match {
+        case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
+        case _ => // horizontal
+          // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
+          splitPane.setDividerLocation(0.5)
+      }
+  }
+
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
   with MenuAction {
     category    = ToolsCategory
@@ -173,22 +190,28 @@ class InterfaceTab(workspace: GUIWorkspace,
       if (splitPane.getDividerLocation < maxDividerLocation) {
         splitPane.setDividerLocation(maxDividerLocation)
         if (iP.isFocusable) iP.requestFocus()
-      }
-      else {
-        if (splitPane.getLastDividerLocation < maxDividerLocation)
-          splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-        else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-          splitPane.getOrientation match {
-            case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-            case _ => // horizontal
-              // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-              splitPane.setDividerLocation(0.5)
-          }
-          commandCenter.requestFocus()
+      } else {
+        showCommandCenter()
+        commandCenter.requestFocus()
       }
       putValue(Action.NAME,
         if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
         else I18N.gui.get("menu.tools.showCommandCenter"))
+    }
+  }
+
+
+  class JumpToCommandCenterAction extends AbstractAction(I18N.gui.get("menu.tools.jumpToCommandCenter"))
+  with MenuAction {
+    category    = ToolsCategory
+    group       = MenuGroup
+    accelerator = UserAction.KeyBindings.keystroke('C', withMenu = true, withShift = true)
+
+    override def actionPerformed(e: ActionEvent) {
+      if (! commandCenter.getDefaultComponentForFocus.isFocusOwner) {
+        showCommandCenter()
+        commandCenter.requestFocusInWindow()
+      }
     }
   }
 
