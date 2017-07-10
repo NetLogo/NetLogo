@@ -2,10 +2,15 @@
 
 package org.nlogo.plot
 
-import org.nlogo.core.PlotPenInterface
-import org.nlogo.api.{ PlotAction, PlotInterface, PlotState }
+import
+  org.nlogo.core.{ Color, ColorConstants, PlotPenInterface },
+    ColorConstants.White
 
-import java.io.{ Serializable => JSerializable }
+import
+  org.nlogo.api.{ PlotAction, PlotInterface, PlotState }
+
+import
+  java.io.{ Serializable => JSerializable }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -48,6 +53,11 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   var updateCode: String = ""
 
   var runtimeError: Option[Exception] = None
+
+  // NOTE: This almost certainly ought to be a field of `api.PlotState`
+  // However, I would prefer a better datatype than `Int` and don't want to add it to
+  // the API until I'm sure it's right.
+  var backgroundColor: Int = Color.getARGBbyPremodulatedColorNumber(White)
 
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
@@ -166,6 +176,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     pens.foreach(_.hardReset())
     state = PlotState(defaultAutoPlotOn, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
     runtimeError = None
+    backgroundColor = Color.getARGBbyPremodulatedColorNumber(White)
     makeDirty()
     plotListener.foreach(_.clear)
     pensDirty = true

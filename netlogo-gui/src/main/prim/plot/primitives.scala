@@ -3,7 +3,7 @@
 package org.nlogo.prim.plot
 
 import org.nlogo.api.{ CommandRunnable}
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ Color, Syntax }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
@@ -29,39 +29,37 @@ trait Helpers extends Instruction {
   }
 }
 
-abstract class PlotCommand(args: Int*)
-extends Command with Helpers {
+abstract class PlotCommand extends Command with Helpers {
 }
 
-abstract class PlotReporter(returnType: Int, args: Int*)
-extends Reporter with Helpers {
+abstract class PlotReporter extends Reporter with Helpers {
 }
 
 //
 // commands requiring only the plot manager (it's ok if there are no plots)
 //
 
-class _clearallplots extends PlotCommand() {
+class _clearallplots extends PlotCommand {
   override def perform(context: Context) {
     plotManager.clearAll()
     context.ip = next
   }
 }
-class _setupplots extends PlotCommand() {
+class _setupplots extends PlotCommand {
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.setupPlots(context)
     context.ip = next
   }
 }
-class _updateplots extends PlotCommand() {
+class _updateplots extends PlotCommand {
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.updatePlots(context)
     context.ip = next
   }
 }
-class _setcurrentplot extends PlotCommand(Syntax.StringType) {
+class _setcurrentplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
@@ -77,26 +75,26 @@ class _setcurrentplot extends PlotCommand(Syntax.StringType) {
 // commands requiring that there be a current plot.
 //
 
-class _clearplot extends PlotCommand() {
+class _clearplot extends PlotCommand {
   override def perform(context: Context) {
     currentPlot(context).clear()
     context.ip = next
   }
 }
-class _autoplotoff extends PlotCommand() {
+class _autoplotoff extends PlotCommand {
   override def perform(context: Context) {
     currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = false)
     context.ip = next
   }
 }
-class _autoploton extends PlotCommand() {
+class _autoploton extends PlotCommand {
   override def perform(context: Context) {
     currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = true)
     context.ip = next
   }
 }
 
-class _plot extends PlotCommand(Syntax.NumberType) {
+class _plot extends PlotCommand {
   override def perform(context: Context) {
     val y = argEvalDoubleValue(context, 0)
     currentPlot(context).plot(y)
@@ -104,7 +102,7 @@ class _plot extends PlotCommand(Syntax.NumberType) {
   }
 }
 
-class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
+class _plotxy extends PlotCommand {
   override def perform(context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
@@ -113,7 +111,33 @@ class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
   }
 }
 
-class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
+class _setplotbackgroundcolor extends PlotCommand {
+  override def perform(context: Context) {
+    val obj = args(0).report(context)
+    val backgroundColor =
+      obj match {
+        case rgbList: LogoList =>
+          try
+          Color.getARGBIntByRGBAList(rgbList)
+          catch {
+            case e: ClassCastException =>
+              throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, displayName + " an rgb list must contain only numbers")
+          }
+        case c: java.lang.Double =>
+          Color.getARGBbyPremodulatedColorNumber(
+            Color.modulateDouble(c))
+        case _ =>
+          throw new org.nlogo.nvm.ArgumentTypeException(
+            context, this, 0, Syntax.ListType | Syntax.NumberType, obj)
+      }
+    val plot = currentPlot(context)
+    plot.backgroundColor = backgroundColor
+    plot.makeDirty()
+    context.ip = next
+  }
+}
+
+class _setplotxrange extends PlotCommand {
   override def perform(context: Context) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
@@ -127,7 +151,7 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
   }
 }
 
-class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
+class _setplotyrange extends PlotCommand {
   override def perform(context: Context) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
@@ -141,7 +165,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
   }
 }
 
-class _createtemporaryplotpen extends PlotCommand(Syntax.StringType) {
+class _createtemporaryplotpen extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val plot = currentPlot(context)
@@ -150,7 +174,7 @@ class _createtemporaryplotpen extends PlotCommand(Syntax.StringType) {
   }
 }
 
-class _histogram extends PlotCommand(Syntax.ListType) {
+class _histogram extends PlotCommand {
   import org.nlogo.api.Dump
   override def perform(context: Context) {
     val list = argEvalList(context, 0)
@@ -169,7 +193,7 @@ class _histogram extends PlotCommand(Syntax.ListType) {
   }
 }
 
-class _sethistogramnumbars extends PlotCommand(Syntax.NumberType) {
+class _sethistogramnumbars extends PlotCommand {
   override def perform(context: Context) {
     val numBars = argEvalIntValue(context, 0)
     if (numBars < 1)
@@ -180,7 +204,7 @@ class _sethistogramnumbars extends PlotCommand(Syntax.NumberType) {
   }
 }
 
-class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
+class _exportplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
@@ -202,7 +226,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
 }
 
 // this also requires only the PlotManager, but it seems better to put it here next to exportplot.
-class _exportplots extends PlotCommand(Syntax.StringType) {
+class _exportplots extends PlotCommand {
   override def perform(context: Context) {
     val path = argEvalString(context, 0)
     if (plotManager.getPlotNames.length == 0)
@@ -226,31 +250,31 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 // reporters
 //
 
-class _autoplot extends PlotReporter(Syntax.BooleanType) {
+class _autoplot extends PlotReporter {
   override def report(context: Context) =
     Boolean.box(currentPlot(context).autoPlotOn)
 }
-class _plotname extends PlotReporter(Syntax.StringType) {
+class _plotname extends PlotReporter {
   override def report(context: Context) =
     currentPlot(context).name
 }
-class _plotxmin extends PlotReporter(Syntax.NumberType) {
+class _plotxmin extends PlotReporter {
   override def report(context: Context) =
     Double.box(currentPlot(context).xMin)
 }
-class _plotxmax extends PlotReporter(Syntax.NumberType) {
+class _plotxmax extends PlotReporter {
   override def report(context: Context) =
     Double.box(currentPlot(context).xMax)
 }
-class _plotymin extends PlotReporter(Syntax.NumberType) {
+class _plotymin extends PlotReporter {
   override def report(context: Context) =
     Double.box(currentPlot(context).yMin)
 }
-class _plotymax extends PlotReporter(Syntax.NumberType) {
+class _plotymax extends PlotReporter {
   override def report(context: Context) =
     Double.box(currentPlot(context).yMax)
 }
-class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
+class _plotpenexists extends PlotReporter {
   override def report(context: Context) =
     Boolean.box(currentPlot(context).getPen(argEvalString(context, 0)).isDefined)
 }
@@ -259,31 +283,31 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType)
 // plot pen prims
 //
 
-final class _plotpendown extends PlotCommand() {
+final class _plotpendown extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).isDown = true
     context.ip = next
   }
 }
-final class _plotpenup extends PlotCommand() {
+final class _plotpenup extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).isDown = false
     context.ip = next
   }
 }
-final class _plotpenshow extends PlotCommand() {
+final class _plotpenshow extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).hidden = false
     context.ip = next
   }
 }
-final class _plotpenhide extends PlotCommand() {
+final class _plotpenhide extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).hidden = true
     context.ip = next
   }
 }
-final class _plotpenreset extends PlotCommand() {
+final class _plotpenreset extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).hardReset()
     currentPen(context).plotListenerReset(true)
@@ -292,14 +316,14 @@ final class _plotpenreset extends PlotCommand() {
   }
 }
 
-final class _setplotpeninterval extends PlotCommand(Syntax.NumberType) {
+final class _setplotpeninterval extends PlotCommand {
   override def perform(context: Context) {
     currentPen(context).interval = argEvalDoubleValue(context, 0)
     context.ip = next
   }
 }
 
-final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
+final class _setplotpenmode extends PlotCommand {
   import org.nlogo.core.PlotPenInterface
   override def perform(context: Context) {
     val mode = argEvalIntValue(context, 0)
@@ -312,7 +336,7 @@ final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
   }
 }
 
-final class _setplotpencolor extends PlotCommand(Syntax.NumberType | Syntax.ListType) {
+final class _setplotpencolor extends PlotCommand {
   import org.nlogo.api.Color
   override def perform(context: Context) {
     val obj = args(0).report(context)
@@ -334,7 +358,7 @@ final class _setplotpencolor extends PlotCommand(Syntax.NumberType | Syntax.List
   }
 }
 
-final class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
+final class _setcurrentplotpen extends PlotCommand {
   override def perform(context: Context) {
     val penName = argEvalString(context, 0)
     val plot = currentPlot(context)

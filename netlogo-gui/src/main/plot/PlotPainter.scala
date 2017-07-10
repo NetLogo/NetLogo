@@ -2,6 +2,7 @@
 
 package org.nlogo.plot
 
+import java.awt.Color
 
 class PlotPainter(plot: Plot) {
 
@@ -26,7 +27,7 @@ class PlotPainter(plot: Plot) {
       if(gOff != null)
         gOff.dispose()
       gOff = offScreenImage.getGraphics()
-      gOff.setColor(java.awt.Color.WHITE)
+      gOff.setColor(new Color(plot.backgroundColor))
       gOff.fillRect(0, 0, width, height)
       refresh()
     }
@@ -35,7 +36,7 @@ class PlotPainter(plot: Plot) {
   def drawImage(g: java.awt.Graphics) { g.drawImage(offScreenImage, 0, 0, null) }
 
   def refresh() {
-    gOff.setColor(java.awt.Color.WHITE)
+    gOff.setColor(new Color(plot.backgroundColor))
     gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
     for(pen <- plot.pens; if(! pen.hidden)) {
       pen.penModeChanged = false

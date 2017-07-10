@@ -660,6 +660,7 @@ Go figure! - ST 12/2/04
       <a href="#set-current-plot">set-current-plot</a>
       <a href="#set-current-plot-pen">set-current-plot-pen</a>
       <a href="#set-histogram-num-bars">set-histogram-num-bars</a>
+      <a href="#set-plot-background-color">set-plot-background-color</a>
       <a href="#set-plot-pen-color">set-plot-pen-color</a>
       <a href="#set-plot-pen-interval">set-plot-pen-interval</a>
       <a href="#set-plot-pen-mode">set-plot-pen-mode</a>
@@ -7073,6 +7074,23 @@ ask cats [ set breed dogs ]
         typically an integer, but may also be a floating point number.
       <p>
         See also <a href="#patch-size">patch-size</a>, <a href="#resize-world">resize-world</a>.
+      </div>
+    <div class="dict_entry" id="set-plot-background-color">
+      <h3>
+        <a>set-plot-background-color<span class="since">6.0.2</span></a>
+      </h3>
+      <h4>
+        <span class="prim_example">set-plot-background-color <i>color</i></span>
+      </h4>
+      <p>
+        Sets the background color of the current plot.
+        The color may be specified as a number or a list.
+        See the <a href="programming.html#colors">Colors</a> section of the programming guide for more details.
+        This change is temporary and is not saved with the model. When the
+        plot is cleared, the background color will revert to white.
+      <p>
+        <b>Note:</b> Plot backgrounds do not support transparency.
+        If a list is used to set the color, the alpha component will be ignored.
       </div>
     <div class="dict_entry" id="set-plot-pen-color">
       <h3>
