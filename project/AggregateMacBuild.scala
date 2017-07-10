@@ -150,9 +150,26 @@ object PackageMacAggregate {
 
     val apps = subApplications.map(a => s"${a.name} $version.app")
       .map(n => aggregateMacDir / n)
-      .map(_.getAbsolutePath)
 
-    RunProcess(Seq("codesign", "--deep", "-s", "Developer ID Application") ++ apps, "codesigning")
+    val filesToBeSigned =
+      apps
+        .flatMap(a => FileActions.enumerateFiles(a.toPath).filterNot(p => Files.isDirectory(p)))
+
+    val filesToMakeExecutable =
+      filesToBeSigned.filter(p => p.getFileName.toString.endsWith(".dylib") || p.getFileName.toString.endsWith(".jnilib"))
+
+    filesToMakeExecutable.foreach(_.toFile.setExecutable(true))
+
+    // ensure applications are signed *after* their libraries and resources
+    val orderedFilesToBeSigned =
+      filesToBeSigned.sortBy {
+        case p if subApplications.map(_.name).contains(p.getFileName.toString) => 2
+        case _ => 1
+      }
+
+    println(orderedFilesToBeSigned.map(_.toString).mkString("\n"))
+
+    RunProcess(Seq("codesign", "-s", "Developer ID Application") ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
