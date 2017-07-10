@@ -147,10 +147,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   def refreshGUI() {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
+    def yAxismin(d:Double) = if (d == Long.MinValue) -9.22E18 else d
+    def yAxismax(d:Double) = if (d == Long.MaxValue) 9.22E18 else d
     xAxis.setMin(getLabel(plot.xMin))
     xAxis.setMax(getLabel(plot.xMax))
-    yAxis.setMin(getLabel(plot.yMin))
-    yAxis.setMax(getLabel(plot.yMax))
+    yAxis.setMin(getLabel(yAxismin(plot.yMin)))
+    yAxis.setMax(getLabel(yAxismax(plot.yMax)))
     if(plot.pensDirty) {
       legend.refresh()
       plot.pensDirty = false
@@ -162,7 +164,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def needsPreferredWidthFudgeFactor = false
   override def zoomSubcomponents = true
   def makeDirty(){
-    // yuck! plot calls makeDirty when its being constructed.
+    // yuck! plot calls makoDirty when its being constructed.
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
   }
