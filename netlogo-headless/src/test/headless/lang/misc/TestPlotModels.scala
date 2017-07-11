@@ -256,6 +256,18 @@ class TestPlotModels extends FixtureSuite {
     testReporter("n-values 10 [random 10]", "[8 9 8 4 2 4 5 4 7 9]")
   }
 
+  test("legend is correctly off") { implicit fixture =>
+    import fixture._
+    open(Model("", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List()))))
+    assertResult(false)(workspace.plotManager.currentPlot.get.legendIsOpen)
+  }
+
+  test("legend is correctly on") { implicit fixture =>
+    import fixture._
+    open(Model("", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List(), legendOn = true))))
+    assertResult(true)(workspace.plotManager.currentPlot.get.legendIsOpen)
+  }
+
   def testCompileError(model: Model)(f: Throwable => Unit)(implicit fixture: Fixture) = {
     val ex = intercept[Throwable] {
       fixture.workspace.openModel(model)
