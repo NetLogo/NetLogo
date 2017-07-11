@@ -1,5 +1,5 @@
 import java.io.File
-import java.nio.file.Path
+import java.nio.file.{ Files, Path, Paths }
 import java.util.regex.Pattern
 import sbt._
 import Keys._
@@ -34,14 +34,14 @@ object ModelsLibrary {
 
   def modelFiles(directory: File): Seq[Path] = {
     val dirPath = directory.toPath
-    FileActions.enumerateFiles(dirPath)
+    FileActions.enumeratePaths(dirPath)
       .filter(p => p.getFileName.toString.endsWith(".nlogo") || p.getFileName.toString.endsWith(".nlogo3d"))
   }
 
   lazy val settings = Seq(
     modelIndex := {
-      streams.value.log.info("creating models/index.txt")
-      val path = modelsDirectory.value / "index.txt"
+      streams.value.log.info("creating models/index.conf")
+      val path = modelsDirectory.value / "index.conf"
       IO.write(path, generateIndex(modelsDirectory.value, streams.value.log))
       Seq(path)
     },
@@ -61,36 +61,35 @@ object ModelsLibrary {
   )
 
   private def generateIndex(modelsPath: File, logger: Logger): String = {
+    import scala.collection.JavaConverters._
     val buf = new StringBuilder
     def println(s: String) { buf ++= s + "\n" }
-    // -H tells find to follow symbolic links.  we need that because
-    // bin/release.sh uses a symbolic link to fool this task into
-    // generating the index.txt file for a release - ST 6/18/12
-    val command =
-      Seq("find", "-H", modelsPath.toString,
-        "-name", "test", "-prune", "-o", "-name", "*.nlogo", "-print",
-        "-o", "-name", "*.nlogo3d", "-print")
-    val paths = command.lines_!
-    def infoTab(path: String) = try {
-      IO.read(new File(path)).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+    val paths = FileActions
+      .enumeratePaths(modelsPath.toPath)
+      .filterNot(p => p.toString.contains("test"))
+      .filterNot(p => Files.isDirectory(p))
+      .filter(p => p.getFileName.toString.endsWith("nlogo") || p.getFileName.toString.endsWith("nlogo3d"))
+    def infoTab(path: Path) = try {
+      Files.readAllLines(path).asScala.mkString("\n").split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
     } catch {
       case e: Exception =>
         logger.error(s"while generating index, encountered error on file $path : ${e.getMessage}")
         throw e
     }
+    println("models.indexes = [")
     for(path <- paths) {
       val info = infoTab(path)
       // The (?s) part allows . to match line endings
       val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
-      val modelPathPattern = Pattern.quote(modelsPath.toString)
-      if(info.matches(whatIsItPattern + ".*") ) {
+      if (info.matches(whatIsItPattern + ".*") ) {
         val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
-        println("models" + path.replaceFirst(modelPathPattern, ""))
-        println(firstParagraph)
+        val q3 = "\"\"\""
+        println(s"  { path: ${q3}models/${modelsPath.toPath.relativize(path)}${q3}, info: ${q3}${firstParagraph}${q3} },")
       } else {
         System.err.println("WHAT IS IT not found: " + path)
       }
     }
+    println("]")
     buf.toString
   }
 

@@ -126,7 +126,7 @@ object FileActions {
     Files.move(src.toPath, dest.toPath)
   }
 
-  def enumerateFiles(path: Path): Seq[Path] = {
+  def enumeratePaths(path: Path): Seq[Path] = {
     val listVisitor = new ListVisitor()
     Files.walkFileTree(path, new java.util.HashSet(), Int.MaxValue, listVisitor)
     listVisitor.pathsFound

@@ -699,8 +699,7 @@ class App extends
   }
 
   private def magicOpen(name: String) {
-    import scala.collection.JavaConverters._
-    val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
+    val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name)
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
       val fullName =
@@ -710,9 +709,10 @@ class App extends
           if (i != -1) matches(i) else null
         }
       if (fullName != null) {
-        val path = org.nlogo.workspace.ModelsLibrary.getModelPath(fullName)
-        val source = org.nlogo.api.FileIO.fileToString(path)(Codec.UTF8)
-        org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
+        org.nlogo.workspace.ModelsLibrary.getModelPath(fullName).foreach { path =>
+          val source = org.nlogo.api.FileIO.fileToString(path)(Codec.UTF8)
+          org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
+        }
       }
     }
   }

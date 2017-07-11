@@ -3,7 +3,7 @@ import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, runMain, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsRoot, manualPDF }
-import Extensions.extensionRoot
+import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
@@ -20,10 +20,10 @@ object NetLogoPackaging {
   lazy val buildDownloadPages      = taskKey[Seq[File]]("package the web download pages")
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val iconFiles               = settingKey[Seq[File]]("icon files to make available")
+  lazy val resaveModels   = taskKey[Unit]("prep models library for packaging")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val localSiteTarget         = settingKey[File]("directory into which local copy of the site is built")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
-  lazy val modelCrossReference     = taskKey[Unit]("add model cross references")
   lazy val netLogoLongVersion      = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
   lazy val netLogoRoot             = settingKey[File]("Root directory of NetLogo project")
   lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
@@ -70,19 +70,6 @@ object NetLogoPackaging {
       .map(p => (" " ~> p))
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
-  def modelTasks(netlogo: Project): Def.Initialize[Task[Unit]] = {
-    val resaveModels = (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver")
-    val generatePreviews = (allPreviews in netlogo).toTask("")
-    val crossReference = modelCrossReference
-    val indexTask = (modelIndex in netlogo)
-
-    Def.task {
-      System.setProperty("netlogo.extensions.gogo.javaexecutable",
-        (file(System.getProperty("java.home")) / "bin" / "java").getAbsolutePath)
-      (indexTask dependsOn crossReference dependsOn generatePreviews dependsOn resaveModels dependsOn (all in netlogo)).value
-    }
-  }
-
   def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[_]] = Seq(
     netLogoRoot     := (baseDirectory in netlogo).value,
     behaviorsearchRoot := netLogoRoot.value.getParentFile / "behaviorsearch",
@@ -95,10 +82,15 @@ object NetLogoPackaging {
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
-      modelTasks(netlogo).value
+      (allPreviews in netlogo).toTask("").value
+      resaveModels.value
       RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
       (packageBin in Compile in behaviorsearchProject).value
     },
+    resaveModels := {
+      (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
+    },
+    resaveModels := resaveModels.dependsOn(extensions in netlogo),
     packagedMathematicaLink := {
       val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")
@@ -115,9 +107,6 @@ object NetLogoPackaging {
     aggregateOnlyFiles := {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", buildVariables.value)
       Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
-    },
-    modelCrossReference := {
-      ModelCrossReference((modelsDirectory in netlogo).value)
     },
     buildVariables := Map[String, String](
       "version"               -> marketingVersion.value,

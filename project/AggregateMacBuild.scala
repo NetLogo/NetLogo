@@ -153,7 +153,7 @@ object PackageMacAggregate {
 
     val filesToBeSigned =
       apps
-        .flatMap(a => FileActions.enumerateFiles(a.toPath).filterNot(p => Files.isDirectory(p)))
+        .flatMap(a => FileActions.enumeratePaths(a.toPath).filterNot(p => Files.isDirectory(p)))
 
     val filesToMakeExecutable =
       filesToBeSigned.filter(p => p.getFileName.toString.endsWith(".dylib") || p.getFileName.toString.endsWith(".jnilib"))
