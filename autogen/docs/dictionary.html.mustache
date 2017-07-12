@@ -2435,14 +2435,19 @@ export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
       <p>
         Reports a list of three values, the first (hue) in the range of
         0 to 360, the second and third (brightness and saturation) in
-        the range of in the range 0 to 100, of the given
-        NetLogo <i>color</i> in the range 0 to 140, not including 140
-        itself.
+        the range of in the range 0 to 100.
+      <p>
+        The given <i>color</i> can either be a NetLogo color in the
+        range 0 to 140, not including 140 itself, or an RGB list of
+        three values in the range 0 to 255 representing the levels
+        of red, green, and blue.
       <pre>
-show extract-hsb red
-=&gt; [3.103 80.93 84.314]
 show extract-hsb cyan
 =&gt; [180 57.143 76.863]
+show extract-hsb red
+=&gt; [3.103 80.93 84.314]
+show extract-hsb [255 0 0]
+=&gt; [0 100 100]
 </pre>
       <p>
         See also <a href="#approximate-hsb">approximate-hsb</a>, <a href="#approximate-rgb">approximate-rgb</a>, <a href="#extract-rgb">extract-rgb</a>.
