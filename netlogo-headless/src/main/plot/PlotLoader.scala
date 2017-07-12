@@ -16,6 +16,7 @@ object PlotLoader {
         autoPlotOn = parsedPlot.autoPlotOn)
     plot.setupCode = parsedPlot.setupCode
     plot.updateCode = parsedPlot.updateCode
+    plot.legendIsOpen = parsedPlot.legendOn
 
     def loadPens(parsedPens: Seq[ParsedPen]) {
       plot.pens = Nil
