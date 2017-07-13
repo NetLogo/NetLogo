@@ -551,20 +551,17 @@ preference.
 
 ### Who numbering
 
-Prior to NetLogo 4.0, a dead turtle's who number (stored in the
-[`who`](dictionary.html#who) turtle variable) could be reassigned to a later
-newborn turtle. In NetLogo 4.0, who numbers are never reused until who numbering
-is reset to 0 by the [`clear-all`](dictionary.html#clear-all) or
-[`clear-turtles`](dictionary.html#clear-turtles) command. This change in
-behavior may break a few old models.
+Prior to NetLogo 4.0, a dead turtle's who number (stored in the [[who]] turtle
+variable) could be reassigned to a later newborn turtle. In NetLogo 4.0, who
+numbers are never reused until who numbering is reset to 0 by the [[clear-all]]
+or [[clear-turtles]] command. This change in behavior may break a few old
+models.
 
 ### Turtle creation: randomized vs. "ordered"
 
 NetLogo 4.0 provides two different observer commands for creating turtles,
-[`create-turtles`](dictionary.html#create-turtles)
-([`crt`](dictionary.html#create-turtles)) and
-[`create-ordered-turtles`](dictionary.html#create-ordered-turtles)
-([`cro`](dictionary.html#create-ordered-turtles)).
+[[create-turtles]] ([[crt|create-turtles]]) and
+[[create-ordered-turtles]] ([[cro|create-ordered-turtles]]).
 
 `crt` gives the new turtles random colors and random integer headings. `cro`
 assigns colors sequentially and gives the turtles sequential equally spaced
@@ -580,12 +577,11 @@ random 360`. These commands are no longer necessary when used inside `crt`.
 
 ### Adding strings and lists
 
-Prior to NetLogo 4.0, the [`+`](dictionary.html#Symbols) (addition) operator
-could be used to concatenate strings and join lists. In current NetLogo, `+`
-only works on numbers. To concatenate strings, use the
-[`word`](dictionary.html#word) primitive; to join lists together, use the
-[`sentence`](dictionary.html#sentence) primitive. This language change was made
-to increase the speed of code that uses `+`.
+Prior to NetLogo 4.0, the [[+|Symbols]] (addition) operator could be used to
+concatenate strings and join lists. In current NetLogo, `+` only works on
+numbers. To concatenate strings, use the [[word]] primitive; to join lists
+together, use the [[sentence]] primitive. This language change was made to
+increase the speed of code that uses `+`.
 
 Old code:
 
@@ -608,12 +604,10 @@ operation, NetLogo's overall speed is affected.
 
 ### The `-at` primitives
 
-The observer may no longer use [`patch-at`](dictionary.html#patch-at),
-[`turtles-at`](dictionary.html#turtles-at), and
-[`BREEDS-at`](dictionary.html#turtles-at). Use [`patch`](dictionary.html#patch),
-[`turtles-on`](dictionary.html#turtles-on) `patch`, and
-[`BREEDS-on`](dictionary.html#turtles-on) `patch` instead. Note that `patch` now
-rounds its inputs (before it only accepted integer inputs).
+The observer may no longer use [[patch-at]], [[turtles-at]], and
+[[BREEDS-at|turtles-at]]. Use [[patch]], [[turtles-on]] `patch`, and
+[[BREEDS-on|turtles-on]] `patch` instead. Note that `patch` now rounds its
+inputs (before it only accepted integer inputs).
 
 ### Links
 
@@ -636,18 +630,17 @@ that use links. There are also some link-based Code Examples.
 
 First you will need to remove any breeds called "links" if you are only using
 one type of links then you will not have to use breeds at all. If you are using
-multiple types of links see
-[`undirected-link-breed`](dictionary.html#undirected-link-breed) and
-[`directed-link-breed`](dictionary.html#directed-link-breed). Commands and
-reporters that contain the word "links" (like `__create-links-with`, etc.) will
-automatically be converted to the new form without underscores
-([`create-links-with`](dictionary.html#create-link)). However, primitives that
-use a different breed name (such as "edges") will not be converted. You will
-need to remove the underscores by hand and unless you are declaring a link breed
-with that name you will need to change the breed designation to "links".
+multiple types of links see [[undirected-link-breed]] and
+[[directed-link-breed]]. Commands and reporters that contain the word "links"
+(like `__create-links-with`, etc.) will automatically be converted to the new
+form without underscores ([[create-links-with|create-link]]).
+However, primitives that use a different breed name (such as "edges") will not
+be converted. You will need to remove the underscores by hand and unless you are
+declaring a link breed with that name you will need to change the breed
+designation to "links".
 
 The commands `remove-link(s)-with/from/to` no longer exist. Instead you should
-ask the links in question to [`die`](dictionary.html#die).
+ask the links in question to [[die]].
 
 For example:
 
@@ -659,20 +652,18 @@ becomes
 
 Several of the layout commands have slightly different inputs, the first two
 inputs are generally a turtle agentset and a link agentset to perform the layout
-on. See the dictionary entries for details.
-[`layout-spring`](dictionary.html#layout-spring),
-[`layout-radial`](dictionary.html#layout-radial)
-[`layout-tutte`](dictionary.html#layout-tutte)
+on. See the dictionary entries for details. [[layout-spring]], [[layout-radial]]
+and [[layout-tutte]]
 
 You may also need to rearrange the declaration of turtles-own variables, since
 links were once actually turtles. Any variables that apply to links should be
-moved into a [`links-own`](dictionary.html#links-own) block.
+moved into a [[links-own]] block.
 
 Since links are no longer turtles they no longer have the built-in turtle
-variables (though some of the link variables are the same such as
-[`color`](dictionary.html#color) and [`label`](dictionary.html#label). If you
-formerly used the location of link turtles you will now need to calculate the
-midpoint of the link. This is fairly simple in a non-wrapping world.
+variables (though some of the link variables are the same such as [[color]] and
+[[label]]. If you formerly used the location of link turtles you will now need
+to calculate the midpoint of the link. This is fairly simple in a non-wrapping
+world.
 
     to-report link-xcor
       report mean [xcor] of both-ends
@@ -704,14 +695,12 @@ straightforward.
 and similarly for `ycor`.
 
 If you used either the size or heading of the link turtles you can use the
-reporters [`link-length`](dictionary.html#link-length) and
-[`link-heading`](dictionary.html#link-heading) instead.
+reporters [[link-length]] and [[link-heading]] instead.
 
 ### New "of" syntax
 
 We have replaced three different language constructs, `-of` (with hyphen),
-`value-from`, and `values-from` with a single [`of`](dictionary.html#of)
-construct (no hyphen).
+`value-from`, and `values-from` with a single [[of]] construct (no hyphen).
 <table border>
 <tr>
   <th>old
@@ -738,34 +727,31 @@ converted by hand.
 
 ### Serial `ask`
 
-The [`ask`](dictionary.html#ask) command is now serial rather than concurrent.
-In other words, the asked agents will run one at a time. Not until one agent
-completely finishes the entire body of the `ask` does the next agent start.
+The [[ask]] command is now serial rather than concurrent. In other words, the
+asked agents will run one at a time. Not until one agent completely finishes the
+entire body of the `ask` does the next agent start.
 
-Note that even the old [`ask`](dictionary.html#ask) was never truly concurrent;
-we simulated concurrent execution by interleaving execution among the agents
-using a turn-taking mechanism described in the NetLogo FAQ.
+Note that even the old [[ask]] was never truly concurrent; we simulated
+concurrent execution by interleaving execution among the agents using a
+turn-taking mechanism described in the NetLogo FAQ.
 
 We have made this change because in our experience, users often wrote models
 that behaved in unexpected ways due to the simulated concurrency, but rarely
 wrote models that benefited from the simulated concurrency. Models exhibiting
 unexpected behavior could usually be fixed by adding the
-[`without-interruption`](dictionary.html#without-interruption) command in the
-right places, but it was difficult for users to know whether that command was
-needed and if so, where.
+[[without-interruption]] command in the right places, but it was difficult for
+users to know whether that command was needed and if so, where.
 
-In NetLogo 4.0, [`without-interruption`](dictionary.html#without-interruption)
-is no longer necessary unless your model uses
-[`ask-concurrent`](dictionary.html#ask-concurrent) (or a turtle or patch forever
-button containing code that depends on simulated concurrency). In most models,
-all uses of `without-interruption` can be removed.
+In NetLogo 4.0, [[without-interruption]] is no longer necessary unless your
+model uses [[ask-concurrent]] (or a turtle or patch forever button containing
+code that depends on simulated concurrency). In most models, all uses of
+`without-interruption` can be removed.
 
 The simulated concurrency formerly employed by "ask" is still accessible in
 three ways:
 
-- You may use the [`ask-concurrent`](dictionary.html#ask-concurrent) primitive
-  instead of [`ask`](dictionary.html#ask) to get the old simulated concurrency.
-  (We don't recommend this, though.)
+- You may use the [[ask-concurrent]] primitive instead of [[ask]] to get the old
+  simulated concurrency. (We don't recommend this, though.)
 - Commands issued in the Command Center directly to turtles, patches, or links
   have an implied `ask-concurrent`.
 - Turtle, patch, and link forever buttons have an implied `ask-concurrent` as
@@ -783,17 +769,15 @@ button.
 NetLogo now has a built-in tick counter for representing the passage of
 simulated time.
 
-You advance the counter by one using the [`tick`](dictionary.html#tick) command.
-If you need to read its value, there's a reporter called
-[`ticks`](dictionary.html#ticks). The [`clear-all`](dictionary.html#clear-all)
-command resets the tick counter; so does
-[`reset-ticks`](dictionary.html#reset-ticks).
+You advance the counter by one using the [[tick]] command. If you need to read
+its value, there's a reporter called [[ticks]]. The [[clear-all]] command resets
+the tick counter; so does [[reset-ticks]].
 
 In most models the tick counter will be integer-valued, but if you want to use
-smaller increments of time, you can use the
-[`tick-advance`](dictionary.html#tick-advance) command to advance the tick
-counter by any positive amount, including fractional amounts. Some Models
-Library models that use `tick-advance` are Vector Fields and the GasLab models.
+smaller increments of time, you can use the [[tick-advance]] command to advance
+the tick counter by any positive amount, including fractional amounts. Some
+Models Library models that use `tick-advance` are Vector Fields and the GasLab
+models.
 
 The value of the tick counter is displayed in the toolbar at the top of the
 Interface tab. (You can use the Settings... button in the toolbar to hide the
@@ -807,13 +791,12 @@ was that you usually want updates to happen between model ticks, not in the
 middle of a tick, so we had a checkbox on buttons that (by default) forced a
 display update after every button iteration. That made sure updates happened
 between ticks, but it didn't get rid of the intermediate updates. You had to use
-[`no-display`](dictionary.html#no-display) and
-[`display`](dictionary.html#display) to lock them out.
+[[no-display]] and [[display]] to lock them out.
 
 We still support continuous updates. They are the default when you start up
 NetLogo. But most Models Library models now use tick-based updates. With
 tick-based updates, updates happen only when the tick counter advances. (The
-[`display`](dictionary.html#display) command can be used to force additional
+[[display]] command can be used to force additional
 updates; see below.)
 
 The advantages of tick-based updates as we see them are as follows:
@@ -841,7 +824,7 @@ Seeing what's going on within a tick, instead of only seeing the end result of a
 tick, could help with troubleshooting.
 
 If you switch your model to use tick-based updates, you'll also need to add the
-[`tick`](dictionary.html#tick) command to your code, otherwise the view won't
+[[tick]] command to your code, otherwise the view won't
 update. (Note that the view still always updates when a button pops up or a
 command entered in the command center finishes, though. So it's not like the
 view will just stay frozen indefinitely.)
@@ -853,34 +836,30 @@ updates in NetLogo 4.0:
 
 1. In the Interface tab toolbar, on the right hand side where it says "update
    view:", change the setting from "continuously" to "on ticks".
-2. Add the [`tick`](dictionary.html#tick) command to your go procedure, at or
-   near the end. In Models Library models we always put `tick` after the agents
-   move but before any plotting commands. That's because the plotting commands
-   might contain something like `plotxy ticks ...` and we want the new value of
-   the tick counter used, not the old one. Most models don't refer to the tick
-   counter in their plotting commands, but nonetheless, for consistency and to
-   avoid mistakes we suggest always putting `tick` before the plotting commands.
+2. Add the [[tick]] command to your go procedure, at or near the end. In Models
+   Library models we always put `tick` after the agents move but before any
+   plotting commands. That's because the plotting commands might contain
+   something like `plotxy ticks ...` and we want the new value of the tick
+   counter used, not the old one. Most models don't refer to the tick counter in
+   their plotting commands, but nonetheless, for consistency and to avoid
+   mistakes we suggest always putting `tick` before the plotting commands.
 
 Some models will require some additional changes:
 
 1. If your model already has a global "ticks" or "clock" or "time" variable, get
-   rid of it. Use the [`tick`](dictionary.html#tick) command and
-   [`ticks`](dictionary.html#ticks) reporter instead. (If your model uses
-   fractional increments of time, use
-   [`tick-advance`](dictionary.html#tick-advance) instead of `tick`.) If you had
-   a monitor for that variable, you can get rid of it; there's now a tick
-   counter in the toolbar.
-2. [`clear-all`](dictionary.html#clear-all) resets the tick counter to zero. If
-   you don't use `clear-all` in your setup procedure, then you may need to add
-   [`reset-ticks`](dictionary.html#reset-ticks) to reset the counter to zero.
-3. If you used [`no-display`](dictionary.html#no-display) and
-   [`display`](dictionary.html#display) to prevent view updates from happening
-   in the middle of go, you can get rid of them.
+   rid of it. Use the [[tick]] command and [[ticks]] reporter instead. (If your
+   model uses fractional increments of time, use [[tick-advance]] instead of
+   `tick`.) If you had a monitor for that variable, you can get rid of it;
+   there's now a tick counter in the toolbar.
+2. [[clear-all]] resets the tick counter to zero. If you don't use `clear-all`
+   in your setup procedure, then you may need to add [[reset-ticks]] to reset
+   the counter to zero.
+3. If you used [[no-display]] and [[display]] to prevent view updates from
+   happening in the middle of go, you can get rid of them.
 4. If your model needs to update the view without advancing the tick counter
    (examples: Party, Dice Stalagmite, network models with animated layout,
-   models with mouse interaction buttons), use the
-   [`display`](dictionary.html#display) command to force additional view updates
-   so the user can see what is going on.
+   models with mouse interaction buttons), use the [[display]] command to force
+   additional view updates so the user can see what is going on.
 
 ### Speed slider
 
@@ -958,20 +937,16 @@ billion); the new range is +/-9,007,199,254,740,992 (around +/- 9 quadrillion).
 NetLogo 3.1 (and some earlier versions) included primitives called
 `turtles-from` and `patches-from` that were occasionally useful for building
 agentsets. In NetLogo 4.0, these primitives have been replaced with new
-primitives called [`turtle-set`](dictionary.html#turtle-set) and
-[`patch-set`](dictionary.html#patch-set) that are much more flexible and
-powerful. ([`link-set`](dictionary.html#link-set) exists as well.) See the
-entries for these primitives in the NetLogo Dictionary. Models that use the old
-`turtles-from` and `patches-from` will need to be altered by hand to use the new
-primitives.
+primitives called [[turtle-set]] and [[patch-set]] that are much more flexible
+and powerful. ([[link-set]] exists as well.) See the entries for these
+primitives in the NetLogo Dictionary. Models that use the old `turtles-from` and
+`patches-from` will need to be altered by hand to use the new primitives.
 
 ### RGB Colors
 
 In NetLogo 3.1 RGB and HSB colors could be approximated as NetLogo colors using
-the `rgb` and `hsb` primitives. These have been renamed to
-[`approximate-rgb`](dictionary.html#approximate-rgb) and
-[`approximate-hsb`](dictionary.html#approximate-hsb) and now expect inputs in
-the range 0-255, not 0-1.
+the `rgb` and `hsb` primitives. These have been renamed to [[approximate-rgb]]
+and [[approximate-hsb]] and now expect inputs in the range 0-255, not 0-1.
 
 The full RGB spectrum is now available in NetLogo so it may no longer be
 necessary to use these primitives at all. You can set any color variable to a
@@ -982,10 +957,9 @@ details.
 ### Tie
 
 In previous versions `__tie` was provided as an experimental feature. As of
-NetLogo 4.0 links have a [`tie-mode`](dictionary.html#tie-mode) variable which
-can be set to `"none"`, `"free"`, or `"fixed"`. In 4.0
-[`tie`](dictionary.html#tie) is now a link-only primitive. This means that to
-tie turtle 1 to turtle 0 you write:
+NetLogo 4.0 links have a [[tie-mode]] variable which can be set to `"none"`,
+`"free"`, or `"fixed"`. In 4.0 [[tie]] is now a link-only primitive. This means
+that to tie turtle 1 to turtle 0 you write:
 
     ask turtle 0 [ create-link-to turtle 1 [ tie ] ]
 
@@ -1001,10 +975,10 @@ NetLogo 3.1, agentsets are now always in random order. In prior versions of
 NetLogo, agentsets were always in a fixed order. If your code depended on that
 fixed order, then it won't work anymore. How to fix your model to work with
 randomized agentsets depends on the details of what your code is doing. In some
-situations, it is helpful to use the [`sort`](dictionary.html#sort) or
-[`sort-by`](dictionary.html#sort-by) primitives to convert an agentset (random
-order) into a list of agents (fixed order). See "Lists of agents" in the
-[Lists](programming.html#lists) section of the Programming Guide.
+situations, it is helpful to use the [[sort]] or [[sort-by]] primitives to
+convert an agentset (random order) into a list of agents (fixed order). See
+"Lists of agents" in the [Lists](programming.html#lists) section of the
+Programming Guide.
 
 ### Wrapping
 

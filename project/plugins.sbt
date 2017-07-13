@@ -69,9 +69,10 @@ libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark-ext-anchorlink" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-autolink" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-escaped-character" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-tables" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-toc" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-typographic" % flexmarkVersion,
-    "com.vladsch.flexmark" % "flexmark-ext-tables" % flexmarkVersion,
+    "com.vladsch.flexmark" % "flexmark-ext-wikilink" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
   )
 }

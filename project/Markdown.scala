@@ -1,24 +1,27 @@
 import java.util.{ ArrayList => JArrayList, HashSet => JHashSet, Set => JSet }
 import java.net.URI
 
+import scala.collection.JavaConverters._
 import scala.util.Try
 import scala.util.matching.Regex
 
 import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
   ast.{ AutoLink, Node },
-  ext.{ anchorlink, autolink, escaped, tables, toc, typographic },
+  ext.{ anchorlink, autolink, escaped, tables, toc, typographic, wikilink },
     anchorlink.AnchorLinkExtension,
     autolink.AutolinkExtension,
     escaped.character.EscapedCharacterExtension,
     tables.TablesExtension,
     toc.TocExtension,
     typographic.TypographicExtension,
-  html.{ AttributeProvider, HtmlRenderer, IndependentAttributeProviderFactory,
-         LinkResolver, LinkResolverFactory, renderer },
-    renderer.{ AttributablePart, LinkStatus, NodeRendererContext, ResolvedLink },
+    wikilink.{ WikiLink, WikiLinkExtension },
+  html.{ AttributeProvider, CustomNodeRenderer, HtmlRenderer, HtmlWriter,
+         IndependentAttributeProviderFactory, LinkResolver, LinkResolverFactory, renderer },
+    renderer.{ AttributablePart, LinkStatus, LinkType, NodeRenderer, NodeRendererContext,
+               NodeRendererFactory, NodeRenderingHandler, ResolvedLink },
   parser.{ Parser, ParserEmulationProfile },
   util.html.Attributes,
-  util.options.MutableDataSet
+  util.options.{ DataHolder, MutableDataHolder, MutableDataSet }
 
 object Markdown {
   def apply(
@@ -49,6 +52,8 @@ object Markdown {
 
     options.setFrom(ParserEmulationProfile.PEGDOWN)
 
+    extensions.add(PrimLinkExtension)
+
     extensions.add(EscapedCharacterExtension.create())
 
     options.set(HtmlRenderer.SOFT_BREAK, "\n")
@@ -63,6 +68,8 @@ object Markdown {
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
     extensions.add(TablesExtension.create())
+    
+    extensions.add(WikiLinkExtension.create())
 
     if (addTableOfContents)
       extensions.add(TocExtension.create())
@@ -81,6 +88,40 @@ object Markdown {
 
     object Factory extends IndependentAttributeProviderFactory {
       override def create(context: NodeRendererContext) = AutolinkAttributeProvider
+    }
+  }
+
+  object PrimLinkExtension extends HtmlRenderer.HtmlRendererExtension {
+    def rendererOptions(options: MutableDataHolder) = {}
+    def extend(builder: HtmlRenderer.Builder, rendererType: String) =
+      if (rendererType == "HTML")
+        builder.nodeRendererFactory(PrimLinkRenderer.Factory)
+    
+    object PrimLinkRenderer extends CustomNodeRenderer[WikiLink] {
+      override def render(node: WikiLink, context: NodeRendererContext, html: HtmlWriter) = {
+        if (context.isDoNotRenderLinks) {
+          html.srcPos(node.getChars).tag("code")
+          html.text(node.getLink)
+          html.tag("/code")
+        } else {
+          val resolvedLink = context.resolveLink(LinkType.LINK,
+            "dictionary.html#" +
+            node.getLink.toString.stripPrefix("__").stripSuffix("?"), null)
+          html.attr("href", resolvedLink.getUrl)
+          html.srcPos(node.getChars).withAttr(resolvedLink).tag("a")
+          html.srcPos(node.getText).withAttr().tag("code")
+          html.text(if (node.getText.isNotNull) node.getText else node.getLink)
+          html.tag("/code")
+          html.tag("/a")
+        }
+      }
+
+      object Factory extends NodeRendererFactory {
+        def create(options: DataHolder) = new NodeRenderer {
+          def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
+            new NodeRenderingHandler(classOf[WikiLink], PrimLinkRenderer)).asJava
+        }
+      }
     }
   }
 

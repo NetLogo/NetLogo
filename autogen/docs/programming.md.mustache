@@ -30,31 +30,23 @@ just as "alive" as turtles.)
 
 Patches have coordinates. The patch at coordinates (0, 0) is called the origin
 and the coordinates of the other patches are the horizontal and vertical
-distances from this one. We call the patch's coordinates
-[`pxcor`](dictionary.html#pcor) and [`pycor`](dictionary.html#pcor). Just like
-in the standard mathematical coordinate plane, [`pxcor`](dictionary.html#pcor)
-increases as you move to the right and [`pycor`](dictionary.html#pcor) increases
+distances from this one. We call the patch's coordinates [[pxcor|pcor]] and
+[[pycor|pcor]]. Just like in the standard mathematical coordinate plane,
+[[pxcor|pcor]] increases as you move to the right and [[pycor|pcor]] increases
 as you move up.
 
 The total number of patches is determined by the settings
-[`min-pxcor`](dictionary.html#min-pcor),
-[`max-pxcor`](dictionary.html#max-pcor),
-[`min-pycor`](dictionary.html#min-pcor), and
-[`max-pycor`](dictionary.html#max-pcor) When NetLogo starts up,
-[`min-pxcor`](dictionary.html#min-pcor),
-[`max-pxcor`](dictionary.html#max-pcor),
-[`min-pycor`](dictionary.html#min-pcor), and
-[`max-pycor`](dictionary.html#max-pcor) are -16, 16, -16, and 16 respectively.
-This means that [`pxcor`](dictionary.html#pcor) and
-[`pycor`](dictionary.html#pcor) both range from -16 to 16, so there are 33 times
-33, or 1089 patches total. (You can change the number of patches with the
-Settings button.)
+[[min-pxcor|min-pcor]], [[max-pxcor|max-pcor]], [[min-pycor|min-pcor]] and
+[[max-pycor|max-pcor]]. When NetLogo starts up, [[min-pxcor|min-pcor]],
+[[max-pxcor|max-pcor]], [[min-pycor|min-pcor]] and [[max-pycor|max-pcor]] are
+ -16, 16, -16, and 16 respectively. This means that [[pxcor|pcor]] and
+ [[pycor|pcor]] both range from -16 to 16, so there are 33 times 33, or 1089
+ patches total. (You can change the number of patches with the Settings button.)
 
-Turtles have coordinates too: [`xcor`](dictionary.html#xcor) and
-[`ycor`](dictionary.html#ycor). A patch's coordinates are always integers, but a
-turtle's coordinates can have decimals. This means that a turtle can be
-positioned at any point within its patch; it doesn't have to be in the center of
-the patch.
+Turtles have coordinates too: [[xcor]] and [[ycor]]. A patch's coordinates are
+always integers, but a turtle's coordinates can have decimals. This means that a
+turtle can be positioned at any point within its patch; it doesn't have to be in
+the center of the patch.
 
 Links do not have coordinates. Every link has two ends, and each end is a
 turtle. If either turtle dies, the link dies too. A link is represented visually
@@ -75,11 +67,10 @@ Commands and reporters built into NetLogo are called **primitives**.
 commands and reporters.
 
 Commands and reporters you define yourself are called **procedures**. Each
-procedure has a name, preceded by the keyword [`to`](dictionary.html#to) or
-[`to-report`](dictionary.html#to-report), depending on whether it is a command
-procedure or a reporter procedure. The keyword [`end`](dictionary.html#end)
-marks the end of the commands in the procedure. Once you define a procedure, you
-can use it elsewhere in your program.
+procedure has a name, preceded by the keyword [[to]] or [[to-report]], depending
+on whether it is a command procedure or a reporter procedure. The keyword
+[[end]] marks the end of the commands in the procedure. Once you define a
+procedure, you can use it elsewhere in your program.
 
 Many commands and reporters take **inputs** -- values that the command or
 reporter uses in carrying out its actions or computing its result.
@@ -107,17 +98,13 @@ your code easier to read and understand, but they don't affect its behavior.
 In this program,
 
 - `setup` and `go` are user-defined commands.
-- [`clear-all`](dictionary.html#clear-all),
-  [`create-turtles`](dictionary.html#create-turtles),
-  [`reset-ticks`](dictionary.html#reset-ticks), [`ask`](dictionary.html#ask),
-  [`lt`](dictionary.html#left) ("left turn"), [`rt`](dictionary.html#right)
-  ("right turn") and [`tick`](dictionary.html#tick), are all primitive commands.
-- [`random`](dictionary.html#random) and [`turtles`](dictionary.html#turtles)
-  are primitive reporters. [`random`](dictionary.html#random) takes a single
+- [[clear-all]], [[create-turtles]], [[reset-ticks]], [[ask]], [[lt|left]]
+  ("left turn"), [[rt|right]] ("right turn") and [[tick]], are all primitive
+  commands.
+- [[random]] and [[turtles]] are primitive reporters. [[random]] takes a single
   number as an input and reports a random integer that is less than the input
-  (in this case, between 0 and 9). [`turtles`](dictionary.html#turtles) reports
-  the agentset consisting of all the turtles. (We'll explain about agentsets
-  later.)
+  (in this case, between 0 and 9). [[turtles]] reports the agentset consisting
+  of all the turtles. (We'll explain about agentsets later.)
 
 `setup` and `go` can be called by other procedures, or by buttons, or from the
 Command Center.
@@ -127,14 +114,13 @@ a forever button that calls a procedure called `go`.
 
 In NetLogo, you may specify which agents -- turtles, patches, or links -- are to
 run each command. If you don't specify, the code is run by the observer. In the
-code above, the observer uses [`ask`](dictionary.html#ask) to make the set of
-all turtles run the commands between the square brackets.
+code above, the observer uses [[ask]] to make the set of all turtles run the
+commands between the square brackets.
 
-[`clear-all`](dictionary.html#clear-all) and
-[`create-turtles`](dictionary.html#create-turtles) can only be run by the
-observer. [`fd`](dictionary.html#forward), on the other hand, can only be run by
-turtles. Some other commands and reporters, such as [`set`](dictionary.html#set)
-and [`ticks`](dictionary.html#ticks), can be run by different agent types.
+[[clear-all]] and [[create-turtles]] can only be run by the observer.
+[[fd|forward]], on the other hand, can only be run by turtles. Some other
+commands and reporters, such as [[set]] and [[ticks]], can be run by different
+agent types.
 
 Here are some more advanced features you can take advantage of when defining
 your own procedures.
@@ -161,10 +147,9 @@ each draw an octagon with a side length equal to its who number:
 **Reporter procedures**
 
 Just like you can define your own commands, you can define your own reporters.
-You must do two special things. First, use
-[`to-report`](dictionary.html#to-report) instead of [`to`](dictionary.html#to)
-to begin your procedure. Then, in the body of the procedure, use
-[`report`](dictionary.html#report) to report the value you want to report.
+You must do two special things. First, use [[to-report]] instead of [[to]] to
+begin your procedure. Then, in the body of the procedure, use [[report]] to
+report the value you want to report.
 
     to-report absolute-value [number]
       ifelse number >= 0
@@ -188,37 +173,30 @@ Turtle, patch, and link variables are different. Each turtle has its *own* value
 for every turtle variable. The same goes for patches and links.
 
 Some variables are built into NetLogo. For example, all turtles and links have a
-[`color`](dictionary.html#color) variable, and all patches have a
-[`pcolor`](dictionary.html#pcolor) variable. (The patch variable begins with "p"
-so it doesn't get confused with the turtle variable, since turtles have direct
-access to patch variables.) If you set the variable, the turtle or patch changes
-color. (See next section for details.)
+[[color]] variable, and all patches have a [[pcolor]] variable. (The patch
+variable begins with "p" so it doesn't get confused with the turtle variable,
+since turtles have direct access to patch variables.) If you set the variable,
+the turtle or patch changes color. (See next section for details.)
 
-Other built-in turtle variables including [`xcor`](dictionary.html#xcor),
-[`ycor`](dictionary.html#ycor), and [`heading`](dictionary.html#heading). Other
-built-in patch variables include [`pxcor`](dictionary.html#pcor) and
-[`pycor`](dictionary.html#pcor). (There is a complete list
-[here](dictionary.html#builtinvariables).)
+Other built-in turtle variables including [[xcor]], [[ycor]], and [[heading]].
+Other built-in patch variables include [[pxcor|pcor]] and [[pycor|pcor]]. (There
+is a complete list [[here|builtinvariables]].)
 
 You can also define your own variables. You can make a global variable by adding
 a switch, slider, chooser, or input box to your model, or by using the
-[`globals`](dictionary.html#globals) keyword at the beginning of your code, like
-this:
+[[globals]] keyword at the beginning of your code, like this:
 
     globals [score]
 
 You can also define new turtle, patch and link variables using the
-[`turtles-own`](dictionary.html#turtles-own),
-[`patches-own`](dictionary.html#patches-own) and
-[`links-own`](dictionary.html#links-own) keywords, like this:
+[[turtles-own]], [[patches-own]] and [[links-own]] keywords, like this:
 
     turtles-own [energy speed]
     patches-own [friction]
     links-own [strength]
 
-These variables can then be used freely in your model. Use the
-[`set`](dictionary.html#set) command to set them. (Any variable you don't set
-has a starting value of zero.)
+These variables can then be used freely in your model. Use the [[set]] command
+to set them. (Any variable you don't set has a starting value of zero.)
 
 Global variables can be read and set at any time by any agent. As well, a turtle
 can read and set patch variables of the patch it is standing on. For example,
@@ -231,13 +209,13 @@ variables are shared by turtles in this way, you can't have a turtle variable
 and a patch variable with the same name.)
 
 In other situations where you want an agent to read a different agent's
-variable, you can use [`of`](dictionary.html#of). Example:
+variable, you can use [[of]]. Example:
 
     show [color] of turtle 5
     ;; prints current color of turtle with who number 5
 
-You can also use [`of`](dictionary.html#of) with a
-more complicated expression than just a variable name, for example:
+You can also use [[of]] with a more complicated expression than just a variable
+name, for example:
 
     show [xcor + ycor] of turtle 5
     ;; prints the sum of the x and y coordinates of
@@ -246,11 +224,10 @@ more complicated expression than just a variable name, for example:
 **Local variables**
 
 A local variable is defined and used only in the context of a particular
-procedure or part of a procedure. To create a local variable, use the
-[`let`](dictionary.html#let) command. If you use `let` at the top of a
-procedure, the variable will exist throughout the procedure. If you use it
-inside a set of square brackets, for example inside an "ask", then it will exist
-only inside those brackets.
+procedure or part of a procedure. To create a local variable, use the [[let]]
+command. If you use `let` at the top of a procedure, the variable will exist
+throughout the procedure. If you use it inside a set of square brackets, for
+example inside an "ask", then it will exist only inside those brackets.
 
     to swap-colors [turtle1 turtle2]
       let temp [color] of turtle1
@@ -268,26 +245,23 @@ The current value of the tick counter is shown above the view. (You can use the
 Settings button to hide the tick counter, or change the word "ticks" to
 something else.)
 
-In code, to retrieve the current value of the tick counter, use the
-[`ticks`](dictionary.html#ticks) reporter. The
-[`tick`](dictionary.html#tick) command advances the tick counter by 1. The
-[`clear-all`](dictionary.html#clear-all) command clears the tick counter along
-with everything else.
+In code, to retrieve the current value of the tick counter, use the [[ticks]]
+reporter. The [[tick]] command advances the tick counter by 1. The [[clear-all]]
+command clears the tick counter along with everything else.
 
 When the tick counter is clear, it's an error to try to read or modify it. Use
-the [`reset-ticks`](dictionary.html#reset-ticks) command when your model is done
-setting up, to start the tick counter.
+the [[reset-ticks]] command when your model is done setting up, to start the
+tick counter.
 
-If your model is set to use tick-based updates, then the
-[`tick`](dictionary.html#tick) command will usually also update the view. See
-the later section, [View Updates](#view-updates).
+If your model is set to use tick-based updates, then the [[tick]] command will
+usually also update the view. See the later section,
+[View Updates](#view-updates).
 
 ### When to tick
 
-Use [`reset-ticks`](dictionary.html#reset-ticks) at the end of your setup
-procedure.
+Use [[reset-ticks]] at the end of your setup procedure.
 
-Use [`tick`](dictionary.html#tick) at the end of your go procedure.
+Use [[tick]] at the end of your go procedure.
 
     to setup
       clear-all
@@ -306,9 +280,9 @@ In most models, the tick counter starts at 0 and goes up 1 at a time, from
 integer to integer. But it's also possible for the tick counter to take on
 in-between floating point values.
 
-To advance the tick counter by a fractional amount, use the
-[`tick-advance`](dictionary.html#tick-advance) command. This command takes a
-numeric input specifying how far to advance the tick counter.
+To advance the tick counter by a fractional amount, use the [[tick-advance]]
+command. This command takes a numeric input specifying how far to advance the
+tick counter.
 
 A typical use of fractional ticks is to approximate continuous or curved motion.
 See, for example, the GasLab models in the Models Library (under
@@ -339,10 +313,8 @@ If you use a number outside the 0 to 140 range, NetLogo will repeatedly add or
 subtract 140 from the number until it is in the 0 to 140 range. For example, 25
 is orange, so 165, 305, 445, and so on are orange too, and so are -115, -255,
 -395, etc. This calculation is done automatically whenever you set the turtle
-variable [`color`](dictionary.html#color) or the patch variable
-[`pcolor`](dictionary.html#pcolor). Should you need to perform this calculation
-in some other context, use the [`wrap-color`](dictionary.html#wrap-color)
-primitive.
+variable [[color]] or the patch variable [[pcolor]]. Should you need to perform
+this calculation in some other context, use the [[wrap-color]] primitive.
 
 If you want a color that's not on the chart, more exist between the integers.
 For example, 26.5 is a shade of orange halfway between 26 and 27. This doesn't
@@ -359,15 +331,13 @@ or 26.58.
 
 There are a few primitives that are helpful for working with colors.
 
-We have already mentioned the [`wrap-color`](dictionary.html#wrap-color)
-primitive.
+We have already mentioned the [[wrap-color]] primitive.
 
-The [`scale-color`](dictionary.html#scale-color) primitive is useful for
-converting numeric data into colors.
+The [[scale-color]] primitive is useful for converting numeric data into colors.
 
-[`shade-of?`](dictionary.html#shade-of) will tell you if two colors are both
-"shades" of the same basic hue. For example, `shade-of? orange 27` is true,
-because 27 is a lighter shade of orange.
+[[shade-of?]] will tell you if two colors are both "shades" of the same basic
+hue. For example, `shade-of? orange 27` is true, because 27 is a lighter shade
+of orange.
 
 > **Code Example:** Scale-color Example demonstrates the scale-color reporter.
 
@@ -379,10 +349,9 @@ available to you. RGBA colors allow all the colors that RGB allows and you can
 also vary the transparency of a color. RGB and RGBA lists are made up of three
 or four integers, respectively, between 0 and 255 if a number is outside that
 range 255 is repeatedly subtracted until it is in the range. You can set any
-color variables in NetLogo ([`color`](dictionary.html#color) for turtles and
-links and [`pcolor`](dictionary.html#pcolor) for patches) to an RGB list and
-that agent will be rendered appropriately. So you can set the color of patch 0 0
-to pure red using the following code:
+color variables in NetLogo ([[color]] for turtles and links and [[pcolor]] for
+patches) to an RGB list and that agent will be rendered appropriately. So you
+can set the color of patch 0 0 to pure red using the following code:
 
     set pcolor [255 0 0]
 
@@ -393,15 +362,12 @@ be approximately half transparent pure red with the following code:
     set color [255 0 0 125]
 
 You can convert from a NetLogo color to RGB or HSB (hue/saturation/brightness)
-using [`extract-hsb`](dictionary.html#extract-hsb) and
-[`extract-rgb`](dictionary.html#extract-rgb). You can use
-[`rgb`](dictionary.html#rgb) to generate rgb lists and
-[`hsb`](dictionary.html#hsb) to convert from an HSB color to RGB.
+using [[extract-hsb]] and [[extract-rgb]]. You can use [[rgb]] to generate rgb
+lists and [[hsb]] to convert from an HSB color to RGB.
 
-Since many colors are missing from the NetLogo color space,
-[`approximate-hsb`](dictionary.html#approximate-hsb) and
-[`approximate-rgb`](dictionary.html#approximate-rgb) often can't give you the
-exact color you ask for, but they try to come as close as possible.
+Since many colors are missing from the NetLogo color space, [[approximate-hsb]]
+and [[approximate-rgb]] often can't give you the exact color you ask for, but
+they try to come as close as possible.
 
 Example: you can change any turtle from it's existing NetLogo color to a half
 transparent version of that color using:
@@ -429,9 +395,9 @@ setting.
 
 ## Ask
 
-NetLogo uses the [`ask`](dictionary.html#ask) command to give commands to
-turtles, patches, and links. All code to be run by turtles *must* be located in
-a turtle "context". You can establish a turtle context in any of three ways:
+NetLogo uses the [[ask]] command to give commands to turtles, patches, and
+links. All code to be run by turtles *must* be located in a turtle "context".
+You can establish a turtle context in any of three ways:
 
 - In a button, by choosing "Turtles" from the popup menu. Any code you put in
   the button will be run by all turtles.
@@ -441,11 +407,10 @@ a turtle "context". You can establish a turtle context in any of three ways:
   context.
 
 The same goes for patches, links, and the observer, except that you cannot
-[`ask`](dictionary.html#ask) the observer. Any code that is not inside any
-[`ask`](dictionary.html#ask) is by default observer code.
+[[ask]] the observer. Any code that is not inside any [[ask]] is by default
+observer code.
 
-Here's an example of the use of [`ask`](dictionary.html#ask) in a NetLogo
-procedure:
+Here's an example of the use of [[ask]] in a NetLogo procedure:
 
     to setup
       clear-all
@@ -462,13 +427,10 @@ procedure:
 The models in the Models Library are full of other examples. A good place to
 start looking is in the Code Examples section.
 
-Usually, the observer uses [`ask`](dictionary.html#ask) to ask all turtles, all
-patches or all links to run commands. You can also use
-[`ask`](dictionary.html#ask) to have an individual turtle, patch or link run
-commands. The reporters [`turtle`](dictionary.html#turtle),
-[`patch`](dictionary.html#patch), [`link`](dictionary.html#link) and
-[`patch-at`](dictionary.html#patch-at) are useful for this technique. For
-example:
+Usually, the observer uses [[ask]] to ask all turtles, all patches or all links
+to run commands. You can also use [[ask]] to have an individual turtle, patch or
+link run commands. The reporters [[turtle]], [[patch]], [[link]] and
+[[patch-at]] are useful for this technique. For example:
 
     to setup
       clear-all
@@ -494,15 +456,13 @@ example:
 Every turtle created has a who number. The first turtle created is number 0, the
 second turtle number 1, and so forth.
 
-The [`turtle`](dictionary.html#turtle) primitive reporter takes a who number as
-an input, and reports the turtle with that who number. The
-[`patch`](dictionary.html#patch) primitive reporter takes values for pxcor and
-pycor and reports the patch with those coordinates. The
-[`link`](dictionary.html#link) primitive takes two inputs, the who numbers of
-the two turtles it connects. And the [`patch-at`](dictionary.html#patch-at)
-primitive reporter takes *offsets*: distances, in the x and y directions, *from*
-the first agent. In the example above, the turtle with who number 0 is asked to
-get the patch east (and no patches north) of itself.
+The [[turtle]] primitive reporter takes a who number as an input, and reports
+the turtle with that who number. The [[patch]] primitive reporter takes values
+for pxcor and pycor and reports the patch with those coordinates. The [[link]]
+primitive takes two inputs, the who numbers of the two turtles it connects. And
+the [[patch-at]] primitive reporter takes *offsets*: distances, in the x and y
+directions, *from* the first agent. In the example above, the turtle with who
+number 0 is asked to get the patch east (and no patches north) of itself.
 
 You can also select a subset of turtles, or a subset of patches, or a subset of
 links and ask them to do something. This involves using **agentsets**. The next
@@ -537,26 +497,22 @@ This helps you keep your model from treating any particular turtles, patches or
 links differently from any others (unless you want them to be). Since the order
 is random every time, no one agent always gets to go first.
 
-You've seen the [`turtles`](dictionary.html#turtles) primitive, which reports
-the agentset of all turtles, the [`patches`](dictionary.html#patches) primitive,
-which reports the agentset of all patches and the
-[`links`](dictionary.html#links) primitive which reports the agentset of all
-links.
+You've seen the [[turtles]] primitive, which reports the agentset of all
+turtles, the [[patches]] primitive, which reports the agentset of all patches
+and the [[links]] primitive which reports the agentset of all links.
 
 But what's powerful about the agentset concept is that you can construct
 agentsets that contain only *some* turtles, *some* patches or *some* links. For
 example, all the red turtles, or the patches with pxcor evenly divisible by
 five, or the turtles in the first quadrant that are on a green patch or the
-links connected to turtle 0. These agentsets can then be used by
-[`ask`](dictionary.html#ask) or by various reporters that take agentsets as
-inputs.
+links connected to turtle 0. These agentsets can then be used by [[ask]] or by
+various reporters that take agentsets as inputs.
 
-One way is to use [`turtles-here`](dictionary.html#turtles-here) or
-[`turtles-at`](dictionary.html#turtles-at), to make an agentset containing only
-the turtles on my patch, or only the turtles on some other patch at some x and y
-offsets. There's also [`turtles-on`](dictionary.html#turtles-on) so you can get
-the set of turtles standing on a given patch or set of patches, or the set of
-turtles standing on the same patch as a given turtle or set of turtles.
+One way is to use [[turtles-here]] or [[turtles-at]], to make an agentset
+containing only the turtles on my patch, or only the turtles on some other patch
+at some x and y offsets. There's also [[turtles-on]] so you can get the set of
+turtles standing on a given patch or set of patches, or the set of turtles
+standing on the same patch as a given turtle or set of turtles.
 
 Here are some more examples of how to make agentsets:
 
@@ -584,59 +540,48 @@ Here are some more examples of how to make agentsets:
     ;; all the links connected to turtle 0
     [my-links] of turtle 0
 
-Note the use of [`other`](dictionary.html#other) to exclude this agent. This is
-common.
+Note the use of [[other]] to exclude this agent. This is common.
 
 Once you have created an agentset, here are some simple things you can do:
 
-- Use [`ask`](dictionary.html#ask) to make the agents in the agentset do
-  something
-- Use [`any?`](dictionary.html#any) to see if the agentset is empty
-- Use [`all?`](dictionary.html#all) to see if every agent in an agentset
-  satisfies a condition.
-- Use [`count`](dictionary.html#count) to find out exactly how many agents are
-  in the set
+- Use [[ask]] to make the agents in the agentset do something
+- Use [[any?]] to see if the agentset is empty
+- Use [[all?]] to see if every agent in an agentset satisfies a condition.
+- Use [[count]] to find out exactly how many agents are in the set
 
 And here are some more complex things you can do:
 
-- Pick a random agent from the set using [`one-of`](dictionary.html#one-of). For
-  example, we can make a randomly chosen turtle turn green:
+- Pick a random agent from the set using [[one-of]]. For example, we can make a
+  randomly chosen turtle turn green:
   
         ask one-of turtles [ set color green ]
   
-    Or tell a randomly chosen patch to [`sprout`](dictionary.html#sprout) a new
-    turtle:
+    Or tell a randomly chosen patch to [[sprout]] a new turtle:
   
         ask one-of patches [ sprout 1 ]
   
-- Use the [`max-one-of`](dictionary.html#max-one-of) or
-  [`min-one-of`](dictionary.html#min-one-of) reporters to find out which agent
+- Use the [[max-one-of]] or
+  [[min-one-of]] reporters to find out which agent
   is the most or least along some scale. For example, to remove the richest
   turtle, you could say
   
         ask max-one-of turtles [sum assets] [ die ]
   
-- Make a histogram of the agentset using the
-  [`histogram`](dictionary.html#histogram) command (in combination with
-  [`of`](dictionary.html#of)).
-- Use [`of`](dictionary.html#of) to make a list of values, one for each agent in
-  the agentset. Then use one of NetLogo's list primitives to do something with
-  the list. (See the "Lists" section [below](#lists).) For example, to find out
-  how rich turtles are on the average, you could say
+- Make a histogram of the agentset using the [[histogram]] command (in
+  combination with [[of]]).
+- Use [[of]] to make a list of values, one for each agent in the agentset. Then
+  use one of NetLogo's list primitives to do something with the list. (See the
+  "Lists" section [below](#lists).) For example, to find out how rich turtles
+  are on the average, you could say
   
         show mean [sum assets] of turtles
 
-- Use [`turtle-set`](dictionary.html#turtle-set),
-  [`patch-set`](dictionary.html#patch-set) and
-  [`link-set`](dictionary.html#link-set) reporters to make new agentsets by
-  gathering together agents from a variety of possible sources.
-- Use [`no-turtles`](dictionary.html#no-turtles),
-  [`no-patches`](dictionary.html#no-patches) and
-  [`no-links`](dictionary.html#no-links) reporters to make empty agentsets.
-- Check whether two agentsets are equal using [`=`](dictionary.html#Symbols) or
-  [`!=`](dictionary.html#Symbols).
-- Use [`member?`](dictionary.html#member) to see whether a particular agent is a
-  member of an agentset.
+- Use [[turtle-set]], [[patch-set]] and [[link-set]] reporters to make new
+  agentsets by gathering together agents from a variety of possible sources.
+- Use [[no-turtles]], [[no-patches]] and [[no-links]] reporters to make empty
+  agentsets.
+- Check whether two agentsets are equal using [[=|Symbols]] or [[!=|Symbols]].
+- Use [[member?]] to see whether a particular agent is a member of an agentset.
 
 This only scratches the surface. See the Models Library for many more examples,
 and consult the NetLogo Dictionary for more information about all of the
@@ -696,19 +641,19 @@ have the wolves try to eat the sheep or you could have link breeds called
 `streets` and `sidewalks` where foot traffic is routed on sidewalks and car
 traffic is routed on streets.
 
-You define turtle breeds using the [`breed`](dictionary.html#breed) keyword, at
-the top of the Code tab, before any procedures:
+You define turtle breeds using the [[breed]] keyword, at the top of the Code
+tab, before any procedures:
 
     breed [wolves wolf]
     breed [sheep a-sheep]
 
 You can refer to a member of the breed using the singular form, just like the
-[`turtle`](dictionary.html#turtle) reporter. When printed, members of the breed
-will be labeled with the singular name.
+[[turtle]] reporter. When printed, members of the breed will be labeled with the
+singular name.
 
 Some commands and reporters have the plural name of the breed in them, such as
-[`create-<breeds>`](dictionary.html#create-turtles). Others have the singular
-name of the breed in them, such as [`<breed>`](dictionary.html#turtle)
+[[create-<breeds>|create-turtles]]. Others have the singular name of the breed
+in them, such as [[<breed>|turtle]].
 
 The order in which breeds are declared is also the order in which they are
 layered in the view. So breeds defined later will appear on top of breeds
@@ -719,20 +664,16 @@ automatically created, so that all of the agentset capabilities described above
 are immediately available with the `sheep` agentset.
 
 The following new primitives are also automatically available once you define a
-breed: [`create-sheep`](dictionary.html#create-turtles),
-[`hatch-sheep`](dictionary.html#hatch),
-[`sprout-sheep`](dictionary.html#sprout),
-[`sheep-here`](dictionary.html#turtles-here),
-[`sheep-at`](dictionary.html#turtles-at),
-[`sheep-on`](dictionary.html#turtles-on), and
-[`is-a-sheep?`](dictionary.html#is-of-type).
+breed: [[create-sheep|create-turtles]], [[hatch-sheep|hatch]],
+[[sprout-sheep|sprout]], [[sheep-here|turtles-here]], [[sheep-at|turtles-at]],
+[[sheep-on|turtles-on]], and [[is-a-sheep?|is-of-type]].
 
-Also, you can use [`sheep-own`](dictionary.html#turtles-own) to define new
-turtle variables that only turtles of the given breed have. (It's allowed for
-more than one breed to own the same variable.)
+Also, you can use [[sheep-own|turtles-own]] to define new turtle variables that
+only turtles of the given breed have. (It's allowed for more than one breed to
+own the same variable.)
 
-A turtle's breed agentset is stored in the [`breed`](dictionary.html#breedvar)
-turtle variable. So you can test a turtle's breed, like this:
+A turtle's breed agentset is stored in the [[breed|breedvar]] turtle variable.
+So you can test a turtle's breed, like this:
 
     if breed = wolves [ ... ]
 
@@ -741,9 +682,8 @@ its whole life. Let's change a random wolf into a sheep:
 
     ask one-of wolves [ set breed sheep ]
 
-The [`set-default-shape`](dictionary.html#set-default-shape) primitive is useful
-for associating certain turtle shapes with certain breeds. See the section on
-shapes [below](#turtle-shapes).
+The [[set-default-shape]] primitive is useful for associating certain turtle
+shapes with certain breeds. See the section on shapes [below](#turtle-shapes).
 
 Who numbers are assigned irrespective of breeds. If you already have a `frog 0`,
 then the first mouse will be `mouse 1`, not `mouse 0`, since the who number 0 is
@@ -772,9 +712,8 @@ Link breeds are very similar to turtle breeds, however, there are a few
 differences.
 
 When you declare a link breed you must declare whether it is a breed of directed
-or undirected links by using the
-[`directed-link-breed`](dictionary.html#directed-link-breed) and
-[`undirected-link-breed`](dictionary.html#undirected-link-breed) keywords.
+or undirected links by using the [[directed-link-breed]] and
+[[undirected-link-breed]] keywords.
 
     directed-link-breed [streets street]
     undirected-link-breed [friendships friendship]
@@ -785,29 +724,22 @@ just not in the same breed)
 
 Unlike with turtle breeds the singular breed name is required for link breeds,
 as many of the link commands and reports use the singular name, such as
-[`<link-breed>-neighbor?`](dictionary.html#link-neighbor).
+[[<link-breed>-neighbor?|link-neighbor]].
 
 The following primitives are also automatically available once you define a
-directed link breed: [`create-street-from`](dictionary.html#create-link)
-[`create-streets-from`](dictionary.html#create-link)
-[`create-street-to`](dictionary.html#create-link)
-[`create-streets-to`](dictionary.html#create-link)
-[`in-street-neighbor?`](dictionary.html#in-link-neighbor)
-[`in-street-neighbors`](dictionary.html#in-link-neighbors)
-[`in-street-from`](dictionary.html#in-link-from)
-[`my-in-streets`](dictionary.html#my-in-links)
-[`my-out-streets`](dictionary.html#my-out-links)
-[`out-street-neighbor?`](dictionary.html#out-link-neighbor)
-[`out-street-neighbors`](dictionary.html#out-link-neighbors)
-[`out-street-to`](dictionary.html#out-link-to)
+directed link breed: [[create-street-from|create-link]]
+[[create-streets-from|create-link]] [[create-street-to|create-link]]
+[[create-streets-to|create-link]] [[in-street-neighbor?|in-link-neighbor]]
+[[in-street-neighbors|in-link-neighbors]] [[in-street-from|in-link-from]]
+[[my-in-streets|my-in-links]] [[my-out-streets|my-out-links]]
+[[out-street-neighbor?|out-link-neighbor]]
+[[out-street-neighbors|out-link-neighbors]] [[out-street-to|out-link-to]]
 
 And the following are automatically available when you define an undirected link
-breed: [`create-friendship-with`](dictionary.html#create-link)
-[`create-friendships-with`](dictionary.html#create-link)
-[`friendship-neighbor?`](dictionary.html#link-neighbor)
-[`friendship-neighbors`](dictionary.html#link-neighbors)
-[`friendship-with`](dictionary.html#link-with)
-[`my-friendships`](dictionary.html#my-links)
+breed: [[create-friendship-with|create-link]]
+[[create-friendships-with|create-link]] [[friendship-neighbor?|link-neighbor]]
+[[friendship-neighbors|link-neighbors]] [[friendship-with|link-with]]
+[[my-friendships|my-links]]
 
 Multiple link breeds may declare the same `-own` variable, but a variable may
 not be shared between a turtle breed and a link breed.
@@ -815,8 +747,8 @@ not be shared between a turtle breed and a link breed.
 Just as with turtle breeds the order in which link breeds are declared defines
 the order in which the links are drawn, so the friendships will always be on top
 of streets (if for some reason these breeds were in the same model). You can
-also use [`<link-breeds>-own`](dictionary.html#links-own) to declare variables
-of each link breed separately.
+also use [[<link-breeds>-own|links-own]] to declare variables of each link breed
+separately.
 
 You can change the breed of a link with `set breed`. (However, you cannot change
 a breeded link to an unbreeded one, to prevent having breeded and unbreeded
@@ -825,8 +757,8 @@ links in the same world.)
     ask one-of friendships [ set breed streets ]
     ask one-of friendships [ set breed links ] ;; produces a runtime error
 
-[`set-default-shape`](dictionary.html#set-default-shape) may also be used with
-link breeds to associate it with a particular link shape.
+[[set-default-shape]] may also be used with link breeds to associate it with a
+particular link shape.
 
 > **Code Example:** Link Breeds Example
 
@@ -864,8 +796,8 @@ When you put code in a button, you must also specify which agents you want to
 run that code. You can choose to have the observer run the code, or all turtles,
 or all patches, or all links. (If you want the code to be run by only some
 turtles or some patches, you could make an observer button, and then have the
-observer use the [`ask`](dictionary.html#ask) command to ask only some of the
-turtles or patches to do something.)
+observer use the [[ask]] command to ask only some of the turtles or patches to
+do something.)
 
 When you edit a button, you have the option to assign an "action key". This
 makes that key on the keyboard behave just like a button press. If the button is
@@ -905,9 +837,9 @@ forever button, and putting the same commands in an observer button that does
 of the agents have finished running all of the commands in the "ask". So the
 agents, as they all run the commands concurrently, can be out of sync with each
 other, but they all sync up again at the end of the ask. The same isn't true of
-turtle, patch and link forever buttons. Since [`ask`](dictionary.html#ask) was
-not used, each turtle or patch runs the given code over and over again, so they
-can become (and remain) out of sync with each other.
+turtle, patch and link forever buttons. Since [[ask]] was not used, each turtle
+or patch runs the given code over and over again, so they can become (and
+remain) out of sync with each other.
 
 At present, this capability is very rarely used in the models in our Models
 Library. A model that does use the capability is the Termites model, in the
@@ -954,9 +886,9 @@ The empty list is written by putting nothing between the brackets, like this:
 **Building lists on the fly**
 
 If you want to make a list in which the values are determined by reporters, as
-opposed to being a series of constants, use the [`list`](dictionary.html#list)
-reporter. The [`list`](dictionary.html#list) reporter accepts two other
-reporters, runs them, and reports the results as a list.
+opposed to being a series of constants, use the [[list]] reporter. The [[list]]
+reporter accepts two other reporters, runs them, and reports the results as a
+list.
 
 If I wanted a list to contain two random values, I might use the following code:
 
@@ -965,45 +897,41 @@ If I wanted a list to contain two random values, I might use the following code:
 This will set `random-list` to a new list of two random integers each time it
 runs.
 
-To make longer or shorter lists, you can use the [`list`](dictionary.html#list)
-reporter with fewer or more than two inputs, but in order to do so, you must
-enclose the entire call in parentheses, e.g.:
+To make longer or shorter lists, you can use the [[list]] reporter with fewer or
+more than two inputs, but in order to do so, you must enclose the entire call in
+parentheses, e.g.:
 
     (list random 10)
     (list random 10 random 20 random 30)
 
 For more information, see [Varying number of inputs](#variadic).
 
-Some kinds of lists are most easily built using the
-[`n-values`](dictionary.html#n-values) reporter, which allows you to construct a
-list of a specific length by repeatedly running a given reporter. You can make a
-list of the same value repeated, or all the numbers in a range, or a lot of
-random numbers, or many other possibilities. See dictionary entry for details
-and examples.
+Some kinds of lists are most easily built using the [[n-values]] reporter, which
+allows you to construct a list of a specific length by repeatedly running a
+given reporter. You can make a list of the same value repeated, or all the
+numbers in a range, or a lot of random numbers, or many other possibilities. See
+dictionary entry for details and examples.
 
-The [`of`](dictionary.html#of) primitive lets you construct a list from an
-agentset. It reports a list containing each agent's value for the given
-reporter. (The reporter could be a simple variable name, or a more complex
-expression -- even a call to a procedure defined using
-[`to-report`](dictionary.html#to-report).) A common idiom is
+The [[of]] primitive lets you construct a list from an agentset. It reports a
+list containing each agent's value for the given reporter. (The reporter could
+be a simple variable name, or a more complex expression -- even a call to a
+procedure defined using [[to-report]].) A common idiom is
 
     max [...] of turtles
     sum [...] of turtles
 
 and so on.
 
-You can combine two or more lists using the
-[`sentence`](dictionary.html#sentence) reporter, which concatenates lists by
-combining their contents into a single, larger list. Like
-[`list`](dictionary.html#list), [`sentence`](dictionary.html#sentence) normally
-takes two inputs, but can accept any number of inputs if the call is surrounded
-by parentheses.
+You can combine two or more lists using the [[sentence]] reporter, which
+concatenates lists by combining their contents into a single, larger list. Like
+[[list]], [[sentence]] normally takes two inputs, but can accept any number of
+inputs if the call is surrounded by parentheses.
 
 **Changing list items**
 
 Technically, lists can't be modified, but you can construct new lists based on
-old lists. If you want the new list to replace the old list, use
-[`set`](dictionary.html#set). For example:
+old lists. If you want the new list to replace the old list, use [[set]]. For
+example:
 
     set mylist [2 7 5 Bob [3 0 -2]]
     ; mylist is now [2 7 5 Bob [3 0 -2]]
@@ -1011,20 +939,18 @@ old lists. If you want the new list to replace the old list, use
     ; mylist is now [2 7 10 Bob [3 0 -2]]
 
 
-The [`replace-item`](dictionary.html#replace-item) reporter takes three inputs.
-The first input specifies which item in the list is to be changed. 0 means the
-first item, 1 means the second item, and so forth.
+The [[replace-item]] reporter takes three inputs. The first input specifies
+which item in the list is to be changed. 0 means the first item, 1 means the
+second item, and so forth.
 
-To add an item, say 42, to the end of a list, use the
-[`lput`](dictionary.html#lput) reporter. ([`fput`](dictionary.html#fput) adds an
-item to the beginning of a list.)
+To add an item, say 42, to the end of a list, use the [[lput]] reporter.
+([[fput]] adds an item to the beginning of a list.)
 
     set mylist lput 42 mylist
     ; mylist is now [2 7 10 Bob [3 0 -2] 42]
 
-But what if you changed your mind? The
-[`but-last`](dictionary.html#but-first-and-last) (`bl` for short) reporter
-reports all the list items but the last.
+But what if you changed your mind? The [[but-last|but-first-and-last]] (`bl` for
+short) reporter reports all the list items but the last.
 
     set mylist but-last mylist
     ; mylist is now [2 7 10 Bob [3 0 -2]]
@@ -1036,9 +962,8 @@ Suppose you want to get rid of item 0, the 2 at the beginning of the list.
 
 Suppose you wanted to change the third item that's nested inside item 3 from -2
 to 9? The key is to realize that the name that can be used to call the nested
-list [3 0 -2] is `item 3 mylist`. Then the
-[`replace-item`](dictionary.html#replace-item) reporter can be nested to change
-the list-within-a-list. The parentheses are added for clarity.
+list [3 0 -2] is `item 3 mylist`. Then the [[replace-item]] reporter can be
+nested to change the list-within-a-list. The parentheses are added for clarity.
 
     set mylist (replace-item 3 mylist
                       (replace-item 2 (item 3 mylist) 9))
@@ -1046,13 +971,11 @@ the list-within-a-list. The parentheses are added for clarity.
 
 **Iterating over lists**
 
-If you want to do some operation on each item in a list in turn, the
-[`foreach`](dictionary.html#foreach) command and the
-[`map`](dictionary.html#map) reporter may be helpful.
+If you want to do some operation on each item in a list in turn, the [[foreach]]
+command and the [[map]] reporter may be helpful.
 
-[`foreach`](dictionary.html#foreach) is used to run a command or commands on
-each item in a list. It takes an input list and a command name or block of
-commands, like this:
+[[foreach]] is used to run a command or commands on each item in a list. It
+takes an input list and a command name or block of commands, like this:
 
     foreach [1 2 3] show
     => 1
@@ -1067,27 +990,25 @@ commands, like this:
 
 In the block, the variable `n` holds the current value from the input list.
 
-Here are some more examples of [`foreach`](dictionary.html#foreach):
+Here are some more examples of [[foreach]]:
 
     foreach [1 2 3] [ steps -> ask turtles [ fd steps ] ]
     ;; turtles move forward 6 patches
     foreach [true false true true] [ should-move? -> ask turtles [ if should-move? [ fd 1 ] ] ]
     ;; turtles move forward 3 patches
 
-[`map`](dictionary.html#map) is similar to [`foreach`](dictionary.html#foreach),
-but it is a reporter. It takes an input list and a reporter name or reporter
-block. Note that unlike [`foreach`](dictionary.html#foreach), the reporter comes
-first, like this:
+[[map]] is similar to [[foreach]], but it is a reporter. It takes an input list
+and a reporter name or reporter block. Note that unlike [[foreach]], the
+reporter comes first, like this:
 
     show map round [1.2 2.2 2.7]
     ;; prints [1 2 3]
 
-[`map`](dictionary.html#map) reports a list containing the results of applying
-the reporter to each item in the input list. Again, use the variable named in
-the anonymous procedure (`x` in the examples below) to refer to the current item
-in the list.
+[[map]] reports a list containing the results of applying the reporter to each
+item in the input list. Again, use the variable named in the anonymous procedure
+(`x` in the examples below) to refer to the current item in the list.
 
-Here are a couple more examples of [`map`](dictionary.html#map):
+Here are a couple more examples of [[map]]:
 
     show map [ x -> x < 0 ] [1 -1 3 4 -2 -10]
     ;; prints [false true false false true true]
@@ -1095,13 +1016,12 @@ Here are a couple more examples of [`map`](dictionary.html#map):
     ;; prints [1 4 9]
 
 Besides `map` and `foreach`, other primitives for processing whole lists in a
-configurable way include [`filter`](dictionary.html#filter),
-[`reduce`](dictionary.html#reduce), and [`sort-by`](dictionary.html#sort-by).
+configurable way include [[filter]], [[reduce]], and [[sort-by]].
 
 These primitives aren't always the solution for every situation in which you
 want to operate on an entire list. In some situations, you may need to use some
-other technique such as a loop using [`repeat`](dictionary.html#repeat) or
-[`while`](dictionary.html#while), or a recursive procedure.
+other technique such as a loop using [[repeat]] or [[while]], or a recursive
+procedure.
 
 The blocks of code we're giving to `map` and `foreach` in these examples are
 actually **anonymous procedures**. Anonymous procedures are explained in more
@@ -1123,10 +1043,8 @@ parentheses. Here are some examples:
 
 Note that each of these special primitives has a default number of inputs for
 which no parentheses are required. The primitives which have this capability are
-[`list`](dictionary.html#list), [`word`](dictionary.html#word),
-[`sentence`](dictionary.html#sentence), [`map`](dictionary.html#map),
-[`foreach`](dictionary.html#foreach), [`run`](dictionary.html#run), and
-[`runresult`](dictionary.html#run).
+[[list]], [[word]], [[sentence]], [[map]], [[foreach]], [[run]], and
+[[runresult|run]].
 
 **Lists of agents**
 
@@ -1134,52 +1052,46 @@ Earlier, we said that agentsets are always in random order, a different random
 order every time. If you need your agents to do something in a fixed order, you
 need to make a list of the agents instead.
 
-There are two primitives that help you do this, [`sort`](dictionary.html#sort)
-and [`sort-by`](dictionary.html#sort-by).
+There are two primitives that help you do this, [[sort]] and [[sort-by]].
 
-Both [`sort`](dictionary.html#sort) and [`sort-by`](dictionary.html#sort-by) can
-take an agentset as input. The result is always a new list, containing the same
-agents as the agentset did, but in a particular order.
+Both [[sort]] and [[sort-by]] can take an agentset as input. The result is
+always a new list, containing the same agents as the agentset did, but in a
+particular order.
 
-If you use [`sort`](dictionary.html#sort) on an agentset of turtles, the result
-is a list of turtles sorted in ascending order by [`who`](dictionary.html#who)
-number.
+If you use [[sort]] on an agentset of turtles, the result is a list of turtles
+sorted in ascending order by [[who]] number.
 
-If you use [`sort`](dictionary.html#sort) on an agentset of patches, the result
-is a list of patches sorted left-to-right, top-to-bottom.
+If you use [[sort]] on an agentset of patches, the result is a list of patches
+sorted left-to-right, top-to-bottom.
 
-If you use [`sort`](dictionary.html#sort) on an agentset of links, the result is
-a list of links, sorted in ascending order first by
-[`end1`](dictionary.html#end1) then by [`end2`](dictionary.html#end2) any
-remaining ties are resolved by breed in the order they are declared in the Code
+If you use [[sort]] on an agentset of links, the result is a list of links,
+sorted in ascending order first by [[end1]] then by [[end2]] any remaining ties
+are resolved by breed in the order they are declared in the Code
 tab.
 
-If you need descending order instead, you can combine
-[`reverse`](dictionary.html#reverse) with [`sort`](dictionary.html#sort), for
-example `reverse sort turtles`.
+If you need descending order instead, you can combine [[reverse]] with [[sort]],
+for example `reverse sort turtles`.
 
 If you want your agents to be ordered by some other criterion than the standard
-ones [`sort`](dictionary.html#sort) uses, you'll need to use
-[`sort-by`](dictionary.html#sort-by) instead.
+ones [[sort]] uses, you'll need to use [[sort-by]] instead.
 
 Here's an example:
 
     sort-by [ [a b] -> [size] of a < [size] of b ] turtles
 
 This returns a list of turtles sorted in ascending order by their turtle
-variable [`size`](dictionary.html#size).
+variable [[size]].
 
 There's a common pattern to get a list of agents in a random order, using a
-combination of [`of`](dictionary.html#of) and [`self`](dictionary.html#self), in
-the rare case that you cannot just use [`ask`](dictionary.html#self):
+combination of [[of]] and [[self]], in the rare case that you cannot just use
+[[ask]]:
 
     [self] of my-agentset
 
 **Asking a list of agents**
 
 Once you have a list of agents, you might want to ask them each to do something.
-To do this, use the [`foreach`](dictionary.html#foreach) and
-[`ask`](dictionary.html#ask) commands in combination, like this:
+To do this, use the [[foreach]] and [[ask]] commands in combination, like this:
 
     foreach sort turtles [ the-turtle ->
       ask the-turtle [
@@ -1190,9 +1102,8 @@ To do this, use the [`foreach`](dictionary.html#foreach) and
 This will ask each turtle in ascending order by who number. Substitute "patches"
 for "turtles" to ask patches in left-to-right, top-to-bottom order.
 
-Note that you can't use [`ask`](dictionary.html#ask) directly on a list of
-turtles. [`ask`](dictionary.html#ask) only works with agentsets and single
-agents.
+Note that you can't use [[ask]] directly on a list of turtles. [[ask]] only
+works with agentsets and single agents.
 
 **Performance of lists**
 
@@ -1329,9 +1240,9 @@ replace a straightforward equality test such as `if x = 1 [ ... ]` with a test
 that tolerates slight imprecision, for example
 `if abs (x - 1) < 0.0001 [ ... ]`.
 
-Also, the [`precision`](dictionary.html#precision) primitive is handy for
-rounding off numbers for display purposes. NetLogo monitors round the numbers
-they display to a configurable number of decimal places, too.
+Also, the [[precision]] primitive is handy for rounding off numbers for display
+purposes. NetLogo monitors round the numbers they display to a configurable
+number of decimal places, too.
 
 ## Random numbers
 
@@ -1349,10 +1260,9 @@ with it can be reproduced by others.
 
 Here's how it works. NetLogo's random number generator can be started with a
 certain seed value, which must be an integer in the range -2147483648 to
-2147483647. Once the generator has been "seeded" with the
-[`random-seed`](dictionary.html#random-seed) command, it always generates the
-same sequence of random numbers from then on. For example, if you run these
-commands:
+2147483647. Once the generator has been "seeded" with the [[random-seed]]
+command, it always generates the same sequence of random numbers from then on.
+For example, if you run these commands:
 
     random-seed 137
     show random 100
@@ -1367,10 +1277,9 @@ NetLogo the random number generator changes. (Presently, we use a generator
 known as the Mersenne Twister.)
 
 To create a number suitable for seeding the random number generator, use the
-[`new-seed`](dictionary.html#new-seed) reporter.
-[`new-seed`](dictionary.html#new-seed) creates a seed, evenly distributed over
-the space of possible seeds, based on the current date and time. It never
-reports the same seed twice in a row.
+[[new-seed]] reporter. [[new-seed]] creates a seed, evenly distributed over the
+space of possible seeds, based on the current date and time. It never reports
+the same seed twice in a row.
 
 > **Code Example:** Random Seed Example
 
@@ -1382,21 +1291,16 @@ seed yourself ahead of time.
 The NetLogo primitives with "random" in their names (random, random-float, and
 so on) aren't the only ones that use pseudo-random numbers. Many other
 operations also make random choices. For example, agentsets are always in random
-order, [`one-of`](dictionary.html#one-of) and [`n-of`](dictionary.html#n-of)
-choose agents randomly, the [`sprout`](dictionary.html#sprout) command creates
-turtles with random colors and headings, and the
-[`downhill`](dictionary.html#downhill) reporter chooses a random patch when
-there's a tie. All of these random choices are governed by the random seed as
-well, so model runs can be reproducible.
+order, [[one-of]] and [[n-of]] choose agents randomly, the [[sprout]] command
+creates turtles with random colors and headings, and the [[downhill]] reporter
+chooses a random patch when there's a tie. All of these random choices are
+governed by the random seed as well, so model runs can be reproducible.
 
 In addition to the uniformly distributed random integers and floating point
-numbers generated by [`random`](dictionary.html#random) and
-[`random-float`](dictionary.html#random-float), NetLogo also offers several
-other random distributions. See the dictionary entries for
-[`random-normal`](dictionary.html#random-reporters),
-[`random-poisson`](dictionary.html#random-reporters),
-[`random-exponential`](dictionary.html#random-reporters), and
-[`random-gamma`](dictionary.html#random-reporters).
+numbers generated by [[random]] and [[random-float]], NetLogo also offers
+several other random distributions. See the dictionary entries for
+[[random-normal|random-reporters]], [[random-poisson|random-reporters]],
+[[random-exponential|random-reporters]], and [[random-gamma|random-reporters]].
 
 ### Auxiliary generator
 
@@ -1411,9 +1315,8 @@ The same is true of code in sliders.
 
 You may want to explicitly specify that a section of code does not affect the
 state of the main random generator, so the outcome of the model is not affected.
-The [`with-local-randomness`](dictionary.html#with-local-randomness) command is
-provided for this purpose. See its entry in the NetLogo Dictionary for more
-information.
+The [[with-local-randomness]] command is provided for this purpose. See its
+entry in the NetLogo Dictionary for more information.
 
 ## Turtle shapes
 
@@ -1422,17 +1325,16 @@ geometric shapes; squares, circles, and lines, rather than a grid of pixels.
 Vector shapes are fully scalable and rotatable. NetLogo caches bitmap images of
 vector shapes size 1, 1.5, and 2 in order to speed up execution.
 
-A turtle's shape is stored in its [`shape`](dictionary.html#shape) variable and
-can be set using the [`set`](dictionary.html#set) command.
+A turtle's shape is stored in its [[shape]] variable and can be set using the
+[[set]] command.
 
-New turtles have a shape of "default". The
-[`set-default-shape`](dictionary.html#set-default-shape) primitive is useful for
-changing the default turtle shape to a different shape, or having a different
-default turtle shape for each breed of turtle.
+New turtles have a shape of "default". The [[set-default-shape]] primitive is
+useful for changing the default turtle shape to a different shape, or having a
+different default turtle shape for each breed of turtle.
 
-The [`shapes`](dictionary.html#shapes) primitive reports a list of currently
-available turtle shapes in the model. This is useful if, for example, you want
-to assign a random shape to a turtle:
+The [[shapes]] primitive reports a list of currently available turtle shapes in
+the model. This is useful if, for example, you want to assign a random shape to
+a turtle:
 
     ask turtles [ set shape one-of shapes ]
 
@@ -1441,7 +1343,7 @@ to your model from our shapes library, or to transfer shapes between models. For
 more information, see the Shapes Editor [section](shapes.html) of this manual.
 
 The thickness of the lines used to draw the vector shapes can be controlled by
-the [`__set-line-thickness`](dictionary.html#set-line-thickness) primitive.
+the [[__set-line-thickness]] primitive.
 
 > **Code Examples:** Breeds and Shapes Example, Shape Animation Example
 
@@ -1450,15 +1352,14 @@ the [`__set-line-thickness`](dictionary.html#set-line-thickness) primitive.
 Link Shapes are similar to turtle shapes, only you use the Link Shape Editor to
 create and edit them. Link shapes consist of between 0 and 3 lines which can
 have different patterns and a direction indicator that is composed of the same
-elements as turtle shapes. Links also have a [`shape`](dictionary.html#shape)
-variable that can be set to any link shape that is in the model. By default
-links have the "default" shape, though you can change that using
-[`set-default-shape`](dictionary.html#set-default-shape). The
-[`link-shapes`](dictionary.html#link-shapes) reporter reports all the link
-shapes included in the current model.
+elements as turtle shapes. Links also have a [[shape]] variable that can be set
+to any link shape that is in the model. By default links have the "default"
+shape, though you can change that using [[set-default-shape]]. The
+[[link-shapes]] reporter reports all the link shapes included in the current
+model.
 
-The thickness of the lines in the link shape is controlled by the
-[`thickness`](dictionary.html#thickness) link variable.
+The thickness of the lines in the link shape is controlled by the [[thickness]]
+link variable.
 
 ## View updates
 
@@ -1508,11 +1409,10 @@ will be separated by several seconds.
 At extremely slow settings, NetLogo will be updating so often that you will see
 your agents moving (or changing color, etc.) one at a time.
 
-If you need to temporarily shut off continuous updates, use the
-[`no-display`](dictionary.html#no-display) command. The
-[`display`](dictionary.html#display) command turns updates back on, and also
-forces an immediate update (unless the user is fast-forwarding the model using
-the speed slider).
+If you need to temporarily shut off continuous updates, use the [[no-display]]
+command. The [[display]] command turns updates back on, and also forces an
+immediate update (unless the user is fast-forwarding the model using the speed
+slider).
 
 ### Tick-based updates
 
@@ -1522,12 +1422,12 @@ view to update once per tick, between ticks. That's the default behavior with
 tick-based updates.
 
 If you want additional view updates, you can force an update using the
-[`display`](dictionary.html#display) command. (The update may be skipped if the
-user is fast-forwarding the model using the speed slider.)
+[[display]] command. (The update may be skipped if the user is fast-forwarding
+the model using the speed slider.)
 
 You don't have to use the tick counter to use tick-based updates. If the tick
-counter never advances, the view will update only when you use the
-[`display`](dictionary.html#display) command.
+counter never advances, the view will update only when you use the [[display]]
+command.
 
 If you move the speed slider to a fast enough setting, eventually NetLogo will
 skip some of the updates that would ordinarily have happened. Moving the speed
@@ -1536,13 +1436,12 @@ NetLogo pause after each update. The slower the setting, the longer the pause.
 
 Even under tick-based updates, the view also updates whenever a button in the
 interface pops up (both once and forever buttons) and when a command entered in
-the Command Center finishes. So it's not necessary to add the
-[`display`](dictionary.html#display) command to once buttons that don't advance
-the tick counter. Many forever buttons that don't advance the tick counter do
-need to use the [`display`](dictionary.html#display) command. An example in the
-Models Library is the Life model (under Computer Science -> Cellular Automata).
-The forever buttons that let the user draw in the view use the
-[`display`](dictionary.html#display) command so the user can see what they are
+the Command Center finishes. So it's not necessary to add the [[display]]
+command to once buttons that don't advance the tick counter. Many forever
+buttons that don't advance the tick counter do need to use the [[display]]
+command. An example in the Models Library is the Life model (under
+Computer Science -> Cellular Automata). The forever buttons that let the user
+draw in the view use the [[display]] command so the user can see what they are
 drawing, even though the tick counter is not advancing.
 
 ### Choosing a mode
@@ -1885,9 +1784,7 @@ Most of the list primitives work on strings as well:
     reverse "string" => "gnirts"
 
 A few primitives are specific to strings, such as
-[`is-string?`](dictionary.html#is-of-type),
-[`substring`](dictionary.html#subliststring), and
-[`word`](dictionary.html#word):
+[[is-string?|is-of-type]], [[substring|subliststring]], and [[word]]:
 
     is-string? "string" => true
     is-string? 37 => false
@@ -1907,48 +1804,39 @@ sequences:
 ## Output
 
 This section is about output to the screen. Output to the screen can also be
-later saved to a file using the [`export-output`](dictionary.html#export-cmds)
-command. If you need a more flexible method of writing data to external files,
-see the next section, [File I/O](#file-io).
+later saved to a file using the [[export-output|export-cmds]] command. If you
+need a more flexible method of writing data to external files, see the next
+section, [File I/O](#file-io).
 
 The basic commands for generating output to the screen in NetLogo are
-[`print`](dictionary.html#print), [`show`](dictionary.html#show),
-[`type`](dictionary.html#type), and [`write`](dictionary.html#write). These
-commands send their output to the Command Center.
+[[print]], [[show]], [[type]], and [[write]]. These commands send their output
+to the Command Center.
 
 For full details on these four commands, see their entries in the NetLogo
 Dictionary. Here is how they are typically used:
 
-- [`print`](dictionary.html#print) is useful in most situations.
-- [`show`](dictionary.html#show) lets you see which agent is printing what.
-- [`type`](dictionary.html#type) lets you print several things on the same line.
-- [`write`](dictionary.html#write) lets you print values in a format which can
-  be read back in using [`file-read`](dictionary.html#file-read).
+- [[print]] is useful in most situations.
+- [[show]] lets you see which agent is printing what.
+- [[type]] lets you print several things on the same line.
+- [[write]] lets you print values in a format which can
+  be read back in using [[file-read]].
 
 A NetLogo model may optionally have an "output area" in its Interface tab,
 separate from the Command Center. To send output there instead of the Command
-Center, use the [`output-print`](dictionary.html#output-cmds),
-[`output-show`](dictionary.html#output-cmds),
-[`output-type`](dictionary.html#output-cmds), and
-[`output-write`](dictionary.html#output-cmds) commands.
+Center, use the [[output-print|output-cmds]], [[output-show|output-cmds]],
+[[output-type|output-cmds]], and [[output-write|output-cmds]] commands.
 
-The output area can be cleared with the
-[`clear-output`](dictionary.html#clear-output) command and saved to a file with
-[`export-output`](dictionary.html#export-cmds). The contents of the output area
-will be saved by the [`export-world`](dictionary.html#export-cmds) command. The
-[`import-world`](dictionary.html#import-world) command will clear the output
-area and set its contents to the value in imported world file. It should be
-noted that large amounts of data being sent to the output area can increase the
-size of your exported worlds.
+The output area can be cleared with the [[clear-output]] command and saved to a
+file with [[export-output|export-cmds]]. The contents of the output area will be
+saved by the [[export-world|export-cmds]] command. The [[import-world]] command
+will clear the output area and set its contents to the value in imported world
+file. It should be noted that large amounts of data being sent to the output
+area can increase the size of your exported worlds.
 
-If you use [`output-print`](dictionary.html#output-cmds),
-[`output-show`](dictionary.html#output-cmds),
-[`output-type`](dictionary.html#output-cmds),
-[`output-write`](dictionary.html#output-cmds),
-[`clear-output`](dictionary.html#clear-output), or
-[`export-output`](dictionary.html#export-cmds) in a model which does not have a
-separate output area, then the commands apply to the output portion of the
-Command Center.
+If you use [[output-print|output-cmds]], [[output-show|output-cmds]],
+[[output-type|output-cmds]], [[output-write|output-cmds]], [[clear-output]], or
+[[export-output|export-cmds]] in a model which does not have a separate output
+area, then the commands apply to the output portion of the Command Center.
 
 ## File I/O
 
@@ -1961,42 +1849,34 @@ information from a file, data that is stored in the file flows into your model.
 On the other hand, writing allows data to flow out of your model and into a
 file.
 
-When working with files, always begin by using the primitive
-[`file-open`](dictionary.html#file-open). This specifies which file you will be
-interacting with. None of the other primitives work unless you open a file
-first.
+When working with files, always begin by using the primitive [[file-open]]. This
+specifies which file you will be interacting with. None of the other primitives
+work unless you open a file first.
 
 The next **file-** primitive you use dictates which mode the file will be in
 until the file is closed, reading or writing. To switch modes, close and then
 reopen the file.
 
-The reading primitives include [`file-read`](dictionary.html#file-read),
-[`file-read-line`](dictionary.html#file-read-line),
-[`file-read-characters`](dictionary.html#file-read-characters), and
-[`file-at-end?`](dictionary.html#file-at-end) Note that the file must exist
+The reading primitives include [[file-read]], [[file-read-line]],
+[[file-read-characters]], and [[file-at-end?]]. Note that the file must exist
 already before you can open it for reading.
 
 > **Code Examples:** File Input Example
 
 The primitives for writing are similar to the primitives that print things in
 the Command Center, except that the output gets saved to a file. They include
-[`file-print`](dictionary.html#file-print),
-[`file-show`](dictionary.html#file-show),
-[`file-type`](dictionary.html#file-type), and
-[`file-write`](dictionary.html#file-write). Note that you can never "overwrite"
-data. In other words, if you attempt to write to a file with existing data, all
-new data will be appended to the end of the file. (If you want to overwrite a
-file, use [`file-delete`](dictionary.html#file-delete) to delete it, then open
-it for writing.)
+[[file-print]], [[file-show]], [[file-type]], and [[file-write]]. Note that you
+can never "overwrite" data. In other words, if you attempt to write to a file
+with existing data, all new data will be appended to the end of the file. (If
+you want to overwrite a file, use [[file-delete]] to delete it, then open it for
+writing.)
 
 > **Code Examples:** File Output Example
 
-When you are finished using a file, you can use the command
-[`file-close`](dictionary.html#file-close) to end your session with the file. If
-you wish to remove the file afterwards, use the primitive
-[`file-delete`](dictionary.html#file-delete) to delete it. To close multiple
-opened files, one needs to first select the file by using
-[`file-open`](dictionary.html#file-open) before closing it.
+When you are finished using a file, you can use the command [[file-close]] to
+end your session with the file. If you wish to remove the file afterwards, use
+the primitive [[file-delete]] to delete it. To close multiple opened files, one
+needs to first select the file by using [[file-open]] before closing it.
 
     ;; Open 3 files
     file-open "myfile1.txt"
@@ -2011,13 +1891,12 @@ opened files, one needs to first select the file by using
     file-close
 
 Or, if you know you just want to close every file, you can use
-[`file-close-all`](dictionary.html#file-close-all).
+[[file-close-all]].
 
-Two primitives worth noting are [`file-write`](dictionary.html#file-write) and
-[`file-read`](dictionary.html#file-read) . These primitives are designed to
-easily save and retrieve NetLogo constants such as numbers, lists, booleans, and
-strings. file-write will always output the variable in such a manner that
-file-read will be able to interpret it correctly.
+Two primitives worth noting are [[file-write]] and [[file-read]] . These
+primitives are designed to easily save and retrieve NetLogo constants such as
+numbers, lists, booleans, and strings. file-write will always output the
+variable in such a manner that file-read will be able to interpret it correctly.
 
     file-open "myfile.txt"  ;; Opening file for writing
     ask turtles
@@ -2033,11 +1912,9 @@ file-read will be able to interpret it correctly.
 
 **Letting the user choose**
 
-The [`user-directory`](dictionary.html#user-directory),
-[`user-file`](dictionary.html#user-file), and
-[`user-new-file`](dictionary.html#user-new-file)
-primitives are useful when you want the user to choose a file or directory for
-your code to operate on.
+The [[user-directory]], [[user-file]], and [[user-new-file]] primitives are
+useful when you want the user to choose a file or directory for your code to
+operate on.
 
 ## Movies
 
@@ -2117,19 +1994,16 @@ pixel-level detail.
 The 2D and the 3D view show the world from the perspective of the observer. By
 default the observer is looking down on the world from the positive z-axis at
 the origin. You can change the perspective of the observer by using the
-[`follow`](dictionary.html#follow), [`ride`](dictionary.html#ride) and
-[`watch`](dictionary.html#watch) observer commands and
-[`follow-me`](dictionary.html#follow-me), [`ride-me`](dictionary.html#ride-me)
-and [`watch-me`](dictionary.html#watch-me) turtle commands. When in follow or
-ride mode the observer moves with the subject agent around the world. The
-difference between follow and ride is only visible in the 3D view. In the 3D
-view the user can change the distance behind the agent using the mouse. When the
-observer is following at zero distance from the agent it is actually riding the
-agent. When the observer is in watch mode it tracks the movements of one turtle
-without moving. In both views you will see a spotlight appear on the subject and
-in the 3D view the observer will turn to face the subject. To determine which
-agent is the focus you can use the [`subject`](dictionary.html#subject)
-reporter.
+[[follow]], [[ride]] and [[watch]] observer commands and [[follow-me]],
+[[ride-me]] and [[watch-me]] turtle commands. When in follow or ride mode the
+observer moves with the subject agent around the world. The difference between
+follow and ride is only visible in the 3D view. In the 3D view the user can
+change the distance behind the agent using the mouse. When the observer is
+following at zero distance from the agent it is actually riding the agent. When
+the observer is in watch mode it tracks the movements of one turtle without
+moving. In both views you will see a spotlight appear on the subject and in the
+3D view the observer will turn to face the subject. To determine which agent is
+the focus you can use the [[subject]] reporter.
 
 > **Code Example:** Perspective Example
 
@@ -2144,44 +2018,39 @@ You can see the drawing, but the turtles (and patches) can't. They can't sense
 the drawing or react to it. The drawing is just for people to look at.
 
 Turtles can draw and erase lines in the drawing using the
-[`pen-down`](dictionary.html#pen-switch-status) and
-[`pen-erase`](dictionary.html#pen-switch-status) commands. When a turtle's pen
-is down (or erasing), the turtle draws (or erases) a line behind it whenever it
-moves. The lines are the same color as the turtle. To stop drawing (or erasing),
-use [`pen-up`](dictionary.html#pen-switch-status).
+[[pen-down|pen-switch-status]] and [[pen-erase|pen-switch-status]] commands.
+When a turtle's pen is down (or erasing), the turtle draws (or erases) a line
+behind it whenever it moves. The lines are the same color as the turtle. To stop
+drawing (or erasing), use [[pen-up|pen-switch-status]].
 
 Lines drawn by turtles are normally one pixel thick. If you want a different
-thickness, set the [`pen-size`](dictionary.html#pen-size) turtle variable to a
-different number before drawing (or erasing). In new turtles, the variable is
-set to 1.
+thickness, set the [[pen-size]] turtle variable to a different number before
+drawing (or erasing). In new turtles, the variable is set to 1.
 
 Lines made when a turtle moves in a way that doesn't fix a direction, such as
-with [`setxy`](dictionary.html#setxy) or [`move-to`](dictionary.html#move-to),
-the shortest path line that obeys the topology will be drawn.
+with [[setxy]] or [[move-to]], the shortest path line that obeys the topology
+will be drawn.
 
 Here's some turtles which have made a drawing over a grid of randomly shaded
 patches. Notice how the turtles cover the lines and the lines cover the patch
-colors. The [`pen-size`](dictionary.html#pen-size) used here was 2:
+colors. The [[pen-size]] used here was 2:
 <p class="screenshot">
   <img alt="[color chart]" src="images/drawing.gif">
 
-The [`stamp`](dictionary.html#stamp) command lets a turtle leave an image of
-itself behind in the drawing and [`stamp-erase`](dictionary.html#stamperase)
-lets it remove the pixels below it in the drawing.
+The [[stamp]] command lets a turtle leave an image of itself behind in the
+drawing and [[stamp-erase]] lets it remove the pixels below it in the drawing.
 
-To erase the whole drawing, use the observer commmand
-[`clear-drawing`](dictionary.html#clear-drawing). (You can also use
-[`clear-all`](dictionary.html#clear-all), which clears everything else too.)
+To erase the whole drawing, use the observer commmand [[clear-drawing]]. (You
+can also use [[clear-all]], which clears everything else too.)
 
 **Importing an image**
 
-The observer command [`import-drawing`](dictionary.html#import-drawing) command
-allows you to import an image file from disk into the drawing.
+The observer command [[import-drawing]] command allows you to import an image
+file from disk into the drawing.
 
-[`import-drawing`](dictionary.html#import-drawing) is useful only for providing
-a backdrop for people to look at. If you want turtles and patches to react to
-the image, you should use [`import-pcolors`](dictionary.html#import-pcolors) or
-[`import-pcolors-rgb`](dictionary.html#import-pcolors-rgb) instead.
+[[import-drawing]] is useful only for providing a backdrop for people to look
+at. If you want turtles and patches to react to the image, you should use
+[[import-pcolors]] or [[import-pcolors-rgb]] instead.
 
 **Comparison to other Logos**
 
@@ -2281,17 +2150,16 @@ reflected back into the world (either systematically or randomly), the turtle
 exits the system (dies), or the turtle is hidden. It is no longer necessary to
 check the bounds using turtle coordinates, instead we can just ask NetLogo if a
 turtle is at the edge of the world. There are a couple ways of doing this, the
-simplest is to use the [`can-move?`](dictionary.html#can-move) primitive.
+simplest is to use the [[can-move?]] primitive.
 
     if not can-move? distance [ rt 180 ]
 
 can-move? merely returns true if the position *distance* in front of the turtle
 is inside the NetLogo world, false otherwise. In this case, if the turtle is at
 the edge of the world it simple goes back the way it came. You can also use
-`patch-ahead 1 != nobody` in place of [`can-move?`](dictionary.html#can-move).
-If you need to do something smarter that simply turning around it may be useful
-to use [`patch-at`](dictionary.html#patch-at) with [`dx`](dictionary.html#dxy)
-and [`dy`](dictionary.html#dxy).
+`patch-ahead 1 != nobody` in place of [[can-move?]]. If you need to do something
+smarter that simply turning around it may be useful to use [[patch-at]] with
+[[dx|dxy]] and [[dy|dxy]].
 
     if patch-at dx 0 = nobody [
       set heading (- heading)
@@ -2351,19 +2219,16 @@ another node. The relationship between spouses, or siblings, could be modeled as
 an undirected link.
 
 There is a global agentset of all links, just as with turtles and patches. You
-can create undirected links using the
-[`create-link-with`](dictionary.html#create-link) and
-[`create-links-with`](dictionary.html#create-link) commands; and directed links
-using the [`create-link-to`](dictionary.html#create-link),
-[`create-links-to`](dictionary.html#create-link),
-[`create-link-from`](dictionary.html#create-link), and
-[`create-links-from`](dictionary.html#create-link) commands. Once the first link
-has been created directed or undirected, all unbreeded links must match (links
-also support breeds, much like turtles, which will be discussed shortly); it's
-impossible to have two unbreeded links where one is directed and the other is
-undirected. A runtime error occurs if you try to do it. (If all unbreeded links
-die, then you can create links of that breed that are different in designation
-from the previous links.)
+can create undirected links using the [[create-link-with|create-link]] and
+[[create-links-with|create-link]] commands; and directed links using the
+[[create-link-to|create-link]], [[create-links-to|create-link]],
+[[create-link-from|create-link]], and [[create-links-from|create-link]]
+commands. Once the first link has been created directed or undirected, all
+unbreeded links must match (links also support breeds, much like turtles, which
+will be discussed shortly); it's impossible to have two unbreeded links where
+one is directed and the other is undirected. A runtime error occurs if you try
+to do it. (If all unbreeded links die, then you can create links of that breed
+that are different in designation from the previous links.)
 
 In general, link primitive names indicate what kind of links they deal with:
 
@@ -2386,15 +2251,12 @@ Link breeds, like turtle breeds, allow you to define different types of links in
 your model. Link breeds must either be directed or undirected, unlike unbreeded
 links this is defined at compile time rather than run time. You declare link
 breeds using the keywords
-[`undirected-link-breed`](dictionary.html#undirected-link-breed) and
-[`directed-link-breed`](dictionary.html#directed-link-breed).
-Breeded links can be created using the commands
-[`create-<breed>-with`](dictionary.html#create-link) and
-[`create-<breeds>-with`](dictionary.html#create-link) for undirected breeds and
-the commands [`create-<breed>-to`](dictionary.html#create-link),
-[`create-<breeds>-to`](dictionary.html#create-link),
-[`create-<breed>-from`](dictionary.html#create-link), and
-[`create-<breeds>-from`](dictionary.html#create-link) for directed links.
+[[undirected-link-breed]] and [[directed-link-breed]]. Breeded links can be
+created using the commands [[create-<breed>-with|create-link]] and
+[[create-<breeds>-with|create-link]] for undirected breeds and the commands
+[[create-<breed>-to|create-link]], [[create-<breeds>-to|create-link]],
+[[create-<breed>-from|create-link]], and [[create-<breeds>-from|create-link]]
+for directed links.
 
 There cannot be more than one undirected link of the same breed (or more than
 one unbreeded undirected link) between a pair of agents, nor more than one
@@ -2405,44 +2267,40 @@ links) between a pair if they are in opposite directions.
 **Layouts**
 
 As part of our network support we have also added several different primitives
-that will help you to visualize the networks. The simplest is
-[`layout-circle`](dictionary.html#layout-circle) which evenly spaces the agents
-around the center of the world given a radius.
+that will help you to visualize the networks. The simplest is [[layout-circle]]
+which evenly spaces the agents around the center of the world given a radius.
 <p class="screenshot">
   <img alt="screen shot" src="images/circle-layout.gif">
 
-[`layout-radial`](dictionary.html#layout-radial) is a good layout if you have
-something like a tree structure, though even if there are some cycles in the
-tree it will still work, though as there are more and more cycles it will
-probably not look as good. [`layout-radial`](dictionary.html#layout-radial)
-takes a root agent to be the central node places it at (0,0) and arranges the
-nodes connected to it in a concentric pattern. Nodes one degree away from the
-root will be arranged in a circular pattern around the central node and the next
-level around those nodes and so on.
-[`layout-radial`](dictionary.html#layout-radial) will attempt to account for
-asymmetrical graphs and give more space to branches that are wider.
-[`layout-radial`](dictionary.html#layout-radial) also takes a breed as an input
-so you use one breed of links to layout the network and not another.
+[[layout-radial]] is a good layout if you have something like a tree structure,
+though even if there are some cycles in the tree it will still work, though as
+there are more and more cycles it will probably not look as good.
+[[layout-radial]] takes a root agent to be the central node places it at (0,0)
+and arranges the nodes connected to it in a concentric pattern. Nodes one degree
+away from the root will be arranged in a circular pattern around the central
+node and the next level around those nodes and so on. [[layout-radial]] will
+attempt to account for asymmetrical graphs and give more space to branches that
+are wider. [[layout-radial]] also takes a breed as an input so you use one breed
+of links to layout the network and not another.
 <p class="screenshot">
   <img alt="screen shot" src="images/radial-layout.gif">
 
-Given a set of anchor nodes [`layout-tutte`](dictionary.html#layout-tutte)
-places all the other nodes at the center of mass of the nodes it is linked to.
-The anchor set is automatically arranged in a circle layout with a user defined
-radius and the other nodes will converge into place (this of course means that
-you may have to run it several times before the layout is stable.)
+Given a set of anchor nodes [[layout-tutte]] places all the other nodes at the
+center of mass of the nodes it is linked to. The anchor set is automatically
+arranged in a circle layout with a user defined radius and the other nodes will
+converge into place (this of course means that you may have to run it several
+times before the layout is stable.)
 <p class="screenshot">
   <img alt="screen shot" src="images/tutte-layout.gif">
 
-[`layout-spring`](dictionary.html#layout-spring) is useful for many kinds of
-networks. The drawback is that is relatively slow since it takes many iterations
-to converge. In this layout the links act as springs that pull the nodes they
-connect toward each other and the nodes repel each other. The strength of the
-forces is controlled by inputs to the primitives. These inputs will always have
-a value between 0 and 1; keep in mind that very small changes can still affect
-the appearance of the network. The springs also have a length (in patch units),
-however, because of all the forces involved the nodes will not end up exactly
-that distance from each other.
+[[layout-spring]] is useful for many kinds of networks. The drawback is that is
+relatively slow since it takes many iterations to converge. In this layout the
+links act as springs that pull the nodes they connect toward each other and the
+nodes repel each other. The strength of the forces is controlled by inputs to
+the primitives. These inputs will always have a value between 0 and 1; keep in
+mind that very small changes can still affect the appearance of the network. The
+springs also have a length (in patch units), however, because of all the forces
+involved the nodes will not end up exactly that distance from each other.
 
 > **Code Examples:**Network Example, Network Import Example, Giant Component,
 > Small Worlds, Preferential Attachment
@@ -2580,66 +2438,56 @@ versions:
 compatibility. We don't recommend using the `ask-concurrent` primitive at all in
 new models.
 
-In very old versions of NetLogo, [`ask`](dictionary.html#ask) had simulated
-concurrent behavior by default. Since NetLogo 4.0 (2007),
-[`ask`](dictionary.html#ask) is serial, that is, the agents run the commands
-inside the ask one at a time.
+In very old versions of NetLogo, [[ask]] had simulated concurrent behavior by
+default. Since NetLogo 4.0 (2007), [[ask]] is serial, that is, the agents run
+the commands inside the ask one at a time.
 
-The following information describes the behavior of the
-[`ask-concurrent`](dictionary.html#ask-concurrent) command, which behaves the
-way the old [`ask`](dictionary.html#ask) behaved.
+The following information describes the behavior of the [[ask-concurrent]]
+command, which behaves the way the old [[ask]] behaved.
 
-[`ask-concurrent`](dictionary.html#ask-concurrent) produces simulated
-concurrency via a mechanism of turn-taking. The first agent takes a turn, then
-the second agent takes a turn, and so on until every agent in the asked agentset
-has had a turn. Then we go back to the first agent. This continues until all of
-the agents have finished running all of the commands.
+[[ask-concurrent]] produces simulated concurrency via a mechanism of
+turn-taking. The first agent takes a turn, then the second agent takes a turn,
+and so on until every agent in the asked agentset has had a turn. Then we go
+back to the first agent. This continues until all of the agents have finished
+running all of the commands.
 
 An agent's "turn" ends when it performs an action that affects the state of the
 world, such as moving, or creating a turtle, or changing the value of a global,
 turtle, patch, or link variable. (Setting a local variable doesn't count.)
 
-The [`forward`](dictionary.html#forward) ([`fd`](dictionary.html#forward)) and
-[`back`](dictionary.html#back) ([`bk`](dictionary.html#back)) commands are
-treated specially. When used inside
-[`ask-concurrent`](dictionary.html#ask-concurrent), these commands can take
-multiple turns to execute. During its turn, the turtle can only move by one
-step. Thus, for example, `fd 20` is equivalent to `repeat 20 [ fd 1 ]`, where
-the turtle's turn ends after each run of `fd`. If the distance specified isn't
-an integer, the last fraction of step takes a full turn. So for example
-`fd 20.3` is equivalent to `repeat 20 [ fd 1 ] fd 0.3`.
+The [[forward]] ([[fd|forward]]) and [[back]] ([[bk|back]]) commands are treated
+specially. When used inside [[ask-concurrent]], these commands can take multiple
+turns to execute. During its turn, the turtle can only move by one step. Thus,
+for example, `fd 20` is equivalent to `repeat 20 [ fd 1 ]`, where the turtle's
+turn ends after each run of `fd`. If the distance specified isn't an integer,
+the last fraction of step takes a full turn. So for example `fd 20.3` is
+equivalent to `repeat 20 [ fd 1 ] fd 0.3`.
 
-The [`jump`](dictionary.html#jump) command always takes exactly one turn,
-regardless of distance.
+The [[jump]] command always takes exactly one turn, regardless of distance.
 
-To understand the difference between [`ask`](dictionary.html#ask) and
-[`ask-concurrent`](dictionary.html#ask-concurrent), consider the following two
-commands:
+To understand the difference between [[ask]] and [[ask-concurrent]], consider
+the following two commands:
 
     ask turtles [ fd 5 ]
     ask-concurrent turtles [ fd 5 ]
 
-With [`ask`](dictionary.html#ask), the first turtle takes five steps forward,
-then the second turtle takes five steps forward, and so on.
+With [[ask]], the first turtle takes five steps forward, then the second turtle
+takes five steps forward, and so on.
 
-With [`ask-concurrent`](dictionary.html#ask-concurrent), all of the turtles take
-one step forward. Then they all take a second step, and so on. Thus, the latter
-command is equivalent to:
+With [[ask-concurrent]], all of the turtles take one step forward. Then they all
+take a second step, and so on. Thus, the latter command is equivalent to:
 
     repeat 5 [ ask turtles [ fd 1 ] ]
 
-> **Code Example:** Ask-Concurrent Example shows the difference between
-> [`ask`](dictionary.html#ask) and
-> [`ask-concurrent`](dictionary.html#ask-concurrent).
+> **Code Example:** Ask-Concurrent Example shows the difference between [[ask]]
+> and [[ask-concurrent]].
 
-The behavior of [`ask-concurrent`](dictionary.html#ask-concurrent) cannot always
-be so simply reproduced using [`ask`](dictionary.html#ask), as in this example.
-Consider this command:
+The behavior of [[ask-concurrent]] cannot always be so simply reproduced using
+[[ask]], as in this example. Consider this command:
 
     ask-concurrent turtles [ fd random 10 ]
 
-In order to get the same behavior using [`ask`](dictionary.html#ask), we would
-have to write:
+In order to get the same behavior using [[ask]], we would have to write:
 
     turtles-own [steps]
     ask turtles [ set steps random 10 ]
@@ -2650,17 +2498,14 @@ have to write:
       ]
     ]
 
-To prolong an agent's "turn", use the
-[`without-interruption`](dictionary.html#without-interruption) command. (The
-command blocks inside some commands, such as
-[`create-turtles`](dictionary.html#create-turtles) and
-[`hatch`](dictionary.html#hatch), have an implied
-[`without-interruption`](dictionary.html#without-interruption) around them.)
+To prolong an agent's "turn", use the [[without-interruption]] command. (The
+command blocks inside some commands, such as [[create-turtles]] and [[hatch]],
+have an implied [[without-interruption]] around them.)
 
-Note that the behavior of [`ask-concurrent`](dictionary.html#ask-concurrent) is
-completely deterministic. Given the same code and the same initial conditions,
-the same thing will always happen (if you are using the same version of NetLogo
-and begin your model run with the same random seed).
+Note that the behavior of [[ask-concurrent]] is completely deterministic. Given
+the same code and the same initial conditions, the same thing will always happen
+(if you are using the same version of NetLogo and begin your model run with the
+same random seed).
 
 In general, we suggest you not use `ask-concurrent` at all. If you do, we
 suggest you write your model so that it does not depend on the exact details of
@@ -2706,15 +2551,11 @@ Tie connects two turtles so that the movement of one turtles affects the
 location and heading of another. Tie is a property of links so there must be a
 link between two turtles to create a tie relationship.
 
-When a link's [`tie-mode`](dictionary.html#tie-mode) is set to "fixed" or "free"
-[`end1`](dictionary.html#end1) and [`end2`](dictionary.html#end2) are tied
-together. If the link is directed [`end1`](dictionary.html#end1) is the "root
-agent" and [`end2`](dictionary.html#end2) is the "leaf agent". That is when
-[`end1`](dictionary.html#end1) moves (using [`fd`](dictionary.html#forward),
-[`jump`](dictionary.html#jump), [`setxy`](dictionary.html#setxy), etc.)
-[`end2`](dictionary.html#end2) also moves the same distance and direction.
-However when [`end2`](dictionary.html#end2) moves it does not affect
-[`end1`](dictionary.html#end1).
+When a link's [[tie-mode]] is set to "fixed" or "free" [[end1]] and [[end2]] are
+tied together. If the link is directed [[end1]] is the "root agent" and [[end2]]
+is the "leaf agent". That is when [[end1]] moves (using [[fd|forward]],
+[[jump]], [[setxy]], etc.) [[end2]] also moves the same distance and direction.
+However when [[end2]] moves it does not affect [[end1]].
 
 If the link is undirected it is a reciprocal tie relationship, meaning, if
 either turtle moves the other turtle will also move. So depending on which
@@ -2723,43 +2564,40 @@ turtle is always the turtle that initiates the movement.
 
 When the root turtle turns right or left, the leaf turtle rotates around the
 root turtle the same amount as if a stiff were attaching the turtles. When
-[`tie-mode`](dictionary.html#tie-mode) is set to "fixed" the heading of the leaf
-turtle changes by the same amount. If the [`tie-mode`](dictionary.html#tie-mode)
-is set to "free" the heading of the leaf turtle is unchanged.
+[[tie-mode]] is set to "fixed" the heading of the leaf turtle changes by the
+same amount. If the [[tie-mode]] is set to "free" the heading of the leaf turtle
+is unchanged.
 
-The [`tie-mode`](dictionary.html#tie-mode) of a link can be set to "fixed" using
-the [`tie`](dictionary.html#tie) command and set to "none" (meaning the turtles
-are no longer tied) using [`untie`](dictionary.html#untie) to set the mode to
-"free" you need to: `set tie-mode "free"`.
+The [[tie-mode]] of a link can be set to "fixed" using the [[tie]] command and
+set to "none" (meaning the turtles are no longer tied) using [[untie]] to set
+the mode to "free" you need to: `set tie-mode "free"`.
 
 > **Code Example:** Tie System Example
 
 ## Multiple source files
 
-The [`__includes`](dictionary.html#includes) keyword allows you to use multiple
-source files in a single NetLogo model.
+The [[__includes]] keyword allows you to use multiple source files in a single
+NetLogo model.
 
 The keyword begins with two underscores to indicate that the feature is
 experimental and may change in future NetLogo releases.
 
-When you open a model that uses the [`__includes`](dictionary.html#includes)
-keyword, or if you add it to the top of a model and hit the Check button, the
-includes menu will appear in the toolbar. From the includes menu you can select
-from the files included in this model.
+When you open a model that uses the [[__includes]] keyword, or if you add it to
+the top of a model and hit the Check button, the includes menu will appear in
+the toolbar. From the includes menu you can select from the files included in
+this model.
 
 When you open included files they appear in additional tabs. See the
 [Interface Guide](codetab.html#included-files-menu) for more details.
 
 You can have anything in external source files (`.nls`) that you would normally
-put in the Code tab: [`globals`](dictionary.html#globals),
-[`breed`](dictionary.html#breed), [`turtles-own`](dictionary.html#turtles-own),
-[`patches-own`](dictionary.html#patches-own),
-[`breeds-own`](dictionary.html#turtles-own), procedure definitions, etc. Note
-though that these declarations all share the same namespace. That is, if you
-declare a global `my-global` in the Code tab you cannot declare a global (or
-anything else) with the name `my-global` in any file that is included in the
-model. `my-global` will be accessible from all the included files. The same
-would be true if `my-global` were declared in one of the included files.
+put in the Code tab: [[globals]], [[breed]], [[turtles-own]], [[patches-own]],
+[[breeds-own|turtles-own]], procedure definitions, etc. Note though that these
+declarations all share the same namespace. That is, if you declare a global
+`my-global` in the Code tab you cannot declare a global (or anything else) with
+the name `my-global` in any file that is included in the model. `my-global` will
+be accessible from all the included files. The same would be true if `my-global`
+were declared in one of the included files.
 
 ## Syntax
 
@@ -2782,22 +2620,18 @@ unfamiliar to some readers.
 
 ### Keywords
 
-The only keywords in the language are [`globals`](dictionary.html#globals),
-[`breed`](dictionary.html#breed), [`turtles-own`](dictionary.html#turtles-own),
-[`patches-own`](dictionary.html#patches-own), [`to`](dictionary.html#to),
-[`to-report`](dictionary.html#to-report), and [`end`](dictionary.html#end), plus
-[`extensions`](dictionary.html#extensions) and the experimental
-[`__includes`](dictionary.html#includes) keyword. (Built-in primitive names may
-not be shadowed or redefined, so they are effectively a kind of keyword as
-well.)
+The only keywords in the language are [[globals]], [[breed]], [[turtles-own]],
+[[patches-own]], [[to]], [[to-report]], and [[end]], plus [[extensions]] and the
+experimental [[__includes]] keyword. (Built-in primitive names may not be
+shadowed or redefined, so they are effectively a kind of keyword as well.)
 
 ### Identifiers
 
 All primitives, global and agent variable names, and procedure names share a
-single global case-insensitive namespace; local names
-([`let`](dictionary.html#let) variables and the names of procedure inputs) may
-not shadow global names or each other. Identifiers may contain any Unicode
-letter or digit and the following ASCII characters:
+single global case-insensitive namespace; local names ([[let]] variables and the
+names of procedure inputs) may not shadow global names or each other.
+Identifiers may contain any Unicode letter or digit and the following ASCII
+characters:
 
     .?=*!<>:#+/%$_^'&-
 
@@ -2818,20 +2652,15 @@ end of the line. There is no multi-line comment syntax.
 
 ### Structure
 
-A program consists of optional declarations
-([`globals`](dictionary.html#globals), [`breed`](dictionary.html#breed),
-[`turtles-own`](dictionary.html#turtles-own),
-[`patches-own`](dictionary.html#patches-own),
-[`<BREED>-own`](dictionary.html#turtles-own),
-[`extensions`](dictionary.html#extensions)) in any order, followed by zero or
-more procedure definitions. Multiple breeds may be declared with separate
-[`breed`](dictionary.html#breed) declarations; the other declarations may appear
-once only.
+A program consists of optional declarations ([[globals]], [[breed]],
+[[turtles-own]], [[patches-own]], [[<BREED>-own|turtles-own]], [[extensions]])
+in any order, followed by zero or more procedure definitions. Multiple breeds
+may be declared with separate [[breed]] declarations; the other declarations may
+appear once only.
 
-Every procedure definition begins with [`to`](dictionary.html#to) or
-[`to-report`](dictionary.html#to-report), the procedure name, and an optional
-bracketed list of input names. Every procedure definition ends with
-[`end`](dictionary.html#end). In between are zero or more commands.
+Every procedure definition begins with [[to]] or [[to-report]], the procedure
+name, and an optional bracketed list of input names. Every procedure definition
+ends with [[end]]. In between are zero or more commands.
 
 ### Commands and reporters
 
@@ -2850,9 +2679,9 @@ of inputs by default. (That's why the language can be parsed though there is no
 punctuation to separate or terminate commands and/or inputs.) Some primitives
 are variadic, that is, may optionally take a different number of inputs than the
 default; parentheses are used to indicate this, e.g. `(list 1 2 3)` (since the
-[`list`](dictionary.html#list) primitive only takes two inputs by default).
-Parentheses are also used to override the default operator precedence, e.g.
-`(1 + 2) * 3`, as in other programming languages.
+[[list]] primitive only takes two inputs by default). Parentheses are also used
+to override the default operator precedence, e.g. `(1 + 2) * 3`, as in other
+programming languages.
 
 Sometimes an input to a primitive is a command block (zero or more commands
 inside square brackets) or a reporter block (a single reporter expression inside
@@ -2861,16 +2690,14 @@ block as input.
 
 Operator precedences are as follows, high to low:
 
-- [`with`](dictionary.html#with), [`at-points`](dictionary.html#at-points),
-  [`in-radius`](dictionary.html#in-radius), [`in-cone`](dictionary.html#in-cone)
+- [[with]], [[at-points]], [[in-radius]], [[in-cone]]
 - (all other primitives and user-defined procedures)
 - `^`
 - `*`, `/`, `mod`
 - `+`, `-`
 - `<`, `>`, `<=`, `>=`
 - `=`, `!=`
-- [`and`](dictionary.html#and), [`or`](dictionary.html#or),
-  [`xor`](dictionary.html#xor)
+- [[and]], [[or]], [[xor]]
 
 ### Compared to other Logos
 
@@ -2887,22 +2714,21 @@ The most important differences are as follows.
   `sin (x + 1)`. NetLogo, on the other hand, interprets it the way most other
   programming languages would, and the way the same expression would be
   interpreted in standard mathematical notation, namely as `(sin x) + 1`.
-- The [`and`](dictionary.html#and) and [`or`](dictionary.html#or) reporters are
-  special forms, not ordinary functions, and they "short circuit", that is, they
-  only evaluate their second input if necessary.
+- The [[and]] and [[or]] reporters are special forms, not ordinary functions,
+  and they "short circuit", that is, they only evaluate their second input if
+  necessary.
 - Procedures can only be defined in the Code tab, not interactively in the
   Command Center.
 - Reporter procedures, that is, procedures that "report" (return) a value, must
-  be defined with [`to-report`](dictionary.html#to-report) instead of
-  [`to`](dictionary.html#to). The command to report a value from a reporter
-  procedure is [`report`](dictionary.html#report), not `output`.
+  be defined with [[to-report]] instead of [[to]]. The command to report a value
+  from a reporter procedure is [[report]], not `output`.
 - When defining a procedure, the inputs to the procedure must be enclosed in
   square brackets, e.g. `to square [x]`.
 - Variable names are always used without any punctuation: always `foo`, never
   `:foo` or `"foo`. (To make this work, instead of a `make` command taking a
-  quoted argument we supply a [`set`](dictionary.html#set) special form which
-  does not evaluate its first input.) As a result, procedures and variables
-  occupy a single shared namespace.
+  quoted argument we supply a [[set]] special form which does not evaluate its
+  first input.) As a result, procedures and variables occupy a single shared
+  namespace.
 
 The last three differences are illustrated in the following procedure
 definitions:
@@ -2932,15 +2758,14 @@ end</pre>
   example in Logo you could write `[see spot run]` (a list of words), but in
   NetLogo you must write `"see spot run"` (a string) or `["see" "spot" "run"]`
   (a list of strings) instead.
-- NetLogo's [`run`](dictionary.html#run) command works on anonymous procedures
-  and strings, not lists (since we have no "word" data type), and does not
-  permit the definition or redefinition of procedures.
-- Control structures such as [`if`](dictionary.html#if) and
-  [`while`](dictionary.html#while) are special forms, not ordinary functions.
-  You can't define your own special forms, so you can't define your own control
-  structures. (You can do something similar using anonymous procedures, but you
-  must use the `->`, `run`, and `runresult` primitives for that, you cannot make
-  them implicit.)
+- NetLogo's [[run]] command works on anonymous procedures and strings, not lists
+  (since we have no "word" data type), and does not permit the definition or
+  redefinition of procedures.
+- Control structures such as [[if]] and [[while]] are special forms, not
+  ordinary functions. You can't define your own special forms, so you can't
+  define your own control structures. (You can do something similar using
+  anonymous procedures, but you must use the `->`, `run`, and `runresult`
+  primitives for that, you cannot make them implicit.)
 - Anonymous procedures (aka function values or lambda) are true lexically-scoped
   closures. This feature is available in NetLogo and in modern Lisps, but not in
   standard Logo.

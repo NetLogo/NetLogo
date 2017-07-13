@@ -23,14 +23,13 @@ be able to use this activity as a starting point for most projects.
 ### Setup
 
 To make a NetLogo model into a HubNet activity you must first initialize the
-network. In most HubNet activities you will use the
-[`startup`](dictionary.html#startup) procedure to initialize the network.
-`startup` is a special procedure that NetLogo runs automatically when you open
-any model. That makes it a good place to put code that you want to run once and
-only once (no matter how many times the user runs the model). For HubNet we put
-the command that initializes the network in `startup` because once the network
-is setup we don't need to do so again. We initialize the system using
-[`hubnet-reset`](dictionary.html#hubnet-reset), which will ask the user for a
+network. In most HubNet activities you will use the [[startup]] procedure to
+initialize the network. `startup` is a special procedure that NetLogo runs
+automatically when you open any model. That makes it a good place to put code
+that you want to run once and only once (no matter how many times the user runs
+the model). For HubNet we put the command that initializes the network in
+`startup` because once the network is setup we don't need to do so again. We
+initialize the system using [[hubnet-reset]], which will ask the user for a
 session name and open up the HubNet Control Center. Here is the startup
 procedure in the template model:
 
@@ -39,8 +38,8 @@ procedure in the template model:
     end
 
 Now that the network is all setup you don't need to worry about calling
-[`hubnet-reset`](dictionary.html#hubnet-reset) again. Take a look at the setup
-procedure in the template model:
+[[hubnet-reset]] again. Take a look at the setup procedure in the template
+model:
 
     to setup
       cp
@@ -54,15 +53,15 @@ procedure in the template model:
     end
 
 For the most part it looks like most other setup procedures, however, you should
-notice that it does not call [`clear-all`](dictionary.html#clear-all). In this
-model, and in the great majority of HubNet activities in the Models Library, we
-have a breed of turtles that represent the currently logged in clients. In this
-case we've called this breed `students`. Whenever a client logs in we create a
-student and record any information we might need later about that client in a
-turtle variable. Since we don't want to require users to log out and log back in
-every time we setup the activity we don't want to kill all the turtles, instead,
-we want to set all the variables back to initial values and notify the clients
-of any changes we make (more on that later).
+notice that it does not call [[clear-all]]. In this model, and in the great
+majority of HubNet activities in the Models Library, we have a breed of turtles
+that represent the currently logged in clients. In this case we've called this
+breed `students`. Whenever a client logs in we create a student and record any
+information we might need later about that client in a turtle variable. Since we
+don't want to require users to log out and log back in every time we setup the
+activity we don't want to kill all the turtles, instead, we want to set all the
+variables back to initial values and notify the clients of any changes we make
+(more on that later).
 
 ### Receiving messages from clients
 
@@ -85,24 +84,19 @@ checks for new messages from clients in this case it's called listen clients:
     end
 
 As long as there are messages in the queue this loop fetches each message one at
-a time. [`hubnet-fetch-message`](dictionary.html#hubnet-fetch-message) makes the
-next message in the queue the current message and sets the reporters
-[`hubnet-message-source`](dictionary.html#hubnet-message-source),
-[`hubnet-message-tag`](dictionary.html#hubnet-message-tag) and
-[`hubnet-message`](dictionary.html#hubnet-message) to the appropriate values.
-The clients send messages when the users login and logout any time the user
-manipulates one of the interface elements, that is, pushes a button, moves a
-slider, clicks in the view, etc. We step through each message and decide what
-action to take depending on the type of message (enter, exit, or other), the
-[`hubnet-message-tag`](dictionary.html#hubnet-message-tag) (the name of the
-interface element), and the
-[`hubnet-message-source`](dictionary.html#hubnet-message-source) of the message
-(the name of the client the message came from).
+a time. [[hubnet-fetch-message]] makes the next message in the queue the current
+message and sets the reporters [[hubnet-message-source]], [[hubnet-message-tag]]
+and [[hubnet-message]] to the appropriate values. The clients send messages when
+the users login and logout any time the user manipulates one of the interface
+elements, that is, pushes a button, moves a slider, clicks in the view, etc. We
+step through each message and decide what action to take depending on the type
+of message (enter, exit, or other), the [[hubnet-message-tag]] (the name of the
+interface element), and the [[hubnet-message-source]] of the message (the name
+of the client the message came from).
 
 On an enter message we create a turtle with a `user-id` that matches the
-[`hubnet-message-source`](dictionary.html#hubnet-message-source) which is the
-name that each user enters upon entering the activity, it is guaranteed to be
-unique.
+[[hubnet-message-source]] which is the name that each user enters upon entering
+the activity, it is guaranteed to be unique.
 
     to create-new-student
       create-students 1
@@ -115,12 +109,11 @@ unique.
     end
 
 At this point we set any other client variables to default values and send them
-to the clients if appropriate. We declared a
-[`students-own`](dictionary.html#turtles-own) variable for every interface
-element on the client that holds state, that is, anything that would be a global
-variable on the server, sliders, choosers, switches and input boxes. It is
-important to make sure that these variables stay synchronized with the values
-visible on the client.
+to the clients if appropriate. We declared a [[students-own|turtles-own]]
+variable for every interface element on the client that holds state, that is,
+anything that would be a global variable on the server, sliders, choosers,
+switches and input boxes. It is important to make sure that these variables stay
+synchronized with the values visible on the client.
 
 When the clients logout they send an exit message to the server which gives you
 a chance to clean up any information you have been storing about the client, in
@@ -132,14 +125,13 @@ this case we merely have to ask the appropriate turtle to die.
     end
 
 All other messages are interface elements identified by the
-[`hubnet-message-tag`](dictionary.html#hubnet-message-tag) which is the name
-that appears in the client interface. Every time an interface element changes a
-message is sent to the server. Unless you store the state of the values
-currently displayed in the client interface will not be accessible in other
-parts of the model. That's why we've declared a
-[`students-own`](dictionary.html#turtles-own) variable for every interface
-element that has a state (sliders, switches, etc). When we receive the message
-from the client we set the turtle variable to the content of the message:
+[[hubnet-message-tag]] which is the name that appears in the client interface.
+Every time an interface element changes a message is sent to the server. Unless
+you store the state of the values currently displayed in the client interface
+will not be accessible in other parts of the model. That's why we've declared a
+[[students-own|turtles-own]] variable for every interface element that has a
+state (sliders, switches, etc). When we receive the message from the client we
+set the turtle variable to the content of the message:
 
     if hubnet-message-tag = "step-size"
     [
@@ -165,10 +157,9 @@ As mentioned earlier you can also send values to any interface elements that
 display information: monitors, sliders, switches, choosers, and input boxes
 (note that plots and the view are special cases that have their own sections).
 
-There are two primitives that allow you to send information
-[`hubnet-send`](dictionary.html#hubnet-send) and
-[`hubnet-broadcast`](dictionary.html#hubnet-broadcast). Broadcast sends the
-information to all the clients; send sends to one client, or a selected group.
+There are two primitives that allow you to send information [[hubnet-send]] and
+[[hubnet-broadcast]]. Broadcast sends the information to all the clients; send
+sends to one client, or a selected group.
 
 As suggested earlier, nothing on the client updates automatically. If a value
 changes on the server, it is your responsibility as the activity author to
@@ -238,7 +229,7 @@ link to commands and reporters the widgets send messages back to the server and
 the model then determines how those messages affect the model. All widgets on
 the client have a tag which is a name that uniquely identifies the widget. When
 the server receives a message from that widget the tag is found in
-[`hubnet-message-tag`](dictionary.html#hubnet-message-tag).
+[[hubnet-message-tag]].
 
 For example, if you have a button called "move left", a slider called
 "step-size", a switch called "all-in-one-step?", and a monitor called
@@ -318,22 +309,17 @@ You can change what a client sees in two distinct ways. We call them
 "client perspectives" and "client overrides".
 
 Changing a client's perspective means making it "watch" or "follow" a particular
-agent, much like the [`watch`](dictionary.html#watch) and
-[`follow`](dictionary.html#follow) commands that work with ordinary NetLogo
-models. See the dictionary entries for
-[`hubnet-send-watch`](dictionary.html#hubnet-send-watch),
-[`hubnet-send-follow`](dictionary.html#hubnet-send-follow), and
-p`hubnet-reset-perspective`](dictionary.html#hubnet-reset-perspective).
+agent, much like the [[watch]] and [[follow]] commands that work with ordinary
+NetLogo models. See the dictionary entries for [[hubnet-send-watch]],
+[[hubnet-send-follow]], and [[hubnet-reset-perspective]].
 
 > **Code Example:** Client Perspective Example
 
 Client overrides let you change the appearance of patches, turtles, and links in
 the client views. You can override any of the variables affecting an agent's
 appearance, including the `hidden?` variable causing a turtle or link to be
-visible or invisible. See the dictionary entries for
-[`hubnet-send-override`](dictionary.html#hubnet-send-override),
-[`hubnet-clear-override`](dictionary.html#hubnet-clear-override), and
-[`hubnet-clear-overrides`](dictionary.html#hubnet-clear-override).
+visible or invisible. See the dictionary entries for [[hubnet-send-override]],
+[[hubnet-clear-override]], and [[hubnet-clear-overrides|hubnet-clear-override]].
 
 > **Code Example:** Client Overrides Example
 

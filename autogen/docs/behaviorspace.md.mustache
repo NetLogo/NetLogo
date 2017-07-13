@@ -85,41 +85,35 @@ names will help you keep them straight.
 varied, and what values you want them to take. Variables can include sliders,
 switches, choosers, and any global variables in your model.
 
-Variables can also include [`max-pxcor`](dictionary.html#max-pcor),
-[`min-pxcor`](dictionary.html#min-pcor), [`max-pycor`](dictionary.html#max-pcor)
-and [`min-pycor`](dictionary.html#min-pcor),
-[`world-width`](dictionary.html#world-dim),
-[`world-height`](dictionary.html#world-dim) and
-[`random-seed`](dictionary.html#random-seed). These are not, strictly speaking,
-variables, but BehaviorSpace lets you vary them as if they were. Varying the
-world dimensions lets you explore the effect of world size upon your model.
-Since setting [`world-width`](dictionary.html#world-dim) and
-[`world-height`](dictionary.html#world-dim) does not necessarily define the
-bounds of the world how they are varied depends on the location of the origin.
-If the origin is centered, BehaviorSpace will keep it centered so the values
-[`world-width`](dictionary.html#world-dim) or
-[`world-height`](dictionary.html#world-dim) must be odd. If one of the bounds is
-at zero that bound will be kept at zero and the other bound will move, for
-example if you start with a world with `min-pxcor = 0` `max-pxcor = 10` and you
-vary `world-width` like this:
+Variables can also include [[max-pxcor|max-pcor]], [[min-pxcor|min-pcor]],
+[[max-pycor|max-pcor]] and [[min-pycor|min-pcor]], [[world-width|world-dim]],
+[[world-height|world-dim]] and [[random-seed]]. These are not, strictly
+speaking, variables, but BehaviorSpace lets you vary them as if they were.
+Varying the world dimensions lets you explore the effect of world size upon your
+model. Since setting [[world-width|world-dim]] and [[world-height|world-dim]]
+does not necessarily define the bounds of the world how they are varied depends
+on the location of the origin. If the origin is centered, BehaviorSpace will
+keep it centered so the values [[world-width|world-dim]] or
+[[world-height|world-dim]] must be odd. If one of the bounds is at zero that
+bound will be kept at zero and the other bound will move, for example if you
+start with a world with `min-pxcor = 0` `max-pxcor = 10` and you vary
+`world-width` like this:
 
 > `["world-width" [11 1 14]]`
 
-[`min-pxcor`](dictionary.html#min-pcor) will stay at zero and
-[`max-pxcor`](dictionary.html#max-pcor) will set to 11, 12, and 13 for each of
-the runs. If neither of these conditions are true, the origin is not centered,
-nor at the edge of the world you cannot vary
-[`world-height`](dictionary.html#world-dim) or
-[`world-width`](dictionary.html#world-dim) directly but you should vary
-[`max-pxcor`](dictionary.html#max-pcor),
-[`max-pycor`](dictionary.html#max-pcor), [`min-pxcor`](dictionary.html#min-pcor)
-and [`min-pycor`](dictionary.html#min-pcor) instead.
+[[min-pxcor|min-pcor]] will stay at zero and [[max-pxcor|max-pcor]] will set to
+11, 12, and 13 for each of the runs. If neither of these conditions are true,
+the origin is not centered, nor at the edge of the world you cannot vary
+[[world-height|world-dim]] or [[world-width|world-dim]] directly but you should
+vary [[max-pxcor|max-pcor]], [[max-pycor|max-pcor]], [[min-pxcor|min-pcor]]
+and [[min-pycor|min-pcor]] instead.
 
-Varying [`random-seed`](dictionary.html#random-seed) lets you repeat runs by
-using a known seed for the NetLogo random number generator. Note that you're
-also free to use the [`random-seed`](dictionary.html#random-seed) command in
-your experiment's setup commands. For more information on random seeds, see the
-[Random Numbers](programming.html#random-numbers) section of the Programmer's Guide.
+Varying [[random-seed]] lets you repeat runs by using a known seed for the
+NetLogo random number generator. Note that you're also free to use the
+[[random-seed]] command in your experiment's setup commands. For more
+information on random seeds, see the
+[Random Numbers](programming.html#random-numbers) section of the Programming
+Guide.
 
 You may specify values either by listing the values you want used, or by
 specifying that you want to try every value within a given range. For example,
@@ -170,7 +164,7 @@ each reporter must be on a line by itself, for example:
 
 If you don't enter any reporters, the runs will still take place. This is useful
 if you want to record the results yourself your own way, such as with the
-[`export-world`](dictionary.html#export-cmds) command.
+[[export-world|export-cmds]] command.
 
 **Measure runs at every step:** Normally NetLogo will measure model runs at
 every step, using the reporters you entered in the previous box. If you're doing
@@ -194,20 +188,18 @@ run to last until there were no more turtles. Then you would enter:
 If you want the length of runs to all be of a fixed length, just leave this
 blank.
 
-The run may also stop because the go commands use the
-[`stop`](dictionary.html#stop) command, in the same way that
-[`stop`](dictionary.html#stop) can be used to stop a forever button. The
-[`stop`](dictionary.html#stop) command may be used directly in the go commands,
-or in a procedure called directly by the go commands. (The intent is that the
-same `go` procedure should work both in a button and in a BehaviorSpace
-experiment.) Note that the step in which [`stop`](dictionary.html#stop) is used
-is considered to have been aborted, so no results will be recorded for that
-step. Therefore, the stopping test should be at the beginning of the go commands
-or procedure, not at the end.
+The run may also stop because the go commands use the [[stop]] command, in the
+same way that [[stop]] can be used to stop a forever button. The [[stop]]
+command may be used directly in the go commands, or in a procedure called
+directly by the go commands. (The intent is that the same `go` procedure should
+work both in a button and in a BehaviorSpace experiment.) Note that the step in
+which [[stop]] is used is considered to have been aborted, so no results will be
+recorded for that step. Therefore, the stopping test should be at the beginning
+of the go commands or procedure, not at the end.
 
 **Final commands:** These are any extra commands that you want run once, when
 the run ends. Usually this is left blank, but you might use it to call the
-[`export-world`](dictionary.html#export-cmds) command or record the results of
+[[export-world|export-cmds]] command or record the results of
 the run in some other way.
 
 **Time limit:** This lets you set a fixed maximum length for each run. If you
@@ -216,12 +208,11 @@ by the stop condition instead, enter 0.
 
 ### Special primitives for BehaviorSpace experiments
 
-Currently there are only two,
-[`behaviorspace-run-number`](dictionary.html#behaviorspace-run-number) and
-[`behaviorspace-experiment-name`](dictionary.html#behaviorspace-experiment-name).
-The run number reported by the former primitive matches the run number used in
-the results files generated by BehaviorSpace. The experiment name reported by
-the latter matches the name with which the experiment was set up.
+Currently there are only two, [[behaviorspace-run-number]] and
+[[behaviorspace-experiment-name]]. The run number reported by the former
+primitive matches the run number used in the results files generated by
+BehaviorSpace. The experiment name reported by the latter matches the name with
+which the experiment was set up.
 
 ### Running an experiment
 

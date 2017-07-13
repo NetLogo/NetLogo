@@ -66,31 +66,28 @@ When you're done, the Code tab looks like this:
 Note that some lines are indented. Most people find it helpful to indent their
 code. It isn't mandatory, but it makes the code easier to read and change.
 
-Your procedure begins with [`to`](dictionary.html#to) and ends with
-[`end`](dictionary.html#end). Every procedure begins and ends with these words.
+Your procedure begins with [[to]] and ends with [[end]]. Every procedure begins
+and ends with these words.
 
 Let's look at what you typed in and see what each line of your procedure does:
 
 - `to setup` begins defining a procedure named "setup".
-- [`clear-all`](dictionary.html#clear-all) resets the world to an initial, empty
-  state. All the patches turn black and any turtles you might have created
-  disappear. Basically, it wipes the slate clean for a new model run.
+- [[clear-all]] resets the world to an initial, empty state. All the patches
+  turn black and any turtles you might have created disappear. Basically, it
+  wipes the slate clean for a new model run.
 - `create-turtles 100` creates 100 turtles. They start out standing at the
   origin, that is, the center of patch 0,0.
 - After `create-turtles` we can put commands for the new turtles to run,
   enclosed by square brackets.
 - `setxy random-xcor random-ycor` is a command using "reporters". A reporter, as
   opposed to a command, reports a result. First each turtle runs the reporter
-  [`random-xcor`](dictionary.html#random-cor) which will report a random number
-  from the allowable range of turtle coordinates along the X axis. Then each
-  turtle runs the reporter [`random-ycor`](dictionary.html#random-cor), same for
-  the Y axis. Finally each turtle runs the [`setxy`](dictionary.html#setxy)
-  command with those two numbers as inputs. That makes the turtle move to the
-  point with those coordinates.
-- [`reset-ticks`](dictionary.html#reset-ticks) starts the tick counter, now that
-  setup is otherwise complete.
-- [`end`](dictionary.html#end) completes the definition of the "setup"
-  procedure.
+  [[random-xcor|random-cor]] which will report a random number from the
+  allowable range of turtle coordinates along the X axis. Then each turtle runs
+  the reporter [[random-ycor|random-cor]], same for the Y axis. Finally each
+  turtle runs the [[setxy]] command with those two numbers as inputs. That makes
+  the turtle move to the point with those coordinates.
+- [[reset-ticks]] starts the tick counter, now that setup is otherwise complete.
+- [[end]] completes the definition of the "setup" procedure.
 
 When you're done typing, switch to the Interface tab and press the setup button
 you made before. You will see the turtles scattered around the world:
@@ -148,8 +145,7 @@ The "Disable until ticks start" prevents you from pressing go before setup.
 >           tick
 >         end
 
-[`tick`](dictionary.html#tick) is a primitive that advances the tick counter by
-one tick.
+[[tick]] is a primitive that advances the tick counter by one tick.
 
 But what is `move-turtles`? Is it a primitive (in other words, built-in to
 NetLogo)? No, it's another procedure that you're about to add. So far, you have
@@ -180,8 +176,8 @@ Here is what each command in the `move-turtles` procedure does:
   brackets.
 - `right random 360` is another command that uses a reporter. First, each turtle
   picks a random whole number between 0 and 359.
-  ([`random`](dictionary.html#random) doesn't include the number you give it as
-  a possible result.) Then the turtle turns right this number of degrees.
+  ([[random]] doesn't include the number you give it as a possible result.) Then
+  the turtle turns right this number of degrees.
 - `forward 1` makes the turtle move forward one step.
 
 Why couldn't we have just written all of these commands in `go` instead of in a
@@ -251,8 +247,7 @@ these turtles a nice background against which to move.
 >         end
 > 
 > The `setup-patches` procedure sets the color of every patch to green to start
-> with. (A turtle's color variable is [`color`](dictionary.html#color); a
-> patch's is [`pcolor`](dictionary.html#pcolor).)
+> with. (A turtle's color variable is [[color]]; a patch's is [[pcolor]].)
 
 > The only part remaining in our new 'setup' that is still undefined is
 > `setup-turtles`.
@@ -290,9 +285,8 @@ We'll need a way of controlling when a turtle reproduces and dies. We'll
 determine that by keeping track of how much "energy" each turtle has. To do that
 we need to add a new turtle variable.
 
-You've already seen built-in turtle variables like
-[`color`](dictionary.html#color). To make a new turtle variable, we add a
-[`turtles-own`](dictionary.html#turtles-own) declaration at the top of the Code
+You've already seen built-in turtle variables like [[color]]. To make a new
+turtle variable, we add a [[turtles-own]] declaration at the top of the Code
 tab, before all the procedures. Call it `energy`:
 
     turtles-own [energy]
@@ -325,16 +319,15 @@ Let's use this newly defined variable (`energy`) to allow the turtles to eat.
 >           ]
 >         end
 
-We are using the [`if`](dictionary.html#if) command for the first time. Look at
-the code carefully. Each turtle, when it runs these commands, compares the value
-of the patch color it is on ([`pcolor`](dictionary.html#pcolor)) to the value
-for `green`. (A turtle has direct access to the variables of the patch it is
-standing on.) If the patch color is green, the comparison reports `true`, and
-only then will the turtle run the commands inside the brackets (otherwise it
-skips them). The commands make the turtle change the patch color to black and
-increase its own energy by 10. The patch turns black to signify that the grass
-at that spot has been eaten. And the turtle is given more energy, from having
-just eaten.
+We are using the [[if]] command for the first time. Look at the code carefully.
+Each turtle, when it runs these commands, compares the value of the patch color
+it is on ([[pcolor]]) to the value for `green`. (A turtle has direct access to
+the variables of the patch it is standing on.) If the patch color is green, the
+comparison reports `true`, and only then will the turtle run the commands inside
+the brackets (otherwise it skips them). The commands make the turtle change the
+patch color to black and increase its own energy by 10. The patch turns black to
+signify that the grass at that spot has been eaten. And the turtle is given more
+energy, from having just eaten.
 
 Next, let's make the movement of turtles use up some of the turtle's energy.
 
@@ -375,8 +368,8 @@ Let's make the first monitor now.
 <p class="screenshot">
   <img alt="screen shot" src="images/tutorial3/monitor-1.gif"></p>
 
-[`turtles`](dictionary.html#turtles) is an "agentset", the set of all turtles.
-[`count`](dictionary.html#count) tells us how many agents are in that set.
+[[turtles]] is an "agentset", the set of all turtles. [[count]] tells us how
+many agents are in that set.
 
 Let's make the second monitor now:
 
@@ -394,13 +387,12 @@ Let's make the second monitor now:
 <p class="screenshot">
   <img alt="screen shot" src="images/tutorial3/monitor-2.gif"></p>
 
-Here we're using [`count`](dictionary.html#count) again to see how many agents
-are in an agentset. [`patches`](dictionary.html#patches) is the set of all the
-patches, but we don't just want to know how many patches there are total, we
-want to know how many of them are green. That's what
-[`with`](dictionary.html#with) does; it makes a smaller agentset of just those
-agents for whom the condition in the brackets is true. The condition is
-`pcolor = green`, so that gives us just the green patches.
+Here we're using [[count]] again to see how many agents are in an agentset.
+[[patches]] is the set of all the patches, but we don't just want to know how
+many patches there are total, we want to know how many of them are green. That's
+what [[with]] does; it makes a smaller agentset of just those agents for whom
+the condition in the brackets is true. The condition is `pcolor = green`, so
+that gives us just the green patches.
 
 Now we have two monitors that will report how many turtles and green patches we
 have, to help us track what's going on in our model. As the model runs, the
@@ -447,14 +439,14 @@ information on and off.
 >           ]
 >         end
 
-The `eat-grass` procedure introduces the [`ifelse`](dictionary.html#ifelse)
-command. Look at the code carefully. Each turtle, when it runs these new
-commands, checks the value of `show-energy?` (determined by the switch). If the
-switch is on, comparison is true and the turtle will run the commands inside the
-first set of brackets. In this case, it assigns the value for the energy to the
-label of the turtle. If the comparison is false (the switch is off) then the
-turtle runs the commands inside the second set of brackets. In this case, it
-removes the text labels (by setting the label of the turtle to be nothing).
+The `eat-grass` procedure introduces the [[ifelse]] command. Look at the code
+carefully. Each turtle, when it runs these new commands, checks the value of
+`show-energy?` (determined by the switch). If the switch is on, comparison is
+true and the turtle will run the commands inside the first set of brackets. In
+this case, it assigns the value for the energy to the label of the turtle. If
+the comparison is false (the switch is off) then the turtle runs the commands
+inside the second set of brackets. In this case, it removes the text labels (by
+setting the label of the turtle to be nothing).
 
 (In NetLogo, a piece of text is called a "string", short for string of
 characters. A string is a sequence of letters or other characters, written
@@ -512,21 +504,19 @@ by making three separate procedures, one for each behavior.
 >           ]
 >         end
 
-Each of these procedures uses the [`if`](dictionary.html#if) command. Each
-turtle, when it runs `check-death` it will check to see if its energy is less or
-equal to 0. If this is true, then the turtle is told to
-[`die`](dictionary.html#die) (die is a NetLogo primitive).
+Each of these procedures uses the [[if]] command. Each turtle, when it runs
+`check-death` it will check to see if its energy is less or equal to 0. If this
+is true, then the turtle is told to [[die]] (die is a NetLogo primitive).
 
 When each turtle runs `reproduce`, it checks the value of the turtle's `energy`
 variable. If it is greater than 50, then the turtle runs the commands inside the
 first set of brackets. In this case, it decreases the turtle's energy by 50,
-then 'hatches' a new turtle with an energy of 50. The
-[`hatch`](dictionary.html#hatch) command is a NetLogo primitive which looks like
-this: `hatch` *number* [ *commands* ]. This turtle creates *number* new turtles,
-each identical to its parent, and asks the new turtle(s) that have been hatched
-to run *commands*. You can use the commands to give the new turtles different
-colors, headings, or whatever. In our case we run one command. We set the energy
-for the newly hatched turtle to be 50.
+then 'hatches' a new turtle with an energy of 50. The [[hatch]] command is a
+NetLogo primitive which looks like this: `hatch` *number* [ *commands* ]. This
+turtle creates *number* new turtles, each identical to its parent, and asks the
+new turtle(s) that have been hatched to run *commands*. You can use the commands
+to give the new turtles different colors, headings, or whatever. In our case we
+run one command. We set the energy for the newly hatched turtle to be 50.
 
 When each patch runs `regrow-grass` it will check to see if a random integer
 from 0 to 99 is less than 3. If so, the patch color is set to green. This will
@@ -577,12 +567,12 @@ values on the X and Y axes. You'll want to leave the "Auto Scale" checkbox
 checked, so that if anything you plot exceeds the minimum and maximum values for
 the axes, the axes will automatically grow so you can see all the data.
 
-Note that we used the [`plot`](dictionary.html#plot) command to add the next
-point to a plot. This command moves the current plot pen to the point that has
-an X coordinate equal to 1 greater than the previously plotted X coordinate and
-a Y coordinate equal to the value given in the plot command (in the first case,
-the number of turtles, and in the second case, the number of green patches). As
-the pens move they each draw a line.
+Note that we used the [[plot]] command to add the next point to a plot. This
+command moves the current plot pen to the point that has an X coordinate equal
+to 1 greater than the previously plotted X coordinate and a Y coordinate equal
+to the value given in the plot command (in the first case, the number of
+turtles, and in the second case, the number of green patches). As the pens move
+they each draw a line.
 
 > - Setup and run the model again.
 
@@ -633,9 +623,8 @@ the total length of a run.
 The graph and model won't keep running forever. They should stop automatically
 when the tick counter in the Interface tab's toolbar reaches 500.
 
-The [`tick`](dictionary.html#tick) command advances the tick counter by 1.
-[`ticks`](dictionary.html#ticks) is a reporter which reports the current value
-of the tick counter. [`reset-ticks`](dictionary.html#reset-ticks), in your
+The [[tick]] command advances the tick counter by 1. [[ticks]] is a reporter
+which reports the current value of the tick counter. [[reset-ticks]], in your
 `setup` procedure, takes care of restarting the tick counter at 0 when a new run
 is set up and ready to begin.
 
