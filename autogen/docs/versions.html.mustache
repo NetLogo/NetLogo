@@ -16,6 +16,96 @@
     <p>
       For help running models made in old versions, see the <a href="transition.html">Transition Guide</a>.
     <h2>
+      Version 6.0.2 (August 2017)
+    </h2>
+
+    <h3>Feature Changes</h3>
+    <ul>
+      <li>The autosuggest functionality introduced in NetLogo 6 will now display extension primitive names.</li>
+      <li>A new <code>insert-item</code> primitive was added to the language. It works similarly to <code>replace-item</code>, but without removing the item at the specified index.</li>
+      <li>A new <code>set-plot-background-color</code> primitive was added to the language. It can be used in plotting code to set the background color of the plot.</li>
+    </ul>
+
+    <h3>Bugfixes</h3>
+    <ul>
+      <li>The 6.0.1 autoconverter would error when converting tasks with exactly one argument (from 5.3.1 and earlier models only). The conversion would be correct, but it was confusing. This has now been remedied and the autoconverter will correctly convert models from 5.3.1 and earlier without erroring on single-argument tasks.</li>
+      <li>Fix a bug where extensions weren't located properly when in a path relative to the model.</li>
+      <li>Help browser now opens in 64-bit windows.</li>
+      <li>Fix a speed regression for the <code>import-world</code> primitive introduced in 6.0.</li>
+      <li>If an unexpected reporter block is passed to <code>with</code> when used with <code>other</code>, the error will now reflect that the block is unsuitable for <code>with</code> instead of <code>other</code>.</li>
+      <li>When <code>sort-by</code> receives an unsuitable reporter block from the user it now shows a useful error instead of a cryptic stack trace.</li>
+      <li>String representations of anonymous procedures now show the arguments of those anonymous procedures</li>
+      <li>When working in an nls file, switching to a different tab will compile the nls file.</li>
+      <li>Display error label on nls file when the code it contains causes an error.</li>
+      <li>Some users were unable to open NetLogo 6 and 6.0.1 in Mac OS Sierra.
+        We've changed our signing process in 6.0.2 to attempt to fix this problem.
+        We are continuing to track this issue to determine whether our fix was effective.
+        More information (including a partial workaround for the problem) is available<a href="https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-sierra">here</a>.</li>
+    </ul>
+
+    <h3>Extension Changes</h3>
+    <ul>
+      <li>Fixed a bug in <code>gis:patch-dataset</code> introduced in NetLogo 6.</li>
+      <li>The table extension has new <code>table:group-agents</code> and <code>table:group-items</code> primitives which can be used to build a table of grouped agents and items by supplying an anonymous reporter.</li>
+    </ul>
+
+    <h3>Documentation Changes</h3>
+    <ul>
+      <li>Clarify when various parts of the anonymous procedure syntax are optional.</li>
+      <li>Fix a few small documentation bugs around <code>foreach</code>.</li>
+      <li>Clarify relationship between speed and update modality in the "View Updates" section of the programming guide.</li>
+    </ul>
+
+    <h3>Model Changes</h3>
+
+    <h4>New Sample Models:</h4>
+    <ul>
+      <li>Chaos in a Box</li>
+      <li>Fairy Circles</li>
+      <li>SmoothLife</li>
+    </ul>
+
+    <h4>New Curricular Models:</h4>
+    <ul>
+      <li>Lattice Land curriculum:
+        <ul>
+          <li>Lattice Land - Triangles Explore</li>
+          <li>Lattice Land - Triangles Dissection</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Revised Sample Models:</h4>
+    <ul>
+      <li>Ethnocentrism: Now cross-listed as an Evolutionary model.</li>
+      <li>Fireworks: Rename <code>fireworks</code> to <code>max-fireworks</code> and enforce a minimum of 1.</li>
+      <li>GenJam - Duple: Minor info tab updates.</li>
+      <li>Wolf Sheep Predation: Revised to better clarify the <code>grass?</code> construct and code.</li>
+    </ul>
+
+    <h4>Revised Curricular Models:</h4>
+    <ul>
+      <li>
+        Connected Chemistry:
+        <ul>
+          <li>Connected Chemistry 1: Fix NetLogo Web incompatibility.</li>
+          <li>Connected Chemistry 3: Update minimum number of particles to 2.</li>
+          <li>Connected Chemistry 8: Minor code updates. Small change to default values.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Revised HubNet Activities:</h4>
+    <ul>
+      <li>Gridlock HubNet: Minor code updates.</li>
+    </ul>
+
+    <h4>Revised Code Examples:</h4>
+    <ul>
+      <li>Info Tab Example: Corrected formatting of un/ordered lists example.</li>
+    </ul>
+
+    <h2>
       Version 6.0.1 (March 2017)
     </h2>
 
@@ -347,7 +437,7 @@
     <h3>Extension Changes</h3>
     <ul>
       <li>
-      A minor update to the `nw` extension makes `nw:weighted-path-to`
+      A minor update to the <code>nw</code> extension makes <code>nw:weighted-path-to</code>
       behave as documented.</li>
       <li>Most extensions should continue to work without change unless they
       rely on javax.media.opengl, which was renamed in the updated version of

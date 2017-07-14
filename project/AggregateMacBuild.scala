@@ -167,8 +167,6 @@ object PackageMacAggregate {
         case _ => 1
       }
 
-    println(orderedFilesToBeSigned.map(_.toString).mkString("\n"))
-
     RunProcess(Seq("codesign", "-s", "Developer ID Application") ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
