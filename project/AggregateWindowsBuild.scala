@@ -189,6 +189,19 @@ object PackageWinAggregate {
       configureSubApplication(aggregateWinDir, app, commonConfig, variables, aggregateTarget)
     }
 
+    val headlessClasspath =
+      ("netlogoJar" ->
+        commonConfig.classpath
+          .filter(_.getName.startsWith("netlogo"))
+          .map(jar => "app\\" + jar.getName)
+          .take(1)
+          .mkString(""))
+
+    val targetFile = aggregateWinDir / "netlogo-headless.bat"
+    Mustache(commonConfig.configRoot / "shared" / "windows" / "netlogo-headless.bat.mustache",
+      targetFile, variables + headlessClasspath)
+    targetFile.setExecutable(true)
+
     val uuidArchiveFileName =
       variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"
     val uuidArchiveFile = commonConfig.configRoot / "aggregate" / "win" /  "archive" / uuidArchiveFileName

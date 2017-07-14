@@ -145,6 +145,17 @@ object PackageMacAggregate {
       configureSubApplication(aggregateMacDir / (appName + ".app"), app, commonConfig, variables ++ appSpecificConfig(app))
     }
 
+    val headlessClasspath =
+      ("classpathJars" ->
+        commonConfig.classpath
+          .map(jar => "Java/" + jar.getName)
+          .sorted
+          .mkString(File.pathSeparator))
+    val targetFile = aggregateMacDir / "netlogo-headless.sh"
+    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
+      targetFile, variables + headlessClasspath)
+
+    targetFile.setExecutable(true)
     // build and sign
     (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
 
