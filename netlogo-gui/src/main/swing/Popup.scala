@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import javax.swing.{JDialog, JPanel}
-import java.awt.{BorderLayout, Frame}
+import java.awt.{ BorderLayout, Frame }
 
 /**
  * Pops up the given panel as a modal window above the parent frame.
@@ -14,11 +14,14 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   val dialog = new JDialog(parentFrame, true)
   dialog.setTitle(title)
   dialog.add(panel, BorderLayout.CENTER)
+  dialog.setAutoRequestFocus(true)
 
   dialog.add(ButtonPanel(
     RichJButton(i18n("common.buttons.ok")){ if(ok) die() },
     RichJButton(i18n("common.buttons.cancel")){ cancel; die() }),
     BorderLayout.SOUTH)
+
+  DialogForegrounder(dialog)
 
   def show() {
     dialog.pack()

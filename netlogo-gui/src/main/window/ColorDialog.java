@@ -4,6 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.I18N;
 import org.nlogo.shape.VectorShape;
+import org.nlogo.swing.DialogForegrounder$;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -110,6 +111,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
                 dispose();
               }
             });
+    DialogForegrounder$.MODULE$.apply(this);
   }
 
   public void showDialog() {
