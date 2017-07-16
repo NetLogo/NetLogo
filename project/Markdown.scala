@@ -1,4 +1,4 @@
-import java.util.{ ArrayList => JArrayList, HashSet => JHashSet, Set => JSet }
+import java.util.{ ArrayList => JArrayList }
 import java.net.URI
 
 import scala.collection.JavaConverters._
@@ -7,8 +7,9 @@ import scala.util.matching.Regex
 
 import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
   ast.{ AutoLink, Link, Node },
-  ext.{ anchorlink, autolink, escaped, tables, toc, typographic, wikilink },
+  ext.{ anchorlink, aside, autolink, escaped, tables, toc, typographic, wikilink },
     anchorlink.AnchorLinkExtension,
+    aside.{ AsideBlock, AsideExtension },
     autolink.AutolinkExtension,
     escaped.character.EscapedCharacterExtension,
     tables.TablesExtension,
@@ -45,10 +46,12 @@ object Markdown {
 
     options.setFrom(ParserEmulationProfile.PEGDOWN)
 
-    extensions.add(EscapedCharacterExtension.create())
+    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
     options.set(HtmlRenderer.SOFT_BREAK, "\n")
     options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
+    
+    extensions.add(EscapedCharacterExtension.create())
 
     extensions.add(TypographicExtension.create())
     options.set(TypographicExtension.ENABLE_QUOTES, Boolean.box(true))
@@ -56,7 +59,8 @@ object Markdown {
 
     extensions.add(AutolinkExtension.create())
 
-    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
+    extensions.add(QuestionExtension)
+    extensions.add(AsideExtension.create())
 
     extensions.add(TablesExtension.create())
 
@@ -136,6 +140,29 @@ object Markdown {
         def create(options: DataHolder) = new NodeRenderer {
           def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
             new NodeRenderingHandler(classOf[WikiLink], PrimLinkRenderer)).asJava
+        }
+      }
+    }
+  }
+
+  object QuestionExtension extends HtmlRenderer.HtmlRendererExtension {
+    def rendererOptions(options: MutableDataHolder) = {}
+    def extend(builder: HtmlRenderer.Builder, rendererType: String) =
+      if (rendererType == "HTML")
+        builder.nodeRendererFactory(QuestionRenderer.Factory)
+    
+    object QuestionRenderer extends CustomNodeRenderer[AsideBlock] {
+      override def render(node: AsideBlock, context: NodeRendererContext, html: HtmlWriter) = {
+        html.attr("class", "question")
+        html.withAttr().tag("p")
+        context.renderChildren(node.getFirstChild) // the actual text is wrapped in <p>
+        html.tag("/p")
+      }
+
+      object Factory extends NodeRendererFactory {
+        def create(options: DataHolder) = new NodeRenderer {
+          def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
+            new NodeRenderingHandler(classOf[AsideBlock], QuestionRenderer)).asJava
         }
       }
     }

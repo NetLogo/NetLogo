@@ -26,9 +26,8 @@ like an accident.
 You may alter the settings and observe a few runs to get a fuller understanding
 of the model.
 
-> <p class="question">
->   As you are using the Traffic Basic model, have you noticed any
->   additions you would like to make to the model?</p>
+> | As you are using the Traffic Basic model, have you noticed any
+> | additions you would like to make to the model?
 
 Looking at the Traffic Basic model, you may notice the environment is fairly
 simple; a black background with a white street and number of blue cars and one
@@ -59,20 +58,19 @@ NetLogo's agents: turtles, patches, links, and the observer.
 > 
 > - Press the return key.
 > 
-> <p class="question">
->   What happened to the View?</p>
+> | What happened to the View?
 > 
 > You may have noticed the background of the View has turned all yellow and the
 > street has disappeared.
-> <p class="question">
->   Why didn't the cars turn yellow too?
+> 
+> | Why didn't the cars turn yellow too?
 > 
 > Looking back at the command that was written, we asked only the patches to
 > change their color. In this model, the cars are represented by a different
 > kind of agent, called "turtles". Therefore, the cars did not receive these
 > instructions and thus did not change.
->  <p class="question">
->    What happened in the Command Center?
+> 
+> | What happened in the Command Center?
 > 
 > You may have noticed that the command you just typed is now displayed in the
 > Command Center as shown below:
@@ -81,8 +79,8 @@ NetLogo's agents: turtles, patches, links, and the observer.
 > - Type in the bottom of the Command Center the text shown below:
 > 
 > ![[cc-set-turtles-brown.gif]]
-> <p class="question">
->   Was the result what you expected?</p>
+> 
+> | Was the result what you expected?
 > 
 > The view should have a yellow background with a line of brown cars in the
 > middle:
@@ -109,11 +107,10 @@ different types.
 > - Press the tab key until you see "patches>" in the bottom left corner.
 > - Type <code>set pcolor white</code> and press return.
 > 
-> <p class="question">
->   What does the View look like now?</p>
-> <p class="question">
->   Do you notice any differences between these two commands and the
->   observer commands from earlier?</p>
+> | What does the View look like now?
+> 
+> | Do you notice any differences between these two commands and the
+> | observer commands from earlier?
 
 The observer oversees the world and therefore can give a command to the patches
 or turtles using [[ask]]. Like in the first example (observer>
@@ -124,8 +121,7 @@ to give the command itself.
 
 > - Press "setup".
 > 
-> <p class="question">
->   What happened?</p>
+> | What happened?
 
 Why did the View revert back to the old version, with the black background and
 white road? Upon pressing the "setup" button, the model will reconfigure itself
@@ -143,15 +139,13 @@ some more details about how colors work in NetLogo.
 You may have noticed in the previous section that we used two different words
 for changing color: [[color]] and [[pcolor]].
 
-> <p class="question">
->   What is the difference between color and pcolor?</p>
+> | What is the difference between color and pcolor?
 > 
 > - Choose "turtles" from the popup menu in the Command Center (or use the tab
 >   key).
 > - Type `set color blue` and press return.
 > 
-> <p class="question">
->   What happened to the cars?</p>
+> | What happened to the cars?
 > 
 > Think about what you did to make the cars turn blue, and try to make the
 > patches turn red.
@@ -224,12 +218,11 @@ that belong to the red car. A variable is a location that holds a value.
 
 Let's take a closer look at the turtle monitor:
 
-> <p class="question">
->   What is this turtle's who number?</p>
-> <p class="question">
->   What color is this turtle?</p>
-> <p class="question">
->   What shape is this turtle?</p>
+> | What is this turtle's who number?
+> 
+> | What color is this turtle?
+> 
+> | What shape is this turtle?
 
 This turtle monitor is showing a turtle who that has a who number of 0, a color
 of 15 (red -- see chart above), and the shape of a car.
@@ -253,10 +246,9 @@ commands you type here are only done by this particular turtle.
 > - In the Agent Commander of the Turtle Monitor for turtle 0, type
 >   `set color pink`.
 > 
-> <p class="question">
->   What happens in the View?</p>
-> <p class="question">
->   Did anything change in the Turtle Monitor?</p>
+> | What happens in the View?
+> 
+> | Did anything change in the Turtle Monitor?
 
 A second way to change one turtle's color is to go directly to the color
 variable in the Turtle Monitor and change the value.
@@ -264,8 +256,7 @@ variable in the Turtle Monitor and change the value.
 > - Select the text to the right of "color" in the Turtle Monitor.
 > - Type in a new color such as `green + 2`.
 > 
-> <p class="question">
->   What happened?</p>
+> | What happened?
 
 The third way to change an individual turtle's or patch's color is to use the
 observer. Since, the observer oversees the NetLogo world, it can give commands
@@ -275,14 +266,13 @@ that affect individual turtles, as well as groups of turtles.
 >   key).
 > - Type `ask turtle 0 [set color blue]` and press return.
 > 
-> <p class="question">
->   What happens?</p>
+> | What happens?
 
 > Just as there are Turtle Monitors, there are also Patch Monitors, which work
 > very similarly.
-> <p class="question">
->   Can you make a patch monitor and use it to change the color of a single
->   patch?
+> 
+> | Can you make a patch monitor and use it to change the color of a single
+> | patch?
 
 If you try to have the observer `ask patch 0 [set pcolor blue]`, you'll get an
 error message:
