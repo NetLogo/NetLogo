@@ -1,31 +1,31 @@
 <style type="text/css">
-/* The following is about making the nested lists look like headings with lists inside */
+  /* The following is about making the nested lists look like headings with lists inside */
 
-#questions > ul {
-  padding-left: 0px;
-}
+  #questions > ul {
+    padding-left: 0px;
+  }
 
-#questions > ul > li {
-  list-style-type: none;
-}
+  #questions > ul > li {
+    list-style-type: none;
+  }
 
-#questions > ul > li > a {
-  display: block;
-  clear: both;
-  margin: 1em 0em;
-  padding: 0.2em;
-  font-size: 125%;
-  font-weight: bold;
-  text-decoration: none;
-  background: rgb(175,175,175);
-  color: inherit;
-}
+  #questions > ul > li > a {
+    display: block;
+    clear: both;
+    margin: 1em 0em;
+    padding: 0.2em;
+    font-size: 125%;
+    font-weight: bold;
+    text-decoration: none;
+    background: rgb(175,175,175);
+    color: inherit;
+  }
 
-#questions > ul > li > ul > li {
-  list-style-type: disc;
-  font-size: 80%;
-  font-weight: bold;
-}
+  #questions > ul > li > ul > li {
+    list-style-type: disc;
+    font-size: 80%;
+    font-weight: bold;
+  }
 </style>
 
 {{> header.html}}
@@ -821,9 +821,9 @@ To stop a foreach from executing you need to define a separate procedure that
 contains only the foreach, for example:
 
     to test
-      foreach [1 2 3] [
-        if ? = 2 [ stop ]
-        print ?
+      foreach [1 2 3] [ i ->
+        if i = 2 [ stop ]
+        print i
       ]
     end
 
@@ -874,21 +874,6 @@ made with `let`
 
 Another possible workaround is to change your model's setup procedure to use
 more specific clearing commands to clear only what you want cleared.
-
-### Why are some of my results cut off in Excel?
-
-In some versions of Excel, spreadsheets can't have more than 256 columns. (See
-[a Microsoft support article](https://office.microsoft.com/en-us/assistance/HA010548191033.aspx)
-on the subject.)
-
-Possible workarounds include:
-
-- Use a newer version of Excel, such as Excel 2007 (Windows) or Excel 2008
-  (Mac).
-- Use a different program besides Excel.
-- Ask BehaviorSpace to generate results in table format instead of, or in
-  addition to, spreadsheet format. (Excel can read our table format, too.)
-- Change your experiment so the result has fewer columns.
 
 ## NetLogo 3D
 

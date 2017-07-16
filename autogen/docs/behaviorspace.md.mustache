@@ -317,8 +317,10 @@ experiment setups directly using XML.
 
 #### How to use it
 
-Run Java with the `org.nlogo.headless.Main` class. The `Main.main()` method
-supports these arguments:
+Run NetLogo using the included command line script. This is found in the root
+directory of your NetLogo installation and is named `netlogo-headless.sh` on Mac
+and Linux and `netlogo-headless.bat` on Windows. The netlogo-headless script
+supports the following arguments:
 
 - `--model <path>`: pathname of model to open (required)
 - `--setup-file <path>`: read experiment setups from this file instead of the
@@ -339,6 +341,10 @@ supports these arguments:
 `--setup-file`. By default no results are generated, so you'll usually want to
 specify either `--table` or `--spreadsheet`, or both. If you specify any of the
 world dimensions, you must specify all four.
+
+**Note:** The remainder of this guide uses `netlogo-headless.sh` to refer to the
+NetLogo Headless launch script. If you are using Windows, please substitute
+`netlogo-headless.bat` for `netlogo-headless.sh` in each example.
     
 #### Examples
 
@@ -346,35 +352,30 @@ It is easiest if you create your experiment setup ahead of time in the GUI, so
 it is saved as part of the model. To run an experiment setup saved in a model,
 here is an example command line:
 
-    java -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
-      org.nlogo.headless.Main \
+    netlogo-headless.sh \
       --model Fire.nlogo \
       --experiment experiment1 \
       --table -
 
-(For this to work, `NetLogo.jar` must be present along with the `lib`
-subdirectory containing necessary libraries. Both `NetLogo.jar` and `lib` are
-included with NetLogo.)
+For this to work, Java (version 1.8 or later) must be available.
+You can make Java available to headless in either of two ways
+
+1. Set the `JAVA_HOME` environment variable to the path to the Java
+   installation. This is the directory of the Java installation which contains a
+   "bin" directory.
+2. Add the directory containing the Java executable to the `PATH` environment
+   variable
+
+If `JAVA_HOME` is defined, netlogo-headless will run NetLogo using the Java that
+it points to, ignoring the version of Java available on the path.
 
 After the named experiment has run, the results are sent to standard output in
 table format, as CSV. ("-" is how you specify standard output instead of output
 to a file.)
 
-When running the headless.Main class as an application, it forces the system
-property `java.awt.headless` to be true. This tells Java to run in headless
-mode, allowing NetLogo to run on machines when a graphical display is not
-available.
-
-Note the use of `-Xmx` to specify a maximum heap size of one gigabyte. If you
-don't specify a maximum heap size, you will get your VM's default size, which
-may be unusably small. (One gigabyte is an arbitrary size which should be more
-than large enough for most models; you can specify a different limit if you
-want.)
-
-Note the use of `-Dfile.encoding=UTF-8`. This forces all file I/O to use UTF-8
-encoding. Doing so ensures that NetLogo can load all models consistently, and
-that file-* primitives work consistently on all platforms, including models
-containing Unicode characters.
+When running netlogo headless, it forces the system property `java.awt.headless`
+to be true. This tells Java to run in headless mode, allowing NetLogo to run on
+machines when a graphical display is not available.
 
 The required `--model` argument is used to specify the model file you want to
 open.
@@ -385,8 +386,7 @@ it a name.)
 
 Here's another example that shows some additional, optional arguments:
 
-    java -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
-      org.nlogo.headless.Main \
+    netlogo-headless.sh \
       --model Fire.nlogo \
       --experiment experiment2 \
       --max-pxcor 100 \
@@ -400,15 +400,14 @@ for the experiment setup to specify values for the world dimensions; if they are
 specified by the experiment setup, then there is no need to specify them on the
 command line.)
 
-Since neither --table nor --spreadsheet is specified, no results will be
+Since neither `--table` nor `--spreadsheet` is specified, no results will be
 generated. This is useful if the experiment setup generates all the output you
 need by some other means, such as exporting world files or writing to a text
 file.
 
 Yet another example:
 
-    java -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
-      org.nlogo.headless.Main \
+    netlogo-headless.sh \
       --model Fire.nlogo \
       --experiment experiment2 \
       --table table-output.csv \
@@ -431,8 +430,7 @@ do, both kinds of output file will be generated.
 Here is one final example that shows how to run an experiment setup which is
 stored in a separate XML file, instead of in the model file:
 
-    java -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
-      org.nlogo.headless.Main \
+    netlogo-headless.sh \
       --model Fire.nlogo \
       --setup-file fire-setups.xml \
       --experiment experiment3
@@ -440,12 +438,12 @@ stored in a separate XML file, instead of in the model file:
 If the XML file contains more than one experiment setup, it is necessary to use
 the `--experiment` argument to specify the name of the setup to use.
 
-In order to run any of these experiments in 3D add `-Dorg.nlogo.is3d=true` to
-any of these startup commands, for example:
+In order to run a NetLogo 3D experiment, run headless with the `--3D` argument,
+for example:
 
-    java -Dorg.nlogo.is3d=true -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
-      org.nlogo.headless.Main \
-      --model Fire3D.nlogo \
+    netlogo-headless.sh \
+      --3D \
+      --model "Mousetraps 3D.nlogo3d" \
       --experiment experiment1 \
       --table -
 
@@ -506,7 +504,25 @@ file with proper XML headers, as follows:
 
 The second line must be included exactly as shown. In the first line, you may
 specify a different encoding than `UTF-8`, such as `ISO-8859-1`.
-    
+
+### Adjusting JVM Parameters
+
+Opening the NetLogo Headless launcher script will show the options used to
+launch java when running NetLogo Headless. You can adjust various JVM parameters
+in this script. You may also pass in Java properties starting with `-D` to the
+launcher.
+
+Note the use of `-Xmx` to specify a maximum heap size of one gigabyte. If you
+don't specify a maximum heap size, you will get your VM's default size, which
+may be unusably small. (One gigabyte is an arbitrary size which should be more
+than large enough for most models; you can specify a different limit if you
+want.)
+
+Note the use of `-Dfile.encoding=UTF-8`. This forces all file I/O to use UTF-8
+encoding. Doing so ensures that NetLogo can load all models consistently, and
+that file-* primitives work consistently on all platforms, including models
+containing Unicode characters.
+
 ### Controlling API
 
 If BehaviorSpace is not sufficient for your needs, a possible alternative is to

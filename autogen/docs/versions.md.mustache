@@ -9,6 +9,82 @@ For help running models made in old versions, see the
 
 [TOC levels=2]
 
+## Version 6.0.2 (August 2017)
+
+### Feature Changes
+
+- The autosuggest functionality introduced in NetLogo 6 will now display extension primitive names.
+- A new `insert-item` primitive was added to the language. It works similarly to `replace-item`, but without removing the item at the specified index.
+- A new `set-plot-background-color` primitive was added to the language. It can be used in plotting code to set the background color of the plot.
+- Behaviorsearch's user interface has been updated. It now uses the JavaFX UI toolkit for a more modern look and feel.
+
+### Bugfixes
+
+- The 6.0.1 autoconverter would error when converting tasks with exactly one argument (from 5.3.1 and earlier models only). The conversion would be correct, but it was confusing. This has now been remedied and the autoconverter will correctly convert models from 5.3.1 and earlier without erroring on single-argument tasks.
+- Fix a bug where extensions weren't located properly when in a path relative to the model.
+- Help browser now opens in 64-bit Windows.
+- Fix a speed regression for the `import-world` primitive introduced in 6.0.
+- If an unexpected reporter block is passed to `with` when used with `other`, the error will now reflect that the block is unsuitable for `with` instead of `other`.
+- When `sort-by` receives an unsuitable reporter block from the user it now shows a useful error instead of a cryptic stack trace.
+- String representations of anonymous procedures now show the arguments of those anonymous procedures
+- When working in an nls file, switching to a different tab will compile the nls file.
+- Display error label on nls file when the code it contains causes an error.
+- Some users were unable to open NetLogo 6 and 6.0.1 in Mac OS Sierra.
+  We've changed our signing process in 6.0.2 to attempt to fix this problem.
+  We are continuing to track this issue to determine whether our fix was effective.
+  More information (including a partial workaround for the problem) is available [here](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-sierra).
+
+### Extension Changes
+
+- Fixed a bug in `gis:patch-dataset` introduced in NetLogo 6.
+- The table extension has new `table:group-agents` and `table:group-items` primitives which can be used to build a table of grouped agents and items by supplying an anonymous reporter.
+
+### Documentation Changes
+
+- Clarify when various parts of the anonymous procedure syntax are optional.
+- Fix a few small documentation bugs around `foreach`.
+- Clarify relationship between speed and update modality in the "View Updates" section of the programming guide.
+
+### Model Changes
+
+#### New Sample Models:
+
+- Chaos in a Box
+- Fairy Circles
+- SmoothLife
+
+#### New Curricular Models:
+
+- Lattice Land Curriculum
+    - Lattice Land - Triangles Explore
+    - Lattice Land - Triangles Dissection
+
+#### Revised Sample Models:
+
+- Anisogamy: New color scheme. Adds BehaviorSpace experiments.
+- Ethnocentrism: Now cross-listed as an Evolutionary model.
+- Fireworks: Rename `fireworks` to `max-fireworks` and enforce a minimum of 1.
+- GenJam - Duple: Minor info tab updates.
+- Wolf Sheep Predation: Revised to better clarify the `grass?` construct and code.
+
+
+#### Revised Curricular Models:
+
+- Connected Chemistry:
+    - Connected Chemistry 1: Fix NetLogo Web incompatibility.
+    - Connected Chemistry 3: Update minimum number of particles to 2.
+    - Connected Chemistry 8: Minor code updates. Small change to default values.
+
+#### Revised HubNet Activities:
+
+- Gridlock HubNet: Minor code updates.
+
+#### Revised Code Examples:
+
+- Info Tab Example: Corrected formatting of un/ordered lists example.
+- LS Extension -- Model Visualizer and Plotter Example: Updated code dependencies for WSP.
+- LS Extension -- Model Interactions Example: Updated code dependencies for WSP.
+
 ## Version 6.0.1 (March 2017)
 
 ### Feature Changes
