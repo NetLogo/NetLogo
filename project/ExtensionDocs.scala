@@ -54,7 +54,7 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
     }
 
   private def renderMarkdown(extensionName: String)(str: String): String =
-    Markdown(str, addTableOfContents = false, manualizeLinks = true, extName = Some(extensionName))
+    Markdown(str, extensionName, true)
 
   private def getIncludes(filenames: Seq[String], basePath: NioPath): TemplateFunction =
     new TemplateFunction {

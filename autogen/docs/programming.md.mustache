@@ -294,8 +294,7 @@ event is to occur, then advance the tick counter to exactly that time.
 NetLogo represents colors in different ways. A color can be number in the range
 0 to 140, with the exception of 140 itself. Below is a chart showing the range
 of such colors you can use in NetLogo.
-<p class="screenshot">
-  <img alt="[color chart]" src="images/colors.jpg">
+![[/colors.jpg]]
 
 The chart shows that:
 
@@ -381,8 +380,7 @@ transparent version of that color using:
 
 The Color Swatches dialog helps you experiment with and choose colors. Open it
 by choosing Color Swatches on the Tools Menu.
-<p class="screenshot">
-  <img alt="screen shot" src="images/colorswatches.gif">
+![[colorswatches.gif]]
 
 When you click on a color swatch (or a color button), that color will be shown
 against other colors. In the bottom left, the code for the currently selected
@@ -2034,8 +2032,7 @@ will be drawn.
 Here's some turtles which have made a drawing over a grid of randomly shaded
 patches. Notice how the turtles cover the lines and the lines cover the patch
 colors. The [[pen-size]] used here was 2:
-<p class="screenshot">
-  <img alt="[color chart]" src="images/drawing.gif">
+![[color chart|drawing.gif]]
 
 The [[stamp]] command lets a turtle leave an image of itself behind in the
 drawing and [[stamp-erase]] lets it remove the pixels below it in the drawing.
@@ -2114,13 +2111,11 @@ because they have a shape.)
 
 Wrapping also affects how the view looks when you are following a turtle. On a
 torus, wherever the turtle goes, you will always see the whole world around it:
-<p class="screenshot">
-  <img alt="screenshot" src="images/torus.jpg">
+![[torus.jpg]]
 
 Whereas in a box or cylinder the world has edges, so the areas past those edges
 show up in the view as gray:
-<p class="screenshot">
-  <img alt="screenshot" src="images/box.jpg">
+![[box.jpg]]
 
 > **Code Example:** Termites Perspective Demo (torus), Ants Perspective Demo
 > (box)
@@ -2269,8 +2264,7 @@ links) between a pair if they are in opposite directions.
 As part of our network support we have also added several different primitives
 that will help you to visualize the networks. The simplest is [[layout-circle]]
 which evenly spaces the agents around the center of the world given a radius.
-<p class="screenshot">
-  <img alt="screen shot" src="images/circle-layout.gif">
+![[circle-layout.gif]]
 
 [[layout-radial]] is a good layout if you have something like a tree structure,
 though even if there are some cycles in the tree it will still work, though as
@@ -2282,16 +2276,14 @@ node and the next level around those nodes and so on. [[layout-radial]] will
 attempt to account for asymmetrical graphs and give more space to branches that
 are wider. [[layout-radial]] also takes a breed as an input so you use one breed
 of links to layout the network and not another.
-<p class="screenshot">
-  <img alt="screen shot" src="images/radial-layout.gif">
+![[radial-layout.gif]]
 
 Given a set of anchor nodes [[layout-tutte]] places all the other nodes at the
 center of mass of the nodes it is linked to. The anchor set is automatically
 arranged in a circle layout with a user defined radius and the other nodes will
 converge into place (this of course means that you may have to run it several
 times before the layout is stable.)
-<p class="screenshot">
-  <img alt="screen shot" src="images/tutte-layout.gif">
+![[tutte-layout.gif]]
 
 [[layout-spring]] is useful for many kinds of networks. The drawback is that is
 relatively slow since it takes many iterations to converge. In this layout the

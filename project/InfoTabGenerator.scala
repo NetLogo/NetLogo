@@ -4,7 +4,7 @@ object InfoTabGenerator {
   def apply(model: File): String = {
     val modelText = IO.read(model)
     val info = modelText.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
-    Markdown(Preprocessor.convert(info))
+    Markdown(Preprocessor.convert(info), "", false)
   }
 
   // runs on the wiki text, before it gets converted to HTML

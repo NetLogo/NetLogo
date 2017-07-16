@@ -96,7 +96,8 @@ class NetLogoDocs(
     Mustache.betweenDirectories(docsSource, targetDir, markdownComponents, variables)
     markdownComponents.keySet foreach { name =>
       val html = Markdown(
-        Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n"))
+        Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n"),
+        name, false)
       IO.write(targetDir / (name + ".html"), "<!DOCTYPE html>\n" + html)
       IO.delete(targetDir / (name + ".md"))
     }

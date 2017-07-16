@@ -1,8 +1,8 @@
 import sbt._
 
 import java.lang.{ Boolean => JBoolean }
-import java.io.File
-import java.net.{ ConnectException, HttpURLConnection, URI, URLDecoder }
+import java.io.{ File, IOException }
+import java.net.{ HttpURLConnection, URI, URLDecoder }
 import java.nio.file.{ Files, Paths }
 import java.util.{ HashMap => JHashMap }
 
@@ -11,6 +11,7 @@ import scala.util.matching.Regex
 
 object NetLogoDocsTest {
   val linkRegex = new Regex("""<a[^<>]+href="([^"]+)"[^<>]*>""")
+  val imgRegex  = new Regex("""<img[^<>]+src="([^"]+)"[^<>]*>""")
   val hrefRegex = new Regex("""(.*/)?([^/#]+)?(#.*)?""")
   def anchorRegex(anchor: String) = {
     val escapedAnchor = anchor
@@ -25,14 +26,15 @@ object NetLogoDocsTest {
   // Most importantly, links to (local) non-existent anchors are also considered broken.
   def apply(docsRoot: File): Map[String, Seq[String]] = {
     val testedLinks = new JHashMap[String, JBoolean]
-  
+
     val fileToLines = docsRoot.listFiles filter (_.getName.endsWith(".html")) map { file: File =>
       file.getName -> Files.readAllLines(file.toPath).asScala
     } toMap;
 
     fileToLines mapValues { lines =>
       val urls = lines flatMap { line =>
-        linkRegex.findAllMatchIn(line).map(_.group(1)).toSeq
+        (linkRegex.findAllMatchIn(line) ++ imgRegex.findAllMatchIn(line))
+          .map(_.group(1)).toSeq
       } distinct;
 
       urls filterNot {
@@ -55,13 +57,16 @@ object NetLogoDocsTest {
           val loc = if (file == null) host else host + file
           if (testedLinks.containsKey(loc))
             testedLinks.get(loc)
-          else {
-            val url = new URL(if (host.startsWith("http")) loc else "http://" + loc)
+          else if (host.startsWith("images/")) { // our regex matches images as external sites (because of the slash)
+            val res = (docsRoot / URLDecoder.decode(loc, "UTF-8")).exists
+            testedLinks.put(loc, Boolean.box(res))
+            res
+          } else {
             val resCode =
               try
-                url.openConnection.asInstanceOf[HttpURLConnection].getResponseCode
+                new URL(loc).openConnection.asInstanceOf[HttpURLConnection].getResponseCode
               catch {
-                case _: ConnectException => 0
+                case _: IOException => 0
               }
             val res = resCode == 200
             testedLinks.put(loc, Boolean.box(res))

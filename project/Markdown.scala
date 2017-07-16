@@ -6,7 +6,7 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
-  ast.{ AutoLink, Node },
+  ast.{ AutoLink, Link, Node },
   ext.{ anchorlink, autolink, escaped, tables, toc, typographic, wikilink },
     anchorlink.AnchorLinkExtension,
     autolink.AutolinkExtension,
@@ -14,11 +14,11 @@ import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
     tables.TablesExtension,
     toc.TocExtension,
     typographic.TypographicExtension,
-    wikilink.{ WikiLink, WikiLinkExtension },
+    wikilink.{ WikiImage, WikiLink, WikiLinkExtension },
   html.{ AttributeProvider, CustomNodeRenderer, HtmlRenderer, HtmlWriter,
-         IndependentAttributeProviderFactory, LinkResolver, LinkResolverFactory, renderer },
-    renderer.{ AttributablePart, LinkStatus, LinkType, NodeRenderer, NodeRendererContext,
-               NodeRendererFactory, NodeRenderingHandler, ResolvedLink },
+         IndependentAttributeProviderFactory, renderer },
+    renderer.{ AttributablePart, LinkType, NodeRenderer, NodeRendererContext,
+               NodeRendererFactory, NodeRenderingHandler },
   parser.{ Parser, ParserEmulationProfile },
   util.html.Attributes,
   util.options.{ DataHolder, MutableDataHolder, MutableDataSet }
@@ -26,33 +26,24 @@ import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
 object Markdown {
   def apply(
     str:                String,
-    addTableOfContents: Boolean = true,
-    manualizeLinks:     Boolean = true,
-    extName:            Option[String] = None): String = {
+    pageName:           String,
+    extension:          Boolean): String = {
 
-    val opts = options(addTableOfContents)
+    val opts = options()
     val parser = Parser.builder(opts).build()
-    val renderer = {
-      val builder = HtmlRenderer.builder(opts)
-      builder.attributeProviderFactory(AutolinkAttributeProvider.Factory)
-      if (manualizeLinks)
-        builder.linkResolverFactory(ManualLinkResolver.Factory)
-      extName foreach { ext =>
-        builder.linkResolverFactory(new GitHubStyleLinkResolver.Factory(ext))
-      }
-      builder.build()
-    }
+    val renderer =
+      HtmlRenderer.builder(opts)
+        .attributeProviderFactory(new ManualAttributeProvider.Factory(pageName, extension))
+        .build()
     val document = parser.parse(str)
     renderer.render(document)
   }
 
-  private def options(addTableOfContents: Boolean): MutableDataSet = {
+  private def options(): MutableDataSet = {
     val extensions = new JArrayList[Extension]()
     val options = new MutableDataSet()
 
     options.setFrom(ParserEmulationProfile.PEGDOWN)
-
-    extensions.add(PrimLinkExtension)
 
     extensions.add(EscapedCharacterExtension.create())
 
@@ -68,11 +59,12 @@ object Markdown {
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
     extensions.add(TablesExtension.create())
-    
-    extensions.add(WikiLinkExtension.create())
 
-    if (addTableOfContents)
-      extensions.add(TocExtension.create())
+    extensions.add(PrimLinkExtension)
+    extensions.add(WikiLinkExtension.create())
+    options.set(WikiLinkExtension.IMAGE_LINKS, Boolean.box(true))
+
+    extensions.add(TocExtension.create())
     extensions.add(AnchorLinkExtension.create())
     options.set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "section-anchor")
 
@@ -81,13 +73,37 @@ object Markdown {
     options
   }
 
-  object AutolinkAttributeProvider extends AttributeProvider {
-    override def setAttributes(node: Node, part: AttributablePart, attributes: Attributes) =
-      if (node.isInstanceOf[AutoLink] && part == AttributablePart.LINK)
-        attributes.replaceValue("target", "_blank")
+  class ManualAttributeProvider(pageName: String, ext: Boolean) extends AttributeProvider {
+    val nlDocURL = new Regex("https?://ccl.northwestern.edu/netlogo/docs/")
+    val extAnchorPrefix = s"#$pageName"
 
-    object Factory extends IndependentAttributeProviderFactory {
-      override def create(context: NodeRendererContext) = AutolinkAttributeProvider
+    def setAttributes(node: Node, part: AttributablePart, attrs: Attributes) =
+      if (part == AttributablePart.LINK)
+        node match {
+          case _: AutoLink =>
+            attrs.replaceValue("target", "_blank")
+          case link: Link =>
+            if (nlDocURL.findPrefixMatchOf(link.getUrl).nonEmpty)
+              attrs.replaceValue("href", nlDocURL.replaceFirstIn(link.getUrl, ""))
+            else if (link.getUrl.indexOf('/') != -1)
+              attrs.replaceValue("target", "_blank")
+            else if (ext && link.getUrl.startsWith(extAnchorPrefix)) {
+              val anchor = link.getUrl.toString.replaceAllLiterally(extAnchorPrefix, extAnchorPrefix + ':')
+              attrs.replaceValue("href", anchor)
+            }
+          case img: WikiImage if part == AttributablePart.LINK =>
+            val srcPrefix = if (img.getLink.startsWith("/")) "images" else s"images/$pageName/"
+            val alt = if (img.getText.isNotNull) img.getText else "Screenshot"
+            attrs.replaceValue("class", "screenshot")
+            attrs.replaceValue("src", srcPrefix + img.getLink)
+            attrs.replaceValue("alt", alt)
+          case _ =>
+        }
+  }
+  
+  object ManualAttributeProvider {
+    class Factory(pageName: String, ext: Boolean) extends IndependentAttributeProviderFactory {
+      override def create(context: NodeRendererContext) = new ManualAttributeProvider(pageName, ext)
     }
   }
 
@@ -122,51 +138,6 @@ object Markdown {
             new NodeRenderingHandler(classOf[WikiLink], PrimLinkRenderer)).asJava
         }
       }
-    }
-  }
-
-  /** Relativizes links when they appear in the manual.
-   *  "http://ccl.northwestern.edu/netlogo/docs/x/y/z" is transformed to "x/y/z"
-   */
-  object ManualLinkResolver extends LinkResolver {
-    val nlDocURL = new Regex("(?:https?://)ccl.northwestern.edu/netlogo/docs/")
-
-    override def resolveLink(node: Node, context: NodeRendererContext, link: ResolvedLink) =
-      if (nlDocURL.findPrefixMatchOf(link.getUrl.toString).nonEmpty)
-        link.withStatus(LinkStatus.VALID).withUrl(nlDocURL.replaceFirstIn(link.getUrl, ""))
-      else if (Try(new URI(link.getUrl).getHost != null).toOption.getOrElse(false))
-        link.withStatus(LinkStatus.VALID).withTarget("_blank")
-      else
-        link
-
-    object Factory extends LinkResolverFactory {
-      def getBeforeDependents = null
-      def getAfterDependents  = null
-      def affectsGlobalScope  = false
-      def create(context: NodeRendererContext) = ManualLinkResolver
-    }
-  }
-
-  /** Changes extension section links using the github convention
-   *  <ext-name><prim-name> to use the flexmark-linking convention <ext-name>:<prim-name>
-   */
-  class GitHubStyleLinkResolver(extName: String) extends LinkResolver {
-    val extAnchorPrefix = s"#$extName"
-    
-    override def resolveLink(node: Node, context: NodeRendererContext, link: ResolvedLink) =
-      if (link.getUrl.startsWith(extAnchorPrefix))
-        link.withStatus(LinkStatus.VALID)
-            .withUrl(link.getUrl.replaceAllLiterally(extAnchorPrefix, extAnchorPrefix + ':'))
-      else
-        link
-  }
-  
-  object GitHubStyleLinkResolver {
-    class Factory(extName: String) extends LinkResolverFactory {
-      def getBeforeDependents = null
-      def getAfterDependents  = null
-      def affectsGlobalScope  = false
-      def create(context: NodeRendererContext) = new GitHubStyleLinkResolver(extName)
     }
   }
 }
