@@ -59,6 +59,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   def handle(e: LoadEndEvent): Unit = {
     isLoading = false
+    world.program(Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames))
+    world.realloc()
     compileAll()
     world.clearAll()
   }
@@ -284,5 +286,5 @@ class CompilerManager(val workspace: AbstractWorkspace,
   }
 
   private def getGlobalVariableNames: Seq[String] =
-    globalWidgets.map(_.name).toSeq
+    globalWidgets.map(_.name.toUpperCase).toSeq
 }

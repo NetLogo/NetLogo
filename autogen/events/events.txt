@@ -48,7 +48,7 @@ window.RemoveJob - org.nlogo.api.JobOwner owner
 window.ResizeView - int width - int height
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
 window.TickStateChange - boolean tickCounterInitialized
-window.WidgetAdded - Widget widget
+window.WidgetAdded - Object widget
 window.WidgetEdited - Widget widget
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget
