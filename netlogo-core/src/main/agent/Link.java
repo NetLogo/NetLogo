@@ -76,8 +76,6 @@ public strictfp class Link
       variables[i] = World.Zero();
     }
 
-    this.setId(world.newLinkId());
-
     setVariables(variables);
 
     colorDoubleUnchecked(DEFAULT_COLOR);
@@ -100,8 +98,6 @@ public strictfp class Link
 
     this.end1 = end1;
     this.end2 = end2;
-
-    this.setId(world.newLinkId());
 
     variables[VAR_BREED] = breed;
     world.links().add(this);

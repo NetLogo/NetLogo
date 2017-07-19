@@ -24,9 +24,12 @@ class World3D extends World
 
   private var _patchScratch3d: Array[Array[Array[Double]]] = _
 
-  override val linkManager = new LinkManagerImpl(
-    this, (world: World3D, src: Turtle, dest: Turtle, breed: AgentSet) =>
-      new Link3D(world, src, dest, breed))
+  override val linkManager = new LinkManagerImpl(this,
+    { (world: World3D, src: Turtle, dest: Turtle, breed: AgentSet) =>
+      val l = new Link3D(world, src, dest, breed)
+      l.setId(newLinkId())
+      l
+    })
 
   protected val _links: TreeAgentSet = new TreeAgentSet(AgentKind.Link, "LINKS")
 

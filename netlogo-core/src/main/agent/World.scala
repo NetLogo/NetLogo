@@ -141,8 +141,10 @@ class World2D extends World with CompilationManagement {
 
   val linkManager: LinkManager =
     new LinkManagerImpl(this,
-      (world: World, src: Turtle, dest: Turtle, breed: AgentSet) => {
-        new Link(world, src, dest, breed)
+      { (world: World, src: Turtle, dest: Turtle, breed: AgentSet) =>
+        val l = new Link(world, src, dest, breed)
+        l.setId(newLinkId())
+        l
       })
   protected val _links: TreeAgentSet = new TreeAgentSet(AgentKind.Link, "LINKS")
 

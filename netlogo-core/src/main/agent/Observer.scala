@@ -49,14 +49,13 @@ with api.Observer with OrientatableObserver with Constraints {
 
   def targetAgent: api.Agent =
     perspective match {
-      case Perspective.Observe          => null
       case a: AgentFollowingPerspective => a.targetAgent
       case Perspective.Watch(a)         => a
+      case _                            => null
     }
 
   def followDistance: Int =
     perspective match {
-      case Perspective.Observe          => 5
       case a: AgentFollowingPerspective => a.followDistance
       case _                            => 5
     }
