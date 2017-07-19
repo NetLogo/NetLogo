@@ -8,7 +8,7 @@ import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
-import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent }
+import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent, WidgetAddedEvent }
 
 class CompilerManagerTests extends FunSuite {
   def loadWidgets(ws: Seq[JobOwner],
@@ -57,6 +57,10 @@ class CompilerManagerTests extends FunSuite {
       compilerManager.handle(new LoadBeginEvent())
       widgets.foreach { w =>
         compilerManager.handle(new CompileMoreSourceEvent(w))
+        w match {
+          case ig: DummyIGWidget => compilerManager.handle(new WidgetAddedEvent(ig))
+          case _ =>
+        }
       }
       compilerManager.handle(new LoadEndEvent())
     }
@@ -184,6 +188,16 @@ class CompilerManagerTests extends FunSuite {
       case e: CompiledEvent => e
     }
     assert(compiledEvents.forall(_.sourceOwner ne widget))
+  } }
+
+  test("when compilation fails, world is setup with a program containing defined interface globals") { new Helper {
+    val igWidget = new DummyIGWidget("", Double.box(10))
+    widgets = Seq(igWidget)
+    source = "to foo show y end"
+    loadWidgets()
+    assert(compilerManager.globalWidgets.contains(igWidget))
+    println(workspace.world.program.interfaceGlobals)
+    assert(workspace.world.program.interfaceGlobals.contains("IG"))
   } }
 }
 
