@@ -65,8 +65,20 @@ public strictfp class Turtle2D
         cachedSine = StrictMath.sin(headingRadians);
       }
     }
+
+    if (!penMode().equals(PEN_UP)) {
+      try {
+        Patch ignore = getPatchAtHeadingAndDistance(0, distance);
+        drawJumpLine(xcor, ycor, distance);
+      } catch (AgentException ex) {
+        // We end up here if `getPatchAtHeadingAndDistance` can't reach the patch that
+        // far away (due to wrapping difficulties) --JAB (11/2/16)
+        org.nlogo.api.Exceptions.ignore(ex);
+      }
+		}
+
     xandycor(xcor + (distance * cachedSine),
-        ycor + (distance * cachedCosine));
+        ycor + (distance * cachedCosine), true);
   }
 
   public Patch getPatchHere() {
@@ -77,6 +89,22 @@ public strictfp class Turtle2D
     }
     return currentPatch;
   }
+
+  void drawJumpLine(double x, double y, double dist) {
+    if (!penMode().equals(PEN_UP)) {
+      Object color = variables()[VAR_COLOR];
+      double size = penSize();
+      String mode = penMode();
+      double minPxcor = world().minPxcor() - 0.5;
+      double maxPxcor = world().maxPxcor() + 0.5;
+      double minPycor = world().minPycor() - 0.5;
+      double maxPycor = world().maxPycor() + 0.5;
+      Trail[] lines   = PenLineMaker.apply(x, y, heading, dist, minPxcor, maxPxcor, minPycor, maxPycor);
+      for (Trail line : lines) {
+        ((World2D) _world).drawLine(line.x1(), line.y1(), line.x2(), line.y2(), color, size, mode);
+      }
+    }
+	}
 
   void drawLine(double x0, double y0, double x1, double y1) {
     if (!penMode().equals(PEN_UP) && (x0 != x1 || y0 != y1)) {
