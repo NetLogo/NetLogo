@@ -75,8 +75,6 @@ object PackageLinuxAggregate {
         FileActions.copyAny(f, aggregateLinuxDir / f.getName)
       }
 
-      val variablesAndJarClasspath =
-
       // configure each sub application
       subApplications.foreach { app =>
         configureSubApplication(aggregateLinuxDir, app, commonConfig, variables)
