@@ -871,9 +871,14 @@ public strictfp abstract class Turtle
 
   public void xandycor(double xcor, double ycor)
       throws AgentException {
+    xandycor(xcor, ycor, false);
+  }
+
+  public void xandycor(double xcor, double ycor, boolean jumping)
+      throws AgentException {
     double oldX = this.xcor;
     double oldY = this.ycor;
-    xandycorHelper(xcor, ycor);
+    xandycorHelper(xcor, ycor, jumping);
     if (_world.tieManager().hasTies()) {
       _world.tieManager().turtleMoved(this, xcor, ycor, oldX, oldY);
     }
@@ -885,20 +890,22 @@ public strictfp abstract class Turtle
       throws AgentException {
     double oldX = this.xcor;
     double oldY = this.ycor;
-    xandycorHelper(xcor, ycor);
+    xandycorHelper(xcor, ycor, false);
     if (_world.tieManager().hasTies()) {
       _world.tieManager().turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
     }
   }
 
-  public void xandycorHelper(double xcor, double ycor)
+  public void xandycorHelper(double xcor, double ycor, boolean jumping)
       throws AgentException {
     Patch originalPatch = getPatchHere();
 
     double newX = _world.wrapX(xcor);
     double newY = _world.wrapY(ycor);
 
-    drawLine(this.xcor, this.ycor, xcor, ycor);
+		if (! jumping) {
+			drawLine(this.xcor, this.ycor, xcor, ycor);
+		}
 
     this.xcor = newX;
     this.ycor = newY;

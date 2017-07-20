@@ -142,4 +142,13 @@ class WorldTests extends FunSuite with AbstractTestWorld {
     assert(copiedWorld.getTurtle(0).xcor == 1)
     assert(copiedWorld.getTurtle(0).ycor == 2)
   }
+  test("first link created after calling getLink has id 0") {
+    val world = makeWorld(worldRectangle, Program.empty)
+    val t1 = world.createTurtle(world.turtles)
+    val t2 = world.createTurtle(world.turtles)
+    world.linkManager.getLink(t1, t2, world.links)
+    world.linkManager.getLink(t2, t1, world.links)
+    val link = world.linkManager.createLink(t1, t2, world.links)
+    assert(link.id == 0)
+  }
 }
