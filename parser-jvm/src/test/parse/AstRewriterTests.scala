@@ -141,6 +141,8 @@ class AstRewriterTests extends FunSuite {
   testLambda("foreach [1 2 3] [ -> show 4 ]", "foreach [1 2 3] [ -> show 4 ]")
   testLambda("__ignore runresult [2 < (3 + pi)]", "__ignore runresult [2 < (3 + pi)]")
   testLambda("show filter [ ?1 -> ?1 < 3 ] [1 3 2]", "show filter [? < 3] [1 3 2]")
+  testLambda("""let i map [ -> [ [] -> show "abc" ] ] [1 2 3]""",
+    """let i map [task [show "abc"]] [1 2 3]""")
 
   test("add extension") {
     assertResult("extensions [foo]")(addExtension("", "foo"))

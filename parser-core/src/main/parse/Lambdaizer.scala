@@ -41,8 +41,16 @@ class Lambdaizer extends PositionalAstFolder[AstEdit] {
           case cl: _commandlambda  if cl.synthetic && maxVar.isEmpty => ctx.appendText(ctx.wsMap.leading(path) + bodyText)
           case _ =>
             val vars = maxVar.map(1 to _).map(_.map(num => varName(nestingDepth, num))) getOrElse Seq()
+            lazy val taskIsFirstArgument =
+              app.args.headOption.exists {
+                case ReporterApp(t: _task, _, _) => true
+                case _ => false
+              }
             val varString =
-              if (vars.isEmpty) ""
+              // when a task is the first argument, we need to disambiguate that the anonymous procedure
+              // contained in `astNode` is not actually a list, which we do by inserting an arrow.
+              if (vars.isEmpty && taskIsFirstArgument) " ->"
+              else if (vars.isEmpty) ""
               else if (vars.length == 1) vars.mkString(" ", "", " ->")
               else vars.mkString(" [", " ", "] ->")
             val frontMargin = if (varString.isEmpty || bodyText.startsWith(" ")) "" else " "
@@ -119,13 +127,15 @@ class Lambdaizer extends PositionalAstFolder[AstEdit] {
     }
 
     app.reporter match {
-      case r: _reporterlambda if r.argumentNames.nonEmpty => super.visitReporterApp(app, position)
-      case c: _commandlambda  if c.argumentNames.nonEmpty => super.visitReporterApp(app, position)
-      case (_: _reporterlambda | _: _commandlambda) =>
+      case l: Lambda if l.argumentNames.nonEmpty => super.visitReporterApp(app, position)
+      case l: Lambda =>
         val variables = MaxTaskVariable.visitExpression(app.args(0))(None)
-        val nestingDepth = edits.operations.filter { case (k, v) => k.isParentOf(position) && v.isInstanceOf[AddVariables] }.size
+        val nestingDepth = edits.operations.filter {
+          case (k, v: AddVariables) => k.isParentOf(position)
+          case _ => false
+        }.size
         super.visitReporterApp(app, position)(edits.addOperation(position, new AddVariables(variables, nestingDepth)))
-      case _: _task           =>
+      case _: _task  =>
         // need to check if arg0 is synthetic. If it is synthetic, we need to make it an actual block
         app.args(0) match {
           case ra@ReporterApp(l@Lambda(args, true, _), _, _) if ! args.isEmpty =>
