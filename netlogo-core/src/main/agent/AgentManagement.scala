@@ -35,8 +35,8 @@ trait AgentManagement
 
   def patchesOwnNameAt(index: Int): String = program.patchesOwn(index)
   def patchesOwnIndexOf(name: String): Int = program.patchesOwn.indexOf(name)
-  def observerOwnsNameAt(index: Int): String = program.globals(index)
-  def observerOwnsIndexOf(name: String): Int = program.globals.indexOf(name)
+  def observerOwnsNameAt(index: Int): String = observer.variableName(index)
+  def observerOwnsIndexOf(name: String): Int = observer.variableIndex(name)
 
   protected var breedsOwnCache: JHashMap[String, Integer] = new JHashMap[String, Integer]()
 
