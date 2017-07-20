@@ -81,6 +81,14 @@ Copyright 1999 CERN - European Organization for Nuclear Research.  Permission to
 
 ===
 
+NetLogo uses the Typesafe "Config" library.
+Copyright (C) 2011-2012 Typesafe Inc. <http://typesafe.com>
+
+The Config library is licensed under the Apache 2.0 License.
+You may obtain a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
+
+===
+
 The NetLogo compiler uses a digest method from the Apache Commons Codec (TM)
 library. Apache Commons Codec (TM) is copyright and trademark 2002-2014 the Apache Software Foundation.
 It is licensed under the Apache 2.0 License. You may obtain a copy of the license at

@@ -64,7 +64,7 @@ trait ModelTracker {
    */
   @throws(classOf[IOException])
   def convertToNormal(): String = {
-    val git = new File(ModelsLibrary.modelsRoot(), ".git")
+    val git = new File(ModelsLibrary.modelsRoot, ".git")
     if (!git.exists()) {
       throw new IOException("The models folder is not under version control.")
     }

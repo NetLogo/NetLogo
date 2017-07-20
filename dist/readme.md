@@ -196,6 +196,14 @@ that code is as follows:
 > suitability of this software for any purpose.  It is provided "as is"
 > without expressed or implied warranty.
 
+### Config
+
+NetLogo uses the Typesafe "Config" library.
+Copyright (C) 2011-2012 Typesafe Inc. http://typesafe.com
+
+The Config library is licensed under the Apache 2.0 License.
+You may obtain a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
+
 ### Apache Commons Codec (TM)
 
 The NetLogo compiler uses a digest method from the Apache Commons Codec (TM) library.

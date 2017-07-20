@@ -1,6 +1,7 @@
 import sbt._
 import Def.spaceDelimited
 import Keys._
+import Extensions.extensions
 
 object ChecksumsAndPreviews {
 
@@ -26,6 +27,6 @@ object ChecksumsAndPreviews {
         runJVMOptions = Seq("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
       runner.run("org.nlogo.headless.ChecksumsAndPreviews",
         (fullClasspath in Compile).value.map(_.data), flag +: args, streams.value.log)
-    }.dependsOn(compile in Compile)
+    }.dependsOn(compile in Compile, extensions)
 
 }

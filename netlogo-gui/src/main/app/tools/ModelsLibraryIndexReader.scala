@@ -5,24 +5,37 @@ package org.nlogo.app.tools
 // This is a little piece of ModelsLibraryDialog I wanted to write in Scala without having to
 // convert the whole thing to Scala. - ST 2/27/11
 
-import java.io.{ File, IOException }
-import java.util.{ Map => JMap }
+import java.io.File
+import java.util.{ ArrayList => JArrayList, List => JList }
 
-import scala.collection.mutable
-import scala.collection.JavaConverters._
-import scala.io.Source
+import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigParseOptions, ConfigSyntax }
 
-import org.nlogo.api.Exceptions.handling
 import org.nlogo.workspace.ModelsLibrary
 
+import scala.collection.JavaConverters._
+
+
 object ModelsLibraryIndexReader {
-  def readInfoMap: JMap[String, String] = {
-    val result = new mutable.HashMap[String, String]
-    val input = Source.fromFile(ModelsLibrary.modelsRoot + File.separator + "index.txt")("UTF-8").getLines
-    handling(classOf[IOException]) {
-      for(Seq(name, description) <- input.grouped(2))
-        result(name) = description
+  def readInfoMap: Map[String, String] = {
+    val parsingConfiguration = ConfigParseOptions.defaults.setSyntax(ConfigSyntax.CONF)
+    val index = ConfigFactory.parseFile(new File(ModelsLibrary.modelsRoot, "index.conf"), parsingConfiguration)
+    val indexItems: JList[_ <: Config] =
+      try {
+        index.getConfigList("models.indexes")
+      } catch {
+        case missing: ConfigException.Missing =>
+          new JArrayList[Config]()
+      }
+
+    indexItems.asScala.foldLeft(Map.empty[String, String]) {
+      case (acc: Map[String, String], c: Config) =>
+        try {
+          val modelPath = c.getString("path")
+          val modelInfo = c.getString("info")
+          acc + (modelPath -> modelInfo)
+        } catch {
+          case missing: ConfigException.Missing => acc
+        }
     }
-    result.asJava
   }
 }

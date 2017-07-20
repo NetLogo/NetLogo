@@ -76,15 +76,15 @@ object FileManager {
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.modelsLibrary"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
-    group       =   UserAction.FileOpenGroup
-    rank        =    3
-    accelerator =             UserAction.KeyBindings.keystroke('M', withMenu = true)
+    group       = UserAction.FileOpenGroup
+    rank        = 3
+    accelerator = UserAction.KeyBindings.keystroke('M', withMenu = true)
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       manager.aboutToCloseFiles()
-      val sourceURI = ModelsLibraryDialog.open(frame)
-      manager.openFromURI(sourceURI, ModelType.Library)
+      ModelsLibraryDialog.open(frame,
+      { sourceURI => manager.openFromURI(sourceURI, ModelType.Library) })
     }
   }
 
