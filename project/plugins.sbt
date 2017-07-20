@@ -58,7 +58,7 @@ addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.7.2")
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler" % "0.9.5",
   "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5",
-  "org.jsoup"                         % "jsoup" % "1.8.3",
+  "org.jsoup"                         % "jsoup" % "1.10.3",
   "org.apache.commons"                % "commons-lang3" % "3.1"
 )
 
