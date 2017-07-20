@@ -35,6 +35,7 @@ menu.file.open = Open
 menu.file.modelsLibrary = Models Library
 menu.file.uploadMc = Upload To Modeling Commons
 menu.file.save = Save
+menu.file.save.error = Error while saving file: {0}
 menu.file.saveAs = Save As
 menu.file.saveAll = Save All
 menu.file.saveAsNetLogoWeb = Save As NetLogo Web…
