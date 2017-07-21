@@ -17,8 +17,9 @@ with api.Observer with OrientatableObserver with Constraints {
 
   private var varNames: Array[String] = new Array[String](0)
 
-  override def variableName(vn: Int) =
-    world.observerOwnsNameAt(vn)
+  override def variableName(vn: Int) = varNames(vn)
+
+  def variableIndex(name: String): Int = varNames.indexOf(name)
 
   @throws(classOf[api.AgentException])
   override def setVariable(vn: Int, value: AnyRef) {
@@ -26,8 +27,6 @@ with api.Observer with OrientatableObserver with Constraints {
     variables(vn) = value
     world.notifyWatchers(this, vn, value)
   }
-
-  def variableIndex(name: String): Int = varNames.indexOf(name)
 
   override def realloc(oldProgram: Program, newProgram: Program): Agent = {
     val forRecompile = oldProgram != null
