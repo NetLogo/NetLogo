@@ -121,6 +121,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            InfoTab.infoTabTask ++
            ModelsLibrary.settings ++
            NativeLibs.nativeLibsTask ++
+           NetLogoWebExport.settings ++
            GUISettings.settings ++
            Depend.dependTask: _*).
   settings(
