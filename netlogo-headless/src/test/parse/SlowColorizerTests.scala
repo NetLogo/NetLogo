@@ -11,7 +11,7 @@ class SlowColorizerTests extends FunSuite  {
   // slow, hence SlowTest
   test("don't blow stack", SlowTestTag) {
     val longCode = io.Source.fromFile("models/test/Really Long Code.nls").mkString
-    assertResult(1011096)(
+    assertResult(1042326)(
       Colorizer.toHtml(longCode).size)
   }
 }
