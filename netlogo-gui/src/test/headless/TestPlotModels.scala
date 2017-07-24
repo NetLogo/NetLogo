@@ -188,6 +188,14 @@ class TestPlotModels extends AbstractTestModels {
     assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 4.0, 2.0, 4.0, 5.0, 4.0, 7.0, 9.0]")
   }
 
+  testModel("legend is correctly off", Model("", Plot(legendOn = false))) {
+    assertResult(false)(workspace.plotManager.currentPlot.get.legendIsOpen)
+  }
+
+  testModel("legend is correctly on", Model("", Plot(legendOn = true))) {
+    assertResult(true)(workspace.plotManager.currentPlot.get.legendIsOpen)
+  }
+
   testModelCompileError("Plot With Bad Update Code Should Throw Exception on Load (headless only)",
     Model(modelCode, Plot(updateCode="weijefwef"))){ ex =>
     assert(I18N.errors.getN("compiler.LocalsVisitor.notDefined", "WEIJEFWEF") === ex.getMessage)

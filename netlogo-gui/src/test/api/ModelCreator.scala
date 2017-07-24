@@ -37,8 +37,8 @@ trait ModelCreator {
   def Pens(pens: core.Pen*): List[core.Pen] = pens.toList
 
   def Plot(name: String = "Plot" + counter.next,
-    setupCode: String = "", updateCode: String = "", pens: List[core.Pen] = Nil): core.Plot =
-      core.Plot(Some(name), 5, 5, 5, 5, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, false, setupCode, updateCode, pens)
+    setupCode: String = "", updateCode: String = "", pens: List[core.Pen] = Nil, legendOn: Boolean = false): core.Plot =
+      core.Plot(Some(name), 5, 5, 5, 5, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, legendOn, setupCode, updateCode, pens)
 
   def Pen(name:String = "Pen" + counter.next, setupCode:String = "", updateCode: String = ""): core.Pen =
     core.Pen(name, 1.0, 0, -16777216, true, setupCode, updateCode)

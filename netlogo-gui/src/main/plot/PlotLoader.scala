@@ -18,6 +18,7 @@ object PlotLoader {
     plot.setupCode = corePlot.setupCode
     plot.updateCode = corePlot.updateCode
     plot.pens = corePlot.pens.map(loadPen(plot))
+    plot.legendIsOpen = corePlot.legendOn
     plot.clear()
     plot
   }
