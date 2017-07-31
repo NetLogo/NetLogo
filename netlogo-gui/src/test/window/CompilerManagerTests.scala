@@ -196,8 +196,7 @@ class CompilerManagerTests extends FunSuite {
     source = "to foo show y end"
     loadWidgets()
     assert(compilerManager.globalWidgets.contains(igWidget))
-    println(workspace.world.program.interfaceGlobals)
-    assert(workspace.world.program.interfaceGlobals.contains("IG"))
+    assert(workspace.world.program.interfaceGlobals.contains("ig"))
   } }
 }
 

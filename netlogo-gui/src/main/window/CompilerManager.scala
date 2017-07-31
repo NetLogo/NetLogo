@@ -286,5 +286,5 @@ class CompilerManager(val workspace: AbstractWorkspace,
   }
 
   private def getGlobalVariableNames: Seq[String] =
-    globalWidgets.map(_.name.toUpperCase).toSeq
+    globalWidgets.map(_.name).toSeq
 }

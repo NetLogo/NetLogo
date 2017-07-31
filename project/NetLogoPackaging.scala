@@ -20,7 +20,7 @@ object NetLogoPackaging {
   lazy val buildDownloadPages      = taskKey[Seq[File]]("package the web download pages")
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val iconFiles               = settingKey[Seq[File]]("icon files to make available")
-  lazy val resaveModels   = taskKey[Unit]("prep models library for packaging")
+  lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val localSiteTarget         = settingKey[File]("directory into which local copy of the site is built")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
@@ -90,7 +90,7 @@ object NetLogoPackaging {
     resaveModels := {
       (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
     },
-    resaveModels := resaveModels.dependsOn(extensions in netlogo),
+    resaveModels := (resaveModels dependsOn (extensions in netlogo)).value,
     packagedMathematicaLink := {
       val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")

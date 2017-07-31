@@ -55,7 +55,8 @@ class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
       "Sample Models")
         .flatMap(subDir => Path.allSubpaths(sourceDir / subDir))
         .map(_._1)
-        .filterNot(_.isHidden) :+ (sourceDir / "index.txt")
+        .filterNot(_.isHidden) ++
+        Seq(sourceDir / "index.conf", sourceDir / "crossReference.conf")
 }
 
 class NativesDir(sourceDir: File, platforms: String*) extends BundledDirectory(sourceDir) {

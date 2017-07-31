@@ -736,49 +736,48 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
-          ISTORE 4
-          GETSTATIC org/nlogo/agent/Turtle.BIT : I
-          ILOAD 4
-          IF_ICMPNE L4
+          LOOKUPSWITCH
+            2: L4
+            8: L5
+            default: L6
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent]
           ALOAD 3
           ICONST_1
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
-          GOTO L5
-         L4
-         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
-          GETSTATIC org/nlogo/agent/Link.BIT : I
-          ILOAD 4
-          IF_ICMPNE L6
+          GOTO L7
+         L5
+         FRAME SAME
           ALOAD 3
           ICONST_2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L6
          FRAME SAME
           ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L1
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_11 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 5
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 5
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME APPEND [I]
+         L7
+         FRAME SAME
           ALOAD 1
           BIPUSH 14
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L7
+         L8
           RETURN
 [14]_asm_proceduresetup_setturtlevariable_12 "set energy random-float 2 * sheep-metabolism" Object => void
       _randomfloat "random-float 2 * sheep-metabolism" double => double
@@ -887,49 +886,48 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
-          ISTORE 4
-          GETSTATIC org/nlogo/agent/Turtle.BIT : I
-          ILOAD 4
-          IF_ICMPNE L4
+          LOOKUPSWITCH
+            2: L4
+            8: L5
+            default: L6
+         L4
+         FRAME APPEND [java/lang/String org/nlogo/agent/Agent]
           ALOAD 3
           ICONST_5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
-          GOTO L5
-         L4
-         FRAME APPEND [java/lang/String org/nlogo/agent/Agent I]
-          GETSTATIC org/nlogo/agent/Link.BIT : I
-          ILOAD 4
-          IF_ICMPNE L6
+          GOTO L7
+         L5
+         FRAME SAME
           ALOAD 3
           BIPUSH 8
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L6
          FRAME SAME
           ALOAD 3
           LDC "SHAPE"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L1
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_13 org/nlogo/nvm/Context java/lang/String org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 5
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 5
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME APPEND [I]
+         L7
+         FRAME SAME
           ALOAD 1
           BIPUSH 16
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L7
+         L8
           RETURN
 [16]_asm_proceduresetup_setxy_14 "setxy random world-width random world-height" double,double => void
       _random "random world-width" double => double
@@ -1217,49 +1215,48 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
-          ISTORE 4
-          GETSTATIC org/nlogo/agent/Turtle.BIT : I
-          ILOAD 4
-          IF_ICMPNE L4
+          LOOKUPSWITCH
+            2: L4
+            8: L5
+            default: L6
+         L4
+         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent]
           ALOAD 3
           ICONST_1
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
-          GOTO L5
-         L4
-         FRAME APPEND [java/lang/Double org/nlogo/agent/Agent I]
-          GETSTATIC org/nlogo/agent/Link.BIT : I
-          ILOAD 4
-          IF_ICMPNE L6
+          GOTO L7
+         L5
+         FRAME SAME
           ALOAD 3
           ICONST_2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L6
          FRAME SAME
           ALOAD 3
           LDC "COLOR"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L1
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_18 org/nlogo/nvm/Context java/lang/Double org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 5
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 5
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME APPEND [I]
+         L7
+         FRAME SAME
           ALOAD 1
           BIPUSH 21
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L7
+         L8
           RETURN
 [21]_asm_proceduresetup_setturtlevariable_19 "set energy random-float 2 * wolf-metabolism" Object => void
       _randomfloat "random-float 2 * wolf-metabolism" double => double
@@ -1368,49 +1365,48 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
-          ISTORE 4
-          GETSTATIC org/nlogo/agent/Turtle.BIT : I
-          ILOAD 4
-          IF_ICMPNE L4
+          LOOKUPSWITCH
+            2: L4
+            8: L5
+            default: L6
+         L4
+         FRAME APPEND [java/lang/String org/nlogo/agent/Agent]
           ALOAD 3
           ICONST_5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
-          GOTO L5
-         L4
-         FRAME APPEND [java/lang/String org/nlogo/agent/Agent I]
-          GETSTATIC org/nlogo/agent/Link.BIT : I
-          ILOAD 4
-          IF_ICMPNE L6
+          GOTO L7
+         L5
+         FRAME SAME
           ALOAD 3
           BIPUSH 8
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setLinkVariable (ILjava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L6
          FRAME SAME
           ALOAD 3
           LDC "SHAPE"
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleOrLinkVariable (Ljava/lang/String;Ljava/lang/Object;)V
-          GOTO L5
+          GOTO L7
          L1
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtleorlinkvariable_20 org/nlogo/nvm/Context java/lang/String org/nlogo/agent/Agent] [org/nlogo/api/AgentException]
-          ASTORE 5
+         FRAME SAME1 org/nlogo/api/AgentException
+          ASTORE 4
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
           ALOAD 0
-          ALOAD 5
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME APPEND [I]
+         L7
+         FRAME SAME
           ALOAD 1
           BIPUSH 23
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L7
+         L8
           RETURN
 [23]_asm_proceduresetup_setxy_21 "setxy random world-width random world-height" double,double => void
       _random "random world-width" double => double
