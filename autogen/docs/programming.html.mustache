@@ -2920,18 +2920,26 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       <code>filter</code>, <code>n-values</code>, and <code>sort-by</code> can be
       written with an especially concise syntax. You can write:
     <pre>
-map abs [1 -2 3 -4] =&gt; [1 2 3 4]
-reduce + [1 2 3 4] =&gt; 10
-filter is-number? [1 &quot;x&quot; 3] =&gt; [1 3]
+map abs [1 -2 3 -4]
+;; =&gt; [1 2 3 4]
+reduce + [1 2 3 4]
+;; =&gt; 10
+filter is-number? [1 &quot;x&quot; 3]
+;; =&gt; [1 3]
 foreach [1 2 3 4] print
+;; prints 1 through 4
 </pre>
     <p>
       In older NetLogo versions (4 and earlier), these had to be written:
     <pre>
-map [abs ?] [1 -2 3 -4] =&gt; [1 2 3 4]
-reduce [?1 + ?2] [1 2 3 4] =&gt; 10
-filter [is-number? ?] [1 &quot;x&quot; 3] =&gt; [1 3]
+map [abs ?] [1 -2 3 -4]
+;; =&gt; [1 2 3 4]
+reduce [?1 + ?2] [1 2 3 4]
+;; =&gt; 10
+filter [is-number? ?] [1 &quot;x&quot; 3]
+;; =&gt; [1 3]
 foreach [1 2 3 4] [ print ? ]
+;; prints 1 through 4
 </pre>
     <h3>
       Anonymous procedures as closures
