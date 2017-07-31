@@ -157,7 +157,7 @@ object NetLogoPackaging {
       val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
         (dependencyClasspath in behaviorsearchProject in Runtime).value
 
-      (filterDuplicateDeps(allDeps).files :+
+      (removeJdkLibraries(filterDuplicateDeps(allDeps)).files :+
         (packageBin in Compile in behaviorsearchProject).value)
         .filterNot(jarExcluded)
         .filterNot(_.isDirectory) :+ packagingMainJar.value
@@ -363,6 +363,10 @@ object NetLogoPackaging {
     val p2Int = try { p2.toInt } catch { case f: NumberFormatException => -1 }
     if (p1Int > -1 && p2Int > -1) Ordering.Int.compare(p1Int, p2Int) > 0
     else                          Ordering.String.compare(p1, p2) > 0
+  }
+
+  private def removeJdkLibraries(cp: Def.Classpath): Def.Classpath = {
+    cp.filterNot(_.get(AttributeKey[Boolean]("jdkLibrary")).getOrElse(false))
   }
 
   def mapToParser[T](m: Map[String, T]): Parser[T] = {

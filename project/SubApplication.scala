@@ -67,7 +67,7 @@ object HubNetClientApp extends SubApplication {
 
 object BehaviorsearchApp extends SubApplication {
   override def name          = "Behaviorsearch"
-  override def mainClass     = "bsearch.app.BehaviorSearchGUI"
+  override def mainClass     = "bsearch.fx.MainGUI"
   override def jarName       = "behaviorsearch.jar"
   override def shortName     = "Behaviorsearch"
   override def jvmOptions    = Seq()
