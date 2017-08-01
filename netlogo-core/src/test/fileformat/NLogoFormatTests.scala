@@ -8,7 +8,7 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, Version }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
@@ -196,4 +196,19 @@ class LinkShapesComponentTest extends NLogoFormatTest[Seq[LinkShape]] {
   testDeserializes("empty link shapes to default shapes", Array[String](), Model.defaultLinkShapes)
   val defaultShape = Model.defaultLinkShapes.find(_.name == "default").get
   testRoundTripsObjectForm("default-only link shape list", Seq(defaultShape))
+}
+
+class ModelSettingsComponentTest extends NLogoFormatTest[ModelSettings] {
+  def subject = NLogoModelSettings
+  def modelComponent(model: Model): ModelSettings =
+    model.optionalSectionValue(NLogoModelSettings.componentName).get
+  def attachComponent(settings: ModelSettings): Model =
+    Model().withOptionalSection(NLogoModelSettings.componentName, Some(settings), ModelSettings(false))
+
+  testDeserializes("empty section to snap-to-grid = false", Array[String](), ModelSettings(false))
+  testDeserializes("blank section to snap-to-grid = false", Array[String](""), ModelSettings(false))
+  testDeserializes("0 to snap-to-grid = false", Array[String]("0"), ModelSettings(false))
+  testDeserializes("1 to snap-to-grid = true", Array[String]("1"), ModelSettings(true))
+  testRoundTripsObjectForm("snap-to-grid", ModelSettings(true))
+  testRoundTripsObjectForm("non-snap-to-grid", ModelSettings(false))
 }

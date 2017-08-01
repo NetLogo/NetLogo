@@ -23,7 +23,7 @@ trait ModelSettingsComponent[A <: ModelFormat[Array[String], A]] extends Compone
   override def deserialize(s: Array[String]) = {(m: Model) =>
     Try {
       val foundValue =
-        ModelSettings(s.headOption.map(_.toInt != 0).getOrElse(false))
+        ModelSettings(s.headOption.flatMap(s => Try(s.toInt).toOption).map(_ != 0).getOrElse(false))
       m.withOptionalSection(componentName, Some(foundValue), ModelSettings(false))
     }
   }
