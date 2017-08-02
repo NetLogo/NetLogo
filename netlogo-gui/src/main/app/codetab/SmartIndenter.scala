@@ -70,7 +70,6 @@ extends Indenter {
     val line = code.offsetToLine(code.getSelectionEnd)
     val start = code.lineToStartOffset(line)
     val end = code.lineToEndOffset(line)
-    // end - 1 because the editor includes newlines as part of the text given in a line
     val indentations = lineIndentation(start, end - 1)
     if (indentations.nonEmpty) {
       executeIndentations(indentations, Some(originalCaretPosition))

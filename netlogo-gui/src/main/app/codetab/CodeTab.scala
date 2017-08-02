@@ -8,15 +8,25 @@ import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, Action, ImageIcon, JPanel }
+import javax.swing.text.JTextComponent
 
 import org.nlogo.agent.Observer
+import org.nlogo.api.EditorAreaInterface
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.editor.DumbIndenter
+import org.nlogo.editor.{ DumbIndenter, EditorAreaWrapper }
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
+
+object CodeTab {
+  class CodeTabEditorAreaWrapper(val textComponent: JTextComponent)
+  extends EditorAreaWrapper
+  with EditorAreaInterface
+}
+
+import CodeTab.CodeTabEditorAreaWrapper
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
 with ProceduresInterface
@@ -172,7 +182,7 @@ with MenuTab {
     printer.printText(g, pageFormat, pageIndex, text.getText)
 
   def setIndenter(isSmart: Boolean): Unit = {
-    if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
+    if(isSmart) text.setIndenter(new SmartIndenter(new CodeTabEditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
   }
 
