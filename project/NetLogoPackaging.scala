@@ -154,8 +154,10 @@ object NetLogoPackaging {
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
     },
     packagingClasspath := {
-      ((dependencyClasspath in netlogo in Runtime).value.files ++
-        (dependencyClasspath in Runtime in behaviorsearchProject).value.files :+
+      val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
+        (dependencyClasspath in behaviorsearchProject in Runtime).value
+
+      (removeJdkLibraries(filterDuplicateDeps(allDeps)).files :+
         (packageBin in Compile in behaviorsearchProject).value)
         .filterNot(jarExcluded)
         .filterNot(_.isDirectory) :+ packagingMainJar.value
@@ -327,6 +329,45 @@ object NetLogoPackaging {
     }
   )
 
+
+  def filterDuplicateDeps(cp: Def.Classpath): Def.Classpath = {
+    val modId = AttributeKey[ModuleID]("moduleId")
+    val (modules, others) = cp.partition(_.get(modId).isDefined)
+    val filteredModules =
+      modules.foldLeft(Seq.empty[Attributed[File]]) {
+        case (acc, jar) =>
+          val id = jar.get(modId).get
+          if (acc.exists { j =>
+            val otherId = j.get(modId).get
+            otherId.organization == id.organization &&
+            otherId.name == id.name &&
+            isNewer(otherId.revision, id.revision)
+          })
+          acc
+        else
+          acc :+ jar
+      }
+    filteredModules ++ others
+  }
+
+  private def isNewer(s1: String, s2: String): Boolean = {
+    (s1.split("\\.") zip s2.split("\\."))
+      .filter(t => t._1 != t._2)
+      .headOption
+      .map((compareRevisionPart _).tupled)
+      .getOrElse(false)
+  }
+
+  private def compareRevisionPart(p1: String, p2: String): Boolean = {
+    val p1Int = try { p1.toInt } catch { case f: NumberFormatException => -1 }
+    val p2Int = try { p2.toInt } catch { case f: NumberFormatException => -1 }
+    if (p1Int > -1 && p2Int > -1) Ordering.Int.compare(p1Int, p2Int) > 0
+    else                          Ordering.String.compare(p1, p2) > 0
+  }
+
+  private def removeJdkLibraries(cp: Def.Classpath): Def.Classpath = {
+    cp.filterNot(_.get(AttributeKey[Boolean]("jdkLibrary")).getOrElse(false))
+  }
 
   def mapToParser[T](m: Map[String, T]): Parser[T] = {
     m.map(t => t._1 ^^^ t._2).reduceLeft(_ | _)
