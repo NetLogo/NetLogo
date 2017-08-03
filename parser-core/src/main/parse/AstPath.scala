@@ -63,6 +63,8 @@ case class AstPath(components: Component*) {
         case (app: Application, CmdBlk(i)) =>
           if (i >= app.args.length || ! app.args(i).isInstanceOf[CommandBlock]) None
           else traverseRec(app.args(i).asInstanceOf[CommandBlock].statements, comps.tail)
+        case (blk: ReporterBlock, RepArg(0)) =>
+          traverseRec(blk.app, comps.tail)
         case (_, _) => None
       }
     }
