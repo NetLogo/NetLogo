@@ -2,6 +2,8 @@
 
 package org.nlogo.headless
 
+import java.nio.file.{ Files, Paths }
+
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
@@ -38,6 +40,10 @@ object ChecksumsAndPreviews {
         Previews.remake(path)
       case Array("--previews") =>
         paths(Previews.okPath, false).foreach(Previews.remake)
+      case Array("--checksum-export", path) =>
+        ChecksumExports.export(List(path))
+      case Array("--checksum-exports") =>
+        ChecksumExports.export(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
     }
     println("done")
   }
@@ -161,6 +167,38 @@ object ChecksumsAndPreviews {
       val stdError = scala.io.Source.fromInputStream(proc.getErrorStream)
       Option(stdInput.readLine()).map(_.trim).getOrElse(
         throw new Exception("Error fetching SHA1 of model: " + stdError.mkString))
+    }
+  }
+
+  // For when you need to know what the checksummed world exports are
+  object ChecksumExports {
+    import scala.collection.JavaConverters._
+
+    def export(paths: List[String]): Unit = {
+      paths.foreach(exportOne)
+    }
+
+    def exportOne(path: String): Unit = {
+      val workspace = HeadlessWorkspace.newInstance
+      try {
+        workspace.open(path)
+        Checksummer.initModelForChecksumming(workspace)
+        val modelPath = Paths.get(path)
+        val modelIndex = modelPath.iterator.asScala.indexWhere(_.toString == "models")
+        val pathCount = modelPath.getNameCount
+        val modelName = modelPath.getName(pathCount - 1).toString
+        val exportPath =
+          Paths.get("tmp/checksum-exports")
+            .resolve(
+              modelPath.subpath(modelIndex, pathCount - 2)
+                .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
+
+            Files.createDirectories(exportPath.getParent)
+            workspace.exportWorld(exportPath.toString)
+        } catch { case e: Exception =>
+          println("SKIPPING MODEL: " + path + "\n  because of exception:")
+          e.printStackTrace() }
+        finally { workspace.dispose() }
     }
   }
 }

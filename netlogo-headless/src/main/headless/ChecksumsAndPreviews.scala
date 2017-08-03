@@ -2,6 +2,8 @@
 
 package org.nlogo.headless
 
+import java.nio.file.{ Files, Paths }
+
 import org.nlogo.api.PreviewCommands
 import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
 
@@ -40,6 +42,10 @@ object ChecksumsAndPreviews {
         Previews.remake(path)
       case Array("--previews") =>
         paths(Previews.okPath, false).foreach(Previews.remake)
+      case Array("--checksum-export", path) =>
+        ChecksumExports.export(List(path))
+      case Array("--checksum-exports") =>
+        ChecksumExports.export(paths(Checksums.okPath, includeBenchmarks = true))
     }
     println("done")
   }
@@ -193,6 +199,39 @@ object ChecksumsAndPreviews {
                                     new java.io.File("models"))
           .getInputStream))
       Option(stdInput.readLine()).map(_.trim).getOrElse(throw new Exception(s"Filepath $modelPath not found"))
+    }
+  }
+
+  // For when you need to know what the checksummed world exports are
+  object ChecksumExports {
+    import scala.collection.JavaConverters._
+
+    def export(paths: List[String]): Unit = {
+      paths.foreach(exportOne)
+    }
+
+    def exportOne(path: String): Unit = {
+      val workspace = HeadlessWorkspace.newInstance
+      try {
+        workspace.open(path)
+        Checksummer.initModelForChecksumming(workspace)
+        val modelPath = Paths.get(path)
+        val modelIndex = modelPath.iterator.asScala.indexWhere(_.toString == "models")
+        val pathCount = modelPath.getNameCount
+        val modelName = modelPath.getName(pathCount - 1).toString
+        val exportPath =
+          Paths.get("tmp/checksum-exports")
+            .resolve(
+              modelPath.subpath(modelIndex, pathCount - 2)
+                .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
+
+            Files.createDirectories(exportPath.getParent)
+            workspace.exportWorld(exportPath.toString)
+      } catch { case e: Exception =>
+        println("SKIPPING MODEL: " + path + "\n  because of exception:")
+        e.printStackTrace()
+      }
+      finally { workspace.dispose() }
     }
   }
 }

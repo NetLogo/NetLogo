@@ -1,27 +1,4 @@
 ///
-/// checksums and previews
-///
-
-// These have a suffix to avoid conflict with the names in project/ChecksumsAndPreviews
-val csap = "org.nlogo.headless.ChecksumsAndPreviews"
-
-val checksumHL = inputKey[Unit]("update one model checksum")
-
-fullRunInputTask(checksumHL, Compile, csap, "--checksum")
-
-val allChecksumsHL = inputKey[Unit]("update all model checksums")
-
-fullRunInputTask(allChecksumsHL, Compile, csap, "--checksums")
-
-val previewHL = inputKey[Unit]("update one model preview image")
-
-fullRunInputTask(previewHL,   Compile, csap, "--preview")
-
-val allPreviewsHL = inputKey[Unit]("update all model preview images")
-
-fullRunInputTask(allPreviewsHL, Compile, csap, "--previews")
-
-///
 /// Classycle
 ///
 
