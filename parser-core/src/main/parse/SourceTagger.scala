@@ -38,17 +38,20 @@ class LambdaWhitespace(startNode: ReporterApp) extends FormattingWhitespace {
           case Some(ReporterApp(c: _commandlambda, _, _)) => " "
           case other => " ]"
         }
+      case Some(AstPath.RepBlk(i)) => " ]"
       case other => " "
     }
-  def content(path: AstPath): String =
+  def content(path: AstPath): String = {
     path.traverse(startNode) match {
       case Some(r: ReporterApp) =>
         r.reporter match {
           case _const(ll: LogoList) => Dump.logoObject(ll, true, false)
           case other => other.token.text
         }
-      case other => ""
+      case other =>
+        ""
     }
+  }
   def frontMargin(path: AstPath): String = ""
   def leading(path: AstPath): String =
     path.components.lastOption match {
@@ -64,6 +67,7 @@ class LambdaWhitespace(startNode: ReporterApp) extends FormattingWhitespace {
             }
           case other => " ["
         }
+      case Some(AstPath.RepBlk(i)) => " ["
       case _ => ""
     }
   def trailing(path: AstPath): String = ""

@@ -11,12 +11,17 @@ object ChecksumsAndPreviews {
   lazy val allChecksums = InputKey[Option[String]]("all-checksums", "update all model checksums")
   lazy val preview = InputKey[Option[String]]("preview", "update one model preview image")
   lazy val allPreviews = InputKey[Option[String]]("all-previews", "update all model preview images")
+  lazy val checksumExport = InputKey[Option[String]]("checksumExport", "run export on preview commands for one model")
+  lazy val allChecksumsExport = InputKey[Option[String]]("allChecksumsExport", "run export on preview commands for all models")
+
 
   val settings = Seq(
     Def.setting(checksum, makeTask("--checksum")),
     Def.setting(allChecksums, makeTask("--checksums")),
     Def.setting(preview, makeTask("--preview")),
-    Def.setting(allPreviews, makeTask("--previews"))
+    Def.setting(allPreviews, makeTask("--previews")),
+    Def.setting(checksumExport, makeTask("--checksum-export")),
+    Def.setting(allChecksumsExport, makeTask("--checksum-exports"))
   )
 
   private def makeTask(flag: String) =

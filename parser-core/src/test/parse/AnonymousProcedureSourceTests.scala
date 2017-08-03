@@ -79,4 +79,10 @@ class AnonymousProcedureSourceTests extends FunSuite with Inside with BaseParser
   test("blocks in anonymous procedures") {
     assertStringifies(expression("[ [a b] -> crt 10 [ fd 1 ] ]"), "[ [a b] -> crt 10 [ fd 1 ] ]")
   }
+  test("reporter blocks in anonymous procedures") {
+    assertStringifies(expression("[ -> count turtles with [ xcor = 10 ] ]"), "[ -> count turtles with [ xcor = 10 ] ]")
+  }
+  test("color literals in anonymous procedures") {
+    assertStringifies(expression("[ -> blue ]"), "[ -> blue ]")
+  }
 }
