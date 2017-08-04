@@ -21,13 +21,8 @@ object StickyLineEndNavigationFilter {
         }
         offsetValidIndex = Some(lineEndOffset)
         lineEndOffset
-      } else if (offsetValidIndex.contains(fromPos)) {
-        val offset = savedOffset.get
-        val targetLineStart = ea.lineToStartOffset(targetLineNum)
-        val targetLineEnd = ea.lineToEndOffset(targetLineNum)
-        offsetValidIndex = None
-        (targetLineStart + offset) min (targetLineEnd - 1)
       } else {
+        offsetValidIndex = None
         endPos
       }
     }
