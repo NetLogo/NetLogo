@@ -101,15 +101,11 @@ object ModelsLibraryDialog {
     val info: String = {
       if (allowsChildren) ""
       else {
-        var _info  =
+        val _info  =
           infoMap.get(
             path.substring(path.indexOf("models"))
               .replace(System.getProperty("file.separator"), "/"))
             .getOrElse("")
-        // remove any leading non alpha-numeric characters
-        while (_info.length > 0 && !Character.isLetterOrDigit(_info.charAt(0))) {
-          _info = _info.substring(1)
-        }
 
         // All of the above the calls to String.substring and
         // String.trim will leave the char array containing the
