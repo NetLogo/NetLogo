@@ -95,7 +95,10 @@ object ChecksumsAndPreviews {
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
+          "/ART/GENJAM - DUPLE.NLOGO",
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/"),
+        Some("it uses behaviorspace-experiment-name") -> List(
+          "/SAMPLE MODELS/BIOLOGY/EVOLUTION/ANISOGAMY.NLOGO"),
         Some("it uses the ls extension, not setup for headless") -> List(
           "/SAMPLE MODELS/CHEMISTRY & PHYSICS/KICKED ROTATORS.NLOGO",
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/LS/"),
@@ -190,7 +193,7 @@ object ChecksumsAndPreviews {
     }
 
     def getRevisionNumber(modelPath: String): String = {
-      val cmds = Array("git", "log", "--pretty=format:%h",
+      val cmds = Array("git", "log", "--pretty=format:%H",
                        new java.io.File(modelPath).getAbsolutePath)
       val stdInput = new java.io.BufferedReader(
         new java.io.InputStreamReader(
@@ -198,7 +201,9 @@ object ChecksumsAndPreviews {
                                     Array[String](),
                                     new java.io.File("models"))
           .getInputStream))
-      Option(stdInput.readLine()).map(_.trim).getOrElse(throw new Exception(s"Filepath $modelPath not found"))
+      // rather than use %h, we take the first 10 of %H. Git changed things making %h different
+      // across versions (see https://github.com/git/git/commit/e6c587c733b4634030b353f4024794b08bc86892)
+      Option(stdInput.readLine()).map(_.trim.take(10)).getOrElse(throw new Exception(s"Filepath $modelPath not found"))
     }
   }
 
