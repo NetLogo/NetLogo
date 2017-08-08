@@ -16,7 +16,7 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   def testBehaviorSpaceXml(fileName: String): Array[String] =
     scala.io.Source.fromFile(s"test/fileformat/$fileName")
       .mkString.lines.toArray
-  val sampleLines = testBehaviorSpaceXml("BehaviorSpaceExample.xml")
+  val sampleLines = testBehaviorSpaceXml("NLogoBehaviorSpaceExample.xml")
 
   val expectedProto = LabProtocol("experiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new RefEnumeratedValueSet("density", List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
 

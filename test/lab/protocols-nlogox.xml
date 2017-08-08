@@ -1,0 +1,314 @@
+<experiments>
+  <experiment name="testBehaviorSpace1" repetitions="2">
+    <stepLimit>2</stepLimit>
+    <setup>set counter 0</setup>
+    <go>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</go>
+    <exitCondition>counter &gt; param2</exitCondition>
+    <metrics>
+      <metric>counter</metric>
+    </metrics>
+    <valueSets>
+      <enumeratedValueSet variable="param1">
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+      </enumeratedValueSet>
+      <steppedValueSet variable="param2" first="1" step="1" last="5"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testBehaviorSpace2" repetitions="2" runMetricsEveryStep="false">
+    <stepLimit>2</stepLimit>
+    <setup>set counter 0</setup>
+    <go>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</go>
+    <exitCondition>counter &gt; param2</exitCondition>
+    <metrics>
+      <metric>counter</metric>
+    </metrics>
+    <valueSets>
+      <enumeratedValueSet variable="param1">
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+      </enumeratedValueSet>
+      <steppedValueSet variable="param2" first="1" step="1" last="5"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testMultipleMetrics" >
+    <stepLimit>4</stepLimit>
+    <setup>set counter 0</setup>
+    <go>set counter counter + 1</go>
+    <exitCondition>counter &gt;= param1</exitCondition>
+    <metrics>
+      <metric>counter</metric>
+      <metric>counter / 2</metric>
+      <metric>counter / 10</metric>
+    </metrics>
+    <valueSets>
+      <enumeratedValueSet variable="param1">
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+      </enumeratedValueSet>
+    </valueSets>
+  </experiment>
+  <experiment name="testNoMetrics1" >
+    <stepLimit>4</stepLimit>
+    <setup>set counter 0</setup>
+    <go>set counter counter + 1</go>
+    <exitCondition>counter &gt;= param1</exitCondition>
+    <valueSets>
+      <enumeratedValueSet variable="param1">
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+      </enumeratedValueSet>
+    </valueSets>
+  </experiment>
+  <experiment name="testNoMetrics2" >
+    <stepLimit>4</stepLimit>
+    <setup>set counter 0</setup>
+    <go>set counter counter + 1</go>
+    <exitCondition>counter &gt;= param1</exitCondition>
+    <valueSets>
+      <enumeratedValueSet variable="param1">
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+      </enumeratedValueSet>
+    </valueSets>
+  </experiment>
+  <experiment name="testImmediateExit" >
+    <stepLimit>4</stepLimit>
+    <setup>set foo 0</setup>
+    <final>set foo 99</final>
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>5</metric>
+    </metrics>
+  </experiment>
+  <experiment name="testCarryover" repetitions="4">
+    <stepLimit>5</stepLimit>
+    <go>set foo foo + 1</go>
+    <metrics>
+      <metric>foo</metric>
+    </metrics>
+  </experiment>
+  <experiment name="experiment1" repetitions="5">
+    <stepLimit>50</stepLimit>
+    <setup>setup-random</setup>
+    <go>go</go>
+    <final>show timer</final>
+    <exitCondition>"foo&amp;bar!"
+
+"\n+\n"baz!</exitCondition>
+    <metrics>
+      <metric>count patches with [living?]</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="bgcolor" first="0" step="1" last="100"/>
+      <enumeratedValueSet variable="fgcolor">
+        <number>133</number>
+        <number>134</number>
+        <number>135</number>
+        <number>136</number>
+      </enumeratedValueSet>
+      <steppedValueSet variable="foobarbaz" first="0" step="1" last="100"/>
+      <enumeratedValueSet variable="foo?">
+        <boolean>true</boolean>
+        <boolean>false</boolean>
+      </enumeratedValueSet>
+    </valueSets>
+  </experiment>
+  <experiment name="experiment2" repetitions="6" runMetricsEveryStep="false">
+    <stepLimit>50</stepLimit>
+    <setup>setup-random</setup>
+    <go>go</go>
+    <metrics>
+      <metric>count patches with [living?]</metric>
+      <metric>count patches with [not living?]</metric>
+    </metrics>
+  </experiment>
+  <experiment name="experiment3" repetitions="9">
+    <stepLimit>11</stepLimit>
+    <setup>setup-random</setup>
+    <go>go</go>
+    <metrics>
+      <metric>count patches with [living?]</metric>
+      <metric>count patches with [not living?]</metric>
+    </metrics>
+  </experiment>
+  <experiment name="experiment4" repetitions="9">
+    <setup>setup-random</setup>
+    <go>go</go>
+  </experiment>
+  <experiment name="testResizingWorld1"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="max-pxcor" first="0" step="1" last="5"/>
+      <steppedValueSet variable="max-pycor" first="0" step="1" last="5"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testResizingWorld2"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
+      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testResizingWorld3"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="world-width" first="2" step="1" last="5"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testRandomSeed" repetitions="2">
+    <stepLimit>2</stepLimit>
+    <metrics>
+      <metric>random 1000</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="random-seed" first="0" step="1" last="2"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testExportGraphics"  runMetricsEveryStep="false">
+    <stepLimit>20</stepLimit>
+    <setup>ask patches [ set pcolor black ] crt 10 [ set size 10 fd random 40 ]</setup>
+    <final>export-view "tmp/testExportGraphics.png"</final>
+    <metrics>
+      <metric>random 1000</metric>
+    </metrics>
+  </experiment>
+  <experiment name="testStopping1"  runMetricsEveryStep="false">
+    <stepLimit>10</stepLimit>
+    <setup>set x 0</setup>
+    <go>if x = 5 [ stop ] set x x + 1</go>
+  </experiment>
+  <experiment name="testStopping2"  runMetricsEveryStep="false">
+    <stepLimit>10</stepLimit>
+    <setup>set x 0</setup>
+    <go>go</go>
+  </experiment>
+  <experiment name="badAtBeginning"  runMetricsEveryStep="false">
+    <stepLimit>5</stepLimit>
+    <setup>setup</setup>
+    <go>go</go>
+    <metrics>
+      <metric>bad-divide</metric>
+    </metrics>
+  </experiment>
+  <experiment name="metricsLocalRandomness" >
+    <stepLimit>2</stepLimit>
+    <setup>random-seed 0</setup>
+    <go>set x random-float 1.0</go>
+    <metrics>
+      <metric>random-float 1.0</metric>
+    </metrics>
+  </experiment>
+  <experiment name="exitConditionLocalRandomness" >
+    <stepLimit>3</stepLimit>
+    <setup>random-seed 0</setup>
+    <go>set x random-float 1.0</go>
+    <exitCondition>one-of [false false]</exitCondition>
+    <metrics>
+      <metric>random-float 1.0</metric>
+    </metrics>
+  </experiment>
+  <experiment name="testResizingWorld13d"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="max-pxcor" first="0" step="1" last="5"/>
+      <steppedValueSet variable="max-pycor" first="0" step="1" last="5"/>
+      <steppedValueSet variable="max-pzcor" first="0" step="1" last="5"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
+      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
+      <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
+    </valueSets>
+  </experiment>
+  <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
+    <exitCondition>true</exitCondition>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <valueSets>
+      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
+      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
+      <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
+    </valueSets>
+  </experiment>
+  <experiment name="wait1" repetitions="4">
+    <stepLimit>2</stepLimit>
+    <setup>reset-timer</setup>
+    <go>wait 1</go>
+    <metrics>
+      <metric>round timer</metric>
+    </metrics>
+  </experiment>
+  <experiment name="metricGoBoom" repetitions="2">
+    <stepLimit>2</stepLimit>
+    <setup>ca reset-ticks</setup>
+    <go>tick</go>
+    <metrics>
+      <metric>__boom</metric>
+    </metrics>
+  </experiment>
+  <experiment name="metricGoBoom2" repetitions="100">
+    <stepLimit>20</stepLimit>
+    <setup>setup</setup>
+    <go>go</go>
+    <metrics>
+      <metric>mean [who] of turtles</metric>
+    </metrics>
+  </experiment>
+  <experiment name="goCommandsGoBoom" repetitions="2">
+    <stepLimit>2</stepLimit>
+    <setup>ca reset-ticks</setup>
+    <go>tick __ignore __boom</go>
+    <metrics>
+      <metric>ticks</metric>
+    </metrics>
+  </experiment>
+  <experiment name="setupCommandsGoBoom" repetitions="2">
+    <stepLimit>2</stepLimit>
+    <setup>ca reset-ticks __ignore __boom</setup>
+    <go>tick</go>
+    <metrics>
+      <metric>ticks</metric>
+    </metrics>
+  </experiment>
+  <experiment name="metricsWithSideEffects" >
+    <stepLimit>2</stepLimit>
+    <setup>clear-all reset-ticks</setup>
+    <go>tick</go>
+    <metrics>
+      <metric>metric</metric>
+    </metrics>
+  </experiment>
+  <experiment name="runNumber" repetitions="3">
+    <stepLimit>2</stepLimit>
+    <setup>clear-all reset-ticks</setup>
+    <go>tick</go>
+    <metrics>
+      <metric>behaviorspace-run-number</metric>
+    </metrics>
+  </experiment>
+</experiments>

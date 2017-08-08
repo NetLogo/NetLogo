@@ -1,0 +1,17 @@
+<experiments>
+  <experiment name="experiment" repetitions="10">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>not any? fires</exitCondition>
+    <metrics>
+      <metric>burned-trees</metric>
+    </metrics>
+    <valueSets>
+      <enumeratedValueSet variable="density">
+        <number>40</number>
+        <number>0.1</number>
+        <number>70</number>
+      </enumeratedValueSet>
+    </valueSets>
+  </experiment>
+</experiments>

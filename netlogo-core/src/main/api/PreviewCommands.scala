@@ -31,6 +31,16 @@ object PreviewCommands {
     override val source = "need-to-manually-make-preview-for-this-model"
     override val description = "Manually make preview"
   }
+  object Compilable {
+    def apply(source: String): PreviewCommands.Compilable = {
+      val strippedSource = source.stripTrailingWhiteSpace
+      strippedSource.toLowerCase match {
+        case ""             => Default
+        case Default.source => Default
+        case other          => Custom(other)
+      }
+    }
+  }
   trait Compilable extends PreviewCommands
   case object Default extends Compilable {
     override val source = "setup repeat 75 [ go ]"

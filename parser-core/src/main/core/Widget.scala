@@ -48,6 +48,17 @@ case class Button(source: Option[String],
       this.copy(source = source.map(conversion))
   }
 
+object HubNetButton {
+  def apply(
+  left: Int, top: Int,
+  right: Int, bottom: Int,
+  display: Option[String] = None,
+  forever: Boolean = false,
+  actionKey: Option[Char] = None): Button = {
+    Button(source = None, left, top, right, bottom, display, forever, AgentKind.Observer, actionKey, disableUntilTicksStart = false)
+  }
+}
+
 case class TextBox(display: Option[String],
   left:  Int = 0, top:    Int = 0,
   right: Int = 5, bottom: Int = 5,
@@ -96,6 +107,20 @@ case class Slider(variable: Option[String],
 
   override def convertSource(conversion: String => String): Slider =
     this.copy(min = conversion(min), max = conversion(max), step = conversion(step))
+}
+
+object HubNetSlider {
+  def apply(variable: Option[String],
+  left:  Int = 0, top:    Int = 0,
+  right: Int = 0, bottom: Int = 0,
+  display:  Option[String]  = None,
+  min:       Double         = 0,
+  max:       Double         = 100,
+  default:   Double         = 1,
+  step:      Double         = 1,
+  units:     Option[String] = None,
+  direction: Direction      = Horizontal): Slider =
+    Slider(variable, left, top, right, bottom, display, min.toString, max.toString, default, step.toString, units, direction)
 }
 
 case class Monitor(

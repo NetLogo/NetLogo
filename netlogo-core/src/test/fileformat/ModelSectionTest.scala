@@ -20,6 +20,8 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
 
   def displaySerialized(a: A): String = a.toString
 
+  def minimizeSerializedDiff(a1: A, a2: A): (A, A) = (a1, a2)
+
   def attachComponent(b: C): Model
 
   def testDeserializationError[D <: Exception](description: String, serializedVersion: A)(implicit ct: ClassTag[D]): Unit = {
@@ -47,7 +49,8 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
       val s = subject
       val model = attachComponent(deserializedVersion)
       val serialized = s.serialize(model)
-      assert(compareSerialized(serialized, serializedVersion), displaySerialized(serialized) + " did not equal " + displaySerialized(serializedVersion))
+      val (min1, min2) = minimizeSerializedDiff(serialized, serializedVersion)
+      assert(compareSerialized(serialized, serializedVersion), displaySerialized(serialized) + " did not equal " + displaySerialized(serializedVersion) + "\ndiff expected:\n" + displaySerialized(min2) + "\ndiff actual:\n" + displaySerialized(min1))
     }
   }
 
@@ -65,7 +68,8 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
       val s = subject
       val m = s.deserialize(serializedVersion)(new Model()).get
       val reserialized = s.serialize(m)
-      assert(compareSerialized(serializedVersion, reserialized), s"${displaySerialized(reserialized)} was expected to equal ${displaySerialized(serializedVersion)}")
+      val (min1, min2) = minimizeSerializedDiff(reserialized, serializedVersion)
+      assert(compareSerialized(serializedVersion, reserialized), displaySerialized(reserialized) + " was expected to equal " + displaySerialized(serializedVersion) + "\ndiff expected:\n" + displaySerialized(min1) + "\ndiff actual:\n" + displaySerialized(min2))
     }
   }
 

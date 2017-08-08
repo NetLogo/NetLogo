@@ -4,7 +4,11 @@ package org.nlogo.core
 
 object Shape {
   val Width = 300
-  case class RgbColor(red: Int, green: Int, blue: Int, alpha: Int = 255)
+  type RgbColor = org.nlogo.core.RgbColor
+  object RgbColor {
+    def apply(red: Int, green: Int, blue: Int, alpha: Int = 255) =
+      org.nlogo.core.RgbColor(red, green, blue, alpha)
+  }
 
   trait Element {
     def filled: Boolean

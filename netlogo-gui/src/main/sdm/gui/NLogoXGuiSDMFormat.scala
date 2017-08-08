@@ -4,36 +4,60 @@ package org.nlogo.sdm.gui
 
 import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, StringReader }
 
-import org.jhotdraw.util.{ StorableInput, StorableOutput }
+import
+  cats.data.Validated.{ Invalid, Valid }
 
-import org.nlogo.core.{ Model => CoreModel }
-import org.nlogo.fileformat.NLogoFormat
+import
+  org.jhotdraw.util.{ StorableInput, StorableOutput }
+
+import
+  org.nlogo.core.{ model, Model => CoreModel },
+    model.{ ElementFactory, MissingElement, XmlReader }
+
+import
+  org.nlogo.fileformat.{ NLogoXFormat, NLogoXFormatException }
+
 import org.nlogo.api.{ AddableLoader, ComponentSerialization, ConfigurableModelLoader }
 
-import scala.util.Try
+import
+  scala.util.{ Failure, Success, Try }
 
-class NLogoGuiSDMFormat extends AddableLoader with ComponentSerialization[Array[String], NLogoFormat] {
+class NLogoXGuiSDMFormat(factory: ElementFactory)
+  extends AddableLoader
+  with ComponentSerialization[NLogoXFormat.Section, NLogoXFormat] {
   override def componentName = "org.nlogo.modelsection.systemdynamics"
   override def addDefault = identity
-  override def serialize(m: CoreModel): Array[String] = {
+  override def serialize(m: CoreModel): NLogoXFormat.Section = {
     m.optionalSectionValue[AggregateDrawing](componentName)
-      .map(drawingStrings)
-      .getOrElse(Array[String]())
+      .map(drawing => (drawingStrings(drawing), drawing.getModel.getDt))
+      .map {
+        case (strings, dt) =>
+          factory.newElement("systemDynamics")
+            .withAttribute("dt", dt.toString)
+            .withElement(
+              factory.newElement("jhotdraw6").withText(strings.mkString("\n")).build
+            )
+            .build
+      }
+      .getOrElse(factory.newElement("systemDynamics").build)
   }
 
   override def validationErrors(m: CoreModel): Option[String] =
     None
 
-  override def deserialize(s: Array[String]): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
-    Try {
-      stringsToDrawing(s)
-        .map(sdm => m.withOptionalSection(componentName, Some(sdm), sdm))
-        .getOrElse(m)
-    }
+  override def deserialize(e: NLogoXFormat.Section): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
+    XmlReader.allElementReader("jhotdraw6").read(e)
+      .map(XmlReader.childText _) match {
+        case Valid(sdm) =>
+          Try(stringsToDrawing(sdm.lines.toArray[String])
+            .map(drawing => m.withOptionalSection(componentName, Some(drawing), drawing))
+            .getOrElse(m))
+          case Invalid(_: MissingElement) => Success(m)
+          case Invalid(err) => Failure(new NLogoXFormatException(err.message))
+      }
   }
 
   private def drawingStrings(drawing: AggregateDrawing): Array[String] = {
-    drawing.synchronizeModel()
     if (drawing.getModel.elements.isEmpty)
       Array()
     else {
@@ -85,5 +109,5 @@ class NLogoGuiSDMFormat extends AddableLoader with ComponentSerialization[Array[
                      "org.nlogo.sdm.gui")
 
   def addToLoader(loader: ConfigurableModelLoader): ConfigurableModelLoader =
-    loader.addSerializer[Array[String], NLogoFormat](this)
+    loader.addSerializer[NLogoXFormat.Section, NLogoXFormat](this)
 }

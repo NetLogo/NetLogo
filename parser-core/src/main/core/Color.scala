@@ -209,6 +209,12 @@ trait Color {
        ((rgba.get(1).asInstanceOf[java.lang.Double]).intValue << 8) |
        ((rgba.get(2).asInstanceOf[java.lang.Double]).intValue))
 
+  def getARGBIntByRgbColor(c: RgbColor): Int =
+    (c.alpha << 24 |
+     c.red   << 16 |
+     c.green << 8  |
+     c.blue)
+
   // this assumes that you have an RGB color that is actually one of the NetLogo colors
   def argbToColor(argb: Int): java.lang.Double =
     getClosestColorNumberByARGB(argb)

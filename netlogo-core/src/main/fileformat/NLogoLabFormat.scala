@@ -7,12 +7,18 @@ import org.nlogo.api.{ LabProtocol, ModelFormat, ComponentSerialization }
 
 import scala.util.Try
 
-trait LabFormat[A <: ModelFormat[Array[String], A]]
-  extends ComponentSerialization[Array[String], A] {
+trait LabFormat {
+  def componentName = "org.nlogo.modelsection.behaviorspace"
+
+  def validationErrors(m: Model) =
+    None
+}
+
+trait AbstractNLogoLabFormat[A <: ModelFormat[Array[String], A]]
+  extends ComponentSerialization[Array[String], A]
+  with LabFormat {
 
   def literalParser: LiteralParser
-
-  def componentName = "org.nlogo.modelsection.behaviorspace"
 
   val loader = new LabLoader(literalParser)
 
@@ -25,9 +31,6 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
       .getOrElse(Array[String]())
   }
 
-  def validationErrors(m: Model) =
-    None
-
   override def deserialize(s: Array[String]) = {(m: Model) =>
     Try { m.withOptionalSection(componentName, load(s, Some(m.version)), Seq[LabProtocol]()) }
   }
@@ -38,8 +41,8 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
 }
 
 class NLogoLabFormat(val literalParser: LiteralParser)
-  extends LabFormat[NLogoFormat]
+  extends AbstractNLogoLabFormat[NLogoFormat]
 
 class NLogoThreeDLabFormat(val literalParser: LiteralParser)
-  extends LabFormat[NLogoThreeDFormat]
+  extends AbstractNLogoLabFormat[NLogoThreeDFormat]
 

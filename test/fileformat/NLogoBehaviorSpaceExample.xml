@@ -1,5 +1,5 @@
 <experiments>
-  <experiment name="experiment" repetitions="10" runMetricsEveryStep="true">
+  <experiment name="experiment" repetitions="10" runMetricsEveryStep="true" sequentialRunOrder="true">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>not any? fires</exitCondition>

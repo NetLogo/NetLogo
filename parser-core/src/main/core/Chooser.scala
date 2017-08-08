@@ -11,8 +11,8 @@ sealed trait Chooseable {
 }
 
 object Chooseable {
-  def apply(a: AnyRef): Chooseable = {
-    a match {
+  def apply(value: AnyRef): Chooseable = {
+    value match {
       case s: String            => ChooseableString(s)
       case d: java.lang.Double  => ChooseableDouble(d)
       case b: java.lang.Boolean => ChooseableBoolean(b)

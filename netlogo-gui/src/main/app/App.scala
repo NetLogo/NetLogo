@@ -14,17 +14,18 @@ import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, Find
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, I18N, Model,
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, Femto, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoFormat }
+import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, ScalaXmlElementFactory }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala,
+  Controllable, CurrentModelOpener, HubNetManagerFactory, SaveModel, SaveModelAs, WorkspaceFactory }
 
 import org.picocontainer.adapters.AbstractAdapter
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
@@ -87,6 +88,7 @@ object App{
 
     if (Version.systemDynamicsAvailable) {
       pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+      pico.add(classOf[AddableLoader], "org.nlogo.sdm.gui.NLogoXGuiSDMFormat", new ConstantParameter(ScalaXmlElementFactory))
     }
     pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
@@ -97,20 +99,17 @@ object App{
       def verify(x$1: org.picocontainer.PicoContainer): Unit = {}
 
       def getComponentInstance(container: org.picocontainer.PicoContainer, into: java.lang.reflect.Type) = {
-        val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
-        val compilerServices = new DefaultCompilerServices(compiler)
+        val literalParser = Femto.scalaSingleton[org.nlogo.core.LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
         val loader =
-          fileformat.standardLoader(compilerServices)
+          fileformat.standardLoader(literalParser)
         val additionalComponents =
-          container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
+          container.getComponents(classOf[AddableLoader]).asScala
         if (additionalComponents.nonEmpty)
           additionalComponents.foldLeft(loader) {
-            case (l, serialization) =>
-              l.addSerializer[Array[String], NLogoFormat](serialization)
+            case (l, component) => component.addToLoader(l)
           }
-        else
-          loader
+        else loader
       }
     }
 
@@ -895,8 +894,12 @@ class App extends
    * Should only be used by ModelResaver.
    */
   @throws(classOf[java.io.IOException])
-  private[nlogo] def saveOpenModel(): Unit = {
-    dispatchThreadOrBust(fileManager.saveModel(false))
+  private[nlogo] def saveOpenModel(controller: SaveModel.Controller): Unit = {
+    SaveModelAs(pico.getComponent(classOf[ModelSaver]).currentModel,
+      pico.getComponent(classOf[ModelLoader]),
+      controller,
+      pico.getComponent(classOf[AbstractWorkspaceScala]),
+      Version).foreach(thunk => thunk())
   }
 
   /**

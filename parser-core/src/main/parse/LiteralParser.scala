@@ -14,8 +14,6 @@ import org.nlogo.core,
  */
 class LiteralParser(importHandler: LiteralImportHandler) {
 
-  // private lazy val parseLiteralAgentOrAgentSet = _parseLiteralAgentOrAgentSet(this.readLiteralPrefix)
-
   /// all error messages used in this class
   private val ERR_EXPECTED_CLOSEPAREN = "Expected a closing parenthesis."
   private val ERR_EXPECTED_LITERAL = "Expected a literal value."
