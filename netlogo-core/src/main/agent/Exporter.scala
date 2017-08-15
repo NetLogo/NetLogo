@@ -113,7 +113,9 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     Collections.sort(sortedGlobals)
     val subject =
       Option(world.observer.targetAgent).getOrElse(Nobody)
-    print("," + csv.variableNameRow(sortedGlobals))
+    if (! sortedGlobals.isEmpty) {
+      print("," + csv.variableNameRow(sortedGlobals))
+    }
     println()
     print(csv.encode(world.minPxcor.toString) + ","
           + csv.encode(world.maxPxcor.toString) + ","
