@@ -46,17 +46,20 @@ object ModelsLibrary {
     def exactMatch(node: Node): Option[Seq[String]] =
       node.depthFirstIterable
         .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGO"))
+        .filter(_.isLeaf)
         .map(n => Seq(n.name))
 
     def initialMatch(node: Node): Seq[String] =
       node.depthFirstIterable
         .filter(n => n.name.toUpperCase.startsWith(targetName.toUpperCase))
+        .filter(_.isLeaf)
         .map(n => n.name)
         .toSeq
 
     def anywhereMatch(node: Node): Seq[String] =
       node.depthFirstIterable
         .filter(n => n.name.toUpperCase.contains(targetName.toUpperCase))
+        .filter(_.isLeaf)
         .map(n => n.name)
         .toSeq
 

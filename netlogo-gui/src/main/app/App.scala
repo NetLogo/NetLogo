@@ -705,7 +705,11 @@ class App extends
       val fullName =
         if (matches.size == 1) matches(0)
         else {
-          val i = org.nlogo.swing.OptionDialog.showAsList(frame, "Magic Model Matcher", "You must choose!", matches.toArray)
+          val i = org.nlogo.swing.OptionDialog.showAsList(
+            frame,
+            "Magic Model Matcher",
+            "You must choose!",
+            matches.map(_.replaceAllLiterally(".nlogo3d", "").replaceAllLiterally(".nlogo", "")).toArray)
           if (i != -1) matches(i) else null
         }
       if (fullName != null) {

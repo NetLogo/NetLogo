@@ -27,6 +27,9 @@ class ModelsLibraryTests extends FunSuite {
   test("findModelsBySubstring returns a list of library models starting with that string") {
     assert(ModelsLibrary.findModelsBySubstring("ant").size > 10)
   }
+  test("findModelsBySubstring excludes directories") {
+    assert(! ModelsLibrary.findModelsBySubstring("sample").contains("Sample Models"))
+  }
   test("findModelsBySubstring returns a list of library models with that string anywhere") {
     assert(ModelsLibrary.findModelsBySubstring("oper").size > 1)
   }
