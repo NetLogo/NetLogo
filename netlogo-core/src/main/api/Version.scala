@@ -90,6 +90,14 @@ trait Version {
         false
     }
 
+  def systemDynamicsAvailable =
+    try {
+      Class.forName("org.jhotdraw.util.StorableInput")
+      true
+    } catch {
+      case _: ClassNotFoundException => false
+    }
+
   def knownVersion(version: String) =
     knownVersions.exists(removeRev(version.trim).startsWith)
 

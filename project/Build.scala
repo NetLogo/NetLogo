@@ -39,7 +39,31 @@ object NetLogoBuild {
         val existingMappings = (mappings in Compile).value.map(_._2)
         val newMappings = (mappings in Compile in project).value
         newMappings.filterNot(n => existingMappings.contains(n._2))
-      }))
+      })) ++ Seq(
+        ivyModule := {
+          val is = ivySbt.value
+          val newMs =
+            moduleSettings.value match {
+              case i: InlineConfigurationWithExcludes =>
+                val excludedModule = (projectID in project).value
+                val newDeps = i.dependencies.filterNot(m =>
+                    m.name == excludedModule.name && m.organization == excludedModule.organization)
+                InlineConfigurationWithExcludes(i.module, i.moduleInfo,
+                  newDeps,
+                  i.overrides,
+                  i.excludes,
+                  i.ivyXML,
+                  i.configurations,
+                  i.defaultConfiguration,
+                  i.ivyScala,
+                  i.validate,
+                  i.conflictManager)
+                case other => other
+            }
+          new is.Module(newMs)
+        },
+        libraryDependencies ++= (libraryDependencies in project).value)
+
 
   def shareSourceDirectory(path: String): Seq[Setting[_]] = {
     Seq(

@@ -2,7 +2,8 @@ import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
 import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging, marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
+import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
+  marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Dump.dumpClassName
 import Testing.{ testTempDirectory, testChecksumsClass }
@@ -97,17 +98,17 @@ lazy val root =
 
 lazy val netlogo = project.in(file("netlogo-gui")).
   dependsOn(parserJVM % "test->test;compile->compile").
+  settings(NetLogoBuild.settings: _*).
   settings(includeInPackaging(parserJVM): _*).
+  settings(shareSourceDirectory("netlogo-core"): _*).
   settings(commonSettings: _*).
   settings(jvmSettings: _*).
   settings(scalaSettings: _*).
   settings(scalatestSettings: _*).
-  settings(NetLogoBuild.settings: _*).
   settings(JFlexRunner.settings: _*).
   settings(EventsGenerator.settings: _*).
   settings(Docs.settings: _*).
   settings(publicationSettings("NetLogo-JVM"): _*).
-  settings(shareSourceDirectory("netlogo-core"): _*).
   settings(flexmarkDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -127,7 +128,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(
     name := "NetLogo",
     version := "6.0.2",
-    isSnapshot := false,
+    isSnapshot := true,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
@@ -148,7 +149,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.parboiled" %% "parboiled" % "2.1.3",
       "org.jogamp.jogl" % "jogl-all" % "2.3.2",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
-      "org.jhotdraw" % "jhotdraw" % "6.0b1"      from cclArtifacts("jhotdraw-6.0b1.jar"),
+      "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
       "org.jmock" % "jmock" % "2.5.1" % "test",
       "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
       "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
@@ -252,8 +253,8 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
-  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*).
-  settings(NetLogoBuild.settings: _*)
+  settings(NetLogoBuild.settings: _*).
+  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
 
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).
