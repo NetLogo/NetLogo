@@ -2328,13 +2328,13 @@ command, while `[ -> count turtles ]` reports an anonymous reporter, because
 
 These primitives require anonymous procedures as input: `foreach`, `map`,
 `reduce`, `filter`, `n-values`, `sort-by`. When calling these primitives, using
-an `->` is optional if your anonymous procedure if your anonymous procedure
-contains a single primitive which has requires no more inputs than are are
-provided by the primitive. For example one may write simply
-`foreach mylist print` instead of `foreach mylist [ [x] -> print x ]`, though
-the latter is also accepted. Depending on the anonymous procedure, various parts
-of the anonymous procedure syntax can be omitted. For a summary of optional
-syntax, see [the table below](#what-is-optional).
+an `->` is optional if your anonymous procedure contains a single primitive
+which has requires no more inputs than are are provided by the primitive. For
+example one may write simply `foreach mylist print` instead of
+`foreach mylist [ [x] -> print x ]`, though the latter is also accepted.
+Depending on the anonymous procedure, various parts of the anonymous procedure
+syntax can be omitted. For a summary of optional syntax, see
+[the table below](#what-is-optional).
 
 The `run` command accepts anonymous commands as well as strings.
 
