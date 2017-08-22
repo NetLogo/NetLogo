@@ -159,13 +159,15 @@ object ChecksumsAndPreviews {
       fw.close()
     }
     def getRevisionNumber(modelPath: String): String = {
-      val cmds = Array("git", "log", "--pretty=format:%h",
+      val cmds = Array("git", "log", "--pretty=format:%H",
         new java.io.File(modelPath).getAbsolutePath)
       val proc =
         Runtime.getRuntime().exec(cmds, Array[String](), new java.io.File(ModelsLibrary.modelsRoot))
       val stdInput = new java.io.BufferedReader(new java.io.InputStreamReader(proc.getInputStream))
       val stdError = scala.io.Source.fromInputStream(proc.getErrorStream)
-      Option(stdInput.readLine()).map(_.trim).getOrElse(
+      // rather than use %h, we take the first 10 of %H. Git changed things making %h different
+      // across versions (see https://github.com/git/git/commit/e6c587c733b4634030b353f4024794b08bc86892)
+      Option(stdInput.readLine()).map(_.trim.take(10)).getOrElse(
         throw new Exception("Error fetching SHA1 of model: " + stdError.mkString))
     }
   }
