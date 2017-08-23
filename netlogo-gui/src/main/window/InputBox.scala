@@ -231,8 +231,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     if (frame != null) {
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
-        msg = "Expected reporter."
-      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid input for a " + inputType,
+        msg = I18N.gui.get("edit.input.invalid.message")
+      org.nlogo.swing.OptionDialog.showMessage(frame, I18N.gui.getN("edit.input.invalid.title", inputType),
         msg, Array(I18N.gui.get("common.buttons.ok")))
     }
   }
@@ -398,7 +398,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     }
 
     private val applyAction =
-    new AbstractAction("Apply") {
+    new AbstractAction(I18N.gui.get("common.buttons.apply")) {
       def actionPerformed(e: ActionEvent) {
         try inputText(inputType.readValue(textArea1.getText))
         catch {

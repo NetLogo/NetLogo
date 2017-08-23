@@ -7,6 +7,7 @@ common.link = link
 common.turtles = turtles
 common.patches = patches
 common.links = links
+common.netlogo = NetLogo
 
 common.buttons.ok = OK
 common.buttons.cancel = Cancel
@@ -23,6 +24,7 @@ common.buttons.yes = Yes
 common.buttons.no = No
 
 common.messages.error = Error
+common.messages.error.runtimeError = Runtime Error
 common.messages.warning = Warning
 
 common.menus.empty = <empty>
@@ -152,6 +154,7 @@ tabs.run.widget.export = Export…
 tabs.run.widget.deselect = Deselect
 tabs.run.widget.delete = Delete
 tabs.run.widget.select = Select
+tabs.run.widget.copyselectedtext = Copy Selected Text
 
 tabs.run.speedslider.normalspeed = normal speed
 tabs.run.speedslider.faster      = faster
@@ -169,6 +172,12 @@ tabs.run.widgets.output = Output
 tabs.run.widgets.note = Note
 tabs.run.widgets.view = View
 tabs.run.widgets.tooltip = choose type of interface item to add
+
+tabs.run.widget.view.export = Export View...
+tabs.run.widget.view.copy = Copy View
+tabs.run.widget.view.inspectGlobals = inspect globals
+
+tabs.run.widgets.monitor.notApplicable = N/A
 
 tabs.run.commandcenter = Command Center
 tabs.run.commandcenter.clearButton = Clear
@@ -192,6 +201,8 @@ tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo 
    Would you like to open the full NetLogo Dictionary?
 tabs.code.rightclick.collapse = Toggle Folds in Selection
 tabs.code.checkButton = Check
+tabs.code.extension.notfound.title = Extension not found
+tabs.code.extension.notfound.message = Go to download site for NetLogo extensions?
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
 tabs.code.includedFiles = Included Files
@@ -233,6 +244,9 @@ file.open.error.invalidmodel = This file is not a valid NetLogo model file.
 file.open.error.invalidmodel.withPath = The file {0} is not a valid NetLogo model file.
 file.open.error.unableToOpen = NetLogo can''t open the model {0}:\n\n{1}.
 file.open.error.external.suffix = Filename must end with ".nls".
+file.open.error.notFound = File specified to open ({0}) was not found!
+file.open.error.unloadable.message = Could not obtain NetLogo model from URL ''{0}''.\nNetLogo will instead start without any model loaded.
+file.open.error.unloadable.title = Connection Failed
 file.close.warn.movieInProgress = There is a movie in progress. Are you sure you want to exit this model? You will lose the contents of your movie.
 file.save.external = Save NetLogo Source File
 file.save.offer.external.filesChanged = The following files has been modified:
@@ -301,14 +315,18 @@ edit.plot.pen.showInLegend = Show in legend
 edit.plot.pen.setupCommands = Pen setup commands
 edit.plot.pen.updateCommands = Pen update commands
 edit.plot.error.runtimeError = Runtime Error:
+edit.plot.copyimage = Copy Image
+edit.plot.clearplot = Clear
 
 edit.chooser.globalVar = Global variable
+edit.chooser.example = <html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>
 edit.chooser.choices = Choices
 
 edit.slider.globalVar = Global variable
 edit.slider.minimum = Minimum
 edit.slider.increment = Increment
 edit.slider.maximum = Maximum
+edit.slider.minmax.message = min, increment, and max may be numbers or reporters
 edit.slider.value = Value
 edit.slider.units = Units (optional)
 edit.slider.vertical = vertical?
@@ -316,6 +334,7 @@ edit.slider.vertical = vertical?
 edit.monitor.reporter = Reporter
 edit.monitor.name = Display Name
 edit.monitor.decimalPlaces = Decimal places
+edit.monitor.precision = full precision is 17
 edit.monitor.fontSize = Font Size
 
 edit.output.fontSize = Font Size
@@ -327,6 +346,8 @@ edit.input.type.string = String
 edit.input.type.string.reporter = String (reporter)
 edit.input.type.string.commands = String (commands)
 edit.input.type.color = Color
+edit.input.invalid.title = Invalid input for a {0}
+edit.input.invalid.message = Expected reporter.
 
 edit.text.text = Text
 edit.text.fontSize = Font size
@@ -415,6 +436,17 @@ tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
+tools.agentMonitorEditor.noVariables = (no variables defined)
+tools.agentMonitorEditor.expectedTurtleOrWho = expected a turtle or a who number
+tools.agentMonirorEditor.edpectedLinkBreed = expected a link breed
+
+tools.agentMonitorWindow.globals = Globals
+tools.agentMonitorWindow.noTurtle = (no turtle)
+tools.agentMonitorWindow.dead = {0} (dead)
+tools.agentMonitorWindow.noLink = (no link)
+tools.agentMonitorWindow.noPatch = (no patch)
+
+
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview
 tools.colorswatch.copy = Copy selected color
@@ -490,12 +522,26 @@ tools.behaviorSpace.finalCommands.info = run at the end of each run
 tools.behaviorSpace.timeLimit = Time limit
 tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
 
+tools.loggingMode.enterName = Enter your name:
+tools.loggingMode.fileDoesNotExist = The file {0} does not exist.
+
+tools.magicModelMatcher = Magic Model Matcher
+tools.magicModelMathcer.mustChoose = You must choose!
+
+tools.previewPanel.runPreviewCommands = Run Preview Commands
+tools.previewPanel.runningPreviewCommands = Running Preview Commands
+tools.previewPanel.loadManualPreviewImage = Load Manual Preview Image
+tools.previewPanel.unknownManualImagePath = Unknown manual preview image path.
+tools.previewPanel.loadingManualPreviewImage = Loading Manual Preview Image
+tools.previewPanel.reloadManualPreviewImage = Reload Manual Preview Image
+
 # Models Library
 
 modelsLibrary.clear = Clear
 modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library…
+modelsLibrary.unverified = (unverified)
 
 
 # CONTROL CENTER
@@ -545,5 +591,8 @@ error.dialog.outOfMemory = \
 Your model is too large to run in the amount of memory available to NetLogo!\n\
 For more information consult the "How big can my model be?" section of the FAQ in the user manual.\n\
 Warning: you may see strange results if you continue running the current model without restarting NetLogo.\n
+error.dialog.outOfMemory.title = Model Too Large
 error.dialog.openFAQ = Open FAQ
-
+warn.dialog.badjvm = You have started NetLogo under the GNU libgcj Java VM. NetLogo may not run well, or at \
+all, under libgcj. We recommend using the Oracle Java VM to run NetLogo. Recent OpenJDK versions may \
+also work. If you choose to continue, NetLogo may not function properly.

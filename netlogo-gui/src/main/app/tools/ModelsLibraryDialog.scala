@@ -86,7 +86,7 @@ object ModelsLibraryDialog {
 
     private def translateNameForDisplay(name: String): String =
       if (name.equalsIgnoreCase("UNVERIFIED"))
-        "(unverified)"
+        I18N.gui.get("modelsLibrary.unverified")
       else
         removeSuffix(name)
 
@@ -609,6 +609,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
         Option(e.getURL)
           .flatMap(u => Try(u.toURI).toOption) match {
+            // TODO: Convert to I18N
             case None => JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }

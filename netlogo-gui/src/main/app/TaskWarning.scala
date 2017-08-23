@@ -14,12 +14,10 @@ import org.nlogo.swing.OptionDialog
 object TaskWarning {
   val buttons = Array[AnyRef](I18N.gui.get("common.buttons.continue"),
                               I18N.gui.get("common.buttons.cancel"))
-  val message =
-    "Some of your agent variables contain anonymous procedures. You may export anyway, " +
-    "but import-world won't be able to read the file."
+  val message = I18N.gui.get("warn.taskWarning.anonymousProcedures")
   def maybeWarn(parent: java.awt.Component, world: World) {
     def confirmed =
-      0 == OptionDialog.showMessage(parent, "Exporting Anonymous Procedures", message, buttons)
+      0 == OptionDialog.showMessage(parent, I18N.gui.get("message.taskWarning.exportingAnonymousProcedures"), message, buttons)
     if(world.allStoredValues.exists(_.isInstanceOf[AnonymousProcedure]) && !confirmed)
       throw new UserCancelException
   }

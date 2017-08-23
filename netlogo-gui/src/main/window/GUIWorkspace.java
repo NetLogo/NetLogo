@@ -306,7 +306,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     return 0 == org.nlogo.swing.OptionDialog.showMessage(
         getFrame(), I18N.guiJ().get("common.messages.warning"),
-        "Warning: " + message, options);
+        I18N.guiJ().get("common.messages.warning") + ":" + message, options);
   }
 
   public void resizeView() {

@@ -49,10 +49,8 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
       }
     } catch {
       case ex: IllegalArgumentException =>
-        println("errored replacing: " + start + ", " + len + " with: " + str)
         throw ex
       case ex: javax.swing.text.BadLocationException =>
-        println("errored replacing: " + start + ", " + len + " with: " + str)
         throw ex
     }
   }
@@ -61,7 +59,6 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
       text.getDocument.remove(start, len)
     } catch {
       case ex: javax.swing.text.BadLocationException =>
-        println("errored removing: " + start + ", " + len)
         throw ex
     }
   }

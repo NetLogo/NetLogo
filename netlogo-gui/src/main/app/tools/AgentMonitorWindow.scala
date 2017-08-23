@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, BorderFactory, JWindow, LayoutFocusTraversa
 import scala.collection.JavaConverters._
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ Utils => SwingUtils, WindowDragger, WindowResizer }
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
@@ -106,18 +106,18 @@ with WindowEvents.LoadBeginEvent.Handler
 
   def title = {
     monitor.agentKind match {
-      case AgentKind.Observer => "Globals"
-      case AgentKind.Turtle if agent == null => "(no turtle)"
-      case AgentKind.Turtle if agent.id == -1 => lastAliveTitle + " (dead)"
+      case AgentKind.Observer => I18N.gui.get("tools.agentMonitorWindow.globals")
+      case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitorWindow.noTurtle")
+      case AgentKind.Turtle if agent.id == -1 => I18N.gui.getN("tools.agentMonitorWindow.dead", lastAliveTitle)
       case AgentKind.Turtle =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Link if agent == null => "(no link)"
-      case AgentKind.Link if agent.id == -1 => lastAliveTitle + " (dead)"
+      case AgentKind.Link if agent == null => I18N.gui.get("tools.agentMonitorWindow.noLink")
+      case AgentKind.Link if agent.id == -1 => I18N.gui.getN("tools.agentMonitorWindow.dead", lastAliveTitle)
       case AgentKind.Link =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Patch if agent == null => "(no patch)"
+      case AgentKind.Patch if agent == null => I18N.gui.get("tools.agentMonitorWindow.noPatch")
       case AgentKind.Patch => agent.toString
     }
   }

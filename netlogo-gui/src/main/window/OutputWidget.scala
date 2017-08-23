@@ -48,7 +48,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    val copyItem = RichJMenuItem("Copy Selected Text"){ outputArea.text.copy }
+    val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
     menu.add(copyItem)
     p
   }
