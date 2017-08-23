@@ -56,10 +56,10 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
     editor
   }
 
- def useExtensionManager(extensionManager: ExtensionManager): Unit = {
+  def useExtensionManager(extensionManager: ExtensionManager): Unit = {
    val tmf = TokenMakerFactory.getDefaultInstance.asInstanceOf[NetLogoTokenMakerFactory]
    tmf.extensionManager = Some(extensionManager)
- }
+  }
 
   override def newEditor(configuration: EditorConfiguration): AbstractEditorArea = {
     // This is a proxy for advanced editor fixtures required only by the main code tab

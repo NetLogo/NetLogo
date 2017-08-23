@@ -92,6 +92,7 @@ class InfoTab(attachModelDir: String => String)
         this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
       }
     }, BorderLayout.NORTH)
+    scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane,BorderLayout.CENTER)
     activeMenuActions = Seq(undoAction, redoAction)
   }
