@@ -13,7 +13,8 @@ import com.vladsch.flexmark.{ Extension, ast, ext, html, parser, util },
     autolink.AutolinkExtension,
     escaped.character.EscapedCharacterExtension,
     tables.TablesExtension,
-    toc.TocExtension,
+    toc.{ TocExtension, internal },
+      internal.TocOptions,
     typographic.TypographicExtension,
     wikilink.{ WikiImage, WikiLink, WikiLinkExtension },
   html.{ AttributeProvider, CustomNodeRenderer, HtmlRenderer, HtmlWriter,
@@ -69,6 +70,7 @@ object Markdown {
     options.set(WikiLinkExtension.IMAGE_LINKS, Boolean.box(true))
 
     extensions.add(TocExtension.create())
+    options.set[java.lang.Integer](TocExtension.LEVELS, TocOptions.getLevels(2))
     extensions.add(AnchorLinkExtension.create())
     options.set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "section-anchor")
 

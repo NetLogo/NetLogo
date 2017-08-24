@@ -72,7 +72,7 @@ class NetLogoDocs(
       buildVariables + ("infoTabModelHTML" -> infoTabHTML)
 
     val tmp = IO.createTemporaryDirectory
-    generateDocs(tmp, documentedExtensions, mustacheVars)
+    generateDocs(tmp, documentedExtensions, mustacheVars, perPageTOC = false)
     generateManualPDF(tmp, documentedExtensions.map(_._1))
   }
 
@@ -84,20 +84,26 @@ class NetLogoDocs(
 
     val supportFiles =
       Seq("dictTemplate.html", "title.html", "toc.xsl").map(n => docsTarget / n)
-    generateDocs(docsTarget, documentedExtensions, mustacheVars)
+    generateDocs(docsTarget, documentedExtensions, mustacheVars, perPageTOC = true)
     generatePrimIndices(docsTarget / "dict")
     supportFiles.foreach(IO.delete)
 
     Path.allSubpaths(docsTarget).map(_._1).toSeq
   }
 
-  private def generateDocs(targetDir: File, documentedExtensions: Seq[(String, String)], variables: Map[String, Object]): Unit = {
+  private def generateDocs(
+    targetDir:            File,
+    documentedExtensions: Seq[(String, String)],
+    variables:            Map[String, Object],
+    perPageTOC:           Boolean): Unit = {
+
     IO.createDirectory(targetDir)
     Mustache.betweenDirectories(docsSource, targetDir, markdownComponents, variables)
     markdownComponents.keySet foreach { name =>
+      val md = Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n")
       val html = Markdown(
-        Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n"),
-        name, false)
+        if (perPageTOC) md else md.replaceAll("""\n\n\[TOC[^]]*\]""",""),
+        name, extension = false)
       IO.write(targetDir / (name + ".html"), "<!DOCTYPE html>\n" + html)
       IO.delete(targetDir / (name + ".md"))
     }
