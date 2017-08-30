@@ -145,8 +145,10 @@ class RichSyntax(syntax: Syntax, variadic: Boolean, arguments: List[(Expression,
 
   val argCount = arguments.length
 
+  /*
   private def removeRepeatableModifier(i: Int): Int =
     i & (~ Syntax.RepeatableType)
+  */
 
   private def isRepeatable(i: Int): Boolean =
     (i & Syntax.RepeatableType) != 0

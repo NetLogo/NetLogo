@@ -13,7 +13,11 @@ import org.nlogo.core.{Statement, AstTransformer}
 class LetReducer extends AstTransformer {
   override def visitStatement(stmt: Statement): Statement = {
     stmt.instruction match {
-      case l: _let => super.visitStatement(stmt.copy(args = stmt.args.tail))
+      case l: _let =>
+        if (stmt.args.isEmpty)
+          super.visitStatement(stmt)
+        else
+          super.visitStatement(stmt.copy(args = stmt.args.tail))
       case _ => super.visitStatement(stmt)
     }
   }

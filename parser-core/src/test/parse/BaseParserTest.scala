@@ -9,7 +9,7 @@ import
 import org.scalatest.FunSuite
 
 trait BaseParserTest { this: FunSuite =>
-  val PREAMBLE = "to __test "
+  val PREAMBLE = "to __test [] "
   val POSTAMBLE = "\nend"
 
   /// helpers

@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ Expression, ReporterApp, SourceLocation, Syntax }
-import org.nlogo.core.prim.{ _const }
+import org.nlogo.core.prim.{ _const, _turtlevariable }
 import org.scalatest.FunSuite
 
 import RichSyntax._

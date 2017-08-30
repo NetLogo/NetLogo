@@ -467,14 +467,18 @@ object ExpressionParser {
         case _ => SuccessfulParse(pr)
       }
 
-    processMaybeLet(pr, scope).flatMap {
+    (processMaybeLet(pr, scope).flatMap {
       case (cmd, scope) => argsWithOptional.map(args => (cmd, scope, args))
-    } match {
-      case f: FailedParse => (PartialError(f), scope)
-      case SuccessfulParse((newCmd, newScope, pr)) =>
-        val loc = SourceLocation(tok.start, pr.args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
-        (PartialStatement(new core.Statement(newCmd, pr.args, loc)), newScope)
-    }
+    }) match {
+        case f: FailedParse => (PartialError(f), scope)
+        case SuccessfulParse((newCmd, newScope, pr)) =>
+          resolveTypes(pr.args, ArgumentParseContext(newCmd, tok.sourceLocation), scope) match {
+            case f: FailedParse => (PartialError(f), scope)
+            case SuccessfulParse(typedArgs) =>
+              val loc = SourceLocation(tok.start, pr.args.lastOption.map(_.sourceLocation.end).getOrElse(tok.end), tok.filename)
+              (PartialStatement(new core.Statement(newCmd, typedArgs, loc)), newScope)
+          }
+      }
   }
 
   // this is the work currently done by LetScoper...
@@ -627,7 +631,7 @@ object ExpressionParser {
       case (app, remainingGroups) =>
         resolveType(Syntax.WildcardType, app, null, scope).map[Partial] {
           case (expr: core.ReporterApp) =>
-            val lambda = new core.prim._reporterlambda(Lambda.ConciseArguments(block.argNames))
+            val lambda = new core.prim._reporterlambda(block.arguments)
             lambda.token = block.openBracket
             PartialReporterApp(new core.ReporterApp(lambda, Seq(expr), block.group.location))
           case (other: core.Expression) =>

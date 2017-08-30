@@ -35,15 +35,6 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("DoParseOptionalBlock") {
     testParse("crt 10 ", "_createturtles()[_const(10)[], []]")
   }
-  test("parseSymbolUnknownName") {
-    testParse("report __symbol foo", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
-  }
-  test("parseSymbolKnownName1") {
-    testParse("report __symbol turtles", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
-  }
-  test("parseSymbolKnownName2") {
-    testParse("report __symbol turtle", "_report()[_symbolstring()[_symbol()[]]]", preamble = "to-report sym ")
-  }
   test("basic lambda parse") {
     testParse("__ignore [[x] -> x + x]",
       "_ignore()[_reporterlambda(X)[_plus()[_lambdavariable(X)[], _lambdavariable(X)[]]]]")

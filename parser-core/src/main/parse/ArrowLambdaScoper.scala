@@ -9,8 +9,6 @@ import
   org.nlogo.core.prim.{ Lambda, _lambdavariable, _unknownidentifier },
     Lambda.Arguments
 
-// import scala.annotation.tailrec
-
 object ArrowLambdaScoper {
   def apply(group: BracketGroup, usedNames: SymbolTable): Option[(Arguments, Seq[SyntaxGroup], SymbolTable)] = {
     val containsArrow =
