@@ -85,7 +85,9 @@ object App{
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
-    pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+    if (Version.systemDynamicsAvailable) {
+      pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+    }
     pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
     class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
