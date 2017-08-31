@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <title>
-      NetLogo {{version}} User Manual: NetLogo Dictionary
-    </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-    p  { margin-left: 1.5em ; }
-    h3 { font-size: 115% ; }
-    h4 { font-size: 100% ; margin-left: 1.5em ; background: white ; }
-    </style>
-    <h1>
-      NetLogo Dictionary
-    </h1>
-    {{> versionTag.html }}
+  NetLogo {{version}} User Manual: NetLogo Dictionary
+</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+p  { margin-left: 1.5em ; }
+h3 { font-size: 115% ; }
+h4 { font-size: 100% ; margin-left: 1.5em ; background: white ; }
+</style>
+<h1>
+  NetLogo Dictionary
+</h1>
+<div class="version">
+  NetLogo {{version}} User Manual
+</div>
     <div class="centertext">
       <div class="block">
         <div class="smallfont centertext tocborder inlineblock">
@@ -149,7 +151,7 @@ Go figure! - ST 12/2/04
       <a href="#sprout">sprout</a>
       <a href="#sprout">sprout-<i>&lt;breeds&gt;</i></a>
       <a href="#stamp">stamp</a>
-      <a href="#stamperase">stamp-erase</a>
+      <a href="#stamp-erase">stamp-erase</a>
       <a href="#stop-inspecting">stop-inspecting</a>
       <a href="#subject">subject</a>
       <a href="#subtract-headings">subtract-headings</a>
@@ -6276,7 +6278,7 @@ ask turtles [
         integers supported by NetLogo (-9007199254740992 to
         9007199254740992).
       <p>
-        See the <a href="programming.html#random">Random Numbers</a>
+        See the <a href="programming.html#random-numbers">Random Numbers</a>
         section of the Programming Guide for more details.
       <pre>
 random-seed 47822
@@ -6812,7 +6814,7 @@ show (runresult [ [a b] -&gt; a + b ] 10 5)
 ;; adds 10 and 5
 </pre>
         <p>
-        See also <a href="foreach">foreach</a>, <a href="arrow">-> (anonymous procedure)</a>.
+        See also <a href="#foreach">foreach</a>, <a href="#arrow">-> (anonymous procedure)</a>.
       </div><!-- ======================================== -->
     </div>
     <h2>
@@ -7548,7 +7550,7 @@ sprout-sheep 1 [ set color black ]
         Note: The shapes made by stamp may not be pixel-for-pixel identical
         from computer to computer.
       </div>
-    <div class="dict_entry" id="stamperase">
+    <div class="dict_entry" id="stamp-erase">
       <h3>
         <a>stamp-erase<span class="since">3.1</span></a>
       </h3>
@@ -7806,7 +7808,7 @@ show sum [energy] of turtles
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
       <p>
-        When using <a href="programming.html#updates">tick-based view
+        When using <a href="programming.html#view-updates">tick-based view
         updates</a>, the view is normally updated every 1.0 ticks, so using
         <code>tick-advance</code> with a number less then 1.0 may not always
         trigger an update. If you want to make sure that the view is
@@ -8393,7 +8395,7 @@ file-open user-new-file
 show user-input &quot;What is your name?&quot;
 </pre>
       <p>
-        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
         Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-message">
@@ -8414,7 +8416,7 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
         Note that if a user closes the <code>user-message</code> dialog
         with the &quot;X&quot; in the corner, the behavior will be the same as if they had clicked &quot;OK&quot;.
         <p>
-        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
         Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-one-of">
@@ -8437,7 +8439,7 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
   [ setup ]
 </pre>
         <p>
-        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
         Programming Guide for additional details.
     </div>
     <div class="dict_entry" id="user-yes-or-no">
@@ -8457,7 +8459,7 @@ if user-yes-or-no? &quot;Set up the model?&quot;
   [ setup ]
 </pre>
         <p>
-        See the <a href="programming.html#user-interaction">User Interaction Primitives section</a> of the
+        See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
         Programming Guide for additional details.
     </div><!-- ======================================== -->
   </div>

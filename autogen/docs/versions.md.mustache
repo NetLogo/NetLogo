@@ -1,0 +1,549 @@
+{{> header.html}}
+
+The following is a condensed history.
+[Detailed release notes](https://github.com/NetLogo/NetLogo/wiki/Release-notes)
+are on GitHub.
+
+For help running models made in old versions, see the
+[Transition Guide](transition.html).
+
+[TOC]
+
+## Version 6.0.2 (August 2017)
+
+### Feature Changes
+
+- The autosuggest functionality introduced in NetLogo 6 will now display extension primitive names.
+- A new `insert-item` primitive was added to the language. It works similarly to `replace-item`, but without removing the item at the specified index.
+- A new `set-plot-background-color` primitive was added to the language. It can be used in plotting code to set the background color of the plot.
+- Behaviorsearch's user interface has been updated. It now uses the JavaFX UI toolkit for a more modern look and feel.
+
+### Bugfixes
+
+- The 6.0.1 autoconverter would error when converting tasks with exactly one argument (from 5.3.1 and earlier models only). The conversion would be correct, but it was confusing. This has now been remedied and the autoconverter will correctly convert models from 5.3.1 and earlier without erroring on single-argument tasks.
+- Fix a bug where extensions weren't located properly when in a path relative to the model.
+- Help browser now opens in 64-bit Windows.
+- Fix a speed regression for the `import-world` primitive introduced in 6.0.
+- If an unexpected reporter block is passed to `with` when used with `other`, the error will now reflect that the block is unsuitable for `with` instead of `other`.
+- When `sort-by` receives an unsuitable reporter block from the user it now shows a useful error instead of a cryptic stack trace.
+- String representations of anonymous procedures now show the arguments of those anonymous procedures
+- When working in an nls file, switching to a different tab will compile the nls file.
+- Display error label on nls file when the code it contains causes an error.
+- Some users were unable to open NetLogo 6 and 6.0.1 in Mac OS Sierra.
+  We've changed our signing process in 6.0.2 to attempt to fix this problem.
+  We are continuing to track this issue to determine whether our fix was effective.
+  More information (including a partial workaround for the problem) is available [here](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-sierra).
+
+### Extension Changes
+
+- Fixed a bug in `gis:patch-dataset` introduced in NetLogo 6.
+- The table extension has new `table:group-agents` and `table:group-items` primitives which can be used to build a table of grouped agents and items by supplying an anonymous reporter.
+
+### Documentation Changes
+
+- Clarify when various parts of the anonymous procedure syntax are optional.
+- Fix a few small documentation bugs around `foreach`.
+- Clarify relationship between speed and update modality in the "View Updates" section of the programming guide.
+
+### Model Changes
+
+#### New Sample Models:
+
+- Chaos in a Box
+- Fairy Circles
+- SmoothLife
+
+#### New Curricular Models:
+
+- Lattice Land Curriculum
+    - Lattice Land - Triangles Explore
+    - Lattice Land - Triangles Dissection
+
+#### Revised Sample Models:
+
+- Anisogamy: New color scheme. Adds BehaviorSpace experiments.
+- Ethnocentrism: Now cross-listed as an Evolutionary model.
+- Fireworks: Rename `fireworks` to `max-fireworks` and enforce a minimum of 1.
+- GenJam - Duple: Minor info tab updates.
+- Wolf Sheep Predation: Revised to better clarify the `grass?` construct and code.
+
+
+#### Revised Curricular Models:
+
+- Connected Chemistry:
+    - Connected Chemistry 1: Fix NetLogo Web incompatibility.
+    - Connected Chemistry 3: Update minimum number of particles to 2.
+    - Connected Chemistry 8: Minor code updates. Small change to default values.
+
+#### Revised HubNet Activities:
+
+- Gridlock HubNet: Minor code updates.
+
+#### Revised Code Examples:
+
+- Info Tab Example: Corrected formatting of un/ordered lists example.
+- LS Extension -- Model Visualizer and Plotter Example: Updated code dependencies for WSP.
+- LS Extension -- Model Interactions Example: Updated code dependencies for WSP.
+
+## Version 6.0.1 (March 2017)
+
+### Feature Changes
+
+- Brackets are required around anonymous procedure reporters only when there are two or more arguments. For instance `[ [x] -> x ]` can now be written `[ x -> x ]`. Note this change makes it possible to create models in NetLogo 6.0.1 that will not run in NetLogo 6.0. If you plan to use your model in NetLogo 6.0, be sure to include brackets around anonymous procedure arguments. For a short period after the release, models which use unbracketed lambda arguments may not work on netlogoweb.org.
+
+### Bugfixes
+
+- The NetLogo code editor navigates and indents models much more quickly and efficiently than in NetLogo 6.0.
+- The NetLogo 5-to-6 autoconverter now ignores commented-out code.
+- The behavior of layout-radial in NetLogo 6 did not match the 5.3.1 behavior. This has been corrected and layout-radial should be identical between NetLogo 6.0.1 and NetLogo 5.3.1
+- NetLogo 6 raised a NullPointerException when numbers became too large for NetLogo to handle. This is now properly displayed to the user as a number out of bounds error.
+- Improved performance of models which use `let` and anonymous procedures together.
+- Reloading a model now clears global variables.
+- Clearer warning dialogs when opening an older version of a NetLogo 2D file in NetLogo 3D.
+- Using `foreach` improperly in the Command Center will display the same error as it would if used improperly in the code tab.
+- Extremely long anonymous procedures no longer cause an exception when compiled.
+- `in-radius` is no longer pathologically slow on agentsets created using `with`.
+
+### Extension Changes
+
+- A new primitive, `table:values` has been added to the table extension.
+- The R extension has been updated to take full advantage of the JavaGD R library using `r:setPlotDevice`.
+- Users can now supply a path to the R extension by configuring the value of r.lib.paths in the user.properties file.
+- Fixed a LevelSpace bug preventing interactive models from using nls files.
+- Fixed a LevelSpace bug causing NetLogo to lock up when trying to load a nonexistent file as an interactive model.
+
+### Documentation Changes
+
+- The system dynamics tutorial now instructs the user to set the `dt` to a value which gives stable behavior
+- The documentation for `follow`, `ride`, and `watch` has been clarified to indicate that calling one undoes highlights and perspective changes caused by the other
+- The documentation for `=` and `!=` indicates that they work with extension objects.
+- Several examples have been added to `sort` clarifying the behavior of `sort` on lists featuring different types of objects.
+- A new [section on User Interface primitives](programming.html#user-interaction-primitives) has been added to the programming guide which discusses the behavior of the "Halt" button in the various user interaction dialogs.
+- Incorrect example code for `foreach` and `reduce` has been corrected.
+
+### Models
+
+All models have been updated to reflect the new optional nature of brackets for
+zero/one argument anonymous procedures. This resulted in changes to 108 models.
+
+All models have been updated to reflect the availability of the new range
+primitive. This resulted in changes to 12 models.
+
+#### New Sample Model
+
+- GenJam - Duple
+
+#### New Curricular Model
+
+- Lattice Land curriculum:
+    - Lattice Land Explore
+
+#### Revised Sample Models
+
+- PD 2 Person Iterated: info tab updates and extensive fixes for the code.
+- Party: fixed bug where a monitor covered a plot.
+- Signaling Game: info tab updates.
+
+#### Revised Curricular Models
+
+- GenEvo curriculum:
+    - GenEvo 1 Genetic Switch: info tab updates and new graduated method of displaying lacZ concentration.
+    - GenEvo 2 Genetic Drift: info tab updates and interface tweaks. New model preview.
+    - GenEvo 3 Genetic Drift and Natural Selection: info tab updates and interface tweaks.
+    - GenEvo 4 Competition: info tab updates.
+    - Genetic Switch - Synthetic Biology has been renamed and is now Synthetic Biology - Genetic Switch. It also received info tab updates and a few interface changes.
+
+## Version 6.0 (December 2016)
+
+### Feature Changes
+
+- The NetLogo code editor now offers autocompletion support. Simply press the Control key and the spacebar at the same time while typing a word and you will see a list of similar NetLogo primitives as suggestions.
+- The NetLogo code editor offers the option to "fold" procedures to make navigating large models simpler.
+- NetLogo supports multi-level agent-based modeling with the LevelSpace extension
+- Line numbering can be enabled in the NetLogo code editor by choosing "Show Line Numbers" from the "Preferences" dialog. This dialog can be opened by selecting "NetLogo" > "Preferences" in Mac, or "Tools" > "Preferences" on Linux or Windows.
+- The view resizing arrows have been removed and the tick counter has been relocated under the speed slider.
+- When editing NetLogo code, users can right-click a variable name or primitive and choose "Show Usage" to see all usages of that name in the file.
+- When editing NetLogo code, users can right-click a variable name and choose "Jump to Declaration" to see where in the file that variable is declared.
+- The NetLogo interface editor now supports "Undo" for widget addition, deletion, and movement.
+- NetLogo can export code to HTML with code-colorization by choosing "Export Code" in the "Export" section of the "File" menu.
+- The look and feel of NetLogo on Mac OS X has changed significantly. NetLogo is now using the Oracle-supplied Java look and feel as opposed to a third-party look and feel used in prior versions.
+- Plots use a random number generator independent of the main-model random number generator.
+- Model Preview Commands can be edited through the GUI by choosing "Preview Commands Editor" in the "Tools" menu. Those commands generate the preview image that appears when you upload your model to the Modeling Commons.
+- NetLogo displays a more helpful error message when a program fails due to an "out of memory" error.
+- NetLogo and its bundled extensions are now compiled against Java 8 and Scala 2.12.
+- NetLogo has upgraded the ASM bytecode library to enable generation of Java 8 bytecode.
+
+### Bugfixes
+
+- `*-link-neighbor?` primitives now work the same way for breeded and unbreeded links.
+- Resizing the world in NetLogo 3D no longer causes a black view. 
+- Fixed error caused by right-clicking a widget while dragging. 
+- Improved error message when a user-defined procedure shadows a breed procedure.
+- `neighbors4` and `neighbors` no longer report agentsets containing the same patch more than once.
+
+### Language Changes
+
+- Support for plural-only breed names (e.g., `breed [mice]`) has been removed. Write `breed [mice mouse]` instead.
+- Tasks have been replaced by anonymous procedures. Tasks made use of `?` variables which were confusing for novices and difficult to read for experts. Additionally, tasks could not refer to the task variables of a containing task. Anonymous procedures may have named arguments which can be accessed by inner anonymous tasks. Upon first opening a NetLogo 5 model in NetLogo 6, tasks like `task [ ?1 + ?2 ]` will be automatically converted to `[ [?1 ?2] -> ?1 + ?2 ]`. See the [the transition guide](transition.html) for more information.
+- Link reporters have been overhauled to be more consistent and flexible
+- The `task` primitive is no longer supported.
+- Breed names that conflict with language primitives are now disallowed. For instance, `breed [strings string]` is now disallowed since it makes `is-string?` ambiguous.
+- The compiler errors on duplicated breed singular names. 
+- The compiler detects a greater number of type errors, for instance `not pxcor` now raises a compiler error instead of erroring at runtime.
+- `set-plot-pen-color` now accepts RGB lists as arguments.
+- The `hubnet-set-client-interface` primitive has been removed. 
+- The various primitives starting with `movie-` have been removed, as has the movie encoder. They have been replaced with the new `vid` extension. [The transition guide](transition.html) provides more details and information.
+- The `__change-language` primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms). 
+- The string representation of anonymous procedures displays the body of the anonymous procedure.
+
+### Extension Changes
+
+- NetLogo 6.0 comes with three new, bundled extensions: LevelSpace `ls`, the `vid` extension for video manipulation, and the enhanced visualization extension `view2.5d`.
+-  `ls` enables multi-level agent-based modeling in NetLogo.
+- The Extensions API has been updated from 5.0 to 6.0. This means that all non-bundled extensions will need to be updated to use the new API. Extensions written for NetLogo 5 *will not* work in NetLogo 6. If you're an extension author, see [the extension author transition guide for 6.0](https://github.com/NetLogo/NetLogo/wiki/Hexy-Extension-Transition-Guide) for more information. If you regularly use extensions you may want to contact their authors to inform them a new version of NetLogo is on the way and they may want to update their extensions.
+- `arduino:get` (in the arduino extension) correctly reports values from Windows 64-bit machines. In prior versions it would only report some values correctly.
+- Several new features have been added to the `nw` extension:
+    - Added community detection using the Louvain method
+    - Added modularity measurement
+    - Added Watts-Strogatz small-world network generation
+    - Made other network generation algorithms easier to layout
+    - Weighted primitives now take symbolic variable names instead of strings. See [the transition guide](transition.html) for more information.
+- The `qtj` extension is no longer bundled with NetLogo. Users are encouraged to make use of the [new `vid` extension](vid.html).
+- The new `vid` extension is now bundled with NetLogo, combining features of the late `qtj` extension and the movie primitives.
+- The network extension is no longer bundled with NetLogo. Users are encouraged to use the `nw` extension ([https://ccl.northwestern.edu/netlogo/docs/nw.html](nw.html)), which has been bundled with NetLogo for some time.
+- The `gogo-serial` extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer `gogo` extension, which uses HID to communicate with the GoGo board. 
+
+### Operating System Support
+
+- NetLogo will now be used to open `.nlogo` links in PowerPoint and other programs on Microsoft Windows.
+- The NetLogo binaries on Mac OS X are installed as runnable by any user. 
+- NetLogo in Mac OS X will not use "App Nap" while running. This keeps simulations running at full speed when NetLogo is in the background.
+- The NetLogo controlling API has changed since NetLogo 5. Programs that rely on the controlling API (such as BehaviorSearch) will not work until they have been changed to match the new API.
+
+### Documentation Changes
+
+- New documentation for anonymous procedures
+- The NetLogo tutorial screenshots have been updated to correspond to the new Mac OS X Look and Feel.
+- The NetLogo dictionary displays the version in which each primitive was introduced next to that primitive.
+- A Spanish translation of the NetLogo dictionary is available [here](diccionario.pdf)
+
+### Internationalization Changes
+
+- A new Spanish translation of the NetLogo dictionary is available [as part of the NetLogo manual](diccionario.pdf).
+- Language preferences can be changed by using the new "Preferences" menu instead of the `__change-language` primitive. 
+- A Japanese localization for NetLogo is now available and included with the standard download.
+- The Chinese translation for NetLogo has been updated.
+
+### Models
+
+#### New Sample Models:
+
+- Kicked Rotator
+- Kicked Rotators
+- Mammoths, a legacy StarLogoT model, has been converted to NetLogo.
+
+#### New Curricular Models:
+
+- GenEvo 1 Genetic Switch
+- GenEvo 2 Genetic Drift
+- GenEvo 3 Genetic Drift and Natural Selection
+- GenEvo 4 Competition
+
+#### New Code Examples:
+
+- Movie Playing Example (`vid` extension)
+- Movie Recording Example (`vid` extension)
+- Video Camera Example (`vid` extension)
+- Network Extension General Demo (`nw` extension)
+- Model Interactions Example (`ls` extension)
+- Model Loader Example (`ls` extension)
+- Model Visualizer and Plotter Example (`ls` extension)
+
+#### Promoted Models (improved and no longer "unverified"):
+
+- ProbLab Genetics
+- Traffic 2 Lanes
+
+#### Revised Sample Models:
+
+- Giant Component: added text in the info tab.
+- Team Assembly: removed unused switch widget.
+- Traffic Basic, Traffic Grid, Traffic Intersection: revised info tab.
+- Voting: stopped the model when voting stabilizes.
+- Wealth Distribution: fixed typos in info tab, improved code formatting.
+
+#### Revised HubNet Activities:
+
+- Bug Hunters Competition HubNet, Critter Designers HubNet, Fish Spotters HubNet: removed unnecessary call to `hubnet-set-client-interface`.
+- Gridlock HubNet, Gridlock Alternate HubNet: revised info tab.
+
+#### Revised Curricular Models:
+
+- DNA Replication Fork: fixed a a monitor and runtime error when using a time limit.
+
+#### Revised IABM models:
+
+- Agentset Efficiency: clarified description of `go-2` in info tab.
+- Agentset Ordering: fixed typos in into tab.
+- Arduino Example: improved model to demonstrate both directions of communication with the Arduino.
+- Heroes and Cowards: removed extra text in info tab.
+- Preferential Attachment Simple: removed extra pen in plot and extra "layout" button.
+- Random Network: made sure that the number of links is never too big for the number of nodes.
+- Segregation Simple Extension 1, 2 and 3: fixed `number-of-ethnicities` slider to avoid runtime errors.
+- Traffic Basic Adaptive Individuals, Traffic Basic Utility, Traffic Grid Goal: revised info tab.
+- Traffic Basic Adaptive: revised info tab, clarified comment in `adaptive-go` procedure.
+- Voting Component Verification: stopped the model when voting stabilizes.
+- Voting Sensitivity Analysis: improved code for stopping the model when voting stabilizes.
+
+#### Revised Code Examples:
+
+- GoGoMonitorSerial, GoGoMonitorSimpleSerial: removed the models, as the `gogo-serial` and `qtj` extensions are no longer bundled.
+- Random Network Example: made sure that the number of links is never too big for the number of nodes.
+- Since the QuickTime extension (`qtj`) has been replaced by the `vid` extension, the following models have been converted to use the `vid` extension:
+    - Movie Example, replaced by Movie Recording Example
+    - QuickTime Movie Example, replaced by Movie Playing Example
+    - QuickTime Camera Example, replaced by Video Camera Example
+
+#### Demoted model:
+
+- El Farol Network Congestion, a previously "unverified" model, has been moved to the NetLogo User Community Models
+
+## Version 5.3.1 (February 2016)
+
+### Feature Changes
+
+- Mathematica Link is now included and has been tested to work with Mathematica 10.
+- A link to Introduction to Agent-Based Modelling has been added to the "Help" menu.
+
+### Extension Changes
+
+- The gogo extension now prompts the user for the location of Java upon opening. This version of Java is used to launch the gogo hid daemon.
+- The correct version of the network extension is now bundled, which will open properly
+- Bundles the cf extension, which adds match, case, and select primitives.
+
+### Bugfixes
+
+- Corrects a bug where turtles wrapping around a torus-shaped world with pen down would sometimes cause NetLogo to loop infinitely.
+- Fixes a bug where buttons would appear to remain pressed after a right click on Mac.
+- Fixes a bug where pressing the right mouse button while dragging would confuse the mouse-down? primitive.
+- Fixes agent type-checking of tasks (bug appeared in 5.2.1).
+- link-neighbor? now returns true if and only if the neighbor is connected through an undirected link.
+- Documentation fixes for my-links and mean primitives.
+
+## Version 5.3 (December 2015)
+
+### Feature Changes
+
+- Java 8 is now bundled with all versions of NetLogo, this removes the need for a separate Java 6 installation on Mac OS X
+- Separate 32-bit and 64-bit versions are available for both Windows and Linux
+- The Windows installer is now an msi instead of an exe
+- javax.media.opengl is no longer supported in Java 8, it has been replaced by com.jogamp.opengl
+- Mathematica Link is not distributed due to Java version changes
+
+### Extension Changes
+
+- A minor update to the `nw` extension makes `nw:weighted-path-to` behave as documented.
+- Most extensions should continue to work without change unless they rely on javax.media.opengl, which was renamed in the updated version of JOGL.
+
+## Version 5.2.1 (September 2015)
+
+### Extensions
+
+- An included Arduino extension for use with Arduino boards
+
+### New features
+
+- New file menu item to export models to NetLogo Web
+
+### Bug fixes
+
+- BehaviorSpace output type preference is now remembered
+- Output widget font is now saved at the proper size when zoomed
+- Reporter tasks are now evaluated in variable context
+- `runresult` arguments now only get evaluated once
+- The last used directory is now remembered on Linux
+- Whitespace is now stripped from models when saving
+
+- New Sample Models: Artificial Anasazi, Bacteria Food Hunt, Bacteria Hunt Speeds, BeeSmart - Hive Finding, Bug Hunt Disruptions, Bug Hunt Environmental Changes, Bug Hunt Predators and Invasive Species - Two Regions, Hydrogen Diffusion 3D, Lennard-Jones, Paths 
+- There are 46 new models in the new IABM Textbook folder: Turtles Circling Simple, Ants Simple, Heroes and Cowards, Life Simple, Simple Economy, 4 DLA extensions, 4 El Farol Extensions, 4 Fire Extensions, 4 Segregation Extensions, 5 Wolf Sheep Extensions, Agentset Efficiency, Agentset Ordering, Communication-T-T Network Example, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Traffic Basic Utility, Traffic Grid Goal, Spread of Disease, Voting Component Verification, Voting Sensitivity Analysis, Arduino Example, Disease With Android Avoidance HubNet, Example HubNet, Run Example, Run Result Example, Simple Machine Learning, Simple Viral Marketing, Ticket Sales, Sandpile Simple 
+- New models in the new Alternate Visualizations folder: Ethnocentrism - Alternative Visualization, Flocking - Alternative Visualizations, Heat Diffusion - Alternative visualization, Virus - Alternative Visualization, Virus - Circle Visualization 
+- Promoted models: Honeycomb, Minority Game 
+- Many other bugfixes and upgrades
+
+### Model changes
+
+- Improved Sample Models: Altruism, Ant Lines, Artificial Anasazi, Cooperation, Daisyworld, Divide the Cake, Heat Diffusion, Hydrogen Diffusion 3D, Lennard-Jones, N-Bodies, PD Basic Evolutionary, Sandpile, Robby the Robot, Segregation, Simple Kinetics 2 and 3, Traffic Grid, GridLock HubNet, GridLock HubNet Alternate 
+- Revised Curricular Models: 4 Block Stalagmites, 4 Block Two Stalagmites, Bug Hunter Competition HubNet, Fish Spotters HubNet, Ising, Tijuana Bordertowns, Urban Suite - Tijuana Bordertowns, 
+- Revised Code Examples: Lottery Example, self Example, Network Import Example 
+- Revised IABM Textbook models: Simple Economy, Fire Simple Extension 2 and 3, Segregation Simple, 1, 2 and 3, Agentset Efficiency, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Run Example, Traffic Grid Goal, 
+- New IABM Textbook model: Traffic Basic Adaptive Individuals
+
+## Version 5.2.0 (April 2015)
+
+### Extensions
+
+- An included CSV extension to read and write CSV files
+- An included Palette extension to map different values to colors
+- The previous gogo extension has been removed. It has been replaced with two different gogo extensions, gogo and gogo-serial. The extensions work with different hardware. The gogo extension works with the new style HID-interface gogo boards and the gogo-serial extension works with the old-style serial-interface gogo boards
+- Upgrade to the network extension including the following changes:
+    - Support for many more file types, including GEXF, GDF, GML, Pajek NET, UCINET DL, and Netdraw VNA
+    - Fixed bugs with GraphML support
+    - Improved documentation
+
+### New features
+
+- New primitive `netlogo-web?` added to test whether you are currently running in NetLogo Web
+- New primitive `behaviorspace-experiment-name` added allowing you to get the name of the currently running experiment
+- New primitive `stop-inspecting` to stop inspecting agents
+- New primitive `stop-inspecting-dead-agents` and menu item to stop inspecting dead agents
+- `__includes` keyword now enables the Includes button when given an empty
+- hooks added for extensions to write custom log messages
+
+### Bug fixes
+
+- `user-one-of` will now signal an error earlier when provided an empty list of choices
+- `hsb`, `extract-hsb`, and `approximate-hsb` have been updated to represent true hsb conventions
+- new deprecated primitives `__hsb-old`, `__extract-hsb-old`, and `__approximate-hsb-old` work as the old hsb primitives did when older models using the hsb primitives are opened in NetLogo 5.2, they will be auto-converted to use the deprecated primitives
+- `extract-hsb` -- fixed bug where it didn't work correctly on rgb lists
+
+### Model changes
+
+- New Sample Models: Artificial Anasazi, Bacteria Food Hunt, Bacteria Hunt Speeds, BeeSmart - Hive Finding, Bug Hunt Disruptions, Bug Hunt Environmental Changes, Bug Hunt Predators and Invasive Species - Two Regions, Hydrogen Diffusion 3D, Lennard-Jones, Paths
+- There are 46 new models in the new IABM Textbook folder: Turtles Circling Simple, Ants Simple, Heroes and Cowards, Life Simple, Simple Economy, 4 DLA extensions, 4 El Farol Extensions, 4 Fire Extensions, 4 Segregation Extensions, 5 Wolf Sheep Extensions, Agentset Efficiency, Agentset Ordering, Communication-T-T Network Example, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Traffic Basic Utility, Traffic Grid Goal, Spread of Disease, Voting Component Verification, Voting Sensitivity Analysis, Arduino Example, Disease With Android Avoidance HubNet, Example HubNet, Run Example, Run Result Example, Simple Machine Learning, Simple Viral Marketing, Ticket Sales, Sandpile Simple
+- New models in the new Alternate Visualizations folder: Ethnocentrism - Alternative Visualization, Flocking - Alternative Visualizations, Heat Diffusion - Alternative visualization, Virus - Alternative Visualization, Virus - Circle Visualization
+- Promoted models: Honeycomb, Minority Game
+- Many other bugfixes and upgrades
+
+## Version 5.1.0 (July 2014)
+
+- bundle new network extension
+- File menu includes recently opened files
+- deprecate applets
+- support retina display on new MacBooks
+
+## Version 5.0.4 (March 2013)
+
+- upload models to the Modeling Commons
+
+## Version 5.0 (February 2012)
+
+- features:
+    - open source (GPL license; source code online at https://github.com/NetLogo/NetLogo)
+    - new license for Sample Models and Curricular Models is Creative Commons Attribution-NonCommercial-ShareAlike
+    - international characters (Unicode) supported throughout application
+    - GUI is localized in Spanish, Russian, and Chinese (volunteer translators wanted)
+    - rich formatting and images in Info tabs using Markdown
+    - plotting code goes inside plots instead of in code tab
+    - authorable model speed (target frame rate setting)
+    - buttons optionally disable until ticks start
+    - translucent colors in 3D view and NetLogo 3D (for RGB colors only)
+- language changes:
+    - "tasks" store code to be run later
+        - aka first-class functions, closures, lambda
+        - new primitives: `task`, `is-command-task?`, `is-reporter-task?`
+        - these primitives accept tasks: `run`, `runresult`, `foreach`, `map`, `reduce`, `filter`, `n-values`, `sort-by`
+    - improved overall list performance (many operations take near-constant time instead of linear time)
+    - you must use `reset-ticks` to start the tick counter before using `tick` or `tick-advance`
+    - new primitives `setup-plots` and `update-plots`
+    - new primitive `sort-on` lets you say e.g., `sort-on [size] turtles`
+    - new primitive `error` causes a runtime error
+    - `random-normal` rejects negative standard deviations
+- HubNet:
+    - activities can run headless
+    - new primitives `hubnet-clients-list`, `hubnet-kick-client`, `hubnet-kick-all-clients`
+    - `hubnet-set-client-interface` no longer required
+- other fixes and changes:
+    - tabs renamed to Interface/Info/Code
+    - Command Center allows reporters, adds `show` command automatically
+    - NetLogo 3D uses .nlogo3d suffix, not .nlogo
+    - `import-world` is much faster
+    - `startup` no longer runs headless or in background BehaviorSpace runs
+    - fixed 3D rendering bug where small turtles were too bright
+    - Mac app runs in 64 bit mode by default
+    - upgraded Windows installer
+    - GoGo extension getting-started experience now smoother on all platforms
+- models:
+    - new Sample Models: Sandpile, Lightning, Osmotic Pressure, Robby the Robot, Preferential Attachment 3D
+    - new Curricular Models: Bug Hunt Consumers, Bug Hunt Predators and Invasive Species, Plant Speciation, epiDEM Basic, epiDEM Travel and Control, Connected Chemistry Atmosphere
+    - new Code Examples: Info Tab Example, GoGoMonitorSimple
+
+## Version 4.1.3 (April 2011)
+
+- matrix extension
+- `behaviorspace-run-number`
+
+## Version 4.1 (December 2009)
+
+- parallel BehaviorSpace
+- controlling API allows embedding
+- automatic code indenter
+- searchable Models Library
+- translucent colors
+- mini-views in agent monitors
+- `resize-world`, `set-patch-size`
+- bitmap, QuickTime extensions
+- individualized HubNet client views
+- browser-based HubNet client
+
+## Version 4.0 (September 2007)
+
+- link agents
+- tick counter
+- view update modes (tick-based, continuous)
+- speed slider fast forwards
+- input boxes in interface tab
+- include multiple source files
+- RGB colors
+- slider bounds may be reporters
+- HubNet client editor
+- Mathematica-NetLogo link
+- array, table, profiler, GIS extensions
+- models run faster (partial compilation to JVM byte code)
+- logging
+
+## Version 3.1 (April 2006)
+
+- topologies (optional wrapping at world edges)
+- randomized agentset ordering
+
+## Version 3.0 (September 2005)
+
+- 3D view (for 2D models)
+- formatted Info tabs
+- System Dynamics Modeler
+- `follow`, `ride`, `watch`
+- drawing layer
+- GoGo extension
+
+## Version 2.1 (December 2004)
+
+- "headless" mode for command line operation
+- "action keys" to trigger buttons by keypresses
+- makes QuickTime movies of models
+- `let`, `carefully`
+
+## Version 2.0.2 (August 2004)
+
+- extensions and controlling APIs
+- sound extension
+
+## Version 2.0 (December 2003)
+
+- fast, flicker-free, non-grid-based graphics
+
+## Version 1.3 (June 2003)
+
+- `run`, `runresult`, `map`, `foreach`, `filter`, `reduce`
+
+## Version 1.2 (March 2003)
+
+- computers as HubNet clients
+
+## Version 1.1 (July 2002)
+
+- Applets
+
+## Version 1.0 (April 2002)
+
+- first full release (after a series of betas)
+
