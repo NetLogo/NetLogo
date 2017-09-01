@@ -269,16 +269,22 @@ tar is available under the name "gnutar". You can find out if you are already
 using the GNU version by typing `tar --version` and seeing if the output says
 "tar (GNU tar)".
 
-### How do I install NetLogo unattended
+### How do I install NetLogo unattended?
 
 It depends on which platform you are using.
 
 - **Linux:** Untar NetLogo into the appropriate place.
 - **Mac:** Copy the NetLogo directory from the disk image into the Applications
   folder.
-- **Windows:** Run the installer from the command line using the -q option:
-        
-        NetLogo{{version}}Installer.exe -q
+- **Windows:** The installer is an MSI which can be run  using one of the following commands (these may require admin privileges):
+
+        msiexec.exe /i C:\Path\to\NetLogo.msi ALLUSERS=1 ADDLOCAL=Shortcuts   :: To install with desktop shortcuts
+        msiexec.exe /i C:\Path\to\NetLogo.msi ALLUSERS=1 ADDLOCAL=BaseInstall :: To install without desktop shortcuts
+
+We also maintain an [advanced installation wiki page](https://github.com/NetLogo/NetLogo/wiki/Advanced-Installation)
+which may have additional tips and tricks.
+We encourage users who have problems with unattended installation or ideas on
+how it could be improved to email [feedback@ccl.northwestern.edu](mailto:feedback@ccl.northwestern.edu?subject=Unattended%20Installation).
 
 ## Running
 
@@ -389,7 +395,7 @@ It would be extremely helpful if you could run the following command in the
 "Terminal" application and send the output in an email to
 [bugs@ccl.northwestern.edu](mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug).
 
-    xattr -pl com.apple.quarantine /Applications/NetLogo\ 6.0/NetLogo\ 6.0.app
+    xattr -pl com.apple.quarantine /Applications/NetLogo\ {{version}}/NetLogo\ {{version}}.app
 
 running it should give you a single line of output (something like
 `com.apple.quarantine: 01e1;58ac6af2;Firefox;F2E0B1E2-D203-4B05-8DF9-ABA58B52EFEA`,
@@ -400,7 +406,7 @@ There is also a partial workaround! Running the following command in the
 Terminal will enable users to run NetLogo without turning Gatekeeper completely
 off. The command is:
 
-    sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ 6.0/NetLogo\ 6.0.app
+    sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ {{version}}/NetLogo\ {{version}}.app
 
 Note that if you plan to run NetLogo 3D, HubNet Client, or NetLogo Logging, you
 may also need to re-run that command once for each of those applications. If the
