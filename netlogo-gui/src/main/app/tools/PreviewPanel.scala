@@ -56,13 +56,19 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
       setEnabled(runnableCommands.isDefined)
       showText("")
     }
-  def loadManualPreviewAction(imagePath: Option[String]) =
+  def loadManualPreviewAction(imagePath: Option[String]) = {
+    imagePath.map(loadImageAction _).getOrElse(dummyLoadImageAction)
+  }
+  def loadImageAction(path: String): Action =
     new AbstractAction {
+      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      showText(wrap(path))
+      setEnabled(true)
+
       def load(): Unit = {
-        putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
-        showText(wrap(imagePath.getOrElse(I18N.gui.get("tools.previewPanel.unknownManualImagePath"))))
-        imagePath.foreach { path =>
-          ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), I18N.gui.get("tools.previewPanel.loadingManualPreviewImage"), () => {
+        ModalProgressTask.onUIThread(getFrame(PreviewPanel.this),
+          I18N.gui.get("tools.previewPanel.loadingManualPreviewImage"),
+          () => {
             try {
               showImage(ImageIO.read(new File(path)))
               putValue(Action.NAME, I18N.gui.get("tools.previewPanel.reloadManualPreviewImage"))
@@ -70,12 +76,18 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
               case e: IOException => showText(wrap(e.getMessage, path))
             }
           })
-        }
       }
+
       def actionPerformed(evt: ActionEvent): Unit = load()
-      setEnabled(imagePath.isDefined)
       load()
     }
+  def dummyLoadImageAction: Action = {
+    new AbstractAction {
+      setEnabled(false)
+      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      def actionPerformed(evt: ActionEvent): Unit = { }
+    }
+  }
   add(new JPanel() {
     add(button)
   }, BorderLayout.PAGE_START)
