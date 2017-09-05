@@ -28,7 +28,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   def openFromModel(model: Model) {
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
-    ws.setModelOpened()
+    ws.setOpenModel(model)
 
     // get out if unknown version
     val netLogoVersion = model.version

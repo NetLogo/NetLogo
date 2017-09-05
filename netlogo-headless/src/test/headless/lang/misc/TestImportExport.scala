@@ -186,7 +186,8 @@ class TestImportExport extends FixtureSuite  {
   test("ExportOutputArea", SlowTestTag) { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    declare(Model())
+    val m = Model()
+    declare(m.copy(widgets = m.widgets :+ Output(0, 0, 0, 0, 10)))
     testCommand("ca")
     testCommand("output-print \"This is a test of output areas.\"");
     exportWorld(filename)
