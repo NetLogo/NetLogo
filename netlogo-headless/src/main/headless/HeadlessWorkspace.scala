@@ -10,7 +10,7 @@ import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World, World2D },
     api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
-    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, UpdateMode, WorldDimensions },
+    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
@@ -84,9 +84,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Has a model been opened in this workspace?
    */
-  private[this] var _modelOpened = false
-  def modelOpened = _modelOpened
-  def setModelOpened() { _modelOpened = true }
+  def modelOpened = _openModel.nonEmpty
+
+  private[this] var _openModel = Option.empty[Model]
+  def setOpenModel(model: Model) { _openModel = Some(model) }
 
   val outputAreaBuffer = new StringBuilder
 
@@ -236,8 +237,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   override def exportOutputAreaToCSV(writer: java.io.PrintWriter) {
-    writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"))
-    org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString)
+    if (_openModel.exists(_.widgets.exists(_.isInstanceOf[Output]))) {
+      writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"))
+      org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString)
+    }
   }
 
   /**

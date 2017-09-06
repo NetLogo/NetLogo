@@ -11,7 +11,7 @@ import java.nio.file.Paths
 import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
   WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Program, UpdateMode, WorldDimensions }
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
@@ -117,7 +117,10 @@ with org.nlogo.api.ViewSettings {
   /**
    * Has a model been opened in this workspace?
    */
-  var modelOpened = false
+  def modelOpened = _openModel.nonEmpty
+
+  private[this] var _openModel = Option.empty[Model]
+  def setOpenModel(model: Model): Unit = { _openModel = Some(model) }
 
   val outputAreaBuffer = new StringBuilder
 
@@ -335,8 +338,10 @@ with org.nlogo.api.ViewSettings {
   }
 
   override def exportOutputAreaToCSV(writer: java.io.PrintWriter) {
-    writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"))
-    org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString)
+    if (_openModel.exists(_.widgets.exists(_.isInstanceOf[Output]))) {
+      writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"))
+      org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString)
+    }
   }
 
   /**

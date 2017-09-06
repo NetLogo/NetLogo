@@ -25,7 +25,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   def openFromModel(model: Model) {
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
-    ws.modelOpened = true
+    ws.setOpenModel(model)
 
     if (!Version.compatibleVersion(model.version))
       throw new IllegalStateException("unknown NetLogo version: " + model.version)
