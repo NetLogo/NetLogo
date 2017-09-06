@@ -1,45 +1,44 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.codetab
+package org.nlogo.editor
 
-import org.nlogo.api.EditorAreaInterface
-import org.nlogo.editor.AdvancedEditorArea
 import javax.swing.JTextArea
 import javax.swing.text.{ AbstractDocument, JTextComponent }
 
 // wraps an EditorArea to satisfy EditorAreaInterface, for the benefit of SmartIndenter
 
-class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
+trait EditorAreaWrapper {
+  def textComponent: JTextComponent
   def getLineOfText(lineNum: Int) = {
     val lineStart = lineToStartOffset(lineNum)
     val lineEnd = lineToEndOffset(lineNum)
     getText(lineStart, lineEnd - lineStart)
   }
-  def getCaretPosition: Int = text.getCaretPosition
-  def setCaretPosition(pos: Int) = text.setCaretPosition(pos)
-  def getText(start: Int, len: Int) = text.getDocument.getText(start, len)
-  def getSelectionStart = text.getSelectionStart
-  def getSelectionEnd = text.getSelectionEnd
-  def setSelectionStart(pos: Int) { text.setSelectionStart(pos) }
-  def setSelectionEnd(pos: Int) { text.setSelectionEnd(pos) }
+  def getCaretPosition: Int = textComponent.getCaretPosition
+  def setCaretPosition(pos: Int) = textComponent.setCaretPosition(pos)
+  def getText(start: Int, len: Int) = textComponent.getDocument.getText(start, len)
+  def getSelectionStart = textComponent.getSelectionStart
+  def getSelectionEnd = textComponent.getSelectionEnd
+  def setSelectionStart(pos: Int) { textComponent.setSelectionStart(pos) }
+  def setSelectionEnd(pos: Int) { textComponent.setSelectionEnd(pos) }
   def offsetToLine(offset: Int) =
-    text.getDocument.getDefaultRootElement.getElementIndex(offset)
+    textComponent.getDocument.getDefaultRootElement.getElementIndex(offset)
   def lineToStartOffset(line: Int) =
-    text.getDocument.getDefaultRootElement.getElement(line).getStartOffset
+    textComponent.getDocument.getDefaultRootElement.getElement(line).getStartOffset
   def lineToEndOffset(line: Int) = {
-    text.getDocument.getDefaultRootElement.getElement(line).getEndOffset
+    textComponent.getDocument.getDefaultRootElement.getElement(line).getEndOffset
   }
   def insertString(pos: Int, spaces: String) {
-    text.getDocument.insertString(pos, spaces, null)
+    textComponent.getDocument.insertString(pos, spaces, null)
   }
-  def replaceSelection(s: String) { text.replaceSelection(s) }
+  def replaceSelection(s: String) { textComponent.replaceSelection(s) }
   def replace(start: Int, len: Int, str: String): Unit = {
     try {
-      text match {
+      textComponent match {
         case textArea: JTextArea =>
           textArea.replaceRange(str, start, start + len)
         case _ =>
-          text.getDocument match {
+          textComponent.getDocument match {
             case abstractDoc: AbstractDocument =>
               abstractDoc.replace(start, len, str, null)
             case doc =>
@@ -58,23 +57,23 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   }
   def remove(start: Int, len: Int) {
     try {
-      text.getDocument.remove(start, len)
+      textComponent.getDocument.remove(start, len)
     } catch {
       case ex: javax.swing.text.BadLocationException =>
         println("errored removing: " + start + ", " + len)
         throw ex
     }
   }
-  override def beginCompoundEdit(): Unit = {
-    text match {
+  def beginCompoundEdit(): Unit = {
+    textComponent match {
       case a: AdvancedEditorArea => a.beginCompoundEdit()
-      case _ => super.beginCompoundEdit()
+      case _ =>
     }
   }
-  override def endCompoundEdit(): Unit = {
-    text match {
+  def endCompoundEdit(): Unit = {
+    textComponent match {
       case a: AdvancedEditorArea => a.endCompoundEdit()
-      case _ => super.endCompoundEdit()
+      case _ =>
     }
   }
 }

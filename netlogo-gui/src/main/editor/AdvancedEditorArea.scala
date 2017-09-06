@@ -3,7 +3,7 @@
 package org.nlogo.editor
 
 import javax.swing.{ Action, JMenu, JPopupMenu }
-import javax.swing.text.EditorKit
+import javax.swing.text.{ EditorKit, NavigationFilter }
 
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
@@ -25,6 +25,11 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
 
   def enableBracketMatcher(enable: Boolean): Unit = {
     setBracketMatchingEnabled(enable)
+  }
+
+  override def setNavigationFilter(filter: NavigationFilter): Unit = {
+    if (filter == null) super.setNavigationFilter(null)
+    else                super.setNavigationFilter(new StickyLineEndNavigationFilter(filter))
   }
 
   override def getActions(): Array[Action] = {
