@@ -83,7 +83,7 @@ final strictfp class QuickHelp<TokenType> {
     } else {
       if (0 == javax.swing.JOptionPane.showConfirmDialog
           (comp, I18N.guiJ().getN("tabs.code.rightclick.quickhelp.notfound", token.toUpperCase()),
-           "NetLogo", javax.swing.JOptionPane.YES_NO_OPTION)) {
+           I18N.guiJ().get("common.netlogo"), javax.swing.JOptionPane.YES_NO_OPTION)) {
         org.nlogo.swing.BrowserLauncher.openPath(comp, docPath("index2.html"), null);
       }
     }

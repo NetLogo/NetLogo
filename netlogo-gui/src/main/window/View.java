@@ -4,6 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.I18N;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
@@ -441,7 +442,7 @@ public strictfp class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    JMenuItem copyItem = new JMenuItem("Copy View");
+    JMenuItem copyItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.copy"));
     copyItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
@@ -449,7 +450,7 @@ public strictfp class View
       }
     });
     menu.add(copyItem);
-    JMenuItem exportItem = new JMenuItem("Export View...");
+    JMenuItem exportItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.export"));
     exportItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         workspace.doExportView(View.this);
@@ -462,7 +463,7 @@ public strictfp class View
 
     menu.add(new JPopupMenu.Separator());
 
-    JMenuItem inspectGlobalsItem = new JMenuItem("inspect globals");
+    JMenuItem inspectGlobalsItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals"));
     inspectGlobalsItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
         workspace.inspectAgent(AgentKindJ.Observer());

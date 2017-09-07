@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.Container
 import java.net.URI
-import java.nio.file.Paths
+import java.nio.file.{ Files, Paths }
 
 import org.nlogo.window.Events.{ AfterLoadEvent, BeforeLoadEvent,
   LoadBeginEvent, LoadEndEvent, LoadModelEvent, LoadWidgetsEvent }
@@ -23,7 +23,10 @@ object ReconfigureWorkspaceUI {
     def getLinkParent = linkParent
 
     def loadHelper(modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices) {
-      val uriOption = Try(Paths.get(modelURI).toString).toOption
+      val uriOption = Try(Paths.get(modelURI)).toOption
+        .filterNot(p => p.getFileName.toString.startsWith("empty.nlogo"))
+        .filter(p => Files.isRegularFile(p))
+        .map(_.toString)
       val beforeEvents = List(
         new BeforeLoadEvent(uriOption, modelType),
         new LoadBeginEvent())

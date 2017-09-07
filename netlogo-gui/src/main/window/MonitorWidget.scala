@@ -262,7 +262,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   def handle(e: JobRemovedEvent): Unit =
     if (e.owner == this) {
       jobRunning = false
-      value(if (hasError) "N/A" else "")
+      value(if (hasError) I18N.gui.get("tabs.run.widgets.monitor.notApplicable") else "")
     }
 
   def halt(): Unit = {

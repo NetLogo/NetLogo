@@ -213,7 +213,7 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui
 }
 
 class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
-  private val dialogTitle: String = "Runtime Error"
+  private val dialogTitle: String = I18N.gui.get("common.messages.error.runtimeError")
 
   def doShow(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
     buildTexts(errorInfo, debuggingInfo)
@@ -241,7 +241,7 @@ class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gu
 }
 
 class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog {
-  private val dialogTitle: String = "Model Too Large"
+  private val dialogTitle: String = I18N.gui.get("error.dialog.outOfMemory.title")
   private val ErrorText = I18N.gui.get("error.dialog.outOfMemory")
 
   override def makeButtons(): Seq[JComponent] = {

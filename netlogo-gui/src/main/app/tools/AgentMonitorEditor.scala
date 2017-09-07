@@ -42,7 +42,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel
     editors.clear()
     if(vars == null || vars.isEmpty) {
       setLayout(new FlowLayout)
-      add(new JLabel("(no variables defined)"))
+      add(new JLabel(I18N.gui.get("tools.agentMonitorEditor.noVariables")))
     }
     else fill()
   }
@@ -408,7 +408,7 @@ with WindowEvents.JobRemovedEvent.Handler
       case d: java.lang.Double =>
         workspace.world.getTurtle(d.longValue)
       case _ =>
-        throw new org.nlogo.api.AgentException("expected a turtle or a who number")
+        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitorEditor.expectedTurtleOrWho"))
     }
   }
 
@@ -419,7 +419,7 @@ with WindowEvents.JobRemovedEvent.Handler
     else {
       val breed = workspace.world.getLinkBreed(text.toUpperCase)
       if(breed == null)
-        throw new org.nlogo.api.AgentException("expected a link breed")
+        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonirorEditor.edpectedLinkBreed"))
       breed
     }
 

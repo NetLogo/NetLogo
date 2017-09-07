@@ -222,10 +222,11 @@ object App{
                 commandLineMagic == null &&
                 commandLineURL == null,
           "Error parsing command line arguments: you can only specify one model to open at startup.")
-        val modelFile = new java.io.File(nextToken())
+        val fileToken = nextToken()
+        val modelFile = new java.io.File(fileToken)
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists) throw new IllegalStateException("File specified to open (" + token + ") was not found!")
+        if (!modelFile.exists) throw new IllegalStateException(I18N.gui.getN("file.open.error.notFound", fileToken))
         commandLineModel = modelFile.getAbsolutePath()
       }
       else if (token == "--magic") {
@@ -265,7 +266,7 @@ object App{
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists())
-          throw new IllegalStateException("File specified to open (" + token + ") was not found!")
+          throw new IllegalStateException(I18N.gui.getN("file.open.error.notFound", token))
         commandLineModel = modelFile.getAbsolutePath()
       }
     }
@@ -499,7 +500,7 @@ class App extends
   def startLogging(properties:String) {
     if(new java.io.File(properties).exists) {
       val username =
-        JOptionPane.showInputDialog(null, "Enter your name:", "",
+        JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.enterName"), "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       if(username != null){
         logger = new Logger(username)
@@ -508,7 +509,7 @@ class App extends
         org.nlogo.api.Version.startLogging()
       }
     }
-    else JOptionPane.showConfirmDialog(null, "The file " + properties + " does not exist.",
+    else JOptionPane.showConfirmDialog(null, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", properties),
       "NetLogo", JOptionPane.DEFAULT_OPTION)
   }
 
@@ -591,8 +592,8 @@ class App extends
         case ex: java.net.ConnectException =>
           fileManager.newModel()
           JOptionPane.showConfirmDialog(null,
-            "Could not obtain NetLogo model from URL '%s'.\nNetLogo will instead start without any model loaded.".format(commandLineURL),
-            "Connection Failed", JOptionPane.DEFAULT_OPTION)
+            I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
+            I18N.gui.get("file.open.error.unloadable.title"), JOptionPane.DEFAULT_OPTION)
       }
 
     }
@@ -707,11 +708,8 @@ class App extends
       val fullName =
         if (matches.size == 1) matches(0)
         else {
-          val i = org.nlogo.swing.OptionDialog.showAsList(
-            frame,
-            "Magic Model Matcher",
-            "You must choose!",
-            matches.map(_.replaceAllLiterally(".nlogo3d", "").replaceAllLiterally(".nlogo", "")).toArray)
+          val options = matches.map(_.replaceAllLiterally(".nlogo3d", "").replaceAllLiterally(".nlogo", "")).toArray[AnyRef]
+          val i = org.nlogo.swing.OptionDialog.showAsList(frame, I18N.gui.get("tools.magicModelMatcher"), I18N.gui.get("tools.magicModelMathcer.mustChoose"), options)
           if (i != -1) matches(i) else null
         }
       if (fullName != null) {

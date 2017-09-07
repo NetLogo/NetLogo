@@ -31,10 +31,7 @@ public strictfp final class VMCheck {
 
   public static void detectBadJVMs() {
     if (org.nlogo.util.SysInfo.isLibgcj()) {
-      warn("You have started NetLogo under the GNU libgcj Java VM. " +
-          "NetLogo may not run well, or at all, under libgcj. " +
-          "We recommend using the Oracle Java VM to" +
-          "run NetLogo. Recent OpenJDK versions may also work.");
+      warn(I18N.guiJ().get("warn.dialog.badjvm"));
     }
   }
 
@@ -43,8 +40,7 @@ public strictfp final class VMCheck {
     bogusFrame.pack(); // otherwise OptionDialog will fail to get font metrics
     int choice = org.nlogo.swing.OptionDialog.showMessage(
         bogusFrame, I18N.guiJ().get("common.messages.warning"),
-            message + "  If you choose to continue, NetLogo may not " +
-                "function properly.",
+            message,
             new String[]{I18N.guiJ().get("common.buttons.quit"), I18N.guiJ().get("common.buttons.continue")});
     if (choice == 0) {
       System.exit(0);

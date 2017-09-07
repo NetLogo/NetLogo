@@ -9,6 +9,7 @@ import java.awt.{Component, Point}
 import java.awt.image.BufferedImage
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.plot.{PlotManagerInterface, Plot}
+import org.nlogo.core.I18N
 
 object PlotWidget{
   def apply(name:String, plotManager:PlotManagerInterface): PlotWidget = {
@@ -42,7 +43,7 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
   }
 
   override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {
-    val copyItem = RichJMenuItem("Copy Image"){
+    val copyItem = RichJMenuItem(I18N.gui.get("edit.plot.copyimage")){
       java.awt.Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)
     }
     menu.add(copyItem)
@@ -50,7 +51,7 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
   }
 
   override def extraMenuItems: List[JMenuItem] = List(
-    RichJMenuItem("Clear"){ clear() }
+    RichJMenuItem(I18N.gui.get("edit.plot.clearplot")){ clear() }
   )
 
   def repaintIfNeeded(){

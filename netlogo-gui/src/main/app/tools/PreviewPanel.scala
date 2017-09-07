@@ -9,6 +9,7 @@ import javax.swing.{ AbstractAction, Action, BorderFactory, JButton, JLabel, JPa
 import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
+import org.nlogo.core.I18N
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
@@ -37,11 +38,11 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
     .map("<p style='text-align:center; margin:10px'><![CDATA[" + _ + "]]></p>")
     .mkString("<html>", "", "</html>")
   def executeCommandsAction(runnableCommands: Option[PreviewCommandsRunner#Runnable]) =
-    new AbstractAction("Run Preview Commands") {
+    new AbstractAction(I18N.gui.get("tools.previewPanel.runPreviewCommands")) {
       def run(): Unit = {
         runnableCommands match {
           case Some(runnable) =>
-            ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), "Running Preview Commands", runnable)
+            ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), I18N.gui.get("tools.previewPanel.runningPreviewCommands"), runnable)
             runnable.result.foreach {
               _ match {
                 case Success(image) => showImage(image)
@@ -55,26 +56,38 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
       setEnabled(runnableCommands.isDefined)
       showText("")
     }
-  def loadManualPreviewAction(imagePath: Option[String]) =
+  def loadManualPreviewAction(imagePath: Option[String]) = {
+    imagePath.map(loadImageAction _).getOrElse(dummyLoadImageAction)
+  }
+  def loadImageAction(path: String): Action =
     new AbstractAction {
+      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      showText(wrap(path))
+      setEnabled(true)
+
       def load(): Unit = {
-        putValue(Action.NAME, "Load Manual Preview Image")
-        showText(wrap(imagePath.getOrElse("Unknown manual preview image path.")))
-        imagePath.foreach { path =>
-          ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), "Loading Manual Preview Image", () => {
+        ModalProgressTask.onUIThread(getFrame(PreviewPanel.this),
+          I18N.gui.get("tools.previewPanel.loadingManualPreviewImage"),
+          () => {
             try {
               showImage(ImageIO.read(new File(path)))
-              putValue(Action.NAME, "Reload Manual Preview Image")
+              putValue(Action.NAME, I18N.gui.get("tools.previewPanel.reloadManualPreviewImage"))
             } catch {
               case e: IOException => showText(wrap(e.getMessage, path))
             }
           })
-        }
       }
+
       def actionPerformed(evt: ActionEvent): Unit = load()
-      setEnabled(imagePath.isDefined)
       load()
     }
+  def dummyLoadImageAction: Action = {
+    new AbstractAction {
+      setEnabled(false)
+      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      def actionPerformed(evt: ActionEvent): Unit = { }
+    }
+  }
   add(new JPanel() {
     add(button)
   }, BorderLayout.PAGE_START)

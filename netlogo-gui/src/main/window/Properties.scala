@@ -39,12 +39,12 @@ object Properties {
   val chooser = javaList(
     P("nameWrapper", P.Identifier, I18N.gui("chooser.globalVar")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
-      "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>")
+      I18N.gui.get("edit.chooser.example"))
   )
   val slider = javaList(
     P("nameWrapper", P.Identifier, I18N.gui("slider.globalVar")),
     P("minimumCode", P.ReporterLine, I18N.gui("slider.minimum"),
-      "min, increment, and max may be numbers or reporters",
+      I18N.gui.get("edit.slider.minmax.message"),
       gridWidth = 1),
     P("incrementCode", P.ReporterLine, I18N.gui("slider.increment"),
       " ", // empty, so layout lines up
@@ -58,7 +58,7 @@ object Properties {
   val monitor = javaList(
     P("wrapSource", P.Reporter, I18N.gui("monitor.reporter")),
     P("name", P.String, I18N.gui("monitor.name")),
-    P("decimalPlaces", P.Integer, I18N.gui("monitor.decimalPlaces"), "full precision is 17", gridWidth = RELATIVE),
+    P("decimalPlaces", P.Integer, I18N.gui("monitor.decimalPlaces"), I18N.gui.get("edit.monitor.precision"), gridWidth = RELATIVE),
     P("fontSize", P.Integer, I18N.gui("monitor.fontSize"))
   )
   val output = javaList(
@@ -120,7 +120,7 @@ object Properties {
   val dummyChooser = javaList(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
-      "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>")
+      I18N.gui.get("edit.chooser.example"))
   )
   val dummyInput = javaList(
     P("nameWrapper", P.String, I18N.gui("hubnet.tag")),
@@ -128,7 +128,7 @@ object Properties {
   )
   val dummyMonitor = javaList(
     P("name", P.String, I18N.gui("hubnet.tag")),
-    P("decimalPlaces", P.Integer, "Decimal places", gridWidth = RELATIVE)
+    P("decimalPlaces", P.Integer, I18N.gui.get("edit.monitor.decimalPlaces"), gridWidth = RELATIVE)
   )
   val dummyPlot = javaList(
     P("nameOptions", P.PlotOptions, I18N.gui("plot.name")),
