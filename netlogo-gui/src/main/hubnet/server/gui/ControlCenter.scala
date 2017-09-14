@@ -21,7 +21,7 @@ import org.nlogo.hubnet.server.{HubNetUtils, ConnectionManager}
  * methods only called by the constructor), must be
  * executed on the event thread.</i>
  */
-class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, activityName: String)
+class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, activityName: String, address: Option[InetAddress])
         extends JFrame(I18N.gui.get("menu.tools.hubNetControlCenter")) {
   private val clientsPanel: ClientsPanel = new ClientsPanel(server.clients.keys)
   private val messagePanel: MessagePanel = new MessagePanel()
@@ -232,8 +232,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.name"), new SelectableJLabel(serverId))
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.activity"), new SelectableJLabel(activityName))
         add(Box.createVerticalStrut(12))
-        val serverIP = findLocalHostAddress()
-        addField(I18N.gui.get("menu.tools.hubnetControlCenter.serverAddress"), new SelectableJLabel(serverIP))
+        addField(I18N.gui.get("menu.tools.hubnetControlCenter.serverAddress"), new SelectableJLabel(address.map(_.toString.drop(1)).getOrElse(findLocalHostAddress())))
         addField(I18N.gui.get("menu.tools.hubnetControlCenter.portNumber"), new SelectableJLabel(server.port.toString))
       })
       add(Box.createVerticalStrut(30))

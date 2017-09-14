@@ -1,9 +1,9 @@
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+/// / (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.client
 
 import java.io.IOException
-import java.net.{DatagramPacket, InetAddress, MulticastSocket}
+import java.net.{DatagramPacket, InetAddress, MulticastSocket, SocketTimeoutException}
 import java.util.Arrays
 import org.nlogo.hubnet.protocol.DiscoveryMessage
 
@@ -20,7 +20,7 @@ object DiscoveryListener {
  * in the server. When a message is received, it notifies an  { @link AnnouncementListener }.
  * @see org.nlogo.hubnet.protocol.DiscoveryMessage
  */
-class DiscoveryListener extends Thread {
+class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) extends Thread {
   import DiscoveryListener._
 
   // this should probably be changed to support a set of listeners like the
@@ -69,29 +69,38 @@ class DiscoveryListener extends Thread {
     // really matter on the client, unless zero termination matters...
     val receiptBuffer = Array.ofDim[Byte](1024)
     var multicastSocket: MulticastSocket = null
-    try{
-      multicastSocket = new MulticastSocket(SERVER_DISCOVERY_MULTICAST_PORT)
-      val group = InetAddress.getByName(SERVER_DISCOVERY_MULTICAST_GROUP)
-      multicastSocket.joinGroup(group)
-      while (shouldKeepListening) {
+    while (shouldKeepListening) {
+      interfaceAddress.foreach { address =>
         Arrays.fill(receiptBuffer, 0.toByte)
         // the -1 should, hopefully, force zero termination upon truncation of large packets...
         val packet = new DatagramPacket(receiptBuffer, receiptBuffer.length - 1)
+        val group = InetAddress.getByName(SERVER_DISCOVERY_MULTICAST_GROUP)
         try {
+          multicastSocket = new MulticastSocket(SERVER_DISCOVERY_MULTICAST_PORT)
+          multicastSocket.setSoTimeout(3000)
+          multicastSocket.setInterface(address)
+          multicastSocket.joinGroup(group)
           multicastSocket.receive(packet)
           notifyListeners(DiscoveryMessage.deserialize(packet.getAddress.getHostName, packet.getData))
         }
-        catch {case ex: IOException => org.nlogo.api.Exceptions.ignore(ex)}
+        catch {
+          case timeout: SocketTimeoutException =>
+          case ex: java.security.AccessControlException =>
+            System.err.println(ex)
+            System.err.println(ex.getMessage)
+            org.nlogo.api.Exceptions.ignore(ex)
+          case ex: IOException =>
+            System.err.println(ex)
+            System.err.println(ex.getMessage)
+            org.nlogo.api.Exceptions.ignore(ex)
+        }
+        finally {
+          if (multicastSocket != null) {
+            multicastSocket.leaveGroup(group)
+            multicastSocket.close()
+          }
+        }
       }
-      multicastSocket.leaveGroup(group)
     }
-    catch {
-      // must be in an applet, so ignore - ST 8/17/11
-      case ex: java.security.AccessControlException => org.nlogo.api.Exceptions.ignore(ex)
-      // Im not sure how we should handle this...
-      case ex: IOException => org.nlogo.api.Exceptions.ignore(ex)
-    }
-
-    if (multicastSocket != null) multicastSocket.close()
   }
 }

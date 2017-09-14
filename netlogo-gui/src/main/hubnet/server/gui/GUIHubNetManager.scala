@@ -6,14 +6,14 @@ import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.hubnet.connection.HubNetException
+import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window._
 
-import java.net.InetAddress
+import java.net.{ InetAddress, NetworkInterface }
 import java.awt.Component
 
 class GUIHubNetManager(workspace: GUIWorkspace,
@@ -27,6 +27,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
   private var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
+  private var serverInterface = Option.empty[(NetworkInterface, InetAddress)]
 
   private val listener = new ClientEventListener() {
     def addClient(clientId: String, remoteAddress: String) {
@@ -100,7 +101,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def showControlCenter() {
     if (controlCenter == null) {
       controlCenter =
-        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
+        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
       controlCenter.pack()
     }
     controlCenter.setVisible(true)
@@ -131,9 +132,22 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       connectionManager.shutdown()
       closeControlCenter()
     }
-    if (serverName == null || serverName.trim == "")
-      serverName = new StartupDialog(workspace.getFrame) { setVisible(true) }.getName()
-    connectionManager.startup(serverName)
+    val networkChoices = NetworkUtils.findViableInterfaces
+    val preferredNetworkInterface = NetworkUtils.recallNetworkInterface
+    val preferredNetworkConnection = networkChoices.find(_._1 == preferredNetworkInterface)
+    val (name, selectedNetwork) =
+      if (serverName == null || serverName.trim == "" || serverInterface.isEmpty) {
+        val dialog =
+          new StartupDialog(workspace.getFrame, networkChoices, preferredNetworkConnection) {
+            setVisible(true)
+          }
+        (dialog.getName, dialog.selectedNetwork.getOrElse(networkChoices.head))
+      } else {
+        (serverName, serverInterface.get)
+      }
+    serverName = name
+    serverInterface = Some(selectedNetwork)
+    connectionManager.startup(name, selectedNetwork)
     showControlCenter()
   }
 
