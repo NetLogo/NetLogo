@@ -2,11 +2,13 @@
 
 package org.nlogo.hubnet.client
 
-import java.awt.event.{ActionEvent, MouseEvent, MouseAdapter, ActionListener}
+import java.awt.event.{ActionEvent, ActionListener, MouseEvent, MouseAdapter}
 import java.awt.{BorderLayout, FlowLayout, Dimension, Frame}
-import javax.swing.{BorderFactory, Box, BoxLayout, JPanel, JButton, JDialog, JScrollPane, JTable, SwingUtilities}
+import java.net.{ InetAddress, NetworkInterface }
+import javax.swing.{BorderFactory, Box, BoxLayout, JPanel, JButton, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
 import javax.swing.event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
 import javax.swing.table.{AbstractTableModel, DefaultTableCellRenderer}
+import org.nlogo.hubnet.connection.NetworkUtils
 import org.nlogo.swing.{NonemptyTextFieldButtonEnabler, TextField, TextFieldBox}
 
 abstract class LoginCallback{
@@ -33,7 +35,9 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def port = portField.getText.toInt
 
   private val enterButton = new JButton("Enter") {addActionListener(LoginDialog.this)}
-  private val serverTable = new ServerTable()
+  private val interfaceChooser = new InterfaceComboBox()
+  private val serverTable = new ServerTable(interfaceChooser.selectedNetworkAddress)
+  interfaceChooser.addActionListener(serverTable)
   private var isServerTableSelectingValue = false
 
   // this is all really crazy... - JC 8/21/10
@@ -70,6 +74,9 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
         setVisible(false)
       }
       centerPanel.add(serverTablePane)
+      if (interfaceChooser.getItemCount > 1) {
+        centerPanel.add(interfaceChooser)
+      }
 
       // Register event handlers
       serverTable.getSelectionModel.addListSelectionListener(this)
@@ -194,7 +201,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
    * A JTable of the active servers. Part of the  { @link LoginDialog }.
    * Interfaces with the  { @link DiscoveryListener }.
    **/
-  class ServerTable extends JTable with Runnable with AnnouncementListener {
+  class ServerTable(private var interfaceAddress: Option[InetAddress]) extends JTable with Runnable with AnnouncementListener with ActionListener {
 
     import ServerTable._
     import org.nlogo.hubnet.protocol.DiscoveryMessage
@@ -249,7 +256,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
         this.active = active
         if (active) {
           expirationThread = new ExpirationThread()
-          discoveryListener = new DiscoveryListener()
+          discoveryListener = new DiscoveryListener(interfaceAddress)
           discoveryListener.setAnnouncementListener(this)
           expirationThread.start()
           discoveryListener.start()
@@ -276,6 +283,25 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
      **/
     def run() {
       if (activeServers.expire() > 0) getModel.asInstanceOf[ServerTableModel].fireTableDataChanged()
+    }
+
+    /**
+     * Controls the interface that the DiscoveryListener is listening on
+     **/
+    def setInterfaceAddress(address: Option[InetAddress]): Unit = {
+      interfaceAddress = address
+      if (discoveryListener != null)
+        discoveryListener.interfaceAddress = address
+    }
+
+    /**
+     * Keeps DiscoveryListener in sync with target address
+     **/
+    def actionPerformed(e: ActionEvent): Unit = {
+      e.getSource match {
+        case i: InterfaceComboBox => setInterfaceAddress(i.selectedNetworkAddress)
+        case _ =>
+      }
     }
 
     /**
@@ -316,5 +342,27 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       }
       override def isCellEditable(row: Int, column: Int) = false
     }
+  }
+
+  object InterfaceComboBox {
+    def choiceToString(choice: (NetworkInterface, InetAddress)) =
+      choice match {
+        case (ni: NetworkInterface, a: InetAddress) => s"${ni.getName}: ${a.toString}"
+      }
+
+    private def choices: Seq[(NetworkInterface, InetAddress)] =
+      NetworkUtils.findViableInterfaces
+  }
+
+  class InterfaceComboBox(val choices: Seq[(NetworkInterface, InetAddress)] = InterfaceComboBox.choices)
+    extends JComboBox(choices.map(InterfaceComboBox.choiceToString).toArray[String]) {
+      import InterfaceComboBox._
+      val choiceMap = choices.map(c => choiceToString(c) -> c).toMap
+
+    setPrototypeDisplayValue("1234567890123456789012345")
+    setMaximumSize(new java.awt.Dimension(250, 80))
+    setAlignmentX(0.0f)
+
+    def selectedNetworkAddress = choiceMap.get(getItemAt(getSelectedIndex)).map(_._2)
   }
 }

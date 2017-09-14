@@ -7,8 +7,6 @@ import NetLogoPackaging.netLogoRoot
 trait PlatformBuild {
   def shortName: String
 
-  def jvmOptions: Seq[String] = "-Xmx1024m -Dfile.encoding=UTF-8".split(" ")
-
   def nativeFormat: String
 }
 
@@ -28,9 +26,6 @@ class MacPlatform(macApp: Project) extends PlatformBuild {
   import Keys._
 
   override def shortName: String = "macosx"
-
-  override def jvmOptions =
-    super.jvmOptions ++ Seq("-Dapple.awt.graphics.UseQuartz=true")
 
   override def nativeFormat = "dmg"
 }

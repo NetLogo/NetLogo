@@ -13,7 +13,7 @@ object Running {
       "-Dapple.awt.graphics.UseQuartz=true") ++
     (if(System.getProperty("os.name").startsWith("Mac"))
       Seq("-Xdock:name=NetLogo")
-     else Seq()) ++
+      else Seq()) ++
     (if(System.getProperty("org.nlogo.is3d") == "true")
       Seq("-Dorg.nlogo.is3d=true")
      else Seq()) ++

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.connection.HubNetException
+import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.core.{ Model, Widget => CoreWidget }
 import org.nlogo.api.{ ModelType, ModelLoader }
@@ -70,7 +70,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
     // for now, I've decided to just fall back on the user name. JC - 12/18/10
     var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
     if(serverName == null || serverName.trim == "") serverName = System.getProperty("user.name", "")
-    connectionManager.startup(serverName)
+    connectionManager.startup(serverName, NetworkUtils.findViableInterfaces.head)
     // println("started HubNet server on port " + connectionManager.port)
   }
 
