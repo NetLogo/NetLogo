@@ -980,23 +980,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   }
 
-  /// importing
-
-  @Override
-  protected org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler() {
-    return new org.nlogo.agent.ImporterJ.ErrorHandler() {
-      public boolean showError(String title, String errorDetails,
-                               boolean fatalError) {
-        org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
-        String[] options = fatalError ? new String[]{I18N.guiJ().get("common.buttons.ok")} :
-            new String[]{I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-        return org.nlogo.swing.OptionDialog.showMessage
-            (getFrame(), title, errorDetails, options) == 0;
-      }
-    };
-  }
-
-
   /// runtime error handling
 
   public void runtimeError(final org.nlogo.api.JobOwner owner, final org.nlogo.nvm.Context context,
