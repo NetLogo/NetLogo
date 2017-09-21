@@ -2,15 +2,15 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, FileIO, HubNetInterface,
-  OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
-import org.nlogo.core.{ Model, View, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.agent.{ Agent, World, ImporterJ, OutputObject }
+import org.nlogo.api.{ Dump, FileIO, HubNetInterface, OutputDestination,
+  PreviewCommands, Workspace => APIWorkspace }
+import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
 
 import collection.mutable.WeakHashMap
-import java.io.IOException
+import java.io.{ BufferedReader, IOException, Reader }
 import java.nio.file.Paths
 
 import scala.util.Try
@@ -31,7 +31,9 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with BehaviorSpaceInformation
   with Traceable with HubNetManager
   with Components
-  with ExtendableWorkspaceMethods with Exporting
+  with ExtendableWorkspaceMethods
+  with Exporting
+  with Importing
   with Plotting {
 
   def isHeadless: Boolean
@@ -79,10 +81,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   }
 
   def loadWorld(view: View, worldInterface: WorldLoaderInterface): Unit = {
-    val loader = view.dimensions match {
-      case d: WorldDimensions3D => new WorldLoader3D()
-      case d: WorldDimensions   => new WorldLoader()
-    }
+    val loader = new WorldLoader()
     loader.load(view, worldInterface)
   }
 
@@ -300,5 +299,41 @@ object AbstractWorkspaceTraits {
 
     def getHubNetManager: Option[HubNetInterface] =
       getComponent(classOf[HubNetInterface])
+  }
+
+  trait Importing { self: AbstractWorkspace =>
+    @throws(classOf[IOException])
+    def importWorld(filename: String): Unit = {
+      // we need to clearAll before we import in case
+      // extensions are hanging on to old data. ev 4/10/09
+      clearAll()
+      doImport(new BufferedReaderImporter(filename) {
+        @throws(classOf[IOException])
+        override def doImport(reader: BufferedReader): Unit = {
+          _world.importWorld(importerErrorHandler, self, stringReader, reader)
+        }
+      })
+    }
+
+    @throws(classOf[IOException])
+    def importWorld(reader: Reader): Unit = {
+      // we need to clearAll before we import in case
+      // extensions are hanging on to old data. ev 4/10/09
+      clearAll()
+      _world.importWorld(importerErrorHandler, self, stringReader, new java.io.BufferedReader(reader))
+    }
+
+    private final def stringReader: ImporterJ.StringReader = {
+      new ImporterJ.StringReader() {
+        @throws(classOf[ImporterJ.StringReaderException])
+        def readFromString(s: String): AnyRef = {
+          try {
+            return compiler.readFromString(s, _world, extensionManager)
+          } catch {
+            case ex: CompilerException => throw new ImporterJ.StringReaderException(ex.getMessage)
+          }
+        }
+      }
+    }
   }
 }

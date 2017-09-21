@@ -2,11 +2,13 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.gl.render.GLViewSettings
-import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
-import javax.swing.JFrame
 import java.awt.event.KeyListener
+import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
+import javax.swing.JFrame
+
+import org.nlogo.core.{ I18N, Shape, WorldDimensions }
+import org.nlogo.gl.render.GLViewSettings
+import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel, WorldViewSettings }
 
 class ViewManager(val workspace: GUIWorkspace,
                   appWindow: JFrame,
@@ -16,12 +18,14 @@ class ViewManager(val workspace: GUIWorkspace,
     with org.nlogo.window.Event.LinkParent
     with org.nlogo.window.Events.PeriodicUpdateEvent.Handler
     with org.nlogo.window.LinkRoot
+    with PropertyChangeListener
     with GLViewSettings {
 
   val world = workspace.world
   var currentView: View = null
   var observerView: ObserverView = null
-  val tickCounterLabel = new TickCounterLabel(workspace.world)
+  val tickCounterLabel = new TickCounterLabel()
+  workspace.listenerManager.addListener(tickCounterLabel)
   addLinkComponent(tickCounterLabel)
   private var fullscreenView: FullscreenView = null
   var turtleView: View = null
@@ -201,12 +205,6 @@ class ViewManager(val workspace: GUIWorkspace,
       observerView.controlStrip.updateTicks()
   }
 
-  def displayOn = workspace.displaySwitchOn
-
-  def displayOn(displayOn: Boolean) {
-    workspace.displaySwitchOn(displayOn)
-  }
-
   def graphicsSettings: org.nlogo.api.ViewSettings =
     workspace.view
 
@@ -244,17 +242,22 @@ class ViewManager(val workspace: GUIWorkspace,
     currentView.renderer.addCustomShapes(filename)
   }
 
-  def displaySwitch(on: Boolean) {
-    observerView.controlStrip.displaySwitch.setOn(on)
-  }
-
-  def displaySwitch =
-    observerView.controlStrip.displaySwitch.isSelected
-
   // I think the 3D renderer grabs it's font size directly from the main view so we don't need to
   // keep track of it here.
   def applyNewFontSize(fontSize: Int, zoom: Int) {}
 
   var warned = false
 
+  // I believe these operations don't make sense in the context of 3D - RG 9/21/17
+  def freeze(): Unit = { }
+  def thaw(): Unit = { }
+
+  def propertyChange(evt: PropertyChangeEvent): Unit = {
+    (evt.getPropertyName, evt.getNewValue) match {
+      case (WorldViewSettings.WorldDimensionsProperty, d: WorldDimensions) =>
+        if (workspace.displayStatusRef.get.shouldRender(false))
+          editFinished()
+      case _ =>
+    }
+  }
 }

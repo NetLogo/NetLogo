@@ -6,7 +6,7 @@ import java.lang.{Double => JDouble, Integer => JInteger}
 import java.util.{Arrays, List => JList, Map => JMap}
 
 import org.nlogo.agent.ImporterJ.{ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader}
-import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer}
+import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer }
 import org.nlogo.core.{AgentKind, Program, WorldDimensions}
 
 object World {
@@ -96,7 +96,7 @@ trait CoreWorld
 
     def ticks: Double = tickCounter.ticks
 
-    def allStoredValues: scala.collection.Iterator[Object] = AllStoredValues.apply(this)
+    def allStoredValues: scala.collection.Iterator[Object] = AllStoredValues(this)
 
     def worldWidth: Int
     def worldHeight: Int
@@ -187,7 +187,7 @@ class World2D extends World with CompilationManagement {
 
   @throws(classOf[java.io.IOException])
   def importWorld(errorHandler: ImporterErrorHandler, importerUser: ImporterUser,
-                          stringReader: ImporterStringReader, reader: java.io.BufferedReader): Unit =
+                  stringReader: ImporterStringReader, reader: java.io.BufferedReader): Unit =
     new Importer(errorHandler, this, importerUser, stringReader).importWorld(reader)
 
   /// equality

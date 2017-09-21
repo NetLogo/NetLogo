@@ -9,7 +9,7 @@ package org.nlogo.headless
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World, World2D },
-    api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
+    api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner, WorldResizer },
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
@@ -122,17 +122,12 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
-  def setDimensions(d: WorldDimensions) {
-    world.createPatches(d)
-    clearDrawing()
-  }
-
-  def setDimensions(d: WorldDimensions, patchSize: Double) {
-    world.patchSize(patchSize)
+  def setDimensions(d: WorldDimensions,showProgress: Boolean,stop: WorldResizer.JobStop): Unit = {
+    world.patchSize(d.patchSize)
     if (!compilerTestingMode) {
       world.createPatches(d)
     }
-    renderer.resetCache(patchSize)
+    renderer.resetCache(d.patchSize)
     clearDrawing()
   }
 
@@ -315,7 +310,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Internal use only.
    */
-  def updateDisplay(haveWorldLockAlready: Boolean) { }
+  def updateDisplay(haveWorldLockAlready: Boolean, forced: Boolean) { }
+
+  def disablePeriodicRendering(): Unit = { }
+  def enablePeriodicRendering(): Unit = { }
 
   /**
    * Internal use only.

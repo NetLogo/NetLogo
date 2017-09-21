@@ -58,7 +58,7 @@ public abstract strictfp class AbstractWorkspace
     this._world = world;
     evaluator = new Evaluator(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
-        new Object[]{this, world, world});
+        new Object[]{this, world});
     extensionManager = new ExtensionManager(this, new JarLoader(this));
   }
 
@@ -208,7 +208,7 @@ public abstract strictfp class AbstractWorkspace
 
   public void halt() {
     jobManager.haltPrimary();
-    _world.displayOn(true);
+    enablePeriodicRendering();
   }
 
   // called by _display from job thread
@@ -258,47 +258,6 @@ public abstract strictfp class AbstractWorkspace
   public abstract void clearAll();
 
   protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
-
-  public void importWorld(String filename)
-      throws java.io.IOException {
-    // we need to clearAll before we import in case
-    // extensions are hanging on to old data. ev 4/10/09
-    clearAll();
-    doImport
-        (new BufferedReaderImporter(filename) {
-          @Override
-          public void doImport(java.io.BufferedReader reader)
-              throws java.io.IOException {
-            _world.importWorld
-                (importerErrorHandler(), AbstractWorkspace.this,
-                    stringReader(), reader);
-          }
-        });
-  }
-
-  public void importWorld(java.io.Reader reader)
-      throws java.io.IOException {
-    // we need to clearAll before we import in case
-    // extensions are hanging on to old data. ev 4/10/09
-    clearAll();
-    _world.importWorld
-        (importerErrorHandler(), AbstractWorkspace.this,
-            stringReader(), new java.io.BufferedReader(reader));
-  }
-
-  private final ImporterJ.StringReader stringReader() {
-    return new ImporterJ.StringReader() {
-      public Object readFromString(String s)
-          throws ImporterJ.StringReaderException {
-        try {
-          return compiler().readFromString(s, _world, extensionManager);
-        } catch (CompilerException ex) {
-          throw new ImporterJ.StringReaderException
-              (ex.getMessage());
-        }
-      }
-    };
-  }
 
   public void importDrawing(String filename)
       throws java.io.IOException {

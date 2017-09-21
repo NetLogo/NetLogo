@@ -121,9 +121,11 @@ object FileActions {
 
   class ImportWorldAction(workspace: GUIWorkspace, parent: Component)
   extends ImportAction("world", parent, { importPath =>
-    workspace.importWorld(importPath)
-    workspace.view.dirty()
-    workspace.view.repaint()
+    workspace.world.synchronized {
+      workspace.importWorld(importPath)
+      workspace.view.dirty()
+      workspace.view.repaint()
+    }
   })
   with MenuAction {
     category    = FileCategory

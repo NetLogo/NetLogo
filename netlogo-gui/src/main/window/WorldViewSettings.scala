@@ -2,16 +2,33 @@
 
 package org.nlogo.window
 
+import java.awt.Dimension
 import java.util.{ ArrayList => ArrayJList, List => JList }
+import java.beans.{ PropertyChangeListener, PropertyChangeSupport }
 
 import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, WorldDimensions }
-import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
+import org.nlogo.api.{ Editable, Property, RichWorldDimensions, WorldPropertiesInterface, WorldResizer },
+  RichWorldDimensions._
 import org.nlogo.workspace.WorldLoaderInterface
+import org.nlogo.swing.ModalProgressTask
 
-abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
+object WorldViewSettings {
+  val TickCounterLabelProperty = "tickCounterLabel"
+  val TickCounterVisibilityProperty = "showTickCounter"
+  val ViewFontSizeProperty = "fontSize"
+  val ViewPropertiesBeingEdited = "isBeingEdited"
+  val ViewSize = "viewSize"
+  val WorldDimensionsProperty = "worldDimensions"
+}
+
+import WorldViewSettings._
+
+abstract class WorldViewSettings(protected val workspace: GUIWorkspaceScala)
     extends Editable
     with WorldLoaderInterface
     with WorldPropertiesInterface {
+
+  type DimensionsType <: WorldDimensions
 
   val dimensionProperties: JList[Property] = new ArrayJList[Property]()
   val wrappingProperties: JList[Property] = new ArrayJList[Property]()
@@ -21,37 +38,42 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   val edgeChoices: JList[OriginConfiguration] = new ArrayJList[OriginConfiguration]()
   val originConfigurations: JList[OriginConfiguration] = new ArrayJList[OriginConfiguration]()
 
+  protected val propertyChangeSupport = new PropertyChangeSupport(this)
+
+  protected var _currentDimensions: DimensionsType
+  protected var _pendingDimensions: DimensionsType
+
   protected var _propertySet: JList[Property] = null
 
-  protected var wrappingChanged: Boolean = false
-  protected var edgesChanged: Boolean = false
-  protected var patchSizeChanged: Boolean = false
-  protected var fontSizeChanged: Boolean = false
+  private var _isBeingEdited: Boolean = false
+  private var _showTickCounter = true
+  private var _tickCounterLabel = "ticks"
+  private var _viewFontSize: Int = 13
+  private var _viewSize: Dimension = new Dimension(0, 0)
 
-  protected var newPatchSize: Double = _
-
-  protected var newMinX: Int = _
-  protected var newMaxX: Int = _
-  protected var newMinY: Int = _
-  protected var newMaxY: Int = _
-
-  protected var newWrapX: Boolean = _
-  protected var newWrapY: Boolean = _
-
-  protected var newFontSize: Int = _
+  protected def wrappingChanged: Boolean =
+    _pendingDimensions.wrappingAllowedInX != _currentDimensions.wrappingAllowedInX ||
+    _pendingDimensions.wrappingAllowedInY != _currentDimensions.wrappingAllowedInY
+  protected def patchSizeChanged: Boolean =
+    _pendingDimensions.patchSize != _currentDimensions.patchSize
+  protected def edgesChanged: Boolean =
+    _pendingDimensions.minPxcor != _currentDimensions.minPxcor ||
+    _pendingDimensions.maxPxcor != _currentDimensions.maxPxcor ||
+    _pendingDimensions.minPycor != _currentDimensions.minPycor ||
+    _pendingDimensions.maxPycor != _currentDimensions.maxPycor
 
   protected var _error: Option[CompilerException] = None
 
   addProperties()
 
-  def classDisplayName: String = "Model Settings"
-
-  def resizeWithProgress(showProgress: Boolean): Unit
-
-  def model: CoreView
-
-  def addWrappingProperties(): Unit
   def addDimensionProperties(): Unit
+  def addWrappingProperties(): Unit
+  def model: CoreView
+  def toDimensionType(d: WorldDimensions): DimensionsType
+
+  protected def createPatches(): Unit
+
+  def classDisplayName: String = "Model Settings"
 
   protected def addProperties(): Unit = {
     propertySet(new ArrayJList[Property]())
@@ -174,18 +196,18 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
       0
   }
 
-  def load(view: CoreView): AnyRef = {
-    workspace.world.displayOn(false)
-    workspace.loadWorld(view, this)
-    // we can't clearAll here because the globals may not
-    // be allocated yet ev 7/12/06
-    // note that we clear turtles inside the load method so
-    // it can happen before we set the topology ev 7/19/06
-    workspace.world.tickCounter.clear
-    workspace.world.clearPatches
-    workspace.world.displayOn(true)
-    this
-  }
+  def copyDimensions(
+    minPxcor: Int = _pendingDimensions.minPxcor,
+    maxPxcor: Int = _pendingDimensions.maxPxcor,
+    minPycor: Int = _pendingDimensions.minPycor,
+    maxPycor: Int = _pendingDimensions.maxPycor,
+    minPzcor: Int = _pendingDimensions.defaultMinPzcor,
+    maxPzcor: Int = _pendingDimensions.defaultMaxPzcor,
+    patchSize: Double = _pendingDimensions.patchSize,
+    wrappingAllowedInX: Boolean = _pendingDimensions.wrappingAllowedInX,
+    wrappingAllowedInY: Boolean = _pendingDimensions.wrappingAllowedInY,
+    wrappingAllowedInZ: Boolean = _pendingDimensions.defaultWrappingInZ
+  ): DimensionsType
 
   def smooth: Boolean =
     workspace.glView.antiAliasingOn
@@ -220,46 +242,41 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def minPxcor(minPxcor: Int): Unit = {
     if (minPxcor <= 0) {
-      newMinX = minPxcor
-      edgesChanged ||= newMinX != workspace.world.minPxcor
+      _pendingDimensions = copyDimensions(minPxcor = minPxcor)
     }
   }
 
-  def minPxcor: Int = newMinX
+  def minPxcor: Int = _pendingDimensions.minPxcor
 
   def maxPxcor(maxPxcor: Int): Unit = {
     if (maxPxcor >= 0) {
-      newMaxX = maxPxcor
-      edgesChanged ||= newMaxX != workspace.world.maxPxcor
+      _pendingDimensions = copyDimensions(maxPxcor = maxPxcor)
     }
   }
 
-  def maxPxcor: Int = newMaxX
+  def maxPxcor: Int = _pendingDimensions.maxPxcor
 
   def minPycor(minPycor: Int): Unit = {
     if (minPycor <= 0) {
-      newMinY = minPycor
-      edgesChanged ||= newMinY != workspace.world.minPycor
+      _pendingDimensions = copyDimensions(minPycor = minPycor)
     }
   }
 
-  def minPycor: Int = newMinY
+  def minPycor: Int = _pendingDimensions.minPycor
 
   def maxPycor(maxPycor: Int): Unit = {
     if (maxPycor >= 0) {
-      newMaxY = maxPycor
-      edgesChanged ||= newMaxY != workspace.world.maxPycor
+      _pendingDimensions = copyDimensions(maxPycor = maxPycor)
     }
   }
 
-  def maxPycor: Int = newMaxY
+  def maxPycor: Int = _pendingDimensions.maxPycor
 
   def patchSize(size: Double): Unit = {
-    newPatchSize = size
-    patchSizeChanged ||= size != patchSize
+    _pendingDimensions = copyDimensions(patchSize = size)
   }
 
-  def patchSize: Double = workspace.world.patchSize
+  def patchSize: Double = _pendingDimensions.patchSize
 
   def updateMode: UpdateMode = workspace.updateMode
 
@@ -267,39 +284,26 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     workspace.updateMode(updateMode)
   }
 
-  def wrappingX: Boolean = {
-    if (! wrappingChanged)
-      newWrapX = workspace.world.wrappingAllowedInX
-
-    newWrapX
-  }
+  def wrappingX: Boolean = _pendingDimensions.wrappingAllowedInX
 
   def wrappingX(value: Boolean): Unit = {
-    newWrapX = value
-    wrappingChanged ||= newWrapX != workspace.world.wrappingAllowedInX
+    _pendingDimensions = copyDimensions(wrappingAllowedInX = value)
   }
 
-  def wrappingY: Boolean = {
-    if (!wrappingChanged)
-      newWrapY = workspace.world.wrappingAllowedInY
-
-    newWrapY
-  }
+  def wrappingY: Boolean = _pendingDimensions.wrappingAllowedInY
 
   def wrappingY(value: Boolean): Unit = {
-    newWrapY = value
-    wrappingChanged ||= newWrapY != workspace.world.wrappingAllowedInY
+    _pendingDimensions = copyDimensions(wrappingAllowedInY = value)
   }
 
-  def fontSize: Int = gWidget.view.fontSize
+  def fontSize: Int = _viewFontSize
 
-  // this must be public because it's listed in our property set - ST 1/20/04
   def fontSize(newSize: Int): Unit = {
-    this.newFontSize = newSize
-    if (newSize != fontSize)
-      fontSizeChanged = true
-
-    workspace.viewManager.applyNewFontSize(newSize)
+    if (_viewFontSize != newSize) {
+      val oldFontSize = _viewFontSize
+      _viewFontSize = newSize
+      propertyChangeSupport.firePropertyChange(ViewFontSizeProperty, oldFontSize, _viewFontSize)
+    }
   }
 
   def frameRate: Double = workspace.frameRate
@@ -309,18 +313,20 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   }
 
   def showTickCounter(visible: Boolean): Unit = {
-    tickCounter.visibility = visible
+    val oldVisibility = _showTickCounter
+    _showTickCounter = visible
+    propertyChangeSupport.firePropertyChange(TickCounterVisibilityProperty, oldVisibility, _showTickCounter)
   }
 
-  def showTickCounter: Boolean =
-    tickCounter.visibility
+  def showTickCounter: Boolean = _showTickCounter
 
   def tickCounterLabel(label: String): Unit = {
-    tickCounter.label = label
+    val oldLabel = _tickCounterLabel
+    _tickCounterLabel = label
+    propertyChangeSupport.firePropertyChange(TickCounterLabelProperty, oldLabel, _tickCounterLabel)
   }
 
-  def tickCounterLabel: String =
-    tickCounter.label
+  def tickCounterLabel: String = _tickCounterLabel
 
   def changeTopology(wrapX: Boolean, wrapY: Boolean): Unit = {
     workspace.changeTopology(wrapX, wrapY)
@@ -348,64 +354,125 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def error(a: AnyRef): Exception = _error.orNull
 
   def setSize(x: Int, y: Int): Unit = {
-    gWidget.setSize(x, y)
-  }
-
-  def getMinimumWidth: Int = gWidget.getMinimumSize.width
-
-  def insetWidth: Int = gWidget.insetWidth
-
-  def computePatchSize(width: Int, numPatches: Int): Double =
-    gWidget.computePatchSize(width, numPatches)
-
-  def calculateHeight(worldHeight: Int, patchSize: Double): Int =
-    gWidget.calculateHeight(worldHeight, patchSize)
-
-  def calculateWidth(worldWidth: Int, patchSize: Double): Int =
-    gWidget.calculateWidth(worldWidth, patchSize)
-
-  def setDimensions(d: WorldDimensions, newPatchSize: Double): Unit = {
-    workspace.world.patchSize(newPatchSize)
-    setDimensions(d)
-    patchSize(newPatchSize)
-    gWidget.resetSize()
-  }
-
-  def setDimensions(d: WorldDimensions): Unit = {
-    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
-  }
-
-  def setDimensions(minPxcor: Int, maxPxcor: Int,
-                    minPycor: Int, maxPycor: Int): Unit = {
-    newMinX = minPxcor
-    newMaxX = maxPxcor
-    newMinY = minPycor
-    newMaxY = maxPycor
-    if (minPxcor != workspace.world.minPxcor ||
-        maxPxcor != workspace.world.maxPxcor ||
-        minPycor != workspace.world.minPycor ||
-        maxPycor != workspace.world.maxPycor) {
-      prepareForWorldResize()
-      workspace.world
-        .createPatches(minPxcor, maxPxcor, minPycor, maxPycor)
-      finishWorldResize()
+    if (_viewSize.getWidth != x || _viewSize.getHeight != y) {
+      val oldViewSize = _viewSize
+      _viewSize = new Dimension(x, y)
+      propertyChangeSupport.firePropertyChange(ViewSize, oldViewSize, _viewSize)
     }
   }
 
-  private[window] def prepareForWorldResize(): Unit = {
-    workspace.jobManager.haltNonObserverJobs()
-    workspace.world.clearTurtles()
-    workspace.world.clearLinks()
+  protected def changeActiveDimensions(d: DimensionsType): Unit = {
+    if (_currentDimensions != d) {
+      val oldDimensions = _currentDimensions
+      _currentDimensions = d
+      propertyChangeSupport.firePropertyChange(WorldDimensionsProperty, oldDimensions, _currentDimensions)
+    }
   }
 
-  private[window] def finishWorldResize(): Unit = {
-    workspace.patchesCreatedNotify()
-    gWidget.resetSize()
+  case class SetDimensionRunnable(
+    beforeActions: Seq[() => Unit],
+    synchronizedActions: Seq[() => Unit],
+    afterActions: Seq[() => Unit]
+  ) extends Runnable() {
+    override def run(): Unit = {
+      beforeActions.foreach(_())
+      workspace.world.synchronized {
+        synchronizedActions.foreach(_())
+      }
+      afterActions.foreach(_())
+    }
+    def runActionBefore(f: () => Unit): SetDimensionRunnable =
+      copy(beforeActions = beforeActions :+ f)
+
+    def runActionSynchronized(f: () => Unit): SetDimensionRunnable =
+      copy(synchronizedActions = synchronizedActions :+ f)
+
+    def runActionAfter(f: () => Unit): SetDimensionRunnable =
+      copy(afterActions = afterActions :+ f)
+  }
+
+  protected def aboutToChangePatches(stop: WorldResizer.JobStop): Unit = {
+    stop match {
+      case WorldResizer.StopNonObserverJobs => workspace.jobManager.haltNonObserverJobs()
+      case WorldResizer.StopEverything =>
+        workspace.jobManager.haltSecondary()
+        workspace.jobManager.haltPrimary()
+      case WorldResizer.StopNothing =>
+    }
+  }
+
+  protected def didChangePatches(): Unit = {
     workspace.clearDrawing()
+  }
+
+  protected def updateTopology(): Unit = {
+    workspace.changeTopology(_pendingDimensions.wrappingAllowedInX, _pendingDimensions.wrappingAllowedInY)
+  }
+
+  def setDimensions(d: WorldDimensions, showProgress: Boolean, jobStop: WorldResizer.JobStop): Unit = {
+    _pendingDimensions = toDimensionType(d)
+
+    val oldStatus =
+      workspace.displayStatusRef.getAndUpdate(s => s.codeSet(false))
+
+    var runnable = new SetDimensionRunnable(Seq(), Seq(), Seq())
+      .runActionAfter { () =>
+        workspace.displayStatusRef.set(oldStatus)
+        workspace.enableDisplayUpdates()
+        changeActiveDimensions(_pendingDimensions)
+      }
+
+    if (wrappingChanged) {
+      runnable = runnable.runActionSynchronized { () => updateTopology() }
+    }
+    if (patchSizeChanged) {
+      runnable = runnable.runActionSynchronized { () =>
+        workspace.world.patchSize(_pendingDimensions.patchSize)
+      }
+    }
+    if (edgesChanged) {
+      runnable = runnable
+        .runActionBefore { () => aboutToChangePatches(jobStop) }
+        .runActionSynchronized { () =>
+          workspace.world.clearTurtles()
+          workspace.world.clearLinks()
+          createPatches()
+          workspace.patchesCreatedNotify()
+        }
+        .runActionAfter { () => didChangePatches() }
+    }
+
+    if (showProgress && (edgesChanged || patchSizeChanged))
+      ModalProgressTask.onUIThread(workspace.getFrame, I18N.gui.get("view.resize.progress"), runnable)
+    else
+      runnable.run()
   }
 
   def sourceOffset: Int =
     // we should never be dealing with errors
     // related to the view
     throw new IllegalStateException();
+
+  override def editStarted(): Unit = {
+    if (! _isBeingEdited) {
+      _pendingDimensions = _currentDimensions
+      _isBeingEdited = true
+      propertyChangeSupport.firePropertyChange(ViewPropertiesBeingEdited, false, _isBeingEdited)
+    }
+  }
+
+  def notifyEditFinished(): Unit = {
+    if (_isBeingEdited) {
+      _isBeingEdited = false
+      propertyChangeSupport.firePropertyChange(ViewPropertiesBeingEdited, true, _isBeingEdited)
+    }
+  }
+
+  def addPropertyChangeListener(listener: PropertyChangeListener): Unit = {
+    propertyChangeSupport.addPropertyChangeListener(listener)
+  }
+
+  def removePropertyChangeListener(listener: PropertyChangeListener): Unit = {
+    propertyChangeSupport.removePropertyChangeListener(listener)
+  }
 }

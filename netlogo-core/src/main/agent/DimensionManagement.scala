@@ -9,6 +9,7 @@ import java.lang.{ Double => JDouble }
 
 trait DimensionManagement { this: WorldJ =>
   def topology: Topology
+  def getDimensions: WorldDimensions
 
   private[agent] def getTopology: Topology = topology
 
@@ -87,6 +88,9 @@ trait DimensionManagement { this: WorldJ =>
       case _ => d
     }
   }
+
+  def dimensionsAdjustedForPatchSize(patchSize: Double): WorldDimensions =
+    getDimensions.copy(patchSize = patchSize)
 
   def equalDimensions(d: WorldDimensions): Boolean =
     d.minPxcor == minPxcor &&

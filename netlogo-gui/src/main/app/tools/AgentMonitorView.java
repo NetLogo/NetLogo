@@ -51,9 +51,9 @@ public strictfp class AgentMonitorView
 
   public void radius(double radius) {
     this.radius = radius;
-    patchSize((viewWidth * patchSize) / ((radius * 2) + 1));
-    this.viewWidth = (radius * 2) + 1;
-    this.viewHeight = (radius * 2) + 1;
+    patchSize((viewWidth() * _patchSize()) / ((radius * 2) + 1));
+    _viewWidth_$eq((radius * 2) + 1);
+    _viewHeight_$eq((radius * 2) + 1);
     incrementalUpdateFromEventThread();
   }
 
@@ -61,7 +61,7 @@ public strictfp class AgentMonitorView
     java.awt.Font font = getFont();
     int newFontSize = StrictMath.max(1, (int) (patchSize * fontSizeRatio));
     setFont(new java.awt.Font(font.getName(), font.getStyle(), newFontSize));
-    this.patchSize = patchSize;
+    _patchSize_$eq(patchSize);
   }
 
   @Override
@@ -83,7 +83,7 @@ public strictfp class AgentMonitorView
     } else {
       x = ((Link) agent).midpointX();
     }
-    return x - radius - workspace.world().minPxcor();
+    return x - radius - workspace().world().minPxcor();
   }
 
   @Override
@@ -101,27 +101,27 @@ public strictfp class AgentMonitorView
       y = ((Link) agent).midpointY();
     }
 
-    return y + ((viewHeight - 1) / 2) - workspace.world().maxPycor();
+    return y + ((viewHeight() - 1) / 2) - workspace().world().maxPycor();
   }
 
   @Override
   public double patchSize() {
-    return patchSize;
+    return _patchSize();
   }
 
   private double fontSizeRatio;
 
   @Override
   public void applyNewFontSize(int newFontSize, int zoom) {
-    fontSizeRatio = newFontSize / workspace.world().patchSize();
+    fontSizeRatio = newFontSize / workspace().world().patchSize();
     super.applyNewFontSize(newFontSize, zoom);
   }
 
   @Override
   public void setSize(int worldWidth, int worldHeight, double patchSize) {
     patchSize(patchSize);
-    this.viewWidth = worldWidth;
-    this.viewHeight = worldHeight;
+    _viewWidth_$eq(worldWidth);
+    _viewHeight_$eq(worldHeight);
   }
 
   @Override
@@ -159,7 +159,7 @@ public strictfp class AgentMonitorView
       };
 
   public void close() {
-    workspace.viewManager().remove(this);
+    workspace().viewManager().remove(this);
   }
 
   private void doPopup(java.awt.event.MouseEvent e) {

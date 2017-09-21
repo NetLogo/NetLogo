@@ -5,8 +5,6 @@ package org.nlogo.headless
 import org.nlogo.core.Femto
 import org.nlogo.api.{ ModelLoader, ComponentSerialization, ConfigurableModelLoader }
 
-import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
-
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
 

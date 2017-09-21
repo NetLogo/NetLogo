@@ -34,6 +34,8 @@ extends AbstractWorkspaceScala(
   override def openString(modelContents: String) = unsupported
   override def magicOpen(name: String) = unsupported
   override def clearOutput(): Unit = unsupported
+  override def disablePeriodicRendering(): Unit = {}
+  override def enablePeriodicRendering(): Unit = {}
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported
   override def importDrawing(file: org.nlogo.core.File) = unsupported
@@ -50,22 +52,25 @@ extends AbstractWorkspaceScala(
   override def setOutputAreaContents(text: String) = unsupported
   override def setDimensions(d: org.nlogo.core.WorldDimensions) = unsupported
   override def setDimensions(d: org.nlogo.core.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: org.nlogo.api.JobOwner,
                             context: org.nlogo.nvm.Context,
                             instruction: org.nlogo.nvm.Instruction,
                             ex: Exception) = unsupported
   override def ownerFinished(owner: org.nlogo.api.JobOwner) = unsupported
-  override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe(): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def startLogging(properties: String) = unsupported
+  override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
 
   def openModel(model: org.nlogo.core.Model): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported
+
+
 }

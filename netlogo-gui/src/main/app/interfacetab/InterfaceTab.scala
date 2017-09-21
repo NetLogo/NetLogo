@@ -85,7 +85,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       override def addControls() {
         super.addControls()
         add(new ToolBar.Separator)
-        viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
+        viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.tickCounter)
         add(viewUpdatePanel)
       }
     }, BorderLayout.NORTH)

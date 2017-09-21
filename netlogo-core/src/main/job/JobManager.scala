@@ -2,16 +2,18 @@
 
 package org.nlogo.job
 
+import java.util.{ ArrayList, List }
+import java.util.concurrent.atomic.AtomicBoolean
+
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner, Workspace}
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{JobOwner, LogoException}
-import org.nlogo.agent.{Agent, Turtle, Link, AgentSet, World}
-import java.util.List
+import org.nlogo.agent.{Agent, Turtle, Link, AgentSet}
 import org.nlogo.api.Exceptions.ignoring
+
 import collection.JavaConverters._
 
-class JobManager(jobManagerOwner: JobManagerOwner,
-                 private val world: World, lock: Object) extends org.nlogo.nvm.JobManagerInterface {
+class JobManager(jobManagerOwner: JobManagerOwner, lock: Object) extends org.nlogo.nvm.JobManagerInterface {
 
   private val thread = new JobThread(this, jobManagerOwner, lock)
 
@@ -24,6 +26,15 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   def maybeRunSecondaryJobs() { thread.maybeRunSecondaryJobs() }
   def anyPrimaryJobs = !thread.primaryJobs.isEmpty
   def onJobThread = Thread.currentThread == thread
+  def pokePrimaryJobs(): Unit = {
+    val list = new ArrayList[Job]()
+    thread.primaryJobs.synchronized { list.addAll(thread.primaryJobs) }
+    list.stream
+      .filter { job => job != null }
+      .forEach { job =>
+        job.comeUpForAir.set(true)
+      }
+  }
 
   /// public methods for adding jobs
 
@@ -33,14 +44,14 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   }
 
   def makeConcurrentJob(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Job =
-    new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random)
+    new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random, freshAtomicStopBoolean)
 
   @throws(classOf[LogoException])
   def callReporterProcedure(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Object =
-    new ExclusiveJob(owner, agentSet, procedure, 0, null, workspace, owner.random).callReporterProcedure()
+    new ExclusiveJob(owner, agentSet, procedure, 0, null, workspace, owner.random, freshAtomicStopBoolean).callReporterProcedure()
 
   def addReporterJobAndWait(owner: JobOwner, agentSet: AgentSet, workspace: Workspace, procedure: Procedure): Object = {
-    val job = new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random)
+    val job = new ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random, freshAtomicStopBoolean)
     add(job, thread.primaryJobs)
     waitFor(job, false)
     job.result
@@ -48,7 +59,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   def addJobFromJobThread(job: Job) {thread.primaryJobs.add(job)}
   def addJob(owner: JobOwner, agents: AgentSet, workspace: Workspace, procedure: Procedure) {
-    add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random),
+    add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random, freshAtomicStopBoolean),
         thread.primaryJobs)
   }
   def addSecondaryJob(owner: JobOwner, agents: AgentSet, workspace: Workspace, procedure: Procedure) {
@@ -58,7 +69,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       thread.secondaryJobs.asScala.exists{ s => s != null && s.owner == owner && s.state == Job.RUNNING }
     }
     if(!found)
-      add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random),
+      add(new ConcurrentJob(owner, agents, procedure, 0, null, workspace, owner.random, freshAtomicStopBoolean),
           thread.secondaryJobs)
   }
 
@@ -106,9 +117,18 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   def haltNonObserverJobs() {
     val goners = thread.primaryJobs.synchronized {
       thread.primaryJobs.asScala.filter {j => j != null && j.agentset.kind != AgentKind.Observer}
-    }.asJava
-    finishJobs(goners, null)
-    waitForFinishedJobs(goners)
+    }
+    finishJobs(goners.asJava, null)
+    waitForSomeJobs(goners.toSet, thread.primaryJobs)
+  }
+
+  def haltJobsBesides(owner: JobOwner): Unit = {
+    haltSecondary()
+    val goners = thread.primaryJobs.synchronized {
+      thread.primaryJobs.asScala.filter { j => j.owner ne owner }
+    }
+    finishJobs(goners.asJava, null)
+    waitForSomeJobs(goners.toSet, thread.primaryJobs)
   }
 
   def finishJobs(owner: JobOwner) {finishJobs(thread.primaryJobs, owner)}
@@ -134,8 +154,10 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     }
   }
 
-  /// private methods for waiting for and/or finishing jobs
+  private def freshAtomicStopBoolean: AtomicBoolean =
+    new AtomicBoolean(false)
 
+  // private methods for waiting for and/or finishing jobs
   private def waitFor(job: Job, kill: Boolean) {
     // We could use wait-notify always, but at the cost of introducing
     // lock-acquisition overhead in the run loop, so let's just do
@@ -151,7 +173,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
         // furthermore, the job thread might be stuck inside an extremely
         // tight loop in an exclusive job setting the comeUpForAir flag
         // is the only way to get it unstuck - ST 1/10/07
-        world.comeUpForAir = true
+        job.comeUpForAir.set(true)
       }
       thread.isTimeToRunSecondaryJobs = true
       ignoring(classOf[InterruptedException]) { job.synchronized {job.wait(50)} }
@@ -166,6 +188,18 @@ class JobManager(jobManagerOwner: JobManagerOwner,
         job <- jobs.asScala
         if (job != null && (owner == null || job.owner == owner))
       } job.finish()
+    }
+  }
+
+  private def waitForSomeJobs(jobsAwaited: Set[Job], jobs: List[Job]): Unit = {
+    var jobsStillWaiting = jobsAwaited
+
+    while (jobsStillWaiting.nonEmpty) {
+      val jobToWaitFor = jobsStillWaiting.head
+      val jobRunning = jobs.contains(jobToWaitFor)
+      if (jobRunning)
+        waitFor(jobToWaitFor, true)
+      jobsStillWaiting -= jobToWaitFor
     }
   }
 

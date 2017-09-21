@@ -4,8 +4,10 @@ package org.nlogo.agent;
 
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.ImporterUser;
+import org.nlogo.api.JobOwner;
 import org.nlogo.api.WorldDimensions3D;
 
 import java.util.Map;
@@ -29,6 +31,20 @@ public strictfp class Importer3D
       return AgentVariables.getImplicitPatchVariables(true);
     else
       return super.getImplicitVariables(kind);
+  }
+
+  @Override
+  public WorldDimensions addPatchSizeToDimensions(WorldDimensions dimensions, double patchSize) {
+    if (dimensions instanceof WorldDimensions3D) {
+      WorldDimensions3D dims = (WorldDimensions3D) dimensions;
+      return dims.copyThreeD(
+        dims.minPxcor(), dims.maxPxcor(),
+        dims.minPycor(), dims.maxPycor(),
+        dims.minPzcor(), dims.maxPzcor(),
+        patchSize,
+        dims.wrappingAllowedInX(), dims.wrappingAllowedInY(), dims.wrappingAllowedInZ());
+    } else
+      return super.addPatchSizeToDimensions(dimensions, patchSize);
   }
 
   @Override
@@ -176,7 +192,7 @@ public strictfp class Importer3D
   }
 
   @Override
-  void setScreenDimensions(Map<String, Object> varVals) {
+  WorldDimensions getScreenDimensions(Map<String, Object> varVals) {
     try {
       int minx, maxx, miny, maxy, minz, maxz;
 
@@ -202,8 +218,13 @@ public strictfp class Importer3D
       if (minx != world.minPxcor() || maxx != world.maxPxcor() ||
           miny != world.minPycor() || maxy != world.maxPycor() ||
           minz != w.minPzcor() || maxz != w.maxPzcor()) {
-        importerUser.setDimensions(new WorldDimensions3D(minx, maxx, miny, maxy, minz, maxz, 12.0, true, true, true));
         needToResize = true;
+        return new WorldDimensions3D(minx, maxx, miny, maxy, minz, maxz, 12.0, true, true, true);
+      } else {
+        return new WorldDimensions3D(
+            world.minPxcor(), world.maxPxcor(),
+            world.minPycor(), world.maxPycor(),
+            w.minPzcor(), w.maxPzcor(), world.patchSize(), true, true, true);
       }
     } catch (ClassCastException cce) {
       String abortingError = "Illegal Screen dimension- max-px/y/zcor, min-px/y/zcor must be numbers.";

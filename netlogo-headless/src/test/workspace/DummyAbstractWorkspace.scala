@@ -27,6 +27,8 @@ extends AbstractWorkspace(new World2D)
   override def open(path: String) = unsupported
   override def openModel(model: Model) = unsupported
   override def clearOutput(): Unit = unsupported
+  override def disablePeriodicRendering(): Unit = {}
+  override def enablePeriodicRendering(): Unit = {}
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported
   override def importDrawing(file: File) = unsupported
@@ -43,17 +45,18 @@ extends AbstractWorkspace(new World2D)
   override def setOutputAreaContents(text: String) = unsupported
   override def setDimensions(d: core.WorldDimensions) = unsupported
   override def setDimensions(d: core.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: api.JobOwner,
                             context: nvm.Context,
                             instruction: nvm.Instruction,
                             ex: Exception) = unsupported
   override def ownerFinished(owner: api.JobOwner) = unsupported
-  override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe(context: nvm.Context): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: nvm.Job) = unsupported
+  override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
   override def compiler: CompilerInterface = unsupported
   override def renderer = unsupported
   override def command(source: String) = unsupported

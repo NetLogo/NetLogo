@@ -161,7 +161,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   private def compileAll(): Unit = {
     raiseEvent(new RemoveAllJobsEvent())
-    world.displayOn(true)
+    workspace.enablePeriodicRendering()
     // We can't compile the Code tab until the contents of
     // InterfaceGlobals is known, which won't happen until the
     // widgets are loaded, which happens later.  So the isLoading

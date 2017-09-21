@@ -60,6 +60,7 @@ trait EditDialog extends javax.swing.JDialog {
       sendEditFinishedOnCancel = true
       editPanel.apply()
       target.editFinished()
+      target.editStarted()
     }
   }
 
@@ -111,6 +112,7 @@ trait EditDialog extends javax.swing.JDialog {
   }
   editPanel.requestFocus()
   setResizable(editPanel.isResizable)
+  target.editStarted()
   setVisible(true)
 
   private def cancel(target: org.nlogo.api.Editable) {

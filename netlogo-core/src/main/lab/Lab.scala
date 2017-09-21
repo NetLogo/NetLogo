@@ -2,8 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.LogoException
+import org.nlogo.api.{ LabProtocol, LogoException, WorldResizer }
 import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
 // This is used when running headless. - ST 3/3/09
@@ -18,7 +17,7 @@ class Lab extends LabInterface {
     val queue = new collection.mutable.Queue[Workspace]
     workspaces.foreach(queue.enqueue(_))
     try {
-      queue.foreach(w => dims.foreach(w.setDimensions _))
+      queue.foreach(w => dims.foreach(d => w.setDimensions(d, true, WorldResizer.StopNonObserverJobs)))
       def modelDims = queue.head.world.getDimensions
       val worker = newWorker(protocol)
       tableWriter.foreach(

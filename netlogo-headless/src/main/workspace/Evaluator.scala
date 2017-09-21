@@ -112,7 +112,7 @@ class Evaluator(workspace: AbstractWorkspace) {
           // calling the procedure directly.  This is temporary code that never got cleaned up.
           // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
           // is ever run. - ST 1/8/10
-          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random)
+          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random, ExclusiveJob.initialComeUpForAir)
           val context = new Context(job, agent, 0, null)
           Try(context.callReporterProcedure(new Activation(procedure, null, 0)))
         }

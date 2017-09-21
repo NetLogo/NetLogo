@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _display extends Command {
   switches = true
   override def perform(context: Context) {
-    world.displayOn(true)
+    workspace.enablePeriodicRendering()
     workspace.requestDisplayUpdate(true)
     context.ip = next
   }

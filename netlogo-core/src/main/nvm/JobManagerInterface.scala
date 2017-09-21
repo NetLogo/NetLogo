@@ -14,6 +14,7 @@ trait JobManagerInterface {
   def maybeRunSecondaryJobs()
   def onJobThread: Boolean
   def anyPrimaryJobs(): Boolean
+  def pokePrimaryJobs(): Unit
   def addJob(job: Job, waitForCompletion: Boolean)
   def makeConcurrentJob(owner: JobOwner, agentset: AgentSet, workspace: Workspace, procedure: Procedure): Job
   @throws(classOf[LogoException])
@@ -25,6 +26,7 @@ trait JobManagerInterface {
   def joinForeverButtons(agent: Agent)
   def haltPrimary()
   def haltNonObserverJobs()
+  def haltJobsBesides(owner: JobOwner)
   def finishJobs(owner: JobOwner)
   def finishSecondaryJobs(owner: JobOwner)
   def haltSecondary()

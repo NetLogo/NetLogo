@@ -12,6 +12,16 @@ import org.nlogo.core.WorldDimensions
 
 object WorldDimensions3D {
   def box(n: Int) = new WorldDimensions3D(-n, n, -n, n, -n, n)
+  def apply(minPxcor: Int, maxPxcor: Int,
+    minPycor: Int, maxPycor: Int,
+    minPzcor: Int, maxPzcor: Int,
+    patchSize: Double,
+    wrappingAllowedInX: Boolean = true,
+    wrappingAllowedInY: Boolean = true,
+    wrappingAllowedInZ: Boolean = true) =
+      new WorldDimensions3D(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, patchSize,
+        wrappingAllowedInX, wrappingAllowedInY, wrappingAllowedInZ)
+
 }
 
 class WorldDimensions3D(minPxcor: Int, maxPxcor: Int,
@@ -44,5 +54,13 @@ extends WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrapp
 
   override def toString: String = {
     s"WorldDimensions3D($minPxcor, $maxPxcor, $minPycor, $maxPycor, $minPzcor, $maxPzcor, $patchSize, $wrappingAllowedInX, $wrappingAllowedInY, $wrappingAllowedInZ)"
+  }
+
+  override def equals(that: Any): Boolean = {
+    that match {
+      case w: WorldDimensions3D =>
+        super.equals(w) && minPzcor == w.minPzcor && maxPzcor == w.maxPzcor && wrappingAllowedInZ == w.wrappingAllowedInZ
+      case other => super.equals(other)
+    }
   }
 }

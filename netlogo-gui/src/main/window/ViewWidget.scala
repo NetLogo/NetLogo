@@ -2,15 +2,15 @@
 
 package org.nlogo.window
 
+import java.lang.{ Boolean => JBoolean }
 import java.awt.{ Component, Dimension, Font, Point, Rectangle }
+import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ JPopupMenu, BorderFactory }
 
 import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
-import org.nlogo.core.{ View => CoreView }
-import org.nlogo.window.Events.ResizeViewEvent
+import org.nlogo.core.{ View => CoreView, WorldDimensions }
 import org.nlogo.window.MouseMode._
-
 
 object ViewWidget {
   private val InsideBorderHeight = 1
@@ -21,19 +21,33 @@ object ViewWidget {
   // way, since all of this view widget sizing code is targeted to be
   // thrown out and redone anyway - ST 1/20/11
   private val MaxViewWidthFudgeValue = 245
+
+  def computePatchSize(width: Int, numPatches: Int): Double = {
+    // This is sneaky.  We'd rather not have numbers with a zillion decimal places
+    // show up in "Patch Size" when you edit the graphics window.
+    // So instead of setting the patch to the exact quotient of
+    // the size in pixels divided by the number of patches, we set
+    // it to the number with the least junk after the decimal
+    // point that still rounds to the correct # of pixels - ST 4/6/03
+    val exactPatchSize = width.toDouble / numPatches.toDouble
+    val roundedPatchSize = (0 to 15).map(precision => Approximate.approximate(exactPatchSize, precision))
+      .find(roundedPatchSize => (numPatches * roundedPatchSize).toInt == width)
+    roundedPatchSize.getOrElse(exactPatchSize)
+  }
 }
 
-class ViewWidget(workspace: GUIWorkspace)
+class ViewWidget(workspace: GUIWorkspaceScala)
     extends Widget
-    with ViewWidgetInterface {
+    with ViewWidgetInterface
+    with PropertyChangeListener {
 
   import ViewWidget._
 
   type WidgetModel = CoreView
 
+  val tickCounter = new TickCounterLabel()
+  workspace.listenerManager.addListener(tickCounter)
   val view = new View(workspace)
-  val tickCounter = new TickCounterLabel(workspace.world)
-  val displaySwitch = new DisplaySwitch(workspace)
 
   NlogoFonts.adjustDefaultFont(tickCounter)
 
@@ -43,19 +57,16 @@ class ViewWidget(workspace: GUIWorkspace)
         BorderFactory.createMatteBorder(1, 1, 2, 2, InterfaceColors.GRAPHICS_BACKGROUND)))
   setLayout(null)
   add(view)
+
   val settings: WorldViewSettings =
     if (Version.is3D)
-      new WorldViewSettings3D(workspace, this, tickCounter)
+      new WorldViewSettings3D(workspace)
     else
-      new WorldViewSettings2D(workspace, this, tickCounter);
+      new WorldViewSettings2D(workspace, getPaddingDimensions)
+
+  settings.addPropertyChangeListener(tickCounter)
 
   override def classDisplayName: String = "World & View"
-
-  final def getExtraHeight: Int =
-    getInsets.top + getInsets.bottom + InsideBorderHeight
-
-  def getAdditionalHeight: Int =
-    getExtraHeight
 
   override def doLayout(): Unit = {
     val availableWidth = getWidth - getInsets.left - getInsets.right
@@ -75,19 +86,6 @@ class ViewWidget(workspace: GUIWorkspace)
   override def getEditable: AnyRef =
     settings
 
-  def computePatchSize(width: Int, numPatches: Int): Double = {
-    // This is sneaky.  We'd rather not have numbers with a zillion decimal places
-    // show up in "Patch Size" when you edit the graphics window.
-    // So instead of setting the patch to the exact quotient of
-    // the size in pixels divided by the number of patches, we set
-    // it to the number with the least junk after the decimal
-    // point that still rounds to the correct # of pixels - ST 4/6/03
-    val exactPatchSize = width.toDouble / numPatches.toDouble
-    val roundedPatchSize = (0 to 15).map(precision => Approximate.approximate(exactPatchSize, precision))
-      .find(roundedPatchSize => (numPatches * roundedPatchSize).toInt == width)
-    roundedPatchSize.getOrElse(exactPatchSize)
-  }
-
   /// sizing
 
   // just returning zeros prevents the "smart" preferred-size
@@ -102,8 +100,20 @@ class ViewWidget(workspace: GUIWorkspace)
     new Dimension(gSize.getWidth.toInt, getExtraHeight + gSize.height)
   }
 
-  def insetWidth: Int =
+  def getPaddingDimensions = {
+    val insets = getInsets
+    new Dimension(insets.left + insets.right, insets.top + insets.bottom + InsideBorderHeight)
+  }
+
+  final def getExtraHeight: Int =
+    getInsets.top + getInsets.bottom + InsideBorderHeight
+
+  def getAdditionalHeight: Int =
+    getExtraHeight
+
+  def insetWidth: Int = {
     getInsets.left + getInsets.right;
+  }
 
   def calculateWidth(worldWidth: Int, patchSize: Double): Int = {
     ((worldWidth * patchSize) + insetWidth).toInt
@@ -122,12 +132,6 @@ class ViewWidget(workspace: GUIWorkspace)
         dim.height + getExtraHeight)
     doLayout()
     resetZoomInfo()
-  }
-
-  override def setSize(width: Int, height: Int): Unit = {
-    super.setSize(width, height)
-    new ResizeViewEvent(workspace.world.worldWidth, workspace.world.worldHeight)
-        .raise(this);
   }
 
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
@@ -236,20 +240,57 @@ class ViewWidget(workspace: GUIWorkspace)
   override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point =
     view.populateContextMenu(menu, p, source)
 
-  /// display switch
-
-  private[window] def displaySwitchOn(on: Boolean): Unit = {
-    displaySwitch.actionPerformed(null)
-  }
-
-
   /// load & save
 
-  override def model: WidgetModel =
-    settings.model
+  override def model: WidgetModel = {
+    val b = getBoundsTuple
+    settings.model.copy(left = b._1, top = b._2, right = b._3, bottom = b._4)
+  }
 
-  override def load(view: WidgetModel): AnyRef =
-    settings.load(view)
+  override def load(view: WidgetModel): AnyRef = {
+    workspace.withoutRendering { () =>
+      workspace.loadWorld(view, settings)
+      // we can't clearAll here because the globals may not
+      // be allocated yet ev 7/12/06
+      // note that we clear turtles inside the load method so
+      // it can happen before we set the topology ev 7/19/06
+      workspace.world.tickCounter.clear
+      workspace.world.clearPatches()
+    }
+    this
+  }
 
   override def copyable: Boolean = false
+
+  def propertyChange(evt: PropertyChangeEvent): Unit = {
+    (evt.getPropertyName, evt.getNewValue) match {
+      case (WorldViewSettings.ViewPropertiesBeingEdited, b: JBoolean) =>
+        if (! b.booleanValue) editFinished()
+      case (WorldViewSettings.ViewSize, d: Dimension) =>
+        setSize(d.getWidth.toInt, d.getHeight.toInt)
+      case (WorldViewSettings.WorldDimensionsProperty, d: WorldDimensions) =>
+        evt.getOldValue match {
+          case old: WorldDimensions =>
+            val boundsChanged =
+              old.minPxcor != d.minPxcor ||
+              old.maxPxcor != d.maxPxcor ||
+              old.minPycor != d.minPycor ||
+              old.maxPycor != d.maxPycor
+            val patchSizeChanged = old.patchSize != d.patchSize
+            if (boundsChanged || patchSizeChanged) {
+              resetSize()
+            }
+            if (patchSizeChanged)
+              view.renderer.trailDrawer.rescaleDrawing()
+
+            if (workspace.displayStatusRef.get.shouldRender(false)) {
+              view.dirty()
+              view.repaint()
+            }
+
+          case _ =>
+        }
+      case _ =>
+    }
+  }
 }

@@ -8,14 +8,14 @@ import java.nio.file.Paths
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
-  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
-  NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, WorldDimensions3D,
+  AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
+  NetLogoThreeDDialect, CommandRunnable, ReporterRunnable, WorldResizer }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
-import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoXFormat }
+import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoXFormat, ScalaXmlElementFactory }
 import org.nlogo.util.Pico
 
 import scala.io.Codec
@@ -108,7 +108,7 @@ class HeadlessWorkspace(
   hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
-with org.nlogo.workspace.WorldLoaderInterface
+with org.nlogo.workspace.DefaultWorldLoader
 with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
@@ -227,17 +227,17 @@ with org.nlogo.api.ViewSettings {
   /**
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
-  def setDimensions(d: WorldDimensions) {
-    world.createPatches(d)
-    clearDrawing()
-  }
-
-  def setDimensions(d: WorldDimensions, patchSize: Double) {
-    world.patchSize(patchSize)
-    if (!compilerTestingMode) {
+  def setDimensions(d: WorldDimensions, showProgress: Boolean, toStop: WorldResizer.JobStop): Unit = {
+    val patchSizeChanged = world.patchSize != d.patchSize
+    if (patchSizeChanged) {
+      world.patchSize(d.patchSize)
+    }
+    if (! compilerTestingMode) {
       world.createPatches(d)
     }
-    renderer.resetCache(patchSize)
+    if (patchSizeChanged) {
+      renderer.resetCache(d.patchSize)
+    }
     clearDrawing()
   }
 
@@ -257,10 +257,10 @@ with org.nlogo.api.ViewSettings {
   override def insetWidth = 0
   override def computePatchSize(width: Int, numPatches: Int): Double =
     width / numPatches
-  override def calculateHeight(worldHeight: Int, patchSize: Double) =
-    (worldHeight * patchSize).toInt
-  def calculateWidth(worldWidth: Int, patchSize: Double): Int =
-    (worldWidth * patchSize).toInt
+  override def calculateHeight(d: WorldDimensions) =
+    (d.height * d.patchSize).toInt
+  def calculateWidth(d: WorldDimensions): Int =
+    (d.width * patchSize).toInt
   override def resizeView() { }
   override def viewWidth = world.worldWidth
   override def viewHeight = world.worldHeight
@@ -409,7 +409,10 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def updateDisplay(haveWorldLockAlready: Boolean) { }
+  def updateDisplay(haveWorldLockAlready: Boolean, forced: Boolean) { }
+
+  def disablePeriodicRendering(): Unit = { }
+  def enablePeriodicRendering(): Unit = { }
 
   /**
    * Internal use only.
@@ -481,7 +484,7 @@ with org.nlogo.api.ViewSettings {
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](
-        Femto.get[ComponentSerialization[NLogoXFormat.Section, NLogoXFormat]]("org.nlogo.sdm.NLogoXSDMFormat"))
+        Femto.get[ComponentSerialization[NLogoXFormat.Section, NLogoXFormat]]("org.nlogo.sdm.NLogoXSDMFormat", ScalaXmlElementFactory))
   }
   /// Controlling API methods
 

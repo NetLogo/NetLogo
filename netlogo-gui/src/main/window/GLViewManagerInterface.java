@@ -2,16 +2,14 @@
 
 package org.nlogo.window;
 
+import java.beans.PropertyChangeListener;
+
 public interface GLViewManagerInterface
-    extends LocalViewInterface {
+    extends LocalViewInterface, PropertyChangeListener {
   void open()
       throws JOGLLoadingException;
 
   boolean isFullscreen();
-
-  boolean displayOn();
-
-  void displayOn(boolean displayOn);
 
   void antiAliasingOn(boolean on);
 

@@ -5,7 +5,7 @@ package org.nlogo.lab
 import org.nlogo.api.LabProtocol
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.core.{ AgentKind, WorldDimensions }
-import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner}
+import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner, WorldResizer}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
@@ -118,7 +118,7 @@ class Worker(val protocol: LabProtocol)
           else if(name.equalsIgnoreCase("RANDOM-SEED"))
             ws.world.mainRNG.setSeed(value.asInstanceOf[java.lang.Double].longValue)
         }
-        if(!world.equalDimensions(d)) ws.setDimensions(d)
+        if(!world.equalDimensions(d)) ws.setDimensions(d, true, WorldResizer.StopNonObserverJobs)
         for((name, value) <- settings)
           if(!world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED"))
             ws.world.synchronized {
@@ -185,7 +185,7 @@ class Worker(val protocol: LabProtocol)
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
           checkForRuntimeError()
         }
-        ws.updateDisplay(false)
+        ws.updateDisplay(false, false)
         if(aborted) return
       }
       if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {

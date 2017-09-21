@@ -6,6 +6,7 @@ trait Editable {
   def helpLink: Option[String]
   def propertySet: java.util.List[Property]
   def classDisplayName: String
+  def editStarted(): Unit = {}
   def editFinished(): Boolean
 
   def anyErrors: Boolean

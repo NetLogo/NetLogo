@@ -2,11 +2,13 @@
 
 package org.nlogo.window
 
+import java.lang.{ Boolean => JBoolean }
 import java.awt.Dimension
+import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 
 import javax.swing.JLabel
 
-import org.nlogo.api.{ Dump, World }
+import org.nlogo.api.{ Dump, Exceptions, NetLogoListener }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
@@ -15,12 +17,16 @@ object TickCounterLabel {
 
 import TickCounterLabel._
 
-class TickCounterLabel(world: World)
+class TickCounterLabel
   extends JLabel
   with AfterLoadEvent.Handler
   with LoadBeginEvent.Handler
-  with PeriodicUpdateEvent.Handler {
+  with PeriodicUpdateEvent.Handler
+  with NetLogoListener
+  with PropertyChangeListener {
   private var _label: String = TickCounterLabelDefault
+
+  private var lastTickSeen = -1
 
   override def getPreferredSize: Dimension = getMinimumSize
 
@@ -34,6 +40,7 @@ class TickCounterLabel(world: World)
   def handle(e: LoadBeginEvent): Unit = {
     setText("")
     _label = "ticks"
+    lastTickSeen = -1
     setVisible(true)
   }
 
@@ -46,9 +53,8 @@ class TickCounterLabel(world: World)
   }
 
   protected def redrawTickCounter(): Unit = {
-    val ticks = world.ticks
     val tickText =
-        if (ticks == -1) "" else Dump.number(StrictMath.floor(ticks))
+        if (lastTickSeen == -1) "" else Dump.number(StrictMath.floor(lastTickSeen))
     setText("     " + _label + ": " + tickText)
   }
 
@@ -65,5 +71,36 @@ class TickCounterLabel(world: World)
   }
 
   def label: String = _label
+
+  def tickCounterChanged(ticks: Double): Unit = {
+    lastTickSeen = ticks.toInt
+  }
+
+  def propertyChange(evt: PropertyChangeEvent): Unit = {
+    evt.getPropertyName match {
+      case WorldViewSettings.TickCounterLabelProperty =>
+        evt.getNewValue match {
+          case s: String => label = s
+          case other => Exceptions.ignore(new RuntimeException(s"Invalid value supplied for tickCounterLabel: $other"))
+        }
+      case WorldViewSettings.TickCounterVisibilityProperty =>
+        evt.getNewValue match {
+          case b: JBoolean => visibility = b.booleanValue
+          case other => Exceptions.ignore(new RuntimeException(s"Invalid value supplied for tickCounterVisibility: $other"))
+        }
+      case _ =>
+    }
+  }
+
+  def buttonPressed(buttonName: String): Unit = {}
+  def buttonStopped(buttonName: String): Unit = {}
+  def chooserChanged(name: String,value: AnyRef,valueChanged: Boolean): Unit = {}
+  def codeTabCompiled(text: String,errorMsg: org.nlogo.core.CompilerException): Unit = {}
+  def commandEntered(owner: String,text: String,agentType: Char,errorMsg: org.nlogo.core.CompilerException): Unit = {}
+  def inputBoxChanged(name: String,value: AnyRef,valueChanged: Boolean): Unit = {}
+  def modelOpened(name: String): Unit = {}
+  def possibleViewUpdate(): Unit = {}
+  def sliderChanged(name: String,value: Double,min: Double,increment: Double,max: Double,valueChanged: Boolean,buttonReleased: Boolean): Unit = {}
+  def switchChanged(name: String,value: Boolean,valueChanged: Boolean): Unit = {}
 
 }

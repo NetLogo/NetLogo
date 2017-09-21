@@ -2,6 +2,8 @@
 
 package org.nlogo.nvm;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
@@ -24,6 +26,7 @@ public abstract strictfp class Job {
   public final Context parentContext;
   public final Procedure topLevelProcedure;
   protected final Workspace workspace;
+  public final AtomicBoolean comeUpForAir;
 
   public org.nlogo.api.MersenneTwisterFast random;
 
@@ -33,7 +36,8 @@ public abstract strictfp class Job {
       int address,
       Context parentContext,
       Workspace workspace,
-      org.nlogo.api.MersenneTwisterFast random) {
+      org.nlogo.api.MersenneTwisterFast random,
+      AtomicBoolean comeUpForAir) {
     this.owner = owner;
     this.agentset = agentset;
     this.topLevelProcedure = topLevelProcedure;
@@ -41,6 +45,7 @@ public abstract strictfp class Job {
     this.parentContext = parentContext;
     this.workspace = workspace;
     this.random = random;
+    this.comeUpForAir = comeUpForAir;
   }
 
   public abstract void step() throws LogoException;

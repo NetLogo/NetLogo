@@ -2,6 +2,8 @@
 
 package org.nlogo.compile
 
+import java.util.concurrent.atomic.AtomicBoolean
+
 import org.scalatest.FunSuite
 
 import org.nlogo.api.SimpleJobOwner
@@ -97,7 +99,7 @@ class NvmTests extends FunSuite {
     }
 
     def exclusiveJob(proc: Procedure): ExclusiveJob =
-      new ExclusiveJob(owner, world.observers, proc, 0, null, workspace, world.mainRNG)
+      new ExclusiveJob(owner, world.observers, proc, 0, null, workspace, world.mainRNG, new AtomicBoolean(false))
 
     def checkBinding(l: Let, value: AnyRef): _probe = {
       val p =

@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _nodisplay extends Command {
 
   override def perform(context: Context) {
-    world.displayOn(false)
+    workspace.disablePeriodicRendering()
     context.ip = next
   }
 }

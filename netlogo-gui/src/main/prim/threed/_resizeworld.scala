@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.threed
 
+import org.nlogo.api.WorldResizer
 import org.nlogo.agent.World3D
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
@@ -34,13 +35,17 @@ class _resizeworld extends Command {
     if (oldMinX != newMinX || oldMaxX != newMaxX ||
         oldMinY != newMinY || oldMaxY != newMaxY ||
         oldMinZ != newMinZ || oldMaxZ != newMaxZ) {
-      workspace.setDimensions(
+      val dimensions =
         new org.nlogo.api.WorldDimensions3D(newMinX, newMaxX,
                                             newMinY, newMaxY,
-                                            newMinZ, newMaxZ))
+                                            newMinZ, newMaxZ,
+                                            world.patchSize);
       workspace.waitFor(
         new org.nlogo.api.CommandRunnable {
-          override def run() { workspace.resizeView() }})
+          override def run(): Unit = {
+            workspace.setDimensions(dimensions, true, WorldResizer.StopNonObserverJobs)
+          }
+        })
     }
     context.ip = next
   }

@@ -2,13 +2,20 @@
 
 package org.nlogo.nvm
 
+import java.util.concurrent.atomic.AtomicBoolean
+
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.JobOwner
 import org.nlogo.api.MersenneTwisterFast
 
+object ExclusiveJob {
+  def initialComeUpForAir = new AtomicBoolean(false)
+}
+
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
-                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast)
-extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random) {
+                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast,
+                   comeUpForAir: AtomicBoolean)
+extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random, comeUpForAir) {
 
   override def exclusive = true
 

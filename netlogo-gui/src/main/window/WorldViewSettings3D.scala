@@ -1,52 +1,50 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.api.{ RichWorldDimensions, WorldDimensions3D, WorldResizer },
+  RichWorldDimensions._
 import org.nlogo.agent.World3D
-import org.nlogo.window.Events.RemoveAllJobsEvent
-import org.nlogo.swing.ModalProgressTask
-import org.nlogo.awt.Hierarchy
 
-class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: TickCounterLabel)
-  extends WorldViewSettings(workspace, gw, tickCounter) {
+class WorldViewSettings3D(workspace: GUIWorkspaceScala)
+  extends WorldViewSettings(workspace) {
+
+  type DimensionsType = WorldDimensions3D
 
   protected val world: World3D = workspace.world.asInstanceOf[World3D]
+  protected var _pendingDimensions: DimensionsType = WorldDimensions3D(0, 1, 0, 1, 0, 1, 12.0, true, true, true)
+  protected var _currentDimensions: DimensionsType = WorldDimensions3D(0, 1, 0, 1, 0, 1, 12.0, true, true, true)
 
-  protected var newMinZ: Int = _
-  protected var newMaxZ: Int = _
+  override protected def wrappingChanged: Boolean =
+    super.wrappingChanged ||
+      _pendingDimensions.wrappingAllowedInZ != _currentDimensions.wrappingAllowedInZ
 
-  protected var newWrapZ: Boolean = _
+  override protected def edgesChanged: Boolean =
+    super.edgesChanged ||
+      _pendingDimensions.minPzcor != _currentDimensions.minPzcor ||
+      _pendingDimensions.maxPzcor != _currentDimensions.maxPzcor
 
   def minPzcor(minPzcor: Int): Unit = {
     if (minPzcor <= 0) {
-      newMinZ = minPzcor
-      edgesChanged ||= newMinZ != world.minPzcor
+      _pendingDimensions = copyDimensions(minPzcor = minPzcor)
     }
   }
 
-  def minPzcor: Int = newMinZ
+  def minPzcor: Int = _pendingDimensions.minPzcor
 
   def maxPzcor(maxPzcor: Int): Unit = {
     if (maxPzcor >= 0) {
-      newMaxZ = maxPzcor
-      edgesChanged ||= newMaxZ != world.maxPzcor
+      _pendingDimensions = copyDimensions(maxPzcor = maxPzcor)
     }
   }
 
-  def maxPzcor: Int = newMaxZ
+  def maxPzcor: Int = _pendingDimensions.maxPzcor
 
-  def wrappingZ: Boolean = {
-    if (!wrappingChanged)
-      newWrapZ = world.wrappingAllowedInZ
-
-    newWrapZ
-  }
+  def wrappingZ: Boolean = _pendingDimensions.wrappingAllowedInZ
 
   def wrappingZ(value: Boolean): Unit = {
-    newWrapZ = value
-    wrappingChanged ||= newWrapZ != world.wrappingAllowedInZ
+    _pendingDimensions = copyDimensions(wrappingAllowedInZ = value)
   }
 
   override def addDimensionProperties(): Unit = {
@@ -120,6 +118,28 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         Array(false, false, false, false, false, false)))
   }
 
+  override def adjustDimensions(d: WorldDimensions): WorldDimensions = d
+  override def calculateViewSize(d: WorldDimensions, v: CoreView) =
+    (v.right - v.left, v.bottom - v.top)
+
+  def copyDimensions(
+    minPxcor: Int = _pendingDimensions.minPxcor,
+    maxPxcor: Int = _pendingDimensions.maxPxcor,
+    minPycor: Int = _pendingDimensions.minPycor,
+    maxPycor: Int = _pendingDimensions.maxPycor,
+    minPzcor: Int = _pendingDimensions.defaultMinPzcor,
+    maxPzcor: Int = _pendingDimensions.defaultMaxPzcor,
+    patchSize: Double = _pendingDimensions.patchSize,
+    wrappingAllowedInX: Boolean = _pendingDimensions.wrappingAllowedInX,
+    wrappingAllowedInY: Boolean = _pendingDimensions.wrappingAllowedInY,
+    wrappingAllowedInZ: Boolean = _pendingDimensions.defaultWrappingInZ
+  ): DimensionsType = {
+    WorldDimensions3D(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, patchSize,
+      wrappingAllowedInX, wrappingAllowedInY, wrappingAllowedInZ)
+  }
+
+  def toDimensionType(d: WorldDimensions): DimensionsType = d.to3D
+
   override def firstEditor: Int = 0
 
   override def lastEditor: Int = 5
@@ -187,122 +207,25 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
   }
 
   def editFinished(): Boolean = {
-    gWidget.editFinished()
+    notifyEditFinished()
 
-    if (wrappingChanged) {
-      workspace.changeTopology(newWrapX, newWrapY)
-      wrappingChanged = false
-    }
-    if (edgesChanged || patchSizeChanged) {
-      resizeWithProgress(true)
-      edgesChanged = false
-      patchSizeChanged = false
-    }
-    if (fontSizeChanged) {
-      gWidget.applyNewFontSize(newFontSize)
-      fontSizeChanged = false
-    }
-    gWidget.view.dirty()
-    gWidget.view.repaint()
-    workspace.glView.editFinished()
+    setDimensions(_pendingDimensions, true, WorldResizer.StopEverything)
+
     true
   }
 
-  class ResizeRunner extends Runnable {
-    def run(): Unit = {
-      try {
-        if (edgesChanged) {
-          new RemoveAllJobsEvent().raise(gWidget)
-          world.clearTurtles()
-          world.clearLinks()
-          world.createPatches(newMinX, newMaxX,
-            newMinY, newMaxY, newMinZ, newMaxZ)
-          workspace.patchesCreatedNotify()
-          gWidget.resetSize()
-        }
-        if (patchSizeChanged) {
-          world.patchSize(newPatchSize)
-          gWidget.resetSize()
-        }
-
-        if (edgesChanged)
-          workspace.clearDrawing()
-        else
-          gWidget.view.renderer.trailDrawer.rescaleDrawing()
-        } catch {
-          case e: Exception =>
-            println("Exception in resizing thread: " + e + " " + e.getMessage)
-            throw e
-        }
-    }
-  }
-
-  override def resizeWithProgress(showProgress: Boolean): Unit = {
-    val oldGraphicsOn = world.displayOn
-    if (oldGraphicsOn)
-      world.displayOn(false)
-
-    val runnable = new ResizeRunner()
-    if (showProgress)
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
-        I18N.gui.get("view.resize.progress"), runnable)
-    else
-      runnable.run()
-
-    gWidget.displaySwitchOn(true)
-    if (oldGraphicsOn) {
-      world.displayOn(true)
-      gWidget.view.dirty()
-      gWidget.view.repaint()
-    }
-  }
-
-  override def setDimensions(d: WorldDimensions): Unit = {
-    d match {
-      case dd: WorldDimensions3D =>
-        setDimensions(dd.minPxcor, dd.maxPxcor, dd.minPycor, dd.maxPycor, dd.minPzcor, dd.maxPzcor)
-      case d =>
-        setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, 0, 0)
-    }
-  }
-
-  def setDimensions(minPxcor: Int, maxPxcor: Int,
-                    minPycor: Int, maxPycor: Int,
-                    minPzcor: Int, maxPzcor: Int): Unit = {
-    newMinX = minPxcor
-    newMaxX = maxPxcor
-    newMinY = minPycor
-    newMaxY = maxPycor
-    newMinZ = minPzcor
-    newMaxZ = maxPzcor
-
-    if (minPxcor != world.minPxcor ||
-        maxPxcor != world.maxPxcor ||
-        minPycor != world.minPycor ||
-        maxPycor != world.maxPycor ||
-        minPzcor != world.minPzcor ||
-        maxPzcor != world.maxPzcor) {
-      prepareForWorldResize()
-      world.createPatches(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor)
-      finishWorldResize()
-    }
+  protected def createPatches(): Unit = {
+    world.createPatches(_pendingDimensions.minPxcor, _pendingDimensions.maxPxcor,
+      _pendingDimensions.minPycor, _pendingDimensions.maxPycor,
+      _pendingDimensions.minPzcor, _pendingDimensions.maxPzcor)
   }
 
   override def model: CoreView = {
-    val dimensions = new WorldDimensions3D(
-      world.minPxcor, world.maxPxcor,
-      world.minPycor, world.maxPycor,
-      world.minPzcor, world.maxPzcor,
-      patchSize = world.patchSize,
-      wrappingAllowedInX = world.wrappingAllowedInX,
-      wrappingAllowedInY = world.wrappingAllowedInY,
-      wrappingAllowedInZ = world.wrappingAllowedInZ)
-    val b = gWidget.getBoundsTuple
     val label = if (tickCounterLabel == null || tickCounterLabel.trim == "") None else Some(tickCounterLabel)
     CoreView(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
-      dimensions = dimensions,
-      fontSize = gWidget.view.fontSize,
+      left = 0, top = 0, right = 0, bottom = 0,
+      dimensions = _currentDimensions,
+      fontSize = fontSize,
       updateMode = workspace.updateMode(),
       showTickCounter = showTickCounter,
       tickCounterLabel = label,

@@ -305,7 +305,12 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
      if (someNodesHaveView && connectionManager.isRunning) {connectionManager.incrementalViewUpdate()}
      _framesSkipped = false
    }
+   // these three methods are all a part of ViewInterface and have nothing to do
+   // with HubNetManager. Maybe the api.ViewInterface should actually be two separate
+   // interfaces? RG 9/21/17
    def repaint() {}
+   def freeze(): Unit = {}
+   def thaw(): Unit = {}
 
   // since mouseInside is always false all the other values don't matter.
   // all this is silly, but its here because we have to extend ViewInterface.

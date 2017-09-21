@@ -3,8 +3,8 @@
 package org.nlogo.agent
 
 import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
-import org.nlogo.api.{ AgentException, Color, ImporterUser,
-  NetLogoThreeDDialect, WorldDimensionException, WorldDimensions3D }
+import org.nlogo.api.{ AgentException, Color, ImporterUser, NetLogoThreeDDialect,
+  WorldDimensionException, WorldDimensions3D }
 
 import java.lang.{ Double => JDouble }
 
@@ -278,9 +278,12 @@ class World3D extends World
   // to vary the size of the world without
   // knowing quite so much about the world.
   // ev 2/20/06
-  override def getDimensions: WorldDimensions = {
+  override def getDimensions: WorldDimensions3D = {
     new WorldDimensions3D(_minPxcor, _maxPxcor, _minPycor, _maxPycor, _minPzcor, _maxPzcor, 12.0, true, true, true)
   }
+
+  override def dimensionsAdjustedForPatchSize(patchSize: Double): WorldDimensions =
+    getDimensions.copyThreeD(patchSize = patchSize)
 
   @throws(classOf[WorldDimensionException])
   override def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions = {

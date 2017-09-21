@@ -7,7 +7,7 @@ package org.nlogo.agent
 // methods from ImporterJ to here. - ST 7/11/12
 
 import org.nlogo.{ api, core },
-  core.{PlotPenState, PlotPenInterface, Breed, AgentKind, AgentVariables},
+  core.{PlotPenState, PlotPenInterface, Breed, AgentKind, AgentVariables, WorldDimensions},
   api.{PlotState, PlotInterface, ImporterUser}
 
 import collection.immutable.ListMap
@@ -31,6 +31,9 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
       case AgentKind.Link =>
         AgentVariables.implicitLinkVariables.toArray
     }
+
+  def addPatchSizeToDimensions(d: WorldDimensions, patchSize: Double): WorldDimensions =
+    d.copy(patchSize = patchSize)
 
   def getSpecialObserverVariables: Array[String] = {
     import ImporterJ._

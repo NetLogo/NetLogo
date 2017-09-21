@@ -4,13 +4,15 @@ package org.nlogo.agent;
 
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.WorldDimensions;
-import org.nlogo.api.AgentException;
 import org.nlogo.core.AgentVariables;
+import org.nlogo.core.WorldDimensions;
 import org.nlogo.core.Breed;
+import org.nlogo.api.AgentException;
 import org.nlogo.api.ImporterUser;
+import org.nlogo.api.JobOwner;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.WorldResizer;
 
 import scala.collection.Seq;
 
@@ -49,6 +51,7 @@ public abstract strictfp class ImporterJ
   static final String TICKS_HEADER = "TICKS";
 
   boolean needToResize = false;
+  WorldDimensions pendingDimensions = null;
 
   private boolean olderThan40beta2 = false;
 
@@ -150,6 +153,10 @@ public abstract strictfp class ImporterJ
       world.clearAll();
 
       importAgents(AgentKindJ.Observer());
+      if (needToResize && pendingDimensions != null) {
+        importerUser.setDimensions(pendingDimensions, true, WorldResizer.stopNonObserverJobs());
+        needToResize = false;
+      }
       importAgents(AgentKindJ.Turtle());
       importAgents(AgentKindJ.Patch());
       checkForBlankTurtles();
@@ -161,9 +168,6 @@ public abstract strictfp class ImporterJ
       }
       if (nextLine != null && nextLine.indexOf("OUTPUT") != -1) {
         importOutputArea();
-      }
-      if (needToResize) {
-        importerUser.resizeView();
       }
       importPlots();
       importExtensionData();
@@ -200,8 +204,8 @@ public abstract strictfp class ImporterJ
       throws java.io.IOException {
     if (hasMoreLines(false)) {
       Double patchSize = Double.valueOf(nextLine()[0]);
-      importerUser.patchSize(patchSize.doubleValue());
-      importerUser.resizeView();
+      pendingDimensions = addPatchSizeToDimensions(pendingDimensions, patchSize);
+      importerUser.setDimensions(pendingDimensions, true, WorldResizer.stopNonObserverJobs());
       needToResize = false;
 
       int width = (int) (patchSize.doubleValue() * world.worldWidth());
@@ -274,8 +278,9 @@ public abstract strictfp class ImporterJ
     Map<String, Object> varVals = getVarVals(headers, line, kind);
 
     if (kind == AgentKindJ.Observer()) {
-      setScreenDimensions(varVals);
+      pendingDimensions = getScreenDimensions(varVals);
     }
+
     // if there were any agentsets in the values that getVarVals() fetched,
     // then those values may have become invalid as a result of resizing
     // the world, so we'd better call getVarVals over again - ST 12/21/04
@@ -785,7 +790,7 @@ public abstract strictfp class ImporterJ
     return val;
   }
 
-  void setScreenDimensions(Map<String, Object> varVals) {
+  WorldDimensions getScreenDimensions(Map<String, Object> varVals) {
     try {
       int minx, maxx, miny, maxy;
 
@@ -805,8 +810,12 @@ public abstract strictfp class ImporterJ
 
       if (minx != world.minPxcor() || maxx != world.maxPxcor() ||
           miny != world.minPycor() || maxy != world.maxPycor()) {
-        importerUser.setDimensions(new WorldDimensions(minx, maxx, miny, maxy));
         needToResize = true;
+        return new WorldDimensions(minx, maxx, miny, maxy,
+            world.patchSize(), world.wrappingAllowedInX(), world.wrappingAllowedInY());
+      } else {
+        return new WorldDimensions(world.minPxcor(), world.maxPxcor(), world.minPycor(), world.maxPycor(),
+            world.patchSize(), world.wrappingAllowedInX(), world.wrappingAllowedInY());
       }
     } catch (ClassCastException cce) {
       String abortingError = "Illegal Screen dimension- max-px/ycor, min-px/ycor must be numbers.";
@@ -969,6 +978,8 @@ public abstract strictfp class ImporterJ
   }
 
   abstract String[] getImplicitVariables(AgentKind kind);
+
+  abstract WorldDimensions addPatchSizeToDimensions(WorldDimensions dimensions, double patchSize);
 
   //code to handle peek for the StringTokenizer
 

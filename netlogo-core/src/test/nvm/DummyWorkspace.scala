@@ -84,12 +84,13 @@ class DummyWorkspace extends Workspace {
   override def patchSize(patchSize: Double) = unsupported
   override def setDimensions(dim: WorldDimensions) = unsupported
   override def setDimensions(dim: WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
 
   // from JobManagerOwner
   override def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception) = unsupported
   override def ownerFinished(owner: JobOwner) = unsupported
-  override def updateDisplay(haveWorldLockAlready: Boolean) = unsupported
   override def periodicUpdate() = unsupported
+  override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
 
   // from RandomServices
   override def auxRNG = null
@@ -145,4 +146,6 @@ class DummyWorkspace extends Workspace {
   override def behaviorSpaceExperimentName: String = unsupported
   override def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A] = unsupported
   override def requestDisplayUpdate(force: Boolean): Unit = unsupported
+  override def disablePeriodicRendering(): Unit = unsupported
+  override def enablePeriodicRendering(): Unit = unsupported
 }

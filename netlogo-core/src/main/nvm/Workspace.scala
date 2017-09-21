@@ -72,6 +72,8 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
 
   /* controls for things outside of nvm */
   def breathe(context: Context): Unit
+  def disablePeriodicRendering(): Unit
+  def enablePeriodicRendering(): Unit
   def requestDisplayUpdate(force: Boolean)
   def inspectAgent(agent: ApiAgent, radius: Double)
   def inspectAgent(agentKind: AgentKind, agent: Agent, radius: Double): Unit

@@ -7,6 +7,6 @@ import org.nlogo.api.JobOwner
 trait JobManagerOwner {
   def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception)
   def ownerFinished(owner: JobOwner)
-  def updateDisplay(haveWorldLockAlready: Boolean)
+  def updateDisplay(haveWorldLockAlready: Boolean, forced: Boolean)
   def periodicUpdate()
 }

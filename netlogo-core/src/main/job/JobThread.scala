@@ -112,7 +112,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
           linkForeverButtonJobs.remove(job)
         job.state = Job.REMOVED
         if (job.topLevelProcedure != null) {
-          owner.updateDisplay(false)
+          owner.updateDisplay(false, false)
           job.synchronized {
             job.notifyAll()
           }

@@ -4,17 +4,18 @@ package org.nlogo.window
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
+import javax.swing.{ AbstractAction, Action, JButton, JPanel }
 
 import org.nlogo.awt.{ ColumnLayout, Fonts => NLogoFonts }
 import org.nlogo.swing.ToolBar.Separator
 import org.nlogo.core.I18N, I18N.Prefix
 import org.nlogo.window.Events.LoadEndEvent
 
-class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
+class ViewUpdatePanel(workspace: GUIWorkspace, tickCounter: TickCounterLabel)
     extends JPanel with LoadEndEvent.Handler {
   implicit val prefix = Prefix("tabs.run")
 
+  private val displaySwitch     = new DisplaySwitch()
   private val updateModeChooser = new UpdateModeChooser(workspace)
   private val speedSlider       = new SpeedSliderPanel(workspace)
   private val sliderTickPanel   = verticallyStackedPanel(speedSlider, tickCounter)
@@ -28,6 +29,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
+  workspace.registerDisplaySwitch(displaySwitch)
 
   updateModeChooser.refreshSelection()
 

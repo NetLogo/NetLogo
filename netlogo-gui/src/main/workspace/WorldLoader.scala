@@ -2,8 +2,8 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.WorldDimensions
 import org.nlogo.core.{ View => CoreView }
+import org.nlogo.api.WorldResizer
 
 class WorldLoader {
   def load(view: CoreView, worldInterface: WorldLoaderInterface) {
@@ -15,12 +15,6 @@ class WorldLoader {
     worldInterface.tickCounterLabel(label)
     worldInterface.showTickCounter(view.showTickCounter)
 
-    val width = getWidth(worldInterface, d, view)
-    val adjustedPatchSize = adjustPatchSize(worldInterface, d)
-
-    val height = getHeight(worldInterface, d, adjustedPatchSize, view)
-    worldInterface.setDimensions(d, adjustedPatchSize)
-
     // we have to clear turtles before we change the topology otherwise we might have extra links
     // lying around in the world that go kerplooey when we try to reposition them and after we set
     // the dimensions because that's where every thing gets allocated initially. ev 7/19/06
@@ -28,38 +22,13 @@ class WorldLoader {
 
     worldInterface.fontSize(view.fontSize)
 
-    worldInterface.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
+    val adjustedDimensions = worldInterface.adjustDimensions(d)
+    val (width, height) = worldInterface.calculateViewSize(adjustedDimensions, view)
 
+    worldInterface.setDimensions(adjustedDimensions, false, WorldResizer.StopNonObserverJobs)
     worldInterface.updateMode(view.updateMode)
     worldInterface.frameRate(view.frameRate)
-
     worldInterface.setSize(width, height)
   }
 
-  def getWidth(world: WorldLoaderInterface, d: WorldDimensions, v: CoreView): Int = {
-    val widgetWidth = world.calculateWidth(d.width, d.patchSize)
-    val minWidth = world.getMinimumWidth
-    widgetWidth max minWidth
-  }
-
-  def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, v: CoreView): Int =
-    world.calculateHeight(d.height, patchSize)
-
-  def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions): Double = {
-    val widgetWidth = world.calculateWidth(d.width, d.patchSize)
-    val minWidth = world.getMinimumWidth
-    if(widgetWidth < minWidth)
-      world.computePatchSize(minWidth - world.insetWidth, d.width)
-    else
-      d.patchSize
-  }
-}
-
-class WorldLoader3D extends WorldLoader {
-  override def getWidth(world: WorldLoaderInterface, d: WorldDimensions, v: CoreView) =
-    v.right - v.left
-  override def getHeight(world: WorldLoaderInterface, d: WorldDimensions, adjustedPatchSize: Double, v: CoreView) =
-    v.bottom - v.top
-  override def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions) =
-    d.patchSize
 }
