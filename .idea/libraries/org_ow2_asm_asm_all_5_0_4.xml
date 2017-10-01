@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="org.ow2.asm:asm-all:5.0.4">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-all-5.0.4.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.ow2.asm/asm-all/jars/asm-all-5.0.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
