@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="org.apache.httpcomponents:httpclient:4.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/httpclient-4.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/httpcore-4.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/commons-logging-1.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/commons-codec-1.6.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.apache.httpcomponents/httpclient/jars/httpclient-4.2.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.2.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/commons-codec/commons-codec/jars/commons-codec-1.6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
