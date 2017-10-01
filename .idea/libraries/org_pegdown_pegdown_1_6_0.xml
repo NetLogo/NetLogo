@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="org.pegdown:pegdown:1.6.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/parboiled-java-1.1.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/parboiled-core-1.1.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-5.0.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-tree-5.0.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-analysis-5.0.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/asm-util-5.0.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/pegdown-1.6.0.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.parboiled/parboiled-java/jars/parboiled-java-1.1.7.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.7.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.ow2.asm/asm/jars/asm-5.0.3.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.ow2.asm/asm-tree/jars/asm-tree-5.0.3.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.ow2.asm/asm-analysis/jars/asm-analysis-5.0.3.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.ow2.asm/asm-util/jars/asm-util-5.0.3.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.pegdown/pegdown/jars/pegdown-1.6.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

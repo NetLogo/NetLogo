@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="com.googlecode.json-simple:json-simple:1.1.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/json-simple-1.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/junit-4.10.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/hamcrest-core-1.1.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/com.googlecode.json-simple/json-simple/bundles/json-simple-1.1.1.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/junit/junit/jars/junit-4.10.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

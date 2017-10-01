@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="org.apache.httpcomponents:httpmime:4.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib_idea/httpmime-4.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_idea/httpcore-4.2.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.apache.httpcomponents/httpmime/jars/httpmime-4.2.jar!/" />
+      <root url="jar://$IVY_HOME$/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
