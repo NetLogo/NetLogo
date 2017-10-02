@@ -169,7 +169,7 @@ InconeManyTurtlesCountingTorus
   O> __change-topology true true
   P> sprout 1 [ set heading 0 ]
   length remove-duplicates [count patches in-cone 10 30] of turtles => 1
-  length remove-duplicates [count turtles in-cone 10 30] of turtles => 1
+  remove-duplicates [count turtles in-cone 10 30] of turtles => [27]
 
 InconeManyTurtlesCounting_2D
   P> sprout 1 [ set heading 0 ]
