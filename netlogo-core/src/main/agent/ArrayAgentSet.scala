@@ -15,7 +15,7 @@ import collection.JavaConverters._
 class ArrayAgentSet(
   kind: core.AgentKind,
   printName: String,
-  private val array: Array[Agent])
+  private[agent] val array: Array[Agent])
 extends IndexedAgentSet(kind, printName) {
 
   private[this] val arraySize = array.size
