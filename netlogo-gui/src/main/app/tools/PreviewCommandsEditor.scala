@@ -10,14 +10,14 @@ import org.nlogo.api.PreviewCommands
 import org.nlogo.core.Model
 import org.nlogo.swing.UserAction._
 import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, WorkspaceFactory }
+import org.nlogo.workspace.{ AbstractWorkspace, WorkspaceFactory }
 
 
 object PreviewCommandsEditor {
   val title = "Preview Commands Editor"
   class EditPreviewCommands(
     previewCommandsEditor: => PreviewCommandsEditorInterface,
-    workspace:             AbstractWorkspaceScala,
+    workspace:             AbstractWorkspace,
     f:                     () => Model) extends AbstractAction(title)
     with MenuAction {
       category    = ToolsCategory

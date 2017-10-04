@@ -8,8 +8,10 @@ import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
+import org.nlogo.workspace.ModelTracker
 
 class HubNetClientEditor(workspace: GUIWorkspace,
+                         modelTracker: ModelTracker,
                          linkParent: Component,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
@@ -18,7 +20,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
 
   locally {
-    setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
+    setTitle(getTitle(modelTracker.modelNameForDisplay, modelTracker.getModelDir, modelTracker.getModelType))
     getContentPane.setLayout(new BorderLayout())
     getContentPane.add(new JScrollPane(interfacePanel,
       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,

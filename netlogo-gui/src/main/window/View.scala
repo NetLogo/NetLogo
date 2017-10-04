@@ -24,7 +24,7 @@ object View {
 import View.AgentMenuType._
 
 @scala.annotation.strictfp
-class View(val workspace: GUIWorkspaceScala) extends JComponent
+class View(protected val workspace: GUIWorkspaceScala) extends JComponent
     with LoadBeginEvent.Handler
     with LoadEndEvent.Handler
     with CompiledEvent.Handler

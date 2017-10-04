@@ -29,7 +29,7 @@ public final strictfp class _externreport
       result =
           reporter.report
               (arguments,
-                  new ExtensionContext(workspace, context));
+                  new ExtensionContext(workspace, workspace.modelTracker(), context));
     } catch (org.nlogo.api.ExtensionException ex) {
       throw new WrappedExtensionException(
           context, this, "Extension exception: " + ex.getMessage(), ex);

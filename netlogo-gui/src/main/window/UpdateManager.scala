@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.core.UpdateMode
+import org.nlogo.agent.TickCounter
 import System.nanoTime
 import StrictMath.pow
 
@@ -34,12 +35,24 @@ import StrictMath.pow
 // With continuous updates only, GUIWorkspace generates a pseudo-tick every time the engine comes up
 // for air, which basically means every time one agent runs one command.
 
-abstract class UpdateManager extends UpdateManagerInterface {
+class UpdateManager(tickCounter: TickCounter) extends UpdateManagerInterface {
 
   // abstract methods
-  def defaultFrameRate: Double
-  def ticks: Double
-  def updateMode: UpdateMode
+  def ticks: Double = tickCounter.ticks
+  private var frameRateSetPoint: Double = 30.0
+  private var _updateMode: UpdateMode = UpdateMode.Continuous
+
+  def frameRate: Double = frameRateSetPoint
+  def frameRate(f: Double) = {
+    frameRateSetPoint = f
+    recompute()
+  }
+
+  def updateMode: UpdateMode = _updateMode
+  def updateMode(u: UpdateMode) = {
+    _updateMode = u
+    recompute()
+  }
 
   // ticks returns -1 if the tick counter is clear, so for the logic below to work, we need to use
   // an even more negative value.  (yeah, kludgy.) - ST 4/28/10
@@ -171,7 +184,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   /// NO SIDE EFFECTS BELOW HERE PLEASE!  not even calling System.nanoTime()!
   // (well, except for the nasty bit of stateful logic in checkTicks() which we call below)
 
-  private def updatePolicy: UpdatePolicy = updateMode match {
+  private def updatePolicy: UpdatePolicy = _updateMode match {
     case UpdateMode.Continuous => ContinuousPolicy
     case UpdateMode.TickBased  => TickBasedPolicy
   }
@@ -226,9 +239,9 @@ abstract class UpdateManager extends UpdateManagerInterface {
         1000000L * pow(pow(9000, 1 / 50.0), - speed).toLong
     def frameRateGap =
       if(speed >= 0)
-        (1000000000L / (defaultFrameRate + speed - 1 + pow(1.3, speed))).toLong
+        (1000000000L / (frameRateSetPoint + speed - 1 + pow(1.3, speed))).toLong
       else
-        (1000000000L / (defaultFrameRate * pow (0.9, - speed))).toLong
+        (1000000000L / (frameRateSetPoint * pow (0.9, - speed))).toLong
     def nanoGap =
       if(speed <= 25)
         0L
@@ -298,9 +311,9 @@ abstract class UpdateManager extends UpdateManagerInterface {
       if(speed < -12)
         1000000L
       else if (speed <= 0)  // from 1 millisecond (at speed -12) to frame rate (at speed 0)
-        (1000000 * pow(pow(1000 / defaultFrameRate, 1 / 12.0), speed + 12)).toLong
+        (1000000 * pow(pow(1000 / frameRateSetPoint, 1 / 12.0), speed + 12)).toLong
       else  // from frame rate (speed 0) to every 3 seconds (at speed 50)
-        (1000000000.0 / (defaultFrameRate + speed * ((0.333333 - defaultFrameRate) / 50))).toLong
+        (1000000000.0 / (frameRateSetPoint + speed * ((0.333333 - frameRateSetPoint) / 50))).toLong
     def tickGap =
       if(speed <= -25)
         1

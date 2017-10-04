@@ -10,7 +10,6 @@ trait FileManager {
   def attachPrefix(filename: String): String
   def prefix: String
   def setPrefix(newPrefix: String)
-  def setPrefix(newPrefix: java.net.URL)
   @throws(classOf[java.io.IOException])
   def eof: Boolean
   def currentFile: Option[File]

@@ -13,14 +13,14 @@ object ExclusiveJob {
 }
 
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
-                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast,
+                   address: Int, parentContext: Context, random: MersenneTwisterFast,
                    comeUpForAir: AtomicBoolean)
-extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random, comeUpForAir) {
+extends Job(owner, agentset, topLevelProcedure, address, parentContext, random, comeUpForAir) {
 
   override def exclusive = true
 
   // we are not suspendable. we run to the end and that's it
-  override def step() { throw new UnsupportedOperationException() }
+  override def step(manager: JobManagerInterface) { throw new UnsupportedOperationException() }
 
   def run() {
     // Note that this relies on shufflerators making a copy, which might change in a future

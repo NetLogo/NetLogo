@@ -2,17 +2,17 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{World2D, World3D}
+import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.nvm.PresentationCompilerInterface
-import org.nlogo.core.AgentKind
-import org.nlogo.api.{AggregateManagerInterface, Version}
+import org.nlogo.core.{ AgentKind, Femto }
+import org.nlogo.api.{ AggregateManagerInterface, NetLogoLegacyDialect, Version }
 
 /**
  * handy for use in unit tests
  */
 
 class DummyAbstractWorkspace
-extends AbstractWorkspaceScala(
+extends AbstractWorkspace(
     if(Version.is3D) new World3D else new World2D,
     null) // no hubNetManagerFactory
 {
@@ -55,19 +55,21 @@ extends AbstractWorkspaceScala(
   override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
   override def resizeView(): Unit = unsupported
   override def runtimeError(owner: org.nlogo.api.JobOwner,
+                            manager: org.nlogo.nvm.JobManagerInterface,
                             context: org.nlogo.nvm.Context,
                             instruction: org.nlogo.nvm.Instruction,
                             ex: Exception) = unsupported
   override def ownerFinished(owner: org.nlogo.api.JobOwner) = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
-  override def breathe(): Unit = unsupported
+  override def breathe(context: org.nlogo.nvm.Context): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def startLogging(properties: String) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
-  override def compiler: PresentationCompilerInterface = unsupported
+  override def compiler: PresentationCompilerInterface =
+    Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
 
   def openModel(model: org.nlogo.core.Model): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported

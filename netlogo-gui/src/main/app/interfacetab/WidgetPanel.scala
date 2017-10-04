@@ -70,7 +70,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
 
-  protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
+  protected val editorFactory: EditorFactory =
+    new EditorFactory(workspace.compiler, workspace.getExtensionManager, workspace.dialect)
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)

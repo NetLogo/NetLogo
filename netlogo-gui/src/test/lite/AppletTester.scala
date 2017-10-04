@@ -4,13 +4,11 @@ package org.nlogo.lite
 
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window.{ Event, VMCheck }
-import org.nlogo.workspace.AbstractWorkspace
 
 object AppletTester {
   def main(args: Array[String]) {
     System.setProperty("apple.awt.graphics.UseQuartz", "true")
     System.setProperty("apple.awt.showGrowBox", "true")
-    AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
     val (eventsArgs, otherArgs) = args.partition(_ == "--events")
     Event.logEvents = eventsArgs.nonEmpty
@@ -28,9 +26,9 @@ object AppletTester {
   }
   def open(path: String) {
     val frame = new javax.swing.JFrame("NetLogo Model")
-    val panel = new AppletPanel(frame, new java.awt.event.MouseAdapter() { }, false) {
+    val panel = new AppletPanel(frame, new java.awt.event.MouseAdapter() { }) {
       override def getFileURL(filename: String) =
-        AbstractWorkspace.toURL(new java.io.File(filename))
+        new java.io.File(filename).toURI.toURL
       override def getInsets =
         new java.awt.Insets(5, 5, 5, 5)
     }

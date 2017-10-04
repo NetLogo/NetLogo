@@ -27,8 +27,6 @@ class SaveModelTests extends FunSuite {
       val modelTracker = new ModelTracker {
         override def getModelType = modelType
         override def getModelPath: String = existingPath.orNull
-        override def compiler = null
-        override def getExtensionManager() = null
       }
       val res =
         if (forcePathSelect)

@@ -8,10 +8,14 @@ import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ JobOwner, LogoException }
 import org.nlogo.api.MersenneTwisterFast
 
-class ConcurrentJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
-                    address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast,
-                    comeUpForAir: AtomicBoolean)
-extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random, comeUpForAir) {
+class ConcurrentJob(owner: JobOwner,
+  agentset: AgentSet,
+  topLevelProcedure: Procedure,
+  address: Int,
+  parentContext: Context,
+  random: MersenneTwisterFast,
+  comeUpForAir: AtomicBoolean)
+extends Job(owner, agentset, topLevelProcedure, address, parentContext, random, comeUpForAir) {
 
   override def exclusive = false
 
@@ -52,7 +56,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     contexts(count) = context
   }
 
-  override def step() {
+  override def step(manager: JobManagerInterface) {
     if (contexts == null)
       initialize()
     // this is a very tight loop, so we pull as many calls out of the loop as possible
@@ -76,11 +80,11 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
       case ex: LogoException =>
         finish()
         if (!Thread.currentThread.isInterrupted)
-          context.runtimeError(ex)
+          context.runtimeError(ex, manager)
         throw ex
       case ex: RuntimeException =>
         finish()
-        context.runtimeError(ex)
+        context.runtimeError(ex, manager)
         throw ex
     }
     if (state == Job.RUNNING && allContextsDone)

@@ -31,8 +31,7 @@ extends AppletPanel(frame,
                     new java.awt.event.MouseAdapter {
                       override def mouseClicked(e: java.awt.event.MouseEvent) {
                         BrowserLauncher.openURI(frame, new URI("http://ccl.northwestern.edu/netlogo/"))
-                      }},
-                    false)
+                      }})
 with Event.LinkChild {
 
   var logger: Logger = null

@@ -21,7 +21,8 @@ import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, Successfu
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
+import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker, OpenModel, OpenModelFromURI,
+  OpenModelFromSource, SaveModel, SaveModelAs }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -88,7 +89,7 @@ object FileManager {
     }
   }
 
-  class ImportClientAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
+  class ImportClientAction(manager: FileManager, workspace: AbstractWorkspace, parent: Component)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.import.hubNetClientInterface") + Ellipsis, parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -133,7 +134,7 @@ object FileManager {
     }
   }
 
-  class SaveAsNetLogoWebAction(manager: FileManager, workspace: AbstractWorkspaceScala, modelSaver: ModelSaver, parent: Component)
+  class SaveAsNetLogoWebAction(manager: FileManager, modelTracker: ModelTracker, modelSaver: ModelSaver, parent: Component)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAsNetLogoWeb"), parent)
   with MenuAction {
     category = UserAction.FileCategory
@@ -156,11 +157,11 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     def suggestedFileName: String = {
-      if (workspace.getModelType == ModelType.New) {
+      if (modelTracker.getModelType == ModelType.New) {
         manager.saveModel(false)
-        workspace.getModelFileName.stripSuffix(".nlogo") + ".html"
+        modelTracker.getModelFileName.stripSuffix(".nlogo") + ".html"
       } else
-        workspace.modelNameForDisplay + ".html"
+        modelTracker.modelNameForDisplay + ".html"
     }
 
     @throws(classOf[UserCancelException])
@@ -174,7 +175,7 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     private def userWantsLastSaveExported(): Boolean = {
-      val modelType = workspace.getModelType
+      val modelType = modelTracker.getModelType
       val typeKey =
         if (modelType == ModelType.Normal) "fromSave" else "fromLibrary"
       val options = Array[Object](
@@ -203,7 +204,7 @@ object FileManager {
     tab:            TemporaryCodeTab,
     modelSaver:     ModelSaver,
     modelConverter: ModelConversion,
-    workspace:      AbstractWorkspaceScala,
+    workspace:      AbstractWorkspace,
     controller:     FileController)
   extends ExceptionCatchingAction(I18N.gui.get("menu.edit.convertToNetLogoSix"), tab)
   with MenuAction{
@@ -236,7 +237,8 @@ import FileManager._
 /** This class manages a number of file operations. Much of the code in here used to live in
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
-class FileManager(workspace: AbstractWorkspaceScala,
+class FileManager(workspace: AbstractWorkspace,
+  modelTracker: ModelTracker,
   modelLoader: ModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
@@ -247,7 +249,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
 
-  val controller = new FileController(parent, workspace)
+  val controller = new FileController(parent, modelTracker)
 
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library)
@@ -302,7 +304,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace.compilerServices)
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
@@ -333,7 +335,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   private[app] def saveModel(saveAs: Boolean): Unit = {
     val saveThunk = {
       val saveModel = if (saveAs) SaveModelAs else SaveModel
-      saveModel(currentModel, modelLoader, controller, workspace, Version)
+      saveModel(currentModel, modelLoader, controller, modelTracker, Version)
     }
 
     // if there's no thunk, the user canceled the save
@@ -397,7 +399,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     new OpenAction(this, parent),
     new QuitAction(this, parent),
     new ModelsLibraryAction(this, parent),
-    new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
+    new SaveAsNetLogoWebAction(this, modelTracker, modelSaver, parent),
     new ImportClientAction(this, workspace, parent))
 
   def saveModelActions(parent: Component) = {

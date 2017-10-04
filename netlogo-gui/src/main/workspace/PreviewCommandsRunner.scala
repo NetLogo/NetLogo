@@ -38,7 +38,7 @@ object PreviewCommandsRunner {
   def initWorkspace(
     workspaceFactory: WorkspaceFactory,
     openModelIn: AbstractWorkspace => Unit,
-    previewCommands: Option[PreviewCommands] = None): AbstractWorkspaceScala = {
+    previewCommands: Option[PreviewCommands] = None): AbstractWorkspace = {
 
     def newWorkspace(openModelIn: AbstractWorkspace => Unit) = {
       val ws = workspaceFactory.newInstance

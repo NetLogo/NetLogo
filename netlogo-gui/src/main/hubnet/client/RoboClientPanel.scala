@@ -2,12 +2,12 @@
 
 package org.nlogo.hubnet.client
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.hubnet.protocol.{HandshakeFromServer, ActivityCommand}
 
 private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
-                              errorHandler:ErrorHandler, waitTime:Long, workspace:CompilerServices)
-        extends ClientPanel(editorFactory, errorHandler, workspace) {
+                              errorHandler:ErrorHandler, waitTime:Long, compiler: PresentationCompilerInterface)
+        extends ClientPanel(editorFactory, errorHandler, compiler) {
   private lazy val roboClient:RoboWidgetControl = new RoboWidgetControl()
 
   override def completeLogin(handshake:HandshakeFromServer){

@@ -72,7 +72,7 @@ class Supervisor(dialog: java.awt.Dialog,
     if(options.spreadsheet) {
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
+        workspace.modelTracker.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
       addExporter(new SpreadsheetExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
@@ -82,7 +82,7 @@ class Supervisor(dialog: java.awt.Dialog,
     if(options.table) {
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-table.csv"))
+        workspace.modelTracker.guessExportName(worker.protocol.name + "-table.csv"))
       addExporter(new TableExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,

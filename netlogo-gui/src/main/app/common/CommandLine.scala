@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.{BorderLayout, Dimension}
-import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
+import java.awt.event.{ActionEvent, KeyEvent, KeyListener}
 import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
 import org.nlogo.agent.{Agent, AgentSet, OutputObject}
@@ -27,12 +27,20 @@ object CommandLine {
   case class ExecutionString(agentClass: AgentKind, string: String)
 }
 
+// A note to future maintainers looking for ways to reduce the web of dependencies
+// in the NetLogo UI code. You probably cut the dependency this class has on commandCenter
+// by making the following changes:
+// * Have CommandCenter become a KeyListener (only for VK_TAB)
+// * Add addKeyListener method on CommandLine which proxies through to textField
+// * Remove VK_TAB processing in this keyListener
+// * have commandLine implement propertyChange stuff on historyPosition
+// * make CommandCenter implement PropertyChangeListener
+// * register CommandCenter as listener, have it listen on the historyPosition property
 class CommandLine(commandCenter: CommandCenterInterface,
-                     echoCommandsToOutput: Boolean,
-                     fontSize: Int,
-                     workspace: AbstractWorkspace)
+  echoCommandsToOutput: Boolean,
+  fontSize: Int,
+  workspace: AbstractWorkspace)
     extends JobWidget(workspace.world.mainRNG)
-    with ActionListener
     with KeyListener
     with WindowEvents.CompiledEvent.Handler {
   import CommandLine._
@@ -49,7 +57,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyBaseClass: AgentKind = AgentKind.Observer
   private var history: List[ExecutionString] = List()
 
-  val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
+  val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.extensionManager)
   val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
     -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
@@ -138,7 +146,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
       setText("")
       return
     }
-    if (workspace.isReporter(inner)) {
+    if (workspace.compilerServices.isReporter(inner)) {
       inner = "show " + inner
       setText(inner)
     }

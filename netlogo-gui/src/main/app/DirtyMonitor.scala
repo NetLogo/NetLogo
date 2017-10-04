@@ -118,8 +118,7 @@ with SaveModel.Controller
 
   object TempFileModelTracker extends ModelTracker {
     val delegate = modelTracker
-    def compiler: org.nlogo.nvm.PresentationCompilerInterface = delegate.compiler
-    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager
+
     override def getModelType = delegate.getModelType
     override def getModelFileUri: Option[URI] = {
       delegate.getModelFileUri.map { u =>

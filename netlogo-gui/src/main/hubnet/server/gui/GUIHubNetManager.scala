@@ -9,7 +9,6 @@ import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.fileformat.ModelConversion
-import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window._
 
@@ -25,7 +24,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
 
-  private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
+  private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, workspace.modelTracker, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
   private var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
   private var serverInterface = Option.empty[(NetworkInterface, InetAddress)]
@@ -55,7 +54,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup("", host.orNull, connectionManager.port, true,
-      isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+      isRobo, waitTime, workspace.compiler)
   }
 
   /// client editor
@@ -124,7 +123,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def closeClientEditor() {
      _clientEditor.close()
      _clientEditor.dispose()
-     _clientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
+     _clientEditor = new HubNetClientEditor(workspace, workspace.modelTracker, linkParent, ifactory, menuFactory)
   }
 
   @throws(classOf[HubNetException])

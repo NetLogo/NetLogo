@@ -4,16 +4,15 @@ package org.nlogo.window
 
 import org.scalatest.FunSuite
 import org.nlogo.core.UpdateMode, UpdateMode._
+import org.nlogo.agent.TickCounter
 
 class UpdateManagerTests extends FunSuite {
 
   // at present, we're not testing the stateful parts of UpdateManager, we're just testing
   // the (functional) formulas in the two UpdatePolicy objects. - ST 2/28/11
 
-  class MyUpdateManager(mode: UpdateMode) extends UpdateManager {
-    override def defaultFrameRate = 30
-    override def ticks = 0
-    override def updateMode = mode
+  class MyUpdateManager(mode: UpdateMode) extends UpdateManager(new TickCounter()) {
+    updateMode(mode)
   }
 
   def debugInfo(mode: UpdateMode, speed: Int) = {

@@ -25,7 +25,6 @@ public abstract strictfp class Job {
   public final AgentSet agentset;
   public final Context parentContext;
   public final Procedure topLevelProcedure;
-  protected final Workspace workspace;
   public final AtomicBoolean comeUpForAir;
 
   public org.nlogo.api.MersenneTwisterFast random;
@@ -35,7 +34,6 @@ public abstract strictfp class Job {
       Procedure topLevelProcedure,
       int address,
       Context parentContext,
-      Workspace workspace,
       org.nlogo.api.MersenneTwisterFast random,
       AtomicBoolean comeUpForAir) {
     this.owner = owner;
@@ -43,12 +41,11 @@ public abstract strictfp class Job {
     this.topLevelProcedure = topLevelProcedure;
     this.address = address;
     this.parentContext = parentContext;
-    this.workspace = workspace;
     this.random = random;
     this.comeUpForAir = comeUpForAir;
   }
 
-  public abstract void step() throws LogoException;
+  public abstract void step(JobManagerInterface manager) throws LogoException;
 
   public void finish() {
     state = DONE;

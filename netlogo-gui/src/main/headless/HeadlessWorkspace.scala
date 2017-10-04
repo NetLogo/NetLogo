@@ -14,7 +14,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, World
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
+import org.nlogo.workspace.{ DefaultAbstractWorkspace, HubNetManagerFactory, RuntimeError, WorkspaceEvent }
 import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoXFormat, ScalaXmlElementFactory }
 import org.nlogo.util.Pico
 
@@ -102,16 +102,14 @@ object HeadlessWorkspace {
  */
 class HeadlessWorkspace(
   _world: World with CompilationManagement,
-  val compiler: PresentationCompilerInterface,
+  compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory)
-extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
+extends DefaultAbstractWorkspace(_world, compiler, hubNetManagerFactory, aggregateManager)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.DefaultWorldLoader
 with org.nlogo.api.ViewSettings {
-
-  AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
 
   /**
@@ -133,11 +131,6 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override def isHeadless = true
-
-  /**
-   * Internal use only.
-   */
-  var compilerTestingMode = false
 
   /**
    * Internal use only.
@@ -228,16 +221,17 @@ with org.nlogo.api.ViewSettings {
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
   def setDimensions(d: WorldDimensions, showProgress: Boolean, toStop: WorldResizer.JobStop): Unit = {
-    val patchSizeChanged = world.patchSize != d.patchSize
-    if (patchSizeChanged) {
+    if (d.patchSize != world.patchSize)
       world.patchSize(d.patchSize)
+    if (d.wrappingAllowedInX != world.wrappingAllowedInX ||
+      d.wrappingAllowedInY != world.wrappingAllowedInY) {
+      world.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
+      renderer.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
     }
     if (! compilerTestingMode) {
       world.createPatches(d)
     }
-    if (patchSizeChanged) {
-      renderer.resetCache(d.patchSize)
-    }
+    renderer.resetCache(d.patchSize)
     clearDrawing()
   }
 
@@ -424,7 +418,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def breathe() { }
+  override def breathe(context: org.nlogo.nvm.Context) { }
 
   /**
    * Internal use only.
@@ -464,11 +458,29 @@ with org.nlogo.api.ViewSettings {
   // command function.  -JC 11/16/10
   var lastErrorReport: ErrorReport = null
 
+  // The headless collaborator JMO sends a RuntimeError WorkspaceEvent, dealt with here.
+  // In the long run, we'd like to remove all of the JobManagerOwner methods on workspace.
+  // - RG 2/11/17
+  override def processWorkspaceEvent(evt: WorkspaceEvent): Unit = {
+    super.processWorkspaceEvent(evt)
+    evt match {
+      case e: RuntimeError =>
+        if (e.exception.isInstanceOf[LogoException]) {
+          lastErrorReport = new ErrorReport(e.owner, e.context, e.instruction, e.exception)
+          lastLogoException = e.exception.asInstanceOf[LogoException]
+        }
+      case _ =>
+    }
+  }
+
   /**
    * Internal use only.
    */
-  def runtimeError(owner: org.nlogo.api.JobOwner, context: org.nlogo.nvm.Context,
-                   instruction: org.nlogo.nvm.Instruction, ex: Exception) {
+  def runtimeError(owner: org.nlogo.api.JobOwner,
+    manager: org.nlogo.nvm.JobManagerInterface,
+    context: org.nlogo.nvm.Context,
+    instruction: org.nlogo.nvm.Instruction,
+    ex: Exception) {
     ex match {
       case le: LogoException =>
         lastLogoException = le
@@ -499,8 +511,8 @@ with org.nlogo.api.ViewSettings {
   override def open(path: String) {
     try {
       val m = loader.readModel(Paths.get(path).toUri).get
-      setModelPath(path)
-      setModelType(ModelType.Normal)
+      modelTracker.setModelPath(path)
+      modelTracker.setModelType(ModelType.Normal)
       fileManager.handleModelChange()
       openModel(m)
     }

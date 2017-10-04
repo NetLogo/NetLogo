@@ -26,13 +26,16 @@ import scala.util.Try
  * See the "Controlling" section of the NetLogo User Manual for example code.
  */
 
-abstract class AppletPanel(
-  frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
+abstract class AppletPanel(frame: java.awt.Frame, iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel
 with org.nlogo.api.Exceptions.Handler
 with Event.LinkParent
 with LinkRoot
 with ControlSet {
+
+  @deprecated("AppletPanel can no longer be an actual applet, omit last argument", "6.1.0")
+  def this(frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean) =
+    this(frame, iconListener)
 
   /**
    * The NetLogoListenerManager stored in this field can be used to add and remove NetLogoListeners,
@@ -42,14 +45,13 @@ with ControlSet {
    */
   val listenerManager = new NetLogoListenerManager
 
-  org.nlogo.workspace.AbstractWorkspace.isApplet(isApplet)
   RuntimeErrorDialog.init(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
   protected val world = if(Version.is3D) new World3D() else new World2D()
-  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, this)
+  val workspace = new LiteWorkspace(world, frame, listenerManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
-  protected val liteEditorFactory = new DefaultEditorFactory(workspace)
+  protected val liteEditorFactory = new DefaultEditorFactory(workspace.compiler, workspace.getExtensionManager)
 
   val iP = createInterfacePanel(workspace)
 
@@ -60,7 +62,7 @@ with ControlSet {
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
   addLinkComponent(procedures)
-  addLinkComponent(new CompilerManager(workspace, world, procedures))
+  addLinkComponent(new CompilerManager(workspace, world, procedures, Seq(workspace.aggregateManager)))
   addLinkComponent(new CompiledEvent.Handler {
     override def handle(e: CompiledEvent) {
       if (e.error != null)
@@ -68,7 +70,7 @@ with ControlSet {
   }})
   addLinkComponent(new LoadModelEvent.Handler {
     override def handle(e: LoadModelEvent) {
-      workspace.aggregateManager.load(e.model, workspace)
+      workspace.aggregateManager.load(e.model, workspace.compilerServices)
   }})
   workspace.setWidgetContainer(iP)
   setBackground(java.awt.Color.WHITE)
@@ -88,20 +90,12 @@ with ControlSet {
   }
 
   protected def createInterfacePanel(workspace: LiteWorkspace): InterfacePanelLite =
-    new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager, liteEditorFactory)
+    new InterfacePanelLite(workspace.viewWidget, workspace.compilerServices,
+      workspace, workspace.plotManager, liteEditorFactory)
 
   /** internal use only */
   def setAdVisible(visible: Boolean) {
     panel.setVisible(visible)
-  }
-
-  /**
-   * sets the current working directory
-   *
-   * @param url the directory as java.net.URL
-   */
-  def setPrefix(url: java.net.URL) {
-    workspace.fileManager.setPrefix(url)
   }
 
   /** internal use only */
@@ -212,12 +206,12 @@ with ControlSet {
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
-    val controller = new FileController(this, workspace)
+    val controller = new FileController(this, workspace.modelTracker)
     val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
-      workspace, fileformat.defaultAutoConvertables) _
+      workspace.compilerServices, fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
-    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
+    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace.compilerServices))
   }
 
   def userInterface: Future[BufferedImage] = {

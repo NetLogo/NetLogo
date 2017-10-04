@@ -14,6 +14,7 @@ import java.io.{ Closeable, IOException, PrintWriter }
 import java.util.{ List => JList }
 
 import scala.collection.JavaConverters._
+import scala.reflect.ClassTag
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -116,7 +117,19 @@ object ExtensionManager {
 
 import ExtensionManager._
 
-class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoader) extends NvmExtensionManager {
+
+// MessageCenter is used to communicate with other workspace components.
+// Extension manager will install itself as a listener.
+class ExtensionManager(
+    userInteraction: UserInteraction,
+    evaluator: Evaluator,
+    messageCenter: WorkspaceMessageCenter,
+    loader: ExtensionLoader)
+  extends NvmExtensionManager
+  with WorkspaceMessageListener {
+
+  messageCenter.subscribe(this)
+
   import ExtensionManagerException._
 
   private var loaders   = Seq[ExtensionLoader](loader)
@@ -125,6 +138,15 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   private var typeCache = Map[String, TokenType]()
 
   def anyExtensionsLoaded: Boolean = jars.nonEmpty
+
+  private var testingMode: Boolean = false
+
+  def processWorkspaceEvent(evt: WorkspaceEvent): Unit = {
+    evt match {
+      case ToggleCompilerTesting(isOn) => testingMode = isOn
+      case _ =>
+    }
+  }
 
   def loadedExtensions: JIterable[ClassManager] =
     jars.values.map(_.classManager).asJava
@@ -198,7 +220,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   private def initializedClassManager(cm: ClassManager): ClassManager =
     try {
-      if (!workspace.compilerTestingMode)
+      if (! testingMode)
         cm.runOnce(this)
       cm
     } catch {
@@ -210,7 +232,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
-    workspace.readFromString(source)
+    evaluator.readFromString(source, this)
 
   def clearAll(): Unit = {
     for (jar <- jars.values) {
@@ -288,6 +310,16 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     }
   )
 
+  def addInstrumentation[A](name: String, instrument: A, klass: Class[A]): Unit = {
+    implicit val klassTag: ClassTag[A] = ClassTag(klass)
+    messageCenter.send(AddInstrumentation(name, instrument, klassTag))
+  }
+
+  def removeInstrumentation[A](name: String, klass: Class[A]): Unit = {
+    implicit val klassTag: ClassTag[A] = ClassTag(klass)
+    messageCenter.send(RemoveInstrumentation(name, klassTag))
+  }
+
   def reset() = {
     jars.values.foreach { jar =>
       jar.unload(this)
@@ -330,11 +362,11 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     val currentVer: String = org.nlogo.api.APIVersion.version
     val shouldContinue: Boolean =
       if (extensionVer.isEmpty)
-        workspace.warningMessage(
+        userInteraction.warningMessage(
           """|Could not determine version of NetLogo extension.
              |NetLogo can try to load the extension, but it might not work.""".stripMargin.lines.mkString(" "))
       else if (currentVer != extensionVer.get)
-        workspace.warningMessage(
+        userInteraction.warningMessage(
           s"""|You are attempting to open a NetLogo extension file that was created
               |for a different version of the NetLogo Extension API.
               |(This NetLogo uses Extension API $currentVer;

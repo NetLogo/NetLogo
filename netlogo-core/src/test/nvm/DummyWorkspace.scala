@@ -45,7 +45,7 @@ class DummyWorkspace extends Workspace {
   override def getModelFileName = unsupported
   override def fileManager = unsupported
   override def plotManager = unsupported
-  override def attachModelDir(filePath: String) = unsupported
+  override def modelTracker = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet, waitForCompletion: Boolean) = unsupported
   override def compileCommands(source: String) = unsupported
   override def compileCommands(source: String,  agentClass: AgentKind) = unsupported
@@ -61,7 +61,6 @@ class DummyWorkspace extends Workspace {
   override def patchSize = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def lastRunTimes = unsupported
-  override def completedActivations = unsupported
   override def compiler = unsupported
   override def open(modelPath: String) = unsupported
   override def dispose() { }
@@ -87,7 +86,7 @@ class DummyWorkspace extends Workspace {
   override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
 
   // from JobManagerOwner
-  override def runtimeError(owner: JobOwner, context: Context, instruction: Instruction, ex: Exception) = unsupported
+  override def runtimeError(owner: JobOwner, manager: JobManagerInterface, context: Context, instruction: Instruction, ex: Exception) = unsupported
   override def ownerFinished(owner: JobOwner) = unsupported
   override def periodicUpdate() = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported

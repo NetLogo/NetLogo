@@ -12,7 +12,7 @@ import org.nlogo.api.ClassManager
 
 import scala.util.{ Success, Try }
 
-class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.ExtensionLoader {
+class JarLoader(modelTracker: ModelTracker) extends ExtensionManager.ExtensionLoader {
 
   def locateExtension(extensionName: String): Option[URL] =
     try {
@@ -81,7 +81,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
 
   private def potentialPaths(path: String): Seq[File] = {
     val paths = Seq(new File(ExtensionManager.extensionPath + java.io.File.separator + path))
-    Try(new File(workspace.attachModelDir(path))).toOption.map(_ +: paths).getOrElse(paths)
+    Try(new File(modelTracker.attachModelDir(path))).toOption.map(_ +: paths).getOrElse(paths)
   }
 
   private def getAdditionalJars(folder: File): Seq[URL] =

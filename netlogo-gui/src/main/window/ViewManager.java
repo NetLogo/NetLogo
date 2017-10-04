@@ -25,6 +25,18 @@ public strictfp class ViewManager implements ChangeListener, PropertyChangeListe
     this.displayStatus = displayStatus;
   }
 
+  public void dirty() {
+    ViewInterface viewZero = views.get(0);
+    if (viewZero != null && viewZero instanceof View)
+      ((View) viewZero).dirty();
+  }
+
+  public void repaint() {
+    ViewInterface viewZero = views.get(0);
+    if (viewZero != null && viewZero instanceof View)
+      ((View) viewZero).repaint();
+  }
+
   // note that primary views *must* be local views aka not hubnet
   public LocalViewInterface getPrimary() {
     return (LocalViewInterface) views.get(0);

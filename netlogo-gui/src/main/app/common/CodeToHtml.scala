@@ -6,10 +6,9 @@ import java.awt.Component
 
 import org.nlogo.core.{ Dialect, Femto }
 import org.nlogo.api.{ Version, FileIO }
-import org.nlogo.nvm.CompilerInterface
+import org.nlogo.nvm.{ CompilerInterface, ModelTracker }
 import org.nlogo.swing.UserAction,
   UserAction.{ FileCategory, FileExportSubcategory, MenuAction }
-import org.nlogo.workspace.AbstractWorkspace
 
 object CodeToHtml {
   // for standalone use, for example on a web server
@@ -28,10 +27,10 @@ object CodeToHtml {
     new CodeToHtml(compiler)
   }
 
-  class Action(workspace: AbstractWorkspace, parent: Component, getText: () => String) extends
-  ExportAction("code", workspace.guessExportName("code.html"), parent, { exportPath =>
+  class Action(modelTracker: ModelTracker, compiler: CompilerInterface, parent: Component, getText: () => String) extends
+  ExportAction("code", modelTracker.guessExportName("code.html"), parent, { exportPath =>
     FileIO.writeFile(exportPath,
-      new CodeToHtml(workspace.compiler).convert(getText()))
+      new CodeToHtml(compiler).convert(getText()))
   }) with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory

@@ -16,7 +16,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, tickCounter: TickCounterLabel)
   implicit val prefix = Prefix("tabs.run")
 
   private val displaySwitch     = new DisplaySwitch()
-  private val updateModeChooser = new UpdateModeChooser(workspace)
+  private val updateModeChooser = new UpdateModeChooser(workspace.updateManager)
   private val speedSlider       = new SpeedSliderPanel(workspace)
   private val sliderTickPanel   = verticallyStackedPanel(speedSlider, tickCounter)
 

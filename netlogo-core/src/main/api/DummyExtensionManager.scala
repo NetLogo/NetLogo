@@ -19,5 +19,7 @@ class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionMana
   override def dumpExtensionPrimitives(): String = unsupported
   def extensionCommandNames: Set[String] = Set.empty[String]
   def extensionReporterNames: Set[String] = Set.empty[String]
+  def addInstrumentation[A](name: String, instrument: A, klass: Class[A]): Unit = unsupported
+  def removeInstrumentation[A](name: String, klass: Class[A]): Unit = unsupported
   private def unsupported = throw new UnsupportedOperationException
 }

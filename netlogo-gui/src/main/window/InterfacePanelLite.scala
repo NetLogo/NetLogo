@@ -11,8 +11,10 @@ import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
 import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
+import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.plot.PlotManager
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
+
 import org.nlogo.util.SysInfo
 
 import scala.collection.mutable.{ Map => MutableMap }
@@ -24,6 +26,14 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   with FocusListener
   with LoadWidgetsEvent.Handler
   with OutputEvent.Handler {
+
+  def this(
+    viewWidget: ViewWidgetInterface,
+    compiler: PresentationCompilerInterface,
+    random: RandomServices,
+    plotManager: PlotManager,
+    editorFactory: EditorFactory) =
+      this(viewWidget, new DefaultCompilerServices(compiler), random, plotManager, editorFactory)
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
@@ -142,9 +152,9 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   def handle(e: OutputEvent): Unit =
     if (! e.toCommandCenter && getOutputWidget != null) {
       if (e.clear)
-        getOutputWidget.outputArea.clear()
+        getOutputWidget.output.clear()
       if (e.outputObject != null)
-        getOutputWidget.outputArea.append(e.outputObject, e.wrapLines)
+        getOutputWidget.output.append(e.outputObject, e.wrapLines)
     }
 
   ///

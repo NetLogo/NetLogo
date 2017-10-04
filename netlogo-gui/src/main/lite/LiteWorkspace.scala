@@ -2,41 +2,46 @@
 
 package org.nlogo.lite
 
-import org.nlogo.core.{ AgentKind, Model, Femto }
-import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, ControlSet, FileIO, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
+import org.nlogo.core.{ Model, Femto }
+import org.nlogo.agent.World
+import org.nlogo.api.{ AggregateManagerInterface, ControlSet, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
 import org.nlogo.nvm.PresentationCompilerInterface
-import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
-import org.nlogo.workspace.BufferedReaderImporter
+import org.nlogo.window.{ GUIJobManagerOwner, GUIWorkspace, GUIWorkspaceScala, NetLogoListenerManager, WorkspaceConfig }
+import org.nlogo.workspace.{ ModelTrackerImpl, WorkspaceMessageCenter }
 
-class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager, controlSet: ControlSet)
-extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager, controlSet) {
-  val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
-  // lazy to avoid initialization order snafu - ST 3/1/11
-  lazy val updateManager = new UpdateManager() {
-    override def defaultFrameRate = LiteWorkspace.this.frameRate
-    override def updateMode = LiteWorkspace.this.updateMode
-    override def ticks = world.tickCounter.ticks
-  }
+object LiteWorkspace {
+  def compiler =
+    Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler",
+      if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+}
+
+class LiteWorkspace(config: WorkspaceConfig)
+  extends GUIWorkspace(config) {
+  def this(world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager, controlSet: ControlSet) =
+    this(
+      WorkspaceConfig
+        .default
+        .withCompiler(LiteWorkspace.compiler)
+        .withKioskLevel(GUIWorkspace.KioskLevel.MODERATE)
+        .withWorld(world)
+        .withFrame(frame)
+        .withLinkParent(frame)
+        .withListenerManager(listenerManager)
+        .withControlSet(controlSet)
+        .withMessageCenter(new WorkspaceMessageCenter())
+        .tap(config => config.withModelTracker(new ModelTrackerImpl(config.messageCenter)))
+        .tap(config => config.withViewManager(GUIWorkspaceScala.viewManager(config.displayStatusRef)))
+        .tap(config =>
+            config.withOwner(new GUIJobManagerOwner(config.updateManager,
+              config.viewManager, config.displayStatusRef, config.world, config.frame)))
+      )
+
+  @deprecated("LiteWorkspace can no longer be an actual applet, omit first two arguments", "6.1.0")
+  def this(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager, controlSet: ControlSet) =
+    this(world, frame, listenerManager, controlSet)
+
   val aggregateManager =
     Femto.get[AggregateManagerInterface]("org.nlogo.sdm.AggregateManagerLite")
-  override def doImport(importer: BufferedReaderImporter) {
-    if(isApplet)
-      // it's pretty gruesome here efficiency-wise that we slurp
-      // the entire contents into a giant string -- ST 9/29/04
-      importer.doImport(
-        new java.io.BufferedReader(
-          new java.io.StringReader(
-            FileIO.url2String(
-              appletPanel.getFileURL(importer.filename).toString))))
-    else
-      super.doImport(importer)
-  }
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
-  override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) { }
-  override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
-  override def stopInspectingDeadAgents(): Unit = { }
-  override def closeAgentMonitors() { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
   override def updateModel(m: Model): Model = m
 }

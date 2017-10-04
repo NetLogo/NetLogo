@@ -34,7 +34,7 @@ public final strictfp class _extern
     try {
       command.perform
           (arguments,
-              new ExtensionContext(workspace, context));
+              new ExtensionContext(workspace, workspace.modelTracker(), context));
     } catch (org.nlogo.api.ExtensionException ex) {
       LogoException le =
           new WrappedExtensionException(context, this, "Extension exception: " + ex.getMessage(), ex);

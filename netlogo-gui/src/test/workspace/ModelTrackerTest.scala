@@ -2,20 +2,25 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ ModelType, NetLogoLegacyDialect }
-import org.nlogo.core.Femto
+import org.nlogo.api.ModelType
 import org.scalatest.FunSuite
 
 class ModelTrackerTest extends FunSuite {
-  class Subject(modelType: ModelType, modelName: String) extends ModelTracker {
-    _modelFileName = modelName
-    setModelType(modelType)
-    def compiler = Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
-    def getExtensionManager = null
+  def subject(modelType: ModelType, modelName: String) = {
+    val helper = Helper.default
+    helper.modelTracker._modelFileName = modelName
+    helper.modelTracker.setModelType(modelType)
+    helper.modelTracker
+  }
+
+  trait Helper {
+    val messageCenter = new WorkspaceMessageCenter()
+    val subject = new ModelTrackerImpl(messageCenter)
+    def setModelPath(s: String) = subject.setModelPath(s)
   }
 
   def makeModelNameForDisplay(modelType: ModelType = ModelType.Normal, name: String = "foo.nlogo"): String = {
-    new Subject(modelType, name).modelNameForDisplay
+    subject(modelType, name).modelNameForDisplay
   }
 
   test("if the model is of model type new, modelName for Display is Untitled") {
@@ -43,4 +48,38 @@ class ModelTrackerTest extends FunSuite {
   test("MakeModelNameForDisplay5") {
     assertResult("foo.nlogo2")(makeModelNameForDisplay(name = "foo.nlogo2"))
   }
+
+
+  test("GuessExportName1") { new Helper {
+    setModelPath("foo.nlogo")
+    assertResult("foo graphics.png")(subject.guessExportName("graphics.png"))
+  } }
+  test("GuessExportName2") { new Helper {
+    setModelPath("fo.o.nlogo")
+    assertResult("fo.o graph.ics.png")(subject.guessExportName("graph.ics.png"))
+  } }
+  test("GuessExportName3") { new Helper {
+    setModelPath("foo.nlogo.nlogo")
+    assertResult("foo.nlogo graphics.png")(subject.guessExportName("graphics.png"))
+  } }
+  test("GuessExportName4") { new Helper {
+    setModelPath(null)
+    assertResult("graphics.png")(subject.guessExportName("graphics.png"))
+  } }
+  test("GuessExportName5") { new Helper {
+    setModelPath("foo")
+    assertResult("foo graphics.png")(subject.guessExportName("graphics.png"))
+  } }
+  test("AttachModelDir1") { new Helper {
+    setModelPath("/tmp/foo.nlogo")
+    assertResult("/tmp/abc.txt")(subject.attachModelDir("abc.txt"))
+  } }
+  test("AttachModelDir2") { new Helper {
+    setModelPath("/tmp/foo.nlogo")
+    assertResult("/usr/abc.txt")(subject.attachModelDir("/usr/abc.txt"))
+  } }
+  test("AttachModelDir3") { new Helper {
+    val home = System.getProperty("user.home")
+    assertResult(s"$home/abc.txt")(subject.attachModelDir("abc.txt"))
+  } }
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.TokenType
+import org.nlogo.core.{ LogoList, TokenType }
 import org.nlogo.api.ExtensionException
 import ExtensionManager.ExtensionLoader
 
@@ -11,16 +11,9 @@ import org.scalatest.{ BeforeAndAfter, FunSuite }
 import scala.collection.JavaConverters._
 
 class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
-  before {
-    AbstractWorkspace.isApplet(false)
-  }
-
-  after {
-    AbstractWorkspace.isApplet(true)
-  }
-
-  val dummyWorkspace = new DummyWorkspace
-  val emptyManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+  val helper = Helper.default
+  val emptyManager = new ExtensionManager(
+    helper.userInteraction, helper.evaluator, helper.messageCenter, helper.jarLoader)
 
   class ErrorSourceException extends Exception("problem")
 
@@ -35,7 +28,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
     def extraLoaders: Seq[ExtensionLoader] = Seq()
 
     lazy val loadingManager = {
-      val m = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+      val m = Helper.default.extensionManager
       extraLoaders.foreach(m.addLoader)
       m
     }
@@ -51,7 +44,8 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   trait InMemoryExtensionTest {
     lazy val dummyClassManager = new DummyClassManager()
     lazy val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
-    lazy val inmemoryManager = new ExtensionManager(dummyWorkspace, memoryLoader)
+    lazy val inmemoryManager = new ExtensionManager(
+      helper.userInteraction, helper.evaluator, helper.messageCenter, memoryLoader)
   }
 
   test("loadedExtensions returns empty list when no extensions loaded") {
@@ -111,7 +105,8 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   }
 
   test("readFromString proxies through to workspace") {
-    assert(emptyManager.readFromString("foobar") == "foobar")
+    assert(emptyManager.readFromString("[1 true \"abc\"]") ===
+      LogoList(Double.box(1), Boolean.box(true), "abc"))
   }
 
   test("loading extension caches the types of replaced identifiers") { new WithLoadedArrayExtension {

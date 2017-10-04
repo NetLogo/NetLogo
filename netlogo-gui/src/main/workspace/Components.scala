@@ -41,7 +41,7 @@ class ComponentPair[A <: AnyRef](
  *  we could have a more advanced component lifecycle where components could be
  *  initialized, disposed, and made aware of workspace events (like ticks)
  */
-trait Components extends AbstractWorkspace {
+trait Components {
   private var componentPairs = List.empty[ComponentPair[_]]
 
   def addLifecycle[A <: AnyRef](lifecycle: ComponentLifecycle[A]): Unit =
@@ -55,8 +55,7 @@ trait Components extends AbstractWorkspace {
   }
 
   @throws(classOf[InterruptedException])
-  abstract override def dispose(): Unit = {
-    super.dispose()
+  def disposeComponents(): Unit = {
     componentPairs.foreach(_.dispose())
     componentPairs = List.empty[ComponentPair[_]]
   }

@@ -33,7 +33,7 @@ class AppControlSet extends ControlSet {
 
   def userOutput: Future[String] = {
     def getOutput(ts: Tabs): String =
-      ts.interfaceTab.getOutputArea.valueText
+      ts.interfaceTab.getOutputArea.map(_.valueText).getOrElse("")
 
     tabs
       .map({ts =>

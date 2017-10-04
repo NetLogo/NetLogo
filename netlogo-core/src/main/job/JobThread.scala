@@ -130,7 +130,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
             activeButton = job.owner
         }
         if(!skip)
-          try lock.synchronized { job.step() }
+          try lock.synchronized { job.step(manager) }
           catch {
             case ex: LogoException =>
               job.result = ex
@@ -165,7 +165,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
         }
       }
       else
-        try lock.synchronized { job.step() }
+        try lock.synchronized { job.step(manager) }
         catch {
           case ex: LogoException =>
             job.result = ex

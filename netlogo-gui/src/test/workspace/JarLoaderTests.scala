@@ -13,9 +13,9 @@ import ExtensionManager.ExtensionData
 import org.scalatest.{ BeforeAndAfter, FunSuite }
 
 class JarLoaderTests extends FunSuite with BeforeAndAfter {
-  val dummyWorkspace = new DummyWorkspace
+  val helper = Helper.default
 
-  val jarLoader = new JarLoader(dummyWorkspace)
+  val jarLoader = new JarLoader(helper.modelTracker)
 
   val arrayJarURL = new File("extensions/array/array.jar").toURI.toURL
   val madeUpURL   = new File("extensions/foobar/foobar.jar").toURI.toURL
@@ -153,12 +153,16 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
   }
 
   test("resolvePathAsURL resolves paths with slashes relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.fooExt.toURI.toURL
-    assert(jarLoader.resolvePathAsURL("extensions/foo").get == expectedURL)
+    val dummyFileManager = new DummyFileManager()
+    val expectedURL = dummyFileManager.fooExt.toURI.toURL
+    val jarLoader = new JarLoader(dummyFileManager)
+    assert(jarLoader.resolvePathAsURL("extensions/foo") == Some(expectedURL))
   }
 
   test("resolvePathAsURL resolves paths relative to the model location") {
-    val expectedURL = dummyWorkspace.dummyFileManager.foobarFile.toURI.toURL
+    val dummyFileManager = new DummyFileManager()
+    val expectedURL = dummyFileManager.foobarFile.toURI.toURL
+    val jarLoader = new JarLoader(dummyFileManager)
     assert(jarLoader.resolvePathAsURL("foobar").get == expectedURL)
   }
 

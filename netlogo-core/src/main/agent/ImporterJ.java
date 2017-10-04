@@ -153,10 +153,6 @@ public abstract strictfp class ImporterJ
       world.clearAll();
 
       importAgents(AgentKindJ.Observer());
-      if (needToResize && pendingDimensions != null) {
-        importerUser.setDimensions(pendingDimensions, true, WorldResizer.stopNonObserverJobs());
-        needToResize = false;
-      }
       importAgents(AgentKindJ.Turtle());
       importAgents(AgentKindJ.Patch());
       checkForBlankTurtles();
@@ -279,6 +275,10 @@ public abstract strictfp class ImporterJ
 
     if (kind == AgentKindJ.Observer()) {
       pendingDimensions = getScreenDimensions(varVals);
+      if (needToResize && pendingDimensions != null) {
+        importerUser.setDimensions(pendingDimensions, true, WorldResizer.stopNonObserverJobs());
+        needToResize = false;
+      }
     }
 
     // if there were any agentsets in the values that getVarVals() fetched,

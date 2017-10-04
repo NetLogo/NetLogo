@@ -2,11 +2,12 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ MersenneTwisterFast, PlotInterface }
+import org.nlogo.api.{ LogoThunkFactory, MersenneTwisterFast, PlotInterface }
 import org.nlogo.plot.PlotManager
 import org.nlogo.nvm.Context
 
-trait Plotting { this: AbstractWorkspace =>
+trait Plotting extends { this: LogoThunkFactory =>
+  def evaluator: Evaluator
 
   val plotRNG = new MersenneTwisterFast()
 

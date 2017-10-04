@@ -3,14 +3,20 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.core.{ AgentKind, CompilerException }
+import org.nlogo.core.{ AgentKind, CompilationEnvironment, CompilerException }
 import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
 import org.nlogo.nvm.Procedure
 
-trait Evaluating { this: AbstractWorkspace =>
+trait Evaluating extends { this: AbstractWorkspace =>
   var lastLogoException: LogoException = null
+  private implicit val implicitExtensionManager: ExtensionManager = getExtensionManager
+  private implicit val implicitCompilationEnvironment: CompilationEnvironment = getCompilationEnvironment
+  private implicit def implicitWorkspaceProcedures: Procedure.ProceduresMap = procedures
+  private implicit val implicitLinker = linker
 
-  override def clearLastLogoException() { lastLogoException = null }
+  def evaluator: Evaluator
+
+  def clearLastLogoException() { lastLogoException = null }
 
   @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
@@ -24,7 +30,7 @@ trait Evaluating { this: AbstractWorkspace =>
     evaluator.makeCommandThunk(source, world.observer,
       new SimpleJobOwner(jobOwnerName, rng, AgentKind.Observer))
   @throws(classOf[CompilerException])
-  def evaluateCommands(owner: JobOwner, source: String)  = {
+  def evaluateCommands(owner: JobOwner, source: String) = {
     evaluator.evaluateCommands(owner, source)
   }
   @throws(classOf[CompilerException])
@@ -59,10 +65,6 @@ trait Evaluating { this: AbstractWorkspace =>
     evaluator.runCompiledCommands(owner, procedure)
   def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
     evaluator.runCompiledReporter(owner, procedure)
-
-  @throws(classOf[CompilerException])
-  def readFromString(string: String): AnyRef =
-    evaluator.readFromString(string)
 
   val defaultOwner =
     new SimpleJobOwner(getClass.getSimpleName, world.mainRNG, AgentKind.Observer)

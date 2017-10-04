@@ -9,8 +9,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory, CompilerServices }
+import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.plot.{ PlotExporter, Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
 import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
@@ -27,9 +28,9 @@ import scala.concurrent.Future
 // the app and window packages.  But currently there's no better
 // way to find out when a button was pressed or a slider (etc.)
 // moved, so we use events.  - ST 8/24/03
-class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
-                  errorHandler:ErrorHandler,
-                  compiler:CompilerServices) extends JPanel with
+class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
+                  errorHandler:  ErrorHandler,
+                  compiler:      PresentationCompilerInterface) extends JPanel with
         AddJobEvent.Handler with
         ExportPlotEvent.Handler with
         InterfaceGlobalEvent.Handler with

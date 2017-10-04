@@ -36,7 +36,7 @@ object ViewWidget {
   }
 }
 
-class ViewWidget(workspace: GUIWorkspaceScala)
+class ViewWidget(workspace: GUIWorkspaceScala, val view: View)
     extends Widget
     with ViewWidgetInterface
     with PropertyChangeListener {
@@ -47,7 +47,6 @@ class ViewWidget(workspace: GUIWorkspaceScala)
 
   val tickCounter = new TickCounterLabel()
   workspace.listenerManager.addListener(tickCounter)
-  val view = new View(workspace)
 
   NlogoFonts.adjustDefaultFont(tickCounter)
 

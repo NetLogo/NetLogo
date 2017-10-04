@@ -17,7 +17,8 @@ import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, Us
   Utils.icon
 import org.nlogo.swing.{ Implicits, Utils => SwingUtils }, Implicits.thunk2action
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
-  InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
+  InterfaceColors, OutputArea, ViewUpdatePanel, WidgetInfo,
+  Events => WindowEvents, WorkspaceActions },
     WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
@@ -124,12 +125,13 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// output
 
-  def getOutputArea = Option(iP.getOutputWidget).map(_.outputArea).getOrElse(commandCenter.output)
+  def getOutputArea: Option[OutputArea] =
+    Option(iP.getOutputWidget).flatMap(_.outputArea) orElse commandCenter.outputArea
 
   def handle(e: OutputEvent) {
-    val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
-    if(e.clear && iP.getOutputWidget != null) outputArea.clear()
-    if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
+    val outputArea = if (e.toCommandCenter) commandCenter.outputArea else getOutputArea
+    if(e.clear && iP.getOutputWidget != null) outputArea.foreach(_.clear())
+    if(e.outputObject != null) outputArea.foreach(_.append(e.outputObject, e.wrapLines))
   }
 
   def handle(e: Enable2DEvent) {

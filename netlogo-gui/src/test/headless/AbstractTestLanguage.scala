@@ -46,7 +46,7 @@ trait AbstractTestLanguage extends Assertions {
     val results = {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source, newProgram,
-        workspace.getExtensionManager(), workspace.getCompilationEnvironment)
+        workspace.getExtensionManager, workspace.getCompilationEnvironment)
     }
     workspace.setProcedures(results.proceduresMap)
     workspace.world.asInstanceOf[CompilationManagement].program(results.program)

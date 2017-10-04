@@ -13,7 +13,7 @@ import org.nlogo.fileformat, fileformat.NLogoThreeDFormat
 class TestModelNetLogoVersions extends FunSuite with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
   val dummyWorkspace = new DummyWorkspace()
-  val extensionManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+  val extensionManager = Helper.default.extensionManager
   for(path <- paths)
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version

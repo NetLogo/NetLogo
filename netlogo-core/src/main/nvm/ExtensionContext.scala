@@ -11,7 +11,7 @@ import org.nlogo.api.{ Activation => ApiActivation, MersenneTwisterFast }
  * abstraction, so extensions can go around that if they must.  As the extensions API
  * improves, this should become less often necessary.
  */
-class ExtensionContext(val workspace: Workspace, val nvmContext: Context)
+class ExtensionContext(val workspace: Workspace, val modelTracker: ModelTracker, val nvmContext: Context)
 extends api.Context {
   def getAgent: api.Agent =
     nvmContext.agent
@@ -31,7 +31,7 @@ extends api.Context {
 
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String =
-    workspace.attachModelDir(filePath)
+    modelTracker.attachModelDir(filePath)
 
   def importPcolors(image: BufferedImage, asNetLogoColors: Boolean) {
     org.nlogo.agent.ImportPatchColors.doImport(

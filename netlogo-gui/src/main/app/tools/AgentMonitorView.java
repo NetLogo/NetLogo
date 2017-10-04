@@ -10,11 +10,11 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.window.GUIWorkspace;
+import org.nlogo.window.GUIWorkspaceScala;
 
 public strictfp class AgentMonitorView
     extends org.nlogo.window.View {
-  public AgentMonitorView(GUIWorkspace workspace) {
+  public AgentMonitorView(GUIWorkspaceScala workspace) {
     super(workspace);
     radius = (workspace.world().worldWidth() - 1) / 2;
     addMouseListener(popupListener);

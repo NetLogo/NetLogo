@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
 
-class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
+class Compiler(val dialect: Dialect) extends PresentationCompilerInterface {
 
   val defaultDialect = dialect
 
@@ -93,14 +93,14 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // these two used by input boxes
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to __bogus-name " + source + "\nend",
-                true, program, procedures, extensionManager, parse, compilationEnv)
+                true, program, procedures, extensionManager, parse)
   }
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to-report __bogus-name report " + source + "\nend",
-                true, program, procedures, extensionManager, parse, compilationEnv)
+                true, program, procedures, extensionManager, parse)
   }
 
   // this function tries to go as far as possible, but throws an exception if there is
@@ -109,7 +109,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   // Additionally, the compiler doesn't currently work for 3D prims, so that will also need to be fixed.
   // this also always parses, which probably isn't desirable, but we don't have an option at this point
   @throws(classOf[CompilerException])
-  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
 
     val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
     val (topLevelDefs, feStructureResults) =
@@ -166,7 +166,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     parserTokenizer.isValidIdentifier(s)
 
   // used by CommandLine
-  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
+  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) = {
     val proceduresListMap = ListMap[String, Procedure](procedures.toSeq: _*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }

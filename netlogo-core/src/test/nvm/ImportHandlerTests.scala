@@ -2,14 +2,12 @@
 
 package org.nlogo.nvm
 
-import java.util.{ List => JList }
-
 import org.scalatest.FunSuite
 
 import org.nlogo.{ api, agent, core },
   agent.{ AgentSet, World2D, DummyLiteralParser },
-  api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager },
-  core.{ ExtensionObject, File, ErrorSource, Primitive, TokenDSL}
+  api.{ DummyExtensionManager, Dump },
+  core.{ ExtensionObject, TokenDSL }
 
 class ImportHandlerTests extends FunSuite {
   import TokenDSL._
@@ -47,30 +45,7 @@ class ImportHandlerTests extends FunSuite {
     override def getExtensionName: String = ???
   }
 
-  def extensionManager = {
-    new ApiExtensionManager {
-      def storeObject(obj: AnyRef) = ???
-      def retrieveObject: AnyRef = ???
-      def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = new DummyExtensionObject(extname, typeName, value)
-      def readFromString(src: String): AnyRef = ???
-      def reset() = ???
-      def startFullCompilation() = ???
-      def finishFullCompilation() = ???
-      def anyExtensionsLoaded: Boolean = ???
-      def loadedExtensions: java.lang.Iterable[ClassManager] = ???
-      def replaceIdentifier(name: String): Primitive = ???
-      def importExtension(jarPath: String, errors: ErrorSource) = ???
-      def resolvePath(path: String): String = ???
-      def resolvePathAsURL(path: String): String = ???
-      def dumpExtensions: String = ???
-      def dumpExtensionPrimitives(): String = ???
-      def addToLibraryPath(classManager: AnyRef, directory: String) = ???
-      def getFile(path: String): File = ???
-      def getJarPaths: JList[String] = ???
-      def getExtensionNames: JList[String] = ???
-      def profilingEnabled: Boolean = ???
-    }
-  }
+  def extensionManager = new DummyExtensionManager()
 
   def importHandler = new ImportHandler(defaultWorld, extensionManager)
 }

@@ -4,8 +4,8 @@ package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
   api.{ ExtensionManager => ApiExtensionManager, SourceOwner, Version, World },
-  core.{ CompilerException, CompilationEnvironment, CompilerUtilitiesInterface, Dialect, FrontEndInterface, ProcedureSyntax,
-    Program, Token }
+  core.{ CompilerException, CompilationEnvironment, CompilerUtilitiesInterface, Dialect,
+    FrontEndInterface, ProcedureSyntax, Program, Token }
 
 import scala.collection.immutable.ListMap
 
@@ -14,6 +14,7 @@ import scala.collection.immutable.ListMap
 trait CompilerInterface {
   import Procedure.ProceduresMap
   def frontEnd: FrontEndInterface
+  def dialect: Dialect
   def utilities: CompilerUtilitiesInterface
   def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager,
     compilationEnvironment: CompilationEnvironment, flags: CompilerFlags = CompilerFlags()): CompilerResults
@@ -43,18 +44,18 @@ trait AuxiliaryCompilerInterface {
   def isValidIdentifier(s: String): Boolean
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
 
-  def isReporter(s: String, program: Program, procedures: ListMap[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
+  def isReporter(s: String, program: Program, procedures: ListMap[String, Procedure], extensionManager: ApiExtensionManager): Boolean
 
   def tokenizeForColorization(source: String, extensionManager: ApiExtensionManager): Array[Token]
   def tokenizeForColorizationIterator(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
 
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
-                         extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
+                         extensionManager: ApiExtensionManager, parse: Boolean)
 
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
-                          extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
+                          extensionManager: ApiExtensionManager, parse: Boolean)
 }
 
 trait PresentationCompilerInterface extends CompilerInterface with AuxiliaryCompilerInterface

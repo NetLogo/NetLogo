@@ -28,6 +28,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   private val northPanel = new JPanel
   private val southPanel = new JPanel
   val output = OutputArea.withNextFocus(commandLine)
+  val outputArea = Some(output)
   output.text.addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
     override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
@@ -129,7 +130,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
           try {
             val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
-              workspace.guessExportName("command center output.txt"))
+              workspace.modelTracker.guessExportName("command center output.txt"))
             ModalProgressTask.onBackgroundThreadWithUIData(
               Hierarchy.getFrame(output), I18N.gui.get("dialog.interface.export.task"),
               () => output.valueText, (text: String) => ExportOutput.silencingErrors(filename, text))

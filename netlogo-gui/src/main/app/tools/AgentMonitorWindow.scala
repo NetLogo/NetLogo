@@ -11,10 +11,10 @@ import scala.collection.JavaConverters._
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ Utils => SwingUtils, WindowDragger, WindowResizer }
-import org.nlogo.window.{ Event, Events => WindowEvents }
+import org.nlogo.window.{ Event, Events => WindowEvents, GUIWorkspaceScala }
 
 class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
-                         manager: AgentMonitorManager, parent: Frame)
+                         manager: AgentMonitorManager, workspace: GUIWorkspaceScala, parent: Frame)
 // JWindow not JFrame so we can float on top of the App window - ev 1/7/09
 extends JWindow(parent)
 with Event.LinkChild
@@ -138,7 +138,7 @@ with WindowEvents.LoadBeginEvent.Handler
   }
 
   class ObserverMonitor(window: JWindow)
-  extends AgentMonitor(manager.workspace, window) {
+  extends AgentMonitor(workspace, window) {
     override def agentKind = AgentKind.Observer
     override def repaintPrompt() { }
     override def vars = {
@@ -150,7 +150,7 @@ with WindowEvents.LoadBeginEvent.Handler
   }
 
   class TurtleMonitor(window: JWindow)
-  extends AgentMonitor(manager.workspace, window){
+  extends AgentMonitor(workspace, window){
     override def agentKind = AgentKind.Turtle
     override def repaintPrompt() { }
     override def vars = {
@@ -166,14 +166,14 @@ with WindowEvents.LoadBeginEvent.Handler
   }
 
   class PatchMonitor(window: JWindow)
-  extends AgentMonitor(manager.workspace, window) {
+  extends AgentMonitor(workspace, window) {
     override def agentKind = AgentKind.Patch
     override def repaintPrompt() { }
     override def vars = workspace.world.program.patchesOwn.asJava
   }
 
   class LinkMonitor(window: JWindow)
-  extends AgentMonitor(manager.workspace, window) {
+  extends AgentMonitor(workspace, window) {
     override def agentKind = AgentKind.Link
     override def repaintPrompt() { }
     override def vars = {

@@ -2,13 +2,19 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Token, TokenType }
 import java.awt.Color
-import org.nlogo.api.CompilerServices
+
+import org.nlogo.core.{ Token, TokenType }
+import org.nlogo.api.ExtensionManager
 import org.nlogo.editor.Colorizer
+import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.workspace.AbstractWorkspace
+
 import collection.JavaConverters._
 
-class EditorColorizer(compiler: CompilerServices) extends Colorizer {
+class EditorColorizer(compiler: PresentationCompilerInterface, extensionManager: ExtensionManager) extends Colorizer {
+
+  def this(workspace: AbstractWorkspace) = this(workspace.compiler, workspace.getExtensionManager)
 
   // cache last studied line, so we don't retokenize the same string over and over again when the
   // user isn't even doing anything
@@ -72,7 +78,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
     token == TokenType.CloseParen || token == TokenType.CloseBracket
 
   def tokenizeForColorization(line: String): Array[Token] =
-    compiler.tokenizeForColorization(line)
+    compiler.tokenizeForColorization(line, extensionManager)
 
   ///
 

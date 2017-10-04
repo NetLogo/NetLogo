@@ -99,7 +99,7 @@ class NvmTests extends FunSuite {
     }
 
     def exclusiveJob(proc: Procedure): ExclusiveJob =
-      new ExclusiveJob(owner, world.observers, proc, 0, null, workspace, world.mainRNG, new AtomicBoolean(false))
+      new ExclusiveJob(owner, world.observers, proc, 0, null, world.mainRNG, new AtomicBoolean(false))
 
     def checkBinding(l: Let, value: AnyRef): _probe = {
       val p =

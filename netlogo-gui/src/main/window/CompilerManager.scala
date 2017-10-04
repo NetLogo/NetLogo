@@ -17,6 +17,7 @@ import scala.collection.mutable.HashSet
 class CompilerManager(val workspace: AbstractWorkspace,
   val world: org.nlogo.agent.World with org.nlogo.agent.CompilationManagement = null,
   val proceduresInterface: ProceduresInterface,
+  additionalOwners: Seq[SourceOwner],
   eventRaiser: (Event, Object) => Unit = (e:Event, o:Object) => e.raise(o))
     extends LinkChild
     with CompileMoreSourceEvent.Handler
@@ -29,6 +30,8 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   private[window] val widgets       = HashSet[JobOwner]()
   private[window] val globalWidgets = HashSet[InterfaceGlobalWidget]()
+
+  private val ownersMap = additionalOwners.map(o => o.classDisplayName -> o).toMap
 
   private def raiseEvent(e: Event): Unit =
     eventRaiser(e, this)
@@ -190,21 +193,18 @@ class CompilerManager(val workspace: AbstractWorkspace,
     val program = Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames)
     world.program(program)
     try {
-      val owners =
-        if (workspace.aggregateManager != null)
-          Seq[SourceOwner](workspace.aggregateManager)
-        else
-          Seq()
-
       val results =
         workspace.compiler.compileProgram(
-          proceduresInterface.innerSource, owners, program,
-          workspace.getExtensionManager, workspace.getCompilationEnvironment)
+          proceduresInterface.innerSource,
+          additionalOwners,
+          program,
+          workspace.getExtensionManager,
+          workspace.getCompilationEnvironment)
       workspace.setProcedures(results.proceduresMap)
       workspace.procedures.values.foreach { procedure =>
         val owner = procedure.filename match {
           case ""          => proceduresInterface
-          case "aggregate" => workspace.aggregateManager
+          case s if (ownersMap.contains(s)) => ownersMap(s)
           case fileName    => new ExternalFileInterface(fileName)
         }
         procedure.owner = owner
@@ -217,7 +217,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
       case error: CompilerException =>
         val errorSource = error.filename match {
           case ""          => proceduresInterface
-          case "aggregate" => workspace.aggregateManager
+          case s if (ownersMap.contains(s)) => ownersMap(s)
           case fileName    => new ExternalFileInterface(fileName)
         }
         raiseEvent(new CompiledEvent(errorSource, null, null, error))

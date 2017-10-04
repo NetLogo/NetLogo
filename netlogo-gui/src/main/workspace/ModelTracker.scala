@@ -6,8 +6,10 @@ import java.io.{ File, IOException }
 import java.net.URI
 import java.nio.file.Paths
 
-import org.nlogo.api.ModelType
-import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
+import org.nlogo.api.{ FileIO, ModelType }
+import org.nlogo.nvm.{ ModelTracker => NvmModelTracker }
+
+import scala.util.Try
 
 /** This trait holds the state of the workspace with respect to
  *  various facets related to (but external from) the model.
@@ -22,14 +24,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
  *  but only because nothing in the workspace needs it directly.
  *  RG 5/12/16
  */
-trait ModelTracker {
-
-  def compiler: PresentationCompilerInterface
-
-  def getExtensionManager(): ExtensionManager
-
-  val fileManager: FileManager = new DefaultFileManager(this)
-
+trait ModelTracker extends NvmModelTracker {
   /**
    * path to the directory from which the current model was loaded. NetLogo
    * uses this as the default path for file I/O, when reloading models,
@@ -123,11 +118,24 @@ trait ModelTracker {
       if (modelDir == "") {
         modelDir = null
       }
-      if (modelDir != null) {
-        fileManager.setPrefix(modelDir)
-      }
     }
   }
+
+  /**
+   * attaches the current model directory to a relative path, if necessary.
+   * If filePath is an absolute path, this method simply returns it.
+   * If it's a relative path, then the current model directory is prepended
+   * to it. If this is a new model, the user's platform-dependent home
+   * directory is prepended instead.
+   */
+  @throws(classOf[java.net.MalformedURLException])
+  def attachModelDir(filePath: String): String = {
+    FileIO.resolvePath(filePath,
+      Option(getModelPath).flatMap(s => Try(Paths.get(s)).toOption))
+        .map(_.toString)
+        .getOrElse(filePath)
+  }
+
 
   def modelNameForDisplay: String =
     Option(modelFileName)
@@ -137,4 +145,50 @@ trait ModelTracker {
           else if (name.endsWith(".nlogo3d")) name.stripSuffix(".nlogo3d")
           else name)
       .getOrElse("Untitled")
+
+  def guessExportName(defaultName: String): String = {
+    val modelName = getModelFileName
+    if (modelName == null) {
+      defaultName
+    } else if (modelName.startsWith("empty.nlog")) {
+      defaultName
+    } else {
+      val index = modelName.lastIndexOf(".nlogo");
+
+      val baseName =
+        if (index > -1) modelName.substring(0, index)
+        else            modelName
+
+      s"${baseName} ${defaultName}"
+    }
+  }
+}
+
+class ModelTrackerImpl(messageCenter: WorkspaceMessageCenter) extends ModelTracker {
+  override def setModelPath(dir: String): Unit = {
+    super.setModelPath(dir)
+
+    messageCenter.send(ModelPathChanged(Option(_modelFileName), Option(modelDir)))
+  }
+}
+
+// This trait is used to implement the methods from api.Workspace.
+// While we may want these methods exposed for extensions, internal classes should depend on ModelTracker
+// directly wherever possible to make it possible to factor out this functionality from Workspace in the future.
+trait ModelTracking {
+  def modelTracker: ModelTracker
+  def convertToNormal(): String =
+    modelTracker.convertToNormal()
+  def attachModelDir(filePath: String): String =
+    modelTracker.attachModelDir(filePath)
+  def getModelDir: String =
+    modelTracker.getModelDir
+  def modelNameForDisplay: String =
+    modelTracker.modelNameForDisplay
+  def getModelFileName: String =
+    modelTracker.getModelFileName
+  def getModelPath: String =
+    modelTracker.getModelPath
+  def setModelPath(path: String): Unit =
+    modelTracker.setModelPath(path)
 }

@@ -8,6 +8,7 @@ import javax.swing.Action
 import org.nlogo.awt.UserCancelException
 import org.nlogo.agent.ImportPatchColors
 import org.nlogo.api.LocalFile
+import org.nlogo.nvm.ModelTracker
 import org.nlogo.plot.Plot
 import org.nlogo.swing.{ Implicits, UserAction },
   Implicits.thunk2runnable,
@@ -18,13 +19,14 @@ import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace, PlotWidgetExport
 object FileActions {
 
   def apply(workspace: GUIWorkspace, parent: Component): Seq[Action] = {
+    val modelTracker = workspace.modelTracker
     val baseActions = Seq(
-      new ExportWorldAction(workspace, parent),
-      new ExportGraphicsAction(workspace, parent),
-      new ExportOutputAction(workspace, parent),
-      new ExportPlotAction(workspace, parent),
-      new ExportAllPlotsAction(workspace, parent),
-      new ExportInterfaceAction(workspace, parent),
+      new ExportWorldAction(workspace, modelTracker, parent),
+      new ExportGraphicsAction(workspace, modelTracker, parent),
+      new ExportOutputAction(workspace, modelTracker, parent),
+      new ExportPlotAction(workspace, modelTracker, parent),
+      new ExportAllPlotsAction(workspace, modelTracker, parent),
+      new ExportInterfaceAction(workspace, modelTracker, parent),
       new ImportWorldAction(workspace, parent),
       new ImportPatchColorsAction(workspace, parent),
       new ImportPatchColorsRGBAction(workspace, parent)
@@ -33,16 +35,16 @@ object FileActions {
     baseActions ++ twodSpecificActions
   }
 
-  class ExportWorldAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld _)
+  class ExportWorldAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+  extends ExportAction("world", modelTracker.guessExportName("world.csv"), parent, workspace.exportWorld _)
   with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 0
   }
 
-  class ExportGraphicsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png"))
+  class ExportGraphicsAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+    extends ExportBackgroundAction[String](parent, "view", modelTracker.guessExportName("view.png"))
     with MenuAction {
       category    = FileCategory
       subcategory = FileExportSubcategory
@@ -55,8 +57,8 @@ object FileActions {
       }
   }
 
-  class ExportOutputAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
+  class ExportOutputAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+    extends ExportAction("output", modelTracker.guessExportName("output.txt"), parent,
     { exportPath => workspace.exportOutput(exportPath) })
     with MenuAction {
     category    = FileCategory
@@ -64,8 +66,8 @@ object FileActions {
     rank        = 5
   }
 
-  class ExportPlotAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[(String, Plot)](parent, "plot", workspace.guessExportName("plot.csv"))
+  class ExportPlotAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+    extends ExportBackgroundAction[(String, Plot)](parent, "plot", modelTracker.guessExportName("plot.csv"))
     with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
@@ -84,8 +86,8 @@ object FileActions {
     }
   }
 
-  class ExportAllPlotsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv"))
+  class ExportAllPlotsAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+    extends ExportBackgroundAction[String](parent, "allPlots", modelTracker.guessExportName("plots.csv"))
     with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
@@ -105,8 +107,8 @@ object FileActions {
     }
   }
 
-  class ExportInterfaceAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png"))
+  class ExportInterfaceAction(workspace: GUIWorkspace, modelTracker: ModelTracker, parent: Component)
+    extends ExportBackgroundAction[String](parent, "interface", modelTracker.guessExportName("interface.png"))
     with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory

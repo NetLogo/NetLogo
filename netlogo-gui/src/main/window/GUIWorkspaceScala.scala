@@ -2,9 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Frame, FileDialog => AwtFileDialog }
+import java.awt.{ Component, EventQueue => AwtEventQueue, Frame, FileDialog => AwtFileDialog }
 import java.awt.image.BufferedImage
-import java.io.{ IOException, PrintWriter }
+import java.io.{InputStream, IOException, PrintWriter}
 import javax.swing.{ JScrollPane, JTextArea }
 import java.util.concurrent.atomic.AtomicReference
 import javax.swing.Action
@@ -13,37 +13,59 @@ import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
 import scala.util.{ Failure, Success }
 
-import org.nlogo.agent.{ Agent, ImporterJ, World }
-
-import org.nlogo.api.{ AgentFollowingPerspective, CommandRunnable, ControlSet, Exceptions,
-  FileIO, LogoException, ModelReader, ModelSettings, RendererInterface, WorldResizer }
+import org.nlogo.core.{ AgentKind, File, I18N, Model, UpdateMode, WorldDimensions }
+import org.nlogo.agent.{ Agent, ImporterJ, OutputObject }
+import org.nlogo.api.{ AgentFollowingPerspective, CommandRunnable, Exceptions,
+  FileIO, LogoException, ModelSettings, RendererInterface, TrailDrawerInterface, WorldResizer }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{ DisplayAlways, DisplayStatus }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
-import org.nlogo.window.Events.{ Enable2DEvent, ExportPlotEvent, ExportWidgetEvent, LoadModelEvent }
+import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput, UserInteraction }
+import org.nlogo.window.Events.{ Enable2DEvent, ExportPlotEvent, ExportWidgetEvent, LoadModelEvent, OutputEvent }
 
-abstract class GUIWorkspaceScala(
-  world:                World,
-  hubNetManagerFactory: HubNetManagerFactory,
-  protected val frame:  Frame,
-  externalFileManager:  ExternalFileManager,
-  val listenerManager:  NetLogoListenerManager,
-  controlSet:           ControlSet)
-  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
+object GUIWorkspaceScala {
+  /**
+   * Displays a warning to the user, allowing her to continue or cancel.
+   * This provides the nice graphical warning dialog for when we're GUI.
+   * Returns true if the user OKs it.
+   */
+  class SwingUserInteraction(frame: Frame) extends UserInteraction {
+    def warningMessage(text: String): Boolean = {
+      val options = Array[String](I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
+      OptionDialog.showMessage(
+        frame, I18N.gui.get("common.messages.warning"),
+        I18N.gui.get("common.messages.warning") + ":" + text, options) == 0
+    }
+  }
+
+  type DisplayStatusRef = AtomicReference[DisplayStatus]
+
+  val initialDisplayStatus = new AtomicReference[DisplayStatus](DisplayAlways)
+  def viewManager(displayStatus: AtomicReference[DisplayStatus]): ViewManager =
+    new ViewManager(displayStatus)
+}
+
+abstract class GUIWorkspaceScala(config: WorkspaceConfig)
+  extends {
+    override val owner: GUIJobManagerOwner = config.owner
+  } with AbstractWorkspace(config)
   with ExportPlotEvent.Handler
   with ExportWidgetEvent.Handler
-  with LoadModelEvent.Handler {
+  with LoadModelEvent.Handler
+  with TrailDrawerInterface {
+
+  val listenerManager = config.listenerManager
+  val displayStatusRef = config.displayStatusRef
+  val viewManager = config.viewManager
+  val updateManager = config.updateManager
+  protected val frame = config.frame
+  protected val externalFileManager = config.externalFileManager
+  private val controlSet = config.controlSet
+  private val monitorManager = config.monitorManager
 
   def glView: GLViewManagerInterface
-
-  val displayStatusRef: AtomicReference[DisplayStatus] =
-    new AtomicReference[DisplayStatus](DisplayAlways)
-
-  val viewManager = new ViewManager(displayStatusRef)
 
   def getFrame: Frame = frame
 
@@ -52,29 +74,75 @@ abstract class GUIWorkspaceScala(
   // for grid snap
   private var _snapOn: Boolean = false
 
-  val viewWidget: ViewWidget = new ViewWidget(this)
-
-  val view: View = viewWidget.view
+  val view = new View(this)
+  val viewWidget: ViewWidget = new ViewWidget(this, view)
 
   def dualView: Boolean
   def dualView(on: Boolean): Unit
   def patchesCreatedNotify(): Unit
-  def frameRate: Double
-  def frameRate(frameRate: Double): Unit
-  def updateManager: UpdateManagerInterface
   def newRenderer(): RendererInterface
   def switchTo3DViewAction : Action
-  def inspectAgent(agentKind: AgentKind, agent: Agent, radius: Double): Unit
+
+  // agent inspection
 
   def inspectAgent(agentKind: AgentKind): Unit = {
     inspectAgent(agentKind, null, (world.worldWidth - 1) / 2)
   }
+
+  def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
+    val a = agent.asInstanceOf[org.nlogo.agent.Agent]
+    monitorManager.inspect(a.kind, a, radius, this)
+  }
+
+  def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) {
+    monitorManager.inspect(agentClass, agent, radius, this)
+  }
+
+  def stopInspectingAgent(agent: Agent): Unit = {
+    monitorManager.stopInspecting(agent)
+  }
+
+  def stopInspectingDeadAgents(): Unit = {
+    monitorManager.stopInspectingDeadAgents()
+  }
+
+  def closeAgentMonitors() { monitorManager.closeAll() }
+
 
   def setSnapOn(snapOn: Boolean): Unit = {
     _snapOn = snapOn
   }
 
   def snapOn = _snapOn
+
+  def frameRate: Double = updateManager.frameRate
+  def frameRate(frameRate: Double): Unit = {
+    updateManager.frameRate(frameRate)
+  }
+
+  def updateMode: UpdateMode = updateManager.updateMode
+  def updateMode(updateMode: UpdateMode): Unit = {
+    updateManager.updateMode(updateMode)
+  }
+
+  def setPeriodicUpdatesEnabled(periodicUpdatesEnabled: Boolean): Unit = {
+    owner.setPeriodicUpdatesEnabled(periodicUpdatesEnabled)
+  }
+
+  // this is called on the job thread - ST 9/30/03
+  def periodicUpdate(): Unit = {
+    if (owner.periodicUpdatesEnabled) {
+      ThreadUtils.waitFor(world, updateRunner)
+    }
+  }
+
+  protected val updateRunner: Runnable =
+    new Runnable() {
+      def run(): Unit = {
+        new Events.PeriodicUpdateEvent().raise(GUIWorkspaceScala.this)
+      }
+    }
+
 
   override def exportDrawingToCSV(writer: PrintWriter): Unit = {
     view.renderer.trailDrawer.exportDrawingToCSV(writer)
@@ -99,6 +167,30 @@ abstract class GUIWorkspaceScala(
     }
   }
 
+  @throws(classOf[IOException])
+  override def importDrawing(is: InputStream): Unit = {
+    view.renderer.trailDrawer.importDrawing(is)
+  }
+
+  @throws(classOf[IOException])
+  override def importDrawing(file: File): Unit = {
+    view.renderer.trailDrawer.importDrawing(file)
+  }
+
+  override protected def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
+    val event = new OutputEvent(false, oo, false, !toOutputArea)
+
+    // This method can be called when we are ALREADY in the AWT
+    // event thread, so check before we block on it. -- CLB 07/18/05
+    if (! AwtEventQueue.isDispatchThread) {
+      ThreadUtils.waitFor(world, new Runnable() {
+        def run(): Unit = event.raise(GUIWorkspaceScala.this)
+      })
+    } else {
+      event.raise(this)
+    }
+  }
+
   def handle(e: LoadModelEvent): Unit = {
     loadFromModel(e.model)
     world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
@@ -109,9 +201,13 @@ abstract class GUIWorkspaceScala(
     }
   }
 
+  def updateModel(model: Model): Model = {
+    model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
+  }
+
   def handle(e: ExportWidgetEvent): Unit = {
     try {
-      val guessedName = guessExportName(e.widget.getDefaultExportName)
+      val guessedName = modelTracker.guessExportName(e.widget.getDefaultExportName)
       val exportPath = FileDialog.showFiles(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
       val exportToPath = Future.successful(exportPath)
       e.widget match {
@@ -218,7 +314,8 @@ abstract class GUIWorkspaceScala(
   def doExportView(exportee: LocalViewInterface): Unit = {
     val exportPathOption =
       try {
-        Some(FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE, guessExportName("view.png")))
+        Some(FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE,
+          modelTracker.guessExportName("view.png")))
       } catch {
         case ex: UserCancelException =>
           Exceptions.ignore(ex)
@@ -298,13 +395,6 @@ abstract class GUIWorkspaceScala(
       throw new IllegalArgumentException("cannot provide source for empty filename")
     }
     externalFileManager.getSource(filename) getOrElse super.getSource(filename)
-  }
-
-  override def guessExportName(defaultName: String): String = {
-    if (Option(getModelFileName).contains("empty." + ModelReader.modelSuffix))
-      defaultName
-    else
-      super.guessExportName(defaultName)
   }
 
   def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)
@@ -397,7 +487,7 @@ abstract class GUIWorkspaceScala(
   def updateDisplay(haveWorldLockAlready: Boolean, force: Boolean): Unit = {
     view.dirty()
     val displayStatus = displayStatusRef.get
-    val displayIsRendering= displayStatus.shouldRender(force)
+    val displayIsRendering = displayStatus.shouldRender(force)
     val shouldUpdate = updateManager.shouldUpdateNow
     if (shouldUpdate && displayIsRendering) {
       if (haveWorldLockAlready) {
@@ -410,7 +500,7 @@ abstract class GUIWorkspaceScala(
           // don't block the event thread during a smoothing pause
           // or the UI will go sluggish (issue #1263) - ST 9/21/11
           while(! updateManager.isDoneSmoothing()) {
-            ThreadUtils.waitForQueuedEvents(this)
+            ThreadUtils.waitForQueuedEvents(world)
           }
         } catch {
           case ex: org.nlogo.nvm.HaltException => org.nlogo.api.Exceptions.ignore(ex)

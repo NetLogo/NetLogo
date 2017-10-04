@@ -7,24 +7,26 @@ import java.awt.Font
 import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
-import org.nlogo.api.{ CompilerServices, Version }
+import org.nlogo.core.Dialect
+import org.nlogo.api.Version
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
-import org.nlogo.nvm.ExtensionManager
+import org.nlogo.nvm.{ ExtensionManager, PresentationCompilerInterface }
 import org.nlogo.window.DefaultEditorFactory
 
 import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager) extends DefaultEditorFactory(compiler) {
+class EditorFactory(compiler: PresentationCompilerInterface, extensionManager: ExtensionManager, dialect: Dialect)
+  extends DefaultEditorFactory(compiler, extensionManager) {
   System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
     "org.nlogo.ide.NetLogoTokenMakerFactory")
   useExtensionManager(extensionManager)
 
   def autoSuggestAction =
-    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(compiler.dialect, extensionManager))
+    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(dialect, extensionManager))
 
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val showUsageBox = new ShowUsageBox(colorizer)

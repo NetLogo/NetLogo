@@ -97,7 +97,7 @@ object ModelResaver {
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
       OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
-        SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
+        SaveModel(model, modelLoader, controller, ws.modelTracker, Version).map(_.apply()) match {
           case Some(Success(u)) => println("resaved: " + u)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)
           case None => println("failed to resave: " + modelPath.toString)

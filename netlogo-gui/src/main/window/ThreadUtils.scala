@@ -10,10 +10,15 @@ object ThreadUtils {
   val DO_NOTHING = new CommandRunnable() {def run() {}}
 
   @throws(classOf[LogoException])
-  def waitForQueuedEvents(workspace: GUIWorkspaceScala): Unit = {waitFor(workspace, DO_NOTHING)}
+  def waitForQueuedEvents(monitor: AnyRef): Unit = {waitFor(monitor, DO_NOTHING)}
 
-  def waitFor(workspace: GUIWorkspaceScala, runnable: Runnable): Unit = {
-    try waitForResult(workspace, reporter(runnable.run _))
+  // NOTE: We use `monitor` because all we do with this object is call synchronization
+  // methods on it, but it should be the same object that the job thread locks
+  // while performing computation.
+  // At the time of this writing, this object is the world.
+  // RG 10/9/17
+  def waitFor(monitor: AnyRef, runnable: Runnable): Unit = {
+    try waitForResult(monitor, reporter(runnable.run _))
     catch {
       case ex: HaltException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: LogoException => throw new IllegalStateException(ex)
@@ -25,8 +30,8 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitFor(workspace: GUIWorkspaceScala, runnable: CommandRunnable) {
-    waitForResult(workspace, reporter(runnable.run _))
+  def waitFor(monitor: AnyRef, runnable: CommandRunnable) {
+    waitForResult(monitor, reporter(runnable.run _))
   }
 
   private class Result[T] {
@@ -36,7 +41,7 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitForResult[T](workspace: GUIWorkspaceScala, runnable: ReporterRunnable[T]) = {
+  def waitForResult[T](monitor: AnyRef, runnable: ReporterRunnable[T]) = {
     val result = new Result[T]()
     // in order to wait for the event thread without deadlocking,
     // we need to give up our lock on World by calling wait()
@@ -53,7 +58,7 @@ object ThreadUtils {
           }
           finally {
             result.done = true
-            workspace.world.synchronized {workspace.world.notifyAll()}
+            monitor.synchronized {monitor.notifyAll()}
           }
         }
       })
@@ -64,7 +69,7 @@ object ThreadUtils {
       // flag to see if we missed our notification
       // - ST 8/13/03
       while (!result.done) {
-        workspace.world.synchronized {workspace.world.wait(50)}
+        monitor.synchronized {monitor.wait(50)}
         if (Thread.currentThread.isInterrupted)
           throw new InterruptedException()
       }

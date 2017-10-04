@@ -18,7 +18,6 @@ with org.nlogo.window.Event.LinkChild
 with org.nlogo.window.Events.CompiledEvent.Handler
 with org.nlogo.window.Events.BeforeLoadEvent.Handler
 with org.nlogo.window.Events.LoadModelEvent.Handler {
-
   private var editor: AggregateModelEditor = null
 
   override def showEditor() {

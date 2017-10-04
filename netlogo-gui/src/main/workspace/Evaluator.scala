@@ -2,60 +2,78 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, AgentSet }
+import org.nlogo.core.{ AgentKind, CompilationEnvironment, CompilerException, Let }
 import org.nlogo.api.{ JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
-import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
+import org.nlogo.agent.{ Agent, AgentSet, World }
+import org.nlogo.nvm.{ Activation, Context, JobManagerInterface, PresentationCompilerInterface, Procedure }
 
 import scala.collection.immutable.Vector
 import scala.util.Try
 
-class Evaluator(workspace: AbstractWorkspace) {
+class Evaluator(jobManager: JobManagerInterface,
+  compiler: PresentationCompilerInterface,
+  world: World) {
+
+import Evaluator.Linker
 
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner,
                        source: String,
-                       agentSet: AgentSet = workspace.world.observers,
-                       waitForCompletion: Boolean = true) = {
+                       agentSet: AgentSet = world.observers,
+                       waitForCompletion: Boolean = true)(
+                         implicit extensionManager: ExtensionManager,
+                         compilationEnvironment: CompilationEnvironment,
+                         procedures: Procedure.ProceduresMap,
+                         linker: Linker) = {
     val procedure = invokeCompiler(source, None, true, agentSet.kind)
-    workspace.jobManager.addJob(
-      workspace.jobManager.makeConcurrentJob(owner, agentSet, workspace, procedure),
-      waitForCompletion)
+    jobManager.addJob(jobManager.makeConcurrentJob(owner, agentSet, procedure), waitForCompletion)
   }
 
   @throws(classOf[CompilerException])
-  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
+  def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = world.observers)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): Object = {
     val procedure = invokeCompiler(source, None, false, agents.kind)
-    workspace.jobManager.addReporterJobAndWait(owner, agents, workspace, procedure)
+    jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
   @throws(classOf[CompilerException])
-  def compileCommands(source: String, agentClass: AgentKind): Procedure =
+  def compileCommands(source: String, agentClass: AgentKind)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): Procedure =
     invokeCompiler(source, None, true, agentClass)
 
   @throws(classOf[CompilerException])
-  def compileReporter(source: String) =
+  def compileReporter(source: String)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): Procedure =
     invokeCompiler(source, None, false, AgentKind.Observer)
 
   /**
    * @return whether the code did a "stop" at the top level
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
-    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, workspace, procedure)
-    workspace.jobManager.addJob(job, true)
+    val job = jobManager.makeConcurrentJob(owner, world.observers, procedure)
+    jobManager.addJob(job, true)
     job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
-    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, workspace, procedure)
-
-  ///
+    jobManager.addReporterJobAndWait(owner, world.observers, procedure)
 
   @throws(classOf[CompilerException])
-  def compileForRun(source: String, context: Context,reporter: Boolean) =
+  def compileForRun(source: String, context: Context, reporter: Boolean)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker) =
     invokeCompilerForRun(source, context.agent.kind, context.activation.procedure, reporter)
-
-  ///
 
   private[workspace] def withContext(context: Context)(f: => Unit) {
     val oldContext = ProcedureRunner.context
@@ -70,11 +88,13 @@ class Evaluator(workspace: AbstractWorkspace) {
       val oldActivation = context.activation
       val newActivation = new Activation(p, context.activation, 1)
       val oldRandom = context.job.random
+      val let = new Let(p.name + "_finished")
+      newActivation.binding.let(let, Boolean.box(false))
       context.activation = newActivation
-      context.job.random = ownerOption.map(_.random).getOrElse(workspace.world.mainRNG.clone)
+      context.job.random = ownerOption.map(_.random).getOrElse(world.mainRNG.clone)
       val procedureResult = Try {
-        context.runExclusiveJob(workspace.world.observers, 0)
-        ! workspace.completedActivations.get(newActivation).contains(true)
+        context.runExclusiveJob(world.observers, 0)
+        ! (newActivation.binding.getLet(let) == Boolean.box(true))
       }
       context.activation = oldActivation
       context.job.random = oldRandom
@@ -83,26 +103,29 @@ class Evaluator(workspace: AbstractWorkspace) {
   }
 
   @throws(classOf[CompilerException])
-  def makeReporterThunk(source: String, agent: Agent, owner: JobOwner): ReporterLogoThunk =
+  def makeReporterThunk(source: String, agent: Agent, owner: JobOwner)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): ReporterLogoThunk = {
     if(source.trim.isEmpty) throw new IllegalStateException("empty reporter source")
     else {
       val proc = invokeCompiler(source, Some(owner.displayName), false, agent.kind)
       new MyLogoThunk(source, agent, owner, false, proc) with ReporterLogoThunk {
         @throws(classOf[LogoException])
         def call(): Try[AnyRef] = {
-          // This really ought to create a job and submit it through the job manager, instead of just
-          // calling the procedure directly.  This is temporary code that never got cleaned up.
-          // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
-          // is ever run. - ST 1/8/10
-          val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random, ExclusiveJob.initialComeUpForAir)
-          val context = new Context(job, agent, 0, null, workspace)
-          Try(context.callReporterProcedure(new Activation(procedure, null, 0)))
+          Try(jobManager.callReporterProcedure(owner, agentset, procedure))
         }
       }
     }
+  }
 
   @throws(classOf[CompilerException])
-  def makeCommandThunk(source: String, agent: Agent, owner: JobOwner): CommandLogoThunk =
+  def makeCommandThunk(source: String, agent: Agent, owner: JobOwner)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): CommandLogoThunk = {
     if(source.trim.isEmpty)
       new CommandLogoThunk { def call() = Try(false) }
     else {
@@ -113,6 +136,7 @@ class Evaluator(workspace: AbstractWorkspace) {
         def call(): Try[Boolean] = ProcedureRunner.run(procedure, Some(owner))
       }
     }
+  }
 
   @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean, val procedure: Procedure) {
@@ -120,11 +144,12 @@ class Evaluator(workspace: AbstractWorkspace) {
     procedure.topLevel = false
   }
 
-  ///
-
   @throws(classOf[CompilerException])
-  def invokeCompilerForRun(source: String, agentClass: AgentKind,
-    callingProcedure: Procedure, reporter: Boolean): Procedure = {
+  def invokeCompilerForRun(source: String, agentClass: AgentKind, callingProcedure: Procedure, reporter: Boolean)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker): Procedure = {
 
     val vars =
       if (callingProcedure == null) Vector[String]()
@@ -141,33 +166,37 @@ class Evaluator(workspace: AbstractWorkspace) {
         agentTypeHint + " report ( " + source + " \n) __done end"
     else
       "to __run " + vars.mkString("[", " ", "]") + " " + agentTypeHint + " " + source + "\nend"
-    val results = workspace.compiler.compileMoreCode(
+    val results = compiler.compileMoreCode(
       wrappedSource,
       Some(if(reporter) "runresult" else "run"),
-      workspace.world.program, workspace.procedures,
-      workspace.getExtensionManager, workspace.getCompilationEnvironment)
-    results.head.init(workspace)
-    results.head
+      world.program, procedures, extensionManager, compilationEnvironment)
+    linker.link(results.head)
   }
 
 
   @throws(classOf[CompilerException])
-  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, agentClass: AgentKind) = {
+  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, agentClass: AgentKind)(
+    implicit extensionManager: ExtensionManager,
+    compilationEnvironment: CompilationEnvironment,
+    procedures: Procedure.ProceduresMap,
+    linker: Linker) = {
     val wrappedSource = Evaluator.getHeader(agentClass, commands) + source + Evaluator.getFooter(commands)
     val results =
-      workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
-        workspace.procedures, workspace.getExtensionManager, workspace.getCompilationEnvironment)
-    results.head.init(workspace)
-    results.head
+      compiler.compileMoreCode(wrappedSource, displayName, world.program, procedures, extensionManager, compilationEnvironment)
+    linker.link(results.head)
   }
 
   @throws(classOf[CompilerException])
-  def readFromString(string: String) =
-    workspace.compiler.readFromString(string, workspace.world, workspace.getExtensionManager)
+  def readFromString(string: String, extensionManager: ExtensionManager) =
+    compiler.readFromString(string, world, extensionManager)
 }
 
 
 object Evaluator {
+
+  trait Linker {
+    def link(p: Procedure): Procedure
+  }
 
   val agentTypeHint = Map[AgentKind, String](
     AgentKind.Observer -> "__observercode",

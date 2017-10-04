@@ -30,7 +30,7 @@ object Shell {
 
   def run(workspace: HeadlessWorkspace, line: String) {
     val command =
-      if (workspace.isReporter(line))
+      if (workspace.compilerServices.isReporter(line))
         "print " + line
       else
         line

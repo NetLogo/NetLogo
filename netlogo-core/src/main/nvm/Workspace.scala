@@ -16,13 +16,12 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def compiler: CompilerInterface
 
   def procedures: Procedure.ProceduresMap
+  /*
   def procedures_=(procedures: Procedure.ProceduresMap)
+  */
 
   def tick(c: Context, originalInstruction: Instruction)
   def resetTicks(c: Context)
-
-  @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String
 
   def behaviorSpaceExperimentName: String
   def behaviorSpaceExperimentName(name: String): Unit
@@ -31,8 +30,6 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
 
   /** lastRunTimes is used by `every` to track how long ago a job ran */
   def lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
-  /** completedActivations is used by `__thunk-did-finish` */
-  def completedActivations: WeakHashMap[Activation, Boolean]
 
   /* compiler controls */
   @throws(classOf[CompilerException])
@@ -61,6 +58,7 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   /* components */
   def fileManager: FileManager
   def profilingTracer: Tracer
+  def modelTracker: ModelTracker
 
   /* plots */
   def setupPlots(c: Context): Unit

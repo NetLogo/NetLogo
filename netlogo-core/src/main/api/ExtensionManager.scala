@@ -39,4 +39,10 @@ trait ExtensionManager extends CoreManager {
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
+
+  /**
+   * Used for providing or removing instrumentation (a profiler) for the NetLogo engine to use
+   */
+  def addInstrumentation[A](name: String, instrument: A, klass: Class[A]): Unit
+  def removeInstrumentation[A](name: String, klass: Class[A]): Unit
 }

@@ -3,19 +3,22 @@
 package org.nlogo.workspace
 
 import
-  java.{ io, net },
-    io.{ BufferedReader, EOFException, File => JFile, FileNotFoundException, IOException },
-      JFile.separatorChar,
-    net.URL
+  java.io.{ BufferedReader, EOFException, File => JFile, FileNotFoundException, IOException },
+      JFile.separatorChar
 
 import
   org.nlogo.{ agent, api, core, nvm },
     agent.{ OutputObject, World },
-    core.{ CompilerException, File, FileMode, I18N },
+    core.{ CompilerException, CompilerUtilitiesInterface, File, FileMode, I18N },
     api.LocalFile,
     nvm.{ FileManager, ImportHandler }
 
-private[workspace] final class DefaultFileManager(private val workspace: ModelTracker) extends FileManager {
+private[workspace] final class DefaultFileManager(
+  private val tracker: ModelTracker,
+  extensionManager:    ExtensionManager,
+  utilities:           CompilerUtilitiesInterface)
+  extends FileManager
+  with WorkspaceMessageListener {
 
   private            var openFiles:    Map[String, File] = Map[String, File]()
   private[workspace] var _currentFile: Option[File]      = None
@@ -58,6 +61,14 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   def getFile(filename: String): File =
     new LocalFile(filename)
 
+  def processWorkspaceEvent(evt: WorkspaceEvent): Unit = {
+    evt match {
+      case m: ModelPathChanged =>
+        m.modelDirName.foreach(dirName => setPrefix(dirName))
+      case _ =>
+    }
+  }
+
   def setPrefix(setPrefix: String): Unit = {
     _prefix =
       if (setPrefix == "")
@@ -72,12 +83,8 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
       }
   }
 
-  def setPrefix(newPrefix: URL): Unit = {
-    _prefix = newPrefix.toString
-  }
-
   def attachPrefix(filename: String): String =
-    if (new JFile(filename).isAbsolute || _prefix == "")
+    if (new JFile(filename).isAbsolute || prefix == "")
       filename
     else
       relativeToAbsolute(filename)
@@ -162,11 +169,11 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def read(world: World): AnyRef = {
-    val importHandler = new ImportHandler(world, workspace.getExtensionManager)
+    val importHandler = new ImportHandler(world, extensionManager)
     val readLiteral = { (file: File) =>
       val oldPos = file.pos
       try {
-        workspace.compiler.utilities.readFromFile(file, importHandler)
+        utilities.readFromFile(file, importHandler)
       } catch {
         case ex: CompilerException =>
           file.pos = oldPos
@@ -189,7 +196,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def handleModelChange(): Unit = {
-    Option(workspace.getModelDir).foreach(setPrefix)
+    Option(tracker.getModelDir).foreach(setPrefix)
     try closeAllFiles()
     catch {
       case ex: IOException => throw new IllegalStateException(ex)
@@ -243,7 +250,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   private def relativeToAbsolute(newPath: String): String =
-    try new JFile(s"${_prefix}$separatorChar$newPath").getCanonicalPath
+    try new JFile(s"${prefix}$separatorChar$newPath").getCanonicalPath
     catch {
       case ex: IOException => throw new IllegalStateException(ex)
     }

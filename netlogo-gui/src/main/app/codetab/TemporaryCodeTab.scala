@@ -15,7 +15,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
+import org.nlogo.workspace.AbstractWorkspace
 
 import scala.io.Codec
 import scala.util.control.Exception.ignoring
@@ -25,7 +25,7 @@ object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(Regex.quote(File.separator)).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
+class TemporaryCodeTab(workspace: AbstractWorkspace,
   tabs:                           TabsInterface,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,

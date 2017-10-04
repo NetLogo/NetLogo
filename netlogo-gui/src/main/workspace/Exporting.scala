@@ -7,7 +7,8 @@ import org.nlogo.api.Dump
 import org.nlogo.plot.PlotExporter
 import java.io.{IOException,PrintWriter}
 
-trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
+trait Exporting extends Plotting { this: AbstractWorkspace =>
+  def extensionManager: ExtensionManager
 
   def exportDrawingToCSV(writer:PrintWriter)
   def exportOutputAreaToCSV(writer:PrintWriter)
@@ -21,7 +22,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         exportOutputAreaToCSV(writer)
         exportPlotsToCSV(writer)
         extensionManager.exportWorld(writer)
-    } }.export("world",modelFileName,"")
+    } }.export("world",modelTracker.modelFileName,"")
   }
 
   def exportWorld(writer:PrintWriter) {
@@ -50,7 +51,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         exportInterfaceGlobals(writer)
         new PlotExporter(plotManager.getPlot(plotName),Dump.csv).export(writer)
       }
-    }.export("plot",modelFileName,"")
+    }.export("plot",modelTracker.modelFileName,"")
   }
 
   def exportInterfaceGlobals(writer: PrintWriter): Unit = {
@@ -73,6 +74,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
           writer.println()
         }
       }
-    }.export("plots",modelFileName,"")
+    }.export("plots",modelTracker.modelFileName,"")
   }
 }

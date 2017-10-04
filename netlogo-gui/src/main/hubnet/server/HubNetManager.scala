@@ -10,7 +10,7 @@ import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
+import org.nlogo.workspace.{ AbstractWorkspace, OpenModel, OpenModelFromURI }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
 
@@ -19,7 +19,7 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader, modelConverter: ModelConversion)
+abstract class HubNetManager(workspace: AbstractWorkspace, modelLoader: ModelLoader, modelConverter: ModelConversion)
   extends HubNetInterface
   with ConnectionInterface {
 

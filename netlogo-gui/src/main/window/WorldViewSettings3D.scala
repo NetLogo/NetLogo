@@ -226,7 +226,7 @@ class WorldViewSettings3D(workspace: GUIWorkspaceScala)
       left = 0, top = 0, right = 0, bottom = 0,
       dimensions = _currentDimensions,
       fontSize = fontSize,
-      updateMode = workspace.updateMode(),
+      updateMode = workspace.updateMode,
       showTickCounter = showTickCounter,
       tickCounterLabel = label,
       frameRate = frameRate)

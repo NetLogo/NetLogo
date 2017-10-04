@@ -1,7 +1,7 @@
 package org.nlogo.headless
 
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 
 class WorkspaceFactory extends org.nlogo.workspace.WorkspaceFactory {
-  def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
+  def newInstance: AbstractWorkspace = HeadlessWorkspace.newInstance
 }

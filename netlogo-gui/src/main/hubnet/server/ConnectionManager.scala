@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server
 
 import java.io.{ Serializable => JSerializable , InterruptedIOException, IOException}
 import org.nlogo.core.AgentKind
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
@@ -40,7 +40,7 @@ trait ConnectionManagerInterface {
 
 class ConnectionManager(val connection: ConnectionInterface,
                         val clientEventListener: ClientEventListener,
-                        workspace: AbstractWorkspaceScala) extends ConnectionManagerInterface with Runnable {
+                        workspace: AbstractWorkspace) extends ConnectionManagerInterface with Runnable {
   val VALID_SEND_TYPES_MESSAGE =
     "You can only send strings, booleans (true or false), numbers, and lists of these types."
 

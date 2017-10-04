@@ -39,7 +39,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       else NetLogoLegacyDialect
 
     // load system dynamics model (if present)
-    ws.aggregateManager.load(model, ws)
+    ws.aggregateManager.load(model, ws.compilerServices)
 
     // read procedures, compile them.
     val results = {
