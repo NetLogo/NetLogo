@@ -2,14 +2,15 @@
 
 package org.nlogo.app
 
+import javax.swing.{ ImageIcon, JLabel, JWindow }
+
 import org.nlogo.api.Version
 
 object Splash {
-
-  private var splashWindow: javax.swing.JWindow = null
+  private var splashWindow: JWindow = null
 
   def beginSplash() {
-    splashWindow = new javax.swing.JWindow
+    splashWindow = new JWindow
     splashWindow.getContentPane.add(new MyIconHolder)
     splashWindow.pack()
     org.nlogo.awt.Positioning.center(splashWindow, null)
@@ -22,11 +23,9 @@ object Splash {
     splashWindow = null
   }
 
-  def icon =
-    new javax.swing.ImageIcon(
-      Splash.getClass.getResource("/images/title.jpg"))
+  def icon = new ImageIcon(Splash.getClass.getResource("/images/title.jpg"))
 
-  class MyIconHolder extends org.nlogo.swing.IconHolder(icon) {
+  class MyIconHolder extends JLabel(icon) {
     val message = {
       val date = Version.buildDate
       val version = "Version " + Version.versionDropZeroPatch.drop("NetLogo ".size)

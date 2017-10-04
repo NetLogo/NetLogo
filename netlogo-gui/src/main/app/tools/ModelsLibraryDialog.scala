@@ -14,8 +14,8 @@ import java.io.File
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, ImageIcon,
-  InputMap, JButton, JComponent, JDialog, JEditorPane, JOptionPane, JPanel, JScrollPane,
-  JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
+  InputMap, JButton, JComponent, JDialog, JEditorPane, JLabel, JOptionPane, JPanel,
+  JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeModel, TreePath, TreeSelectionModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, DocumentListener,
@@ -25,7 +25,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, IconHolder, ModalProgressTask, Utils }
+import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils }
 import org.nlogo.workspace.ModelsLibrary
 
 import scala.util.Try
@@ -306,7 +306,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     })
     val buttonFont = clearSearchButton.getFont()
     clearSearchButton.setFont(buttonFont.deriveFont(buttonFont.getSize2D - 2))
-    searchPanel.add(new IconHolder(new ImageIcon(getClass.getResource("/images/magnify.gif"))))
+    searchPanel.add(new JLabel(new ImageIcon(getClass.getResource("/images/magnify.gif"))))
     searchPanel.add(Box.createRigidArea(new java.awt.Dimension(2, 0)))
     searchPanel.add(searchField)
     searchPanel.add(Box.createRigidArea(new Dimension(2, 0)))
