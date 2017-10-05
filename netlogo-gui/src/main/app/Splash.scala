@@ -2,16 +2,18 @@
 
 package org.nlogo.app
 
-import javax.swing.{ ImageIcon, JLabel, JWindow }
+import java.awt.Graphics
+import javax.swing.{ JLabel, JWindow }
 
 import org.nlogo.api.Version
+import org.nlogo.swing.Utils.icon
 
 object Splash {
   private var splashWindow: JWindow = null
 
   def beginSplash() {
     splashWindow = new JWindow
-    splashWindow.getContentPane.add(new MyIconHolder)
+    splashWindow.getContentPane.add(splash)
     splashWindow.pack()
     org.nlogo.awt.Positioning.center(splashWindow, null)
     splashWindow.setVisible(true)
@@ -23,9 +25,9 @@ object Splash {
     splashWindow = null
   }
 
-  def icon = new ImageIcon(Splash.getClass.getResource("/images/title.jpg"))
+  val image = icon("/images/title.jpg")
 
-  class MyIconHolder extends JLabel(icon) {
+  val splash = new JLabel(image) {
     val message = {
       val date = Version.buildDate
       val version = "Version " + Version.versionDropZeroPatch.drop("NetLogo ".size)
@@ -35,7 +37,8 @@ object Splash {
         date
       else version
     }
-    override def paintComponent(g: java.awt.Graphics) {
+
+    override def paintComponent(g: Graphics) = {
       super.paintComponent(g)
       val metrics = g.getFontMetrics
       val r = new java.awt.Rectangle(getWidth - metrics.stringWidth(message) - 18,

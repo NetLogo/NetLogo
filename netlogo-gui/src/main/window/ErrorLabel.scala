@@ -3,8 +3,10 @@
 package org.nlogo.window
 
 import java.awt.Color.{ WHITE, YELLOW }
-import javax.swing.{ BorderFactory, ImageIcon, JLabel, UIManager }
+import javax.swing.{ BorderFactory, JLabel, UIManager }
 import javax.swing.border.{ EmptyBorder, LineBorder }
+
+import org.nlogo.swing.Utils.icon
 
 class ErrorLabel extends JLabel {
 
@@ -15,8 +17,7 @@ class ErrorLabel extends JLabel {
     setFont(UIManager.getFont("Label.font"))
     setForeground(UIManager.getColor("Label.foreground"))
     setBackground(YELLOW)
-    setIcon(
-      new ImageIcon(classOf[ErrorLabel].getResource("/images/stop.gif")))
+    setIcon(icon("/images/stop.gif"))
     setBorder(BorderFactory.createCompoundBorder(
       new LineBorder(WHITE, 4) ,
       new EmptyBorder(4, 24, 4, 4)

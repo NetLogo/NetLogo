@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, Action, ImageIcon, JPanel }
+import javax.swing.{ AbstractAction, Action, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
@@ -15,6 +15,7 @@ import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
+import org.nlogo.swing.Utils.icon
 import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -26,6 +27,7 @@ with WindowEvents.CompiledEvent.Handler
 with Zoomable
 with NlogoPrintable
 with MenuTab {
+
   private var _dirty = false
   def dirty = _dirty
 
@@ -182,13 +184,13 @@ with MenuTab {
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
   private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource("/images/check-gray.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/check-gray.gif"))
     def actionPerformed(e: ActionEvent) = compile()
     def setDirty(isDirty: Boolean) = {
       val iconPath =
         if (isDirty) "/images/check.gif"
         else         "/images/check-gray.gif"
-      putValue(Action.SMALL_ICON, new ImageIcon(classOf[CodeTab].getResource(iconPath)))
+      putValue(Action.SMALL_ICON, icon(iconPath))
     }
   }
 }

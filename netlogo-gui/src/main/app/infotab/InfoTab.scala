@@ -7,8 +7,8 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon,
-  JEditorPane, JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel,
+  JScrollPane, JTextArea, ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
@@ -19,8 +19,8 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher },
-  BrowserLauncher.docPath
+  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
+  BrowserLauncher.docPath, Utils.icon
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
@@ -68,7 +68,7 @@ class InfoTab(attachModelDir: String => String)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
     BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(new ImageIcon(classOf[FindDialog].getResource("/images/questionmark.gif")))
+  helpButton.setIcon(icon("/images/questionmark.gif"))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -194,7 +194,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InfoTab].getResource("/images/edit.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/edit.gif"))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

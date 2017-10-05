@@ -17,6 +17,7 @@ import org.nlogo.shape.Line;
 import org.nlogo.shape.Polygon;
 import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
+import static org.nlogo.swing.Utils.icon;
 
 strictfp class EditorDialog
     extends javax.swing.JDialog
@@ -111,10 +112,8 @@ strictfp class EditorDialog
         new javax.swing.ButtonGroup();
 
     // edit
-    editElements = new javax.swing.JToggleButton
-        (new javax.swing.ImageIcon
-            (EditorDialog.class.getResource
-                ("/images/shapes-editor/arrow.gif")), false);
+    editElements = new javax.swing.JToggleButton(
+      icon("/images/shapes-editor/arrow.gif"), false);
     editElements.setToolTipText("Select");
     editElements.addActionListener
         (new java.awt.event.ActionListener() {
@@ -747,10 +746,7 @@ strictfp class EditorDialog
       super(name);
       this.typeID = typeID;
       this.filled = filled;
-      putValue(SMALL_ICON,
-          new javax.swing.ImageIcon
-              (CreateAction.class.getResource
-                  ("/images/shapes-editor/" + name + ".gif")));
+      putValue(SMALL_ICON, icon("/images/shapes-editor/" + name + ".gif"));
       if (toolTip != null) {
         putValue(SHORT_DESCRIPTION, toolTip);
       }

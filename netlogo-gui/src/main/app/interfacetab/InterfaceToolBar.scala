@@ -6,14 +6,15 @@ import java.awt.{ Frame, SystemColor }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
 import javax.swing.{ JMenuItem, JPopupMenu, ButtonGroup, JToggleButton,
-  AbstractAction, Action, ImageIcon }
+  AbstractAction, Action }
 
 import scala.collection.mutable
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton }
+import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils },
+  Utils.icon
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
   GUIWorkspace, JobWidget, Widget, WidgetInfo }
 
@@ -55,14 +56,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   widgetMenu.setToolTipText(I18N.gui.get("tabs.run.widgets.tooltip"))
 
   class EditAction extends AbstractAction(I18N.gui.get("tabs.run.editButton")) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/edit.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/edit.gif"))
     def actionPerformed(e: ActionEvent) {
       new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
     }
   }
 
   class AddAction extends AbstractAction(I18N.gui.get("tabs.run.addButton")) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/add.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/add.gif"))
     def actionPerformed(e: ActionEvent) { }
   }
 
@@ -97,7 +98,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   class DeleteAction extends AbstractAction(I18N.gui.get("tabs.run.deleteButton")) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/delete.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/delete.gif"))
     def actionPerformed(e: ActionEvent) {
       wPanel.deleteSelectedWidgets()
     }

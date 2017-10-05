@@ -2,43 +2,45 @@
 
 package org.nlogo.swing
 
-import java.awt.BorderLayout
+import java.awt.{ BorderLayout, FlowLayout }
+import java.awt.event.{ MouseAdapter, MouseEvent }
 
-import javax.swing.{ JComponent, JLabel, JPanel, JWindow, ImageIcon }
-import javax.swing.border.LineBorder
+import javax.swing.{ JComponent, JLabel, JPanel, JWindow }
 
-class CollapsiblePane(element: JComponent, parent: JWindow) extends JPanel {
-  private val open = new JLabel(new ImageIcon(
-    classOf[CollapsiblePane].getResource("/images/popup.gif")))
-  private val closed = new JLabel(new ImageIcon(
-    classOf[CollapsiblePane].getResource("/images/closedarrow.gif")))
+import org.nlogo.swing.Utils.icon
+
+object CollapsiblePane {
+  private val OpenIcon   = icon("/images/popup.gif")
+  private val ClosedIcon = icon("/images/closedarrow.gif")
+}
+
+class CollapsiblePane(title: String, element: JComponent, parent: JWindow)
+extends JPanel(new BorderLayout) {
+  import CollapsiblePane._
+
+  private val titleLabel = new JLabel(title)
 
   locally {
-    open.addMouseListener(
-      new java.awt.event.MouseAdapter {
-        override def mouseClicked(e: java.awt.event.MouseEvent) {
-          setCollapsed(true) }})
-    closed.addMouseListener(
-      new java.awt.event.MouseAdapter {
-        override def mouseClicked(e: java.awt.event.MouseEvent) {
-          setCollapsed(false) }})
-    setLayout(new BorderLayout)
-    add(open,    BorderLayout.NORTH)
-    add(element, BorderLayout.CENTER)
-    setBorder(LineBorder.createGrayLineBorder)
+    titleLabel.setIcon(OpenIcon)
+
+    val titlePanel = {
+      val panel = new JPanel(new FlowLayout(FlowLayout.LEADING))
+      panel.add(titleLabel)
+      panel.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent) = setOpen(!isOpen)
+      })
+      panel
+    }
+
+    add(titlePanel, BorderLayout.NORTH)
+    add(element,    BorderLayout.CENTER)
   }
 
-  def setCollapsed(collapsed: Boolean) {
-    element.setVisible(!collapsed)
-    if (collapsed) {
-      remove(open)
-      add(closed, BorderLayout.NORTH)
-    } else {
-      remove(closed)
-      add(open, BorderLayout.NORTH)
-    }
+  def setOpen(open: Boolean): Unit = {
+    element.setVisible(open)
+    titleLabel.setIcon(if (open) OpenIcon else ClosedIcon)
     parent.pack()
   }
 
-  def isCollapsed = element.isVisible
+  def isOpen = element.isVisible
 }

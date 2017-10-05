@@ -2,20 +2,20 @@
 
 package org.nlogo.properties
 
-import javax.swing.border.{EtchedBorder, TitledBorder}
+import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints } 
 import javax.swing._
 import javax.swing.BorderFactory._
-import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
+import javax.swing.border.{ EtchedBorder, TitledBorder }
+import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
+import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
-import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
-
-import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.swing.RichJButton
-import org.nlogo.editor.{Colorizer, EditorField}
-import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}
-import org.nlogo.window.{ColorDialog, PlotWidget}
-import org.nlogo.plot.{Plot, PlotManagerInterface, PlotPen}
+import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.editor.{ Colorizer, EditorField }
+import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
+import org.nlogo.swing.{ RichJButton, Utils},
+  Utils.icon
+import org.nlogo.window.{ ColorDialog, PlotWidget }
 
 object PlotPensEditor {
   sealed trait CodeType
@@ -272,11 +272,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      import javax.swing.ImageIcon
-
-      val EditIcon   = new ImageIcon(getClass.getResource("/images/edit.gif"))
-      val AlertIcon  = new ImageIcon(getClass.getResource("/images/alert.gif"))
-      val DeleteIcon = new ImageIcon(getClass.getResource("/images/delete.gif"))
+      val EditIcon   = icon("/images/edit.gif")
+      val AlertIcon  = icon("/images/alert.gif")
+      val DeleteIcon = icon("/images/delete.gif")
 
       val editButton = RichJButton(EditIcon) {
         openAdvancedPenEditor(model.pens(getSelectedRow))

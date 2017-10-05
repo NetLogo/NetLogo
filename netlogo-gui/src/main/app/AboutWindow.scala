@@ -9,8 +9,9 @@ import java.net.URI
 
 import org.nlogo.util.SysInfo
 import org.nlogo.api.{ FileIO, APIVersion, Version }
-import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ BrowserLauncher, RichAction }
+import org.nlogo.swing.Implicits._
+import org.nlogo.swing.Utils.icon
 
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
@@ -62,7 +63,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     refreshSystemText()
 
     getContentPane.setLayout(new BorderLayout(0,10))
-    val graphic = new JLabel(new ImageIcon(classOf[AboutWindow].getResource("/images/title.jpg"))) {
+    val graphic = new JLabel(icon("/images/title.jpg")) {
       setBorder(BorderFactory.createEmptyBorder(10,10,0,10))
     }
     getContentPane.add(graphic,BorderLayout.NORTH)
