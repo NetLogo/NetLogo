@@ -4,7 +4,6 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, FlowLayout }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-
 import javax.swing.{ JComponent, JLabel, JPanel, JWindow }
 
 import org.nlogo.swing.Utils.icon
@@ -23,14 +22,11 @@ extends JPanel(new BorderLayout) {
   locally {
     titleLabel.setIcon(OpenIcon)
 
-    val titlePanel = {
-      val panel = new JPanel(new FlowLayout(FlowLayout.LEADING))
-      panel.add(titleLabel)
-      panel.addMouseListener(new MouseAdapter {
-        override def mouseClicked(e: MouseEvent) = setOpen(!isOpen)
-      })
-      panel
-    }
+    val titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING))
+    titlePanel.add(titleLabel)
+    titlePanel.addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) = setOpen(!isOpen)
+    })
 
     add(titlePanel, BorderLayout.NORTH)
     add(element,    BorderLayout.CENTER)

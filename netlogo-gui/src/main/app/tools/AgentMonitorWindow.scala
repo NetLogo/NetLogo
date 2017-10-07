@@ -106,18 +106,18 @@ with WindowEvents.LoadBeginEvent.Handler
 
   def title = {
     monitor.agentKind match {
-      case AgentKind.Observer => I18N.gui.get("tools.agentMonitorWindow.globals")
-      case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitorWindow.noTurtle")
-      case AgentKind.Turtle if agent.id == -1 => I18N.gui.getN("tools.agentMonitorWindow.dead", lastAliveTitle)
+      case AgentKind.Observer => I18N.gui.get("tools.agentMonitor.window.globals")
+      case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitor.window.noTurtle")
+      case AgentKind.Turtle if agent.id == -1 => I18N.gui.getN("tools.agentMonitor.window.dead", lastAliveTitle)
       case AgentKind.Turtle =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Link if agent == null => I18N.gui.get("tools.agentMonitorWindow.noLink")
-      case AgentKind.Link if agent.id == -1 => I18N.gui.getN("tools.agentMonitorWindow.dead", lastAliveTitle)
+      case AgentKind.Link if agent == null => I18N.gui.get("tools.agentMonitor.window.noLink")
+      case AgentKind.Link if agent.id == -1 => I18N.gui.getN("tools.agentMonitor.window.dead", lastAliveTitle)
       case AgentKind.Link =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Patch if agent == null => I18N.gui.get("tools.agentMonitorWindow.noPatch")
+      case AgentKind.Patch if agent == null => I18N.gui.get("tools.agentMonitor.window.noPatch")
       case AgentKind.Patch => agent.toString
     }
   }
