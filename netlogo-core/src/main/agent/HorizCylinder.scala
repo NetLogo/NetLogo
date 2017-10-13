@@ -234,9 +234,9 @@ extends Topology(world2d, xWraps = false, yWraps = true) {
       x = xx
       while (x < xx2) {
         val diffuseVal = (scratch(x - xx)(y - yy) / 4) * amount
-        if (x > 0 && x < xx - 1) {
+        if (x > xx && x < xx2 - 1) {
           scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (4 * diffuseVal)
-          scratch2((x - 1) % xx)(y) += diffuseVal
+          scratch2((x - 1) % xx)(y % yy) += diffuseVal
           scratch2(x % xx)((y + 1) % yy) += diffuseVal
           scratch2(x % xx)((y - 1) % yy) += diffuseVal
           scratch2((x + 1) % xx)(y % yy) += diffuseVal
