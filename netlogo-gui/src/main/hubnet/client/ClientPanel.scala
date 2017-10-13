@@ -9,9 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory }
+import org.nlogo.api.{ Dump, EditorCompiler, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory, TwoDVersion }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
-import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.plot.{ PlotExporter, Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
 import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
@@ -28,9 +27,13 @@ import scala.concurrent.Future
 // the app and window packages.  But currently there's no better
 // way to find out when a button was pressed or a slider (etc.)
 // moved, so we use events.  - ST 8/24/03
+// NOTE: As part of the great version refactor of fall 2017, this class is explicitly associated
+// with NetLogo 2D. As of fall 2017, there is no such thing as 3D HubNet, so this is no loss.
+// In the future, Version could be injected here as necessary instead of hardcoded
+// for 2D (assuming the rest of HubNet was updated as well). - RG 10/23/17
 class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
                   errorHandler:  ErrorHandler,
-                  compiler:      PresentationCompilerInterface) extends JPanel with
+                  compiler:      EditorCompiler) extends JPanel with
         AddJobEvent.Handler with
         ExportPlotEvent.Handler with
         InterfaceGlobalEvent.Handler with
@@ -101,7 +104,7 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
                override def export(writer: PrintWriter) {
                  new PlotExporter(plot, Dump.csv).export(writer)
                }
-             }.export("plot", "HubNet Client", "")
+             }.export("plot", "HubNet Client", TwoDVersion, "")
              catch {
                case ex: IOException => org.nlogo.api.Exceptions.handle(ex)
              }
@@ -313,7 +316,7 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
       //socket.setTcpNoDelay( true )
       listener = new Listener(userid, socket)
       listener.start()
-      sendDataAndWait(Version.version)
+      sendDataAndWait(TwoDVersion.version)
       None
     }
     catch {
@@ -423,7 +426,7 @@ class ClientPanel(editorFactory: org.nlogo.window.EditorFactory,
     a match {
       case m: Message => handleProtocolMessage(m)
       case info: String => if (! connected.get) {
-        if (info == Version.version)
+        if (info == TwoDVersion.version)
           sendDataAndWait(new HandshakeFromClient(listener.clientId, ConnectionTypes.COMP_CONNECTION))
         else handleLoginFailure("The version of the HubNet Client" +
                 " you are using does not match the version of the " +

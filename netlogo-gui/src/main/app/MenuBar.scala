@@ -42,7 +42,7 @@ class MenuBar
     TabsCategory  -> tabsMenu
   )
 
-  def offerAction(action: javax.swing.Action): Unit = {
+  def offerAction(action: Action): Unit = {
     val categoryKey = action.getValue(ActionCategoryKey) match {
       case s: String => s
       case _ => ""

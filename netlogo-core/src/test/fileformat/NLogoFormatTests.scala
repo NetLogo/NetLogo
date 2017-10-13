@@ -8,13 +8,14 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, TwoDVersion, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConverters._
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
+  val version: Version = TwoDVersion
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
 
@@ -152,9 +153,8 @@ class NLogoVersionComponentTest extends NLogoFormatTest[String] {
   def modelComponent(model: Model): String = model.version
   def attachComponent(b: String): Model = Model(version = b)
 
-  // this test assumes the 2D Format
-  val correctArityFormat = Version.version.replaceAll(" 3D", "")
-  val wrongArityVersion = Version.version.replaceAll("NetLogo", "NetLogo 3D")
+  val correctArityFormat = version.version
+  val wrongArityVersion = version.version.replaceAll("NetLogo", "NetLogo 3D")
 
   testErrorsOnDeserialization("wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
   testErrorsOnDeserialization("empty version section to empty version", Array[String](), "")

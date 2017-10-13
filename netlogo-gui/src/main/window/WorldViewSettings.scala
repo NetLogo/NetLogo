@@ -472,6 +472,9 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspaceScala)
     propertyChangeSupport.addPropertyChangeListener(listener)
   }
 
+  private[window] def currentListeners: Seq[PropertyChangeListener] =
+    propertyChangeSupport.getPropertyChangeListeners.toSeq
+
   def removePropertyChangeListener(listener: PropertyChangeListener): Unit = {
     propertyChangeSupport.removePropertyChangeListener(listener)
   }

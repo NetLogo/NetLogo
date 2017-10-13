@@ -4,9 +4,8 @@ package org.nlogo.hubnet.client
 
 import java.awt.BorderLayout
 import javax.swing.{WindowConstants, JFrame}
-import org.nlogo.api.DummyExtensionManager
+import org.nlogo.api.{ DummyExtensionManager, EditorCompiler }
 import org.nlogo.core.I18N
-import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
 import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
@@ -19,7 +18,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], compiler: PresentationCompilerInterface) {
+  def mainHelper(args: Array[String], compiler: EditorCompiler) {
     try {
       val app = new ClientApp()
       org.nlogo.swing.Utils.setSystemLookAndFeel()
@@ -64,8 +63,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     setResizable(false)
   }
 
-  def startup(userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: PresentationCompilerInterface): Unit = {
+  final def startup(userid: String, hostip: String,
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: EditorCompiler): Unit = {
     val editorFactory = new DefaultEditorFactory(compiler, new DummyExtensionManager)
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

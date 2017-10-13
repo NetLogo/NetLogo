@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction, Utils },
   UserAction.{ MenuAction, ToolsCategory },
   Utils.icon
@@ -19,7 +19,7 @@ import org.nlogo.swing.{ Implicits, Utils => SwingUtils }, Implicits.thunk2actio
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
   InterfaceColors, OutputArea, ViewUpdatePanel, WidgetInfo,
   Events => WindowEvents, WorkspaceActions },
-    WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
+    WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent, UpdateModelEvent, WidgetAlteredEvent, WidgetEditedEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -36,7 +36,9 @@ class InterfaceTab(workspace: GUIWorkspace,
   with Enable2DEvent.Handler
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
-  with MenuTab {
+  with MenuTab
+  with WidgetAlteredEvent.Handler
+  with WidgetEditedEvent.Handler {
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
@@ -62,6 +64,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
   private var viewUpdatePanel: ViewUpdatePanel = null
+  private var _cachedWidgetsForSaving = Seq[CoreWidget]()
 
   private val splitPane = new JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
@@ -121,6 +124,23 @@ class InterfaceTab(workspace: GUIWorkspace,
   def handle(e: LoadBeginEvent) {
     scrollPane.getHorizontalScrollBar.setValue(0)
     scrollPane.getVerticalScrollBar.setValue(0)
+  }
+
+  // Widgets and updating model
+  def handle(e: WidgetEditedEvent): Unit = {
+    if (e.panel eq iP)
+      updateWidgetsIfNecessary()
+  }
+  def handle(e: WidgetAlteredEvent): Unit = {
+    if (e.panel eq iP)
+      updateWidgetsIfNecessary()
+  }
+
+  def updateWidgetsIfNecessary() {
+    if (_cachedWidgetsForSaving != iP.getWidgetsForSaving) {
+      _cachedWidgetsForSaving = iP.getWidgetsForSaving
+      new UpdateModelEvent(_.copy(widgets = _cachedWidgetsForSaving)).raise(this)
+    }
   }
 
   /// output

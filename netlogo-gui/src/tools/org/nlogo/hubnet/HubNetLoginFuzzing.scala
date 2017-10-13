@@ -7,7 +7,7 @@ import java.nio.file.{ Files, Path, Paths }
 import java.io.{ ObjectOutputStream}
 import java.util.concurrent.Executors
 
-import org.nlogo.api.Version
+import org.nlogo.api.TwoDVersion
 import org.nlogo.util.ClassLoaderObjectInputStream
 import protocol.{ ActivityCommand, EnterMessage, ExitMessage, HandshakeFromClient, HandshakeFromServer }
 
@@ -77,7 +77,7 @@ object HubNetLoginFuzzing extends App {
 
   lazy val messagePool: Seq[(Random => Send)] =
     Seq(
-    { (r) => SendVersion(Version.version) },
+    { (r) => SendVersion(TwoDVersion.version) },
     { (r) => SendHandshake(randString(r)) },
     { (r) => SendHandshake(null) },
     { (r) => SendEnter },

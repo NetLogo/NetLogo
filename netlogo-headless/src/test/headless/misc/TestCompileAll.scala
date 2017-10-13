@@ -5,7 +5,7 @@ package misc
 
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.core.model.ModelReader
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.{ FileIO, TwoDVersion, Version }
 import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.FunSuite
@@ -62,7 +62,7 @@ object TestCompileAll {
 
 class TestCompileAll extends FunSuite  {
   for {
-    path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
+    path <- ModelsLibrary.getModelPaths(TwoDVersion).filterNot(TestCompileAll.badPath)
     text <- TestCompileAll.goodModel(FileIO.fileToString(path))
   }  {
       test("compile: " + path, SlowTestTag) {
@@ -73,7 +73,8 @@ class TestCompileAll extends FunSuite  {
       }
     }
 
-  for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
+  for(path <- (ModelsLibrary.getModelPaths(TwoDVersion) ++
+       ModelsLibrary.getModelPathsAtRoot("extensions", TwoDVersion)).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTestTag) {
       val workspace = HeadlessWorkspace.newInstance
       val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version

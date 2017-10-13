@@ -7,7 +7,7 @@ import java.awt.{ Component, Dimension, Font, Point, Rectangle }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ JPopupMenu, BorderFactory }
 
-import org.nlogo.api.{ Approximate, Version }
+import org.nlogo.api.{ Approximate, WorldDimensions3D }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ View => CoreView, WorldDimensions }
 import org.nlogo.window.MouseMode._
@@ -57,13 +57,17 @@ class ViewWidget(workspace: GUIWorkspaceScala, val view: View)
   setLayout(null)
   add(view)
 
-  val settings: WorldViewSettings =
-    if (Version.is3D)
-      new WorldViewSettings3D(workspace)
-    else
-      new WorldViewSettings2D(workspace, getPaddingDimensions)
+  // initialize in 2D as default
+  private var _settings: WorldViewSettings = new WorldViewSettings2D(workspace, getPaddingDimensions)
+  _settings.addPropertyChangeListener(tickCounter)
 
-  settings.addPropertyChangeListener(tickCounter)
+  def settings: WorldViewSettings = _settings
+  def settings_=(s: WorldViewSettings): Unit = {
+    val listeners = settings.currentListeners
+    listeners.foreach(settings.removePropertyChangeListener _)
+    _settings = s
+    listeners.foreach(settings.addPropertyChangeListener _)
+  }
 
   override def classDisplayName: String = "World & View"
 
@@ -248,6 +252,10 @@ class ViewWidget(workspace: GUIWorkspaceScala, val view: View)
 
   override def load(view: WidgetModel): AnyRef = {
     workspace.withoutRendering { () =>
+      settings = view.dimensions match {
+        case _: WorldDimensions3D => new WorldViewSettings3D(workspace)
+        case _ => new WorldViewSettings2D(workspace, getPaddingDimensions)
+      }
       workspace.loadWorld(view, settings)
       // we can't clearAll here because the globals may not
       // be allocated yet ev 7/12/06

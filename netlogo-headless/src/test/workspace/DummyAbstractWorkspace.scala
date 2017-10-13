@@ -2,8 +2,8 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ Agent, World2D }
-import org.nlogo.nvm, nvm.CompilerInterface
+import org.nlogo.agent.Agent
+import org.nlogo.nvm
 import org.nlogo.api
 import org.nlogo.core, org.nlogo.core.{File, Model}
 
@@ -11,10 +11,13 @@ import org.nlogo.core, org.nlogo.core.{File, Model}
  * handy for use in unit tests
  */
 
-class DummyAbstractWorkspace
-extends AbstractWorkspace(new World2D)
-{
+class DummyAbstractWorkspace(helper: Helper)
+extends AbstractWorkspace(helper)
+with HeadlessCatchAll
+with DefaultWorldLoader {
+  def this() = this(Helper.twoD)
   dispose() // don't leak a JobThread - ST 5/2/13
+  override def silent: Boolean = true
   private def unsupported = throw new UnsupportedOperationException
   override def compilerTestingMode = false
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
@@ -25,6 +28,7 @@ extends AbstractWorkspace(new World2D)
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
   override def open(path: String) = unsupported
+  override def openString(modelContents: String) = unsupported
   override def openModel(model: Model) = unsupported
   override def clearOutput(): Unit = unsupported
   override def disablePeriodicRendering(): Unit = {}
@@ -47,17 +51,10 @@ extends AbstractWorkspace(new World2D)
   override def setDimensions(d: core.WorldDimensions, patchSize: Double) = unsupported
   override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
   override def resizeView(): Unit = unsupported
-  override def runtimeError(owner: api.JobOwner,
-                            context: nvm.Context,
-                            instruction: nvm.Instruction,
-                            ex: Exception) = unsupported
-  override def ownerFinished(owner: api.JobOwner) = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe(context: nvm.Context): Unit = unsupported
-  override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: nvm.Job) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
-  override def compiler: CompilerInterface = unsupported
   override def renderer = unsupported
   override def command(source: String) = unsupported
   override def report(source: String) = unsupported
@@ -74,4 +71,19 @@ extends AbstractWorkspace(new World2D)
   override def viewOffsetY = unsupported
   override def viewWidth = unsupported
   override def isHeadless = true
+
+  // Members declared in org.nlogo.workspace.DefaultWorldLoader
+  def getMinimumWidth: Int = unsupported
+  def insetWidth: Int = unsupported
+
+  // Members declared in org.nlogo.workspace.WorldLoaderInterface
+  def clearTurtles(): Unit = unsupported
+  def frameRate(rate: Double): Unit = unsupported
+  def frameRate: Double = unsupported
+  def setSize(x: Int,y: Int): Unit = unsupported
+  def showTickCounter: Boolean = unsupported
+  def showTickCounter(visible: Boolean): Unit = unsupported
+  def tickCounterLabel: String = unsupported
+  def tickCounterLabel(label: String): Unit = unsupported
+  def updateMode(updateMode: org.nlogo.core.UpdateMode): Unit = unsupported
 }

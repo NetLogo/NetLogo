@@ -2,7 +2,6 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.Version
 import org.nlogo.workspace.Checksummer
 import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
@@ -43,11 +42,8 @@ class TestChecksums extends FunSuite {
 }
 
 object TestChecksums extends ChecksumTester(println _) {
-  def checksums = {
-    val path = if (Version.is3D) "test/checksums3d.txt"
-               else "test/checksums.txt"
-    ChecksumsAndPreviews.Checksums.load(path)
-  }
+  def checksums =
+    ChecksumsAndPreviews.Checksums.load("test/checksums.txt")
 
   def main(args: Array[String]) {
 
@@ -99,10 +95,9 @@ class ChecksumTester(info: String => Unit) {
   val failures = new StringBuilder
 
   def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
-    val workspace = HeadlessWorkspace.newInstance
+    val workspace = HeadlessWorkspace.fromPath(model)
     workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
-    workspace.open(model)
     Checksummer.initModelForChecksumming(workspace)
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {

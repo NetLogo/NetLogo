@@ -2,37 +2,43 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ ModelLoader, ModelSections, Version}
+import org.nlogo.api.ModelLoader
 import org.nlogo.core.Model
+import org.nlogo.workspace.ModelTracker
+import org.nlogo.window.Events, Events.{ LoadModelEvent, ModelSavedEvent }
 
-class ModelSaver(model: ModelSections, loader: ModelLoader) {
+@deprecated("ModelSaver will be removed in a future version", "6.1.0")
+class ModelSaver(modelTracker: ModelTracker, loader: ModelLoader)
+  extends LoadModelEvent.Handler
+  with ModelSavedEvent.Handler {
 
-  private var _currentModel: Model = Model()
+  def this(app: App, loader: ModelLoader) = this(app.modelTracker, loader)
 
-  def priorModel: Model = _currentModel
+  private var _priorModel: Model = Model()
 
-  def currentModel = {
-    val m = _currentModel.copy(
-      code         = model.procedureSource,
-      widgets      = model.widgets,
-      info         = model.info,
-      turtleShapes = model.turtleShapes,
-      linkShapes   = model.linkShapes)
-    if (model.additionalSections.isEmpty)
-      m
-    else
-      model.additionalSections.foldLeft(m) {
-        case (newModel, section) => section.updateModel(newModel)
-      }
+  def handle(e: LoadModelEvent): Unit = {
+    _priorModel = e.model
   }
 
-  def currentModelInCurrentVersion: Model =
-    currentModel.copy(version = Version.version)
+  def handle(e: ModelSavedEvent): Unit = {
+    _priorModel = currentModel
+  }
 
+  @deprecated("Use ModelSaver.priorModel will be removed in a future version", "6.1.0")
+  def priorModel: Model = _priorModel
+
+  @deprecated("Use workspace.modelTracker.model instead", "6.1.0")
+  def currentModel = modelTracker.model
+
+  @deprecated("Use workspace.modelTracker.model instead", "6.1.0")
+  def currentModelInCurrentVersion: Model = currentModel
+
+  @deprecated("Have the workspace open a model instead of setting it as current", "6.1.0")
   def setCurrentModel(m: Model) = {
-    _currentModel = m
+    _priorModel = m
   }
 
+  @deprecated("Use modelLoader.sourceString(Model, String) instead", "6.1.0")
   // this is only used by Modeling Commons and NetLogo Web Export
   // at the moment. It should *not* be used by anything else
   // (and it shouldn't be used by NLW or MC either if they can be changed).

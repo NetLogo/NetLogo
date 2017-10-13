@@ -11,9 +11,9 @@ import org.nlogo.swing.Utils.icon
 object Splash {
   private var splashWindow: JWindow = null
 
-  def beginSplash() {
+  def beginSplash(version: Version = Version) {
     splashWindow = new JWindow
-    splashWindow.getContentPane.add(splash)
+    splashWindow.getContentPane.add(new MyIconHolder(version))
     splashWindow.pack()
     org.nlogo.awt.Positioning.center(splashWindow, null)
     splashWindow.setVisible(true)
@@ -27,10 +27,10 @@ object Splash {
 
   val image = icon("/images/title.jpg")
 
-  val splash = new JLabel(image) {
+  class MyIconHolder(versionObj: Version) extends JLabel(image) {
     val message = {
-      val date = Version.buildDate
-      val version = "Version " + Version.versionDropZeroPatch.drop("NetLogo ".size)
+      val date = versionObj.buildDate
+      val version = "Version " + versionObj.versionDropZeroPatch.drop("NetLogo ".size)
       // hopefully avoid confusion where semi-devel people report bugs in versions that aren't
       // finished yet -- don't foreground the version number to them - ST 2/27/06
       if(date.startsWith("INTERIM DEVEL BUILD"))

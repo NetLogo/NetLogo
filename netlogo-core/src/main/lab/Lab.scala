@@ -21,9 +21,9 @@ class Lab extends LabInterface {
       def modelDims = queue.head.world.getDimensions
       val worker = newWorker(protocol)
       tableWriter.foreach(
-        worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
+        worker.addTableWriter(modelPath, dims.getOrElse(modelDims), settings.version.version, _))
       spreadsheetWriter.foreach(
-        worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), _))
+        worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), settings.version.version, _))
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

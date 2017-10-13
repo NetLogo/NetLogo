@@ -3,11 +3,14 @@
 package org.nlogo.app.infotab
 
 import org.scalatest.FunSuite
+import org.nlogo.api.NetLogoLegacyDialect
 import java.io.ByteArrayInputStream
 
 class InfoFormatterTests extends FunSuite {
 
-  import InfoFormatter._
+  def toInnerHtml(md: String): String = {
+    InfoFormatter.toInnerHtml(md, NetLogoLegacyDialect).trim
+  }
 
   val helloWorldMarkdown = """|
                               |    # Hello
@@ -18,7 +21,7 @@ class InfoFormatterTests extends FunSuite {
 
   test("hello world (smoke test)") {
     assertResult(helloWorldInnerHtml) {
-      toInnerHtml(helloWorldMarkdown).trim
+      toInnerHtml(helloWorldMarkdown)
     }
   }
 
@@ -26,7 +29,7 @@ class InfoFormatterTests extends FunSuite {
     assertResult("""|<p>hi<br />
                     |there</p>""".stripMargin) {
       toInnerHtml("""|hi
-                     |there""".stripMargin).trim
+                     |there""".stripMargin)
     }
   }
 
@@ -35,12 +38,12 @@ class InfoFormatterTests extends FunSuite {
                     |<p>there</p>""".stripMargin) {
       toInnerHtml("""|hi
                      |
-                     |there""".stripMargin).trim
+                     |there""".stripMargin)
     }
   }
 
   test("main") {
-    val fullHtml = InfoFormatter(helloWorldMarkdown)
+    val fullHtml = InfoFormatter(helloWorldMarkdown, NetLogoLegacyDialect)
     // make sure the style sheet is there:
     assert(fullHtml.contains("<style type=\"text/css\">"))
     assert(fullHtml.contains(":link { color: rgb(110,0,110); }"))
@@ -51,7 +54,7 @@ class InfoFormatterTests extends FunSuite {
 
   test("read function that should probably be in a utils class somewhere") {
     def process(s: String) =
-      assertResult(s) { read(new ByteArrayInputStream(s.getBytes)) }
+      assertResult(s) { InfoFormatter.read(new ByteArrayInputStream(s.getBytes)) }
     process("goo")
     process("\ngoo")
     process("\ngoo\n")
@@ -70,7 +73,7 @@ class InfoFormatterTests extends FunSuite {
                     |is 5 &lt; x?</p>""".stripMargin) {
       toInnerHtml("""|is 5<6?
                      |is 5 < 6?
-                     |is 5 < x?""".stripMargin).trim
+                     |is 5 < x?""".stripMargin)
     }
   }
 
@@ -82,7 +85,7 @@ class InfoFormatterTests extends FunSuite {
                      |<tr> <td>confess     <td>silent           <td>0              <td>5
                      |</table>""".stripMargin
     val time = System.currentTimeMillis
-    assertResult(content) { toInnerHtml(content).trim }
+    assertResult(content) { toInnerHtml(content) }
     // trac.assembla.com/nlogo/ticket/1181
     assert(System.currentTimeMillis - time < 1000)
   }
@@ -102,13 +105,12 @@ class InfoFormatterTests extends FunSuite {
                      |  baz
                      |qux
                      |```
-                     |oof""".stripMargin.replaceAll("\r\n", "\n")).trim
+                     |oof""".stripMargin.replaceAll("\r\n", "\n"))
     }
   }
 
   test("colorized code blocks") {
-    assertResult("""|<pre><code><font color="#007f69">to</font><font color="#000000"> setup<br />  </font><font color="#0000aa">ca</font><font color="#000000"><br />  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000"><br /></font><font color="#007f69">end</font></code></pre>
-                    |""".stripMargin) {
+    assertResult("""|<pre><code><font color="#007f69">to</font><font color="#000000"> setup<br />  </font><font color="#0000aa">ca</font><font color="#000000"><br />  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000"><br /></font><font color="#007f69">end</font></code></pre>""".stripMargin) {
       toInnerHtml("""|    to setup
                      |      ca
                      |      crt 10

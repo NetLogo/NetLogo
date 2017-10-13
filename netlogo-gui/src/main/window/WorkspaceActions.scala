@@ -57,7 +57,7 @@ object WorkspaceActions {
 
     override def performAction(workspace: GUIWorkspace): Unit = {
       try {
-        workspace.glView.open()
+        workspace.glView.open(workspace.compiler.dialect.is3D)
         workspace.set2DViewEnabled(false)
       }
       catch {

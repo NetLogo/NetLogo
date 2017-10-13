@@ -4,8 +4,8 @@ package org.nlogo.headless
 
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.api.PreviewCommands
-import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
+import org.nlogo.api.{ PreviewCommands, TwoDVersion }
+import org.nlogo.workspace.{ ModelsLibrary, Checksummer }
 
 object ChecksumsAndPreviews {
 
@@ -17,11 +17,11 @@ object ChecksumsAndPreviews {
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
-    AbstractWorkspace.setHeadlessProperty()
+    Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
-        ModelsLibrary.getModelPaths()
+        ModelsLibrary.getModelPaths(TwoDVersion, true)
           .filter(fn)
           .map(p => p.substring(p.indexOf("models/")))
           .toList

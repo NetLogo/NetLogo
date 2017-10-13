@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.view
 
-import java.awt.event.KeyListener
+import java.awt.event.{ KeyListener, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.JFrame
 
@@ -12,7 +12,7 @@ import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatc
 
 class ViewManager(val workspace: GUIWorkspace,
                   appWindow: JFrame,
-                  keyListener: KeyListener)
+                  viewFactory: ViewFactory)
     extends org.nlogo.window.GLViewManagerInterface
     with org.nlogo.window.Event.LinkChild
     with org.nlogo.window.Event.LinkParent
@@ -30,6 +30,7 @@ class ViewManager(val workspace: GUIWorkspace,
   private var fullscreenView: FullscreenView = null
   var turtleView: View = null
   private var fullscreen = false
+  private var keyListeners: Seq[KeyListener] = Seq()
 
   var paintingImmediately = false
   private var _framesSkipped = false
@@ -38,12 +39,12 @@ class ViewManager(val workspace: GUIWorkspace,
   override def getLinkParent = appWindow
 
   @throws(classOf[JOGLLoadingException])
-  def open() {
+  def open(for3D: Boolean) {
     if (observerView != null) {
       observerView.toFront()
       observerView.updatePerspectiveLabel()
     } else
-      try init()
+      try init(for3D)
       catch {
         case vex: JOGLVersionMismatchException =>
           org.nlogo.swing.Utils.alert(
@@ -58,13 +59,20 @@ class ViewManager(val workspace: GUIWorkspace,
       }
   }
 
-  def init() {
+  def init(for3D: Boolean) {
     // if we have a frame already, dispose of it
     Option(observerView).foreach(_.dispose())
 
     try {
-      observerView = new ObserverView(this, null)
-      observerView.canvas.addKeyListener(keyListener)
+      observerView = viewFactory.observer(this, null)
+      keyListeners.foreach(observerView.canvas.addKeyListener _)
+      if(! for3D) {
+        observerView.addWindowListener(new WindowAdapter {
+          override def windowClosing(e: WindowEvent) {
+            ViewManager.this.close()
+          }
+        })
+      }
       currentView = observerView
       org.nlogo.awt.Positioning.moveNextTo(observerView, appWindow)
       currentView.updatePerspectiveLabel()
@@ -89,8 +97,8 @@ class ViewManager(val workspace: GUIWorkspace,
             "This graphics environment does not support full screen mode")
         currentView.setVisible(true)
         appWindow.setVisible(false)
-        fullscreenView = new FullscreenView(this, currentView.renderer)
-        fullscreenView.canvas.addKeyListener(keyListener)
+        fullscreenView = viewFactory.fullscreen(this, currentView.renderer)
+        keyListeners.foreach(fullscreenView.canvas.addKeyListener _)
         fullscreenView.init()
         observerView.setVisible(false)
         currentView = fullscreenView
@@ -169,7 +177,7 @@ class ViewManager(val workspace: GUIWorkspace,
     this.antiAliasing = antiAliasing
     if (currentView != null) {
       world.markPatchColorsDirty()
-      observerView = new ObserverView(this, currentView.renderer, currentView.getBounds)
+      observerView = viewFactory.observer(this, currentView.renderer, currentView.getBounds)
       currentView.dispose()
       currentView = observerView
       currentView.setVisible(true)
@@ -198,6 +206,10 @@ class ViewManager(val workspace: GUIWorkspace,
   override def addLinkComponent(c: AnyRef) {
     linkComponents.clear()
     super.addLinkComponent(c)
+  }
+
+  def addKeyListener(listener: KeyListener): Unit = {
+    keyListeners :+= listener
   }
 
   def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) {

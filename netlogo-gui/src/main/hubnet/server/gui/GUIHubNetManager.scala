@@ -72,7 +72,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     }
   }
 
-  override def updateModel(m: Model): Model = {
+  def updateModel(m: Model): Model = {
     m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(interfaceWidgets), Seq())
   }
 

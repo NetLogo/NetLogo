@@ -6,15 +6,21 @@ import java.nio.file.Paths
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.Version
+import org.nlogo.api.{ TwoDVersion, ThreeDVersion, Version }
 import org.nlogo.util.SlowTest
 import org.nlogo.fileformat, fileformat.NLogoThreeDFormat
 
 class TestModelNetLogoVersions extends FunSuite with SlowTest {
-  val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
+
+  val paths =
+    ModelsLibrary.getModelPaths(TwoDVersion) ++
+    ModelsLibrary.getModelPaths(ThreeDVersion) ++
+    ModelsLibrary.getModelPathsAtRoot("extensions", TwoDVersion)
+    ModelsLibrary.getModelPathsAtRoot("extensions", ThreeDVersion)
+
   val dummyWorkspace = new DummyWorkspace()
-  val extensionManager = Helper.default.extensionManager
-  for(path <- paths)
+
+  for(path <- paths.distinct)
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version
       val loader =

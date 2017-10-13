@@ -7,7 +7,7 @@ import org.nlogo.headless.HeadlessWorkspace
 object HeadlessServerExample {
 
   def main(args: Array[String]) {
-    val workspace = HeadlessWorkspace.newInstance
+    val workspace = HeadlessWorkspace.newInstance(false)
     val commandLine = new CommandLineThread(workspace)
     workspace.open("models/HubNet Activities/Code Examples/Template.nlogo")
     workspace.command("hubnet-reset")

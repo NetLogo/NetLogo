@@ -72,6 +72,8 @@ class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
   category    = ToolsCategory
   group       = ToolsDialogsGroup
   accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
+  setEnabled(aggregateManager != null)
+
 
   override def actionPerformed(e: ActionEvent) {
     aggregateManager.showEditor()

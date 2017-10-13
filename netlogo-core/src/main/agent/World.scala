@@ -6,8 +6,8 @@ import java.lang.{Double => JDouble, Integer => JInteger}
 import java.util.{Arrays, List => JList, Map => JMap}
 
 import org.nlogo.agent.ImporterJ.{ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader}
-import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer }
-import org.nlogo.core.{AgentKind, Program, WorldDimensions}
+import org.nlogo.api.{AgentException, Color, ImporterUser, NetLogoLegacyDialect, MersenneTwisterFast, RandomSeedGenerator, Timer }
+import org.nlogo.core.{AgentKind, Dialect, NetLogoCore, Program, WorldDimensions}
 
 object World {
   val Zero = JDouble.valueOf(0.0)
@@ -135,7 +135,16 @@ abstract class World
 // that don't wrap regardless of what the topology is.  So that's why many
 // methods like distance() and towards() take a boolean argument "wrap";
 // it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
-class World2D extends World with CompilationManagement {
+class World2D extends {
+  val defaultDialect: Dialect = {
+    if (NetLogoLegacyDialect.isAvailable)
+      NetLogoLegacyDialect
+    else
+      NetLogoCore
+  }
+}
+with World
+with CompilationManagement {
 
   val protractor: Protractor = new Protractor(this)
 
@@ -355,4 +364,5 @@ class World2D extends World with CompilationManagement {
   def sprout(patch: Patch, breed: AgentSet): Turtle = {
     new Turtle2D(this, breed, patch.pxcor, patch.pycor)
   }
+
 }

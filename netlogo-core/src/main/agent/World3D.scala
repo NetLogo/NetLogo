@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
+import org.nlogo.core.{ AgentKind, Dialect, Program, WorldDimensions }
 import org.nlogo.api.{ AgentException, Color, ImporterUser, NetLogoThreeDDialect,
   WorldDimensionException, WorldDimensions3D }
 
@@ -12,9 +12,12 @@ import java.util.Arrays
 
 import World._
 
-class World3D extends World
-  with org.nlogo.api.World3D
-  with CompilationManagement {
+class World3D extends {
+  val defaultDialect: Dialect = NetLogoThreeDDialect
+}
+with World
+with org.nlogo.api.World3D
+with CompilationManagement {
 
   val drawing: Drawing3D = new Drawing3D(this)
 

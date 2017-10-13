@@ -24,7 +24,8 @@ the stack traces, not the results.
  */
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
+import org.nlogo.api.{Argument, Context, Command, ExtensionException,
+  LogoException, ThreeDVersion, TwoDVersion, WorldDimensions3D, Version}
 import org.nlogo.core.Syntax
 import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
 import org.nlogo.core.{WorldDimensions, View, Model}
@@ -96,42 +97,43 @@ error while observer running __BOOM
 }
 
 class TestExtensionStackTraces extends FunSuite {
-  test("extension exceptions keep causes") {
-    val primaryCause = new Exception()
-    val wrapperCause = new Exception(primaryCause)
-    val dummyClassManager = new DummyClassManager() {
-      override val barPrim = new Command {
-        def getAgentClassString = "OTPL"
-        override def getSyntax = Syntax.commandSyntax()
-        override def perform(args: Array[Argument], context: Context) {
-          throw new ExtensionException(wrapperCause)
+  def testInMode(version: Version, dimensions: WorldDimensions, suffix: String): Unit = {
+    test(s"extension exceptions keep causes ($suffix)") {
+      val primaryCause = new Exception()
+      val wrapperCause = new Exception(primaryCause)
+      val dummyClassManager = new DummyClassManager() {
+        override val barPrim = new Command {
+          def getAgentClassString = "OTPL"
+          override def getSyntax = Syntax.commandSyntax()
+          override def perform(args: Array[Argument], context: Context) {
+            throw new ExtensionException(wrapperCause)
+          }
+        }
+      }
+
+      val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
+      val ws = HeadlessWorkspace.newInstance(version.is3D)
+      ws.getExtensionManager.addLoader(memoryLoader)
+      ws.initForTesting(dimensions, "")
+      ws.openModel(Model(
+        code = "extensions [ foo ]",
+        widgets = List(View(dimensions = dimensions)),
+        version = version.version
+      ))
+
+      try {
+        ws.command("foo:bar")
+      } catch {
+        case e: org.nlogo.nvm.EngineException => {
+          var ex: Throwable = e
+          while (ex != null && ex != wrapperCause) ex = ex.getCause
+          assert(ex === wrapperCause)
+          assert(ex.getCause === primaryCause)
         }
       }
     }
-
-    val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
-    val ws = HeadlessWorkspace.newInstance
-    ws.getExtensionManager.addLoader(memoryLoader)
-    val dims = if(Version.is3D)
-                 new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
-               else
-                 new WorldDimensions(-5, 5, -5, 5)
-    ws.initForTesting(dims, "")
-    ws.openModel(Model(
-      code = "extensions [ foo ]",
-      widgets = List(View(dimensions = dims)),
-      version = Version.version
-    ))
-
-    try {
-      ws.command("foo:bar")
-    } catch {
-      case e: org.nlogo.nvm.EngineException => {
-        var ex: Throwable = e
-        while (ex != null && ex != wrapperCause) ex = ex.getCause
-        assert(ex === wrapperCause)
-        assert(ex.getCause === primaryCause)
-      }
-    }
   }
+
+  testInMode(ThreeDVersion, new WorldDimensions3D(-5, 5, -5, 5, -5, 5), "3D")
+  testInMode(TwoDVersion, new WorldDimensions(-5, 5, -5, 5), "2D")
 }

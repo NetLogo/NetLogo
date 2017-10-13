@@ -2,32 +2,35 @@
 
 package org.nlogo.compile
 
-import org.nlogo.core.{ DummyCompilationEnvironment, Program }
-import org.scalatest.FunSuite
+import org.nlogo.core.{ Dialect, DummyCompilationEnvironment, Program }
 import org.nlogo.api.{ AgentVariableNumbers, DummyExtensionManager, Version, NetLogoThreeDDialect, NetLogoLegacyDialect }
 import org.nlogo.nvm.Procedure
 
-class TestGenerator extends FunSuite {
+import org.nlogo.util.{ ArityIndependent, TaggedFunSuite }
 
-  val dialect =
-    if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+trait GeneratorHelper {
+  def dialect: Dialect
   val compiler = new Compiler(dialect)
   val program = Program.fromDialect(dialect).copy(userGlobals = Seq("GLOB1"))
-  def condense(disassembly: String) =
-    disassembly.split("\n").map(_.trim).mkString("\n")
-  def compile(source: String, preamble: String) =
-    compiler.compileMoreCode(
-      "to foo " + preamble + source + "\nend", None,
-      program, new scala.collection.immutable.ListMap[String, Procedure](),
-      new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head
+  def condense(disassembly: String) = disassembly.split("\n").map(_.trim).mkString("\n")
+
+  def compile(source: String, preamble: String) = compiler.compileMoreCode(
+    "to foo " + preamble + source + "\nend", None,
+    program, new scala.collection.immutable.ListMap[String, Procedure](),
+    new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head
+
   def disassembleCommand(source: String): String =
     condense(compile(source, "").disassembly.value)
   def disassembleReporter(source: String): String =
     condense(compile(source, "__ignore ").args.head.disassembly.value)
   def stripLineNumbers(disassembly: String) =
     disassembly.split("\n").filter(!_.matches("L\\d?")).toList
+}
 
-  if(Version.useGenerator)
+class TestGenerator extends TaggedFunSuite(ArityIndependent) with GeneratorHelper {
+  def dialect = NetLogoLegacyDialect
+
+  if(Version.useGenerator) {
     test("no arg reporter") {
       // the result is being passed to __ignore which expects an Object so we should
       // generate code that retrieves a stored Double
@@ -39,84 +42,75 @@ class TestGenerator extends FunSuite {
       assert(disassembleReporter("1 + timer").matches("(?s).*DCONST_1.*"))
     }
 
-  // We're testing here that since _if.offset is known at compile time, for
-  // "ip += offset" in _if.perform, we generate "ICONST_2 IADD" rather than
-  // "GETFIELD IADD"
-  if(Version.useGenerator)
+    // We're testing here that since _if.offset is known at compile time, for
+    // "ip += offset" in _if.perform, we generate "ICONST_2 IADD" rather than
+    // "GETFIELD IADD"
     test("offset compiled to constant") {
       assertResult("""|ICONST_4
-                        |FRAME FULL [org/nlogo/prim/_asm_procedurefoo_if_0 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
-                        |PUTFIELD org/nlogo/nvm/Context.ip : I
-                        |RETURN""".stripMargin)(
-        stripLineNumbers(disassembleCommand("if true [ __ignore 1 __ignore 2 __ignore 3 ]"))
-        .takeRight(4).mkString("\n"))
+        |FRAME FULL [org/nlogo/prim/_asm_procedurefoo_if_0 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
+        |PUTFIELD org/nlogo/nvm/Context.ip : I
+        |RETURN""".stripMargin)(
+          stripLineNumbers(disassembleCommand("if true [ __ignore 1 __ignore 2 __ignore 3 ]"))
+            .takeRight(4).mkString("\n"))
     }
 
-  // make sure the generator chooses _constdouble's Double-returning method,
-  // not the double-returning one, when the result is to be stored in a variable
-  if(Version.useGenerator)
-    test("useBoxedConstant") {
-      val patchLabelVarNum =
-        if (Version.is3D)
-          AgentVariableNumbers.VAR_PLABEL3D
-        else
-          AgentVariableNumbers.VAR_PLABEL
-      val actual = disassembleCommand("set plabel 1")
-      assert(actual.matches(s"(?s).*ICONST_${patchLabelVarNum}\n" +
-                      "ALOAD 2\n" +
-                      "INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable.*"))
-    }
-
-  // make sure we generate good code for nobody checking
-  if(Version.useGenerator)
+    // make sure we generate good code for nobody checking
     test("equalsNobody1") {
       assert(!disassembleReporter("glob1 = nobody")
-             .matches("(?s).*recursivelyEqual.*"))
+        .matches("(?s).*recursivelyEqual.*"))
     }
 
-  if(Version.useGenerator)
     test("equalsNobody2") {
       assert(!disassembleReporter("nobody = glob1")
-             .matches("(?s).*recursivelyEqual.*"))
+        .matches("(?s).*recursivelyEqual.*"))
     }
 
-  if(Version.useGenerator)
     test("equalsNobody3") {
       assert(!disassembleReporter("glob1 != nobody")
-             .matches("(?s).*recursivelyEqual.*"))
+        .matches("(?s).*recursivelyEqual.*"))
     }
 
-  if(Version.useGenerator)
     test("equalsNobody4") {
       assert(!disassembleReporter("nobody != glob1")
-             .matches("(?s).*recursivelyEqual.*"))
+        .matches("(?s).*recursivelyEqual.*"))
     }
 
-  // make sure we don't choke when a rejiggered reporter has a nonrejiggered argument
-  if(Version.useGenerator)
+    // make sure we don't choke when a rejiggered reporter has a nonrejiggered argument
     test("nonRejiggeredArgument") {
       // __boom is unrejiggered - ST 2/6/09
       assert(disassembleReporter("2 * __boom")
-             .matches("(?s).*" +
-                      "LDC 2.0.*" +
-                      "GETFIELD org/nlogo/prim/_asm_procedurefoo_mult_0.keptinstr3 : Lorg/nlogo/prim/etc/_boom;.*" +
-                      "INVOKEVIRTUAL org/nlogo/prim/etc/_boom.report \\(Lorg/nlogo/nvm/Context;\\)Ljava/lang/Object;.*"))
+        .matches("(?s).*" +
+          "LDC 2.0.*" +
+          "GETFIELD org/nlogo/prim/_asm_procedurefoo_mult_0.keptinstr3 : Lorg/nlogo/prim/etc/_boom;.*" +
+          "INVOKEVIRTUAL org/nlogo/prim/etc/_boom.report \\(Lorg/nlogo/nvm/Context;\\)Ljava/lang/Object;.*"))
+    }
+  }
+}
+
+abstract class ArityDependentTests(is3D: Boolean) extends TaggedFunSuite(ArityIndependent) with GeneratorHelper {
+  val plabelVN: Int
+  val xcorVN: Int
+  def dialect = if (is3D) NetLogoThreeDDialect else NetLogoLegacyDialect
+  val generatorName: String = if (is3D) "3D" else "2D"
+
+  if (Version.useGenerator) {
+    // make sure the generator chooses _constdouble's Double-returning method,
+    // not the double-returning one, when the result is to be stored in a variable
+    test(s"useBoxedConstant ($generatorName)") {
+      val actual = disassembleCommand("set plabel 1")
+      assert(actual.matches(s"(?s).*ICONST_${plabelVN}\n" +
+        "ALOAD 2\n" +
+        "INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable.*"))
     }
 
-  // make sure we generate good code for comparison of a variable known to be numeric
-  if(Version.useGenerator)
-    test("xcorEqualsNumber") {
-      val xcorVarNumber =
-        if (Version.is3D)
-          AgentVariableNumbers.VAR_XCOR3D
-        else
-          AgentVariableNumbers.VAR_XCOR
+    // make sure we generate good code for comparison of a variable known to be numeric
+    test(s"xcorEqualsNumber ($generatorName)") {
       assertResult(List(
         // context.agent.getTurtleVariableDouble
         "L0","ALOAD 1",
         "GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;",
         "CHECKCAST org/nlogo/agent/Turtle",
-        s"ICONST_${xcorVarNumber}",
+        s"ICONST_${xcorVN}",
         "INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D",
         // ... = 0
         "L1","DCONST_0",
@@ -137,20 +131,15 @@ class TestGenerator extends FunSuite {
         "L6","FRAME SAME1 java/lang/Boolean", "ARETURN"
       ).mkString("\n"))(disassembleReporter("xcor = 0"))
     }
+  }
+}
 
-    if(Version.useGenerator)
-      test("Correctly generates custom code for or") {
-        val emptyProgram = {
-          Program.empty()
-        }
-        compiler.compileProgram(
-          """
-          |breed [agents an-agent]
-          |
-          |to-report move
-          |  report all? agents-here [true] or all? agents-here [false]
-          |end
-          """.stripMargin, emptyProgram, new DummyExtensionManager, new DummyCompilationEnvironment()
-        )
-      }
+class TestGeneratorTwoD extends ArityDependentTests(is3D = false) {
+  val plabelVN = AgentVariableNumbers.VAR_PLABEL
+  val xcorVN = AgentVariableNumbers.VAR_XCOR
+}
+
+class TestGeneratorThreeD extends ArityDependentTests(is3D = true) {
+  val plabelVN = AgentVariableNumbers.VAR_PLABEL3D
+  val xcorVN = AgentVariableNumbers.VAR_XCOR3D
 }

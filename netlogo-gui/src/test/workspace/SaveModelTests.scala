@@ -114,8 +114,8 @@ class SaveModelTests extends FunSuite {
         warnedOfInvalidFileFormat = extension
       }
 
-      def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
-        warnedOfDiffereringVersion = version
+      def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean = {
+        warnedOfDiffereringVersion = saveVersion
         continueSavingModel
       }
     }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.nio.file.Path;
 
-final strictfp class QuickHelp<TokenType> {
+final strictfp class QuickHelp {
 
   // not instantiable
   private QuickHelp() {
@@ -57,17 +57,10 @@ final strictfp class QuickHelp<TokenType> {
     org.nlogo.swing.BrowserLauncher.openPath(comp, docPath("dict/" + theFile), null);
   }
 
-  public static void doHelp(java.awt.Component comp, String token) {
+  public static void doHelp(java.awt.Component comp, String token, boolean is3D) {
     if (!quickHelpLoaded) {
       quickHelpWords = loadHelp(QUICKHELPWORDS_PATH);
-      // if we're not in 3D don't load the 3d dictionary words
-      // cause we don't need 'em and they'll override the 2d
-      // dictionary ev 10/25/07
-      if (org.nlogo.api.Version$.MODULE$.is3D()) {
-        quickHelpWords3d = loadHelp(QUICKHELPWORDS_PATH3D);
-      } else {
-        quickHelpWords3d = new HashMap<String, String>();
-      }
+      quickHelpWords3d = loadHelp(QUICKHELPWORDS_PATH3D);
       quickHelpLoaded = true;
     }
     if (token == null) {
@@ -76,7 +69,7 @@ final strictfp class QuickHelp<TokenType> {
     token = token.toLowerCase();
     // if there is an entry in the 3D dictionary then it overrides
     // the 2D entry ev 10/25/07
-    if (quickHelpWords3d.containsKey(token)) {
+    if (is3D && quickHelpWords3d.containsKey(token)) {
       openDictionary(comp, token, quickHelpWords3d);
     } else if (quickHelpWords.containsKey(token)) {
       openDictionary(comp, token, quickHelpWords);

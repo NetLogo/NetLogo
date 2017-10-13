@@ -2,11 +2,14 @@
 
 package org.nlogo.lite
 
+import java.awt.Frame
 import java.awt.EventQueue.isDispatchThread
 import java.awt.image.BufferedImage
-import java.net.URI
+import java.awt.event.MouseListener
+import java.net.{ MalformedURLException, URI }
+import javax.swing.JPanel
 
-import org.nlogo.api.{ ControlSet, LogoException, ModelType, Version, SimpleJobOwner }
+import org.nlogo.api.{ ControlSet, Exceptions, LogoException, ModelType, SimpleJobOwner, ThreeDVersion, TwoDVersion }
 import org.nlogo.awt.EventQueue
 import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
@@ -26,15 +29,15 @@ import scala.util.Try
  * See the "Controlling" section of the NetLogo User Manual for example code.
  */
 
-abstract class AppletPanel(frame: java.awt.Frame, iconListener: java.awt.event.MouseListener)
-extends javax.swing.JPanel
-with org.nlogo.api.Exceptions.Handler
+abstract class AppletPanel(frame: Frame, iconListener: MouseListener)
+extends JPanel
+with Exceptions.Handler
 with Event.LinkParent
 with LinkRoot
 with ControlSet {
 
   @deprecated("AppletPanel can no longer be an actual applet, omit last argument", "6.1.0")
-  def this(frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean) =
+  def this(frame: Frame, iconListener: MouseListener, isApplet: Boolean) =
     this(frame, iconListener)
 
   /**
@@ -48,8 +51,11 @@ with ControlSet {
   RuntimeErrorDialog.init(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
-  protected val world = if(Version.is3D) new World3D() else new World2D()
-  val workspace = new LiteWorkspace(world, frame, listenerManager, this)
+  def is3D: Boolean
+
+  protected val world = if (is3D) new World3D() else new World2D()
+  val workspace = new LiteWorkspace(world, frame, listenerManager, this, is3D)
+  private val version = if (is3D) ThreeDVersion else TwoDVersion
   val procedures = new ProceduresLite(workspace, workspace)
   protected val liteEditorFactory = new DefaultEditorFactory(workspace.compiler, workspace.getExtensionManager)
 
@@ -79,7 +85,7 @@ with ControlSet {
   add(panel, java.awt.BorderLayout.EAST)
 
   /** internal use only */
-  @throws(classOf[java.net.MalformedURLException])
+  @throws(classOf[MalformedURLException])
   def getFileURL(filename: String): java.net.URL =
     throw new UnsupportedOperationException
 
@@ -210,7 +216,7 @@ with ControlSet {
     val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
       workspace.compilerServices, fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
-    val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
+    val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace.compilerServices))
   }
 

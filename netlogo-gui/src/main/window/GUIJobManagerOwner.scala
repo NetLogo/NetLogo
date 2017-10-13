@@ -32,7 +32,7 @@ class GUIJobManagerOwner(
       }
     }
 
-  private var _periodicUpdatesEnabled = false;
+  @volatile private var _periodicUpdatesEnabled = false;
   def periodicUpdatesEnabled = _periodicUpdatesEnabled
   def setPeriodicUpdatesEnabled(enabled: Boolean): Unit = {
     _periodicUpdatesEnabled = enabled

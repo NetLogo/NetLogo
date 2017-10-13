@@ -5,14 +5,19 @@ package org.nlogo.log
 import org.scalatest.FunSuite
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.core.CompilerException
+import org.nlogo.api.TwoDVersion
 
 class LoggerTests extends FunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
+
   val logger = new Logger("esther")
+  val loggedVersion = TwoDVersion.version
+
   DOMConfigurator.configure("dist/configuration/NetLogo Logging/netlogo_logging.xml")
   new java.io.File("tmp").mkdir()
   new java.io.File("tmp/LoggerTests").mkdir()
   logger.changeLogDirectory(new java.io.File("tmp/LoggerTests").getCanonicalPath)
+
   test("logger") {
     logger.modelOpened("models/Sample Models/Biology/Ants.nlogo")
     Logger.logSpeedSlider(20)
@@ -26,7 +31,7 @@ class LoggerTests extends FunSuite {
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.SPEED\" " +
+      loggedVersion + "\">\n  <event logger=\"org.nlogo.log.Logger.SPEED\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"speed\">\n    " +
       "<value>20.0</value>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)
@@ -44,7 +49,7 @@ class LoggerTests extends FunSuite {
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
+      loggedVersion + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"ticks\">\n    " +
       "<name>ticks</name>\n    <value>50.0</value>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)
@@ -62,7 +67,7 @@ class LoggerTests extends FunSuite {
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
+      loggedVersion + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>foo</code>\n    <errorMessage start=\"99\" end=\"999\">error!!!</errorMessage>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)
@@ -80,7 +85,7 @@ class LoggerTests extends FunSuite {
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
+      loggedVersion + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>bar</code>\n    <errorMessage start=\"0\" end=\"0\">success</errorMessage>\n  </event>\n</eventSet>\n"
     assertResult(expected)(log)

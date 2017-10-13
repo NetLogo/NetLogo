@@ -10,8 +10,9 @@ import org.nlogo.nvm.Workspace
 class TableExporter(modelFileName: String,
                     initialDims: WorldDimensions,
                     protocol: LabProtocol,
+                    versionString: String,
                     out: java.io.PrintWriter)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, versionString, out)
 {
   val settings = new collection.mutable.HashMap[Int,List[(String,Any)]]
   override def experimentStarted() {

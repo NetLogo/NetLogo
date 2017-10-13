@@ -25,8 +25,8 @@ object BehaviorSpaceCoordinator {
   private def modelProtocols(m: Model): Option[Seq[LabProtocol]] =
     m.optionalSectionValue[Seq[LabProtocol]](bsSection)
 
-  def selectProtocol(settings: Settings, workspace: Workspace): Option[LabProtocol] = {
-    val model = modelAtPath(settings.modelPath, workspace)
+  def selectProtocol(settings: Settings, workspace: Workspace): Option[(LabProtocol, Model)] = {
+    val model = modelAtPath(settings.modelPath, settings.version, workspace)
 
     val modelWithExtraProtocols =
       settings.externalXMLFile.map { file =>
@@ -48,10 +48,10 @@ object BehaviorSpaceCoordinator {
         protos          <- modelProtocols(modelWithExtraProtocols)
       } yield protos.head
 
-    namedProtocol orElse firstSetupFileProtocol
+    (namedProtocol orElse firstSetupFileProtocol).map(p => (p, model))
   }
 
-  private def modelAtPath(path: String, workspace: Workspace): Model = {
+  private def modelAtPath(path: String, version: Version, workspace: Workspace): Model = {
     val allAutoConvertables = fileformat.defaultAutoConvertables :+
       Femto.scalaSingleton[org.nlogo.api.AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
     val converter =
@@ -59,15 +59,15 @@ object BehaviorSpaceCoordinator {
     val loader = fileformat.standardLoader(literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 
-    OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
+    OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, version)
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
     }
   }
 
-  def protocolsFromModel(modelPath: String, workspace: Workspace): Seq[LabProtocol] = {
-    modelProtocols(modelAtPath(modelPath, workspace)).getOrElse(Seq[LabProtocol]())
+  def protocolsFromModel(modelPath: String, version: Version, workspace: Workspace): Seq[LabProtocol] = {
+    modelProtocols(modelAtPath(modelPath, version, workspace)).getOrElse(Seq[LabProtocol]())
   }
 
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {

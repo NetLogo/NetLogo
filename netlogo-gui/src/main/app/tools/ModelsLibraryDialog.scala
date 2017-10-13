@@ -23,8 +23,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
   TreeSelectionEvent, TreeSelectionListener }
 
 import org.nlogo.core.I18N
-import org.nlogo.api.FileIO
-import org.nlogo.awt.{ Positioning, UserCancelException }
+import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.awt.Positioning
 import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils },
   Utils.{ addEscKeyAction, icon }
 import org.nlogo.workspace.ModelsLibrary
@@ -34,47 +34,36 @@ import scala.util.Try
 import scala.language.implicitConversions
 
 object ModelsLibraryDialog {
-  private var me: ModelsLibraryDialog = null
-
-  // finish is a callback called *on the UI Thread* with the URI of the selected model
-  @throws(classOf[UserCancelException])
-  def open(parent: Frame, onSelect: URI => Unit): Unit = {
-    if (me == null) {
-      ModalProgressTask.onUIThread(parent, I18N.gui.get("modelsLibrary.loading"), { () =>
-        try {
-          buildRootNode.foreach { node =>
-            SwingUtilities.invokeLater({ () =>
-              finishOpen(new ModelsLibraryDialog(parent, node), onSelect)
-            })
-          }
-        } catch {
-          case e: Exception =>
-            println(e.getMessage)
-            e.printStackTrace()
-        }
-      })
-    } else {
-      finishOpen(me, onSelect)
-    }
-  }
-
-  // must be called from the UI Thread
-  private def finishOpen(me: ModelsLibraryDialog, onSelect: URI => Unit): Unit = {
-    this.me = me
-    me.setVisible(true)
-    me.sourceURI.foreach(onSelect)
+  def create(parent: Frame, version: Version): Option[ModelsLibraryDialog] = {
+    var dialog: Option[ModelsLibraryDialog] = None
+    var error: String = ""
+    ModalProgressTask.onUIThread(parent, I18N.gui.get("modelsLibrary.loading"), { () =>
+      try {
+        dialog = buildRootNode(version).map { node => new ModelsLibraryDialog(parent, node) }
+      } catch {
+        case e: Exception =>
+          println(e.getMessage)
+          error = e.getMessage
+          e.printStackTrace()
+      }
+    })
+    if (dialog.isEmpty)
+      JOptionPane.showMessageDialog(parent,
+        I18N.gui.getN("modelsLibrary.error.unableToLoad", error),
+        "NetLogo", JOptionPane.ERROR_MESSAGE)
+    dialog
   }
 
   // this *is* called on the background thread. It's probably a bad idea
   // to call it on the UI thread, as it performs many file operations in the background
-  private def buildRootNode: Option[Node] = {
-    ModelsLibrary.scanForModels(false)
+  private def buildRootNode(version: Version): Option[Node] = {
+    ModelsLibrary.scanForModels(version, false)
     val crossReferencedNode =
       for {
-        rootNode@ModelsLibrary.Tree(_, _, _) <- ModelsLibrary.rootNode
+        rootNode@ModelsLibrary.Tree(_, _, _) <- ModelsLibrary.rootNodes.get(version)
         xRefConfig <- ModelCrossReferencer.loadConfig()
       } yield ModelCrossReferencer.applyConfig(rootNode, xRefConfig)
-    (crossReferencedNode orElse ModelsLibrary.rootNode)
+    (crossReferencedNode orElse ModelsLibrary.rootNodes.get(version))
       .map(node => new Node(node, ModelsLibraryIndexReader.readInfoMap))
   }
 
@@ -155,7 +144,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   with TreeExpansionListener {
 
   private var selected = Option.empty[Node]
-  private var sourceURI = Option.empty[URI]
+  private[nlogo] var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
   private val searchField: JTextField = new JTextField("");
   private var searchText = Option.empty[String]
@@ -200,9 +189,10 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val communityAction: Action =
     new AbstractAction(I18N.gui.get("modelsLibrary.community")) {
       def actionPerformed(e: ActionEvent): Unit = {
-        val uri = BrowserLauncher.makeURI(me, "http://ccl.northwestern.edu/netlogo/models/community/")
+        val uri = BrowserLauncher.makeURI(ModelsLibraryDialog.this,
+          "http://ccl.northwestern.edu/netlogo/models/community/")
         if (uri != null) {
-          BrowserLauncher.openURI(me, uri)
+          BrowserLauncher.openURI(ModelsLibraryDialog.this, uri)
         }
       }
     }

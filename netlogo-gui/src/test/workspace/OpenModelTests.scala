@@ -25,10 +25,15 @@ class OpenModelTests extends FunSuite {
     def userCancelsOpen() = controller.openModel(false)
 
     lazy val controller = new MockController()
-    def format = new MockFormat(modelChanges(Model()), None)
+    val oldModel = Model()
+    val newModel = modelChanges(oldModel)
+    def format = new MockFormat(newModel, None)
     object VersionInfo extends Version {
+      def noVersion: String = currentVersion + " (no version)"
+      def version: String = currentVersion
       override def is3D = currentVersion.contains("3D")
       override def knownVersion(v: String) = v == currentVersion || super.knownVersion(v)
+      protected def additionalKnownVersions: Seq[String] = Seq()
     }
     lazy val loader = new ConfigurableModelLoader().addFormat[String, MockFormat](format)
     lazy val openedModel = OpenModelFromURI(uri, controller, loader, autoconverter, VersionInfo)
@@ -158,13 +163,13 @@ class MockController extends OpenModel.Controller {
     notifiedModelVersion = version
     willOpenModel
   }
-  def shouldOpenModelOfUnknownVersion(version: String): Boolean = {
-    notifiedModelVersion = version
+  def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = {
+    notifiedModelVersion = openVersion
     notifiedVersionUnknown = true
     willOpenModel
   }
-  def shouldOpenModelOfLegacyVersion(version: String): Boolean = {
-    notifiedModelVersion = version
+  def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = {
+    notifiedModelVersion = openVersion
     willOpenModel
   }
 }

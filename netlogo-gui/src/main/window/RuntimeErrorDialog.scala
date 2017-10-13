@@ -10,7 +10,7 @@ import java.nio.file.Path
 import javax.swing.{ JButton, JCheckBox, JComponent }
 
 import org.nlogo.core.I18N
-import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.api.{ LogoException, TwoDVersion }
 import org.nlogo.nvm.{ Context, Instruction }
 import org.nlogo.swing.{ BrowserLauncher, MessageDialog }
 import org.nlogo.util.Utils
@@ -39,7 +39,7 @@ case class ErrorInfo(var throwable: Throwable, var context: Option[Context] = No
 
 case class DebuggingInfo(var className: String, var threadName: String, var modelName: String, var eventTrace: String, var javaStackTrace: String) {
   def debugInfo =
-    s"""|${Version.version}
+    s"""|${TwoDVersion.version}
         |main: $className
         |thread: $threadName
         |${SysInfo.getVMInfoString}

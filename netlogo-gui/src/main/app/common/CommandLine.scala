@@ -11,7 +11,7 @@ import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
 import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
+import org.nlogo.window.{CommandCenterInterface, DefaultEditorColorizer, JobWidget, Events => WindowEvents}
 
 import scala.collection.immutable.List
 
@@ -65,7 +65,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new org.nlogo.editor.EditorField(30,
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
         java.awt.Font.PLAIN, 12),
-      true, new EditorColorizer(workspace), actionMap)
+      true, DefaultEditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
 

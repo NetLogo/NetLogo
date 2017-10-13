@@ -8,7 +8,7 @@ import javax.swing._
 import java.net.URI
 
 import org.nlogo.util.SysInfo
-import org.nlogo.api.{ FileIO, APIVersion, Version }
+import org.nlogo.api.{ FileIO, APIVersion, TwoDVersion, Version }
 import org.nlogo.swing.{ BrowserLauncher, RichAction }
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.Utils.icon
@@ -25,7 +25,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   }
   private var graphicsInfo = ""
   private val staticInfo =
-    Version.version +
+    TwoDVersion.version +
       " (" + Version.buildDate + ")\n" +
       "Extension API version: " + APIVersion.version + "\n" +
       SysInfo.getVMInfoString + "\n" +

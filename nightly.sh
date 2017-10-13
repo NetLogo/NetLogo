@@ -25,9 +25,6 @@ echo "*** done: test:fast"
 ./sbt nogen test:fast 2>&1 | tee tmp/nightly/1-nogen-fast-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen test:fast"; exit 1; fi
 echo "*** done: nogen test:fast"
-./sbt threed test:fast 2>&1 | tee tmp/nightly/2-threed-fast-test.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed test:fast"; exit 1; fi
-echo "*** done: threed test:fast"
 
 ./sbt test:slow 2>&1 | tee tmp/nightly/3-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: test:slow"; exit 1; fi
@@ -35,9 +32,6 @@ echo "*** done: test:slow"
 ./sbt nogen test:slow 2>&1 | tee tmp/nightly/4-nogen-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: nogen test:slow"; exit 1; fi
 echo "*** done: nogen test:slow"
-./sbt threed test:slow 2>&1 | tee tmp/nightly/5-threed-slow-test.txt
-if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed test:slow"; exit 1; fi
-echo "*** done: threed test:slow"
 
 ./sbt depend 2>&1 | tee tmp/nightly/6-depend.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: depend"; exit 1; fi

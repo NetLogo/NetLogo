@@ -118,7 +118,7 @@ class RecentFiles {
   }
 }
 
-class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
+class RecentFilesMenu(fileManager: FileManager)
   extends ModelSavedEvent.Handler
   with BeforeLoadEvent.Handler {
 

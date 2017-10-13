@@ -4,7 +4,7 @@ package org.nlogo.headless
 package misc
 
 import org.nlogo.workspace.ModelsLibrary
-import org.nlogo.api.SimpleJobOwner
+import org.nlogo.api.{ SimpleJobOwner, TwoDVersion }
 
 // This is accessible through the "bench" task in the sbt build.  It makes it convenient
 // to run the `__dump` command on a particular models, or on whole groups of models.
@@ -43,7 +43,7 @@ object Dump {
     Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
     //
     for {
-      path <- ModelsLibrary.getModelPaths
+      path <- ModelsLibrary.getModelPaths(TwoDVersion, true)
       if !TestCompileAll.badPath(path)
     } {
       val name = path.split("/").last.toList.mkString.stripSuffix(".nlogo")

@@ -4,15 +4,20 @@ package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World2D}
-import org.nlogo.api.{ JobOwner, CommandRunnable,
+import org.nlogo.api.{ JobOwner, CommandRunnable, NetLogoLegacyDialect,
   ReporterRunnable, ImportErrorHandler, OutputDestination}
 import org.nlogo.core.WorldDimensions
 import scala.collection.immutable.ListMap
 
 class DummyWorkspace extends Workspace {
   private def unsupported = throw new UnsupportedOperationException
+
   val world = new World2D()
+
+  def dialect = NetLogoLegacyDialect
   override def procedures: ListMap[String,Procedure] = ListMap.empty[String, Procedure]
+  override def owner = unsupported
+  override def linker = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager = unsupported
@@ -70,11 +75,13 @@ class DummyWorkspace extends Workspace {
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
+  override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported
   override def currentPlot(plot: String) = unsupported
   override def getPlot(plot: String) = unsupported
+  override def findPlot(plot: String) = unsupported
   override def isExtensionName(name: String) = unsupported
   override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: ImportErrorHandler) = unsupported
 
@@ -84,12 +91,6 @@ class DummyWorkspace extends Workspace {
   override def setDimensions(dim: WorldDimensions) = unsupported
   override def setDimensions(dim: WorldDimensions, patchSize: Double) = unsupported
   override def setDimensions(dim: org.nlogo.core.WorldDimensions,showProgress: Boolean,stop: org.nlogo.api.WorldResizer.JobStop): Unit = unsupported
-
-  // from JobManagerOwner
-  override def runtimeError(owner: JobOwner, manager: JobManagerInterface, context: Context, instruction: Instruction, ex: Exception) = unsupported
-  override def ownerFinished(owner: JobOwner) = unsupported
-  override def periodicUpdate() = unsupported
-  override def updateDisplay(haveWorldLockAlready: Boolean,forced: Boolean): Unit = unsupported
 
   // from RandomServices
   override def auxRNG = null
@@ -132,7 +133,7 @@ class DummyWorkspace extends Workspace {
 
   // Members declared in org.nlogo.core.LiteralParser
   def readFromString(s: String): AnyRef = unsupported
-  def readNumberFromString(source: String): AnyRef = unsupported
+  def readNumberFromString(source: String): java.lang.Double = unsupported
 
   // Members declared in org.nlogo.nvm.Workspace
   override def breathe(context: org.nlogo.nvm.Context): Unit = unsupported
@@ -140,11 +141,21 @@ class DummyWorkspace extends Workspace {
   override def inspectAgent(agentKind: org.nlogo.core.AgentKind, agent: Agent,radius: Double): Unit = unsupported
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = unsupported
   override def stopInspectingDeadAgents(): Unit = unsupported
-  override def procedures_=(procedures: org.nlogo.nvm.Procedure.ProceduresMap): Unit = unsupported
   override def behaviorSpaceExperimentName(name: String): Unit = unsupported
   override def behaviorSpaceExperimentName: String = unsupported
   override def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A] = unsupported
   override def requestDisplayUpdate(force: Boolean): Unit = unsupported
   override def disablePeriodicRendering(): Unit = unsupported
   override def enablePeriodicRendering(): Unit = unsupported
+
+  // deprecated members from CompilerServices
+  def checkCommandSyntax(source: String): Unit = unsupported
+  def checkReporterSyntax(source: String): Unit = unsupported
+  def findProcedurePositions(source: String): Map[String,org.nlogo.core.ProcedureSyntax] = unsupported
+  def getTokenAtPosition(source: String,position: Int): org.nlogo.core.Token = unsupported
+  def isConstant(s: String): Boolean = unsupported
+  def isReporter(s: String): Boolean = unsupported
+  def isValidIdentifier(s: String): Boolean = unsupported
+  def tokenizeForColorization(source: String): Array[org.nlogo.core.Token] = unsupported
+  def tokenizeForColorizationIterator(source: String): Iterator[org.nlogo.core.Token] = unsupported
 }

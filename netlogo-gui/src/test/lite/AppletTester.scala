@@ -27,6 +27,7 @@ object AppletTester {
   def open(path: String) {
     val frame = new javax.swing.JFrame("NetLogo Model")
     val panel = new AppletPanel(frame, new java.awt.event.MouseAdapter() { }) {
+      val is3D = false
       override def getFileURL(filename: String) =
         new java.io.File(filename).toURI.toURL
       override def getInsets =

@@ -10,7 +10,7 @@ class EvaluatorTests extends fixture.FunSuite {
 
   type FixtureParam = Evaluator
 
-  val helper = Helper.default
+  val helper = Helper.twoD
 
   implicit val extensionManager: ExtensionManager = helper.extensionManager
   implicit val compilationEnvironment = helper.compilationEnvironment

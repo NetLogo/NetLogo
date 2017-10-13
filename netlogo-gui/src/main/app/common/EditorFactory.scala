@@ -8,7 +8,6 @@ import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.Version
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
@@ -46,7 +45,7 @@ class EditorFactory(compiler: PresentationCompilerInterface, extensionManager: E
         KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK), shiftTabAction)
       .withLineNumbers(
         Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
-      .forThreeDLanguage(Version.is3D)
+      .forThreeDLanguage(compiler.dialect.is3D)
   }
 
   def newEditor(configuration: EditorConfiguration, isApp: Boolean): AbstractEditorArea = {

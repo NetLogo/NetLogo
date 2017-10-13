@@ -546,6 +546,7 @@ modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library…
 modelsLibrary.unverified = (unverified)
+modelsLibrary.error.unableToLoad = Unable to load the models library at this time. Encountered the error {0} while loading the library. If this error persists, please report to the CCL.
 
 
 # CONTROL CENTER

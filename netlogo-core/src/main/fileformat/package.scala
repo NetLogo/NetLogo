@@ -4,7 +4,7 @@ package org.nlogo
 
 import java.nio.file.Path
 
-import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
+import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, Version }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
 import org.nlogo.core.model.{ WidgetReader, HubNetWidgetReader }
 
@@ -33,6 +33,15 @@ package object fileformat {
         ModelConverter(extensionManager, compilationEnvironment,
           literalParser, dialect, conversionSections)
       }
+
+  def modelSuffix(modelString: String): Option[String] =
+    VersionDetector.findSuffix(modelString)
+
+  def modelVersionAtPath(path: String): Option[Version] =
+    VersionDetector.fromPath(path, basicLoader)
+
+  def modelVersionFromString(modelString: String): Option[Version] =
+    VersionDetector.fromModelContents(modelString, basicLoader)
 
   // basicLoader only loads the core of the model, and does no autoconversion, but has no external dependencies
   def basicLoader: ConfigurableModelLoader =

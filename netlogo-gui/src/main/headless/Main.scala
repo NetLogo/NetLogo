@@ -3,8 +3,9 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, TwoDVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.fileformat
 
 object Main {
   def main(args: Array[String]) {
@@ -14,7 +15,7 @@ object Main {
 
   def runExperiment(settings: Settings) {
     def newWorkspace = {
-      val w = HeadlessWorkspace.newInstance
+      val w = HeadlessWorkspace.newInstance(settings.version.is3D)
       w.open(settings.modelPath)
       w
     }
@@ -25,8 +26,8 @@ object Main {
       openWs.dispose()
     }
     proto match {
-      case Some(protocol) =>
-        val lab = HeadlessWorkspace.newLab
+      case Some((protocol, model)) =>
+        val lab = HeadlessWorkspace.newLab(Version.is3D(model.version))
         lab.run(settings, protocol, newWorkspace _)
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
@@ -69,7 +70,7 @@ object Main {
           die("missing argument after " + arg)
       }
       if(arg == "--version")
-        { println(Version.version); return None }
+        { println(TwoDVersion.version); return None }
       else if(arg == "--extension-api-version")
         { println(APIVersion.version); return None }
       else if(arg == "--builddate")
@@ -114,7 +115,10 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
+    val version = fileformat.modelVersionAtPath(model.get)
+    if (version.isEmpty)
+      die(s"Unable to detect model version at path ${model.get}")
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors))
+                      spreadsheetWriter, dims, threads, suppressErrors, version.get))
   }
 }

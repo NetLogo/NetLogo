@@ -38,7 +38,10 @@ class LabManager(val workspace:        GUIWorkspace,
   private lazy val dialog = new ManagerDialog(this, dialogFactory, menuFactory)
   def show() { dialog.update(); dialog.setVisible(true) }
   def close() { dialog.setVisible(false) }
-  def dirty() { new DirtyEvent(None).raise(this) }
+  def dirty() {
+    new UpdateModelEvent(updateModel _).raise(this)
+    new DirtyEvent(None).raise(this)
+  }
   /// Event.LinkChild -- lets us get events out to rest of app
   val getLinkParent = workspace
   /// loading & saving
@@ -52,7 +55,7 @@ class LabManager(val workspace:        GUIWorkspace,
       .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
       .getOrElse(Seq[LabProtocol]())
   }
-  override def updateModel(m: Model): Model =
+  def updateModel(m: Model): Model =
     m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols), Seq())
 
   /// making sure everything gets compiled before an experiment run

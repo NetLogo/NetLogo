@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, TwoDVersion }
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.nvm.{ LabInterface, Workspace }
@@ -98,10 +98,10 @@ class TestBehaviorSpace extends FunSuite
       }
     }
     def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
-      worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
+      worker.addTableWriter(filename, dims, TwoDVersion.version, new java.io.PrintWriter(writer))
     }
     def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
-      worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
+      worker.addSpreadsheetWriter(filename, dims, TwoDVersion.version, new java.io.PrintWriter(writer))
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _))
       .filter {

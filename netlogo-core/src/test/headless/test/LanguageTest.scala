@@ -4,13 +4,13 @@ package org.nlogo.headless.test
 
 import org.nlogo.core.AgentKind
 
-case class LanguageTest(suiteName: String, testName: String, entries: List[Entry]) {
+case class LanguageTest(
+  suiteName: String,
+  testName: String,
+  entries: List[Entry],
+  modes: List[TestMode] = List(NormalMode, RunMode),
+  versionLimit: VersionLimit = AnyVersion) {
   val fullName = s"$suiteName::$testName"
-  val modes =
-    if(testName.startsWith("*"))
-      List(NormalMode)
-    else
-      List(NormalMode, RunMode)
 }
 
 sealed trait Entry
@@ -30,3 +30,9 @@ case class StackTrace    (message: String) extends Result
 sealed abstract class TestMode
 case object NormalMode extends TestMode
 case object RunMode extends TestMode
+
+sealed trait VersionLimit
+case object AnyVersion extends VersionLimit
+case object ThreeDOnly extends VersionLimit
+case object TwoDOnly extends VersionLimit
+case object HeadlessOnly extends VersionLimit

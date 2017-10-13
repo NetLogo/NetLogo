@@ -13,6 +13,7 @@ class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionMana
   override def retrieveObject: AnyRef = unsupported
   override def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = unsupported
   override def readFromString(src: String): AnyRef = unsupported
+  override def activeModel = unsupported
   override def reset() = unsupported
   override def loadedExtensions = java.util.Collections.emptyList[ClassManager]
   override def dumpExtensions: String = unsupported

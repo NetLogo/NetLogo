@@ -8,7 +8,7 @@ import java.nio.file.{ Files, Paths }
 import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
   UpdateMode, View, Widget, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
+import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, TwoDVersion, Version, VersionHistory }
 import scala.util.{ Failure, Success, Try }
 import scala.io.{ Codec, Source }, Codec.UTF8
 
@@ -16,6 +16,7 @@ import scala.io.{ Codec, Source }, Codec.UTF8
 class NLogoFormat
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
+    def versionObject = TwoDVersion
     val is3DFormat = false
     def name: String = "nlogo"
     def widgetReaders: Map[String, WidgetReader] = Map()
@@ -23,11 +24,17 @@ class NLogoFormat
 
 class NLogoFormatException(m: String) extends RuntimeException(m)
 
-trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelFormat[Array[String], A] {
-  def is3DFormat: Boolean
-  def name: String
+object AbstractNLogoFormat {
   val Separator = "@#$#@#$#@"
   val SeparatorRegex = "(?m)^@#\\$#@#\\$#@$"
+}
+
+trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelFormat[Array[String], A] {
+  def versionObject: Version
+  def is3DFormat: Boolean
+  def name: String
+  val Separator = AbstractNLogoFormat.Separator
+  val SeparatorRegex = AbstractNLogoFormat.SeparatorRegex
 
   def widgetReaders: Map[String, WidgetReader]
 
@@ -140,7 +147,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
 
   object VersionComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.version"
-    override def addDefault = (_.copy(version = Version.version))
+    override def addDefault = (_.copy(version = versionObject.version))
     def serialize(m: Model): Array[String] = Array(m.version)
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
@@ -150,7 +157,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
         Success(m.copy(version = versionString))
       else {
         val errorString =
-          I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, Version.version, versionString)
+          I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, versionObject.version, versionString)
         Failure(new NLogoFormatException(errorString))
       }
     }

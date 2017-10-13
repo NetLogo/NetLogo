@@ -141,7 +141,7 @@ public class Renderer3D
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
     pickPatches(agents, ray);
-    pickListener.pick(mouseState.point(), agents);
+    pickListener.pick(mouseState.point(), agents, pickView);
     mouseState.pickRequest_$eq(false);
   }
 

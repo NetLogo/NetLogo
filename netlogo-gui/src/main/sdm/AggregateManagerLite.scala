@@ -27,6 +27,6 @@ class AggregateManagerLite extends AggregateManagerInterface {
 
   /// these AggregateManagerInterface methods aren't relevant when running headless
   def showEditor() = unsupported
-  override def updateModel(m: CoreModel): CoreModel = m
+  def updateModel(m: CoreModel): CoreModel = m
 
 }

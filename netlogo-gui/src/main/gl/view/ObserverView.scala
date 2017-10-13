@@ -16,13 +16,6 @@ extends View("3D View", viewManager, renderer) {
   val controlStrip = new ViewControlStrip3D(viewManager.workspace, viewManager.tickCounterLabel)
   add(controlStrip, java.awt.BorderLayout.NORTH)
 
-  addWindowListener(new java.awt.event.WindowAdapter {
-    override def windowClosing(e: java.awt.event.WindowEvent) {
-      if(!org.nlogo.api.Version.is3D)
-        ObserverView.this.viewManager.close()
-    }
-  })
-
   viewManager.addLinkComponent(this)
 
   override def updatePerspectiveLabel() {
@@ -33,5 +26,4 @@ extends View("3D View", viewManager, renderer) {
     super.editFinished()
     true
   }
-
 }

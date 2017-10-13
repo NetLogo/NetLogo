@@ -13,8 +13,9 @@ import
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface },
-    workspace.AbstractWorkspace
+    nvm.{ CompilerFlags, Context, LabInterface, PresentationCompilerInterface },
+    workspace.{ AbstractWorkspace, DefaultAbstractWorkspace, HeadlessCatchAll,
+      RuntimeError, WorkspaceDependencies, WorkspaceEvent }
 
 import java.nio.file.Paths
 
@@ -35,12 +36,17 @@ object HeadlessWorkspace {
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+    newInstance(subclass, CompilerFlags(optimizations = nvm.Optimizations.headlessOptimizations))
+  }
+  /**
+   * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
+   */
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace], flags: CompilerFlags): HeadlessWorkspace = {
     val world = new World2D
-    Femto.get(subclass, world,
-      Femto.scalaSingleton[CompilerInterface](
-        "org.nlogo.compile.Compiler"),
-      Femto.get[RendererInterface](
-        "org.nlogo.render.Renderer", world))
+    val compiler = Femto.scalaSingleton[PresentationCompilerInterface]("org.nlogo.compile.Compiler")
+    val renderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
+    val deps = DefaultAbstractWorkspace.defaultDependencies(world, compiler, null, Seq(), flags)
+    Femto.get[HeadlessWorkspace](subclass, deps, renderer)
   }
 
   def newLab: LabInterface = Femto.get("org.nlogo.lab.Lab")
@@ -64,12 +70,21 @@ object HeadlessWorkspace {
  * Don't try to use the constructor yourself; use
  * HeadlessWorkspace.newInstance instead.
  */
-class HeadlessWorkspace(
-  _world: World,
-  val compiler: CompilerInterface,
-  val renderer: RendererInterface)
-extends AbstractWorkspace(_world)
-with org.nlogo.workspace.WorldLoaderInterface {
+class HeadlessWorkspace(deps: WorkspaceDependencies, val renderer: RendererInterface)
+extends AbstractWorkspace(deps)
+with org.nlogo.workspace.WorldLoaderInterface
+with HeadlessCatchAll {
+
+  def this(world: World, compiler: PresentationCompilerInterface, renderer: RendererInterface) =
+    this(
+      DefaultAbstractWorkspace.defaultDependencies(world, compiler, null,
+        Seq(), CompilerFlags(optimizations = nvm.Optimizations.headlessOptimizations)),
+      renderer)
+
+  def this(world: World, compiler: PresentationCompilerInterface, flags: CompilerFlags, renderer: RendererInterface) =
+    this(
+      DefaultAbstractWorkspace.defaultDependencies(world, compiler, null, Seq(), flags),
+      renderer)
 
   def parser = compiler.utilities
 
@@ -78,7 +93,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)
 
-  val defaultOwner =
+  override val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
 
   /**
@@ -95,11 +110,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * If true, don't send anything to standard output.
    */
   var silent = false
-
-  /**
-   * Internal use only.
-   */
-  var compilerTestingMode = false
 
   /**
    * Internal use only.
@@ -122,9 +132,15 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
-  def setDimensions(d: WorldDimensions,showProgress: Boolean,stop: WorldResizer.JobStop): Unit = {
-    world.patchSize(d.patchSize)
-    if (!compilerTestingMode) {
+  def setDimensions(d: WorldDimensions, showProgress: Boolean, stop: WorldResizer.JobStop): Unit = {
+    if (d.patchSize != world.patchSize)
+      world.patchSize(d.patchSize)
+    if (d.wrappingAllowedInX != world.wrappingAllowedInX ||
+      d.wrappingAllowedInY != world.wrappingAllowedInY) {
+      world.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
+      renderer.changeTopology(d.wrappingAllowedInX, d.wrappingAllowedInY)
+    }
+    if (! compilerTestingMode) {
       world.createPatches(d)
     }
     renderer.resetCache(d.patchSize)
@@ -149,13 +165,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
 
   override def getMinimumWidth = 0
   override def insetWidth = 0
-  override def computePatchSize(width: Int, numPatches: Int): Double =
-    width / numPatches
-  override def calculateHeight(worldHeight: Int, patchSize: Double) =
-    (worldHeight * patchSize).toInt
-  def calculateWidth(worldWidth: Int, patchSize: Double): Int =
-    (worldWidth * patchSize).toInt
-  override def resizeView() { }
   override def viewWidth = world.worldWidth
   override def viewHeight = world.worldHeight
   override def patchSize(patchSize: Double) {
@@ -307,11 +316,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   def ownerFinished(owner: org.nlogo.api.JobOwner) { }
 
-  /**
-   * Internal use only.
-   */
-  def updateDisplay(haveWorldLockAlready: Boolean, forced: Boolean) { }
-
   def disablePeriodicRendering(): Unit = { }
   def enablePeriodicRendering(): Unit = { }
 
@@ -330,29 +334,23 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   def periodicUpdate() { }
 
-  // This lastLogoException stuff is gross.  We should write methods that are declared to throw
-  // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
-  private var _lastLogoException: LogoException = null
-  override def lastLogoException: LogoException = _lastLogoException
-  override def clearLastLogoException() { _lastLogoException = null }
-
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
   // command function.  -JC 11/16/10
   var lastErrorReport: ErrorReport = null
 
-  /**
-   * Internal use only.
-   */
-  def runtimeError(owner: org.nlogo.api.JobOwner, context: Context,
-                   instruction: org.nlogo.nvm.Instruction, ex: Exception) {
-    ex match {
-      case le: LogoException =>
-        _lastLogoException = le
-        lastErrorReport = new ErrorReport(owner, context, instruction, le)
+  // The headless collaborator JMO sends a RuntimeError WorkspaceEvent, dealt with here.
+  // In the long run, we'd like to remove all of the JobManagerOwner methods on workspace.
+  // - RG 2/11/17
+  override def processWorkspaceEvent(evt: WorkspaceEvent): Unit = {
+    super.processWorkspaceEvent(evt)
+    evt match {
+      case e: RuntimeError =>
+        if (e.exception.isInstanceOf[LogoException]) {
+          lastErrorReport = new ErrorReport(e.owner, e.context, e.instruction, e.exception)
+          lastLogoException = e.exception.asInstanceOf[LogoException]
+        }
       case _ =>
-        System.err.println("owner: " + owner.displayName)
-        org.nlogo.api.Exceptions.handle(ex)
     }
   }
 
@@ -383,6 +381,17 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   /**
+   * Opens a model stored in a string
+   *
+   * @param modelContents
+   */
+  override def openString(modelContents: String) {
+    val suffix = fileformat.modelSuffix(modelContents)
+    loader.readModel(modelContents, suffix.getOrElse(throw new Exception(s"Invalid model: $modelContents")))
+      .foreach(openModel)
+  }
+
+  /**
    * Opens a model stored in memory.
    * Can only be called once per instance of HeadlessWorkspace
    *
@@ -390,46 +399,6 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   def openModel(model: Model = Model()) {
     new HeadlessModelOpener(this).openFromModel(model)
-  }
-
-  /**
-   * Runs NetLogo commands and waits for them to complete.
-   *
-   * @param source The command or commands to run
-   * @throws core.CompilerException if the code fails to compile
-   * @throws api.LogoException if the code fails to run
-   */
-  @throws(classOf[core.CompilerException])
-  @throws(classOf[api.LogoException])
-  def command(source: String) {
-    evaluator.evaluateCommands(defaultOwner, source, world.observers, true, flags)
-    if (lastLogoException != null) {
-      val ex = lastLogoException
-      _lastLogoException = null
-      throw ex
-    }
-  }
-
-  /**
-   * Runs a NetLogo reporter.
-   *
-   * @param source The reporter to run
-   * @return the result reported; may be of type java.lang.Integer, java.lang.Double,
-   *         java.lang.Boolean, java.lang.String, {@link org.nlogo.core.LogoList},
-   *         {@link org.nlogo.api.Agent}, AgentSet, or Nobody
-   * @throws core.CompilerException if the code fails to compile
-   * @throws api.LogoException if the code fails to run
-   */
-  @throws(classOf[core.CompilerException])
-  @throws(classOf[api.LogoException])
-  def report(source: String): AnyRef = {
-    val result = evaluator.evaluateReporter(defaultOwner, source, world.observers, flags)
-    if (lastLogoException != null) {
-      val ex = lastLogoException
-      _lastLogoException = null
-      throw ex
-    }
-    result
   }
 
   /**

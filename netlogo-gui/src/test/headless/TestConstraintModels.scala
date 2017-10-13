@@ -118,11 +118,11 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModelFile("Slider Constraint Constructor", "test/constraint/density-slider.nlogo") {
     var con = SliderConstraint.makeSliderConstraint(
-      world.observer, "0", "100", "1", 50d, "", workspace, workspace)
+      world.observer, "0", "100", "1", 50d, "", workspace, workspace.compilerServices)
     assert(con.isInstanceOf[ConstantSliderConstraint])
     con = SliderConstraint.makeSliderConstraint(
       world.observer, "min-pxcor", "max-pxcor", "1",
-      50d, "", workspace, workspace)
+      50d, "", workspace, workspace.compilerServices)
     assert(con.isInstanceOf[DynamicSliderConstraint])
   }
 

@@ -2,11 +2,11 @@
 
 package org.nlogo.hubnet.client
 
-import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.api.EditorCompiler
 import org.nlogo.hubnet.protocol.{HandshakeFromServer, ActivityCommand}
 
 private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
-                              errorHandler:ErrorHandler, waitTime:Long, compiler: PresentationCompilerInterface)
+                              errorHandler:ErrorHandler, waitTime:Long, compiler: EditorCompiler)
         extends ClientPanel(editorFactory, errorHandler, compiler) {
   private lazy val roboClient:RoboWidgetControl = new RoboWidgetControl()
 

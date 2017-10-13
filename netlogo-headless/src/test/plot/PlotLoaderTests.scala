@@ -3,7 +3,7 @@
 package org.nlogo.plot
 
 import org.scalatest.FunSuite
-import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.api.{ DummyLogoThunkFactory, MersenneTwisterFast }
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.core.model.{PlotReader, PenReader}
 
@@ -319,7 +319,7 @@ trait TestPlotLoaderHelper extends FunSuite {
   }
 
   def load(lines:String): Plot = {
-    val plot = new PlotManager(new DummyLogoThunkFactory).newPlot("test")
+    val plot = new PlotManager(new DummyLogoThunkFactory, new MersenneTwisterFast).newPlot("test")
     assert(PlotReader.validate(lines.trim.split("\n").toList))
     PlotLoader.loadPlot(PlotReader.parse(lines.trim.split("\n").toList, literalParser), plot)
     plot

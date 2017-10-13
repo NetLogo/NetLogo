@@ -3,11 +3,9 @@
 package org.nlogo.window
 
 import org.scalatest.FunSuite
-import org.nlogo.core.Femto
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
-import org.nlogo.nvm.PresentationCompilerInterface
-import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
+import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace, Helper => WsHelper }
 import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent, WidgetAddedEvent }
 
 class CompilerManagerTests extends FunSuite {
@@ -23,15 +21,12 @@ class CompilerManagerTests extends FunSuite {
     cm
   }
 
-  def newWorkspace = new DummyAbstractWorkspace {
-    override def aggregateManager = null
-    override def compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
-  }
+  def newWorkspace = new DummyAbstractWorkspace(new WsHelper(NetLogoLegacyDialect))
 
   def manager(workspace: AbstractWorkspace, procedures: DummyProcedures, eventSink: (Event, Object) => Unit): CompilerManager = {
     new CompilerManager(workspace,
       workspace.world.asInstanceOf[World with CompilationManagement],
-      procedures, eventSink)
+      procedures, Seq(), eventSink)
   }
 
   def testCompilerManager(run: (CompilerManager) => Unit)(
@@ -58,7 +53,7 @@ class CompilerManagerTests extends FunSuite {
       widgets.foreach { w =>
         compilerManager.handle(new CompileMoreSourceEvent(w))
         w match {
-          case ig: DummyIGWidget => compilerManager.handle(new WidgetAddedEvent(ig))
+          case ig: DummyIGWidget => compilerManager.handle(new WidgetAddedEvent(ig, null))
           case _ =>
         }
       }

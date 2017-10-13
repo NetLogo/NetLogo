@@ -27,7 +27,7 @@ class TestMain extends FunSuite {
       Main.main(Array("--version"))
     }
     assertResult("")(err)
-    assertResult(s"${api.Version.version}\n")(out)
+    assertResult(s"${api.TwoDVersion.version}\n")(out)
   }
 
   test("bad arg") {
@@ -95,7 +95,7 @@ class TestMain extends FunSuite {
          |""".stripMargin
     assertResult("")(err)
     // version number varies, date and time varies, compare carefully!
-    assertResult(expected.replaceFirst("VERSION", api.Version.version))(
+    assertResult(expected.replaceFirst("VERSION", api.TwoDVersion.version))(
       out.replaceAll(
         """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\n""",
         ""))

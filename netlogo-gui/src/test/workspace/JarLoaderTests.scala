@@ -13,7 +13,7 @@ import ExtensionManager.ExtensionData
 import org.scalatest.{ BeforeAndAfter, FunSuite }
 
 class JarLoaderTests extends FunSuite with BeforeAndAfter {
-  val helper = Helper.default
+  val helper = Helper.twoD
 
   val jarLoader = new JarLoader(helper.modelTracker)
 

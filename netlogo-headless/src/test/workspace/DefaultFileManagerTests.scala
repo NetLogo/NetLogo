@@ -6,12 +6,10 @@ import
   java.io.{ BufferedReader, File => JFile, FileReader, IOException, PrintWriter }
 
 import
-org.nlogo.{core, agent, api, nvm},
+org.nlogo.{core, agent },
     agent.OutputObject,
-    api.{ ExtensionManager => APIExtensionManager, SourceOwner },
-    core.{ CompilerException, CompilerUtilitiesInterface, CompilationEnvironment,
+    core.{ CompilerUtilitiesInterface,
            File, FileMode, FrontEndInterface, LiteralImportHandler, Program},
-    nvm.{Procedure, CompilerFlags, CompilerInterface, CompilerResults, Reporter},
       FrontEndInterface.ProceduresMap
 
 import
@@ -268,80 +266,45 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
   }
 
   test("read raises an IOException if asked to read when at EOF") {
-    withWrittenFile("", {file => intercept[IOException](fileManager.read(dummyWorkspace.world))})
+    withWrittenFile("", {file => intercept[IOException](fileManager.read(helper.world))})
   }
 
   test("read passes the file contents through to the compiler frontEnd") {
     withWrittenFile("abc", {file =>
-      assert(fileManager.read(dummyWorkspace.world) == "abc")
+      assert(fileManager.read(helper.world) == "abc")
       assert(readFile.isDefined)
       assert(readFile.get == file)
     })
   }
 
-  val dummyWorkspace = new DummyAbstractWorkspace {
-    override def compiler = dummyCompiler
-  }
-
-  val fileManager = new DefaultFileManager(dummyWorkspace)
+  val helper = Helper.twoD
 
   val openModes = Set(FileMode.Write, FileMode.Append, FileMode.Read)
   val allModes = openModes + FileMode.None
 
   val output = new OutputObject("", "bar", false, false)
 
-  val dummyCompiler = new CompilerInterface {
-    override def utilities: CompilerUtilitiesInterface = dummyFrontEnd
-
-    override def compileProgram(source: String,
-                                program: Program,
-                                extensionManager: APIExtensionManager,
-                                compilationEnvironment: CompilationEnvironment,
-                                flags: CompilerFlags): CompilerResults = ???
-
-    @throws(classOf[CompilerException])
-    override def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: APIExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = ???
-
-    override def makeLiteralReporter(value: AnyRef): Reporter = ???
-
-    override def compileMoreCode(source: String,
-                                 displayName: Option[String],
-                                 program: Program,
-                                 oldProcedures: Procedure.ProceduresMap,
-                                 extensionManager: APIExtensionManager,
-                                 compilationEnvironment: CompilationEnvironment,
-                                 flags: CompilerFlags): CompilerResults = ???
-
-    override def frontEnd: FrontEndInterface = ???
-  }
-
   var readFile: Option[File] = None
 
   val dummyFrontEnd = new CompilerUtilitiesInterface {
-
     override def readFromString(source: String): AnyRef = ???
-
     override def readFromString(source: String, importHandler: LiteralImportHandler): AnyRef = ???
-
     override def isReporter(s: String,
-                            program: Program,
-                            procedures: ProceduresMap,
-                            extensionManager: core.ExtensionManager): Boolean = ???
-
+      program: Program,
+      procedures: ProceduresMap,
+      extensionManager: core.ExtensionManager): Boolean = ???
     override def isReporter(s: String): Boolean = ???
-
     @throws(classOf[IOException])
     override def readFromFile(currFile: File, importHandler: LiteralImportHandler): AnyRef = {
       readFile = Some(currFile)
       "abc"
     }
-
     override def readNumberFromString(source: String): java.lang.Double = ???
-
     override def readNumberFromString(source: String, importHandler: LiteralImportHandler): java.lang.Double = ???
-
     override def colorizer = ???
   }
+
+  val fileManager = new DefaultFileManager(helper.modelTracker, helper.extensionManager, dummyFrontEnd)
 
   def testReadLine(fileText: String, expectedRead: String, i: Int) = {
     test(s"readLine, given a file with '${unescape(fileText)}', reads '$expectedRead', advancing file position $i") {

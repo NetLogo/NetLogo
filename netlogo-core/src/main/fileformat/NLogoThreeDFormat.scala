@@ -2,13 +2,14 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ ModelFormat, WorldDimensions3D }
+import org.nlogo.api.{ ModelFormat, ThreeDVersion, WorldDimensions3D }
 import org.nlogo.core.{ View, UpdateMode }
 import org.nlogo.core.model.WidgetReader
 
 class NLogoThreeDFormat
   extends ModelFormat[Array[String], NLogoThreeDFormat]
   with AbstractNLogoFormat[NLogoThreeDFormat] {
+    def versionObject = ThreeDVersion
     val is3DFormat = true
     def name: String = "nlogo3d"
     override def widgetReaders =

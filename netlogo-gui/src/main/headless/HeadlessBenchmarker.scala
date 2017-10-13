@@ -1,10 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+
 import org.nlogo.api.Version
 import org.nlogo.workspace.Benchmarker
+
 object HeadlessBenchmarker {
   def main(argv:Array[String]) {
+    val is3D = Version.is3DInternal
     Main.setHeadlessProperty()
     val (name,minTime,maxTime) = argv match {
       case Array(name)         => (name,60,300)
@@ -14,7 +17,7 @@ object HeadlessBenchmarker {
     }
     println("@@@@@@ benchmarking " + Version.fullVersion)
     println("@@@@@@ warmup " + minTime + " seconds, min " + minTime + " seconds, max " + maxTime + " seconds")
-    val workspace = HeadlessWorkspace.newInstance
+    val workspace = HeadlessWorkspace.newInstance(is3D)
     try {
       workspace.open("models/test/benchmarks/" + name + " Benchmark.nlogo")
       Benchmarker.benchmark(workspace,minTime,maxTime)

@@ -2,7 +2,7 @@ package org.nlogo.workspace
 
 import java.nio.file.Files
 
-class DummyWorkspace extends ExtendableWorkspace {
+class DummyWorkspace {
   val dummyFileManager = new DummyFileManager()
 
   var _isTesting = false

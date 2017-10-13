@@ -4,13 +4,22 @@ package org.nlogo.workspace
 
 import org.scalatest.fixture
 
+import org.nlogo.nvm.{ CompilerFlags, Procedure }
+
 class EvaluatorTests extends fixture.FunSuite {
 
   type FixtureParam = Evaluator
 
+  val helper = Helper.twoD
+
   override def withFixture(test: OneArgTest) = {
-   test(new Evaluator(new DummyAbstractWorkspace))
- }
+    test(new Evaluator(helper.jobManager, helper.compiler, helper.world, CompilerFlags()))
+  }
+
+  implicit val extensionManager: ExtensionManager = helper.extensionManager
+  implicit val compilationEnvironment = helper.compilationEnvironment
+  implicit val procedures = Procedure.NoProcedures
+  implicit val linker = helper.linker
 
   test("Illegal to have empty source for a reporter thunk"){ e =>
     intercept[IllegalStateException]{

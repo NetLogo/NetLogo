@@ -126,6 +126,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            NativeLibs.nativeLibsTask ++
            NetLogoWebExport.settings ++
            GUISettings.settings ++
+           mockDependencies ++
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
@@ -153,9 +154,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "org.jmock" % "jmock" % "2.5.1" % "test",
-      "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-      "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",

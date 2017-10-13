@@ -32,14 +32,16 @@ trait TestMultiThreadedModels extends AbstractTestModels {
    * run a model test in N threads, using the given model
    */
   def testModelWithThreads(threads:Int, testName: String, model: Model)(f: => Unit) {
-    test(testName, SlowTest.Tag){ testWithThreads(threads){ runModel(model){ f } } }
+    val is3D = isModel3D(model)
+    test(testName, arityTag(is3D), SlowTest.Tag){ testWithThreads(threads){ runModel(is3D, model){ f } } }
   }
 
   /**
    * run a model test in N threads, loading the model from the given file
    */
   def testModelFileWithThreads(threads:Int, testName: String, path: String)(f: => Unit) {
-    test(testName, SlowTest.Tag){ testWithThreads(threads){ runModelFromFile(path){ f } } }
+    val is3D = isModelPath3D(path)
+    test(testName, arityTag(is3D), SlowTest.Tag){ testWithThreads(threads){ runModelFromFile(is3D, path){ f } } }
   }
 
   /**

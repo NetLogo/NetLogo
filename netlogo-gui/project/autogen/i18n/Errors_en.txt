@@ -201,3 +201,7 @@ compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
 
 fileformat.invalidversion = Invalid NetLogo file. Expected "{0}" formatted model to have version compatible with {1}, but this model had version {2}
+
+org.nlogo.boot.args.twoModelsSpecified = Error parsing command line arguments: you can only specify one model to open at startup.
+org.nlogo.boot.args.unknownArgument = Error: Unknown command line argument: {0}
+org.nlogo.boot.args.logDirectoryWithoutLogging = No --logging argument was supplied, so logging will not be started, even though --log-directory was supplied.

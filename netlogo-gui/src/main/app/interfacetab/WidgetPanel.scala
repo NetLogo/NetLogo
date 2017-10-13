@@ -19,9 +19,9 @@ import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
-  PlotWidget },
+  PlotWidget, Zoomable },
     WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent,
-      WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
+      WidgetAlteredEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -40,7 +40,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with MouseMotionListener
     with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
-    with LoadBeginEvent.Handler {
+    with LoadBeginEvent.Handler
+    with Zoomable {
 
   import WidgetPanel.GridSnap
 
@@ -482,6 +483,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case _ => false
     }
     WidgetActions.removeWidgets(this, hitList)
+    hitList.foreach { w =>
+      new WidgetAlteredEvent(w.widget, this).raise(this)
+    }
   }
 
   def deleteWidget(target: WidgetWrapper): Unit =

@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import org.nlogo.core.ExtensionObject
 
-import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager }
+import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager, Model }
 
 /**
  * <code>ExtensionManager</code> provides some methods that can be used in runOnce
@@ -26,6 +26,11 @@ trait ExtensionManager extends CoreManager {
   def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject
 
   def readFromString(src: String): AnyRef
+
+  /**
+   * Allows the extension access to the model loading it.
+   */
+  def activeModel: Model
 
   /**
    * Instructs any loaded extensions to unload. Should be called previous

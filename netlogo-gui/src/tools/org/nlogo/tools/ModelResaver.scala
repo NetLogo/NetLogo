@@ -84,7 +84,9 @@ object ModelResaver {
     if (modelPath.toString.contains("System Dynamics"))
       systemDynamicsModels = systemDynamicsModels :+ modelPath
     else {
-      val ws = HeadlessWorkspace.newInstance
+      val version = fileformat.modelVersionAtPath(modelPath.toString)
+        .getOrElse(throw new Exception(s"Unable to determine version of ${modelPath.toString}"))
+      val ws = HeadlessWorkspace.newInstance(version.is3D)
       val converter =
         fileformat.converter(ws.getExtensionManager, ws.getCompilationEnvironment,
           literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
@@ -96,13 +98,14 @@ object ModelResaver {
       val dialect =
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
-      OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
-        SaveModel(model, modelLoader, controller, ws.modelTracker, Version).map(_.apply()) match {
+      OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), version).foreach { model =>
+        SaveModel(model, modelLoader, controller, ws.modelTracker, version).map(_.apply()) match {
           case Some(Success(u)) => println("resaved: " + u)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)
           case None => println("failed to resave: " + modelPath.toString)
         }
       }
+      ws.dispose()
     }
   }
 
@@ -171,7 +174,7 @@ object ModelResaver {
       val nlogoXPath = pathSegments.init
       Some(new URI((nlogoXPath :+ "nlogox").mkString(".")))
     }
-    def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
+    def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean = true
     def warnInvalidFileFormat(format: String): Unit = {
       println("asked to save model in invalid format \"" + format + "\"")
     }
@@ -196,7 +199,7 @@ object ModelResaver {
       None
     }
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = false
-    def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
-    def shouldOpenModelOfUnknownVersion(version: String): Boolean = false
+    def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = true
+    def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = false
   }
 }

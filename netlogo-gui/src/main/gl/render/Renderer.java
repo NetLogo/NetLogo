@@ -68,6 +68,7 @@ public class Renderer
   final GLUgl2 glu = new GLUgl2();
   ShapeManager shapeManager;
   PickListener pickListener;
+  ViewInterface pickView;
 
   // we need to save the last matricies for mouse-x/ycor;
   // also used by context menu - jrn 5/20/05
@@ -702,10 +703,11 @@ public class Renderer
   /// Picking
 
   // queue a request for object selection/pick
-  public void queuePick(java.awt.Point mousePt, PickListener pickListener) {
+  public void queuePick(java.awt.Point mousePt, PickListener pickListener, ViewInterface view) {
     mouseState.pickRequest_$eq(true);
     mouseState.point_$eq(mousePt);
     this.pickListener = pickListener;
+    this.pickView = view;
   }
 
   // pick/select objects for context menu
@@ -717,7 +719,7 @@ public class Renderer
     pickPatches(agents, ray);
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
-    pickListener.pick(mouseState.point(), agents);
+    pickListener.pick(mouseState.point(), agents, pickView);
     mouseState.pickRequest_$eq(false);
   }
 

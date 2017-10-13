@@ -10,7 +10,7 @@ class _externreport(reporter: api.Reporter) extends nvm.Reporter {
     val arguments = Array.tabulate[api.Argument](args.length)(i =>
       new nvm.Argument(context, args(i)))
     try reporter.report(
-      arguments, new nvm.ExtensionContext(workspace, context))
+      arguments, new nvm.ExtensionContext(workspace, workspace.modelTracker, context))
     catch {
       case ex: api.ExtensionException =>
         val ee = new nvm.RuntimePrimitiveException(

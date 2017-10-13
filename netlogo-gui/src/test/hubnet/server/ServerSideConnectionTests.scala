@@ -4,18 +4,20 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.Streamable
 import org.nlogo.hubnet.protocol._
-import org.nlogo.util.MockSuite
-import org.nlogo.api.Version
+import org.nlogo.util.{ MockSuite, TaggedFunSuite, TwoDTag }
+import org.nlogo.api.TwoDVersion
 
 // tests for the hubnet session behavior on the server side.
-class ServerSideConnectionTests extends MockSuite {
+class ServerSideConnectionTests extends TaggedFunSuite(TwoDTag) with MockSuite {
+
+  val serverVersion = TwoDVersion.version
 
   val clientId = "test-user"
 
   mockTest("send version, get version back"){
     val conn = newConnection()
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
   }
 
   // these next tests are a little strange. i guess this behavior allows clients to
@@ -24,25 +26,25 @@ class ServerSideConnectionTests extends MockSuite {
   mockTest("send old version, get current version back"){
     val conn = newConnection()
     conn.receiveData("NetLogo 1.0")
-    assert(conn.nextOutgoingMessage === Version.version)
+    assert(conn.nextOutgoingMessage === serverVersion)
   }
 
   mockTest("send old version, get current version back, send current version"){
     val conn = newConnection()
     conn.receiveData("NetLogo 1.0")
-    assert(conn.nextOutgoingMessage === Version.version)
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    assert(conn.nextOutgoingMessage === serverVersion)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
   }
 
   mockTest("send old version, then handshake, get login failure back"){
     val conn = newConnection()
     conn.receiveData("NetLogo 1.0")
-    assert(conn.nextOutgoingMessage === Version.version)
+    assert(conn.nextOutgoingMessage === serverVersion)
     conn.receiveData(HandshakeFromClient(clientId, "COMPUTER"))
     // this was lifted right from ServerSideConnection.scala
     val error = "The version of the HubNet Client you are using does not " +
-                "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version
+                "match the version of the server.\nPlease use the HubNet Client that comes with " + serverVersion
     conn.nextOutgoingMessage match {
       case LoginFailure(reason) => assert(reason === error)
       case _ => fail("expected LogonFailure")
@@ -52,8 +54,8 @@ class ServerSideConnectionTests extends MockSuite {
   mockTest("send correct version, but invalid client type, get login failure back"){
     val server = mock[ConnectionManagerInterface]
     val conn = newConnection(server)
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
 
     expecting{ one(server).isSupportedClientType(arg("INVALID")); willReturn(false) }
     when{ conn.receiveData(HandshakeFromClient(clientId, "INVALID")) }
@@ -67,24 +69,24 @@ class ServerSideConnectionTests extends MockSuite {
   }
 
   mockTest("sending EnterMessage before handshake does not propogate an error message") { new LoginFailure {
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
 
     conn.receiveData(EnterMessage)
     assert(conn.nextOutgoingMessage === ExitMessage("Client login failed, please try logging in again"))
   } }
 
   mockTest("sending ActivityMessage before handshake does not propogate that message") { new LoginFailure {
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
 
     conn.receiveData(ActivityCommand("Selection", "two"))
     assert(conn.nextOutgoingMessage === ExitMessage("Client login failed, please try logging in again"))
   } }
 
   mockTest("sending ExitMessage before handshake does not propogate an exit message") { new LoginFailure {
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(serverVersion)
+    assert(conn.nextOutgoingMessage === serverVersion)
 
     conn.receiveData(ExitMessage("Bye"))
   } }
@@ -135,7 +137,7 @@ class ServerSideConnectionTests extends MockSuite {
       // in order to have a complete session.
 
       // the first message is always the version of the client.
-      conn.receiveData(Version.version)
+      conn.receiveData(serverVersion)
 
       // followed by a handshake from the client
       // (assuming that the server sent a good version back)

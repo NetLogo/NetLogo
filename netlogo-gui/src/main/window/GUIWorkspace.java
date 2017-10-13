@@ -38,6 +38,7 @@ import org.nlogo.nvm.DisplayStatus;
 import org.nlogo.nvm.JobManagerOwner;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
+import org.nlogo.workspace.SwitchModel;
 import org.nlogo.workspace.ModelCompiledFailure;
 import org.nlogo.workspace.ModelCompiledSuccess;
 
@@ -61,8 +62,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.AddChooserConstraintEvent.Handler,
     org.nlogo.window.Events.AddInputBoxConstraintEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
-    org.nlogo.api.DrawingInterface,
-    org.nlogo.api.ModelSections.ModelSaveable {
+    org.nlogo.api.DrawingInterface {
 
   public enum KioskLevel {NONE, MODERATE}
 
@@ -202,13 +202,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     new Events.TickStateChangeEvent(true).raiseLater(this);
   }
 
-  /*
-  @Override
-  public Procedure compileForRun(String source, org.nlogo.nvm.Context context, boolean reporter) throws CompilerException {
-    return super.compileForRun(source, context, reporter);
-  }
-  */
-
   @Override
   public void clearTicks() {
     super.clearTicks();
@@ -232,6 +225,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void dispose() throws InterruptedException {
     periodicUpdater.stop();
+
+    // These two lines clear any pending periodic updates. Otherwise, when
+    // we go to dispose the workspace, we may find it `wait`ing on world,
+    // and since the GUIWorkspace is being shut down, nothing will ever call `notify`
+    // on world. RG 10/31/17
+    setPeriodicUpdatesEnabled(false);
+    jobManager().interrupt();
+
     repaintTimer.stop();
     lifeguard.interrupt();
     lifeguard.join();
@@ -553,7 +554,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   private void open3DView() {
     try {
-      glView.open();
+      glView.open(compiler().dialect().is3D());
       set2DViewEnabled(false);
     } catch (JOGLLoadingException jlex) {
       String message = jlex.getMessage();
@@ -764,78 +765,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  /// runtime error handling
-
-  public void runtimeError(
-      final org.nlogo.api.JobOwner owner,
-      org.nlogo.nvm.JobManagerInterface manager,
-      final org.nlogo.nvm.Context context,
-      final org.nlogo.nvm.Instruction instruction,
-      final Exception ex) {
-    // this method is called from the job thread, so we need to switch over
-    // to the event thread.  but in the error dialog we want to be able to
-    // show the original thread in which it happened, so we hang on to the
-    // current thread before switching - ST 7/30/04
-    final Thread thread = Thread.currentThread();
-    org.nlogo.awt.EventQueue.invokeLater
-        (new Runnable() {
-          public void run() {
-            runtimeErrorPrivate(owner, context, instruction, thread, ex);
-          }
-        });
-  }
-
-  private void runtimeErrorPrivate(
-      org.nlogo.api.JobOwner owner,
-      final org.nlogo.nvm.Context context,
-      final org.nlogo.nvm.Instruction instruction,
-      final Thread thread,
-      final Exception ex) {
-    // halt, or at least turn graphics back on if they were off
-    if (ex instanceof org.nlogo.nvm.HaltException &&
-        ((org.nlogo.nvm.HaltException) ex).haltAll()) {
-      halt(); // includes turning graphics back on
-    } else if (!(owner instanceof MonitorWidget)) {
-      displayStatusRef().updateAndGet(s -> s.codeSet(true));
-    }
-    // tell the world!
-    if (!(ex instanceof org.nlogo.nvm.HaltException)) {
-      int[] posAndLength;
-
-      // check to see if the error occurred inside a "run" or "runresult" instruction;
-      // if so, report the error as having occurred there - ST 5/7/03
-      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure.owner();
-      if (instruction.token() == null) {
-        posAndLength = new int[]{-1, 0};
-      } else {
-        posAndLength = instruction.getPositionAndLength();
-      }
-      new org.nlogo.window.Events.RuntimeErrorEvent
-          (owner, sourceOwner, posAndLength[0], posAndLength[1])
-          .raiseLater(this);
-    }
-    // MonitorWidgets always immediately restart their jobs when a runtime error occurs,
-    // but we don't want to just stream errors to the command center, so let's not print
-    // anything to the command center, and assume that someday MonitorWidgets will do
-    // their own user notification - ST 12/16/01
-    if (!(owner instanceof MonitorWidget ||
-        ex instanceof org.nlogo.nvm.HaltException)) {
-      // It doesn't seem like we should need to use invokeLater() here, because
-      // we're already on the event thread.  But without using it, at least on
-      // Mac 142U1DP3 (and maybe other Mac VMs, and maybe other platforms too,
-      // I don't know), the error dialog didn't wind up with the keyboard focus
-      // if the Code tab came forward... probably because something that
-      // the call to select() in ProceduresTab was doing was doing invokeLater()
-      // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
-      org.nlogo.awt.EventQueue.invokeLater
-          (new Runnable() {
-            public void run() {
-              RuntimeErrorDialog$.MODULE$.show(context, instruction, thread, ex);
-            }
-          });
-    }
-  }
-
   /// keep track of model name
 
   /**
@@ -846,26 +775,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void handle(org.nlogo.window.Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
-    if (e.modelPath.isDefined()) {
-      setModelPath(e.modelPath.get());
-    } else {
-      setModelPath(null);
-    }
-    modelTracker().setModelType(e.modelType);
-    if (hubNetManager().isDefined()) {
-      hubNetManager().get().disconnect();
-    }
-    jobManager().haltSecondary();
-    jobManager().haltPrimary();
-    getExtensionManager().reset();
-    fileManager().handleModelChange();
-    previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
+    messageCenter().send(new SwitchModel(e.modelPath, e.modelType));
     clearDrawing();
     viewManager().resetMouseCors();
     enableDisplayUpdates();
-    setProcedures(new scala.collection.immutable.ListMap<String, Procedure>());
     lastTicksListenersHeard = -1.0;
-    plotManager().forgetAll();
   }
 
   /**

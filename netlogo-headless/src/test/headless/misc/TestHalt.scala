@@ -5,15 +5,15 @@ package misc
 
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTestTag
-import org.nlogo.{ core, api, agent, nvm }
+import org.nlogo.{ core, api, nvm }
+import org.nlogo.workspace.WorkspaceDependencies
 
 object TestHalt {
   // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   var finalized = false
-  class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,
-    renderer: api.RendererInterface)
-  extends HeadlessWorkspace(world, compiler, renderer) {
+  class MyWorkspace(deps: WorkspaceDependencies, renderer: api.RendererInterface)
+  extends HeadlessWorkspace(deps, renderer) {
     override def finalize() {
       finalized = true
       super.finalize()

@@ -2,23 +2,22 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.api.{ Agent => ApiAgent, JobOwner, Workspace => ApiWorkspace }
+import org.nlogo.core.{ AgentKind, CompilerException, ProcedureSyntax, Token }
+import org.nlogo.api.{ Agent => ApiAgent, CompilerServices, JobOwner, Workspace => ApiWorkspace }
 
 import org.nlogo.agent.{ Agent, AgentSet, World }
 
 import collection.mutable.WeakHashMap
 
-trait Workspace extends ApiWorkspace with JobManagerOwner {
+trait Workspace
+  extends ApiWorkspace
+  with CompilerServices {
 
   def world: World
 
   def compiler: CompilerInterface
 
   def procedures: Procedure.ProceduresMap
-  /*
-  def procedures_=(procedures: Procedure.ProceduresMap)
-  */
 
   def tick(c: Context, originalInstruction: Instruction)
   def resetTicks(c: Context)
@@ -26,10 +25,15 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def behaviorSpaceExperimentName: String
   def behaviorSpaceExperimentName(name: String): Unit
 
+  def owner: JobManagerOwner
+
   def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A]
 
   /** lastRunTimes is used by `every` to track how long ago a job ran */
   def lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
+
+  /* for lab.Worker */
+  def updateDisplay(haveWorldLockAlready: Boolean, forced: Boolean): Unit
 
   /* compiler controls */
   @throws(classOf[CompilerException])
@@ -55,6 +59,8 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet): AnyRef
 
+  def linker: Linker
+
   /* components */
   def fileManager: FileManager
   def profilingTracer: Tracer
@@ -77,6 +83,25 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def inspectAgent(agentKind: AgentKind, agent: Agent, radius: Double): Unit
   def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit
   def stopInspectingDeadAgents(): Unit
+
+  @deprecated("Workspace.checkCommandSyntax is deprecated, use Workspace.compilerServices.checkCommandSyntax", "6.1.0")
+  def checkCommandSyntax(source: String): Unit
+  @deprecated("Workspace.checkReporterSyntax is deprecated, use Workspace.compilerServices.checkReporterSyntax", "6.1.0")
+  def checkReporterSyntax(source: String): Unit
+  @deprecated("Workspace.findProcedurePositions is deprecated, use Workspace.compilerServices.findProcedurePositions", "6.1.0")
+  def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
+  @deprecated("Workspace.getTokenAtPosition is deprecated, use Workspace.compilerServices.getTokenAtPosition", "6.1.0")
+  def getTokenAtPosition(source: String,position: Int): Token
+  @deprecated("Workspace.isConstant is deprecated, use Workspace.compilerServices.isConstant", "6.1.0")
+  def isConstant(s: String): Boolean
+  @deprecated("Workspace.isReporter is deprecated, use Workspace.compilerServices.isReporter", "6.1.0")
+  def isReporter(s: String): Boolean
+  @deprecated("Workspace.isValidIdentifier is deprecated, use Workspace.compilerServices.isValidIdentifier", "6.1.0")
+  def isValidIdentifier(s: String): Boolean
+  @deprecated("Workspace.tokenizeForColorization is deprecated, use Workspace.compilerServices.tokenizeForColorization", "6.1.0")
+  def tokenizeForColorization(source: String): Array[Token]
+  @deprecated("Workspace.tokenizeForColorizationIterator is deprecated, use Workspace.compilerServices.tokenizeForColorizationIterator", "6.1.0")
+  def tokenizeForColorizationIterator(source: String): Iterator[Token]
 }
 
 trait EditorWorkspace {
@@ -91,3 +116,8 @@ trait LoggingWorkspace {
   def zipLogFiles(filename: String): Unit
   def deleteLogFiles(): Unit
 }
+
+trait Linker {
+  def link(p: Procedure): Procedure
+}
+

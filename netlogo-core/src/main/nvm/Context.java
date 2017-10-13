@@ -298,7 +298,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
         context = this;
       }
       instruction.workspace
-          .runtimeError(job.owner, manager, context, instruction, ex);
+        .owner().runtimeError(job.owner, manager, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,
       // but a new exception happened. so we'll report the original

@@ -174,8 +174,8 @@ class TestProfiler extends FixtureSuite  {
   test("isReporter on extension prims", SlowTestTag) { implicit fixture =>
     import fixture._
     declare(Model(code = "extensions [profiler]"))
-    assertResult(false) { workspace.isReporter("profiler:start") }
-    assertResult(true) { workspace.isReporter("profiler:report") }
+    assertResult(false) { workspace.compilerServices.isReporter("profiler:start") }
+    assertResult(true) { workspace.compilerServices.isReporter("profiler:report") }
   }
 
 }

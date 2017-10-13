@@ -9,7 +9,8 @@ import javax.swing.AbstractAction
 import org.nlogo.api.PreviewCommands
 import org.nlogo.core.Model
 import org.nlogo.swing.UserAction._
-import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
+import org.nlogo.window.{ Events, GraphicsPreviewInterface, PreviewCommandsEditorInterface },
+  Events.UpdateModelEvent
 import org.nlogo.workspace.{ AbstractWorkspace, WorkspaceFactory }
 
 
@@ -28,6 +29,10 @@ object PreviewCommandsEditor {
         val model = f()
 
         workspace.previewCommands = previewCommandsEditor.getPreviewCommands(model, workspace.getModelPath)
+
+        component.foreach { c =>
+          new UpdateModelEvent(workspace.previewCommands.updateModel _).raise(c)
+        }
       }
     }
 }

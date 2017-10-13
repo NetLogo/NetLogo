@@ -69,7 +69,7 @@ class Tabs(val workspace:       GUIWorkspace,
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
 
-  val infoTab = new InfoTab(workspace.attachModelDir(_))
+  val infoTab = new InfoTab(workspace.attachModelDir(_), workspace.compiler.dialect)
   val codeTab = new MainCodeTab(workspace, this, menu)
   var externalFileTabs = Set.empty[TemporaryCodeTab]
 

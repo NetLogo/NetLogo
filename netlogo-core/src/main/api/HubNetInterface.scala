@@ -5,7 +5,7 @@ package org.nlogo.api
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
 import java.io.{ Serializable => JSerializable }
 
-trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
+trait HubNetInterface extends ViewInterface {
   /// getting messages
   @throws(classOf[LogoException])
   def messageWaiting: Boolean

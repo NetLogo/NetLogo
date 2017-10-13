@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
 import javax.swing.{ JMenuItem, JPopupMenu }
 
-import org.nlogo.api.{ Editable, Exceptions, Version }
+import org.nlogo.api.{ Editable, Exceptions }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
   FileActions.ExportInterfaceAction
 import org.nlogo.awt.Images
@@ -34,7 +34,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
   // disabled there's no reason for it to take space 7/5/07
-  if (!Version.is3D)
+  if (!workspace.compiler.dialect.is3D)
     addWidget(viewWidget.asInstanceOf[Widget], 0, 0, false, false)
 
   viewWidget.asInstanceOf[Widget].deleteable = false

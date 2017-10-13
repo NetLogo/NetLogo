@@ -46,7 +46,10 @@ with WindowEvents.LoadModelEvent.Handler
 
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
-    if (b) new WindowEvents.DirtyEvent(None).raise(this)
+    if (b) {
+      new WindowEvents.DirtyEvent(None).raise(this)
+      new org.nlogo.window.Events.UpdateModelEvent(m => m.copy(code = innerSource)).raise(this)
+    }
   }
 
   def handle(e: WindowEvents.LoadModelEvent) {

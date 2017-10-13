@@ -49,7 +49,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.procedures = results.proceduresMap
-    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
+    ws.clearRunCache() //(WTH IS THIS? - JC 10/27/09)
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
     model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)

@@ -6,6 +6,9 @@ import
   java.net.URI
 
 import
+  java.io.{ StringWriter, Writer }
+
+import
   java.nio.{ charset, file },
     charset.StandardCharsets,
     file.{ Files, Paths }
@@ -18,7 +21,7 @@ import
     core.{ model, I18N, Model, Shape, Widget },
       model.{ Element, ElementFactory, LinkShapeXml, Text, VectorShapeXml, WidgetXml },
       Shape.{ LinkShape, VectorShape },
-    api.{ FileIO, Version }
+    api.{ FileIO, TwoDVersion }
 
 import
   org.nlogo.api.{ ComponentSerialization, ModelFormat }
@@ -80,7 +83,8 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
 
   object VersionComponent extends ComponentSerialization[Section, NLogoXFormat] {
     val componentName = "org.nlogo.modelsection.version"
-    override def addDefault = (_.copy(version = Version.version))
+    // TwoDVersion is used here because it's "generic".
+    override def addDefault = (_.copy(version = TwoDVersion.version))
     def serialize(m: Model): Element = factory.newElement("version").withText(m.version).build
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(e: Element) = { (m: Model) =>
@@ -91,7 +95,7 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
       if (versionString.startsWith("NetLogo"))
         Success(m.copy(version = versionString))
       else {
-        val errorString = I18N.errors.getN("fileformat.invalidversion", name, Version.version, versionString)
+        val errorString = I18N.errors.getN("fileformat.invalidversion", name, TwoDVersion.version, versionString)
         Failure(new NLogoXFormatException(errorString))
       }
     }
@@ -211,9 +215,9 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
     }
   }
 
-  def writeSections(sections: Map[String,Section],location: URI): Try[URI] = {
+  private def normalizedElems(sections: Map[String,Section]): Try[Elem] = {
     val topScope = new NamespaceBinding(null, namespace, null)
-    val tryRootElem = factory.newElement("model").withElementList(sections.values.toSeq).build match {
+    factory.newElement("model").withElementList(sections.values.toSeq).build match {
       case s: ScalaXmlElement =>
         val elem = s.elem
         val normalizedElem =
@@ -225,17 +229,24 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
         Success(normalizedElem)
       case _ => Failure(new NLogoXFormatException("internal error: unable to write nlogox file"))
     }
+  }
 
+  private def writeScalaXMLElements(writer: Writer, rootElem: Elem): Unit = {
+    XML.write(writer, rootElem, "UTF-8", true, null)
+    writer.write("\n")
+    writer.flush()
+    writer.close()
+  }
+
+  def writeSections(sections: Map[String,Section],location: URI): Try[URI] = {
+    val tryRootElem = normalizedElems(sections)
     val tryWriter = Try(Files.newBufferedWriter(Paths.get(location), StandardCharsets.UTF_8))
 
     for {
       rootElem <- tryRootElem
       writer <- tryWriter
     } yield {
-      XML.write(writer, rootElem, "UTF-8", true, null)
-      writer.write("\n")
-      writer.flush()
-      writer.close()
+      writeScalaXMLElements(writer, rootElem)
       location
     }
     // this doesn't work right now, see https://github.com/scala/scala-xml/issues/76
@@ -258,7 +269,13 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
     */
   }
 
-  def sectionsToSource(sections: Map[String,Section]): Try[String] = ???
+  def sectionsToSource(sections: Map[String,Section]): Try[String] = {
+    val writer = new StringWriter()
+    normalizedElems(sections).map { e =>
+      writeScalaXMLElements(writer, e)
+      e.toString
+    }
+  }
 
   def codeComponent: ComponentSerialization[Section,NLogoXFormat] = CodeComponent
   def infoComponent: ComponentSerialization[Section,NLogoXFormat] = InfoComponent

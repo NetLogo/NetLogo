@@ -17,11 +17,11 @@ class Worker(val protocol: LabProtocol)
   def addListener(listener: ProgressListener) {
     listeners += listener
   }
-  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
-    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w))
+  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, versionString: String, w: java.io.PrintWriter) {
+    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, versionString, w))
   }
-  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
-    addListener(new TableExporter(modelFileName, initialDims, protocol, w))
+  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, versionString: String, w: java.io.PrintWriter) {
+    addListener(new TableExporter(modelFileName, initialDims, protocol, versionString, w))
   }
   var runners: Seq[Runner] = null
   // we only want to compile stuff once per workspace, so use this

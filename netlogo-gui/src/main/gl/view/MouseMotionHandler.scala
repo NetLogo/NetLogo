@@ -52,19 +52,14 @@ with java.awt.event.MouseWheelListener {
     prevMouseY = evt.getY
     if (!evt.isPopupTrigger && movementMode == InteractMode && hasButton1(evt))
       view.renderer.mouseDown(true)
-    else {
-      if (evt.isPopupTrigger)
-        view.doPopup(evt)
+    else
       view.renderer.showCrossHairs(true)
-    }
   }
 
   def mouseReleased(evt: MouseEvent) {
     view.renderer.showCrossHairs(false)
     if (!evt.isPopupTrigger && (movementMode == InteractMode) && hasButton1(evt))
       view.renderer.mouseDown(false)
-    else if (evt.isPopupTrigger)
-      view.doPopup(evt)
     view.signalViewUpdate()
   }
 

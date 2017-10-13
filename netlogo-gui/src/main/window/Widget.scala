@@ -10,6 +10,7 @@ import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ Widget => CoreWidget }
 import org.nlogo.window.Events.{ WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent }
+import org.nlogo.awt.Hierarchy
 
 object Widget {
   trait LoadHelper {
@@ -74,7 +75,7 @@ abstract class Widget extends JPanel {
   }
 
   def editFinished(): Boolean = {
-    new WidgetEditedEvent(this).raise(this)
+    new WidgetEditedEvent(this, findWidgetPanel).raise(this)
     true
   }
 
@@ -99,8 +100,12 @@ abstract class Widget extends JPanel {
   }
 
   def findWidgetContainer: WidgetContainer =
-    org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer])
+    Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer])
       .orNull.asInstanceOf[WidgetContainer]
+
+  def findWidgetPanel: AbstractWidgetPanel =
+    Hierarchy.findAncestorOfClass(this, classOf[AbstractWidgetPanel])
+      .orNull.asInstanceOf[AbstractWidgetPanel]
 
   def displayName(displayName: String): Unit = {
     this.displayName = displayName
@@ -166,7 +171,7 @@ abstract class Widget extends JPanel {
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
     org.nlogo.window.Event.rehash()
-    new WidgetAddedEvent(this).raise(this)
+    new WidgetAddedEvent(this, findWidgetPanel).raise(this)
   }
 
   implicit class RichStringOption(s: Option[String]) {

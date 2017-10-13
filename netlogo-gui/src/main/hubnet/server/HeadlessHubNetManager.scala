@@ -29,7 +29,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspace, loader: ModelLoader, m
       widgets = ws
     }
   }
-  override def updateModel(m: Model): Model = {
+  def updateModel(m: Model): Model = {
     m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(widgets), Seq())
   }
   override def modelWidgets: Seq[CoreWidget] = widgets

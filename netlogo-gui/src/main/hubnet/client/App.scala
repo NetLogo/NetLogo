@@ -20,10 +20,14 @@ object App {
     handler.getClass.getDeclaredMethod("init").invoke(handler)
     handler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(handler, this)
     VMCheck.detectBadJVMs()
+    // NOTE: While generally we shouldn't rely on a system property to tell
+    // us whether or not we're in 3D, it's fine to do it here because:
+    // * We only call this once, right at boot time.
+    // * We never switch 2D / 3D in HubNet
     val compiler =
       Femto.get[PresentationCompilerInterface](
         "org.nlogo.compile.Compiler",
-        if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+        if (Version.is3DInternal) NetLogoThreeDDialect else NetLogoLegacyDialect)
     ClientApp.mainHelper(args, compiler)
   }
 }

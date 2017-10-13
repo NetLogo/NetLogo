@@ -5,7 +5,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import java.util.Date
-import org.nlogo.api.Version
+import org.nlogo.api.TwoDVersion
 import org.nlogo.hubnet.connection.{Streamable, AbstractConnection}
 
 // TODO remove die hard. fix ALL of this business.
@@ -39,8 +39,8 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
       // so, this string we received must be the version of the client.
       case s:String =>
         if (clientId == null) {
-          if (s == Version.version) validClientVersion = true
-          sendData(Version.version)
+          if (s == TwoDVersion.version) validClientVersion = true
+          sendData(TwoDVersion.version)
         }
         else {
           // TODO: handle the client sending another string after theyve already logged in
@@ -75,7 +75,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         }
         else if (!validClientVersion) {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "
-                  + "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version))
+                  + "match the version of the server.\nPlease use the HubNet Client that comes with " + TwoDVersion.version))
         }
         else if(!server.isSupportedClientType(clientType)){
           sendData(new LoginFailure("The HubNet model you are connected to does not support your client type: " + clientType))
@@ -177,7 +177,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         val message =
           "An incompatible version of the HubNet Client tried logging in.\n" +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
-          Version.version
+          TwoDVersion.version
         org.nlogo.api.Exceptions.handle(new Exception(message, e))
       } else {
         if (!sendingEx) org.nlogo.api.Exceptions.handle(e)

@@ -2,25 +2,32 @@
 
 package org.nlogo.headless
 
-import scala.util.{ Failure, Success, Try }
+import java.nio.file.{ Path, Paths }
 
-import org.nlogo.api.{ PreviewCommands, Version }
+import org.nlogo.api.{ PreviewCommands, ThreeDVersion, TwoDVersion, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Workspace
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{ SlowTest, ThreeDTag, TwoDTag }
 import org.nlogo.workspace.{ ExtensionManager, ModelsLibrary }
+import org.nlogo.fileformat
 import org.scalatest.FunSuite
+
+import scala.util.{ Failure, Success, Try }
+import scala.collection.JavaConverters._
+
 
 class TestCompileAll extends FunSuite with SlowTest {
 
   // Models whose path contains any of these strings will not be tested at all:
-  def excludeModel(path: String): Boolean = {
-    if (Version.is3D) ! path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
-    else (path.endsWith(".nlogo3d") || // when not in 3D, skip 3D models
-      path.contains("vid") || // the vid extension loads javafx on startup, which we don't want in headless mode.
-      path.contains("r") || // the r extension relies on R, which is system-dependent and we don't want to depend on.
-      path.endsWith("5.x.nlogo") || // This is a LS model specifically for testing version problems.
-      path.endsWith("LS-Widgets.nlogo")) // This is a LS model designed to test widgets with errors.
+  def excludeModel(path: Path): Boolean = {
+    // the vid extension loads javafx on startup, which we don't want in headless mode.
+    path.iterator.asScala.map(_.toString).toSet.contains("vid") ||
+    // the r extension relies on R, which is system-dependent and we don't want to depend on.
+    path.iterator.asScala.map(_.toString).toSet.contains("r") ||
+    // This is a LS model specifically for testing version problems.
+    path.getFileName.toString.endsWith("5.x.nlogo") ||
+    // This is a LS model designed to test widgets with errors.
+    path.getFileName.toString.endsWith("LS-Widgets.nlogo")
   }
 
   // and those are exempt from having their preview commands tested:
@@ -29,18 +36,25 @@ class TestCompileAll extends FunSuite with SlowTest {
       .exists(path.contains)
 
   val modelPaths =
-    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionPath))
-      .map(new java.io.File(_).getCanonicalPath()).distinct // workaround for https://github.com/NetLogo/NetLogo/issues/765
-      .filterNot(excludeModel)
+    (ModelsLibrary.getModelPaths(TwoDVersion) ++
+      ModelsLibrary.getModelPaths(ThreeDVersion) ++
+      ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionPath, TwoDVersion) ++
+      ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionPath, ThreeDVersion))
+        .map(s => Paths.get(s).toAbsolutePath)
+        .distinct
+        .filterNot(excludeModel _)
 
   for (path <- modelPaths) {
-    test("compile: " + path, SlowTest.Tag) {
-      compile(path)
+    val version = fileformat.modelVersionAtPath(path.toString)
+      .getOrElse(throw new RuntimeException("Unable to determine version of " + path.toString))
+    val tag = if (version.is3D) ThreeDTag else TwoDTag
+    test("compile: " + path.toString, tag, SlowTest.Tag) {
+      compile(path.toString, version)
     }
   }
 
-  def compile(path: String) {
-    val workspace = HeadlessWorkspace.newInstance
+  def compile(path: String, version: Version) {
+    val workspace = HeadlessWorkspace.newInstance(version.is3D)
     // this keeps patches from being created, which we don't need,
     // and which was slowing things down - ST 1/13/05
     // and has some other effects - ST 12/6/07
@@ -49,8 +63,8 @@ class TestCompileAll extends FunSuite with SlowTest {
       workspace.open(path)
       if (!excludePreviewCommands(path)) compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
-      val lab = HeadlessWorkspace.newLab
-      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path, workspace)
+      val lab = HeadlessWorkspace.newLab(version.is3D)
+      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path, version, workspace)
       protocols.foreach(lab.newWorker(_).compile(workspace))
     } finally workspace.dispose()
   }

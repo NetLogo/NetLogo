@@ -26,6 +26,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
       def resizeView() { }
       def currentPlot(plot: String) { }
       def getPlot(plot: String): PlotInterface = null
+      def findPlot(plot: String): Option[PlotInterface] = None
       def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) { }
       def isExtensionName(name: String) = false
     }

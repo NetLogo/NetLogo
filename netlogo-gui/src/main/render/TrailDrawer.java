@@ -225,7 +225,7 @@ public strictfp class TrailDrawer
 
       writer.println(Dump.csv().encode(Double.toString(world.patchSize())));
 
-      String colorString = org.nlogo.util.HexString.toHexString(colors());
+      String colorString = org.nlogo.api.HexString.toHexString(colors());
 
       Dump.csv().stringToCSV(writer, colorString);
     }

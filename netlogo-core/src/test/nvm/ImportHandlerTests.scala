@@ -45,7 +45,10 @@ class ImportHandlerTests extends FunSuite {
     override def getExtensionName: String = ???
   }
 
-  def extensionManager = new DummyExtensionManager()
+  def extensionManager = new DummyExtensionManager() {
+    override def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject =
+      new DummyExtensionObject(extname, typeName, value)
+  }
 
   def importHandler = new ImportHandler(defaultWorld, extensionManager)
 }

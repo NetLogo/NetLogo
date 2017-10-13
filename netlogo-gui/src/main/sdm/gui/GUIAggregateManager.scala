@@ -52,7 +52,7 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
       }
   }
 
-  override def updateModel(m: CoreModel): CoreModel = {
+  def updateModel(m: CoreModel): CoreModel = {
     if (editor == null || !editor.drawing.figures.hasNextFigure)
       m
     else

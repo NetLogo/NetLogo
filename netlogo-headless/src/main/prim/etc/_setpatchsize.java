@@ -19,10 +19,8 @@ public final strictfp class _setpatchsize
     final double newPatchSize = argEvalDoubleValue(context, 0);
     if (newPatchSize != workspace.patchSize()) {
       final WorldDimensions dim = workspace.world().dimensionsAdjustedForPatchSize(newPatchSize);
-      workspace.waitFor
-          (new org.nlogo.api.CommandRunnable() {
+      workspace.waitFor(new org.nlogo.api.CommandRunnable() {
             public void run() {
-              WorldDimensions dim = workspace.world().getDimensions();
               workspace.setDimensions(dim, true, WorldResizer.stopNonObserverJobs());
             }
           });

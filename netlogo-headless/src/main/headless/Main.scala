@@ -3,8 +3,9 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, TwoDVersion }
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.fileformat
 
 object Main {
   class CancelException extends RuntimeException
@@ -75,13 +76,13 @@ object Main {
           die("missing argument after " + arg)
       }
       if(arg == "--version")
-        { println(Version.version); return None }
+        { println(TwoDVersion.version); return None }
       else if(arg == "--extension-api-version")
         { println(APIVersion.version); return None }
       else if(arg == "--builddate")
-        { println(Version.buildDate); return None }
+        { println(TwoDVersion.buildDate); return None }
       else if(arg == "--fullversion")
-        { println(Version.fullVersion); return None }
+        { println(TwoDVersion.fullVersion); return None }
       else if(arg == "--model")
         { requireHasNext(); model = Some(it.next()) }
       else if(arg == "--min-pxcor")
@@ -120,7 +121,10 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
+    val version = fileformat.modelVersionAtPath(model.get)
+    if (version.isEmpty)
+      die(s"Unable to detect model version at path ${model.get}")
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors))
+                      spreadsheetWriter, dims, threads, suppressErrors, version.get))
   }
 }

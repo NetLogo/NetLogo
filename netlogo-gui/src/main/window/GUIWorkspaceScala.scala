@@ -23,7 +23,7 @@ import org.nlogo.nvm.{ DisplayAlways, DisplayStatus }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput, UserInteraction }
-import org.nlogo.window.Events.{ Enable2DEvent, ExportPlotEvent, ExportWidgetEvent, LoadModelEvent, OutputEvent }
+import org.nlogo.window.Events.{ Enable2DEvent, ExportPlotEvent, ExportWidgetEvent, LoadModelEvent, OutputEvent, UpdateModelEvent }
 
 object GUIWorkspaceScala {
   /**
@@ -54,6 +54,7 @@ abstract class GUIWorkspaceScala(config: WorkspaceConfig)
   with ExportPlotEvent.Handler
   with ExportWidgetEvent.Handler
   with LoadModelEvent.Handler
+  with UpdateModelEvent.Handler
   with TrailDrawerInterface {
 
   val listenerManager = config.listenerManager
@@ -111,6 +112,7 @@ abstract class GUIWorkspaceScala(config: WorkspaceConfig)
 
   def setSnapOn(snapOn: Boolean): Unit = {
     _snapOn = snapOn
+    modelTracker.updateModel(updateModel _)
   }
 
   def snapOn = _snapOn
@@ -196,10 +198,13 @@ abstract class GUIWorkspaceScala(config: WorkspaceConfig)
     world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
     world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
     e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings") match {
-      case Some(settings: ModelSettings) => setSnapOn(settings.snapToGrid)
+      case Some(settings: ModelSettings) => _snapOn = settings.snapToGrid
       case _ =>
     }
   }
+
+  def handle(e: UpdateModelEvent): Unit =
+    modelTracker.updateModel(m => e.updateFunction.apply(m))
 
   def updateModel(model: Model): Model = {
     model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))

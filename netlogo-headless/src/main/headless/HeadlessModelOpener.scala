@@ -1,8 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.headless
 
-import org.nlogo.workspace
-import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, InputBoxConstraint, NumericConstraint}
 import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
@@ -35,7 +33,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
-    WorldLoader.load(model.view, ws)
+    ws.loadWorld(model.view, ws)
 
     for(plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
@@ -44,8 +42,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val results = {
       val code = model.code
       ws.compiler.compileProgram(
-        code, Program.empty.copy(interfaceGlobals = model.interfaceGlobals),
-        ws.getExtensionManager, ws.compilationEnvironment, ws.flags)
+        code, Seq(), Program.empty.copy(interfaceGlobals = model.interfaceGlobals),
+        ws.getExtensionManager, ws.getCompilationEnvironment)
     }
     ws.procedures = results.proceduresMap
     ws.clearRunCache()

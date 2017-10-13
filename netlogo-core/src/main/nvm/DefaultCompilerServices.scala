@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.{ CompilerServices }
+import org.nlogo.api.{ CompilerServices, EditorCompiler }
 import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
 
@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 // HubNet client is one such context; also various testing contexts; also when reading
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
-class DefaultCompilerServices(compiler: PresentationCompilerInterface) extends CompilerServices {
+class DefaultCompilerServices(compiler: EditorCompiler) extends CompilerServices {
   def dialect: Dialect = compiler.defaultDialect
   def emptyProgram = Program.fromDialect(compiler.defaultDialect)
   def autoConvert(modelVersion: String)(source: String) = source
@@ -20,10 +20,10 @@ class DefaultCompilerServices(compiler: PresentationCompilerInterface) extends C
     compiler.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =
     compiler.checkReporterSyntax(source, emptyProgram,
-                                 new ListMap[String,Procedure], null, false)
+                                 Procedure.NoProcedures, null, false)
   def checkCommandSyntax(source: String) =
     compiler.checkCommandSyntax(source, emptyProgram,
-                                new ListMap[String,Procedure], null, true)
+                                Procedure.NoProcedures, null, true)
   def readFromString(source: String) =
     compiler.readFromString(source)
   def isConstant(s: String) =

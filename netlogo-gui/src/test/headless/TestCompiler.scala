@@ -2,150 +2,212 @@
 
 package org.nlogo.headless
 
-import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
+import org.scalatest.{ FunSuite, Tag }
 import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.util.{ ThreeDTag, TwoDTag }
 
-class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
+class TestCompiler extends FunSuite {
 
-  var workspace: HeadlessWorkspace = _
-  override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
-  override def afterEach() { workspace.dispose() }
+  class TestEnv(val is3D: Boolean) {
+    var _workspace: HeadlessWorkspace = _
 
-  def declare(source:String) {
-    workspace.initForTesting(5, source)
-  }
-  def declareBad(source:String,expectedError:String) {
-    val exception = intercept[CompilerException] {
-      declare(source)
+    def workspace: HeadlessWorkspace = {
+      if (_workspace == null) {
+        _workspace = HeadlessWorkspace.newInstance(is3D)
+      }
+      _workspace
     }
-    assertResult(expectedError)(exception.getMessage)
-  }
-  def badCommand(command:String,expectedError:String) {
-    val exception = intercept[CompilerException] {
-      workspace.command(command)
+
+    def cleanup(): Unit = {
+      if (_workspace != null)
+        workspace.dispose()
     }
-    assertResult(expectedError)(exception.getMessage)
+
+    def declare(source:String) {
+      initForTesting(5, source)
+    }
+
+    def initForTesting(size: Int, source: String) {
+      workspace.initForTesting(is3D, size, source)
+    }
+
+    def declareBad(source:String,expectedError:String) {
+      val exception = intercept[CompilerException] {
+        declare(source)
+      }
+      assertResult(expectedError)(exception.getMessage)
+    }
+
+    def badCommand(command:String,expectedError:String) {
+      val exception = intercept[CompilerException] {
+        workspace.command(command)
+      }
+      assertResult(expectedError)(exception.getMessage)
+    }
   }
 
-  test("RunUnknownProcedure") {
+  def compilerTest(name: String)(f: TestEnv => Unit): Unit = {
+    def runTest(suffix: String, tag: Tag, env: => TestEnv): Unit = {
+      test(name + suffix, tag) {
+        try {
+          f(env)
+        }
+        finally {
+          env.cleanup()
+        }
+      }
+    }
+    runTest(" (2D)", TwoDTag, new TestEnv(false))
+    runTest(" (3D)", ThreeDTag, new TestEnv(true))
+  }
+
+  compilerTest("RunUnknownProcedure") { e =>
+    import e._
     badCommand("foo 5",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
   }
 
-  test("RunWithUnknownArgument") {
+  compilerTest("RunWithUnknownArgument") { e =>
+    import e._
     badCommand("crt foo",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
   }
 
-  test("GetUnknownVariable") {
+  compilerTest("GetUnknownVariable") { e =>
+    import e._
     badCommand("let a foo",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
   }
 
-  test("SetUnknownVariable") {
+  compilerTest("SetUnknownVariable") { e =>
+    import e._
     badCommand("set foo 5",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
   }
 
-  test("LetSameVariableTwice1") {
+  compilerTest("LetSameVariableTwice1") { e =>
+    import e._
     badCommand("let a 5 let a 6",
                "There is already a local variable here called A")
   }
-  test("LetSameVariableTwice2") {
+  compilerTest("LetSameVariableTwice2") { e =>
+    import e._
     badCommand("let a 5 ask patches [ let a 6 ]",
                "There is already a local variable here called A")
   }
-  test("LetSameNameAsCommandProcedure1") {
+  compilerTest("LetSameNameAsCommandProcedure1") { e =>
+    import e._
     declare("to a end")
     badCommand("let a 5",
                "There is already a procedure called A")
   }
-  test("LetSameNameAsCommandProcedure2") {
+  compilerTest("LetSameNameAsCommandProcedure2") { e =>
+    import e._
     declareBad("to b let a 5 end  to a end",
                "There is already a procedure called A")
   }
-  test("LetSameNameAsReporterProcedure1") {
+  compilerTest("LetSameNameAsReporterProcedure1") { e =>
+    import e._
     declare("to-report a end")
     badCommand("let a 5",
                "There is already a procedure called A")
   }
-  test("LetSameNameAsReporterProcedure2") {
+  compilerTest("LetSameNameAsReporterProcedure2") { e =>
+    import e._
     declareBad("to b let a 5 end  to-report a end",
                "There is already a procedure called A")
   }
-  test("LetSameNameAsGlobal") {
+  compilerTest("LetSameNameAsGlobal") { e =>
+    import e._
     declare("globals [glob1]")
     badCommand("let glob1 5",
                "There is already a global variable called GLOB1")
   }
-  test("LetSameNameAsBreed") {
+  compilerTest("LetSameNameAsBreed") { e =>
+    import e._
     declare("breed [mice mouse]")
     badCommand("let mice 5",
                "There is already a breed called MICE")
   }
-  test("LetSameNameAsTurtleVariable") {
+  compilerTest("LetSameNameAsTurtleVariable") { e =>
+    import e._
     declare("turtles-own [tvar]")
     badCommand("let tvar 5",
                "There is already a turtle variable called TVAR")
   }
-  test("LetSameNameAsBreedVariable") {
+  compilerTest("LetSameNameAsBreedVariable") { e =>
+    import e._
     declare("breed [mice mouse] mice-own [fur]")
     badCommand("let fur 5",
                "There is already a MICE-OWN variable called FUR")
   }
-  test("LetSameNameAsPrimitiveCommand") {
+  compilerTest("LetSameNameAsPrimitiveCommand") { e =>
+    import e._
     badCommand("let fd 5",
                "There is already a primitive command called FD")
   }
-  test("LetSameNameAsPrimitiveReporter1") {
+  compilerTest("LetSameNameAsPrimitiveReporter1") { e =>
+    import e._
     badCommand("let timer 5",
                "There is already a primitive reporter called TIMER")
   }
-  test("LetSameNameAsPrimitiveReporter2") {
+  compilerTest("LetSameNameAsPrimitiveReporter2") { e =>
+    import e._
     badCommand("let sin 5",
                "There is already a primitive reporter called SIN")
   }
-  test("LetShadowsLet") {
+  compilerTest("LetShadowsLet") { e =>
+    import e._
     badCommand("let x 4 ask patches [ let x 0 ]",
                "There is already a local variable here called X")
   }
-  test("LetNameSameAsEnclosingCommandProcedureName") {
+  compilerTest("LetNameSameAsEnclosingCommandProcedureName") { e =>
+    import e._
     declareBad("to bazort let bazort 5 end",
                "There is already a procedure called BAZORT")
   }
-  test("LetNameSameAsEnclosingReporterProcedureName") {
+  compilerTest("LetNameSameAsEnclosingReporterProcedureName") { e =>
+    import e._
     declareBad("to-report bazort let bazort 5 report bazort end",
                "There is already a procedure called BAZORT")
   }
-  test("SameLocalVariableTwice1") {
+  compilerTest("SameLocalVariableTwice1") { e =>
+    import e._
     declareBad("to a1 locals [b b] end",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
   }
-  test("SameLocalVariableTwice2") {
+  compilerTest("SameLocalVariableTwice2") { e =>
+    import e._
     declareBad("to a2 [b b] end",
                "There is already a local variable called B here")
   }
-  test("SameLocalVariableTwice3") {
+  compilerTest("SameLocalVariableTwice3") { e =>
+    import e._
     declareBad("to a3 let b 5 let b 6 end",
                "There is already a local variable here called B")
   }
-  test("SameLocalVariableTwice4") {
+  compilerTest("SameLocalVariableTwice4") { e =>
+    import e._
     declareBad("to a4 locals [b] let b 5 end",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
   }
-  test("SameLocalVariableTwice5") {
+  compilerTest("SameLocalVariableTwice5") { e =>
+    import e._
     declareBad("to a5 [b] locals [b] end",
                I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
   }
-  test("SameLocalVariableTwice6") {
+  compilerTest("SameLocalVariableTwice6") { e =>
+    import e._
     declareBad("to a6 [b] let b 5 end",
                "There is already a local variable here called B")
   }
-  test("NonAsciiChars") {
+  compilerTest("NonAsciiChars") { e =>
+    import e._
     badCommand("blah " + 8211.toChar + " blah ",
                "This non-standard character is not allowed.")
   }
-  test("BreedOwnsConflict") {
+  compilerTest("BreedOwnsConflict") { e =>
+    import e._
     declareBad("undirected-link-breed [edges edge]\n" +
                "breed [nodes node]\n" +
                "breed [foos foo]\n" +
@@ -154,14 +216,16 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                "foos-own [weight] ",
                "There is already a EDGES-OWN variable called WEIGHT")
   }
-  test("BreedOwnsNoConflict") {
-    workspace.initForTesting(5,
-                             "undirected-link-breed [edges edge]\n" +
-                             "breed [nodes node]\n" +
-                             "breed [foos foo]\n" +
-                             "edges-own [lweight]\n" +
-                             "nodes-own [weight]\n" +
-                             "foos-own [weight]")
+
+  compilerTest("BreedOwnsNoConflict") { e =>
+    import e._
+    initForTesting(5,
+                   "undirected-link-breed [edges edge]\n" +
+                   "breed [nodes node]\n" +
+                   "breed [foos foo]\n" +
+                   "edges-own [lweight]\n" +
+                   "nodes-own [weight]\n" +
+                   "foos-own [weight]")
   }
 
   /// isReporter
@@ -169,20 +233,23 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   val reporters = Seq("3", "[]", "[", "((5))", "timer", "glob1")
   val nonReporters = Seq("", ";", " ; ", "ca", "((ca))", "5984783478344387487348734")
   for(x <- reporters)
-    test("is a reporter: '" + x + "'") {
-      workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
-      assertResult(true) { workspace.isReporter(x) }
+    compilerTest("is a reporter: '" + x + "'") { e =>
+      import e._
+      initForTesting(5, HeadlessWorkspace.TestDeclarations)
+      assertResult(true) { workspace.compilerServices.isReporter(x) }
     }
   for(x <- nonReporters)
-    test("isn't a reporter: '" + x + "'") {
-      workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
-      assertResult(false) { workspace.isReporter(x) }
+    compilerTest("isn't a reporter: '" + x + "'") { e =>
+      import e._
+      initForTesting(5, HeadlessWorkspace.TestDeclarations)
+      assertResult(false) { workspace.compilerServices.isReporter(x) }
     }
 
-  test("isReporter on user-defined procedures") {
-    workspace.initForTesting(5, "to foo end to-report bar [] report 5 end")
-    assertResult(false) { workspace.isReporter("foo") }
-    assertResult(true) { workspace.isReporter("bar") }
+  compilerTest("isReporter on user-defined procedures") { e =>
+    import e._
+    initForTesting(5, "to foo end to-report bar [] report 5 end")
+    assertResult(false) { workspace.compilerServices.isReporter("foo") }
+    assertResult(true) { workspace.compilerServices.isReporter("bar") }
   }
 
 }

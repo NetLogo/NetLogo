@@ -2,26 +2,26 @@
 
 package org.nlogo.headless
 
-import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, Perspective, Version }
+import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
+import org.nlogo.api.{ FileIO, Perspective }
 import org.nlogo.workspace.Checksummer
 import org.nlogo.util.SlowTest
 import scala.collection.JavaConverters._
-class TestImportExport extends FunSuite with AbstractTestLanguage
+
+class TestImportExport extends AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
-  override def beforeEach() {
-    init()
+  override def initializeRunner(r: Runner): Runner = {
+    val newR = super.initializeRunner(r)
     // the default error handler just spits something to stdout or stderr or somewhere.
     // we want to fail hard. - ST 7/21/10
-    workspace.importerErrorHandler =
+    newR.workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           sys.error(title + " / " + errorDetails + " / " + fatalError)
       }
+    newR
   }
-
-  override def afterEach() { workspace.dispose() }
 
   def getUniqueFilename() = {
     new java.io.File("tmp").mkdir()
@@ -36,11 +36,12 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   def roundTripHelper(setup: String,
                       model: String = "",
-                      worldSize: Int = 0) {
+                      worldSize: Int = 0)(r: Runner): Unit = {
+    import r._
     val filename = getUniqueFilename()
 
     // get ready
-    workspace.initForTesting(worldSize, model)
+    initForTesting(worldSize, model)
     testCommand("random-seed 378234"); // just some number I made up
 
     // run the setup commands, run export-world, and slurp the resulting export into a string
@@ -73,114 +74,74 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   /// tests that use roundTripHelper
 
-  test("testRoundTripEmpty", SlowTest.Tag) {
-    roundTripHelper("")
-  }
+  testInSpace("testRoundTripEmpty", normalConfigurations, SlowTest.Tag)(roundTripHelper(""))
 
-  test("testRoundTripTicks1", SlowTest.Tag) {
-    roundTripHelper("reset-ticks")
-  }
+  testInSpace("testRoundTripTicks1", normalConfigurations, SlowTest.Tag)(roundTripHelper("reset-ticks"))
 
-  test("testRoundTripTicks2", SlowTest.Tag) {
-    roundTripHelper("reset-ticks tick")
-  }
+  testInSpace("testRoundTripTicks2", normalConfigurations, SlowTest.Tag)(roundTripHelper("reset-ticks tick"))
 
-  test("testRoundTripTicks3", SlowTest.Tag) {
-    roundTripHelper("reset-ticks tick clear-ticks")
-  }
+  testInSpace("testRoundTripTicks3", normalConfigurations, SlowTest.Tag)(
+    roundTripHelper("reset-ticks tick clear-ticks"))
 
-  test("testRoundTripSimple", SlowTest.Tag) {
-    roundTripHelper("crt 30 [ set heading who * 90 fd who ]",
-      worldSize = 5)
-  }
+  testInSpace("testRoundTripSimple", normalConfigurations, SlowTest.Tag)(
+    roundTripHelper("crt 30 [ set heading who * 90 fd who ]", worldSize = 5))
 
-  if(!Version.is3D)
-    test("RoundTripComplexNewFormat", SlowTest.Tag) {
-      roundTripHelper("setup true", COMPLEX_SOURCE, worldSize = 3)
-    }
-
-  test("testRoundTripSpecialCharacter", SlowTest.Tag) {
-    // 8211 and 8212 are some arbitrary unicode values. we use numbers since we don't want non-ASCII
-    // characters in the source files -- ST 2/14/07
+  // 8211 and 8212 are some arbitrary unicode values. we use numbers since we don't want non-ASCII
+  // characters in the source files -- ST 2/14/07
+  testInSpace("testRoundTripSpecialCharacter", normalConfigurations, SlowTest.Tag)(
     roundTripHelper("ask one-of patches [ set plabel \""
       + 8211.toChar
       + 8212.toChar
-      + "\" ]")
-  }
+      + "\" ]"))
 
-  test("testRoundTripAllTurtlesAllPatches1", SlowTest.Tag) {
-    roundTripHelper("set x turtles set y patches",
-      "globals [x y]")
-  }
+  testInSpace("testRoundTripAllTurtlesAllPatches1", normalConfigurations, SlowTest.Tag)(
+    roundTripHelper("set x turtles set y patches", "globals [x y]"))
 
-  test("testAgentsStoredInAgentVariables", SlowTest.Tag) {
+  testInSpace("testAgentsStoredInAgentVariables", normalConfigurations, SlowTest.Tag)(
     roundTripHelper("cro 4 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of other turtles ]\n" +
       "ask turtle 1 [ set label one-of patches ]\n" +
       "ask turtle 2 [ set label sort turtles ]\n" +
-      "ask turtle 3 [ set label sort patches ]")
-  }
+      "ask turtle 3 [ set label sort patches ]"))
 
-  test("testBreededTurtlesStoredInAgentVariables", SlowTest.Tag) {
+  testInSpace("testBreededTurtlesStoredInAgentVariables", normalConfigurations, SlowTest.Tag)(
     roundTripHelper("create-ordered-mice 2 [ create-links-with other mice ]\n" +
       "ask turtle 0 [ set label one-of other mice ]\n" +
       "ask turtle 1 [ set label sort mice ]",
-      "breed [mice mouse]")
-  }
+      "breed [mice mouse]"))
 
   // ticket #934
-  test("testLinksStoredInAgentVariables", SlowTest.Tag) {
+  testInSpace("testLinksStoredInAgentVariables", normalConfigurations, SlowTest.Tag)(
     roundTripHelper("cro 2 [ create-links-with other turtles ]\n" +
       "ask turtle 0 [ set label one-of links ]\n" +
-      "ask turtle 1 [ set label sort links]\n")
-  }
+      "ask turtle 1 [ set label sort links]\n"))
 
   // more ticket #934
-  test("testBreededLinksStoredInAgentVariables", SlowTest.Tag) {
+  testInSpace("testBreededLinksStoredInAgentVariables", normalConfigurations, SlowTest.Tag)(
     roundTripHelper("cro 2 [ create-shipments-to other turtles ]\n" +
       "ask turtle 0 [ set label one-of shipments ]\n" +
       "ask turtle 1 [ set label sort shipments]\n",
-      "directed-link-breed [shipments shipment]")
-  }
+      "directed-link-breed [shipments shipment]"))
 
-  test("testRoundTripAllTurtlesAllPatches2", SlowTest.Tag) {
+  testInSpace("testRoundTripAllTurtlesAllPatches2", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     // the bug we're testing for is elusive and may only appear if we actually change the world size
     // around - ST 12/21/04
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [x y]")
+    initForTesting(5, "globals [x y]")
     testCommand("crt 10 set x turtles set y patches")
     testCommand("export-world \"" + filename + "\"")
-    workspace.initForTesting(6, "globals [x y]")
+    initForTesting(6, "globals [x y]")
     testCommand("import-world \"" + filename + "\"")
     assert(delete(filename))
     testReporter("x = turtles", "true")
     testReporter("y = patches", "true")
   }
 
-  if(!Version.is3D)
-    test("testImportDrawing", SlowTest.Tag) {
-      val filename = getUniqueFilename()
-      workspace.initForTesting(10)
-      testCommand("random-seed 2843")
-      testCommand("crt 10 [ pd  set pen-size random 5 ]")
-      testCommand("ask turtles [ fd random 5 ]")
-      val realColors = workspace.renderer.trailDrawer.colors
-      testCommand("export-world \"" + filename + "\"")
-      testCommand("ca")
-      testCommand("import-world \"" + filename + "\"")
-      val importedColors = workspace.renderer.trailDrawer.colors
-
-      assertResult(realColors.size)(importedColors.size)
-
-      // right now we can't test the pixels because they are not pixel for pixel the same, what we
-      // import is exactly as was, however, when we copy it for one image to the drawing image the
-      // colors can change ever so slightly. (we copy images because of an apple bug, see the
-      // TrailDrawer for details.  ev 3/1/06
-    }
-
-  test("testExportOutputArea", SlowTest.Tag) {
+  testInSpace("testExportOutputArea", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(10)
+    initForTesting(10)
     testCommand("ca")
     testCommand("output-print \"This is a test of output areas.\"");
     testCommand("export-world \"" + filename + "\"")
@@ -190,9 +151,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assertResult(expected)(actual)
   }
 
-  test("testExportLinks", SlowTest.Tag) {
+  testInSpace("testExportLinks", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(10, HeadlessWorkspace.TestDeclarations)
+    initForTesting(10, HeadlessWorkspace.TestDeclarations)
     testCommand("ca")
     testCommand("create-ordered-nodes 2 [ fd 2 ]")
     testCommand("ask node 0 [ create-link-to node 1 [ tie ] ]")
@@ -208,42 +170,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("[heading] of node 1", "0")
   }
 
-  if(!Version.is3D)
-    test("testImportInvalidSize", SlowTest.Tag) {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
-            {
-              assert(!fatalError)
-              assertResult("Error Importing Drawing")(title)
-              assertResult("Invalid data length, the drawing will not be imported")(
-                errorDetails)
-              true
-            }
-        }
-      testCommand("import-world \"test/import/invalid-drawing.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("testImportDrawingIncompleteData", SlowTest.Tag) {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
-            assert(!fatalError)
-            assertResult("Error Importing Drawing")(title)
-            assertResult("Invalid data length, the drawing will not be imported")(
-              errorDetails)
-            true
-          }
-        }
-      testCommand("import-world \"test/import/short-drawing.csv\"")
-    }
-
-  test("testImportSubject", SlowTest.Tag) {
+  testInSpace("testImportSubject", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(10)
+    initForTesting(10)
     testCommand("export-world \"" + filename + "\"")
     testCommand("import-world \"" + filename + "\"")
     testReporter("subject", "nobody")
@@ -270,55 +200,56 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assertResult(workspace.world.observer.perspective)(Perspective.Ride(workspace.world.turtles.agents.asScala.iterator.toSeq(1)))
   }
 
-  if(!Version.is3D)
-    test("testNonExistentPlot", SlowTest.Tag) {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+  testInSpace("testNonExistentPlot", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+          assert(!fatalError)
+          assertResult("Error Importing Plots")(title)
+          assertResult("The plot \"plot 2\" does not exist.")(
+            errorDetails)
+          true
+        }
+      }
+    testCommand("import-world \"test/import/plot-simple.csv\"")
+  }
+
+  testInSpace("testNonExistentPen", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    workspace.open("test/import/plot-simple.nlogo")
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String,
+                      fatalError: Boolean) =
+          {
             assert(!fatalError)
             assertResult("Error Importing Plots")(title)
-            assertResult("The plot \"plot 2\" does not exist.")(
-              errorDetails)
+            assertResult("The pen \"default 1\" does not exist.")(errorDetails)
             true
-          }
-        }
-      testCommand("import-world \"test/import/plot-simple.csv\"")
-    }
+          }}
+    testCommand("import-world \"plot-simple.csv\"")
+  }
 
-  if(!Version.is3D)
-    test("testNonExistentPen", SlowTest.Tag) {
-      workspace.open("test/import/plot-simple.nlogo")
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String,
-                        fatalError: Boolean) =
-            {
-              assert(!fatalError)
-              assertResult("Error Importing Plots")(title)
-              assertResult("The pen \"default 1\" does not exist.")(errorDetails)
-              true
-            }}
-      testCommand("import-world \"plot-simple.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("testCustomPenColor", SlowTest.Tag) {
-      val filename = getUniqueFilename()
-      workspace.open("test/import/plot-custom-color.nlogo")
-      testCommand("setup-plots update-plots")
-      testCommand("export-world \"../../" + filename + "\"")
-      val export1 = org.nlogo.api.FileIO.fileToString(filename)
-      testCommand("ca import-world \"../../" + filename + "\"")
-      testCommand("export-world \"../../" + filename + "\"")
-      val export2 = org.nlogo.api.FileIO.fileToString(filename)
-      assertResult(dropLines(export1, 3))(
-        dropLines(export2, 3))
-    }
-
-  test("testImportingTurtlesDying", SlowTest.Tag) {
+  testInSpace("testCustomPenColor", normalTwoD, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(10)
+    workspace.open("test/import/plot-custom-color.nlogo")
+    testCommand("setup-plots update-plots")
+    testCommand("export-world \"../../" + filename + "\"")
+    val export1 = org.nlogo.api.FileIO.fileToString(filename)
+    testCommand("ca import-world \"../../" + filename + "\"")
+    testCommand("export-world \"../../" + filename + "\"")
+    val export2 = org.nlogo.api.FileIO.fileToString(filename)
+    assertResult(dropLines(export1, 3))(
+      dropLines(export2, 3))
+  }
+
+  testInSpace("testImportingTurtlesDying", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
+    val filename = getUniqueFilename()
+    initForTesting(10)
     testCommand("crt 10")
     testCommand("ask turtle 9 [ die ]")
     testCommand("ask turtle 5 [ die ]")
@@ -330,9 +261,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("sort [who] of turtles", "[0 1 2 3 6 7 8 10 11]")
   }
 
-  test("testImportingTables", SlowTest.Tag) {
+  testInSpace("testImportingTables", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
+    initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [\"word\" \"value\"] [3 false]]")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
@@ -340,9 +272,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table1", "[[1 2] [\"word\" \"value\"] [3 false]]")
   }
 
-  test("testImportingTablesSameTable", SlowTest.Tag) {
+  testInSpace("testImportingTablesSameTable", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
+    initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("set table2 table1")
     testCommand("export-world \"" + filename + "\"")
@@ -353,9 +286,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5] [7 8]]")
   }
 
-  test("testImportingTablesTwoTables", SlowTest.Tag) {
+  testInSpace("testImportingTablesTwoTables", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
+    initForTesting(5, "globals [table1 table2] extensions [ table ]")
     testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("set table2 table:from-list [[1 2] [3 4] [4 5]]")
     testCommand("export-world \"" + filename + "\"")
@@ -366,9 +300,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list table2", "[[1 2] [3 4] [4 5]]")
   }
 
-  test("testImportingArrays", SlowTest.Tag) {
+  testInSpace("testImportingArrays", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
+    initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [1 2 3 4 \"string\" false]")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
@@ -376,9 +311,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar1", "[1 2 3 4 \"string\" false]")
   }
 
-  test("testImportingArraysSameArray", SlowTest.Tag) {
+  testInSpace("testImportingArraysSameArray", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
+    initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 ar1")
     testCommand("export-world \"" + filename + "\"")
@@ -388,9 +324,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar2", "[1 2 4]");
   }
 
-  test("testImportingArraysTwoArrays", SlowTest.Tag) {
+  testInSpace("testImportingArraysTwoArrays", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
+    initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 array:from-list [ 1 2 3 ]")
     testCommand("export-world \"" + filename + "\"")
@@ -401,9 +338,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("array:to-list ar2", "[1 2 3]");
   }
 
-  test("testImportingArraysAndTables", SlowTest.Tag) {
+  testInSpace("testImportingArraysAndTables", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2 t1 t2] extensions [ array table ]")
+    initForTesting(5, "globals [ar1 ar2 t1 t2] extensions [ array table ]")
     testCommand("set ar1 array:from-list [ 1 2 3 ]")
     testCommand("set ar2 array:from-list [ 1 2 3 ]")
     testCommand("set t1 table:from-list [ [1 2] [3 4]]")
@@ -421,79 +359,12 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   /// other tests (that don't use roundTripHelper)
 
-  if(!Version.is3D)
-    test("testTrailingCommas", SlowTest.Tag) {
-      workspace.initForTesting(35, FileIO.fileToString("test/import/trailing-commas.nlogo"))
-      testCommand("import-world \"test/import/trailing-commas.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("ImportWrongOrder", SlowTest.Tag) {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
-              assert(fatalError)
-              assertResult("Fatal Error- Incorrect Structure For Import File")(title)
-              assertResult("The agents are in the wrong order in the import file. " +
-                "The global variables should be first, followed by the turtles, " +
-                "followed by the patches.  Found TURTLES but needed " +
-                "GLOBALS\n\nThe import will now abort.")(errorDetails)
-              true
-            }}
-      testCommand("import-world \"test/import/wrong-order.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("ImportSentinelName", SlowTest.Tag) {
-      workspace.initForTesting(10)
-      testCommand("import-world \"test/import/TURTLES.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("ExtraFieldValue", SlowTest.Tag) {
-      workspace.initForTesting(35, FileIO.fileToString("test/import/trailing-commas.nlogo"))
-      val errorNumber = Array(0)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.ImporterJ.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
-            assert(!fatalError)
-            assertResult("Warning: Too Many Values For Agent")(title)
-            errorNumber(0) match {
-              case 0 =>
-                assertResult("Error Importing at Line 7: There are a total of "
-                  + "10 Global variables declared in this model "
-                  + "(including built-in variables).  The import-world "
-                  + "file has at least one agent in the GLOBALS section "
-                  + "with more than this number of values.\n\n"
-                  + "Action to be Taken: All the extra values will "
-                  + "be ignored for this section.")(
-                  errorDetails)
-              case 1 =>
-                assertResult("Error Importing at Line 54: There are a total of "
-                  + "5 Patch variables declared in this model "
-                  + "(including built-in variables).  The import-world "
-                  + "file has at least one agent in the PATCHES section "
-                  + "with more than this number of values.\n\n"
-                  + "Action to be Taken: All the extra values will "
-                  + "be ignored for this section.")(
-                  errorDetails)
-              case _ =>
-                fail()
-            }
-            errorNumber(0) += 1
-            true
-          }
-        }
-      testCommand("import-world \"test/import/extra-values.csv\"")
-      assertResult(2)(errorNumber(0))
-    }
-
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment1", SlowTest.Tag) {
+  testInSpace("testReproducibilityOfWhoNumberAssignment1", normalConfigurations, SlowTest.Tag) { i =>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(0)
+    initForTesting(0)
     testCommand("crt 4")
     testCommand("ask turtle 0 [ die ]")
     testCommand("ask turtle 2 [ die ]")
@@ -508,9 +379,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
-  test("testReproducibilityOfWhoNumberAssignment2", SlowTest.Tag) {
+  testInSpace("testReproducibilityOfWhoNumberAssignment2", normalConfigurations, SlowTest.Tag) { i=>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(0)
+    initForTesting(0)
     testCommand("crt 4")
     testCommand("ask turtle 2 [ die ]")
     testCommand("ask turtle 0 [ die ]")
@@ -525,9 +397,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // this is a less focused test with lots of turtles
   // that might hopefully catch new bugs
-  test("testReproducibilityOfWhoNumberAssignment3", SlowTest.Tag) {
+  testInSpace("testReproducibilityOfWhoNumberAssignment3", normalConfigurations, SlowTest.Tag) { i=>
+    import i._
     val filename = getUniqueFilename()
-    workspace.initForTesting(0)
+    initForTesting(0)
     testCommand("crt 500")
     testCommand("ask turtles [ if random 2 = 0 [ die ] ]")
     testCommand("export-world \"" + filename + "\"");
@@ -540,57 +413,41 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assert(delete(filename))
   }
 
-  test("utf 8 string", SlowTest.Tag) {
+  testInSpace("utf 8 string", normalConfigurations, SlowTest.Tag) { i =>
     val x = new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C")
-    roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
+    roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")(i)
   }
 
-  if (! Version.is3D)
-    test("CurrentPlotPenAfterImport", SlowTest.Tag) {
+  testInSpace("CurrentPlotPenAfterImport", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    workspace.open("test/import/current-plot-pen.nlogo")
+    testCommand("reset-ticks")
+    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
 
-      workspace.open("test/import/current-plot-pen.nlogo")
-      testCommand("reset-ticks")
-      assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+    val filename = getUniqueFilename()
+    testCommand(s"""export-world "../../$filename"""")
+    testCommand(s"""import-world "../../$filename"""")
+    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+    delete(filename)
+  }
 
-      val filename = getUniqueFilename()
-      testCommand(s"""export-world "../../$filename"""")
-      testCommand(s"""import-world "../../$filename"""")
-      assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
-      delete(filename)
+  testInSpace("PlotPenUpAfterImport", normalTwoD, SlowTest.Tag) { i =>
+    import i._
 
-    }
+    workspace.open("test/import/current-plot-pen.nlogo")
+    testCommand("reset-ticks plot-pen-up")
 
-  if (! Version.is3D)
-    test("PlotPenUpAfterImport", SlowTest.Tag) {
+    val filename = getUniqueFilename()
+    testCommand(s"""export-world "../../$filename"""")
+    testCommand(s"""import-world "../../$filename"""")
+    assertResult(workspace.plotManager.currentPlot.get.currentPen.get.state.isDown)(false)
+    delete(filename)
 
-      workspace.open("test/import/current-plot-pen.nlogo")
-      testCommand("reset-ticks plot-pen-up")
+  }
 
-      val filename = getUniqueFilename()
-      testCommand(s"""export-world "../../$filename"""")
-      testCommand(s"""import-world "../../$filename"""")
-      assertResult(workspace.plotManager.currentPlot.get.currentPen.get.state.isDown)(false)
-      delete(filename)
 
-    }
 
-  /// 3D tests
-
-  if(Version.is3D)
-    test("RoundTripDrawing", SlowTest.Tag) {
-      roundTripHelper("crt 10 [ pd repeat 5 [ fd random-float 5 rt random-float 360 ] ]",
-        worldSize = 5)
-    }
-
-  if(Version.is3D)
-    test("RoundTripStamp", SlowTest.Tag) {
-      roundTripHelper("crt 10 [ repeat 5 [ fd random-float 5 rt random-float 360 stamp ] ]",
-        worldSize = 5)
-    }
-
-  ///
-
-  val COMPLEX_SOURCE =
+  val ComplexSource =
     "globals [ g-string-test g-list-test nobody-var one-turtle one-patch " +
       "          empty-patch-agentset empty-turtle-agentset cats-breed all-turtles all-patches ]" +
       "turtles-own [ t-foo t-bar ]" +
@@ -659,4 +516,139 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "    set p-fish-breed fish" +
       "  ]" +
       "end"
+
+  testInSpace("RoundTripComplexNewFormat", normalTwoD, SlowTest.Tag)(
+    roundTripHelper("setup true", ComplexSource, worldSize = 3))
+
+  testInSpace("testImportDrawing", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    val filename = getUniqueFilename()
+    initForTesting(10)
+    testCommand("random-seed 2843")
+    testCommand("crt 10 [ pd  set pen-size random 5 ]")
+    testCommand("ask turtles [ fd random 5 ]")
+    val realColors = workspace.renderer.trailDrawer.colors
+    testCommand("export-world \"" + filename + "\"")
+    testCommand("ca")
+    testCommand("import-world \"" + filename + "\"")
+    val importedColors = workspace.renderer.trailDrawer.colors
+
+    assertResult(realColors.size)(importedColors.size)
+
+    // right now we can't test the pixels because they are not pixel for pixel the same, what we
+    // import is exactly as was, however, when we copy it for one image to the drawing image the
+    // colors can change ever so slightly. (we copy images because of an apple bug, see the
+    // TrailDrawer for details.  ev 3/1/06
+  }
+
+  testInSpace("testTrailingCommas", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(35, FileIO.fileToString("test/import/trailing-commas.nlogo"))
+    testCommand("import-world \"test/import/trailing-commas.csv\"")
+  }
+
+  testInSpace("ImportWrongOrder", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+          assert(fatalError)
+          assertResult("Fatal Error- Incorrect Structure For Import File")(title)
+          assertResult("The agents are in the wrong order in the import file. " +
+            "The global variables should be first, followed by the turtles, " +
+            "followed by the patches.  Found TURTLES but needed " +
+            "GLOBALS\n\nThe import will now abort.")(errorDetails)
+          true
+      }}
+      testCommand("import-world \"test/import/wrong-order.csv\"")
+  }
+
+  testInSpace("ImportSentinelName", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(10)
+    testCommand("import-world \"test/import/TURTLES.csv\"")
+  }
+
+  testInSpace("ExtraFieldValue", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(35, FileIO.fileToString("test/import/trailing-commas.nlogo"))
+    val errorNumber = Array(0)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+          assert(!fatalError)
+          assertResult("Warning: Too Many Values For Agent")(title)
+          errorNumber(0) match {
+            case 0 =>
+              assertResult("Error Importing at Line 7: There are a total of "
+                + "10 Global variables declared in this model "
+                + "(including built-in variables).  The import-world "
+                + "file has at least one agent in the GLOBALS section "
+                + "with more than this number of values.\n\n"
+                + "Action to be Taken: All the extra values will "
+                + "be ignored for this section.")(
+                  errorDetails)
+                case 1 =>
+                  assertResult("Error Importing at Line 54: There are a total of "
+                    + "5 Patch variables declared in this model "
+                    + "(including built-in variables).  The import-world "
+                    + "file has at least one agent in the PATCHES section "
+                    + "with more than this number of values.\n\n"
+                    + "Action to be Taken: All the extra values will "
+                    + "be ignored for this section.")(
+                      errorDetails)
+                    case _ =>
+                      fail()
+          }
+          errorNumber(0) += 1
+          true
+        }
+      }
+      testCommand("import-world \"test/import/extra-values.csv\"")
+      assertResult(2)(errorNumber(0))
+  }
+
+  testInSpace("testImportInvalidSize", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
+        {
+          assert(!fatalError)
+          assertResult("Error Importing Drawing")(title)
+          assertResult("Invalid data length, the drawing will not be imported")(
+            errorDetails)
+          true
+        }
+      }
+      testCommand("import-world \"test/import/invalid-drawing.csv\"")
+  }
+
+  testInSpace("testImportDrawingIncompleteData", normalTwoD, SlowTest.Tag) { i =>
+    import i._
+    initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
+          assert(!fatalError)
+          assertResult("Error Importing Drawing")(title)
+          assertResult("Invalid data length, the drawing will not be imported")(
+            errorDetails)
+          true
+        }
+      }
+    testCommand("import-world \"test/import/short-drawing.csv\"")
+  }
+
+  /// 3D tests
+
+  testInSpace("RoundTripDrawing", normalThreeD, SlowTest.Tag)(
+    roundTripHelper("crt 10 [ pd repeat 5 [ fd random-float 5 rt random-float 360 ] ]",
+      worldSize = 5))
+
+  testInSpace("RoundTripStamp", normalThreeD, SlowTest.Tag)(
+    roundTripHelper("crt 10 [ repeat 5 [ fd random-float 5 rt random-float 360 stamp ] ]",
+      worldSize = 5))
 }

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Can't export `cygpath`ed JAVA_HOME on Cygwin, since that will corrupt it for Windows-y accesses
 # Namely, the SBT build tries to configure its JAVA_HOME, and it would get Cygwin gunk
 # Other things might rely on exported JAVA_HOMEs, though, so the solution here is to introduce
@@ -10,7 +11,7 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
-    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java-8|1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
+    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -v openjdk | grep -E 'java-8|1\.8' | sed 's/\([^ ]*\) .*priority \([0-9]*\)/\1 \2/' | grep -E 'java-8|1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
     if [ -e "$HIGHEST_PRIORITY_JAVA_8" ] ; then
       export JAVA_HOME="${HIGHEST_PRIORITY_JAVA_8%/bin/javac}"
     elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.8" >> /dev/null ; then
@@ -51,7 +52,8 @@ SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.13.15.jar
 URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.15/sbt-launch.jar'
 
 if [ ! -f $BUILD_NUMBER ] ; then
-  JAVA_OPTS="-Dsbt.log.noformat=true"
+  mkdir -p tmp/sbt-staging
+  JAVA_OPTS="-Dsbt.log.noformat=true -Dsbt.global.staging=tmp/sbt-staging"
 fi
 
 if [ ! -f $SBT_LAUNCH ] ; then

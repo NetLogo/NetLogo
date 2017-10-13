@@ -78,7 +78,7 @@ object Depend {
       "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
       "lite" -> List("window"),
-      "log" -> List("api"),
+      "log" -> List("api", "fileformat"),
       "mc" -> List("workspace", "swing"),
       "nvm" -> List("agent"),
       "parse" -> List("core", "core/prim", "util"),
@@ -163,7 +163,7 @@ check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
 check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
+[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.api.Pico [app] [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 
 """

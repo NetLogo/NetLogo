@@ -4,9 +4,11 @@ package org.nlogo.headless
 
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.{ FileIO, ThreeDVersion, TwoDVersion }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
+
+import scala.util.{ Failure, Success, Try }
 
 object ChecksumsAndPreviews {
 
@@ -17,10 +19,13 @@ object ChecksumsAndPreviews {
 
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
-    def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
+    def paths(fn: String => Boolean, includeBenchmarks: Boolean = true) = {
+      val benchmarks =
+        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
-        ModelsLibrary.getModelPaths(true)
+        (ModelsLibrary.getModelPaths(TwoDVersion, true) ++
+          ModelsLibrary.getModelPaths(ThreeDVersion, true))
+          .distinct
           .filter(fn)
           .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
           .distinct
@@ -35,7 +40,7 @@ object ChecksumsAndPreviews {
       case Array("--checksum", path) =>
         Checksums.update(List(path))
       case Array("--checksums") =>
-        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        Checksums.update(paths(Checksums.okPath))
       case Array("--preview", path) =>
         Previews.remake(path)
       case Array("--previews") =>
@@ -43,7 +48,7 @@ object ChecksumsAndPreviews {
       case Array("--checksum-export", path) =>
         ChecksumExports.export(List(path))
       case Array("--checksum-exports") =>
-        ChecksumExports.export(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        ChecksumExports.export(paths(Checksums.okPath))
     }
     println("done")
   }
@@ -52,7 +57,7 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
     def okPath(path: String) =
-      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
+      List("HUBNET", "GOGO", "VIEW2.5D", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
@@ -99,49 +104,50 @@ object ChecksumsAndPreviews {
     }).isEmpty
 
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "test/checksums3d.txt"
-                 else "test/checksums.txt"
+      val path = "test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
     }
     def updateOne(m: ChecksumMap, model: String) {
-      val workspace = HeadlessWorkspace.newInstance
-      try {
-        if(!new java.io.File(model).exists && m.contains(model)) {
-          // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
-          // the checksum file let it fall through and report the error
-          m.remove(model)
-          println("Model does not exist, deleting checksum for: " + model)
-        }
-        else {
-          workspace.open(model)
-          updateOneHelper(m, model, workspace)
-        }
+      if(!new java.io.File(model).exists && m.contains(model)) {
+        // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
+        // the checksum file let it fall through and report the error
+        m.remove(model)
+        println("Model does not exist, deleting checksum for: " + model)
       }
-      catch { case e: Exception =>
-                println("SKIPPING MODEL: " + model + "\n  because of exception:")
-                e.printStackTrace() }
-      finally { workspace.dispose() }
+      else {
+        Try(HeadlessWorkspace.fromPath(model))
+          .map(workspace => updateOneHelper(model, workspace)) match {
+            case Success(newEntry: Entry) =>
+              import newEntry._
+              // figure out if the entry is new, changed, or the same
+              val oldEntry = m.get(model)
+              val action =
+                if      (! m.contains(model))                         "* Added"
+                else if (oldEntry.get == newEntry)                    "Didn't change"
+                else if (oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
+                else                                                  "* Changed"
+              m.put(model, newEntry)
+              if (action != "Didn't change")
+                println(action + ": \"" + path + separator + worldSum
+                  + separator + graphicsSum + separator + revision + "\"")
+             case Failure(e: Exception) =>
+               println("SKIPPING MODEL: " + model + "\n  because of exception:")
+               e.printStackTrace()
+             case Failure(t) => throw t
+          }
+        }
     }
-    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
+
+    def updateOneHelper(model: String, workspace: HeadlessWorkspace): Entry = {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
       val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
-      val oldEntry = m.get(model)
-      val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
-      // figure out if the entry is new, changed, or the same
-      val action =
-        if(!m.contains(model)) "* Added"
-        else if(oldEntry.get == newEntry) "Didn't change"
-        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
-        else "* Changed"
-      m.put(model, newEntry)
-      if(action != "Didn't change")
-        println(action + ": \"" + model + separator + newCheckSum
-                + separator + newGraphicsChecksum + separator + revision + "\"")
+      Entry(model, newCheckSum, newGraphicsChecksum, revision)
     }
+
     def load(path: String): ChecksumMap = {
       val m = new ChecksumMap
       for(line <- io.Source.fromFile(path).getLines.map(_.trim))
@@ -177,13 +183,12 @@ object ChecksumsAndPreviews {
     import scala.collection.JavaConverters._
 
     def export(paths: List[String]): Unit = {
-      paths.foreach(exportOne)
+      paths.foreach(p => exportOne(p))
     }
 
     def exportOne(path: String): Unit = {
-      val workspace = HeadlessWorkspace.newInstance
+      val workspace = HeadlessWorkspace.fromPath(path)
       try {
-        workspace.open(path)
         Checksummer.initModelForChecksumming(workspace)
         val modelPath = Paths.get(path)
         val modelIndex = modelPath.iterator.asScala.indexWhere(_.toString == "models")

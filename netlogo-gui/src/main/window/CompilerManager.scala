@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.{ CompilerException, Program }
 import org.nlogo.api.{ AgentException, Exceptions, JobOwner, LogoException, SourceOwner, ValueConstraint }
-import org.nlogo.nvm.CompilerResults
+import org.nlogo.nvm.{ CompilerFlags, CompilerResults, Optimizations }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events.{
@@ -30,6 +30,12 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
   private[window] val widgets       = HashSet[JobOwner]()
   private[window] val globalWidgets = HashSet[InterfaceGlobalWidget]()
+
+  private val compilerFlags =
+    if (workspace.compiler.dialect.is3D)
+      CompilerFlags(optimizations = Optimizations.gui3DOptimizations)
+    else
+      CompilerFlags(optimizations = Optimizations.guiOptimizations)
 
   private val ownersMap = additionalOwners.map(o => o.classDisplayName -> o).toMap
 
@@ -81,7 +87,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
           workspace.compiler.compileMoreCode(owner.source,
             displayName, world.program,
             workspace.procedures, workspace.getExtensionManager,
-            workspace.getCompilationEnvironment);
+            workspace.getCompilationEnvironment, compilerFlags)
         results.head.init(workspace)
         results.head.owner = owner
         raiseEvent(new CompiledEvent(owner, world.program, results.head, null))
@@ -248,7 +254,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
       val results: CompilerResults =
         workspace.compiler.compileMoreCode(owner.source, displayName,
           world.program, workspace.procedures,
-          workspace.getExtensionManager, workspace.getCompilationEnvironment)
+          workspace.getExtensionManager, workspace.getCompilationEnvironment, compilerFlags)
 
       if (!results.proceduresMap.isEmpty && results.proceduresMap != workspace.procedures) {
         results.head.init(workspace)

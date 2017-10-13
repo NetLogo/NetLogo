@@ -17,7 +17,11 @@ object Shell {
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     System.err.println(Version.fullVersion)
-    val workspace = HeadlessWorkspace.newInstance
+    // NOTE: While generally we shouldn't rely on a system property to tell
+    // us whether or not we're in 3D, it's fine to do it here because:
+    // * We're in the process of constructing the App / World / Workspace
+    // * We do not change the 2D / 3D arity for the duration of the run
+    val workspace = HeadlessWorkspace.newInstance(Version.is3DInternal)
     argv.headOption match {
       case None =>
         workspace.openModel(Model())

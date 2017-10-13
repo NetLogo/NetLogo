@@ -4,7 +4,6 @@ package org.nlogo.headless
 
 import java.net.URI
 
-import org.nlogo.api.Version
 import org.nlogo.core.Model
 import org.nlogo.fileformat.FailedConversionResult
 import org.nlogo.workspace.OpenModel
@@ -21,17 +20,16 @@ object HeadlessFileController extends OpenModel.Controller {
     System.err.println(s"NetLogo wasn't able to open the model at $uri. The NetLogo file had a missing or invalid version string")
   }
   def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = {
-    val expectedArity = if (Version.is3D) "3D" else ""
-    val actualArity = if (arity == 2) "" else "3D"
-    System.err.println(s"Expected to find a NetLogo $expectedArity model, but found a NetLogo $actualArity model. Aborting...")
+    val (expectedArity, actualArity) = if (arity == 2) ("3D ", "") else (" ", "3D ")
+    System.err.println(s"Expected to find a NetLogo ${expectedArity}model, but found a NetLogo ${actualArity}model. Aborting...")
     false
   }
-  def shouldOpenModelOfLegacyVersion(version: String): Boolean = {
-    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in NetLogo ${Version.version} before opening headlessly. Aborting...")
+  def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = {
+    System.err.println(s"This NetLogo model has version ${openVersion}, the current version is ${currentVersion}, please resave the model in NetLogo ${currentVersion} before opening headlessly. Aborting...")
     false
   }
-  def shouldOpenModelOfUnknownVersion(version: String): Boolean = {
-    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in NetLogo ${Version.version} before opening headlessly. Aborting...")
+  def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = {
+    System.err.println(s"This NetLogo model has version ${openVersion}, the current version is ${currentVersion}, please resave the model in NetLogo ${currentVersion} before opening headlessly. Aborting...")
     false
   }
   def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {

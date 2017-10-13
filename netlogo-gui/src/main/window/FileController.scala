@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.net.URI
 import javax.swing.{ AbstractAction, JButton, JComponent, JDialog }
 
-import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffix
+import org.nlogo.api.{ ModelReader, ModelType, ThreeDVersion, TwoDVersion, Version }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
@@ -42,8 +42,8 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
   def chooseFilePath(modelType: ModelType): Option[URI] =
     runOnUIThreadForResult(() => foregroundController.chooseFilePath(modelType))
 
-  def shouldSaveModelOfDifferingVersion(version: String): Boolean =
-    runOnUIThreadForResult(() => foregroundController.shouldSaveModelOfDifferingVersion(version))
+  def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldSaveModelOfDifferingVersion(currentVersion, saveVersion))
 
   def warnInvalidFileFormat(format: String): Unit =
     runOnUIThread(() => foregroundController.warnInvalidFileFormat(format))
@@ -60,13 +60,15 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
     runOnUIThread(() => foregroundController.invalidModelVersion(uri, version))
   def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean =
     runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfDifferingArity(arity, version))
-  def shouldOpenModelOfLegacyVersion(version: String): Boolean =
-    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfLegacyVersion(version))
-  def shouldOpenModelOfUnknownVersion(version: String): Boolean =
-    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfUnknownVersion(version))
+  def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfLegacyVersion(currentVersion, openVersion))
+  def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean =
+    runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfUnknownVersion(currentVersion, openVersion))
 }
 
 class FileController(owner: Component, modelTracker: ModelTracker) extends OpenModelController with SaveModelController {
+  private def modelSuffix = ModelReader.modelSuffix(modelTracker.currentVersion.is3D)
+
   // OpenModel.Controller methods
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
     val options = Array[Object](I18N.gui.get("common.buttons.ok"))
@@ -113,17 +115,17 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     }
   }
 
-  def shouldOpenModelOfUnknownVersion(version: String): Boolean = {
+  def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = {
     try {
-      checkWithUserBeforeOpeningModelFromFutureVersion(version);
+      checkWithUserBeforeOpeningModelFromFutureVersion(currentVersion, openVersion);
       true
     } catch {
       case ex: UserCancelException => false
     }
   }
 
-  def shouldOpenModelOfLegacyVersion(version: String): Boolean = {
-    showVersionWarningAndGetResponse(version)
+  def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = {
+    showVersionWarningAndGetResponse(currentVersion, openVersion)
   }
 
   lazy val continueAndCancelOptions = Array[Object](
@@ -131,8 +133,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     I18N.gui.get("common.buttons.cancel"))
 
   @throws(classOf[UserCancelException])
-  def checkWithUserBeforeOpeningModelFromFutureVersion(version: String): Unit = {
-    val message = I18N.gui.getN("file.open.warn.version.newer", Version.version, version)
+  def checkWithUserBeforeOpeningModelFromFutureVersion(currentVersion: String, openVersion: String): Unit = {
+    val message = I18N.gui.getN("file.open.warn.version.newer", currentVersion, openVersion)
     if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
@@ -140,7 +142,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
-    val message = I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version)
+    val message = I18N.gui.getN("file.open.warn.intwod.openthreed", TwoDVersion.version, version)
     if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
@@ -148,7 +150,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
-    val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version)
+    val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", ThreeDVersion.version)
     if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }
@@ -165,8 +167,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     throw new UserCancelException()
   }
 
-  def showVersionWarningAndGetResponse(version: String): Boolean = {
-    val message = I18N.gui.getN("file.open.warn.version.older", version, Version.version)
+  def showVersionWarningAndGetResponse(currentVersion: String, openVersion: String): Boolean = {
+    val message = I18N.gui.getN("file.open.warn.version.older", openVersion, currentVersion)
     val options = Array[Object](
       I18N.gui.get("common.buttons.continue"),
       I18N.gui.get("file.open.warn.version.transitionGuide"),
@@ -177,7 +179,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       case 0 => true
       case 1 =>
         BrowserLauncher.openURI(owner, new URI(I18N.gui.get("file.open.transitionGuide.url")))
-        showVersionWarningAndGetResponse(version)
+        showVersionWarningAndGetResponse(currentVersion, openVersion)
       case 2 => false
     }
   }
@@ -195,8 +197,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     var path = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName)
-    if (! (path.endsWith("." + modelSuffix) || path.endsWith(".nlogox"))) {
-      path += "." + modelSuffix
+    if (! (path.endsWith(".nlogo") || path.endsWith(".nlogo3d") || path.endsWith(".nlogox"))) {
+      path += s".${modelSuffix}"
     }
     Some(Paths.get(path).toUri)
   }
@@ -208,12 +210,12 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   private def guessFileName: String =
     modelTracker.modelNameForDisplay + "." + modelSuffix
 
-  def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
-    Version.compatibleVersion(version) || {
+  def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean = {
+    currentVersion.compatibleVersion(saveVersion) || {
       val options = Array[Object](
         I18N.gui.get("common.buttons.save"),
         I18N.gui.get("common.buttons.cancel"))
-      val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version)
+      val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", saveVersion, currentVersion.version)
       OptionDialog.showMessage(owner, "NetLogo", message, options) == 0
     }
   }

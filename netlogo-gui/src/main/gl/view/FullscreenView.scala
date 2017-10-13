@@ -16,8 +16,4 @@ extends View("", viewManager, renderer) {
     gd.setFullScreenWindow(this)
     canvas.requestFocus()
   }
-
-  // We override this so no popup menus -- otherwise the screen just goes blank. - AZS 6/1/05
-  override def doPopup(e: java.awt.event.MouseEvent) { }
-
 }

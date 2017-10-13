@@ -8,10 +8,10 @@ import java.awt.event.{ FocusListener, FocusEvent,
 import java.awt.image.BufferedImage
 import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
 
-import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
+import org.nlogo.api.{ CompilerServices, EditorCompiler, Exceptions, RandomServices, TwoDVersion }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
-import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
+import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.plot.PlotManager
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 
@@ -29,7 +29,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   def this(
     viewWidget: ViewWidgetInterface,
-    compiler: PresentationCompilerInterface,
+    compiler: EditorCompiler,
     random: RandomServices,
     plotManager: PlotManager,
     editorFactory: EditorFactory) =
@@ -177,7 +177,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
       item.setEnabled(false)
       item
     }
-    menu.add(disabledItem(Version.version))
+    menu.add(disabledItem(TwoDVersion.version))
     menu.add(disabledItem(SysInfo.getOSInfoString))
     menu.add(disabledItem(SysInfo.getVMInfoString))
     menu.add(disabledItem(SysInfo.getMemoryInfoString))

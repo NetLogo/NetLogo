@@ -7,7 +7,7 @@ import org.scalatest.FunSuite
 
 class ModelTrackerTest extends FunSuite {
   def subject(modelType: ModelType, modelName: String) = {
-    val helper = Helper.default
+    val helper = Helper.twoD
     helper.modelTracker._modelFileName = modelName
     helper.modelTracker.setModelType(modelType)
     helper.modelTracker

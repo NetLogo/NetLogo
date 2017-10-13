@@ -77,8 +77,8 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
         val line = nextLine()
         try {
           val plotName = getTokenValue(line(0), false, false).asInstanceOf[String]
-          val plot = importerUser.getPlot(plotName)
-          if (plot == null) {
+          val plotOption = importerUser.findPlot(plotName)
+          if (plotOption.isEmpty) {
             errorHandler.showError("Error Importing Plots",
                 "The plot \"" + plotName + "\" does not exist.",
                 false)
@@ -86,6 +86,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
             while (hasMoreLines(false)) { }
             return
           } else {
+            val plot = plotOption.get
             val (numPens, currentPenNameOpt) = importIntro(plot)
             importPens(plot, numPens)
             importPoints(plot)
