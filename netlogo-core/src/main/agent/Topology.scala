@@ -68,6 +68,22 @@ extends Neighbors {
   @throws(classOf[PatchException])
   def diffuse4(amount: Double, vn: Int)
 
+  protected def getPatchScratch(vn: Int): Array[Array[Double]] = {
+    val xx = world.worldWidth
+    val yy = world.worldHeight
+    val minX = world.minPxcor
+    val minY = world.minPycor
+    val scratch = world.getPatchScratch
+    var i = 0
+    val ps = xx * yy
+    while (i < ps) {
+      val p = world.patches.getByIndex(i).asInstanceOf[Patch]
+      scratch(p.pxcor - minX)(p.pycor - minY) = p.getPatchVariable(vn).asInstanceOf[Double].doubleValue
+      i += 1
+    }
+    scratch
+  }
+
   // getPatch methods.  These are here so they can be called by subclasses in their implementations
   // of getPN, getPS, etc.  They provide the usual torus-style behavior.  It's a little odd that
   // they're here rather than in Torus, but doing it that way would have involved other
