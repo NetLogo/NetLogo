@@ -2,11 +2,10 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.AgentException
-
 @annotation.strictfp
 class Torus(_world: World)
-extends Topology(_world, xWraps = true, yWraps = true) {
+extends Topology(_world, xWraps = true, yWraps = true)
+with XWraps with YWraps {
 
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world._minPxcor - 0.5, world._maxPxcor + 0.5)
@@ -147,120 +146,30 @@ extends Topology(_world, xWraps = true, yWraps = true) {
         y1 + StrictMath.abs(y1 - y2)
   }
 
-  @throws(classOf[AgentException])
-  @throws(classOf[PatchException])
-  override def diffuse(amount: Double, vn: Int) {
-    val scratch = getPatchScratch(vn)
-    val xx = world.worldWidth
-    val yy = world.worldHeight
-    val a: Array[Double] = Array.ofDim(8)
-    var y = 0
-    while (y < yy) {
-      var x = 0
-      while (x < xx) {
-        val xe = (x + xx - 1) % xx
-        val xw = (x + 1) % xx
-        val yn = (y + 1) % yy
-        val ys = (y + yy - 1) % yy
-        a(0) = scratch(xe)(ys)
-        insert(scratch(xe)(y ), a, 1)
-        insert(scratch(xe)(yn), a, 2)
-        insert(scratch(x )(ys), a, 3)
-        insert(scratch(x )(yn), a, 4)
-        insert(scratch(xw)(ys), a, 5)
-        insert(scratch(xw)(y ), a, 6)
-        insert(scratch(xw)(yn), a, 7)
-        val sum = a(0) + a(1) + a(2) + a(3) + a(4) + a(5) + a(6) + a(7)
-        val oldval = scratch(x)(y)
-        val newval = oldval + amount * (sum / 8 - oldval)
-        if (newval != oldval) {
-          world.patches.getByIndex(y * xx + x).setPatchVariable(vn, Double.box(newval))
-        }
-        x += 1
+  override protected def diffuseCorners
+  (amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
+    val lastX = world.worldWidth - 1
+    val lastY = world.worldHeight - 1
+    val butLastY = lastY - 1
+    val update = if (fourWay)
+      (x: Int, y: Int, w: Array[Double], c: Array[Double], e: Array[Double], y1: Int, y2: Int) => {
+        val sum = sum4(e(y), w(y), c(y1), c(y2))
+        updatePatch(amount, vn, 4, x, y, c(y), sum)
       }
-      y += 1
-    }
-  }
-
-  @throws(classOf[AgentException])
-  @throws(classOf[PatchException])
-  override def diffuse4(amount: Double, vn: Int) {
-    val scratch = getPatchScratch(vn)
-    val xx = world.worldWidth
-    val yy = world.worldHeight
-    val a: Array[Double] = Array.ofDim(4)
-    var y = 0
-    while (y < yy) {
-      var x = 0
-      while (x < xx) {
-        a(0) = scratch((x + xx - 1) % xx)((y         )     )
-        insert(scratch((x         )     )((y + 1     ) % yy), a, 1)
-        insert(scratch((x + 1     ) % xx)((y         )     ), a, 2)
-        insert(scratch((x         )     )((y + yy - 1) % yy), a, 3)
-        val sum = a(0) + a(1) + a(2) + a(3)
-        val oldval = scratch(x)(y)
-        val newval = oldval + amount * (sum / 4 - oldval)
-        if (newval != oldval)
-          world.patches.getByIndex(xx * y + x).setPatchVariable(vn, Double.box(newval))
-        x += 1
+    else
+      (x: Int, y: Int, w: Array[Double], c: Array[Double], e: Array[Double], y1: Int, y2: Int) => {
+        val sum = sum4(e(y), w(y), c(y1), c(y2)) +
+          sum4(e(y1), w(y1), e(y2), w(y2))
+        updatePatch(amount, vn, 8, x, y, c(y), sum)
       }
-      y += 1
-    }
+    val butLastCol = scratch(lastX - 1)
+    val lastCol = scratch(lastX)
+    val firstCol = scratch(0)
+    val secondCol = scratch(1)
+
+    update(0,     0,     lastCol,    firstCol, secondCol, lastY,    1)
+    update(0,     lastY, lastCol,    firstCol, secondCol, butLastY, 0)
+    update(lastX, 0,     butLastCol, lastCol,  firstCol,  lastY,    1)
+    update(lastX, lastY, butLastCol, lastCol,  firstCol,  butLastY, 0)
   }
-
-
-  /*
-  def sortedSum(vals: Array[Double]) = {
-    var result: Double = 0
-    var end = vals.length
-    var minIx = 0
-    var minVal = vals(minIx)
-    while (end > 1) {
-      var i = minIx + 1
-      while (i < end) {
-        val v = vals(i)
-        if (v < minVal) {
-          minIx += 1
-          val t = vals(minIx)
-          vals(minIx) = v
-          vals(i) = t
-          minVal = v
-          minIx = i
-        }
-        i+=1
-      }
-      result += minVal
-      vals(minIx) = vals(end - 1)
-      if (minIx > 0)
-        minIx -= 1
-      minVal = vals(minIx)
-      end -= 1
-    }
-    result + vals(0)
-  }
-  */
-
-  def insert(x: Double, vals: Array[Double], end: Int): Unit = {
-    var i = end
-    while (i > 0 && x < vals(i - 1)) {
-      vals(i) = vals(i - 1)
-      i -= 1
-    }
-    vals(i) = x
-  }
-
-  def kahanSum(vals: Array[Double]) = {
-    var sum = 0.0
-    var c = 0.0
-    var i = 0
-    while (i < vals.length) {
-      val y = vals(i) - c
-      val t = sum + y
-      c = (t - sum) - y
-      sum = t
-      i+=1
-    }
-    sum
-  }
-
 }

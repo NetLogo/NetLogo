@@ -9,7 +9,8 @@ import org.nlogo.api.AgentException
 
 @annotation.strictfp
 class HorizCylinder(world2d: World2D)
-extends Topology(world2d, xWraps = false, yWraps = true) {
+extends Topology(world2d, xWraps = false, yWraps = true)
+with XBlocks with YWraps{
 
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double = {
@@ -126,146 +127,29 @@ extends Topology(world2d, xWraps = false, yWraps = true) {
         else
           source.pycor + 1)
 
-  @throws(classOf[AgentException])
-  @throws(classOf[PatchException])
-  override def diffuse(amount: Double, vn: Int) {
-    val xx = world.worldWidth
-    val yy = world.worldHeight
-    val xx2 = xx * 2
-    val yy2 = yy * 2
-    val scratch = world.getPatchScratch
-    val scratch2 = Array.ofDim[Double](xx, yy)
-    val minx = world.minPxcor
-    val miny = world.minPycor
-    var x, y = 0
-    try while(y < yy) {
-      x = 0
-      while (x < xx) {
-        scratch(x)(y) =
-          world.fastGetPatchAt(x + minx, y + miny)
-            .getPatchVariable(vn)
-            .asInstanceOf[java.lang.Double].doubleValue
-        scratch2(x)(y) = 0
-        x += 1
+  override protected def diffuseCorners
+  (amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
+    val lastX = world.worldWidth - 1
+    val butLastX = lastX - 1
+    val lastY = world.worldHeight - 1
+    val butLastY = lastY - 1
+    val update = if (fourWay)
+      (x: Int, y: Int, innerX: Int, innerY: Int, wrappedY: Int) => {
+        val oldVal = scratch(x)(y)
+        updatePatch(amount, vn, 4, x, y, oldVal,
+          sum4(scratch(innerX)(y), scratch(x)(innerY), scratch(x)(wrappedY), oldVal))
       }
-      y += 1
-    }
-    catch { case _: ClassCastException =>
-      throw new PatchException(
-        world.fastGetPatchAt(wrapX(x).toInt, wrapY(y).toInt))
-    }
-    y = yy
-    while (y < yy2) {
-      x = xx
-      while (x < xx2) {
-        val diffuseVal = (scratch(x - xx)(y - yy) / 8) * amount
-        if (x > xx && x < xx2 - 1) {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (8 * diffuseVal)
-          scratch2((x - 1) % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x - 1) % xx)(y % yy) += diffuseVal
-          scratch2((x - 1) % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)(y % yy) += diffuseVal
-          scratch2((x + 1) % xx)((y + 1) % yy) += diffuseVal
-        } else if (x == xx) {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (5 * diffuseVal)
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)(y % yy) += diffuseVal
-          scratch2((x + 1) % xx)((y + 1) % yy) += diffuseVal
-        } else {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (5 * diffuseVal)
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x - 1) % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x - 1) % xx)(y % yy) += diffuseVal
-          scratch2((x - 1) % xx)((y + 1) % yy) += diffuseVal
-        }
-        x += 1
+    else
+      (x: Int, y: Int, innerX: Int, innerY: Int, wrappedY: Int) => {
+        val oldVal = scratch(x)(y)
+        updatePatch(amount, vn, 8, x, y, oldVal,
+          sum4(scratch(innerX)(y), scratch(x)(innerY), scratch(x)(wrappedY), oldVal) +
+          sum4(scratch(innerX)(innerY), scratch(innerX)(wrappedY), oldVal, oldVal)
+        )
       }
-      y += 1
-    }
-    y = 0
-    while(y < yy) {
-      x = 0
-      while (x < xx) {
-        if (scratch2(x)(y) != scratch(x)(y))
-          world2d.getPatchAtWrap(x + minx, y + miny)
-              .setPatchVariable(vn, Double.box(scratch2(x)(y)))
-        x += 1
-      }
-      y += 1
-    }
+    update(0, 0, 1, 1, lastY)
+    update(0, lastY, 1, butLastY, 0)
+    update(lastX, 0, butLastX, 1, lastY)
+    update(lastX, lastY, butLastX, butLastY, 0)
   }
-
-  @throws(classOf[AgentException])
-  @throws(classOf[PatchException])
-  override def diffuse4(amount: Double, vn: Int) {
-    val xx = world.worldWidth
-    val yy = world.worldHeight
-    val xx2 = xx * 2
-    val yy2 = yy * 2
-    val scratch = world.getPatchScratch
-    val scratch2 = Array.ofDim[Double](xx, yy)
-    val minx = world.minPxcor
-    val miny = world.minPycor
-    var x, y = 0
-    try while(y < yy) {
-      x = 0
-      while (x < xx) {
-        scratch(x)(y) =
-          world.fastGetPatchAt(x + minx, y + miny)
-            .getPatchVariable(vn)
-            .asInstanceOf[java.lang.Double].doubleValue
-        scratch2(x)(y) = 0
-        x += 1
-      }
-      y += 1
-    }
-    catch { case _: ClassCastException =>
-      throw new PatchException(
-        world.fastGetPatchAt(wrapX(x).toInt, wrapY(y).toInt))
-    }
-    y = yy
-    while (y < yy2) {
-      x = xx
-      while (x < xx2) {
-        val diffuseVal = (scratch(x - xx)(y - yy) / 4) * amount
-        if (x > xx && x < xx2 - 1) {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (4 * diffuseVal)
-          scratch2((x - 1) % xx)(y % yy) += diffuseVal
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)(y % yy) += diffuseVal
-        } else if (x == xx) {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (3 * diffuseVal)
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x + 1) % xx)(y % yy) += diffuseVal
-        } else {
-          scratch2(x - xx)(y - yy) += scratch(x - xx)(y - yy) - (3 * diffuseVal)
-          scratch2(x % xx)((y + 1) % yy) += diffuseVal
-          scratch2(x % xx)((y - 1) % yy) += diffuseVal
-          scratch2((x - 1) % xx)(y % yy) += diffuseVal
-        }
-        x += 1
-      }
-      y += 1
-    }
-    y = 0
-    while (y < yy) {
-      x = 0
-      while (x < xx) {
-        if (scratch2(x)(y) != scratch(x)(y))
-          world2d.getPatchAtWrap(x + minx, y + miny)
-            .setPatchVariable(vn, Double.box(scratch2(x)(y)))
-        x += 1
-      }
-      y += 1
-    }
-  }
-
 }
