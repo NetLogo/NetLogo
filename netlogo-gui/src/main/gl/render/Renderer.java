@@ -18,6 +18,7 @@ import org.nlogo.api.World;
 import org.nlogo.api.WorldWithWorldRenderable;
 import org.nlogo.api.World3D;
 
+import com.jogamp.nativewindow.NativeSurface;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -45,6 +46,7 @@ public class Renderer
   int width;
   int height;
   private float ratio;
+  NativeSurface surface;
 
   public static final float WORLD_SCALE = 0.3f;
   public static final float PICK_THRESHOLD = 0.23f;
@@ -124,6 +126,7 @@ public class Renderer
 
   @Override
   public void dispose(GLAutoDrawable autoDrawable) {
+    surface = null;
   }
 
   TurtleRenderer createTurtleRenderer(World world) {
@@ -150,18 +153,20 @@ public class Renderer
     return new ExportRenderer2D(this);
   }
 
-  public void displayChanged(GLAutoDrawable gLDrawable,
+  public void displayChanged(GLAutoDrawable glDrawable,
                              boolean modeChanged,
                              boolean deviceChanged) {
+    surface = glDrawable.getNativeSurface();
   }
 
-  public void init(GLAutoDrawable gLDrawable) {
+  public void init(GLAutoDrawable glDrawable) {
     // Suggestion: If possible, enable any needed features and change any
     // graphics settings as close as possible to the place where they're
     // needed, instead of in here. Other parts of the application might
     // change these settings, which creates hard-to-debug issues.
 
-    GL2 gl = (GL2) gLDrawable.getGL();
+    GL2 gl = (GL2) glDrawable.getGL();
+    surface = glDrawable.getNativeSurface();
 
     ClassLoader classLoader = getClass().getClassLoader();
     org.nlogo.util.SysInfo.getJOGLInfoString_$eq
@@ -226,8 +231,9 @@ public class Renderer
     shapeRenderer.stencilSupport_$eq(StencilBits[0] > 0);
   }
 
-  public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-    GL2 gl = (GL2) gLDrawable.getGL();
+  public void reshape(GLAutoDrawable glDrawable, int x, int y, int width, int height) {
+    GL2 gl = (GL2) glDrawable.getGL();
+    surface = glDrawable.getNativeSurface();
     this.width = width;
     this.height = (height > 0) ? height : 1;
     ratio = (float) this.width / (float) this.height;
@@ -251,8 +257,9 @@ public class Renderer
     gl.glLoadIdentity();
   }
 
-  public void display(GLAutoDrawable gLDrawable) {
-    final GL2 gl = (GL2) gLDrawable.getGL();
+  public void display(GLAutoDrawable glDrawable) {
+    final GL2 gl = (GL2) glDrawable.getGL();
+    surface = glDrawable.getNativeSurface();
 
     gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     shapeManager.checkQueue(gl, glu);
@@ -704,7 +711,9 @@ public class Renderer
   // pick/select objects for context menu
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>(5);
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    int toSurfacePixels[] = { (int) mouseState.point().getX(), (int) mouseState.point().getY() };
+    surface.convertToPixelUnits(toSurfacePixels);
+    double[][] ray = generatePickRay(toSurfacePixels[0], (height - toSurfacePixels[1]));
     pickPatches(agents, ray);
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
