@@ -46,7 +46,9 @@ private[compile] object CompilerMain {
     // NOTE: This only provides a list of optimizations to run.
     // The optimization system property (in api.Version) controls
     // whether those are actually turned on.
-    val flags = CompilerFlags(optimizations = NvmOptimizations.guiOptimizations)
+    val flags = CompilerFlags(optimizations =
+      if (program.dialect.is3D) NvmOptimizations.gui3DOptimizations
+      else NvmOptimizations.guiOptimizations)
 
     val allDefs = middleEnd.middleEnd(
       bridged,

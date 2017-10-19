@@ -155,8 +155,9 @@ class World3D extends World
   }
 
   override def createPatches(minPxcor: Int, maxPxcor: Int,
-                            minPycor: Int, maxPycor: Int): Unit =
+                            minPycor: Int, maxPycor: Int): Unit = {
     createPatches(minPxcor, maxPxcor, minPycor, maxPycor, 0, 0)
+  }
 
   override def newProgram: Program =
     Program.fromDialect(NetLogoThreeDDialect)

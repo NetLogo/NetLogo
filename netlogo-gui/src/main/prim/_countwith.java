@@ -15,7 +15,6 @@ import org.nlogo.nvm.Reporter;
 
 public final strictfp class _countwith extends Reporter {
 
-
   @Override
   public Object report(Context context) throws LogoException {
     return report_1(context,

@@ -46,6 +46,9 @@ object Optimizations {
       DialectReporter -> "org.nlogo.compile.optimize.DialectPatchVariableDouble",
       DialectReporter -> "org.nlogo.compile.optimize.DialectTurtleVariableDouble")
 
+  val gui3DOptimizations: OptimizationList =
+    guiOptimizations.filterNot(o => o == ((Reporter, "org.nlogo.compile.middle.optimize.With")))
+
   val headlessOptimizations: OptimizationList =
     standardOptimizations ++ Seq(
       Reporter -> toOptimizerClassName("PatchVariableDouble"),
