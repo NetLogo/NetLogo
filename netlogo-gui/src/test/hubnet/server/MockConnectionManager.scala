@@ -8,6 +8,7 @@ import collection.mutable.ListBuffer
 import org.nlogo.api.{ HubNetInterface, PlotInterface }, HubNetInterface.ClientInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
+import java.net.{ InetAddress, NetworkInterface }
 import java.io.{ Serializable => JSerializable }
 
 class MockControlCenter extends ClientEventListener() {
@@ -52,7 +53,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
 
   // have to override this so threads and things arent started up.
   // JC - 12/28/10
-  override def startup(serverName:String): Boolean = {
+  override def startup(serverName: String, selectedNetwork: (NetworkInterface, InetAddress)): Boolean = {
     running = true
     workspace.hubNetRunning = true
     true

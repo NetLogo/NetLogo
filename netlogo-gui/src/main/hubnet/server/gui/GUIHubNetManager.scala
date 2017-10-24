@@ -6,15 +6,16 @@ import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.hubnet.connection.HubNetException
+import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.fileformat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window._
 
-import java.net.InetAddress
+import java.net.{ InetAddress, NetworkInterface }
 import java.awt.Component
+import javax.swing.JOptionPane
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
@@ -27,6 +28,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
   private var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
+  private var serverInterface = Option.empty[(NetworkInterface, InetAddress)]
 
   private val listener = new ClientEventListener() {
     def addClient(clientId: String, remoteAddress: String) {
@@ -100,7 +102,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def showControlCenter() {
     if (controlCenter == null) {
       controlCenter =
-        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay)
+        new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
       controlCenter.pack()
     }
     controlCenter.setVisible(true)
@@ -131,10 +133,40 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       connectionManager.shutdown()
       closeControlCenter()
     }
-    if (serverName == null || serverName.trim == "")
-      serverName = new StartupDialog(workspace.getFrame) { setVisible(true) }.getName()
-    connectionManager.startup(serverName)
-    showControlCenter()
+    while (serverName == null || serverName.isEmpty || serverInterface.isEmpty) {
+      val (name, selectedNetwork) = getNameAndSelectedNetwork()
+      serverName = name
+      serverInterface = selectedNetwork
+      if (serverInterface.isEmpty) {
+        JOptionPane.showMessageDialog(workspace.getFrame,
+          "Unable to find a suitable network connection for HubNet, please check your network connection")
+      }
+      else if (serverInterface.get._1.isLoopback)
+        JOptionPane.showMessageDialog(workspace.getFrame,
+          "Unable to find an external network connection, HubNet will be served locally")
+    }
+    serverInterface.foreach { nw =>
+      connectionManager.startup(serverName, nw)
+      showControlCenter()
+    }
+  }
+
+  private def getNameAndSelectedNetwork(): (String, Option[(NetworkInterface, InetAddress)]) = {
+    val networkChoices = NetworkUtils.findViableInterfaces
+    val preferredNetworkInterface = NetworkUtils.recallNetworkInterface
+    val preferredNetworkConnection = networkChoices.find(_._1 == preferredNetworkInterface)
+    if (serverName == null || serverName.trim == "" || serverInterface.isEmpty) {
+      val dialog =
+        new StartupDialog(workspace.getFrame, networkChoices, preferredNetworkConnection) {
+          setVisible(true)
+        }
+      dialog.selectedNetwork.foreach {
+        case (nic, _) => NetworkUtils.rememberNetworkInterface(nic)
+      }
+      (dialog.getName, (dialog.selectedNetwork orElse networkChoices.headOption orElse NetworkUtils.loopbackInterface))
+    } else {
+      (serverName, serverInterface)
+    }
   }
 
   def disconnect() {

@@ -13,7 +13,7 @@ import org.nlogo.hubnet.protocol.DiscoveryMessage
  * a org.nlogo.hubnet.client.DiscoveryListener on the client.
  * @see org.nlogo.hubnet.protocol.DiscoveryMessage
  **/
-class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int) extends Thread {
+class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int, address: InetAddress) extends Thread {
   private val message = DiscoveryMessage(uniqueId, modelName, portNumber)
   @volatile private var shouldRun = true
   def shutdown() { shouldRun = false }
@@ -43,6 +43,7 @@ class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int) e
       val messageBytes = message.toByteArray
       try {
         multicastSocket.setTimeToLive(63)
+        multicastSocket.setInterface(address)
         multicastSocket.send(new DatagramPacket(messageBytes, messageBytes.length, group, SERVER_DISCOVERY_MULTICAST_PORT))
       }
       catch {case ioe: IOException => dump("Could not transmit multicast announcement.", ioe)}

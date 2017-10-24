@@ -10,7 +10,7 @@ import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
-import java.net.{BindException, ServerSocket}
+import java.net.{BindException, InetAddress, NetworkInterface, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
@@ -97,7 +97,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * This is called when NetLogo executes the <code>hubnet-reset</code> primitive.
    * @return true if startup was succesful
    */
-  def startup(serverName:String): Boolean = {
+  def startup(serverName: String, selectedNetwork: (NetworkInterface, InetAddress)): Boolean = {
     workspace.hubNetRunning = true
     running = true
     // we set this when hubnet-reset is called now, instead
@@ -118,7 +118,7 @@ class ConnectionManager(val connection: ConnectionInterface,
       this.socket = socket
       serverOn = true
 
-      announcer = new DiscoveryAnnouncer(serverName, workspace.modelNameForDisplay, port)
+      announcer = new DiscoveryAnnouncer(serverName, workspace.modelNameForDisplay, port, selectedNetwork._2)
       announcer.start()
 
       nodeThread = new Thread(this) {setName("org.nlogo.hubnet.server.ConnectionManager")}
