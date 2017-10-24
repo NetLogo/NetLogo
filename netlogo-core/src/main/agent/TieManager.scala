@@ -43,7 +43,7 @@ class TieManager(links: TreeAgentSet, linkManager: LinkManager, protractor: Prot
         val dx = newX - oldX
         val dy = newY - oldY
         ignoring(classOf[AgentException]) {
-          t.xandycor(t.xcor + dx, t.ycor + dy, allSeenTurtles)
+          t.xandycor(t.xcor + dx, t.ycor + dy, allSeenTurtles, false)
         }
     }
   }
@@ -76,7 +76,7 @@ class TieManager(links: TreeAgentSet, linkManager: LinkManager, protractor: Prot
               val theta = protractor.towards(root, t, true) + dh
               val newX2 = x + r * squashedSin(theta)
               val newY2 = y + r * squashedCos(theta)
-              t.xandycor(newX2, newY2, allSeenTurtles)
+              t.xandycor(newX2, newY2, allSeenTurtles, false)
             }
             false
           }
