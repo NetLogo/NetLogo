@@ -2,23 +2,24 @@
 
 package org.nlogo.window
 
-import java.awt.{Component, Frame, FileDialog => AwtFileDialog}
+import java.awt.{ Component, Frame, FileDialog => AwtFileDialog }
 import java.awt.image.BufferedImage
-import java.io.{IOException, PrintWriter}
+import java.io.{ IOException, PrintWriter }
+import javax.swing.{ JScrollPane, JTextArea }
 
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
 import scala.util.{ Failure, Success }
 
-import org.nlogo.agent.World
-import org.nlogo.api.{ControlSet, Exceptions, FileIO, ModelReader, ModelSettings}
-import org.nlogo.awt.{Hierarchy, UserCancelException}
+import org.nlogo.agent.{ ImporterJ, World }
+import org.nlogo.api.{ ControlSet, Exceptions, FileIO, ModelReader, ModelSettings }
+import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
 import org.nlogo.log.Logger
-import org.nlogo.swing.{FileDialog, ModalProgressTask}
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.workspace.{AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory}
-import org.nlogo.window.Events.{ExportPlotEvent, ExportWidgetEvent, LoadModelEvent}
+import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
+import org.nlogo.window.Events.{ ExportPlotEvent, ExportWidgetEvent, LoadModelEvent }
 
 abstract class GUIWorkspaceScala(
   world:                World,
@@ -54,6 +55,21 @@ abstract class GUIWorkspaceScala(
 
   override def exportOutputAreaToCSV(writer: PrintWriter): Unit = {
     new Events.ExportWorldEvent(writer).raise(this)
+  }
+
+  override def importerErrorHandler: ImporterJ.ErrorHandler = new ImporterJ.ErrorHandler {
+    def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
+      EventQueue.mustBeEventDispatchThread()
+      val options = {
+        implicit val i18nPrefix = I18N.Prefix("common.buttons")
+        val buttons = if (fatalError) Array("ok") else Array("continue", "cancel")
+        buttons.map(I18N.gui.apply)
+      }
+      val textArea = new JTextArea
+      textArea.setText(errorDetails)
+      textArea.setEditable(false)
+      0 == OptionDialog.showCustom(getFrame, title, new JScrollPane(textArea), options)
+    }
   }
 
   def handle(e: LoadModelEvent): Unit = {
