@@ -66,8 +66,20 @@ public strictfp class Turtle2D
       }
     }
 
-    xandycor(xcor + (distance * cachedSine),
-        ycor + (distance * cachedCosine));
+    if (!penMode().equals(PEN_UP)) {
+      try {
+        Patch ignore = getPatchAtHeadingAndDistance(0, distance);
+        drawLine(xcor, ycor, distance);
+      } catch (AgentException ex) {
+        // We end up here if `getPatchAtHeadingAndDistance` can't reach the patch that
+        // far away (due to wrapping difficulties) --JAB (11/2/16)
+        org.nlogo.api.Exceptions.ignore(ex);
+      }
+    }
+
+    xandycorHelper(xcor + (distance * cachedSine),
+        ycor + (distance * cachedCosine),
+        true);
   }
 
   public Patch getPatchHere() {
@@ -79,9 +91,31 @@ public strictfp class Turtle2D
     return currentPatch;
   }
 
+  void drawLine(double xcor, double ycor, double distance) {
+    if (!penMode().equals(PEN_UP)) {
+      Object color = variables()[VAR_COLOR];
+      double size = penSize();
+      String mode = penMode();
+      double minPxcor = world().minPxcor() - 0.5;
+      double maxPxcor = world().maxPxcor() + 0.5;
+      double minPycor = world().minPycor() - 0.5;
+      double maxPycor = world().maxPycor() + 0.5;
+      Trail[] lines   = PenLineMaker.jumpLine(xcor, ycor, heading, distance, minPxcor, maxPxcor, minPycor, maxPycor);
+      for (Trail line : lines) {
+        ((World2D) _world).drawLine(line.x1(), line.y1(), line.x2(), line.y2(), color, size, mode);
+      }
+    }
+  }
+
   void drawLine(double x0, double y0, double x1, double y1) {
-    if (!penMode().equals(PEN_UP) && (x0 != x1 || y0 != y1)) {
-      ((World2D) _world).drawLine(x0, y0, x1, y1, _variables[VAR_COLOR], penSize(), penMode());
+    if (!penMode().equals(PEN_UP)) {
+      Object color = variables()[VAR_COLOR];
+      double size = penSize();
+      String mode = penMode();
+      Trail[] lines = PenLineMaker.translate(x0, y0, x1, y1);
+      for (Trail line : lines) {
+        ((World2D) _world).drawLine(line.x1(), line.y1(), line.x2(), line.y2(), color, size, mode);
+      }
     }
   }
 

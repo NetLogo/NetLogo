@@ -1,0 +1,101 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.agent
+
+import org.scalatest.FunSuite
+import org.nlogo.core.WorldDimensions
+import org.nlogo.api.TrailDrawerInterface
+
+// This test is used primarily to verify exact numeric reproducibility between NetLogo desktop
+// and NetLogo Web. If there are discrepancies found between the two in the area of trail-drawing
+// new tests should be added here.
+class TrailDrawingTests extends FunSuite {
+
+  case class LineSeg(x0: Double, y0: Double, x1: Double, y1: Double, color: AnyRef, size: Double, mode: String)
+  class DummyTrailDrawer extends TrailDrawerInterface {
+    var lines = Seq[LineSeg]()
+    def drawLine(x0: Double, y0: Double, x1: Double, y1: Double, color: AnyRef, size: Double, mode: String): Unit = {
+      lines :+= LineSeg(x0, y0, x1, y1, color, size, mode)
+    }
+    def colors: Array[Int] = ???
+    def getHeight: Int = ???
+    def getWidth: Int = ???
+    def isBlank: Boolean = ???
+    def markClean(): Unit = ???
+    def markDirty(): Unit = ???
+    def setColors(colors: Array[Int]) = ???
+    def getDrawing: AnyRef = ???
+    def sendPixels: Boolean = ???
+    def sendPixels(dirty: Boolean) = ???
+    def stamp(agent: org.nlogo.api.Agent, erase: Boolean) = ???
+    @throws(classOf[java.io.IOException])
+    def readImage(is: java.awt.image.BufferedImage) = ???
+    @throws(classOf[java.io.IOException])
+    def readImage(is: java.io.InputStream) = ???
+    @throws(classOf[java.io.IOException])
+    def importDrawing(is: java.io.InputStream) = ???
+    @throws(classOf[java.io.IOException])
+    def importDrawing(file: org.nlogo.core.File) = ???
+    def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage = ???
+    def clearDrawing() = ???
+    def exportDrawingToCSV(writer: java.io.PrintWriter) = ???
+    def rescaleDrawing() = ???
+    def isDirty: Boolean = ???
+  }
+
+  val worldSquare = new WorldDimensions(0, 0, 0, 0)
+
+  def makeWorld(dimensions: WorldDimensions) =
+    new World2D() {
+      createPatches(dimensions)
+      realloc()
+    }
+
+  def makeTurtle(world: World, cors: Array[Int]) =
+    new Turtle2D(world, world.turtles, cors(0).toDouble, cors(1).toDouble)
+
+  trait Helper {
+    val drawer = new DummyTrailDrawer()
+    val world = makeWorld(worldSquare)
+    world.trailDrawer(drawer)
+    val turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+  }
+
+  test("no pen trails when turtle doesn't move") { new Helper {
+    assert(drawer.lines.isEmpty)
+  } }
+
+  test("single pen trail when turtle moves without crossing world boundary") { new Helper {
+    turtle.xandycor(0.25, 0.25)
+    assert(drawer.lines.length == 1)
+    assert(drawer.lines.head == LineSeg(0.0,0.0,0.25,0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+  } }
+
+  test("single pen trail when turtle moves backwards without crossing world boundary") { new Helper {
+    turtle.heading(0)
+    turtle.jump(-0.25)
+    assert(drawer.lines.length == 1)
+    assert(drawer.lines.head == LineSeg(0.0,0.0,0,-0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+  } }
+
+  test("draws two trails when turtle crosses world boundary") { new Helper {
+    turtle.heading(0)
+    turtle.jump(0.75)
+    assert(drawer.lines.length == 2)
+    assert(drawer.lines(0) == LineSeg(0, 0, 0, 0.5, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+    assert(drawer.lines(1) == LineSeg(0, -0.5, 0, -0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+  } }
+
+  test("draws three trails when turtle crosses world boundary twice") { new Helper {
+    turtle.heading(319)
+    turtle.jump(1)
+    assert(drawer.lines.length == 3)
+    assertResult(drawer.lines(0))(
+      LineSeg(0.0,0.0,-0.43464336890811345,0.5,Double.box(0.0),1.0,Turtle.PEN_DOWN))
+    assertResult(drawer.lines(1))(
+      LineSeg(-0.43464336890811345,-0.5,-0.5,-0.4248157963894954,Double.box(0.0),1.0,Turtle.PEN_DOWN))
+    assertResult(drawer.lines(2))(
+      LineSeg(0.5,-0.4248157963894954,0.3439409710094926,-0.24529041977722812,Double.box(0.0),1.0,Turtle.PEN_DOWN))
+  } }
+}

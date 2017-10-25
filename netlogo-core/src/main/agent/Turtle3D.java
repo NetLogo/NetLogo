@@ -502,8 +502,7 @@ public final strictfp class Turtle3D
   @Override
   void drawLine(double x0, double y0, double x1, double y1) {
     if (penMode().equals(PEN_DOWN) && (x0 != x1 || y0 != y1)) {
-      ((World3D) _world).drawLine
-          (x0, y0, zcor, x1, y1, zcor, color(), penSize());
+      ((World3D) _world).drawLine(x0, y0, zcor, x1, y1, zcor, color(), penSize());
     }
   }
 

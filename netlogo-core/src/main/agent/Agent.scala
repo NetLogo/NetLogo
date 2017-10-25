@@ -7,6 +7,8 @@ import
     core.{ I18N, Program },
     api.{ AgentException, Agent => ApiAgent }
 
+import scala.collection.immutable.Set
+
 abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comparable[Agent] {
   def world = _world
 
@@ -104,4 +106,9 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
     throw new AgentException(I18N.errors.getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
         classDisplayName, name, api.Dump.typeName(expectedClass), api.Dump.logoObject(value)))
   }
+}
+
+object Agent {
+  // this method needs to be in scala for some jankiness in agent.Turtle
+  private[agent] def turtleSet(t: Turtle): Set[Turtle] = Set[Turtle](t)
 }

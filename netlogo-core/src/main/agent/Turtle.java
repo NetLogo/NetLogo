@@ -871,34 +871,34 @@ public strictfp abstract class Turtle
 
   public void xandycor(double xcor, double ycor)
       throws AgentException {
-    double oldX = this.xcor;
-    double oldY = this.ycor;
-    xandycorHelper(xcor, ycor);
-    if (_world.tieManager().hasTies()) {
-      _world.tieManager().turtleMoved(this, xcor, ycor, oldX, oldY);
-    }
+    xandycorHelper(xcor, ycor, false);
   }
 
   // when we're calculating ties this gets called since we are recursing
   // and we need to pass the seenTurtles around ev 7/24/07
-  public void xandycor(double xcor, double ycor, scala.collection.immutable.Set<Turtle> seenTurtles)
+  public void xandycor(double xcor, double ycor, scala.collection.immutable.Set<Turtle> seenTurtles, boolean isJump)
+      throws AgentException {
+    xandycorHelper(xcor, ycor, seenTurtles, isJump);
+  }
+
+  public void xandycorHelper(double xcor, double ycor, boolean isJump)
+    throws AgentException {
+    xandycorHelper(xcor, ycor, Agent$.MODULE$.turtleSet(this), isJump);
+  }
+
+  public void xandycorHelper(double xcor, double ycor, scala.collection.immutable.Set<Turtle> seenTurtles, boolean isJump)
       throws AgentException {
     double oldX = this.xcor;
     double oldY = this.ycor;
-    xandycorHelper(xcor, ycor);
-    if (_world.tieManager().hasTies()) {
-      _world.tieManager().turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
-    }
-  }
 
-  public void xandycorHelper(double xcor, double ycor)
-      throws AgentException {
     Patch originalPatch = getPatchHere();
 
     double newX = _world.wrapX(xcor);
     double newY = _world.wrapY(ycor);
 
-    drawLine(this.xcor, this.ycor, xcor, ycor);
+    if (! isJump) {
+      drawLine(this.xcor, this.ycor, xcor, ycor);
+    }
 
     this.xcor = newX;
     this.ycor = newY;
@@ -914,6 +914,9 @@ public strictfp abstract class Turtle
     Observer observer = _world.observer();
     if (this == observer.targetAgent()) {
       observer.updatePosition();
+    }
+    if (_world.tieManager().hasTies()) {
+      _world.tieManager().turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
     }
   }
 
