@@ -62,6 +62,14 @@ class TrailDrawingTests extends FunSuite {
     turtle.penMode(Turtle.PEN_DOWN)
   }
 
+  trait HelperBig {
+    val drawer = new DummyTrailDrawer()
+    val world = makeWorld(new WorldDimensions(4, 4, -4, -4))
+    world.trailDrawer(drawer)
+    val turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+  }
+
   test("no pen trails when turtle doesn't move") { new Helper {
     assert(drawer.lines.isEmpty)
   } }
@@ -69,33 +77,39 @@ class TrailDrawingTests extends FunSuite {
   test("single pen trail when turtle moves without crossing world boundary") { new Helper {
     turtle.xandycor(0.25, 0.25)
     assert(drawer.lines.length == 1)
-    assert(drawer.lines.head == LineSeg(0.0,0.0,0.25,0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+    assertResult(LineSeg(0.0, 0.0, 0.25, 0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines.head)
   } }
 
   test("single pen trail when turtle moves backwards without crossing world boundary") { new Helper {
     turtle.heading(0)
     turtle.jump(-0.25)
     assert(drawer.lines.length == 1)
-    assert(drawer.lines.head == LineSeg(0.0,0.0,0,-0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+    assertResult(LineSeg(0.0, 0.0, 0, -0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines.head)
   } }
 
   test("draws two trails when turtle crosses world boundary") { new Helper {
     turtle.heading(0)
     turtle.jump(0.75)
     assert(drawer.lines.length == 2)
-    assert(drawer.lines(0) == LineSeg(0, 0, 0, 0.5, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
-    assert(drawer.lines(1) == LineSeg(0, -0.5, 0, -0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))
+    assertResult(LineSeg(0, 0, 0, 0.5, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(0))
+    assertResult(LineSeg(0, -0.5, 0, -0.25, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(1))
+  } }
+
+  test("draws one trail with face then moveTo") { new HelperBig {
+    val target = world.getPatchAt(-2, 1)
+    turtle.moveToPatchCenter()
+    turtle.face(target, true)
+    turtle.moveTo(target)
+    assert(drawer.lines.length == 1)
+    assertResult(LineSeg(0.0, 0.0, 4.0, -4.0, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(0))
   } }
 
   test("draws three trails when turtle crosses world boundary twice") { new Helper {
     turtle.heading(319)
     turtle.jump(1)
     assert(drawer.lines.length == 3)
-    assertResult(drawer.lines(0))(
-      LineSeg(0.0,0.0,-0.43464336890811345,0.5,Double.box(0.0),1.0,Turtle.PEN_DOWN))
-    assertResult(drawer.lines(1))(
-      LineSeg(-0.43464336890811345,-0.5,-0.5,-0.4248157963894954,Double.box(0.0),1.0,Turtle.PEN_DOWN))
-    assertResult(drawer.lines(2))(
-      LineSeg(0.5,-0.4248157963894954,0.3439409710094926,-0.24529041977722812,Double.box(0.0),1.0,Turtle.PEN_DOWN))
+    assertResult(LineSeg(0.0, 0.0, -0.43464336890811345, 0.5, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(0))
+    assertResult(LineSeg(-0.43464336890811345, -0.5, -0.5, -0.4248157963894954, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(1))
+    assertResult(LineSeg(0.5, -0.4248157963894954, 0.3439409710094926, -0.24529041977722812, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(2))
   } }
 }

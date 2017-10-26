@@ -23,7 +23,7 @@ private[agent] object PenLineMaker {
 
   def translate(x0: Double, y0: Double, x1: Double, y1: Double): Array[Trail] = {
     val dist = StrictMath.sqrt(StrictMath.pow(x0 - x1, 2) + StrictMath.pow(y0 - y1, 2))
-    Array(new Trail(x0, y0, x1, y1, dist))
+    if (dist == 0.0) Array() else Array(new Trail(x0, y0, x1, y1, dist))
   }
 
   private def helper(x: Double, y: Double, jumpDist: Double, context: HelperContext, acc: Seq[Trail] = Seq.empty): Seq[Trail] = {
