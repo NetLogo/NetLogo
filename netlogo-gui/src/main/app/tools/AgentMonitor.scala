@@ -2,9 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.util.{ List => JList }
-import javax.swing.{ BoxLayout, JPanel, JScrollPane, JWindow, ScrollPaneConstants }
+import javax.swing.{ JPanel, JScrollPane, JWindow, ScrollPaneConstants }
 
 import org.nlogo.agent.Agent
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
@@ -48,7 +48,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
   private val historyPrompt = new HistoryPrompt(commandLine)
   private val agentEditor = new AgentMonitorEditor(this)
 
-  setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS))
+  setLayout(new BorderLayout)
 
   val scrollPane = new JScrollPane(agentEditor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -62,14 +62,14 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
   val viewPanel: Option[AgentMonitorViewPanel] =
     if(agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
-      add(scrollPane)
+      add(scrollPane, BorderLayout.CENTER)
       None
     }
     else {
       implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
       val panel = new AgentMonitorViewPanel(workspace)
-      add(new CollapsiblePane(I18N.gui("view"), panel, window))
-      add(new CollapsiblePane(I18N.gui("properties"), scrollPane, window))
+      add(new CollapsiblePane(I18N.gui("view"), panel, window), BorderLayout.NORTH)
+      add(new CollapsiblePane(I18N.gui("properties"), scrollPane, window), BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)
@@ -90,7 +90,7 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
       c.insets = new Insets(1, 1, 1, 1)
       gridBag.setConstraints(historyPrompt, c)
       commandPanel.add(historyPrompt)
-      add(commandPanel)
+      add(commandPanel, BorderLayout.SOUTH)
       Some(panel)
     }
 
