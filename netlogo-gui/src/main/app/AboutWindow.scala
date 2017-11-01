@@ -8,9 +8,10 @@ import javax.swing._
 import java.net.URI
 
 import org.nlogo.util.SysInfo
-import org.nlogo.api.{FileIO, APIVersion, Version}
+import org.nlogo.api.{ FileIO, APIVersion, Version }
+import org.nlogo.swing.{ BrowserLauncher, RichAction }
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{BrowserLauncher, RichAction, IconHolder}
+import org.nlogo.swing.Utils.icon
 
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
@@ -35,7 +36,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     setResizable(false)
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
-    val label = new JLabel(){
+    val label = new JLabel {
       setText(
           "<html>\n"
           + "<center>"
@@ -52,7 +53,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
           + "</center> </html>"
        )
       setHorizontalAlignment(SwingConstants.CENTER)
-      addMouseListener(new MouseAdapter() {
+      addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent) {
           BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
         }
@@ -62,7 +63,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     refreshSystemText()
 
     getContentPane.setLayout(new BorderLayout(0,10))
-    val graphic = new IconHolder(new ImageIcon(classOf[AboutWindow].getResource("/images/title.jpg"))){
+    val graphic = new JLabel(icon("/images/title.jpg")) {
       setBorder(BorderFactory.createEmptyBorder(10,10,0,10))
     }
     getContentPane.add(graphic,BorderLayout.NORTH)

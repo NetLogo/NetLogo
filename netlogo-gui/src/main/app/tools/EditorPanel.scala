@@ -4,13 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ BorderFactory, DefaultComboBoxModel, ImageIcon, JButton,
+import javax.swing.{ BorderFactory, DefaultComboBoxModel, JButton,
   JComboBox, JPanel, JScrollPane }
 
 import org.nlogo.core.I18N
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.HasPropertyChangeSupport
+import org.nlogo.swing.{ HasPropertyChangeSupport, Utils},
+  Utils.icon
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
@@ -21,7 +22,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
   val comboBox = new ComboBox
   val compileButton = new JButton(
     I18N.gui.get("tabs.code.checkButton"),
-    new ImageIcon(classOf[EditorPanel].getResource("/images/check.gif"))
+    icon("/images/check.gif")
   )
 
   private var dirty = false

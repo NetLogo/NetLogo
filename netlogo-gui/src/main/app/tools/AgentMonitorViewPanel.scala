@@ -2,59 +2,48 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Font, GridBagConstraints, GridBagLayout }
+import java.awt.BorderLayout
 import java.awt.event.{ ActionEvent, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ AbstractAction, JButton, JPanel }
+import javax.swing.{ AbstractAction, JToggleButton, JPanel, JSlider }
 
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
-import org.nlogo.awt.Fonts
-import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ GUIWorkspace, InterfaceColors }
+import org.nlogo.core.I18N
+import org.nlogo.window.GUIWorkspace
 
-class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
-
-  val view = new AgentMonitorView(workspace)
-  setLayout(new BorderLayout)
-  add(view, BorderLayout.CENTER)
-  view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255 / workspace.world.worldWidth)
-  view.applyNewFontSize(workspace.view.fontSize, 0)
-  private val watchButton = new JButton(new WatchMeAction)
-  watchButton.setFont(new Font(Fonts.platformFont, Font.PLAIN, 10))
-  watchButton.setBackground(InterfaceColors.GRAPHICS_BACKGROUND)
-  watchButton.setBorder(SwingUtils.createWidgetBorder())
-  watchButton.setFocusable(false)
+class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) {
+  private val view = new AgentMonitorView(workspace)
+  private val watchButton = new JToggleButton(new WatchAction)
   private val zoomer = new ZoomSlider(view)
-  val controlPanel = new JPanel
-  val gridbag = new GridBagLayout
-  val c = new GridBagConstraints
-  controlPanel.setLayout(gridbag)
-  c.gridwidth = GridBagConstraints.RELATIVE
-  gridbag.setConstraints(watchButton, c)
-  controlPanel.add(watchButton)
-  c.gridwidth = GridBagConstraints.REMAINDER
-  gridbag.setConstraints(zoomer, c)
-  controlPanel.add(zoomer)
-  add(controlPanel, BorderLayout.SOUTH)
-  watchButton.setEnabled(false)
-  zoomer.setEnabled(false)
 
-  def agent(agent: Agent, radius: Double) {
+  locally {
+    add(view, BorderLayout.CENTER)
+    view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255 / workspace.world.worldWidth)
+    view.applyNewFontSize(workspace.view.fontSize, 0)
+    watchButton.setFocusable(false)
+    val controls = new JPanel
+    controls.add(watchButton)
+    controls.add(zoomer)
+    add(controls, BorderLayout.SOUTH)
+    watchButton.setEnabled(false)
+    zoomer.setEnabled(false)
+  }
+
+  def agent(agent: Agent, radius: Double): Unit = {
     view.agent(agent)
     watchButton.setEnabled(true)
     zoomer.setEnabled(true)
     this.radius(radius)
   }
 
-  def radius(radius: Double) {
+  def radius(radius: Double): Unit =
     zoomer.setValue(StrictMath.round(radius * 100).toInt)
-  }
 
-  override def setEnabled(enablement: Boolean): Unit = {
+  override def setEnabled(enabled: Boolean): Unit = {
     val wasEnabled = isEnabled
-    super.setEnabled(enablement)
-    if (! enablement && wasEnabled) {
-      val grayPanel = new JPanel()
+    super.setEnabled(enabled)
+    if (! enabled && wasEnabled) {
+      val grayPanel = new JPanel
       grayPanel.setPreferredSize(view.getPreferredSize)
       remove(view)
       add(grayPanel, BorderLayout.CENTER)
@@ -66,31 +55,31 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel {
     revalidate()
   }
 
-  def close(): Unit = {
-    view.close()
-  }
+  def close(): Unit = view.close()
 
-  private class WatchMeAction extends AbstractAction("watch-me") {
-    override def actionPerformed(e: ActionEvent) {
-      workspace.world.observer.setPerspective(Perspective.Watch(view.agent))
+  private class WatchAction extends AbstractAction(I18N.gui.get("tools.agentMonitor.view.watch")) {
+    override def actionPerformed(e: ActionEvent) = {
+      if (watchButton.isSelected)
+        workspace.world.observer.setPerspective(Perspective.Watch(view.agent))
+      else
+        workspace.world.observer.resetPerspective()
       workspace.view.discardOffscreenImage()
       workspace.viewManager.getPrimary.incrementalUpdateFromEventThread()
     }
   }
 
   private class ZoomSlider(view: AgentMonitorView)
-  extends javax.swing.JSlider(0, ((workspace.world.worldWidth - 1) / 2) * 100, (view.radius() * 100).toInt)
+  extends JSlider(0, ((workspace.world.worldWidth - 1) / 2) * 100, (view.radius * 100).toInt)
   with MouseWheelListener
   {
     addMouseWheelListener(this)
     setInverted(true)
-    override def setValue(n: Int) {
+    override def setValue(n: Int) = {
       super.setValue(n)
       view.radius(n / 100.0)
     }
-    override def mouseWheelMoved(e: MouseWheelEvent) {
+    override def mouseWheelMoved(e: MouseWheelEvent) =
       setValue(getValue - e.getWheelRotation)
-    }
   }
 
 }

@@ -2,16 +2,20 @@
 
 package org.nlogo.sdm.gui
 
-import org.jhotdraw.framework.{DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool}
-import org.jhotdraw.standard.{CreationTool, DeleteCommand}
+import java.awt.event.{ ActionEvent, MouseEvent }
+import javax.swing.{ JOptionPane, Action, AbstractAction, ButtonGroup, JButton,
+  JLabel, JPanel, JToggleButton }
 import javax.swing.JToolBar.Separator
-import java.awt.event.{ActionEvent, MouseEvent}
-import javax.swing.{JOptionPane, ImageIcon, Action, AbstractAction, ButtonGroup, JButton, JLabel, JPanel, JToggleButton}
-import org.nlogo.sdm.Model
-import org.nlogo.core.I18N
-import org.nlogo.swing.{ ToolBarActionButton, ToolBarToggleButton }
 
-class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends org.nlogo.swing.ToolBar {
+import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
+import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
+
+import org.nlogo.core.I18N
+import org.nlogo.sdm.Model
+import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton }
+import org.nlogo.swing.Utils.icon
+
+class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar {
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("")
   private var dtLabel: JLabel = null
@@ -20,9 +24,9 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   override def addControls() {
     add(new ToolBarActionButton(editAction))
     add(new ToolBarActionButton(deleteAction))
-    add(new Separator())
+    add(new Separator)
     add(new ToolBarActionButton(compileAction))
-    add(new Separator())
+    add(new Separator)
 
     def makeButton(name:String, image:String, tool:Tool) = {
       new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
@@ -92,7 +96,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   /// Actions
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)){
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[AggregateModelEditorToolBar].getResource(image)))
+    putValue(Action.SMALL_ICON, icon(image))
     setEnabled(enableMe)
   }
   val compileAction = new MyAction("Check", "/images/check.gif", enableMe = true) {
@@ -124,7 +128,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     }
   }
   class ToolAction(toolName: String, iconName: String, tool: Tool) extends AbstractAction(toolName) {
-    putValue(Action.SMALL_ICON, new ImageIcon(classOf[AggregateModelEditorToolBar].getResource(iconName)))
+    putValue(Action.SMALL_ICON, icon(iconName))
     def actionPerformed(e: ActionEvent) {editor.setTool(tool)}
   }
 }

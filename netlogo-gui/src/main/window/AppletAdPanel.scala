@@ -5,28 +5,25 @@ package org.nlogo.window
 import java.awt.{ Color, Dimension, Font, Graphics, Graphics2D }
 import javax.swing.{ BorderFactory, Box, BoxLayout, Icon }
 
+import org.nlogo.swing.Utils.icon
+
 class AppletAdPanel(iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel {
 
   locally {
-    val icon =
-      new RotatedIconHolder(
-        new javax.swing.ImageIcon(
-          classOf[AppletAdPanel].getResource(
-            "/images/icon16.gif")))
-    icon.addMouseListener(iconListener)
+    val rotatedIcon = new RotatedIconHolder(icon("/images/icon16.gif"))
+    rotatedIcon.addMouseListener(iconListener)
     val label = new JVertLabel("powered by NetLogo")
     label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    icon.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    rotatedIcon.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     setBackground(Color.WHITE)
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
     add(Box.createGlue)
     add(label)
-    add(icon)
+    add(rotatedIcon)
   }
 
   private class JVertLabel(label: String) extends javax.swing.JLabel(label) {
-
     setFont(
       new Font(
         org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))

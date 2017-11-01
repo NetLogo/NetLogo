@@ -6,14 +6,15 @@ import java.awt.{ BorderLayout, Component, Container,
   ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ AbstractAction, Action, BorderFactory, ImageIcon, JComponent,
+import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
   JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction },
-  UserAction.{ MenuAction, ToolsCategory }
+import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction, Utils },
+  UserAction.{ MenuAction, ToolsCategory },
+  Utils.icon
 import org.nlogo.swing.{ Implicits, Utils => SwingUtils }, Implicits.thunk2action
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
   InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
@@ -154,7 +155,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   /// command center stuff
 
   private class CommandCenterLocationToggleAction extends AbstractAction("Toggle") {
-    putValue(Action.SMALL_ICON,new ImageIcon(classOf[InterfaceTab].getResource("/images/toggle.gif")))
+    putValue(Action.SMALL_ICON, icon("/images/toggle.gif"))
     override def actionPerformed(e: ActionEvent) {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>

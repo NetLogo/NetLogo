@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.nlogo.swing.Utils.icon;
+
 public strictfp class UserDialog
     extends javax.swing.JDialog {
   int selection = 0;
@@ -54,9 +56,8 @@ public strictfp class UserDialog
     layout.setConstraints(buttons, c);
     add(buttons);
     buttons.getRootPane().setDefaultButton((javax.swing.JButton)buttons.getComponent(1));
-    javax.swing.ImageIcon icon = new javax.swing.ImageIcon
-        (UserDialog.class.getResource("/images/arrowhead.gif"));
-    javax.swing.JLabel label = new javax.swing.JLabel(icon);
+    javax.swing.ImageIcon turtleIcon = icon("/images/arrowhead.gif");
+    javax.swing.JLabel label = new javax.swing.JLabel(turtleIcon);
     c.gridheight = c.gridy;
     c.gridx = 1;
     c.gridy = 1;

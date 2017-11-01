@@ -9,7 +9,7 @@ import javax.swing.{ JPanel, JScrollPane, JWindow, ScrollPaneConstants }
 import org.nlogo.agent.Agent
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.CollapsiblePane
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace, InterfaceColors }
 
@@ -66,11 +66,10 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
       None
     }
     else {
+      implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
       val panel = new AgentMonitorViewPanel(workspace)
-      add(new CollapsiblePane(panel, window),
-          BorderLayout.NORTH)
-      add(new CollapsiblePane(scrollPane, window),
-          BorderLayout.CENTER)
+      add(new CollapsiblePane(I18N.gui("view"), panel, window), BorderLayout.NORTH)
+      add(new CollapsiblePane(I18N.gui("properties"), scrollPane, window), BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)

@@ -6,17 +6,18 @@ package org.nlogo.app.common
 
 import java.awt.{ Font, Insets }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
-import javax.swing.{ JButton, JMenuItem, JPopupMenu, ImageIcon }
+import javax.swing.{ JButton, JMenuItem, JPopupMenu }
 
-import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.awt.{ Fonts, Mouse }
+import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.swing.Utils.icon
 
 class HistoryPrompt(commandLine: CommandLine) extends JButton {
 
   locally {
-    val icon = new ImageIcon(classOf[HistoryPrompt].getResource("/images/popup.gif"))
-    setIcon(icon)
-    setDisabledIcon(icon)
+    val arrowIcon = icon("/images/popup.gif")
+    setIcon(arrowIcon)
+    setDisabledIcon(arrowIcon)
   }
   setEnabled(false)
   setOpaque(true) // needed as of quaqua 3.4.1 - ST 10/4/05

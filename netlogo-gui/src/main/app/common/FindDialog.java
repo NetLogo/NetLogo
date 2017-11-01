@@ -2,15 +2,17 @@
 
 package org.nlogo.app.common;
 
-import javax.swing.JDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import javax.swing.Action;
+import javax.swing.JDialog;
 
 import org.nlogo.core.I18N;
 import org.nlogo.swing.NonemptyTextFieldActionEnabler;
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler;
 import org.nlogo.swing.UserAction;
 import org.nlogo.swing.UserAction.KeyBindings$;
+import static org.nlogo.swing.Utils.icon;
 
 public strictfp class FindDialog
     extends JDialog
@@ -45,21 +47,17 @@ public strictfp class FindDialog
 
   /// ACTIONS
 
-  public static final javax.swing.Action FIND_ACTION = new FindAction();
-  public static final javax.swing.Action FIND_NEXT_ACTION = new FindNextAction();
+  public static final Action FIND_ACTION = new FindAction();
+  public static final Action FIND_NEXT_ACTION = new FindNextAction();
 
   public static class FindAction
       extends javax.swing.text.TextAction {
     FindAction() {
       super(I18N.guiJ().get("menu.edit.find"));
-      putValue
-          (javax.swing.Action.SMALL_ICON,
-              new javax.swing.ImageIcon
-                  (FindDialog.class.getResource
-                      ("/images/magnify.gif")));
+      putValue(Action.SMALL_ICON, icon("/images/magnify.gif"));
       putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
       putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
-      putValue(javax.swing.Action.ACCELERATOR_KEY,
+      putValue(Action.ACCELERATOR_KEY,
           UserAction.KeyBindings$.MODULE$.keystroke('F', true, false));
       setEnabled(false);
     }
@@ -87,14 +85,10 @@ public strictfp class FindDialog
       extends javax.swing.text.TextAction {
     FindNextAction() {
       super(I18N.guiJ().get("menu.edit.findNext"));
-      putValue
-          (javax.swing.Action.SMALL_ICON,
-              new javax.swing.ImageIcon
-                  (FindDialog.class.getResource
-                      ("/images/magnify.gif")));
+      putValue(Action.SMALL_ICON, icon("/images/magnify.gif"));
       putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
       putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
-      putValue(javax.swing.Action.ACCELERATOR_KEY,
+      putValue(Action.ACCELERATOR_KEY,
           UserAction.KeyBindings$.MODULE$.keystroke('G', true, false));
       setEnabled(false);
     }

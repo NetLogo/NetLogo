@@ -7,17 +7,16 @@ import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
 import java.awt.image.FilteredImageSource
 import javax.swing.ImageIcon
 
-import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.api.{ Editable, MersenneTwisterFast, Options, Version}
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
+import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.nvm.Procedure
+import org.nlogo.swing.Utils.icon
 
 object ButtonWidget {
 
-  def image(path: String) = new ImageIcon(classOf[ButtonWidget].getResource(path))
-
-  val FOREVER_GRAPHIC_DARK: ImageIcon = image("/images/forever.gif")
-  val FOREVER_GRAPHIC: ImageIcon = image("/images/forever2.gif")
+  val FOREVER_GRAPHIC_DARK: ImageIcon = icon("/images/forever.gif")
+  val FOREVER_GRAPHIC: ImageIcon = icon("/images/forever2.gif")
 
   object ButtonType {
 
@@ -33,7 +32,7 @@ object ButtonWidget {
       new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
 
     private def apply(headerCode:String, agentKind:AgentKind, imagePath: String): ButtonType = {
-      val img = image(imagePath)
+      val img = icon(imagePath)
       new ButtonType(headerCode, agentKind, Some(img), Some(darkImage(img)))
     }
     def apply(c:AgentKind): ButtonType = {

@@ -436,16 +436,20 @@ tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
-tools.agentMonitorEditor.noVariables = (no variables defined)
-tools.agentMonitorEditor.expectedTurtleOrWho = expected a turtle or a who number
-tools.agentMonirorEditor.edpectedLinkBreed = expected a link breed
+tools.agentMonitor.view = View
+tools.agentMonitor.properties = Properties
 
-tools.agentMonitorWindow.globals = Globals
-tools.agentMonitorWindow.noTurtle = (no turtle)
-tools.agentMonitorWindow.dead = {0} (dead)
-tools.agentMonitorWindow.noLink = (no link)
-tools.agentMonitorWindow.noPatch = (no patch)
+tools.agentMonitor.window.globals = Globals
+tools.agentMonitor.window.noTurtle = (no turtle)
+tools.agentMonitor.window.dead = {0} (dead)
+tools.agentMonitor.window.noLink = (no link)
+tools.agentMonitor.window.noPatch = (no patch)
 
+tools.agentMonitor.view.watch = Watch
+
+tools.agentMonitor.editor.noVariables = (no variables defined)
+tools.agentMonitor.editor.expectedTurtleOrWho = expected a turtle or a who number
+tools.agentMoniror.editor.edpectedLinkBreed = expected a link breed
 
 tools.colorswatch = Color Swatches
 tools.colorswatch.preview = Preview

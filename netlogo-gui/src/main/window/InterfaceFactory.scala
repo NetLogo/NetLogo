@@ -2,12 +2,12 @@
 
 package org.nlogo.window
 
-import javax.swing.ImageIcon
 import org.nlogo.core.I18N
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox }
+import org.nlogo.swing.{ Utils => SwingUtils }
 
 object WidgetInfo {
   def apply(widgetType: String, imageName: String, widgetThunk: () => CoreWidget): WidgetInfo = {
@@ -28,7 +28,7 @@ object WidgetInfo {
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
-  def icon = new ImageIcon(classOf[WidgetInfo].getResource("/images/" + imageName))
+  def icon = SwingUtils.icon("/images/" + imageName)
   def coreWidget = widgetThunk()
 }
 
