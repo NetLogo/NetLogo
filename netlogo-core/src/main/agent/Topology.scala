@@ -117,7 +117,8 @@ extends Neighbors {
     * lowest numbers (though we don't necessarily know which group is which). We then sum each group separately, and
     * then sum their sums. This works because we can rely on the commutativity of floats. -- BCH 10/15/2017
     */
-  protected def sum4(a: Double,b: Double,c: Double,d: Double): Double = {
+  @inline
+  final protected def sum4(a: Double,b: Double,c: Double,d: Double): Double = {
     var low1, high1, low2, high2: Double = 0.0
     if (a < b) {
       low1 = a
@@ -146,7 +147,8 @@ extends Neighbors {
       (low1 + high1) + (low2 + high2)
   }
 
-  protected def updatePatch(amount: Double, vn: Int, directions: Int,
+  @inline
+  final protected def updatePatch(amount: Double, vn: Int, directions: Int,
                             x: Int, y: Int, oldVal: Double, sum: Double): Unit = {
     val newVal = oldVal + amount * (sum / directions - oldVal)
     if (newVal != oldVal) {
