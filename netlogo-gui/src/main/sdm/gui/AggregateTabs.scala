@@ -3,6 +3,7 @@
 package org.nlogo.sdm.gui
 
 import java.awt.{ Color, Component }
+import java.awt.event.{ ComponentEvent, ComponentListener }
 import javax.swing.{ JTabbedPane, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
@@ -22,6 +23,23 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
   add(I18N.gui.get("tools.sdm.diagram"), editorTab)
   add(I18N.gui.get("tabs.code"), proceduresTab)
   setSelectedComponent(editorTab)
+
+  addComponentListener(new ComponentListener {
+    def componentHidden(e: ComponentEvent): Unit = {
+      resizeEditorPane()
+    }
+    def componentMoved(e: ComponentEvent): Unit = {}
+
+    def componentResized(e: ComponentEvent): Unit = {
+      resizeEditorPane()
+    }
+    def componentShown(e: ComponentEvent): Unit = {
+      resizeEditorPane()
+    }
+    private def resizeEditorPane(): Unit = {
+      proceduresTab.resizeTo(getSize)
+    }
+  })
 
   override def stateChanged(e: ChangeEvent): Unit = {
     proceduresTab.setText(editor.toNetLogoCode)
