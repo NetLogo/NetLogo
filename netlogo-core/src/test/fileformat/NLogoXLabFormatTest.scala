@@ -3,9 +3,11 @@
 package org.nlogo.fileformat
 
 import
-  org.nlogo.core.{ LogoList, Model, model },
-    model.{ DummyXML, Element },
-      DummyXML._
+  org.nlogo.core.{ LogoList, Model }
+
+import
+  org.nlogo.xmllib.{ DummyXml, Element, ScalaXmlElement, ScalaXmlElementFactory },
+    DummyXml._
 
 import
   org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet, SteppedValueSet }

@@ -7,7 +7,7 @@ object NetLogoBuild {
   def cclArtifacts(path: String): String =
     s"http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/$path"
 
-  val autogenRoot = taskKey[File]("source root for autogeneration files")
+  val autogenRoot = settingKey[File]("source root for autogeneration files")
 
   val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
 

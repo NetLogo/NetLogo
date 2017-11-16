@@ -4,7 +4,8 @@ package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, Tag }
 
-import org.nlogo.api.{ LogoException, ModelCreator, WorldDimensions3D }
+import org.nlogo.core.WorldDimensions3D
+import org.nlogo.api.{ LogoException, ModelCreator }
 import org.nlogo.util.{ ThreeDTag, TwoDTag }
 import org.nlogo.fileformat
 

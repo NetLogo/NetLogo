@@ -2,9 +2,9 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Dialect, Program, WorldDimensions }
+import org.nlogo.core.{ AgentKind, Dialect, Program, WorldDimensions, WorldDimensions3D }
 import org.nlogo.api.{ AgentException, Color, ImporterUser, NetLogoThreeDDialect,
-  WorldDimensionException, WorldDimensions3D }
+  WorldDimensionException }
 
 import java.lang.{ Double => JDouble }
 

@@ -3,13 +3,14 @@
     <stepLimit>1600</stepLimit>
     <setup>setup</setup>
     <go>go</go>
-    <valueSets>
-      <enumeratedValueSet variable="world-size">
+    <metrics></metrics>
+    <cartesianProduct>
+      <discreteValues variable="world-size">
         <number>20</number>
         <number>30</number>
         <number>40</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="exchange-rate-exponent">
+      </discreteValues>
+      <discreteValues variable="exchange-rate-exponent">
         <number>-6</number>
         <number>-5.5</number>
         <number>-5</number>
@@ -22,26 +23,27 @@
         <number>-2.5</number>
         <number>-2</number>
         <number>-1.5</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="selection-rate">
+      </discreteValues>
+      <discreteValues variable="selection-rate">
         <number>1</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="reproduction-rate">
+      </discreteValues>
+      <discreteValues variable="reproduction-rate">
         <number>1</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
   <experiment name="experiment" repetitions="50" runMetricsEveryStep="false">
     <stepLimit>1601</stepLimit>
     <setup>setup</setup>
     <go>go</go>
-    <valueSets>
-      <enumeratedValueSet variable="world-size">
+    <metrics></metrics>
+    <cartesianProduct>
+      <discreteValues variable="world-size">
         <number>20</number>
         <number>30</number>
         <number>40</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="exchange-rate-exponent">
+      </discreteValues>
+      <discreteValues variable="exchange-rate-exponent">
         <number>-6</number>
         <number>-5.5</number>
         <number>-5</number>
@@ -54,13 +56,13 @@
         <number>-2.5</number>
         <number>-2</number>
         <number>-1.5</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="selection-rate">
+      </discreteValues>
+      <discreteValues variable="selection-rate">
         <number>1</number>
-      </enumeratedValueSet>
-      <enumeratedValueSet variable="reproduction-rate">
+      </discreteValues>
+      <discreteValues variable="reproduction-rate">
         <number>1</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
 </experiments>

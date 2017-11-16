@@ -36,7 +36,7 @@ class _resizeworld extends Command {
         oldMinY != newMinY || oldMaxY != newMaxY ||
         oldMinZ != newMinZ || oldMaxZ != newMaxZ) {
       val dimensions =
-        new org.nlogo.api.WorldDimensions3D(newMinX, newMaxX,
+        new org.nlogo.core.WorldDimensions3D(newMinX, newMaxX,
                                             newMinY, newMaxY,
                                             newMinZ, newMaxZ,
                                             world.patchSize);

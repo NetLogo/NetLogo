@@ -4,8 +4,8 @@ package org.nlogo.fileformat
 
 import org.scalatest.FunSuite
 
-import org.nlogo.core.{ Model, View }
-import org.nlogo.api.{ TwoDVersion, ThreeDVersion, WorldDimensions3D }
+import org.nlogo.core.{ Model, View, WorldDimensions3D }
+import org.nlogo.api.{ TwoDVersion, ThreeDVersion }
 
 class VersionDetectorTest extends FunSuite {
   val loader = basicLoader

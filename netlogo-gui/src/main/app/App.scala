@@ -14,7 +14,8 @@ import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, Dialect, Femto, I18N }
-import org.nlogo.fileformat, fileformat.ScalaXmlElementFactory
+import org.nlogo.fileformat
+import org.nlogo.xmllib.ScalaXmlElementFactory
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{ CompilerFlags, Optimizations => NvmOptimizations,
   PresentationCompilerInterface }

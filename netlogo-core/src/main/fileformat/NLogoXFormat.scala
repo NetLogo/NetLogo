@@ -17,11 +17,12 @@ import
   cats.data.Validated.{ Invalid, Valid }
 
 import
-  org.nlogo.{ core, api },
+  org.nlogo.{ core, api, xmllib },
     core.{ model, I18N, Model, Shape, Widget },
-      model.{ Element, ElementFactory, LinkShapeXml, Text, VectorShapeXml, WidgetXml },
+      model.{ LinkShapeXml, VectorShapeXml, WidgetXml, XmlShape },
       Shape.{ LinkShape, VectorShape },
-    api.{ FileIO, TwoDVersion }
+    api.{ FileIO, TwoDVersion },
+    xmllib.{ Element, ElementFactory, ScalaXmlElement, Text }
 
 import
   org.nlogo.api.{ ComponentSerialization, ModelFormat }
@@ -130,7 +131,7 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
     val componentName = "org.nlogo.modelsection.linkshapes"
     override def addDefault = ((m: Model) => m.copy(linkShapes = Model.defaultLinkShapes.toSeq))
     def serialize(m: Model): Section = factory.newElement("linkShapes")
-      .withElementList(m.linkShapes.map(s => LinkShapeXml.write(s, factory)))
+      .withElementList(m.linkShapes.map(s => LinkShapeXml.write(XmlShape.coerceLinkShape(s), factory)))
       .build
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(shapes: Section) = { (m: Model) =>
@@ -155,7 +156,7 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
     override def addDefault = _.copy(turtleShapes = Model.defaultShapes)
     def serialize(m: Model): Section =
       factory.newElement("shapes")
-        .withElementList(m.turtleShapes.map(s => VectorShapeXml.write(s, factory)))
+        .withElementList(m.turtleShapes.map(s => VectorShapeXml.write(XmlShape.coerceVectorShape(s), factory)))
         .build
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(shapes: Section) = { (m: Model) =>
@@ -187,7 +188,9 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
       "previewCommands" -> "org.nlogo.modelsection.previewcommands",
       "experiments"     -> "org.nlogo.modelsection.behaviorspace",
       "systemDynamics"  -> "org.nlogo.modelsection.systemdynamics",
-      "hubnet"          -> "org.nlogo.modelsection.hubnetclient"
+      "hubnet"          -> "org.nlogo.modelsection.hubnetclient",
+      "modelInfo"       -> "org.nlogo.modelsection.modelinfo",
+      "modelSettings"   -> "org.nlogo.modelsection.modelsettings"
     )
 
   def sections(location: URI): Try[Map[String,Section]] =

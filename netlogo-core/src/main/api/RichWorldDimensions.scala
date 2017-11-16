@@ -2,33 +2,33 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.WorldDimensions
+import org.nlogo.core.{ WorldDimensions, WorldDimensions3D => CoreWorldDimensions3D }
 
 object RichWorldDimensions {
   implicit class WorldDimensionsEnriched(w: WorldDimensions) {
     def defaultMinPzcor =
       w match {
-        case w3d: WorldDimensions3D => w3d.minPzcor
+        case w3d: CoreWorldDimensions3D => w3d.minPzcor
         case w: WorldDimensions => 0
       }
 
     def defaultMaxPzcor =
       w match {
-        case w3d: WorldDimensions3D => w3d.maxPzcor
+        case w3d: CoreWorldDimensions3D => w3d.maxPzcor
         case w: WorldDimensions => 0
       }
 
     def defaultWrappingInZ =
       w match {
-        case w3d: WorldDimensions3D => w3d.wrappingAllowedInZ
+        case w3d: CoreWorldDimensions3D => w3d.wrappingAllowedInZ
         case w: WorldDimensions => false
       }
 
-    def to3D: WorldDimensions3D =
+    def to3D: CoreWorldDimensions3D =
       w match {
-        case w3d: WorldDimensions3D => w3d
+        case w3d: CoreWorldDimensions3D => w3d
         case w: WorldDimensions =>
-          WorldDimensions3D(w.minPxcor, w.maxPxcor, w.minPycor, w.maxPycor, 0, 0, w.patchSize,
+          CoreWorldDimensions3D(w.minPxcor, w.maxPxcor, w.minPycor, w.maxPycor, 0, 0, w.patchSize,
             w.wrappingAllowedInX, w.wrappingAllowedInY, true)
       }
 
@@ -47,8 +47,11 @@ object RichWorldDimensions {
       wrappingAllowedInY: Boolean = w.wrappingAllowedInY,
       wrappingAllowedInZ: Boolean = defaultWrappingInZ) = {
         w match {
-          case w3d: WorldDimensions3D =>
-            new WorldDimensions3D(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, patchSize, wrappingAllowedInX, wrappingAllowedInY, wrappingAllowedInZ)
+          case w3d: CoreWorldDimensions3D =>
+            new CoreWorldDimensions3D(minPxcor, maxPxcor,
+              minPycor, maxPycor,
+              minPzcor, maxPzcor, patchSize,
+              wrappingAllowedInX, wrappingAllowedInY, wrappingAllowedInZ)
           case w: WorldDimensions =>
             w.copy(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrappingAllowedInY, wrappingAllowedInY)
         }

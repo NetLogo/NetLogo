@@ -6,8 +6,10 @@ import
   cats.data.Validated.{ Invalid, Valid }
 
 import
-  org.nlogo.core.{ model, Model },
-    model.ElementFactory
+  org.nlogo.core.Model
+
+import
+  org.nlogo.xmllib.ElementFactory
 
 import
   org.nlogo.api.{ ComponentSerialization, ModelSettings }

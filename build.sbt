@@ -110,7 +110,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(Docs.settings: _*).
   settings(publicationSettings("NetLogo-JVM"): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
-  settings(XmlReaderGenerator.bspaceSettings: _*).
+  settings(XmlReaderGenerator.additionalSectionsSettings: _*).
   settings(flexmarkDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -194,7 +194,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(includeInPackaging(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(Dump.settings: _*).
-  settings(XmlReaderGenerator.bspaceSettings: _*).
+  settings(XmlReaderGenerator.additionalSectionsSettings: _*).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
@@ -303,10 +303,12 @@ lazy val parser = CrossProject("parser", file("."),
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
           "org.scala-lang.modules"   %%%! "scala-parser-combinators" % "1.0.5",
+          "org.typelevel"  %%%! "cats-core" % "1.0.0-MF",
+          "org.nlogo" %%%! "xml-lib" % "0.0.1",
+          "org.typelevel" %%%! "cats-core" % "1.0.0-MF",
           "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
-          // scalatest doesn't yet play nice with scalacheck 1.13.0
           "org.scalacheck" %%%! "scalacheck" % "1.13.4" % "test",
-          "org.typelevel"  %%%! "cats-core" % "1.0.0-MF"
+          "org.nlogo" %%%! "xml-lib" % "0.0.1" % "test" classifier "tests"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
@@ -314,8 +316,11 @@ lazy val parser = CrossProject("parser", file("."),
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5",
-      libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.0-MF"
+      libraryDependencies ++=
+        Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5",
+          "org.typelevel" %% "cats-core" % "1.0.0-MF",
+          "org.nlogo" %% "xml-lib" % "0.0.1",
+          "org.nlogo" %% "xml-lib" % "0.0.1" % "test" classifier "tests")
     )
 
 lazy val parserJVM = parser.jvm

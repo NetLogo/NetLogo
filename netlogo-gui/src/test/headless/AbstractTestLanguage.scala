@@ -7,8 +7,9 @@ import org.scalatest.Tag
 
 import org.nlogo.agent.CompilationManagement
 import org.nlogo.api.{Equality, JobOwner, LogoException, NetLogoLegacyDialect,
-  NetLogoThreeDDialect, TwoDVersion, ThreeDVersion, Version, WorldDimensions3D }
-import org.nlogo.core.{ AgentKind, CompilerException, Model, Program, WorldDimensions }
+  NetLogoThreeDDialect, TwoDVersion, ThreeDVersion, Version }
+import org.nlogo.core.{ AgentKind, CompilerException, Model, Program,
+  WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ CompilerFlags, PresentationCompilerInterface, Optimizations }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.headless.test.{ LanguageTest, NormalMode, RunMode, TestMode }

@@ -3,7 +3,10 @@
 package org.nlogo.fileformat
 
 import
-  org.nlogo.core.{ Model, model }, model.ElementFactory
+  org.nlogo.core.Model
+
+import
+  org.nlogo.xmllib.ElementFactory
 
 import
   org.nlogo.api.{ ComponentSerialization, LabProtocol }
@@ -16,12 +19,12 @@ class NLogoXLabFormat(val factory: ElementFactory)
   with NLogoXBaseReader
   with LabFormat {
     override def deserialize(s: NLogoXFormat.Section): Model => Try[Model] = { (m: Model) =>
-      parseChildren(s, LabProtocolXml.read _)
+      parseChildren(s, ExperimentXml.read _)
         .map(protocols => m.withOptionalSection(componentName, Some(protocols), Seq.empty[LabProtocol]))
     }
 
   def serialize(m: Model): NLogoXFormat.Section =
     toSeqElement("experiments",
       m.optionalSectionValue[Seq[LabProtocol]](componentName).getOrElse(Seq()),
-      (p: LabProtocol) => LabProtocolXml.write(p, factory))
+      (p: LabProtocol) => ExperimentXml.write(p, factory))
 }

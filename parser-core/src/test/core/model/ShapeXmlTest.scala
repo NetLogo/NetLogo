@@ -3,19 +3,23 @@
 package org.nlogo.core.model
 
 import
-  org.nlogo.core.{ RgbColor, Shape }, Shape.{ LinkShape, VectorShape }
+  org.nlogo.core.{ RgbColor, Shape },
+    Shape.{ LinkShape, VectorShape => CoreVectorShape }
 
 import
-  org.scalatest.FunSuite
+  org.nlogo.xmllib.{ DummyXml, Element, XmlReader },
+    DummyXml._
+
+import
+  org.scalatest.{ FunSuite, Matchers },
+    Matchers._
 
 object ShapeXmlTest {
-  import DummyXML._
-
-  val emptyTurtleXml = Elem("turtleShape",
+  val emptyTurtleXml = Elem("vectorShape",
     Seq(Attr("name", "default"), Attr("rotatable", "true"), Attr("editableColorIndex", "0")),
     Seq(Elem("elements", Seq(), Seq())))
 
-  val emptyTurtleShape = TurtleShape("default", true, 0, Seq())
+  val emptyTurtleShape = VectorShape("default", true, 0, Nil)
 
   val circle = CircleElem(RgbColor(1, 2, 3), true, false, 5, 10, 20)
   val rectangle = RectangleElem(RgbColor(1, 2, 3), true, false, 5, 10, 20, 40)
@@ -49,14 +53,15 @@ object ShapeXmlTest {
   val rectTurtleXml = xmlWith(rectangleXml)
 
   val multiShapeTurtle =
-    emptyTurtleShape.copy(elements = Seq(circle, line, polygon, rectangle))
+    emptyTurtleShape.copy(elements = List(circle, line, polygon, rectangle))
 
   val multiShapeTurtleXml =
     emptyTurtleXml.copy(children = Seq(Elem("elements", Seq(), Seq(circleXml, lineXml, polygonXml, rectangleXml))))
 
   val otherLineTurtle = {
+    import org.nlogo.core.ShapeParser.{ VectorShape => OtherVectorShape }
     import org.nlogo.core.ShapeParser._
-    VectorShape("default", true, 0, Line(RgbColor(1, 2, 3), false, (5, 10), (20, 40)))
+    OtherVectorShape("default", true, 0, Line(RgbColor(1, 2, 3), false, (5, 10), (20, 40)))
   }
 
   // offset is typically one of { -0.2, 0.0, 0.2 }
@@ -76,35 +81,34 @@ object ShapeXmlTest {
   val linkShape =
     ParsedLinkShape("foo", 0, Seq(linkLine(-0.2), linkLine(0.0), linkLine(0.2)), rectTurtle)
 
-  def shapeWith(e: XmlElement, t: TurtleShape = emptyTurtleShape): TurtleShape =
+  def shapeWith(e: XmlShapeElement, t: VectorShape = emptyTurtleShape): VectorShape =
     t.copy(elements = t.elements :+ e)
 
   def xmlWith(e: Elem): Elem =
     emptyTurtleXml.copy(children = Seq(Elem("elements", Seq(), Seq(e))))
 }
 
-class ShapeXmlTest extends FunSuite {
-  import DummyXML._
+class ShapeXmlTest extends FunSuite with XmlEquality {
   import ShapeXmlTest._
 
-  def readTurtleFromXml(x: Elem): VectorShape =
+  def readTurtleFromXml(x: Elem): CoreVectorShape =
     VectorShapeXml.read(x).toOption.get
 
   def readLinkFromXml(x: Elem): LinkShape =
     LinkShapeXml.read(x).toOption.get
 
-  def writeTurtleToXml(s: VectorShape): Element =
-    VectorShapeXml.write(s, Factory)
+  def writeTurtleToXml(s: CoreVectorShape): Element =
+    VectorShapeXml.write(XmlShape.coerceVectorShape(s), Factory)
 
   def writeLinkToXml(s: LinkShape): Element =
-    LinkShapeXml.write(s, Factory)
+    LinkShapeXml.write(XmlShape.coerceLinkShape(s), Factory)
 
   test("reads empty turtle shape") {
     assertResult(emptyTurtleShape)(readTurtleFromXml(emptyTurtleXml))
   }
 
   test("writes empty turtle shape") {
-    assertResult(emptyTurtleXml)(writeTurtleToXml(emptyTurtleShape))
+    writeTurtleToXml(emptyTurtleShape) should beXmlEqualTo (emptyTurtleXml)
   }
 
   test("reads turtle shape with circle") {
@@ -112,7 +116,7 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes turtle shape with circle") {
-    assertResult(circleTurtleXml)(writeTurtleToXml(circleTurtle))
+    writeTurtleToXml(circleTurtle) should beXmlEqualTo (circleTurtleXml)
   }
 
   test("reads turtle shape with rectangle") {
@@ -120,7 +124,7 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes turtle shape with rectangle") {
-    assertResult(rectTurtleXml)(writeTurtleToXml(rectTurtle))
+    writeTurtleToXml(rectTurtle) should beXmlEqualTo (rectTurtleXml)
   }
 
   test("reads turtle shape with line") {
@@ -128,7 +132,7 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes turtle shape with line") {
-    assertResult(lineTurtleXml)(writeTurtleToXml(lineTurtle))
+    writeTurtleToXml(lineTurtle) should beXmlEqualTo (lineTurtleXml)
   }
 
   test("reads turtle shape with polygon") {
@@ -136,7 +140,7 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes turtle shape with polygon") {
-    assertResult(polyTurtleXml)(writeTurtleToXml(polyTurtle))
+    writeTurtleToXml(polyTurtle) should beXmlEqualTo (polyTurtleXml)
   }
 
   test("reads turtle shape with multiple shapes") {
@@ -144,7 +148,7 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes turtle shape with multiple shapes") {
-    assertResult(multiShapeTurtleXml)(writeTurtleToXml(multiShapeTurtle))
+    writeTurtleToXml(multiShapeTurtle) should beXmlEqualTo (multiShapeTurtleXml)
   }
 
   test("reads link shapes") {
@@ -152,10 +156,10 @@ class ShapeXmlTest extends FunSuite {
   }
 
   test("writes link shapes") {
-    assertResult(linkShapeXml)(writeLinkToXml(linkShape))
+    writeLinkToXml(linkShape) should beXmlEqualTo (linkShapeXml)
   }
 
   test("writes turtle shape for other types of TurtleShapes") {
-    assertResult(lineTurtleXml)(writeTurtleToXml(otherLineTurtle))
+    writeTurtleToXml(otherLineTurtle) should beXmlEqualTo (lineTurtleXml)
   }
 }

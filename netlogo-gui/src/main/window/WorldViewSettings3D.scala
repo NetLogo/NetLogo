@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.api.{ RichWorldDimensions, WorldDimensions3D, WorldResizer },
+import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ RichWorldDimensions, WorldResizer },
   RichWorldDimensions._
 import org.nlogo.agent.World3D
 

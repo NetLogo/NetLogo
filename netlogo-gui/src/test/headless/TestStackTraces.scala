@@ -25,8 +25,8 @@ the stack traces, not the results.
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{Argument, Context, Command, ExtensionException,
-  LogoException, ThreeDVersion, TwoDVersion, WorldDimensions3D, Version}
-import org.nlogo.core.Syntax
+  LogoException, ThreeDVersion, TwoDVersion, Version}
+import org.nlogo.core.{ Syntax, WorldDimensions3D }
 import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
 import org.nlogo.core.{WorldDimensions, View, Model}
 

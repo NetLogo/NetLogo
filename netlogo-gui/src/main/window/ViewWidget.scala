@@ -7,9 +7,9 @@ import java.awt.{ Component, Dimension, Font, Point, Rectangle }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ JPopupMenu, BorderFactory }
 
-import org.nlogo.api.{ Approximate, WorldDimensions3D }
+import org.nlogo.api.Approximate
 import org.nlogo.awt.{ Fonts => NlogoFonts }
-import org.nlogo.core.{ View => CoreView, WorldDimensions }
+import org.nlogo.core.{ View => CoreView, WorldDimensions, WorldDimensions3D }
 import org.nlogo.window.MouseMode._
 
 object ViewWidget {

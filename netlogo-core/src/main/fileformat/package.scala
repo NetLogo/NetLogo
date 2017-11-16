@@ -7,6 +7,7 @@ import java.nio.file.Path
 import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, Version }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
 import org.nlogo.core.model.{ WidgetReader, HubNetWidgetReader }
+import org.nlogo.xmllib.ScalaXmlElementFactory
 
 package object fileformat {
   type ModelConversion = (Model, Path) => ConversionResult
@@ -47,6 +48,7 @@ package object fileformat {
   def basicLoader: ConfigurableModelLoader =
     new ConfigurableModelLoader()
       .addFormat[NLogoXFormat.Section, NLogoXFormat](new NLogoXFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelInfo(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXLabFormat(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelSettings(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXPreviewCommandsFormat(ScalaXmlElementFactory))
@@ -57,6 +59,7 @@ package object fileformat {
   def standardLoader(literalParser: LiteralParser) = {
     new ConfigurableModelLoader()
       .addFormat[NLogoXFormat.Section, NLogoXFormat](new NLogoXFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelInfo(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXLabFormat(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelSettings(ScalaXmlElementFactory))
       .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXPreviewCommandsFormat(ScalaXmlElementFactory))

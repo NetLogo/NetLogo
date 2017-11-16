@@ -12,10 +12,11 @@ import org.nlogo.app.App
 import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
-import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat, NLogoXFormat, ScalaXmlElementFactory }
+import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat, NLogoXFormat }
 import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.sdm.{ NLogoSDMFormat, NLogoXSDMFormat, SDMAutoConvertable }
+import org.nlogo.xmllib.ScalaXmlElementFactory
 
 /**
  *

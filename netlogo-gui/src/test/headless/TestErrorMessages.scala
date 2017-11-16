@@ -6,8 +6,7 @@ package org.nlogo.headless
 // they go beyond the capabilities of the txt-based stuff.  (In the long run, perhaps
 // that framework should be extended so these tests could be done in it.)  - ST 3/18/08, 8/21/13
 
-import org.nlogo.core.{ CompilerException, Model, View }
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.core.{ CompilerException, Model, View, WorldDimensions3D }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends AbstractTestLanguage {

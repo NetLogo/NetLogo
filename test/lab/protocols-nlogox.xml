@@ -7,14 +7,14 @@
     <metrics>
       <metric>counter</metric>
     </metrics>
-    <valueSets>
-      <enumeratedValueSet variable="param1">
+    <cartesianProduct>
+      <discreteValues variable="param1">
         <number>1</number>
         <number>2</number>
         <number>3</number>
-      </enumeratedValueSet>
-      <steppedValueSet variable="param2" first="1" step="1" last="5"/>
-    </valueSets>
+      </discreteValues>
+      <range variable="param2" first="1" step="1" last="5"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testBehaviorSpace2" repetitions="2" runMetricsEveryStep="false">
     <stepLimit>2</stepLimit>
@@ -24,14 +24,14 @@
     <metrics>
       <metric>counter</metric>
     </metrics>
-    <valueSets>
-      <enumeratedValueSet variable="param1">
+    <cartesianProduct>
+      <discreteValues variable="param1">
         <number>1</number>
         <number>2</number>
         <number>3</number>
-      </enumeratedValueSet>
-      <steppedValueSet variable="param2" first="1" step="1" last="5"/>
-    </valueSets>
+      </discreteValues>
+      <range variable="param2" first="1" step="1" last="5"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testMultipleMetrics" >
     <stepLimit>4</stepLimit>
@@ -43,39 +43,43 @@
       <metric>counter / 2</metric>
       <metric>counter / 10</metric>
     </metrics>
-    <valueSets>
-      <enumeratedValueSet variable="param1">
+    <cartesianProduct>
+      <discreteValues variable="param1">
         <number>1</number>
         <number>2</number>
         <number>3</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
   <experiment name="testNoMetrics1" >
     <stepLimit>4</stepLimit>
     <setup>set counter 0</setup>
     <go>set counter counter + 1</go>
     <exitCondition>counter &gt;= param1</exitCondition>
-    <valueSets>
-      <enumeratedValueSet variable="param1">
+    <metrics>
+    </metrics>
+    <cartesianProduct>
+      <discreteValues variable="param1">
         <number>1</number>
         <number>2</number>
         <number>3</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
   <experiment name="testNoMetrics2" >
     <stepLimit>4</stepLimit>
     <setup>set counter 0</setup>
     <go>set counter counter + 1</go>
     <exitCondition>counter &gt;= param1</exitCondition>
-    <valueSets>
-      <enumeratedValueSet variable="param1">
+    <metrics>
+    </metrics>
+    <cartesianProduct>
+      <discreteValues variable="param1">
         <number>1</number>
         <number>2</number>
         <number>3</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
   <experiment name="testImmediateExit" >
     <stepLimit>4</stepLimit>
@@ -85,6 +89,7 @@
     <metrics>
       <metric>5</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="testCarryover" repetitions="4">
     <stepLimit>5</stepLimit>
@@ -92,6 +97,7 @@
     <metrics>
       <metric>foo</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="experiment1" repetitions="5">
     <stepLimit>50</stepLimit>
@@ -104,20 +110,20 @@
     <metrics>
       <metric>count patches with [living?]</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="bgcolor" first="0" step="1" last="100"/>
-      <enumeratedValueSet variable="fgcolor">
+    <cartesianProduct>
+      <range variable="bgcolor" first="0" step="1" last="100"/>
+      <discreteValues variable="fgcolor">
         <number>133</number>
         <number>134</number>
         <number>135</number>
         <number>136</number>
-      </enumeratedValueSet>
-      <steppedValueSet variable="foobarbaz" first="0" step="1" last="100"/>
-      <enumeratedValueSet variable="foo?">
+      </discreteValues>
+      <range variable="foobarbaz" first="0" step="1" last="100"/>
+      <discreteValues variable="foo?">
         <boolean>true</boolean>
         <boolean>false</boolean>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
   <experiment name="experiment2" repetitions="6" runMetricsEveryStep="false">
     <stepLimit>50</stepLimit>
@@ -127,6 +133,7 @@
       <metric>count patches with [living?]</metric>
       <metric>count patches with [not living?]</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="experiment3" repetitions="9">
     <stepLimit>11</stepLimit>
@@ -136,48 +143,52 @@
       <metric>count patches with [living?]</metric>
       <metric>count patches with [not living?]</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="experiment4" repetitions="9">
     <setup>setup-random</setup>
     <go>go</go>
+    <metrics>
+    </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld1"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="max-pxcor" first="0" step="1" last="5"/>
-      <steppedValueSet variable="max-pycor" first="0" step="1" last="5"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="max-pxcor" first="0" step="1" last="5"/>
+      <range variable="max-pycor" first="0" step="1" last="5"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld2"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
-      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="world-width" first="1" step="2" last="11"/>
+      <range variable="world-height" first="1" step="2" last="11"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld3"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="world-width" first="2" step="1" last="5"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="world-width" first="2" step="1" last="5"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testRandomSeed" repetitions="2">
     <stepLimit>2</stepLimit>
     <metrics>
       <metric>random 1000</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="random-seed" first="0" step="1" last="2"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="random-seed" first="0" step="1" last="2"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testExportGraphics"  runMetricsEveryStep="false">
     <stepLimit>20</stepLimit>
@@ -186,16 +197,23 @@
     <metrics>
       <metric>random 1000</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="testStopping1"  runMetricsEveryStep="false">
     <stepLimit>10</stepLimit>
     <setup>set x 0</setup>
     <go>if x = 5 [ stop ] set x x + 1</go>
+    <metrics>
+    </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="testStopping2"  runMetricsEveryStep="false">
     <stepLimit>10</stepLimit>
     <setup>set x 0</setup>
     <go>go</go>
+    <metrics>
+    </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="badAtBeginning"  runMetricsEveryStep="false">
     <stepLimit>5</stepLimit>
@@ -204,6 +222,7 @@
     <metrics>
       <metric>bad-divide</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="metricsLocalRandomness" >
     <stepLimit>2</stepLimit>
@@ -212,6 +231,7 @@
     <metrics>
       <metric>random-float 1.0</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="exitConditionLocalRandomness" >
     <stepLimit>3</stepLimit>
@@ -221,39 +241,40 @@
     <metrics>
       <metric>random-float 1.0</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld13d"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="max-pxcor" first="0" step="1" last="5"/>
-      <steppedValueSet variable="max-pycor" first="0" step="1" last="5"/>
-      <steppedValueSet variable="max-pzcor" first="0" step="1" last="5"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="max-pxcor" first="0" step="1" last="5"/>
+      <range variable="max-pycor" first="0" step="1" last="5"/>
+      <range variable="max-pzcor" first="0" step="1" last="5"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
-      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
-      <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="world-width" first="1" step="2" last="11"/>
+      <range variable="world-height" first="1" step="2" last="11"/>
+      <range variable="world-depth" first="1" step="2" last="11"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
     <exitCondition>true</exitCondition>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <valueSets>
-      <steppedValueSet variable="world-width" first="1" step="2" last="11"/>
-      <steppedValueSet variable="world-height" first="1" step="2" last="11"/>
-      <steppedValueSet variable="world-depth" first="1" step="2" last="11"/>
-    </valueSets>
+    <cartesianProduct>
+      <range variable="world-width" first="1" step="2" last="11"/>
+      <range variable="world-height" first="1" step="2" last="11"/>
+      <range variable="world-depth" first="1" step="2" last="11"/>
+    </cartesianProduct>
   </experiment>
   <experiment name="wait1" repetitions="4">
     <stepLimit>2</stepLimit>
@@ -262,6 +283,7 @@
     <metrics>
       <metric>round timer</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="metricGoBoom" repetitions="2">
     <stepLimit>2</stepLimit>
@@ -270,6 +292,7 @@
     <metrics>
       <metric>__boom</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="metricGoBoom2" repetitions="100">
     <stepLimit>20</stepLimit>
@@ -278,6 +301,7 @@
     <metrics>
       <metric>mean [who] of turtles</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="goCommandsGoBoom" repetitions="2">
     <stepLimit>2</stepLimit>
@@ -286,6 +310,7 @@
     <metrics>
       <metric>ticks</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="setupCommandsGoBoom" repetitions="2">
     <stepLimit>2</stepLimit>
@@ -294,6 +319,7 @@
     <metrics>
       <metric>ticks</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="metricsWithSideEffects" >
     <stepLimit>2</stepLimit>
@@ -302,6 +328,7 @@
     <metrics>
       <metric>metric</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
   <experiment name="runNumber" repetitions="3">
     <stepLimit>2</stepLimit>
@@ -310,5 +337,6 @@
     <metrics>
       <metric>behaviorspace-run-number</metric>
     </metrics>
+    <cartesianProduct></cartesianProduct>
   </experiment>
 </experiments>

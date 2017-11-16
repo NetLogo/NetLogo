@@ -4,10 +4,15 @@ package org.nlogo.core.model
 
 import org.nlogo.core.{ Button, Monitor, View, Widget, WorldDimensions }
 
-import org.scalatest.FunSuite
+import
+  org.nlogo.xmllib.{ Element, DummyXml },
+    DummyXml._
+
+import
+  org.scalatest.{ FunSuite, Matchers },
+    Matchers._
 
 object HubNetWidgetXmlTest {
-  import DummyXML._
   import WidgetXmlTest.dimensions
 
   val buttonXml = Elem("button",
@@ -44,8 +49,8 @@ object HubNetWidgetXmlTest {
 
 }
 
-class HubNetWidgetXmlTest extends FunSuite {
-  import DummyXML._
+class HubNetWidgetXmlTest extends FunSuite with XmlEquality {
+  import DummyXml._
 
   def readToWidget(xml: Element): Widget =
     HubNetWidgetXml.read(xml).toOption.get
@@ -61,7 +66,7 @@ class HubNetWidgetXmlTest extends FunSuite {
     }
 
     test(s"writes $name to xml") {
-      assertResult(xml)(writeToXml(widget))
+      writeToXml(widget) should beXmlEqualTo (xml)
     }
   }
 }

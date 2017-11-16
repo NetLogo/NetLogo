@@ -25,6 +25,9 @@ case class Model(code: String = "",
   def view: View = widgets.collectFirst{case (w: View) => w}.get
   def plots: Seq[Plot] = widgets.collect{case (w: Plot) => w}
 
+  def modelInfo =
+    optionalSectionValue[ModelInfo](ModelInfo.sectionKey).getOrElse(ModelInfo.empty)
+
   /* true only when the value is not a default */
   def hasValueForOptionalSection(key: String): Boolean = {
     optionalSections.find(_.key == key).isDefined

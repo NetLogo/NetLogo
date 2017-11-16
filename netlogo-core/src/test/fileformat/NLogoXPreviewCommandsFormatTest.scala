@@ -3,10 +3,14 @@
 package org.nlogo.fileformat
 
 import
-  org.nlogo.core.{ model, Model },
-    model.DummyXML._
+  org.nlogo.core.Model
 
-import org.nlogo.api.PreviewCommands
+import
+  org.nlogo.xmllib.{ DummyXml, ScalaXmlElementFactory },
+    DummyXml._
+
+import
+  org.nlogo.api.PreviewCommands
 
 class NLogoXPreviewCommandsFormatTest extends NLogoXFormatTest[PreviewCommands] {
 

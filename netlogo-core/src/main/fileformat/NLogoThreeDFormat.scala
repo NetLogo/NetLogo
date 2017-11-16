@@ -2,8 +2,8 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ ModelFormat, ThreeDVersion, WorldDimensions3D }
-import org.nlogo.core.{ View, UpdateMode }
+import org.nlogo.api.{ ModelFormat, ThreeDVersion }
+import org.nlogo.core.{ View, UpdateMode, WorldDimensions3D }
 import org.nlogo.core.model.WidgetReader
 
 class NLogoThreeDFormat

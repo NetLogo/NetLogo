@@ -6,8 +6,10 @@ import
   cats.data.Validated.{ Invalid, Valid }
 
 import
-  org.nlogo.core.{ model, Model => CoreModel },
-    model.{ Element, ElementFactory, MissingElement, XmlReader }
+  org.nlogo.core.{ Model => CoreModel }
+
+import
+  org.nlogo.xmllib.{ Element, ElementFactory, MissingElement, XmlReader }
 
 import
   org.nlogo.fileformat.{ NLogoXFormat, NLogoXFormatException }
@@ -43,7 +45,7 @@ class NLogoXSDMFormat(factory: ElementFactory) extends ComponentSerialization[NL
           .map(sdmModelOpt => sdmModelOpt
             .map(sdmModel => m.withOptionalSection[Model](componentName, Some(sdmModel), sdmModel)))
           .map(_.getOrElse(m))
-      case Invalid(_: MissingElement) => Success(m)
+      case Invalid(MissingElement("jhotdraw6")) => Success(m)
       case Invalid(err) => Failure(new NLogoXFormatException(err.message))
     }
   }

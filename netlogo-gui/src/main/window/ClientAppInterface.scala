@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ CompilerServices, EditorCompiler }
+import org.nlogo.api.EditorCompiler
 
 private[nlogo] trait ClientAppInterface {
   def startup(userid: String, hostip: String,

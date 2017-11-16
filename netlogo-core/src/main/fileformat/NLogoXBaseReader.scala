@@ -3,7 +3,7 @@
 package org.nlogo.fileformat
 
 import
-  org.nlogo.core.model.{ Element, ElementFactory, ParseError }
+  org.nlogo.xmllib.{ Element, ElementFactory, ParseError }
 
 import
   cats.data.Validated

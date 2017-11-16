@@ -5,10 +5,10 @@ package org.nlogo.agent;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.WorldDimensions;
+import org.nlogo.core.WorldDimensions3D;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.JobOwner;
-import org.nlogo.api.WorldDimensions3D;
 
 import java.util.Map;
 

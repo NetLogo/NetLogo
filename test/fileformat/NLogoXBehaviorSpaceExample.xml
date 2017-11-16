@@ -6,12 +6,12 @@
     <metrics>
       <metric>burned-trees</metric>
     </metrics>
-    <valueSets>
-      <enumeratedValueSet variable="density">
+    <cartesianProduct>
+      <discreteValues variable="density">
         <number>40</number>
         <number>0.1</number>
         <number>70</number>
-      </enumeratedValueSet>
-    </valueSets>
+      </discreteValues>
+    </cartesianProduct>
   </experiment>
 </experiments>

@@ -3,8 +3,8 @@
 package org.nlogo.fileformat
 
 import org.nlogo.api.ComponentSerialization
-import org.nlogo.core.{ Model, Widget => CoreWidget }
-import org.nlogo.core.model.{ Element, ElementFactory, HubNetWidgetXml }
+import org.nlogo.core.{ model, Model, Widget => CoreWidget }, model.HubNetWidgetXml
+import org.nlogo.xmllib.{ Element, ElementFactory }
 
 class NLogoXHubNetFormat(val factory: ElementFactory)
   extends ComponentSerialization[NLogoXFormat.Section, NLogoXFormat]

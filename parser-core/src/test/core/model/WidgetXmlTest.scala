@@ -5,12 +5,16 @@ package org.nlogo.core.model
 import org.nlogo.core.{ AgentKind, Button, Chooser,
   ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
   Horizontal, InputBox, LogoList, Monitor, NumericInput, Output, Pen, Plot, Slider,
-  StringInput, Switch, TextBox, UpdateMode, View, WorldDimensions, Widget }
+  StringInput, Switch, TextBox, UpdateMode, View, Widget, WorldDimensions, WorldDimensions3D }
 
-import org.scalatest.FunSuite
+import org.nlogo.xmllib.{ DummyXml, Element, InvalidAttribute, MissingElement, MissingKeys, MissingValues, ParseError, UnknownElementType },
+  DummyXml._
+
+import
+  org.scalatest.{ FunSuite, Matchers },
+    Matchers._
 
 object WidgetXmlTest {
-  import DummyXML._
 
   val color = Attr("color", "#000000")
 
@@ -28,13 +32,54 @@ object WidgetXmlTest {
 
   private val textboxWidget = TextBox(Some("Wolf Settings"), 150, 200, 250, 300, 12, 0.0, false)
 
+
+  def viewDimensionsXml(name: String, additionalAttrs: Seq[Attr]): Elem = {
+    Elem(name,
+      additionalAttrs ++
+      Seq(
+        Attr("minPxcor", "-25"),
+        Attr("maxPxcor", "25"),
+        Attr("wrapInX", "true"),
+        Attr("minPycor", "-25"),
+        Attr("maxPycor", "25"),
+        Attr("wrapInY", "true"),
+        Attr("patchSize", "13.0")),
+      Seq())
+  }
+
+  val viewDimensions2dXml = viewDimensionsXml("dimensions", Seq())
+
+  val viewDimensions3dXml = viewDimensionsXml("dimensions3d",
+    Seq(
+      Attr("minPzcor", "-25"),
+      Attr("maxPzcor", "25"),
+      Attr("wrapInZ", "true")))
+
+  def viewXml(viewDimXml: Elem) =
+    Elem("view",
+      dimensions ++ Seq(
+        Attr("updateMode", "continuous"),
+        Attr("fontSize", "12"),
+        Attr("frameRate", "30.0"),
+        Attr("showTickCounter", "true")),
+      Seq(viewDimXml, namedText("tickCounterLabel", "ticks")))
+
+  val viewXml2d = viewXml(viewDimensions2dXml)
+  val viewXml3d = viewXml(viewDimensions3dXml)
+
+  val dimensions2d = WorldDimensions(-25, 25, -25, 25, 13.0, true, true)
+  val dimensions3d = WorldDimensions3D(-25, 25, -25, 25, -25, 25, 13.0, true, true, true)
+
+  val viewWidget2d = View(150, 200, 250, 300, dimensions2d, 12, UpdateMode.Continuous, true, Some("ticks"), 30.0)
+  val viewWidget3d = viewWidget2d.copy(dimensions = dimensions3d)
+
   val widgetXmlPairs = Map[String, (Element, Widget)](
-    "textbox" -> (textboxXml -> textboxWidget)
+    "textbox" -> (textboxXml -> textboxWidget),
+    "view2d" -> (viewXml2d -> viewWidget2d)
   )
 }
 
-class WidgetXmlTest extends FunSuite {
-  import DummyXML._
+class WidgetXmlTest extends FunSuite with XmlEquality {
   import WidgetXmlTest._
 
   def readToWidget(xml: Element): Widget =
@@ -56,7 +101,7 @@ class WidgetXmlTest extends FunSuite {
   }
 
   test("writes TextBox widgets to xml") {
-    assertResult(textboxXml)(writeToXml(textboxWidget))
+    textboxXml should beXmlEqualTo (writeToXml(textboxWidget))
   }
 
   test("color reader correctly identifies colors") {
@@ -106,7 +151,7 @@ class WidgetXmlTest extends FunSuite {
     val xml = Elem("switch",
       dimensions :+ Attr("isOn", "false"),
       Seq(namedText("variable", "foo")))
-    assertResult(xml)(writeToXml(Switch(Some("foo"), 150, 200, 250, 300, Some("foo"), false)))
+    writeToXml(Switch(Some("foo"), 150, 200, 250, 300, Some("foo"), false)) should beXmlEqualTo (xml)
   }
 
   test("reads switch widgets with empty variable name from xml") {
@@ -120,7 +165,7 @@ class WidgetXmlTest extends FunSuite {
     val xml = Elem("switch",
       dimensions :+ Attr("isOn", "false"),
       Seq())
-    assertResult(xml)(writeToXml(Switch(None, 150, 200, 250, 300, None, false)))
+    writeToXml(Switch(None, 150, 200, 250, 300, None, false)) should beXmlEqualTo (xml)
   }
 
   test("reads monitor widgets from xml") {
@@ -139,10 +184,10 @@ class WidgetXmlTest extends FunSuite {
       dimensions ++ Seq(fontSize, Attr("precision", "3")),
       Seq(namedText("source", "5 + 10"),
         namedText("display", "this is the monitor")))
-    assertResult(xml)(writeToXml(
+    writeToXml(
       Monitor(Some("5 + 10"),
         150, 200, 250, 300,
-        Some("this is the monitor"), 3, 12)))
+        Some("this is the monitor"), 3, 12)) should beXmlEqualTo (xml)
   }
 
   test("reads button widgets from xml") {
@@ -169,11 +214,11 @@ class WidgetXmlTest extends FunSuite {
       // doesn't write out agentKind because Observer is default
       Seq(namedText("source", "go 100"),
         namedText("display", "go")))
-    assertResult(xml)(writeToXml(
+    writeToXml(
       Button(
         Some("go 100"), 150, 200, 250, 300,
         Some("go"), false, AgentKind.Observer,
-        None, false)))
+        None, false)) should beXmlEqualTo (xml)
   }
 
   test("writes button widgets with actionKeys to xml") {
@@ -185,11 +230,10 @@ class WidgetXmlTest extends FunSuite {
         Attr("actionKey", "c")),
       Seq(namedText("source", "go 100"),
         namedText("display", "go")))
-    assertResult(xml)(
       writeToXml(Button(
         Some("go 100"), 150, 200, 250, 300,
         Some("go"), false, AgentKind.Observer,
-        Some('c'), false)))
+        Some('c'), false)) should beXmlEqualTo (xml)
   }
 
   test("reads button widgets without an actionKey from xml") {
@@ -229,60 +273,25 @@ class WidgetXmlTest extends FunSuite {
         namedText("step", "maximum - minimum / 10"),
         namedText("units", "Foozles"),
         namedText("variable", "foo")))
-    assertResult(xml)(
       writeToXml(
         Slider(Some("foo"), 150, 200, 250, 300, Some("foo"),
-          "0", "100", 5, "maximum - minimum / 10", Some("Foozles"), Horizontal)))
+          "0", "100", 5, "maximum - minimum / 10", Some("Foozles"), Horizontal)) should beXmlEqualTo (xml)
   }
 
   test("reads view widgets") {
-    val dimElem = Elem("dimensions",
-      Seq(
-        Attr("minPxcor", "-25"),
-        Attr("maxPxcor", "25"),
-        Attr("wrapInX", "true"),
-        Attr("minPycor", "-25"),
-        Attr("maxPycor", "25"),
-        Attr("wrapInY", "true"),
-        Attr("patchSize", "13")),
-      Seq())
-    val xml = Elem("view",
-      dimensions ++ Seq(
-        Attr("updateMode", "continuous"),
-        Attr("fontSize", "12"),
-        Attr("frameRate", "30.0"),
-        Attr("showTickCounter", "true")),
-      Seq(dimElem, namedText("tickCounterLabel", "ticks")))
-
-    val dims =
-      WorldDimensions(-25, 25, -25, 25, 13.0, true, true)
-    assertResult(View(150, 200, 250, 300, dims, 12, UpdateMode.Continuous, true, Some("ticks"), 30.0))(
-      readToWidget(xml))
+    assertResult(viewWidget2d)(readToWidget(viewXml2d))
   }
 
   test("writes view widget to xml") {
-    val dimElem = Elem("dimensions",
-      Seq(
-        Attr("patchSize", "13.0"),
-        Attr("wrapInX", "true"),
-        Attr("wrapInY", "true"),
-        Attr("minPxcor", "-25"),
-        Attr("maxPxcor", "25"),
-        Attr("minPycor", "-25"),
-        Attr("maxPycor", "25")),
-      Seq())
-    val xml = Elem("view",
-      dimensions ++ Seq(
-        Attr("fontSize", "12"),
-        Attr("updateMode", "continuous"),
-        Attr("showTickCounter", "true"),
-        Attr("frameRate", "30.0")),
-      Seq(dimElem, namedText("tickCounterLabel", "ticks")))
+    writeToXml(viewWidget2d) should beXmlEqualTo (viewXml2d)
+  }
 
-    val dims = WorldDimensions(-25, 25, -25, 25, 13.0, true, true)
-    val view = View(150, 200, 250, 300, dims, 12, UpdateMode.Continuous, true, Some("ticks"), 30.0)
-    val actual = writeToXml(view)
-    assertResult(xml, xmlWriteHint(xml, actual))(actual)
+  test("reads view widgets with 3D dimensions") {
+    assertResult(viewWidget3d)(readToWidget(viewXml3d))
+  }
+
+  test("writes view widgets with 3D dimensions") {
+    writeToXml(viewWidget3d) should beXmlEqualTo (viewXml3d)
   }
 
   test("reads chooser widgets") {
@@ -326,15 +335,7 @@ class WidgetXmlTest extends FunSuite {
       0)
 
     val actual = writeToXml(chooser)
-    assertResult(xml, xmlWriteHint(xml, actual))(actual)
-  }
-
-  test("chooser widgets with an unavailable default choice return invalid") {
-    pending
-    val xml = Elem("chooser",
-      dimensions :+ Attr("defaultChoice", "0"),
-      Seq())
-    assertResult(InvalidAttribute(Seq("chooser"), "defaultChoice", "0"))(readToError(xml))
+    actual should beXmlEqualTo (xml)
   }
 
   test("chooser widgets with invalid choices are invalid") {
@@ -343,7 +344,7 @@ class WidgetXmlTest extends FunSuite {
       Seq(
         namedText("variable", "foo"),
         Elem("choices", Seq(), Seq(namedText("booleanChoice", "abc")))))
-    assertResult(new InvalidElement(Seq("chooser"), "booleanChoice", "abc"))(readToError(xml))
+    assertResult(MissingElement(Seq("chooser", "choices"), "booleanChoice or listChoice or numberChoice or stringChoice"))(readToError(xml))
   }
 
   test("reads string inputbox widgets") {
@@ -468,7 +469,9 @@ class WidgetXmlTest extends FunSuite {
       dimensions ++ Seq(Attr("autoPlotOn", "true"), Attr("legendOn", "true"),
         Attr("xmin", "5"), Attr("xmax", "10"), Attr("ymin", "15"), Attr("ymax", "20")),
       Seq())
-    assertResult(new MissingElement(Seq("plot"), "setup"))(readToError(xml))
+    assertResult(
+      MissingValues(Seq("plot"), Seq("pens", "setup", "update").map(MissingValues.MissingElem.apply _)))(
+        readToError(xml))
   }
 
   test("returns an invalid widget parse when a widget is missing a required field") {
@@ -492,7 +495,7 @@ class WidgetXmlTest extends FunSuite {
       dimensions.tail.tail,
       Seq())
     assert(WidgetXml.read(xml).isInvalid)
-    assertResult(MissingKeys(Seq("output"), Seq("left", "top", "fontSize")))(readToError(xml))
+    assertResult(MissingKeys(Seq("output"), Seq("fontSize", "left", "top")))(readToError(xml))
   }
 
   test("returns an invalid widget parse when the widget type is unknown") {

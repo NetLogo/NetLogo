@@ -11,8 +11,10 @@ import
   org.jhotdraw.util.{ StorableInput, StorableOutput }
 
 import
-  org.nlogo.core.{ model, Model => CoreModel },
-    model.{ ElementFactory, MissingElement, XmlReader }
+  org.nlogo.core.{ Model => CoreModel }
+
+import
+  org.nlogo.xmllib.{ ElementFactory, MissingElement, XmlReader }
 
 import
   org.nlogo.fileformat.{ NLogoXFormat, NLogoXFormatException }
@@ -52,7 +54,7 @@ class NLogoXGuiSDMFormat(factory: ElementFactory)
           Try(stringsToDrawing(sdm.lines.toArray[String])
             .map(drawing => m.withOptionalSection(componentName, Some(drawing), drawing))
             .getOrElse(m))
-          case Invalid(_: MissingElement) => Success(m)
+          case Invalid(MissingElement("jhotdraw6")) => Success(m)
           case Invalid(err) => Failure(new NLogoXFormatException(err.message))
       }
   }
