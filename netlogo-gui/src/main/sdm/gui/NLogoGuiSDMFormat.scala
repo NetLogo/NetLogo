@@ -33,6 +33,7 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
   }
 
   private def drawingStrings(drawing: AggregateDrawing): Array[String] = {
+    drawing.synchronizeModel()
     if (drawing.getModel.elements.isEmpty)
       Array()
     else {

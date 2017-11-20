@@ -17,12 +17,13 @@ public strictfp class AggregateDrawing
   }
 
   public void synchronizeModel() {
+    model.elements().clear();
     FigureEnumeration figs = figures();
     while (figs.hasNextFigure()) {
       Figure fig = figs.nextFigure();
       if (fig instanceof ModelElementFigure &&
           ((ModelElementFigure) fig).getModelElement() != null) {
-        getModel().addElement(((ModelElementFigure) fig).getModelElement());
+        model.addElement(((ModelElementFigure) fig).getModelElement());
           }
     }
   }
