@@ -158,6 +158,7 @@ class AggregateModelEditor(
    * Translates the model into NetLogo code.
    */
   def toNetLogoCode: String = {
+    drawing.synchronizeModel()
     new Translator(drawing.getModel, compiler).source
   }
 
