@@ -16,3 +16,6 @@ RunResult4
 # the parens results it this confusing error message. - ST 11/12/09
 RunResult5
   runresult "3 die" => ERROR No closing parenthesis for this open parenthesis.
+
+RunResultWithComment
+  runresult "1; + 2" => 1
