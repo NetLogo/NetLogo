@@ -49,6 +49,10 @@ BreedNoDupNames
   breed [bs a]
   COMPILE> COMPILER ERROR There is already a singular breed name called A
 
+OutOfRangeWhoGivesNobody
+  breed [apples apple]
+  apple -1 => nobody
+
 HatchWithBreedsOwn
   breed [rabbits rabbit]
   rabbits-own [energy]
