@@ -8,7 +8,6 @@ object Dump {
   // e.g. dump Fire   (to dump a benchmark model)
   // e.g. dump bench  (to replace all of the benchmark model dumps in test/bench)
   // e.g. dump all    (to dump all models to tmp/dumps)
-
   lazy val dump = InputKey[Unit](
     "dump",
     "dump compiled models (dump Fire, dump bench, dump all, dump <path>)")
@@ -27,6 +26,7 @@ object Dump {
         .getMethod("main", classOf[Array[String]])
         .invoke(null, args.toArray)
         ()
-    })
+    }
+    )
 
 }

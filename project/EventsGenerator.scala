@@ -10,15 +10,18 @@ object EventsGenerator {
 
   lazy val task =
     Def.task {
-        val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-          (in: Set[File]) =>
-            Set("window", "app.common").map { pkg =>
-              events(streams.value.log.info(_), autogenRoot.value, (sourceManaged in Compile).value, pkg)
-            }
-        }
-        cachedEvents(Set(
-          autogenRoot.value / "events" / "events.txt",
-          autogenRoot.value / "events" / "warning.txt")).toSeq
+      val streamsValue = streams.value
+      val autogenRootValue = autogenRoot.value
+      val sourceManagedValue = (sourceManaged in Compile).value
+      val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+        (in: Set[File]) =>
+          Set("window", "app.common").map { pkg =>
+            events(streamsValue.log.info(_), autogenRootValue, sourceManagedValue, pkg)
+          }
+      }
+      cachedEvents(Set(
+        autogenRoot.value / "events" / "events.txt",
+        autogenRoot.value / "events" / "warning.txt")).toSeq
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {

@@ -9,8 +9,7 @@ import javax.xml.transform.stax.StAXResult
 
 import org.w3c.dom.{ Document, Element, Node }
 
-import scala.collection.mutable.Stack
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 // a brief note on this class.
@@ -23,8 +22,8 @@ object HarvestResources {
   val WiXNamespace = "http://schemas.microsoft.com/wix/2006/wi"
 
   class AuthoringVisitor(root: Path, doc: Document, directoryRefName: String, wixNode: Node, excludedFiles: Seq[String], variables: Map[String, String]) extends FileVisitor[Path] {
-    var directoryNodes: Stack[Element] = Stack()
-    var componentNodes: Stack[Element] = Stack()
+    var directoryNodes: List[Element] = Nil
+    var componentNodes: List[Element] = Nil
     var generatedUUIDs: Map[String, String] = Map()
 
     val filesFragment = doc.createElementNS(WiXNamespace, "Fragment")
@@ -34,8 +33,11 @@ object HarvestResources {
     def activeDirectory = directoryNodes.head
 
     def postVisitDirectory(p: Path, e: IOException): FileVisitResult = {
-      val poppedComponent = componentNodes.pop()
-      val poppedDirectory = directoryNodes.pop()
+      val poppedComponent = componentNodes.head
+      componentNodes = componentNodes.tail
+      val poppedDirectory = directoryNodes.head
+      directoryNodes = directoryNodes.tail
+
       // no empty components
       if (! poppedComponent.hasChildNodes) {
         poppedDirectory.removeChild(poppedComponent)
@@ -49,7 +51,7 @@ object HarvestResources {
         val topDirectory = doc.createElementNS(WiXNamespace, "DirectoryRef")
         topDirectory.setAttribute("Id", directoryRefName)
         filesFragment.appendChild(topDirectory)
-        directoryNodes.push(topDirectory)
+        directoryNodes = topDirectory :: directoryNodes
 
         val topComponent = doc.createElementNS(WiXNamespace, "Component")
         val uuid = generateUUID
@@ -58,15 +60,15 @@ object HarvestResources {
         topComponent.setAttribute("Id", "InstallationRootComponent")
         topComponent.setAttribute("Win64", variables("win64"))
         topDirectory.appendChild(topComponent)
-        componentNodes.push(topComponent)
+        componentNodes = topComponent :: componentNodes
       } else {
-        val pathSegments = root.relativize(p).iterator.toSeq
+        val pathSegments = root.relativize(p).asScala.iterator.toSeq
         val id = "dir_" + pathSegments.mkString("_").takeRight(68)
         val newDirectory = doc.createElementNS(WiXNamespace, "Directory")
         newDirectory.setAttribute("Name", nameSafe(p.getFileName.toString))
         newDirectory.setAttribute("Id", idSafe(id))
         activeDirectory.appendChild(newDirectory)
-        directoryNodes.push(newDirectory)
+        directoryNodes = newDirectory :: directoryNodes
         val newComponent = doc.createElementNS(WiXNamespace, "Component")
         val uuid = generateUUID
         val componentId = idSafe(pathSegments.mkString("_"))
@@ -75,7 +77,7 @@ object HarvestResources {
         newComponent.setAttribute("Id", componentId)
         newComponent.setAttribute("Win64", variables("win64"))
         newDirectory.appendChild(newComponent)
-        componentNodes.push(newComponent)
+        componentNodes = newComponent :: componentNodes
       }
       FileVisitResult.CONTINUE
     }
@@ -84,7 +86,7 @@ object HarvestResources {
     def visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult = {
       if (! excludedFiles.contains(p.getFileName.toString)) {
         val fileNode = doc.createElementNS(WiXNamespace, "File")
-        val pathElements = root.relativize(p).iterator.map(_.toString).toSeq
+        val pathElements = root.relativize(p).asScala.iterator.map(_.toString).toSeq
         val sourceName = ("SourceDir" +: pathElements).mkString("\\")
         val id = idSafe(pathElements.mkString("__"))
         fileNode.setAttribute("Source", nameSafe(sourceName))

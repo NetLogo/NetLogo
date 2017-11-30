@@ -11,7 +11,7 @@ object NetLogoWebExport {
   val ModelSigil = "______NetLogoModel_______"
 
   def apply(saveFile: File): Unit = {
-    IO.download(StandaloneURL, saveFile)
+    FileActions.download(StandaloneURL, saveFile)
     val parsedHtml = Jsoup.parse(new String(Files.readAllBytes(saveFile.toPath), "UTF-8"))
     val codeElement = parsedHtml.getElementById("nlogo-code")
     codeElement.appendText(ModelSigil)

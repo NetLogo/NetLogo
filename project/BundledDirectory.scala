@@ -1,4 +1,6 @@
-import sbt._
+import sbt.io.{ FileFilter, IO, Path }
+import sbt.io.syntax._
+
 import java.io.File
 import scala.language.postfixOps
 
@@ -87,8 +89,8 @@ class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends 
 
   override def fileMappings = super.fileMappings :+ headlessScriptMapping
   def files: Seq[File] =
-    ((baseDirectory * "*.TXT") +++
-      (baseDirectory / "documentation" ***) +++
-      (baseDirectory / "resources" ***) +++
-      (baseDirectory / "examples" ***)).get
+    ((baseDirectory * FileFilter.globFilter("*.TXT")) +++
+      ((baseDirectory / "documentation").allPaths) +++
+      ((baseDirectory / "resources").allPaths) +++
+      ((baseDirectory / "examples").allPaths)).get
 }

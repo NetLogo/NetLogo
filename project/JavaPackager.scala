@@ -1,9 +1,12 @@
 import sbt._
 
 import Keys.{ artifactPath, dependencyClasspath, packageOptions, packageBin }
+import sbt.io.Using
 import java.nio.file.FileSystems
 import java.io.File
 import java.util.jar.Attributes.Name._
+import scala.sys.process.Process
+import scala.collection.JavaConverters._
 
 object JavaPackager {
   def mainArtifactSettings: Seq[Setting[_]] =
@@ -56,9 +59,8 @@ object JavaPackager {
   }
 
   def windowsJavaPackagers: Seq[File] = {
-    import scala.collection.JavaConversions._
     val fs = FileSystems.getDefault
-    fs.getRootDirectories.toSeq.flatMap(r =>
+    fs.getRootDirectories.asScala.toSeq.flatMap(r =>
         Seq(fs.getPath(r.toString, "Program Files", "Java"),
           fs.getPath(r.toString, "Program Files (x86)", "Java")))
        .map(_.toFile)

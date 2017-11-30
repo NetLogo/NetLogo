@@ -6,6 +6,8 @@ import Def.Initialize
 import sbt.complete.{ Parser, DefaultParsers }, Parser.success, DefaultParsers._
 import SbtSubdirectory.runSubdirectoryCommand
 
+import scala.sys.process.Process
+
 object Extensions {
 
   private val extensionNetLogoJar = TaskKey[File]("netlogo jar, ensuring test jar also built")
@@ -67,14 +69,17 @@ object Extensions {
       buildExtension(extensionDir, extensionNetLogoJar.value, state.value)(Set()).toSeq
     },
     extensions := {
+      val nlJar = extensionNetLogoJar.value
+      val excluded = excludedExtensions.value
       val base = baseDirectory.value
       val s    = streams.value
-      ("git -C " + base + " submodule --quiet update --init") ! s.log
+      Process("git -C " + base + " submodule --quiet update --init") ! s.log
       val dirs = extensionDirs(extensionRoot.value)
-      dirs.filterNot(f => excludedExtensions.value.contains(f.getName)).flatMap{ dir =>
+      val stateValue = state.value
+      dirs.filterNot(f => excluded.contains(f.getName)).flatMap{ dir =>
         cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar")) {
           s.log.info("building extension: " + dir.getName)
-          buildExtension(dir, extensionNetLogoJar.value, state.value) }
+          buildExtension(dir, nlJar, stateValue) }
       }
     },
     excludedExtensions := Seq(),

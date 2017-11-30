@@ -1,5 +1,4 @@
 import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
-import org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
@@ -7,7 +6,6 @@ import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
 import Docs.htmlDocs
 import Dump.dumpClassName
 import Testing.{ testTempDirectory, testChecksumsClass }
-
 
 // these settings are common to ALL BUILDS
 // if it doesn't belong in every build, it can't go in here
@@ -84,7 +82,7 @@ lazy val mockDependencies = Seq(
 
 lazy val scalastyleSettings = Seq(
   scalastyleTarget in Compile := {
-  baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
+    baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
   })
 
 def publicationSettings(repository: String) =
@@ -221,7 +219,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     )}
   )
 
-// this project exists as a wrapper for the mac-specific NetLogo components
+ // this project exists as a wrapper for the mac-specific NetLogo components
 lazy val macApp = project.in(file("mac-app")).
   settings(commonSettings: _*).
   settings(jvmSettings: _*).
@@ -290,7 +288,7 @@ lazy val parser = CrossProject("parser", file("."),
   jsSettings(publicationSettings("NetLogoHeadless"): _*).
   jsSettings(
       name := "parser-js",
-      ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
+      scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
       resolvers += Resolver.sonatypeRepo("releases"),
       parallelExecution in Test := false,
       libraryDependencies ++= {
