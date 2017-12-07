@@ -204,7 +204,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     if (history.isEmpty || executionString != history.head) {
       history = executionString :: history
       while (history.size > MAX_HISTORY_SIZE) {
-        history.dropRight(1)
+        history = history.dropRight(1)
       }
     }
     historyPosition = -1
