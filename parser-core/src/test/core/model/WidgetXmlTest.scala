@@ -77,6 +77,14 @@ object WidgetXmlTest {
     "textbox" -> (textboxXml -> textboxWidget),
     "view2d" -> (viewXml2d -> viewWidget2d)
   )
+
+  val penXml =
+    Elem("pen",
+      Seq(Attr("interval", "0.5"), Attr("mode", "line"),
+        Attr("color", "10"), Attr("inLegend", "false")),
+      Seq(namedText("setup", "setup-pen"),
+        namedText("update", "update-pen"),
+        namedText("display", "pen-name")))
 }
 
 class WidgetXmlTest extends FunSuite with XmlEquality {
@@ -411,11 +419,7 @@ class WidgetXmlTest extends FunSuite with XmlEquality {
         namedText("yAxis", "turtles"),
         namedText("xAxis", "time"),
         Elem("pens", Seq(),
-          Seq(Elem("pen",
-            Seq(Attr("interval", "0.5"), Attr("mode", "0"),
-              Attr("color", "10"), Attr("inLegend", "false")),
-
-            Seq(namedText("setup", "setup-pen"), namedText("update", "update-pen"), namedText("display", "pen-name")))))))
+          Seq(penXml))))
 
     // println(readToError(xml))
     val plotResult = readToWidget(xml)
@@ -436,12 +440,7 @@ class WidgetXmlTest extends FunSuite with XmlEquality {
         namedText("yAxis", "turtles"),
         namedText("setup", "setup-plot"),
         namedText("update", "update-plot"),
-        Elem("pens", Seq(),
-          Seq(Elem("pen",
-            Seq(Attr("interval", "0.5"), Attr("mode", "0"),
-              Attr("color", "10"), Attr("inLegend", "false")),
-
-            Seq(namedText("setup", "setup-pen"), namedText("update", "update-pen"), namedText("display", "pen-name")))))))
+        Elem("pens", Seq(), Seq(penXml))))
 
     val pen = Pen("pen-name", 0.5, 0, 10, false, "setup-pen", "update-pen")
     val plot = Plot(

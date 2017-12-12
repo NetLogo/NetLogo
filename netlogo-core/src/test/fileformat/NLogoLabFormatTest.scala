@@ -18,7 +18,11 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
       .mkString.lines.toArray
   val sampleLines = testBehaviorSpaceXml("NLogoBehaviorSpaceExample.xml")
 
-  val expectedProto = LabProtocol("experiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new RefEnumeratedValueSet("density", List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
+  val expectedProto = LabProtocol.fromValueSets("experiment", "setup", "go", "", 10,
+    true, true, 0, "not any? fires",
+    List("burned-trees"),
+    List(new RefEnumeratedValueSet("density",
+      List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
 
   testDeserializes("empty section", Array[String](), Seq[LabProtocol]())
   testDeserializes("non-empty section", sampleLines, Seq(expectedProto))

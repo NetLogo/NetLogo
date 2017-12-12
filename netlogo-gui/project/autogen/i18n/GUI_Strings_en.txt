@@ -222,12 +222,14 @@ file.open.warn.version.newer = You are attempting to open a model \
 file.open.warn.version.older = This model was created in {0}. \
     You may need to make changes for it to work in {1}.
 file.open.warn.version.transitionGuide = Open Transition Guide
+file.open.warn.arity.openTwoD = Open in 2D
+file.open.warn.arity.openThreeD = Open in 3D
 file.open.warn.intwod.openthreed = You are attempting to open a model \
-  that was created in a 3D version of NetLogo.  \
-  (This is {0}; the model was created in {1}.) \
-  NetLogo can try to open the model, but it may or may not work.
-file.open.warn.inthreed.opentwod = You are attempting to open \
-  a 2D model in {0}. You might need to make changes before it will work in 3D.
+  that was created for NetLogo''s 3D mode.  \
+  (This is {0}; the model version is {1}.) \
+  If you choose to continue opening in 2D Mode, you might need to make changes to the model.
+file.open.warn.inthreed.opentwod = You are opening a 2D model, but are currently in 3D mode. \n\
+If you choose to continue opening in 3D mode, you might need to make changes to the model.
 file.open.warn.autoconversion.model.title = Error Converting Model
 file.open.warn.autoconversion.model.error = NetLogo encountered the following errors while trying to automatically convert the model to the current version. \
  Would you like to continue opening it? \n

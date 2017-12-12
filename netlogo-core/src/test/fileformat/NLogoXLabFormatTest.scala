@@ -27,11 +27,11 @@ class NLogoXLabFormatTest extends NLogoXFormatTest[Seq[LabProtocol]] {
   }
   val sampleElem = testBehaviorSpaceXml("NLogoXBehaviorSpaceExample.xml")
 
-  val expectedProto = LabProtocol("experiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new RefEnumeratedValueSet("density", List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
+  val expectedProto = LabProtocol.fromValueSets("experiment", "setup", "go", "export-world \"/tmp/foo\"", 10, true, true, 500, "not any? fires", List("burned-trees"), List(new RefEnumeratedValueSet("density", List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
 
-  val steppedProto = LabProtocol("steppedExperiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new SteppedValueSet("density", BigDecimal(0), BigDecimal(1), BigDecimal(100))))
+  val steppedProto = LabProtocol.fromValueSets("steppedExperiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new SteppedValueSet("density", BigDecimal(0), BigDecimal(1), BigDecimal(100))))
 
-  val enumeratedListProto = LabProtocol("listProtocol", "setup", "go", "", 10, true, true, 0, "not any? fires",
+  val enumeratedListProto = LabProtocol.fromValueSets("listProtocol", "setup", "go", "", 10, true, true, 0, "not any? fires",
     List("burned-trees"),
     List(new RefEnumeratedValueSet("tree-list",
       List(LogoList(Double.box(0), Double.box(1)), LogoList(Double.box(3)), "abc", Boolean.box(false)))))

@@ -70,7 +70,9 @@ class HeadlessHubNetManager(workspace: AbstractWorkspace, loader: ModelLoader, m
     // for now, I've decided to just fall back on the user name. JC - 12/18/10
     var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
     if(serverName == null || serverName.trim == "") serverName = System.getProperty("user.name", "")
-    connectionManager.startup(serverName, NetworkUtils.findViableInterfaces.head)
+    val interface = NetworkUtils.findViableInterfaces.headOption
+      .getOrElse(throw new Exception("Unable to find an interface on which to run HubNet"))
+    connectionManager.startup(serverName, interface)
     // println("started HubNet server on port " + connectionManager.port)
   }
 

@@ -7,12 +7,17 @@ import org.nlogo.api.{ FileIO, TwoDVersion }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
+object TestBehaviorSpace {
+  val TestNLogoProtocolsFilePath = "test/lab/protocols.xml"
+  val TestNLogoXProtocolsFilePath = "test/lab/protocols-nlogox.xml"
+}
+
+import TestBehaviorSpace._
+
 class TestBehaviorSpace
   extends AbstractTestLanguage(SlowTest.Tag)
   with OneInstancePerTest
   with BeforeAndAfterEach {
-
-  val TestProtocolsFilePath = "test/lab/protocols.xml"
 
   val workspaces = new collection.mutable.ListBuffer[HeadlessWorkspace]
 
@@ -24,7 +29,7 @@ class TestBehaviorSpace
 
   def newWorker(name: String, r: Runner): LabInterface.Worker = {
     val protocol =
-      BehaviorSpaceCoordinator.externalProtocols(TestProtocolsFilePath)
+      BehaviorSpaceCoordinator.externalProtocols(TestNLogoProtocolsFilePath)
         .flatMap(_.find(_.name == name))
         .getOrElse(throw new Exception(s"Invalid protocol: $name"))
     HeadlessWorkspace.newLab(r.instance.version.is3D).newWorker(protocol)

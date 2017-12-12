@@ -12,7 +12,7 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.api.{ Exceptions, FileIO, ModelLoader, ModelReader, ModelType, Version },
-  ModelReader.{ emptyModelPath, modelSuffix }
+  ModelReader.emptyModelPath
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
@@ -321,7 +321,7 @@ class FileManager(workspace: AbstractWorkspace,
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace.compilerServices)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace.compilerServices, modelTracker.currentVersion)
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
@@ -341,10 +341,8 @@ class FileManager(workspace: AbstractWorkspace,
   @throws(classOf[IOException])
   def newModel(version: Version): Unit = {
     try {
-      openFromModel(
-        modelLoader.emptyModel(modelSuffix(version.is3D)),
-        getClass.getResource(emptyModelPath(version.is3D)).toURI,
-        ModelType.New)
+      val uri = getClass.getResource(emptyModelPath(version.is3D)).toURI
+      openFromModel(modelLoader.readModel(uri).get, uri, ModelType.New)
     } catch  {
       case ex: URISyntaxException =>
         println("Unable to locate empty model: " + emptyModelPath(version.is3D))

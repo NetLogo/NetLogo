@@ -69,7 +69,6 @@ class ShowAboutWindow(frame: Frame)
     group    = HelpAboutGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    println(e.getSource)
     new AboutWindow(frame).setVisible(true)
   }
 }

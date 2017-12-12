@@ -2,6 +2,7 @@
 
 package org.nlogo.nvm
 
+import java.net.URI
 import org.nlogo.api.{ LabProtocol, Version }
 import org.nlogo.core.WorldDimensions
 
@@ -25,8 +26,9 @@ object LabInterface {
   }
   case class Settings(
     modelPath: String,
+    modelLocation: URI,
     protocolName: Option[String],
-    externalXMLFile: Option[java.io.File],
+    externalXMLFile: Option[URI],
     tableWriter: Option[java.io.PrintWriter],
     spreadsheetWriter: Option[java.io.PrintWriter],
     dims: Option[WorldDimensions],

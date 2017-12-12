@@ -1,342 +1,376 @@
+<?xml version="1.0"?>
 <experiments>
-  <experiment name="testBehaviorSpace1" repetitions="2">
-    <stepLimit>2</stepLimit>
-    <setup>set counter 0</setup>
-    <go>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</go>
-    <exitCondition>counter &gt; param2</exitCondition>
+  <experiment name="testBehaviorSpace1" iterationLimit="2">
+    <setupCode>set counter 0</setupCode>
+    <goCode>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</goCode>
+    <stopConditionCode>counter &gt; param2</stopConditionCode>
     <metrics>
       <metric>counter</metric>
     </metrics>
-    <cartesianProduct>
-      <discreteValues variable="param1">
-        <number>1</number>
-        <number>2</number>
-        <number>3</number>
-      </discreteValues>
-      <range variable="param2" first="1" step="1" last="5"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2">
+        <discreteValues variable="param1">
+          <number>1</number>
+          <number>2</number>
+          <number>3</number>
+        </discreteValues>
+        <range variable="param2" min="1" interval="1" max="5"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testBehaviorSpace2" repetitions="2" runMetricsEveryStep="false">
-    <stepLimit>2</stepLimit>
-    <setup>set counter 0</setup>
-    <go>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</go>
-    <exitCondition>counter &gt; param2</exitCondition>
+  <experiment name="testBehaviorSpace2" runMetricsEveryStep="false" iterationLimit="2">
+    <setupCode>set counter 0</setupCode>
+    <goCode>repeat param1 [ repeat param2 [ set counter counter + 1 ] ]</goCode>
+    <stopConditionCode>counter &gt; param2</stopConditionCode>
     <metrics>
       <metric>counter</metric>
     </metrics>
-    <cartesianProduct>
-      <discreteValues variable="param1">
-        <number>1</number>
-        <number>2</number>
-        <number>3</number>
-      </discreteValues>
-      <range variable="param2" first="1" step="1" last="5"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2">
+        <discreteValues variable="param1">
+          <number>1</number>
+          <number>2</number>
+          <number>3</number>
+        </discreteValues>
+        <range variable="param2" min="1" interval="1" max="5"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testMultipleMetrics" >
-    <stepLimit>4</stepLimit>
-    <setup>set counter 0</setup>
-    <go>set counter counter + 1</go>
-    <exitCondition>counter &gt;= param1</exitCondition>
+  <experiment name="testMultipleMetrics" iterationLimit="4">
+    <setupCode>set counter 0</setupCode>
+    <goCode>set counter counter + 1</goCode>
+    <stopConditionCode>counter &gt;= param1</stopConditionCode>
     <metrics>
       <metric>counter</metric>
       <metric>counter / 2</metric>
       <metric>counter / 10</metric>
     </metrics>
-    <cartesianProduct>
-      <discreteValues variable="param1">
-        <number>1</number>
-        <number>2</number>
-        <number>3</number>
-      </discreteValues>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct>
+        <discreteValues variable="param1">
+          <number>1</number>
+          <number>2</number>
+          <number>3</number>
+        </discreteValues>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testNoMetrics1" >
-    <stepLimit>4</stepLimit>
-    <setup>set counter 0</setup>
-    <go>set counter counter + 1</go>
-    <exitCondition>counter &gt;= param1</exitCondition>
-    <metrics>
-    </metrics>
-    <cartesianProduct>
-      <discreteValues variable="param1">
-        <number>1</number>
-        <number>2</number>
-        <number>3</number>
-      </discreteValues>
-    </cartesianProduct>
+  <experiment name="testNoMetrics1" iterationLimit="4">
+    <setupCode>set counter 0</setupCode>
+    <goCode>set counter counter + 1</goCode>
+    <stopConditionCode>counter &gt;= param1</stopConditionCode>
+    <metrics/>
+    <parameterSet>
+      <cartesianProduct>
+        <discreteValues variable="param1">
+          <number>1</number>
+          <number>2</number>
+          <number>3</number>
+        </discreteValues>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testNoMetrics2" >
-    <stepLimit>4</stepLimit>
-    <setup>set counter 0</setup>
-    <go>set counter counter + 1</go>
-    <exitCondition>counter &gt;= param1</exitCondition>
-    <metrics>
-    </metrics>
-    <cartesianProduct>
-      <discreteValues variable="param1">
-        <number>1</number>
-        <number>2</number>
-        <number>3</number>
-      </discreteValues>
-    </cartesianProduct>
+  <experiment name="testNoMetrics2" runMetricsEveryStep="false" iterationLimit="4">
+    <setupCode>set counter 0</setupCode>
+    <goCode>set counter counter + 1</goCode>
+    <stopConditionCode>counter &gt;= param1</stopConditionCode>
+    <metrics/>
+    <parameterSet>
+      <cartesianProduct>
+        <discreteValues variable="param1">
+          <number>1</number>
+          <number>2</number>
+          <number>3</number>
+        </discreteValues>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testImmediateExit" >
-    <stepLimit>4</stepLimit>
-    <setup>set foo 0</setup>
-    <final>set foo 99</final>
-    <exitCondition>true</exitCondition>
+  <experiment name="testImmediateExit" iterationLimit="4">
+    <setupCode>set foo 0</setupCode>
+    <finalCode>set foo 99</finalCode>
+    <stopConditionCode>true</stopConditionCode>
     <metrics>
       <metric>5</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="testCarryover" repetitions="4">
-    <stepLimit>5</stepLimit>
-    <go>set foo foo + 1</go>
+  <experiment name="testCarryover" iterationLimit="5">
+    <goCode>set foo foo + 1</goCode>
     <metrics>
       <metric>foo</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="4"/>
+    </parameterSet>
   </experiment>
-  <experiment name="experiment1" repetitions="5">
-    <stepLimit>50</stepLimit>
-    <setup>setup-random</setup>
-    <go>go</go>
-    <final>show timer</final>
-    <exitCondition>"foo&amp;bar!"
+  <experiment name="experiment1" iterationLimit="50">
+    <setupCode>setup-random</setupCode>
+    <goCode>go</goCode>
+    <finalCode>show timer</finalCode>
+    <stopConditionCode>"foo&amp;bar!"
 
-"\n+\n"baz!</exitCondition>
+"\n+\n"baz!</stopConditionCode>
     <metrics>
       <metric>count patches with [living?]</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="bgcolor" first="0" step="1" last="100"/>
-      <discreteValues variable="fgcolor">
-        <number>133</number>
-        <number>134</number>
-        <number>135</number>
-        <number>136</number>
-      </discreteValues>
-      <range variable="foobarbaz" first="0" step="1" last="100"/>
-      <discreteValues variable="foo?">
-        <boolean>true</boolean>
-        <boolean>false</boolean>
-      </discreteValues>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="5">
+        <range variable="bgcolor" min="0" interval="1" max="100"/>
+        <discreteValues variable="fgcolor">
+          <number>133</number>
+          <number>134</number>
+          <number>135</number>
+          <number>136</number>
+        </discreteValues>
+        <range variable="foobarbaz" min="0" interval="1" max="100"/>
+        <discreteValues variable="foo?">
+          <boolean>true</boolean>
+          <boolean>false</boolean>
+        </discreteValues>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="experiment2" repetitions="6" runMetricsEveryStep="false">
-    <stepLimit>50</stepLimit>
-    <setup>setup-random</setup>
-    <go>go</go>
-    <metrics>
-      <metric>count patches with [living?]</metric>
-      <metric>count patches with [not living?]</metric>
-    </metrics>
-    <cartesianProduct></cartesianProduct>
-  </experiment>
-  <experiment name="experiment3" repetitions="9">
-    <stepLimit>11</stepLimit>
-    <setup>setup-random</setup>
-    <go>go</go>
+  <experiment name="experiment2" runMetricsEveryStep="false" iterationLimit="50">
+    <setupCode>setup-random</setupCode>
+    <goCode>go</goCode>
     <metrics>
       <metric>count patches with [living?]</metric>
       <metric>count patches with [not living?]</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="6"/>
+    </parameterSet>
   </experiment>
-  <experiment name="experiment4" repetitions="9">
-    <setup>setup-random</setup>
-    <go>go</go>
+  <experiment name="experiment3" iterationLimit="11">
+    <setupCode>setup-random</setupCode>
+    <goCode>go</goCode>
     <metrics>
+      <metric>count patches with [living?]</metric>
+      <metric>count patches with [not living?]</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="9"/>
+    </parameterSet>
   </experiment>
-  <experiment name="testResizingWorld1"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
-    <metrics>
-      <metric>count patches</metric>
-    </metrics>
-    <cartesianProduct>
-      <range variable="max-pxcor" first="0" step="1" last="5"/>
-      <range variable="max-pycor" first="0" step="1" last="5"/>
-    </cartesianProduct>
+  <experiment name="experiment4">
+    <setupCode>setup-random</setupCode>
+    <goCode>go</goCode>
+    <metrics/>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="9"/>
+    </parameterSet>
   </experiment>
-  <experiment name="testResizingWorld2"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
-    <metrics>
-      <metric>count patches</metric>
-    </metrics>
-    <cartesianProduct>
-      <range variable="world-width" first="1" step="2" last="11"/>
-      <range variable="world-height" first="1" step="2" last="11"/>
-    </cartesianProduct>
-  </experiment>
-  <experiment name="testResizingWorld3"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
+  <experiment name="testResizingWorld1" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="world-width" first="2" step="1" last="5"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="max-pxcor" min="0" interval="1" max="5"/>
+        <range variable="max-pycor" min="0" interval="1" max="5"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testRandomSeed" repetitions="2">
-    <stepLimit>2</stepLimit>
+  <experiment name="testResizingWorld2" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="world-width" min="1" interval="2" max="11"/>
+        <range variable="world-height" min="1" interval="2" max="11"/>
+      </cartesianProduct>
+    </parameterSet>
+  </experiment>
+  <experiment name="testResizingWorld3" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
+    <metrics>
+      <metric>count patches</metric>
+    </metrics>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="world-width" min="2" interval="1" max="5"/>
+      </cartesianProduct>
+    </parameterSet>
+  </experiment>
+  <experiment name="testRandomSeed" iterationLimit="2">
     <metrics>
       <metric>random 1000</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="random-seed" first="0" step="1" last="2"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2">
+        <range variable="random-seed" min="0" interval="1" max="2"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testExportGraphics"  runMetricsEveryStep="false">
-    <stepLimit>20</stepLimit>
-    <setup>ask patches [ set pcolor black ] crt 10 [ set size 10 fd random 40 ]</setup>
-    <final>export-view "tmp/testExportGraphics.png"</final>
+  <experiment name="testExportGraphics" runMetricsEveryStep="false" iterationLimit="20">
+    <setupCode>ask patches [ set pcolor black ] crt 10 [ set size 10 fd random 40 ]</setupCode>
+    <finalCode>export-view "tmp/testExportGraphics.png"</finalCode>
     <metrics>
       <metric>random 1000</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="testStopping1"  runMetricsEveryStep="false">
-    <stepLimit>10</stepLimit>
-    <setup>set x 0</setup>
-    <go>if x = 5 [ stop ] set x x + 1</go>
-    <metrics>
-    </metrics>
-    <cartesianProduct></cartesianProduct>
+  <experiment name="testStopping1" runMetricsEveryStep="false" iterationLimit="10">
+    <setupCode>set x 0</setupCode>
+    <goCode>if x = 5 [ stop ] set x x + 1</goCode>
+    <metrics/>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="testStopping2"  runMetricsEveryStep="false">
-    <stepLimit>10</stepLimit>
-    <setup>set x 0</setup>
-    <go>go</go>
-    <metrics>
-    </metrics>
-    <cartesianProduct></cartesianProduct>
+  <experiment name="testStopping2" runMetricsEveryStep="false" iterationLimit="10">
+    <setupCode>set x 0</setupCode>
+    <goCode>go</goCode>
+    <metrics/>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="badAtBeginning"  runMetricsEveryStep="false">
-    <stepLimit>5</stepLimit>
-    <setup>setup</setup>
-    <go>go</go>
+  <experiment name="badAtBeginning" runMetricsEveryStep="false" iterationLimit="5">
+    <setupCode>setup</setupCode>
+    <goCode>go</goCode>
     <metrics>
       <metric>bad-divide</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="metricsLocalRandomness" >
-    <stepLimit>2</stepLimit>
-    <setup>random-seed 0</setup>
-    <go>set x random-float 1.0</go>
+  <experiment name="metricsLocalRandomness" iterationLimit="2">
+    <setupCode>random-seed 0</setupCode>
+    <goCode>set x random-float 1.0</goCode>
     <metrics>
       <metric>random-float 1.0</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="exitConditionLocalRandomness" >
-    <stepLimit>3</stepLimit>
-    <setup>random-seed 0</setup>
-    <go>set x random-float 1.0</go>
-    <exitCondition>one-of [false false]</exitCondition>
+  <experiment name="exitConditionLocalRandomness" iterationLimit="3">
+    <setupCode>random-seed 0</setupCode>
+    <goCode>set x random-float 1.0</goCode>
+    <stopConditionCode>one-of [false false]</stopConditionCode>
     <metrics>
       <metric>random-float 1.0</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="testResizingWorld13d"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
+  <experiment name="testResizingWorld13d" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="max-pxcor" first="0" step="1" last="5"/>
-      <range variable="max-pycor" first="0" step="1" last="5"/>
-      <range variable="max-pzcor" first="0" step="1" last="5"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="max-pxcor" min="0" interval="1" max="5"/>
+        <range variable="max-pycor" min="0" interval="1" max="5"/>
+        <range variable="max-pzcor" min="0" interval="1" max="5"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
+  <experiment name="testResizingWorld23d" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="world-width" first="1" step="2" last="11"/>
-      <range variable="world-height" first="1" step="2" last="11"/>
-      <range variable="world-depth" first="1" step="2" last="11"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="world-width" min="1" interval="2" max="11"/>
+        <range variable="world-height" min="1" interval="2" max="11"/>
+        <range variable="world-depth" min="1" interval="2" max="11"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="testResizingWorld23d"  runMetricsEveryStep="false">
-    <exitCondition>true</exitCondition>
+  <experiment name="testResizingWorld23d" runMetricsEveryStep="false">
+    <stopConditionCode>true</stopConditionCode>
     <metrics>
       <metric>count patches</metric>
     </metrics>
-    <cartesianProduct>
-      <range variable="world-width" first="1" step="2" last="11"/>
-      <range variable="world-height" first="1" step="2" last="11"/>
-      <range variable="world-depth" first="1" step="2" last="11"/>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct>
+        <range variable="world-width" min="1" interval="2" max="11"/>
+        <range variable="world-height" min="1" interval="2" max="11"/>
+        <range variable="world-depth" min="1" interval="2" max="11"/>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
-  <experiment name="wait1" repetitions="4">
-    <stepLimit>2</stepLimit>
-    <setup>reset-timer</setup>
-    <go>wait 1</go>
+  <experiment name="wait1" iterationLimit="2">
+    <setupCode>reset-timer</setupCode>
+    <goCode>wait 1</goCode>
     <metrics>
       <metric>round timer</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="4"/>
+    </parameterSet>
   </experiment>
-  <experiment name="metricGoBoom" repetitions="2">
-    <stepLimit>2</stepLimit>
-    <setup>ca reset-ticks</setup>
-    <go>tick</go>
+  <experiment name="metricGoBoom" iterationLimit="2">
+    <setupCode>ca reset-ticks</setupCode>
+    <goCode>tick</goCode>
     <metrics>
       <metric>__boom</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2"/>
+    </parameterSet>
   </experiment>
-  <experiment name="metricGoBoom2" repetitions="100">
-    <stepLimit>20</stepLimit>
-    <setup>setup</setup>
-    <go>go</go>
+  <experiment name="metricGoBoom2" iterationLimit="20">
+    <setupCode>setup</setupCode>
+    <goCode>go</goCode>
     <metrics>
       <metric>mean [who] of turtles</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="100"/>
+    </parameterSet>
   </experiment>
-  <experiment name="goCommandsGoBoom" repetitions="2">
-    <stepLimit>2</stepLimit>
-    <setup>ca reset-ticks</setup>
-    <go>tick __ignore __boom</go>
+  <experiment name="goCommandsGoBoom" iterationLimit="2">
+    <setupCode>ca reset-ticks</setupCode>
+    <goCode>tick __ignore __boom</goCode>
     <metrics>
       <metric>ticks</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2"/>
+    </parameterSet>
   </experiment>
-  <experiment name="setupCommandsGoBoom" repetitions="2">
-    <stepLimit>2</stepLimit>
-    <setup>ca reset-ticks __ignore __boom</setup>
-    <go>tick</go>
+  <experiment name="setupCommandsGoBoom" iterationLimit="2">
+    <setupCode>ca reset-ticks __ignore __boom</setupCode>
+    <goCode>tick</goCode>
     <metrics>
       <metric>ticks</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="2"/>
+    </parameterSet>
   </experiment>
-  <experiment name="metricsWithSideEffects" >
-    <stepLimit>2</stepLimit>
-    <setup>clear-all reset-ticks</setup>
-    <go>tick</go>
+  <experiment name="metricsWithSideEffects" iterationLimit="2">
+    <setupCode>clear-all reset-ticks</setupCode>
+    <goCode>tick</goCode>
     <metrics>
       <metric>metric</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct/>
+    </parameterSet>
   </experiment>
-  <experiment name="runNumber" repetitions="3">
-    <stepLimit>2</stepLimit>
-    <setup>clear-all reset-ticks</setup>
-    <go>tick</go>
+  <experiment name="runNumber" iterationLimit="2">
+    <setupCode>clear-all reset-ticks</setupCode>
+    <goCode>tick</goCode>
     <metrics>
       <metric>behaviorspace-run-number</metric>
     </metrics>
-    <cartesianProduct></cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="3"/>
+    </parameterSet>
   </experiment>
 </experiments>

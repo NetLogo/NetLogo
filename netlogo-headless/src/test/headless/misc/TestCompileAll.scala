@@ -3,8 +3,9 @@
 package org.nlogo.headless
 package misc
 
+import java.nio.file.Paths
+
 import org.nlogo.core.{ Femto, LiteralParser }
-import org.nlogo.core.model.ModelReader
 import org.nlogo.api.{ FileIO, TwoDVersion, Version }
 import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary
@@ -37,7 +38,7 @@ object TestCompileAll {
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
-      path.containsSlice("Anisogamy.nlogo") || // uses behaviorspace-experiment-name
+      path.containsSlice("Anisogamy.nlogox") || // uses behaviorspace-experiment-name
       path.endsWith("5.x.nlogo") || // explicitly 5.x models
       path.endsWith(".nlogo3d")
   }
@@ -76,8 +77,7 @@ class TestCompileAll extends FunSuite  {
   for(path <- (ModelsLibrary.getModelPaths(TwoDVersion) ++
        ModelsLibrary.getModelPathsAtRoot("extensions", TwoDVersion)).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTestTag) {
-      val workspace = HeadlessWorkspace.newInstance
-      val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version
+      val version = fileformat.standardLoader(literalParser).readModel(Paths.get(path).toUri).get.version
       assert(Version.compatibleVersion(version))
     }
 
@@ -86,10 +86,11 @@ class TestCompileAll extends FunSuite  {
 
   def readWriteRead(path: String, text: String) {
     val workspace = HeadlessWorkspace.newInstance
+    val extension = path.split("\\.").last
     try {
       val loader = fileformat.standardLoader(literalParser)
-      val model = loader.readModel(text, "nlogo").get
-      val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get
+      val model = loader.readModel(text, extension).get
+      val newModel = loader.readModel(loader.sourceString(model, extension).get, extension).get
       assertResult(model.code)(newModel.code)
       assertResult(model.widgets)(newModel.widgets)
       assertResult(model.info)(newModel.info)
@@ -109,7 +110,7 @@ class TestCompileAll extends FunSuite  {
     try {
       workspace.open(path)
       val lab = HeadlessWorkspace.newLab
-      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path)
+      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(Paths.get(path).toUri, TwoDVersion, workspace)
       protocols.foreach(lab.newWorker(_).compile(workspace))
     }
     finally workspace.dispose()

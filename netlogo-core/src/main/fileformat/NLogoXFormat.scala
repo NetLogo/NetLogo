@@ -6,7 +6,7 @@ import
   java.net.URI
 
 import
-  java.io.{ StringWriter, Writer }
+  java.io.{ StringReader, StringWriter, Writer }
 
 import
   java.nio.{ charset, file },
@@ -14,11 +14,17 @@ import
     file.{ Files, Paths }
 
 import
+  javax.xml.transform.{ OutputKeys, TransformerFactory }
+
+import
+  javax.xml.transform.stream.{ StreamResult, StreamSource }
+
+import
   cats.data.Validated.{ Invalid, Valid }
 
 import
   org.nlogo.{ core, api, xmllib },
-    core.{ model, I18N, Model, Shape, Widget },
+    core.{ model, I18N, Model, Shape, UpdateMode, View, Widget, WorldDimensions },
       model.{ LinkShapeXml, VectorShapeXml, WidgetXml, XmlShape },
       Shape.{ LinkShape, VectorShape },
     api.{ FileIO, TwoDVersion },
@@ -40,13 +46,18 @@ object NLogoXFormat {
   type Section = Element
 }
 
-class NLogoXFormatException(m: String) extends RuntimeException(m)
+case class NLogoXFormatException(m: String) extends RuntimeException(m)
 
 class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Section, NLogoXFormat] {
   def name: String = "nlogox"
   import NLogoXFormat.Section
 
-  val namespace ="http://ccl.northwestern.edu/netlogo/6.1"
+  val namespace = "http://ccl.northwestern.edu/netlogo/netlogox/1"
+
+  private val NLogoXPrettyIndent = 2
+
+  // as of 12/13/17 the default nlogox file "empty.nlogox" is under 25K
+  private val EmptyNLogoXFileSize = 25000
 
   object CodeComponent extends ComponentSerialization[Section, NLogoXFormat] {
     val componentName = "org.nlogo.modelsection.code"
@@ -104,6 +115,12 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
 
   object InterfaceComponent extends ComponentSerialization[Section, NLogoXFormat] {
     val componentName = "org.nlogo.modelsection.interface"
+
+    lazy val defaultView: View = View(left = 210, top = 10, right = 649, bottom = 470,
+      dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
+      showTickCounter = true, frameRate = 30)
+
+    override def addDefault = ((m: Model) => m.copy(widgets = Seq(defaultView)))
 
     def serialize(m: Model): Section = {
       val widgets = m.widgets.map((w: Widget) => WidgetXml.write(w, factory))
@@ -234,51 +251,51 @@ class NLogoXFormat(factory: ElementFactory) extends ModelFormat[NLogoXFormat.Sec
     }
   }
 
-  private def writeScalaXMLElements(writer: Writer, rootElem: Elem): Unit = {
-    XML.write(writer, rootElem, "UTF-8", true, null)
-    writer.write("\n")
-    writer.flush()
-    writer.close()
-  }
-
-  def writeSections(sections: Map[String,Section],location: URI): Try[URI] = {
+  def writeSections(sections: Map[String,Section], location: URI): Try[URI] = {
     val tryRootElem = normalizedElems(sections)
     val tryWriter = Try(Files.newBufferedWriter(Paths.get(location), StandardCharsets.UTF_8))
 
     for {
       rootElem <- tryRootElem
-      writer <- tryWriter
+      basicXml <- writeScalaXMLElements(rootElem)
+      fileWriter <- tryWriter
     } yield {
-      writeScalaXMLElements(writer, rootElem)
+      writeFormatted(basicXml, fileWriter)
       location
     }
-    // this doesn't work right now, see https://github.com/scala/scala-xml/issues/76
-    /*
-    for {
-      rootElem <- tryRootElem
-      writer <- tryWriter
-    } yield {
-      val prettyPrinter = new PrettyPrinter(1000, 2)
-      val xmlText = prettyPrinter.format(rootElem)
-      writer.write("""<?xml version="1.0"?>""")
-      writer.write("\n")
-      println(xmlText)
-      writer.write(xmlText)
-      writer.write("\n")
-      writer.flush()
-      writer.close()
-      location
-    }
-    */
   }
 
-  def sectionsToSource(sections: Map[String,Section]): Try[String] = {
-    val writer = new StringWriter()
-    normalizedElems(sections).map { e =>
-      writeScalaXMLElements(writer, e)
-      e.toString
+  private def writeScalaXMLElements(rootElem: Elem): Try[StringWriter] =
+    Try {
+      val writer = new StringWriter(EmptyNLogoXFileSize)
+      XML.write(writer, rootElem, "UTF-8", true, null)
+      writer.flush()
+      writer
+    }
+
+  // once https://github.com/scala/scala-xml/issues/76 is fixed, we can probably use the
+  // scala XML pretty-printer
+  private def writeFormatted(input: StringWriter, output: Writer): Try[Writer] = {
+    Try {
+      output.append("<?xml version='1.0' encoding='UTF-8'?>\n")
+      val xmlInput = new StreamSource(new StringReader(input.toString))
+      val xmlOutput = new StreamResult(output)
+      val transformer = TransformerFactory.newInstance.newTransformer
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", NLogoXPrettyIndent.toString)
+      transformer.transform(xmlInput, xmlOutput)
+      output.flush()
+      output.close()
+      output
     }
   }
+
+  def sectionsToSource(sections: Map[String,Section]): Try[String] =
+    normalizedElems(sections)
+      .flatMap(writeScalaXMLElements _)
+      .flatMap(xml => writeFormatted(xml, new StringWriter()))
+      .map(_.toString)
 
   def codeComponent: ComponentSerialization[Section,NLogoXFormat] = CodeComponent
   def infoComponent: ComponentSerialization[Section,NLogoXFormat] = InfoComponent

@@ -6,7 +6,7 @@ import org.nlogo.window.WorkspaceConfig
 import org.nlogo.api.Pico
 
 class AppConfig(val pico: Pico) {
-  var workspaceConfig: WorkspaceConfig = WorkspaceConfig.default
+  var workspaceConfig: WorkspaceConfig = WorkspaceConfig.empty
   var menuBarFactory: StatefulMenuBarFactory = null
   var relaunch: Boolean = false
   var is3D: Boolean = false

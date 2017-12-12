@@ -1,17 +1,20 @@
 <experiments>
-  <experiment name="experiment" repetitions="10">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>not any? fires</exitCondition>
+  <experiment name="experiment" iterationLimit="500">
+    <setupCode>setup</setupCode>
+    <goCode>go</goCode>
+    <finalCode>export-world "/tmp/foo"</finalCode>
+    <stopConditionCode>not any? fires</stopConditionCode>
     <metrics>
       <metric>burned-trees</metric>
     </metrics>
-    <cartesianProduct>
-      <discreteValues variable="density">
-        <number>40</number>
-        <number>0.1</number>
-        <number>70</number>
-      </discreteValues>
-    </cartesianProduct>
+    <parameterSet>
+      <cartesianProduct repetitionsPerCombo="10" sequentialRunOrder="true">
+        <discreteValues variable="density">
+          <number>40</number>
+          <number>0.1</number>
+          <number>70</number>
+        </discreteValues>
+      </cartesianProduct>
+    </parameterSet>
   </experiment>
 </experiments>

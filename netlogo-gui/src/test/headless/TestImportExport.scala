@@ -218,7 +218,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   testInSpace("testNonExistentPen", normalTwoD, SlowTest.Tag) { i =>
     import i._
-    workspace.open("test/import/plot-simple.nlogo")
+    workspace.open("test/import/plot-simple.nlogox")
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String,
@@ -235,7 +235,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   testInSpace("testCustomPenColor", normalTwoD, SlowTest.Tag) { i =>
     import i._
     val filename = getUniqueFilename()
-    workspace.open("test/import/plot-custom-color.nlogo")
+    workspace.open("test/import/plot-custom-color.nlogox")
     testCommand("setup-plots update-plots")
     testCommand("export-world \"../../" + filename + "\"")
     val export1 = org.nlogo.api.FileIO.fileToString(filename)
@@ -420,7 +420,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   testInSpace("CurrentPlotPenAfterImport", normalTwoD, SlowTest.Tag) { i =>
     import i._
-    workspace.open("test/import/current-plot-pen.nlogo")
+    workspace.open("test/import/current-plot-pen.nlogox")
     testCommand("reset-ticks")
     assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
 
@@ -434,7 +434,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   testInSpace("PlotPenUpAfterImport", normalTwoD, SlowTest.Tag) { i =>
     import i._
 
-    workspace.open("test/import/current-plot-pen.nlogo")
+    workspace.open("test/import/current-plot-pen.nlogox")
     testCommand("reset-ticks plot-pen-up")
 
     val filename = getUniqueFilename()

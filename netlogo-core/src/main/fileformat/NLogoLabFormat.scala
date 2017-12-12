@@ -37,7 +37,7 @@ trait AbstractNLogoLabFormat[A <: ModelFormat[Array[String], A]]
 
   def load(s: Array[String], version: Option[String]): Option[Seq[LabProtocol]] =
     if (s.isEmpty || s.forall(_.isEmpty)) None
-    else Some(loader(s.mkString("\n")))
+    else Try(loader(s.mkString("\n"))).toOption
 }
 
 class NLogoLabFormat(val literalParser: LiteralParser)

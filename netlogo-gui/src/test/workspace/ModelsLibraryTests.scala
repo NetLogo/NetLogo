@@ -31,13 +31,13 @@ class ModelsLibraryTests extends FunSuite {
     assert(! ModelsLibrary.findModelsBySubstring("sample", TwoDVersion).contains("Sample Models"))
   }
   test("findModelsBySubstring returns a list of library models with that string anywhere") {
-    assert(ModelsLibrary.findModelsBySubstring("oper", TwoDVersion).size > 1)
+    assert(ModelsLibrary.findModelsBySubstring("Ant", TwoDVersion).size > 8)
   }
   test("getModelPath returns the full path to the model whose name matches exactly") {
-    assert(ModelsLibrary.getModelPath("ants.nlogo", TwoDVersion).get.endsWith(s"Biology${File.separator}Ants.nlogo"))
+    assert(ModelsLibrary.getModelPath("ants.nlogox", TwoDVersion).get.endsWith(s"Biology${File.separator}Ants.nlogox"))
   }
   test("getModelPath returns null when no model name matches exactly") {
-    assert(ModelsLibrary.getModelPath("pong.nlogo", TwoDVersion) == None)
+    assert(ModelsLibrary.getModelPath("pong.nlogox", TwoDVersion) == None)
   }
   test("getModelPaths returns a list of all model paths in the models library") {
     assert(ModelsLibrary.getModelPaths(TwoDVersion, true).length > 450)

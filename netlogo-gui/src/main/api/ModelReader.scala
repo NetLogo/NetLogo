@@ -5,10 +5,11 @@ package org.nlogo.api
 object ModelReader {
 
   def modelSuffix(is3D: Boolean) =
-    if (is3D) "nlogo3d" else "nlogo"
+    "nlogox"
 
   def emptyModelPath(is3D: Boolean) =
-    "/system/empty." + modelSuffix(is3D)
+    if (is3D) "/system/empty-3d.nlogox"
+    else      "/system/empty.nlogox"
 
   @deprecated("Use ModelReader.modelSuffix(compiler.dialect.is3D) instead", "6.1.0")
   lazy val modelSuffix: String = {

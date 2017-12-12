@@ -11,6 +11,7 @@ import org.nlogo.core.Model
 import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
   SuccessfulConversion, ErroredConversion }
 import org.nlogo.api.{ ConfigurableModelLoader, Version }
+import OpenModel.{ CancelOpening, OpenAsSaved, OpenInCurrentVersion, VersionResponse }
 
 class OpenModelTests extends FunSuite {
   val testURI = new URI("file:///foo.test")
@@ -23,6 +24,8 @@ class OpenModelTests extends FunSuite {
 
     def userContinuesOpen() = controller.openModel(true)
     def userCancelsOpen() = controller.openModel(false)
+    def userGivesVersionResponse(vr: VersionResponse) =
+      controller.willGiveVersionResponse = vr
 
     lazy val controller = new MockController()
     val oldModel = Model()
@@ -58,13 +61,27 @@ class OpenModelTests extends FunSuite {
     assertResult("foobarbaz")(controller.invalidVersion)
   } }
 
+  test("if the model is 3D, but NetLogo is open in 2D mode, the user may cancel opening") { new OpenTest {
+    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    userGivesVersionResponse(CancelOpening)
+    assert(openedModel.isEmpty)
+  } }
+
   test("if the model is 3D, but NetLogo is open in 2D mode, notifies the user") { new OpenTest {
     override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
-    userContinuesOpen()
+    userGivesVersionResponse(OpenAsSaved)
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity == 3)
     assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
     assert(! controller.notifiedVersionUnknown)
+    assert(openedModel.get.version == "NetLogo 3D 6.0")
+  } }
+
+  test("when in 2D Mode, choosing to open a 3D model using current version adjusts the version") { new OpenTest {
+    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    userGivesVersionResponse(OpenInCurrentVersion)
+    assert(openedModel.isDefined)
+    assert(openedModel.get.version == "NetLogo 6.0")
   } }
 
   test("doesn't open different-arity model unless the user approves") { new OpenTest {
@@ -77,10 +94,11 @@ class OpenModelTests extends FunSuite {
 
   test("if the model is in 2D, but NetLogo is open in 3D, notifies the user") { new OpenTest {
     override def currentVersion = "NetLogo 3D 6.0"
-    userContinuesOpen()
+    userGivesVersionResponse(OpenAsSaved)
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity   == 2)
     assert(controller.notifiedModelVersion == "NetLogo 6.0")
+    assert(openedModel.get.version == "NetLogo 6.0")
   } }
 
   test("if the model is not a known version, checks before opening") { new OpenTest {
@@ -135,6 +153,7 @@ class MockController extends OpenModel.Controller {
   var notifiedModelVersion: String = _
   var notifiedException: Exception = _
   var notifiedVersionUnknown: Boolean = false
+  var willGiveVersionResponse: VersionResponse = OpenModel.CancelOpening
   var willOpenModel = false
 
   def openModel(willDo: Boolean): MockController = {
@@ -158,10 +177,10 @@ class MockController extends OpenModel.Controller {
     invalidURI = uri
     invalidVersion = version
   }
-  def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean = {
+  def shouldOpenModelOfDifferingArity(arity: Int, version: String): VersionResponse = {
     notifiedModelArity = arity
     notifiedModelVersion = version
-    willOpenModel
+    willGiveVersionResponse
   }
   def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = {
     notifiedModelVersion = openVersion

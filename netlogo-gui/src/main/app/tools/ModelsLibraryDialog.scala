@@ -81,12 +81,7 @@ object ModelsLibraryDialog {
         removeSuffix(name)
 
     private def removeSuffix(reference: String): String =
-      if (reference.endsWith(".nlogo"))
-        reference.substring(0, reference.lastIndexOf(".nlogo"))
-      else if (reference.endsWith(".nlogo3d"))
-        reference.substring(0, reference.lastIndexOf(".nlogo3d"))
-      else
-        reference
+      reference.stripSuffix(".nlogox")
 
     val info: String = {
       if (allowsChildren) ""

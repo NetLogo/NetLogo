@@ -6,7 +6,7 @@ import
   org.nlogo.core.Model
 
 import
-  org.nlogo.xmllib.ElementFactory
+  org.nlogo.xmllib.{ Element, ElementFactory }
 
 import
   org.nlogo.api.{ ComponentSerialization, LabProtocol }
@@ -27,4 +27,7 @@ class NLogoXLabFormat(val factory: ElementFactory)
     toSeqElement("experiments",
       m.optionalSectionValue[Seq[LabProtocol]](componentName).getOrElse(Seq()),
       (p: LabProtocol) => ExperimentXml.write(p, factory))
+
+  def load(e: Element, version: Option[String]): Option[Seq[LabProtocol]] =
+    parseChildren(e, ExperimentXml.read _).toOption
 }

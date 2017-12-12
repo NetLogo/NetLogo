@@ -4,7 +4,8 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
+import org.nlogo.api.{ CartesianProductParameterSet, EnumeratedValueSet, LabProtocol,
+  RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
 import java.awt.{GridBagConstraints,Window}
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
 import collection.JavaConverters._
@@ -55,8 +56,14 @@ class ProtocolEditable(protocol: LabProtocol,
   var setupCommands = protocol.setupCommands
   var goCommands = protocol.goCommands
   var finalCommands = protocol.finalCommands
-  var repetitions = protocol.repetitions
-  var sequentialRunOrder = protocol.sequentialRunOrder
+  var repetitions = protocol.parameterSet match {
+    case c: CartesianProductParameterSet => c.repetitions
+    case _ => 0
+  }
+  var sequentialRunOrder: Boolean = protocol.parameterSet match {
+    case c: CartesianProductParameterSet => c.sequentialRunOrder
+    case _ => true
+  }
   var runMetricsEveryStep = protocol.runMetricsEveryStep
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
@@ -72,7 +79,10 @@ class ProtocolEditable(protocol: LabProtocol,
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
        }) + "]\n"
-    protocol.valueSets.map(setString).mkString
+    protocol.parameterSet match {
+      case c: CartesianProductParameterSet => c.valueSets.map(setString).mkString
+      case _ => ""
+    }
   }
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -82,7 +92,7 @@ class ProtocolEditable(protocol: LabProtocol,
         window, "Invalid spec for varying variables. Error:\n" + message,
        "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
     }
-    Some(new LabProtocol(
+    Some(LabProtocol.fromValueSets(
       name.trim, setupCommands.trim, goCommands.trim,
       finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
       timeLimit, exitCondition.trim,

@@ -2,6 +2,9 @@
 
 package org.nlogo.headless
 
+import java.nio.file.Paths
+import java.net.URI
+
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, TwoDVersion }
 import org.nlogo.nvm.LabInterface.Settings
@@ -32,7 +35,13 @@ object Main {
       openWs.dispose()
     }
     proto match {
-      case Some(protocol) =>
+      case Some((protocol, _, conversionPath)) =>
+        conversionPath.foreach { p =>
+          System.err.println(
+            s"""|The behaviorspace setup-file format has changed.
+                |NetLogo has converted the provided setup file and saved a copy at ${p}.
+                |Please update your existing file with this copy""".stripMargin)
+        }
         val lab = HeadlessWorkspace.newLab
         lab.run(settings, protocol, newWorkspace _)
       case None =>
@@ -49,12 +58,13 @@ object Main {
       System.setProperty(p, "true")
   }
   private def parseArgs(args: Array[String]): Option[Settings] = {
-    var model: Option[String] = None
+    var model: Option[URI] = None
+    var modelPathString: Option[String] = None
     var minPxcor: Option[String] = None
     var maxPxcor: Option[String] = None
     var minPycor: Option[String] = None
     var maxPycor: Option[String] = None
-    var setupFile: Option[java.io.File] = None
+    var setupFile: Option[URI] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
@@ -84,7 +94,11 @@ object Main {
       else if(arg == "--fullversion")
         { println(TwoDVersion.fullVersion); return None }
       else if(arg == "--model")
-        { requireHasNext(); model = Some(it.next()) }
+        { requireHasNext()
+          val modelString = it.next()
+          model = Some(Paths.get(modelString).toUri)
+          modelPathString = Some(modelString)
+        }
       else if(arg == "--min-pxcor")
         { requireHasNext(); minPxcor = Some(it.next()) }
       else if(arg == "--max-pxcor")
@@ -94,7 +108,7 @@ object Main {
       else if(arg == "--max-pycor")
         { requireHasNext(); maxPycor = Some(it.next()) }
       else if(arg == "--setup-file")
-        { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
+        { requireHasNext(); setupFile = Some(new java.io.File(it.next()).toPath.toUri) }
       else if(arg == "--experiment")
         { requireHasNext(); experiment = Some(it.next()) }
       else if(arg == "--table")
@@ -121,10 +135,10 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    val version = fileformat.modelVersionAtPath(model.get)
+    val version = fileformat.modelVersionAtPath(modelPathString.get)
     if (version.isEmpty)
       die(s"Unable to detect model version at path ${model.get}")
-    Some(new Settings(model.get, experiment, setupFile, tableWriter,
+    Some(new Settings(modelPathString.get, model.get, experiment, setupFile, tableWriter,
                       spreadsheetWriter, dims, threads, suppressErrors, version.get))
   }
 }

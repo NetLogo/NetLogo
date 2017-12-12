@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
-<model xmlns="http://ccl.northwestern.edu/netlogo/6.1">
-  <version>NetLogo 6.1.0</version>
+<?xml version='1.0' encoding='UTF-8'?>
+<model xmlns="http://ccl.northwestern.edu/netlogo/netlogox/1">
+  <version><![CDATA[NetLogo 6.1.0]]></version>
   <code><![CDATA[to foo crt 1 end]]></code>
   <widgets>
     <view left="100" top="150" right="200" bottom="250" updateMode="continuous" fontSize="12" frameRate="30.0" showTickCounter="true">
-      <dimensions minPxcor="-25" maxPxcor="25" wrapInX="true" minPycor="-25" maxPycor="25" wrapInY="true" patchSize="13" />
-      <tickCounterLabel>ticks</tickCounterLabel>
+      <dimensions minPxcor="-25" maxPxcor="25" wrapInX="true" minPycor="-25" maxPycor="25" wrapInY="true" patchSize="13"/>
+      <tickCounterLabel><![CDATA[ticks]]></tickCounterLabel>
     </view>
   </widgets>
   <info><![CDATA[
@@ -44,8 +44,19 @@
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)]]>
-  </info>
-  <shapes></shapes>
-  <linkShapes></linkShapes>
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+  ]]></info>
+  <shapes/>
+  <linkShapes/>
+  <hubnet/>
+  <modelSettings/>
+  <modelInfo>
+    <title/>
+    <subject/>
+  </modelInfo>
+  <previewCommands>
+    <compiled><![CDATA[setup repeat 75 [ go ]]]></compiled>
+  </previewCommands>
+  <experiments/>
+  <systemDynamics/>
 </model>

@@ -45,7 +45,7 @@ trait ModelTracker extends NvmModelTracker {
   /**
    * Representation of the active model.
    */
-  private var _model: Model = Model()
+  protected var _model: Model = Model()
   def model: Model = _model
 
   /**
@@ -152,6 +152,7 @@ trait ModelTracker extends NvmModelTracker {
     Option(modelFileName)
       .map(name =>
           if (getModelType == ModelType.New) "Untitled"
+          else if (name.endsWith(".nlogox")) name.stripSuffix(".nlogox")
           else if (name.endsWith(".nlogo")) name.stripSuffix(".nlogo")
           else if (name.endsWith(".nlogo3d")) name.stripSuffix(".nlogo3d")
           else name)
@@ -188,7 +189,9 @@ trait ModelTracker extends NvmModelTracker {
   }
 }
 
-class ModelTrackerImpl(messageCenter: WorkspaceMessageCenter) extends ModelTracker {
+class ModelTrackerImpl(messageCenter: WorkspaceMessageCenter, initialModel: Model = Model()) extends ModelTracker {
+  _model = initialModel
+
   override def setModelPath(dir: String): Unit = {
     super.setModelPath(dir)
 

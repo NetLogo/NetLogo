@@ -46,6 +46,7 @@ window.RemoveAllJobs
 window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
+window.SwitchArity - Boolean is3D - java.net.URI modelURI - org.nlogo.core.Model model - org.nlogo.api.ModelType modelType
 window.TickStateChange - boolean tickCounterInitialized
 window.UpdateModel - java.util.function.Function<org.nlogo.core.Model,org.nlogo.core.Model> updateFunction
 window.WidgetAdded - Object widget - org.nlogo.window.AbstractWidgetPanel panel

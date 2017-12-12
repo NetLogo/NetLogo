@@ -19,10 +19,10 @@ object HeadlessFileController extends OpenModel.Controller {
   def invalidModelVersion(uri: URI,version: String): Unit = {
     System.err.println(s"NetLogo wasn't able to open the model at $uri. The NetLogo file had a missing or invalid version string")
   }
-  def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = {
+  def shouldOpenModelOfDifferingArity(arity: Int,version: String): OpenModel.VersionResponse = {
     val (expectedArity, actualArity) = if (arity == 2) ("3D ", "") else (" ", "3D ")
     System.err.println(s"Expected to find a NetLogo ${expectedArity}model, but found a NetLogo ${actualArity}model. Aborting...")
-    false
+    OpenModel.CancelOpening
   }
   def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = {
     System.err.println(s"This NetLogo model has version ${openVersion}, the current version is ${currentVersion}, please resave the model in NetLogo ${currentVersion} before opening headlessly. Aborting...")

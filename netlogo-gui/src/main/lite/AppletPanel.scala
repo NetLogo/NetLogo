@@ -217,7 +217,7 @@ with ControlSet {
       workspace.compilerServices, fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), version)
-    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace.compilerServices))
+    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace.compilerServices, workspace.modelTracker.currentVersion))
   }
 
   def userInterface: Future[BufferedImage] = {

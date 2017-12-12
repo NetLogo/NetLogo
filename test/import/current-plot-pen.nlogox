@@ -1,0 +1,394 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model xmlns="http://ccl.northwestern.edu/netlogo/netlogox/1">
+  <version><![CDATA[NetLogo 6.1.0-M1]]></version>
+  <previewCommands>
+    <compiled><![CDATA[setup repeat 75 [ go ]]]></compiled>
+  </previewCommands>
+  <info><![CDATA[## WHAT IS IT?
+
+(a general understanding of what the model is trying to show or explain)
+
+## HOW IT WORKS
+
+(what rules the agents use to create the overall behavior of the model)
+
+## HOW TO USE IT
+
+(how to use the model, including a description of each of the items in the Interface tab)
+
+## THINGS TO NOTICE
+
+(suggested things for the user to notice while running the model)
+
+## THINGS TO TRY
+
+(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+
+## EXTENDING THE MODEL
+
+(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+
+## NETLOGO FEATURES
+
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+
+## RELATED MODELS
+
+(models in the NetLogo Models Library and elsewhere which are of related interest)
+
+## CREDITS AND REFERENCES
+
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)]]></info>
+  <systemDynamics/>
+  <modelInfo>
+    <title/>
+    <subject/>
+  </modelInfo>
+  <linkShapes>
+    <linkShape curviness="0.0" name="default">
+      <line stroke-dasharray="0.0,1.0" isVisible="false" offset="-0.2"/>
+      <line stroke-dasharray="1.0,0.0" isVisible="true" offset="0.0"/>
+      <line stroke-dasharray="0.0,1.0" isVisible="false" offset="0.2"/>
+      <indicator editableColorIndex="0" rotatable="true" name="link direction">
+        <elements>
+          <line marked="true" filled="false" color="#8D8D8D" y2="180" x2="90" y1="150" x1="150"/>
+          <line marked="true" filled="false" color="#8D8D8D" y2="180" x2="210" y1="150" x1="150"/>
+        </elements>
+      </indicator>
+    </linkShape>
+  </linkShapes>
+  <widgets>
+    <view bottom="448" right="647" top="10" left="210" frameRate="30.0" showTickCounter="true" updateMode="continuous" fontSize="10">
+      <dimensions maxPycor="16" minPycor="-16" maxPxcor="16" minPxcor="-16" wrapInY="true" wrapInX="true" patchSize="13.0"/>
+      <tickCounterLabel><![CDATA[ticks]]></tickCounterLabel>
+    </view>
+    <plot bottom="161" right="203" top="11" left="3" ymax="10.0" ymin="0.0" xmax="10.0" xmin="0.0" legendOn="true" autoPlotOn="true">
+      <display><![CDATA[plot]]></display>
+      <setup/>
+      <update/>
+      <pens>
+        <pen inLegend="true" color="-16777216" mode="line" interval="1.0">
+          <setup/>
+          <update><![CDATA[plot 1]]></update>
+          <display><![CDATA[pen1]]></display>
+        </pen>
+        <pen inLegend="true" color="-7500403" mode="line" interval="1.0">
+          <setup/>
+          <update><![CDATA[plot 2]]></update>
+          <display><![CDATA[pen2]]></display>
+        </pen>
+      </pens>
+    </plot>
+  </widgets>
+  <experiments/>
+  <shapes>
+    <vectorShape editableColorIndex="0" rotatable="true" name="default">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,5 40,250 150,205 260,250"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="airplane">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,0 135,15 120,60 120,105 15,165 15,195 120,180 135,240 105,270 120,285 150,270 180,285 210,270 165,240 180,180 285,195 285,165 180,105 180,60 165,15"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="arrow">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,0 0,150 105,150 105,293 195,293 195,150 300,150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="box">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,285 285,225 285,75 150,135"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,135 15,75 150,15 285,75"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="15,75 15,225 150,285 150,135"/>
+        <line marked="false" filled="false" color="#000000" y2="135" x2="150" y1="285" x1="150"/>
+        <line marked="false" filled="false" color="#000000" y2="75" x2="15" y1="135" x1="150"/>
+        <line marked="false" filled="false" color="#000000" y2="75" x2="285" y1="135" x1="150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="bug">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="182" cx="96"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="127" cx="110"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="75" cx="110"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="30" x2="80" y1="100" x1="150"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="30" x2="220" y1="100" x1="150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="butterfly">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,165 209,199 225,225 225,255 195,270 165,255 150,240"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,165 89,198 75,225 75,255 105,270 135,255 150,240"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="139,148 100,105 55,90 25,90 10,105 10,135 25,180 40,195 85,194 139,163"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="162,150 200,105 245,90 275,90 290,105 290,135 275,180 260,195 215,195 162,165"/>
+        <polygon marked="false" filled="true" color="#000000" points="150,255 135,225 120,150 135,120 150,105 165,120 180,150 165,225"/>
+        <circle marked="false" filled="true" color="#000000" diameter="30" cy="90" cx="135"/>
+        <line marked="false" filled="false" color="#000000" y2="60" x2="195" y1="105" x1="150"/>
+        <line marked="false" filled="false" color="#000000" y2="60" x2="105" y1="105" x1="150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="car">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="300,180 279,164 261,144 240,135 226,132 213,106 203,84 185,63 159,50 135,50 75,60 0,150 0,165 0,225 300,225 300,180"/>
+        <circle marked="false" filled="true" color="#000000" diameter="90" cy="180" cx="180"/>
+        <circle marked="false" filled="true" color="#000000" diameter="90" cy="180" cx="30"/>
+        <polygon marked="false" filled="true" color="#000000" points="162,80 132,78 134,135 209,135 194,105 189,96 180,89"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="58" cy="195" cx="47"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="58" cy="195" cx="195"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="circle">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="circle 2">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+        <circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="cow">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="200,193 197,249 179,249 177,196 166,187 140,189 93,191 78,179 72,211 49,209 48,181 37,149 25,120 25,89 45,72 103,84 179,75 198,76 252,64 272,81 293,103 285,121 255,121 242,118 224,167"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="73,210 86,251 62,249 48,208"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="25,114 16,195 9,204 23,213 25,200 39,123"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="cylinder">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="dot">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="120" cy="90" cx="90"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="face happy">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="8" cx="8"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <polygon marked="false" filled="true" color="#000000" points="150,255 90,239 62,213 47,191 67,179 90,203 109,218 150,225 192,218 210,203 227,181 251,194 236,217 212,240"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="face neutral">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="7" cx="8"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <rect marked="false" filled="true" color="#000000" height="30" width="180" y="195" x="60"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="face sad">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="8" cx="8"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <polygon marked="false" filled="true" color="#000000" points="150,168 90,184 62,210 47,232 67,244 90,220 109,205 150,198 192,205 210,220 227,242 251,229 236,206 212,183"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="fish">
+      <elements>
+        <polygon marked="false" filled="true" color="#FFFFFF" points="44,131 21,87 15,86 0,120 15,150 0,180 13,214 20,212 45,166"/>
+        <polygon marked="false" filled="true" color="#FFFFFF" points="135,195 119,235 95,218 76,210 46,204 60,165"/>
+        <polygon marked="false" filled="true" color="#FFFFFF" points="75,45 83,77 71,103 86,114 166,78 135,60"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="30,136 151,77 226,81 280,119 292,146 292,160 287,170 270,195 195,210 151,212 30,166"/>
+        <circle marked="false" filled="true" color="#000000" diameter="30" cy="106" cx="215"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="flag">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="285" width="15" y="15" x="60"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="90,150 270,90 90,30"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="135" x2="90" y1="135" x1="75"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="45" x2="90" y1="45" x1="75"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="flower">
+      <elements>
+        <polygon marked="false" filled="true" color="#59B03C" points="135,120 165,165 180,210 180,240 150,300 165,300 195,240 195,195 165,135"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="132" cx="85"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="147" cx="130"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="85" cx="192"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="40" cx="85"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="40" cx="177"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="132" cx="177"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="85" cx="70"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="25" cx="130"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="51" cx="96"/>
+        <circle marked="false" filled="true" color="#000000" diameter="74" cy="68" cx="113"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="189,233 219,188 249,173 279,188 234,218"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="180,255 150,210 105,210 75,240 135,240"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="house">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="165" width="210" y="120" x="45"/>
+        <rect marked="false" filled="true" color="#000000" height="75" width="60" y="210" x="120"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="15,120 150,15 285,120"/>
+        <line marked="false" filled="false" color="#000000" y2="120" x2="270" y1="120" x1="30"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="leaf">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,210 135,195 120,210 60,210 30,195 60,180 60,165 15,135 30,120 15,105 40,104 45,90 60,90 90,105 105,120 120,120 105,60 120,60 135,30 150,15 165,30 180,60 195,60 180,120 195,120 210,105 240,90 255,90 263,104 285,105 270,120 285,135 240,165 240,180 270,195 240,210 180,210 165,195"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="135,195 135,240 120,255 105,255 105,285 135,285 165,240 165,195"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="line">
+      <elements>
+        <line marked="true" filled="false" color="#8D8D8D" y2="300" x2="150" y1="0" x1="150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="line half">
+      <elements>
+        <line marked="true" filled="false" color="#8D8D8D" y2="150" x2="150" y1="0" x1="150"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="pentagon">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,15 15,120 60,285 240,285 285,120"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="person">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="5" cx="110"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="105,90 120,195 90,285 105,300 135,300 150,225 165,300 195,300 210,285 180,195 195,90"/>
+        <rect marked="true" filled="true" color="#8D8D8D" height="15" width="45" y="79" x="127"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="195,90 240,150 225,180 165,105"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="105,90 60,150 75,180 135,105"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="plant">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="210" width="30" y="90" x="135"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="135,255 90,210 45,195 75,255 135,285"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="165,255 210,210 255,195 225,255 165,285"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="135,180 90,135 45,120 75,180 135,210"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="165,180 165,210 225,180 255,120 210,135"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="135,105 90,60 45,45 75,105 135,135"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="165,105 165,135 225,105 255,45 210,60"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="135,90 120,45 150,15 180,45 165,90"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="15" rotatable="false" name="sheep">
+      <elements>
+        <circle marked="true" filled="true" color="#FFFFFF" diameter="88" cy="65" cx="203"/>
+        <circle marked="true" filled="true" color="#FFFFFF" diameter="162" cy="65" cx="70"/>
+        <circle marked="true" filled="true" color="#FFFFFF" diameter="120" cy="105" cx="150"/>
+        <polygon marked="false" filled="true" color="#8D8D8D" points="218,120 240,165 255,165 278,120"/>
+        <circle marked="false" filled="true" color="#8D8D8D" diameter="67" cy="72" cx="214"/>
+        <rect marked="true" filled="true" color="#FFFFFF" height="75" width="15" y="223" x="164"/>
+        <polygon marked="true" filled="true" color="#FFFFFF" points="45,285 30,285 30,240 15,195 45,210"/>
+        <circle marked="true" filled="true" color="#FFFFFF" diameter="150" cy="83" cx="3"/>
+        <rect marked="true" filled="true" color="#FFFFFF" height="75" width="15" y="221" x="65"/>
+        <polygon marked="true" filled="true" color="#FFFFFF" points="195,285 210,285 210,240 240,210 195,210"/>
+        <polygon marked="false" filled="true" color="#8D8D8D" points="276,85 285,105 302,99 294,83"/>
+        <polygon marked="false" filled="true" color="#8D8D8D" points="219,85 210,105 193,99 201,83"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="square">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="240" width="240" y="30" x="30"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="square 2">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="240" width="240" y="30" x="30"/>
+        <rect marked="false" filled="true" color="#000000" height="180" width="180" y="60" x="60"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="star">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="151,1 185,108 298,108 207,175 242,282 151,216 59,282 94,175 3,108 116,108"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="target">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+        <circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="180" cy="60" cx="60"/>
+        <circle marked="false" filled="true" color="#000000" diameter="120" cy="90" cx="90"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="60" cy="120" cx="120"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="tree">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="94" cy="3" cx="118"/>
+        <rect marked="false" filled="true" color="#9D6E48" height="105" width="60" y="195" x="120"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="21" cx="65"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="127" cy="41" cx="116"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="120" cy="90" cx="45"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="152" cy="74" cx="104"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="triangle">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,30 15,255 285,255"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="triangle 2">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="150,30 15,255 285,255"/>
+        <polygon marked="false" filled="true" color="#000000" points="151,99 225,223 75,224"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="truck">
+      <elements>
+        <rect marked="true" filled="true" color="#8D8D8D" height="142" width="191" y="45" x="4"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="296,193 296,150 259,134 244,104 208,104 207,194"/>
+        <rect marked="false" filled="true" color="#FFFFFF" height="45" width="0" y="60" x="195"/>
+        <polygon marked="false" filled="true" color="#000000" points="238,112 252,141 219,141 218,112"/>
+        <circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="234"/>
+        <rect marked="true" filled="true" color="#8D8D8D" height="9" width="33" y="185" x="181"/>
+        <circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="144"/>
+        <circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="24"/>
+        <circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="24"/>
+        <circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="144"/>
+        <circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="234"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="true" name="turtle">
+      <elements>
+        <polygon marked="false" filled="true" color="#59B03C" points="215,204 240,233 246,254 228,266 215,252 193,210"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="195,90 225,75 245,75 260,89 269,108 261,124 240,105 225,105 210,105"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="105,90 75,75 55,75 40,89 31,108 39,124 60,105 75,105 90,105"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="132,85 134,64 107,51 108,17 150,2 192,18 192,52 169,65 172,87"/>
+        <polygon marked="false" filled="true" color="#59B03C" points="85,204 60,233 54,254 72,266 85,252 107,210"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="119,75 179,75 209,101 224,135 220,225 175,261 128,261 81,224 74,135 88,99"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="wheel">
+      <elements>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="294" cy="3" cx="3"/>
+        <circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="15" x2="150" y1="285" x1="150"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="150" x2="285" y1="150" x1="15"/>
+        <circle marked="true" filled="true" color="#8D8D8D" diameter="60" cy="120" cx="120"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="269" x2="79" y1="40" x1="216"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="221" x2="269" y1="84" x1="40"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="79" x2="269" y1="216" x1="40"/>
+        <line marked="true" filled="false" color="#8D8D8D" y2="269" x2="221" y1="40" x1="84"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="wolf">
+      <elements>
+        <polygon marked="false" filled="true" color="#000000" points="253,133 245,131 245,133"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="2,194 13,197 30,191 38,193 38,205 20,226 20,257 27,265 38,266 40,260 31,253 31,230 60,206 68,198 75,209 66,228 65,243 82,261 84,268 100,267 103,261 77,239 79,231 100,207 98,196 119,201 143,202 160,195 166,210 172,213 173,238 167,251 160,248 154,265 169,264 178,247 186,240 198,260 200,271 217,271 219,262 207,258 195,230 192,198 210,184 227,164 242,144 259,145 284,151 277,141 293,140 299,134 297,127 273,119 270,105"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="-1,195 14,180 36,166 40,153 53,140 82,131 134,133 159,126 188,115 227,108 236,102 238,98 268,86 269,92 281,87 269,103 269,113"/>
+      </elements>
+    </vectorShape>
+    <vectorShape editableColorIndex="0" rotatable="false" name="x">
+      <elements>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="270,75 225,30 30,225 75,270"/>
+        <polygon marked="true" filled="true" color="#8D8D8D" points="30,75 75,30 270,225 225,270"/>
+      </elements>
+    </vectorShape>
+  </shapes>
+  <code/>
+  <modelSettings/>
+  <hubnet/>
+</model>

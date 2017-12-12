@@ -1,0 +1,1294 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://ccl.northwestern.edu/netlogo/netlogox/1"
+  xmlns:netlogox="http://ccl.northwestern.edu/netlogo/netlogox/1"
+  xmlns:xrgt="http://github.com/NetLogo/xml-format-library/0/types"
+  xmlns:xrg="http://github.com/NetLogo/xml-format-library/0/annotations"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  elementFormDefault="qualified" >
+
+  <xsd:import namespace="http://github.com/NetLogo/xml-format-library/0/types" schemaLocation="types.xsd" />
+
+  <xsd:element name="model" type="netlogox:Model" />
+
+  <xsd:complexType name="Model">
+    <xsd:annotation>
+      <xsd:documentation netlogox:docType="internal">
+        This is only here because it allows validation, at the moment no code is generated based on ModelType.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="version" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The version element contains a string of the form "NetLogo A.B.C" where A, B, and C are
+            the major, minor, and patch version numbers respectively. This string is essential to helping NetLogo
+            determine whether code needs to be automatically converted to a newer version. If this string is missing
+            or invalid, NetLogo will most likely be unable to open the model.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="code" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The code element is the code of the model. This code is typically enclosed in
+            <a href="https://en.wikipedia.org/wiki/CDATA">CDATA tags</a> to preserve whitespace
+            and allow code to be stored in a non-escaped form.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="info" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The info tab content of the model. This content is typically enclosed in
+            <a href="https://en.wikipedia.org/wiki/CDATA">CDATA tags</a> to preserve
+            whitespace and allow text to be stored in a non-escaped form.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="widgets" type="netlogox:Widget">
+        <xsd:annotation>
+          <xsd:documentation>
+            Lists the widgets in the model.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="modelInfo" type="netlogox:ModelInfo">
+        <xsd:annotation>
+          <xsd:documentation>
+            Contains metadata (things like title, author, etc.) about the model.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="linkShapes">
+        <xsd:annotation>
+          <xsd:documentation>
+            The list of link shapes available within the model.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="linkShape" type="netlogox:LinkShape" minOccurs="0" maxOccurs="unbounded" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="shapes">
+        <xsd:annotation>
+          <xsd:documentation>
+            The list of turtle shapes available within the model.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="vectorShape" type="netlogox:VectorShape" minOccurs="0" maxOccurs="unbounded" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="experiments">
+        <xsd:annotation>
+          <xsd:documentation>
+            The behaviorspace experiments available to the model uses to generate its preview.
+            This value also corresponds to the Behaviorspace external file format available to headless behaviorspace runs.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="experiment" type="netlogox:Experiment" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="modelSettings" type="netlogox:ModelSettings">
+        <xsd:annotation>
+          <xsd:documentation>
+            Gives the settings applied to the NetLogo environment at the the time this model is loaded.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="previewCommands" type="netlogox:PreviewCommands">
+        <xsd:annotation>
+          <xsd:documentation>
+            The method the model uses to generate its preview image.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="hubnet" type="netlogox:HubNetWidget">
+        <xsd:annotation>
+          <xsd:documentation>
+            The widgets available to Hubnet clients using this model. This section will be empty for non-hubnet models.
+            Note that certain hubnet widgets differ from the typical widgets available to the model. Moving widgets
+            directly from the widgets section to the hubnet section (and vice-versa) isn&apos;t recommended.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="systemDynamics" type="netlogox:SystemDynamics">
+        <xsd:annotation>
+          <xsd:documentation>
+            The system dynamics section of the model. For models without a system dynamics, component,
+            this section will be empty. Note that this section (at the moment) consists of opaque data serialized
+            by our system-dynamics drawing library. Changing this data may result in a corrupted system dynamics
+            section and an unopenable file.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="Widget">
+    <xsd:annotation>
+      <xsd:documentation>
+        A widget represents one of the items found in the NetLogo interface tab.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="button"  type="netlogox:Button" />
+      <xsd:element name="chooser" type="netlogox:Chooser" />
+      <xsd:element name="numericInput" type="netlogox:NumericInput" />
+      <xsd:element name="stringInput" type="netlogox:StringInput" />
+      <xsd:element name="monitor" type="netlogox:Monitor" />
+      <xsd:element name="output"  type="netlogox:Output" />
+      <xsd:element name="plot"    type="netlogox:Plot" />
+      <xsd:element name="slider"  type="netlogox:Slider" />
+      <xsd:element name="switch"  type="netlogox:Switch" />
+      <xsd:element name="textbox" type="netlogox:Textbox" />
+      <xsd:element name="view"    type="netlogox:View" />
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="HubNetWidget">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Widget" />
+      <xsd:documentation>
+        A HubNetWidget represents an item found in the HubNet client editor.
+        While many of the NetLogo widgets are also HubNetWidgets, note that hubnet buttons,
+        monitors, and views are not identical to their normal counterparts.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="button"  type="netlogox:HubnetButton" />
+      <xsd:element name="chooser" type="netlogox:Chooser" />
+      <xsd:element name="numericInput" type="netlogox:NumericInput" />
+      <xsd:element name="stringInput" type="netlogox:StringInput" />
+      <xsd:element name="monitor" type="netlogox:HubnetMonitor" />
+      <xsd:element name="output"  type="netlogox:Output" />
+      <xsd:element name="plot"    type="netlogox:Plot" />
+      <xsd:element name="slider"  type="netlogox:Slider" />
+      <xsd:element name="switch"  type="netlogox:Switch" />
+      <xsd:element name="textbox" type="netlogox:Textbox" />
+      <xsd:element name="view"    type="netlogox:HubnetView" />
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="Dimensions">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="WorldDimensions" />
+      <xsd:documentation>
+        Dimensions represent the size and shape of a two-dimensional world.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="patchSize" type="xsd:double" use="required" />
+    <xsd:attribute name="wrapInX" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="wrappingAllowedInX" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="wrapInY" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="wrappingAllowedInY" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="minPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="minPycor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPycor" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Dimensions3d">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="WorldDimensions3D" />
+      <xsd:documentation>
+        Dimensions3d represent the size and shape of a three-dimensional world.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="patchSize" type="xsd:double" use="required" />
+    <xsd:attribute name="wrapInX" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="wrappingAllowedInX" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="wrapInY" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="wrappingAllowedInY" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="wrapInZ" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="wrappingAllowedInZ" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="minPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="minPycor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPycor" type="xsd:integer" use="required" />
+    <xsd:attribute name="minPzcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPzcor" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="HubnetDimensions">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="WorldDimensions" />
+      <xsd:documentation>
+        HubnetDimensions represent the size and shape of a two-dimensional hubnet world.
+        These will match the dimensions of the world described in that models view widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="minPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPxcor" type="xsd:integer" use="required" />
+    <xsd:attribute name="minPycor" type="xsd:integer" use="required" />
+    <xsd:attribute name="maxPycor" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="View">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="View" xrg:additionalImports="UpdateMode" />
+      <xsd:documentation>
+        A view widget describes the view widget for the interface area.
+        Views may have either a 2D or a 3D dimension.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="dimensions" xrg:className="WorldDimensions"/>
+        </xsd:annotation>
+        <xsd:element name="dimensions3d" type="netlogox:Dimensions3d"/>
+        <xsd:element name="dimensions" type="netlogox:Dimensions"/>
+      </xsd:choice>
+      <xsd:element name="tickCounterLabel" type="xsd:string" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="fontSize" type="xsd:positiveInteger" use="required" />
+    <xsd:attribute name="updateMode" default="tick-based">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:annotation>
+            <xsd:appinfo xrg:className="UpdateMode" />
+          </xsd:annotation>
+          <xsd:enumeration value="continuous">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="UpdateMode.Continuous" />
+              <xsd:documentation>
+                View updates will occur on a continuous basis.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="tick-based">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="UpdateMode.TickBased" />
+              <xsd:documentation>
+                View updates will occur only on ticks.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="showTickCounter" type="xsd:boolean" use="required" />
+    <xsd:attribute name="frameRate" type="xsd:double" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="HubnetView">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="View" />
+      <xsd:documentation>Represents the view used by the HubNet client interface.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="dimensions" type="netlogox:HubnetDimensions" minOccurs="1" maxOccurs="1" />
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Slider">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Slider" xrg:additionalImports="Direction Horizontal Vertical" />
+      <xsd:documentation>Represents an interface slider.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="maximum" type="xsd:string" minOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="max" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="minimum" type="xsd:string" minOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="min" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="step"    type="xsd:string" minOccurs="1"/>
+      <xsd:element name="units"   type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="variable" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:appinfo xrg:additionalField="display" />
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="default" type="xsd:double" use="required" />
+    <xsd:attribute name="direction" use="required" >
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:annotation>
+            <xsd:appinfo xrg:className="Direction" />
+          </xsd:annotation>
+          <xsd:enumeration value="horizontal">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="Horizontal" />
+              <xsd:documentation>
+                Sliders are left-to-right
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="vertical">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="Vertical" />
+              <xsd:documentation>
+                Sliders are bottom-to-top
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="StringInput">
+    <xsd:annotation>
+      <xsd:appinfo xrg:additionalImports="BoxedValue" xrg:className="InputBox" xrg:elementName="stringInput" />
+      <xsd:documentation>
+        Represents an input widget which accepts a string from the user.
+        The particular type of input widget is inferred from the <html:span class="mono">kind</html:span>
+        attribute of the <html:span class="mono">stringData</html:span> element.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="variable" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="stringData" type="netlogox:StringDataType">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="boxedValue" xrg:coerceFrom="BoxedValue" />
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+  </xsd:complexType>
+
+  <xsd:complexType name="StringDataType">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="StringInput" />
+      <xsd:documentation>
+        A tagged string representing the value of a string input widget, also contains information about the type of string
+        (plain string, command, reporter) and whether the string is multiline.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="multiline" type="xsd:boolean" use="required" />
+        <xsd:attribute name="kind" use="required" >
+          <xsd:annotation>
+            <xsd:appinfo xrg:fieldName="label" />
+            <xsd:documentation netlogox:docType="enumName">stringKind</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:annotation>
+                <xsd:appinfo xrg:className="StringInput.StringKind" />
+              </xsd:annotation>
+              <xsd:enumeration value="string">
+                <xsd:annotation>
+                  <xsd:appinfo xrg:enumeratedValue="StringInput.StringLabel" />
+                  <xsd:documentation>
+                    This string input represents a plain string.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+              <xsd:enumeration value="reporter">
+                <xsd:annotation>
+                  <xsd:appinfo xrg:enumeratedValue="StringInput.ReporterLabel" />
+                  <xsd:documentation>
+                    This string input represents a reporter.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+              <xsd:enumeration value="command">
+                <xsd:annotation>
+                  <xsd:appinfo xrg:enumeratedValue="StringInput.CommandLabel" />
+                  <xsd:documentation>
+                    This string input represents a command.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="NumericDataType" >
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="NumericInput" />
+      <xsd:documentation>
+        A tagged string representing the value of a numeric input widget, also contains information about the type of number
+        (whether it is a plain number or color).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:double">
+        <xsd:attribute name="kind" use="required" >
+          <xsd:annotation>
+            <xsd:appinfo xrg:fieldName="label" />
+            <xsd:documentation netlogox:docType="enumName">numberKind</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:annotation>
+                <xsd:appinfo xrg:className="NumericInput.NumericKind" />
+              </xsd:annotation>
+              <xsd:enumeration value="number">
+                <xsd:annotation>
+                  <xsd:appinfo xrg:enumeratedValue="NumericInput.NumberLabel" />
+                  <xsd:documentation>
+                    This numeric input represents a number.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+              <xsd:enumeration value="color">
+                <xsd:annotation>
+                  <xsd:appinfo xrg:enumeratedValue="NumericInput.ColorLabel" />
+                  <xsd:documentation>
+                    This numeric input represents a color.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="NumericInput">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="InputBox" xrg:additionalImports="BoxedValue" xrg:elementName="numericInput" />
+      <xsd:documentation>
+        A numeric input widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="variable" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="numericData" type="netlogox:NumericDataType">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="boxedValue" xrg:coerceFrom="BoxedValue" />
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Button">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Button" xrg:additionalImports="AgentKind" />
+      <xsd:documentation>
+        A NetLogo button. When <span class="mono">ticksEnabled</span> is true, the widget will be disabled until ticks start.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="source" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="forever" type="xsd:boolean" use="required" />
+    <xsd:attribute name="ticksEnabled" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="disableUntilTicksStart" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="agentKind" default="observer" >
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="buttonKind" />
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:annotation>
+            <xsd:appinfo xrg:className="AgentKind" />
+          </xsd:annotation>
+          <xsd:enumeration value="observer">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="AgentKind.Observer" />
+              <xsd:documentation>
+                Observer button (default).
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="turtle">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="AgentKind.Turtle" />
+              <xsd:documentation>
+                Turtle button.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="patch">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="AgentKind.Patch" />
+              <xsd:documentation>
+                Patch button.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="link">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="AgentKind.Link" />
+              <xsd:documentation>
+                Link button.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="actionKey" type="xrgt:character" />
+  </xsd:complexType>
+
+  <xsd:complexType name="HubnetButton">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Button" xrg:alternateConstructor="HubNetButton" xrg:additionalImports="HubNetButton" />
+      <xsd:documentation>
+        A HubNet button.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="actionKey" type="xrgt:character" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Chooser">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Chooser" />
+      <xsd:documentation>
+        A chooser widget. The active choice is specified by using <span class="mono">currentChoice</span>
+        as the index into the list of choices, where the first element is selected when
+        <span class="mono">currentChoice</span> is 0, the second element when
+        <span class="mono">currentChoice</span> is 1, and so on.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="variable" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:additionalField="display" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="choices" type="netlogox:Choices" />
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="currentChoice" type="xsd:nonNegativeInteger" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Choices">
+    <xsd:annotation>
+      <xsd:documentation>
+        A list of choices held by a chooser widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:className="List[Chooseable]" />
+      </xsd:annotation>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="value" xrg:className="Chooseable" />
+        </xsd:annotation>
+        <xsd:element name="listChoice" type="netlogox:LogoList" />
+        <xsd:element name="numberChoice" type="xsd:double">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="stringChoice" type="xsd:string" />
+        <xsd:element name="booleanChoice" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LogoList">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="org.nlogo.core.LogoList" xrg:elementName="logoList" />
+      <xsd:documentation>
+        A LogoList is used to represent a list in NetLogo.
+        See the <a href="programming.html#lists">Lists</a> section of
+        the programming guide for more information.
+        Note that while lists in a running NetLogo program can contain agents
+        or anonymous procedures, lists saved in the model may only contain numbers, strings,
+        booleans, and other lists.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:variadic="true" xrg:fieldName="objs" />
+      </xsd:annotation>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="value" xrg:className="AnyRef" />
+        </xsd:annotation>
+        <xsd:element name="number" type="xsd:double">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="string" type="xsd:string" />
+        <xsd:element name="boolean" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="logoList" type="netlogox:LogoList" />
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Output">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Output" />
+      <xsd:documentation>The NetLogo output widget. This should only appear once in the widgets section.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attributeGroup ref="netlogox:FontSized" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Plot">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Plot" />
+      <xsd:documentation>
+        The NetLogo plot widget. Note that a plot with no pens
+        should have an empty <span class="mono"><![CDATA[<pens />]]></span> element.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="xAxis"   type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="yAxis"   type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="setup"   type="xsd:string" minOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="setupCode" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="update"  type="xsd:string" minOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="updateCode" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="pens" type="netlogox:Pens" minOccurs="1" />
+    </xsd:all>
+    <xsd:attribute name="autoPlotOn" type="xsd:boolean" use="required" />
+    <xsd:attribute name="legendOn" type="xsd:boolean" use="required" />
+    <xsd:attribute name="xmin" type="xsd:double" use="required" />
+    <xsd:attribute name="xmax" type="xsd:double" use="required" />
+    <xsd:attribute name="ymin" type="xsd:double" use="required" />
+    <xsd:attribute name="ymax" type="xsd:double" use="required" />
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Pens">
+    <xsd:annotation>
+      <xsd:documentation>
+        Lists the pens for the containing plot.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:className="List[Pen]" />
+      </xsd:annotation>
+      <xsd:element name="pen" type="netlogox:Pen" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Pen">
+    <xsd:annotation>
+      <xsd:documentation>
+        A plot pen.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="setup" type="xsd:string" minOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="setupCode" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="update" type="xsd:string" minOccurs="1" >
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="updateCode" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="display" type="xsd:string" minOccurs="1" />
+    </xsd:all>
+    <xsd:attribute name="interval" type="xsd:double" use="required" />
+    <xsd:attribute name="mode" use="required" >
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:annotation>
+            <xsd:appinfo xrg:className="Int" />
+          </xsd:annotation>
+          <xsd:enumeration value="line">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="0" />
+              <xsd:documentation>
+                Denotes a plot pen in "Line Mode".
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="bar">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="1" />
+              <xsd:documentation>
+                Denotes a plot pen in "Bar Mode".
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="point">
+            <xsd:annotation>
+              <xsd:appinfo xrg:enumeratedValue="2" />
+              <xsd:documentation>
+                Denotes a plot pen in "Point Mode".
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="color" type="xsd:integer" use="required" />
+    <xsd:attribute name="inLegend" type="xsd:boolean" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Switch">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Switch" />
+      <xsd:documentation>
+        A switch widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="variable" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:additionalField="display" />
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="isOn" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="on" />
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="Monitor">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Monitor" />
+      <xsd:documentation>
+        A monitor widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="source" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1" />
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attributeGroup ref="netlogox:FontSized" />
+    <xsd:attribute name="precision" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="HubnetMonitor">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="Monitor" />
+      <xsd:documentation>
+        A HubNet monitor widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="source" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1" />
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned" />
+    <xsd:attribute name="precision" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Textbox">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="TextBox" />
+      <xsd:documentation>
+        A TextBox widget.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="display" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+    <xsd:attributeGroup ref="netlogox:Positioned"/>
+    <xsd:attributeGroup ref="netlogox:FontSized" />
+    <xsd:attribute name="color" type="netlogox:DoubleColor" use="required" />
+    <xsd:attribute name="transparent" type="xsd:boolean" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Experiment">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="LabProtocol" xrg:elementName="experiment" />
+      <xsd:documentation>
+        A Behaviorspace experiment.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="setupCode" type="xsd:string" minOccurs="0" default="">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="setupCommands" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="goCode" type="xsd:string" minOccurs="0" default="">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="goCommands" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="finalCode" type="xsd:string" minOccurs="0" default="">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="finalCommands" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="stopConditionCode" type="xsd:string" minOccurs="0" default="">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="exitCondition" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="metrics" type="netlogox:Metrics" />
+      <xsd:element name="parameterSet" type="netlogox:ParameterSet" />
+    </xsd:all>
+    <xsd:attribute name="name"                type="xsd:string" default="" />
+    <xsd:attribute name="runMetricsEveryStep" type="xsd:boolean" default="true" />
+    <xsd:attribute name="iterationLimit"      type="xsd:nonNegativeInteger" default="0">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="timeLimit" />
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="ParameterSet">
+    <xsd:annotation>
+      <xsd:documentation>
+        The set of parameters for a given Behaviorspace experiment.
+        Although this must be a <span class="mono">cartesianProduct</span> at the moment,
+        future versions of the nlogox file format may allow for different types of
+        Behaviorspace parameter sets.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:annotation>
+        <xsd:appinfo xrg:className="ParameterSet" xrg:ifNoMatch="CartesianProductParameterSet.empty" />
+      </xsd:annotation>
+      <xsd:element name="cartesianProduct" type="netlogox:CartesianProduct" />
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="CartesianProduct">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="CartesianProductParameterSet" xrg:additionalImports="RefValueSet" />
+      <xsd:documentation>
+        A Behaviorspace parameterset which iterates through all possible combinations of the value sets supplied.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="valueSets" />
+      </xsd:annotation>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:appinfo xrg:className="RefValueSet" />
+        </xsd:annotation>
+        <xsd:element name="discreteValues" type="netlogox:DiscreteValues" />
+        <xsd:element name="range" type="netlogox:Range" />
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="repetitionsPerCombo" type="xsd:nonNegativeInteger" default="1">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="repetitions" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="sequentialRunOrder"  type="xsd:boolean" default="true" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Metrics">
+    <xsd:annotation>
+      <xsd:appinfo xrg:import="false" />
+      <xsd:documentation>
+        A list of strings used to measure a behaviorspace run.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:className="List[String]" />
+      </xsd:annotation>
+      <xsd:element name="metric" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Range">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="SteppedValueSet" />
+      <xsd:documentation>
+        A value set which directs Behaviorspace to consider the values starting at <span class="mono">min</span>
+        adding <span class="mono">interval</span> to each successive value until the value reaches
+        <span class="mono">max</span>. Values larger than <span class="mono">max</span> are not included.
+        In mathematical terms:
+        { <span class="italic">x</span> &#x2208; &#x211D;, <span class="italic">i</span> &#x2208; &#x2115; |
+        <span class="italic">x</span> = <span class="italic">min</span> + <span class="italic">i &#x2219; interval</span>,
+        <span class="italic">x</span> &lt; <span class="italic">max</span> }.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="variable" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="variableName" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="min" type="xrgt:bigDecimal" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="firstValue" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="interval" type="xrgt:bigDecimal" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="step" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="max" type="xrgt:bigDecimal" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="lastValue" />
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="DiscreteValues">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="RefEnumeratedValueSet" />
+      <xsd:documentation>
+        A value set which directs Behaviorspace to consider each value provided.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="values" />
+      </xsd:annotation>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+        <xsd:annotation>
+          <xsd:appinfo xrg:className="AnyRef" xrg:fieldName="value" />
+        </xsd:annotation>
+        <xsd:element name="number" type="xsd:double">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="string" type="xsd:string" />
+        <xsd:element name="boolean" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:appinfo xrg:boxed="true" />
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="logoList" type="netlogox:LogoList" />
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="variable" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="variableName" />
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="VectorShape">
+    <xsd:annotation>
+      <xsd:appinfo xrg:import="false" xrg:elementName="vectorShape" />
+      <xsd:documentation>
+        A shape used to represent a turtle or a link end.
+        The appearance of the shape is denoted by <span class="mono">elements</span>.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="elements" type="netlogox:Elements" />
+    </xsd:all>
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="rotatable" type="xsd:boolean" use="required" />
+    <xsd:attribute name="editableColorIndex" type="xsd:integer" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="Circle">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="CircleElem" xrg:import="false" />
+      <xsd:documentation>
+        Shape element for a circle.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="cx" type="xsd:integer" use="required" >
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="x" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="cy" type="xsd:integer" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="y" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="diameter" type="xsd:integer" use="required" />
+    <xsd:attributeGroup ref="netlogox:ShapeElement"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Line">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="LineElem" xrg:import="false" />
+      <xsd:documentation>
+        Shape element for a line.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="x1" type="xsd:integer" use="required" />
+    <xsd:attribute name="y1" type="xsd:integer" use="required" />
+    <xsd:attribute name="x2" type="xsd:integer" use="required" />
+    <xsd:attribute name="y2" type="xsd:integer" use="required" />
+    <xsd:attributeGroup ref="netlogox:ShapeElement"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Rect">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="RectangleElem" xrg:import="false" />
+      <xsd:documentation>
+        Shape element for a Rectangle.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="x" type="xsd:integer" use="required" />
+    <xsd:attribute name="y" type="xsd:integer" use="required" />
+    <xsd:attribute name="width" type="xsd:integer" use="required" />
+    <xsd:attribute name="height" type="xsd:integer" use="required" />
+    <xsd:attributeGroup ref="netlogox:ShapeElement"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Polygon">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="PolygonElem" xrg:import="false" />
+      <xsd:documentation>
+        Shape element for a Polygon.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="points" type="xrgt:intPairs" use="required" />
+    <xsd:attributeGroup ref="netlogox:ShapeElement"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Elements">
+    <xsd:annotation>
+      <xsd:appinfo xrg:import="false" />
+      <xsd:documentation>
+        List of elements which comprise a VectorShape.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:appinfo xrg:className="List[XmlShapeElement]" />
+      </xsd:annotation>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="elems" />
+        </xsd:annotation>
+        <xsd:element name="circle"    type="netlogox:Circle"  />
+        <xsd:element name="line"      type="netlogox:Line" />
+        <xsd:element name="rect"      type="netlogox:Rect" />
+        <xsd:element name="polygon"   type="netlogox:Polygon" />
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LinkShape">
+    <xsd:annotation>
+      <xsd:appinfo
+        xrg:alternateConstructor="ParsedLinkShape"
+        xrg:className="ParsedLinkShape"
+        xrg:elementName="linkShape"
+        xrg:import="false" />
+      <xsd:documentation>
+        Denotes a NetLogo Link Shape. The child <span class="mono">line</span> elements
+        are given in top-to-bottom order.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="line" type="netlogox:LinkLine" minOccurs="3" maxOccurs="3">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="linkLines" />
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="indicator" type="netlogox:VectorShape" minOccurs="1" maxOccurs="1" />
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="curviness" type="xsd:double" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="LinkLine">
+    <xsd:annotation>
+      <xsd:appinfo
+        xrg:className="ParsedLinkLine"
+        xrg:import="false" />
+      <xsd:documentation>
+        Denotes a line within a link shape.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="offset" type="xsd:double" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="xcor" />
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="isVisible" type="xsd:boolean" use="required" />
+    <xsd:attribute name="stroke-dasharray" type="xrgt:floatSeq" use="required">
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="dashChoices" />
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <!-- This is based in a very loose way on the DCMI standards for metadata
+       (http://dublincore.org/documents/dc-xml-guidelines/). When additional
+       metadata is needed, it is recommended that names and values conform to
+       DCMI standards. -->
+  <xsd:complexType name="ModelInfo">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="ModelInfo" xrg:elementName="modelInfo" />
+      <xsd:documentation>
+        Model metadata. This is a new model section which doesn&apos;t
+        have a parallel in the .nlogo file format. While <span class="mono">modelInfo</span>
+        only lists title and subject at the moment, we plan to follow the
+        <a href="http://dublincore.org/documents/dc-xml-guidelines/">Dublin Core</a>
+        metadata recommendations if / when this element needs to be expanded.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="title" type="xsd:string" default="" maxOccurs="1" />
+      <xsd:element name="subject" type="xrgt:commaSeparatedList" default="" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:appinfo xrg:fieldName="tags" />
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="ModelSettings">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="ModelSettings" xrg:elementName="modelSettings" />
+      <xsd:documentation>
+        Holds information about the environment of the model. At present, this is limited to
+        whether widget editing in the workspace snaps to grid or not, but this may be enlarged
+        in future versions.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="snapToGrid" type="xsd:boolean" default="false" />
+  </xsd:complexType>
+
+  <xsd:complexType name="PreviewCommands">
+    <xsd:annotation>
+      <xsd:documentation>
+        Holds the preview commands for the model.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="source" />
+      </xsd:annotation>
+      <xsd:element name="manual" type="netlogox:ManualPreviewCommands" />
+      <xsd:element name="compiled" type="netlogox:CompiledPreviewCommands" />
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="ManualPreviewCommands">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="PreviewCommands.Manual" xrg:isScalaObject="true" />
+      <xsd:documentation>
+        Denotes that the model preview is generated manually.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+
+  <xsd:complexType name="CompiledPreviewCommands">
+    <xsd:annotation>
+      <xsd:appinfo xrg:className="PreviewCommands.Compilable" />
+      <xsd:documentation>
+        Gives the compilable-and-runnable commands used to generate the preview of the model.
+        To edit these, use the &quot;Preview Commands Editor&quot; in NetLogo.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:annotation>
+        <xsd:appinfo xrg:fieldName="source" />
+      </xsd:annotation>
+      <xsd:extension base="xsd:string" />
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="SystemDynamics">
+    <xsd:annotation>
+      <xsd:appinfo xrg:elementName="systemDynamics" />
+      <xsd:documentation>
+        Holds the data saved and loaded by the system dynamics modeler.
+        Although this is structured data, it is not XML and the form is not well-documented.
+        We <span class="italic">do not</span> advise changing the data contained within
+        this element except through the system dynamics modeler in NetLogo.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="jhotdraw6" type="xsd:string" minOccurs="0"/>
+    </xsd:all>
+    <xsd:attribute name="dt" type="xsd:double" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:attributeGroup name="Positioned">
+    <xsd:attribute name="left" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="top" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="right" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="bottom" type="xsd:nonNegativeInteger" use="required" />
+  </xsd:attributeGroup>
+
+  <xsd:attributeGroup name="FontSized">
+    <xsd:attribute name="fontSize" type="xsd:positiveInteger" use="required" />
+  </xsd:attributeGroup>
+
+  <xsd:attributeGroup name="ShapeElement">
+    <xsd:attribute name="color" type="netlogox:ColorType" use="required" />
+    <xsd:attribute name="filled" type="xsd:boolean" use="required" />
+    <xsd:attribute name="marked" type="xsd:boolean" use="required" />
+  </xsd:attributeGroup>
+
+  <xsd:simpleType name="ColorType">
+    <xsd:annotation>
+      <xsd:documentation source="http://www.w3.org/TR/SVG/types.html#DataTypeColor">a CSS2 Color </xsd:documentation>
+      <xsd:documentation>Color as defined in CSS2 and XSL 1.0 plus additional recognised color keyword names (the 'X11 colors')</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="DoubleColor">
+    <xsd:annotation>
+      <xsd:documentation source="http://www.w3.org/TR/SVG/types.html#DataTypeColor">a CSS2 Color </xsd:documentation>
+      <xsd:documentation>Color as defined in CSS2 and XSL 1.0 plus additional recognised color keyword names (the 'X11 colors')</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:attribute name="docType">
+    <xsd:annotation>
+      <xsd:documentation>docType is an attribute applied to documentation elements to indicate whether they are
+        public-facing documentation (default) or "internal", meaning primarily about the format and technical.
+        Used by the stylesheet when transforming model.xsd into HTML.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string" />
+  </xsd:attribute>
+</xsd:schema>

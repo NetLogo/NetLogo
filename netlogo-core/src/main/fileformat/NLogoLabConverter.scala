@@ -20,14 +20,12 @@ object NLogoLabConverter extends AutoConvertable {
 
   def autoConvertProtocol(converter: AutoConverter)(protocol:LabProtocol): LabProtocol = {
     import protocol._
-    new LabProtocol(name,
-      converter.convertStatement(setupCommands),
-      converter.convertStatement(goCommands),
-      converter.convertStatement(finalCommands),
-      repetitions, sequentialRunOrder, runMetricsEveryStep, timeLimit,
-      if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
-      metrics.map(converter.convertReporterExpression),
-      valueSets)
+    protocol.copy(
+      setupCommands = converter.convertStatement(setupCommands),
+      goCommands = converter.convertStatement(goCommands),
+      finalCommands = converter.convertStatement(finalCommands),
+      exitCondition = if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
+      metrics = metrics.map(converter.convertReporterExpression))
   }
 
   override def requiresAutoConversion(model: Model, needsConversion: String => Boolean): Boolean =

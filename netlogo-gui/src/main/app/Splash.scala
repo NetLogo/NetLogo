@@ -20,9 +20,11 @@ object Splash {
   }
 
   def endSplash() {
-    splashWindow.setVisible(false)
-    splashWindow.dispose()
-    splashWindow = null
+    if (splashWindow != null) {
+      splashWindow.setVisible(false)
+      splashWindow.dispose()
+      splashWindow = null
+    }
   }
 
   val image = icon("/images/title.jpg")

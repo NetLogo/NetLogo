@@ -341,7 +341,7 @@
       <documentation>All elements have an ID</documentation>
     </annotation>
     <attribute name="id" type="ID" use="optional"/>
-    <attribute ref="xml:base" type="anyURI" use="optional"/>
+    <attribute ref="xml:base" use="optional"/>
   </attributeGroup>
   <attributeGroup name="langSpaceAttrs">
     <annotation>
@@ -842,7 +842,7 @@
   </attributeGroup>
   <attributeGroup name="animElementAttrs">
     <attributeGroup ref="svg:xlinkRefAttrs"/>
-    <attribute ref="xlink:href" type="anyURI" use="optional"/>
+    <attribute ref="xlink:href" use="optional"/>
   </attributeGroup>
   <attributeGroup name="animAttributeAttrs">
     <attribute name="attributeName" type="string" use="required"/>
@@ -1875,7 +1875,7 @@
     </sequence>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:xlinkRefAttrs"/>
-    <attribute ref="xlink:href" type="anyURI" use="optional"/>
+    <attribute ref="xlink:href" use="optional"/>
     <attribute name="local" type="string" use="optional"/>
     <attribute name="name" type="string" use="required"/>
     <attribute name="rendering-intent" default="auto">

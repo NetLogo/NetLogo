@@ -2,6 +2,8 @@
 
 package org.nlogo.fileformat
 
+import java.nio.file.Files
+
 import org.scalatest.FunSuite
 
 import org.nlogo.core.{ Model, View, WorldDimensions3D }
@@ -15,6 +17,7 @@ class VersionDetectorTest extends FunSuite {
   val threeDModel = Model("").copy(
     version = ThreeDVersion.version,
     widgets = Seq(View(dimensions = WorldDimensions3D(0, 0, 0, 0, 0, 0, 12))))
+
   def modelAsString(m: Model, format: String) =
     loader.sourceString(m, format).get
 
@@ -37,7 +40,9 @@ class VersionDetectorTest extends FunSuite {
   }
 
   test("detects nlogox version 3D when it stores a 3D model") {
-    pending
+    val tempFile = Files.createTempFile("3dtest", ".nlogox")
+    loader.save(threeDModel, tempFile.toUri)
+    assertResult(ThreeDVersion)(VersionDetector.fromPath(tempFile.toString, loader).get)
   }
 
   test("fromModelContents dectects nlogox version to be 2D when it stores a 2D model") {
@@ -46,8 +51,9 @@ class VersionDetectorTest extends FunSuite {
   }
 
   test("fromPath detects nlogox version to be 2D when it stores a 2D model") {
-    // TODO: Once we support 3D nlogox, we will have to write this file
-    assertResult(TwoDVersion)(VersionDetector.fromPath("foo.nlogox", loader).get)
+    val tempFile = Files.createTempFile("2dtest", ".nlogox")
+    loader.save(twoDModel, tempFile.toUri)
+    assertResult(TwoDVersion)(VersionDetector.fromPath(tempFile.toString, loader).get)
   }
 
   test("detects nlogo string suffix to be .nlogo") {

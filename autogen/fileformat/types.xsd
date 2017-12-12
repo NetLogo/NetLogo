@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://github.com/NetLogo/xml-format-library/0/types">
+  <xsd:simpleType name="bigDecimal">
+    <xsd:annotation>
+      <xsd:documentation>Decimal type with arbitrary precision.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:double"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="commaSeparatedList">
+    <xsd:annotation>
+      <xsd:documentation>A list of strings separated by commas.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="character">
+    <xsd:annotation>
+      <xsd:documentation>A length-one string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="intPairs">
+    <xsd:annotation>
+      <xsd:documentation>A space-separated list of comma-separated integer pairs. Equivalent to the svg:Points datatype</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="floatSeq">
+    <xsd:annotation>
+      <xsd:documentation>A space-separated list of floats. Equivalent to the svg 'stroke-dasharray' property/attribute value</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+</xsd:schema>

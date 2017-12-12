@@ -2,6 +2,9 @@
 
 package org.nlogo.headless
 
+import java.net.URI
+import java.nio.file.{ Files, Paths }
+
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, TwoDVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
@@ -26,7 +29,14 @@ object Main {
       openWs.dispose()
     }
     proto match {
-      case Some((protocol, model)) =>
+      case Some((protocol, model, conversionPath)) =>
+        conversionPath.foreach { p =>
+          System.err.println(
+            s"""|The Behaviorspace setup-file format has changed.
+                |NetLogo has converted the provided setup file and saved a copy at: ${p}
+                |Please update your existing file with this copy.
+                |Continuing Behaviorspace run....""".stripMargin)
+        }
         val lab = HeadlessWorkspace.newLab(Version.is3D(model.version))
         lab.run(settings, protocol, newWorkspace _)
       case None =>
@@ -43,12 +53,13 @@ object Main {
       System.setProperty(p, "true")
   }
   private def parseArgs(args: Array[String]): Option[Settings] = {
-    var model: Option[String] = None
+    var model: Option[URI] = None
+    var modelPathString: Option[String] = None
     var minPxcor: Option[String] = None
     var maxPxcor: Option[String] = None
     var minPycor: Option[String] = None
     var maxPycor: Option[String] = None
-    var setupFile: Option[java.io.File] = None
+    var setupFile: Option[URI] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
@@ -78,7 +89,11 @@ object Main {
       else if(arg == "--fullversion")
         { println(Version.fullVersion); return None }
       else if(arg == "--model")
-        { requireHasNext(); model = Some(it.next()) }
+        { requireHasNext()
+          val modelString = it.next()
+          model = Some(Paths.get(modelString).toUri)
+          modelPathString = Some(modelString)
+        }
       else if(arg == "--min-pxcor")
         { requireHasNext(); minPxcor = Some(it.next()) }
       else if(arg == "--max-pxcor")
@@ -88,7 +103,7 @@ object Main {
       else if(arg == "--max-pycor")
         { requireHasNext(); maxPycor = Some(it.next()) }
       else if(arg == "--setup-file")
-        { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
+        { requireHasNext(); setupFile = Some(new java.io.File(it.next()).toPath.toUri) }
       else if(arg == "--experiment")
         { requireHasNext(); experiment = Some(it.next()) }
       else if(arg == "--table")
@@ -115,10 +130,12 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    val version = fileformat.modelVersionAtPath(model.get)
+    if (! Files.exists(Paths.get(model.get)))
+      die(s"Could not find model file at ${Paths.get(model.get)}, please check the path and try again")
+    val version = fileformat.modelVersionAtPath(modelPathString.get)
     if (version.isEmpty)
       die(s"Unable to detect model version at path ${model.get}")
-    Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors, version.get))
+    Some(new Settings(modelPathString.get, model.get, experiment, setupFile, tableWriter,
+      spreadsheetWriter, dims, threads, suppressErrors, version.get))
   }
 }

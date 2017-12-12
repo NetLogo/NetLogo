@@ -111,6 +111,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(publicationSettings("NetLogo-JVM"): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(XmlReaderGenerator.additionalSectionsSettings: _*).
+  settings(XmlReaderGenerator.importSchemaSettings: _*).
   settings(flexmarkDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -272,6 +273,8 @@ lazy val macros = (project in file("macros")).
   settings(scalastyleSettings: _*).
   settings(libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value)
 
+lazy val xmlLibVersion = "0.0.8"
+
 lazy val parser = CrossProject("parser", file("."),
   new CrossType {
     override def projectDir(crossBase: File, projectType: String): File =
@@ -287,6 +290,7 @@ lazy val parser = CrossProject("parser", file("."),
     isSnapshot := true,
     name := "parser",
     version := "0.2.0",
+    resolvers += Resolver.bintrayRepo("content/netlogo", "NetLogo-JVM"),
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test",
     autogenRoot     := baseDirectory.value.getParentFile / "autogen"
@@ -304,11 +308,11 @@ lazy val parser = CrossProject("parser", file("."),
         Seq(
           "org.scala-lang.modules"   %%%! "scala-parser-combinators" % "1.0.5",
           "org.typelevel"  %%%! "cats-core" % "1.0.0-MF",
-          "org.nlogo" %%%! "xml-lib" % "0.0.1",
+          "org.nlogo" %%%! "xml-lib" % xmlLibVersion,
           "org.typelevel" %%%! "cats-core" % "1.0.0-MF",
           "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
           "org.scalacheck" %%%! "scalacheck" % "1.13.4" % "test",
-          "org.nlogo" %%%! "xml-lib" % "0.0.1" % "test" classifier "tests"
+          "org.nlogo" %%%! "xml-lib" % xmlLibVersion % "test" classifier "tests"
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
@@ -319,8 +323,8 @@ lazy val parser = CrossProject("parser", file("."),
       libraryDependencies ++=
         Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5",
           "org.typelevel" %% "cats-core" % "1.0.0-MF",
-          "org.nlogo" %% "xml-lib" % "0.0.1",
-          "org.nlogo" %% "xml-lib" % "0.0.1" % "test" classifier "tests")
+          "org.nlogo" %% "xml-lib" % xmlLibVersion,
+          "org.nlogo" %% "xml-lib" % xmlLibVersion % "test" classifier "tests")
     )
 
 lazy val parserJVM = parser.jvm

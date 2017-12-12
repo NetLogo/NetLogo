@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<nlogox:model xmlns:nlogox="http://ccl.northwestern.edu/netlogo/netlogox/1">
+  <nlogox:version><![CDATA[NetLogo 6.0.2]]></nlogox:version>
+  <nlogox:previewCommands>
+    <nlogox:compiled><![CDATA[set density 60.0
+setup
+repeat 180 [ go ]]]></nlogox:compiled>
+  </nlogox:previewCommands>
+  <nlogox:info/>
+  <nlogox:systemDynamics/>
+  <nlogox:modelInfo>
+    <nlogox:title/>
+    <nlogox:subject/>
+  </nlogox:modelInfo>
+  <nlogox:linkShapes>
+    <nlogox:linkShape curviness="0.0" name="default">
+      <nlogox:line stroke-dasharray="0.0,1.0" isVisible="false" offset="-0.2"/>
+      <nlogox:line stroke-dasharray="1.0,0.0" isVisible="true" offset="0.0"/>
+      <nlogox:line stroke-dasharray="0.0,1.0" isVisible="false" offset="0.2"/>
+      <nlogox:indicator editableColorIndex="0" rotatable="true" name="link direction">
+        <nlogox:elements>
+          <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="180" x2="90" y1="150" x1="150"/>
+          <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="180" x2="210" y1="150" x1="150"/>
+        </nlogox:elements>
+      </nlogox:indicator>
+    </nlogox:linkShape>
+  </nlogox:linkShapes>
+  <nlogox:widgets>
+    <nlogox:view bottom="543" right="712" top="10" left="200" frameRate="30.0" showTickCounter="true" fontSize="10">
+      <nlogox:dimensions maxPycor="125" minPycor="-125" maxPxcor="125" minPxcor="-125" wrapInY="false" wrapInX="false" patchSize="2.0"/>
+      <nlogox:tickCounterLabel><![CDATA[ticks]]></nlogox:tickCounterLabel>
+    </nlogox:view>
+    <nlogox:slider bottom="71" right="190" top="38" left="5" direction="horizontal" default="57.0">
+      <nlogox:maximum><![CDATA[99.0]]></nlogox:maximum>
+      <nlogox:minimum><![CDATA[0.0]]></nlogox:minimum>
+      <nlogox:step><![CDATA[1.0]]></nlogox:step>
+      <nlogox:units><![CDATA[%]]></nlogox:units>
+      <nlogox:variable><![CDATA[density]]></nlogox:variable>
+    </nlogox:slider>
+  </nlogox:widgets>
+  <nlogox:experiments/>
+  <nlogox:shapes>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="default">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,5 40,250 150,205 260,250"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="airplane">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,0 135,15 120,60 120,105 15,165 15,195 120,180 135,240 105,270 120,285 150,270 180,285 210,270 165,240 180,180 285,195 285,165 180,105 180,60 165,15"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="arrow">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,0 0,150 105,150 105,293 195,293 195,150 300,150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="box">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,285 285,225 285,75 150,135"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,135 15,75 150,15 285,75"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="15,75 15,225 150,285 150,135"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="135" x2="150" y1="285" x1="150"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="75" x2="15" y1="135" x1="150"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="75" x2="285" y1="135" x1="150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="bug">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="182" cx="96"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="127" cx="110"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="75" cx="110"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="30" x2="80" y1="100" x1="150"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="30" x2="220" y1="100" x1="150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="butterfly">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,165 209,199 225,225 225,255 195,270 165,255 150,240"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,165 89,198 75,225 75,255 105,270 135,255 150,240"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="139,148 100,105 55,90 25,90 10,105 10,135 25,180 40,195 85,194 139,163"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="162,150 200,105 245,90 275,90 290,105 290,135 275,180 260,195 215,195 162,165"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="150,255 135,225 120,150 135,120 150,105 165,120 180,150 165,225"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="30" cy="90" cx="135"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="60" x2="195" y1="105" x1="150"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="60" x2="105" y1="105" x1="150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="car">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="300,180 279,164 261,144 240,135 226,132 213,106 203,84 185,63 159,50 135,50 75,60 0,150 0,165 0,225 300,225 300,180"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="90" cy="180" cx="180"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="90" cy="180" cx="30"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="162,80 132,78 134,135 209,135 194,105 189,96 180,89"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="58" cy="195" cx="47"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="58" cy="195" cx="195"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="circle">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="circle 2">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="cow">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="200,193 197,249 179,249 177,196 166,187 140,189 93,191 78,179 72,211 49,209 48,181 37,149 25,120 25,89 45,72 103,84 179,75 198,76 252,64 272,81 293,103 285,121 255,121 242,118 224,167"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="73,210 86,251 62,249 48,208"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="25,114 16,195 9,204 23,213 25,200 39,123"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="cylinder">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="dot">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="120" cy="90" cx="90"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="face happy">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="8" cx="8"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="150,255 90,239 62,213 47,191 67,179 90,203 109,218 150,225 192,218 210,203 227,181 251,194 236,217 212,240"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="face neutral">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="7" cx="8"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <nlogox:rect marked="false" filled="true" color="#000000" height="30" width="180" y="195" x="60"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="face sad">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="285" cy="8" cx="8"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="60"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="60" cy="75" cx="180"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="150,168 90,184 62,210 47,232 67,244 90,220 109,205 150,198 192,205 210,220 227,242 251,229 236,206 212,183"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="fish">
+      <nlogox:elements>
+        <nlogox:polygon marked="false" filled="true" color="#FFFFFF" points="44,131 21,87 15,86 0,120 15,150 0,180 13,214 20,212 45,166"/>
+        <nlogox:polygon marked="false" filled="true" color="#FFFFFF" points="135,195 119,235 95,218 76,210 46,204 60,165"/>
+        <nlogox:polygon marked="false" filled="true" color="#FFFFFF" points="75,45 83,77 71,103 86,114 166,78 135,60"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="30,136 151,77 226,81 280,119 292,146 292,160 287,170 270,195 195,210 151,212 30,166"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="30" cy="106" cx="215"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="flag">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="285" width="15" y="15" x="60"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="90,150 270,90 90,30"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="135" x2="90" y1="135" x1="75"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="45" x2="90" y1="45" x1="75"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="flower">
+      <nlogox:elements>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="135,120 165,165 180,210 180,240 150,300 165,300 195,240 195,195 165,135"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="132" cx="85"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="147" cx="130"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="85" cx="192"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="40" cx="85"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="40" cx="177"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="132" cx="177"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="85" cx="70"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="38" cy="25" cx="130"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="51" cx="96"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="74" cy="68" cx="113"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="189,233 219,188 249,173 279,188 234,218"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="180,255 150,210 105,210 75,240 135,240"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="house">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="165" width="210" y="120" x="45"/>
+        <nlogox:rect marked="false" filled="true" color="#000000" height="75" width="60" y="210" x="120"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="15,120 150,15 285,120"/>
+        <nlogox:line marked="false" filled="false" color="#000000" y2="120" x2="270" y1="120" x1="30"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="leaf">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,210 135,195 120,210 60,210 30,195 60,180 60,165 15,135 30,120 15,105 40,104 45,90 60,90 90,105 105,120 120,120 105,60 120,60 135,30 150,15 165,30 180,60 195,60 180,120 195,120 210,105 240,90 255,90 263,104 285,105 270,120 285,135 240,165 240,180 270,195 240,210 180,210 165,195"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="135,195 135,240 120,255 105,255 105,285 135,285 165,240 165,195"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="line">
+      <nlogox:elements>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="300" x2="150" y1="0" x1="150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="line half">
+      <nlogox:elements>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="150" x2="150" y1="0" x1="150"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="pentagon">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,15 15,120 60,285 240,285 285,120"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="person">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="80" cy="5" cx="110"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="105,90 120,195 90,285 105,300 135,300 150,225 165,300 195,300 210,285 180,195 195,90"/>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="15" width="45" y="79" x="127"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="195,90 240,150 225,180 165,105"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="105,90 60,150 75,180 135,105"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="plant">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="210" width="30" y="90" x="135"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="135,255 90,210 45,195 75,255 135,285"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="165,255 210,210 255,195 225,255 165,285"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="135,180 90,135 45,120 75,180 135,210"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="165,180 165,210 225,180 255,120 210,135"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="135,105 90,60 45,45 75,105 135,135"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="165,105 165,135 225,105 255,45 210,60"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="135,90 120,45 150,15 180,45 165,90"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="square">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="240" width="240" y="30" x="30"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="square 2">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="240" width="240" y="30" x="30"/>
+        <nlogox:rect marked="false" filled="true" color="#000000" height="180" width="180" y="60" x="60"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="star">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="151,1 185,108 298,108 207,175 242,282 151,216 59,282 94,175 3,108 116,108"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="target">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="300" cy="0" cx="0"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="180" cy="60" cx="60"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="120" cy="90" cx="90"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="60" cy="120" cx="120"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="tree">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="94" cy="3" cx="118"/>
+        <nlogox:rect marked="false" filled="true" color="#9D6E48" height="105" width="60" y="195" x="120"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="108" cy="21" cx="65"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="127" cy="41" cx="116"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="120" cy="90" cx="45"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="152" cy="74" cx="104"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="triangle">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,30 15,255 285,255"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="triangle 2">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="150,30 15,255 285,255"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="151,99 225,223 75,224"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="truck">
+      <nlogox:elements>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="142" width="191" y="45" x="4"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="296,193 296,150 259,134 244,104 208,104 207,194"/>
+        <nlogox:rect marked="false" filled="true" color="#FFFFFF" height="45" width="0" y="60" x="195"/>
+        <nlogox:polygon marked="false" filled="true" color="#000000" points="238,112 252,141 219,141 218,112"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="234"/>
+        <nlogox:rect marked="true" filled="true" color="#8D8D8D" height="9" width="33" y="185" x="181"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="144"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="42" cy="174" cx="24"/>
+        <nlogox:circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="24"/>
+        <nlogox:circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="144"/>
+        <nlogox:circle marked="true" filled="false" color="#8D8D8D" diameter="42" cy="174" cx="234"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="true" name="turtle">
+      <nlogox:elements>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="215,204 240,233 246,254 228,266 215,252 193,210"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="195,90 225,75 245,75 260,89 269,108 261,124 240,105 225,105 210,105"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="105,90 75,75 55,75 40,89 31,108 39,124 60,105 75,105 90,105"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="132,85 134,64 107,51 108,17 150,2 192,18 192,52 169,65 172,87"/>
+        <nlogox:polygon marked="false" filled="true" color="#59B03C" points="85,204 60,233 54,254 72,266 85,252 107,210"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="119,75 179,75 209,101 224,135 220,225 175,261 128,261 81,224 74,135 88,99"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="wheel">
+      <nlogox:elements>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="294" cy="3" cx="3"/>
+        <nlogox:circle marked="false" filled="true" color="#000000" diameter="240" cy="30" cx="30"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="15" x2="150" y1="285" x1="150"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="150" x2="285" y1="150" x1="15"/>
+        <nlogox:circle marked="true" filled="true" color="#8D8D8D" diameter="60" cy="120" cx="120"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="269" x2="79" y1="40" x1="216"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="221" x2="269" y1="84" x1="40"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="79" x2="269" y1="216" x1="40"/>
+        <nlogox:line marked="true" filled="false" color="#8D8D8D" y2="269" x2="221" y1="40" x1="84"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+    <nlogox:vectorShape editableColorIndex="0" rotatable="false" name="x">
+      <nlogox:elements>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="270,75 225,30 30,225 75,270"/>
+        <nlogox:polygon marked="true" filled="true" color="#8D8D8D" points="30,75 75,30 270,225 225,270"/>
+      </nlogox:elements>
+    </nlogox:vectorShape>
+  </nlogox:shapes>
+  <nlogox:code/>
+  <nlogox:ModelSettings/>
+  <nlogox:hubnet/>
+</nlogox:model>

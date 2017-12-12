@@ -2,7 +2,7 @@ package org.nlogo.tools
 
 import java.awt.EventQueue
 import java.net.URI
-import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
+import java.nio.file.{ Path, Paths }
 
 import scala.util.{ Failure, Success }
 
@@ -17,6 +17,7 @@ import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.sdm.{ NLogoSDMFormat, NLogoXSDMFormat, SDMAutoConvertable }
 import org.nlogo.xmllib.ScalaXmlElementFactory
+import org.nlogo.util.PathTools
 
 /**
  *
@@ -37,6 +38,21 @@ import org.nlogo.xmllib.ScalaXmlElementFactory
  *
  */
 object ModelResaver {
+  sealed trait ResaveMode {
+    def matchesModel(p: Path): Boolean
+  }
+  case object LegacyToNLogoX extends ResaveMode {
+    def matchesModel(p: Path): Boolean = {
+      val name = p.getFileName.toString
+      name.endsWith(".nlogo") || name.endsWith(".nlogo3d")
+    }
+  }
+  case object NLogoX extends ResaveMode {
+    def matchesModel(p: Path): Boolean = {
+      val name = p.getFileName.toString
+      name.endsWith(".nlogox")
+    }
+  }
 
   def wait(block: => Unit) {
     EventQueue.invokeAndWait(
@@ -50,32 +66,46 @@ object ModelResaver {
   def main(args: Array[String]): Unit = {
     System.setProperty("org.nlogo.preferHeadless", "true")
 
-    if (args.length > 0) resaveModels(args.toSeq)
-    else                 resaveAllModels()
+    val (mode, recursive, startArg) = {
+      val mode =
+        if (args.take(2).contains("--nlogo")) LegacyToNLogoX
+        else NLogoX
+      val recursive =
+        if (args.take(2).contains("-r")) true
+        else false
+      (mode, recursive, 0 + (if (recursive) 1 else 0) + (if (mode == LegacyToNLogoX) 1 else 0))
+    }
+
+    // recurse and resave
+    if (recursive)            resaveModelsRecursive(args(startArg), mode)
+    else if (args.length > 0) resaveModels(args.toSeq, mode)
+    else                      resaveAllModels(mode)
   }
 
-  def resaveModels(paths: Seq[String]): Unit = {
+  def resaveModels(paths: Seq[String], mode: ResaveMode): Unit = {
     val (systemDynamicsModels, otherModels) =
       paths.map((s: String) => Paths.get(s)).partition(_.toString.contains("System Dynamics"))
-
-    if (systemDynamicsModels.isEmpty)
-      System.setProperty("java.awt.headless", "true")
-
-    otherModels.foreach(p => resaveModel(p))
-
-    if (systemDynamicsModels.nonEmpty)
-      resaveSystemDynamicsModels(systemDynamicsModels)
-
-    System.exit(0)
+    resaveCollection(new PathCollection(otherModels, systemDynamicsModels))
   }
 
-  def resaveAllModels(): Unit = {
-    traverseModels(Paths.get(modelsRoot), resaveModel _)
+  def resaveModelsRecursive(pathString: String, mode: ResaveMode): Unit =
+    resaveCollection(traverseModels(Paths.get(pathString), mode, Seq("BIN", "SRC", "PROJECT")))
 
-    val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)
+  def resaveAllModels(mode: ResaveMode): Unit =
+    resaveCollection(traverseModels(Paths.get(modelsRoot), mode))
 
-    println("FAILED MODELS:")
-    println(failedModels.mkString("\n"))
+  def resaveCollection(collection: PathCollection): Unit = {
+    collection.normalModels.foreach(resaveModel _)
+
+    println(s"Resaved ${collection.normalModels.length} non-system-dynamics models")
+    if (collection.systemDynamicsModels.nonEmpty) {
+      val failedModels = resaveSystemDynamicsModels(collection.systemDynamicsModels)
+
+      println("FAILED MODELS:")
+      println(failedModels.mkString("\n"))
+    } else {
+      System.exit(0)
+    }
   }
 
   lazy val literalParser =
@@ -110,39 +140,21 @@ object ModelResaver {
     }
   }
 
-  def traverseModels(modelRoot: Path, resave: Path => Unit): Unit = {
-    Files.walkFileTree(modelRoot, new java.util.HashSet(), Int.MaxValue, new ResaveVisitor(resave))
-  }
+  case class PathCollection(normalModels: Seq[Path], systemDynamicsModels: Seq[Path])
 
-  class ResaveVisitor(resave: Path => Unit) extends FileVisitor[Path] {
-    import java.nio.file.attribute.BasicFileAttributes
+  def traverseModels(
+    modelRoot:      Path,
+    mode:           ResaveMode,
+    excludeFolders: Seq[String] = Seq("TEST", "BIN", "PROJECT", "SRC")): PathCollection = {
+    val childPaths =
+      PathTools
+        .findChildrenRecursive(modelRoot,
+          filterDirectories = (p: Path) => ! excludeFolders.contains(p.getFileName.toString.toUpperCase))
+        .filter(mode.matchesModel _)
 
-    val excludeFolders = Seq("TEST", "BIN", "PROJECT", "SRC")
+    val (sdModels, normalModels) = childPaths.partition(p => p.toString.contains("System Dynamics"))
 
-    def postVisitDirectory(path: Path, error: java.io.IOException): FileVisitResult = {
-      if (error != null) throw error
-      FileVisitResult.CONTINUE
-    }
-
-    def preVisitDirectory(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      val dirName = path.getFileName.toString
-      if (excludeFolders.contains(dirName.toUpperCase))
-        FileVisitResult.SKIP_SUBTREE
-      else
-        FileVisitResult.CONTINUE
-    }
-
-    def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      val fileName = path.getFileName.toString
-      if (fileName.endsWith(".nlogo") || fileName.endsWith(".nlogo3d"))
-        resave(path)
-      FileVisitResult.CONTINUE
-    }
-
-    def visitFileFailed(path: Path, error: java.io.IOException): FileVisitResult = {
-      throw error
-      FileVisitResult.TERMINATE
-    }
+    PathCollection(normalModels, sdModels)
   }
 
   def resaveSystemDynamicsModels(paths: Seq[Path]): Seq[(Path, String)] = {
@@ -199,7 +211,8 @@ object ModelResaver {
       })
       None
     }
-    def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = false
+    def shouldOpenModelOfDifferingArity(arity: Int,version: String): OpenModel.VersionResponse =
+      OpenModel.OpenAsSaved
     def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = true
     def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = false
   }

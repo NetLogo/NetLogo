@@ -1,4 +1,5 @@
 import java.io.File
+import java.nio.file.Files
 import sbt._
 import Keys._
 import NetLogoBuild.autogenRoot
@@ -10,6 +11,8 @@ import org.nlogo.xmllib.plugin.{
 }
 
 object XmlReaderGenerator {
+  val TargetNamespace = "http://ccl.northwestern.edu/netlogo/netlogox/1"
+
   lazy val experimentReader = taskKey[Seq[File]]("generate experiment reader")
   lazy val hubnetWidgetReader = taskKey[Seq[File]]("generate hubnet widget reader")
   lazy val linkShapeReader = taskKey[Seq[File]]("generate link shape reader")
@@ -34,25 +37,9 @@ object XmlReaderGenerator {
       s"ColorReader.colorDoubleToHex(${valueName})"
   }
 
-  object PointsType extends PluginDataType {
-    val className = "Seq[(Int, Int)]"
-    val attributeReaderName = Some("XmlReader.pointsReader")
-    override def writeValue(valueName: String): String =
-      s"""${valueName}.map(t => t._1 + "," + t._2).mkString(" ")"""
-  }
-
-  object DashArrayType extends PluginDataType {
-    val attributeReaderName = Some("XmlReader.dashArrayReader")
-    val className = "Seq[Float]"
-    override def writeValue(valueName: String): String =
-      s"XmlReader.dashArrayToString(${valueName})"
-  }
-
   val additionalTypes =
-    Map("svg:ColorType" -> ColorType,
-      "svg:PointsType" -> PointsType,
-      "svg:StrokeDashArrayValueType" -> DashArrayType,
-      "nlx:DoubleColor" -> DoubleColorType)
+    Map((TargetNamespace, "ColorType") -> ColorType,
+      (TargetNamespace, "DoubleColor") -> DoubleColorType)
 
   lazy val parserSettings = Seq(
     netLogoXsdSchema := autogenRoot.value / "fileformat" / "netlogo.xsd") ++
@@ -68,6 +55,21 @@ object XmlReaderGenerator {
       generateTask("modelSettings", "org.nlogo.fileformat", "org.nlogo.api", modelSettingsReader, Some("ModelSettingsXml.scala")) ++
       generateTask("experiment", "org.nlogo.fileformat", "org.nlogo.api", experimentReader, Some("ExperimentXml.scala")) ++
       generateTask("previewCommands", "org.nlogo.fileformat", "org.nlogo.api", previewCommandsReader, Some("PreviewCommandsXml.scala"))
+
+  lazy val importSchemaSettings =
+    Seq(
+      resourceGenerators in Test += Def.task {
+        val directory = (resourceManaged in Test).value
+        Files.createDirectories((directory / "xfl").toPath)
+        val typesXsd = directory / "xfl" / "types.xsd"
+        val annotationsXsd = directory / "xfl" / "annotations.xsd"
+        if (! Files.exists(typesXsd.toPath))
+          Files.copy(XmlReaderGenerator.getClass.getResourceAsStream("types.xsd"), typesXsd.toPath)
+        if (! Files.exists(annotationsXsd.toPath))
+          Files.copy(XmlReaderGenerator.getClass.getResourceAsStream("annotations.xsd"), annotationsXsd.toPath)
+        Seq(typesXsd, annotationsXsd)
+      }
+    )
 
   def generateTask(topLevel: String, packageName: String, importPackage: String, thisTask: TaskKey[Seq[File]], fileName: Option[String] = None): Seq[Def.Setting[_]] =
     Seq(

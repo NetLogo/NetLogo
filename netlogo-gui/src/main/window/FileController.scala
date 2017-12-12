@@ -14,7 +14,7 @@ import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, MessageDialog, OptionDialog }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
-  OpenModel.{ Controller => OpenModelController },
+  OpenModel.{ CancelOpening, Controller => OpenModelController, OpenAsSaved, OpenInCurrentVersion, VersionResponse },
   SaveModel.{ Controller => SaveModelController }
 
 import scala.util.Try
@@ -58,7 +58,7 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
     runOnUIThread(() => foregroundController.invalidModel(uri))
   def invalidModelVersion(uri: java.net.URI,version: String): Unit =
     runOnUIThread(() => foregroundController.invalidModelVersion(uri, version))
-  def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean =
+  def shouldOpenModelOfDifferingArity(arity: Int,version: String): VersionResponse =
     runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfDifferingArity(arity, version))
   def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean =
     runOnUIThreadForResult(() => foregroundController.shouldOpenModelOfLegacyVersion(currentVersion, openVersion))
@@ -103,15 +103,14 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     notifyUserNotValidFile(uri)
   }
 
-  def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean = {
+  def shouldOpenModelOfDifferingArity(arity: Int, version: String): OpenModel.VersionResponse = {
     try {
-      if (arity == 2)
+      if (arity == 3)
         checkWithUserBeforeOpening3DModelin2D(version)
       else
         checkWithUserBeforeOpening2DModelin3D()
-      true
     } catch {
-      case ex: UserCancelException => false
+      case ex: UserCancelException => CancelOpening
     }
   }
 
@@ -141,18 +140,30 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 
   @throws(classOf[UserCancelException])
-  def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
+  def checkWithUserBeforeOpening3DModelin2D(version: String): VersionResponse = {
     val message = I18N.gui.getN("file.open.warn.intwod.openthreed", TwoDVersion.version, version)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
-      throw new UserCancelException()
+    val options = Array[Object](
+      I18N.gui.get("file.open.warn.arity.openTwoD"),
+      I18N.gui.get("file.open.warn.arity.openThreeD"),
+      I18N.gui.get("common.buttons.cancel"))
+    OptionDialog.showMessage(owner, "NetLogo", message, options) match {
+      case 0 => OpenInCurrentVersion
+      case 1 => OpenAsSaved
+      case _ => CancelOpening
     }
   }
 
   @throws(classOf[UserCancelException])
-  def checkWithUserBeforeOpening2DModelin3D(): Unit = {
+  def checkWithUserBeforeOpening2DModelin3D(): VersionResponse = {
     val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", ThreeDVersion.version)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
-      throw new UserCancelException()
+    val options = Array[Object](
+      I18N.gui.get("file.open.warn.arity.openThreeD"),
+      I18N.gui.get("file.open.warn.arity.openTwoD"),
+      I18N.gui.get("common.buttons.cancel"))
+    OptionDialog.showMessage(owner, "NetLogo", message, options) match {
+      case 0 => OpenInCurrentVersion
+      case 1 => OpenAsSaved
+      case _ => CancelOpening
     }
   }
 

@@ -45,7 +45,7 @@ object ModelsLibrary {
 
     def exactMatch(node: Node): Option[Seq[String]] =
       node.depthFirstIterable
-        .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGO"))
+        .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGOX"))
         .filter(_.isLeaf)
         .map(n => Seq(n.name))
 
@@ -113,7 +113,7 @@ object ModelsLibrary {
     scanDirectory(new File(path, "").toPath, true, version, exclusive)
 
   def getImagePath(filePath: String): String = {
-    val index = filePath.indexOf(".nlogo");
+    val index = filePath.indexOf(".nlogox");
     val path =
       if (index != -1) filePath.substring(0, index)
       else             filePath
@@ -154,7 +154,7 @@ object ModelsLibrary {
           scanDirectory(p, false, version, exclusive)
         else {
           val fileName = p.getFileName.toString.toUpperCase
-          if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D"))
+          if (fileName.endsWith(".NLOGOX"))
             Some(Leaf(
               p.getFileName.toString,
               p.toString))

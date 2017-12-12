@@ -2,6 +2,7 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.api.{ CartesianProductParameterSet, Dump, PeriodicUpdateDelay }
 import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
@@ -9,7 +10,6 @@ import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump}
 import org.nlogo.plot.DummyPlotManager
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor)
@@ -18,7 +18,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
   private val totalRuns = protocol.countRuns
-  private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
+  private val progressArea = {
+    val textAreaRows = protocol.parameterSet match {
+      case c: CartesianProductParameterSet =>
+        10 min (c.valueSets.length + 3)
+      case _ => 10
+    }
+    new JTextArea(textAreaRows, 0)
+  }
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
 
   private var updatePlots = true

@@ -23,6 +23,9 @@ import
 import
   org.scalatest.FunSuite
 
+import
+  scala.util.Failure
+
 abstract class NLogoXFormatTest[A] extends ModelSectionTest[NLogoXFormat.Section, NLogoXFormat, A] {
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
@@ -79,7 +82,7 @@ class NLogoXFormatIOTest extends FunSuite {
   }
   test("reads in sections from a given URI") {
     assert(format.sections(sampleUri).isSuccess)
-    assert(format.sections(sampleUri).get.size == 7)
+    assert(format.sections(sampleUri).get.size == 12)
   }
   test("saves specified sections to a given URI") {
     val sections =
@@ -93,15 +96,14 @@ class NLogoXFormatIOTest extends FunSuite {
       case (k, v) if ! k.contains("info") => assert(v == sections(k)) // pretty-printing breaks info tab
       case _ =>
     }
-    pending
-    // TODO: This does need to pass long-term, but won't pass until our xml wrapper writes CDATA
-    // :P
-    // (See https://github.com/scala/scala-xml/issues/76)
-    // Check out DOM, JDOM, dom4j as possibilities
-    // assert(Files.readAllLines(Paths.get(result.get)) == Files.readAllLines(Paths.get(sampleUri)))
   }
   test("invalid nlogox file gives error about model") {
-    pending
+    val errorMessage = """|linkShape has the following errors:
+                          |* expected to find at least 3 line elements, but found 0
+                          |* missing required attribute curviness
+                          |* missing required attribute name""".stripMargin
+    val errantXml = """<?xml version="1.0" encoding="UTF-8"?><model><linkShapes><foo /></linkShapes></model>"""
+    assertResult(Failure(new NLogoXFormatException(errorMessage)))(format.load(errantXml, Seq.empty))
   }
   test("invalid non-XML file suggests that the file extension may be incorrect") {
     val modelsLibrary = System.getProperty("netlogo.models.dir", "models")

@@ -27,7 +27,7 @@ class TestCompileAll extends FunSuite with SlowTest {
     // This is a LS model specifically for testing version problems.
     path.getFileName.toString.endsWith("5.x.nlogo") ||
     // This is a LS model designed to test widgets with errors.
-    path.getFileName.toString.endsWith("LS-Widgets.nlogo")
+    path.getFileName.toString.endsWith("LS-Widgets.nlogox")
   }
 
   // and those are exempt from having their preview commands tested:
@@ -64,7 +64,7 @@ class TestCompileAll extends FunSuite with SlowTest {
       if (!excludePreviewCommands(path)) compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab(version.is3D)
-      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path, version, workspace)
+      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(Paths.get(path).toUri, version, workspace)
       protocols.foreach(lab.newWorker(_).compile(workspace))
     } finally workspace.dispose()
   }

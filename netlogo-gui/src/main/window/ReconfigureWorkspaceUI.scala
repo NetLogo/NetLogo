@@ -7,8 +7,9 @@ import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.window.Events.{ AfterLoadEvent, BeforeLoadEvent,
-  LoadBeginEvent, LoadEndEvent, LoadModelEvent, LoadWidgetsEvent }
-import org.nlogo.api.{ CompilerServices, ModelType }
+  LoadBeginEvent, LoadEndEvent, LoadModelEvent, LoadWidgetsEvent,
+  SwitchArityEvent }
+import org.nlogo.api.{ CompilerServices, ModelType, Version }
 import org.nlogo.core.Model
 
 import scala.util.Try
@@ -112,14 +113,26 @@ import scala.util.Try
 
 object ReconfigureWorkspaceUI {
   def apply(linkParent: Container, uri: URI, modelType: ModelType, model: Model,
-    compilerServices: CompilerServices): Unit = {
-      new Loader(linkParent).loadHelper(uri, modelType, model, compilerServices)
+    compilerServices: CompilerServices, currentVersion: Version): Unit = {
+      if (Version.is3D(model.version) != currentVersion.is3D) {
+        new AritySwitchLoader(linkParent).loadHelper(uri, model, modelType)
+      } else {
+        new Loader(linkParent).loadHelper(uri, model, modelType, compilerServices)
+      }
+  }
+
+  private case class AritySwitchLoader(linkParent: Container) extends org.nlogo.window.Event.LinkChild {
+    def getLinkParent = linkParent
+
+    def loadHelper(modelURI: URI, model: Model, modelType: ModelType): Unit = {
+      new SwitchArityEvent(Version.is3D(model.version), modelURI, model, modelType).raise(this)
+    }
   }
 
   private case class Loader(linkParent: Container) extends org.nlogo.window.Event.LinkChild {
     def getLinkParent = linkParent
 
-    def loadHelper(modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices) {
+    def loadHelper(modelURI: URI, model: Model, modelType: ModelType, compilerServices: CompilerServices) {
       val uriOption = Try(Paths.get(modelURI)).toOption
         .filterNot(p => p.getFileName.toString.startsWith("empty.nlogo"))
         .filter(p => Files.isRegularFile(p))

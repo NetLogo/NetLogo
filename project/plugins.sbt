@@ -55,7 +55,7 @@ resolvers += Resolver.url(
 
 addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.7.2")
 
-addSbtPlugin("org.nlogo" % "xml-gen-plugin" % "0.0.1")
+addSbtPlugin("org.nlogo" % "xml-gen-plugin" % "0.0.8")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler" % "0.9.5",

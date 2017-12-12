@@ -72,7 +72,7 @@ class TestMain extends FunSuite {
       Main.main(Array(
         "--threads", "1",   // avoid out-of-order output
         "--model", "models/test/lab/FireWithExperiments.nlogo",
-        "--setup-file", "test/lab/protocols.xml",
+        "--setup-file", "test/lab/protocols-nlogox.xml",
         "--experiment", "runNumber",
         "--table", "-"))   // stdout
     }

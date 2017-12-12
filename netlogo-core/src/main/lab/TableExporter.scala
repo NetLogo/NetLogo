@@ -2,8 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.Dump
+import org.nlogo.api.{ CartesianProductParameterSet, Dump, LabProtocol }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -41,8 +40,12 @@ class TableExporter(modelFileName: String,
   }
   def writeExperimentHeader() {
     // sample header: "[run number]","var1","var2","[step]","metric1","metric2"
+    val variableNames = protocol.parameterSet match {
+      case c: CartesianProductParameterSet => c.valueSets.map(_.variableName)
+      case _ => List()
+    }
     val headers =
-      "[run number]" :: protocol.valueSets.map(_.variableName) :::
+      "[run number]" :: variableNames :::
       "[step]" :: protocol.metrics
     out.println(headers.map(Dump.csv.header).mkString(","))
   }

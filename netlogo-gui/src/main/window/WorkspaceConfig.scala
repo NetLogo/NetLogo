@@ -13,6 +13,9 @@ import org.nlogo.workspace.{ Evaluator, ExtensionManager, HubNetManagerFactory, 
   WorkspaceMessageCenter, ModelTrackerImpl, UserInteraction }
 
 object WorkspaceConfig {
+  def empty =
+    new WorkspaceConfig().withMonitorManager(NullMonitorManager)
+
   def default = {
     new WorkspaceConfig()
       .withMonitorManager(NullMonitorManager)

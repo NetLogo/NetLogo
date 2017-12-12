@@ -103,7 +103,7 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(
+      LabProtocol.fromValueSets(
         "experiment", "setup", "go", "", 1, true, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
           manager.workspace.world.program.interfaceGlobals.toList

@@ -4,6 +4,7 @@ package org.nlogo.headless
 
 import java.nio.file.{ Files, Paths }
 
+import org.nlogo.util.Implicits.RichTry
 import org.nlogo.api.{ FileIO, ThreeDVersion, TwoDVersion }
 import org.nlogo.core.CompilerException
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
@@ -21,7 +22,7 @@ object ChecksumsAndPreviews {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean = true) = {
       val benchmarks =
-        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
+        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox")
       val library =
         (ModelsLibrary.getModelPaths(TwoDVersion, true) ++
           ModelsLibrary.getModelPaths(ThreeDVersion, true))
@@ -57,10 +58,10 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
     def okPath(path: String) =
-      List("HUBNET", "GOGO", "VIEW2.5D", "/CODE EXAMPLES/SOUND/")
+      List("/3D/", "HUBNET", "GOGO", "VIEW2.5D", "/CODE EXAMPLES/SOUND/")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst("\\.nlogox$", ".png")
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
         println("making preview for: " + path)
@@ -89,7 +90,7 @@ object ChecksumsAndPreviews {
       (message, slices) <- Seq(
         None -> List("HUBNET", "/CURRICULAR MODELS/"),
         Some("it renders slightly differently on Mac vs. Linux") -> List(
-          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGO"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
+          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGOX"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
@@ -118,7 +119,7 @@ object ChecksumsAndPreviews {
       }
       else {
         Try(HeadlessWorkspace.fromPath(model))
-          .map(workspace => updateOneHelper(model, workspace)) match {
+          .flatMap(workspace => updateOneHelper(model, workspace)) match {
             case Success(newEntry: Entry) =>
               import newEntry._
               // figure out if the entry is new, changed, or the same
@@ -135,17 +136,20 @@ object ChecksumsAndPreviews {
              case Failure(e: Exception) =>
                println("SKIPPING MODEL: " + model + "\n  because of exception:")
                e.printStackTrace()
-             case Failure(t) => throw t
+             case Failure(t) =>
+               throw t
           }
         }
     }
 
-    def updateOneHelper(model: String, workspace: HeadlessWorkspace): Entry = {
-      Checksummer.initModelForChecksumming(workspace)
-      val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
-      val revision = getRevisionNumber(workspace.getModelPath)
-      Entry(model, newCheckSum, newGraphicsChecksum, revision)
+    def updateOneHelper(model: String, workspace: HeadlessWorkspace): Try[Entry] = {
+      Try {
+        Checksummer.initModelForChecksumming(workspace)
+        val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
+        val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
+        val revision = getRevisionNumber(workspace.getModelPath)
+        Entry(model, newCheckSum, newGraphicsChecksum, revision)
+      }.andFinally(() => workspace.dispose())
     }
 
     def load(path: String): ChecksumMap = {
@@ -198,7 +202,7 @@ object ChecksumsAndPreviews {
           Paths.get("tmp/checksum-exports")
             .resolve(
               modelPath.subpath(modelIndex, pathCount - 2)
-                .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
+                .resolve(modelName.replaceAllLiterally(".nlogox", ".csv")))
 
             Files.createDirectories(exportPath.getParent)
             workspace.exportWorld(exportPath.toString)

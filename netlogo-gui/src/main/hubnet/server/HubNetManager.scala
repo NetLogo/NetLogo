@@ -10,7 +10,8 @@ import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, OpenModel, OpenModelFromURI }
+import org.nlogo.workspace.{ AbstractWorkspace, OpenModel, OpenModelFromURI },
+  OpenModel.{ OpenInCurrentVersion, VersionResponse }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
 
@@ -343,7 +344,7 @@ abstract class HubNetManager(workspace: AbstractWorkspace, modelLoader: ModelLoa
     def invalidModel(uri: URI): Unit = { }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
     def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Option[Model] = None
-    def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
+    def shouldOpenModelOfDifferingArity(arity: Int,version: String): VersionResponse = OpenInCurrentVersion
     def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = true
     def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = true
   }
