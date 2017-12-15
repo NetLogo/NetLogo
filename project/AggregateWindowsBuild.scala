@@ -3,7 +3,7 @@ import sbt._
 import java.io.{ IOException, File }
 import java.nio.charset.Charset
 import java.nio.file.{ Files, FileSystems, Path }
-import java.util.Properties
+import java.util.{ List => JList, Properties }
 import java.util.jar.JarFile
 
 import scala.collection.JavaConverters._
@@ -232,63 +232,66 @@ object PackageWinAggregate {
           "win64"                 -> winVariables("win64"),
           "version"               -> winVariables("version"),
           "processorArchitecture" -> winVariables("platformArch"))
+    def fileAssociations(
+      friendlyName: String,
+      fileName: String,
+      componentId: String,
+      launchArgs: String,
+      associations: Seq[(String, String, String)]): JList[_ <: AnyRef] = {
+      def fileAssociation(extension: String, icon: String, description: String): java.util.Map[String, String] =
+        Map(
+          "associationDescription" -> description,
+          "componentFileName"      -> fileName,
+          "componentFriendlyName"  -> friendlyName,
+          "componentId"            -> componentId,
+          "fileAssociation"        -> extension,
+          "fileIcon"               -> icon,
+          "launchArgs"             -> launchArgs,
+          "numericOnlyVersion"     -> variables("numericOnlyVersion"),
+          "version"                -> winVariables("version")
+        ).asJava
+      associations.map((fileAssociation _).tupled).asJava
+    }
     val componentConfig = Map[String, AnyRef](
       "components" -> Seq(
         Map[String, AnyRef](
-          "componentFriendlyName" -> "HubNet Client",
-          "noSpaceName"           -> "HubNetClient",
-          "componentId"           -> "HubNet_Client.exe",
           "componentFileName"     -> "HubNet Client.exe",
-          "lowerDashName"         -> "hubnet-client",
+          "componentFriendlyName" -> "HubNet Client",
           "componentGuid"         -> winVariables("hubNetClientExecutableId"),
+          "componentId"           -> "HubNet_Client.exe",
           "desktopShortcutId"     -> winVariables("HubNetClientDesktopShortcutId"),
-          "startMenuShortcutId"   -> winVariables("HubNetClientStartMenuShortcutId"),
-          "hasFileAssociation"    -> Boolean.box(false)
+          "fileAssociations"      -> Seq.empty[java.util.Map[String, Object]].asJava,
+          "lowerDashName"         -> "hubnet-client",
+          "noSpaceName"           -> "HubNetClient",
+          "startMenuShortcutId"   -> winVariables("HubNetClientStartMenuShortcutId")
         ) ++ baseComponentVariables,
         Map[String, AnyRef](
-          "componentFriendlyName"  -> "NetLogo",
-          "noSpaceName"            -> "NetLogo",
-          "componentId"            -> "NetLogo.exe",
           "componentFileName"      -> "NetLogo.exe",
-          "lowerDashName"          -> "netlogo",
+          "componentFriendlyName"  -> "NetLogo",
           "componentGuid"          -> winVariables("nlogoExecutableId"),
+          "componentId"            -> "NetLogo.exe",
           "desktopShortcutId"      -> winVariables("NetLogoDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("NetLogoStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociation"        -> "nlogo",
-          "fileIcon"               -> "ModelIcon",
-          "launchArgs"             -> """--launch "%1"""",
-          "associationDescription" -> "NetLogo Model"
+          "fileAssociations"       -> fileAssociations(
+            "NetLogo", "NetLogo.exe", "NetLogo.exe", """--launch "%1"""",
+            Seq(("nlogo", "ModelIcon", "NetLogo Model"),
+              ("nlogo3d", "ModelIcon", "NetLogo 3D Model"),
+              ("nlogox",  "ModelIcon", "NetLogo Model"))),
+          "lowerDashName"          -> "netlogo",
+          "noSpaceName"            -> "NetLogo",
+          "startMenuShortcutId"    -> winVariables("NetLogoStartMenuShortcutId")
         ) ++ baseComponentVariables,
         Map[String, AnyRef](
-          "componentFriendlyName"  -> "NetLogo 3D",
-          "noSpaceName"            -> "NetLogo3D",
-          "componentId"            -> "NetLogo_3D.exe",
-          "componentFileName"      -> "NetLogo 3D.exe",
-          "lowerDashName"          -> "netlogo-3d",
-          "componentGuid"          -> winVariables("nlogo3DExecutableId"),
-          "desktopShortcutId"      -> winVariables("NetLogo3DDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("NetLogo3DStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "launchArgs"             -> """--launch "%1"""",
-          "fileAssociation"        -> "nlogo3d",
-          "fileIcon"               -> "ModelIcon",
-          "associationDescription" -> "NetLogo 3D Model"
-        ) ++ baseComponentVariables,
-        Map[String, AnyRef](
-          "componentFriendlyName"  -> "Behaviorsearch",
-          "noSpaceName"            -> "Behaviorsearch",
-          "componentId"            -> "Behaviorsearch.exe",
           "componentFileName"      -> "Behaviorsearch.exe",
-          "lowerDashName"          -> "behaviorsearch",
+          "componentFriendlyName"  -> "Behaviorsearch",
           "componentGuid"          -> winVariables("behaviorSearchExecutableId"),
+          "componentId"            -> "Behaviorsearch.exe",
           "desktopShortcutId"      -> winVariables("behaviorSearchDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("behaviorSearchStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "launchArgs"             -> """"%1"""",
-          "fileAssociation"        -> "bsearch",
-          "fileIcon"               -> "BehaviorsearchExperimentIcon",
-          "associationDescription" -> "Behaviorsearch Experiment"
+          "fileAssociations"       -> fileAssociations(
+            "Behaviorsearch", "Behaviorsearch.exe", "Behaviorsearch.exe", """"%1"""",
+            Seq(("bsearch", "BehaviorsearchExperimentIcon", "Behaviorsearch Experiment"))),
+          "lowerDashName"          -> "behaviorsearch",
+          "noSpaceName"            -> "Behaviorsearch",
+          "startMenuShortcutId"    -> winVariables("behaviorSearchStartMenuShortcutId")
         ) ++ baseComponentVariables
       ).map(_.asJava).asJava)
     Mustache(aggregateConfigDir / "NetLogo.wxs.mustache",

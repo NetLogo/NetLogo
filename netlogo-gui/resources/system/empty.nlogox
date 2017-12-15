@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <model xmlns="http://ccl.northwestern.edu/netlogo/netlogox/1">
-  <version><![CDATA[NetLogo 6.0.2]]></version>
+  <version><![CDATA[NetLogo 6.1.0-M1]]></version>
   <previewCommands>
     <compiled><![CDATA[setup repeat 75 [ go ]]]></compiled>
   </previewCommands>

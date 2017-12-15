@@ -70,15 +70,34 @@ object App {
 
     org.nlogo.window.VMCheck.detectBadJVMs()
     Logger.beQuiet()
-    // NOTE: While generally we shouldn't rely on a system property to tell
+    // We call beginSplash here to let the user know that NetLogo is starting.
+    // We call beginSplash again (below) to set the proper arity 2D/3D
+    Splash.beginSplash() // initializes AWT
+
+    val pathToOpen =
+      appHandler.getClass.getDeclaredMethod("pathToOpen").invoke(appHandler)
+
+    val baseModel =
+      if (pathToOpen != null && pathToOpen.isInstanceOf[String]) CommandLineModel(pathToOpen.asInstanceOf[String], true)
+      else EmptyModel
+
+    // NOTE: While generally we don't rely on a system property to tell
     // us whether or not we're in 3D, it's fine to do it here because:
     // * We're in the process of constructing the App / World / Workspace
     // * We only call this once, right at boot time
     // * We do not store this value for use at a later time when it might be inaccurate
+    val baseArity =
+      baseModel match {
+        case CommandLineModel(path, _) =>
+          fileformat.modelVersionAtPath(path)
+            .getOrElse(Version.getCurrent(Version.is3DInternal))
+        case _ => Version.getCurrent(Version.is3DInternal)
+      }
+
     val params = processCommandLineArguments(args,
-      CommandLineParameters(EmptyModel, Version.getCurrent(Version.is3DInternal), None, None))
+      CommandLineParameters(baseModel, baseArity, None, None))
     val bootAs3D = params.version.is3D
-    Splash.beginSplash(params.version) // also initializes AWT
+    Splash.beginSplash(params.version)
 
     // It's pretty silly, but in order for the splash screen to show up
     // for more than a fraction of a second, we want to initialize as
@@ -363,8 +382,8 @@ Controllable {
   var params: CommandLineParameters = null
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
-  val runningInMacWrapper =
-    Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
+  val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
+  var registerWithAppHandler = runningInMacWrapper
 
   def version =
     if (appConfig.is3D) ThreeDVersion.version
@@ -525,7 +544,7 @@ Controllable {
     //  - ST 8/16/03
     frame.pack()
 
-    loadDefaultModel(params, currentVersion)
+    loadModelFromParams(params, currentVersion)
     // smartPack respects the command center's current size, rather
     // than its preferred size, so we have to explicitly set the
     // command center to the size we want - ST 1/7/05
@@ -538,8 +557,10 @@ Controllable {
 
     Splash.endSplash()
     frame.setVisible(true)
-    if (runningInMacWrapper) {
-      appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
+    if (registerWithAppHandler) {
+      appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef], java.lang.Boolean.TYPE)
+        .invoke(appHandler, this, Boolean.box(params.openTarget != EmptyModel))
+      registerWithAppHandler = false
     }
     menuBarFactory.actions = allActions ++ tabs.permanentMenuActions
   }
@@ -577,7 +598,7 @@ Controllable {
   def quit(){ fileManager.quit() }
 
   ///
-  private def loadDefaultModel(params: CommandLineParameters, currentVersion: Version){
+  private def loadModelFromParams(params: CommandLineParameters, currentVersion: Version){
     params.openTarget match {
       case EmptyModel =>
         fileManager.newModel(currentVersion)

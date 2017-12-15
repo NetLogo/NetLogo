@@ -7,5 +7,6 @@ package org.nlogo.util
 // passed in by the mac launcher
 object NullAppHandler {
   def init(): Unit = {}
-  def ready(app: Object): Unit = {}
+  def ready(app: Object, modelLoaded: Boolean): Unit = {}
+  def pathToOpen: String = null
 }

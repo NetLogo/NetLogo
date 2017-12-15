@@ -8,13 +8,13 @@
   <string>English</string>
   <key>CFBundleAllowMixedLocalizations</key>
   <true/>
-  {{#fileAssociation}}
+  {{#fileAssociations}}
   <key>CFBundleDocumentTypes</key>
   <array>
     <dict>
-      <key>CFBundleTypeExtensions</key> <array> <string>{{{.}}}</string> </array>
+      <key>CFBundleTypeExtensions</key> <array> <string>{{{extension}}}</string> </array>
       <key>CFBundleTypeIconFile</key>
-      <string>{{{fileAssociationIcon}}}</string>
+      <string>{{{icon}}}</string>
       <key>CFBundleTypeName</key>
       <string>NetLogo Model</string>
       <key>CFBundleTypeRole</key>
@@ -25,7 +25,7 @@
       </array>
     </dict>
   </array>
-  {{/fileAssociation}}
+  {{/fileAssociations}}
   <key>CFBundleExecutable</key>
   <string>{{appName}}</string>
   <key>CFBundleIconFile</key>

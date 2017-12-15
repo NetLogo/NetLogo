@@ -9,14 +9,17 @@ import org.nlogo.api.Version
 import org.nlogo.swing.Utils.icon
 
 object Splash {
-  private var splashWindow: JWindow = null
+  private var splashWindow: SplashWindow = null
 
   def beginSplash(version: Version = Version) {
-    splashWindow = new JWindow
-    splashWindow.getContentPane.add(new MyIconHolder(version))
-    splashWindow.pack()
-    org.nlogo.awt.Positioning.center(splashWindow, null)
-    splashWindow.setVisible(true)
+    if (splashWindow == null) {
+      splashWindow = new SplashWindow
+      splashWindow.setVersion(version)
+      org.nlogo.awt.Positioning.center(splashWindow, null)
+      splashWindow.setVisible(true)
+    } else {
+      splashWindow.setVersion(version)
+    }
   }
 
   def endSplash() {
@@ -28,6 +31,17 @@ object Splash {
   }
 
   val image = icon("/images/title.jpg")
+
+  class SplashWindow extends JWindow {
+    var iconHolder = Option.empty[MyIconHolder]
+
+    def setVersion(version: Version): Unit = {
+      iconHolder.foreach { ih => getContentPane.remove(ih) }
+      iconHolder = Some(new MyIconHolder(version))
+      getContentPane.add(iconHolder.get)
+      pack()
+    }
+  }
 
   class MyIconHolder(versionObj: Version) extends JLabel(image) {
     val message = {

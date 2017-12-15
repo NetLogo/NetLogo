@@ -10,7 +10,7 @@ import java.nio.file.Path
 import org.nlogo.core.Model
 import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
   SuccessfulConversion, ErroredConversion }
-import org.nlogo.api.{ ConfigurableModelLoader, Version }
+import org.nlogo.api.{ ConfigurableModelLoader, ThreeDVersion, TwoDVersion, Version }
 import OpenModel.{ CancelOpening, OpenAsSaved, OpenInCurrentVersion, VersionResponse }
 
 class OpenModelTests extends FunSuite {
@@ -19,7 +19,8 @@ class OpenModelTests extends FunSuite {
   trait OpenTest {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
-    def currentVersion = "NetLogo 6.0"
+    def currentVersion = TwoDVersion.version
+    def oldVersion: String = "NetLogo 6.0.2"
     def autoconverter: ModelConversion = defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
@@ -28,7 +29,7 @@ class OpenModelTests extends FunSuite {
       controller.willGiveVersionResponse = vr
 
     lazy val controller = new MockController()
-    val oldModel = Model()
+    val oldModel = Model(version = currentVersion, turtleShapes = Nil, linkShapes = Nil)
     val newModel = modelChanges(oldModel)
     def format = new MockFormat(newModel, None)
     object VersionInfo extends Version {
@@ -62,43 +63,44 @@ class OpenModelTests extends FunSuite {
   } }
 
   test("if the model is 3D, but NetLogo is open in 2D mode, the user may cancel opening") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    override def modelChanges = _.copy(version = ThreeDVersion.version)
     userGivesVersionResponse(CancelOpening)
     assert(openedModel.isEmpty)
   } }
 
   test("if the model is 3D, but NetLogo is open in 2D mode, notifies the user") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    override def modelChanges = _.copy(version = ThreeDVersion.version)
     userGivesVersionResponse(OpenAsSaved)
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity == 3)
-    assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
+    assert(controller.notifiedModelVersion == ThreeDVersion.version)
     assert(! controller.notifiedVersionUnknown)
-    assert(openedModel.get.version == "NetLogo 3D 6.0")
+    assert(openedModel.get.version == ThreeDVersion.version)
   } }
 
   test("when in 2D Mode, choosing to open a 3D model using current version adjusts the version") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    override def modelChanges = _.copy(version = ThreeDVersion.version)
     userGivesVersionResponse(OpenInCurrentVersion)
     assert(openedModel.isDefined)
-    assert(openedModel.get.version == "NetLogo 6.0")
+    assert(openedModel.get.version == TwoDVersion.version)
   } }
 
   test("doesn't open different-arity model unless the user approves") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
+    override def modelChanges = _.copy(version = ThreeDVersion.version)
     userCancelsOpen()
     assert(openedModel.isEmpty)
     assert(controller.notifiedModelArity   == 3)
-    assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
+    assert(controller.notifiedModelVersion == ThreeDVersion.version)
   } }
 
   test("if the model is in 2D, but NetLogo is open in 3D, notifies the user") { new OpenTest {
-    override def currentVersion = "NetLogo 3D 6.0"
+    override def currentVersion = ThreeDVersion.version
+    override def modelChanges = _.copy(version = TwoDVersion.version)
     userGivesVersionResponse(OpenAsSaved)
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity   == 2)
-    assert(controller.notifiedModelVersion == "NetLogo 6.0")
-    assert(openedModel.get.version == "NetLogo 6.0")
+    assert(controller.notifiedModelVersion == TwoDVersion.version)
+    assert(openedModel.get.version         == TwoDVersion.version)
   } }
 
   test("if the model is not a known version, checks before opening") { new OpenTest {
@@ -116,7 +118,7 @@ class OpenModelTests extends FunSuite {
   } }
 
   test("returns the model if it checks out") { new OpenTest {
-    assertResult(Some(Model()))(openedModel)
+    assertResult(Some(newModel))(openedModel)
   } }
 
   test("notifies the user if an error occurs while loading the file") { new OpenTest {
@@ -136,13 +138,13 @@ class OpenModelTests extends FunSuite {
     override def autoconverter = { (m: Model, p: Path) => ErroredConversion(m, ConversionError(exception, "", "")) }
     userContinuesOpen()
     assert(openedModel.isDefined)
-    assertResult(Some(Model()))(openedModel)
+    assertResult(Some(oldModel))(openedModel)
     assert(controller.notifiedException == exception)
   } }
 
   test("OpenFromSource opens the model properly") { new OpenTest {
     val modelFromSource = OpenModelFromSource(uri, "model source", controller, loader, autoconverter, VersionInfo)
-    assertResult(Some(Model()))(modelFromSource)
+    assertResult(Some(newModel))(modelFromSource)
   } }
 }
 

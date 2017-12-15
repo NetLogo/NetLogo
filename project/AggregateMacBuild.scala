@@ -48,7 +48,7 @@ object PackageMacAggregate {
   val libraryDirs = Seq("natives")
 
   // assumes subApplicationDir is {<app.name>.app as copied by JavaPackager.copyMacStubApplication
-  private def configureSubApplication(subApplicationDir: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
+  private def configureSubApplication(subApplicationDir: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, _ <: AnyRef]): Unit = {
     // add runtimeFiles "natives"
     common.runtimeFiles.foreach { d =>
       d.fileMappings.foreach {
@@ -116,7 +116,7 @@ object PackageMacAggregate {
     // add java jars
     // this is wrong, may need further adjustment
     val sharedJars = aggregateMacDir / "Java"
-    JavaPackager.repackageJar("netlogo-mac-app.jar", Some(commonConfig.launcherClass), commonConfig.mainJar,  sharedJars)
+    JavaPackager.repackageJar("netlogo-mac-app.jar", Some(commonConfig.launcherClass), commonConfig.mainJar, sharedJars)
     commonConfig.classpath.foreach { jar =>
       FileActions.copyFile(jar, sharedJars / jar.getName)
     }
@@ -183,7 +183,7 @@ object PackageMacAggregate {
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "450m",
+        "-size", "500m",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
