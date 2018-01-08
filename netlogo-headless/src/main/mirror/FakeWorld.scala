@@ -2,6 +2,8 @@
 
 package org.nlogo.mirror
 
+import scala.collection.immutable.ListMap
+
 import org.nlogo.core.{Femto, Program, Breed}
 import org.nlogo.{ api, core },
   core.{ ShapeList, ShapeListTracker }
@@ -191,12 +193,13 @@ class FakeWorld(state: State) extends api.World {
 
   def program = {
     def makeBreedMap(breedsVar: Int) =
-      worldVar[collection.immutable.ListMap[String, Boolean]](breedsVar).map {
-        case (breedName, isDirected) => breedName -> Breed(breedName, "", Seq(), isDirected)
-      }
+      worldVar[collection.immutable.Seq[String]](breedsVar).map(breedName =>
+        breedName -> Breed(breedName, "", Seq(), false)
+      ).foldLeft(ListMap.empty[String, Breed])((lm, kv) => lm + kv)
     Program.empty.copy(
       breeds = makeBreedMap(TurtleBreeds.id),
-      linkBreeds = makeBreedMap(LinkBreeds.id))
+      linkBreeds = makeBreedMap(LinkBreeds.id)
+    )
   }
 
   private def makeBreeds[A <: FakeAgent](
