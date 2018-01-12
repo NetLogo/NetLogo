@@ -15,13 +15,17 @@ p.c1 {font-style: italic}
       NetLogo 3D
     </h1>
     <p>
-      NetLogo includes the NetLogo 3D application that allows you to create 3D worlds.
+      NetLogo includes a 3D mode which allows you to create 3D worlds.
     <p>
       <b>Notice:</b> NetLogo's support for 3D is less developed than
-      NetLogo 2D. Models created with this release may not be compatible
-      with future versions. While we've made efforts to ensure a quality
-      product, NetLogo 3D has not been subject to the same level of quality
-      control as the main application.
+      for 2D. While we've made efforts to ensure a quality
+      product, NetLogo's 3D mode has not been subject to the same
+      level of quality control as the 2D mode.
+    <p>
+      <b>Notice:</b> Prior to NetLogo 6.1.0, NetLogo 3D was
+      distributed as a separate, standalone application. If you see
+      references to "NetLogo 3D" online or in this manual, those
+      should apply to NetLogo in 3D mode.
     <ul>
       <li>
         <a href="#introduction">Introduction</a>
@@ -35,8 +39,9 @@ p.c1 {font-style: italic}
       <a>Introduction</a>
     </h2>
     <p>
-      To get started using NetLogo 3D, launch the NetLogo 3D application
-      and check out the Sample Models in the 3D section of the Models
+      To get started using 3D, launch the NetLogo application
+      and choose the "Switch to 3D" option from the "File" menu,
+      then check out the Sample Models in the 3D section of the Models
       Library.
     <p>
       When you're ready to write your own 3D model, look at the Code
@@ -65,8 +70,10 @@ p.c1 {font-style: italic}
       <br>
       -- Edwin A. Abbott, <i>Flatland: A romance in many dimensions</i>
     <p>
-      NetLogo 3D's world has width, height and depth. Patches are
-      cubes. In addition to <code><a href="dictionary.html#pcor">pxcor</a></code> and <code><a href="dictionary.html#pcor">pycor</a></code>, patches have <code><a href="#pzcor">pzcor</a></code>.
+      3D worlds have width, height and depth. Patches are
+      cubes. In addition to <code><a href="dictionary.html#pcor">pxcor</a></code>
+      and <code><a href="dictionary.html#pcor">pycor</a></code>,
+      patches have <code><a href="#pzcor">pzcor</a></code>.
     <p>
       Turtles have three Cartesian coordinates, instead of two, to describe
       position. In addition to <code><a href="dictionary.html#xcor">xcor</a></code> and <code><a href="dictionary.html#ycor">ycor</a></code>, turtles have <code><a href="#zcor">zcor</a></code>.
@@ -79,8 +86,8 @@ p.c1 {font-style: italic}
       moves forward. The second vector is perpendicular to the forward
       vector and comes out of the right side of the turtle (as if the
       turtle were to stick its right arm straight out from its body).
-      Heading is the angle between the forward vector of the turtle
-      projected onto the xy-plane and the vector [0 1 0]. Pitch is the
+      Heading measures the angle between the turtle's forward vector
+      relative to the xy-plane and the world's y-axis. Pitch is the
       angle between the forward vector of the turtle and the xy-plane and
       finally roll is the angle between the right vector of the turtle and
       the xy-plane. When turtle turns right or left in 3D space it rotates
@@ -187,8 +194,8 @@ end-shape
       <span class="prim_example">Step 1: Depth</span>
     </h4>
     <p>
-      One of the first things you will notice when you open NetLogo 3D is
-      that the world is a cube instead of a square.
+      One of the first things you will notice when you open NetLogo in 3D mode
+      is that the world is a cube instead of a square.
     <p class="screenshot">
       <img alt="screen shot" src="images/3d/cube.gif">
     <p>
@@ -259,7 +266,7 @@ end-shape
     </div>
     <p>
       Heading, pitch, and roll are turtle variables that represent the
-      orientation of the turtle. Heading is absolute in relation to the x/y
+      orientation of the turtle. Heading is absolute in relation to the xy
       plane; it is the rotation of the turtle around the z-axis.
     <p class="screenshot">
       <img alt="screen shot" src="images/3d/heading.gif">

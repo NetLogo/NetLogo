@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <p>
+    This page is intended for advanced users, those who maintain applications which embed
+    or extend NetLogo, or those who maintain large numbers of models and want to be
+    more familiar with the format they are saved in.
+    For most users, the saving, loading, and editing features NetLogo provides will
+    be more than sufficient to serve their needs.
+  </p>
+  <p>
+    The schema for the <span class="mono">nlogox</span> format is built using
+    <a href="https://en.wikipedia.org/wiki/XML_Schema_(W3C)">W3C XML Schema</a> (sometimes referred to as
+    <span class="mono">xsd</span>), a standard format for describing xml-based
+    data representations. <span class="mono">nlogox</span> files are also valid XML files
+    and may be operated on using XML tools such as XSLT and XPath.
+    The NetLogo model schema is included with the HTML version of this manual <a href="model.xsd">here</a>.
+    To view the schema, save the linked page and open in a text editor.
+  </p>
+  <p>
+    There are several major areas that this guide covers. Many users are only interested
+    in a single type or section of the format; we recommend using the Table of Contents
+    (below) to learn more about your area of interest.
+    This page is divided into several topics.
+    The first of these is <a href="#file-sections">File Sections</a> which describes the
+    elements which live directly inside the <code><![CDATA[<model>]]></code> tag.
+      The second major area, <a href="#composite-types">Composite Types</a> covers the
+      attributes and sub-elements of various xml elements used in the file.
+      Most of the sections define their content in terms of these types and provide links
+      where appropriate.
+      The final major areas are <a href="#atomic-types">Atomic Types</a> which gives
+      information about the syntax and meaning of various format and attribute content,
+      and <a href="#enumerations">Enumerations</a> which provides a list of special values
+      used in various places in the file format.
+    </p>
+  </div>
+

@@ -23,7 +23,7 @@ import scala.io.{ Source => ScalaSource }
 
 class SchemaValidationTest extends FunSuite {
 
-  val schemas = Array[String]("netlogo.xsd", "SVG.xsd")
+  val schemas = Array[String]("model.xsd", "SVG.xsd")
 
   val JaxpSchemaLanguage =
     "http://java.sun.com/xml/jaxp/properties/schemaLanguage"
@@ -61,8 +61,8 @@ class SchemaValidationTest extends FunSuite {
     sf.setErrorHandler(schemaErrorHandler)
     sf.setResourceResolver(resolver)
     assert(schemaErrorHandler.errors.isEmpty,
-      s"netlogo.xsd contains errors:\n${schemaErrorHandler.errorString}")
-    sf.newSchema(Paths.get("autogen/fileformat/netlogo.xsd").toFile)
+      s"model.xsd contains errors:\n${schemaErrorHandler.errorString}")
+    sf.newSchema(Paths.get("autogen/fileformat/model.xsd").toFile)
   }
 
   val factory = DocumentBuilderFactory.newInstance

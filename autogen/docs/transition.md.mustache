@@ -13,6 +13,40 @@ complete details on differences between versions.
 
 [TOC]
 
+## Changes for NetLogo 6.1
+
+### New File Format: .nlogox
+
+NetLogo's ".nlogo" file format was created many years ago as a simple format
+for what was (then) a very simple language and environment. NetLogo is no
+longer as simple as it once was and the limitations of the file format sometimes
+prevent us from enhancing NetLogo in the ways we would like. As NetLogo has
+grown in complexity, general purpose file formats like XML and JSON have grown
+in popularity and support. A great disadvantage of the old format was that few
+programs (besides NetLogo) could understand the details of objects stored in
+it.
+
+We believe that the nlogox format addresses each of these concerns. It is
+built using XML and described using the XML Schema Language. Because values
+have names associated with them, it's much easier for a user to look through
+an nlogox file and understand what it means. Because XML is standardized, it's
+much easier for power users and other developers to build tools which work
+with the file format. Since we have a schema and XML transformations are
+possible, we also hope to be able to make changes to the file format on a
+more frequent basis without breaking models and without needing to put
+out new major versions of NetLogo.
+
+### Incorporation of NetLogo 3D Into the NetLogo Application
+
+The addition of nlogox allows NetLogo's 2D and 3D modes to share a single
+file format. It is most convenient to be able open a given nlogox file in
+a single application without having to determine in advance whether that
+model is 2D or 3D. To that end, we've made it possible to switch between 2D
+and 3D "mode" inside NetLogo. To do this, choose "Switch to 3D" or "Switch
+to 2D" from the "File" menu in NetLogo. Please note that support for
+NetLogo's 3D mode still lags that of the "normal" 2D mode. We appreciate feedback
+and bug reports for 3D as we continue to improve it.
+
 ## Changes for NetLogo 6.0
 
 ### Tasks replaced by Anonymous Procedures

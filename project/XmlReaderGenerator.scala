@@ -18,7 +18,7 @@ object XmlReaderGenerator {
   lazy val linkShapeReader = taskKey[Seq[File]]("generate link shape reader")
   lazy val modelInfoReader = taskKey[Seq[File]]("generate model info reader")
   lazy val modelSettingsReader = taskKey[Seq[File]]("generate model settings reader")
-  lazy val netLogoXsdSchema = settingKey[File]("netlogo xsd schema")
+  lazy val netLogoXsdSchema = settingKey[File]("model xsd schema")
   lazy val previewCommandsReader = taskKey[Seq[File]]("generate preview commands reader")
   lazy val vectorShapeReader = taskKey[Seq[File]]("generate vector shape reader")
   lazy val widgetReader = taskKey[Seq[File]]("generate widget reader")
@@ -42,19 +42,19 @@ object XmlReaderGenerator {
       (TargetNamespace, "DoubleColor") -> DoubleColorType)
 
   lazy val parserSettings = Seq(
-    netLogoXsdSchema := autogenRoot.value / "fileformat" / "netlogo.xsd") ++
+    netLogoXsdSchema := autogenRoot.value / "fileformat" / "model.xsd") ++
     generateTask("Widget", "org.nlogo.core.model", "org.nlogo.core", widgetReader, Some("WidgetXml.scala")) ++
-    generateTask("modelInfo", "org.nlogo.core.model", "org.nlogo.core", modelInfoReader, Some("ModelInfoXml.scala")) ++
+    generateTask("ModelInfo", "org.nlogo.core.model", "org.nlogo.core", modelInfoReader, Some("ModelInfoXml.scala")) ++
     generateTask("HubNetWidget", "org.nlogo.core.model", "org.nlogo.core", hubnetWidgetReader, Some("HubNetWidgetXml.scala")) ++
-    generateTask("vectorShape", "org.nlogo.core.model", "org.nlogo.core", vectorShapeReader, Some("VectorShapeXml.scala")) ++
-    generateTask("linkShape", "org.nlogo.core.model", "org.nlogo.core", linkShapeReader, Some("LinkShapeXml.scala"))
+    generateTask("VectorShape", "org.nlogo.core.model", "org.nlogo.core", vectorShapeReader, Some("VectorShapeXml.scala")) ++
+    generateTask("LinkShape", "org.nlogo.core.model", "org.nlogo.core", linkShapeReader, Some("LinkShapeXml.scala"))
 
 
   lazy val additionalSectionsSettings =
-    Seq(netLogoXsdSchema := autogenRoot.value / "fileformat" / "netlogo.xsd") ++
-      generateTask("modelSettings", "org.nlogo.fileformat", "org.nlogo.api", modelSettingsReader, Some("ModelSettingsXml.scala")) ++
-      generateTask("experiment", "org.nlogo.fileformat", "org.nlogo.api", experimentReader, Some("ExperimentXml.scala")) ++
-      generateTask("previewCommands", "org.nlogo.fileformat", "org.nlogo.api", previewCommandsReader, Some("PreviewCommandsXml.scala"))
+    Seq(netLogoXsdSchema := autogenRoot.value / "fileformat" / "model.xsd") ++
+      generateTask("ModelSettings", "org.nlogo.fileformat", "org.nlogo.api", modelSettingsReader, Some("ModelSettingsXml.scala")) ++
+      generateTask("Experiment", "org.nlogo.fileformat", "org.nlogo.api", experimentReader, Some("ExperimentXml.scala")) ++
+      generateTask("PreviewCommands", "org.nlogo.fileformat", "org.nlogo.api", previewCommandsReader, Some("PreviewCommandsXml.scala"))
 
   lazy val importSchemaSettings =
     Seq(

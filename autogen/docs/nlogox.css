@@ -1,0 +1,121 @@
+div.section > p:last-child {
+  margin-bottom: 0;
+}
+
+div.section {
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+div.complexType {
+  margin-left: 2%;
+}
+
+div.elementAttributes {
+  margin-left: 2%;
+}
+
+.mono, .attributeName, .complexTypeName, .section-name {
+  font-family: "Menlo", "Lucida Console", monospace;
+}
+
+.details.hidden {
+  display: none;
+}
+
+.hide-details, .show-details {
+  color: #338;
+}
+
+ul.toc, ul.toc-subtopics {
+  list-style-type: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table.cols4 {
+  width: 100%;
+}
+
+table.cols2 {
+  width: 100%;
+}
+
+table > thead > tr {
+  background-color: #DDD;
+  border: 1px solid gray;
+}
+
+table > thead > tr > th {
+  padding-top: 3px;
+  text-align: left;
+  padding-left: 1em;
+  max-width: 25%;
+}
+
+table > tbody > tr > td {
+  padding-top: 3px;
+  padding-left: 1em;
+  padding-right: 1em;
+  background-color: #FFF;
+  width: 25%;
+}
+
+table > tbody > tr:nth-child(2n) > td {
+  background-color: #F2F2F2;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+}
+
+a.element-description, span.attribute-heading, span.bold {
+  font-weight: bold;
+}
+
+a.element-description {
+  text-decoration: none;
+  color: black;
+}
+
+span.italic {
+  font-style: italic;
+}
+
+div.type-section > table {
+  margin-bottom: 10px;
+}
+
+div.element-type {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1.5em fit-content(50%);
+  grid-gap: 5px;
+  margin-bottom: 10px;
+}
+
+div.element-type-title {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+
+div.element-type-description {
+  grid-column: 1 / 3;
+  grid-row: 2;
+}
+
+div.element-icon {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  justify-self: self-end;
+}
+
+img.element-icon {
+  display: block;
+  max-height: 3em;
+  max-width: 1fr;
+  width: auto;
+}

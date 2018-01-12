@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="topic" id="atomic-types">
+  <h2>Atomic Types</h2>
+  <div id="atomic-bigDecimal">
+    <h3>Big Decimal</h3>
+    <p>
+      A number stored with arbitrary precision.
+      Numbers in the NetLogo environment are represented as
+      <a href="programming.html#math">IEEE double-precision floating point numbers</a>.
+      These numbers work great for the ranges used in NetLogo,
+      but are sometimes insufficiently expressive when dealing with very large or
+      very small numbers. In those cases, we use big decimal types to indicate that
+      the number can have arbitrary precision. These numbers are formatted the same
+      way as doubles.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[interval="3.14159265359"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-DoubleColor">
+    <h3>Double Color</h3>
+    <p>
+      A double color is a number stored to represent a NetLogo color.
+      See <a href="programming.html#colors">the Colors section of the programming guide</a>
+      for more information.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[color="85"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-boolean">
+    <h3>Boolean</h3>
+    <p>
+      Booleans represent a true / false value.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[isVisible="false"]]></pre>
+      Example (as element):
+      <pre class="mono"><![CDATA[<boolean>true</boolean]]></pre>
+    </div>
+  </div>
+  <div id="atomic-character">
+    <h3>Character</h3>
+    <p>Characters represent a single letter by using a length-one string.</p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[actionKey="F"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-commaSeparatedList">
+    <h3>Comma Separated List</h3>
+    <p>A list of strings, separated by a comma (&apos;,&apos;) and a single space (&apos; &apos;).
+      These lists denote a collection of strings.</p>
+    <div class="example">
+      Example (element):
+      <pre class="mono"><![CDATA[<subject>Biology, Life, Ants</subject>]]></pre>
+    </div>
+  </div>
+  <div id="atomic-double">
+    <h3>Double</h3>
+    <p>A <a href="programming.html#math">IEEE double-precision floating point numbers</a> stored
+      as an element or attribute</p>
+    <div class="example">
+      Example (as attribute)
+      <pre class="mono"><![CDATA[patchSize=15.3]]></pre>
+      Example (as element)
+      <pre class="mono"><![CDATA[<numberChoice>1E5</numberChoice>]]></pre>
+    </div>
+  </div>
+  <div id="atomic-floatSeq">
+    <h3>Float Sequence</h3>
+    <p>
+      A sequence of floating-point values separated by a comma (&apos;,&apos;).
+      This is designed to mirror SVG&apos;s
+      <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray#Usage_context">dasharray</a>
+      data type.
+      At the moment, there are only five combinations supported by NetLogo.
+      Other combinations will not make the file invalid but are likely to cause problems
+      with NetLogo if opened.
+      Here are the valid ones, with brief descriptions:
+    </p>
+    <ul>
+      <li>Invisible line: <span class="mono">&quot;0.0,1.0&quot;</span></li>
+      <li>Solid line: <span class="mono">&quot;1.0,0.0&quot;</span></li>
+      <li>Dotted line: <span class="mono">&quot;2.0,4.0&quot;</span></li>
+      <li>Dashed line: <span class="mono">&quot;4.0,2.0&quot;</span></li>
+      <li>Line alternating dots and dashes: <span class="mono">&quot;4.0,4.0,2.0,2.0&quot;</span></li>
+    </ul>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[stroke-dasharray="1,0"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-ColorType">
+    <h3>Hex Color</h3>
+    <p>Hex Color represents a color using the &apos;#&apos; followed by 6 hex-digits.
+      The first two digits represent the red component of the color, the second two green,
+      and the final two blue. For more information, see the <a href="https://en.wikipedia.org/wiki/Web_colors#Hex_triplet">Hex Triplet at Wikipedia</a>.
+    </p>
+    <p>
+      Please note that while HTML/CSS allow using other color selectors
+      (like three digit hex abbreviations, color names,
+      or css colors created with <span class="mono">rgb</span>),
+      this type <span class="italic">only</span> permits the use of full hex triples.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[color="#ABDE12"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-integer">
+    <h3>Integer</h3>
+    <p>
+      Represents an integer value that may be positive, negative, or zero.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[minPxcor="-16"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-intPairs">
+    <h3>Int Pairs</h3>
+    <p>
+      An approximation of the
+      <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/points">SVG list-of-points type</a>.
+      This type contains a sequence of pairs with first and second components of the pair
+      separated by a comma (&apos;,&apos;) and each pair separated from the next pair by
+      a space (&apos; &apos;).
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[points="0,0 0,5 5,5 5,0"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-nonNegativeInteger">
+    <h3>Non-negative Integer</h3>
+    <p>
+      Represents an integer value greater than or equal to zero.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[iterationLimit="0"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-positiveInteger">
+    <h3>Positive Integer</h3>
+    <p>
+      Represents an integer value greater than zero.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[fontSize="12"]]></pre>
+    </div>
+  </div>
+  <div id="atomic-string">
+    <h3>String</h3>
+    <p>
+      Represents a string value. Because nlogox is an XML-based format, strings must be
+      <a href="https://www.w3.org/TR/REC-xml/#syntax">properly-formatted for XML</a>.
+      In practice, NetLogo saves all string-typed values contained in elements using
+      <a href="https://en.wikipedia.org/wiki/CDATA">CDATA</a>.
+      We recommend that any file modification do the same, both for ease of implementation
+      and to preserve whitespace in regions that frequently represent code.
+      For string-typed values in attributes, ensure that the string is HTML-safe by escaping
+      characters as appropriate.
+    </p>
+    <div class="example">
+      Example (as attribute):
+      <pre class="mono"><![CDATA[name="foo"]]></pre>
+      Example (as element):
+      <pre class="mono"><![CDATA[
+<code><]]><![CDATA[![CDATA[
+to setup
+  clear-all
+  create-turtles 10 [
+    pd
+  ]
+end
+
+to go
+  ask turtles with [ who < 5 ] [
+    fd 5
+  ]
+end
+]]]]><![CDATA[></code>]]></pre>
+    </div>
+  </div>
+</div>

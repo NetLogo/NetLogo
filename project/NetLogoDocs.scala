@@ -4,8 +4,9 @@ import java.nio.file.{ Files, Path => NioPath }
 import scala.collection.JavaConverters._
 
 class NetLogoDocs(
-  docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File,
+  genRoot: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File,
   extensionDocs: ExtensionDocs) {
+    val docsSource = genRoot / "docs"
 
   val dictTarget = docsTarget / "dict"
 
@@ -42,7 +43,7 @@ class NetLogoDocs(
       "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
       "interfacetab", "infotab", "codetab", "programming", "transition", "shapes",
       "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
-      "modelingcommons", "logging", "controlling", "mathematica", "3d",
+      "modelingcommons", "logging", "nlogox", "controlling", "mathematica", "3d",
       "extensions") ++ extensions ++ Seq("faq", "dictionary")
 
     allComponents.map(n => (base / s"$n.html"))
@@ -108,6 +109,7 @@ class NetLogoDocs(
       IO.delete(targetDir / (name + ".md"))
     }
     extensionDocs.generateExtensionDocs(targetDir, documentedExtensions, variables)
+    generateFileFormatDocumentation(targetDir)
     FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
@@ -129,5 +131,36 @@ class NetLogoDocs(
       sys.error("could not generate htmldoc!")
 
     pdfFile
+  }
+
+  private def generateFileFormatDocumentation(targetDir: File): Seq[File] = {
+    import java.io.StringWriter
+    import java.nio.file.Files
+    import javax.xml.transform.{ OutputKeys, Source, TransformerFactory }
+    import javax.xml.transform.stream.{ StreamResult, StreamSource }
+    def transformTo(sourceFile: File, templateFile: File, destFile: File): Unit = {
+      val transformerFactory = TransformerFactory.newInstance
+      val docStylesheet = templateFile
+      val transformer = transformerFactory.newTransformer(new StreamSource(Files.newBufferedReader(docStylesheet.toPath)))
+      val modelXsd = sourceFile
+      val (result, writer) = {
+        val w = new StringWriter()
+        val r = new StreamResult(w)
+        (r, w)
+      }
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
+        transformer.transform(new StreamSource(Files.newBufferedReader(modelXsd.toPath)), result)
+        Files.write(destFile.toPath, writer.toString.getBytes("UTF-8"))
+    }
+    val transformerFactory = TransformerFactory.newInstance
+    transformTo(
+      genRoot / "fileformat" / "model.xsd",
+      genRoot / "docs" / "netlogo-display.xsl",
+      targetDir / "nlogox.html")
+    FileActions.copyFile(genRoot / "docs" / "nlogox.css", targetDir / "nlogox.css")
+    FileActions.copyFile(genRoot / "fileformat" / "model.xsd", targetDir / "model.xsd")
+    Seq(targetDir / "nlogox.html", targetDir / "model.xsd", targetDir / "nlogox.css")
   }
 }

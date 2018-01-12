@@ -111,9 +111,10 @@ object NetLogoPackaging {
       Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     buildVariables := Map[String, String](
-      "version"               -> marketingVersion.value,
-      "numericOnlyVersion"    -> numericMarketingVersion.value,
-      "date"                  -> buildDate.value),
+      "version"            -> marketingVersion.value,
+      "numericOnlyVersion" -> numericMarketingVersion.value,
+      "date"               -> buildDate.value,
+      "year"               -> buildDate.value.takeRight(4)),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = baseDirectory.value / "downloadPages"

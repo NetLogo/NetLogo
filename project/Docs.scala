@@ -22,13 +22,14 @@ object Docs {
     javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
     docsRoot       := baseDirectory.value / "docs",
     buildVariables := Map[String, String](
-      "version"               -> marketingVersion.value,
-      "numericOnlyVersion"    -> numericMarketingVersion.value,
-      "date"                  -> buildDate.value),
+      "version"            -> marketingVersion.value,
+      "numericOnlyVersion" -> numericMarketingVersion.value,
+      "date"               -> buildDate.value,
+      "year"               -> buildDate.value.takeRight(4)),
     netLogoRoot := baseDirectory.value.getParentFile,
     netLogoDocs := {
       new NetLogoDocs(
-        autogenRoot.value / "docs",
+        autogenRoot.value,
         docsRoot.value.getAbsoluteFile,
         baseDirectory.value,
         modelsDirectory.value,

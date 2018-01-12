@@ -353,7 +353,7 @@ it is saved as part of the model. To run an experiment setup saved in a model,
 here is an example command line:
 
     netlogo-headless.sh \
-      --model Fire.nlogo \
+      --model Fire.nlogox \
       --experiment experiment1 \
       --table -
 
@@ -387,7 +387,7 @@ it a name.)
 Here's another example that shows some additional, optional arguments:
 
     netlogo-headless.sh \
-      --model Fire.nlogo \
+      --model Fire.nlogox \
       --experiment experiment2 \
       --max-pxcor 100 \
       --min-pxcor -100 \
@@ -408,7 +408,7 @@ file.
 Yet another example:
 
     netlogo-headless.sh \
-      --model Fire.nlogo \
+      --model Fire.nlogox \
       --experiment experiment2 \
       --table table-output.csv \
       --spreadsheet spreadsheet-output.csv
@@ -431,7 +431,7 @@ Here is one final example that shows how to run an experiment setup which is
 stored in a separate XML file, instead of in the model file:
 
     netlogo-headless.sh \
-      --model Fire.nlogo \
+      --model Fire.nlogox \
       --setup-file fire-setups.xml \
       --experiment experiment3
 
@@ -443,7 +443,7 @@ for example:
 
     netlogo-headless.sh \
       --3D \
-      --model "Mousetraps 3D.nlogo3d" \
+      --model "Mousetraps 3D.nlogox" \
       --experiment experiment1 \
       --table -
 
@@ -452,58 +452,64 @@ Note that you should supply a 3D model and there are also 3D arguments
 
 The next section has information on how to create standalone experiment setup
 files using XML.
-    
+
 ### Setting up experiments in XML
 
 We don't yet have detailed documentation on authoring experiment setups in XML,
 but if you already have some familiarity with XML, then the following pointers
 may be enough to get you started.
 
-The structure of BehaviorSpace experiment setups in XML is determined by a
-Document Type Definition (DTD) file. The DTD is stored in NetLogo.jar, as
-`system/behaviorspace.dtd`. (JAR files are also zip files, so you can extract
-the DTD from the JAR using Java's "jar" utility or with any program that
-understands zip format.)
+The structure of BehaviorSpace experiment setups in XML is determined by an
+XML Schema Definition (XSD) file. Documentation on the behaviorspace experiment
+component can be found [here](nlogox.html#type-Experiment).
 
 The easiest way to learn what setups look like in XML, though, is to author a
 few of them in BehaviorSpace's GUI, save the model, and then examine the
-resulting .nlogo file in a text editor. The experiment setups are stored towards
-the end of the .nlogo file, in a section that begins and ends with a
+resulting .nlogox file in a text editor. The experiment setups are stored towards
+the end of the .nlogox file, in a section that begins and ends with a
 `experiments` tag. Example:
 
     <experiments>
-      <experiment name="experiment" repetitions="10" runMetricsEveryStep="true">
-        <setup>setup</setup>
-        <go>go</go>
-        <exitCondition>not any? fires</exitCondition>
-        <metric>burned-trees</metric>
-        <enumeratedValueSet variable="density">
-          <value value="40"/>
-          <value value="0.1"/>
-          <value value="70"/>
-        </enumeratedValueSet>
+      <experiment name="experiment"  runMetricsEveryStep="true">
+        <setupCode>setup</setupCode>
+        <goCode>go</goCode>
+        <stopConditionCode>not any? fires</stopConditionCode>
+        <metrics>
+          <metric>burned-trees</metric>
+        </metrics>
+        <parameterSet>
+          <cartesianProduct repetitionsPerCombo="10">
+            <discreteValues variable="density">
+              <number>40</number>
+              <number>0.1</number>
+              <number>70</number>
+            </enumeratedValueSet>
+          </cartesianProduct>
+        </parameterSet
       </experiment>
     </experiments>
 
 In this example, only one experiment setup is given, but you can put as many as
 you want between the beginning and ending `experiments` tags.
 
-Between looking at the DTD, and looking at examples you create in the GUI, it
-will hopefully be apparent how to use the tags to specify different kind of
-experiments. The DTD specifies which tags are required and which are optional,
-which may be repeated and which may not, and so forth.
+Between looking at the documentation, and looking at examples you create in the GUI,
+it will hopefully be apparent how to use the tags to specify different kind of
+experiments. The documentation specifies which tags are required and which
+are optional, which may be repeated and which may not, and so forth.
 
 When XML for experiment setups is included in a model file, it does not begin
-with any XML headers, because not the whole file is XML, only part of it. If you
+with any XML headers, the model file starts with an XML header, but that doesn't appear
+immediately before the behaviorspace section. If you
 keep experiment setups in their own file, separate from the model file, then the
-extension on the file should be .xml not .nlogo, and you'll need to begin the
-file with proper XML headers, as follows:
+extension on the file should be .xml not .nlogox, and you'll need to begin the
+file with proper XML header, as follows:
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 
-The second line must be included exactly as shown. In the first line, you may
-specify a different encoding than `UTF-8`, such as `ISO-8859-1`.
+Note that if you are using an older Behaviorspace setup file (compatible with NetLogo
+6.0.2 and older) running Behaviorspace headlessly will output a converted version
+of the file automatically and display the path. You may want to adjust your
+setup to use the new file instead of the old.
 
 ### Adjusting JVM Parameters
 
