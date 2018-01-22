@@ -35,7 +35,7 @@ class AssemblerTests extends FunSuite {
       test1("ask turtles [ die ]"))
   }
   test("assembleWhile") {
-    assertResult("_goto:3 _die _die _while:1 _return")(
+    assertResult("_goto:5 _enterscope _die _die _exitscope _while:1 _return")(
       test1("while [true] [die die]"))
   }
   test("assembleReporterProcedure") {

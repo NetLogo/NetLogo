@@ -14,7 +14,7 @@ import org.nlogo.core.{ AgentKind, Command => CoreCommand, Let,
       _const => _coreconst, _done => _coredone, _equal => _coreequal,
       _lessthan => _corelessthan, _let => _corelet, _letvariable => _coreletvariable,
       _repeat => _corerepeat, _return => _corereturn, _set => _coreset }
-import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure }
+import org.nlogo.nvm.{ Command, Context, ExclusiveJob, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring,
   _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
   _return, _setletvariable }
@@ -108,15 +108,7 @@ class NvmTests extends FunSuite {
 
     def checkBindingCount(i: Int): _probe = {
       val p = new _probe( { (c: Context) =>
-        c.activation.binding.size == i && {
-          var head = c.activation.binding.head
-          var j = 0
-          while (j < i) {
-            head = head.next
-            j += 1
-          }
-          head == Binding.EmptyBinding
-        }
+        c.activation.binding.allLets.size == i
       }, s"contains only $i let-bindings")
       probes :+= p
       p
