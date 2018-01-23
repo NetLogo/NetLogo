@@ -148,8 +148,10 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     else {
       if (connected) {
         OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
-        dispose()
-        doLogin()
+        EventQueue.invokeLater({ () =>
+          dispose()
+          doLogin()
+        })
         ()
       }
     }

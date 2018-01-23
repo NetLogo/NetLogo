@@ -332,7 +332,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (listener != null) listener.disconnect(reason)
     else {
-      invokeLater(() => errorHandler.handleDisconnect(activityName, connected, reason))
+      invokeLater(new RunDisconnection(errorHandler, activityName, connected, reason))
       connected = false
     }
   }
@@ -367,8 +367,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
     override def disconnect(reason:String) {
       super.disconnect(reason)
-      val oldConnected = connected
-      invokeLater(() => errorHandler.handleDisconnect(activityName, oldConnected, reason))
+      invokeLater(new RunDisconnection(errorHandler, activityName, connected, reason))
       connected = false
     }
   }
