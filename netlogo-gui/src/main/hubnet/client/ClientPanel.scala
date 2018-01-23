@@ -5,6 +5,7 @@ package org.nlogo.hubnet.client
 import java.awt.AWTEvent
 import java.io.{IOException, PrintWriter}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
@@ -245,7 +246,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     viewWidget.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
     viewWidget.renderer.replaceLinkShapes(clientInterface.linkShapes)
     sendDataAndWait(EnterMessage)
-    connected = true
+    connected.set(true)
     invokeLater(() => {
       getFrame(ClientPanel.this).pack()
       // in robo fixture, this generated exceptions now and again
@@ -283,7 +284,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private var port: Int = 0
   private var activityName: String = null
   private var listener: Listener = null
-  var connected:Boolean = false
+  protected val connected: AtomicBoolean = new AtomicBoolean(false)
 
   def login(userid: String, hostip: String, port: Int): Option[String] = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
@@ -331,16 +332,12 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def disconnect(reason:String) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (listener != null) listener.disconnect(reason)
-    else {
-      invokeLater(() => errorHandler.handleDisconnect(activityName, connected, reason))
-      connected = false
-    }
+    else                  handleDisconnect(reason)
   }
 
   def logout() {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    if (connected) {
-      connected = false
+    if (connected.compareAndSet(true, false)) {
       listener.stopWriting()
       sendDataAndWait(ExitMessage("Client Exited"))
     }
@@ -367,10 +364,17 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
     override def disconnect(reason:String) {
       super.disconnect(reason)
-      val oldConnected = connected
-      invokeLater(() => errorHandler.handleDisconnect(activityName, oldConnected, reason))
-      connected = false
+      handleDisconnect(reason)
     }
+  }
+
+  /* Note that this method can be called multiple times and from multiple threads.
+   * Calling errorHandler.handleDisconnect twice with connected=true leads to strange behavior
+   * and using the compareAndSet operation here avoids that.
+   */
+  private def handleDisconnect(reason: String): Unit = {
+    val wasConnected = connected.compareAndSet(true, false)
+    invokeLater(() => errorHandler.handleDisconnect(activityName, wasConnected, reason))
   }
 
   // EVENT HANDLING
@@ -417,7 +421,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     a match {
       case m: Message => handleProtocolMessage(m)
-      case info: String => if (!connected) {
+      case info: String => if (! connected.get) {
         if (info == Version.version)
           sendDataAndWait(new HandshakeFromClient(listener.clientId, ConnectionTypes.COMP_CONNECTION))
         else handleLoginFailure("The version of the HubNet Client" +

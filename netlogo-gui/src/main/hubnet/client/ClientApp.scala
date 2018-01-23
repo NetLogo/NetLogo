@@ -119,7 +119,9 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     }
   }
 
-  def completeLogin() { setVisible(true) }
+  def completeLogin() {
+    setVisible(true)
+  }
 
   private def login(userid: String, hostip: String, port: Int) {
     var exs: Option[String] = None
@@ -145,13 +147,11 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
     EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
-    else {
-      if (connected) {
-        OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
-        dispose()
-        doLogin()
-        ()
-      }
+    else if (connected) {
+      OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+      dispose()
+      doLogin()
+      ()
     }
   }
 

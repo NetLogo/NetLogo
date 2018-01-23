@@ -82,7 +82,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         // need to check if we are still connected since we could
         // have shutdown while we were waiting to be called.
         // --mag 8/26/03
-        if (connected && value.isDefined) sendDataAndWait(new ActivityCommand(name, value.get.asInstanceOf[AnyRef]))
+        if (connected.get && value.isDefined) sendDataAndWait(new ActivityCommand(name, value.get.asInstanceOf[AnyRef]))
       })
     }
   }
