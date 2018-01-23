@@ -8,7 +8,7 @@ import java.util.concurrent.Executors // , ExecutorService, TimeUnit, LinkedBloc
 
 import org.nlogo.api.Version
 import org.nlogo.util.ClassLoaderObjectInputStream
-import protocol.{ ActivityCommand, EnterMessage, HandshakeFromClient, HandshakeFromServer }
+import protocol.{ ActivityCommand, EnterMessage, ExitMessage, HandshakeFromClient, HandshakeFromServer }
 
 import scala.util.Random
 
@@ -21,19 +21,21 @@ object HubNetLoginFuzzing extends App {
   case class SendVersion(version: String) extends Send
   case class SendHandshake(clientId: String) extends Send
   case object SendEnter extends Send
+  case object SendExit extends Send
   case class SendActivityMessage(tag: String, value: AnyRef) extends Send
 
   lazy val threadPool = Executors.newFixedThreadPool(4)
 
   val random = new Random(0)
 
-  val actions: Iterator[ActionRunnable] =
+  val actions: Iterable[ActionRunnable] =
     Iterator
       .continually(makeActions(random))
       .map(makeActionRunnables _)
+      .take(3)
+      .toSeq
 
-
-  actions.take(400).foreach(threadPool.submit _)
+  actions.foreach(threadPool.submit _)
 
   threadPool.shutdown()
 
@@ -43,36 +45,25 @@ object HubNetLoginFuzzing extends App {
     println(a.result)
   }
 
+  lazy val messagePool: Seq[(Random => Send)] =
+    Seq(
+    { (r) => SendVersion(Version.version) },
+    { (r) => SendHandshake(randString(r)) },
+    { (r) => SendHandshake(null) },
+    { (r) => SendEnter },
+    { (r) => SendActivityMessage("Choice", Double.box(3)) },
+    { (r) => SendExit })
+
   def makeActions(rand: Random): Seq[Action] = {
-    rand.nextInt(8) match {
-      case 0 =>
-        Seq(SendAction(SendVersion(Version.version)), WaitOneMessage)
-      case 1 =>
-        Seq(SendAction(SendVersion(Version.version)), WaitOneMessage, SendAction(SendHandshake(randString(rand))), WaitOneMessage)
-      case 2 =>
-        Seq(SendAction(SendHandshake(randString(rand))), WaitOneMessage)
-      case 3 =>
-        Seq(SendAction(SendVersion(Version.version)), WaitOneMessage, SendAction(SendHandshake(null)), WaitOneMessage)
-      case 4 =>
-        Seq(SendAction(SendVersion(Version.version)), WaitOneMessage,
-          SendAction(SendHandshake(randString(rand))), WaitOneMessage,
-          SendAction(SendEnter))
-      case 5 =>
-        Seq(SendAction(SendVersion(Version.version)), WaitOneMessage,
-          SendAction(SendHandshake(randString(rand))), WaitOneMessage,
-          SendAction(SendEnter),
-          SendAction(SendActivityMessage("Choice", Double.box(3))), WaitOneMessage)
-      case 6 =>
-        Seq(SendAction(SendVersion(Version.version)),
-          SendAction(SendHandshake(randString(rand))),
-          SendAction(SendEnter),
-          SendAction(SendEnter))
-      case 7 =>
-        Seq(SendAction(SendVersion(Version.version)),
-          SendAction(SendHandshake(randString(rand))),
-          SendAction(SendHandshake(randString(rand))),
-          SendAction(SendEnter))
-    }
+    (1 to rand.nextInt(10))
+      .map(_ => messagePool(rand.nextInt(messagePool.length)))
+      .flatMap { messageMaker =>
+          val madeMessage = messageMaker(rand)
+          madeMessage match {
+            case _: SendActivityMessage | SendExit | SendEnter => Seq(SendAction(madeMessage))
+            case _ => Seq(SendAction(madeMessage), WaitOneMessage)
+          }
+      }
   }
 
   private def randString(rand: Random): String = {
@@ -153,6 +144,8 @@ object HubNetLoginFuzzing extends App {
                       out.writeObject(EnterMessage); out.flush()
                     case SendActivityMessage(tag, value) =>
                       out.writeObject(ActivityCommand(tag, value)); out.flush()
+                    case SendExit =>
+                      out.writeObject(ExitMessage("DONE!")); out.flush()
                   }
                   events = Sent(send) :: events.tail
                     case WaitOneMessage =>
@@ -172,6 +165,7 @@ object HubNetLoginFuzzing extends App {
           } catch {
             case e: Exception =>
               events = ExceptionRaised(e) :: events
+              println("EXCEPTION CAUSED BY: " + events.reverse.mkString(","))
               e.printStackTrace()
           } finally {
             if (socket != null) {
