@@ -66,6 +66,29 @@ class ServerSideConnectionTests extends MockSuite {
     }
   }
 
+  mockTest("sending EnterMessage before handshake does not propogate an error message") { new LoginFailure {
+    conn.receiveData(Version.version)
+    assert(conn.nextOutgoingMessage === Version.version)
+
+    conn.receiveData(EnterMessage)
+    assert(conn.nextOutgoingMessage === ExitMessage("Client login failed, please try logging in again"))
+  } }
+
+  mockTest("sending ActivityMessage before handshake does not propogate that message") { new LoginFailure {
+    conn.receiveData(Version.version)
+    assert(conn.nextOutgoingMessage === Version.version)
+
+    conn.receiveData(ActivityCommand("Selection", "two"))
+    assert(conn.nextOutgoingMessage === ExitMessage("Client login failed, please try logging in again"))
+  } }
+
+  mockTest("sending ExitMessage before handshake does not propogate an exit message") { new LoginFailure {
+    conn.receiveData(Version.version)
+    assert(conn.nextOutgoingMessage === Version.version)
+
+    conn.receiveData(ExitMessage("Bye"))
+  } }
+
 /*
   commented out because it fails intermittently - ST 10/26/12
 
@@ -137,19 +160,35 @@ class ServerSideConnectionTests extends MockSuite {
 
   class TestableConnection(streamable: Streamable, server: ConnectionManagerInterface)
     extends ServerSideConnection(streamable, "test:4242", server) {
-    def nextOutgoingMessage = {
-      val m = this.writeQueue.poll()
-      if(m==null) throw new IllegalStateException("expected message, but got none!")
-      m
-    }
+      override def waitForSendData(a: Any) {
+        writeQueue.add(a)
+      }
+      def nextOutgoingMessage = {
+        val m = this.writeQueue.poll()
+        if(m==null) throw new IllegalStateException("expected message, but got none!")
+        m
+      }
+      override def disconnect(reason: String): Unit = {
+        stopWriting()
+      }
   }
   def newConnection(server:ConnectionManagerInterface=mock[ConnectionManagerInterface]) = {
     val streamable=mock[Streamable]
-    expecting{
-      one(streamable).getOutputStream
-      one(streamable).getInputStream
+    expecting {
+      atLeast(1).of(streamable).getOutputStream
+      atLeast(1).of(streamable).getInputStream
+      atMost(1).of(streamable).close()
     }
     new TestableConnection(streamable, server)
   }
 
+  trait LoginFailure {
+    val server = mock[ConnectionManagerInterface]
+    val conn = newConnection(server)
+
+    expecting {
+      one(server).removeClient(null, true, "Client login failed, please try logging in again")
+      willReturn(false)
+    }
+  }
 }

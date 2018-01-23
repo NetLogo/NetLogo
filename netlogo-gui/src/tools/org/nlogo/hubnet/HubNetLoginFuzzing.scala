@@ -32,7 +32,7 @@ object HubNetLoginFuzzing extends App {
     Iterator
       .continually(makeActions(random))
       .map(makeActionRunnables _)
-      .take(3)
+      .take(800)
       .toSeq
 
   actions.foreach(threadPool.submit _)
@@ -165,8 +165,6 @@ object HubNetLoginFuzzing extends App {
           } catch {
             case e: Exception =>
               events = ExceptionRaised(e) :: events
-              println("EXCEPTION CAUSED BY: " + events.reverse.mkString(","))
-              e.printStackTrace()
           } finally {
             if (socket != null) {
               socket.close()

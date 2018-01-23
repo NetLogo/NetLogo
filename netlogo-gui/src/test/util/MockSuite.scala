@@ -66,10 +66,14 @@ trait MockSuite extends FunSuite {
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {
     test(name) {
-      _context.withValue(new JUnit4Mockery(){setImposteriser(ClassImposteriser.INSTANCE)}) {
-        _expectations.withValue(new Expectations()) {
-          f
+      try {
+        _context.withValue(new JUnit4Mockery(){setImposteriser(ClassImposteriser.INSTANCE)}) {
+          _expectations.withValue(new Expectations()) {
+            f
+          }
         }
+      } catch {
+        case e: java.lang.AssertionError => fail(e.getMessage)
       }
     }
   }
