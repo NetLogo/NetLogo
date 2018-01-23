@@ -83,9 +83,10 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
             while (hasMoreLines(false)) { }
             return
           } else {
-            val numPens = importIntro(plot)
+            val (numPens, currentPenNameOpt) = importIntro(plot)
             importPens(plot, numPens)
             importPoints(plot)
+            currentPenNameOpt.foreach(plot.currentPenByName_=)
           }
         }
         catch { case e: ClassCastException =>
@@ -96,13 +97,13 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
     }
   }
 
-  def importIntro(plot: PlotInterface): Int =
+  private def importIntro(plot: PlotInterface): (Int, Option[String]) =
     // this is the header line and we don't really care about it since
     // we have to set everything by hand anyway.
     if (!hasMoreLines(false))
-      0
+      (0, None)
     else if (!hasMoreLines(false))
-      0
+      (0, None)
     else {
       val line = nextLine()
       plot.state = PlotState(
@@ -111,9 +112,8 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
         yMin = readNumber(line(2)),
         yMax = readNumber(line(3)),
         autoPlotOn = readBoolean(line(4)))
-      plot.currentPenByName_=(readString(line(5)))
       plot.legendIsOpen_=(readBoolean(line(6)))
-      readNumber(line(7)).toInt
+      (readNumber(line(7)).toInt, Option(readString(line(5))))
     }
 
   def importPens(plot: PlotInterface, numPens: Int) {

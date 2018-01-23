@@ -568,6 +568,22 @@ class TestImportExport extends FixtureSuite  {
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }
 
+  test("CurrentPlotPenAfterImport", SlowTestTag) { implicit fixture =>
+
+    import fixture._
+
+    workspace.open("test/import/current-plot-pen.nlogo")
+    testCommand("reset-ticks")
+    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+
+    val filename = getUniqueFilename()
+    exportWorld(filename)
+    importWorld(filename)
+    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+    delete(filename)
+
+  }
+
   ///
 
   val COMPLEX_SOURCE =
