@@ -39,8 +39,13 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
       // so, this string we received must be the version of the client.
       case s:String =>
         if (clientId == null) {
-          if (s == Version.version) validClientVersion = true
-          sendData(Version.version)
+          // NOTE: This is a hack because we need this for a school implementation
+          if (s.toUpperCase.startsWith("NETLOGO 6.0")) {
+            validClientVersion = true
+            sendData(s)
+          } else {
+            sendData(Version.version)
+          }
         }
         else {
           // TODO: handle the client sending another string after theyve already logged in
@@ -177,7 +182,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         val message =
           "An incompatible version of the HubNet Client tried logging in.\n" +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
-          Version.version
+          "NetLogo 6.0.2" // NOTE: This is a hack for an implementation
         org.nlogo.api.Exceptions.handle(new Exception(message, e))
       } else {
         if (!sendingEx) org.nlogo.api.Exceptions.handle(e)
