@@ -127,7 +127,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.2",
+    version := "6.0.3-M2",
     isSnapshot := true,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -196,7 +196,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.0.2",
+    version       := "6.0.3-M2",
     isSnapshot    := true,
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
