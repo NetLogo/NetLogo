@@ -358,7 +358,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   /// view stuff
-  def sendOverrideList (client:String, agentKind: AgentKind,
+  def sendOverrideList(client:String, agentKind: AgentKind,
                                  varName: String, overrides:Map[java.lang.Long, AnyRef]) = {
     sendUserMessage(client, new OverrideMessage(new SendOverride(agentKind, varName, overrides), false))
   }

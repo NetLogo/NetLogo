@@ -38,7 +38,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
       // note: if clientId is null, that means that we haven't yet had a successful login yet.
       // so, this string we received must be the version of the client.
       case s:String =>
-        if(clientId == null) {
+        if (clientId == null) {
           if (s == Version.version) validClientVersion = true
           sendData(Version.version)
         }
@@ -69,7 +69,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
    */
   private def handleMessage(message:Message) {
     message match {
-      case HandshakeFromClient(userId, clientType) => {
+      case HandshakeFromClient(userId, clientType) =>
         if(userId == null || userId.trim == ""){
           sendData(new LoginFailure("Server received empty username."))
         }
@@ -80,33 +80,40 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         else if(!server.isSupportedClientType(clientType)){
           sendData(new LoginFailure("The HubNet model you are connected to does not support your client type: " + clientType))
         }
-        else try output.synchronized {
-          if (server.finalizeConnection(this, desiredClientId = userId)){
-            clientId = userId
-            sendData(server.createHandshakeMessage(clientType))
-            // make sure clients get current view mirroring state.
-            // ideally we'd only send this full update to the client that
-            // just joined, rather than broadcasting it to everyone. - ST 12/5/09
-            if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
-            if (HubNetUtils.plotMirroring) server.sendPlots(userId)
+        else if (clientId == null) {
+          try output.synchronized {
+            if (server.finalizeConnection(this, desiredClientId = userId)){
+              clientId = userId
+              sendData(server.createHandshakeMessage(clientType))
+              // make sure clients get current view mirroring state.
+              // ideally we'd only send this full update to the client that
+              // just joined, rather than broadcasting it to everyone. - ST 12/5/09
+              if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
+              if (HubNetUtils.plotMirroring) server.sendPlots(userId)
+            }
+            else {
+              sendData(new LoginFailure("\"" + userId + "\" is already taken by another user.\nPlease choose another name."))
+            }
           }
-          else {
-            sendData(new LoginFailure("\"" + userId + "\" is already taken by another user.\nPlease choose another name."))
-          }
+          catch { case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex) }
         }
-        catch { case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex) }
-      }
-      // TODO
-      // its possible that the server doesnt even know who this client is!
-      // they might not have sent a proper handshake yet.
-      case EnterMessage => server.putClientData(EnterMessageEnvelope(clientId))
-      // TODO
-      // its possible that the server doesnt even know who this client is!
-      // they might not have sent a proper handshake yet.
-      case m: ActivityCommand => server.putClientData(ActivityMessageEnvelope(clientId, m.tag, m.content))
+      case EnterMessage =>
+        if (clientId != null)
+          server.putClientData(EnterMessageEnvelope(clientId))
+        else
+          dieHard(reason="Client login failed, please try logging in again")
+      case m: ActivityCommand =>
+        if (clientId != null)
+          server.putClientData(ActivityMessageEnvelope(clientId, m.tag, m.content))
+        else
+          dieHard(reason="Client login failed, please try logging in again")
       // my guess on notifyClient=false here is that the client is requesting the exit
       // so theres no reason to notify them. JC 1/3/11
-      case ExitMessage(reason) => server.removeClient(clientId, notifyClient=false, reason)
+      case ExitMessage(reason) =>
+        if (clientId != null)
+          server.removeClient(clientId, notifyClient=false, reason)
+        else
+          disconnect("Disconnecting client")
       case _ =>
         // TODO
         // this is another argument for a proper state machine here.
@@ -140,13 +147,18 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   override def disconnect(reason:String) {
     if(!disconnecting) {
       disconnecting = true
-      server.removeClient(clientId, false, reason)
+      if (!server.removeClient(clientId, false, reason)) {
+        stopWriting()
+        super.disconnect(reason)
+      }
     }
   }
 
   def disconnect(notifyClient:Boolean, reason:String) {
     disconnecting = true
-    server.putClientData(ExitMessageEnvelope(clientId))
+    if (clientId != null) {
+      server.putClientData(ExitMessageEnvelope(clientId))
+    }
     if(notifyClient) sendData(ExitMessage(reason))
     stopWriting()
     super.disconnect(reason)
@@ -155,7 +167,8 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   override def handleEx(e:Exception, sendingEx:Boolean) {
     if(!disconnecting) {
       disconnecting = true
-      if(clientId != null) server.removeClient(clientId, ! sendingEx, e.toString)
+      if (clientId != null)
+        server.removeClient(clientId, ! sendingEx, e.toString)
       else{
         stopWriting()
         super.disconnect(e.toString)
