@@ -544,19 +544,20 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }
 
-  test("CurrentPlotPenAfterImport", SlowTest.Tag) {
+  if (! Version.is3D)
+    test("CurrentPlotPenAfterImport", SlowTest.Tag) {
 
-    workspace.open("test/import/current-plot-pen.nlogo")
-    testCommand("reset-ticks")
-    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+      workspace.open("test/import/current-plot-pen.nlogo")
+      testCommand("reset-ticks")
+      assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
 
-    val filename = getUniqueFilename()
-    testCommand(s"""export-world "$filename"""")
-    testCommand(s"""import-world "$filename"""")
-    assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
-    delete(filename)
+      val filename = getUniqueFilename()
+      testCommand(s"""export-world "../../$filename"""")
+      testCommand(s"""import-world "../../$filename"""")
+      assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
+      delete(filename)
 
-  }
+    }
 
   /// 3D tests
 
