@@ -4,7 +4,6 @@ package org.nlogo.prim
 
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{AssemblerAssistant, Command, Context, CustomAssembled, MutableLong}
-import org.nlogo.prim.etc.{_enterscope, _exitscope}
 
 class _repeatlocal(private[this] val vn: Int) extends Command with CustomAssembled {
   override def toString: String = s"${super.toString}:$vn,+$offset"

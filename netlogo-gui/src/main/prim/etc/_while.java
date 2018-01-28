@@ -5,6 +5,8 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.prim._enterscope;
+import org.nlogo.prim._exitscope;
 
 public final strictfp class _while
     extends Command
