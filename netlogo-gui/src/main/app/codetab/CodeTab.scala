@@ -2,21 +2,21 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Component, Dimension, Graphics, Insets }
-import java.awt.event.{ ActionEvent, TextEvent, TextListener }
+import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
+import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, Action, JPanel }
+import javax.swing.{AbstractAction, Action, JComponent, JPanel}
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab, TabsInterface }
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
+import org.nlogo.core.{AgentKind, I18N}
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ Printable => NlogoPrintable, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction }
 import org.nlogo.swing.Utils.icon
-import org.nlogo.window.{ EditorAreaErrorLabel, Events => WindowEvents, ProceduresInterface, Zoomable }
+import org.nlogo.swing.{PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction, Printable => NlogoPrintable}
+import org.nlogo.window.{EditorAreaErrorLabel, ProceduresInterface, Zoomable, Events => WindowEvents}
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -88,10 +88,15 @@ with MenuTab {
 
   def getToolBar = new ToolBar {
     override def addControls() {
+      val proceduresMenu = new ProceduresMenu(CodeTab.this)
+      this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
+      this.getActionMap.put("procmenu", proceduresMenu.getAction)
+
       add(new ToolBarActionButton(FindDialog.FIND_ACTION))
       add(new ToolBarActionButton(CompileAction))
       add(new ToolBar.Separator)
-      add(new ProceduresMenu(CodeTab.this))
+      add(proceduresMenu)
       add(new IncludedFilesMenu(getIncludesTable, tabs))
       val additionalComps = getAdditionalToolBarComponents
       if (additionalComps.nonEmpty) {
