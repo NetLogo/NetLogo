@@ -319,6 +319,7 @@ class TestImportExport extends FixtureSuite  {
     import fixture._
     val filename = getUniqueFilename()
     workspace.open("test/import/plot-custom-color.nlogo")
+    testCommand("setup-plots update-plots")
     exportWorld("../../" + filename)
     val export1 = fileToString(filename)
     testCommand("ca import-world \"../../" + filename + "\"")

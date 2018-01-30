@@ -42,7 +42,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -7171555 true "" ""
+"default" 1.0 0 -6675684 true "" "plot 0"
 
 @#$#@#$#@
 @#$#@#$#@

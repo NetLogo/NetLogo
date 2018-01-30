@@ -175,8 +175,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
   private def importPointHelper(plot: PlotInterface, pen: PlotPenInterface, data: Array[String], i: Int) {
     try {
       pen.state = pen.state.copy(
-        color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
-          readNumber(data(i * 4 + 2)).toInt),
+        color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(readNumber(data(i * 4 + 2))),
         isDown = readBoolean(data(i * 4 + 3)))
       plot.plot(
         x = readNumber(data(i * 4)),

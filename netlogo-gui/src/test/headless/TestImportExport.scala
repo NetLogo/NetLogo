@@ -306,6 +306,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     test("testCustomPenColor", SlowTest.Tag) {
       val filename = getUniqueFilename()
       workspace.open("test/import/plot-custom-color.nlogo")
+      testCommand("setup-plots update-plots")
       testCommand("export-world \"../../" + filename + "\"")
       val export1 = org.nlogo.api.FileIO.fileToString(filename)
       testCommand("ca import-world \"../../" + filename + "\"")
