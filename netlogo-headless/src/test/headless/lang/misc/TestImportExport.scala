@@ -577,7 +577,7 @@ class TestImportExport extends FixtureSuite  {
     testCommand("reset-ticks")
     assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
 
-    val filename = getUniqueFilename()
+    val filename = "../../" + getUniqueFilename()
     exportWorld(filename)
     importWorld(filename)
     assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
@@ -592,7 +592,7 @@ class TestImportExport extends FixtureSuite  {
     workspace.open("test/import/current-plot-pen.nlogo")
     testCommand("reset-ticks plot-pen-up")
 
-    val filename = getUniqueFilename()
+    val filename = "../../" + getUniqueFilename()
     exportWorld(filename)
     importWorld(filename)
     assertResult(workspace.plotManager.currentPlot.get.currentPen.get.state.isDown)(false)
