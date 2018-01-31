@@ -1,5 +1,4 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.swing
 import java.awt.event.{ActionEvent, MouseAdapter, MouseEvent}
 import java.awt.{Dimension, Graphics, Graphics2D}
