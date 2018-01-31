@@ -48,8 +48,10 @@ class ProceduresMenu(target: ProceduresMenuTarget)
         // Changing the number of items changes the desired size of the menu
         menu.validate() // recalculate correct size
         menu.setSize(menu.getPreferredSize) // resize to that size
-        val root = SwingUtilities.getRoot(menu)
-        root.setSize(root.getPreferredSize) // resize the window to match
+        Option(
+          if (System.getProperty("os.name").startsWith("Mac")) SwingUtilities.getRoot(menu)
+          else menu.getParent
+        ).foreach(r => r.setSize(r.getPreferredSize)) // resize the popup to match
         // All of the above is necessary.
         // -BCH 1/29/2018
       }
