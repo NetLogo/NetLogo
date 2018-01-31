@@ -22,8 +22,10 @@ abstract class ToolBarMenu(name: String) extends JButton(name) {
   def popup(): Unit = {
     val menu = new WrappingPopupMenu
     populate(menu)
+    menu.setVisible(false)
     menu.show(this, 0, getHeight)
     menu.pack()
+    menu.setVisible(true)
   }
 
   protected def populate(menu: JPopupMenu): Unit

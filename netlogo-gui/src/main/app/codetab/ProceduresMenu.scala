@@ -34,7 +34,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
       item
     }
 
-    val filterField = new JTextField()
+    val filterField = new JTextField
     filterField.getDocument.addDocumentListener(new DocumentListener {
       override def removeUpdate(e: DocumentEvent): Unit = changedUpdate(e)
       override def insertUpdate(e: DocumentEvent): Unit = changedUpdate(e)
@@ -49,7 +49,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
         menu.validate() // recalculate correct size
         menu.setSize(menu.getPreferredSize) // resize to that size
         val root = SwingUtilities.getRoot(menu)
-          root.setSize(root.getPreferredSize) // resize the window to match
+        root.setSize(root.getPreferredSize) // resize the window to match
         // All of the above is necessary.
         // -BCH 1/29/2018
       }
@@ -75,22 +75,22 @@ class ProceduresMenu(target: ProceduresMenuTarget)
       }
     })
 
+    menu.add(filterField)
     repopulate(menu, filterField, items)
+
+    SwingUtilities.invokeLater(() => filterField.requestFocusInWindow())
   }
 
   private def repopulate(menu: JPopupMenu, filterField: JTextField, items: Seq[JMenuItem]): Unit = {
     val query = filterField.getText
     val caseSensitive = if (query == query.toLowerCase) "" else "(?i)"
     val pattern = caseSensitive + filterField.getText.split("").mkString(".*", ".*", ".*")
-    menu.removeAll()
-    menu.add(filterField)
-    items.filter(_.getText matches pattern).foreach(menu.add)
-
+    val curItems = menu.getSubElements.collect{case it: JMenuItem => it}
+    curItems.foreach(menu.remove)
     val visibleItems = items.filter(_.getText matches pattern)
     if (visibleItems.isEmpty)
       menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })
     else
       visibleItems.foreach(menu.add)
-
   }
 }
