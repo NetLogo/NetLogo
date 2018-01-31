@@ -585,6 +585,21 @@ class TestImportExport extends FixtureSuite  {
 
   }
 
+  test("PlotPenUpAfterImport", SlowTestTag) { implicit fixture =>
+
+    import fixture._
+
+    workspace.open("test/import/current-plot-pen.nlogo")
+    testCommand("reset-ticks plot-pen-up")
+
+    val filename = getUniqueFilename()
+    exportWorld(filename)
+    importWorld(filename)
+    assertResult(workspace.plotManager.currentPlot.get.currentPen.get.state.isDown)(false)
+    delete(filename)
+
+  }
+
   ///
 
   val COMPLEX_SOURCE =

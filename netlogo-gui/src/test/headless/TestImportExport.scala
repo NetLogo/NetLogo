@@ -560,6 +560,20 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
     }
 
+  if (! Version.is3D)
+    test("PlotPenUpAfterImport", SlowTest.Tag) {
+
+      workspace.open("test/import/current-plot-pen.nlogo")
+      testCommand("reset-ticks plot-pen-up")
+
+      val filename = getUniqueFilename()
+      testCommand(s"""export-world "../../$filename"""")
+      testCommand(s"""import-world "../../$filename"""")
+      assertResult(workspace.plotManager.currentPlot.get.currentPen.get.state.isDown)(false)
+      delete(filename)
+
+    }
+
   /// 3D tests
 
   if(Version.is3D)

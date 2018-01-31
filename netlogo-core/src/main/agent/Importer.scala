@@ -160,8 +160,11 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
                 plot.currentPenByName_=(pen.name)
                 // there may be blank fields in the list of points
                 // since some pens may have more points than others.
-                if (data(i * 4).nonEmpty)
+                if (data(i * 4).nonEmpty) {
+                  val oldState = pen.state
                   importPointHelper(plot, pen, data, i)
+                  pen.state = oldState
+                }
               case None =>
                 errorHandler.showError(
                   "Error Importing Plots",
