@@ -9,26 +9,32 @@ import org.nlogo.nvm.{ CompilerFlags, JobManagerInterface, JobManagerOwner,
   Optimizations, PresentationCompilerInterface }
 
 object DefaultAbstractWorkspace {
+  class DefaultDependencies(_world: World,
+    _compiler: PresentationCompilerInterface,
+    _hubNetManagerFactory: HubNetManagerFactory,
+    _sourceOwners: Seq[SourceOwner],
+    flags: CompilerFlags) extends WorkspaceDependencies {
+    val world: World = _world
+    val compiler: PresentationCompilerInterface = _compiler
+    val hubNetManagerFactory: HubNetManagerFactory = _hubNetManagerFactory
+    val sourceOwners = _sourceOwners
+    lazy val userInteraction: UserInteraction = DefaultUserInteraction
+    lazy val messageCenter: WorkspaceMessageCenter = new WorkspaceMessageCenter()
+    lazy val owner: JobManagerOwner = new HeadlessJobManagerOwner(messageCenter)
+    lazy val modelTracker: ModelTracker = new ModelTrackerImpl(messageCenter)
+    lazy val jobManager = Femto.get[JobManagerInterface]("org.nlogo.job.JobManager", owner, world)
+    lazy val evaluator = new Evaluator(jobManager, compiler, world, flags)
+    lazy val extensionManager =
+      new ExtensionManager(userInteraction, evaluator, messageCenter, modelTracker, new JarLoader(modelTracker))
+    lazy val compilerServices =
+      new LiveCompilerServices(compiler, extensionManager, world, evaluator)
+  }
   def defaultDependencies(_world: World,
     _compiler: PresentationCompilerInterface,
     _hubNetManagerFactory: HubNetManagerFactory,
     _sourceOwners: Seq[SourceOwner],
-    flags: CompilerFlags) = new WorkspaceDependencies {
-    val compiler: PresentationCompilerInterface = _compiler
-    val world: World = _world
-    val hubNetManagerFactory: HubNetManagerFactory = _hubNetManagerFactory
-    val userInteraction: UserInteraction = DefaultUserInteraction
-    val messageCenter: WorkspaceMessageCenter = new WorkspaceMessageCenter()
-    val owner: JobManagerOwner = new HeadlessJobManagerOwner(messageCenter)
-    val modelTracker: ModelTracker = new ModelTrackerImpl(messageCenter)
-    val jobManager = Femto.get[JobManagerInterface]("org.nlogo.job.JobManager", owner, world)
-    val evaluator = new Evaluator(jobManager, compiler, world, flags)
-    val extensionManager =
-      new ExtensionManager(userInteraction, evaluator, messageCenter, modelTracker, new JarLoader(modelTracker))
-    val compilerServices =
-      new LiveCompilerServices(compiler, extensionManager, world, evaluator)
-    val sourceOwners = _sourceOwners
-  }
+    flags: CompilerFlags) =
+      new DefaultDependencies(_world, _compiler, _hubNetManagerFactory, _sourceOwners, flags)
 }
 
 abstract class DefaultAbstractWorkspace(deps: WorkspaceDependencies) extends AbstractWorkspace(deps) {

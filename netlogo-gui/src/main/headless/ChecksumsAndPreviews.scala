@@ -97,7 +97,13 @@ object ChecksumsAndPreviews {
           "/ART/GENJAM - DUPLE.NLOGO",
           "/EXTENSIONS EXAMPLES/SOUND/"),
         Some("it uses the vid extension") -> List(
-          "/EXTENSIONS EXAMPLES/VID/"))
+          "/EXTENSIONS EXAMPLES/VID/"),
+        Some("it uses the view2.5d extension") -> List(
+          "/EXTENSIONS EXAMPLES/VIEW2.5D",
+          "/VISION CONE EXAMPLE.NLOGOX"),
+        Some("it requires a graphics component not available headlessly") -> List(
+          "/GIS GRADIENT EXAMPLE.NLOGOX")
+        )
       slice <- slices
       if path.toUpperCase.containsSlice(slice)
     } yield {

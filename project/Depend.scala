@@ -93,7 +93,7 @@ object Depend {
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
-      "fileformat" -> List("api", "core", "core/model"),
+      "fileformat" -> List("api", "core", "core/model", "xmllib"),
       "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
@@ -102,7 +102,8 @@ object Depend {
       "util" -> Nil,
       "widget" -> List("window"),
       "window" -> List("core/model","editor","log","fileformat","shape","swing","workspace"),
-      "workspace" -> List("fileformat", "nvm", "plot"))
+      "workspace" -> List("fileformat", "nvm", "plot"),
+      "xmllib" -> Nil)
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }

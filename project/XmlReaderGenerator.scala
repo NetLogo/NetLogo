@@ -56,18 +56,23 @@ object XmlReaderGenerator {
       generateTask("Experiment", "org.nlogo.fileformat", "org.nlogo.api", experimentReader, Some("ExperimentXml.scala")) ++
       generateTask("PreviewCommands", "org.nlogo.fileformat", "org.nlogo.api", previewCommandsReader, Some("PreviewCommandsXml.scala"))
 
-  lazy val importSchemaSettings =
+  lazy val validationSettings =
     Seq(
       resourceGenerators in Test += Def.task {
         val directory = (resourceManaged in Test).value
-        Files.createDirectories((directory / "xfl").toPath)
-        val typesXsd = directory / "xfl" / "types.xsd"
-        val annotationsXsd = directory / "xfl" / "annotations.xsd"
+        val pluginSchemaDir = directory / "org" / "nlogo" / "xmllib" / "plugin"
+        val modelSchemaDir = directory  / "org" / "nlogo" / "fileformat"
+        Files.createDirectories(pluginSchemaDir.toPath)
+        Files.createDirectories(modelSchemaDir.toPath)
+        val typesXsd = pluginSchemaDir / "types.xsd"
+        val annotationsXsd = pluginSchemaDir / "annotations.xsd"
+        val modelSchemaXsd = modelSchemaDir / "model.xsd"
         if (! Files.exists(typesXsd.toPath))
           Files.copy(XmlReaderGenerator.getClass.getResourceAsStream("types.xsd"), typesXsd.toPath)
         if (! Files.exists(annotationsXsd.toPath))
           Files.copy(XmlReaderGenerator.getClass.getResourceAsStream("annotations.xsd"), annotationsXsd.toPath)
-        Seq(typesXsd, annotationsXsd)
+        FileActions.copyFile(netLogoXsdSchema.value.toPath, modelSchemaXsd.toPath)
+        Seq(typesXsd, annotationsXsd, modelSchemaXsd)
       }
     )
 

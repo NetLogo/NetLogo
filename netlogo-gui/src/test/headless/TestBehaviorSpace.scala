@@ -182,13 +182,13 @@ class TestBehaviorSpace
   // test export-graphics in headless mode
   testInSpace("ExportGraphics", normalTwoD) { r =>
     import r._
-    workspace.open("models/test/lab/FireWithExperiments.nlogo")
+    workspace.open("models/test/lab/FireWithExperiments.nlogox")
     newWorker("testExportGraphics", r).run(workspace, () => workspace, 1)
   }
 
   testInSpace("ModelWithIncludedExperiments", normalTwoD) { r =>
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogox", "test1", "models/test/lab/FireWithExperiments1")
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogox", "test2", "models/test/lab/FireWithExperiments2")
   }
 
   testInSpace("ResizingWorld3", normalTwoD) { r =>
@@ -229,7 +229,7 @@ class TestBehaviorSpace
   testInSpace("metricGoBoom2-parallel", normalConfigurations)(runParallelExperiment("metricGoBoom2", goBoom2Declarations))
 
   testInSpace("metricGoBoom2-parallel-from-model", normalConfigurations) { r =>
-    runExperimentFromModel("test/lab/metricGoBoom2.nlogo", "experiment", "test/lab/metricGoBoom2", wantTable = false,
+    runExperimentFromModel("test/lab/metricGoBoom2.nlogox", "experiment", "test/lab/metricGoBoom2", wantTable = false,
                            threads = Runtime.getRuntime.availableProcessors)
   }
 

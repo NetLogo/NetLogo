@@ -117,7 +117,8 @@ object ChecksumsAndPreviews {
         Some("it uses the vid extension") -> List(
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VID/"),
         Some("it uses the view2.5d extension") -> List(
-          "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VIEW2.5D/"),
+          "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VIEW2.5D/",
+          "VISION CONE EXAMPLE.NLOGOX"),
         Some("it uses the gogo extension") -> List(
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/GOGO/"),
         Some("it uses the arduino extension") -> List(

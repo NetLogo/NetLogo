@@ -12,6 +12,7 @@ object Checksummer {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     val source = workspace.previewCommands match {
       case PreviewCommands.Custom(source) => source
+      case PreviewCommands.Manual => ""
       case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
     }
     workspace.seedRNGs(0)

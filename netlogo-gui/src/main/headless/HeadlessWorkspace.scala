@@ -14,7 +14,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
 import org.nlogo.core.{ CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ CompilerFlags, DefaultCompilerServices, LabInterface, Optimizations, PresentationCompilerInterface }
-import org.nlogo.workspace.{ DefaultAbstractWorkspace, HeadlessCatchAll, HubNetManagerFactory, RuntimeError, WorkspaceEvent }
+import org.nlogo.workspace.{ DefaultAbstractWorkspace, HeadlessCatchAll, HubNetManagerFactory, RuntimeError, WorkspaceDependencies, WorkspaceEvent }
 import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoXFormat }
 import org.nlogo.xmllib.ScalaXmlElementFactory
 
@@ -134,17 +134,31 @@ object HeadlessWorkspace {
  * Don't try to use the constructor yourself; use
  * HeadlessWorkspace.newInstance instead.
  */
-class HeadlessWorkspace(
+class HeadlessWorkspace(deps: WorkspaceDependencies,
   _world: World with CompilationManagement,
-  compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
-  val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: HubNetManagerFactory)
-extends DefaultAbstractWorkspace(_world, compiler, hubNetManagerFactory, Seq(aggregateManager),
-  CompilerFlags(optimizations = Optimizations.standardOptimizations))
+  val aggregateManager: AggregateManagerInterface)
+extends DefaultAbstractWorkspace(deps)
 with org.nlogo.workspace.Controllable
 with org.nlogo.api.ViewSettings
 with HeadlessCatchAll {
+
+  def this(
+    world: World with CompilationManagement,
+    compiler: PresentationCompilerInterface,
+    renderer: RendererInterface,
+    aggregateManager: AggregateManagerInterface,
+    hubNetManagerFactory: HubNetManagerFactory) = {
+      this(
+        DefaultAbstractWorkspace.defaultDependencies(
+          world,
+          compiler,
+          hubNetManagerFactory,
+          Seq(aggregateManager),
+          CompilerFlags(optimizations = Optimizations.standardOptimizations)),
+        world, renderer, aggregateManager)
+  }
+
   world.trailDrawer(renderer.trailDrawer)
 
   /**

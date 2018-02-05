@@ -75,7 +75,7 @@ class NLogoXFormatIOTest extends FunSuite {
   val compilationEnvironment = new DummyCompilationEnvironment()
   val format = new NLogoXFormat(ScalaXmlElementFactory)
 
-  val sampleUri = getClass.getResource("/fileformat/Sample.nlogox").toURI
+  val sampleUri = Paths.get("test/fileformat/Sample.nlogox").toUri
 
   test("fails when reading in sections from a bad URI") {
     assert(format.sections(new URI("file:///not-a-real-file")).isFailure)

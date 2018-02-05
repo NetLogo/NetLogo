@@ -111,7 +111,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(publicationSettings("NetLogo-JVM"): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(XmlReaderGenerator.additionalSectionsSettings: _*).
-  settings(XmlReaderGenerator.importSchemaSettings: _*).
+  settings(XmlReaderGenerator.validationSettings: _*).
   settings(flexmarkDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -196,6 +196,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(shareSourceDirectory("netlogo-core"): _*).
   settings(Dump.settings: _*).
   settings(XmlReaderGenerator.additionalSectionsSettings: _*).
+  settings(XmlReaderGenerator.validationSettings: _*).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
