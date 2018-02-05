@@ -193,6 +193,7 @@ object App {
   def addBasicPicoConfig(pico: Pico, is3D: Boolean): Unit = {
     if (Version.systemDynamicsAvailable) {
       pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+      pico.add("org.nlogo.sdm.gui.NLogoThreeDGuiSDMFormat")
       pico.add(classOf[AddableLoader], "org.nlogo.sdm.gui.NLogoXGuiSDMFormat", new ConstantParameter(ScalaXmlElementFactory))
       pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
       pico.add(classOf[AggregateManagerInterface],

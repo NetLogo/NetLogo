@@ -3,21 +3,7 @@
 package org.nlogo.sdm
 
 import
-  cats.data.Validated.{ Invalid, Valid }
-
-import
-  org.nlogo.core.{ Model => CoreModel }
-
-import
-  org.nlogo.xmllib.{ Element, ElementFactory, MissingElement, XmlReader }
-
-import
-  org.nlogo.fileformat.{ NLogoXFormat, NLogoXFormatException }
-
-import
-  org.nlogo.api.ComponentSerialization
-
-import scala.util.{ Failure, Success, Try }
+  org.nlogo.xmllib.{ ElementFactory }
 
 // NOTE: If you're looking for the ComponentSerialization used
 // in NetLogo-GUI, you want org.nlogo.sdm.gui.NLogoXGuiSDMFormat.
@@ -26,31 +12,11 @@ import scala.util.{ Failure, Success, Try }
 // about the graphical-only components of the model, just sdm.Model
 // GUI, meanwhile, knows about everything and deserializes an
 // AggregateDrawing. - RG 9/19/17
-
-class NLogoXSDMFormat(factory: ElementFactory) extends ComponentSerialization[NLogoXFormat.Section, NLogoXFormat] {
-  override def componentName = "org.nlogo.modelsection.systemdynamics"
-  override def addDefault = identity
-
-  override def serialize(m: CoreModel): NLogoXFormat.Section =
-    // unfortunately, we don't save headlessly, since there's too much graphical stuff
-    factory.newElement("systemDynamics").build
-
-  override def validationErrors(m: CoreModel): Option[String] =
-    None
-
-  override def deserialize(e: Element): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
-    XmlReader.allElementReader("jhotdraw6").read(e).map(XmlReader.childText _) match {
-      case Valid(sdm)   =>
-        Try(stringsToModel(sdm.lines.toArray[String]))
-          .map(sdmModelOpt => sdmModelOpt
-            .map(sdmModel => m.withOptionalSection[Model](componentName, Some(sdmModel), sdmModel)))
-          .map(_.getOrElse(m))
-      case Invalid(MissingElement("jhotdraw6")) => Success(m)
-      case Invalid(err) => Failure(new NLogoXFormatException(err.message))
-    }
-  }
-
-  private def stringsToModel(s: Array[String]): Option[Model] = {
-    Loader.load(s.mkString("\n"))
-  }
+class NLogoXSDMFormat(val factory: ElementFactory) extends NLogoXBaseSDMFormat[Model] {
+  def stringsToObject(dt: Double, jhotdrawLines: String): Option[Model] =
+    Loader.load(dt.toString + "\n" + jhotdrawLines)
+  def objectToStrings(a: Model): String =
+    a.serializedGUI
+  def objectToDt(a: Model): Double =
+    a.getDt
 }

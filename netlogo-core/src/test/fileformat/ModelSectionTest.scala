@@ -18,6 +18,8 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
 
   def compareSerialized(a: A, otherA: A): Boolean = a == otherA
 
+  def compareDeserialized(c1: C, c2: C): Boolean = c1 == c2
+
   def displaySerialized(a: A): String = a.toString
 
   def minimizeSerializedDiff(a1: A, a2: A): (A, A) = (a1, a2)
@@ -40,7 +42,7 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
       val s = subject
       val m = s.deserialize(serializedVersion)(new Model()).get
       val component = modelComponent(m)
-      assert(deserializedVersion == component, display(deserializedVersion) + " did not equal " + display(component))
+      assert(compareDeserialized(deserializedVersion, component), display(deserializedVersion) + " did not equal " + display(component))
     }
   }
 
@@ -79,7 +81,7 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
       val m = attachComponent(deserializedVersion)
       val serialized = s.serialize(m)
       val redeserialized = modelComponent(s.deserialize(serialized)(new Model()).get)
-      assert(deserializedVersion == redeserialized)
+      assert(compareDeserialized(deserializedVersion, redeserialized))
     }
   }
 
