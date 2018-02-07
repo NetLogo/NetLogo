@@ -66,7 +66,7 @@ public strictfp class Turtle2D
       }
     }
 
-    if (!penMode().equals(PEN_UP)) {
+    if (penMode() != PEN_UP) {
       try {
         Patch ignore = getPatchAtHeadingAndDistance(0, distance);
         drawLine(xcor, ycor, distance);
@@ -92,7 +92,7 @@ public strictfp class Turtle2D
   }
 
   void drawLine(double xcor, double ycor, double distance) {
-    if (!penMode().equals(PEN_UP)) {
+    if (penMode() != PEN_UP) {
       Object color = variables()[VAR_COLOR];
       double size = penSize();
       String mode = penMode();
@@ -108,7 +108,7 @@ public strictfp class Turtle2D
   }
 
   void drawLine(double x0, double y0, double x1, double y1) {
-    if (!penMode().equals(PEN_UP)) {
+    if (penMode() != PEN_UP) {
       Object color = variables()[VAR_COLOR];
       double size = penSize();
       String mode = penMode();

@@ -55,9 +55,9 @@ public strictfp abstract class Turtle
   public int LAST_PREDEFINED_VAR = VAR_PENMODE;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
 
-  public static final String PEN_UP = "up";
-  public static final String PEN_DOWN = "down";
-  public static final String PEN_ERASE = "erase";
+  public static final String PEN_UP = "up".intern();
+  public static final String PEN_DOWN = "down".intern();
+  public static final String PEN_ERASE = "erase".intern();
 
 
   void initvars(Double xcor, Double ycor, AgentSet breed) {
@@ -680,7 +680,7 @@ public strictfp abstract class Turtle
       throws AgentException {
     // if the pen is not even down we don't care
     // what the shortest path is so just return.
-    if (!penMode().equals(PEN_DOWN)) {
+    if (penMode() != PEN_DOWN) {
       return y;
     }
 
@@ -717,7 +717,7 @@ public strictfp abstract class Turtle
 
   public double shortestPathX(double x)
       throws AgentException {
-    if (!penMode().equals(PEN_DOWN)) {
+    if (penMode() != PEN_DOWN) {
       return x;
     }
 
@@ -881,9 +881,12 @@ public strictfp abstract class Turtle
     xandycorHelper(xcor, ycor, seenTurtles, isJump);
   }
 
+  private final scala.collection.immutable.Set<Turtle> setOfSelf =
+    Agent$.MODULE$.turtleSet(this);
+
   public void xandycorHelper(double xcor, double ycor, boolean isJump)
     throws AgentException {
-    xandycorHelper(xcor, ycor, Agent$.MODULE$.turtleSet(this), isJump);
+    xandycorHelper(xcor, ycor, setOfSelf, isJump);
   }
 
   public void xandycorHelper(double xcor, double ycor, scala.collection.immutable.Set<Turtle> seenTurtles, boolean isJump)
@@ -1095,7 +1098,7 @@ public strictfp abstract class Turtle
   }
 
   public void penMode(String penMode) {
-    _variables[VAR_PENMODE] = penMode;
+    _variables[VAR_PENMODE] = penMode.intern();
   }
 
   @Override
