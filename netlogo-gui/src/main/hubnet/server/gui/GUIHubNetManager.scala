@@ -141,7 +141,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
         JOptionPane.showMessageDialog(workspace.getFrame,
           "Unable to find a suitable network connection for HubNet, please check your network connection")
       }
-      else if (serverInterface.get._1.isLoopback)
+      else if (serverInterface.exists(_._1.isLoopback))
         JOptionPane.showMessageDialog(workspace.getFrame,
           "Unable to find an external network connection, HubNet will be served locally")
     }
