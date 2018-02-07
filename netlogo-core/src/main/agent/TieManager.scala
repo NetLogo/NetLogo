@@ -19,10 +19,11 @@ class TieManager(links: TreeAgentSet, linkManager: LinkManager, protractor: Prot
   }
 
   def setTieMode(link: Link, mode: String): Unit = {
-    if (link.isTied && mode == Link.MODE_NONE)
+    if (link.isTied && mode == Link.MODE_NONE) {
       tieCount -= 1
-    else if (mode != Link.MODE_NONE)
+    } else if (mode != Link.MODE_NONE) {
       tieCount += 1
+    }
   }
 
   protected def tiedTurtles(root: Turtle, seenTurtles: Set[Turtle]): Seq[Turtle] = {
