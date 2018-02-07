@@ -224,15 +224,13 @@ cautions in mind:
   error in the design of: your model, NetLogo, your Java VM, your hardware, and
   so on.
 
-### Will NetLogo and NetLogo 3D remain separate?
+### Will NetLogo unify 2D and 3D modes?
 
-For now, yes. NetLogo 3D is included with NetLogo, but it is still a separate
-application.
-
-Ideally a single unified application would support both 2D and 3D modeling. We
-would design the 3D world support so it doesn't get in the way when you are
-building 2D models. Models built in NetLogo 3D might require changes in order to
-run in the hypothetical unified application.
+As of 6.1, NetLogo now has one application capable of interacting with 2D or 3D
+models, but switching between 2D and 3D modes is still somewhat clunky
+Ideally, we would design the 3D mode support so it doesn't get in the
+way when you are building 2D models. We welcome suggestions about how to
+improve and enhance this aspect of modeling.
 
 ### Can I run NetLogo on my phone or tablet?
 
@@ -408,7 +406,7 @@ off. The command is:
 
     sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ {{version}}/NetLogo\ {{version}}.app
 
-Note that if you plan to run NetLogo 3D, HubNet Client, or NetLogo Logging, you
+Note that if you plan to run Behaviorsearch, HubNet Client, or NetLogo Logging, you
 may also need to re-run that command once for each of those applications. If the
 workaround was not effective for you, please
 [send us an email and let us know](mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug%20Workaround).
@@ -467,12 +465,12 @@ Yes. NetLogo auto-saves files as you are working on them. The path to the
 auto-save file depends on whether or not the NetLogo model has been saved.
 
 For NetLogo models which have been saved, a hidden file with the name
-".*filename*.tmp.nlogo" will be created in the same directory as the NetLogo
+".*filename*.tmp.nlogox" will be created in the same directory as the NetLogo
 model.
 
 For unsaved NetLogo models, autosave files can be found in your OS-specific java
 temporary directory. The files are named according to the following format:
-`autosave_yyyy-MM-dd.HH_mm_ss.nlogo` where the time and date are the time and
+`autosave_yyyy-MM-dd.HH_mm_ss.nlogox` where the time and date are the time and
 date the model was opened. The exact path will depend on your operating system:
 
 - On Mac OS, the temporary directory is
@@ -527,7 +525,7 @@ your RAM usage accordingly.
 
 <a id="where-is-cfg-file"></a>
 Each platform contains ".cfg" files containing JVM settings. There is one cfg
-file for each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.)
+file for each sub-application (NetLogo, HubNet Client, etc.)
 Although the file location varies by platform, the process for changing it is
 the same. Locate the section of the file that looks like the following:
 
@@ -545,7 +543,7 @@ follow:
   windows, and `C:\Program Files\NetLogo {{version}}\app` otherwise.
 - **Mac OS X:** The file for NetLogo will be located at:
   `/Application/NetLogo {{version}}/NetLogo.app/Contents/Java/NetLogo.cfg` For
-  NetLogo 3D and the other applications, you will find the file in the
+  HubNet Client and the other applications, you will find the file in the
   corresponding location for each application package. You can reach the cfg
   file by control-clicking the application in the Finder and choosing "Show
   Package Contents" from the popup menu.
@@ -881,7 +879,7 @@ made with `let`
 Another possible workaround is to change your model's setup procedure to use
 more specific clearing commands to clear only what you want cleared.
 
-## NetLogo 3D
+## 3D Mode
 
 ### Does NetLogo work with my stereoscopic device?
 

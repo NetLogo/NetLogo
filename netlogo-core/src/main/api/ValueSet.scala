@@ -21,6 +21,7 @@ case class EnumeratedValueSet(variableName: String,
 
 case class RefEnumeratedValueSet(variableName: String, values: List[AnyRef])
   extends RefValueSet {
+    override def toString = s"RefEnumeratedValueSet(${variableName}, ${values.mkString("{", ", ", "}")})"
     def iterator = values.iterator
   }
 
@@ -31,6 +32,7 @@ case class SteppedValueSet(variableName: String,
                       lastValue: BigDecimal)
   extends RefValueSet
 {
+  override def toString = s"SteppedValueSet(${variableName}, ${firstValue} to ${lastValue} by ${lastValue})"
   def iterator =
     Iterator.from(0)
       .map(firstValue + step * _)

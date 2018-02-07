@@ -9,7 +9,7 @@ import org.nlogo.editor.EditorMenu
 import org.nlogo.swing.{ TabsMenu, UserAction },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
 
-class MenuBar(isApplicationWide: Boolean)
+class MenuBar
   extends JMenuBar
   with EditorMenu
   with UserAction.Menu {
@@ -27,13 +27,11 @@ class MenuBar(isApplicationWide: Boolean)
   add(tabsMenu)
   add(helpMenu)
 
-  if (isApplicationWide) {
-    try super.setHelpMenu(helpMenu)
-    catch {
-      // if not implemented in this VM (e.g. 1.8 on Mac as of right now),
-      // then oh well - ST 6/23/03, 8/6/03 - RG 10/21/16
-      case e: Error => org.nlogo.api.Exceptions.ignore(e)
-    }
+  try super.setHelpMenu(helpMenu)
+  catch {
+    // if not implemented in this VM (e.g. 1.8 on Mac as of right now),
+    // then oh well - ST 6/23/03, 8/6/03 - RG 10/21/16
+    case e: Error => org.nlogo.api.Exceptions.ignore(e)
   }
 
   private val categoryMenus: Map[String, UserAction.Menu] = Map(
@@ -44,7 +42,7 @@ class MenuBar(isApplicationWide: Boolean)
     TabsCategory  -> tabsMenu
   )
 
-  def offerAction(action: javax.swing.Action): Unit = {
+  def offerAction(action: Action): Unit = {
     val categoryKey = action.getValue(ActionCategoryKey) match {
       case s: String => s
       case _ => ""

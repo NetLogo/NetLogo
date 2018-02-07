@@ -2,7 +2,7 @@ package org.nlogo.workspace
 
 import java.nio.file.Files
 
-class DummyWorkspace extends ExtendableWorkspace {
+class DummyWorkspace {
   val dummyFileManager = new DummyFileManager()
 
   var _isTesting = false
@@ -18,7 +18,7 @@ class DummyWorkspace extends ExtendableWorkspace {
   def setProfilingTracer(tracer: org.nlogo.nvm.Tracer) = ???
 }
 
-class DummyFileManager extends org.nlogo.nvm.FileManager {
+class DummyFileManager extends org.nlogo.nvm.FileManager with ModelTracker {
   val tempdir = Files.createTempDirectory("modeldir")
   val extDir = new java.io.File(tempdir.toFile, "extensions")
   extDir.mkdir()
@@ -27,7 +27,7 @@ class DummyFileManager extends org.nlogo.nvm.FileManager {
   val foobarFile = new java.io.File(tempdir.toFile, "foobar")
   foobarFile.createNewFile()
 
-  def attachModelDir(f: String): String =
+  override def attachModelDir(f: String): String =
     new java.io.File(tempdir.toFile, f).getAbsolutePath
 
   val dummyFile = new org.nlogo.core.File {

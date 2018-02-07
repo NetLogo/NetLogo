@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabProtocol, ThreeDVersion, TwoDVersion }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.lab.{Exporter,SpreadsheetExporter,TableExporter,Worker}
@@ -69,29 +69,32 @@ class Supervisor(dialog: java.awt.Dialog,
     options =
       try { new RunOptionsDialog(dialog, dialogFactory).get }
       catch{ case ex: UserCancelException => return }
+    val version = if (workspace.dialect.is3D) ThreeDVersion else TwoDVersion
     if(options.spreadsheet) {
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
+        workspace.modelTracker.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
       addExporter(new SpreadsheetExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
         worker.protocol,
+        version.version,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
     }
     if(options.table) {
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-table.csv"))
+        workspace.modelTracker.guessExportName(worker.protocol.name + "-table.csv"))
       addExporter(new TableExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
         worker.protocol,
+        version.version,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
     }
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{_ =>
-      val w = factory.newInstance
+      val w = factory.newInstance(workspace.dialect.is3D)
       factory.openCurrentModelIn(w)
       headlessWorkspaces += w
       queue.enqueue(w)

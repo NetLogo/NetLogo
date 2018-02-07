@@ -7,12 +7,16 @@ import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, St
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
 import org.nlogo.core.{ Model => CoreModel }
-import org.nlogo.fileformat.NLogoFormat
-import org.nlogo.api.ComponentSerialization
+import org.nlogo.fileformat.{ NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.api.{ AddableLoader, ComponentSerialization, ConfigurableModelLoader, ModelFormat }
 
 import scala.util.Try
+import scala.reflect.ClassTag
 
-class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] {
+abstract class AbstractNLogoGuiSDMFormat[A <: ModelFormat[Array[String], A]](implicit ct: ClassTag[A])
+  extends AddableLoader
+  with ComponentSerialization[Array[String], A] {
+
   override def componentName = "org.nlogo.modelsection.systemdynamics"
   override def addDefault = identity
   override def serialize(m: CoreModel): Array[String] = {
@@ -83,4 +87,10 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
          // also translate pre-4.1 save format
          .replaceAll("org.nlogo.aggregate.gui",
                      "org.nlogo.sdm.gui")
+
+  def addToLoader(loader: ConfigurableModelLoader): ConfigurableModelLoader =
+    loader.addSerializer[Array[String], A](this)
 }
+
+class NLogoGuiSDMFormat extends AbstractNLogoGuiSDMFormat[NLogoFormat]
+class NLogoThreeDGuiSDMFormat extends AbstractNLogoGuiSDMFormat[NLogoThreeDFormat]

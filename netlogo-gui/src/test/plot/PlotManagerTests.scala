@@ -49,16 +49,24 @@ class PlotManagerTests extends SimplePlotTest {
     val plot = manager.newPlot("Test1")
     assertResult(plot)(manager.currentPlot.get)
     assertResult("Test1")(manager.currentPlot.get.name)
-    assertResult(plot)(manager.getPlot("test1"))
-    assertResult(plot)(manager.getPlot("TEST1"))
-    assertResult(plot)(manager.getPlot("Test1"))
-    assertResult(null)(manager.getPlot("test1 "))
+    assertResult(Some(plot))(manager.getPlot("test1"))
+    assertResult(Some(plot))(manager.getPlot("TEST1"))
+    assertResult(Some(plot))(manager.getPlot("Test1"))
+    assertResult(None)(manager.getPlot("test1 "))
     val plot2 = manager.newPlot("test2")
     assertResult(plot2)(manager.currentPlot.get)
     assertResult(2)(manager.getPlotNames.length)
     assertResult(List("Test1", "test2"))(manager.getPlotNames.toList)
     manager.forgetPlot(plot)
     assertResult(List("test2"))(manager.getPlotNames.toList)
+  }
+
+  test("nextName") {
+    val manager = newPlotManager()
+    manager.newPlot("test1")
+    assertResult("plot 1")(manager.nextName)
+    manager.newPlot("plot 1")
+    assertResult("plot 2")(manager.nextName)
   }
 
   test("plot runtime errors do not propagate out") {

@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import javax.swing.{ Action, JCheckBoxMenuItem, JMenu, JMenuItem }
-import UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
+import UserAction.{ ActionComponentKey, ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
 
 import scala.math.Ordering
 
@@ -109,11 +109,15 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     }
 
   def revokeAction(action: Action): Unit = {
+    if (action.getValue(ActionComponentKey) == this) {
+      action.putValue(ActionComponentKey, null)
+    }
     menuModel.removeElement(action)
     rebuildFromModel(menuModel)
   }
 
   def offerAction(action: Action): Unit = {
+    action.putValue(ActionComponentKey, this)
     subcategoryItem(action) match {
       case Some((subcategoryKey, subcategoryGroup)) =>
         val branch = menuModel.createBranch(subcategoryKey, subcategoryGroup)

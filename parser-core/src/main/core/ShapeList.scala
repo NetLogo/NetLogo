@@ -41,7 +41,10 @@ case class ShapeList(kind: AgentKind, shapeMap: Map[String, Shape]) {
   def exists(name: String): Boolean = shapeMap.contains(name)
 }
 
-sealed trait ShapeEvent
+sealed trait ShapeEvent {
+  def newShapeList: ShapeList
+}
+
 case class ShapeAdded(newShape: Shape, oldValue: Option[Shape], newShapeList: ShapeList) extends ShapeEvent
 case class ShapesAdded(addedShapes: Map[String, Shape], newShapeList: ShapeList) extends ShapeEvent
 case class AllShapesReplaced(oldShapeList: ShapeList, newShapeList: ShapeList) extends ShapeEvent

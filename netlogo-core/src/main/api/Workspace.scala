@@ -6,8 +6,11 @@ import org.nlogo.core.{ CompilationEnvironment, CompilerException, Model, Litera
 
 import java.io.IOException
 
-trait Workspace extends ImporterUser with LiteralParser with RandomServices
-with ViewSettings with Controllable {
+trait Workspace extends ImporterUser
+with LiteralParser
+with RandomServices
+with ViewSettings
+with Controllable {
   def world: World
   def getExtensionManager: ExtensionManager
   def getCompilationEnvironment: CompilationEnvironment

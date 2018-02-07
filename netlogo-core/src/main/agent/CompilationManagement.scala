@@ -5,8 +5,8 @@ package org.nlogo.agent
 import java.util.{ HashMap => JHashMap, Map => JMap }
 
 import org.nlogo.{ core, api },
-  core.{ AgentKind, Breed, NetLogoCore, Program },
-  api.{ CompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+  core.{ AgentKind, Breed, Dialect, Program },
+  api.CompilerServices
 
 // This trait supports the current (mid-2017) model of interaction between the World and
 // compiler. I think the current model is stateful and gross. That this is a trait
@@ -14,14 +14,7 @@ import org.nlogo.{ core, api },
 // of "World". A better solution would be to simply generate a new World after each compile,
 // although that seems somewhat unrealistic. - RG 6/14/17
 trait CompilationManagement extends CoreWorld { this: AgentManagement =>
-  private val defaultDialect = {
-    if (Version.is3D)
-      NetLogoThreeDDialect
-    else if (NetLogoLegacyDialect.isAvailable)
-      NetLogoLegacyDialect
-    else
-      NetLogoCore
-  }
+  protected def defaultDialect: Dialect
 
   // These are used to cache old values while recompiling...
   private var _oldProgram: Program = null

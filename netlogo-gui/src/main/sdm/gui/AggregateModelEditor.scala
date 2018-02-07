@@ -9,7 +9,7 @@ import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewCh
 
 import org.jhotdraw.util.{ CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
+import org.nlogo.core.{ CompilerException, I18N, LiteralParser, Model => CoreModel }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
@@ -145,6 +145,7 @@ class AggregateModelEditor(
         f match {
           case mef: ModelElementFigure if mef.dirty =>
             new org.nlogo.window.Events.CompileAllEvent().raise(this)
+            new org.nlogo.window.Events.UpdateModelEvent(updateModel _).raise(this)
             new org.nlogo.window.Events.DirtyEvent(None).raise(this)
           case _ =>
         }
@@ -152,6 +153,13 @@ class AggregateModelEditor(
         f.invalidate()
       case _ => // if it's not editable, do nothing
     }
+  }
+
+  def updateModel(m: CoreModel): CoreModel = {
+    if (! drawing.figures.hasNextFigure)
+      m
+    else
+      m.withOptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics", Some(drawing), drawing)
   }
 
   /**

@@ -4,9 +4,10 @@ package org.nlogo
 
 import java.nio.file.Path
 
-import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
+import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, Version }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
-import org.nlogo.core.model.WidgetReader
+import org.nlogo.core.model.{ WidgetReader, HubNetWidgetReader }
+import org.nlogo.xmllib.ScalaXmlElementFactory
 
 package object fileformat {
   type ModelConversion = (Model, Path) => ConversionResult
@@ -18,7 +19,7 @@ package object fileformat {
       Map()
 
   def hubNetReaders: Map[String, WidgetReader] =
-    HubNetWidgetReaders.additionalReaders
+    HubNetWidgetReader.defaultReaders
 
   def defaultAutoConvertables: Seq[AutoConvertable] = Seq(WidgetConverter, NLogoLabConverter)
 
@@ -34,14 +35,35 @@ package object fileformat {
           literalParser, dialect, conversionSections)
       }
 
+  def modelSuffix(modelString: String): Option[String] =
+    VersionDetector.findSuffix(modelString)
+
+  def modelVersionAtPath(path: String): Option[Version] =
+    VersionDetector.fromPath(path, basicLoader)
+
+  def modelVersionFromString(modelString: String): Option[Version] =
+    VersionDetector.fromModelContents(modelString, basicLoader)
+
   // basicLoader only loads the core of the model, and does no autoconversion, but has no external dependencies
   def basicLoader: ConfigurableModelLoader =
     new ConfigurableModelLoader()
+      .addFormat[NLogoXFormat.Section, NLogoXFormat](new NLogoXFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelInfo(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXLabFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelSettings(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXPreviewCommandsFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXHubNetFormat(ScalaXmlElementFactory))
       .addFormat[Array[String], NLogoFormat](new NLogoFormat)
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
 
   def standardLoader(literalParser: LiteralParser) = {
     new ConfigurableModelLoader()
+      .addFormat[NLogoXFormat.Section, NLogoXFormat](new NLogoXFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelInfo(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXLabFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXModelSettings(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXPreviewCommandsFormat(ScalaXmlElementFactory))
+      .addSerializer[NLogoXFormat.Section, NLogoXFormat](new NLogoXHubNetFormat(ScalaXmlElementFactory))
       .addFormat[Array[String], NLogoFormat](new NLogoFormat)
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
       .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(literalParser))

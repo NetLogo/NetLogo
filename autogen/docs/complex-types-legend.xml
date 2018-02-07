@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="subtopic" id="legend">
+    <h3>Legend</h3>
+    <p>The composite types in this document fall into a few different categories, described here.
+                These categories will be accompanied by images which link back here to describe the structure of each element.
+    </p>
+    <div class="legend-section" id="legend-choice">
+      <h4>Choice</h4>
+      <img src="images/nlogox/Choice.svg" alt="choice of items" />
+      <p>Choice reflects that the type <emph>is</emph> one of the given elements listed.
+                  For instance, where the type <a href="#type-Widget">Widget</a> is used, you <span class="bold">won&apos;t</span> see
+        <span class="mono"><![CDATA[<widget><slider ... /></widget>]]></span>, but you will instead see simply
+        <span class="mono"><![CDATA[<slider ... />]]></span>, (or
+        <span class="mono"><![CDATA[<button ... />]]></span> or
+        <span class="mono"><![CDATA[<view ... />]]></span>, etc).</p>
+    </div>
+    <div class="legend-section" id="legend-unordered-elements">
+    <h4>Unordered Elements</h4>
+    <img src="images/nlogox/UnorderedElements.svg" alt="elements in any order" />
+    <p>Unordered elements reflect that their child element are allowed
+                to appear in any order and are identified by their XML label and not positionally.
+                Depending on whether they are optional, they may optionally be omitted.
+    </p>
+    <p>
+                As an example, we can consider the type <a href="#type-ModelInfo">ModelInfo</a> which has two child elements
+                string and subject (both of which are optional). Here are three valid examples of model info:</p>
+    <ul class="no-bullets">
+      <li>
+        <pre class="mono"><![CDATA[
+<modelInfo>
+  <title>Bugs</title>
+  <subject>insects, models</subject>
+</modelInfo>]]></pre>
+      </li>
+      <li>
+        <pre class="mono"><![CDATA[
+<modelInfo>
+  <subject>insects, models</subject>
+  <title>Bugs</title>
+</modelInfo>]]></pre>
+      </li>
+      <li>
+        <pre class="mono"><![CDATA[
+<modelInfo>
+  <title>Bugs</title>
+</modelInfo>]]></pre>
+      </li>
+    </ul>
+    </div>
+    <div class="legend-section" id="legend-sequential-list">
+      <h4>Sequential List</h4>
+      <img src="images/nlogox/SequentialList.svg" />
+      <p>Sequential lists are a list of the same type of element in repeated order.
+                  They are most simply illustrated by the <a href="#type-Pens">Pens</a> type, which contains a list of
+        <a href="#type-Pen">Pen</a> elements. In practice, this element looks like:
+      </p>
+      <pre class="mono"><![CDATA[
+<pens>
+  <pen display="a" ... />
+  <pen display="b" ... />
+  <pen display="c" ... />
+</pens>]]></pre>
+        <p>
+                    In this example, the pens will be read into NetLogo in the order they occur in the file
+                    (a first, then b and c). When working with a sequential list type, note that the order
+                    given in the model <emph>does matter</emph>.
+        </p>
+    </div>
+    <div class="legend-section" id="legend-sequential-elements">
+      <h4>Sequential Elements</h4>
+      <img src="images/nlogox/SequentialElements.svg" />
+      <p>
+                  Sequential elements are somewhat like unordered elements which are order-sensitive.
+                  Named elements <emph>must</emph> appear in the <emph>exact</emph> order specified,
+                  even though these elements do not form a list.
+                  The <a href="#type-View">View</a> type is an example of a sequential element type.
+                  Here is an example view (with attributes omitted for simplicity):
+      </p>
+      <pre class="mono"><![CDATA[
+<view ... >
+  <dimensions ... />
+  <tickCounterLabel ... />
+</view>]]></pre>
+      <p>
+                  The first child element of the view <emph>must</emph> be either a <span class="mono">dimensions</span>
+                  or <span class="mono">dimensions3d</span> element. The second element (if present) must be a
+        <span class="mono">tickCounterLabel</span> element. When editing sequential elements, take great care
+                  to ensure that the order doesn&apos;t change or you may invalidate the nlogox file.
+      </p>
+    </div>
+    <div class="legend-section" id="legend-heterogenous-sequence">
+      <h4>Heterogenous Sequences</h4>
+      <img src="images/nlogox/HeterogenousSequence.svg" />
+      <p>Heterogenous sequences represent lists which can contain different types of children.
+                  The child elements of these sequences are allowed to appear any number of times and in any order, but
+                  that order determined the order of the list.
+        <a href="#type-LogoList">LogoList</a>s are natural exemplars of this type of element.
+                  A LogoList may contain any number of boolean, string, number, or logoList children and these
+                  children in the loaded model will reflect the ordering used in the file.
+                  An example LogoList might look like this:</p>
+      <pre class="mono"><![CDATA[
+<logoList>
+  <number>5</number>
+  <string>abcdef</string>
+  <boolean>false</boolean>
+</logolist>]]></pre>
+    </div>
+    <div class="legend-section" id="legend-annotated-atom">
+      <h4>Annotated Atom</h4>
+      <img src="images/nlogox/AnnotatedAtom.svg" />
+      <p>Annotated atoms are types which contain a single value, but represent additional information
+                  through their attributes.
+        <a href="#type-NumericDataType">NumericDataType</a> is a good reflection of this.
+                  It holds the data for a numeric input and looks like this:
+      </p>
+      <span class="mono"><![CDATA[<numericData kind="color">85</numericData>]]></span>
+      <p>
+                  The <span class="mono">kind</span> attribute reflects the type of numeric data
+                  held in this input (in this case, color).
+                  The value is held as the text content of the element.
+      </p>
+    </div>
+    <div class="legend-section" id="legend-annotated-element">
+      <h4>Annotated Element</h4>
+      <img src="images/nlogox/AnnotatedElement.svg" />
+      <p>Annotated elements are elements which contains no children and are defined solely
+                  on the basis of attributes. <a href="#type-LinkLine">LinkLine</a> is an example of an annotated element:</p>
+      <span class="mono"><![CDATA[<linkLine isVisible="true" offset="0.5" stroke-dasharray="0.0 1.0 0.0 1.0" />]]></span>
+    </div>
+    <div class="legend-section" id="legend-empty-element">
+      <h4>Empty Element</h4>
+      <img src="images/nlogox/EmptyElement.svg" />
+      <p>An element with no children and no attributes which denotes a value only
+                  through where it exists (or doesn't)</p>
+    </div>
+  </div>

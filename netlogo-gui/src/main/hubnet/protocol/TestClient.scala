@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.protocol
 
 import java.net.Socket
-import org.nlogo.api.Version
+import org.nlogo.api.TwoDVersion
 import org.nlogo.api.HubNetInterface.ClientInterface
 import java.io.{IOException, ObjectOutputStream}
 import org.nlogo.util.ClassLoaderObjectInputStream
@@ -53,7 +53,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
       in.readObject()
     }
     try{
-      sendAndReceive(Version.version)
+      sendAndReceive(TwoDVersion.version)
       val response = sendAndReceive(new HandshakeFromClient(userId, clientType))
       val result = response match {
         case h: HandshakeFromServer =>

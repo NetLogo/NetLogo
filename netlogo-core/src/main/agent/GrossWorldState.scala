@@ -6,7 +6,7 @@ import org.nlogo.api.{ Color, TrailDrawerInterface }
 
 // The vars and methods in this track the rendering state of the world.
 // They should be considered transient.  Their values should *not* effect
-// world equality.
+// world equality. This trait is a *strong* candidate for refactoring.
 trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
   // possibly need another array for 3D colors
   // since it seems messy to collapse 3D array into 2D
@@ -57,12 +57,6 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
     _mayHavePartiallyTransparentObjects = false
   }
 
-  private var _displayOn: Boolean = true
-  def displayOn = _displayOn
-  def displayOn(displayOn: Boolean): Unit = {
-    _displayOn = displayOn
-  }
-
   // the trail drawer isn't as gross as the rest of the state and might actually be
   // *necessary* in a way that the rest of this trait isn't
   def trailDrawer(trailDrawer: TrailDrawerInterface): Unit = {
@@ -80,7 +74,6 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
   def copyGrossState(other: GrossWorldState): Unit = {
     other._patchColors = _patchColors
     other._trailDrawer = _trailDrawer
-    other._displayOn = _displayOn
     other._mayHavePartiallyTransparentObjects = _mayHavePartiallyTransparentObjects
     other._patchScratch = _patchScratch
     other._patchesWithLabels = _patchesWithLabels

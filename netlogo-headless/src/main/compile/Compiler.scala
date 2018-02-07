@@ -4,24 +4,25 @@ package org.nlogo.compile
 
 import org.nlogo.{ api => nlogoApi, core, nvm },
   nlogoApi.{ ExtensionManager, SourceOwner },
-  core.{ CompilationEnvironment, CompilationOperand, CompilerUtilitiesInterface, Femto, FrontEndInterface, NetLogoCore, Program },
-  nvm.{ CompilerFlags, CompilerResults, Optimizations => NvmOptimizations, Procedure },
+  core.{ CompilationEnvironment, CompilationOperand, Femto, FrontEndInterface, NetLogoCore, Program },
+  nvm.{ CompilerFlags, CompilerResults, Optimizations => NvmOptimizations, PresentationCompilerInterface, Procedure },
     Procedure.{ ProceduresMap, NoProcedures }
 
-import org.nlogo.compile.api.{ BackEndInterface,
-  CommandMunger, FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ReporterMunger }
+import org.nlogo.compile.api.{ BackEndInterface, CommandMunger, FrontMiddleBridgeInterface,
+  MiddleEndInterface, Optimizations, PresentationCompiler, ReporterMunger }
 
 // One design principle here is that calling the compiler shouldn't have any side effects that are
 // visible to the caller; it should only cause results to be constructed and returned.  There is a
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected
 // as we load and unload extensions. - ST 2/21/08, 1/21/09, 12/7/12
 
-object Compiler extends nvm.CompilerInterface {
+object Compiler extends PresentationCompilerInterface with PresentationCompiler {
+
+  val dialect = NetLogoCore
+  val defaultDialect = dialect
 
   val frontEnd = Femto.scalaSingleton[FrontEndInterface](
     "org.nlogo.parse.FrontEnd")
-  val utilities = Femto.scalaSingleton[CompilerUtilitiesInterface](
-    "org.nlogo.parse.CompilerUtilities")
   val bridge = Femto.scalaSingleton[FrontMiddleBridgeInterface](
     "org.nlogo.compile.middle.FrontMiddleBridge")
   val middleEnd = Femto.scalaSingleton[MiddleEndInterface](
@@ -72,7 +73,7 @@ object Compiler extends nvm.CompilerInterface {
       allSources,
       compilationEnv,
       getOptimizations(defaultCompilerFlags))
-    backEnd.backEnd(allDefs, structureResults.program, compilationEnv.profilingEnabled, CompilerFlags())
+    backEnd.backEnd(allDefs, structureResults.program, compilationEnv.profilingEnabled, defaultCompilerFlags)
   }
 
   private def getOptimizations(flags: nvm.CompilerFlags): Optimizations =

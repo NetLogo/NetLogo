@@ -2,11 +2,14 @@
 
 package org.nlogo.headless
 
-import org.nlogo.util.{ MockSuite, WorldType }
-import org.nlogo.api.{ Version, ViewSettings, Perspective }
+import org.nlogo.util.{ MockSuite, TwoDTag, WorldType }
+import org.nlogo.api.{ ViewSettings, Perspective }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.core.Model
 
+// This seems to be a base trait for a number of older tests and only
+// tests against the 2D workspace. This should be considered deprectated
+// and new tests should avoid using it. - RG 10/23/17
 trait TestUsingWorkspace extends MockSuite {
     case class SimpleViewSettings(
     fontSize: Int = 10,
@@ -23,26 +26,22 @@ trait TestUsingWorkspace extends MockSuite {
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: WorldType = WorldType.Torus)
                         (f: HeadlessWorkspace => Unit) {
-    if (!Version.is3D) {
-      test(testName) {
-        runWorkspaceTest(radius, worldType){f}
-      }
+    test(testName, TwoDTag) {
+      runWorkspaceTest(radius, worldType){f}
     }
   }
 
   def mockTestUsingWorkspace(name:String, radius: Int = 5,
                              worldType: WorldType = WorldType.Torus)
                             (f: HeadlessWorkspace => Unit){
-    if (!Version.is3D) {
-      mockTest(name){
-        runWorkspaceTest(radius, worldType){ f }
-      }
+    mockTest(name, TwoDTag){
+      runWorkspaceTest(radius, worldType){ f }
     }
   }
 
   def runWorkspaceTest(radius: Int = 5, worldType: WorldType = WorldType.Torus)
                       (f: HeadlessWorkspace => Unit) {
-    val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
+    val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance(false)
     try {
       workspace.initForTesting(-radius, radius, -radius, radius, HeadlessWorkspace.TestDeclarations)
       workspace.changeTopology(worldType.xWrap, worldType.yWrap)

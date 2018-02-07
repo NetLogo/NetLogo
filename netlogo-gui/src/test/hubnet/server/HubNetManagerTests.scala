@@ -63,7 +63,7 @@ class HubNetManagerTests extends FunSuite {
 
   def hubnetTest(name: String)(f: (HubNetManager, MockConnectionManager) => Unit) {
     test(name){
-      val workspace = new DummyAbstractWorkspace
+      val workspace = new DummyAbstractWorkspace(false)
       val loader = new ConfigurableModelLoader()
         .addFormat[Array[String], NLogoFormat](new NLogoFormat)
         .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(workspace))

@@ -5,6 +5,7 @@ package org.nlogo.app.interfacetab;
 import org.nlogo.core.I18N;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
+import org.nlogo.window.Events.WidgetAlteredEvent;
 import scala.Option;
 
 import java.awt.Dimension;
@@ -365,44 +366,10 @@ public strictfp class WidgetWrapper
     return mouseMode;
   }
 
+  // A nice enhancement at some point would be to set the cursor to the appropriate
+  // shape for the corresponding action (the draggy arrow appropriate to the corner/edge being adjusted).
   private void mouseMode(MouseMode mouseMode) {
     this.mouseMode = mouseMode;
-    /*
-        it would be nice if it were this easy, but it's not, because setCursor only sets
-        the cursor for when the mouse is actually over the component... at least in Java
-        1.1, there's no way to globally set the cursor, which is what we want - ST 1/20/02
-        switch( mouseMode )
-        {
-        case MOUSE_IDLE :
-        case MOUSE_DRAG :
-        setCursor( java.awt.Cursor.getDefaultCursor() ) ;
-        break ;
-        case MouseMode.NE :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.NE_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.NW :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.NW_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.SE :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.SE_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.SW :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.SW_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.S :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.S_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.W :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.W_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.E :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.E_RESIZE_CURSOR ) ) ;
-        break ;
-        case MouseMode.N :
-        setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.N_RESIZE_CURSOR ) ) ;
-        break ;
-        }
-      */
   }
 
   void doResize(int x, int y) {
@@ -580,6 +547,12 @@ public strictfp class WidgetWrapper
     setLocation(x + originalBounds.x, y + originalBounds.y);
   }
 
+  // NOTE: WidgetAltered is used to trigger updating the model.
+  // Because all widgets are asked to reconstruct their widget models
+  // when the model is updated, differentiating between Move and Resize
+  // isn't important. If this changes in the future, these can and should be
+  // made into separate events.
+  // - RG 10/30/17
   public void mouseReleased(java.awt.event.MouseEvent e) {
     if (e.isPopupTrigger() && mouseMode() != MouseMode.DRAG) {
       doPopup(e);
@@ -587,11 +560,13 @@ public strictfp class WidgetWrapper
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
         WidgetActions.moveWidgets(interfacePanel);
+        new WidgetAlteredEvent(widget, interfacePanel()).raise(this);
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW
           || mouseMode() == MouseMode.SE || mouseMode() == MouseMode.SW
           || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W
           || mouseMode() == MouseMode.E || mouseMode() == MouseMode.N) {
         WidgetActions.resizeWidget(this);
+        new WidgetAlteredEvent(widget, interfacePanel()).raise(this);
       }
       mouseMode(MouseMode.IDLE);
     }
@@ -920,6 +895,7 @@ public strictfp class WidgetWrapper
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
               WidgetActions.removeWidget(interfacePanel(), WidgetWrapper.this);
+              new WidgetAlteredEvent(widget, interfacePanel()).raise(interfacePanel());
             }
           });
       menu.add(new javax.swing.JPopupMenu.Separator());

@@ -6,7 +6,7 @@ import org.nlogo.core.AgentKind
 import org.nlogo.hubnet.connection.{ConnectionInterface, HubNetException}
 import collection.mutable.ListBuffer
 import org.nlogo.api.{ HubNetInterface, PlotInterface }, HubNetInterface.ClientInterface
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 
 import java.net.{ InetAddress, NetworkInterface }
 import java.io.{ Serializable => JSerializable }
@@ -17,7 +17,7 @@ class MockControlCenter extends ClientEventListener() {
   def logMessage(message: String){ }
 }
 
-class MockConnectionManager(connection: ConnectionInterface, workspace: AbstractWorkspaceScala)
+class MockConnectionManager(connection: ConnectionInterface, workspace: AbstractWorkspace)
         extends ConnectionManager(connection, new MockControlCenter, workspace) {
   private val results = new ListBuffer[String]()
   var _nodesHaveView = false

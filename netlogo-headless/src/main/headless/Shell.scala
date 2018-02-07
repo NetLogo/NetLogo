@@ -4,7 +4,8 @@ package org.nlogo.headless
 
 import org.nlogo.core.CompilerException
 import org.nlogo.api.Version
-import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
+import org.nlogo.workspace
+import Main.setHeadlessProperty
 
 object Shell extends workspace.Shell {
 
@@ -25,7 +26,7 @@ object Shell extends workspace.Shell {
 
   def run(workspace: HeadlessWorkspace, line: String) {
     val command =
-      if (workspace.isReporter(line))
+      if (workspace.compilerServices.isReporter(line))
         "print " + line
       else
         line

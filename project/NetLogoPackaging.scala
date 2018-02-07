@@ -10,6 +10,8 @@ import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion 
 import SbtSubdirectory.runSubdirectoryCommand
 import java.nio.file.Paths
 
+import scala.collection.JavaConverters._
+
 object NetLogoPackaging {
 
   lazy val aggregateJDKParser      = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
@@ -77,14 +79,14 @@ object NetLogoPackaging {
     configRoot      := baseDirectory.value / "configuration",
     localSiteTarget := target.value / marketingVersion.value,
     aggregateJDKParser := Def.toSParser(jdkParser),
-    subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp, BehaviorsearchApp),
+    subApplications    := Seq(NetLogoCoreApp, NetLogoLoggingApp, HubNetClientApp, BehaviorsearchApp),
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
       (allPreviews in netlogo).toTask("").value
       resaveModels.value
-      RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
+      SbtSubdirectory.runSubdirectoryCommand(mathematicaRoot.value, state.value, (packageBin in Compile in netlogo).value, Seq("package"))
       (packageBin in Compile in behaviorsearchProject).value
     },
     resaveModels := {
@@ -109,9 +111,10 @@ object NetLogoPackaging {
       Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
     buildVariables := Map[String, String](
-      "version"               -> marketingVersion.value,
-      "numericOnlyVersion"    -> numericMarketingVersion.value,
-      "date"                  -> buildDate.value),
+      "version"            -> marketingVersion.value,
+      "numericOnlyVersion" -> numericMarketingVersion.value,
+      "date"               -> buildDate.value,
+      "year"               -> buildDate.value.takeRight(4)),
     webTarget := target.value / "downloadPages",
     buildDownloadPages := {
       val webSource = baseDirectory.value / "downloadPages"
@@ -158,7 +161,8 @@ object NetLogoPackaging {
       val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
         (dependencyClasspath in behaviorsearchProject in Runtime).value
 
-      (removeJdkLibraries(filterDuplicateDeps(allDeps)).files :+
+      ((removeSjsLibraries _ compose removeJdkLibraries _ compose filterDuplicateDeps _)
+        (allDeps).files :+
         (packageBin in Compile in behaviorsearchProject).value)
         .filterNot(jarExcluded)
         .filterNot(_.isDirectory) :+ packagingMainJar.value
@@ -263,31 +267,44 @@ object NetLogoPackaging {
 
       val classPath =
         (packagingClasspath.value ++
-          (dependencyClasspath in macApp in Runtime).value.files)
+          removeSjsLibraries((dependencyClasspath in macApp in Runtime).value).files)
           .filterNot(jarExcluded)
           .filterNot(_.isDirectory) :+ macAppMainJar
 
-      val nlAppConfig = Map(
+      val fileAssociations =
+        Seq(
+          Map(
+            "extension" -> "nlogo",
+            "icon"      -> "Model.icns"
+          ).asJava,
+          Map(
+            "extension" -> "nlogo3d",
+            "icon"      -> "Model.icns"
+          ).asJava,
+          Map(
+            "extension" -> "nlogox",
+            "icon"      -> "Model.icns"
+          ).asJava
+        ).asJava
+      val nlAppConfig = Map[String, AnyRef](
         "bundleIdentifier"    -> "org.nlogo.NetLogo",
         "bundleName"          -> "NetLogo",
         "bundleSignature"     -> "nLo1",
-        "fileAssociation"     -> "nlogo",
+        "fileAssociations"    -> fileAssociations,
         "fileAssociationIcon" -> "Model.icns",
         "iconFile"            -> "NetLogo.icns",
         "packageID"           -> "APPLnLo1"
       )
+      val bsearchFileAssociations = Seq(
+        Map(
+          "extension" -> "bsearch",
+          "icon"      -> "Behaviorsearch.icns"
+        ).asJava
+      ).asJava
       val appSpecificConfig = Map(
         NetLogoCoreApp    -> nlAppConfig,
-        NetLogoLoggingApp -> nlAppConfig,
-        NetLogoThreeDApp  -> Map(
-          "fileAssociation"  -> "nlogo3d",
-          "bundleIdentifier" -> "org.nlogo.NetLogo3D",
-          "bundleName"       -> "NetLogo",
-          "bundleSignature"  -> "nLo1",
-          "iconFile"         -> "NetLogo.icns",
-          "packageID"        -> "APPLnLo1"
-        ),
-        HubNetClientApp  -> Map(
+        NetLogoLoggingApp -> (nlAppConfig - "fileAssociations"),
+        HubNetClientApp   -> Map(
           "bundleIdentifier" -> "org.nlogo.HubNetClient",
           "bundleName"       -> "HubNet Client",
           "bundleSignature"  -> "????",
@@ -298,8 +315,7 @@ object NetLogoPackaging {
           "bundleIdentifier"    -> "org.nlogo.Behaviorsearch",
           "bundleName"          -> "Behaviorsearch",
           "bundleSignature"     -> "????",
-          "fileAssociation"     -> "bsearch",
-          "fileAssociationIcon" -> "Behaviorsearch.icns",
+          "fileAssociations"    -> bsearchFileAssociations,
           "iconFile"            -> "Behaviorsearch.icns",
           "packageID"           -> "APPL????"
         )
@@ -368,6 +384,10 @@ object NetLogoPackaging {
 
   private def removeJdkLibraries(cp: Def.Classpath): Def.Classpath = {
     cp.filterNot(_.get(AttributeKey[Boolean]("jdkLibrary")).getOrElse(false))
+  }
+
+  private def removeSjsLibraries(cp: Def.Classpath): Def.Classpath = {
+    cp.filterNot(_.data.getName.contains("_sjs"))
   }
 
   def mapToParser[T](m: Map[String, T]): Parser[T] = {

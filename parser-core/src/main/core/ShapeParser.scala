@@ -10,7 +10,6 @@ import Shape.{
   LinkShape   => CoreLinkShape,
   Polygon     => CorePolygon,
   Rectangle   => CoreRectangle,
-  RgbColor,
   VectorShape => CoreVectorShape }
 
 object ShapeParser {

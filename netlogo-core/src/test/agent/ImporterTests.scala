@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import org.scalatest.{ FunSuite, OneInstancePerTest }
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{PlotInterface, ImporterUser}
+import org.nlogo.api.{ ImporterUser, PlotInterface, WorldResizer }
 
 class ImporterTests extends FunSuite with OneInstancePerTest {
   val IGNORE_ERROR_HANDLER =
@@ -15,12 +15,9 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
     }
   val IMPORTER_USER =
     new ImporterUser() {
-      def setDimensions(d: WorldDimensions) {
+      def setDimensions(d: WorldDimensions, showProgress: Boolean, stop: WorldResizer.JobStop) {
         world.createPatches(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
-      }
-      def setDimensions(d: WorldDimensions, patchSize: Double) {
-        world.createPatches(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
-        world.patchSize(patchSize)
+        world.patchSize(d.patchSize)
       }
       def patchSize(patchSize: Double) {
         world.patchSize(patchSize)
@@ -29,6 +26,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
       def resizeView() { }
       def currentPlot(plot: String) { }
       def getPlot(plot: String): PlotInterface = null
+      def findPlot(plot: String): Option[PlotInterface] = None
       def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) { }
       def isExtensionName(name: String) = false
     }

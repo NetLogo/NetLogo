@@ -2,15 +2,31 @@
 
 package org.nlogo.headless
 
-import java.nio.file.Paths
+import
+  java.net.URI
 
-import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, Workspace }
-import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.fileformat
-import scala.util.{ Failure, Success }
+import
+  java.nio.file.{ Files, Path, Paths }
 
-import scala.io.Source
+import
+  javax.xml.transform.{ OutputKeys, TransformerFactory, stream },
+    stream.{ StreamResult, StreamSource }
+
+import
+  org.nlogo.{ api, core, fileformat, nvm, xmllib },
+    core.{ Femto, LiteralParser, Model },
+    api.{ FileIO, LabProtocol, Version, Workspace },
+    nvm.LabInterface.Settings,
+    xmllib.{ ScalaXmlElement, ScalaXmlElementFactory }
+
+import
+  scala.util.{ Failure, Success }
+
+import
+  scala.io.Source
+
+import
+  scala.xml.XML
 
 object BehaviorSpaceCoordinator {
   private val literalParser =
@@ -19,20 +35,33 @@ object BehaviorSpaceCoordinator {
   private lazy val labFormat: fileformat.NLogoLabFormat =
     new fileformat.NLogoLabFormat(literalParser)
 
-  private def bsSection = labFormat.componentName
+  private lazy val labXFormat: fileformat.NLogoXLabFormat =
+    new fileformat.NLogoXLabFormat(ScalaXmlElementFactory)
+
+  private def bsSection = labXFormat.componentName
 
   private def modelProtocols(m: Model): Option[Seq[LabProtocol]] =
     m.optionalSectionValue[Seq[LabProtocol]](bsSection)
 
-  def selectProtocol(settings: Settings, workspace: Workspace): Option[LabProtocol] = {
-    val model = modelAtPath(settings.modelPath)
+  def selectProtocol(settings: Settings, workspace: Workspace): Option[(LabProtocol, Model, Option[Path])] = {
+    val model = modelAtLocation(settings.modelLocation, settings.version, workspace)
+
+    def loadFile(uri: URI): Option[Seq[LabProtocol]] =
+      labXFormat.load(new ScalaXmlElement(XML.load(uri.toURL)), None)
+
+    val additionalProtosAndNewLoadPath: Option[(Seq[LabProtocol], Option[Path])] =
+      settings.externalXMLFile.flatMap(loadFile).map(protos => (protos, None)) orElse
+        settings.externalXMLFile.flatMap { externalFile =>
+          val tmpPath = Files.createTempFile("convertedSetupFile", ".xml")
+          convertToNewFormat(Paths.get(externalFile), tmpPath)
+          loadFile(tmpPath.toUri).map(protos => (protos, Some(tmpPath)))
+        }
 
     val modelWithExtraProtocols =
-      settings.externalXMLFile.map { file =>
-        val loadableXML = Source.fromFile(file).mkString
-        val additionalProtos = labFormat.load(loadableXML.lines.toArray, None)
-        model.withOptionalSection(bsSection, additionalProtos, Seq[LabProtocol]())
-      }.getOrElse(model)
+      additionalProtosAndNewLoadPath
+        .map(_._1)
+        .map(additionalProtos => model.withOptionalSection(bsSection, Some(additionalProtos), Seq[LabProtocol]()))
+        .getOrElse(model)
 
     val namedProtocol: Option[LabProtocol] =
       for {
@@ -45,27 +74,41 @@ object BehaviorSpaceCoordinator {
       for {
         hasExternalFile <- settings.externalXMLFile
         protos          <- modelProtocols(modelWithExtraProtocols)
-      } yield protos.head
+        proto           <- protos.headOption
+      } yield proto
 
-    namedProtocol orElse firstSetupFileProtocol
+    for {
+      selectedProto <- (namedProtocol orElse firstSetupFileProtocol)
+      createdPath   = additionalProtosAndNewLoadPath.flatMap(_._2)
+    } yield (selectedProto, model, createdPath)
   }
 
-  private def modelAtPath(path: String): Model = {
-    val loader =
-      fileformat.standardLoader(literalParser)
+  private def modelAtLocation(location: URI, version: Version, workspace: Workspace): Model = {
+    val loader = fileformat.standardLoader(literalParser)
 
-    loader.readModel(Paths.get(path).toUri) match {
+    loader.readModel(location) match {
       case Success(m) => m
-      case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
+      case Failure(e) => throw new Exception("Unable to open model at: " + location + ". " + e.getMessage)
     }
   }
 
-  def protocolsFromModel(modelPath: String): Seq[LabProtocol] = {
-    modelProtocols(modelAtPath(modelPath)).getOrElse(Seq[LabProtocol]())
+  def protocolsFromModel(modelLocation: URI, version: Version, workspace: Workspace): Seq[LabProtocol] = {
+    modelProtocols(modelAtLocation(modelLocation, version, workspace)).getOrElse(Seq[LabProtocol]())
   }
 
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {
     val fileSource = Source.fromFile(path).mkString
     labFormat.load(fileSource.lines.toArray, None)
+  }
+
+  def convertToNewFormat(oldPath: Path, newPath: Path): Unit = {
+    Files.write(newPath, Files.readAllBytes(oldPath))
+    val stylesource = new StreamSource(FileIO.getResourceAsString("/system/behaviorspace-to-nlogox.xslt"))
+    stylesource.setSystemId(getClass.getResource("/system/behaviorspace-to-nlogox.xslt").toString)
+    val inputSource = new StreamSource(oldPath.toFile)
+    val outputResult = new StreamResult(newPath.toFile)
+    val transformer = TransformerFactory.newInstance.newTransformer(stylesource)
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+    transformer.transform(inputSource, outputResult)
   }
 }

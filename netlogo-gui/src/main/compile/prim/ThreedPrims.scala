@@ -49,6 +49,10 @@ case class _neighbors6() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = PatchsetType, agentClassString = "-TP-")
 }
 
+case class _netlogoversion() extends Reporter {
+  override def syntax = Syntax.reporterSyntax(ret = Syntax.StringType)
+}
+
 case class _oheading() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = NumberType)
 }

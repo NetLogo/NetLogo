@@ -26,27 +26,31 @@
           {{#components}}
           <Component Id="{{{componentId}}}" Guid="{{componentGuid}}" Win64="{{win64}}">
             <File Id="{{{componentId}}}" KeyPath="yes" Source="SourceDir\{{{componentFileName}}}" ProcessorArchitecture="{{platformArch}}" />
-            {{#hasFileAssociation}}
+
             <!-- Vista/7 "Set Program access and defaults" -->
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]{{{componentFileName}}},0" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="{{componentFriendlyName}}" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]{{componentFileName}},1" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
 
-            <!-- Tell windows how to open NetLogo -->
+            <!-- Tell windows how to open {{componentFriendlyName}} -->
             <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Value="[!{{componentId}}]" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Name="Path" Value="[INSTALLDIR]" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
 
+            {{#fileAssociations}}
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            {{/fileAssociations}}
+
+            {{#fileAssociations}}
             <ProgId Id="NetLogo.{{fileAssociation}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
               <Extension Id='{{fileAssociation}}'>
                 <Verb Id='open' Command='Edit with {{componentFriendlyName}} {{numericOnlyVersion}}' Argument='{{launchArgs}}' />
                 <MIME Advertise='yes' ContentType="text/{{fileAssociation}}" Default="yes"/>
               </Extension>
             </ProgId>
-            {{/hasFileAssociation}}
+            {{/fileAssociations}}
           </Component>
           {{/components}}
         </Directory>

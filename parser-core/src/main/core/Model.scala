@@ -10,7 +10,7 @@ import scala.reflect.ClassTag
 case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
-  version: String = "NetLogo 6.0",
+  version: String = "NetLogo 6.1",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[_]] = Seq()) {
@@ -24,6 +24,9 @@ case class Model(code: String = "",
 
   def view: View = widgets.collectFirst{case (w: View) => w}.get
   def plots: Seq[Plot] = widgets.collect{case (w: Plot) => w}
+
+  def modelInfo =
+    optionalSectionValue[ModelInfo](ModelInfo.sectionKey).getOrElse(ModelInfo.empty)
 
   /* true only when the value is not a default */
   def hasValueForOptionalSection(key: String): Boolean = {

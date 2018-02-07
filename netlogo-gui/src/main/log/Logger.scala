@@ -6,10 +6,13 @@ package org.nlogo.log
 // We did not investigate log4j vs. java.util.logging but just went along with Reuven's
 // suggestion. - ST 2/25/08
 
+import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
+
 import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager }
 import org.apache.log4j.xml.DOMConfigurator
-import org.nlogo.api.{ Logger => APILogger, Version }
-import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
+
+import org.nlogo.api.{ Logger => APILogger, TwoDVersion, Version }
+import org.nlogo.fileformat
 
 object Logger extends APILogger {
 
@@ -108,6 +111,8 @@ class Logger(studentName: String) extends LoggingListener {
 
   var logDirectory = System.getProperty("java.io.tmpdir")
 
+  var version: Version = TwoDVersion
+
   def configure(reader: java.io.Reader) {
     val configurator = new DOMConfigurator
     configurator.doConfigure(reader, LogManager.getLoggerRepository)
@@ -133,6 +138,9 @@ class Logger(studentName: String) extends LoggingListener {
     filenames = new java.util.ArrayList[String]
     filenames.addAll(newFiles(JLogger.getRootLogger.getAllAppenders, name))
     val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
+    fileformat.modelVersionAtPath(name).foreach { v =>
+      version = v
+    }
     while (loggers.hasMoreElements) {
       val l = loggers.nextElement().asInstanceOf[JLogger]
       filenames.addAll(newFiles(l.getAllAppenders, name))
@@ -158,7 +166,7 @@ class Logger(studentName: String) extends LoggingListener {
     xappender.setUsername(System.getProperty("user.name"))
     xappender.setIPAddress(getIPAddress)
     xappender.setModelName(Option(name).getOrElse("new model"))
-    xappender.setVersion(Version.version)
+    xappender.setVersion(version.version)
   }
 
   def close() {

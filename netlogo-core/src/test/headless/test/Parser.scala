@@ -11,7 +11,16 @@ object Parser {
       if (xs.isEmpty) Nil
       else xs.tail.span(_.startsWith(" ")) match {
         case (some, rest) =>
-          LanguageTest(suiteName, xs.head.trim, some.map{_.trim}.map(parse)) :: split(rest)
+          val name = xs.head.trim
+          val modes =
+            if (name.startsWith("*")) List(NormalMode)
+            else                      List(NormalMode, RunMode)
+          val versionLimit =
+            if (name.endsWith("_2D")) TwoDOnly
+            else if (name.endsWith("_3D")) ThreeDOnly
+            else if (name.endsWith("_Headless")) HeadlessOnly
+            else AnyVersion
+          LanguageTest(suiteName, name, some.map{_.trim}.map(parse), modes, versionLimit) :: split(rest)
       }
     val lines =
       s.split("\n")

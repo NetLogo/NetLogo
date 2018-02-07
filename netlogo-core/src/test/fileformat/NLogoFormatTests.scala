@@ -8,13 +8,14 @@ import java.util.Arrays
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, TwoDVersion, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
 import scala.collection.JavaConverters._
 
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
+  val version: Version = TwoDVersion
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
 
@@ -100,7 +101,7 @@ class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
 
     test("carries out conversions on behaviorspace operations") {
       import org.nlogo.api.LabProtocol
-      val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, true, false, 0, "", List(), List())
+      val protocol = LabProtocol.fromValueSets("foo", "", "movie-grab-view", "", 0, true, false, 0, "", List(), List())
       val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
         .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
 
@@ -120,7 +121,7 @@ class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
   }
 }
 
-class CodeComponentTest extends NLogoFormatTest[String] {
+class NLogoCodeComponentTest extends NLogoFormatTest[String] {
   def subject: ComponentSerialization[Array[String], NLogoFormat] =
     nlogoFormat.CodeComponent
 
@@ -137,7 +138,7 @@ class CodeComponentTest extends NLogoFormatTest[String] {
   testRoundTripsSerialForm("multiple code lines with whitespace lines between", Array[String]("breed [foos foo]", "", "to baz show 1 end"))
 }
 
-class InfoComponentTest extends NLogoFormatTest[String] {
+class NLogoInfoComponentTest extends NLogoFormatTest[String] {
   def subject = nlogoFormat.InfoComponent
   def modelComponent(model: Model): String = model.info
   def attachComponent(b: String): Model = Model(info = b)
@@ -147,14 +148,13 @@ class InfoComponentTest extends NLogoFormatTest[String] {
   testRoundTripsObjectForm("empty info tab", "")
 }
 
-class VersionComponentTest extends NLogoFormatTest[String] {
+class NLogoVersionComponentTest extends NLogoFormatTest[String] {
   def subject = nlogoFormat.VersionComponent
   def modelComponent(model: Model): String = model.version
   def attachComponent(b: String): Model = Model(version = b)
 
-  // this test assumes the 2D Format
-  val correctArityFormat = Version.version.replaceAll(" 3D", "")
-  val wrongArityVersion = Version.version.replaceAll("NetLogo", "NetLogo 3D")
+  val correctArityFormat = version.version
+  val wrongArityVersion = version.version.replaceAll("NetLogo", "NetLogo 3D")
 
   testErrorsOnDeserialization("wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
   testErrorsOnDeserialization("empty version section to empty version", Array[String](), "")
@@ -163,7 +163,7 @@ class VersionComponentTest extends NLogoFormatTest[String] {
   testDeserializes("multiple version lines to correct version", Array[String]("", correctArityFormat), correctArityFormat)
 }
 
-class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
+class NLogoInterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
   import org.nlogo.core.{ View, Button }
 
   def subject = nlogoFormat.InterfaceComponent
@@ -178,7 +178,7 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
   testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0)))
 }
 
-class VectorShapesComponentTest extends NLogoFormatTest[Seq[VectorShape]] {
+class NLogoVectorShapesComponentTest extends NLogoFormatTest[Seq[VectorShape]] {
   def subject = nlogoFormat.VectorShapesComponent
   def modelComponent(model: Model): Seq[VectorShape] = model.turtleShapes
   def attachComponent(shapes: Seq[VectorShape]): Model = Model(turtleShapes = shapes)
@@ -188,7 +188,7 @@ class VectorShapesComponentTest extends NLogoFormatTest[Seq[VectorShape]] {
   testRoundTripsObjectForm("default-only shape list", Seq(defaultShape))
 }
 
-class LinkShapesComponentTest extends NLogoFormatTest[Seq[LinkShape]] {
+class NLogoLinkShapesComponentTest extends NLogoFormatTest[Seq[LinkShape]] {
   def subject = nlogoFormat.LinkShapesComponent
   def modelComponent(model: Model): Seq[LinkShape] = model.linkShapes
   def attachComponent(shapes: Seq[LinkShape]): Model = Model(linkShapes = shapes)
@@ -198,7 +198,7 @@ class LinkShapesComponentTest extends NLogoFormatTest[Seq[LinkShape]] {
   testRoundTripsObjectForm("default-only link shape list", Seq(defaultShape))
 }
 
-class ModelSettingsComponentTest extends NLogoFormatTest[ModelSettings] {
+class NLogoModelSettingsComponentTest extends NLogoFormatTest[ModelSettings] {
   def subject = NLogoModelSettings
   def modelComponent(model: Model): ModelSettings =
     model.optionalSectionValue(NLogoModelSettings.componentName).get

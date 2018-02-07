@@ -105,7 +105,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (job.comeUpForAir.get()) {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
@@ -133,7 +133,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (job.comeUpForAir.get()) {
           comeUpForAir(command);
         }
       } while (!finished);
@@ -177,7 +177,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   public void runExclusiveJob(AgentSet agentset, int address) {
     new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, workspace, job.random)
+        (job.owner, agentset, activation.procedure, address, this, job.random, job.comeUpForAir)
         .run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
@@ -188,7 +188,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
   }
 
   public Job makeConcurrentJob(AgentSet agentset) {
-    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, workspace, job.random);
+    return new ConcurrentJob(job.owner, agentset, null, ip + 1, this, job.random, job.comeUpForAir);
   }
 
   public void returnFromProcedure() {
@@ -256,7 +256,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
           command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
-        if (command.world.comeUpForAir) {
+        if (job.comeUpForAir.get()) {
           comeUpForAir(command);
         }
       }
@@ -283,7 +283,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
 
   // this had to be made public so that workspace.Evaluator could call it when
   // running command thunks. - JC 6/11/10
-  public void runtimeError(Exception ex) {
+  public void runtimeError(Exception ex, JobManagerInterface manager) {
     try {
       Instruction instruction = null;
       Context context = null;
@@ -298,7 +298,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
         context = this;
       }
       instruction.workspace
-          .runtimeError(job.owner, context, instruction, ex);
+        .owner().runtimeError(job.owner, manager, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,
       // but a new exception happened. so we'll report the original
@@ -327,7 +327,7 @@ public final strictfp class Context implements org.nlogo.api.Context {
       command.workspace.breathe(this);
     }
     if (Thread.currentThread().isInterrupted()) {
-      command.world.comeUpForAir = false;
+      job.comeUpForAir.set(false);
       finished = true;
       throw new HaltException(true);
     }

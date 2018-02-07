@@ -46,8 +46,10 @@ class DummyPlotWidget(plot:Plot, plotManager: PlotManager) extends AbstractPlotW
   }
 
   override def savePens(s: StringBuilder): Unit = {
-    val p: Plot = plotManager.getPlot(plot.name)
-    for(pen <- p.pens){
+    for {
+      p: Plot <- plotManager.getPlot(plot.name)
+      pen <- p.pens
+    } {
       if (!pen.temporary) {
         s.append("\"" + org.nlogo.api.StringUtils.escapeString(pen.name) + "\" " +
                 pen.defaultInterval + " " + pen.defaultMode + " " + pen.defaultColor + " " + pen.inLegend + "\n")

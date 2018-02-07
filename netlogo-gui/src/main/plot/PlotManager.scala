@@ -40,11 +40,11 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   }
 
   // possible null return
-  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name)).orNull
+  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
 
   // used for letting the user choose which plot to export
   def getPlotNames: Array[String] = _plots.map(_.name).toArray
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
+  def nextName = Stream.from(1).map("plot " + _).find(name => getPlot(name).isEmpty).get
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None

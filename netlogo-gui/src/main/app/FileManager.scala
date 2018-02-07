@@ -12,7 +12,7 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.api.{ Exceptions, FileIO, ModelLoader, ModelReader, ModelType, Version },
-  ModelReader.{ emptyModelPath, modelSuffix }
+  ModelReader.emptyModelPath
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
@@ -21,10 +21,11 @@ import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, Successfu
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
+import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker, OpenModel, OpenModelFromURI,
+  OpenModelFromSource, SaveModel, SaveModelAs }
 
 object FileManager {
-  class NewAction(manager: FileManager, parent: Container)
+  class NewAction(manager: FileManager, parent: Container, version: Version)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.new"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -36,7 +37,7 @@ object FileManager {
     @throws(classOf[IOException])
     override def action(): Unit = {
       manager.aboutToCloseFiles()
-      manager.newModel()
+      manager.newModel(version)
     }
   }
 
@@ -72,7 +73,7 @@ object FileManager {
     }
   }
 
-  class ModelsLibraryAction(manager: FileManager, parent: Component)
+  class ModelsLibraryAction(manager: FileManager, parent: Component, modelTracker: ModelTracker)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.modelsLibrary"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -80,15 +81,22 @@ object FileManager {
     rank        = 3
     accelerator = UserAction.KeyBindings.keystroke('M', withMenu = true)
 
+    var modelsLibraryDialog: Option[ModelsLibraryDialog] = None
+
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
       manager.aboutToCloseFiles()
-      ModelsLibraryDialog.open(frame,
-      { sourceURI => manager.openFromURI(sourceURI, ModelType.Library) })
+      if (modelsLibraryDialog.isEmpty) {
+        modelsLibraryDialog = ModelsLibraryDialog.create(frame, modelTracker.currentVersion)
+      }
+      modelsLibraryDialog.foreach { dialog =>
+        dialog.setVisible(true)
+        dialog.sourceURI.foreach { uri => manager.openFromURI(uri, ModelType.Library) }
+      }
     }
   }
 
-  class ImportClientAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
+  class ImportClientAction(manager: FileManager, workspace: AbstractWorkspace, parent: Component)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.import.hubNetClientInterface") + Ellipsis, parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -133,14 +141,16 @@ object FileManager {
     }
   }
 
-  class SaveAsNetLogoWebAction(manager: FileManager, workspace: AbstractWorkspaceScala, modelSaver: ModelSaver, parent: Component)
+  class SaveAsNetLogoWebAction(manager: FileManager, modelTracker: ModelTracker, modelLoader: ModelLoader, parent: Component)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAsNetLogoWeb"), parent)
   with MenuAction {
     category = UserAction.FileCategory
     group    = UserAction.FileShareGroup
 
+    var lastLoadedModel: Option[Model] = None
+
     // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
-    setEnabled(! Version.is3D)
+    setEnabled(! modelTracker.currentVersion.is3D)
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -156,25 +166,25 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     def suggestedFileName: String = {
-      if (workspace.getModelType == ModelType.New) {
+      if (modelTracker.getModelType == ModelType.New) {
         manager.saveModel(false)
-        workspace.getModelFileName.stripSuffix(".nlogo") + ".html"
+        modelTracker.getModelFileName.stripSuffix(".nlogo") + ".html"
       } else
-        workspace.modelNameForDisplay + ".html"
+        modelTracker.modelNameForDisplay + ".html"
     }
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     def modelToSave: String = {
       if (doesNotMatchWorkingCopy && userWantsLastSaveExported())
-        modelSaver.modelAsString(modelSaver.priorModel, "nlogo")
+        modelLoader.sourceString(lastLoadedModel.get, "nlogo").get
       else
-        modelSaver.modelAsString(modelSaver.currentModel, "nlogo")
+        modelLoader.sourceString(modelTracker.model, "nlogo").get
     }
 
     @throws(classOf[UserCancelException])
     private def userWantsLastSaveExported(): Boolean = {
-      val modelType = workspace.getModelType
+      val modelType = modelTracker.getModelType
       val typeKey =
         if (modelType == ModelType.Normal) "fromSave" else "fromLibrary"
       val options = Array[Object](
@@ -195,15 +205,14 @@ object FileManager {
     // We compare last saved to current save here because dirtyMonitor doesn't
     // report if UI values (sliders, etc.) have been changed - RG 9/10/15
     private def doesNotMatchWorkingCopy: Boolean = {
-      modelSaver.priorModel != modelSaver.currentModel
+      lastLoadedModel.nonEmpty && ! lastLoadedModel.contains(modelTracker.model)
     }
   }
 
   class ConvertNlsAction(
     tab:            TemporaryCodeTab,
-    modelSaver:     ModelSaver,
+    modelTracker:   ModelTracker,
     modelConverter: ModelConversion,
-    workspace:      AbstractWorkspaceScala,
     controller:     FileController)
   extends ExceptionCatchingAction(I18N.gui.get("menu.edit.convertToNetLogoSix"), tab)
   with MenuAction{
@@ -212,12 +221,12 @@ object FileManager {
 
     override def action(): Unit = {
       tab.filename.right.toOption
-        .flatMap(name => FileIO.resolvePath(name, Paths.get(workspace.getModelPath)))
+        .flatMap(name => FileIO.resolvePath(name, Paths.get(modelTracker.getModelPath)))
         .foreach { path =>
         val version =
-          if (Version.is3D) "NetLogo 3D 5.3.1"
-          else              "NetLogo 5.3.1"
-        val tempModel = modelSaver.currentModel.copy(code = tab.innerSource, version = version)
+          if (modelTracker.currentVersion.is3D) "NetLogo 3D 5.3.1"
+          else                                  "NetLogo 5.3.1"
+        val tempModel = modelTracker.model.copy(code = tab.innerSource, version = version)
         modelConverter(tempModel, path) match {
           case SuccessfulConversion(originalModel, m) => tab.innerSource = m.code
           case failure: FailedConversionResult =>
@@ -228,7 +237,6 @@ object FileManager {
       }
     }
   }
-
 }
 
 import FileManager._
@@ -236,25 +244,36 @@ import FileManager._
 /** This class manages a number of file operations. Much of the code in here used to live in
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
-class FileManager(workspace: AbstractWorkspaceScala,
+class FileManager(workspace: AbstractWorkspace,
+  modelTracker: ModelTracker,
   modelLoader: ModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
-  modelSaver: ModelSaver,
   eventRaiser: AnyRef,
-  parent: Container)
+  parent: Container,
+  version: Version)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
 
-  val controller = new FileController(parent, workspace)
+  val controller = new FileController(parent, modelTracker)
+
+  val saveNlwAction = new SaveAsNetLogoWebAction(this, modelTracker, modelLoader, parent)
+
+  val actions: Seq[Action] = Seq(
+    new NewAction(this, parent, version),
+    new OpenAction(this, parent),
+    new QuitAction(this, parent),
+    new ModelsLibraryAction(this, parent, modelTracker),
+    saveNlwAction,
+    new ImportClientAction(this, workspace, parent))
 
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library)
   }
 
   def handle(e: LoadModelEvent): Unit = {
-    modelSaver.setCurrentModel(e.model)
+    saveNlwAction.lastLoadedModel = Some(e.model)
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
@@ -284,12 +303,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def openModelURI(uri: URI): (OpenModel.Controller) => Option[Model] =
-    ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, Version))
+    ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, modelTracker.currentVersion))
 
   def openFromSource(uri: URI, modelSource: String, modelType: ModelType): Unit = {
     loadModel(uri,
       (fileController: OpenModel.Controller) =>
-        OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
+        OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, modelTracker.currentVersion))
           .foreach(m => openFromModel(m, uri, modelType))
   }
 
@@ -302,7 +321,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace.compilerServices, modelTracker.currentVersion)
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
@@ -320,12 +339,13 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   @throws(classOf[IOException])
-  def newModel(): Unit = {
+  def newModel(version: Version): Unit = {
     try {
-      openFromModel(modelLoader.emptyModel(modelSuffix), getClass.getResource(emptyModelPath).toURI, ModelType.New)
+      val uri = getClass.getResource(emptyModelPath(version.is3D)).toURI
+      openFromModel(modelLoader.readModel(uri).get, uri, ModelType.New)
     } catch  {
       case ex: URISyntaxException =>
-        println("Unable to locate empty model: " + emptyModelPath)
+        println("Unable to locate empty model: " + emptyModelPath(version.is3D))
     }
   }
 
@@ -333,7 +353,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   private[app] def saveModel(saveAs: Boolean): Unit = {
     val saveThunk = {
       val saveModel = if (saveAs) SaveModelAs else SaveModel
-      saveModel(currentModel, modelLoader, controller, workspace, Version)
+      saveModel(currentModel, modelLoader, controller, modelTracker, modelTracker.currentVersion)
     }
 
     // if there's no thunk, the user canceled the save
@@ -383,22 +403,14 @@ class FileManager(workspace: AbstractWorkspaceScala,
       val r = thunk()
       r.foreach { uri =>
         val path = Paths.get(uri).toString
-        modelSaver.setCurrentModel(modelSaver.currentModel.copy(version = Version.version))
+        saveNlwAction.lastLoadedModel = Some(modelTracker.model)
         new ModelSavedEvent(path).raise(eventRaiser)
       }
       result = Some(r)
     }
   }
 
-  def currentModel: Model = modelSaver.currentModel
-
-  def actions: Seq[Action] = Seq(
-    new NewAction(this, parent),
-    new OpenAction(this, parent),
-    new QuitAction(this, parent),
-    new ModelsLibraryAction(this, parent),
-    new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
-    new ImportClientAction(this, workspace, parent))
+  def currentModel: Model = modelTracker.model
 
   def saveModelActions(parent: Component) = {
     def saveAction(saveAs: Boolean) =
@@ -419,6 +431,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def convertTabAction(t: TemporaryCodeTab): Action = {
-    new ConvertNlsAction(t, modelSaver, modelConverter, workspace, controller)
+    new ConvertNlsAction(t, modelTracker, modelConverter, controller)
   }
 }

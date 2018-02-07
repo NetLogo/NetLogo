@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import org.nlogo.core.ExtensionObject
 
-import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager }
+import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager, Model }
 
 /**
  * <code>ExtensionManager</code> provides some methods that can be used in runOnce
@@ -28,6 +28,11 @@ trait ExtensionManager extends CoreManager {
   def readFromString(src: String): AnyRef
 
   /**
+   * Allows the extension access to the model loading it.
+   */
+  def activeModel: Model
+
+  /**
    * Instructs any loaded extensions to unload. Should be called previous
    * to a new model load.
    */
@@ -39,4 +44,10 @@ trait ExtensionManager extends CoreManager {
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
+
+  /**
+   * Used for providing or removing instrumentation (a profiler) for the NetLogo engine to use
+   */
+  def addInstrumentation[A](name: String, instrument: A, klass: Class[A]): Unit
+  def removeInstrumentation[A](name: String, klass: Class[A]): Unit
 }

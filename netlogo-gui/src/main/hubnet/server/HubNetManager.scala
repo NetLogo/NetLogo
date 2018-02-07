@@ -10,7 +10,8 @@ import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
+import org.nlogo.workspace.{ AbstractWorkspace, OpenModel, OpenModelFromURI },
+  OpenModel.{ OpenInCurrentVersion, VersionResponse }
 import org.nlogo.agent.{Link, Turtle}
 import org.nlogo.fileformat.ModelConversion
 
@@ -19,7 +20,7 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader, modelConverter: ModelConversion)
+abstract class HubNetManager(workspace: AbstractWorkspace, modelLoader: ModelLoader, modelConverter: ModelConversion)
   extends HubNetInterface
   with ConnectionInterface {
 
@@ -305,7 +306,12 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
      if (someNodesHaveView && connectionManager.isRunning) {connectionManager.incrementalViewUpdate()}
      _framesSkipped = false
    }
+   // these three methods are all a part of ViewInterface and have nothing to do
+   // with HubNetManager. Maybe the api.ViewInterface should actually be two separate
+   // interfaces? RG 9/21/17
    def repaint() {}
+   def freeze(): Unit = {}
+   def thaw(): Unit = {}
 
   // since mouseInside is always false all the other values don't matter.
   // all this is silly, but its here because we have to extend ViewInterface.
@@ -338,8 +344,8 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
     def invalidModel(uri: URI): Unit = { }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
     def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Option[Model] = None
-    def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
-    def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
-    def shouldOpenModelOfUnknownVersion(version: String): Boolean = true
+    def shouldOpenModelOfDifferingArity(arity: Int,version: String): VersionResponse = OpenInCurrentVersion
+    def shouldOpenModelOfLegacyVersion(currentVersion: String, openVersion: String): Boolean = true
+    def shouldOpenModelOfUnknownVersion(currentVersion: String, openVersion: String): Boolean = true
   }
 }

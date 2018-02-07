@@ -4,7 +4,7 @@ package org.nlogo.hubnet.client
 
 import java.awt.BorderLayout
 import javax.swing.{WindowConstants, JFrame}
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ DummyExtensionManager, EditorCompiler }
 import org.nlogo.core.I18N
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
 import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
@@ -18,7 +18,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], workspace: CompilerServices) {
+  def mainHelper(args: Array[String], compiler: EditorCompiler) {
     try {
       val app = new ClientApp()
       org.nlogo.swing.Utils.setSystemLookAndFeel()
@@ -44,7 +44,7 @@ object ClientApp {
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
         else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
       }
-      app.startup(userid, hostip, port, false, isRoboClient, waitTime, workspace)
+      app.startup(userid, hostip, port, false, isRoboClient, waitTime, compiler)
     } catch {
       case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)
     }
@@ -63,9 +63,9 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     setResizable(false)
   }
 
-  def startup(userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices): Unit = {
-    val editorFactory = new DefaultEditorFactory(compiler)
+  final def startup(userid: String, hostip: String,
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: EditorCompiler): Unit = {
+    val editorFactory = new DefaultEditorFactory(compiler, new DummyExtensionManager)
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {

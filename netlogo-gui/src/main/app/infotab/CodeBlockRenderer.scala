@@ -13,9 +13,10 @@ import com.vladsch.flexmark.parser.block.{ BlockPreProcessor, BlockPreProcessorF
 import com.vladsch.flexmark.util.sequence.BasedSequence
 import com.vladsch.flexmark.util.options.{ DataHolder, MutableDataHolder }
 
+import org.nlogo.core.Dialect
 import org.nlogo.app.common.CodeToHtml
 
-class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRendererExtension {
+class CodeBlockRenderer(dialect: Dialect) extends Parser.ParserExtension with HtmlRenderer.HtmlRendererExtension {
   class NetLogoCodeBlock(content: BasedSequence, contentLines: JList[BasedSequence]) extends CodeBlock(content, contentLines) {
   }
 
@@ -72,7 +73,7 @@ class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRen
         }))
       return set;
     }
-    val converter = CodeToHtml.newInstance
+    val converter = CodeToHtml.newInstance(dialect)
 
     def render(node: NetLogoCodeBlock, context: NodeRendererContext, html: HtmlWriter): Unit = {
       html.line()

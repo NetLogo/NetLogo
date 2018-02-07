@@ -2,8 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.Dump
+import org.nlogo.api.{ CartesianProductParameterSet, Dump, LabProtocol }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -16,8 +15,9 @@ import org.nlogo.nvm.Workspace
 class SpreadsheetExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
+                          versionString: String,
                           out: java.io.PrintWriter)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, versionString, out)
 {
   val runs = new collection.mutable.HashMap[Int,Run]
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {
@@ -68,7 +68,11 @@ class SpreadsheetExporter(modelFileName: String,
     // "initial-density","0.3","0.5","0.4"
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
-    for(v <- protocol.valueSets.map(_.variableName)) {
+    val variableNames = protocol.parameterSet match {
+      case c: CartesianProductParameterSet => c.valueSets.map(_.variableName)
+      case _ => Nil
+    }
+    for(v <- variableNames) {
       out.print(Dump.csv.header(v) + ",")
       foreachRun((run,metricNumber) =>
         if(metricNumber == 0)

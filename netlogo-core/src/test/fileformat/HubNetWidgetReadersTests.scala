@@ -5,11 +5,12 @@ package org.nlogo.fileformat
 import org.nlogo.core.{ Button, Chooser, Chooseable, Femto, Horizontal,
   ChooseableDouble, ChooseableString, ChooseableBoolean, ChooseableList,
   LiteralParser, LogoList, Monitor, Slider, Switch, Vertical, View, Widget,
-  WorldDimensions }
+  WorldDimensions, model },
+    model.HubNetWidgetReader
 
 import org.nlogo.core.model.WidgetReader
 
-import org.scalacheck.{ Arbitrary, Gen }
+import org.scalacheck.{ Arbitrary, Gen, Shrink }
 
 import org.scalatest.FunSuite
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
@@ -53,8 +54,7 @@ object HubNetGenerators {
 
   val escapedChars = Gen.oneOf('\n', '\t', '\r', '\\', '"')
 
-  val chooserAcceptableString = Gen.listOf(Gen.oneOf(Gen.alphaNumChar, escapedChars)).map(l =>
-      if (l.isEmpty) "" else l.foldLeft("") { case (a, b) => a + b })
+  val chooserAcceptableString = escapable(genNameString)
 
   val chooseableList: Gen[List[Chooseable]] =
     Gen.listOf(
@@ -66,7 +66,7 @@ object HubNetGenerators {
 
   val chooserWidget: Gen[Chooser] = for {
     pos           <- genPos
-    varName       <- escapableOpt(optionalNameString)
+    varName       <- optionalNameString
     choices       <- chooseableList
     currentChoice <- Gen.choose(0, choices.length)
   } yield Chooser(display = varName,
@@ -89,7 +89,7 @@ object HubNetGenerators {
   val sliderWidget: Gen[Slider] =
     for {
       pos       <- genPos
-      name      <- escapableOpt(optionalNameString)
+      name      <- optionalNameString
       min       <- Arbitrary.arbDouble.arbitrary
       max       <- Arbitrary.arbDouble.arbitrary.suchThat(_ > min)
       value     <- Gen.choose(min, max)
@@ -108,7 +108,7 @@ object HubNetGenerators {
 
   val switchWidget: Gen[Switch] = for {
     pos     <- genPos
-    name    <- escapableOpt(optionalNameString)
+    name    <- optionalNameString
     isOn    <- Arbitrary.arbBool.arbitrary
     } yield {
       Switch(display = name,
@@ -131,11 +131,25 @@ object HubNetGenerators {
   val hubNetWidgets: Gen[Widget] =
     Gen.oneOf(buttonWidget, chooserWidget, monitorWidget, sliderWidget, switchWidget, viewWidget)
 
-  implicit val arbWidget = Arbitrary(hubNetWidgets)
+  implicit def shrinkWidget(implicit shrinkChooseableList: Shrink[List[Chooseable]]) = Shrink[Widget]({ w: Widget =>
+    w match {
+      case c: Chooser =>
+        shrinkChooseableList.shrink(c.choices)
+          .map(choices => c.copy(choices = choices))
+          .flatMap(chooser =>
+              chooser.variable.map(v =>
+                Shrink.shrinkString.shrink(v).map(newName => chooser.copy(variable = Some(newName), display = Some(newName))))
+              .getOrElse(Stream(chooser)))
+      case s: Slider =>
+        s.variable
+          .map(varName =>
+              Shrink.shrinkString.shrink(varName).map(newName => s.copy(variable = Some(newName), display = Some(newName))))
+          .getOrElse(Stream.empty[Widget])
+      case _ => Stream.empty[Widget]
+    }
+  })
 
-  val classyReaders =
-    HubNetWidgetReaders.additionalReaders
-      .values.map(r => new ClassyReader(r))
+  implicit val arbWidget = Arbitrary(hubNetWidgets)
 
   lazy val litParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
@@ -147,10 +161,9 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
 
   test("serializes / deserializes hubnet widgets") {
     forAll(hubNetWidgets) { (widget: Widget) =>
-      val reader = classyReaders.find(_.applies(widget)).get
-      val serialized = reader.format(widget)
-      assert(reader.validate(serialized), "serialized wiget should be valid")
-      val deserialized = reader.parse(serialized)
+      val serialized = HubNetWidgetReader.format(widget)
+      assert(! serialized.isEmpty)
+      val deserialized = HubNetWidgetReader.read(serialized.lines.toList, litParser)
       assert(widget == deserialized, "round-trip must not change widget, written as:\n" + serialized)
     }
   }
@@ -158,10 +171,8 @@ class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyCheck
   test("pathological case 1") {
     val chooser =
       Chooser(None,-2147483648,-185212488,2147483647,859780949,None,List(ChooseableBoolean(true), ChooseableBoolean(true), ChooseableBoolean(false), ChooseableDouble(8.502858506075463E-83)), 10)
-    val reader = HubNetChooserReader
-    val serialized = reader.format(chooser)
-    assert(reader.validate(serialized.lines.toList), "serialized wiget should be valid")
-    val deserialized = reader.parse(serialized.lines.toList, litParser)
+    val serialized = HubNetWidgetReader.format(chooser)
+    val deserialized = HubNetWidgetReader.read(serialized.lines.toList, litParser)
     assert(chooser == deserialized, "round-trip must not change widget, written as:\n" + serialized)
   }
 }

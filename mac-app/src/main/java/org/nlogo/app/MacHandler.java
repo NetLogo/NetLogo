@@ -32,9 +32,8 @@ public class MacHandler {
     this.application.setPreferencesHandler(new MyPreferencesHandler());
     this.application.setAboutHandler(new MyAboutHandler());
     this.application.setQuitHandler(new MyQuitHandler());
-    log("in directory:");
-    log(System.getProperty("user.dir"));
-    log(new File(".").getAbsolutePath());
+    log("user.dir: " + System.getProperty("user.dir"));
+    log("in directory:" + new File(".").getAbsolutePath().toString());
   }
 
   void log(String s) {
@@ -52,16 +51,15 @@ public class MacHandler {
   class MyOpenURIHandler implements OpenURIHandler {
     @Override
     public void openURI(AppEvent.OpenURIEvent event) {
-      log("received OpenURI event");
-      log(event.getURI().toString());
+      log("received OpenURI event: " + event.getURI().toString());
     }
   }
 
   class MyOpenFilesHandler implements OpenFilesHandler {
     @Override
     public void openFiles(AppEvent.OpenFilesEvent event) {
-      log("received OpenFiles event");
-      log(event.getFiles().get(0).getAbsolutePath());
+      log("received openFile event for: " + event.getFiles().get(0).getAbsolutePath());
+      log("openFiles called on " + Thread.currentThread().getName());
       doOpen(event.getFiles().get(0).getAbsolutePath());
     }
   }
@@ -119,12 +117,22 @@ public class MacHandler {
     }
   }
 
-  public void init() { }
+  public void init() {
+    log("application initializing");
+  }
 
-  public void ready(Object app) {
+  public String pathToOpen() {
+    log("pathToOpen called on " + Thread.currentThread().getName());
+    return openMeLater;
+  }
+
+  public void ready(Object app, boolean modelLoaded) {
+    log("application ready");
     this.app = app;
-    if (openMeLater != null) {
+    if (openMeLater != null && ! modelLoaded) {
       doOpen(openMeLater);
+    } else {
+      openMeLater = null;
     }
   }
 
@@ -135,6 +143,7 @@ public class MacHandler {
       try {
         Class<?> appClass = app.getClass();
         appClass.getDeclaredMethod("handleOpenPath", String.class).invoke(app, path);
+        openMeLater = null;
       } catch (NoSuchMethodException e) {
       } catch (IllegalAccessException e) {
       } catch (InvocationTargetException e) {

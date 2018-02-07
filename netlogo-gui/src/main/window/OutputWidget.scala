@@ -14,21 +14,22 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   setBorder(widgetBorder)
   setBackground(InterfaceColors.MONITOR_BACKGROUND)
   displayName(I18N.gui.get("tabs.run.widgets.output"))
-  val outputArea = new OutputArea()
+  val output = new OutputArea()
+  val outputArea = Some(output)
   add(new javax.swing.JPanel() {
     setLayout(new java.awt.BorderLayout())
     setBackground(InterfaceColors.MONITOR_BACKGROUND)
     setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    add(outputArea, java.awt.BorderLayout.CENTER)
+    add(output, java.awt.BorderLayout.CENTER)
   }, java.awt.BorderLayout.CENTER)
 
   def propertySet = Properties.output
 
-  originalFont = outputArea.getFont
+  originalFont = output.getFont
   def fontSize = originalFont.getSize
   def fontSize_=(newSize: Int): Unit = {
-    val zoomDiff = outputArea.fontSize - fontSize
-    outputArea.fontSize(newSize + zoomDiff)
+    val zoomDiff = output.fontSize - fontSize
+    output.fontSize(newSize + zoomDiff)
     originalFont = originalFont.deriveFont(newSize.toFloat)
   }
 
@@ -36,7 +37,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def zoomSubcomponents = true
   override def exportable = true
   override def getDefaultExportName = "output.txt"
-  def valueText: String = outputArea.text.getText
+  def valueText: String = output.text.getText
   override def hasContextMenu = true
   override def copyable = false
 
@@ -48,7 +49,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
+    val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ output.text.copy }
     menu.add(copyItem)
     p
   }
@@ -59,7 +60,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   def handle(e:org.nlogo.window.Events.ExportWorldEvent){
     import org.nlogo.api.Dump
     e.writer.println(Dump.csv.encode("OUTPUT"))
-    Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
+    Dump.csv.stringToCSV(e.writer, output.text.getText())
   }
 
   override def load(model: WidgetModel): AnyRef = {

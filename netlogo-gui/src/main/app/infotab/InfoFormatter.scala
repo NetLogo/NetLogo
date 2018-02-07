@@ -13,7 +13,8 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.core.{ Dialect, Femto }
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
@@ -28,7 +29,17 @@ object InfoFormatter {
    * for standalone use, for example on a web server
    */
   def main(argv: Array[String]) {
-    println(apply(read(System.in)))
+    // NOTE: While generally we shouldn't rely on a system property to tell
+    // us whether or not we're in 3D, we do it here because:
+    // * We're in the process of constructing the dialect
+    // * We only call this once, right at boot time
+    // * We do not store this value for use at a later time when it might be inaccurate
+    val dialect =
+      if (Version.is3DInternal)
+        Femto.scalaSingleton[Dialect]("org.nlogo.api.NetLogoThreeDDialect")
+      else
+        Femto.scalaSingleton[Dialect]("org.nlogo.api.NetLogoLegacyDialect")
+    println(apply(read(System.in), dialect))
   }
 
   def read(in: InputStream): String = io.Source.fromInputStream(in).mkString
@@ -46,14 +57,14 @@ object InfoFormatter {
             replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
             replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
 
-  def apply(content: String, fontSize: Int = defaultFontSize) = {
-    wrapHtml(toInnerHtml(content), fontSize)
+  def apply(content: String, dialect: Dialect, fontSize: Int = defaultFontSize) = {
+    wrapHtml(toInnerHtml(content, dialect), fontSize)
   }
 
   def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML =
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
 
-  def toInnerHtml(content: String): String = {
+  def toInnerHtml(content: String, dialect: Dialect): String = {
     val extensions = new JArrayList[Extension]()
     val options = new MutableDataSet()
 
@@ -72,7 +83,7 @@ object InfoFormatter {
 
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
-    extensions.add(new CodeBlockRenderer())
+    extensions.add(new CodeBlockRenderer(dialect))
 
     options.set(Parser.EXTENSIONS, extensions)
 

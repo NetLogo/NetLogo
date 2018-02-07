@@ -2,7 +2,8 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
+import org.nlogo.api.{ CartesianProductParameterSet, EnumeratedValueSet,
+  LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
 import javax.xml.transform
 import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
@@ -39,7 +40,7 @@ object LabSaver {
   }
   def attributes(specs: (String,String)*) = {
     val result = new AttributesImpl
-    for((name,value) <- specs if name != "sequentialRunOrder" || 
+    for((name,value) <- specs if name != "sequentialRunOrder" ||
         (name == "sequentialRunOrder" && value == "false"))
       result.addAttribute("", "", name, "CDATA", value)
     result
@@ -54,10 +55,15 @@ object LabSaver {
       hd.startElement("", "", name, attributes)
       hd.endElement("", "", name)
     }
+    val (reps, sro, valueSets) = protocol.parameterSet match {
+      case cpps: CartesianProductParameterSet =>
+        (cpps.repetitions, cpps.sequentialRunOrder, cpps.valueSets)
+      case _ => (0, true, Nil)
+    }
     hd.startElement("", "", "experiment",
                     attributes(("name", protocol.name),
-                               ("repetitions", protocol.repetitions.toString),
-                               ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
+                               ("repetitions", reps.toString),
+                               ("sequentialRunOrder", sro.toString),
                                ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
     if(protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
@@ -72,7 +78,7 @@ object LabSaver {
       element("exitCondition", protocol.exitCondition)
     for(metric <- protocol.metrics)
       element("metric", metric)
-    for(valueSet <- protocol.valueSets)
+    for(valueSet <- valueSets)
       valueSet match {
         case steppedValueSet:SteppedValueSet =>
           elementWithAttributes(

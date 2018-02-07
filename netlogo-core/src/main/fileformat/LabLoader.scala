@@ -8,6 +8,7 @@ import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
 import scala.language.implicitConversions
+import scala.util.matching.Regex
 
 object LabLoader {
   val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
@@ -22,8 +23,11 @@ class LabLoader(literalParser: LiteralParser) {
     // what about character encodings?  String.getBytes() will use the platform's default encoding;
     // presumably sax.InputSource will also then use that same encoding?  I'm not really sure...  it
     // doesn't seem worth stressing about - ST 12/21/04
+    val xmlDecl = new Regex("(?m)<\\?xml[^?>]*\\?>")
     val taggedXml =
       if (xml.contains("DOCTYPE experiments")) xml
+      else if (xmlDecl.findFirstMatchIn(xml).nonEmpty)
+        xmlDecl.replaceAllIn(xml, m => m.matched + "\n" + DOCTYPE)
       else DOCTYPE + "\n" + xml
     val inputSource = new sax.InputSource(new ByteArrayInputStream(
       ticksToSteps(taggedXml).getBytes))
@@ -37,7 +41,10 @@ class LabLoader(literalParser: LiteralParser) {
     val builder = factory.newDocumentBuilder
     builder.setErrorHandler(new sax.ErrorHandler {
       def error(ex: sax.SAXParseException) { throw ex }
-      def fatalError(ex: sax.SAXParseException) { throw ex }
+      def fatalError(ex: sax.SAXParseException) {
+        println(s"Exception found at line ${ex.getLineNumber} column ${ex.getColumnNumber}")
+        throw ex
+      }
       def warning(ex: sax.SAXParseException) { throw ex }
     })
     builder.parse(inputSource)
@@ -78,14 +85,14 @@ class LabLoader(literalParser: LiteralParser) {
       case _ => None } }
       yield valueSet
     }
-    new LabProtocol(
+    LabProtocol.fromValueSets(
       element.getAttribute("name"),
       readOptional("setup"),
       readOptional("go"),
       readOptional("final"),
       element.getAttribute("repetitions").toInt,
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
-        if(defaultOrder == "") true else defaultOrder == "true"  
+        if(defaultOrder == "") true else defaultOrder == "true"
       },
       element.getAttribute("runMetricsEveryStep") == "true",
       if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,

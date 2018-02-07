@@ -17,11 +17,11 @@ import org.nlogo.util.Implicits.RichString
  * `random-seed 0` called before opening the model. The `startup`
  * procedure, if present, runs before the preview commands.
  */
-sealed trait PreviewCommands extends ModelSections.ModelSaveable {
+sealed trait PreviewCommands {
   def source: String
   def description: String
   override def toString = description
-  override def updateModel(m: Model): Model = {
+  def updateModel(m: Model): Model = {
     m.withOptionalSection[PreviewCommands]("org.nlogo.modelsection.previewcommands", Some(this), PreviewCommands.Default)
   }
 }
@@ -30,6 +30,16 @@ object PreviewCommands {
   case object Manual extends PreviewCommands {
     override val source = "need-to-manually-make-preview-for-this-model"
     override val description = "Manually make preview"
+  }
+  object Compilable {
+    def apply(source: String): PreviewCommands.Compilable = {
+      val strippedSource = source.stripTrailingWhiteSpace
+      strippedSource.toLowerCase match {
+        case ""             => Default
+        case Default.source => Default
+        case other          => Custom(other)
+      }
+    }
   }
   trait Compilable extends PreviewCommands
   case object Default extends Compilable {

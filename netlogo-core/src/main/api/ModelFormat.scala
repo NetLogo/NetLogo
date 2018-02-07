@@ -16,6 +16,10 @@ trait ComponentSerialization[A, B <: ModelFormat[A, B]] {
   def deserialize(s: A): Model => Try[Model] = (m: Model) => Success(m)
 }
 
+trait AddableLoader {
+  def addToLoader(loader: ConfigurableModelLoader): ConfigurableModelLoader
+}
+
 trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
   def name: String
 

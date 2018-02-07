@@ -20,14 +20,22 @@ package misc
 // - If the bytecode generator is on, the compiler will bytecode-generate the dummy arguments
 //   out of existence, so we need to invoke the compiler with useGenerator = false.
 //
-// - We have to cast to AbstractWorkspace because the methods on nvm.Workspace for invoking the
+// - We use AbstractWorkspace because the methods on nvm.Workspace for invoking the
 //   compiler don't allow passing altered CompilerFlags.  (I'd like to change it so they did,
 //   but I'm reluctant to make life too awkward for people using nvm.Workspace from Java.)
 
-import org.nlogo.{ api, nvm },
-  org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.{ core, api, nvm, workspace => wspackage },
+  core.AgentKind,
+    AgentKind.Observer,
+  wspackage.{ AbstractWorkspace },
+  nvm.{ CompilerFlags, Optimizations }
 
 class TestArgumentInjection extends FixtureSuite {
+
+  override def makeWorkspace() = {
+    HeadlessWorkspace.newInstance(classOf[HeadlessWorkspace],
+      CompilerFlags(optimizations = Optimizations.headlessOptimizations, useGenerator = false))
+  }
 
   // making callers
 
@@ -38,21 +46,27 @@ class TestArgumentInjection extends FixtureSuite {
     }
   }
 
-  def makeCommandCaller(ws: nvm.Workspace, name: String): nvm.Procedure = {
+  def makeCommandCaller(ws: AbstractWorkspace, name: String): nvm.Procedure = {
+    implicit val extensionManager = ws.extensionManager
+    implicit val compilationEnvironment = ws.getCompilationEnvironment
+    implicit val procedures = ws.procedures
+    implicit val linker = ws.linker
+
     val proc = ws.procedures(name.toUpperCase)
     val command =
       name + " " + Seq.fill(proc.args.size)("0").mkString(" ")
-    ws.asInstanceOf[AbstractWorkspace]
-      .evaluator.compileCommands(command,
-        flags = nvm.CompilerFlags(useGenerator = false))
+    ws.evaluator.compileCommands(command, Observer)
   }
 
-  def makeReporterCaller(ws: nvm.Workspace, name: String): nvm.Procedure = {
+  def makeReporterCaller(ws: AbstractWorkspace, name: String): nvm.Procedure = {
+    implicit val extensionManager = ws.extensionManager
+    implicit val compilationEnvironment = ws.getCompilationEnvironment
+    implicit val procedures = ws.procedures
+    implicit val linker = ws.linker
+
     val proc = ws.procedures(name.toUpperCase)
     val dummyArgs = Seq.fill(proc.args.size)("0").mkString(" ")
-    ws.asInstanceOf[AbstractWorkspace]
-      .evaluator.compileReporter(s"$name $dummyArgs",
-        flags = nvm.CompilerFlags(useGenerator = false))
+    ws.evaluator.compileReporter(s"$name $dummyArgs")
   }
 
   // using callers
@@ -119,5 +133,4 @@ class TestArgumentInjection extends FixtureSuite {
     check(5)
     check(10)
   }
-
 }

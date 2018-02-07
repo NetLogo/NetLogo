@@ -363,7 +363,7 @@ CountOtherTest
   count other turtles => 4
   [count other turtles] of turtles => [3 3 3 3]
 
-PatchRegionTest
+PatchRegionTest_2D
   globals [x]
   patches-own [a]
   to-report testrow [b] report patches with [pxcor = 0] end

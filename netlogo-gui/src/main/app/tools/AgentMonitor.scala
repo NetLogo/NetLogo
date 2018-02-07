@@ -11,9 +11,9 @@ import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.CollapsiblePane
-import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace, InterfaceColors }
+import org.nlogo.window.{ CommandCenterInterface, GUIWorkspaceScala, InterfaceColors, OutputArea }
 
-abstract class AgentMonitor(val workspace: GUIWorkspace, window: JWindow)
+abstract class AgentMonitor(val workspace: GUIWorkspaceScala, window: JWindow)
 extends JPanel with CommandCenterInterface // lets us embed CommandLine
 {
 
@@ -114,6 +114,8 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
     else
       agentEditor.requestFocus
   }
+
+  def outputArea: Option[OutputArea] = None
 
   def refresh() {
     viewPanel.foreach(_.refresh())

@@ -240,7 +240,8 @@ public final strictfp class Patch3D
   @Override
   public void pcolorDoubleUnchecked(Double boxedColor) {
     double color = boxedColor.doubleValue();
-    if (((Double) _variables[VAR_PCOLOR3D]).doubleValue() != color) {
+    if (! (_variables[VAR_PCOLOR3D] instanceof Double) ||
+         ((Double) _variables[VAR_PCOLOR3D]).doubleValue() != color) {
       _variables[VAR_PCOLOR3D] = boxedColor;
       _world.patchColors()[(int) _id] = Color.getARGBbyPremodulatedColorNumber(color);
       _world.markPatchColorsDirty();

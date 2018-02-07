@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JDialog }
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.{ ColorDialog, LinkRoot }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
@@ -72,13 +72,15 @@ class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
   category    = ToolsCategory
   group       = ToolsDialogsGroup
   accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
+  setEnabled(aggregateManager != null)
+
 
   override def actionPerformed(e: ActionEvent) {
     aggregateManager.showEditor()
   }
 }
 
-class OpenHubNetClientEditor(workspace: AbstractWorkspaceScala, linkRoot: LinkRoot)
+class OpenHubNetClientEditor(workspace: AbstractWorkspace, linkRoot: LinkRoot)
   extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
   with MenuAction {
     category = ToolsCategory

@@ -2,6 +2,8 @@
 
 package org.nlogo.window;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import scala.collection.Seq;
 import scala.Tuple2;
 
@@ -21,6 +23,7 @@ import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.ControlSet;
 import org.nlogo.api.FileIO$;
+import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.ModelTypeJ;
@@ -31,8 +34,13 @@ import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.shape.ShapeConverter;
 import org.nlogo.log.Logger;
+import org.nlogo.nvm.DisplayStatus;
+import org.nlogo.nvm.JobManagerOwner;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
+import org.nlogo.workspace.SwitchModel;
+import org.nlogo.workspace.ModelCompiledFailure;
+import org.nlogo.workspace.ModelCompiledSuccess;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -54,65 +62,49 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     org.nlogo.window.Events.AddChooserConstraintEvent.Handler,
     org.nlogo.window.Events.AddInputBoxConstraintEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
-    org.nlogo.api.TrailDrawerInterface,
-    org.nlogo.api.DrawingInterface,
-    org.nlogo.api.ModelSections.ModelSaveable {
+    org.nlogo.api.DrawingInterface {
 
   public enum KioskLevel {NONE, MODERATE}
 
   public final KioskLevel kioskLevel;
 
   private final java.awt.Component linkParent;
-  public final ViewWidget viewWidget;
-  private final View view;
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
-  public final NetLogoListenerManager listenerManager;
 
   private PeriodicUpdater periodicUpdater;
   private javax.swing.Timer repaintTimer;
   private Lifeguard lifeguard;
 
-  public GUIWorkspace(final org.nlogo.agent.World world,
-                      GUIWorkspace.KioskLevel kioskLevel, java.awt.Frame frame,
-                      java.awt.Component linkParent,
-                      org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
-                      ExternalFileManager externalFileManager,
-                      NetLogoListenerManager listenerManager,
-                      ControlSet controlSet) {
-    super(world, hubNetManagerFactory, frame, externalFileManager, controlSet);
-    this.kioskLevel = kioskLevel;
-    this.linkParent = linkParent;
-    this.listenerManager = listenerManager;
+  public GUIWorkspace(WorkspaceConfig config) {
+    super(config);
+    this.kioskLevel = config.kioskLevel();
+    this.linkParent = config.linkParent();
     hubNetControlCenterAction.setEnabled(false);
 
-    viewWidget = new ViewWidget(this);
-    view = viewWidget.view();
-    viewManager().setPrimary(view);
+    viewManager().setPrimary(view());
+    viewWidget().settings().addPropertyChangeListener(viewManager());
+    viewWidget().settings().addPropertyChangeListener(viewWidget());
 
-    periodicUpdater = new PeriodicUpdater(jobManager);
+    periodicUpdater = new PeriodicUpdater(jobManager());
     periodicUpdater.start();
-    world.trailDrawer(this);
+    world().trailDrawer(this);
 
     // ensure that any skipped frames get painted eventually
     javax.swing.Action repaintAction =
-        new javax.swing.AbstractAction() {
-          public void actionPerformed(java.awt.event.ActionEvent e) {
-            if (world.displayOn() && displaySwitchOn() && !jobManager.anyPrimaryJobs()) {
-              viewManager().paintImmediately(world.observer().updatePosition());
-            }
+      new javax.swing.AbstractAction() {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+          if (displayStatusRef().get().shouldRender(false) && !jobManager().anyPrimaryJobs()) {
+            viewManager().paintImmediately(world().observer().updatePosition());
           }
-        };
+        }
+      };
     // 10 checks a second seems like plenty
     repaintTimer = new javax.swing.Timer(100, repaintAction);
     repaintTimer.start();
 
     lifeguard = new Lifeguard();
     lifeguard.start();
-  }
-
-  public View view() {
-    return view;
   }
 
   // Lifeguard ensures the engine comes up for air every so often.
@@ -136,8 +128,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     public void run() {
       try {
         while (true) {
-          if (jobManager.anyPrimaryJobs()) {
-            world().comeUpForAir = true;
+          if (jobManager().anyPrimaryJobs()) {
+            jobManager().pokePrimaryJobs();
           }
           // 100 times a second seems like plenty
           Thread.sleep(10);
@@ -151,27 +143,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void init(GLViewManagerInterface glView) {
+    if (glView != null)
+      viewWidget().settings().addPropertyChangeListener(glView);
+    if (this.glView != null)
+      viewWidget().settings().removePropertyChangeListener(this.glView);
     this.glView = glView;
   }
 
-  private double _frameRate = 30.0;
-
-  public double frameRate() {
-    return _frameRate;
+  public GLViewManagerInterface glView() {
+    return this.glView;
   }
-
-  public void frameRate(double frameRate) {
-    _frameRate = frameRate;
-    updateManager().recompute();
-  }
-
-  public abstract UpdateManagerInterface updateManager();
-
-  public abstract RendererInterface newRenderer();
 
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
-    view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
-    view.renderer.trailDrawer().stamp(agent, erase);
+    view().renderer().prepareToPaint(view(), view().renderer().trailDrawer().getWidth(), view().renderer().trailDrawer().getHeight());
+    view().renderer().trailDrawer().stamp(agent, erase);
     if (hubNetManager().isDefined()) {
       hubNetManager().get().sendStamp(agent, erase);
     }
@@ -189,21 +174,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     new org.nlogo.window.Events.TickStateChangeEvent(true).raiseLater(this);
   }
 
-  @Override
-  public void importDrawing(java.io.InputStream is)
-      throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(is);
-  }
-
-  @Override
-  public void importDrawing(org.nlogo.core.File file)
-      throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(file);
-  }
-
   public void exportDrawing(String filename, String format)
-      throws java.io.IOException {
-      FileIO$.MODULE$.writeImageFile(view.renderer.trailDrawer().getAndCreateDrawing(true), filename, format);
+    throws java.io.IOException {
+    FileIO$.MODULE$.writeImageFile(view().renderer().trailDrawer().getAndCreateDrawing(true), filename, format);
   }
 
   public java.awt.image.BufferedImage getAndCreateDrawing() {
@@ -211,13 +184,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public java.awt.image.BufferedImage getAndCreateDrawing(boolean dirty) {
-    return view.renderer.trailDrawer().getAndCreateDrawing(dirty);
+    return view().renderer().trailDrawer().getAndCreateDrawing(dirty);
   }
 
   @Override
   public void clearDrawing() {
     world().clearDrawing();
-    view.renderer.trailDrawer().clearDrawing();
+    view().renderer().trailDrawer().clearDrawing();
     if (hubNetManager().isDefined()) {
       hubNetManager().get().sendClear();
     }
@@ -242,16 +215,24 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public boolean sendPixels() {
-    return view.renderer.trailDrawer().sendPixels();
+    return view().renderer().trailDrawer().sendPixels();
   }
 
   public void sendPixels(boolean dirty) {
-    view.renderer.trailDrawer().sendPixels(dirty);
+    view().renderer().trailDrawer().sendPixels(dirty);
   }
 
   @Override
   public void dispose() throws InterruptedException {
     periodicUpdater.stop();
+
+    // These two lines clear any pending periodic updates. Otherwise, when
+    // we go to dispose the workspace, we may find it `wait`ing on world,
+    // and since the GUIWorkspace is being shut down, nothing will ever call `notify`
+    // on world. RG 10/31/17
+    setPeriodicUpdatesEnabled(false);
+    jobManager().interrupt();
+
     repaintTimer.stop();
     lifeguard.interrupt();
     lifeguard.join();
@@ -271,23 +252,19 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return false;
   }
 
-  public void waitFor(Runnable runnable) {
-    ThreadUtils.waitFor(this, runnable);
-  }
-
   public void waitFor(CommandRunnable runnable)
       throws LogoException {
-    ThreadUtils.waitFor(this, runnable);
+    ThreadUtils.waitFor(world(), runnable);
   }
 
   public <T> T waitForResult(ReporterRunnable<T> runnable)
       throws LogoException {
-    return ThreadUtils.waitForResult(this, runnable);
+    return ThreadUtils.waitForResult(world(), runnable);
   }
 
   public void waitForQueuedEvents()
       throws LogoException {
-    ThreadUtils.waitForQueuedEvents(this);
+    ThreadUtils.waitForQueuedEvents(world());
   }
 
   /// Event.LinkChild stuff
@@ -296,76 +273,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return linkParent;
   }
 
-  /**
-   * Displays a warning to the user, allowing her to continue or cancel.
-   * This provides the nice graphical warning dialog for when we're GUI.
-   * Returns true if the user OKs it.
-   */
-  @Override
-  public boolean warningMessage(String message) {
-    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-    return 0 == org.nlogo.swing.OptionDialog.showMessage(
-        getFrame(), I18N.guiJ().get("common.messages.warning"),
-        I18N.guiJ().get("common.messages.warning") + ":" + message, options);
-  }
-
-  public void resizeView() {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
-    viewWidget.settings().resizeWithProgress(true);
-  }
+  @Deprecated
+  public void resizeView() { }
 
   public void patchSize(double patchSize) {
-    viewWidget.settings().patchSize(patchSize);
+    viewWidget().settings().patchSize(patchSize);
   }
 
   public double patchSize() {
     return world().patchSize();
   }
 
-  public void setDimensions(final org.nlogo.core.WorldDimensions d) {
-    Runnable runner =
-        new Runnable() {
-          public void run() {
-            viewWidget.settings().setDimensions(d);
-          }
-        };
-    // this may be called from _resizeworld in which case we're
-    // already on the event thread - ST 7/21/09
-    if (java.awt.EventQueue.isDispatchThread()) {
-      runner.run();
-    } else {
-      try {
-        org.nlogo.awt.EventQueue.invokeAndWait(runner);
-      } catch (InterruptedException ex) {
-        org.nlogo.api.Exceptions.handle(ex);
-      }
-    }
-  }
-
-  public void setDimensions(final org.nlogo.core.WorldDimensions d, final double patchSize) {
-    Runnable runner =
-        new Runnable() {
-          public void run() {
-            viewWidget.settings().setDimensions(d, patchSize);
-          }
-        };
-    // this may be called from _setpatchsize in which case we're
-    // already on the event thread - ST 7/21/09
-    if (java.awt.EventQueue.isDispatchThread()) {
-      runner.run();
-    } else {
-      try {
-        org.nlogo.awt.EventQueue.invokeAndWait(runner);
-      } catch (InterruptedException ex) {
-        org.nlogo.api.Exceptions.handle(ex);
-      }
-    }
-  }
-
   public void patchesCreatedNotify() {
     new org.nlogo.window.Events.PatchesCreatedEvent().raise(this);
   }
-
 
   public boolean compilerTestingMode() {
     return false;
@@ -373,12 +294,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   @Override
   public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
-    return viewWidget.settings();
+    return viewWidget().settings();
   }
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
     world().changeTopology(wrapX, wrapY);
-    viewWidget.view().renderer.changeTopology(wrapX, wrapY);
+    view().renderer().changeTopology(wrapX, wrapY);
   }
 
   /// very kludgy stuff for communicating with stuff in app
@@ -413,7 +334,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   @Override
   public RendererInterface renderer() {
-    return view.renderer;
+    return view().renderer();
   }
 
   // called from the job thread
@@ -463,47 +384,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// painting
 
-  public boolean displaySwitchOn() {
-    return viewManager().getPrimary().displaySwitch();
-  }
-
-  public void displaySwitchOn(boolean on) {
-    viewManager().getPrimary().displaySwitch(on);
-  }
-
-  public void set2DViewEnabled(boolean enabled) {
-    if (enabled) {
-      displaySwitchOn(glView.displayOn());
-
-      viewManager().setPrimary(view);
-      viewManager().remove(glView);
-
-      view.dirty();
-      if (glView.displayOn()) {
-        view.thaw();
-      }
-      if (! (world().observer().perspective() instanceof AgentFollowingPerspective)) {
-        world().observer().home();
-      }
-      viewWidget.setVisible(true);
-      try {
-        viewWidget.displaySwitch().setOn(glView.displaySwitch());
-      } catch (IllegalStateException e) {
-        org.nlogo.api.Exceptions.ignore(e);
-      }
-    } else {
-      viewManager().setPrimary(glView);
-
-      if (!dualView) {
-        viewManager().remove(view);
-        view.freeze();
-      }
-      glView.displaySwitch(viewWidget.displaySwitch().isSelected());
-      viewWidget.setVisible(dualView);
-    }
-    view.renderPerspective = enabled;
-    viewWidget.settings().refreshViewProperties(!enabled);
-    new org.nlogo.window.Events.Enable2DEvent(enabled).raise(this);
+  public void registerDisplaySwitch(DisplaySwitch displaySwitch) {
+    viewManager().registerDisplaySwitch(displaySwitch);
   }
 
   private boolean dualView;
@@ -516,13 +398,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (on != dualView) {
       dualView = on;
       if (dualView) {
-        view.thaw();
-        viewManager().setSecondary(view);
+        view().thaw();
+        viewManager().setSecondary(view());
       } else {
-        view.freeze();
-        viewManager().remove(view);
+        view().freeze();
+        viewManager().remove(view());
       }
-      viewWidget.setVisible(on);
+      viewWidget().setVisible(on);
     }
   }
 
@@ -562,15 +444,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return viewManager().mouseYCor();
   }
 
-  // shouldn't have to fully qualify UpdateMode here, but we were having
-  // intermittent compile failures on this line since upgrading to
-  // Scala 2.8.0.RC1 - ST 4/16/10
-  @Override
-  public void updateMode(UpdateMode updateMode) {
-    super.updateMode(updateMode);
-    updateManager().recompute();
-  }
-
   // Translate between the physical position of the speed slider and
   // the abstract speed value.  The slider has an area in the center
   // where the speed is 0 regardless of the precise position, and the
@@ -589,75 +462,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     updateManager().speed_$eq(speed);
   }
 
-  // this is called *only* from job thread - ST 8/20/03, 1/15/04
-  public void updateDisplay(boolean haveWorldLockAlready) {
-    view.dirty();
-    if (!world().displayOn()) {
-      return;
-    }
-    if (!updateManager().shouldUpdateNow()) {
-      viewManager().framesSkipped();
-      return;
-    }
-    if (!displaySwitchOn()) {
-      return;
-    }
-    if (haveWorldLockAlready) {
-      try {
-        waitFor
-            (new org.nlogo.api.CommandRunnable() {
-              public void run() {
-                viewManager().incrementalUpdateFromEventThread();
-              }
-            });
-        // don't block the event thread during a smoothing pause
-        // or the UI will go sluggish (issue #1263) - ST 9/21/11
-        while(!updateManager().isDoneSmoothing()) {
-          ThreadUtils.waitForQueuedEvents(this);
-        }
-      } catch (org.nlogo.nvm.HaltException ex) {
-        org.nlogo.api.Exceptions.ignore(ex);
-      } catch (LogoException ex) {
-        throw new IllegalStateException(ex);
-      }
-    } else {
-      viewManager().incrementalUpdateFromJobThread();
-    }
-    updateManager().pause();
-  }
-
   /// Job manager stuff
-
-  private final Runnable updateRunner =
-      new Runnable() {
-        public void run() {
-          new org.nlogo.window.Events.PeriodicUpdateEvent()
-              .raise(GUIWorkspace.this);
-        }
-      };
-
-  private boolean periodicUpdatesEnabled = false;
-
-  public void setPeriodicUpdatesEnabled(boolean periodicUpdatesEnabled) {
-    this.periodicUpdatesEnabled = periodicUpdatesEnabled;
-  }
-
-  // this is called on the job thread - ST 9/30/03
-  public void periodicUpdate() {
-    if (periodicUpdatesEnabled) {
-      ThreadUtils.waitFor(this, updateRunner);
-    }
-  }
-
   // this is called on the job thread when the engine comes up for air - ST 1/10/07
   @Override
-  public void breathe() {
-    jobManager.maybeRunSecondaryJobs();
+  public void breathe(org.nlogo.nvm.Context context) {
+    jobManager().maybeRunSecondaryJobs();
     if (updateMode().equals(UpdateModeJ.CONTINUOUS())) {
       updateManager().pseudoTick();
-      updateDisplay(true);
+      updateDisplay(true, false);
     }
-    world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
+    context.job.comeUpForAir.set(updateManager().shouldComeUpForAirAgain());
     notifyListeners();
   }
 
@@ -666,7 +480,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // whole UI is up-to-date before proceeding - ST 8/30/07, 3/3/11
   public void updateUI() {
     // this makes the tick counter et al update
-    ThreadUtils.waitFor(this, updateRunner);
+    ThreadUtils.waitFor(world(), updateRunner());
     // resetting first ensures that if we are allowed to update the view, we will
     updateManager().reset();
     requestDisplayUpdate(true);
@@ -682,7 +496,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (force) {
       updateManager().pseudoTick();
     }
-    updateDisplay(true); // haveWorldLockAlready = true
+    updateDisplay(true, force); // haveWorldLockAlready = true
     notifyListeners();
   }
 
@@ -692,21 +506,21 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     double ticks = world().tickCounter().ticks();
     if (ticks != lastTicksListenersHeard) {
       lastTicksListenersHeard = ticks;
-      listenerManager.tickCounterChanged(ticks);
+      listenerManager().tickCounterChanged(ticks);
     }
-    listenerManager.possibleViewUpdate();
+    listenerManager().possibleViewUpdate();
   }
 
   @Override
   public void halt() {
-    jobManager.interrupt();
+    jobManager().interrupt();
     org.nlogo.swing.ModalProgressTask.onUIThread(
       getFrame(), "Halting...",
       new Runnable() {
         public void run() {
           GUIWorkspace.super.halt();
-          view.dirty();
-          view.repaint();
+          view().dirty();
+          view().repaint();
         }});
   }
 
@@ -740,7 +554,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   private void open3DView() {
     try {
-      glView.open();
+      glView.open(compiler().dialect().is3D());
       set2DViewEnabled(false);
     } catch (JOGLLoadingException jlex) {
       String message = jlex.getMessage();
@@ -762,48 +576,48 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   // DrawingInterface for 3D renderer
   public int[] colors() {
-    return view.renderer.trailDrawer().colors();
+    return view().renderer().trailDrawer().colors();
   }
 
   public boolean isDirty() {
-    return view.renderer.trailDrawer().isDirty();
+    return view().renderer().trailDrawer().isDirty();
   }
 
   public boolean isBlank() {
-    return view.renderer.trailDrawer().isBlank();
+    return view().renderer().trailDrawer().isBlank();
   }
 
   public void markClean() {
-    view.renderer.trailDrawer().markClean();
+    view().renderer().trailDrawer().markClean();
   }
 
   public void markDirty() {
-    view.renderer.trailDrawer().markDirty();
+    view().renderer().trailDrawer().markDirty();
   }
 
   public int getWidth() {
-    return view.renderer.trailDrawer().getWidth();
+    return view().renderer().trailDrawer().getWidth();
   }
 
   public int getHeight() {
-    return view.renderer.trailDrawer().getHeight();
+    return view().renderer().trailDrawer().getHeight();
   }
 
   public void readImage(java.io.InputStream is) throws java.io.IOException {
-    view.renderer.trailDrawer().readImage(is);
+    view().renderer().trailDrawer().readImage(is);
   }
 
   public void readImage(java.awt.image.BufferedImage image) throws java.io.IOException {
-    view.renderer.trailDrawer().readImage(image);
+    view().renderer().trailDrawer().readImage(image);
   }
 
   public void rescaleDrawing() {
-    view.renderer.trailDrawer().rescaleDrawing();
+    view().renderer().trailDrawer().rescaleDrawing();
   }
 
   public void drawLine(double x0, double y0, double x1, double y1,
                        Object color, double size, String mode) {
-    view.renderer.trailDrawer().drawLine
+    view().renderer().trailDrawer().drawLine
         (x0, y0, x1, y1, color, size, mode);
     if (hubNetManager().isDefined()) {
       hubNetManager().get().sendLine(x0, y0, x1, y1, color, size, mode);
@@ -811,11 +625,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void setColors(int[] colors) {
-    view.renderer.trailDrawer().setColors(colors);
+    view().renderer().trailDrawer().setColors(colors);
   }
 
   public Object getDrawing() {
-    return view.renderer.trailDrawer().getDrawing();
+    return view().renderer().trailDrawer().getDrawing();
   }
 
   // called on job thread, but without world lock - ST 9/12/07
@@ -823,7 +637,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
     if (owner.ownsPrimaryJobs()) {
       updateManager().reset();
-      updateDisplay(false);
+      updateDisplay(false, false);
     }
   }
 
@@ -839,31 +653,31 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     if (owner.ownsPrimaryJobs()) {
       if (e.procedure != null) {
-        jobManager.addJob(owner, agents, this, e.procedure);
+        jobManager().addJob(owner, agents, e.procedure);
       } else {
         new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
-      jobManager.addSecondaryJob(owner, agents, this, e.procedure);
+      jobManager().addSecondaryJob(owner, agents, e.procedure);
     }
   }
 
   public void handle(org.nlogo.window.Events.RemoveJobEvent e) {
     org.nlogo.api.JobOwner owner = e.owner;
     if (owner.ownsPrimaryJobs()) {
-      jobManager.finishJobs(owner);
+      jobManager().finishJobs(owner);
     } else {
-      jobManager.finishSecondaryJobs(owner);
+      jobManager().finishSecondaryJobs(owner);
     }
   }
 
   public void handle(org.nlogo.window.Events.JobStoppingEvent e) {
-    jobManager.stoppingJobs(e.owner);
+    jobManager().stoppingJobs(e.owner);
   }
 
   public void handle(org.nlogo.window.Events.RemoveAllJobsEvent e) {
-    jobManager.haltSecondary();
-    jobManager.haltPrimary();
+    jobManager().haltSecondary();
+    jobManager().haltPrimary();
   }
 
   public void handle(org.nlogo.window.Events.AddBooleanConstraintEvent e) {
@@ -900,7 +714,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(org.nlogo.window.Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
-          (world().observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this, this);
+          (world().observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this, compilerServices());
       e.slider.removeAllErrors();
       e.slider.setSliderConstraint(con);
       // now we set the constraint in the observer, so that it is enforced.
@@ -924,17 +738,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(org.nlogo.window.Events.CompiledEvent e) {
-    codeBits.clear();
-  }
-
-  /// agents
-
-  public abstract void closeAgentMonitors();
-
-  public abstract void inspectAgent(AgentKind agentClass, org.nlogo.agent.Agent agent, double radius);
-
-  public void inspectAgent(AgentKind agentClass) {
-    inspectAgent(agentClass, null, (world().worldWidth() - 1) / 2);
+    if (e.program != null)
+      messageCenter().send(new ModelCompiledSuccess(e.program));
+    else if (e.error != null)
+      messageCenter().send(new ModelCompiledFailure(e.error));
   }
 
   /// output
@@ -948,100 +755,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // event thread, so check before we block on it. -- CLB 07/18/05
     if (!java.awt.EventQueue.isDispatchThread()) {
       ThreadUtils.waitFor
-          (this, new Runnable() {
+          (world(), new Runnable() {
             public void run() {
               event.raise(GUIWorkspace.this);
             }
           });
     } else {
       event.raise(this);
-    }
-  }
-
-  @Override
-  protected void sendOutput(final org.nlogo.agent.OutputObject oo,
-                            final boolean toOutputArea) {
-    final org.nlogo.window.Events.OutputEvent event =
-        new org.nlogo.window.Events.OutputEvent
-            (false, oo, false, !toOutputArea);
-
-    // This method can be called when we are ALREADY in the AWT
-    // event thread, so check before we block on it. -- CLB 07/18/05
-    if (!java.awt.EventQueue.isDispatchThread()) {
-      ThreadUtils.waitFor
-          (this, new Runnable() {
-            public void run() {
-              event.raise(GUIWorkspace.this);
-            }
-          });
-    } else {
-      event.raise(this);
-    }
-
-  }
-
-  /// runtime error handling
-
-  public void runtimeError(final org.nlogo.api.JobOwner owner, final org.nlogo.nvm.Context context,
-                           final org.nlogo.nvm.Instruction instruction, final Exception ex) {
-    // this method is called from the job thread, so we need to switch over
-    // to the event thread.  but in the error dialog we want to be able to
-    // show the original thread in which it happened, so we hang on to the
-    // current thread before switching - ST 7/30/04
-    final Thread thread = Thread.currentThread();
-    org.nlogo.awt.EventQueue.invokeLater
-        (new Runnable() {
-          public void run() {
-            runtimeErrorPrivate(owner, context, instruction, thread, ex);
-          }
-        });
-  }
-
-  private void runtimeErrorPrivate(org.nlogo.api.JobOwner owner, final org.nlogo.nvm.Context context,
-                                   final org.nlogo.nvm.Instruction instruction,
-                                   final Thread thread, final Exception ex) {
-    // halt, or at least turn graphics back on if they were off
-    if (ex instanceof org.nlogo.nvm.HaltException &&
-        ((org.nlogo.nvm.HaltException) ex).haltAll()) {
-      halt(); // includes turning graphics back on
-    } else if (!(owner instanceof MonitorWidget)) {
-      world().displayOn(true);
-    }
-    // tell the world!
-    if (!(ex instanceof org.nlogo.nvm.HaltException)) {
-      int[] posAndLength;
-
-      // check to see if the error occurred inside a "run" or "runresult" instruction;
-      // if so, report the error as having occurred there - ST 5/7/03
-      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure.owner();
-      if (instruction.token() == null) {
-        posAndLength = new int[]{-1, 0};
-      } else {
-        posAndLength = instruction.getPositionAndLength();
-      }
-      new org.nlogo.window.Events.RuntimeErrorEvent
-          (owner, sourceOwner, posAndLength[0], posAndLength[1])
-          .raiseLater(this);
-    }
-    // MonitorWidgets always immediately restart their jobs when a runtime error occurs,
-    // but we don't want to just stream errors to the command center, so let's not print
-    // anything to the command center, and assume that someday MonitorWidgets will do
-    // their own user notification - ST 12/16/01
-    if (!(owner instanceof MonitorWidget ||
-        ex instanceof org.nlogo.nvm.HaltException)) {
-      // It doesn't seem like we should need to use invokeLater() here, because
-      // we're already on the event thread.  But without using it, at least on
-      // Mac 142U1DP3 (and maybe other Mac VMs, and maybe other platforms too,
-      // I don't know), the error dialog didn't wind up with the keyboard focus
-      // if the Code tab came forward... probably because something that
-      // the call to select() in ProceduresTab was doing was doing invokeLater()
-      // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
-      org.nlogo.awt.EventQueue.invokeLater
-          (new Runnable() {
-            public void run() {
-              RuntimeErrorDialog$.MODULE$.show(context, instruction, thread, ex);
-            }
-          });
     }
   }
 
@@ -1055,26 +775,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void handle(org.nlogo.window.Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
-    if (e.modelPath.isDefined()) {
-      setModelPath(e.modelPath.get());
-    } else {
-      setModelPath(null);
-    }
-    setModelType(e.modelType);
-    if (hubNetManager().isDefined()) {
-      hubNetManager().get().disconnect();
-    }
-    jobManager.haltSecondary();
-    jobManager.haltPrimary();
-    getExtensionManager().reset();
-    fileManager().handleModelChange();
-    previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
+    messageCenter().send(new SwitchModel(e.modelPath, e.modelType));
     clearDrawing();
     viewManager().resetMouseCors();
-    displaySwitchOn(true);
-    setProcedures(new scala.collection.immutable.ListMap<String, Procedure>());
+    enableDisplayUpdates();
     lastTicksListenersHeard = -1.0;
-    plotManager().forgetAll();
   }
 
   /**
@@ -1084,8 +789,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    * App.handle(). Yuck.
    */
   public void modelSaved(String newModelPath) {
-    setModelPath(newModelPath);
-    setModelType(ModelTypeJ.NORMAL());
+    modelTracker().setModelPath(newModelPath);
+    modelTracker().setModelType(ModelTypeJ.NORMAL());
   }
 
   public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
@@ -1110,10 +815,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public final javax.swing.Action hubNetControlCenterAction = new HubNetControlCenterAction(this);
 
-  public final javax.swing.Action switchTo3DViewAction =
+  final javax.swing.Action switchTo3DViewAction =
     new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.3DView.switch")) {
       public void actionPerformed(java.awt.event.ActionEvent e) {
         open3DView();
       }
     };
+
+  public javax.swing.Action switchTo3DViewAction() {
+    return switchTo3DViewAction;
+  }
 }

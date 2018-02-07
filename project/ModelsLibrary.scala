@@ -5,6 +5,7 @@ import sbt._
 import Keys._
 import Def.Initialize
 import sbt.complete.{ Parser, DefaultParsers }, DefaultParsers.{ EOF, Space }
+import scala.xml.XML
 
 object ModelsLibrary {
 
@@ -68,9 +69,10 @@ object ModelsLibrary {
       .enumeratePaths(modelsPath.toPath)
       .filterNot(p => p.toString.contains("test"))
       .filterNot(p => Files.isDirectory(p))
-      .filter(p => p.getFileName.toString.endsWith("nlogo") || p.getFileName.toString.endsWith("nlogo3d"))
+      .filter(p => p.getFileName.toString.endsWith("nlogox"))
     def infoTab(path: Path) = try {
-      Files.readAllLines(path).asScala.mkString("\n").split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+      val modelInfo = XML.loadFile(path.toFile) \ "info"
+      modelInfo.map(_.text).mkString("")
     } catch {
       case e: Exception =>
         logger.error(s"while generating index, encountered error on file $path : ${e.getMessage}")
@@ -82,11 +84,12 @@ object ModelsLibrary {
       // The (?s) part allows . to match line endings
       val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
       if (info.matches(whatIsItPattern + ".*") ) {
-        val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
+        val firstParagraph =
+          Markdown.modelInfoParagraph(info.replaceFirst(whatIsItPattern, "").split('\n').head)
         val q3 = "\"\"\""
         println(s"  { path: ${q3}models/${modelsPath.toPath.relativize(path)}${q3}, info: ${q3}${firstParagraph}${q3} },")
       } else {
-        System.err.println("WHAT IS IT not found: " + path)
+        System.err.println("WHAT IS IT not found: " + path + " info: " + info)
       }
     }
     println("]")

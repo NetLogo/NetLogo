@@ -7,10 +7,8 @@ import java.awt.BorderLayout
 import javax.swing.JPanel
 
 class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLabel) extends JPanel {
-
-  val displaySwitch = new org.nlogo.window.DisplaySwitch(workspace)
   updateTicks()
-  val controls = new ViewUpdatePanel(workspace, displaySwitch, tickCounter)
+  val controls = new ViewUpdatePanel(workspace, tickCounter)
   org.nlogo.awt.Fonts.adjustDefaultFont(tickCounter)
   setLayout(new java.awt.BorderLayout)
   add(controls, BorderLayout.CENTER)

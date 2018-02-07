@@ -191,7 +191,7 @@ TransitiveTieMovement
   [precision xcor 10] of turtle 2 => -0.3816179908
   [precision ycor 10] of turtle 2 =>  1.9632543669
 
-NoWrapMultiBreedHere
+NoWrapMultiBreedHere_2D
   breed [ particles particle ]
   breed [ walls wall ]
   to go ca ask patches with [ (pycor = min-pycor or pycor = max-pycor or pxcor = min-pxcor or pxcor = max-pxcor) ] [ sprout-walls 1 [ set hidden? true ] ] create-particles 50 [ hatch 1 [ create-link-from myself [tie] ] ] repeat 2 [ ask particles [ fd 1 if (any? walls-here) [ home ] ] ] end

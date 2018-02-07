@@ -2,11 +2,12 @@
 
 package org.nlogo.app.codetab
 
-import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect }
 import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
 import org.nlogo.core.Femto
 import org.nlogo.api.FileIO.fileToString
-import org.scalatest.FunSuite
+
+import org.nlogo.util.{ ArityIndependent, TaggedFunSuite }
 
 import scala.util.matching.Regex
 
@@ -83,7 +84,7 @@ object SmartIndenterTests {
 
 import SmartIndenterTests.Scaffold
 
-class SmartIndenterTests extends FunSuite {
+class SmartIndenterTests extends TaggedFunSuite(ArityIndependent) {
   val path = "test/indent.txt" // where the actual test cases live
 
   // read tests from file
@@ -116,7 +117,7 @@ class SmartIndenterTests extends FunSuite {
   }
 
   val compiler = new DefaultCompilerServices(
-    Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoLegacyDialect else NetLogoThreeDDialect))
+    Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", NetLogoLegacyDialect))
 
   test("handleCloseBracket adds closing bracket") {
     val code = new Scaffold("")

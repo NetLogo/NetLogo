@@ -32,11 +32,21 @@ object Markdown {
     extension:          Boolean): String = {
 
     val opts = options()
-    val parser = Parser.builder(opts).build()
     val renderer =
       HtmlRenderer.builder(opts)
         .attributeProviderFactory(new ManualAttributeProvider.Factory(pageName, extension))
         .build()
+    buildHtml(opts, renderer, str)
+  }
+
+  def modelInfoParagraph(str: String): String = {
+    val opts = options()
+    val renderer = HtmlRenderer.builder(opts).build()
+    buildHtml(opts, renderer, str)
+  }
+
+  private def buildHtml(opts: MutableDataSet, renderer: HtmlRenderer, str: String): String = {
+    val parser = Parser.builder(opts).build()
     val document = parser.parse(str)
     renderer.render(document)
   }
@@ -51,7 +61,7 @@ object Markdown {
 
     options.set(HtmlRenderer.SOFT_BREAK, "\n")
     options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
-    
+
     extensions.add(EscapedCharacterExtension.create())
 
     extensions.add(TypographicExtension.create())
@@ -106,7 +116,7 @@ object Markdown {
           case _ =>
         }
   }
-  
+
   object ManualAttributeProvider {
     class Factory(pageName: String, ext: Boolean) extends IndependentAttributeProviderFactory {
       override def create(context: NodeRendererContext) = new ManualAttributeProvider(pageName, ext)
@@ -118,7 +128,7 @@ object Markdown {
     def extend(builder: HtmlRenderer.Builder, rendererType: String) =
       if (rendererType == "HTML")
         builder.nodeRendererFactory(PrimLinkRenderer.Factory)
-    
+
     object PrimLinkRenderer extends CustomNodeRenderer[WikiLink] {
       override def render(node: WikiLink, context: NodeRendererContext, html: HtmlWriter) = {
         if (context.isDoNotRenderLinks) {
@@ -152,7 +162,7 @@ object Markdown {
     def extend(builder: HtmlRenderer.Builder, rendererType: String) =
       if (rendererType == "HTML")
         builder.nodeRendererFactory(QuestionRenderer.Factory)
-    
+
     object QuestionRenderer extends CustomNodeRenderer[AsideBlock] {
       override def render(node: AsideBlock, context: NodeRendererContext, html: HtmlWriter) = {
         html.attr("class", "question")

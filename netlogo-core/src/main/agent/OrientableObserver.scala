@@ -88,7 +88,6 @@ trait OrientatableObserver { this: Observer =>
   }
 
   def face(agent: org.nlogo.api.Agent): Unit = {
-    import org.nlogo.api.Version
     try {
       heading(world.protractor.towards(this, agent, false))
     } catch {
@@ -98,7 +97,6 @@ trait OrientatableObserver { this: Observer =>
       pitch(-world.protractor.towardsPitch(this, agent, false))
     } catch {
       case ex: AgentException => pitch(0.0)
-      case ex: UnsupportedOperationException if ! Version.is3D => // hack: 3D not implemented
     }
 
     setRotationPoint(agent)

@@ -3,14 +3,14 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.mirroring.HubNetPlotPoint
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.plot.{Plot, PlotListener}
 
 // This should definitely be all redone.
 // It sends messages out on every single little change.
 // We really ought to only send bunched diffs the way we do with view updates.
 // - JOSH COUGH 8/21/10, 12/28/10
-class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: ConnectionManager,
+class ServerPlotManager(workspace: AbstractWorkspace, connectionManager: ConnectionManager,
                         plots: => List[Plot], currentPlot: => Plot) extends PlotListener {
   private val narrowcastPlots = new collection.mutable.ListBuffer[String]()
 

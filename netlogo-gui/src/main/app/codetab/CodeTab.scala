@@ -40,7 +40,8 @@ with MenuTab {
     override def textValueChanged(e: TextEvent) = dirty = true
   }
 
-  lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
+  lazy val editorFactory =
+    new EditorFactory(workspace.compiler, workspace.extensionManager, workspace.dialect)
 
   def editorConfiguration =
     editorFactory.defaultConfiguration(100, 80)
@@ -72,7 +73,7 @@ with MenuTab {
   val errorLabel = new EditorAreaErrorLabel(text)
   val toolBar = getToolBar
   val scrollableEditor = editorFactory.scrollPane(text)
-  def compiler = workspace
+  def compiler = workspace.compilerServices
   def program = workspace.world.program
 
   locally {
@@ -109,7 +110,7 @@ with MenuTab {
   protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
   override val permanentMenuActions =
-    Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
+    new CodeToHtml.Action(workspace.modelTracker, workspace.compiler, this, () => getText) +: editorConfiguration.permanentActions
 
   activeMenuActions =
     editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction)
@@ -179,7 +180,7 @@ with MenuTab {
     printer.printText(g, pageFormat, pageIndex, text.getText)
 
   def setIndenter(isSmart: Boolean): Unit = {
-    if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
+    if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace.compilerServices))
     else text.setIndenter(new DumbIndenter(text))
   }
 

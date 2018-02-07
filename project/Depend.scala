@@ -78,7 +78,7 @@ object Depend {
       "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
       "lite" -> List("window"),
-      "log" -> List("api"),
+      "log" -> List("api", "fileformat"),
       "mc" -> List("workspace", "swing"),
       "nvm" -> List("agent"),
       "parse" -> List("core", "core/prim", "util"),
@@ -93,7 +93,7 @@ object Depend {
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
-      "fileformat" -> List("api", "core", "core/model"),
+      "fileformat" -> List("api", "core", "core/model", "xmllib"),
       "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
@@ -102,7 +102,8 @@ object Depend {
       "util" -> Nil,
       "widget" -> List("window"),
       "window" -> List("core/model","editor","log","fileformat","shape","swing","workspace"),
-      "workspace" -> List("fileformat", "nvm", "plot"))
+      "workspace" -> List("fileformat", "nvm", "plot"),
+      "xmllib" -> Nil)
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }
@@ -163,7 +164,7 @@ check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
 check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
+[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.api.Pico [app] [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 
 """

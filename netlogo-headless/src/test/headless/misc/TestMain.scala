@@ -27,7 +27,7 @@ class TestMain extends FunSuite {
       Main.main(Array("--version"))
     }
     assertResult("")(err)
-    assertResult(s"${api.Version.version}\n")(out)
+    assertResult(s"${api.TwoDVersion.version}\n")(out)
   }
 
   test("bad arg") {
@@ -72,7 +72,7 @@ class TestMain extends FunSuite {
       Main.main(Array(
         "--threads", "1",   // avoid out-of-order output
         "--model", "models/test/lab/FireWithExperiments.nlogo",
-        "--setup-file", "test/lab/protocols.xml",
+        "--setup-file", "test/lab/protocols-nlogox.xml",
         "--experiment", "runNumber",
         "--table", "-"))   // stdout
     }
@@ -95,7 +95,7 @@ class TestMain extends FunSuite {
          |""".stripMargin
     assertResult("")(err)
     // version number varies, date and time varies, compare carefully!
-    assertResult(expected.replaceFirst("VERSION", api.Version.version))(
+    assertResult(expected.replaceFirst("VERSION", api.TwoDVersion.version))(
       out.replaceAll(
         """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\n""",
         ""))

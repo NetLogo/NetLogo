@@ -3,12 +3,14 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.core.I18N;
+import org.nlogo.core.WorldDimensions;
+import org.nlogo.api.WorldResizer;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _resizeworld
-    extends Command {
+  extends Command {
 
   public _resizeworld() {
     switches = true;
@@ -28,25 +30,24 @@ public final strictfp class _resizeworld
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
       throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
+        (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
     }
+
+    final double patchSize = workspace.world().patchSize();
+    final boolean wrappingAllowedInX = workspace.world().wrappingAllowedInX();
+    final boolean wrappingAllowedInY = workspace.world().wrappingAllowedInY();
 
     if (oldMinX != newMinX || oldMaxX != newMaxX ||
         oldMinY != newMinY || oldMaxY != newMaxY) {
+      final WorldDimensions dimensions =
+        new org.nlogo.core.WorldDimensions(newMinX, newMaxX,
+            newMinY, newMaxY, patchSize, wrappingAllowedInX, wrappingAllowedInY);
       workspace.waitFor
-          (new org.nlogo.api.CommandRunnable() {
-            public void run() {
-              workspace.setDimensions
-                  (new org.nlogo.core.WorldDimensions(newMinX, newMaxX,
-                      newMinY, newMaxY));
-            }
-          });
-      workspace.waitFor
-          (new org.nlogo.api.CommandRunnable() {
-            public void run() {
-              workspace.resizeView();
-            }
-          });
+        (new org.nlogo.api.CommandRunnable() {
+          public void run() {
+            workspace.setDimensions(dimensions, true, WorldResizer.stopNonObserverJobs());
+          }
+        });
     }
     context.ip = next;
   }

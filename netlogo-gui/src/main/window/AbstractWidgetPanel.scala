@@ -5,8 +5,7 @@ package org.nlogo.window
 import org.nlogo.core.{ Widget => CoreWidget }
 
 abstract class AbstractWidgetPanel
-extends javax.swing.JLayeredPane
-with Zoomable {
+extends javax.swing.JLayeredPane {
   def removeAllWidgets()
   def getWidgetsForSaving: Seq[CoreWidget]
   def loadWidgets(widgets: Seq[CoreWidget])

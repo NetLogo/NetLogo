@@ -3,11 +3,11 @@
 package org.nlogo.headless
 
 import org.nlogo.api.Version
-import org.nlogo.workspace.{ AbstractWorkspace, Benchmarker }
+import org.nlogo.workspace.Benchmarker
 
 object HeadlessBenchmarker {
   def main(argv:Array[String]) {
-    AbstractWorkspace.setHeadlessProperty()
+    Main.setHeadlessProperty()
     val (name,minTime,maxTime) = argv match {
       case Array(name)         => (name,60,300)
       case Array(name,min)     => (name,min.toInt,min.toInt)

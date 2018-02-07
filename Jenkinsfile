@@ -17,6 +17,9 @@ pipeline {
       steps {
         sh 'git submodule foreach git reset --hard'
         sh 'git submodule update --init'
+        sh "./sbt clean"
+        sh "./sbt netlogo/clean"
+        sh "./sbt headless/clean"
         sh "./sbt update"
         sh "./sbt all"
       }
@@ -31,14 +34,12 @@ pipeline {
         sh "./sbt parserJVM/test"
         sh "./sbt netlogo/test:fast"
         sh "./sbt nogen netlogo/test:fast"
-        sh "./sbt threed netlogo/test:fast"
         sh "./sbt headless/test:fast"
         sh "./sbt netlogo/test:medium"
         sh "./sbt nogen netlogo/test:medium"
         sh "./sbt headless/test:medium"
         sh "./sbt nogen headless/test:medium"
         sh "./sbt netlogo/test:slow"
-        sh "./sbt threed netlogo/test:slow"
         sh "./sbt netlogo/test:extensionTests"
         junit 'netlogo-*/target/test-reports/*.xml'
       }

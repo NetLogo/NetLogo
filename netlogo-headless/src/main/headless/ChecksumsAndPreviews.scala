@@ -4,8 +4,11 @@ package org.nlogo.headless
 
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.api.PreviewCommands
-import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, Checksummer }
+import org.nlogo.api.{ PreviewCommands, TwoDVersion }
+import org.nlogo.workspace.{ ModelsLibrary, Checksummer }
+import org.nlogo.util.Implicits.RichTry
+
+import scala.util.{ Failure, Success, Try }
 
 object ChecksumsAndPreviews {
 
@@ -17,11 +20,11 @@ object ChecksumsAndPreviews {
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
-    AbstractWorkspace.setHeadlessProperty()
+    Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
+      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox")
       val library =
-        ModelsLibrary.getModelPaths()
+        ModelsLibrary.getModelPaths(TwoDVersion, true)
           .filter(fn)
           .map(p => p.substring(p.indexOf("models/")))
           .toList
@@ -114,7 +117,8 @@ object ChecksumsAndPreviews {
         Some("it uses the vid extension") -> List(
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VID/"),
         Some("it uses the view2.5d extension") -> List(
-          "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VIEW2.5D/"),
+          "/CODE EXAMPLES/EXTENSIONS EXAMPLES/VIEW2.5D/",
+          "VISION CONE EXAMPLE.NLOGOX"),
         Some("it uses the gogo extension") -> List(
           "/CODE EXAMPLES/EXTENSIONS EXAMPLES/GOGO/"),
         Some("it uses the arduino extension") -> List(
@@ -147,8 +151,26 @@ object ChecksumsAndPreviews {
           println("Model does not exist, deleting checksum for: " + model)
         }
         else {
-          workspace.open(model)
-          updateOneHelper(m, model, workspace)
+          updateOneHelper(m, model, workspace) match {
+            case Success(newEntry: Entry) =>
+              import newEntry._
+              // figure out if the entry is new, changed, or the same
+              val oldEntry = m.get(model)
+              val action =
+              if(!m.contains(model)) "* Added"
+              else if(oldEntry.get == newEntry) "Didn't change"
+              else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
+              else "* Changed"
+              m.put(model, newEntry)
+              if(action != "Didn't change")
+                println(action + ": \"" + model + separator + worldSum
+                  + separator + graphicsSum + separator + revision + "\"")
+            case Failure(e: Exception) =>
+              println("SKIPPING MODEL: " + model + "\n because of exception:")
+              e.printStackTrace()
+            case Failure(t) =>
+              throw t
+          }
         }
       }
       catch { case e: Exception =>
@@ -156,23 +178,15 @@ object ChecksumsAndPreviews {
                 e.printStackTrace() }
       finally { workspace.dispose() }
     }
-    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
-      Checksummer.initModelForChecksumming(workspace)
-      val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
-      val revision = getRevisionNumber(workspace.getModelPath)
-      val oldEntry = m.get(model)
-      val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
-      // figure out if the entry is new, changed, or the same
-      val action =
-        if(!m.contains(model)) "* Added"
-        else if(oldEntry.get == newEntry) "Didn't change"
-        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
-        else "* Changed"
-      m.put(model, newEntry)
-      if(action != "Didn't change")
-        println(action + ": \"" + model + separator + newCheckSum
-                + separator + newGraphicsChecksum + separator + revision + "\"")
+    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace): Try[Entry] = {
+      Try {
+        workspace.open(model)
+        Checksummer.initModelForChecksumming(workspace)
+        val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
+        val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
+        val revision = getRevisionNumber(workspace.getModelPath)
+        Entry(model, newCheckSum, newGraphicsChecksum, revision)
+      }.andFinally(() => workspace.dispose())
     }
     def load(): ChecksumMap = {
       val m = new ChecksumMap

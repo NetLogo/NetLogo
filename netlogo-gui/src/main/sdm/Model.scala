@@ -2,11 +2,18 @@
 
 package org.nlogo.sdm
 
+import scala.collection.mutable.ListBuffer
+
 object Model {
   class ModelException(message: String) extends Exception(message)
 }
-class Model(name: String, var dt: Double) extends ModelElement(name) {
-  val elements = new collection.mutable.ListBuffer[ModelElement]
+class Model(modelName: String,
+  var dt: Double,
+  val elements: ListBuffer[ModelElement] = new ListBuffer[ModelElement],
+  val serializedGUI: String = "") extends ModelElement(modelName) {
+
+  def this(modelName: String, dt: Double) = this(modelName, dt, new ListBuffer[ModelElement], "")
+
   def getDt = dt
   @throws(classOf[Model.ModelException])
   def setDt(dt: Double) {
@@ -29,4 +36,10 @@ class Model(name: String, var dt: Double) extends ModelElement(name) {
   }
   def elementWithName(name: String): ModelElement =
     elements.find(_.name == name).orNull
+
+  def copy(modelName: String = modelName,
+    dt: Double = dt,
+    elements: ListBuffer[ModelElement] = elements,
+    serializedGUI: String = serializedGUI) =
+      new Model(name, dt, elements, serializedGUI)
 }

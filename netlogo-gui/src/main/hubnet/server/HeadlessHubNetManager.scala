@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.core.{ Model, Widget => CoreWidget }
 import org.nlogo.api.{ ModelType, ModelLoader }
 import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
@@ -13,7 +13,7 @@ import java.util.concurrent.{Executors, ExecutorService}
 
 // TODO: we really need to do something about the printlns in this class.
 // but what?
-class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoader, modelConverter: ModelConversion)
+class HeadlessHubNetManager(workspace: AbstractWorkspace, loader: ModelLoader, modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) {
   // since the server is headless, the clients cant be, or no one would have a view.
   // so, set this to true by default. JC 12/28/10
@@ -29,7 +29,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
       widgets = ws
     }
   }
-  override def updateModel(m: Model): Model = {
+  def updateModel(m: Model): Model = {
     m.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(widgets), Seq())
   }
   override def modelWidgets: Seq[CoreWidget] = widgets
@@ -70,7 +70,9 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
     // for now, I've decided to just fall back on the user name. JC - 12/18/10
     var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
     if(serverName == null || serverName.trim == "") serverName = System.getProperty("user.name", "")
-    connectionManager.startup(serverName, NetworkUtils.findViableInterfaces.head)
+    val interface = NetworkUtils.findViableInterfaces.headOption
+      .getOrElse(throw new Exception("Unable to find an interface on which to run HubNet"))
+    connectionManager.startup(serverName, interface)
     // println("started HubNet server on port " + connectionManager.port)
   }
 

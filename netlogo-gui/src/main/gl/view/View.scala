@@ -5,35 +5,16 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.awt.GLCanvas
 
-import org.nlogo.gl.render.Renderer
+import org.nlogo.gl.render.{ Renderer, ViewInterface }
 import java.awt.image.BufferedImage
-import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
+import java.awt.event.{ KeyEvent, KeyAdapter }
 
-abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
+abstract class View(title: String, val viewManager: ViewManager, val renderer: Renderer)
 extends java.awt.Frame(title)
+with ViewInterface
 with org.nlogo.window.Event.LinkChild {
 
   var canvas: GLCanvas = null
-  val picker = new Picker(this)
-
-  if (org.nlogo.api.Version.is3D)
-    if (renderer == null) {
-      renderer = new org.nlogo.gl.render.Renderer3D(
-        viewManager.world, viewManager.graphicsSettings,
-        viewManager.workspace, viewManager)
-    } else {
-      renderer.cleanUp()
-      renderer = new org.nlogo.gl.render.Renderer3D(renderer)
-    }
-  else if (renderer == null) {
-    renderer = new Renderer(
-      viewManager.world, viewManager.graphicsSettings,
-      viewManager.workspace, viewManager)
-  }
-  else {
-    renderer.cleanUp()
-    renderer = new org.nlogo.gl.render.Renderer(renderer)
-  }
 
   val inputHandler = new MouseMotionHandler(this)
   createCanvas(viewManager.antiAliasingOn)
@@ -116,11 +97,6 @@ with org.nlogo.window.Event.LinkChild {
     renderer.cleanUp()
     display()
     true
-  }
-
-  def doPopup(e: MouseEvent) {
-    renderer.queuePick(e.getPoint, picker)
-    e.consume()
   }
 
   override def dispose(): Unit = {

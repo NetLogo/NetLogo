@@ -2,12 +2,12 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.api.{ DummyLogoThunkFactory, MersenneTwisterFast }
 
 class PlotManagerTests extends SimplePlotTest {
 
   def newPlotManager() =
-    new PlotManager(new DummyLogoThunkFactory())
+    new PlotManager(new DummyLogoThunkFactory(), new MersenneTwisterFast())
 
   test("Constructor") {
     assertResult(0)(newPlotManager().getPlotNames.length)

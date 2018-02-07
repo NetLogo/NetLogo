@@ -7,18 +7,26 @@ import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
+import org.nlogo.window.{ Events, WidgetInfo, MenuBarFactory,
+  InterfaceFactory, GUIWorkspace, AbstractWidgetPanel },
+  Events.{ UpdateModelEvent, WidgetEditedEvent, WidgetAlteredEvent, ZoomedEvent }
+import org.nlogo.workspace.ModelTracker
 
 class HubNetClientEditor(workspace: GUIWorkspace,
+                         modelTracker: ModelTracker,
                          linkParent: Component,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
-        with org.nlogo.window.Events.ZoomedEvent.Handler {
+        with WidgetEditedEvent.Handler
+        with WidgetAlteredEvent.Handler
+        with ZoomedEvent.Handler {
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
 
+  private var _cachedWidgetsForSaving = Seq[CoreWidget]()
+
   locally {
-    setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
+    setTitle(getTitle(modelTracker.modelNameForDisplay, modelTracker.getModelDir, modelTracker.getModelType))
     getContentPane.setLayout(new BorderLayout())
     getContentPane.add(new JScrollPane(interfacePanel,
       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -45,7 +53,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     setSize(getPreferredSize)
   }
 
-  override def getPreferredSize = if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
+  override def getPreferredSize =
+    if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
   def getLinkParent = linkParent
   def close() {interfacePanel.removeAllWidgets()}
   override def requestFocus() {interfacePanel.requestFocus()}
@@ -56,10 +65,22 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
   def load(widgets: Seq[CoreWidget]): Unit = {
     interfacePanel.loadWidgets(widgets)
+    _cachedWidgetsForSaving = widgets
     setSize(getPreferredSize)
   }
 
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {setSize(getPreferredSize)}
+  def handle(e: ZoomedEvent) {setSize(getPreferredSize)}
+
+  // Widget
+  def handle(e: WidgetEditedEvent): Unit = {
+    if (e.panel eq interfacePanel)
+      updateWidgetsIfNecessary()
+  }
+  def handle(e: WidgetAlteredEvent): Unit = {
+    if (e.panel eq interfacePanel)
+      updateWidgetsIfNecessary()
+  }
+
   def setTitle(title: String, directory: String, mt: ModelType) {setTitle(getTitle(title, directory, mt))}
 
   private def getTitle (title:String, directory:String, mt: ModelType) = {
@@ -73,5 +94,14 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
+  }
+
+  def updateWidgetsIfNecessary() {
+    if (_cachedWidgetsForSaving != getWidgetsForSaving) {
+      _cachedWidgetsForSaving = getWidgetsForSaving
+      new UpdateModelEvent(
+        _.withOptionalSection("org.nlogo.modelsection.hubnetclient", Some(_cachedWidgetsForSaving), Seq()))
+          .raise(HubNetClientEditor.this)
+    }
   }
 }

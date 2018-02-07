@@ -14,16 +14,16 @@ import org.nlogo.workspace.{ ModelTracker, SaveModel }
 import scala.util.Try
 
 object DirtyMonitor {
-  val autoSaveFileName = {
+  def autoSaveBaseName: String = {
     val df = new java.text.SimpleDateFormat("yyyy-MM-dd.HH_mm_ss",
                                             java.util.Locale.US)
     System.getProperty("java.io.tmpdir") +
       System.getProperty("file.separator") + "autosave_" +
-      df.format(new java.util.Date()) + "." + ModelReader.modelSuffix
+      df.format(new java.util.Date()) + "."
   }
 }
 
-class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
+class DirtyMonitor(frame: JFrame, modelLoader: ModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
@@ -52,8 +52,13 @@ with SaveModel.Controller
     frame.setTitle(title(path))
   }
 
+  private lazy val baseSaveName = DirtyMonitor.autoSaveBaseName
+
+  def autoSaveFileName(is3D: Boolean): String =
+    baseSaveName + ModelReader.modelSuffix(is3D)
+
   def handle(e: AboutToQuitEvent) {
-    new java.io.File(DirtyMonitor.autoSaveFileName).delete()
+    new java.io.File(autoSaveFileName(modelTracker.currentVersion.is3D)).delete()
     Exceptions.ignoring(classOf[IOException]) {
       priorTempFile.foreach(Files.deleteIfExists)
     }
@@ -67,7 +72,7 @@ with SaveModel.Controller
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
-      SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
+      SaveModel(modelTracker.model, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
         f().foreach { savedUri =>
           if (System.getProperty("os.name").startsWith("Windows")) {
             Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
@@ -118,8 +123,7 @@ with SaveModel.Controller
 
   object TempFileModelTracker extends ModelTracker {
     val delegate = modelTracker
-    def compiler: org.nlogo.nvm.PresentationCompilerInterface = delegate.compiler
-    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager
+
     override def getModelType = delegate.getModelType
     override def getModelFileUri: Option[URI] = {
       delegate.getModelFileUri.map { u =>
@@ -136,8 +140,8 @@ with SaveModel.Controller
 
   // chooseFilePath is used when the file doesn't yet have a path
   def chooseFilePath(modelType: ModelType): Option[URI] =
-    Some(Paths.get(DirtyMonitor.autoSaveFileName).toUri)
+    Some(Paths.get(autoSaveFileName(modelTracker.currentVersion.is3D)).toUri)
 
-  def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
+  def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean = true
   def warnInvalidFileFormat(format: String): Unit = {}
 }

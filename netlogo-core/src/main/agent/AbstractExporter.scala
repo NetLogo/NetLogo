@@ -13,9 +13,9 @@ import
 
 object AbstractExporter {
 
-  def exportHeader(writer: PrintWriter, tpe: String, modelFileName: String, extraHeader: String) {
+  def exportHeader(writer: PrintWriter, tpe: String, modelFileName: String, version: String, extraHeader: String) {
     import writer.println
-    println(csv.header("export-" + tpe + " data (" + Version.version + ")"))
+    println(csv.header(s"export-${tpe} data (${version})"))
     println(csv.header(modelFileName))
     if(extraHeader.nonEmpty)
       println(csv.header(extraHeader))
@@ -34,12 +34,12 @@ abstract class AbstractExporter(filename: String) {
   def export(writer: java.io.PrintWriter) // abstract
 
   @throws(classOf[IOException])
-  def export(tpe: String, modelFileName: String, extraHeader: String) {
+  def export(tpe: String, modelFileName: String, version: Version, extraHeader: String) {
     val file = new org.nlogo.api.LocalFile(filename)
     try {
       file.open(FileMode.Write)
       val writer = file.getPrintWriter
-      AbstractExporter.exportHeader(writer, tpe, modelFileName, extraHeader)
+      AbstractExporter.exportHeader(writer, tpe, modelFileName, version.version, extraHeader)
       export(writer)
     }
     finally ignoring(classOf[IOException]) {

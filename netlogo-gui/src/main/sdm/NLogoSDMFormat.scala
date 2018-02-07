@@ -3,8 +3,8 @@
 package org.nlogo.sdm
 
 import org.nlogo.core.{ Model => CoreModel }
-import org.nlogo.fileformat.NLogoFormat
-import org.nlogo.api.ComponentSerialization
+import org.nlogo.fileformat.{ NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.api.{ ComponentSerialization, ModelFormat }
 
 import scala.util.Try
 
@@ -16,13 +16,15 @@ import scala.util.Try
 // GUI, meanwhile, knows about everything and deserializes an
 // AggregateDrawing. - RG 5/9/16
 
-class NLogoSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] {
+abstract class AbstractNLogoSDMFormat[A <: ModelFormat[Array[String], A]]
+  extends ComponentSerialization[Array[String], A] {
   override def componentName = "org.nlogo.modelsection.systemdynamics"
   override def addDefault = identity
 
   override def serialize(m: CoreModel): Array[String] =
-    // unfortunately, we don't save headlessly, since there's too much graphical stuff
-    Array()
+    m.optionalSectionValue[Model](componentName)
+      .map(sdm => sdm.getDt + "\n" + sdm.serializedGUI)
+      .toArray[String]
 
   override def validationErrors(m: CoreModel): Option[String] =
     None
@@ -39,3 +41,6 @@ class NLogoSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] 
     Loader.load(s.mkString("\n"))
   }
 }
+
+class NLogoSDMFormat extends AbstractNLogoSDMFormat[NLogoFormat]
+class NLogoThreeDSDMFormat extends AbstractNLogoSDMFormat[NLogoThreeDFormat]

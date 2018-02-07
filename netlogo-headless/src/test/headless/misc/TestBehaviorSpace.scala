@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, TwoDVersion }
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.nvm.{ LabInterface, Workspace }
@@ -98,10 +98,10 @@ class TestBehaviorSpace extends FunSuite
       }
     }
     def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
-      worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
+      worker.addTableWriter(filename, dims, TwoDVersion.version, new java.io.PrintWriter(writer))
     }
     def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
-      worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
+      worker.addSpreadsheetWriter(filename, dims, TwoDVersion.version, new java.io.PrintWriter(writer))
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _))
       .filter {
@@ -166,13 +166,13 @@ class TestBehaviorSpace extends FunSuite
   // test export-graphics in headless mode
   test("ExportGraphics", SlowTestTag) {
     val workspace = newWorkspace()
-    workspace.open("models/test/lab/FireWithExperiments.nlogo")
+    workspace.open("models/test/lab/FireWithExperiments.nlogox")
     newWorker("testExportGraphics")
       .run(workspace, () => workspace, 1)
   }
   test("ModelWithIncludedExperiments", SlowTestTag) {
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogox", "test1", "models/test/lab/FireWithExperiments1")
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogox", "test2", "models/test/lab/FireWithExperiments2")
   }
   test("ResizingWorld3", SlowTestTag) {
     runExperiment(View(dimensions = WorldDimensions(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1)), "", "testResizingWorld3")
@@ -217,7 +217,7 @@ class TestBehaviorSpace extends FunSuite
     runParallelExperiment("metricGoBoom2", goBoom2Declarations)
   }
   test("metricGoBoom2-parallel-from-model", SlowTestTag) {
-    runExperimentFromModel("test/lab/metricGoBoom2.nlogo", "experiment", "test/lab/metricGoBoom2", wantTable = false,
+    runExperimentFromModel("test/lab/metricGoBoom2.nlogox", "experiment", "test/lab/metricGoBoom2", wantTable = false,
                            threads = Runtime.getRuntime.availableProcessors)
   }
 

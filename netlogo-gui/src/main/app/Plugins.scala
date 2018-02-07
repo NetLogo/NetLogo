@@ -2,8 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.APIVersion
-import org.nlogo.util.Pico
+import org.nlogo.api.{ APIVersion, Pico }
 import java.awt.Component
 import java.net.{URL, URLClassLoader}
 

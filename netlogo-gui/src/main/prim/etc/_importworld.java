@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -23,9 +24,8 @@ public final strictfp class _importworld
         (new org.nlogo.api.CommandRunnable() {
           public void run() throws LogoException {
             try {
-              workspace.importWorld
-                  (workspace.fileManager().attachPrefix
-                      (filePath));
+              workspace.importWorld(
+                  workspace.fileManager().attachPrefix(filePath));
             } catch (java.io.IOException ex) {
               throw new RuntimePrimitiveException
                   (context, _importworld.this,

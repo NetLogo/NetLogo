@@ -2,9 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.core.{ Femto, LiteralParser, UpdateMode, View }
-
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.core.{ Femto, LiteralParser, UpdateMode, View, WorldDimensions3D }
 
 import org.scalacheck.{ Arbitrary, Gen }
 

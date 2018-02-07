@@ -2,7 +2,7 @@
 
 package org.nlogo.tools
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, NetLogoLegacyDialect }
 import org.nlogo.app.infotab.InfoFormatter
 import java.io.{ FileInputStream, FileOutputStream }
 
@@ -16,7 +16,7 @@ object InfoTabDocGenerator {
     val model = FileIO.fileToString("./models/Code Examples/Info Tab Example.nlogo")
     val info = model.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
     val pre = Preprocessor.convert(info)
-    val html = InfoFormatter.toInnerHtml(pre)
+    val html = InfoFormatter.toInnerHtml(pre, NetLogoLegacyDialect)
     val post = Postprocessor.convert(html)
     //println(start + post)
     println("writing ./docs/infotab.html")

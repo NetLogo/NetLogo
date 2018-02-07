@@ -13,7 +13,7 @@ class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled
     val arguments =
       Array.tabulate[api.Argument](args.length)(i => new nvm.Argument(context, args(i)))
     try command.perform(
-      arguments, new nvm.ExtensionContext(workspace, context))
+      arguments, new nvm.ExtensionContext(workspace, workspace.modelTracker, context))
     catch {
       case ex: api.ExtensionException =>
         val le = new nvm.RuntimePrimitiveException(

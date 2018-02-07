@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.Window
+import java.awt.{ Component, Window }
 
 import scala.collection.mutable
 
@@ -10,11 +10,13 @@ import org.nlogo.agent.Agent
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
-import org.nlogo.window.{ Event, GUIWorkspace }
+import org.nlogo.window.{ Event, GUIWorkspaceScala, MonitorManager }
 
-class AgentMonitorManager(val workspace: GUIWorkspace)
-extends Event.LinkChild with Event.LinkParent
-{
+
+class AgentMonitorManager(parent: Component)
+  extends Event.LinkChild
+  with Event.LinkParent
+  with MonitorManager {
 
   private val monitorWindows = mutable.Map[Agent, AgentMonitorWindow]()
   private var emptyTurtleMonitorWindow: AgentMonitorWindow = null
@@ -56,7 +58,7 @@ extends Event.LinkChild with Event.LinkParent
   }
 
   /// Event.LinkChild -- lets us get events out to rest of app
-  def getLinkParent = workspace
+  def getLinkParent = parent
 
   /// Event.LinkParent -- lets events pass through us to MonitorWindows
   def getLinkChildren = {
@@ -102,7 +104,7 @@ extends Event.LinkChild with Event.LinkParent
       emptyLinkMonitorWindow = null
   }
 
-  def inspect(agentKind: AgentKind, a0: Agent, radius: Double) {
+  def inspect(agentKind: AgentKind, a0: Agent, radius: Double, workspace: GUIWorkspaceScala) {
     val frame = workspace.getFrame
     var window: AgentMonitorWindow = null
     var agent = a0
@@ -118,19 +120,19 @@ extends Event.LinkChild with Event.LinkParent
       window = emptyLinkMonitorWindow
     if(window == null) {
       if(agentKind == AgentKind.Observer)
-        window = new AgentMonitorWindow(AgentKind.Observer, agent, radius, this, frame)
+        window = new AgentMonitorWindow(AgentKind.Observer, agent, radius, this, workspace, frame)
       else if(agentKind == AgentKind.Turtle) {
-        window = new AgentMonitorWindow(AgentKind.Turtle, agent, radius, this, frame)
+        window = new AgentMonitorWindow(AgentKind.Turtle, agent, radius, this, workspace, frame)
         if(agent == null)
           emptyTurtleMonitorWindow = window
       }
       else if(agentKind == AgentKind.Patch) {
-        window = new AgentMonitorWindow(AgentKind.Patch, agent, radius, this, frame)
+        window = new AgentMonitorWindow(AgentKind.Patch, agent, radius, this, workspace, frame)
         if(agent == null)
           emptyPatchMonitorWindow = window
       }
       else if(agentKind == AgentKind.Link) {
-        window = new AgentMonitorWindow(AgentKind.Link, agent, radius, this, frame)
+        window = new AgentMonitorWindow(AgentKind.Link, agent, radius, this, workspace, frame)
         if(agent == null)
           emptyLinkMonitorWindow = window
       }

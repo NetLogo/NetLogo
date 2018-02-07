@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
 import javax.swing.{ JMenuItem, JPopupMenu }
 
-import org.nlogo.api.{ Editable, Exceptions, Version }
+import org.nlogo.api.{ Editable, Exceptions }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
   FileActions.ExportInterfaceAction
 import org.nlogo.awt.Images
@@ -34,7 +34,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
   // disabled there's no reason for it to take space 7/5/07
-  if (!Version.is3D)
+  if (!workspace.compiler.dialect.is3D)
     addWidget(viewWidget.asInstanceOf[Widget], 0, 0, false, false)
 
   viewWidget.asInstanceOf[Widget].deleteable = false
@@ -90,7 +90,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   val exportItem: JMenuItem = {
     val exportAction =
-      new ExportInterfaceAction(workspace, this)
+      new ExportInterfaceAction(workspace, workspace.modelTracker, this)
     new JMenuItem(exportAction)
   }
 
@@ -125,7 +125,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (fromRegistry != null)
       fromRegistry
     else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace)
+      case c: CoreChooser  => new ChooserWidget(workspace.compilerServices)
       case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG)
       case p: CorePlot     => PlotWidget(workspace.plotManager)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)
@@ -138,7 +138,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         val textArea       = new EditorArea(textEditorConfiguration)
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
-        new InputBoxWidget(textArea, dialogTextArea, workspace, this)
+        new InputBoxWidget(textArea, dialogTextArea, workspace.compilerServices, this)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
     }

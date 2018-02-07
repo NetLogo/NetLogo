@@ -14,7 +14,10 @@ object UpdateModeChooser {
 
 import UpdateModeChooser._
 
-class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](Choices.toArray[UpdateMode]) with ItemListener {
+class UpdateModeChooser(updateManager: UpdateManagerInterface)
+  extends JComboBox[UpdateMode](Choices.toArray[UpdateMode])
+  with ItemListener {
+
   implicit val prefix = Prefix("tabs.run.viewUpdates")
   setToolTipText(I18N.gui("dropdown.tooltip"))
   setFocusable(false)
@@ -23,13 +26,13 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](C
 
   def itemStateChanged(e: ItemEvent): Unit = {
     e.getItem match {
-      case mode: UpdateMode => workspace.updateMode(mode)
+      case mode: UpdateMode => updateManager.updateMode(mode)
       case _                => // ItemEvent.getItem is an AnyRef, but should *always* be an UpdateMode
     }
   }
 
   def refreshSelection(): Unit = {
-    setSelectedItem(workspace.updateMode())
+    setSelectedItem(updateManager.updateMode)
   }
 
   private class UpdateModeRenderer(delegateRenderer: ListCellRenderer[_ >: UpdateMode]) extends ListCellRenderer[UpdateMode] {

@@ -55,7 +55,9 @@ class ModelsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
       "Sample Models")
         .flatMap(subDir => Path.allSubpaths(sourceDir / subDir))
         .map(_._1)
-        .filterNot(_.isHidden) ++
+        .filterNot(_.isHidden)
+        .filterNot(_.toString.endsWith(".nlogo"))
+        .filterNot(_.toString.endsWith(".nlogo3d")) ++
         Seq(sourceDir / "index.conf", sourceDir / "crossReference.conf")
 }
 

@@ -27,8 +27,6 @@ class SaveModelTests extends FunSuite {
       val modelTracker = new ModelTracker {
         override def getModelType = modelType
         override def getModelPath: String = existingPath.orNull
-        override def compiler = null
-        override def getExtensionManager() = null
       }
       val res =
         if (forcePathSelect)
@@ -116,8 +114,8 @@ class SaveModelTests extends FunSuite {
         warnedOfInvalidFileFormat = extension
       }
 
-      def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
-        warnedOfDiffereringVersion = version
+      def shouldSaveModelOfDifferingVersion(currentVersion: Version, saveVersion: String): Boolean = {
+        warnedOfDiffereringVersion = saveVersion
         continueSavingModel
       }
     }

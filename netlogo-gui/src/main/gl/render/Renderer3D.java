@@ -135,11 +135,13 @@ public class Renderer3D
   @Override
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>();
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    int toSurfacePixels[] = { (int) mouseState.point().getX(), (int) mouseState.point().getY() };
+    surface.convertToPixelUnits(toSurfacePixels);
+    double[][] ray = generatePickRay(toSurfacePixels[0], (height - toSurfacePixels[1]));
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
     pickPatches(agents, ray);
-    pickListener.pick(mouseState.point(), agents);
+    pickListener.pick(mouseState.point(), agents, pickView);
     mouseState.pickRequest_$eq(false);
   }
 

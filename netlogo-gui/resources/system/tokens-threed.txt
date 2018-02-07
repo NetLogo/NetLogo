@@ -25,6 +25,7 @@ R link-pitch threed._linkpitch
 R max-pzcor threed._maxpzcor
 R min-pzcor threed._minpzcor
 R neighbors6 threed._neighbors6
+R netlogo-version threed._netlogoversion
 R patch threed._patch
 R patch-at threed._patchat
 R patch-at-heading-pitch-and-distance threed._patchatheadingpitchanddistance

@@ -6,12 +6,14 @@ import java.awt.BorderLayout
 import java.awt.event.{ ActionEvent, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ AbstractAction, JToggleButton, JPanel, JSlider }
 
+import org.nlogo.core.I18N
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
-import org.nlogo.core.I18N
-import org.nlogo.window.GUIWorkspace
+import org.nlogo.window.GUIWorkspaceScala
 
-class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) {
+class AgentMonitorViewPanel(workspace: GUIWorkspaceScala)
+  extends JPanel(new BorderLayout) {
+
   private val view = new AgentMonitorView(workspace)
   private val watchButton = new JToggleButton(new WatchAction)
   private val zoomer = new ZoomSlider(view)

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.protocol
 
-import org.nlogo.api.{Version, PlotInterface}
+import org.nlogo.api.{ PlotInterface, TwoDVersion }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
   ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException,
@@ -103,7 +103,7 @@ object DiscoveryMessage {
    * @param portNumber the port the server is listening on
    */
   def apply(uniqueId: String, modelName: String, portNumber: Int): DiscoveryMessage =
-    new DiscoveryMessage(Version.version, uniqueId, modelName, portNumber.toString, null)
+    new DiscoveryMessage(TwoDVersion.version, uniqueId, modelName, portNumber.toString, null)
 
   /**
    * Reconstructs a discovery message from serialized data.
@@ -115,7 +115,7 @@ object DiscoveryMessage {
   def deserialize(hostName: String, bytes: Array[Byte]): DiscoveryMessage = {
     val dis = new DataInputStream(new ByteArrayInputStream(bytes))
     val v = dis.readUTF()
-    if(v != Version.version)
+    if (v != TwoDVersion.version)
       throw new IOException("Cannot deserialize DiscoveryMessage: version mismatch")
     new DiscoveryMessage(v, dis.readUTF(), dis.readUTF(), dis.readUTF(), hostName)
   }

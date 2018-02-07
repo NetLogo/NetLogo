@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ Dump, Version }
+import org.nlogo.api.Dump
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
 
@@ -13,13 +13,14 @@ import org.nlogo.nvm.LabInterface.ProgressListener
 abstract class Exporter(modelFileName: String,
                         initialDims: WorldDimensions,
                         protocol: LabProtocol,
+                        versionString: String,
                         out: java.io.PrintWriter)
   extends ProgressListener
 {
   def writeExportHeader() {
     out.println(
       Dump.csv.header(
-        "BehaviorSpace results (" + Version.version + ")"))
+        "BehaviorSpace results (" + versionString + ")"))
     out.println(
       Dump.csv.header(modelFileName))
     out.println(

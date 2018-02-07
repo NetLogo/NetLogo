@@ -2,23 +2,40 @@
 
 package org.nlogo.window
 
+import java.util.function.{ Function => JFunction }
 import org.nlogo.agent.World
-import org.nlogo.core.{ ShapeEvent, ShapeAdded, ShapeRemoved }
+import org.nlogo.core.{ Model, Shape => CoreShape, ShapeAdded, ShapeEvent, ShapeListTracker, ShapeRemoved },
+  CoreShape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
+import Events.UpdateModelEvent
 
-class ShapeChangeListener(workspace: GUIWorkspace, world: World) {
+import scala.reflect.ClassTag
+
+class ShapeChangeListener(workspace: GUIWorkspace, world: World) extends Event.LinkChild {
+
+  def getLinkParent = workspace
+
   private val turtleShapeTracker = world.turtleShapes
   private val linkShapeTracker = world.linkShapes
-  private val turtleListener = new turtleShapeTracker.Sub {
-    def notify(pub: turtleShapeTracker.Pub, event: ShapeEvent): Unit = {
-      handleShapeEvent(event)
+
+  private def createShapeListener[A <: CoreShape](tracker: ShapeListTracker, update: Seq[A] => JFunction[Model, Model])
+  (implicit ct: ClassTag[A]): tracker.Sub = {
+    new tracker.Sub {
+      def notify(pub: tracker.Pub, event: ShapeEvent): Unit = {
+        handleShapeEvent(event)
+        val allShapes = event.newShapeList.shapes.collect {
+          case v: A => v
+        }
+        new UpdateModelEvent(update(allShapes)).raise(ShapeChangeListener.this)
+      }
     }
   }
 
-  private val linkListener = new linkShapeTracker.Sub {
-    def notify(pub: linkShapeTracker.Pub, event: ShapeEvent): Unit = {
-      handleShapeEvent(event)
-    }
-  }
+  private val turtleListener: turtleShapeTracker.Sub =
+    createShapeListener[CoreVectorShape](turtleShapeTracker, updateModelTurtleShapes _)
+  turtleShapeTracker.subscribe(turtleListener)
+  private val linkListener: linkShapeTracker.Sub =
+    createShapeListener[CoreLinkShape](linkShapeTracker, updateModelLinkShapes _)
+  linkShapeTracker.subscribe(linkListener)
 
   def handleShapeEvent(event: ShapeEvent): Unit = {
     event match {
@@ -28,6 +45,10 @@ class ShapeChangeListener(workspace: GUIWorkspace, world: World) {
         // note that the other cases aren't handled here as they happen only when a view refresh would happen anyway
     }
   }
-  turtleShapeTracker.subscribe(turtleListener)
-  linkShapeTracker.subscribe(linkListener)
+
+  def updateModelTurtleShapes(s: Seq[CoreVectorShape])(m: Model): Model =
+    m.copy(turtleShapes = s)
+
+  def updateModelLinkShapes(s: Seq[CoreLinkShape])(m: Model): Model =
+    m.copy(linkShapes = s)
 }

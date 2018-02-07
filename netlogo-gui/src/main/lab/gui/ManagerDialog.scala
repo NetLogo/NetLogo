@@ -103,7 +103,7 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(
+      LabProtocol.fromValueSets(
         "experiment", "setup", "go", "", 1, true, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
           manager.workspace.world.program.interfaceGlobals.toList
@@ -116,7 +116,7 @@ private class ManagerDialog(manager:       LabManager,
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
-                                        manager.workspace, manager.workspace.world)
+                                        manager.workspace.compilerServices, manager.workspace.world)
     if(!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get
       if(isNew) manager.protocols += newProtocol

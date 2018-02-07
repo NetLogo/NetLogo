@@ -2,19 +2,82 @@
 
 package org.nlogo.api
 
+object LabProtocol {
+  @deprecated("6.1.0", "use LabProtocol.fromValueSets instead")
+  def apply(name: String,
+            setupCommands: String,
+            goCommands: String,
+            finalCommands: String,
+            repetitions: Int,
+            sequentialRunOrder: Boolean,
+            runMetricsEveryStep: Boolean,
+            timeLimit: Int,
+            exitCondition: String,
+            metrics: List[String],
+            valueSets: List[RefValueSet]) =
+              new LabProtocol(name, setupCommands, goCommands, finalCommands, repetitions,
+                sequentialRunOrder, runMetricsEveryStep, timeLimit, exitCondition, metrics, valueSets)
+
+  def fromValueSets(name: String,
+            setupCommands: String,
+            goCommands: String,
+            finalCommands: String,
+            repetitions: Int,
+            sequentialRunOrder: Boolean,
+            runMetricsEveryStep: Boolean,
+            timeLimit: Int,
+            exitCondition: String,
+            metrics: List[String],
+            valueSets: List[RefValueSet]): LabProtocol =
+    LabProtocol(name, setupCommands, goCommands, finalCommands, runMetricsEveryStep, timeLimit, exitCondition, metrics,
+      CartesianProductParameterSet(repetitions, sequentialRunOrder, valueSets))
+
+}
+
 case class LabProtocol(name: String,
                     setupCommands: String,
                     goCommands: String,
                     finalCommands: String,
-                    repetitions: Int,
-                    sequentialRunOrder: Boolean,
                     runMetricsEveryStep: Boolean,
                     timeLimit: Int,
                     exitCondition: String,
                     metrics: List[String],
-                    valueSets: List[RefValueSet])
-{
-  def countRuns = repetitions * valueSets.map(_.toList.size).product
+                    parameterSet: ParameterSet) {
+
+  @deprecated("6.1.0", "use LabProtocol.fromValueSets instead")
+  def this(name: String,
+            setupCommands: String,
+            goCommands: String,
+            finalCommands: String,
+            repetitions: Int,
+            sequentialRunOrder: Boolean,
+            runMetricsEveryStep: Boolean,
+            timeLimit: Int,
+            exitCondition: String,
+            metrics: List[String],
+            valueSets: List[RefValueSet]) =
+    this(name, setupCommands, goCommands, finalCommands, runMetricsEveryStep, timeLimit, exitCondition, metrics,
+      CartesianProductParameterSet(repetitions, sequentialRunOrder, valueSets))
+
+  def countRuns = parameterSet.countRuns
+
+  @deprecated("6.1.0", "inspect parameterSet or use countRuns instead")
+  def sequentialRunOrder: Boolean = parameterSet match {
+    case c: CartesianProductParameterSet => c.sequentialRunOrder
+    case _ => true
+  }
+
+  @deprecated("6.1.0", "inspect parameterSet instead")
+  def repetitions: Int = parameterSet match {
+    case c: CartesianProductParameterSet => c.repetitions
+    case _ => 0
+  }
+
+  @deprecated("6.1.0", "inspect parameterSet instead")
+  def valueSets: List[RefValueSet] = parameterSet match {
+    case c: CartesianProductParameterSet => c.valueSets
+    case _ => Nil
+  }
 
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
@@ -28,21 +91,5 @@ case class LabProtocol(name: String,
 
   type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
-  def refElements: AnyRefSettingsIterator = {
-    def combinations(sets: List[RefValueSet]): AnyRefSettingsIterator =
-      sets match {
-        case Nil => Iterator(Nil)
-        case set::sets =>
-          set.iterator.flatMap(v =>
-            combinations(sets).map(m =>
-              if(sequentialRunOrder) (set.variableName,v) :: m
-              else m :+ set.variableName -> v))
-      }
-    if(sequentialRunOrder) combinations(valueSets)
-      .flatMap(Iterator.fill(repetitions)(_))
-    else {
-      val runners = combinations(valueSets.reverse).toList
-      (for(i <- 1 to repetitions) yield runners).flatten.toIterator
-    }
-  }
+  def refElements: AnyRefSettingsIterator = parameterSet.iterator
 }

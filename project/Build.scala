@@ -7,7 +7,7 @@ object NetLogoBuild {
   def cclArtifacts(path: String): String =
     s"http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/$path"
 
-  val autogenRoot = taskKey[File]("source root for autogeneration files")
+  val autogenRoot = settingKey[File]("source root for autogeneration files")
 
   val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
 
@@ -17,8 +17,8 @@ object NetLogoBuild {
   lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification")
 
   val settings = Seq(
-    marketingVersion        := "6.0.2",
-    numericMarketingVersion := "6.0.2",
+    marketingVersion        := "6.1.0-M1",
+    numericMarketingVersion := "6.1.0",
     buildDate := {
       val dateFormat =
         new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")

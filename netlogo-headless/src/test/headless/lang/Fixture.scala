@@ -13,29 +13,37 @@ import org.nlogo.headless.test.{RunMode, NormalMode, TestMode, CompileError,
                                 AbstractFixture, RuntimeError, StackTrace}
 
 trait FixtureSuite extends scalatest.fixture.FunSuite {
+  def makeWorkspace(): HeadlessWorkspace = HeadlessWorkspace.newInstance
+
   type FixtureParam = Fixture
   override def withFixture(test: OneArgTest) =
-    Fixture.withFixture(test.name) { fixture =>
+    Fixture.withFixture(test.name, makeWorkspace _) { fixture =>
       withFixture(test.toNoArgTest(fixture))
     }
 }
 
 object Fixture {
-  def withFixture[T](name: String)(fn: Fixture => T) = {
-    val fixture = new Fixture(name)
+  def withFixture[T](
+    name: String,
+    makeWs: () => HeadlessWorkspace = { () => HeadlessWorkspace.newInstance })(
+      fn: Fixture => T) = {
+    val fixture = new Fixture(name, makeWs)
     try fn(fixture)
     finally fixture.workspace.dispose()
   }
 }
 
-class Fixture(name: String) extends AbstractFixture {
+class Fixture(name: String, makeWorkspace: () => HeadlessWorkspace)
+    extends AbstractFixture {
 
   import Assertions._
 
   // many individual tests expect this to exist - ST 7/31/13
   new java.io.File("tmp").mkdir()
 
-  val workspace = HeadlessWorkspace.newInstance
+  def makeWorkspace = HeadlessWorkspace.newInstance
+
+  val workspace = makeWorkspace()
   workspace.silent = true
 
   val drawingActionBuffer = new api.ActionBuffer(workspace.drawingActionBroker)

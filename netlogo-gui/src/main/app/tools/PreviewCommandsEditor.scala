@@ -9,15 +9,16 @@ import javax.swing.AbstractAction
 import org.nlogo.api.PreviewCommands
 import org.nlogo.core.Model
 import org.nlogo.swing.UserAction._
-import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, WorkspaceFactory }
+import org.nlogo.window.{ Events, GraphicsPreviewInterface, PreviewCommandsEditorInterface },
+  Events.UpdateModelEvent
+import org.nlogo.workspace.{ AbstractWorkspace, WorkspaceFactory }
 
 
 object PreviewCommandsEditor {
   val title = "Preview Commands Editor"
   class EditPreviewCommands(
     previewCommandsEditor: => PreviewCommandsEditorInterface,
-    workspace:             AbstractWorkspaceScala,
+    workspace:             AbstractWorkspace,
     f:                     () => Model) extends AbstractAction(title)
     with MenuAction {
       category    = ToolsCategory
@@ -28,6 +29,10 @@ object PreviewCommandsEditor {
         val model = f()
 
         workspace.previewCommands = previewCommandsEditor.getPreviewCommands(model, workspace.getModelPath)
+
+        component.foreach { c =>
+          new UpdateModelEvent(workspace.previewCommands.updateModel _).raise(c)
+        }
       }
     }
 }

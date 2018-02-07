@@ -2,18 +2,21 @@
 
 package org.nlogo.gl.view
 
+import java.awt.event.{ ActionEvent, ActionListener }
+import java.awt.Toolkit
+import java.util.{ List => JList }
+import javax.swing.{ JMenu, JMenuItem, JPopupMenu }
+
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{ Agent, Perspective, Turtle }
-import org.nlogo.gl.render.PickListener
+import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
+import org.nlogo.gl.render.{ PickListener, ViewInterface }
 import org.nlogo.window.SyntaxColors
-import org.nlogo.awt.Colors.colorize
-import java.awt.event.{ ActionEvent, ActionListener }
-import java.util.{ List => JList }
-import javax.swing.JPopupMenu
+import org.nlogo.window.Events.EditWidgetEvent
 
-class Picker(view: View) extends PickListener with ActionListener {
+class Picker(viewManager: ViewManager) extends PickListener {
 
-  def pick(mousePt: java.awt.Point, agents: JList[Agent]) {
+  def pick(mousePt: java.awt.Point, agents: JList[Agent], view: ViewInterface) {
 
     val menu = new org.nlogo.swing.WrappingPopupMenu()
 
@@ -21,37 +24,36 @@ class Picker(view: View) extends PickListener with ActionListener {
     editItem.addActionListener(
       new ActionListener {
         override def actionPerformed(e: ActionEvent) {
-          new org.nlogo.window.Events.EditWidgetEvent(
-            view.viewManager.workspace.viewWidget.settings)
+          new EditWidgetEvent(viewManager.workspace.viewWidget.settings)
           .raise(view)
         }})
     menu.add(editItem)
 
-    menu.add(new javax.swing.JPopupMenu.Separator)
+    menu.add(new JPopupMenu.Separator)
 
-    val copyItem = new javax.swing.JMenuItem("Copy View")
+    val copyItem = new JMenuItem("Copy View")
     copyItem.addActionListener(
       new ActionListener {
         override def actionPerformed(e: ActionEvent) {
-          java.awt.Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
-            new org.nlogo.awt.ImageSelection(view.exportView), null)}})
+          Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
+            new ImageSelection(view.exportView), null)}})
     menu.add(copyItem)
 
-    val exportItem = new javax.swing.JMenuItem("Export View...")
+    val exportItem = new JMenuItem("Export View...")
     exportItem.addActionListener(
       new ActionListener {
         override def actionPerformed(e: ActionEvent) {
-          view.viewManager.workspace.doExportView(view.viewManager)
+          viewManager.workspace.doExportView(viewManager)
         }})
     menu.add(exportItem)
 
-    menu.add(new javax.swing.JPopupMenu.Separator)
+    menu.add(new JPopupMenu.Separator)
 
-    val inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals")
+    val inspectGlobalsItem = new JMenuItem("inspect globals")
     inspectGlobalsItem.addActionListener(
       new ActionListener {
         override def actionPerformed(p1: ActionEvent) = {
-          view.viewManager.workspace.inspectAgent(AgentKind.Observer)
+          viewManager.workspace.inspectAgent(AgentKind.Observer)
         }
       }
     )
@@ -67,8 +69,8 @@ class Picker(view: View) extends PickListener with ActionListener {
           view.resetPerspective()
         }})
     menu.add(resetItem)
-    if (view.viewManager.world.observer.atHome3D) {
-      resetItem.setEnabled (false)
+    if (viewManager.world.observer.atHome3D) {
+      resetItem.setEnabled(false)
       resetItem.setText("reset-perspective")
     }
 
@@ -76,20 +78,20 @@ class Picker(view: View) extends PickListener with ActionListener {
     import collection.JavaConverters._
     for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
-        menu.add(new javax.swing.JPopupMenu.Separator)
+        menu.add(new JPopupMenu.Separator)
         last = agent.getClass
       }
       if (agent.isInstanceOf[Turtle]) {
-        val submenu = new AgentMenu(agent)
-        submenu.add(new AgentMenuItem(agent, Inspect, "inspect"))
-        submenu.add(new javax.swing.JPopupMenu.Separator())
-        submenu.add(new AgentMenuItem(agent, Watch, "watch"))
-        submenu.add(new AgentMenuItem(agent, Follow, "follow"))
-        submenu.add(new AgentMenuItem(agent, Ride, "ride"))
+        val submenu = new AgentMenu(agent, view)
+        submenu.add(new AgentMenuItem(agent, Inspect, "inspect", view))
+        submenu.add(new JPopupMenu.Separator())
+        submenu.add(new AgentMenuItem(agent, Watch, "watch", view))
+        submenu.add(new AgentMenuItem(agent, Follow, "follow", view))
+        submenu.add(new AgentMenuItem(agent, Ride, "ride", view))
         menu.add(submenu)
       }
       else
-        menu.add(new AgentMenuItem(agent, Inspect, "inspect"))
+        menu.add(new AgentMenuItem(agent, Inspect, "inspect", view))
     }
     if(menu.getSubElements.nonEmpty)
       // move the menu over just a bit from the mouse point, it tends to
@@ -101,12 +103,11 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   /// context menu
 
-  private class AgentMenu(agent: Agent) extends javax.swing.JMenu(agent.toString) {
+  private class AgentMenu(agent: Agent, view: ViewInterface) extends JMenu(agent.toString) {
     var action: AgentAction = null
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)
-      view.renderer.outlineAgent(if (isIncluded) agent
-                                 else null)
+      view.renderer.outlineAgent(if (isIncluded) agent else null)
       view.signalViewUpdate()
     }
   }
@@ -123,36 +124,38 @@ class Picker(view: View) extends PickListener with ActionListener {
     colorize(agent.classDisplayName, SyntaxColors.REPORTER_COLOR) +
     colorize(agent.toString.drop(agent.classDisplayName.size), SyntaxColors.CONSTANT_COLOR)
 
-  private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
-  extends javax.swing.JMenuItem(htmlString(agent, caption)) {
-    addActionListener(Picker.this)
+  private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String, view: ViewInterface)
+  extends JMenuItem(htmlString(agent, caption)) {
+    addActionListener(new Listener())
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)
       view.renderer.outlineAgent(if (isIncluded) agent else null)
       view.signalViewUpdate()
     }
-  }
 
-  def actionPerformed(e: ActionEvent) {
-    val item = e.getSource.asInstanceOf[AgentMenuItem]
-    val observer = view.viewManager.world.observer
-    def update() {
-      view.signalViewUpdate()
-    }
-    item.action match {
-      case Inspect =>
-        view.viewManager.workspace.inspectAgent(item.agent, 3)
-      case Follow =>
-        val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt
-        val followDistance = 1 max distance min 100
-        observer.setPerspective(Perspective.Follow(item.agent, followDistance))
-        update()
-      case Ride =>
-        observer.setPerspective(Perspective.Ride(item.agent))
-        update()
-      case Watch =>
-        observer.home()
-        observer.setPerspective(Perspective.Watch(item.agent))
+    class Listener extends ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        val item = e.getSource.asInstanceOf[AgentMenuItem]
+        val observer = viewManager.world.observer
+        def update() {
+          view.signalViewUpdate()
+        }
+        item.action match {
+          case Inspect =>
+            viewManager.workspace.inspectAgent(item.agent, 3)
+          case Follow =>
+            val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt
+            val followDistance = 1 max distance min 100
+            observer.setPerspective(Perspective.Follow(item.agent, followDistance))
+            update()
+          case Ride =>
+            observer.setPerspective(Perspective.Ride(item.agent))
+            update()
+          case Watch =>
+            observer.home()
+            observer.setPerspective(Perspective.Watch(item.agent))
+        }
+      }
     }
   }
 

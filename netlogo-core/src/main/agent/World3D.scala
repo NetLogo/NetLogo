@@ -2,9 +2,9 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
-import org.nlogo.api.{ AgentException, Color, ImporterUser,
-  NetLogoThreeDDialect, WorldDimensionException, WorldDimensions3D }
+import org.nlogo.core.{ AgentKind, Dialect, Program, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ AgentException, Color, ImporterUser, NetLogoThreeDDialect,
+  WorldDimensionException }
 
 import java.lang.{ Double => JDouble }
 
@@ -12,9 +12,12 @@ import java.util.Arrays
 
 import World._
 
-class World3D extends World
-  with org.nlogo.api.World3D
-  with CompilationManagement {
+class World3D extends {
+  val defaultDialect: Dialect = NetLogoThreeDDialect
+}
+with World
+with org.nlogo.api.World3D
+with CompilationManagement {
 
   val drawing: Drawing3D = new Drawing3D(this)
 
@@ -155,8 +158,9 @@ class World3D extends World
   }
 
   override def createPatches(minPxcor: Int, maxPxcor: Int,
-                            minPycor: Int, maxPycor: Int): Unit =
+                            minPycor: Int, maxPycor: Int): Unit = {
     createPatches(minPxcor, maxPxcor, minPycor, maxPycor, 0, 0)
+  }
 
   override def newProgram: Program =
     Program.fromDialect(NetLogoThreeDDialect)
@@ -277,9 +281,12 @@ class World3D extends World
   // to vary the size of the world without
   // knowing quite so much about the world.
   // ev 2/20/06
-  override def getDimensions: WorldDimensions = {
+  override def getDimensions: WorldDimensions3D = {
     new WorldDimensions3D(_minPxcor, _maxPxcor, _minPycor, _maxPycor, _minPzcor, _maxPzcor, 12.0, true, true, true)
   }
+
+  override def dimensionsAdjustedForPatchSize(patchSize: Double): WorldDimensions =
+    getDimensions.copyThreeD(patchSize = patchSize)
 
   @throws(classOf[WorldDimensionException])
   override def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions = {

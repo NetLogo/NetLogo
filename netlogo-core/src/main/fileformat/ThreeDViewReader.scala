@@ -2,8 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.WorldDimensions3D
-import org.nlogo.core.{ UpdateMode, View }
+import org.nlogo.core.{ UpdateMode, View, WorldDimensions3D }
 import org.nlogo.core.model.WidgetReader
 
 import org.parboiled2._
