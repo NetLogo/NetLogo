@@ -9,7 +9,7 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
 {
   private val checkbox = new javax.swing.JCheckBox
   checkbox.setText(accessor.displayName)
-  checkbox.addItemListener(changed _)
+  checkbox.addItemListener({ () => changed() })
   setLayout(new java.awt.BorderLayout)
   add(checkbox, java.awt.BorderLayout.CENTER)
   override def get = Some(checkbox.isSelected)

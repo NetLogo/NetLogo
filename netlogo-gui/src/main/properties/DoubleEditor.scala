@@ -13,7 +13,7 @@ abstract class DoubleEditor(accessor: PropertyAccessor[Double])
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
   private val label = new javax.swing.JLabel(accessor.displayName)
   add(label, java.awt.BorderLayout.WEST)
-  editor.getDocument().addDocumentListener(changed _)
+  editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)
   override def setEnabled(enabled: Boolean) {
     super.setEnabled(enabled)

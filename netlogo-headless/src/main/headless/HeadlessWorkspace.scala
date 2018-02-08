@@ -403,7 +403,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   @throws(classOf[core.CompilerException])
   @throws(classOf[api.LogoException])
-  def command(source: String) {
+  override def command(source: String) {
     evaluator.evaluateCommands(defaultOwner, source, world.observers, true, flags)
     if (lastLogoException != null) {
       val ex = lastLogoException
@@ -424,7 +424,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   @throws(classOf[core.CompilerException])
   @throws(classOf[api.LogoException])
-  def report(source: String): AnyRef = {
+  override def report(source: String): AnyRef = {
     val result = evaluator.evaluateReporter(defaultOwner, source, world.observers, flags)
     if (lastLogoException != null) {
       val ex = lastLogoException

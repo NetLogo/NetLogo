@@ -15,7 +15,7 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
   editor.setDragEnabled(false)
   editor.setLineWrap(true)
   editor.setWrapStyleWord(true)
-  editor.getDocument().addDocumentListener(changed _)
+  editor.getDocument().addDocumentListener({ () => changed() })
   add(new javax.swing.JScrollPane(editor,
                                   javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                   javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
