@@ -8,13 +8,15 @@ object I18n {
 
   val resourceGeneratorTask =
     Def.task {
+      val streamsValue = streams.value
+      val resourceManagedValue = resourceManaged.value
       val i18nDir = baseDirectory.value / "project" / "autogen" / "i18n"
       val names: Set[String] =
         IO.listFiles(i18nDir).map(_.getName).filter(_.endsWith(".txt")).map(_.dropRight(4)).toSet
       val cache =
-        FileFunction.cached(streams.value.cacheDirectory / "native2ascii", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+        FileFunction.cached(streamsValue.cacheDirectory / "native2ascii", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
           in: Set[File] =>
-            names.map(name => native2ascii(streams.value.log.info(_), i18nDir, resourceManaged.value, name))
+            names.map(name => native2ascii(streamsValue.log.info(_), i18nDir, resourceManagedValue, name))
         }
       cache(names.map(name => i18nDir / (name + ".txt"))).toSeq
     }

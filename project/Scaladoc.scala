@@ -27,7 +27,7 @@ object Scaladoc {
     // the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
     // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
     apiScaladoc := {
-      val classpath = (compileInputs in compile in Compile).value.config.classpath
+      val classpath = (compileInputs in compile in Compile).value.options.classpath
       val out = baseDirectory.value / "docs" / "scaladoc"
       IO.createDirectory(out)
       val excludedePackages = Seq("org.nlogo.app.previewcommands", "org.nlogo.awt",
@@ -40,10 +40,12 @@ object Scaladoc {
         "org.nlogo.prim", "org.nlogo.swing")
       val opts = (scalacOptions in Compile in doc).value ++
         Seq("-skip-packages", excludedePackages.mkString(":"))
-      Doc.scaladoc("NetLogo", streams.value.cacheDirectory / "apiScaladoc",
-        (compileInputs in compile in Compile).value.compilers.scalac, opts)(
+      Doc.scaladoc("NetLogo", streams.value.cacheStoreFactory.sub("apiScaladoc"),
+        compilers.value.scalac match {
+          case ac: sbt.internal.inc.AnalyzingCompiler => ac
+        }, opts)(
           (sources in Compile).value, classpath, out, opts,
-          (compileInputs in compile in Compile).value.config.maxErrors, streams.value.log)
+          (compileInputs in compile in Compile).value.options.maxErrors, streams.value.log)
       mungeScaladocSourceUrls(out)
     }
     )

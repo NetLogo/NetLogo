@@ -2,6 +2,7 @@ import sbt._
 
 import java.nio.file.{ Files, Path => NioPath }
 import scala.collection.JavaConverters._
+import scala.sys.process.Process
 
 class NetLogoDocs(
   docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File,

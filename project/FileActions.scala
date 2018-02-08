@@ -1,7 +1,8 @@
 import java.nio.file.{ attribute, Files, FileVisitResult, FileVisitor, Path, Paths, StandardCopyOption }, attribute.BasicFileAttributes
-import java.io.IOException
-import java.io.File
+import java.io.{ File, IOException }
+import java.net.URL
 import sbt.IO
+import org.apache.commons.io.FileUtils
 
 object FileActions {
   class ListVisitor extends FileVisitor[Path] {
@@ -130,6 +131,10 @@ object FileActions {
     val listVisitor = new ListVisitor()
     Files.walkFileTree(path, new java.util.HashSet(), Int.MaxValue, listVisitor)
     listVisitor.pathsFound
+  }
+
+  def download(url: URL, file: File): Unit = {
+    FileUtils.copyURLToFile(url, file)
   }
 
   def remove(f: File): Unit = {

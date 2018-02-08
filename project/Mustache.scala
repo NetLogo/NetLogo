@@ -1,4 +1,4 @@
-import sbt._
+import sbt._, io.Using
 
 import scala.collection.JavaConverters._
 
@@ -13,7 +13,7 @@ object Mustache {
 
   def betweenDirectories(source: File, target: File, titleMapping: Map[String, String],
     variables: Map[String, AnyRef]): Seq[File] = {
-    
+
     val pathMapping = Path.allSubpaths(source).map {
       case (f, p) => (f, target / p.stripSuffix(".mustache"))
     }

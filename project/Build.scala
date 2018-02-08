@@ -1,5 +1,6 @@
 import sbt._
 import Keys._
+import librarymanagement.ModuleDescriptorConfiguration
 
 object NetLogoBuild {
   lazy val all = TaskKey[Unit]("all", "build everything!!!")
@@ -44,21 +45,13 @@ object NetLogoBuild {
           val is = ivySbt.value
           val newMs =
             moduleSettings.value match {
-              case i: InlineConfigurationWithExcludes =>
+              case i: ModuleDescriptorConfiguration =>
                 val excludedModule = (projectID in project).value
-                val newDeps = i.dependencies.filterNot(m =>
-                    m.name == excludedModule.name && m.organization == excludedModule.organization)
-                InlineConfigurationWithExcludes(i.module, i.moduleInfo,
-                  newDeps,
-                  i.overrides,
-                  i.excludes,
-                  i.ivyXML,
-                  i.configurations,
-                  i.defaultConfiguration,
-                  i.ivyScala,
-                  i.validate,
-                  i.conflictManager)
-                case other => other
+                val newDeps =
+                  i.dependencies
+                    .filterNot(m => m.name == excludedModule.name && m.organization == excludedModule.organization)
+                i.withDependencies(newDeps)
+              case other => other
             }
           new is.Module(newMs)
         },

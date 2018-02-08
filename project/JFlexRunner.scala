@@ -10,11 +10,13 @@ object JFlexRunner {
 
   lazy val task =
     Def.task {
-      val cachedLexers = FileFunction.cached(streams.value.cacheDirectory / "lexer", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+      val streamsValue = streams.value
+      val autogenRootValue = autogenRoot.value
+      val cachedLexers = FileFunction.cached(streamsValue.cacheDirectory / "lexer", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
         (in: Set[File]) =>
           Set(("agent", "ImportLexer")).map {
             case (pkg, kind) =>
-              flex(streams.value.log.info(_), autogenRoot.value, streams.value.cacheDirectory, (sourceManaged in Compile).value, pkg, kind)
+              flex(streamsValue.log.info(_), autogenRootValue, streamsValue.cacheDirectory, (sourceManaged in Compile).value, pkg, kind)
         }
       }
       cachedLexers(Set(

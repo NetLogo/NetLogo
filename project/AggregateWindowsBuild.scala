@@ -181,7 +181,7 @@ object PackageWinAggregate {
     }
 
     if (! (aggregateTarget / "verpatch.exe").exists) {
-      IO.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
+      FileActions.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
     }
 
     // configure each sub application

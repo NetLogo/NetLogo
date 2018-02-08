@@ -9,6 +9,7 @@ import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import SbtSubdirectory.runSubdirectoryCommand
 import java.nio.file.Paths
+import scala.sys.process.Process
 
 object NetLogoPackaging {
 
@@ -130,7 +131,7 @@ object NetLogoPackaging {
 
       val downloadSizes = downloadLocations.map {
         case (name, f) => name.replaceAllLiterally("Installer", "Size") ->
-            ((f.length / 1000000).round.toString + " MB")
+            ((f.length / 1000000).toString + " MB")
       }
 
       val vars = buildVariables.value ++ downloadSizes ++

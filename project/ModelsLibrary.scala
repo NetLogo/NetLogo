@@ -51,9 +51,9 @@ object ModelsLibrary {
     },
     resaveModel := {
       modelParser.parsed.foreach { model =>
-        val runner = new ForkRun(ForkOptions(
-          workingDirectory = Some(baseDirectory.value.getParentFile),
-          runJVMOptions = Seq("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
+        val runner = new ForkRun(ForkOptions()
+          .withWorkingDirectory(Some(baseDirectory.value.getParentFile))
+          .withRunJVMOptions(Vector("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
         runner.run("org.nlogo.tools.ModelResaver",
           (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
       }

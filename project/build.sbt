@@ -1,5 +1,4 @@
 lazy val root = project.in(file("."))
-  .addSbtFiles(Option(file("tasks").listFiles).map(_.toSeq).getOrElse(Seq()): _*)
   .settings(
     scalacOptions += "-deprecation",
     // so we can use native2ascii on Linux.  use JAVA_HOME not the java.home

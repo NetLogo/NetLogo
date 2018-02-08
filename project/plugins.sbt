@@ -4,7 +4,7 @@ resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releas
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.4")
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
 
 // so we can use native2ascii on Linux.
 unmanagedJars in Compile += {
@@ -24,42 +24,40 @@ libraryDependencies +=
   "classycle" % "classycle" % "1.4.2" from
     "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/classycle-1.4.2.jar"
 
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.6.0")
-
-addSbtPlugin("org.ensime" % "ensime-sbt" % "0.1.7")
+addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 resolvers += Resolver.url(
   "bintray-sbt-plugin-releases",
     url("http://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
         Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.18")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.21")
 
-addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
+addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.1")
 
 // prevents noise from bintray stuff
-libraryDependencies +=
-  "org.slf4j" % "slf4j-nop" % "1.6.0"
+libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.6.0"
 
 resolvers += Resolver.url(
   "publish-versioned-plugin-releases",
     url("http://dl.bintray.com/content/netlogo/publish-versioned"))(
         Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.nlogo" % "publish-versioned-plugin" % "2.0")
+addSbtPlugin("org.nlogo" % "publish-versioned-plugin" % "2.1")
 
 resolvers += Resolver.url(
   "NetLogo-JVM",
   url("http://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
     Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.7.2")
+addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.8.0")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler" % "0.9.5",
   "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5",
   "org.jsoup"                         % "jsoup" % "1.10.3",
-  "org.apache.commons"                % "commons-lang3" % "3.1"
+  "org.apache.commons"                % "commons-lang3" % "3.1",
+  "commons-io"                        % "commons-io"    % "2.6"
 )
 
 {
