@@ -51,7 +51,7 @@ extends IndexedAgentSet(kind, printName) {
     else {
       var result = 0
       val iter = iterator
-      while(iter.hasNext) {
+      while (iter.hasNext) {
         iter.next()
         result += 1
       }
@@ -156,9 +156,9 @@ extends IndexedAgentSet(kind, printName) {
 
   override def iterator: AgentIterator =
     if (!kind.mortal)
-      new Iterator
+      new Iterator(array)
     else
-      new DeadSkippingIterator
+      new DeadSkippingIterator(array)
 
   // shuffling iterator = shufflerator! (Google hits: 0)
   // Update: Now 5 Google hits, the first 4 of which are NetLogo related,
@@ -169,12 +169,14 @@ extends IndexedAgentSet(kind, printName) {
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
     // contents of the agentset - ST 12/15/05
-    new Shufflerator(rng)
+    new Shufflerator(rng, array)
 
   /// iterator implementations
 
-  private class Iterator extends AgentIterator {
-    protected var index = 0
+  private final class Iterator(private[this] val array: Array[Agent])
+  extends AgentIterator {
+    private[this] var index: Int = 0
+    private[this] val arraySize = array.size
     override def hasNext = index < arraySize
     override def next() = {
       val result = array(index)
@@ -184,10 +186,14 @@ extends IndexedAgentSet(kind, printName) {
   }
 
   // extended to skip dead agents
-  private class DeadSkippingIterator extends Iterator {
+  private final class DeadSkippingIterator(private[this] val array: Array[Agent])
+  extends AgentIterator {
+    private[this] var index: Int = 0
+    private[this] val arraySize = array.size
     // skip initial dead agents
     while (index < arraySize && array(index)._id == -1)
       index += 1
+    override def hasNext = index < arraySize
     override def next() = {
       val result = index
       // skip to next live agent
@@ -197,9 +203,9 @@ extends IndexedAgentSet(kind, printName) {
     }
   }
 
-  private class Shufflerator(rng: MersenneTwisterFast) extends Iterator {
+  private final class Shufflerator(rng: MersenneTwisterFast, a: Array[Agent]) extends AgentIterator {
     private[this] var i = 0
-    private[this] val copy = array.clone
+    private[this] val copy = a.clone
     private[this] var nextOne: Agent = null
     while (i < copy.length && copy(i) == null)
       i += 1

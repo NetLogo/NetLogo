@@ -129,8 +129,8 @@ extends AgentSet(kind, printName) {
     LogoList.fromJava(_agents.values)
 
   // parent enumeration class
-  class Iterator extends AgentIterator {
-    val iter = _agents.values.iterator
+  final private class Iterator extends AgentIterator {
+    private[this] val iter = _agents.values.iterator
     override def hasNext = iter.hasNext
     override def next() = iter.next()
   }
@@ -146,14 +146,14 @@ extends AgentSet(kind, printName) {
   override def shufflerator(rng: MersenneTwisterFast): AgentIterator =
     new Shufflerator(rng)
 
-  private class Shufflerator(rng: MersenneTwisterFast)
-  extends Iterator {
-    private var i = 0
-    private val copy = _agents.values.toArray(new Array[Agent](_agents.size))
-    private var _next: Agent = null
+  final private class Shufflerator(rng: MersenneTwisterFast)
+  extends AgentIterator {
+    private[this] var i = 0
+    private[this] val copy = _agents.values.toArray(new Array[Agent](_agents.size))
+    private[this] var _next: Agent = null
     fetch()
-    override def hasNext = _next != null
-    override def next() = {
+    def hasNext = _next != null
+    def next() = {
       val result = _next
       fetch()
       result
