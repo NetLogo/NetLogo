@@ -117,3 +117,13 @@ RGBColorImport_3D
   [pcolor] of patch 0 0 0 => [0 0 255]
   [plabel-color] of patch 0 0 0 => [0 0 255]
   [pcolor] of patch 0 1 0 => 0
+
+ClearPatchRGBColor_3D
+  O> ask patch 0 0 0 [set pcolor [0 0 0]]
+  O> clear-all
+  count patches with [pcolor = [0 0 0]] => 0
+  
+ClearPatchRGBAColor_3D
+  O> ask patch 0 0 0 [set pcolor [0 0 0 0]]
+  O> clear-all
+  count patches with [pcolor = [0 0 0 0]] => 0
