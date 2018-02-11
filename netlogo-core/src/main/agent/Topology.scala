@@ -190,17 +190,19 @@ trait XWraps extends Topology {
     Topology.wrap(x, world._minPxcor - 0.5, world._maxPxcor + 0.5)
 
   protected def diffuseXBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val lastY = world.worldHeight - 1
-    val butLastCol = scratch(lastX - 1)
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = (ww - 1) % ww
+    val lastY = (wh - 1) % wh
+    val secondLastCol = scratch((lastX - 1) % ww)
     val lastCol = scratch(lastX)
     val firstCol = scratch(0)
-    val secondCol = scratch(1)
+    val secondCol = scratch(1 % ww)
     var y = 1
     while (y < lastY) {
       val oldValE = scratch(lastX)(y)
       val oldValW = scratch(0)(y)
-      val sumE = sum4(butLastCol(y), firstCol(y), lastCol(y+1), lastCol(y-1))
+      val sumE = sum4(secondLastCol(y), firstCol(y), lastCol(y+1), lastCol(y-1))
       val sumW = sum4(lastCol(y), secondCol(y), firstCol(y+1), firstCol(y-1))
       if (fourWay) {
         updatePatch(amount, vn, 4, 0, y, oldValW, sumW)
@@ -210,7 +212,7 @@ trait XWraps extends Topology {
           sum4(lastCol(y+1), lastCol(y-1), secondCol(y+1), secondCol(y-1))
         )
         updatePatch(amount, vn, 8, lastX, y, oldValE, sumE +
-          sum4(butLastCol(y+1), butLastCol(y-1), firstCol(y+1), firstCol(y-1))
+          sum4(secondLastCol(y+1), secondLastCol(y-1), firstCol(y+1), firstCol(y-1))
         )
       }
       y += 1
@@ -222,8 +224,10 @@ trait XBlocks extends Topology {
   override val xWraps = false
 
   override def diffuseXBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val lastY = world.worldHeight - 1
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = ww - 1
+    val lastY = wh - 1
     val update = if (fourWay)
       (x: Int, y: Int, borderCol: Array[Double], innerCol: Array[Double]) => {
         val oldVal = borderCol(y)
@@ -238,14 +242,14 @@ trait XBlocks extends Topology {
           sum4(innerCol(y-1), innerCol(y+1), oldVal, oldVal)
         updatePatch(amount, vn, 8, x, y, oldVal, sum)
       }
-    val butLastCol = scratch(lastX - 1)
+    val secondLastCol = scratch((lastX - 1) % ww)
     val lastCol = scratch(lastX)
     val firstCol = scratch(0)
-    val secondCol = scratch(1)
+    val secondCol = scratch(1 % ww)
     var y = 1
     while (y < lastY) {
       update(0, y, firstCol, secondCol)
-      update(lastX, y, lastCol, butLastCol)
+      update(lastX, y, lastCol, secondLastCol)
       y += 1
     }
   }
@@ -258,17 +262,20 @@ trait YWraps extends Topology {
     Topology.wrap(y, world._minPycor - 0.5, world._maxPycor + 0.5)
 
   override def diffuseYBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val lastY = world.worldHeight - 1
-    val butLastY = lastY - 1
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = ww - 1
+    val lastY = wh - 1
+    val secondLastY = (lastY - 1) % wh
+    val secondY = 1 % wh
 
     var x = 1
     while (x < lastX) {
       val e = scratch(x+1)
       val c = scratch(x)
       val w = scratch(x-1)
-      val sumN = sum4(e(0), w(0), c(1), c(lastY))
-      val sumS = sum4(e(lastY), w(lastY), c(0), c(butLastY))
+      val sumN = sum4(e(0), w(0), c(secondY), c(lastY))
+      val sumS = sum4(e(lastY), w(lastY), c(0), c(secondLastY))
       val oldValN = c(0)
       val oldValS = c(lastY)
       if (fourWay) {
@@ -276,10 +283,10 @@ trait YWraps extends Topology {
         updatePatch(amount, vn, 4, x, lastY, oldValS, sumS)
       } else {
         updatePatch(amount, vn, 8, x, 0, oldValN, sumN +
-          sum4(e(1), w(1), e(lastY), w(lastY))
+          sum4(e(secondY), w(secondY), e(lastY), w(lastY))
         )
         updatePatch(amount, vn, 8, x, lastY, oldValS, sumS +
-          sum4(e(butLastY), w(butLastY), e(0), w(0))
+          sum4(e(secondLastY), w(secondLastY), e(0), w(0))
         )
       }
       x += 1
@@ -291,9 +298,12 @@ trait YBlocks extends Topology {
   override val yWraps = false
 
   override def diffuseYBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val lastY = world.worldHeight - 1
-    val butLastY = lastY - 1
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = ww - 1
+    val lastY = wh - 1
+    val secondLastY = (lastY - 1) % wh
+    val secondY = 1 % wh
 
     val update = if(fourWay)
       (x: Int, y: Int, innerY: Int) => {
@@ -313,8 +323,8 @@ trait YBlocks extends Topology {
 
     var x = 1
     while (x < lastX) {
-      update(x, 0, 1)
-      update(x, lastY, butLastY)
+      update(x, 0, secondY)
+      update(x, lastY, secondLastY)
       x += 1
     }
   }

@@ -129,10 +129,14 @@ with XBlocks with YWraps{
 
   override protected def diffuseCorners
   (amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val butLastX = lastX - 1
-    val lastY = world.worldHeight - 1
-    val butLastY = lastY - 1
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = ww - 1
+    val secondLastX = (lastX - 1) % ww
+    val secondX = 1 % ww
+    val lastY = wh - 1
+    val butLastY = (lastY - 1) % wh
+    val secondY = 1 % wh
     val update = if (fourWay)
       (x: Int, y: Int, innerX: Int, innerY: Int, wrappedY: Int) => {
         val oldVal = scratch(x)(y)
@@ -147,9 +151,9 @@ with XBlocks with YWraps{
           sum4(scratch(innerX)(innerY), scratch(innerX)(wrappedY), oldVal, oldVal)
         )
       }
-    update(0, 0, 1, 1, lastY)
-    update(0, lastY, 1, butLastY, 0)
-    update(lastX, 0, butLastX, 1, lastY)
-    update(lastX, lastY, butLastX, butLastY, 0)
+    update(0,     0,     secondX,     secondY,  lastY)
+    update(0,     lastY, secondX,     butLastY, 0)
+    update(lastX, 0,     secondLastX, secondY,  lastY)
+    update(lastX, lastY, secondLastX, butLastY, 0)
   }
 }

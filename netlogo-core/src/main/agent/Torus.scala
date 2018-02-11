@@ -148,9 +148,12 @@ with XWraps with YWraps {
 
   override protected def diffuseCorners
   (amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
-    val lastX = world.worldWidth - 1
-    val lastY = world.worldHeight - 1
-    val butLastY = lastY - 1
+    val ww = world.worldWidth
+    val wh = world.worldHeight
+    val lastX = ww - 1
+    val lastY = wh - 1
+    val secondLastY = (lastY - 1) % wh
+    val secondY = 1 % wh
     val update = if (fourWay)
       (x: Int, y: Int, w: Array[Double], c: Array[Double], e: Array[Double], y1: Int, y2: Int) => {
         val sum = sum4(e(y), w(y), c(y1), c(y2))
@@ -162,14 +165,14 @@ with XWraps with YWraps {
           sum4(e(y1), w(y1), e(y2), w(y2))
         updatePatch(amount, vn, 8, x, y, c(y), sum)
       }
-    val butLastCol = scratch(lastX - 1)
+    val butLastCol = scratch((lastX - 1) % ww)
     val lastCol = scratch(lastX)
     val firstCol = scratch(0)
-    val secondCol = scratch(1)
+    val secondCol = scratch(1 % ww)
 
-    update(0,     0,     lastCol,    firstCol, secondCol, lastY,    1)
-    update(0,     lastY, lastCol,    firstCol, secondCol, butLastY, 0)
-    update(lastX, 0,     butLastCol, lastCol,  firstCol,  lastY,    1)
-    update(lastX, lastY, butLastCol, lastCol,  firstCol,  butLastY, 0)
+    update(0,     0,     lastCol,    firstCol, secondCol, lastY,       secondY)
+    update(0,     lastY, lastCol,    firstCol, secondCol, secondLastY, 0)
+    update(lastX, 0,     butLastCol, lastCol,  firstCol,  lastY,       secondY)
+    update(lastX, lastY, butLastCol, lastCol,  firstCol,  secondLastY, 0)
   }
 }
