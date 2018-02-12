@@ -23,21 +23,21 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     // - ST 12/5/05, 3/15/06
     val it = agentset.shufflerator(random)
     val context = new Context(this, null, 0, null)
+    // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
+    val runActivation =
+      if (parentContext == null)
+        new Activation(topLevelProcedure, null, address)
+      else
+        parentContext.activation
     context.agentBit = agentset.agentBit
     while (it.hasNext) {
       context.agent = it.next()
-      context.activation =
-        // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
-        if (parentContext == null)
-          new Activation(topLevelProcedure, null, address)
-        else
-          parentContext.activation
+      context.activation = runActivation
       context.ip = address
       context.finished = false
-      val oldActivation = context.activation
       context.activation.binding = context.activation.binding.enterScope
       context.runExclusive()
-      if (context.activation == oldActivation) {
+      if (context.activation == runActivation) {
         context.activation.binding = context.activation.binding.exitScope
       }
     }
