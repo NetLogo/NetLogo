@@ -44,7 +44,7 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
   }
 
   override def load(model: CoreModel, compiler: LiteralParser) = {
-    model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics")
+    model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
           linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory)
@@ -57,7 +57,7 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
     if (editor == null || !editor.drawing.figures.hasNextFigure)
       m
     else
-      m.withOptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics",
+      m.withOptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui",
         Some(editor.drawing), editor.drawing)
   }
 
