@@ -10,8 +10,9 @@ else
 fi;
 
 # -Xmx1024m             use up to 1GB RAM (edit to increase)
+# -XX:+UseParallelGC    The parallel collector maximizes throughput
 # -Dfile.encoding=UTF-8 ensure Unicode characters in model files are compatible cross-platform
-JVM_OPTS=(-Xmx1024m -Dfile.encoding=UTF-8)
+JVM_OPTS=(-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8)
 OPTS_INDEX=2
 
 ARGS=()

@@ -39,7 +39,7 @@ JJS=$JH/bin/jjs
 # Most of these settings are fine for everyone
 XSS=-Xss10m
 XMX=-Xmx2048m
-XX=
+XX=-XX:+UseParallelGC
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false

@@ -15,6 +15,7 @@ app.identifier=org.nlogo.app
 -Xdock:name={{appShortName}}
 -Dorg.nlogo.mac.appClassName={{{mainClass}}}
 -Xmx{{maxMemory}}
+-XX:+UseParallelGC
 -Dfile.encoding=UTF-8
 -Dapple.awt.graphics.UseQuartz=true
 {{#jvmOptions}}{{{.}}}
