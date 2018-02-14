@@ -22,12 +22,12 @@ private class ManagerDialog(manager:       LabManager,
   private def action(name: String, fn: ()=>Unit) =
     new javax.swing.AbstractAction(name) {
       def actionPerformed(e: java.awt.event.ActionEvent) { fn() } }
-  private val editAction = action(I18N.gui("edit"), edit _)
-  private val newAction = action(I18N.gui("new"), makeNew _)
-  private val deleteAction = action(I18N.gui("delete"), delete _)
-  private val duplicateAction = action(I18N.gui("duplicate"), duplicate _)
-  private val closeAction = action(I18N.gui("close"), manager.close _)
-  private val runAction = action(I18N.gui("run"), run _)
+  private val editAction = action(I18N.gui("edit"), { () => edit() })
+  private val newAction = action(I18N.gui("new"), { () => makeNew() })
+  private val deleteAction = action(I18N.gui("delete"), { () => delete() })
+  private val duplicateAction = action(I18N.gui("duplicate"), { () => duplicate() })
+  private val closeAction = action(I18N.gui("close"), { () => manager.close() })
+  private val runAction = action(I18N.gui("run"), { () => run() })
   /// initialization
   init()
   private def init() {

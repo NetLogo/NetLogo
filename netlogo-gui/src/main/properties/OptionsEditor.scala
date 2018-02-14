@@ -16,7 +16,7 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
   for(optionName <- options.names)
     combo.addItem(optionName)
   private val originalOption: T = options.chosenValue
-  combo.addActionListener(changed _)
+  combo.addActionListener({ () => changed() })
   override def get = {
     options.selectByName(combo.getSelectedItem.asInstanceOf[String])
     Some(options)

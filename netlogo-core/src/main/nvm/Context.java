@@ -109,8 +109,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!command.switches && !finished);
-    } catch (EngineException ex) {
-      throw ex;
     } catch (LogoException ex) {
       EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {
@@ -137,8 +135,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
           comeUpForAir(command);
         }
       } while (!finished);
-    } catch (EngineException ex) {
-      throw ex;
     } catch (LogoException ex) {
       EngineException.rethrow(ex, copy(), command);
     }
@@ -263,8 +259,6 @@ public final strictfp class Context implements org.nlogo.api.Context {
       while (!finished && job.result == null);
     } catch (NonLocalExit e) {
       // do nothing
-    } catch (EngineException ex) {
-      throw ex;
     } catch (LogoException ex) {
       EngineException.rethrow(ex, copy(), command);
     } catch (StackOverflowError ex) {

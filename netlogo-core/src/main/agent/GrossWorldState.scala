@@ -70,7 +70,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
   }
 
   def trailDrawer = _trailDrawer
-  private var _trailDrawer: TrailDrawerInterface = _
+  private var _trailDrawer: TrailDrawerInterface = null
   def markDrawingClean(): Unit = {
     _trailDrawer.sendPixels(false)
   }

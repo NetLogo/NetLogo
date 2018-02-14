@@ -56,7 +56,7 @@ allNames.foreach(name => results += (name -> new ListBuffer[Double]))
 val width = allNames.map(_.size).max
 
 def outputLines(name: String): Stream[String] =
-  Process("java -classpath " + classpath +
+  Process("java -XX:+UseParallelGC -classpath " + classpath +
           " org.nlogo.headless.HeadlessBenchmarker " +
           name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", ""))
     .lineStream

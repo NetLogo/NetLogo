@@ -11,7 +11,7 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
   setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS))
   add(new javax.swing.JLabel(accessor.displayName))
   add(javax.swing.Box.createHorizontalStrut(5))
-  editor.getDocument.addDocumentListener(changed _)
+  editor.getDocument.addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)
   def makeEditor() = {
     val newEditor = new org.nlogo.swing.TextField(

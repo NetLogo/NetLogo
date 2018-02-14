@@ -9,11 +9,13 @@ import org.jhotdraw.util.{ StorableInput, StorableOutput }
 import org.nlogo.core.{ Model => CoreModel }
 import org.nlogo.fileformat.NLogoFormat
 import org.nlogo.api.ComponentSerialization
+import org.nlogo.sdm.Model
 
 import scala.util.Try
 
 class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] {
   override def componentName = "org.nlogo.modelsection.systemdynamics"
+  val guiComponentName = "org.nlogo.modelsection.systemdynamics.gui"
   override def addDefault = identity
   override def serialize(m: CoreModel): Array[String] = {
     m.optionalSectionValue[AggregateDrawing](componentName)
@@ -27,7 +29,9 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
   override def deserialize(s: Array[String]): CoreModel => Try[CoreModel] = { (m: CoreModel) =>
     Try {
       stringsToDrawing(s)
-        .map(sdm => m.withOptionalSection(componentName, Some(sdm), sdm))
+        .map(sdm =>
+            m.withOptionalSection[Model](componentName, Some(sdm.getModel), sdm.getModel)
+              .withOptionalSection[AggregateDrawing](guiComponentName, Some(sdm), sdm))
         .getOrElse(m)
     }
   }
