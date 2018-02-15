@@ -93,8 +93,10 @@ with XBlocks with YBlocks {
     else
       world.fastGetPatchAt(source.pxcor - 1, source.pycor + 1)
 
-  override protected def diffuseCorners
-  (amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
+  override protected def diffuseCorners(amount: Double,
+                                        vn: Int,
+                                        fourWay: Boolean,
+                                        scratch: Array[Array[Double]]): Unit = {
     val ww = world.worldWidth
     val wh = world.worldHeight
     val lastX = ww - 1
