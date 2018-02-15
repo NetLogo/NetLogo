@@ -3883,7 +3883,17 @@ ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
         suffix) to be included in this model. Included files may contain
         breed, variable, and procedure definitions. <code>__includes</code> can
         only be used once per file.
-      </div>
+      <p>
+        The file names must be strings, for example:
+      <pre>
+__includes [ &quot;utils.nls&quot; ]
+      </pre>
+      <p>
+        Or, for multiple files:
+      <pre>
+__includes [ &quot;utils1.nls&quot; &quot;utils2.nls&quot; ]
+      </pre>
+    </div>
     <div class="dict_entry" id="in-radius">
       <h3>
         <a>in-radius<span class="since">1.0</span></a>
