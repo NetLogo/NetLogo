@@ -52,7 +52,7 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
     def okPath(path: String) =
-      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/")
+      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE")
         .forall(!path.toUpperCase.containsSlice(_))
     def remake(path: String) {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
