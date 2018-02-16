@@ -9,6 +9,38 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.0.3 (February 2018)
+
+### Feature Changes
+
+   * Improve the look & feel of Agent Monitor windows.
+   * The procedures menu in the code tab now has a search field and actively filters procedure names as the user types. This should improve navigation speed for large models with lots of procedures.
+   * Increase the speed of the `diffusion` primitive and make the diffusion operation symmetric.
+
+### Bugfixes
+
+   * Non-code changes to the System Dynamics modeler are pulled in on every recompile (prior to this, changes like newly-disconnected flows were sometimes not taken into account on recompiles).
+   * The system dynamics code tab adjusts itself to match the size of the system dynamics window.
+   * NetLogo 3D loads and saves system dynamics.
+   * When switching from the code tab to the interface tab, the cursor will be active in the command center, meaning that typed commands or copy/paste keyboard shortcuts won't affect the code tab.
+   * Turtles draw trails when moving backwards (regression in NetLogo 6.0.1).
+   * Fix a longstanding HubNet bug in which HubNet would sometimes crash as a large number of users joined.
+   * Fix HubNet broadcasting from Mac HubNet servers.
+   * Smooth Code Tab scrolling.
+   * Miscellaneous small changes to the format of exported worlds. NetLogo 6.0.3 should be able to import worlds exported by older versions of NetLogo and older versions of NetLogo should be able to import worlds exported by NetLogo 6.0.3.
+   * Fixes an error raised in 3D when the world was cleared following setting a patch-color to an RGB list.
+
+### Extension Changes
+
+   * [`nw:generate-preferential-attachment`](http://ccl.northwestern.edu/netlogo/docs/nw.html#nw:generate-preferential-attachment) accepts a `min-degree` parameter, specifying the number of links each new turtle preferentially creates to existing turtles.
+   * The `arduino` extension (and the related sketch and model in the library) have been updated to allow the arduino to send strings back to NetLogo. Two new debug primitives have also been added to help troubleshoot interaction between NetLogo and the arduino.
+
+### Documentation Changes
+
+   * Clarify documentation around `__includes` by providing examples.
+   * Fix a broken link in the dictionary.
+   * Update the Windows unattended installation directions in the FAQ.
+
 ## Version 6.0.2 (August 2017)
 
 ### Feature Changes
