@@ -106,11 +106,16 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def getInterfacePanel = iP
 
+  // When we get focus, we want to focus the command center first
+  // to prevent keyboard shortcuts (copy, cut, paste) from affecting
+  // the code tab or wherever the cursor was before the user switched - RG 2/16/18
   override def requestFocus() {
+    commandCenter.requestFocusInWindow()
     TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
   }
 
   final def handle(e: SwitchedTabsEvent) {
+    commandCenter.requestFocusInWindow()
     TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
     if (e.newTab != this) {
       monitorManager.refresh()

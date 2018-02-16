@@ -21,7 +21,8 @@ object Loader {
       case None => None
       case Some(dt) =>
         val model = buildModel(new Tokenizer(lines.tail.mkString("", "\n", "\n")),
-                               dt.toDouble)
+                               dt.toDouble,
+                               input.lines.drop(1).mkString("\n"))
         Some(model)
     }
   }
@@ -49,7 +50,7 @@ object Loader {
 
   private type LineMap = collection.Map[Int, ModelElement]
 
-  private def buildModel(tokens: Tokenizer, dt: Double): Model = {
+  private def buildModel(tokens: Tokenizer, dt: Double, serializedGUI: String): Model = {
     // lineMap keeps track of the objects we create with keys corresponding to the line numbers
     // file so we can find them later to connect rates. - EV
     // not every line results in an object, so we use a map - ST 1/25/05
@@ -62,7 +63,7 @@ object Loader {
             me match {
               case m: Model =>
                 require(model == null, tokens.diagnostics)
-                model = m
+                model = m.copy(serializedGUI = serializedGUI)
                 model.setDt(dt.toDouble)
               case s: Stock =>
                 lineMap(tokens.lineNumber) = s

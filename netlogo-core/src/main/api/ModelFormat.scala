@@ -86,3 +86,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
 }
 
 case class ModelSettings(snapToGrid: Boolean)
+
+trait AddableComponent {
+  def addToLoader(loader: ConfigurableModelLoader): ConfigurableModelLoader
+}
