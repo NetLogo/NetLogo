@@ -7,18 +7,21 @@ import java.io.{ ByteArrayOutputStream, ByteArrayInputStream, BufferedReader, St
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
 import org.nlogo.core.{ Model => CoreModel }
-import org.nlogo.fileformat.NLogoFormat
-import org.nlogo.api.ComponentSerialization
-import org.nlogo.sdm.Model
+import org.nlogo.fileformat.{ NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.api.{ AddableComponent, ComponentSerialization, ConfigurableModelLoader, ModelFormat }
 
 import scala.util.Try
+import scala.reflect.ClassTag
 
-class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoFormat] {
+abstract class AbstractNLogoGuiSDMFormat[A <: ModelFormat[Array[String], A]](implicit ct: ClassTag[A])
+  extends AddableComponent
+  with ComponentSerialization[Array[String], A] {
+
   override def componentName = "org.nlogo.modelsection.systemdynamics"
   val guiComponentName = "org.nlogo.modelsection.systemdynamics.gui"
   override def addDefault = identity
   override def serialize(m: CoreModel): Array[String] = {
-    m.optionalSectionValue[AggregateDrawing](componentName)
+    m.optionalSectionValue[AggregateDrawing](guiComponentName)
       .map(drawingStrings)
       .getOrElse(Array[String]())
   }
@@ -30,8 +33,8 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
     Try {
       stringsToDrawing(s)
         .map(sdm =>
-            m.withOptionalSection[Model](componentName, Some(sdm.getModel), sdm.getModel)
-              .withOptionalSection[AggregateDrawing](guiComponentName, Some(sdm), sdm))
+            m.withOptionalSection(guiComponentName, Some(sdm), sdm)
+              .withOptionalSection(componentName, Some(sdm.getModel), sdm.getModel))
         .getOrElse(m)
     }
   }
@@ -87,4 +90,10 @@ class NLogoGuiSDMFormat extends ComponentSerialization[Array[String], NLogoForma
          // also translate pre-4.1 save format
          .replaceAll("org.nlogo.aggregate.gui",
                      "org.nlogo.sdm.gui")
+
+  def addToLoader(loader: ConfigurableModelLoader): ConfigurableModelLoader =
+    loader.addSerializer[Array[String], A](this)
 }
+
+class NLogoGuiSDMFormat extends AbstractNLogoGuiSDMFormat[NLogoFormat]
+class NLogoThreeDGuiSDMFormat extends AbstractNLogoGuiSDMFormat[NLogoThreeDFormat]

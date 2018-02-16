@@ -7,7 +7,7 @@ import org.nlogo.api.AutoConvertable
 import org.nlogo.sdm.Translator
 
 object SDMGuiAutoConvertable extends AutoConvertable {
-  val componentName = "org.nlogo.modelsection.systemdynamics"
+  val componentName = "org.nlogo.modelsection.systemdynamics.gui"
 
   def componentDescription: String = "System Dynamics modeler"
 
