@@ -1,6 +1,6 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, runMain, state, streams, target }
+import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsRoot, manualPDF }
 import Extensions.{ extensions, extensionRoot }
@@ -8,6 +8,7 @@ import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
 import SbtSubdirectory.runSubdirectoryCommand
+import Running.makeMainTask
 import java.nio.file.Paths
 import scala.sys.process.Process
 
@@ -89,7 +90,9 @@ object NetLogoPackaging {
       (packageBin in Compile in behaviorsearchProject).value
     },
     resaveModels := {
-      (runMain in Test in netlogo).toTask(" org.nlogo.tools.ModelResaver").value
+      makeMainTask("org.nlogo.tools.ModelResaver",
+        classpath = (Keys.fullClasspath in Test in netlogo),
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
     resaveModels := (resaveModels dependsOn (extensions in netlogo)).value,
     packagedMathematicaLink := {

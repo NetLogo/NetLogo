@@ -5,6 +5,7 @@ import sbt._
 import Keys._
 import Def.Initialize
 import sbt.complete.{ Parser, DefaultParsers }, DefaultParsers.{ EOF, Space }
+import Running.makeMainTask
 
 object ModelsLibrary {
 
@@ -47,9 +48,15 @@ object ModelsLibrary {
     },
     javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString,
     resaveModels := {
-      (runMain in Test).toTask(" org.nlogo.tools.ModelResaver").value
+      makeMainTask("org.nlogo.tools.ModelResaver",
+        classpath = (fullClasspath in Test),
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
     resaveModel := {
+      makeMainTask("org.nlogo.tools.ModelResaver",
+        classpath = (fullClasspath in Test),
+        workingDirectory = baseDirectory(_.getParentFile))
+      /*
       modelParser.parsed.foreach { model =>
         val runner = new ForkRun(ForkOptions()
           .withWorkingDirectory(Some(baseDirectory.value.getParentFile))
@@ -57,6 +64,7 @@ object ModelsLibrary {
         runner.run("org.nlogo.tools.ModelResaver",
           (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
       }
+      */
     }
   )
 

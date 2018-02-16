@@ -1,6 +1,5 @@
 package org.nlogo.tools
 
-import java.awt.EventQueue
 import java.net.URI
 import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
@@ -8,7 +7,6 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
-import org.nlogo.app.App
 import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
@@ -36,16 +34,6 @@ import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
  *
  */
 object ModelResaver {
-
-  def wait(block: => Unit) {
-    EventQueue.invokeAndWait(
-      new Runnable() {
-        def run() { block }
-      })
-  }
-
-  var systemDynamicsModels: Seq[Path] = Seq()
-
   def main(args: Array[String]): Unit = {
     System.setProperty("org.nlogo.preferHeadless", "true")
 
@@ -54,37 +42,21 @@ object ModelResaver {
   }
 
   def resaveModels(paths: Seq[String]): Unit = {
-    val (systemDynamicsModels, otherModels) =
-      paths.map((s: String) => Paths.get(s)).partition(_.toString.contains("System Dynamics"))
-
-    if (systemDynamicsModels.isEmpty)
-      System.setProperty("java.awt.headless", "true")
-
-    otherModels.foreach(p => resaveModel(p))
-
-    if (systemDynamicsModels.nonEmpty)
-      resaveSystemDynamicsModels(systemDynamicsModels)
-
-    System.exit(0)
+    val modelPaths = paths.map((s: String) => Paths.get(s))
+    System.setProperty("java.awt.headless", "true")
+    modelPaths.foreach(p => resaveModel(p))
   }
 
   def resaveAllModels(): Unit = {
     traverseModels(Paths.get(modelsRoot), resaveModel _)
-
-    val failedModels = resaveSystemDynamicsModels(systemDynamicsModels)
-
-    println("FAILED MODELS:")
-    println(failedModels.mkString("\n"))
   }
 
   lazy val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   def resaveModel(modelPath: Path): Unit = {
-    if (modelPath.toString.contains("System Dynamics"))
-      systemDynamicsModels = systemDynamicsModels :+ modelPath
-    else {
-      val ws = HeadlessWorkspace.newInstance
+    val ws = HeadlessWorkspace.newInstance
+    try {
       val converter =
         fileformat.converter(ws.getExtensionManager, ws.getCompilationEnvironment,
           literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
@@ -102,6 +74,8 @@ object ModelResaver {
           case None => println("failed to resave: " + modelPath.toString)
         }
       }
+    } finally {
+      ws.dispose()
     }
   }
 
@@ -138,28 +112,6 @@ object ModelResaver {
       throw error
       FileVisitResult.TERMINATE
     }
-  }
-
-  def resaveSystemDynamicsModels(paths: Seq[Path]): Seq[(Path, String)] = {
-    App.main(Array[String]())
-
-    var failedModels = List[(Path, String)]()
-
-    for (path <- paths) {
-      wait {
-        try {
-          App.app.open(path.toString)
-          App.app.saveOpenModel()
-        }
-        catch {
-          case e: Exception => failedModels :+= ((path, e.getMessage))
-        }
-      }
-    }
-    wait {
-      App.app.quit()
-    }
-    failedModels
   }
 
   class ResaveController(path: URI) extends OpenModelController with SaveModelController {

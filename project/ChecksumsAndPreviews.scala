@@ -26,13 +26,10 @@ object ChecksumsAndPreviews {
   )
 
   private def makeTask(flag: String): Def.Initialize[InputTask[Try[Unit]]] =
-    Def.inputTask {
-      val args = spaceDelimited("").parsed
-      val runner = new ForkRun(ForkOptions()
-        .withWorkingDirectory(Some(baseDirectory.value.getParentFile))
-        .withRunJVMOptions(Vector("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
-      runner.run("org.nlogo.headless.ChecksumsAndPreviews",
-        (fullClasspath in Compile).value.map(_.data), flag +: args, streams.value.log)
-    }.dependsOn(compile in Compile, extensions)
+    Running.makeMainTask(
+      "org.nlogo.headless.ChecksumsAndPreviews",
+      Seq(flag),
+      workingDirectory = baseDirectory(_.getParentFile))
+        .dependsOn(compile in Compile, extensions)
 
 }
