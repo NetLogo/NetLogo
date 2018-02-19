@@ -4,7 +4,7 @@ resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releas
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
+// addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
 
 // so we can use native2ascii on Linux.
 unmanagedJars in Compile += {
