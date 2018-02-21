@@ -28,11 +28,15 @@ package object fileformat {
     extensionManager:       ExtensionManager,
     compilationEnvironment: CompilationEnvironment,
     literalParser:          LiteralParser,
-    conversionSections:     Seq[AutoConvertable])(
-      dialect:                Dialect): ModelConversion = {
-        ModelConverter(extensionManager, compilationEnvironment,
-          literalParser, dialect, conversionSections)
-      }
+    conversionSections:     Seq[AutoConvertable])
+  (dialect:               Dialect): ModelConversion = {
+    new ChainConverter(
+      Seq(
+        ModelConverter(extensionManager, compilationEnvironment, literalParser, dialect, conversionSections),
+        new PlotConverter(extensionManager, compilationEnvironment, literalParser, dialect, conversionSections)
+      )
+    )
+  }
 
   // basicLoader only loads the core of the model, and does no autoconversion, but has no external dependencies
   def basicLoader: ConfigurableModelLoader =
