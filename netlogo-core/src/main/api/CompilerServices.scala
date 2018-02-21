@@ -8,8 +8,6 @@ trait CompilerServices extends LiteralParser {
   def dialect: Dialect
   def isConstant(s: String): Boolean
   @throws(classOf[CompilerException])
-  def readFromString(s: String): AnyRef
-  @throws(classOf[CompilerException])
   def readNumberFromString(source: String): java.lang.Double
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String)
