@@ -31,7 +31,7 @@ object OptionDialog {
   }
 
   def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int =
-    JOptionPane.showOptionDialog(Hierarchy.getFrame(owner), message, title,
+    JOptionPane.showOptionDialog(owner, message, title,
       JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
       options.asInstanceOf[Array[Object]], options(0))
 

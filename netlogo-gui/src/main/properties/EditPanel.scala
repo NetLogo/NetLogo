@@ -131,7 +131,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // the error to pop up twice. - JC 4/9/10
       val value = editor.get
       if(!value.isDefined && !editor.handlesOwnErrors)
-        org.nlogo.swing.OptionDialog.showMessage(frame,
+        org.nlogo.swing.OptionDialog.showMessage(this,
           "Invalid Entry", "Invalid value for " + editor.accessor.displayName,
           Array(I18N.gui.get("common.buttons.ok")))
       value.isDefined
