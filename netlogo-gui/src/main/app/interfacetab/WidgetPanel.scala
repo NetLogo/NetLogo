@@ -573,6 +573,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper => w.widget.model
     }.distinct.toSeq
 
+  override def allWidgets: Seq[CoreWidget] =
+    getWidgetsForSaving
+
   override def removeAllWidgets(): Unit = {
     val comps = getComponents
     setVisible(false)

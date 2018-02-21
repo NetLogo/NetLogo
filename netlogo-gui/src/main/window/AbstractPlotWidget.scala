@@ -309,7 +309,17 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     case "setupCode" => plotManager.getPlotSetupError(plot)
     case "updateCode" => plotManager.getPlotUpdateError(plot)
   }).orNull
+
   def error(key: Object, e: Exception) { throw new UnsupportedOperationException }
+
+  override def invalidSettings: Seq[(String, String)] = {
+    val hasDuplicatedName =
+      findWidgetContainer.allWidgets.collect {
+        case p: CorePlot if p.display.map(_.toUpperCase).getOrElse("") == plotName.toUpperCase => p
+      }.length > 1
+    if (hasDuplicatedName) Seq("plotName" -> I18N.gui.getN("edit.plot.name.duplicate", plotName.toUpperCase))
+    else                   Seq.empty[(String, String)]
+  }
 
   override def editFinished: Boolean = {
     super.editFinished
