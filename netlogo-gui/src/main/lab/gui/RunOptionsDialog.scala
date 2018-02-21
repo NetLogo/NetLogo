@@ -22,7 +22,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       prefs.putBoolean("spreadsheet", runOptions.spreadsheet)
       prefs.putBoolean("table", runOptions.table)
       prefs.putBoolean("updateView",runOptions.updateView)
-      prefs.putBoolean("updatePlotsAndMonitor",runOptions.updatePlotsAndMonitors)
+      prefs.putBoolean("updatePlotsAndMonitors",runOptions.updatePlotsAndMonitors)
     }
   }
   def get = {
