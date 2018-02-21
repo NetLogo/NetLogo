@@ -33,7 +33,7 @@ resolvers += Resolver.url(
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.21")
 
-addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.1")
+addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.3")
 
 // prevents noise from bintray stuff
 libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.6.0"

@@ -277,6 +277,7 @@ lazy val parser = CrossProject("parser", file("."),
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
+  settings(publicationSettings("NetLogoHeadless"): _*).
   settings(
     isSnapshot := true,
     name := "parser",
@@ -285,7 +286,6 @@ lazy val parser = CrossProject("parser", file("."),
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jsConfigure(_.dependsOn(macros % "compile-internal->compile;test-internal->compile")).
-  jsSettings(publicationSettings("NetLogoHeadless"): _*).
   jsSettings(
       name := "parser-js",
       scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
