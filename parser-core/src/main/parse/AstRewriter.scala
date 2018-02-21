@@ -58,6 +58,16 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
     rewrite(NoopFolder, declarationReplace("globals", globalsRegex, _.program.userGlobals.map(_.toLowerCase), newGlobal))
   }
 
+  def addReporterProcedure(name: String, args: Seq[String], body: String): String = {
+    val formattedArgs = if (args.isEmpty) "" else args.mkString(" [ ", " ", " ]")
+    val procedureContent =
+      s"""|
+          |to-report $name$formattedArgs
+          |${body}
+          |end""".stripMargin
+    rewrite(NoopFolder, procedureAdd(procedureContent))
+  }
+
   private val extensionsRegex = new Regex("(?i)(?m)extensions\\s+\\[[^]]*\\]")
   private val globalsRegex = new Regex("(?i)(?m)globals\\s+\\[[^]]*\\]")
 
@@ -74,6 +84,11 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
       .map(m => headers.take(m.start) + newDecl + headers.drop(m.end))
       .getOrElse(newDecl+ "\n" + headers)
     modifiedHeaders + procedures + footer
+  }
+
+  private def procedureAdd(content: String)(
+    res: StructureResults, headers: String, procedures: String, footer: String): String = {
+      headers + procedures + "\n" + content + "\n" + footer
   }
 
   def rewrite(
@@ -145,6 +160,9 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand)
         val r = ws.visitProcedureDefinition(proc)(newContext)
         addTrailingWhitespace(r)
         (whitespaceLog ++ r.whitespaceLog, r)
+    }
+    if (procs.isEmpty) {
+      fileHeaders = fileHeaders + ("" -> getSource(""))
     }
     addTrailingWhitespace(whiteSpaces._2)
     (whiteSpaces._1, fileHeaders, fileFooters)
