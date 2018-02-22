@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NetLogo.iml" filepath="$PROJECT_DIR$/NetLogo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netlogo.iml" filepath="$PROJECT_DIR$/.idea/modules/netlogo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netlogo-build.iml" filepath="$PROJECT_DIR$/.idea/modules/netlogo-build.iml" />
     </modules>
   </component>
 </project>
