@@ -51,7 +51,7 @@ object Markdown {
 
     options.set(HtmlRenderer.SOFT_BREAK, "\n")
     options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
-    
+
     extensions.add(EscapedCharacterExtension.create())
 
     extensions.add(TypographicExtension.create())
@@ -106,7 +106,7 @@ object Markdown {
           case _ =>
         }
   }
-  
+
   object ManualAttributeProvider {
     class Factory(pageName: String, ext: Boolean) extends IndependentAttributeProviderFactory {
       override def create(context: NodeRendererContext) = new ManualAttributeProvider(pageName, ext)
@@ -118,7 +118,7 @@ object Markdown {
     def extend(builder: HtmlRenderer.Builder, rendererType: String) =
       if (rendererType == "HTML")
         builder.nodeRendererFactory(PrimLinkRenderer.Factory)
-    
+
     object PrimLinkRenderer extends CustomNodeRenderer[WikiLink] {
       override def render(node: WikiLink, context: NodeRendererContext, html: HtmlWriter) = {
         if (context.isDoNotRenderLinks) {

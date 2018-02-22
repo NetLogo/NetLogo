@@ -56,15 +56,6 @@ object ModelsLibrary {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (fullClasspath in Test),
         workingDirectory = baseDirectory(_.getParentFile))
-      /*
-      modelParser.parsed.foreach { model =>
-        val runner = new ForkRun(ForkOptions()
-          .withWorkingDirectory(Some(baseDirectory.value.getParentFile))
-          .withRunJVMOptions(Vector("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
-        runner.run("org.nlogo.tools.ModelResaver",
-          (fullClasspath in Test).value.map(_.data), Seq(model.toString), streams.value.log)
-      }
-      */
     }
   )
 
@@ -91,8 +82,9 @@ object ModelsLibrary {
       val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
       if (info.matches(whatIsItPattern + ".*") ) {
         val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
+        val formattedFirstParagraph = Markdown(firstParagraph, "", false)
         val q3 = "\"\"\""
-        println(s"  { path: ${q3}models/${modelsPath.toPath.relativize(path)}${q3}, info: ${q3}${firstParagraph}${q3} },")
+        println(s"  { path: ${q3}models/${modelsPath.toPath.relativize(path)}${q3}, info: ${q3}${formattedFirstParagraph}${q3} },")
       } else {
         System.err.println("WHAT IS IT not found: " + path)
       }
