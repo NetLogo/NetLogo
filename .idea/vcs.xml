@@ -2,5 +2,29 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mathematica-Link" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/behaviorsearch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/arduino" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/array" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/bitmap" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/cf" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/csv" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/gis" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/gogo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/ls" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/matrix" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/nw" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/palette" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/profiler" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/r" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/rnd" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/sample" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/sample-scala" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/sound" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/table" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/vid" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/extensions/view2.5d" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/models" vcs="Git" />
   </component>
 </project>
