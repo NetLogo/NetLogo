@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints } 
+import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
 import javax.swing._
 import javax.swing.BorderFactory._
 import javax.swing.border.{ EtchedBorder, TitledBorder }
@@ -83,7 +83,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   import PlotPensEditor._
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
-
   val plot = accessor.target.asInstanceOf[PlotWidget].plot
   val plotManager = accessor.target.asInstanceOf[PlotWidget].plotManager
   val table = new PlotPensTable()
@@ -114,13 +113,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   override def get: Option[List[PlotPen]] = {
     if(table.isEditing) table.getCellEditor.stopCellEditing
     val names = table.model.pens.map(_.name)
-    // for https://trac.assembla.com/nlogo/ticket/1174
-    // i'm deciding that we can have many pens with no names, if we choose.
-    // maybe we don't need this duplicate pen name restriction at all,
-    // but for now I'll leave it. It would seem weird to have two pens named "turtles"
-    // but also weird to allow for one pen to have no name, but only one.
-    if((names.toSet - "").size  < (names.toList.filterNot(_ == "")).size){
-      org.nlogo.swing.OptionDialog.showMessage(frame, "Invalid Entry", "Pens list contains duplicate names.",
+    // It was an intentional decision made Q2 2011 to allow multiple pens with
+    // a blank name. - RG 2/21/2018
+    val groupedNames = (names.groupBy(_.toUpperCase) - "").toSeq
+    val duplicateNames = groupedNames.filter(_._2.length > 1)
+    if (duplicateNames.nonEmpty) {
+      org.nlogo.swing.OptionDialog.showMessage(this, "Invalid Entry",
+        I18N.gui.getN("edit.plot.pen.duplicateNames", duplicateNames.map(_._1.toUpperCase).mkString(", ")),
         Array(I18N.gui.get("common.buttons.ok")))
       None
     } else Some(table.getPlotPens)

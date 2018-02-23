@@ -4,11 +4,6 @@ package org.nlogo.core
 
 import FrontEndInterface.ProceduresMap
 
-trait LiteralParser {
-  def readFromString(s: String): AnyRef
-  def readNumberFromString(source: String): AnyRef
-}
-
 trait CompilerUtilitiesInterface extends LiteralParser {
   def readFromString(source: String): AnyRef
 

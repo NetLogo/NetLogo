@@ -221,6 +221,9 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Button"   -> (() => new ButtonWidget(random.mainRNG)),
     "Output"   -> (() => new OutputWidget()))
 
+  override def allWidgets: Seq[CoreWidget] =
+    widgets.map(_._2).map(_.model).toSeq.distinct
+
   def loadWidget(coreWidget: CoreWidget): Widget = {
     try {
       val x = coreWidget.left

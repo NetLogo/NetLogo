@@ -27,4 +27,6 @@ trait WidgetContainer {
   def isZoomed: Boolean
 
   def loadWidget(coreWidget: CoreWidget): Widget
+
+  def allWidgets: Seq[CoreWidget]
 }

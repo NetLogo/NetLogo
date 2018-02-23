@@ -2,15 +2,20 @@
 
 package org.nlogo.properties
 
-import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
-import org.nlogo.editor.Colorizer
-import org.nlogo.window.WidgetWrapperInterface
-import javax.swing.{JPanel, JLabel}
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
-import org.nlogo.api.{ CompilerServices, Editable, Property}
-import scala.reflect.ClassTag
-// This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 
+import javax.swing.{JPanel, JLabel}
+
+import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
+import org.nlogo.api.{ CompilerServices, Editable, Property}
+import org.nlogo.editor.Colorizer
+import org.nlogo.swing.OptionDialog
+import org.nlogo.window.WidgetWrapperInterface
+
+import scala.reflect.ClassTag
+import scala.collection.JavaConverters._
+
+// This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer)
   extends JPanel {
 
@@ -122,6 +127,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       wrapper.widgetChanged()
     }
   }
+
   def valid() = {
     def valid(editor: PropertyEditor[_]) = {
       // plot editor handles its errors when you press the ok button.
@@ -131,24 +137,61 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // the error to pop up twice. - JC 4/9/10
       val value = editor.get
       if(!value.isDefined && !editor.handlesOwnErrors)
-        org.nlogo.swing.OptionDialog.showMessage(frame,
-          "Invalid Entry", "Invalid value for " + editor.accessor.displayName,
+        OptionDialog.showMessage(this,
+          I18N.gui.get("edit.general.invalidSettings"),
+          I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
           Array(I18N.gui.get("common.buttons.ok")))
       value.isDefined
     }
-    propertyEditors.forall(valid)
+    propertyEditors.forall(valid) && targetValid()
   }
+
   def apply() {
-    propertyEditors.foreach(_.apply)
+    applyProperties()
     changed()
   }
+
   def revert() {
+    revertProperties()
+    for(wrapper <- wrapperOption)
+      wrapper.setSize(originalSize)
+  }
+
+  private def applyProperties(): Unit = {
+    propertyEditors.foreach(_.apply)
+  }
+
+  private def revertProperties(): Unit = {
     for(editor <- propertyEditors) {
       editor.revert()
       editor.refresh()
     }
-    for(wrapper <- wrapperOption)
-      wrapper.setSize(originalSize)
+  }
+
+  private def targetValid(): Boolean = {
+    propertyEditors.foreach(_.apply)
+    val isValid = target.invalidSettings.isEmpty
+    if (! isValid) {
+      val allInvalidations =
+        target.invalidSettings.map {
+          case (name, error) =>
+            val displayName =
+              target.propertySet
+                .asScala
+                .filter(_.accessString == name)
+                .map(_.name)
+                .headOption
+                .getOrElse(name)
+                s"${displayName}: ${error}"
+        }.mkString("\n", "\n", "")
+      val invalidMessage = I18N.gui.getN("edit.general.invalidValues", allInvalidations)
+      OptionDialog.showMessage(this,
+        I18N.gui.get("edit.general.invalidSettings"),
+        invalidMessage,
+        Array(I18N.gui.get("common.buttons.ok")))
+      revertProperties()
+    }
+    isValid
   }
 
   ////

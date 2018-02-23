@@ -19,10 +19,11 @@ trait ConversionHelper {
   val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
-  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) = {
-    def literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+  def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) =
     new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, defaultAutoConvertables, conversions)
-  }
+
+  def plotConverter =
+    new PlotConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, defaultAutoConvertables)
 
   def tryConvert(model: Model, conversions: ConversionSet*): ConversionResult =
     converter(_ => conversions)(model, modelPath)

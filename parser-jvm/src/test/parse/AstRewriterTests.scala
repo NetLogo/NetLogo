@@ -159,6 +159,15 @@ class AstRewriterTests extends FunSuite {
     assertResult("globals [foo qux baz] to bar end")(addGlobal("GLOBALS [foo qux] to bar end", "baz"))
   }
 
+  test("adds reporter procedure") {
+    assertResult("globals [foo]\n\nto-report foo\nreport 3\nend")(
+      addReporterProcedure("globals [foo]", "foo", "report 3"))
+    assertResult("globals [foo]\nto-report a report 5 end\n\nto-report foo\nreport 3\nend")(
+      addReporterProcedure("globals [foo]\nto-report a report 5 end", "foo", "report 3"))
+    assertResult("globals [foo]\n\nto-report foo [ a ]\nreport a\nend")(
+      addReporterProcedure("globals [foo]", "foo", "report a", Seq("a")))
+  }
+
   val tokenizer: TokenizerInterface =
     Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
@@ -183,6 +192,11 @@ class AstRewriterTests extends FunSuite {
 
   def addGlobal(source: String, global: String): String = {
     val added = rewriter(source).addGlobal(global)
+    added.trim
+  }
+
+  def addReporterProcedure(source: String, name: String, body: String, args: Seq[String] = Seq()): String = {
+    val added = rewriter(source).addReporterProcedure(name, args, body)
     added.trim
   }
 
