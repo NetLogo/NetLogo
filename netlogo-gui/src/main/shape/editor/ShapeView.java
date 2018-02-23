@@ -112,17 +112,17 @@ strictfp class ShapeView
   // Set the size of the view
   @Override
   public java.awt.Dimension getPreferredSize() {
-    return new java.awt.Dimension(300, 300);
+    return new java.awt.Dimension(400, 400);
   }
 
   @Override
   public java.awt.Dimension getMinimumSize() {
-    return new java.awt.Dimension(300, 300);
+    return new java.awt.Dimension(400, 400);
   }
 
   @Override
   public java.awt.Dimension getMaximumSize() {
-    return new java.awt.Dimension(300, 300);
+    return new java.awt.Dimension(400, 400);
   }
 
   public void update(Observable o, Object rect) {
@@ -202,13 +202,10 @@ strictfp class ShapeView
     }
 
     // Draw crosshairs on top of the grid
-    g.setColor(java.awt.Color.DARK_GRAY);
+    g.setColor(java.awt.Color.WHITE);
     g.drawLine(bounds.width / 2, 0, bounds.width / 2, bounds.height);
-    g.drawLine(0, bounds.height / 2, bounds.width, bounds.width / 2);
-    g.drawLine(0,
-        NUM_GRID_LINES * Element.round(gridGapY),
-        bounds.width,
-        NUM_GRID_LINES * Element.round(gridGapY));
+    g.drawLine(0, bounds.height / 2, bounds.width, bounds.height / 2);
+
 
     // Draw the elements
     g2.antiAliasing(true);
@@ -217,14 +214,14 @@ strictfp class ShapeView
       element = elements.get(i);
       g.setColor(element.awtColor());
       element.draw(g2, null,
-          IS_MAC ? 299 : 300,
+          IS_MAC ? 299 : 400,
           0);
     }
 
     if (tempElement != null) {
       g.setColor(editorDialog.getElementColor());
       tempElement.draw(g2, null,
-          IS_MAC ? 299 : 300,
+          IS_MAC ? 299 : 400,
           0);
     }
 
