@@ -28,6 +28,7 @@ For help running models made in old versions, see the
    * Fix HubNet broadcasting from Mac HubNet servers.
    * Smooth Code Tab scrolling.
    * Miscellaneous small changes to the format of exported worlds. NetLogo 6.0.3 should be able to import worlds exported by older versions of NetLogo and older versions of NetLogo should be able to import worlds exported by NetLogo 6.0.3.
+   * BehaviorSpace now only applies standard CSV string escaping (doubling of double quotes) to string outputs in result files. It used to apply NetLogo style string escaping (backslashes in front of special characters) and then apply CSV escaping on top of that. The new behavior is consistent with the RFC 4180 specification and the current behavior of the `csv` extension.
    * Fixes an error raised in 3D when the world was cleared following setting a patch-color to an RGB list.
 
 ### Extension Changes

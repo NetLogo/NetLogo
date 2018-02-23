@@ -3,7 +3,6 @@
 package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.Dump
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -43,10 +42,10 @@ class TableExporter(modelFileName: String,
     val headers =
       "[run number]" :: protocol.valueSets.map(_.variableName) :::
       "[step]" :: protocol.metrics
-    out.println(headers.map(Dump.csv.header).mkString(","))
+    out.println(headers.map(csv.header).mkString(","))
   }
   def writeTableRow(runNumber: Int, step: Int, values: List[AnyRef]) {
     val entries = runNumber :: settings(runNumber).map(_._2) ::: step :: values
-    out.println(entries.map(Dump.csv.data).mkString(","))
+    out.println(entries.map(csv.data).mkString(","))
   }
 }

@@ -227,6 +227,13 @@
     <timeLimit steps="2"/>
     <metric>metric</metric>
   </experiment>
+  <experiment name="stringMetrics" repetitions="1" runMetricsEveryStep="true">
+    <setup>clear-all reset-ticks</setup>
+    <go>tick</go>
+    <timeLimit steps="1"/>
+    <metric>s1</metric>
+    <metric>s2</metric>
+  </experiment>
   <experiment name="runNumber" repetitions="3" runMetricsEveryStep="true">
     <setup>clear-all reset-ticks</setup>
     <go>tick</go>

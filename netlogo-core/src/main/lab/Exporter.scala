@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ Dump, Version }
+import org.nlogo.api.{ CSV, Dump, Version }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
 
@@ -16,25 +16,30 @@ abstract class Exporter(modelFileName: String,
                         out: java.io.PrintWriter)
   extends ProgressListener
 {
+  val csv = new CSV({
+    // boxed integers are used here, but illegal logoObjects -- NP 2018-02-23
+    case i: java.lang.Integer => i.toString
+    case x => Dump.logoObject(x.asInstanceOf[AnyRef], false, true)
+  })
   def writeExportHeader() {
     out.println(
-      Dump.csv.header(
+      csv.header(
         "BehaviorSpace results (" + Version.version + ")"))
     out.println(
-      Dump.csv.header(modelFileName))
+      csv.header(modelFileName))
     out.println(
-      Dump.csv.header(protocol.name))
+      csv.header(protocol.name))
     out.println(
-      Dump.csv.header(
+      csv.header(
         new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SSS Z")
           .format(new java.util.Date)))
     out.println(
-      Dump.csv.headerRow(
+      csv.headerRow(
         Array("min-pxcor", "max-pxcor", "min-pycor", "max-pycor")))
     out.println{
       import initialDims._
       List(minPxcor, maxPxcor, minPycor, maxPycor)
-        .map(Dump.csv.number(_))
+        .map(csv.number(_))
         .mkString(",")
     }
   }
