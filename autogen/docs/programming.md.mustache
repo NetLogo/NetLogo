@@ -1840,6 +1840,26 @@ If you use [[output-print|output-cmds]], [[output-show|output-cmds]],
 [[export-output|export-cmds]] in a model which does not have a separate output
 area, then the commands apply to the output portion of the Command Center.
 
+### How Output Primitives Differ
+
+This information is a quick reference for more advanced users.
+
+The [[print]], [[show]], [[type]], and [[write]] primitives differ on the following facets:
+
+* What types of values does the primitive accept?
+* Does the primitive output a newline at the end?
+* Are strings output with quotes surrounding them?
+* Does the primitive output the agent which printed it?
+
+The following table summarizes the behavior of each primitive.
+
+| Primitive | Acceptable values | Adds newline? | Strings quoted? | Outputs `self`? |
+|---|---|---|---|---|
+| [[print]] | any NetLogo value | yes | no  | no  |
+| [[show]]  | any NetLogo value | yes | yes | yes |
+| [[type]]  | any NetLogo value | no | no | no |
+| [[write]] | boolean, number, string, lists containing only these types | no | yes | no |
+
 ## File I/O
 
 In NetLogo, there is a set of primitives that give you the power to interact
@@ -2857,4 +2877,3 @@ end</pre>
 
 Of course, the NetLogo language also contains other features not found in most
 Logos, most importantly agents and agentsets.
-

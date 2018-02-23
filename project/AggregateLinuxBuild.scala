@@ -1,5 +1,7 @@
 import sbt._
 import NetLogoPackaging.RunProcess
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 
 object PackageLinuxAggregate {
@@ -90,6 +92,12 @@ object PackageLinuxAggregate {
       val targetFile = aggregateLinuxDir / "netlogo-headless.sh"
       Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
         targetFile, variables + headlessClasspath)
+      val permissions = {
+        import PosixFilePermission._
+        import scala.collection.JavaConverters._
+        Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
+      }
+      Files.setPosixFilePermissions(targetFile.toPath, permissions)
       targetFile.setExecutable(true)
 
       val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
