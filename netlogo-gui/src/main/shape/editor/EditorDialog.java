@@ -421,7 +421,6 @@ strictfp class EditorDialog
     rightPanel.add(rotateRightButton);
     rightPanel.add(flipHorizontalButton);
     rightPanel.add(flipVerticalButton);
- 
 
     // BOTTOM BUTTONS
 
