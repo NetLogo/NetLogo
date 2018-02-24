@@ -21,14 +21,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
+  private val displaySwitch = new JCheckBox(displaySwitchAction)
+  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
   private var updatePlots = false
   private var started = 0L
   private var runCount = 0
   private var elapsed = "0:00:00"
   private var settingsString = ""
   private var steps = 0
-  private val displaySwitch = new JCheckBox(displaySwitchAction)
-  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
 
   private val plotWidgetOption: Option[PlotWidget] = {
     if (protocol.runMetricsEveryStep && protocol.metrics.length > 0) {
@@ -137,12 +137,12 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
 
-  def updateView(check:Boolean): Unit = {
+  def updateView(check: Boolean): Unit = {
     displaySwitch.setSelected(check)
     workspace.displaySwitchOn(check)
   }
 
-  def setUpdateView(status:Boolean): Unit = {
+  def setUpdateView(status: Boolean): Unit = {
     if(status){
       updateView(true)
     }
@@ -151,7 +151,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
 
-  def plotsAndMonitorsSwitch(check:Boolean): Unit = {
+  def plotsAndMonitorsSwitch(check: Boolean): Unit = {
     if(check){
       plotsAndMonitorsSwitch.setSelected(true)
       workspace.setPeriodicUpdatesEnabled(true)
@@ -163,7 +163,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
 
-  def setPlotsAndMonitorsSwitch(status:Boolean): Unit = {
+  def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
     if(status){
       plotsAndMonitorsSwitch(true)
       updatePlots = true

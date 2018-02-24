@@ -37,7 +37,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
     var updateView = Prefs.updateView
-    var updatePlotsAndMonitors= Prefs.updatePlotsAndMonitors
+    var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Runtime.getRuntime.availableProcessors
     val classDisplayName = "Run options"
     val propertySet =
