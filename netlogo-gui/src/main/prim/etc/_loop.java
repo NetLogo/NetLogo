@@ -2,9 +2,10 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.prim._enterscope;
+import org.nlogo.prim._exitscope;
 
 public final strictfp class _loop
     extends Command
@@ -19,7 +20,9 @@ public final strictfp class _loop
 
   public void assemble(org.nlogo.nvm.AssemblerAssistant a) {
     a.comeFrom();
+    a.add(new _enterscope());
     a.block();
+    a.add(new _exitscope());
     a.goTo();
   }
 }

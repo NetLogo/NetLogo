@@ -18,7 +18,7 @@ class _commandlambda(
     AnonymousCommand(
       procedure = proc,
       formals   = proc.lambdaFormalsArray,
-      binding   = c.activation.binding.copy,
+      binding   = c.activation.binding,
       locals    = c.activation.args,
       source    = lambdaSource)
   }
