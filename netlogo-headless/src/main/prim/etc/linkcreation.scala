@@ -6,9 +6,9 @@ import
   org.nlogo.{ agent, core, nvm },
     core.Syntax,
     agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
-    nvm.{ Command, Context, RuntimePrimitiveException }
+    nvm.{ Command, Context, RuntimePrimitiveException, SelfScoping }
 
-trait LinkCreationCommand extends Command with nvm.CustomAssembled {
+trait LinkCreationCommand extends Command with nvm.CustomAssembled with SelfScoping {
   // abstract
   def breedName: String
   def inputType: Int

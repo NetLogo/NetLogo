@@ -5,9 +5,12 @@ package org.nlogo.prim
 import org.nlogo.agent.{ Agent, AgentSet, Observer }
 import org.nlogo.core.{ I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, AssemblerAssistant, Command, Context,
-                       CustomAssembled, RuntimePrimitiveException }
+                       CustomAssembled, RuntimePrimitiveException, SelfScoping }
 
-class _ask extends Command with CustomAssembled {
+class _ask
+  extends Command
+  with CustomAssembled
+  with SelfScoping {
 
   switches = true
 

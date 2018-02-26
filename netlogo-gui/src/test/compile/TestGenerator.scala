@@ -5,7 +5,7 @@ package org.nlogo.compile
 import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.scalatest.FunSuite
 import org.nlogo.api.{ AgentVariableNumbers, DummyExtensionManager, Version, NetLogoThreeDDialect, NetLogoLegacyDialect }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ Command, Procedure }
 
 class TestGenerator extends FunSuite {
 
@@ -15,11 +15,15 @@ class TestGenerator extends FunSuite {
   val program = Program.fromDialect(dialect).copy(userGlobals = Seq("GLOB1"))
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")
-  def compile(source: String, preamble: String) =
+  def compileAll(source: String, preamble: String): Procedure =
     compiler.compileMoreCode(
       "to foo " + preamble + source + "\nend", None,
       program, new scala.collection.immutable.ListMap[String, Procedure](),
-      new DummyExtensionManager, new DummyCompilationEnvironment()).head.code.head
+      new DummyExtensionManager, new DummyCompilationEnvironment()).head
+  def compile(source: String, preamble: String): Command =
+    compileAll(source, preamble).code.head
+  def disassembleProcedure(source: String): String =
+    compileAll(source, "").code.map(_.disassembly.value).mkString("\n")
   def disassembleCommand(source: String): String =
     condense(compile(source, "").disassembly.value)
   def disassembleReporter(source: String): String =

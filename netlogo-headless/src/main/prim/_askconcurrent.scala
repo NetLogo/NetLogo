@@ -4,10 +4,10 @@ package org.nlogo.prim
 
 import org.nlogo.agent.Observer
 import org.nlogo.core.I18N
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled}
+import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, SelfScoping }
 import org.nlogo.nvm.RuntimePrimitiveException
 
-class _askconcurrent extends Command with CustomAssembled {
+class _askconcurrent extends Command with CustomAssembled with SelfScoping {
 
   switches = true
 

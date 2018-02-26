@@ -3,14 +3,14 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ ClosedVariable, Token }
-import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter }
+import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter, SelfScoping }
 
 class _commandlambda(
   val argumentNames:   Seq[String],
   val argTokens:       Seq[Token],
   var proc:            LiftedLambda,
   val closedVariables: Set[ClosedVariable],
-  val lambdaSource:    String) extends Reporter {
+  val lambdaSource:    String) extends Reporter with SelfScoping {
 
   source = lambdaSource
 
@@ -25,7 +25,7 @@ class _commandlambda(
     AnonymousCommand(
       procedure = proc,
       formals   = proc.lambdaFormalsArray,
-      binding   = c.activation.binding.copy,
+      binding   = c.activation.binding,
       locals    = c.activation.args,
       source    = lambdaSource)
 

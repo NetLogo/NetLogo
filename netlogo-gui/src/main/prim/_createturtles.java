@@ -2,17 +2,19 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.Syntax;
+import org.nlogo.api.LogoException;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.LogoException;
-import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.CustomAssembled;
+import org.nlogo.nvm.SelfScoping;
 
 public final strictfp class _createturtles
     extends Command
-    implements org.nlogo.nvm.CustomAssembled {
+    implements CustomAssembled, SelfScoping {
   static final String NO_BREED = "";
   public final String breedName;
 

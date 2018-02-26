@@ -4,10 +4,12 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.nvm.CompilerScoping;
+import org.nlogo.nvm.CustomAssembled;
 
 public final strictfp class _while
     extends Command
-    implements org.nlogo.nvm.CustomAssembled {
+    implements CustomAssembled, CompilerScoping {
 
   @Override
   public String toString() {
@@ -29,5 +31,9 @@ public final strictfp class _while
     a.block();
     a.comeFrom();
     a.add(this);
+  }
+
+  public int scopedBlockIndex() {
+    return 1;
   }
 }
