@@ -73,7 +73,7 @@ and the Northwestern Institute on Complex Systems.
 ## License
 
 NetLogo
-Copyright (C) 1999-2016 Uri Wilensky
+Copyright (C) 1999-{{year}} Uri Wilensky
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -98,8 +98,8 @@ licenses, please contact Uri Wilensky at
 
 ### User Manual license
 
-NetLogo User Manual  
-Copyright (C) 1999-2016 Uri Wilensky
+NetLogo User Manual
+Copyright (C) 1999-{{year}} Uri Wilensky
 
 This work is licensed under the Creative Commons
 Attribution-ShareAlike 3.0 Unported License. To view a copy of this

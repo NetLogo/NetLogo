@@ -267,6 +267,7 @@ class App extends
   var recentFilesMenu: RecentFilesMenu = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
@@ -579,7 +580,10 @@ class App extends
   lazy val openColorDialog = new OpenColorDialog(frame)
 
   lazy val allActions: Seq[javax.swing.Action] = {
-    val osSpecificActions = if (isMac) Seq() else Seq(openPreferencesDialog, openAboutDialog)
+    // If we're running in the mac wrapper, it takes care of displaying these
+    // items for us - RG 2/26/18
+    val osSpecificActions =
+      if (runningInMacWrapper) Seq() else Seq(openPreferencesDialog, openAboutDialog)
 
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
