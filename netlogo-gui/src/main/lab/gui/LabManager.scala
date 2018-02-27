@@ -6,11 +6,12 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.core.{ I18N, Model }
-import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
+import org.nlogo.awt.Positioning
+import org.nlogo.core.{I18N, Model}
+import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace, LabManagerInterface, MenuBarFactory}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
-import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
+import org.nlogo.swing.UserAction.{KeyBindings, MenuAction, ToolsCategory, ToolsDialogsGroup}
 
 import scala.collection.mutable.ListBuffer
 
@@ -36,7 +37,11 @@ class LabManager(val workspace:        GUIWorkspace,
     protocols.clear()
   }
   private lazy val dialog = new ManagerDialog(this, dialogFactory, menuFactory)
-  def show() { dialog.update(); dialog.setVisible(true) }
+  def show() {
+    Positioning.center(dialog, workspace.getFrame)
+    dialog.update()
+    dialog.setVisible(true)
+  }
   def close() { dialog.setVisible(false) }
   def dirty() { new DirtyEvent(None).raise(this) }
   /// Event.LinkChild -- lets us get events out to rest of app
