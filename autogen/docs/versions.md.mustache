@@ -9,38 +9,122 @@ For help running models made in old versions, see the
 
 [TOC]
 
-## Version 6.0.3 (February 2018)
+## Version 6.0.3 (March 2018)
 
 ### Feature Changes
 
    * Improve the look & feel of Agent Monitor windows.
    * The procedures menu in the code tab now has a search field and actively filters procedure names as the user types. This should improve navigation speed for large models with lots of procedures.
    * Increase the speed of the `diffusion` primitive and make the diffusion operation symmetric.
-
-### Bugfixes
-
-   * Non-code changes to the System Dynamics modeler are pulled in on every recompile (prior to this, changes like newly-disconnected flows were sometimes not taken into account on recompiles).
-   * The system dynamics code tab adjusts itself to match the size of the system dynamics window.
-   * NetLogo 3D loads and saves system dynamics.
-   * When switching from the code tab to the interface tab, the cursor will be active in the command center, meaning that typed commands or copy/paste keyboard shortcuts won't affect the code tab.
-   * Turtles draw trails when moving backwards (regression in NetLogo 6.0.1).
-   * Fix a longstanding HubNet bug in which HubNet would sometimes crash as a large number of users joined.
-   * Fix HubNet broadcasting from Mac HubNet servers.
-   * Smooth Code Tab scrolling.
-   * Miscellaneous small changes to the format of exported worlds. NetLogo 6.0.3 should be able to import worlds exported by older versions of NetLogo and older versions of NetLogo should be able to import worlds exported by NetLogo 6.0.3.
-   * BehaviorSpace now only applies standard CSV string escaping (doubling of double quotes) to string outputs in result files. It used to apply NetLogo style string escaping (backslashes in front of special characters) and then apply CSV escaping on top of that. The new behavior is consistent with the RFC 4180 specification and the current behavior of the `csv` extension.
-   * Fixes an error raised in 3D when the world was cleared following setting a patch-color to an RGB list.
-
-### Extension Changes
-
-   * [`nw:generate-preferential-attachment`](http://ccl.northwestern.edu/netlogo/docs/nw.html#nw:generate-preferential-attachment) accepts a `min-degree` parameter, specifying the number of links each new turtle preferentially creates to existing turtles.
-   * The `arduino` extension (and the related sketch and model in the library) have been updated to allow the arduino to send strings back to NetLogo. Two new debug primitives have also been added to help troubleshoot interaction between NetLogo and the arduino.
+   * NetLogo enforces that plot names are unique and that pen names are per-plot unique without taking capitalization into account. This avoids certain cases where `set-current-plot` and `set-current-plot-pen` primitives would set the plot or pen to something different than the user intended because names differed in capitalization only.
+   * Models with existing plots and pens which have the same name without taking capitalization into account will be automatically converted on first open in 6.0.3.
 
 ### Documentation Changes
 
-   * Clarify documentation around `__includes` by providing examples.
-   * Fix a broken link in the dictionary.
-   * Update the Windows unattended installation directions in the FAQ.
+   * Add a table to the Output section of the Programming Guide specifying how the various output primitives differ in whether they print the calling agent, whether they print a newline, and whether they can be read back into NetLogo.
+
+### Bugfixes
+
+- Anonymous procedures appearing inside `ask` blocks inside `repeat` blocks now close over unique copies of let-variables introduced in the `repeat` block.
+- Fix a longstanding HubNet bug in which HubNet would sometimes crash as a large number of users joined.
+- Fix HubNet discovery when the HubNet server is run on a Mac.
+- When switching from the code tab to the interface tab, the switches to the command center. This prevents typed commands or copy/paste keyboard shortcuts from affecting the code tab.
+- Turtles draw trails when moving backwards (regression in NetLogo 6.0.1).
+- Smooth Code Tab scrolling.
+- BehaviorSpace now only applies standard CSV string escaping (doubling of double quotes) to string outputs in result files. It used to apply NetLogo style string escaping (backslashes in front of special characters) and then apply CSV escaping on top of that. The new behavior is consistent with the RFC 4180 specification and the current behavior of the `csv` extension.
+- The Behaviorspace dialog appears centered in the NetLogo window.
+- Due to changes introduced in Java, certain dialogs in NetLogo 6.0.1 would appear under the dialog that created them instead of on top. These dialogs now appear on top of the dialog that created them.
+- Non-code changes to the System Dynamics modeler are pulled in on every recompile (prior to this, changes like newly-disconnected flows were sometimes not taken into account on recompiles).
+- The system dynamics code tab adjusts itself to match the size of the system dynamics window.
+- NetLogo 3D loads and saves system dynamics.
+- Fixes an error raised in 3D when the world was cleared following setting a patch-color to an RGB list.
+- Miscellaneous small changes to the format of exported worlds. NetLogo 6.0.3 should be able to import worlds exported by older versions of NetLogo and older versions of NetLogo should be able to import worlds exported by NetLogo 6.0.3.
+- The "others" execute bit is set for the netlogo-headless.sh script in the Linux installer package.
+
+### Extension Changes
+
+- [`nw:generate-preferential-attachment`](http://ccl.northwestern.edu/netlogo/docs/nw.html#nw:generate-preferential-attachment) accepts a `min-degree` parameter, specifying the number of links each new turtle preferentially creates to existing turtles.
+- The `arduino` extension (and the related sketch and model in the library) have been updated to allow the arduino to send strings back to NetLogo. Two new debug primitives have also been added to help troubleshoot interaction between NetLogo and the arduino.
+
+### Documentation Changes
+
+- Clarify documentation around `__includes` by providing examples.
+- Fix a broken link in the dictionary.
+- Update the Windows unattended installation directions in the FAQ.
+
+### Model Changes
+
+#### New Sample Models:
+- **Baldwin Effect** (HAS NOT BEEN COMMITTED)
+- Bidding Market
+- Blood Sugar Regulation
+- Rock Paper Scissors
+- Vision Evolution
+
+#### New Curricular Models
+- NIELS - Current in a Wire HubNet
+
+#### New HubNet Activities:
+- Current in a Wire HubNet (same as above)
+
+#### Revised Code Examples:
+- `arduino` Extension: The example model and sketch have been updated to reflect new features in the extension
+- `sound` Extension – Sound Workbench: Minor GUI updates
+- `sound` Extension – Percussion Workbench: Minor GUI updates
+- File Input Example: Fixed a bug in the `save-patch-data` template procedure
+- Lottery Example: Corrected *Related Models* from Preferential Attachment to the `Rnd` Example Model in the Info Tab
+- Info Tab Example: Corrected reference from `pegdown` to `flexmark` in the Info Tab
+
+#### Revised Curricular Models:
+- BEAGLE Evolution - Fish Tank Genetic Drift: Update duplicate plot-pen names and resize plots
+- GenEvo - GenEvo 4: Replaced usage of `cf:when` with nested `ifelse`s
+- NIELS - Electrostatics: All turtles are now `particles` and each `particle` has a charge; Changed particle coloring; Updated Info Tab and some variable names to reflect later NIELS models
+- Urban Suite - Tijuana Bordertowns: Minor Info Tab updates.
+
+#### Revised Sample Models:
+- Artificial Anasazi: Update broken URLs in Info Tab
+- Autumn: Update broken URLs in Info Tab
+- HIV: The `AIDS` model has been renamed to `HIV`†
+- Color Fractions: Removed direct reference to dead web page in Info Tab
+- Fairy Circles: Update URLs in Info Tab
+- Fur: Update broken URLs in Info Tab
+- Hex Cell Aggregation: Update broken URLs in Info Tab
+- Ising: Update broken URLs in Info Tab
+- Kicked Rotators: Update broken URLs in Info Tab
+- Language Change: Update URLs in Info Tab
+- Lennard-Jones: Added citation in the Info tab
+- Lightning: Update URLs in Info Tab.
+- L-System Fractals: Update broken URLs in Info Tab
+- Membrane Formation: Update broken URLs in Info Tab
+- Moth: Update URLs in Info Tab
+- Party: Fix incorrect comment on turtle headings.
+- PD Basic: Minor GUI updates
+- Segregation: Update broken URLs in Info Tab. Update color scheme for color blindness. Minor GUI updates. Minor Info Tab updates.
+- Sugarscape 1 Immediate Growback: Fixed "Wealth distribution" histogram bug (`turtle` with max `sugar` was not displayed)
+- Sugarscape 2 Constant Growback: Fixed "Wealth distribution" histogram bug (`turtle` with max `sugar` was not displayed)
+- Sugarscape 3 Wealth Distribution: Fixed "Wealth distribution" histogram bug (`turtle` with max `sugar` was not displayed)
+
+#### Revised IABM Models:
+- Arduino Example: The example model and sketch have been updated to reflect new features in the extension (same as above)
+- Segregation Simple Extension 1: Update broken URLs in Info Tab
+- Segregation Simple Extension 2: Update broken URLs in Info Tab
+- Segregation Simple Extension 3: Update broken URLs in Info Tab
+- Segregation Simple: Update broken URLs in Info Tab
+
+#### † - Models Updated to Correctly Reference the HIV Model
+
+- Alternative Visualizations
+  - Virus - Alternative Visualization
+  - Virus - Circle Visualization
+- Curricular Models
+  - epiDEM Basic
+  - epiDEM Travel and Control
+- IABM Models
+  - Spread of Disease
+- Sample Models:
+  - Disease Solo
+  - Virus
+  - Rumor Mill
 
 ## Version 6.0.2 (August 2017)
 
