@@ -13,22 +13,23 @@ For help running models made in old versions, see the
 
 ### Feature Changes
 
-   * Improve the look & feel of Agent Monitor windows.
-   * The procedures menu in the code tab now has a search field and actively filters procedure names as the user types. This should improve navigation speed for large models with lots of procedures.
-   * Increase the speed of the `diffusion` primitive and make the diffusion operation symmetric.
-   * NetLogo enforces that plot names are unique and that pen names are per-plot unique without taking capitalization into account. This avoids certain cases where `set-current-plot` and `set-current-plot-pen` primitives would set the plot or pen to something different than the user intended because names differed in capitalization only.
-   * Models with existing plots and pens which have the same name without taking capitalization into account will be automatically converted on first open in 6.0.3.
+- Improve the look & feel of Agent Monitor windows.
+- The procedures menu in the code tab now has a search field and actively filters procedure names as the user types. This should improve navigation speed for large models with lots of procedures. There is also now a hotkey to access this menu: Ctrl-G on Windows and Linux, and Cmd-G on MacOS.
+- Increase the speed of the `diffusion` primitive and make the diffusion operation symmetric.
+- NetLogo enforces that plot names are unique and that pen names are per-plot unique without taking capitalization into account. This avoids certain cases where `set-current-plot` and `set-current-plot-pen` primitives would set the plot or pen to something different than the user intended because names differed in capitalization only.
+- Models with existing plots and pens which have the same name without taking capitalization into account will be automatically converted on first open in 6.0.3.
+- We are planning on adding the ability to have multiple conditional branches to `ifelse` and `ifelse-value`. However, as this is a fairly substantial change to the core language, we have implemented it in the cf extension for testing. See [the `cf` documentation](https://ccl.northwestern.edu/netlogo/docs/cf.html) for information about the new syntax.
 
 ### Documentation Changes
 
-   * Add a table to the Output section of the Programming Guide specifying how the various output primitives differ in whether they print the calling agent, whether they print a newline, and whether they can be read back into NetLogo.
+- Add a table to the Output section of the Programming Guide specifying how the various output primitives differ in whether they print the calling agent, whether they print a newline, and whether they can be read back into NetLogo.
 
 ### Bugfixes
 
 - Anonymous procedures appearing inside `ask` blocks inside `repeat` blocks now close over unique copies of let-variables introduced in the `repeat` block.
 - Fix a longstanding HubNet bug in which HubNet would sometimes crash as a large number of users joined.
 - Fix HubNet discovery when the HubNet server is run on a Mac.
-- When switching from the code tab to the interface tab, the switches to the command center. This prevents typed commands or copy/paste keyboard shortcuts from affecting the code tab.
+- When switching from the code tab to the interface tab, the cursor switches to the command center. This prevents typed commands or copy/paste keyboard shortcuts from affecting the code tab.
 - Turtles draw trails when moving backwards (regression in NetLogo 6.0.1).
 - Smooth Code Tab scrolling.
 - BehaviorSpace now only applies standard CSV string escaping (doubling of double quotes) to string outputs in result files. It used to apply NetLogo style string escaping (backslashes in front of special characters) and then apply CSV escaping on top of that. The new behavior is consistent with the RFC 4180 specification and the current behavior of the `csv` extension.
@@ -45,6 +46,10 @@ For help running models made in old versions, see the
 
 - [`nw:generate-preferential-attachment`](http://ccl.northwestern.edu/netlogo/docs/nw.html#nw:generate-preferential-attachment) accepts a `min-degree` parameter, specifying the number of links each new turtle preferentially creates to existing turtles.
 - The `arduino` extension (and the related sketch and model in the library) have been updated to allow the arduino to send strings back to NetLogo. Two new debug primitives have also been added to help troubleshoot interaction between NetLogo and the arduino.
+- The verbose `cf` extension conditional syntax as been replaced with straight-forward generalizations of the `ifelse` and `ifelse-value` primitives. The syntax is much simpler and these primitives run much faster than the old constructs.
+- The `ls` extension has much less overhead for calling out to single models, making constructs like `ask turtles [ ls:ask my-model [ run-something ] ]` much faster.
+- The `ls` extension now seeds the child model RNG based on the parent model RNG at model creation. Furthermore, and `ls:random-seed` primitive has been introduced, so an entire model system can be seeded simultaneously. This makes it possible to have reproducible runs when using LevelSpace.
+- The `ls:let` primitive now handles scoping properly.
 
 ### Documentation Changes
 
