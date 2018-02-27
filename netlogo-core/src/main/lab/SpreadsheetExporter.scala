@@ -3,7 +3,6 @@
 package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.Dump
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -52,16 +51,16 @@ class SpreadsheetExporter(modelFileName: String,
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
         j <- 0 until (1 max protocol.metrics.length)
-        output = fn(runs(runNumber), j).map(Dump.csv.data).getOrElse("")
+        output = fn(runs(runNumber), j).map(csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
   }
   def writeSummary() {
     // first output run numbers, like this:
     // "[run number]","1","2","3"
-    out.print(Dump.csv.header("[run number]"))
+    out.print(csv.header("[run number]"))
     for(runNumber <- runNumbers)
-      out.print(List.fill(1 max protocol.metrics.length)(Dump.csv.number(runNumber))
+      out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
                     .mkString(",", ",", ""))
     out.println()
     // now output one row per variable, like this:
@@ -69,7 +68,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
     for(v <- protocol.valueSets.map(_.variableName)) {
-      out.print(Dump.csv.header(v) + ",")
+      out.print(csv.header(v) + ",")
       foreachRun((run,metricNumber) =>
         if(metricNumber == 0)
           Some(run.settings.find(_._1 == v).get._2)
@@ -83,24 +82,24 @@ class SpreadsheetExporter(modelFileName: String,
     // "[mean]","341.57142857142856","360.8095238095238","381.8095238095238"
     // "[steps]","20","20","20"
     if(protocol.runMetricsEveryStep && !protocol.metrics.isEmpty) {
-      out.print(Dump.csv.header("[reporter]"))
+      out.print(csv.header("[reporter]"))
       for(_ <- runs; metric <- protocol.metrics)
-        out.print("," + Dump.csv.header(metric))
+        out.print("," + csv.header(metric))
       out.println()
-      out.print(Dump.csv.header("[final]") + ",")
+      out.print(csv.header("[final]") + ",")
       foreachRun((run, metricNumber) =>
         Some(run.lastMeasurement(metricNumber)))
-      out.print(Dump.csv.header("[min]") + ",")
+      out.print(csv.header("[min]") + ",")
       foreachRun((run, metricNumber) =>
         run.minMeasurement(metricNumber))
-      out.print(Dump.csv.header("[max]") + ",")
+      out.print(csv.header("[max]") + ",")
       foreachRun((run, metricNumber) =>
         run.maxMeasurement(metricNumber))
-      out.print(Dump.csv.header("[mean]") + ",")
+      out.print(csv.header("[mean]") + ",")
       foreachRun((run, metricNumber) =>
         run.meanMeasurement(metricNumber))
     }
-    out.print(Dump.csv.header("[steps]") + ",")
+    out.print(csv.header("[steps]") + ",")
     foreachRun((run,metricNumber) =>
       Some(Int.box(run.steps)))
   }
@@ -113,10 +112,10 @@ class SpreadsheetExporter(modelFileName: String,
     // ,"403.0","425.0","466.0"
     // ,"399.0","423.0","439.0"
     out.println()
-    out.print(Dump.csv.header(if(protocol.runMetricsEveryStep) "[all run data]"
+    out.print(csv.header(if(protocol.runMetricsEveryStep) "[all run data]"
                               else "[initial & final values]"))
     for(_ <- runs; metric <- protocol.metrics)
-      out.print(',' + Dump.csv.header(metric))
+      out.print(',' + csv.header(metric))
     out.println()
     if(runs.isEmpty) return
     // first figure out how long the longest run is, so we know in

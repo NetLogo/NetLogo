@@ -1,0 +1,11 @@
+"[run number]","1","1"
+"[reporter]","s1","s2"
+"[final]","x","""x"""
+"[min]",,
+"[max]",,
+"[mean]",,
+"[steps]","1","1"
+
+"[all run data]","s1","s2"
+,"x","""x"""
+,"x","""x"""

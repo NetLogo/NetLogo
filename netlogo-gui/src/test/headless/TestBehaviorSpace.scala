@@ -248,6 +248,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
       "globals [g] to-report metric set g g + 1 report g end",
       "metricsWithSideEffects")
   }
+  test("stringMetrics", SlowTest.Tag) {
+    runExperiment(0,
+      """to-report s1 report "x" end to-report s2 report "\"x\"" end""",
+      "stringMetrics")
+  }
   if(Version.is3D)
     test("ResizingWorld13d", SlowTest.Tag) {
       run3DExperiment("testResizingWorld13d")

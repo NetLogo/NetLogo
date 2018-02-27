@@ -13,6 +13,9 @@ object Dump extends CDump {
   val csv = new CSV({
     // Boxed integers are illegal Logo values, but we have legacy CSV generation code
     // that still uses them. Yuck. - ST 5/30/06, 4/16/14
+    // org.nlogo.api.LabProtocol.Exporter uses boxed integers, but does not depend
+    // on this instance anymore. Something else still might, however, so I'm
+    // leaving this in -- NP 2018-02-23
     case i: java.lang.Integer =>
       i.toString
     case x =>
