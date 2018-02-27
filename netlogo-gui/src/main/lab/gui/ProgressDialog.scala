@@ -143,12 +143,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   def setUpdateView(status: Boolean): Unit = {
-    if(status){
-      updateView(true)
-    }
-    else {
-      updateView(false)
-    }
+    updateView(status)
   }
 
   def plotsAndMonitorsSwitch(check: Boolean): Unit = {
@@ -164,14 +159,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
-    if(status){
-      plotsAndMonitorsSwitch(true)
-      updatePlots = true
-    }
-    else {
-      plotsAndMonitorsSwitch(false)
-      updatePlots = false
-    }
+    plotsAndMonitorsSwitch(status)
+    updatePlots=status
   }
 
   def close() {
