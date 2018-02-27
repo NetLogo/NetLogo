@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import org.nlogo.core.{Instantiator, BreedIdentifierHandler, Program}
-import org.nlogo.{ api => nlogoApi, core, nvm, prim },
+import org.nlogo.{ api => nlogoApi, core, nvm, prim => nvmprim },
   nvm.Procedure.ProceduresMap
 import org.nlogo.compile.api.{ Backifier => BackifierInterface }
 
@@ -29,21 +29,21 @@ class Backifier(
   def apply(procedures: ProceduresMap, c: core.Command): nvm.Command = {
     val result = c match {
       case core.prim._extern(_) =>
-        new prim._extern(
+        new nvmprim._extern(
           extensionManager.replaceIdentifier(c.token.text.toUpperCase)
             .asInstanceOf[nlogoApi.Command])
       case core.prim._call(proc) =>
-        new prim._call(procedures(proc.name))
+        new nvmprim._call(procedures(proc.name))
       case core.prim._let(Some(let)) =>
-        new prim._let(let)
+        new nvmprim._let(let)
       case cc: core.prim._carefully =>
-        new prim._carefully(cc.let)
+        new nvmprim._carefully(cc.let)
       case bk: core.prim._bk =>
-        new prim._bk(c.token)
+        new nvmprim._bk(c.token)
       case fd: core.prim._fd =>
-        new prim._fd(c.token)
+        new nvmprim._fd(c.token)
       case rep: core.prim._repeat =>
-        new prim._repeat(c.token)
+        new nvmprim._repeat(c.token)
       case _ =>
         fallback[core.Command, nvm.Command](c)
     }
@@ -56,64 +56,64 @@ class Backifier(
     val result = r match {
 
       case core.prim._letvariable(let) =>
-        new prim._letvariable(let)
+        new nvmprim._letvariable(let)
 
       case core.prim._const(value) =>
-        new prim._const(value)
+        new nvmprim._const(value)
 
       case core.prim._commandlambda(args, closedVariables, source) =>
-        new prim._commandlambda(
+        new nvmprim._commandlambda(
           args.argumentNames, args.argumentTokens,
           null, closedVariables, source.getOrElse("")) // LambdaLifter will fill in
 
       case core.prim._reporterlambda(args, closedVariables, source) =>
-        new prim._reporterlambda(args.argumentNames, closedVariables, source.getOrElse(""))
+        new nvmprim._reporterlambda(args.argumentNames, closedVariables, source.getOrElse(""))
 
       case core.prim._externreport(_) =>
-        new prim._externreport(
+        new nvmprim._externreport(
           extensionManager.replaceIdentifier(r.token.text.toUpperCase)
             .asInstanceOf[nlogoApi.Reporter])
 
       case core.prim._breedvariable(varName) =>
-        new prim._breedvariable(varName)
+        new nvmprim._breedvariable(varName)
       case core.prim._linkbreedvariable(varName) =>
-        new prim._linkbreedvariable(varName)
+        new nvmprim._linkbreedvariable(varName)
 
       case core.prim._procedurevariable(vn, name) =>
-        new prim._procedurevariable(vn, name)
+        new nvmprim._procedurevariable(vn, name)
       case core.prim._lambdavariable(name, _) =>
-        new prim._lambdavariable(name)
+        new nvmprim._lambdavariable(name)
 
       case core.prim._observervariable(vn, _) =>
-        new prim._observervariable(vn)
+        new nvmprim._observervariable(vn)
       case core.prim._turtlevariable(vn, _) =>
-        new prim._turtlevariable(vn)
+        new nvmprim._turtlevariable(vn)
       case core.prim._linkvariable(vn, _) =>
-        new prim._linkvariable(vn)
+        new nvmprim._linkvariable(vn)
       case core.prim._patchvariable(vn, _) =>
-        new prim._patchvariable(vn)
+        new nvmprim._patchvariable(vn)
       case core.prim._turtleorlinkvariable(varName, _) =>
-        new prim._turtleorlinkvariable(varName)
+        new nvmprim._turtleorlinkvariable(varName)
 
       case core.prim._callreport(proc) =>
-        new prim._callreport(procedures(proc.name))
+        new nvmprim._callreport(procedures(proc.name))
 
       case core.prim._errormessage(Some(let)) =>
-        new prim._errormessage(let)
+        new nvmprim._errormessage(let)
       case core.prim._errormessage(None) =>
         throw new Exception("Parse error - errormessage not matched with carefully")
 
       case core.prim._constcodeblock(toks) =>
-        new prim._constcodeblock(toks)
+        new nvmprim._constcodeblock(toks)
 
       case s: core.prim._symbol =>
-        new prim._constsymbol(s.token)
+        new nvmprim._constsymbol(s.token)
 
       // diabolical special case: if we have e.g. `breed [fish]` with no singular,
       // then the singular defaults to `turtle`, which will cause BreedIdentifierHandler
       // to interpret "turtle" as _breedsingular - ST 4/12/14
       case core.prim._turtle() =>
-        new prim._turtle()
+        new nvmprim._turtle()
 
       case _ =>
         fallback[core.Reporter, nvm.Reporter](r)

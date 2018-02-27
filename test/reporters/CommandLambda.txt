@@ -310,6 +310,13 @@ LoopBindings3
   O> foreach lambdas [  l -> run l ]
   glob1 => 5
 
+LoopBindings4
+  globals [glob1 lambdas]
+  O> set lambdas []
+  O> repeat 5 [ let bar 0 ask patch 0 0 [ set lambdas lput [ -> set bar bar + 1 set glob1 bar ] lambdas ] ]
+  O> foreach lambdas [ l -> run l ]
+  glob1 => 1
+
 StopFromLambda1
   to-report stopper report [ -> stop] end
   to foo (run stopper) end

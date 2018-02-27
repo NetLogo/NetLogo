@@ -56,6 +56,7 @@ object MiddleEnd extends MiddleEndInterface {
 
   private def transformProcedure(procdef: ProcedureDefinition): ProcedureDefinition = {
     val transformer = new ReferenceTransformer // handle ReferenceType
-    transformer.visitProcedureDefinition(procdef)
+    val scopeTransformer = new ScopeTransformer // Adjust scope for repeated constructs
+    scopeTransformer.visitProcedureDefinition(transformer.visitProcedureDefinition(procdef))
   }
 }

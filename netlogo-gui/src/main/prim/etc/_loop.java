@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.CompilerScoping;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _loop
@@ -21,5 +22,9 @@ public final strictfp class _loop
     a.comeFrom();
     a.block();
     a.goTo();
+  }
+
+  public int scopedBlockIndex() {
+    return 0;
   }
 }

@@ -4,9 +4,12 @@ package org.nlogo.prim
 
 import org.nlogo.agent.AgentSetBuilder
 import org.nlogo.core.AgentKind
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, SelfScoping }
 
-class _createorderedturtles(val breedName: String) extends Command with CustomAssembled {
+class _createorderedturtles(val breedName: String)
+  extends Command
+  with CustomAssembled
+  with SelfScoping {
 
   def this() = this("")
 

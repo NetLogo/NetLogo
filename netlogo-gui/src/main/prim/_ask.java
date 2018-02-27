@@ -12,11 +12,13 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
+import org.nlogo.nvm.SelfScoping;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _ask
     extends Command
-    implements org.nlogo.nvm.CustomAssembled {
+    implements org.nlogo.nvm.CustomAssembled, SelfScoping {
+
   public _ask() {
     this.switches = true;
   }

@@ -4,10 +4,13 @@ package org.nlogo.prim
 
 import org.nlogo.core.{ Let, Token }
 import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, CompilerScoping, Context,
+                       CustomAssembled, MutableLong }
 
-class _repeat(_token: Token) extends Command with CustomAssembled {
+class _repeat(_token: Token) extends Command with CustomAssembled with CompilerScoping {
   token_=(_token)
+
+  def scopedBlockIndex: Int = 1
 
   private[this] val _let: Let = new Let("~" + _token.text + "_" + _token.start.toString)
 

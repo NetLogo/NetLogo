@@ -3,10 +3,12 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ Let, Token }
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, CompilerScoping, Context, CustomAssembled, MutableLong }
 
-class _repeat(_token: Token) extends Command with CustomAssembled {
+class _repeat(_token: Token) extends Command with CustomAssembled with CompilerScoping {
   token_=(_token)
+
+  def scopedBlockIndex: Int = 1
 
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
   private[this] val _let = Let(s"~${_token.text}_${_token.start}")

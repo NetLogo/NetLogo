@@ -5,9 +5,9 @@ package org.nlogo.prim
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.LogoException
 import org.nlogo.core.Let
-import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled }
+import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, SelfScoping }
 
-class _carefully(let: Let) extends Command with CustomAssembled {
+class _carefully(let: Let) extends Command with CustomAssembled with SelfScoping {
   override def toString =
     super.toString + ":+" + offset
 
