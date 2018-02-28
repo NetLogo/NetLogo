@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+exec scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
@@ -23,11 +23,11 @@ def withoutComments(lines: Seq[String]): Seq[String] = {
 val okDeclarations =
   List("strictfp class","public strictfp class","public abstract strictfp","public final strictfp",
        "public strictfp class", "final strictfp class", "strictfp class", "strictfp final class",
-       "abstract strictfp class", "public strictfp final class", "public enum","interface", "public interface",
-       "class AbstractEditorArea",
-       "class TokenLexer", "class ImportLexer") // let's not bother making JFlex emit "strictfp"
+       "abstract strictfp class", "strictfp abstract class", "public strictfp final class",
+       "public enum","interface", "public interface",
+       "class AbstractEditorArea", "class TokenLexer", "class ImportLexer") // let's not bother making JFlex emit "strictfp"
 for {
-  path <- Process("find src -name *.java").lines
+  path <- Process("find netlogo-core/src netlogo-gui/src -name *.java").lineStream
   if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
 } {
   val lines = for{line <- withoutComments(io.Source.fromFile(path).getLines.toSeq)
@@ -42,7 +42,7 @@ for {
 
 // now do the StrictMath check
 
-for{path <- Process("find src -name *.java").lines
+for{path <- Process("find netlogo-core/src netlogo-gui/src -name *.java").lineStream
     if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
     if path != "src/org/nlogo/headless/TestCommands.java"}
   // this isn't the absolutely correct check to be doing, but it seems like a good enough heuristic
@@ -50,6 +50,7 @@ for{path <- Process("find src -name *.java").lines
   if(io.Source.fromFile(path).getLines
      .filter(!_.containsSlice("Mathematica"))
      .filter(!_.containsSlice("DummyMath"))
+     .filter(!_.containsSlice("Activation.java")) // Activation uses Math.max, on "safe" data
      .exists(_.matches(""".*[^t]Math.*""")))
     println("needs StrictMath: " + path)
 

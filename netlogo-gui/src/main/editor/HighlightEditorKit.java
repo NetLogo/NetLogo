@@ -2,7 +2,7 @@
 
 package org.nlogo.editor;
 
-public class HighlightEditorKit
+public strictfp class HighlightEditorKit
     extends javax.swing.text.DefaultEditorKit
     implements javax.swing.text.ViewFactory {
 

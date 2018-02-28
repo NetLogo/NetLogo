@@ -21,6 +21,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
 
   val dummyWorkspace = new DummyWorkspace
   val emptyManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+  val tab = "\t"
 
   class ErrorSourceException extends Exception("problem")
 
@@ -139,9 +140,9 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
 
   test("dumpExtensions prints an empty table when no extensions have been loaded") {
     assert(emptyManager.dumpExtensions ==
-      """|EXTENSION	LOADED	MODIFIED	JARPATH
-         |---------	------	--------	-------
-         |""".stripMargin)
+      s"""|EXTENSION${tab}LOADED${tab}MODIFIED${tab}JARPATH
+          |---------${tab}------${tab}--------${tab}-------
+          |""".stripMargin)
   }
 
   test("dumpExtensions prints a table with all loaded extensions") {
@@ -150,31 +151,31 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       val modified = arrayJar.lastModified()
       val path = arrayJar.toURI.toURL.toString
       assert(loadedManager.dumpExtensions ==
-        s"""|EXTENSION	LOADED	MODIFIED	JARPATH
-            |---------	------	--------	-------
-            |array	true	$modified	$path
+        s"""|EXTENSION${tab}LOADED${tab}MODIFIED${tab}JARPATH
+            |---------${tab}------${tab}--------${tab}-------
+            |array${tab}true${tab}$modified${tab}$path
             |""".stripMargin)
     }
   }
 
   test("dumpExtensionPrimitives prints an empty table when no extensions are loaded") {
     assert(emptyManager.dumpExtensionPrimitives ==
-      """|EXTENSION	PRIMITIVE	TYPE
-         |---------	---------	----
-         |""".stripMargin)
+      s"""|EXTENSION${tab}PRIMITIVE${tab}TYPE
+          |---------${tab}---------${tab}----
+          |""".stripMargin)
   }
 
   test("dumpExtensionPrimitives prints a table with all loaded primitives") {
     new WithLoadedArrayExtension {
       assert(loadedManager.dumpExtensionPrimitives ==
-        """|EXTENSION	PRIMITIVE	TYPE
-           |---------	---------	----
-           |array	TO-LIST	Reporter
-           |array	SET	Command
-           |array	ITEM	Reporter
-           |array	LENGTH	Reporter
-           |array	FROM-LIST	Reporter
-           |""".stripMargin)
+        s"""|EXTENSION${tab}PRIMITIVE${tab}TYPE
+            |---------${tab}---------${tab}----
+            |array${tab}TO-LIST${tab}Reporter
+            |array${tab}SET${tab}Command
+            |array${tab}ITEM${tab}Reporter
+            |array${tab}LENGTH${tab}Reporter
+            |array${tab}FROM-LIST${tab}Reporter
+            |""".stripMargin)
     }
   }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+exec scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 // Check for problems with plain text files including:
@@ -24,8 +24,12 @@ val extensions =
   List("java", "scala", "py", "txt", "sh", "nlogo", "nlogo3d", "html", "css",
        "properties", "md", "csv", "asc", "prj", "xml")
 
+val directories =
+  List("extensions", "netlogo-gui", "netlogo-core", "netlogo-headless", "parser-core",
+    "parser-js", "parser-jvm", "test")
+
 def paths =
-  Process("find . " + extensions.map("-name *." + _).mkString(" -or ")).lines
+  Process("find" + directories.mkString(" ", " ", " ") + "! -ipath */target/* -and " + extensions.map("-name *." + _).mkString("( ", " -or ", " )")).lineStream
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString
