@@ -13,6 +13,30 @@ complete details on differences between versions.
 
 [TOC]
 
+## Changes for NetLogo 6.0.3
+
+### Arduino Extension Changes
+
+The `arduino` extension has substantially changed the way it receives values from
+Arduino boards. Please consult the arduino example sketch (included within
+the "models" folder under Chapter 8 of the IABM textbook) for an updated sketch
+compatible with the Arduino example model. If you have an existing arduino
+sketch, you will need to adjust the format used to send values to NetLogo.
+Old sketches will have code which sends back messages like ";A,2.5;". For the
+new version of the `arduino` extension to receive the same message, sketches
+should send ";A,D,2.5;" instead. The added 'D,' informs Netlogo that
+the value being sent is a number and not a string.
+
+### CF Extension Changes
+
+All primitives have been removed from the `cf` extension and replaced by the `cf:ifelse` and
+`cf:ifelse-value` multi-branch primitives. We encourage existing `cf` users to
+adjust their code to use these new primitives. Over time, we hope to use these primitives
+as an example on which to remodel NetLogo's existing `ifelse` and `ifelse-value`
+primitives. Because this would be a relatively large language change, we would love
+to hear any [feedback address](mailto:ccl-feedback@ccl.northwestern.edu) you may
+have from using these `cf` extension primitives.
+
 ## Changes for NetLogo 6.0
 
 ### Tasks replaced by Anonymous Procedures
