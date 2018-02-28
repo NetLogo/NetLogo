@@ -384,15 +384,14 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     val r = if (x != X || y != Y) R.toInt + 1 else R.toInt
 
     val regionIterator = world.topology.getRegion(x, y, r).iterator
-    var length, curr = 0
-    var region = (0, 0)
+    var length, curr, r1 = 0
 
     val worldPatches = world.patches.asInstanceOf[ArrayAgentSet].array
 
     while (regionIterator.hasNext) {
-      region = regionIterator.next()
-      length = region._2 - region._1
-      System.arraycopy(worldPatches, region._1, patches, curr, length)
+      r1 = regionIterator.next()
+      length = regionIterator.next() - r1
+      System.arraycopy(worldPatches, r1, patches, curr, length)
       curr += length
     }
 
