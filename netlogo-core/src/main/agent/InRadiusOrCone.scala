@@ -306,7 +306,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private def setPatches2(centerPatch: Patch): Unit = {
     setPatches1(centerPatch)
 
-    if (world.worldWidth < 5 || world.worldHeight < 5) {
+    if ((world.wrappingAllowedInX && world.worldWidth < 5) || (world.wrappingAllowedInY && world.worldHeight < 5)) {
 
       // because of how we're adding to allNeighbors, there should never be any duplicates, except
       // when the world is very small.
