@@ -11,9 +11,9 @@ class _patch extends Reporter {
   // doesn't work at runtime ("Inconsistent stack height") - ST 2/10/09
   override def report(context: Context): AnyRef =
     try {
-	  world.getPatchAt(
-		argEvalDoubleValue(context, 0),
-		argEvalDoubleValue(context, 1))
+      world.getPatchAt(
+      argEvalDoubleValue(context, 0),
+      argEvalDoubleValue(context, 1))
     } catch {
       case ex: AgentException => Nobody
     }

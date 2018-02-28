@@ -37,21 +37,23 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
     val label = new JLabel {
+      val yearFormat = new java.text.SimpleDateFormat("yyyy")
+      val year = yearFormat.format(new java.util.Date())
       setText(
-          "<html>\n"
-          + "<center>"
-          + "<b>" + Version.versionDropZeroPatch
-          + " <font color=\"#666666\">(" + Version.buildDate
-          + ")</font>" + "</b><br><br>\n"
-          + "<font size=-1><b>web site</b> "
-          + "<a href=\"http://ccl.northwestern.edu/netlogo/\">ccl.northwestern.edu/netlogo</a><br><br>"
-          + "<font color=\"#333333\">&copy 1999-2016 Uri Wilensky<br><br>"
-          + "Please cite as:<br>"
-          + "Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>"
-          + "Center for Connected Learning and Computer-Based Modeling,<br>"
-          + "Northwestern University. Evanston, IL."
-          + "</center> </html>"
-       )
+        s"""|<html>
+            |<center>
+            |<b>${Version.versionDropZeroPatch}
+            | <font color="#666666">(${Version.buildDate})</font>
+            |</b><br><br>
+            |<font size=-1><b>web site</b>
+            |<a href="http://ccl.northwestern.edu/netlogo/">ccl.northwestern.edu/netlogo</a><br><br>
+            |<font color="#333333">&copy 1999-${year} Uri Wilensky<br><br>
+            |Please cite as:<br>
+            |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
+            |Center for Connected Learning and Computer-Based Modeling,<br>
+            |Northwestern University. Evanston, IL.
+            |</center> </html>""".stripMargin
+      )
       setHorizontalAlignment(SwingConstants.CENTER)
       addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent) {

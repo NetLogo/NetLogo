@@ -488,7 +488,7 @@ class WidgetTest extends FunSuite {
                      |95
                      |168
                      |151
-                     |Note, with	tabs and\n\nnewlines and\nescaped newlines \"\\n\"
+                     |Note, with\ttabs and\n\nnewlines and\nescaped newlines \"\\n\"
                      |11
                      |0.0
                      |1""".stripMargin.split("\n").toList
