@@ -44,8 +44,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       List(
         Property("spreadsheet", Property.Boolean, "Spreadsheet output"),
         Property("table", Property.Boolean, "Table output"),
-        Property("updateView",Property.Boolean,"Update view"),
-        Property("updatePlotsAndMonitors",Property.Boolean,"Update plots and monitors"),
+        Property("updateView", Property.Boolean, "Update view"),
+        Property("updatePlotsAndMonitors", Property.Boolean, "Update plots and monitors"),
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
                  "<html>If more than one, some runs happen invisibly in the background." +
                  "<br>Defaults to one per processor core.</html>")).asJava
