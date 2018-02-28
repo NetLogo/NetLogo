@@ -306,49 +306,73 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private def setPatches2(centerPatch: Patch): Unit = {
     setPatches1(centerPatch)
 
-    // because of how we're adding to allNeighbors, there should never be any duplicates, except
-    // when the world is very small.
-    val allNeighbors = new LinkedHashSet[Patch]
+    if (world.worldWidth < 5 || world.worldHeight < 5) {
 
-    // only need to add and getNeighbors for corners. i = 0 is the original centerPatch,
-    // and i = [1,4] is N,E,S,W.
-    var i = 0
-    while (i < end) {
-      val p = patches(i)
-      allNeighbors.add(p)
+      // because of how we're adding to allNeighbors, there should never be any duplicates, except
+      // when the world is very small.
+      val allNeighbors = new LinkedHashSet[Patch]
 
-      if (i == 5) { // NorthEast
-        allNeighbors.add(p.getPatchNorth)
-        allNeighbors.add(p.getPatchNorthEast)
-        allNeighbors.add(p.getPatchEast)
-        allNeighbors.add(p.getPatchSouthEast)
-      } else if (i == 6) { // SouthEast
-        allNeighbors.add(p.getPatchEast)
-        allNeighbors.add(p.getPatchSouthEast)
-        allNeighbors.add(p.getPatchSouth)
-        allNeighbors.add(p.getPatchSouthWest)
-      } else if (i == 7) { // SouthWest
-        allNeighbors.add(p.getPatchSouth)
-        allNeighbors.add(p.getPatchSouthWest)
-        allNeighbors.add(p.getPatchWest)
-        allNeighbors.add(p.getPatchNorthWest)
-      } else if (i == 8) { // NorthWest
-        allNeighbors.add(p.getPatchWest)
-        allNeighbors.add(p.getPatchNorthWest)
-        allNeighbors.add(p.getPatchNorth)
-        allNeighbors.add(p.getPatchNorthEast)
+      // only need to add and getNeighbors for corners. i = 0 is the original centerPatch,
+      // and i = [1,4] is N,E,S,W.
+      var i = 0
+      while (i < end) {
+        val p = patches(i)
+        allNeighbors.add(p)
+
+        if (i == 5) { // NorthEast
+          allNeighbors.add(p.getPatchNorth)
+          allNeighbors.add(p.getPatchNorthEast)
+          allNeighbors.add(p.getPatchEast)
+          allNeighbors.add(p.getPatchSouthEast)
+        } else if (i == 6) { // SouthEast
+          allNeighbors.add(p.getPatchEast)
+          allNeighbors.add(p.getPatchSouthEast)
+          allNeighbors.add(p.getPatchSouth)
+          allNeighbors.add(p.getPatchSouthWest)
+        } else if (i == 7) { // SouthWest
+          allNeighbors.add(p.getPatchSouth)
+          allNeighbors.add(p.getPatchSouthWest)
+          allNeighbors.add(p.getPatchWest)
+          allNeighbors.add(p.getPatchNorthWest)
+        } else if (i == 8) { // NorthWest
+          allNeighbors.add(p.getPatchWest)
+          allNeighbors.add(p.getPatchNorthWest)
+          allNeighbors.add(p.getPatchNorth)
+          allNeighbors.add(p.getPatchNorthEast)
+        }
+        i += 1
       }
-      i += 1
-    }
 
-    i = 0
-    val allNeighborsIterator = allNeighbors.iterator
-    while (allNeighborsIterator.hasNext) {
-      patches(i) = allNeighborsIterator.next()
-      i += 1
-    }
+      i = 0
+      val allNeighborsIterator = allNeighbors.iterator
+      while (allNeighborsIterator.hasNext) {
+        patches(i) = allNeighborsIterator.next()
+        i += 1
+      }
 
-    end = i
+      end = i
+    } else {
+      patches(end) = patches(1).getPatchNorth; end += 1
+      patches(end) = patches(2).getPatchEast; end += 1
+      patches(end) = patches(3).getPatchSouth; end += 1
+      patches(end) = patches(4).getPatchWest; end += 1
+
+      patches(end) = patches(5).getPatchNorth; end += 1
+      patches(end) = patches(5).getPatchNorthEast; end += 1
+      patches(end) = patches(5).getPatchEast; end += 1
+
+      patches(end) = patches(6).getPatchEast; end += 1
+      patches(end) = patches(6).getPatchSouthEast; end += 1
+      patches(end) = patches(6).getPatchSouth; end += 1
+
+      patches(end) = patches(7).getPatchSouth; end += 1
+      patches(end) = patches(7).getPatchSouthWest; end += 1
+      patches(end) = patches(7).getPatchWest; end += 1
+
+      patches(end) = patches(8).getPatchWest; end += 1
+      patches(end) = patches(8).getPatchNorthWest; end += 1
+      patches(end) = patches(8).getPatchNorth; end += 1
+    }
   }
 
   // helper method to copy relevant patches
