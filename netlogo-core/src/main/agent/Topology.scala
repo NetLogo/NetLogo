@@ -69,7 +69,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   @throws(classOf[PatchException])
   def diffuse(amount: Double, vn: Int): Unit = {
     val scratch = getPatchScratch(vn)
-    diffuseCenter (amount, vn, fourWay = false, scratch)
+    diffuseCenter(amount, vn, fourWay = false, scratch)
     diffuseXBorder(amount, vn, fourWay = false, scratch)
     diffuseYBorder(amount, vn, fourWay = false, scratch)
     diffuseCorners(amount, vn, fourWay = false, scratch)
@@ -79,7 +79,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   @throws(classOf[PatchException])
   def diffuse4(amount: Double, vn: Int): Unit = {
     val scratch = getPatchScratch(vn)
-    diffuseCenter (amount, vn, fourWay = true, scratch)
+    diffuseCenter(amount, vn, fourWay = true, scratch)
     diffuseXBorder(amount, vn, fourWay = true, scratch)
     diffuseYBorder(amount, vn, fourWay = true, scratch)
     diffuseCorners(amount, vn, fourWay = true, scratch)
@@ -90,9 +90,9 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
     val lastY = world.worldHeight - 1
     var x = 1
     while (x < lastX) {
-      val e = scratch(x+1)
+      val e = scratch(x + 1)
       val c = scratch(x)
-      val w = scratch(x-1)
+      val w = scratch(x - 1)
       var y = 1
       while (y < lastY) {
         val oldVal = c(y)
@@ -101,7 +101,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
           updatePatch(amount, vn, 4, x, y, oldVal, sum)
         else
           updatePatch(amount, vn, 8, x, y, oldVal,
-            sum + sum4(e(y+1), e(y-1), w(y+1), w(y-1)))
+            sum + sum4(e(y + 1), e(y - 1), w(y + 1), w(y - 1)))
         y += 1
       }
       x += 1
@@ -109,7 +109,9 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   }
 
   protected def diffuseXBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit
+
   protected def diffuseYBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit
+
   protected def diffuseCorners(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit
 
   /**
@@ -123,7 +125,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
     * then sum their sums. This works because we can rely on the commutativity of floats. -- BCH 10/15/2017
     */
   @inline
-  final protected def sum4(a: Double,b: Double,c: Double,d: Double): Double = {
+  final protected def sum4(a: Double, b: Double, c: Double, d: Double): Double = {
     var low1, high1, low2, high2: Double = 0.0
     if (a < b) {
       low1 = a
@@ -142,19 +144,19 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
     }
 
     if ((low2 < high1) && (low1 < high2))
-      // Covers
-      // (low1 <> low2) < (high1 <> high2)
+    // Covers
+    // (low1 <> low2) < (high1 <> high2)
       (low1 + low2) + (high1 + high2)
     else
-      // Covers
-      // (low1 < high1) < (low2 < high2)
-      // (low1 < high1) > (low2 < high2)
+    // Covers
+    // (low1 < high1) < (low2 < high2)
+    // (low1 < high1) > (low2 < high2)
       (low1 + high1) + (low2 + high2)
   }
 
   @inline
   final protected def updatePatch(amount: Double, vn: Int, directions: Int,
-                            x: Int, y: Int, oldVal: Double, sum: Double): Unit = {
+                                  x: Int, y: Int, oldVal: Double, sum: Double): Unit = {
     val newVal = oldVal + amount * (sum / directions - oldVal)
     if (newVal != oldVal) {
       world.patches.getByIndex(y * world.worldWidth + x).setPatchVariable(vn, Double.box(newVal))
@@ -328,17 +330,17 @@ trait XWraps extends Topology {
     while (y < lastY) {
       val oldValE = scratch(lastX)(y)
       val oldValW = scratch(0)(y)
-      val sumE = sum4(secondLastCol(y), firstCol(y), lastCol(y+1), lastCol(y-1))
-      val sumW = sum4(lastCol(y), secondCol(y), firstCol(y+1), firstCol(y-1))
+      val sumE = sum4(secondLastCol(y), firstCol(y), lastCol(y + 1), lastCol(y - 1))
+      val sumW = sum4(lastCol(y), secondCol(y), firstCol(y + 1), firstCol(y - 1))
       if (fourWay) {
         updatePatch(amount, vn, 4, 0, y, oldValW, sumW)
         updatePatch(amount, vn, 4, lastX, y, oldValE, sumE)
       } else {
         updatePatch(amount, vn, 8, 0, y, oldValW, sumW +
-          sum4(lastCol(y+1), lastCol(y-1), secondCol(y+1), secondCol(y-1))
+          sum4(lastCol(y + 1), lastCol(y - 1), secondCol(y + 1), secondCol(y - 1))
         )
         updatePatch(amount, vn, 8, lastX, y, oldValE, sumE +
-          sum4(secondLastCol(y+1), secondLastCol(y-1), firstCol(y+1), firstCol(y-1))
+          sum4(secondLastCol(y + 1), secondLastCol(y - 1), firstCol(y + 1), firstCol(y - 1))
         )
       }
       y += 1
@@ -357,15 +359,15 @@ trait XBlocks extends Topology {
     val update = if (fourWay)
       (x: Int, y: Int, borderCol: Array[Double], innerCol: Array[Double]) => {
         val oldVal = borderCol(y)
-        val sum = sum4(borderCol(y-1), borderCol(y+1), innerCol(y), oldVal)
+        val sum = sum4(borderCol(y - 1), borderCol(y + 1), innerCol(y), oldVal)
         updatePatch(amount, vn, 4, x, y, oldVal, sum)
       }
     else
       (x: Int, y: Int, borderCol: Array[Double], innerCol: Array[Double]) => {
         val oldVal = borderCol(y)
         val sum =
-          sum4(borderCol(y-1), borderCol(y+1), innerCol(y), oldVal) +
-          sum4(innerCol(y-1), innerCol(y+1), oldVal, oldVal)
+          sum4(borderCol(y - 1), borderCol(y + 1), innerCol(y), oldVal) +
+            sum4(innerCol(y - 1), innerCol(y + 1), oldVal, oldVal)
         updatePatch(amount, vn, 8, x, y, oldVal, sum)
       }
     val secondLastCol = scratch((lastX - 1) % ww)
@@ -397,9 +399,9 @@ trait YWraps extends Topology {
 
     var x = 1
     while (x < lastX) {
-      val e = scratch(x+1)
+      val e = scratch(x + 1)
       val c = scratch(x)
-      val w = scratch(x-1)
+      val w = scratch(x - 1)
       val sumN = sum4(e(0), w(0), c(secondY), c(lastY))
       val sumS = sum4(e(lastY), w(lastY), c(0), c(secondLastY))
       val oldValN = c(0)
@@ -431,18 +433,18 @@ trait YBlocks extends Topology {
     val secondLastY = (lastY - 1) % wh
     val secondY = 1 % wh
 
-    val update = if(fourWay)
+    val update = if (fourWay)
       (x: Int, y: Int, innerY: Int) => {
         val oldVal = scratch(x)(y)
-        val sum = sum4(scratch(x-1)(y), scratch(x+1)(y), scratch(x)(innerY), oldVal)
+        val sum = sum4(scratch(x - 1)(y), scratch(x + 1)(y), scratch(x)(innerY), oldVal)
         updatePatch(amount, vn, 4, x, y, oldVal, sum)
       }
     else
       (x: Int, y: Int, innerY: Int) => {
         val oldVal = scratch(x)(y)
         val sum =
-          sum4(scratch(x-1)(y), scratch(x+1)(y), scratch(x)(innerY), oldVal) +
-          sum4(scratch(x-1)(innerY), scratch(x+1)(innerY), oldVal, oldVal)
+          sum4(scratch(x - 1)(y), scratch(x + 1)(y), scratch(x)(innerY), oldVal) +
+            sum4(scratch(x - 1)(innerY), scratch(x + 1)(innerY), oldVal, oldVal)
         updatePatch(amount, vn, 8, x, y, oldVal, sum)
       }
 

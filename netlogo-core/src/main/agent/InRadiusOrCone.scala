@@ -306,7 +306,15 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private def setPatches2(centerPatch: Patch): Unit = {
     setPatches1(centerPatch)
 
-    if ((world.wrappingAllowedInX && world.worldWidth < 5) || (world.wrappingAllowedInY && world.worldHeight < 5)) {
+    // Special case for when duplicates are possible.
+    // In such a case, use hash set to account for duplicates.
+    // This is necessary when:
+    // - world is tiny in some dimension with wrapping
+    // - center is too close to edge with no wrapping
+    // EH 3/1/18
+    if ((world.wrappingAllowedInX && world.worldWidth < 5) || (world.wrappingAllowedInY && world.worldHeight < 5)
+      || (!world.wrappingAllowedInX && (centerPatch.pxcor - world.minPxcor < 2 || world.maxPxcor - centerPatch.pxcor < 2))
+      || (!world.wrappingAllowedInY && (centerPatch.pycor - world.minPycor < 2 || world.maxPycor - centerPatch.pycor < 2))) {
 
       // because of how we're adding to allNeighbors, there should never be any duplicates, except
       // when the world is very small.
@@ -352,26 +360,28 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
 
       end = i
     } else {
-      patches(end) = patches(1).getPatchNorth; end += 1
-      patches(end) = patches(2).getPatchEast; end += 1
-      patches(end) = patches(3).getPatchSouth; end += 1
-      patches(end) = patches(4).getPatchWest; end += 1
+      patches(9) = patches(1).getPatchNorth
+      patches(10) = patches(2).getPatchEast
+      patches(11) = patches(3).getPatchSouth
+      patches(12) = patches(4).getPatchWest
 
-      patches(end) = patches(5).getPatchNorth; end += 1
-      patches(end) = patches(5).getPatchNorthEast; end += 1
-      patches(end) = patches(5).getPatchEast; end += 1
+      patches(13) = patches(5).getPatchNorth
+      patches(14) = patches(5).getPatchNorthEast
+      patches(15) = patches(5).getPatchEast
 
-      patches(end) = patches(6).getPatchEast; end += 1
-      patches(end) = patches(6).getPatchSouthEast; end += 1
-      patches(end) = patches(6).getPatchSouth; end += 1
+      patches(16) = patches(6).getPatchEast
+      patches(17) = patches(6).getPatchSouthEast
+      patches(18) = patches(6).getPatchSouth
 
-      patches(end) = patches(7).getPatchSouth; end += 1
-      patches(end) = patches(7).getPatchSouthWest; end += 1
-      patches(end) = patches(7).getPatchWest; end += 1
+      patches(19) = patches(7).getPatchSouth
+      patches(20) = patches(7).getPatchSouthWest
+      patches(21) = patches(7).getPatchWest
 
-      patches(end) = patches(8).getPatchWest; end += 1
-      patches(end) = patches(8).getPatchNorthWest; end += 1
-      patches(end) = patches(8).getPatchNorth; end += 1
+      patches(22) = patches(8).getPatchWest
+      patches(23) = patches(8).getPatchNorthWest
+      patches(24) = patches(8).getPatchNorth
+
+      end = 25
     }
   }
 
