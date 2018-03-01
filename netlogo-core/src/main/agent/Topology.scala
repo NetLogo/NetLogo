@@ -202,7 +202,13 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   // 2. x - r < 0 and x + r >= w      (wraps in both directions)
   // 3. x - r < 0                     (wraps below 0)
   // 4. x + r >= w                    (wraps above w - 1)
-  // - EH 2/11/2018
+  //
+  // getRegion's output is a list of integer tuples. Each tuple represents a range of continuous
+  // world.patches indices to be used in InRadiusOrCone.scala with System.arraycopy. In each tuple,
+  // the first int is the first index in the range, and the last index is the (last index + 1). For
+  // example, if there is a range of indices from 2 to 9 (inclusive), then this is the tuple (2, 10).
+  //
+  // EH 2/11/2018
 
   def getRegion(initialX: Int, initialY: Int, initialR: Int): ArrayList[(Int, Int)] = {
 
@@ -286,6 +292,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   }
 
   // helper fo getRegion/getRegionRow
+  // combines pairs and merges them when they intersect
   @scala.inline
   private final def mergeAdd(value: (Int, Int), arr: ArrayList[(Int, Int)]): Unit = {
     val s = arr.size()
