@@ -49,7 +49,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
                  "<html>If more than one, some runs happen invisibly in the background." +
                  "<br>Defaults to one per processor core.</html>")).asJava
-    def get = RunOptions(threadCount, table, spreadsheet,updateView,updatePlotsAndMonitors)
+    def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

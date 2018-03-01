@@ -149,6 +149,9 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   def plotsAndMonitorsSwitch(check: Boolean): Unit = {
     plotsAndMonitorsSwitch.setSelected(check)
     workspace.setPeriodicUpdatesEnabled(check)
+    if(!check) {
+      workspace.jobManager.finishSecondaryJobs(null)
+    }
   }
 
   def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
