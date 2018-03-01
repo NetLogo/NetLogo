@@ -202,61 +202,52 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   // 2. x - r < 0 and x + r >= w      (wraps in both directions)
   // 3. x - r < 0                     (wraps below 0)
   // 4. x + r >= w                    (wraps above w - 1)
-  //
-  // getRegion's output can be thought of as a list of integer pairs. Therefore getRegion's output
-  // will always be of an even length. Each even index holds the first int of a pair, and each odd
-  // index holds the second int of a pair. Each pair represents a range of continuous world.patches
-  // indices to be used in InRadiusOrCone.scala with System.arraycopy. In each pair, the first int is
-  // the first index in the range, and the last index is the last index + 1. For example, if there is
-  // a range of indices from 2 to 9 (inclusive), then this is the pair 2, 10.
-  //
-  //
-  // - EH 2/27/2018
+  // - EH 2/11/2018
 
-  def getRegion(initialX: Int, initialY: Int, initialR: Int): ArrayList[Int] = {
+  def getRegion(initialX: Int, initialY: Int, initialR: Int): ArrayList[(Int, Int)] = {
 
     // translate from Netlogo coordinates to array indices
     val x: Int = initialX - world.minPxcor
     val y: Int = world.worldHeight - 1 - (initialY - world.minPycor)
     val r: Int = initialR
 
-    val ans: ArrayList[Int] = new ArrayList()
+    val ans: ArrayList[(Int, Int)] = new ArrayList()
 
     val low_within = y - r >= 0
     val high_within = y + r <= world.worldHeight - 1
 
     val y_ranges = {
       if (low_within && high_within) { // completely within world
-        Array(y - r, y + r + 1)
+        Array((y - r, y + r + 1))
 
       } else if (!low_within && !high_within) { // wider than both sides of the world
-        Array(0, world.worldHeight)
+        Array((0, world.worldHeight))
 
       } else if (low_within) { // wider on low side
         if (yWraps) {
-          Array(0, y + r - world.worldHeight + 1, y - r, world.worldHeight)
+          Array((0, y + r - world.worldHeight + 1), (y - r, world.worldHeight))
         } else {
-          Array(y - r, world.worldHeight)
+          Array((y - r, world.worldHeight))
         }
 
       } else { // wider on high side
         if (yWraps) {
-          Array(0, y + r + 1, world.worldHeight + y - r, world.worldHeight)
+          Array((0, y + r + 1), (world.worldHeight + y - r, world.worldHeight))
         } else {
-          Array(0, y + r + 1)
+          Array((0, y + r + 1))
         }
       }
     }
 
-    var i = y_ranges(0)
-    while (i < y_ranges(1)) {
+    var i = y_ranges(0)._1
+    while (i < y_ranges(0)._2) {
       getRegionRow(x, r, i * world.worldWidth, ans)
       i += 1
     }
 
-    if (y_ranges.length > 2) {
-      i = y_ranges(2)
-      while (i < y_ranges(3)) {
+    if (y_ranges.length > 1) {
+      i = y_ranges(1)._1
+      while (i < y_ranges(1)._2) {
         getRegionRow(x, r, i * world.worldWidth, ans)
         i += 1
       }
@@ -266,46 +257,43 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
   }
 
   // helper for getRegion
-  // gets the range for a given row
   @scala.inline
-  private final def getRegionRow(x: Int, r: Int, offset: Int, arr: ArrayList[Int]): Unit = {
+  private final def getRegionRow(x: Int, r: Int, offset: Int, arr: ArrayList[(Int, Int)]): Unit = {
     // similar logic as second half of getRegion
 
     val low_within = x - r >= 0
     val high_within = x + r <= world.worldWidth - 1
 
     if (low_within && high_within) {
-      mergeAdd(offset + x - r, offset + x + r + 1, arr)
+      mergeAdd((offset + x - r, offset + x + r + 1), arr)
 
     } else if (!low_within && !high_within) {
-      mergeAdd(offset + 0, offset + world.worldWidth, arr)
+      mergeAdd((offset + 0, offset + world.worldWidth), arr)
 
     } else if (!low_within) {
-      mergeAdd(offset + 0, offset + x + r + 1, arr)
+      mergeAdd((offset + 0, offset + x + r + 1), arr)
       if (xWraps) {
-        mergeAdd(offset + world.worldWidth + x - r, offset + world.worldWidth, arr)
+        mergeAdd((offset + world.worldWidth + x - r, offset + world.worldWidth), arr)
       }
 
     } else { // !high_within
       if (xWraps) {
-        mergeAdd(offset + 0, offset + x + r - world.worldWidth + 1, arr)
+        mergeAdd((offset + 0, offset + x + r - world.worldWidth + 1), arr)
       }
-      mergeAdd(offset + x - r, offset + world.worldWidth, arr)
+      mergeAdd((offset + x - r, offset + world.worldWidth), arr)
     }
 
   }
 
-  // helper for getRegion/getRegionRow
-  // combines pairs and merges them when they intersect
+  // helper fo getRegion/getRegionRow
   @scala.inline
-  private final def mergeAdd(v1: Int, v2: Int, arr: ArrayList[Int]): Unit = {
+  private final def mergeAdd(value: (Int, Int), arr: ArrayList[(Int, Int)]): Unit = {
     val s = arr.size()
-    if (s == 0 || arr.get(s - 1) < v1) {
-      arr.add(v1)
-      arr.add(v2)
+    if (s == 0 || arr.get(s - 1)._2 < value._1) {
+      arr.add(value)
     } else {
-      arr.set(s - 2, arr.get(s - 2).min(v1))
-      arr.set(s - 1, arr.get(s - 1).max(v2))
+      val last = arr.get(s - 1)
+      arr.set(s - 1, (last._1.min(value._1), value._2.max(last._2)))
     }
   }
 
