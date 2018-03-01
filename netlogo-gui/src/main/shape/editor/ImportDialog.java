@@ -17,12 +17,12 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
 
   ///
 
-  public ImportDialog(java.awt.Frame frame,
+  public ImportDialog(java.awt.Dialog dialog,
                ManagerDialog<? extends Shape> manager,
                DrawableList<? extends Shape> drawableList) {
     // The Java 1.1 version of Swing doesn't allow us to pass a JDialog as the first arg to
     // the JDialog constructor, hence the necessity of passing in the frame instead - ST 3/24/02
-    super(frame, "Library", true);
+    super(dialog, "Library", true);
     this.manager = manager;
 
     list = drawableList;

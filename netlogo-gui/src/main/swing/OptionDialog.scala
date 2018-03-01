@@ -30,10 +30,12 @@ object OptionDialog {
     showCustom(owner, title, brokenLines.asScala.mkString("\n"), options)
   }
 
-  def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int =
-    JOptionPane.showOptionDialog(owner, message, title,
+  def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int = {
+    val parent: Component = Hierarchy.getWindow(owner)
+    JOptionPane.showOptionDialog(parent, message, title,
       JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
       options.asInstanceOf[Array[Object]], options(0))
+  }
 
   def showIgnoringCloseBox(owner: Component, title: String, message: String, options: Array[AnyRef], asList: Boolean) = {
     val showDialog = {
