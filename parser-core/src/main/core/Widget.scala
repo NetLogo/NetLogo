@@ -10,6 +10,7 @@ trait Widget {
   def right:  Int
   def bottom: Int
 
+  /** convertSource applies the given conversion to all code found in the widget. */
   def convertSource(conversion: String => String): Widget = this
 }
 
@@ -139,5 +140,3 @@ object View {
 
   def square(dim: Int) = View(dimensions = new WorldDimensions(minPxcor = -dim, maxPxcor = dim, minPycor = -dim, maxPycor = dim))
 }
-
-
