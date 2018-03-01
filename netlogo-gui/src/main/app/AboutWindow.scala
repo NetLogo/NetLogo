@@ -37,8 +37,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
     val label = new JLabel {
-      val yearFormat = new java.text.SimpleDateFormat("yyyy")
-      val year = yearFormat.format(new java.util.Date())
+      val year = Version.buildDate.takeRight(4)
       setText(
         s"""|<html>
             |<center>
