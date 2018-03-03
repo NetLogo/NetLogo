@@ -16,13 +16,13 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
     def spreadsheet = prefs.getBoolean("spreadsheet", true)
     def table = prefs.getBoolean("table", false)
-    def updateView = prefs.getBoolean("updateView",true)
-    def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors",true)
+    def updateView = prefs.getBoolean("updateView", true)
+    def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateFrom(runOptions: RunOptions): Unit = {
       prefs.putBoolean("spreadsheet", runOptions.spreadsheet)
       prefs.putBoolean("table", runOptions.table)
-      prefs.putBoolean("updateView",runOptions.updateView)
-      prefs.putBoolean("updatePlotsAndMonitors",runOptions.updatePlotsAndMonitors)
+      prefs.putBoolean("updateView", runOptions.updateView)
+      prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
     }
   }
   def get = {
