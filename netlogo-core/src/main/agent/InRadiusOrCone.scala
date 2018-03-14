@@ -231,9 +231,9 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     result
   }
 
-  // helper method for inCone()
   // for each world W at offsets offsetX and offsetY, check if any point
   // in W is within radius by checking W's closest point
+  @scala.inline
   private def closestPointIsInRadius(x: Double, y: Double, offsetX: Int, offsetY: Int, r: Double): Boolean = {
     var closestX, closestY = .0
 
@@ -256,9 +256,9 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     world.protractor.distance(closestX, closestY, x, y, false) <= r
   }
 
-  // helper method for inCone().
   // check if (x, y) is in the cone with center (cx, cy) , radius r, half-angle half, and central
   // line of the cone having heading h.
+  @scala.inline
   private def isInCone(x: Double, y: Double, cx: Double, cy: Double, r: Double, half: Double, h: Double): Boolean = {
     if (x == cx && y == cy) {
       return true
@@ -282,6 +282,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     (diff <= half) || ((360 - diff) <= half)
   }
 
+  @scala.inline
   private def initPatches(): Unit = {
     if (patches eq null) {
       patches = new Array[Patch](world.patches.count)
@@ -289,6 +290,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   }
 
   // special case of setPatches for radius <= 1
+  @scala.inline
   private def setPatches1(centerPatch: Patch): Unit = {
     val neighbors = centerPatch.getNeighbors.asInstanceOf[ArrayAgentSet].array
     var i = 0
@@ -303,6 +305,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   }
 
   // special case of setPatches for radius <= 2
+  @scala.inline
   private def setPatches2(centerPatch: Patch): Unit = {
     setPatches1(centerPatch)
 
@@ -320,36 +323,25 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
       // when the world is very small.
       val allNeighbors = new LinkedHashSet[Patch]
 
-      // only need to add and getNeighbors for corners. i = 0 is the original centerPatch,
-      // and i = [1,4] is N,E,S,W.
       var i = 0
       while (i < end) {
         val p = patches(i)
         allNeighbors.add(p)
 
-        if (i == 5) { // NorthEast
-          allNeighbors.add(p.getPatchNorth)
-          allNeighbors.add(p.getPatchNorthEast)
-          allNeighbors.add(p.getPatchEast)
-          allNeighbors.add(p.getPatchSouthEast)
-        } else if (i == 6) { // SouthEast
-          allNeighbors.add(p.getPatchEast)
-          allNeighbors.add(p.getPatchSouthEast)
-          allNeighbors.add(p.getPatchSouth)
-          allNeighbors.add(p.getPatchSouthWest)
-        } else if (i == 7) { // SouthWest
-          allNeighbors.add(p.getPatchSouth)
-          allNeighbors.add(p.getPatchSouthWest)
-          allNeighbors.add(p.getPatchWest)
-          allNeighbors.add(p.getPatchNorthWest)
-        } else if (i == 8) { // NorthWest
-          allNeighbors.add(p.getPatchWest)
-          allNeighbors.add(p.getPatchNorthWest)
-          allNeighbors.add(p.getPatchNorth)
-          allNeighbors.add(p.getPatchNorthEast)
-        }
+        allNeighbors.add(p.getPatchNorth)
+        allNeighbors.add(p.getPatchNorthEast)
+        allNeighbors.add(p.getPatchEast)
+        allNeighbors.add(p.getPatchSouthEast)
+
+        allNeighbors.add(p.getPatchSouth)
+        allNeighbors.add(p.getPatchSouthWest)
+        allNeighbors.add(p.getPatchWest)
+        allNeighbors.add(p.getPatchNorthWest)
+
         i += 1
       }
+
+      allNeighbors.remove(null)
 
       i = 0
       val allNeighborsIterator = allNeighbors.iterator
@@ -385,7 +377,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     }
   }
 
-  // helper method to copy relevant patches
+  @scala.inline
   private def setPatches(X: Double, Y: Double, R: Double): Unit = {
     // initialize patches only once for this class.
 
@@ -409,7 +401,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     end = curr
   }
 
-  // helper method to create cachedIDs set
+  @scala.inline
   private def initCachedIDs(sourceSet: AgentSet): JHashSet[Long] = {
     var cachedIDs: JHashSet[Long] = null
     if (!sourceSet.isBreedSet) {
