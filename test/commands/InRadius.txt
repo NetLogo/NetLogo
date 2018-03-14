@@ -172,15 +172,16 @@ InRadius6_2D
   O> create-turtles 10
   O> __change-topology true true
   [ count turtles in-radius 2 ] of patch 5 5 => 10
-  [ count turtles in-radius 1 ] of patch 0 5 => 10
-  [ count turtles in-radius 1 ] of patch 5 0 => 10
-  [ count turtles in-radius 1 ] of patch 4 4 => 0
+  [ count turtles in-radius 2 ] of patch 0 5 => 10
+  [ count turtles in-radius 2 ] of patch 5 0 => 10
+  [ count turtles in-radius 2 ] of patch 4 4 => 0
+  [ count turtles in-radius 2 ] of patch 1 1 => 10
   O> __change-topology false false
   [ count turtles in-radius 2 ] of patch 5 5 => 0
-  [ count turtles in-radius 1 ] of patch 0 5 => 0
-  [ count turtles in-radius 1 ] of patch 5 0 => 0
-  [ count turtles in-radius 1 ] of patch 4 4 => 0
-  [ count turtles in-radius 1 ] of patch 0 0 => 10
+  [ count turtles in-radius 2 ] of patch 0 5 => 0
+  [ count turtles in-radius 2 ] of patch 5 0 => 0
+  [ count turtles in-radius 2 ] of patch 4 4 => 0
+  [ count turtles in-radius 2 ] of patch 1 1 => 10
   O> resize-world 0 3 0 3
   O> create-turtles 10
   O> __change-topology true true
@@ -349,6 +350,10 @@ InRadiusLargeRadius4_2D
   [ count patches in-radius 14 ] of patch -3 0 => 121
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
+  [ count patches in-radius 2 ] of patch 0 0 => 13
+  [ count patches in-radius 2 ] of patch -3 0 => 13
+  [ count patches in-radius 2 ] of patch max-pxcor 0 => 13
+  [ count patches in-radius 2 ] of patch 0 min-pycor => 13
   [ count turtles in-radius 1 ] of patch -10 -10 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor => 10
   O> __change-topology false false
@@ -356,6 +361,10 @@ InRadiusLargeRadius4_2D
   [ count patches in-radius 14 ] of patch -3 0 => 121
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 120
   [ count patches in-radius 14 ] of patch 0 min-pycor => 120
+  [ count patches in-radius 2 ] of patch 0 0 => 6
+  [ count patches in-radius 2 ] of patch -3 0 => 9
+  [ count patches in-radius 2 ] of patch max-pxcor 0 => 6
+  [ count patches in-radius 2 ] of patch 0 min-pycor => 6
   [ count turtles in-radius 1 ] of patch -10 -10 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor => 10
   O> __change-topology true false
@@ -363,6 +372,10 @@ InRadiusLargeRadius4_2D
   [ count patches in-radius 14 ] of patch -3 0 => 121
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
+  [ count patches in-radius 2 ] of patch 0 0 => 9
+  [ count patches in-radius 2 ] of patch -3 0 => 9
+  [ count patches in-radius 2 ] of patch max-pxcor 0 => 9
+  [ count patches in-radius 2 ] of patch 0 min-pycor => 9
   [ count turtles in-radius 1 ] of patch -10 -10 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor => 10
   O> __change-topology false true
@@ -370,6 +383,10 @@ InRadiusLargeRadius4_2D
   [ count patches in-radius 14 ] of patch -3 0 => 121
   [ count patches in-radius 14 ] of patch max-pxcor 0 => 121
   [ count patches in-radius 14 ] of patch 0 min-pycor => 121
+  [ count patches in-radius 2 ] of patch 0 0 => 9
+  [ count patches in-radius 2 ] of patch -3 0 => 13
+  [ count patches in-radius 2 ] of patch max-pxcor 0 => 9
+  [ count patches in-radius 2 ] of patch 0 min-pycor => 9
   [ count turtles in-radius 1 ] of patch -10 -10 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor => 10
 
