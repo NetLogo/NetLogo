@@ -262,7 +262,6 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
     ans
   }
 
-  // helper for getRegion
   @scala.inline
   private final def getRegionRow(x: Int, r: Int, offset: Int, arr: ArrayList[(Int, Int)]): Unit = {
     // similar logic as second half of getRegion
@@ -291,7 +290,6 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
 
   }
 
-  // helper fo getRegion/getRegionRow
   // combines pairs and merges them when they intersect
   @scala.inline
   private final def mergeAdd(value: (Int, Int), arr: ArrayList[(Int, Int)]): Unit = {
