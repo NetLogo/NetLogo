@@ -63,7 +63,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
-  activeMenuActions = {
+  override val activeMenuActions = {
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
       with MenuAction {
