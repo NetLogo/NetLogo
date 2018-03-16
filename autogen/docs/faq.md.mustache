@@ -482,6 +482,46 @@ date the model was opened. The exact path will depend on your operating system:
   where `<user>` is the logged in user.
 - On most non-Mac Unix-like systems the temp directory is `/tmp`.
 
+### Why is HubNet Discovery Not Working?
+
+HubNet discovery provides the ability for HubNet clients running on the same
+local network as the HubNet server to automatically display the IP address
+and current activity of the server. This uses IPv4 multicast over a local area
+network - it won't identify HubNet servers on the internet or on different
+networks. Some networks also do not support multicast traffic and it will
+simply not work on those networks. For HubNet Discovery to work, the server
+must be broadcasting to the same network that the client is polling for messages.
+Often, both the client and server are only connected to a single network and
+there is no need for further configuration.
+
+Since NetLogo 6.0.3, we have tools in place to allow clients and/or servers
+connected to multiple networks to select the network on which they will
+broadcast/listen. When running a HubNet server, this is done by selecting
+the appropriate "broadcast network" via selection dropdown when starting
+a HubNet server. This preference will be remembered until NetLogo is restarted,
+so if you end up needing to broadcast on a different network, restart NetLogo.
+HubNet clients also see a similar dropdown when selecting which activity to
+join. Unlike HubNet server, clients may change the network on which they
+listen at any time. HubNet discovery will only work when both client
+and server are listening/broadcasting on the *same* network, so some
+trial and error may be required to figure out a working configuration.
+Generally speaking, the shared network is the one on which the client
+and the server have the most similar IP address prefixes. For instance,
+if the server selects to broadcast on a network where it has IP address
+192.168.0.101, a client should prefer listening on a network where it
+has an IP like 192.167.0.203 over a network where it has an IP like
+10.5.0.101. Even when the same network is selected, it is possible
+that that network may not support IPv4 multicast, in which case discovery
+will *not* work and clients must enter IP addresses manually.
+
+Note that the change made in 6.0.3 simply enable selection of the network
+on which clients and servers broadcast/listen on. The HubNet server still
+listens on *all* network connections, so all listed IP addresses given in
+the server broadcast network selection dropdown are potentially valid for
+a HubNet client (even a client on a different network) to connect to.
+Similarly HubNet clients may connect to any HubNet server reachable from
+their computer.
+
 ## Usage
 
 ### When I move the speed slider all the way to the right, why does my model seem to stop?
