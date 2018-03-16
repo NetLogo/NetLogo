@@ -50,6 +50,7 @@ For help running models made in old versions, see the
 - The `ls` extension has much less overhead for calling out to single models, making constructs like `ask turtles [ ls:ask my-model [ run-something ] ]` much faster.
 - The `ls` extension now seeds the child model RNG based on the parent model RNG at model creation. Furthermore, and `ls:random-seed` primitive has been introduced, so an entire model system can be seeded simultaneously. This makes it possible to have reproducible runs when using LevelSpace.
 - The `ls:let` primitive now handles scoping properly.
+- `ls:assign` has been added to LevelSpace to make assigning globals of child models easier.
 
 ### Documentation Changes
 
