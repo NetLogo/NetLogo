@@ -125,7 +125,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.0.3-RC1",
+    version := "6.0.3",
     isSnapshot := false,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -194,7 +194,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.0.3-RC1",
+    version       := "6.0.3",
     isSnapshot    := false,
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
@@ -279,9 +279,9 @@ lazy val parser = CrossProject("parser", file("."),
   settings(scalastyleSettings: _*).
   settings(publicationSettings("NetLogoHeadless"): _*).
   settings(
-    isSnapshot := true,
+    isSnapshot := false,
     name := "parser",
-    version := "0.2.1",
+    version := "0.2.2",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
