@@ -152,7 +152,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
             if (drawableList.shapeList.isEmpty)
               importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
             else
-              importDialog = Some(new ImportDialog(parentFrame, this, drawableList))
+              importDialog = Some(new ImportDialog(ManagerDialog.this, this, drawableList))
         }
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)

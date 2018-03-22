@@ -47,6 +47,8 @@ object PackageMacAggregate {
   // └── Java.runtime (contains JRE)
   val libraryDirs = Seq("natives")
 
+  val CodesigningIdentity = "Developer ID Application: Northwestern University (E74ZKF37E6)"
+
   // assumes subApplicationDir is {<app.name>.app as copied by JavaPackager.copyMacStubApplication
   private def configureSubApplication(subApplicationDir: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
     // add runtimeFiles "natives"
@@ -178,7 +180,9 @@ object PackageMacAggregate {
         case _ => 1
       }
 
-    RunProcess(Seq("codesign", "-s", "Developer ID Application") ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
+    val dmgName = buildName + ".dmg"
+
+    RunProcess(Seq("codesign", "-s", CodesigningIdentity) ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
         "-quiet", s"$buildName.dmg",
@@ -187,8 +191,7 @@ object PackageMacAggregate {
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
-    val dmgName = buildName + ".dmg"
-    RunProcess(Seq("codesign", "-s", "Developer ID Application") :+ dmgName, aggregateTarget, "codesigning dmg")
+    RunProcess(Seq("codesign", "-s", CodesigningIdentity) :+ dmgName, aggregateTarget, "codesigning dmg")
 
     FileActions.createDirectory(webDirectory)
     FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)

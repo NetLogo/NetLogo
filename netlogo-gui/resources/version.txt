@@ -1,5 +1,6 @@
+NetLogo 6.0.3
+March 19, 2018
 NetLogo 6.0.3-M3
-February 16, 2018
 NetLogo 6.0.2
 NetLogo 6.0.1
 NetLogo 6.0

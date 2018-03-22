@@ -200,25 +200,22 @@ object FileManager {
   }
 
   class ConvertNlsAction(
-    tab:            TemporaryCodeTab,
-    modelSaver:     ModelSaver,
-    modelConverter: ModelConversion,
-    workspace:      AbstractWorkspaceScala,
-    controller:     FileController)
+    tab:                TemporaryCodeTab,
+    modelSaver:         ModelSaver,
+    convertIncludeFile: ConvertIncludeFile,
+    workspace:          AbstractWorkspaceScala,
+    controller:         FileController)
   extends ExceptionCatchingAction(I18N.gui.get("menu.edit.convertToNetLogoSix"), tab)
   with MenuAction{
     category = UserAction.EditCategory
     group    = "ConversionGroup"
 
     override def action(): Unit = {
-      tab.filename.right.toOption
-        .flatMap(name => FileIO.resolvePath(name, Paths.get(workspace.getModelPath)))
-        .foreach { path =>
-        val version =
-          if (Version.is3D) "NetLogo 3D 5.3.1"
-          else              "NetLogo 5.3.1"
-        val tempModel = modelSaver.currentModel.copy(code = tab.innerSource, version = version)
-        modelConverter(tempModel, path) match {
+      for {
+        name <- tab.filename.right.toOption
+        path <- FileIO.resolvePath(name, Paths.get(workspace.getModelPath))
+      } {
+        convertIncludeFile.apply(path, modelSaver.currentModel, tab.innerSource) match {
           case SuccessfulConversion(originalModel, m) => tab.innerSource = m.code
           case failure: FailedConversionResult =>
             controller.showAutoconversionError(failure, "nls").foreach { m =>
@@ -419,6 +416,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def convertTabAction(t: TemporaryCodeTab): Action = {
-    new ConvertNlsAction(t, modelSaver, modelConverter, workspace, controller)
+    val version =
+      if (Version.is3D) "NetLogo 3D 5.3.1"
+      else              "NetLogo 5.3.1"
+    val convertIncludeFile = new ConvertIncludeFile(modelConverter, version)
+    new ConvertNlsAction(t, modelSaver, convertIncludeFile, workspace, controller)
   }
 }

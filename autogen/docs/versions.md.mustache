@@ -50,6 +50,7 @@ For help running models made in old versions, see the
 - The `ls` extension has much less overhead for calling out to single models, making constructs like `ask turtles [ ls:ask my-model [ run-something ] ]` much faster.
 - The `ls` extension now seeds the child model RNG based on the parent model RNG at model creation. Furthermore, and `ls:random-seed` primitive has been introduced, so an entire model system can be seeded simultaneously. This makes it possible to have reproducible runs when using LevelSpace.
 - The `ls:let` primitive now handles scoping properly.
+- `ls:assign` has been added to LevelSpace to make assigning globals of child models easier.
 
 ### Documentation Changes
 
@@ -60,7 +61,6 @@ For help running models made in old versions, see the
 ### Model Changes
 
 #### New Sample Models:
-- **Baldwin Effect** (HAS NOT BEEN COMMITTED)
 - Bidding Market
 - Blood Sugar Regulation
 - Rock Paper Scissors
@@ -83,6 +83,8 @@ For help running models made in old versions, see the
 #### Revised Curricular Models:
 - BEAGLE Evolution - Fish Tank Genetic Drift: Update duplicate plot-pen names and resize plots
 - GenEvo - GenEvo 4: Replaced usage of `cf:when` with nested `ifelse`s
+- Lattice Land - Lattice Land Explore: Fixed bug when deleting a segment that didn't exist.
+- Lattice Land - Lattice Land Triangles Dissection: Fixed bug when deleting a segment that didn't exist.
 - NIELS - Electrostatics: All turtles are now `particles` and each `particle` has a charge; Changed particle coloring; Updated Info Tab and some variable names to reflect later NIELS models
 - Urban Suite - Tijuana Bordertowns: Minor Info Tab updates.
 

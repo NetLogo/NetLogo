@@ -105,6 +105,28 @@ object RuntimeErrorDialog {
   def suppressJavaExceptionDialogs: Boolean = {
     unknownDialog.map(_.suppressJavaExceptionDialogs).getOrElse(false)
   }
+
+
+  // This was added to work around https://bugs.openjdk.java.net/browse/JDK-8198809,
+  // which appears only in Java 8u162 and should be resolved in 8u172.
+  // In general, this method should be used as a safety valve for non-fatal exceptions which
+  // are Java's fault (this bug matches that description to a tee, but there are
+  // many other bugs of this sort). - RG 3/2/18
+  def safeToIgnore(t: Throwable): Boolean = {
+    t match {
+      case j: java.awt.IllegalComponentStateException =>
+        val classAndMethodNames = Seq(
+          "java.awt.Component"                                         -> "getLocationOnScreen_NoTreeLock",
+          "java.awt.Component"                                         -> "getLocationOnScreen",
+          "javax.swing.text.JTextComponent$InputMethodRequestsHandler" -> "getTextLocation",
+          "sun.awt.im.InputMethodContext"                              -> "getTextLocation",
+          "sun.awt.windows.WInputMethod$1"                             -> "run")
+        val stackTraceClassAndMethodNames =
+          j.getStackTrace.take(5).map(ste => ste.getClassName -> ste.getMethodName).toSeq
+        classAndMethodNames == stackTraceClassAndMethodNames
+      case _ => false
+    }
+  }
 }
 
 import RuntimeErrorDialog._

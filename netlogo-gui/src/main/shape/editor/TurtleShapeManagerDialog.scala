@@ -74,7 +74,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
     val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
     drawableListFromImportedShapes(mergedShapes.toArray) match {
       case Some(drawableList) =>
-        importDialog = Some(new ImportDialog(parentFrame, this, drawableList))
+        importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
         shapesList.requestFocus()
       case None =>
         javax.swing.JOptionPane.showMessageDialog(this,

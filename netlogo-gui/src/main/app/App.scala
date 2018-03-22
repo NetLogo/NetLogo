@@ -819,7 +819,7 @@ class App extends
       val logo = t.isInstanceOf[LogoException]
       if (! logo) {
         t.printStackTrace(System.err)
-        if (org.nlogo.window.RuntimeErrorDialog.suppressJavaExceptionDialogs) {
+        if (RuntimeErrorDialog.suppressJavaExceptionDialogs || RuntimeErrorDialog.safeToIgnore(t)) {
           return
         }
       }
