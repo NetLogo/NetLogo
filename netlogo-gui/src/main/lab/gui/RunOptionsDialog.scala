@@ -16,9 +16,13 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
     def spreadsheet = prefs.getBoolean("spreadsheet", true)
     def table = prefs.getBoolean("table", false)
+    def updateView = prefs.getBoolean("updateView", true)
+    def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateFrom(runOptions: RunOptions): Unit = {
       prefs.putBoolean("spreadsheet", runOptions.spreadsheet)
       prefs.putBoolean("table", runOptions.table)
+      prefs.putBoolean("updateView", runOptions.updateView)
+      prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
     }
   }
   def get = {
@@ -32,16 +36,20 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   class EditableRunOptions extends Editable {
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
+    var updateView = Prefs.updateView
+    var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Runtime.getRuntime.availableProcessors
     val classDisplayName = "Run options"
     val propertySet =
       List(
         Property("spreadsheet", Property.Boolean, "Spreadsheet output"),
         Property("table", Property.Boolean, "Table output"),
+        Property("updateView", Property.Boolean, "Update view"),
+        Property("updatePlotsAndMonitors", Property.Boolean, "Update plots and monitors"),
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
                  "<html>If more than one, some runs happen invisibly in the background." +
                  "<br>Defaults to one per processor core.</html>")).asJava
-    def get = RunOptions(threadCount, table, spreadsheet)
+    def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

@@ -14,7 +14,7 @@ import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.api.LogoException
 
 object Supervisor {
-  case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean)
+  case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean, updateView: Boolean, updatePlotsAndMonitors: Boolean)
 }
 class Supervisor(dialog: java.awt.Dialog,
                  val workspace: GUIWorkspace,
@@ -60,6 +60,7 @@ class Supervisor(dialog: java.awt.Dialog,
       worker.addListener(exporter)
     }
   }
+
   override def start() {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()
@@ -89,6 +90,8 @@ class Supervisor(dialog: java.awt.Dialog,
         worker.protocol,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
     }
+    progressDialog.setUpdateView(options.updateView)
+    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{_ =>
       val w = factory.newInstance

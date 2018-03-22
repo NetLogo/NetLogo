@@ -12,6 +12,7 @@ import java.awt.Dimension
 import org.nlogo.api.{PeriodicUpdateDelay, Dump}
 import org.nlogo.plot.DummyPlotManager
 
+
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor)
               extends JDialog(dialog, true) with ProgressListener{
 
@@ -20,8 +21,9 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
-
-  private var updatePlots = true
+  private val displaySwitch = new JCheckBox(displaySwitchAction)
+  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
+  private var updatePlots = false
   private var started = 0L
   private var runCount = 0
   private var elapsed = "0:00:00"
@@ -91,14 +93,9 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     scrollPane.setMinimumSize(scrollPane.getPreferredSize())
 
     c.weighty = 0.0
-    val displaySwitch = new JCheckBox(displaySwitchAction)
-    displaySwitch.setSelected(true)
-    workspace.displaySwitchOn(true)
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
     getContentPane.add(displaySwitch, c)
 
-    val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
-    plotsAndMonitorsSwitch.setSelected(true)
     c.insets = new java.awt.Insets(0, 6, 0, 6)
     getContentPane.add(plotsAndMonitorsSwitch, c)
 
@@ -139,6 +136,29 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       workspace.jobManager.finishSecondaryJobs(null)
     }
   }
+
+  def updateView(check: Boolean): Unit = {
+    displaySwitch.setSelected(check)
+    workspace.displaySwitchOn(check)
+  }
+
+  def setUpdateView(status: Boolean): Unit = {
+    updateView(status)
+  }
+
+  def plotsAndMonitorsSwitch(check: Boolean): Unit = {
+    plotsAndMonitorsSwitch.setSelected(check)
+    workspace.setPeriodicUpdatesEnabled(check)
+    if(!check) {
+      workspace.jobManager.finishSecondaryJobs(null)
+    }
+  }
+
+  def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
+    plotsAndMonitorsSwitch(status)
+    updatePlots = status
+  }
+
   def close() {
     timer.stop()
     setVisible(false)
