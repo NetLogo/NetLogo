@@ -42,7 +42,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
-  activeMenuActions =
+  override val activeMenuActions =
     WorkspaceActions.interfaceActions(workspace) ++
     Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction(), new JumpToCommandCenterAction())
 

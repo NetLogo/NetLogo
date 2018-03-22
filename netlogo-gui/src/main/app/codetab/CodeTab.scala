@@ -111,7 +111,7 @@ with MenuTab {
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
 
-  activeMenuActions =
+  override val activeMenuActions =
     editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction)
 
   // don't let the editor influence the preferred size,

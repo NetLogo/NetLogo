@@ -12,6 +12,7 @@ import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCa
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
+import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
@@ -62,7 +63,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 
-  activeMenuActions = {
+  override val activeMenuActions = {
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
       with MenuAction {
@@ -75,7 +76,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         override def action(): Unit = save(saveAs)
       }
     }
-    Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
+    Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++
+      editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++
+      filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
   override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))

@@ -84,6 +84,8 @@ class InfoTab(attachModelDir: String => String)
 
   override def zoomTarget = scrollPane
 
+  override val activeMenuActions = Seq(undoAction, redoAction)
+
   locally {
     resetBorders()
     setLayout(new BorderLayout)
@@ -94,7 +96,6 @@ class InfoTab(attachModelDir: String => String)
     }, BorderLayout.NORTH)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane,BorderLayout.CENTER)
-    activeMenuActions = Seq(undoAction, redoAction)
   }
 
   private def resetBorders() {
