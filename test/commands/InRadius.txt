@@ -196,6 +196,13 @@ InRadius6_2D
   [ count turtles in-radius 1 ] of patch 2 2 => 0
   [ count turtles in-radius 1 ] of patch 0 0 => 10
 
+InRadius7_2D
+  O> resize-world -16 16 -16 16
+  O> __change-topology true true
+  O> crt 1 [ setxy -4.998332335 -6.121246053 ]
+  O> crt 1 [ setxy -7.503291252 -5.746270605 ]
+  [ count turtles in-radius 2.6088790696389133 ] of turtle 0 => 2
+
 InRadius1_3D
   O> create-turtles 10
   O> __change-topology true true
