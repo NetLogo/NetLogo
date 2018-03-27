@@ -381,8 +381,8 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private def setPatches(X: Double, Y: Double, R: Double): Unit = {
     // initialize patches only once for this class.
 
-    val x = X.toInt
-    val y = Y.toInt
+    val x = StrictMath.round(X).toInt
+    val y = StrictMath.round(Y).toInt
     val r = if (x != X || y != Y) R.toInt + 1 else R.toInt
 
     val regionIterator = world.topology.getRegion(x, y, r).iterator
