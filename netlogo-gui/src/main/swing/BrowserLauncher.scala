@@ -27,11 +27,12 @@ object BrowserLauncher {
       if (! opened)
         osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(uri.toString)
     } catch {
-      val exceptionmsg = ex.getLocalizedMessage
+      val unableToOpenBrowserError = "We were unable to open a browser on your system.\n" +
+      "This error can be reported to bugs@ccl.northwestern.edu"
       case ex: UnsupportedOperationException =>
-        JOptionPane.showMessageDialog(comp, exceptionmsg)
+        JOptionPane.showMessageDialog(comp, unableToOpenBrowserError)
       case ex: BrowserNotFoundException =>
-        JOptionPane.showMessageDialog(comp, exceptionmsg)
+        JOptionPane.showMessageDialog(comp, ex.getLocalizedMessage)
       case ex: IOException =>
         JOptionPane.showMessageDialog(comp, s"Unable to open a browser to: ${uri.toString}\n" +
           "Please report to bugs@ccl.northwestern.edu")
