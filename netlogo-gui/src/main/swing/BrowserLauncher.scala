@@ -11,6 +11,8 @@ import javax.swing.JOptionPane
 
 object BrowserLauncher {
   private val osName = System.getProperty("os.name")
+  val unableToOpenBrowserError = "We were unable to open a browser on your system.\n" +
+      "This error can be reported to bugs@ccl.northwestern.edu"
 
   @deprecated("Use openURI or openPath instead", "6.0.2")
   def openURL(comp: Component, urlString: String, local: Boolean): Unit = {
@@ -27,6 +29,8 @@ object BrowserLauncher {
       if (! opened)
         osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(uri.toString)
     } catch {
+      case ex: UnsupportedOperationException =>
+        JOptionPane.showMessageDialog(comp, unableToOpenBrowserError)
       case ex: BrowserNotFoundException =>
         JOptionPane.showMessageDialog(comp, ex.getLocalizedMessage)
       case ex: IOException =>
@@ -107,8 +111,7 @@ object BrowserLauncher {
 
   private def browserNotFound(): Nothing = {
     throw new BrowserNotFoundException(
-      "We were unable to open a browser on your system.\n" +
-      "This error can be reported to bugs@ccl.northwestern.edu");
+      unableToOpenBrowserError);
   }
 
   private def firefoxNotFound(ex: Exception): Nothing = {
