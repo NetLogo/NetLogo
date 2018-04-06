@@ -188,6 +188,7 @@ object PackageMacAggregate {
         "-quiet", s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
         "-size", "450m",
+        "-fs", "HFS+",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
 
