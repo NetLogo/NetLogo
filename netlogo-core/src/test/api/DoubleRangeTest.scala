@@ -13,7 +13,7 @@ class DoubleRangeTest extends FunSuite {
     (-1.0 + 1.0 / 3.0, 0, 1.0 / 3.0, 2), // Shows approaching 0
     (pow(2, 52) - 100.0, pow(2,52), 1.0, 100), // tests maximal differences in exponent
     (pow(2, 52) - 100000.0, pow(2, 52), 1000.0, 100),
-    (-1.0, pow(2,51), pow(2,51), 2),
+    (-2.0, pow(2,51), pow(2,51), 2),
     (0.0, 1.0, 0.1, 10),
     (1e-4, 1e-3, 1e-4, 9),
     (1.00001e-10, 1e-9, 1e-10, 9),
@@ -23,7 +23,8 @@ class DoubleRangeTest extends FunSuite {
     (2.0 / 3.0, 2, 2.0 / 3.0, 2),
     (0.0, 1.0, 1.0 / 6.0, 6),
     (1.0 / 6.0, 1, 1.0 / 6.0, 5),
-    (0, 3333.333334, 1.0 / 3.0, 10001)
+    (0, 3333.333334, 1.0 / 3.0, 10001),
+    (3.0, 2.3, -0.1, 7)
   )
   val inclusiveCases = Seq[(Double, Double, Double, Int)](
     (0.0, 10.0, 1.0, 11),
@@ -31,7 +32,7 @@ class DoubleRangeTest extends FunSuite {
     (-1.0 + 1.0 / 3.0, 0, 1.0 / 3.0, 3), // Shows approaching 0
     (pow(2, 52) - 100.0, pow(2,52), 1.0, 101), // tests maximal differences in exponent
     (pow(2, 52) - 100000.0, pow(2, 52), 1000.0, 101),
-    (-1.0, pow(2,52), pow(2,52), 2),
+    (-2.0, pow(2,52), pow(2,52), 2),
     (0.0, 1.0, 0.1, 11),
     (1e-4, 1e-3, 1e-4, 10),
     (1.00001e-10, 1e-9, 1e-10, 9),
@@ -41,7 +42,8 @@ class DoubleRangeTest extends FunSuite {
     (2.0 / 3.0, 2, 2.0 / 3.0, 3),
     (0.0, 1.0, 1.0 / 6.0, 7),
     (1.0 / 6.0, 1, 1.0 / 6.0, 6),
-    (0, 3333.333334, 1.0 / 3.0, 10001)
+    (0, 3333.333334, 1.0 / 3.0, 10001),
+    (3.0, 2.3, -0.1, 8)
   )
 
   def scale(s: Seq[(Double, Double, Double, Int)]) = s.map {
