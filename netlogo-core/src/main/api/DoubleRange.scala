@@ -9,12 +9,12 @@ case class DoubleRange(start: Double, stop: Double, step: Double = 1.0, inclusiv
       // We want, for instance, 9.999999999999998 to become 10 instead of 9
       // from the floor, so we add the ulp here.
       val num = (stop - start) / step + 1
-      StrictMath.floor(num + StrictMath.ulp(num))
+      StrictMath.floor(num + 2 * StrictMath.ulp(num))
     } else {
       // We want, for instance, 10.000000000000002 to become 10 instead of 11
       // from the ceil, so we subtract the ulp here.
       val num = (stop - start) / step
-      StrictMath.ceil(num - StrictMath.ulp(num))
+      StrictMath.ceil(num - 2 * StrictMath.ulp(num))
     }
 
     if (l > Integer.MAX_VALUE)
