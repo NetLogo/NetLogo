@@ -3934,10 +3934,10 @@ ask turtles
       </h4>
       <p>
         On a list, inserts an item in that list. <i>index</i> is the index
-        where the item will be inserted. The first item has an index of 0. 
+        where the item will be inserted. The first item has an index of 0.
         (The 6th item in a list would have an index of 5.)
       <p>
-        Likewise for a string, but all characters in a multiple-character <i>string2</i> 
+        Likewise for a string, but all characters in a multiple-character <i>string2</i>
         are inserted at <i>index</i>.
       <pre>
 show insert-item 2 [2 7 4 5] 15
@@ -6653,8 +6653,10 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       <p>
         Changes the size of the patch grid.
       <p>
-        As a side effect, all turtles and links die, and the existing patch
-        grid is discarded and new patches created.
+        If the given patch grid coordinates are different than the ones
+        in use, all turtles and links die, and the existing patch grid is
+        discarded and new patches created. Otherwise, existing turtles
+        and links will live if the grid coordinates are unchanged.
       <p>
         Retaining references to old patches or patch sets is inadvisable
         and may subsequently cause runtime errors or other unexpected
