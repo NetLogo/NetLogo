@@ -951,3 +951,13 @@ link-clear-links
   O> clear-links
   count [ link-neighbors ] of turtle 0 => 0
   count [ my-links ] of turtle 0 => 0
+
+lots-of-link-breeds
+  directed-link-breed [links1 link1]
+  directed-link-breed [links2 link2]
+  directed-link-breed [links3 link3]
+  O> random-seed 1939640085
+  O> crt 3 [ create-links1-to other turtles create-links2-to other turtles create-links3-to other turtles ]
+  member? nobody [ [ link1 who [ who ] of myself ] of other turtles ] of turtles => false
+  member? nobody [ [ link2 who [ who ] of myself ] of other turtles ] of turtles => false
+  member? nobody [ [ link3 who [ who ] of myself ] of other turtles ] of turtles => false

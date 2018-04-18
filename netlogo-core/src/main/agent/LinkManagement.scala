@@ -5,6 +5,7 @@ package org.nlogo.agent
 import org.nlogo.core.{ AgentKind, Program, Shape, ShapeListTracker }
 
 import java.util.{ HashMap => JHashMap, Map => JMap }
+import scala.collection.JavaConverters._
 
 import World.NegativeOneInt
 
@@ -109,17 +110,11 @@ trait LinkManagement extends WorldKernel {
   }
 
   // assumes caller has already checked to see if the breeds are equal
-  def compareLinkBreeds(breed1: AgentSet, breed2: AgentSet): Int = {
-    val iter = linkBreeds.values.iterator
-    while (iter.hasNext) {
-      val next = iter.next()
-      if (next == breed1) {
-        return -1
-      } else {
-        return 1
-      }
+  def compareLinkBreeds(breed1: AgentSet, breed2: AgentSet): Int =
+    linkBreeds.values.iterator.asScala.collectFirst {
+      case b if b eq breed1 => -1
+      case b if b eq breed2 => 1
+    }.getOrElse {
+      throw new IllegalStateException("neither of the breeds exist, that's bad");
     }
-
-    throw new IllegalStateException("neither of the breeds exist, that's bad");
-  }
 }
