@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.AggregateManagerInterface
+import org.nlogo.app.tools.{ ExtensionInfo, ExtensionStatus, ExtensionsAndLibrariesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -24,16 +25,22 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
   }
 }
 
-object ShowPreferencesDialog {
-  val Group = "org.nlogo.app.Preferences"
+class ShowPreferencesDialog(newDialog: => JDialog)
+extends ShowDialogAction(I18N.gui.get("menu.tools.preferences"))
+with MenuAction {
+  category = ToolsCategory
+  group    = ToolsSettingsGroup
+
+  override def createDialog = newDialog
 }
 
-class ShowPreferencesDialog(newDialog: => JDialog) extends ShowDialogAction(I18N.gui.get("menu.tools.preferences"))
-  with MenuAction {
+class OpenExtensionsAndLibrariesDialog(frame: Frame)
+extends ShowDialogAction(I18N.gui.get("menu.tools.extensionsAndLibraries"))
+with MenuAction {
   category = ToolsCategory
-  group    = ShowPreferencesDialog.Group
+  group    = ToolsSettingsGroup
 
-  def createDialog(): JDialog = newDialog
+  def createDialog() = new ExtensionsAndLibrariesDialog(frame, Array[ExtensionInfo](ExtensionInfo("Generic Extension", "Short desc", "this is a long description. more than one line", null, null, ExtensionStatus.UpToDate)))
 }
 
 class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.colorSwatches"))

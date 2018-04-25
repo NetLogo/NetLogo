@@ -579,6 +579,8 @@ class App extends
 
   lazy val openColorDialog = new OpenColorDialog(frame)
 
+  lazy val openExtensionsAndLibrariesDialog = new OpenExtensionsAndLibrariesDialog(frame)
+
   lazy val allActions: Seq[javax.swing.Action] = {
     // If we're running in the mac wrapper, it takes care of displaying these
     // items for us - RG 2/26/18
@@ -587,7 +589,8 @@ class App extends
 
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
-    val generalActions    = Seq[javax.swing.Action](
+    val generalActions = Seq[javax.swing.Action](
+      openExtensionsAndLibrariesDialog,
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
