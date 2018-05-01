@@ -7,35 +7,44 @@ import javax.swing.{ JButton, JDialog, JLabel, JList, JPanel, JScrollPane, JText
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.BrowserLauncher
+import org.nlogo.swing.Implicits._
 import org.nlogo.swing.Utils.icon
 
 class LibrariesDialog(parent: Frame, extensions: ListModel[ExtensionInfo])
 extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
-  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
-  val extensionsList = new JList[ExtensionInfo](extensions)
-  extensionsList.setCellRenderer(CellRenderer)
+  locally {
+    implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
-  val sidebar = new JPanel(new BorderLayout)
-  val extensionButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-  extensionButtonsPanel.add(new JButton(I18N.gui("install")))
-  extensionButtonsPanel.add(new JButton(I18N.gui("homepage")))
-  sidebar.add(extensionButtonsPanel, BorderLayout.NORTH)
-  val info = new JLabel {
-    override def getMaximumSize   = new Dimension(200, super.getMaximumSize.height)
-    override def getPreferredSize = new Dimension(200, super.getPreferredSize.height)
+    val extensionsList = new JList[ExtensionInfo](extensions)
+    extensionsList.setCellRenderer(CellRenderer)
+
+    val sidebar = new JPanel(new BorderLayout)
+
+    val extensionButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
+    extensionButtonsPanel.add(new JButton(I18N.gui("install")))
+    val homepageButton = new JButton(I18N.gui("homepage"))
+    homepageButton.addActionListener(() => BrowserLauncher.openURI(this, extensionsList.getSelectedValue.homepage.toURI))
+    extensionButtonsPanel.add(homepageButton)
+
+    sidebar.add(extensionButtonsPanel, BorderLayout.NORTH)
+    val info = new JLabel {
+      override def getMaximumSize   = new Dimension(200, super.getMaximumSize.height)
+      override def getPreferredSize = new Dimension(200, super.getPreferredSize.height)
+    }
+    sidebar.add(info, BorderLayout.CENTER)
+    sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
+
+    extensionsList.addListSelectionListener(new ListSelectionListener {
+      override def valueChanged(e: ListSelectionEvent) = info.setText("<html>" + extensionsList.getSelectedValue.longDescription)
+    })
+
+    add(new JScrollPane(extensionsList), BorderLayout.CENTER)
+    add(sidebar, BorderLayout.EAST)
+    add(new JTextField, BorderLayout.NORTH)
+    setSize(500, 300)
   }
-  sidebar.add(info, BorderLayout.CENTER)
-  sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
-
-  extensionsList.addListSelectionListener(new ListSelectionListener {
-    override def valueChanged(e: ListSelectionEvent) = info.setText("<html>" + extensionsList.getSelectedValue.longDescription)
-  })
-
-  add(new JScrollPane(extensionsList), BorderLayout.CENTER)
-  add(sidebar, BorderLayout.EAST)
-  add(new JTextField, BorderLayout.NORTH)
-  setSize(500, 300)
 }
 
 object CellRenderer extends JPanel(new BorderLayout) with ListCellRenderer[ExtensionInfo] {
