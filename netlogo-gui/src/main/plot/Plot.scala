@@ -243,21 +243,19 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     plotListener.foreach(_.setHistogramNumBars(numBars))
   }
 
-  var histogram: Option[Histogram] = None
-
-  def beginHistogram(pen:PlotPen) {
-    histogram = Some(new Histogram(xMin, xMax, pen.interval))
-  }
-
-  def beginHistogram(pen:PlotPen, bars:Array[Int]){
-    histogram = Some(new Histogram(xMin, pen.interval, bars))
-  }
-
-  def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
-
   // this leaves the pen down, regardless of its previous state
-  // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
-  def endHistogram(pen:PlotPen){
+  def makeHistogram(pen:PlotPen, data: Iterable[Double]){
+    val (lowX, highX) =
+      if (autoPlotOn) {
+        val dataMin = data.min
+        val dataMax = data.max
+        val roundedMax = Math.ceil((dataMax - dataMin) / pen.interval) * pen.interval + dataMin
+        (Math.min(xMin, dataMin), Math.max(xMax, roundedMax))
+      }
+      else (xMin, xMax)
+    val histogram = new Histogram(lowX, highX, pen.interval)
+    data.foreach(histogram.nextValue)
+
     pen.softReset()
     if(autoPlotOn){
       // note that we pass extraRoom as false; we know the exact height
@@ -266,9 +264,10 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(xMin, histogram.get.ceiling, false)
+      growRanges(lowX, 0.0, extraRoom = false)
+      growRanges(highX, histogram.ceiling, extraRoom = false)
     }
-    for((bar, barNumber) <- histogram.get.bars.zipWithIndex) {
+    for((bar, barNumber) <- histogram.bars.zipWithIndex) {
       // there is a design decision here not to generate points corresponding to empty bins.  not
       // sure what the right thing is in general, but in the GasLab models we use the histogram
       // command three times to produce a histogram with three different bar colors, and it looks
@@ -279,7 +278,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
         // point error doesn't accumulate - ST 2/23/06
         pen.plot(xMin + barNumber * pen.interval, bar)
     }
-    histogram = None
   }
 
   @throws(classOf[java.io.IOException])
@@ -308,7 +306,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     pens = in.readObject().asInstanceOf[List[PlotPen]]
     val currentPenName = in.readObject().asInstanceOf[Option[String]]
     currentPenName.foreach{ name => _currentPen = pens.find(_.name == name) }
-    histogram = None
     pens.foreach(_.plot = this)
   }
 }
