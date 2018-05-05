@@ -86,6 +86,7 @@ org.nlogo.prim._greaterthan.cannotCompareParameters = The > operator can only be
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = Can''t find the maximum of a list with no numbers: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = Can''t find the minimum of a list with no numbers: {0}
 org.nlogo.prim._mean.cantFindMeanOfNonNumbers= Can''t find the mean of a list that contains non-numbers : {0} is a {1}.
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = Can''t find the mean of a list with no numbers: {0}.
 
 org.nlogo.prim.etc.$common.emptyList = List is empty.
 org.nlogo.prim.etc.$common.emptyString = String is empty.

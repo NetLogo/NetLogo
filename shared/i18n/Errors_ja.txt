@@ -84,6 +84,7 @@ org.nlogo.prim._greaterthan.cannotCompareParameters = > 演算子は2個の数�
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = リスト {0} は数値を含んでいないため最大値を定義することができません。
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = リスト {0} は数値を含んでいないため最小値を定義することができません。
 org.nlogo.prim._mean.cantFindMeanOfNonNumbers = リスト {0} は数値を含んでいないため平均値を定義することができません。
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = リスト {0} は数値を含んでいないため平均値を定義することができません。
 
 org.nlogo.prim.etc.$common.emptyList = リストは空です。
 org.nlogo.prim.etc.$common.emptyString = 文字列は空です。

@@ -3063,13 +3063,22 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
             IFEQ L5
+            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
+            LDC "org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers"
+            ICONST_1
+            ANEWARRAY java/lang/Object
+            DUP
+            ICONST_0
+            ALOAD 2
+            INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
+            AASTORE
+            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+            ASTORE 5
             NEW org/nlogo/nvm/RuntimePrimitiveException
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.emptyList"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+            ALOAD 5
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L5
@@ -3088,10 +3097,6 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             ALOAD 6
             INSTANCEOF java/lang/Double
             IFNE L8
-            NEW org/nlogo/nvm/RuntimePrimitiveException
-            DUP
-            ALOAD 1
-            ALOAD 0
             INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
             LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
             ICONST_2
@@ -3107,6 +3112,12 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
             INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+            ASTORE 7
+            NEW org/nlogo/nvm/RuntimePrimitiveException
+            DUP
+            ALOAD 1
+            ALOAD 0
+            ALOAD 7
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L8

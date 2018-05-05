@@ -78,6 +78,7 @@ org.nlogo.prim._greaterthan.cannotCompareParameters = Solamente puede usar el op
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = No puede esconder el maximo de un listo sin numeros: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = No puede esconder el minimo de un listo sin numeros: {0}
 org.nlogo.prim._mean.cantFindMeanOfNonNumbers= No puede esconder el promedio de un listo que contiene miebros que no son numersos: {0} es un {1}.
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = No puede esconder el promedio de un listo sin numeros: {0}.
 
 org.nlogo.prim.etc.$common.emptyList = No hay nada en el listo.
 org.nlogo.prim.etc.$common.emptyString = No hay nada en el string.
