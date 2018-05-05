@@ -84,6 +84,7 @@ org.nlogo.prim._greaterthan.cannotCompareParameters = The > operator can only be
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = Can''t find the maximum of a list with no numbers: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = Can''t find the minimum of a list with no numbers: {0}
 org.nlogo.prim._mean.cantFindMeanOfNonNumbers= Can''t find the mean of a list that contains non-numbers : {0} is a {1}.
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = Can''t find the mean of a list with no numbers: {0}.
 
 org.nlogo.prim.etc.$common.emptyList = List is empty.
 org.nlogo.prim.etc.$common.emptyString = String is empty.
@@ -104,7 +105,7 @@ org.nlogo.prim.etc.$common.negativeIndex = {0} isn''t greater than or equal to z
 org.nlogo.prim.etc.$common.indexExceedsListSize = Can''t find element {0} of the list {1}, which is only of length {2}.
 org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of the string {1}, which is only of length {2}.
 
-org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}
+org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}.
 
 org.nlogo.$common.tooBigForInt = {0} is too large to be represented exactly as an integer in NetLogo.
 

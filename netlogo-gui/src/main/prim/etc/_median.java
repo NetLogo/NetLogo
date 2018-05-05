@@ -15,15 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final strictfp class _median
-    extends Reporter
-    implements org.nlogo.core.Pure {
+public final strictfp class _median extends Reporter implements org.nlogo.core.Pure {
   @Override
   public Object report(final Context context) throws LogoException {
     LogoList list = argEvalList(context, 0);
     int badElts = 0;
-    List<Double> nums =
-        new ArrayList<Double>(list.size());
+    List<Double> nums = new ArrayList<Double>(list.size());
     for (Object elt : list.javaIterable()) {
       if (!(elt instanceof Double)) {
         ++badElts;
@@ -33,8 +30,14 @@ public final strictfp class _median
     }
     int listSize = list.size();
     if (listSize == badElts) {
-      throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers", Dump.logoObject(list)));
+      throw new RuntimePrimitiveException(
+        context,
+        this,
+        I18N.errorsJ().getN(
+          "org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers",
+          Dump.logoObject(list)
+        )
+      );
     }
     Collections.sort(nums);
     int medianPos = (listSize - badElts) / 2;
@@ -45,6 +48,4 @@ public final strictfp class _median
     Double middle2 = nums.get(medianPos);
     return newValidDouble(middle1.doubleValue() / 2 + middle2.doubleValue() / 2, context);
   }
-
-
 }

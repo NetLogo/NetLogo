@@ -275,7 +275,7 @@ Min6
   min [373 37 373733 337.0 37] => 37
 
 Mean1
-  mean [] => ERROR List is empty.
+  mean [] => ERROR Can't find the mean of a list with no numbers: [].
 
 Mean2
   mean [1] => 1
