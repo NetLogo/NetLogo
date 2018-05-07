@@ -12,7 +12,6 @@ import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Fonts, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
-import org.nlogo.swing.Implicits._
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
   InterfaceColors, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
@@ -125,7 +124,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     new JPopupMenu{
       add(new JMenuItem(TextMenuActions.CopyAction))
       add(new JMenuItem(I18N.gui.get("menu.file.export")){
-        addActionListener(() =>
+        addActionListener { _ =>
           try {
             val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
@@ -136,7 +135,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
           } catch {
             case uce: UserCancelException => Exceptions.ignore(uce)
           }
-        )
+        }
       })
     }.show(this, e.getX, e.getY)
   }

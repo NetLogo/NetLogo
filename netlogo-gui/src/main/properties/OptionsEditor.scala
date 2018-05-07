@@ -2,21 +2,23 @@
 
 package org.nlogo.properties
 
+import java.awt.FlowLayout
+import javax.swing.{ JComboBox, JLabel }
+
 import org.nlogo.api.Options
-import org.nlogo.swing.Implicits._
 
 abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
   extends PropertyEditor(accessor)
 {
-  private val combo = new javax.swing.JComboBox[String]
-  setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT))
-  add(new javax.swing.JLabel(accessor.displayName))
+  private val combo = new JComboBox[String]
+  setLayout(new FlowLayout(FlowLayout.LEFT))
+  add(new JLabel(accessor.displayName))
   add(combo)
   private val options: Options[T] = accessor.get
   for(optionName <- options.names)
     combo.addItem(optionName)
   private val originalOption: T = options.chosenValue
-  combo.addActionListener({ () => changed() })
+  combo.addActionListener(_ => changed())
   override def get = {
     options.selectByName(combo.getSelectedItem.asInstanceOf[String])
     Some(options)

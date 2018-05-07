@@ -2,14 +2,12 @@
 
 package org.nlogo.properties
 
-import org.nlogo.swing.Implicits._
-
 abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
   extends PropertyEditor(accessor)
 {
   private val checkbox = new javax.swing.JCheckBox
   checkbox.setText(accessor.displayName)
-  checkbox.addItemListener({ () => changed() })
+  checkbox.addItemListener(_ => changed())
   setLayout(new java.awt.BorderLayout)
   add(checkbox, java.awt.BorderLayout.CENTER)
   override def get = Some(checkbox.isSelected)

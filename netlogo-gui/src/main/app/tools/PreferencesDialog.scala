@@ -9,7 +9,7 @@ import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, JDialog, SwingConst
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ RichAction, TextFieldBox, Utils => SwingUtils }
-import org.nlogo.swing.Implicits._
+import org.nlogo.swing.Implicits.{ thunk2action, thunk2windowAdapter }
 
 class PreferencesDialog(parent: Frame, preferences: Preference*)
 extends JDialog(parent, I18N.gui.get("tools.preferences"), false) {

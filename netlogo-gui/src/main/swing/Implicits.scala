@@ -2,37 +2,36 @@
 
 package org.nlogo.swing
 
-import javax.swing.event.DocumentListener
-import javax.swing._
+import java.awt._
 import java.awt.event._
-import java.awt.{Container, Component}
+import javax.swing._
+import javax.swing.event._
 import scala.language.implicitConversions
 
 object Implicits {
-  implicit def thunk2runnable(fn: () => Unit): Runnable =
-    new Runnable { def run() { fn() }}
-  implicit def thunk2action(fn: () => Unit): Action =
-    new AbstractAction() {
-      override def actionPerformed(e: ActionEvent) { fn() } }
-  implicit def thunk2actionListener[T](fn: () => T): ActionListener =
-    new ActionListener() { override def actionPerformed(e: ActionEvent) { fn() } }
-  implicit def thunk2WindowAdapter[T](fn: () => T): WindowAdapter =
-    new WindowAdapter() { override def windowClosing(e: WindowEvent) {fn()} }
+  implicit def thunk2action[T](fn: () => T): Action = new AbstractAction {
+    override def actionPerformed(e: ActionEvent) = fn()
+  }
+  implicit def thunk2windowAdapter[T](fn: () => T) = new WindowAdapter {
+    override def windowClosing(e: WindowEvent) = fn()
+  }
   implicit def JComboBoxToIterable[T](jcb: JComboBox[T]) =
-    for(i <- 0 until jcb.getItemCount)
-    yield jcb getItemAt i
-  implicit def thunk2documentListener[T](fn: () => T): DocumentListener =
-    new javax.swing.event.DocumentListener() {
-      def changedUpdate(e: javax.swing.event.DocumentEvent) { fn() }
-      def insertUpdate(e: javax.swing.event.DocumentEvent) { fn() }
-      def removeUpdate(e: javax.swing.event.DocumentEvent) { fn() }
-    }
-  implicit def thunk2itemListener[T](fn: () => T): ItemListener =
-    new java.awt.event.ItemListener() {
-      override def itemStateChanged(e: java.awt.event.ItemEvent) { fn() } }
+    (0 until jcb.getItemCount).map(jcb.getItemAt)
+  implicit def thunk2documentListener[T](fn: () => T): DocumentListener = thunk2documentListener(_ => fn())
+  implicit def thunk2documentListener[T](fn: DocumentEvent => T) = new DocumentListener {
+    def changedUpdate(e: DocumentEvent) = fn(e)
+    def insertUpdate(e: DocumentEvent)  = fn(e)
+    def removeUpdate(e: DocumentEvent)  = fn(e)
+  }
+  implicit def thunk2keyListener[T](fn: () => T): KeyListener = thunk2keyListener(_ => fn())
+  implicit def thunk2keyListener[T](fn: KeyEvent => T) = new KeyListener {
+    def keyReleased(e: KeyEvent) = fn(e)
+    def keyTyped(e: KeyEvent)    = fn(e)
+    def keyPressed(e: KeyEvent)  = fn(e)
+  }
 
   implicit def EnrichComboBox[T](combo: JComboBox[T]) = RichJComboBox[T](combo)
-  implicit def EnrichContainer(c:Container) = new RichComponent(c)
+  implicit def EnrichContainer(c: Container) = new RichComponent(c)
 }
 
 object RichJButton{

@@ -8,8 +8,9 @@ import javax.swing.JButton
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}, BrowserLauncher.docPath
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, Implicits, RichJButton },
+  BrowserLauncher.docPath,
+  Implicits.thunk2action
 import org.nlogo.api.CompilerServices
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
@@ -47,12 +48,13 @@ trait EditDialog extends javax.swing.JDialog {
     else new EditPanel(target, compiler, colorizer)
 
   val okButton = new javax.swing.JButton(I18N.gui.get("common.buttons.ok"))
-  okButton.addActionListener{() =>
+  okButton.addActionListener { _ =>
     if(editPanel.valid) {
       editPanel.apply()
       if(target.editFinished)
         bye()
-    }}
+    }
+  }
 
   var sendEditFinishedOnCancel = false
   val applyButton = RichJButton(I18N.gui.get("common.buttons.apply")){

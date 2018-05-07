@@ -4,10 +4,9 @@ package org.nlogo.properties
 
 import org.nlogo.api.Options
 import org.nlogo.window.InputBox
-import org.nlogo.swing.Implicits._
 
 import java.awt.FlowLayout
-import javax.swing.{JComboBox, JLabel, JCheckBox}
+import javax.swing.{ JCheckBox, JComboBox, JLabel }
 
 abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
   extends PropertyEditor(accessor)
@@ -25,9 +24,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
 
   for (t <- options.values)
     typeCombo.addItem(t)
-  typeCombo.addActionListener{() =>
-    multiline.setEnabled(selected.enableMultiline)
-  }
+  typeCombo.addActionListener(_ => multiline.setEnabled(selected.enableMultiline))
 
   multiline.setSelected(originalOption.multiline)
   add(multiline)

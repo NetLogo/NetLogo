@@ -12,10 +12,11 @@ import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{PrinterManager, ToolBar, Printable => NlogoPrintable, UserAction, Utils },
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ToolBar, UserAction, Utils },
+  Implicits.thunk2action,
   UserAction.{ MenuAction, ToolsCategory },
   Utils.icon
-import org.nlogo.swing.{ Implicits, Utils => SwingUtils }, Implicits.thunk2action
+import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
   InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
     WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
