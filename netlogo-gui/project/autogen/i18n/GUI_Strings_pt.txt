@@ -1,0 +1,548 @@
+# GERAL
+
+common.observer = observer
+common.turtle = turtle
+common.patch = patch
+common.link = link
+common.turtles = turtles
+common.patches = patches
+common.links = links
+
+common.buttons.ok = OK
+common.buttons.cancel = Cancelar
+common.buttons.apply = Aplicar
+common.buttons.help = Ajuda
+common.buttons.quit = Fechar
+common.buttons.exit = Sair
+common.buttons.continue = Continuar
+common.buttons.save = Salvar
+common.buttons.discard = Descartar
+common.buttons.dismiss = Dispensar
+common.buttons.halt = Parar
+common.buttons.yes = Sim
+common.buttons.no = Não
+
+common.messages.error = Erro
+common.messages.warning = Aviso
+
+common.menus.empty = <vazio>
+
+# INTERFACE DO USUÁRIO
+
+menu.file = Arquivo
+menu.file.new = Novo
+menu.file.open = Abrir
+menu.file.modelsLibrary = Biblioteca de Modelos
+menu.file.uploadMc = Enviar para o Modeling Commons
+menu.file.save = Salvar
+menu.file.save.error = Erro ao salvar o arquivo: {0}
+menu.file.saveAs = Salvar Como
+menu.file.saveAll = Salvar Todos
+menu.file.saveAsNetLogoWeb = Salvar Como NetLogo Web\u2026
+menu.file.saveAsNetLogoWeb.dialog = Salvando como página HTML do NetLogo Web
+menu.file.nlw.prompt.fromSave = Da última versão salva
+menu.file.nlw.prompt.fromLibrary = Da Biblioteca de Modelos
+menu.file.nlw.prompt.fromCurrentCopy = Do que foi copiado
+menu.file.nlw.prompt.title = Escolher Fonte para Exportar
+menu.file.nlw.prompt.message.fromSave = Exportar modelo da última versão salva ou do que foi copiado?
+menu.file.nlw.prompt.message.fromLibrary = Exportar modelo da Biblioteca de Modelos ou do que foi copiado?
+menu.file.print = Imprimir\u2026
+menu.file.export = Exportar
+menu.file.export.failed = Falha ao exportar
+menu.file.export.world = Exportar o Mundo
+menu.file.export.noPlots = Não há gráficos para exportar.
+menu.file.export.plot = Exportar Gráfico
+menu.file.export.plot.exportFailed = Falha ao exportar o gráfico do {0} para o {1}: {2}
+menu.file.export.plot.failed = Falha ao Exportar o Gráfico
+menu.file.export.plot.whichPlot = Que gráficos deseja exportar?
+menu.file.export.allPlots = Exportar Todos os Gráficos
+menu.file.export.allPlots.exportFailed = Falha ao exportar todos os gráficos do {0}: {1}
+menu.file.export.view = Exportar a Visualização
+menu.file.export.interface = Exportar a Interface
+menu.file.export.output = Exportar a Saída
+menu.file.export.code = Exportar o Código
+menu.file.import = Importar
+menu.file.import.world = Importar Mundo
+menu.file.import.patchColors = Importar Cores dos Patchs
+menu.file.import.patchColorsRGB = Importar Cores dos Patchs em formato RGB
+menu.file.import.drawing = Importar Imagem
+menu.file.import.hubNetClientInterface = Importar Interface do Cliente HubNet
+menu.file.import.hubNetClientInterface.message = Importar Cliente HubNet
+menu.file.import.hubNetClientInterface.prompt = De que seção deseja importar?
+menu.file.import.hubNetClientInterface.fromInterface = Aba Interface
+menu.file.import.hubNetClientInterface.fromClient = Cliente HubNet
+menu.file.quit = Sair
+menu.file.recent = Arquivos Recentes
+menu.file.recent.clear = Limpar Itens
+
+menu.edit = Editar
+menu.edit.cut = Recortar
+menu.edit.copy = Copiar
+menu.edit.paste = Colar
+menu.edit.delete = Apagar
+menu.edit.undo = Desfazer
+menu.edit.redo = Refazer
+menu.edit.selectAll = Selecionar Tudo
+menu.edit.find = Localizar\u2026
+menu.edit.findNext = Localizar próxima
+menu.edit.shiftLeft = Deslocar o texto para a esquerda
+menu.edit.shiftRight = Deslocar o texto para a direita
+menu.edit.shiftTab = Adicionar tabulação à esquerda
+menu.edit.format = Formatar
+menu.edit.comment = Transformar em comentário
+menu.edit.uncomment = Remover comentário
+menu.edit.snapToGrid = Ajustar à grade
+menu.edit.convertToNetLogoSix = Converter do 5.3.1 para o 6.0
+
+menu.tools = Ferramentas
+menu.tools.preferences = Preferências\u2026
+menu.tools.halt = Parar
+menu.tools.globalsMonitor = Monitor de Variáveis Globais
+menu.tools.turtleMonitor = Monitor de Turtles
+menu.tools.patchMonitor = Monitor de Patchs
+menu.tools.linkMonitor = Monitor de Links
+menu.tools.closeAllAgentMonitors = Fechar Todos os Monitores de Agentes
+menu.tools.closeDeadAgentMonitors = Fechar Todos os Monitores para Agentes Mortos
+menu.tools.hideCommandCenter = Ocultar Central de Comandos
+menu.tools.jumpToCommandCenter = Ir Para a Central de Comandos
+menu.tools.showCommandCenter = Mostrar Central de Comandos
+menu.tools.3DView = Visualização 3D
+menu.tools.3DView.switch = Alterar para Visualização 3D
+menu.tools.colorSwatches = Amostras de Cores
+menu.tools.turtleShapesEditor = Editor de Formas para Turtles
+menu.tools.linkShapesEditor = Editor de Formas para Links
+menu.tools.behaviorSpace = BehaviorSpace
+menu.tools.systemDynamicsModeler = Modelador de Sistemas Dinâmicos
+menu.tools.hubNetClientEditor = Editor do Cliente HubNet
+menu.tools.hubNetControlCenter = Painel de Controle do HubNet
+
+menu.zoom = Tamanho
+menu.zoom.larger = Maior
+menu.zoom.normalSize = Tamanho normal
+menu.zoom.smaller = Menor
+
+menu.tabs = Abas
+
+menu.help = Ajuda
+menu.help.lookUpInDictionary = Buscar no Dicionário
+menu.help.netLogoUserManual = Manual do Usuário do NetLogo
+menu.help.netLogoDictionary = Dicionário do NetLogo
+menu.help.netLogoUsersGroup = Comunidade de Usuarios do NetLogo
+menu.help.netLogoStackOverflow = Perguntas e Respostas Sobre NetLogo - Stack Overflow
+menu.help.introToABM = Introdução à Modelagem Baseada em Agentes
+menu.help.donate = Doar ao NetLogo
+menu.help.aboutVersion = Sobre o {0}\u2026
+
+tabs.run = Interface
+tabs.run.editButton = Editar
+tabs.run.editButton.tooltip = Editar os componentes selecionados
+tabs.run.deleteButton = Apagar
+tabs.run.deleteButton.tooltip = Apagar os componentes de interface selecionados
+tabs.run.addButton = Adicionar
+tabs.run.addButton.tooltip = Adicionar um novo componente de interface
+tabs.run.settingsButton = Configuração\u2026
+tabs.run.settingsButton.tooltip = Editar configuração do modelo
+tabs.run.viewUpdates.checkbox = visualizar atualização
+tabs.run.viewUpdates.checkbox.tooltip = Permite visualizar ou não a atualização de interface
+tabs.run.viewUpdates.dropdown.onticks = a cada tick
+tabs.run.viewUpdates.dropdown.continuous = continuamente
+tabs.run.viewUpdates.dropdown.tooltip = alterar o modo de atualização da visualização
+tabs.run.widget.edit = Editar\u2026
+tabs.run.widget.export = Exportar\u2026
+tabs.run.widget.deselect = Desselecionar
+tabs.run.widget.delete = Apagar
+tabs.run.widget.select = Selecionar
+
+tabs.run.speedslider.normalspeed = velocidade normal
+tabs.run.speedslider.faster = mais rápido
+tabs.run.speedslider.slower = mais devagar
+tabs.run.speedslider.tooltip = Ajustar a velocidade do modelo
+
+tabs.run.widgets.button = Botão
+tabs.run.widgets.slider = Deslizador
+tabs.run.widgets.switch = Interruptor
+tabs.run.widgets.chooser = Selecionador
+tabs.run.widgets.input = Entrada
+tabs.run.widgets.monitor = Monitor
+tabs.run.widgets.plot = Gráfico
+tabs.run.widgets.output = Saída
+tabs.run.widgets.note = Anotação
+tabs.run.widgets.view = Visualicação
+tabs.run.widgets.tooltip = Escolher o item de interface a adicionar
+
+tabs.run.commandcenter = Central de Comandos
+tabs.run.commandcenter.clearButton = Limpar
+tabs.run.commandcenter.nohistory = Nenhum Histórico
+tabs.run.commandcenter.orusetabkey = ou usar a tecla Tab
+tabs.run.commandcenter.exporting = Exportando
+tabs.run.commandcenter.history = Histórico
+tabs.run.commandcenter.useArrowKeys = ou usar as teclas para cima e para baixo
+tabs.run.commandcenter.clearHistory = Limpar Histórico
+
+tabs.input.export.error = Falha ao exportar. Erro:\n{0}
+
+tabs.info = Informação
+tabs.info.edit = Editar
+tabs.info.help = Ajuda
+
+tabs.code = Código
+tabs.code.rightclick.jumptodeclaration = Ir Para a Declaração
+tabs.code.rightclick.quickhelp = Ajuda rápida
+tabs.code.rightclick.quickhelp.notfound = {0} não pôde ser encontrado na Biblioteca do NetLogo.\n \
+   Deseja abrir a Biblioteca Completa do NetLogo?
+tabs.code.rightclick.collapse = Colapsar a Seleção
+tabs.code.checkButton = Verificar
+tabs.code.procedures = Procedimentos
+tabs.code.procedures.none = nenhum
+tabs.code.includedFiles = Arquivos Inclusos
+tabs.code.includedFiles.new = Novo Arquivo de Fonte
+tabs.code.includedFiles.open = Abrir Arquivo de Fonte
+tabs.code.indentAutomatically = Indentar automaticamente
+
+tabs.external.new = Novo Arquivo {0}
+tabs.external.close = Fechar
+
+# Operações do modelo e do arquivo
+file.open.transitionGuide.url = http://ccl.northwestern.edu/netlogo/6.0/docs/transition.html
+file.open.warn.version.newer = Você está tentando abrir um modelo \
+  que foi criado em uma versão mais recente do NetLogo. \
+  (Esta é a versão {0}; o modelo foi criado na versão {1}.) \
+  O NetLogo pode tentar abrir o modelo, mas isso pode ou não funcionar.
+file.open.warn.version.older = Este modelo foi criado na versão {0}. \
+  Talvez você precise fazer alterações para que funcione na versão {1}.
+file.open.warn.version.transitionGuide = Abrir o Guia de Transição
+file.open.warn.intwod.openthreed = Você está tentando abrir um modelo \
+  que foi criado numa versão 3D do NetLogo.  \
+  Esta é a versão {0}; o modelo foi criado na versão {1}.) \
+  O NetLogo pode tentar abrir o modelo, mas isso pode ou não funcionar.
+file.open.warn.inthreed.opentwod = Você está tentando abrir \
+  um modelo 2D no {0}. Talvez você precise fazer alterações para que funcione em 3D.
+file.open.warn.autoconversion.model.title = Erro ao Converter o Modelo
+file.open.warn.autoconversion.model.error = O NetLogo encontrou os seguintes erros enquanto tentava converter automaticamente o modelo para a versão atual. \
+ Você deseja abri-lo mesmo assim? \n
+file.open.warn.autoconversion.model.detail = Enquanto executando a conversão "{0}" no {1}: {2}
+file.open.warn.autoconversion.model.bestEffort = Abrir Modelo Parcialmente Convertido
+file.open.warn.autoconversion.model.original = Abrir Modelo Não Convertido
+file.open.warn.autoconversion.nls.title = Erro ao converter o arquivo .nls
+file.open.warn.autoconversion.nls.error = O NetLogo encontrou os seguintes erros enquanto tentava converter automaticamente o arquivo nls do 5.3.1 para o 6.0. \
+ Deseja modificar o conteúdo dessa aba? \n
+file.open.warn.autoconversion.nls.detail = Enquanto executava a conversão "{0}" nesta aba: {2}
+file.open.warn.autoconversion.nls.bestEffort = Usar Conversão Parcial
+file.open.warn.autoconversion.nls.original = Usar Código Original
+file.open.error.invalidmodel = Este não é um arquivo válido de modelo do NetLogo.
+file.open.error.invalidmodel.withPath = O arquivo {0} não é um arquivo válido de modelo do NetLogo.
+file.open.error.unableToOpen = O NetLogo não pôde abrir o modelo {0}:\n\n{1}.
+file.open.error.external.suffix = O nome do arquivo deve terminar com ".nls".
+file.close.warn.movieInProgress = Um filme está sendo capturado. Tem certesa que deseja sair desse modelo? Você vai perder todo o conteúdo do seu filme.
+file.save.external = Salvar Arquivo Fonte do Netlogo
+file.save.offer.external.filesChanged = Os seguintes arquivos foram modificados:
+file.save.offer.external.shouldSave = Salvar?
+file.save.offer.external.filename = Nome do Arquivo
+file.save.offer.external.saveSelected = Salvar Arquivos Selecionados
+file.save.offer.external.discardAll = Descartar Todos
+file.save.offer.thisModel = este modelo
+file.save.offer.confirm = Deseja salvar as mudanças que feitas em {0}?
+file.save.error = Falha ao salvar. Erro: {0}
+file.save.warn.savingInNewerVersion = Este modelo foi feito com {0}. Se você salvá-lo no {1} pode ser que deixe de funcionar na versão antiga.
+file.save.warn.invalidFormat = O NetLogo não sabe como salvar no formato ".{0}", por favor escolha um formato diferente.
+
+# ações e diálogo de busca
+dialog.find.title = Localizar
+dialog.find.find = Localizar:
+dialog.find.replaceWith = Substituir com:
+dialog.find.ignoreCase = Ignorar maiúsculas
+dialog.find.wrapAround = Pesquisa circular
+dialog.find.notFound = frase não encontrada
+dialog.find.next = Próxima
+dialog.find.previous = Anterior
+dialog.find.replaceAndFind = Substituir e Localizar
+dialog.find.replace = Substituir
+dialog.find.replaceAll = Substituir Todos
+
+# Dialogos de interface e modais
+dialog.interface.export.file = Exportar Interface
+dialog.interface.export.task = Exportando\u2026
+dialog.interface.import.task = Importando\u2026
+dialog.interface.loading.task = Carregando\u2026
+dialog.interface.saving.task = Salvando\u2026
+
+# Editores de widgets
+
+edit.button.agents = Agente(s)
+edit.button.forever = Para sempre
+edit.button.disable = Desabilitar até a execução
+edit.button.commands = Comandos
+edit.button.displayName = Nome para visualização
+edit.button.actionKey = Tecla de ação
+
+edit.plot.name = Nome
+edit.plot.xLabel = Nome do eixo X
+edit.plot.xmin = X mínimo
+edit.plot.xmax = X máximo
+edit.plot.yLabel = Etiqueta do eixo Y
+edit.plot.ymin = Y mínimo
+edit.plot.ymax = Y máximo
+edit.plot.autoScale = Escala automática?
+edit.plot.showLegend = Mostrar legenda?
+edit.plot.setupCode = Comandos de Configuração do Gráfico
+edit.plot.updateCode = Comandos de Atualização do Gráfico
+edit.plot.pen.plotPens = Caneta do Gráfico
+edit.plot.pen.color = Cor
+edit.plot.pen.name = Nome da Caneta
+edit.plot.pen.add = Adicionar Caneta
+edit.plot.pen.editing = Editando:
+edit.plot.pen.advanced = Opções Avançadas da Caneta
+edit.plot.pen.mode = Modo
+edit.plot.pen.mode.line = Linhas
+edit.plot.pen.mode.bar = Barras
+edit.plot.pen.mode.point = Pontos
+edit.plot.pen.interval = Intervalo
+edit.plot.pen.showInLegend = Mostrar na Legenda
+edit.plot.pen.setupCommands = Comandos de Configuração da Caneta
+edit.plot.pen.updateCommands = Comandos de Atualização da Caneta
+edit.plot.error.runtimeError = Erro de Execução:
+
+edit.chooser.globalVar = Variável global
+edit.chooser.choices = Escolhas
+
+edit.slider.globalVar = Variável global
+edit.slider.minimum = Mínimo
+edit.slider.increment = Incremento
+edit.slider.maximum = Máximo
+edit.slider.value = Valor
+edit.slider.units = Unidades (opcional)
+edit.slider.vertical = Vertical?
+
+edit.monitor.reporter = Comando para mostrar no monitor
+edit.monitor.name = Nome do monitor
+edit.monitor.decimalPlaces = Casas decimais
+edit.monitor.fontSize = Tamanho da Fonte
+
+edit.output.fontSize = Tamanho da Fonte
+
+edit.input.globalVar = Variável global
+edit.input.type = Tipo
+edit.input.type.number = Número
+edit.input.type.string = Texto
+edit.input.type.string.reporter = Texto (função)
+edit.input.type.string.commands = Texto (comandos)
+edit.input.type.color = Cor
+
+edit.text.text = Texto
+edit.text.fontSize = Tamanho da Fonte
+edit.text.transparency = Fundo Transparente
+edit.text.color = Cor do Texto
+
+edit.switch.globalVar = Variável global
+
+edit.viewSettings.world = Mundo
+edit.viewSettings.view = Visualização
+edit.viewSettings.tickCounter = Contador de tempo (ticks)
+edit.viewSettings.origin.location = Localização da origem:
+
+edit.viewSettings.origin.location.center = Centro
+edit.viewSettings.origin.location.corner = Canto
+edit.viewSettings.origin.location.edge = Borda
+edit.viewSettings.origin.location.custom = Personalizado
+
+edit.viewSettings.origin.location.corner.bottomLeft = Abaixo e à esquerda
+edit.viewSettings.origin.location.corner.topLeft = Acima e à esquerda
+edit.viewSettings.origin.location.corner.topRight = Acima e à direita
+edit.viewSettings.origin.location.corner.bottomRight = Abajo a la derecha
+
+edit.viewSettings.origin.location.edge.bottom = Abaixo
+edit.viewSettings.origin.location.edge.top = Acima
+edit.viewSettings.origin.location.edge.right = Direita
+edit.viewSettings.origin.location.edge.left = Esquerda
+
+edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Abaixo e ao Sudoeste
+edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Abaixo e ao Noroeste
+edit.viewSettings.3D.origin.location.corner.bottomNortheast = Abaixo e ao Nordeste
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Abaixo e ao Sudeste
+edit.viewSettings.3D.origin.location.corner.topSouthwest = Acima e ao Sudoeste
+edit.viewSettings.3D.origin.location.corner.topNorthwest = Acima e ao Noroeste
+edit.viewSettings.3D.origin.location.corner.topNortheast = Acima e ao Nordeste
+edit.viewSettings.3D.origin.location.corner.topSoutheast = Acima e ao Sudeste
+
+edit.viewSettings.3D.origin.location.edge.south = Sul
+edit.viewSettings.3D.origin.location.edge.north = Norte
+edit.viewSettings.3D.origin.location.edge.east = Leste
+edit.viewSettings.3D.origin.location.edge.west = Oeste
+edit.viewSettings.3D.origin.location.edge.bottom = Abaixo
+edit.viewSettings.3D.origin.location.edge.top = Acima
+
+edit.viewSettings.showTickCounter = Mostrar o contador de tempo
+edit.viewSettings.tickCounterLabel = Etiqueta do contador de tempo
+
+edit.viewSettings.2D.patchSize = Tamanho do patch
+edit.viewSettings.2D.patchSize.info = medida em pixels
+edit.viewSettings.2D.fontSize = Tamanho da Fonte
+edit.viewSettings.2D.fontSize.info = das etiquetas em agentes
+edit.viewSettings.2D.wrapX = Mundo sem limites no sentido horizontal
+edit.viewSettings.2D.wrapY = Mundo sem limites no sentido vertical
+edit.viewSettings.2D.frameRate = Taxa de quadros
+edit.viewSettings.2D.frameRate.info = Taxa de quadros quando em velocidade normal
+
+edit.viewSettings.2D.minPxcor = mínima coordenada x para os patchs
+edit.viewSettings.2D.maxPxcor = máxima coordenada x para os patchs
+edit.viewSettings.2D.minPycor = mínima coordenada y para os patchs
+edit.viewSettings.2D.maxPycor = máxima coordenada y para os patchs
+
+edit.viewSettings.3D.smooth = Suavizar as bordas (execução mais lenta)
+edit.viewSettings.3D.affects = afeta apenas a visualização 3D
+edit.viewSettings.3D.wireFrame = Visualização simplificada
+edit.viewSettings.3D.fontSize.info = da etiqueta de agentes
+edit.viewSettings.3D.dualView = Atualizar a visualização 2D
+edit.viewSettings.3D.wrapX = Mundo sem limites no sentido X (leste/oeste)
+edit.viewSettings.3D.wrapY = Mundo sem limites no sentido Y (norte/sul)
+edit.viewSettings.3D.wrapZ = Mundo sem limites no sentido Z (acima/abaixo)
+edit.viewSettings.3D.minPxcor = mínima coordenada x para os patchs
+edit.viewSettings.3D.maxPxcor = máxima coordenada x para os patchs
+edit.viewSettings.3D.minPycor = mínima coordenada y para os patchs
+edit.viewSettings.3D.maxPycor = máxima coordenada y para os patchs
+edit.viewSettings.3D.minPzcor = mínima coordenada z para os patchs
+edit.viewSettings.3D.maxPzcor = máxima coordenada z para os patchs
+
+edit.hubnet.tag = Etiqueta
+edit.hubnet.view.width = largura (pixels)
+edit.hubnet.view.height = Altura (pixels)
+
+# Ferramentas
+
+tools.preferences = Preferências do NetLogo
+tools.preferences.restartRequired = (necessário reiniciar)
+tools.preferences.uiLanguage = Idioma da Interface de Usuário:
+tools.preferences.editorLineNumbers = Mostrar Número das Linhas (no editor):
+tools.preferences.includedFilesMenu = Sempre mostrar o menu "Arquivos Inclusos" (na aba Código):
+
+tools.colorswatch = Cores disponíveis
+tools.colorswatch.preview = Amostra
+tools.colorswatch.copy = Copiar cor selecionada
+tools.colorswatch.numbers = Números
+tools.colorswatch.increment = Incremento
+
+tools.shapesEditor.importFromModel = Importar do modelo\u2026
+tools.shapesEditor.importFromLibrary = Importar da biblioteca\u2026
+tools.shapesEditor.edit = Editar
+tools.shapesEditor.new = Novo
+tools.shapesEditor.delete = Apagar
+tools.shapesEditor.duplicate = Duplicar
+tools.shapesEditor.info = (muitas outras formas estão disponíveis na biblioteca)
+tools.shapesEditor.import = Importar
+tools.shapesEditor.import.note = Importar Formas de um Modelo
+tools.shapesEditor.import.libraryError = O NetLogo encontrou um problema ao ler as formas da biblioteca de formas. Por favor informe para bugs@ccl.northwestern.edu!
+tools.shapesEditor.import.invalidError = O NetLogo não conseguiu ler formas nesse arquivo. Por favor verifique se este é um arquivo válido do NetLogo.
+tools.shapesEditor.import.error = Não há formas neste arquivo.
+tools.shapesEditor.delete.one.confirm = Tem certeza que deseja apagar esta forma?
+tools.shapesEditor.delete.many.confirm = Tem certeza que deseja apagar estas {0} formas?
+
+tools.sdm.diagram = Diagrama
+tools.sdm.stock = Nivel
+tools.sdm.variable = Variável
+tools.sdm.flow = Fluxo
+tools.sdm.link = Ligação
+tools.sdm.check = Verificar
+tools.sdm.edit = Editar
+tools.sdm.delete = Apagar
+tools.sdm.dtNumberError = dt deve ser um número
+tools.sdm.dtZeroError = dt deve ser maior que 0
+
+tools.behaviorSpace.experiments = Experimentos:
+tools.behaviorSpace.new = Novo
+tools.behaviorSpace.edit = Editar
+tools.behaviorSpace.duplicate = Duplicar
+tools.behaviorSpace.delete = Apagar
+tools.behaviorSpace.run = Executar
+tools.behaviorSpace.close = Fechar
+
+tools.behaviorSpace.experimentName = Nome do Experimento
+tools.behaviorSpace.vary = Variar as variáveis da seguinte maneira (atenção aos parenteses e às aspas):
+
+# esta propriedade se extende por diversas linhas e tem separadores HTML.
+tools.behaviorSpace.vary.info = Indicar os valores a utilizar, p.e.: <br> \
+["Meu-deslizador" 1 2 7 8] <br> \
+o bien, especificar inicio, incremento, y valor final, p.e.: <br> \
+["Meu-deslizador" [0 1 10]] (atenção aos parenteses adicionais) <br> \
+para pasar de 0 a 10, con incrementos de 1. <br> \
+Também se pode variar max-pxcor, min-pxcor, max-pycor, min-pycor y random-seed.
+
+tools.behaviorSpace.repetitions = Repetições
+tools.behaviorSpace.repetitions.info = executar cada combinação este número de vezes
+tools.behaviorSpace.sequentialRunOrder = Executar combinações em ordem sequencial
+
+# esta propriedade se extende por diversas linhas e tem separadores HTML.
+tools.behaviorSpace.sequentialRunOrder.info = Por exemplo, tendo ["var" 1 2 3] com duas repetições, \
+os valores de "var" do experimento serão:<br>\
+ordem sequencial: 1, 1, 2, 2, 3, 3<br>\
+ordem alternada: 1, 2, 3, 1, 2, 3
+
+tools.behaviorSpace.metrics = Avaliar as execuções usando estes indicadores:
+# Esta propriedade tem um separador HTML.
+tools.behaviorSpace.metrics.info = um indicador por linha; não se pode<br> dividir indicadores em várias linhas
+tools.behaviorSpace.runMetricsEveryStep = Avaliar as execuções a cada passo
+tools.behaviorSpace.runMetricsEveryStep.info = se desmarcado as execuções serão avaliadas apenas quando finalizadas.
+tools.behaviorSpace.setupCommands = Comandos de Configuração Inicial:
+tools.behaviorSpace.goCommands = Comandos de Atualização:
+tools.behaviorSpace.exitCondition = Condição de Parada da Execução:
+tools.behaviorSpace.exitCondition.info = a execução será interrompida assim que esta condição for verdadeira
+tools.behaviorSpace.finalCommands = Comandos de pós-execução:
+tools.behaviorSpace.finalCommands.info = executados ao fim de cada execução
+tools.behaviorSpace.timeLimit = Limite de tempo
+tools.behaviorSpace.timeLimit.info = parar a execução após este número de passos ('0' = sem limite)
+
+# Biblioteca de Modelos
+
+modelsLibrary.clear = Limpar
+modelsLibrary.community = Ir para a Página de Modelos da Comunidade de Usuários
+modelsLibrary.open = Abrir
+modelsLibrary.loading = Cargando Biblioteca de Modelos\u2026
+
+
+# CONTROL CENTER
+menu.tools.hubnetControlCenter.removedViaControlCenter = Removido através da Central de Controle.
+menu.tools.hubnetControlCenter.kick = Remover
+menu.tools.hubnetControlCenter.local = Local
+menu.tools.hubnetControlCenter.reset = Resetar
+menu.tools.hubnetControlCenter.clientName = NOME DO CLIENTE
+menu.tools.hubnetControlCenter.clients = Clientes:
+menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
+menu.tools.hubnetControlCenter.broadcastMessage = Transmitir Mensagem
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Espelhar a visualização 2D para os clientes
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Espelhar os gráficos para os clientes (experimental)
+menu.tools.hubnetControlCenter.name = Nome:
+menu.tools.hubnetControlCenter.activity = Atividade:
+menu.tools.hubnetControlCenter.unknown = DESCONHECIDO
+menu.tools.hubnetControlCenter.serverAddress = Endereço do servidor:
+menu.tools.hubnetControlCenter.portNumber = Número da porta:
+menu.tools.hubnetControlCenter.settings = Configurações:
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}'' entrou de: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}'' desconectado.
+
+view.3d.orbit = Orbitar
+view.3d.zoom = Aproximar
+view.3d.move = Mover
+view.3d.interact = Interagir
+view.3d.watching = Assistindo
+view.3d.riding = Acompanhando
+view.3d.following = Seguindo
+view.3d.fullScreen = Tela Cheia
+view.3d.resetPerspective = Resetar perspectiva
+view.3d.fullScreenWarning = Em alguns sistemas, o modo de Tela Cheia pode fazer com que o Windows trave.
+
+view.resize.progress = Redimensionando\u2026
+view.resize.hubnet.warning = Redimensionar o mundo mata todas as turtles. Isso pode fazer com que os clientes HubNet se tornem irresponsivos. Considere remover todos os clientes antes de prosseguir.
+view.resize.hubnet.prompt = Remover clientes?
+view.resize.hubnet.kick = Remover clientes
+view.resize.hubnet.dontkick = Não remover
+
+error.dialog.pleaseReport = \
+O NetLogo não pôde fornecer mais detalhes sobre este erro. Por favor informe o problema \n \
+em https://github.com/NetLogo/NetLogo/issues, ou para bugs@ccl.northwestern.edu, e cole o \n\
+conteúdo dessa janela no seu relatório. \n
+error.dialog.suppress = Não mostrar novamente
+error.dialog.showInternals = Mostrar detalhes internos
+error.dialog.outOfMemory = \
+Seu modelo é muito grande para ser executado com a quantidade de memória disponível para o Netlogo!\n\
+Para mais informações consulte a seção "How big can my model be?" no FAQ do manual do usuário.\n\
+Aviso: você pode ver resultados estranhos se continuar a executar o modelo sem reiniciar o NetLogo.\n
+error.dialog.openFAQ = Abrir FAQ
