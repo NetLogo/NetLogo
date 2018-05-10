@@ -44,7 +44,7 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, new LibraryManager)
+  def createDialog() = new LibrariesDialog(frame, new LibraryManager("extensions"))
 }
 
 class OpenColorDialog(frame: Frame)

@@ -5,11 +5,11 @@ package org.nlogo.app.tools
 import java.io.File
 import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
-import javax.swing.{ AbstractListModel, SwingWorker }
+import javax.swing.{ DefaultListModel, ListModel, SwingWorker }
 
 import scala.collection.JavaConverters._
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ Config, ConfigFactory }
 
 import org.nlogo.api.APIVersion
 
@@ -17,39 +17,43 @@ object LibraryManager {
   private val configFilename = "libraries.conf"
 }
 
-class LibraryManager extends AbstractListModel[ExtensionInfo] {
+class LibraryManager(categories: String*) {
   import LibraryManager._
 
-  private var extensions = Seq.empty[ExtensionInfo]
+  private val lists = categories.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
+  val listModels: Map[String, ListModel[LibraryInfo]] = lists
 
-  updateExtensionsList()
-  new LibrariesListUpdater().execute()
+  updateLists()
+  new MetadataFetcher().execute()
 
-  private def updateExtensionsList(): Unit = {
+  private def updateLists(): Unit = {
     val configFile = new File(configFilename)
     if (configFile.exists) {
       val config = ConfigFactory.parseFile(configFile)
-      if (config.hasPath("extensions")) {
-        fireIntervalRemoved(this, 0, extensions.length)
-        extensions = config.getConfigList("extensions").asScala map { extensionConfig =>
-          val name        = extensionConfig.getString("name")
-          val shortDesc   = extensionConfig.getString("shortDescription")
-          val longDesc    = extensionConfig.getString("longDescription")
-          val homepage    = new URL(extensionConfig.getString("homepage"))
-          val downloadURL = new URL(extensionConfig.getString("downloadURL"))
-          val status = ExtensionStatus.CanInstall
+      categories.foreach(c => updateList(config, c, lists(c)))
+    }
+  }
 
-          ExtensionInfo(name, shortDesc, longDesc, homepage, downloadURL, status)
-        }
-        fireIntervalAdded(this, 0, extensions.length)
+  private def updateList(config: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
+    if (config.hasPath(category)) {
+      val configList = config.getConfigList(category).asScala
+      listModel.clear()
+      listModel.ensureCapacity(configList.length)
+      configList foreach { c =>
+        val name        = c.getString("name")
+        val shortDesc   = c.getString("shortDescription")
+        val longDesc    = c.getString("longDescription")
+        val homepage    = new URL(c.getString("homepage"))
+        val downloadURL = new URL(c.getString("downloadURL"))
+        val status = LibraryStatus.CanInstall
+
+        listModel.addElement(
+          LibraryInfo(name, shortDesc, longDesc, homepage, downloadURL, status))
       }
     }
   }
 
-  override def getElementAt(i: Int) = extensions(i)
-  override def getSize = extensions.length
-
-  class LibrariesListUpdater extends SwingWorker[Any, Any] {
+  private class MetadataFetcher extends SwingWorker[Any, Any] {
     override def doInBackground(): Unit = {
       val metadataURL = s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename"
       val conn = new URL(metadataURL).openConnection.asInstanceOf[HttpURLConnection]
@@ -57,6 +61,6 @@ class LibraryManager extends AbstractListModel[ExtensionInfo] {
         Files.copy(conn.getInputStream, Paths.get(configFilename), StandardCopyOption.REPLACE_EXISTING)
     }
 
-    override def done(): Unit = updateExtensionsList()
+    override def done(): Unit = updateLists()
   }
 }
