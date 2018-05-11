@@ -1,0 +1,60 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.app.tools
+
+import scala.language.postfixOps
+
+import java.io.File
+import java.net.URL
+import javax.swing.{ AbstractListModel, SwingWorker }
+
+import scala.collection.JavaConverters._
+import scala.sys.process.urlToProcess
+
+import com.typesafe.config.{ ConfigFactory }
+
+import org.nlogo.api.APIVersion
+
+object LibraryManager {
+  private val configFilename = "libraries.conf"
+}
+
+class LibraryManager extends AbstractListModel[ExtensionInfo] {
+  import LibraryManager._
+
+  private var extensions = Seq.empty[ExtensionInfo]
+
+  updateExtensionsList()
+  new LibrariesListUpdater().execute()
+
+  private def updateExtensionsList() = {
+    val configFile = new File(configFilename)
+    if (configFile.exists) {
+      val config = ConfigFactory.parseFile(configFile)
+      fireIntervalRemoved(this, 0, extensions.length)
+      extensions = config.getConfigList("extensions").asScala map { extensionConfig =>
+        val name        = extensionConfig.getString("name")
+        val shortDesc   = extensionConfig.getString("shortDescription")
+        val longDesc    = extensionConfig.getString("longDescription")
+        val homepage    = new URL(extensionConfig.getString("homepage"))
+        val downloadURL = new URL(extensionConfig.getString("downloadURL"))
+        val status = ExtensionStatus.CanInstall
+
+        ExtensionInfo(name, shortDesc, longDesc, homepage, downloadURL, status)
+      }
+      fireIntervalAdded(this, 0, extensions.length)
+    }
+  }
+
+  override def getElementAt(i: Int) = extensions(i)
+  override def getSize = extensions.length
+
+  class LibrariesListUpdater extends SwingWorker[Any, Any] {
+    override def doInBackground(): Unit = {
+      val downloadURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename")
+      downloadURL #> new File(configFilename) !!
+    }
+
+    override def done(): Unit = updateExtensionsList()
+  }
+}

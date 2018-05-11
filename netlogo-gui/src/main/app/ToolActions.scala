@@ -7,7 +7,8 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.AggregateManagerInterface
-import org.nlogo.app.tools.{ ExtensionInfo, ExtensionStatus, ExtensionsAndLibrariesDialog }
+import org.nlogo.app.common.TabsInterface
+import org.nlogo.app.tools.{ LibrariesDialog, LibraryManager, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -25,26 +26,30 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
   }
 }
 
-class ShowPreferencesDialog(newDialog: => JDialog)
+class ShowPreferencesDialog(frame: Frame, tabs: TabsInterface)
 extends ShowDialogAction(I18N.gui.get("menu.tools.preferences"))
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  override def createDialog = newDialog
+  override def createDialog = new PreferencesDialog(frame,
+    Preferences.Language,
+    new Preferences.LineNumbers(tabs),
+    Preferences.IncludedFilesMenu)
 }
 
-class OpenExtensionsAndLibrariesDialog(frame: Frame)
-extends ShowDialogAction(I18N.gui.get("menu.tools.extensionsAndLibraries"))
+class OpenLibrariesDialog(frame: Frame)
+extends ShowDialogAction(I18N.gui.get("menu.tools.extensionsAndIncludeFiles"))
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new ExtensionsAndLibrariesDialog(frame, Array[ExtensionInfo](ExtensionInfo("Generic Extension", "Short desc", "this is a long description. more than one line", null, null, ExtensionStatus.UpToDate)))
+  def createDialog() = new LibrariesDialog(frame, new LibraryManager)
 }
 
-class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.colorSwatches"))
-  with MenuAction {
+class OpenColorDialog(frame: Frame)
+extends ShowDialogAction(I18N.gui.get("menu.tools.colorSwatches"))
+with MenuAction {
   category = ToolsCategory
   group = ToolsDialogsGroup
 

@@ -3,28 +3,30 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, GridLayout, Frame }
-import javax.swing.{ JButton, JDialog, JLabel, JList, JPanel, JScrollPane, JTextField, ListCellRenderer, SwingConstants }
+import javax.swing.{ JButton, JDialog, JLabel, JList, JPanel, JScrollPane, JTextField, ListCellRenderer, ListModel, SwingConstants }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.Utils.icon
 
-class ExtensionsAndLibrariesDialog(parent: Frame, extensions: Array[ExtensionInfo])
-extends JDialog(parent, I18N.gui.get("tools.extensionsAndLibraries"), false) {
+class LibrariesDialog(parent: Frame, extensions: ListModel[ExtensionInfo])
+extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
+  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
+
   val extensionsList = new JList[ExtensionInfo](extensions)
   extensionsList.setCellRenderer(CellRenderer)
 
   val sidebar = new JPanel(new BorderLayout)
   val extensionButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-  extensionButtonsPanel.add(new JButton("Install"))
-  extensionButtonsPanel.add(new JButton("Homepage"))
+  extensionButtonsPanel.add(new JButton(I18N.gui("install")))
+  extensionButtonsPanel.add(new JButton(I18N.gui("homepage")))
   sidebar.add(extensionButtonsPanel, BorderLayout.NORTH)
   val info = new JLabel {
-      override def getMaximumSize = new Dimension(200, super.getMaximumSize.height)
-      override def getPreferredSize = new Dimension(200, super.getPreferredSize.height)
+    override def getMaximumSize   = new Dimension(200, super.getMaximumSize.height)
+    override def getPreferredSize = new Dimension(200, super.getPreferredSize.height)
   }
   sidebar.add(info, BorderLayout.CENTER)
-  sidebar.add(new JButton("Update All"), BorderLayout.SOUTH)
+  sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
 
   extensionsList.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(e: ListSelectionEvent) = info.setText("<html>" + extensionsList.getSelectedValue.longDescription)

@@ -12,7 +12,7 @@ import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
@@ -571,15 +571,13 @@ class App extends
     new ZoomedEvent(0).raise(this)
   }
 
-  lazy val openPreferencesDialog =
-    new ShowPreferencesDialog(new PreferencesDialog(frame,
-      Preferences.Language, new Preferences.LineNumbers(tabs), Preferences.IncludedFilesMenu))
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabs)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openColorDialog = new OpenColorDialog(frame)
 
-  lazy val openExtensionsAndLibrariesDialog = new OpenExtensionsAndLibrariesDialog(frame)
+  lazy val openLibrariesDialog = new OpenLibrariesDialog(frame)
 
   lazy val allActions: Seq[javax.swing.Action] = {
     // If we're running in the mac wrapper, it takes care of displaying these
@@ -590,7 +588,7 @@ class App extends
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
     val generalActions = Seq[javax.swing.Action](
-      openExtensionsAndLibrariesDialog,
+      openLibrariesDialog,
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
