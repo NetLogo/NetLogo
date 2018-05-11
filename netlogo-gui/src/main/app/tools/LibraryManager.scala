@@ -3,13 +3,13 @@
 package org.nlogo.app.tools
 
 import java.io.File
-import java.net.URL
+import java.net.{ HttpURLConnection, URL }
+import java.nio.file.{ Files, Paths, StandardCopyOption }
 import javax.swing.{ AbstractListModel, SwingWorker }
 
 import scala.collection.JavaConverters._
-import scala.sys.process.stringToProcess
 
-import com.typesafe.config.{ ConfigFactory }
+import com.typesafe.config.ConfigFactory
 
 import org.nlogo.api.APIVersion
 
@@ -52,7 +52,9 @@ class LibraryManager extends AbstractListModel[ExtensionInfo] {
   class LibrariesListUpdater extends SwingWorker[Any, Any] {
     override def doInBackground(): Unit = {
       val metadataURL = s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename"
-      s"curl -s -f $metadataURL -o $configFilename".!
+      val conn = new URL(metadataURL).openConnection.asInstanceOf[HttpURLConnection]
+      if (conn.getResponseCode == 200)
+        Files.copy(conn.getInputStream, Paths.get(configFilename), StandardCopyOption.REPLACE_EXISTING)
     }
 
     override def done(): Unit = updateExtensionsList()
