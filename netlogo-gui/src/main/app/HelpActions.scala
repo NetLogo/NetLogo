@@ -52,7 +52,7 @@ object HelpActions {
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
       docPath("index2.html")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
-      new URI("http://groups.yahoo.com/group/netlogo-users/")),
+      new URI("http://groups.google.com/d/forum/netlogo-users")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),
       new URI("https://mitpress.mit.edu/books/introduction-agent-based-modeling")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),

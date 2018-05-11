@@ -2,7 +2,7 @@
 
 This page is for open source developers interested in the source code for NetLogo.
 
-Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](http://groups.yahoo.com/group/netlogo-users/) on Yahoo.
+Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](http://groups.google.com/d/forum/netlogo-users) on Google.
 
 The most recent version of NetLogo can be downloaded [here](https://ccl.northwestern.edu/netlogo/download.shtml).
 
@@ -39,7 +39,7 @@ The archives of an intro courses on NetLogo titled "Introduction to Agent-Based 
 ### Help With Modeling
 
 There are many good resources listed on the [NetLogo resources page](https://ccl.northwestern.edu/netlogo/resources.shtml)
-The [Netlogo-Users yahoo group](https://groups.yahoo.com/neo/groups/netlogo-users/info) frequently tackles questions on modeling.
+The [Netlogo-Users Google group](http://groups.google.com/d/forum/netlogo-users) frequently tackles questions on modeling.
 Be aware that the the group is moderated, so most messages don't go through until at least the next business day.
 There is also a fairly active NetLogo community [on StackOverflow](http://stackoverflow.com/questions/tagged/netlogo).
 NetLogo Users tends to be a better place to ask more open-ended modeling questions, for instance "I'm interested in making a model of plate tectonics, can anyone offer advice?".
