@@ -39,7 +39,9 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     setSize(500, 300)
 
     extensionsList.setSelectedIndex(0)
-    extensionsList.addListSelectionListener(_ => info.setText("<html>" + extensionsList.getSelectedValue.longDescription))
+    extensionsList.addListSelectionListener(_ =>
+      if (!extensionsList.isSelectionEmpty)
+        info.setText("<html>" + extensionsList.getSelectedValue.longDescription))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, extensionsList.getSelectedValue.homepage.toURI))
   }
 
