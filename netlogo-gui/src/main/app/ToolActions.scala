@@ -63,8 +63,8 @@ class OpenColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.
 }
 
 class ShowShapeManager(key: String, shapeManager: => ShapesManagerInterface)
-  extends AbstractAction(I18N.gui.get(s"menu.tools.$key"))
-  with MenuAction {
+extends AbstractAction(I18N.gui.get(s"menu.tools.$key"))
+with MenuAction {
   category = ToolsCategory
   group    = ToolsDialogsGroup
 
@@ -74,8 +74,8 @@ class ShowShapeManager(key: String, shapeManager: => ShapesManagerInterface)
 }
 
 class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
-  extends AbstractAction(I18N.gui.get("menu.tools.systemDynamicsModeler"))
-  with MenuAction {
+extends AbstractAction(I18N.gui.get("menu.tools.systemDynamicsModeler"))
+with MenuAction {
   category    = ToolsCategory
   group       = ToolsDialogsGroup
   accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
@@ -86,10 +86,10 @@ class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
 }
 
 class OpenHubNetClientEditor(workspace: AbstractWorkspaceScala, linkRoot: LinkRoot)
-  extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
-  with MenuAction {
-    category = ToolsCategory
-    group    = ToolsHubNetGroup
+extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
+with MenuAction {
+  category = ToolsCategory
+  group    = ToolsHubNetGroup
 
   override def actionPerformed(e: ActionEvent) {
     workspace.getHubNetManager.foreach { mgr =>

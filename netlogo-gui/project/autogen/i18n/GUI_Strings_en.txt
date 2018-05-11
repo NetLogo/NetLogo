@@ -98,7 +98,7 @@ menu.edit.convertToNetLogoSix = Convert from 5.3.1 to 6.0
 
 menu.tools = Tools
 menu.tools.preferences = Preferences…
-menu.tools.extensionsAndLibraries = Extensions & Libraries…
+menu.tools.extensionsAndIncludeFiles = Extensions & Include Files…
 menu.tools.halt = Halt
 menu.tools.globalsMonitor = Globals Monitor
 menu.tools.turtleMonitor = Turtle Monitor
@@ -443,7 +443,10 @@ tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
-tools.extensionsAndLibraries = Extensions & Libraries
+tools.libraries = Extensions & Include Files
+tools.libraries.install = Install
+tools.libraries.homepage = Homepage
+tools.libraries.updateAll = Update All
 
 tools.agentMonitor.view = View
 tools.agentMonitor.properties = Properties

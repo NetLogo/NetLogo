@@ -12,7 +12,6 @@ import org.nlogo.swing.UserAction._
 import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, WorkspaceFactory }
 
-
 object PreviewCommandsEditor {
   val title = "Preview Commands Editor"
   class EditPreviewCommands(
