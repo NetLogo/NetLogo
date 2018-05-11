@@ -9,6 +9,25 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.0.4 (May 2018)
+
+### Feature Changes
+
+- NetLogo now supports the Portuguese language.
+- BehaviorSpace allows optionally disabling plots and the view when running experiments.
+
+### Bugfixes
+
+- Updated the bundled Java 8, which should resolve an issue with NetLogo failing to start on Windows computers.
+- Fixed a numerical error with the `range` primitive.
+- Fixed a bug with link lookup when using more than two link breeds.
+- Comment and uncomment code hotkeys should work with NetLogo include source files.
+- Added a better error message when a web browser couldn't be launched for any reason.
+
+### Documentation Changes
+
+- Document that `resize-world` only kills all turtles when coordinates really change.
+
 ## Version 6.0.3 (March 2018)
 
 ### Feature Changes
@@ -300,8 +319,8 @@ primitive. This resulted in changes to 12 models.
 ### Bugfixes
 
 - `*-link-neighbor?` primitives now work the same way for breeded and unbreeded links.
-- Resizing the world in NetLogo 3D no longer causes a black view. 
-- Fixed error caused by right-clicking a widget while dragging. 
+- Resizing the world in NetLogo 3D no longer causes a black view.
+- Fixed error caused by right-clicking a widget while dragging.
 - Improved error message when a user-defined procedure shadows a breed procedure.
 - `neighbors4` and `neighbors` no longer report agentsets containing the same patch more than once.
 
@@ -312,12 +331,12 @@ primitive. This resulted in changes to 12 models.
 - Link reporters have been overhauled to be more consistent and flexible
 - The `task` primitive is no longer supported.
 - Breed names that conflict with language primitives are now disallowed. For instance, `breed [strings string]` is now disallowed since it makes `is-string?` ambiguous.
-- The compiler errors on duplicated breed singular names. 
+- The compiler errors on duplicated breed singular names.
 - The compiler detects a greater number of type errors, for instance `not pxcor` now raises a compiler error instead of erroring at runtime.
 - `set-plot-pen-color` now accepts RGB lists as arguments.
-- The `hubnet-set-client-interface` primitive has been removed. 
+- The `hubnet-set-client-interface` primitive has been removed.
 - The various primitives starting with `movie-` have been removed, as has the movie encoder. They have been replaced with the new `vid` extension. [The transition guide](transition.html) provides more details and information.
-- The `__change-language` primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms). 
+- The `__change-language` primitive has been removed. You can now change the User Interface Language through the preferences dialog, which can be found by choosing "Preferences..." in the "NetLogo" menu (Mac OS X) or in the "Tools" menu (all other platforms).
 - The string representation of anonymous procedures displays the body of the anonymous procedure.
 
 ### Extension Changes
@@ -335,12 +354,12 @@ primitive. This resulted in changes to 12 models.
 - The `qtj` extension is no longer bundled with NetLogo. Users are encouraged to make use of the [new `vid` extension](vid.html).
 - The new `vid` extension is now bundled with NetLogo, combining features of the late `qtj` extension and the movie primitives.
 - The network extension is no longer bundled with NetLogo. Users are encouraged to use the `nw` extension ([https://ccl.northwestern.edu/netlogo/docs/nw.html](nw.html)), which has been bundled with NetLogo for some time.
-- The `gogo-serial` extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer `gogo` extension, which uses HID to communicate with the GoGo board. 
+- The `gogo-serial` extension is no longer bundled with NetLogo. Users are encouraged to transition to the newer `gogo` extension, which uses HID to communicate with the GoGo board.
 
 ### Operating System Support
 
 - NetLogo will now be used to open `.nlogo` links in PowerPoint and other programs on Microsoft Windows.
-- The NetLogo binaries on Mac OS X are installed as runnable by any user. 
+- The NetLogo binaries on Mac OS X are installed as runnable by any user.
 - NetLogo in Mac OS X will not use "App Nap" while running. This keeps simulations running at full speed when NetLogo is in the background.
 - The NetLogo controlling API has changed since NetLogo 5. Programs that rely on the controlling API (such as BehaviorSearch) will not work until they have been changed to match the new API.
 
@@ -354,7 +373,7 @@ primitive. This resulted in changes to 12 models.
 ### Internationalization Changes
 
 - A new Spanish translation of the NetLogo dictionary is available [as part of the NetLogo manual](diccionario.pdf).
-- Language preferences can be changed by using the new "Preferences" menu instead of the `__change-language` primitive. 
+- Language preferences can be changed by using the new "Preferences" menu instead of the `__change-language` primitive.
 - A Japanese localization for NetLogo is now available and included with the standard download.
 - The Chinese translation for NetLogo has been updated.
 
@@ -488,18 +507,18 @@ primitive. This resulted in changes to 12 models.
 - The last used directory is now remembered on Linux
 - Whitespace is now stripped from models when saving
 
-- New Sample Models: Artificial Anasazi, Bacteria Food Hunt, Bacteria Hunt Speeds, BeeSmart - Hive Finding, Bug Hunt Disruptions, Bug Hunt Environmental Changes, Bug Hunt Predators and Invasive Species - Two Regions, Hydrogen Diffusion 3D, Lennard-Jones, Paths 
-- There are 46 new models in the new IABM Textbook folder: Turtles Circling Simple, Ants Simple, Heroes and Cowards, Life Simple, Simple Economy, 4 DLA extensions, 4 El Farol Extensions, 4 Fire Extensions, 4 Segregation Extensions, 5 Wolf Sheep Extensions, Agentset Efficiency, Agentset Ordering, Communication-T-T Network Example, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Traffic Basic Utility, Traffic Grid Goal, Spread of Disease, Voting Component Verification, Voting Sensitivity Analysis, Arduino Example, Disease With Android Avoidance HubNet, Example HubNet, Run Example, Run Result Example, Simple Machine Learning, Simple Viral Marketing, Ticket Sales, Sandpile Simple 
-- New models in the new Alternate Visualizations folder: Ethnocentrism - Alternative Visualization, Flocking - Alternative Visualizations, Heat Diffusion - Alternative visualization, Virus - Alternative Visualization, Virus - Circle Visualization 
-- Promoted models: Honeycomb, Minority Game 
+- New Sample Models: Artificial Anasazi, Bacteria Food Hunt, Bacteria Hunt Speeds, BeeSmart - Hive Finding, Bug Hunt Disruptions, Bug Hunt Environmental Changes, Bug Hunt Predators and Invasive Species - Two Regions, Hydrogen Diffusion 3D, Lennard-Jones, Paths
+- There are 46 new models in the new IABM Textbook folder: Turtles Circling Simple, Ants Simple, Heroes and Cowards, Life Simple, Simple Economy, 4 DLA extensions, 4 El Farol Extensions, 4 Fire Extensions, 4 Segregation Extensions, 5 Wolf Sheep Extensions, Agentset Efficiency, Agentset Ordering, Communication-T-T Network Example, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Traffic Basic Utility, Traffic Grid Goal, Spread of Disease, Voting Component Verification, Voting Sensitivity Analysis, Arduino Example, Disease With Android Avoidance HubNet, Example HubNet, Run Example, Run Result Example, Simple Machine Learning, Simple Viral Marketing, Ticket Sales, Sandpile Simple
+- New models in the new Alternate Visualizations folder: Ethnocentrism - Alternative Visualization, Flocking - Alternative Visualizations, Heat Diffusion - Alternative visualization, Virus - Alternative Visualization, Virus - Circle Visualization
+- Promoted models: Honeycomb, Minority Game
 - Many other bugfixes and upgrades
 
 ### Model changes
 
-- Improved Sample Models: Altruism, Ant Lines, Artificial Anasazi, Cooperation, Daisyworld, Divide the Cake, Heat Diffusion, Hydrogen Diffusion 3D, Lennard-Jones, N-Bodies, PD Basic Evolutionary, Sandpile, Robby the Robot, Segregation, Simple Kinetics 2 and 3, Traffic Grid, GridLock HubNet, GridLock HubNet Alternate 
-- Revised Curricular Models: 4 Block Stalagmites, 4 Block Two Stalagmites, Bug Hunter Competition HubNet, Fish Spotters HubNet, Ising, Tijuana Bordertowns, Urban Suite - Tijuana Bordertowns, 
-- Revised Code Examples: Lottery Example, self Example, Network Import Example 
-- Revised IABM Textbook models: Simple Economy, Fire Simple Extension 2 and 3, Segregation Simple, 1, 2 and 3, Agentset Efficiency, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Run Example, Traffic Grid Goal, 
+- Improved Sample Models: Altruism, Ant Lines, Artificial Anasazi, Cooperation, Daisyworld, Divide the Cake, Heat Diffusion, Hydrogen Diffusion 3D, Lennard-Jones, N-Bodies, PD Basic Evolutionary, Sandpile, Robby the Robot, Segregation, Simple Kinetics 2 and 3, Traffic Grid, GridLock HubNet, GridLock HubNet Alternate
+- Revised Curricular Models: 4 Block Stalagmites, 4 Block Two Stalagmites, Bug Hunter Competition HubNet, Fish Spotters HubNet, Ising, Tijuana Bordertowns, Urban Suite - Tijuana Bordertowns,
+- Revised Code Examples: Lottery Example, self Example, Network Import Example
+- Revised IABM Textbook models: Simple Economy, Fire Simple Extension 2 and 3, Segregation Simple, 1, 2 and 3, Agentset Efficiency, Preferential Attachment Simple, Random Network, Traffic Basic Adaptive, Run Example, Traffic Grid Goal,
 - New IABM Textbook model: Traffic Basic Adaptive Individuals
 
 ## Version 5.2.0 (April 2015)
@@ -670,4 +689,3 @@ primitive. This resulted in changes to 12 models.
 ## Version 1.0 (April 2002)
 
 - first full release (after a series of betas)
-
