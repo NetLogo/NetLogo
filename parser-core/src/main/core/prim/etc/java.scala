@@ -26,6 +26,13 @@ case class _approximatergb() extends Reporter with Pure {
       right = List(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
       ret = Syntax.NumberType)
 }
+case class _atmost() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.NumberType, Syntax.AgentsetType | Syntax.ListType),
+      ret = Syntax.AgentsetType | Syntax.ListType
+    )
+}
 case class _atpoints() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

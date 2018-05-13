@@ -3,17 +3,14 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.core.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.core.I18N;
 import org.nlogo.core.LogoList;
-import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
-
-import java.util.Iterator;
+import org.nlogo.nvm.RuntimePrimitiveException;
 
 public final strictfp class _nof
     extends Reporter {
@@ -35,7 +32,7 @@ public final strictfp class _nof
       if (n == list.size()) {
         return list;
       }
-      return randomSubset(list, n, context.job.random);
+      return list.randomSubset(n, context.job.random);
     } else if (obj instanceof AgentSet) {
       AgentSet agents = (AgentSet) obj;
       // only call count() once, since it's expensive
@@ -51,24 +48,4 @@ public final strictfp class _nof
           (context, this, 1, Syntax.ListType() | Syntax.AgentsetType(), obj);
     }
   }
-
-  private LogoList randomSubset(LogoList list, int n,
-                                org.nlogo.api.MersenneTwisterFast random) {
-    int size = list.size();
-    LogoListBuilder result = new LogoListBuilder();
-    int i = 0;
-    int j = 0;
-    for (Iterator<Object> it = list.javaIterator();
-         it.hasNext() && j < n;
-         i++) {
-      Object elt = it.next();
-      if (random.nextInt(size - i) < n - j) {
-        result.add(elt);
-        j++;
-      }
-    }
-    return result.toLogoList();
-  }
-
-
 }
