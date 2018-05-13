@@ -11,6 +11,7 @@ import javax.swing.{ Action, BorderFactory, ImageIcon, InputMap, JComponent, JDi
 final object Utils {
   val utilsClass = getClass
   def icon(path: String): ImageIcon = new ImageIcon(utilsClass.getResource(path))
+  def icon(path: String, w: Int, h: Int): ImageIcon = new CenteredImageIcon(icon(path), w, h)
 
   def alert(message: String, continueText: String): Unit = {
     val bogusFrame = new Frame

@@ -3,12 +3,10 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, GridLayout, Frame }
-import javax.swing.{ JButton, JDialog, JLabel, JList, JPanel, JScrollPane, JTextField, ListCellRenderer, ListModel, SwingConstants }
-import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
+import javax.swing.{ JButton, JDialog, JLabel, JList, JPanel, JScrollPane, JTextField, ListCellRenderer, ListModel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.BrowserLauncher
-import org.nlogo.swing.Implicits._
+import org.nlogo.swing.{ BrowserLauncher, EmptyIcon }
 import org.nlogo.swing.Utils.icon
 
 class LibrariesDialog(parent: Frame, extensions: ListModel[ExtensionInfo])
@@ -18,14 +16,13 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
     val extensionsList = new JList[ExtensionInfo](extensions)
-    extensionsList.setCellRenderer(CellRenderer)
+    extensionsList.setCellRenderer(new CellRenderer(extensionsList.getCellRenderer))
 
     val sidebar = new JPanel(new BorderLayout)
 
     val extensionButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
     extensionButtonsPanel.add(new JButton(I18N.gui("install")))
     val homepageButton = new JButton(I18N.gui("homepage"))
-    homepageButton.addActionListener(() => BrowserLauncher.openURI(this, extensionsList.getSelectedValue.homepage.toURI))
     extensionButtonsPanel.add(homepageButton)
 
     sidebar.add(extensionButtonsPanel, BorderLayout.NORTH)
@@ -36,48 +33,36 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     sidebar.add(info, BorderLayout.CENTER)
     sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
 
-    extensionsList.addListSelectionListener(new ListSelectionListener {
-      override def valueChanged(e: ListSelectionEvent) = info.setText("<html>" + extensionsList.getSelectedValue.longDescription)
-    })
-
     add(new JScrollPane(extensionsList), BorderLayout.CENTER)
     add(sidebar, BorderLayout.EAST)
     add(new JTextField, BorderLayout.NORTH)
     setSize(500, 300)
-  }
-}
 
-object CellRenderer extends JPanel(new BorderLayout) with ListCellRenderer[ExtensionInfo] {
-  val status = new JLabel {
-    setHorizontalAlignment(SwingConstants.CENTER)
-    val compSize = new Dimension(32, 32)
-    override def getMinimumSize   = compSize
-    override def getPreferredSize = compSize
-    override def getMaximumSize   = compSize
+    extensionsList.setSelectedIndex(0)
+    extensionsList.addListSelectionListener(_ => info.setText("<html>" + extensionsList.getSelectedValue.longDescription))
+    homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, extensionsList.getSelectedValue.homepage.toURI))
   }
-  val text = new JLabel
-  add(status, BorderLayout.WEST)
-  add(text, BorderLayout.CENTER)
-  def getListCellRendererComponent(list: JList[_ <: ExtensionInfo], value: ExtensionInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
-    text.setText("""<html><h3 style="margin: -10px 0">""" + value.name + """<p style="margin-bottom: 10px" color="#AAAAAA">""" + value.shortDescription)
-    status.setIcon(statusIcon(value.status))
-    if (isSelected) {
-       setBackground(list.getSelectionBackground)
-       setForeground(list.getSelectionForeground)
-    } else {
-       setBackground(list.getBackground)
-       setForeground(list.getForeground)
+
+  private class CellRenderer(originalRenderer: ListCellRenderer[_ >: ExtensionInfo]) extends ListCellRenderer[ExtensionInfo] {
+    private val noIcon = new EmptyIcon(32, 32)
+    private val upToDateIcon = icon("/images/check.gif", 32, 32)
+
+    override def getListCellRendererComponent(list: JList[_ <: ExtensionInfo], value: ExtensionInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
+      val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
+      originalComponent match {
+        case label: JLabel => {
+          label.setText("""<html><h3 style="margin: -10px 0">""" + value.name + """<p style="margin-bottom: 10px" color="#AAAAAA">""" + value.shortDescription)
+          label.setIcon(statusIcon(value.status))
+          label.setIconTextGap(0)
+          label
+        }
+        case _ => originalComponent
+      }
     }
-    setEnabled(list.isEnabled)
-    setFont(list.getFont)
-    setOpaque(true)
-    this
-  }
 
-  def statusIcon(s: ExtensionStatus) = {
-    if (s == ExtensionStatus.UpToDate)
-      icon("/images/check.gif")
-    else
-      null
+    private def statusIcon(status: ExtensionStatus) = status match {
+      case ExtensionStatus.UpToDate => upToDateIcon
+      case _ => noIcon
+    }
   }
 }

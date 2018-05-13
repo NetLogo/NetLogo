@@ -2,14 +2,12 @@
 
 package org.nlogo.app.tools
 
-import scala.language.postfixOps
-
 import java.io.File
 import java.net.URL
 import javax.swing.{ AbstractListModel, SwingWorker }
 
 import scala.collection.JavaConverters._
-import scala.sys.process.urlToProcess
+import scala.sys.process.stringToProcess
 
 import com.typesafe.config.{ ConfigFactory }
 
@@ -27,22 +25,24 @@ class LibraryManager extends AbstractListModel[ExtensionInfo] {
   updateExtensionsList()
   new LibrariesListUpdater().execute()
 
-  private def updateExtensionsList() = {
+  private def updateExtensionsList(): Unit = {
     val configFile = new File(configFilename)
     if (configFile.exists) {
       val config = ConfigFactory.parseFile(configFile)
-      fireIntervalRemoved(this, 0, extensions.length)
-      extensions = config.getConfigList("extensions").asScala map { extensionConfig =>
-        val name        = extensionConfig.getString("name")
-        val shortDesc   = extensionConfig.getString("shortDescription")
-        val longDesc    = extensionConfig.getString("longDescription")
-        val homepage    = new URL(extensionConfig.getString("homepage"))
-        val downloadURL = new URL(extensionConfig.getString("downloadURL"))
-        val status = ExtensionStatus.CanInstall
+      if (config.hasPath("extensions")) {
+        fireIntervalRemoved(this, 0, extensions.length)
+        extensions = config.getConfigList("extensions").asScala map { extensionConfig =>
+          val name        = extensionConfig.getString("name")
+          val shortDesc   = extensionConfig.getString("shortDescription")
+          val longDesc    = extensionConfig.getString("longDescription")
+          val homepage    = new URL(extensionConfig.getString("homepage"))
+          val downloadURL = new URL(extensionConfig.getString("downloadURL"))
+          val status = ExtensionStatus.CanInstall
 
-        ExtensionInfo(name, shortDesc, longDesc, homepage, downloadURL, status)
+          ExtensionInfo(name, shortDesc, longDesc, homepage, downloadURL, status)
+        }
+        fireIntervalAdded(this, 0, extensions.length)
       }
-      fireIntervalAdded(this, 0, extensions.length)
     }
   }
 
@@ -51,8 +51,8 @@ class LibraryManager extends AbstractListModel[ExtensionInfo] {
 
   class LibrariesListUpdater extends SwingWorker[Any, Any] {
     override def doInBackground(): Unit = {
-      val downloadURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename")
-      downloadURL #> new File(configFilename) !!
+      val metadataURL = s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename"
+      s"curl -s -f $metadataURL -o $configFilename".!
     }
 
     override def done(): Unit = updateExtensionsList()
