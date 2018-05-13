@@ -87,9 +87,18 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected var multiline = false
   def multiline(multiline: Boolean) {
     this.multiline = multiline
-    textArea.setEditable(!inputType.changeVisible)
     changeButton.setVisible(inputType.changeVisible)
     editing = false
+
+    // Multiline determines whether what keybindings are present, so we set bindings here.
+    // - BCH 05/13/2018
+    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ESCAPE, 0), new CancelAction())
+    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ENTER, 0),
+      if(multiline) null else new TransferFocusAction())
+    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_TAB, 0), new TransferFocusAction())
+  }
+
+  def updateKeyBindings(): Unit = {
   }
 
   var errorShowing = false
@@ -175,7 +184,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       new FocusListener() {
         def focusGained(e: FocusEvent) {
           _hasFocus = true
-          if (!multiline) editing = true
+          editing = true
         }
         def focusLost(e: FocusEvent) {
           _hasFocus = false
@@ -191,10 +200,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
           }
         }
       })
-
-    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ESCAPE, 0), new CancelAction())
-    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ENTER, 0), new TransferFocusAction())
-    textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_TAB, 0), new TransferFocusAction())
   }
 
   override def paintComponent(g: Graphics) = {
@@ -204,14 +209,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   private class EditActionListener extends ActionListener {
-    def actionPerformed(e: ActionEvent) {
-      if (!editing) {
-        editing = true
-        dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
-        dialog.setVisible(true)
-        editDialogTextArea.setText(textArea.getText)
-        editDialogTextArea.selectAll()
-      }
+    def actionPerformed(e: ActionEvent): Unit = if (dialog == null || !dialog.isVisible) {
+      editing = true
+      dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
+      dialog.setVisible(true)
+      editDialogTextArea.setText(textArea.getText)
+      editDialogTextArea.selectAll()
     }
   }
 
