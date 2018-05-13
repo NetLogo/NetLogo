@@ -51,7 +51,7 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
       val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
       originalComponent match {
         case label: JLabel => {
-          label.setText("""<html><h3 style="margin: -10px 0">""" + value.name + """<p style="margin-bottom: 10px" color="#AAAAAA">""" + value.shortDescription)
+          label.setText("""<html><h3 style="margin: -10px 0">""" + value.name + """<p color="#AAAAAA">""" + value.shortDescription)
           label.setIcon(statusIcon(value.status))
           label.setIconTextGap(0)
           label
