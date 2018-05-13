@@ -2,7 +2,9 @@
 
 package org.nlogo.core
 
-import scala.collection
+import java.util.Random
+
+import scala.collection.immutable.VectorBuilder
 import scala.language.implicitConversions
 
 object LogoList {
@@ -86,5 +88,21 @@ class LogoList private (private val v: Vector[AnyRef])
   }
 
   private def unsupported = throw new UnsupportedOperationException
+
+  def randomSubset(n: Int, rng: Random): LogoList = {
+    // Can't use LogoListBuilder because it's in api, not core
+    // - BCH 5/2/2018
+    val builder = new VectorBuilder[AnyRef]
+    var i = 0
+    var j = 0
+    while (j < n && i < size) {
+      if (rng.nextInt(size - i) < n - j) {
+        builder += this(i)
+        j += 1
+      }
+      i += 1
+    }
+    LogoList.fromVector(builder.result)
+  }
 
 }

@@ -230,6 +230,7 @@ R any? _any
 R approximate-hsb etc._approximatehsb
 R approximate-rgb etc._approximatergb
 R asin etc._asin
+R at-most etc._atmost
 R at-points etc._atpoints
 R atan etc._atan
 R autoplot? etc._autoplot
