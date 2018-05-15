@@ -209,8 +209,6 @@ object ChecksumsAndPreviews {
 
   // For when you need to know what the checksummed world exports are
   object ChecksumExports {
-    import scala.collection.JavaConverters._
-
     def export(paths: List[String]): Unit = {
       paths.foreach(exportOne)
     }
@@ -218,6 +216,8 @@ object ChecksumsAndPreviews {
     def exportOne(path: String): Unit = {
       val workspace = HeadlessWorkspace.newInstance
       try {
+        import scala.collection.JavaConverters._
+
         workspace.open(path)
         Checksummer.initModelForChecksumming(workspace)
         val modelPath = Paths.get(path)

@@ -11,7 +11,6 @@ import org.fife.ui.rsyntaxtextarea.{ folding, RSyntaxTextArea },
 
 import scala.annotation.tailrec
 import scala.util.Try
-import scala.collection.JavaConverters._
 
 object NetLogoFoldParser {
   val tokenizer: TokenizerInterface =
@@ -81,6 +80,8 @@ import NetLogoFoldParser.sections
 
 class NetLogoFoldParser extends FoldParser {
   override def getFolds(textArea: RSyntaxTextArea): JList[Fold] = {
+    import scala.collection.JavaConverters._
+
     val text = textArea.getText
     val parsedSections = sections(text)
 

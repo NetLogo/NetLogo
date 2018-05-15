@@ -12,8 +12,6 @@ import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoa
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
-import scala.collection.JavaConverters._
-
 abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoFormat, A] {
   val extensionManager = new DummyExtensionManager()
   val compilationEnvironment = new DummyCompilationEnvironment()
@@ -45,6 +43,8 @@ class NLogoFormatIOTest extends FunSuite {
     assert(format.sections(antsBenchmarkPath.toUri).isSuccess)
   }
   test("saves specified sections to a given URI") {
+    import scala.collection.JavaConverters._
+
     val sections =
       format.sections(antsBenchmarkPath.toUri).get
     val pathToWrite = Files.createTempFile("AntsCopy", ".nlogo")

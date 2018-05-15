@@ -4,7 +4,6 @@ package org.nlogo.core
 
 import java.util.{ Collection => JCollection }
 import scala.collection.mutable.Publisher
-import scala.collection.JavaConverters._
 
 object ShapeList {
   val DefaultShapeName = "default"
@@ -73,6 +72,7 @@ class ShapeListTracker(private var _shapeList: ShapeList) extends Publisher[Shap
   }
 
   def replaceShapes(newShapes: JCollection[_ <: Shape]): Unit = {
+    import scala.collection.JavaConverters._
     replaceShapes(newShapes.asScala)
   }
 

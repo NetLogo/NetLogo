@@ -5,7 +5,6 @@ package org.nlogo.gl.render
 import org.nlogo.shape.Polygon
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 import com.jogamp.opengl.glu.{ GLU, GLUtessellator }
-import collection.JavaConverters._
 
 object Polygons {
 
@@ -98,6 +97,8 @@ object Polygons {
     GLU.gluTessEndContour(tess)
     GLU.gluTessEndPolygon(tess)
     if(rotatable) {
+      import scala.collection.JavaConverters._
+
       gl.glBegin(data.tpe)
       gl.glNormal3f(0f, 0f, -1f)
       for(element <- data.shapeData.asScala)

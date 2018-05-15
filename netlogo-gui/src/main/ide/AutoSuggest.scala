@@ -3,7 +3,6 @@
 package org.nlogo.ide
 
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.{ HashMap, ListBuffer }
 
@@ -88,7 +87,10 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
 
   class TrieNode(val char : Option[Char] = None, var word: Option[String] = None) extends Trie {
 
-    val children: mutable.Map[Char, TrieNode] = new java.util.TreeMap[Char, TrieNode]().asScala
+    val children: mutable.Map[Char, TrieNode] = {
+        import scala.collection.JavaConverters._
+        new java.util.TreeMap[Char, TrieNode]().asScala
+    }
 
     override def append(key: String) = {
 

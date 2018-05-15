@@ -7,8 +7,6 @@ import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
 import javax.swing.{ DefaultListModel, ListModel, SwingWorker }
 
-import scala.collection.JavaConverters._
-
 import com.typesafe.config.{ Config, ConfigFactory }
 
 import org.nlogo.api.APIVersion
@@ -36,6 +34,8 @@ class LibraryManager(categories: String*) {
 
   private def updateList(config: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
     if (config.hasPath(category)) {
+      import scala.collection.JavaConverters._
+
       val configList = config.getConfigList(category).asScala
       listModel.clear()
       listModel.ensureCapacity(configList.length)

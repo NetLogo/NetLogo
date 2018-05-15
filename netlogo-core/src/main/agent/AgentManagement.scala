@@ -13,9 +13,6 @@ import
       ShapeListTracker, WorldDimensions },
     api.{ AgentException, AgentVariableNumbers, Color }
 
-import
-  scala.collection.JavaConverters._
-
 trait AgentManagement
   extends TurtleManagement
   with LinkManagement
@@ -145,6 +142,8 @@ trait AgentManagement
   // copyAgents is a "deep copy" of the world intended to capture the relevant features
   // of world for displaying it to the user.
   def copyAgents(other: AgentManagement, newWorld: World): Unit = {
+    import scala.collection.JavaConverters._
+
     // begin by copying breeds
     breeds.asScala.foreach {
       case (name, set) =>

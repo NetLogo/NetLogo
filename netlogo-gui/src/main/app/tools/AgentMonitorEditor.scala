@@ -6,7 +6,6 @@ import java.awt.{ BorderLayout, Color, FlowLayout, Font, GridBagConstraints, Gri
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import javax.swing.{ BorderFactory, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
@@ -18,9 +17,7 @@ import org.nlogo.nvm.Procedure
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget }
 
-class AgentMonitorEditor(parent: AgentMonitor) extends JPanel
-{
-
+class AgentMonitorEditor(parent: AgentMonitor) extends JPanel {
   setBackground(InterfaceColors.AGENT_EDITOR_BACKGROUND)
   setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
 
@@ -48,6 +45,8 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel
   }
 
   private def fill() {
+    import scala.collection.JavaConverters._
+
     val layout = new GridBagLayout
     setLayout(layout)
     val labelConstraints = new GridBagConstraints

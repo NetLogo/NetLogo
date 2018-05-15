@@ -7,7 +7,6 @@ import org.nlogo.core.{ CompilerException, I18N, LogoList }
 import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
 import java.awt.{GridBagConstraints,Window}
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
-import collection.JavaConverters._
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -26,7 +25,8 @@ class ProtocolEditable(protocol: LabProtocol,
 
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
 
-  val propertySet =
+  val propertySet = {
+    import scala.collection.JavaConverters._
     List(Property("name", Property.String, I18N.gui("experimentName")),
          Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
@@ -49,6 +49,7 @@ class ProtocolEditable(protocol: LabProtocol,
                   "<html>"+I18N.gui("finalCommands.info")+"</html>", collapsible=true, collapseByDefault=true),
          Property("timeLimit", Property.Integer, I18N.gui("timeLimit"),
                   "<html>"+I18N.gui("timeLimit.info")+"</html>")).asJava
+  }
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
   var name = protocol.name

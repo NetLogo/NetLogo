@@ -1,7 +1,6 @@
 import java.util.{ ArrayList => JArrayList }
 import java.net.URI
 
-import scala.collection.JavaConverters._
 import scala.util.Try
 import scala.util.matching.Regex
 
@@ -140,6 +139,8 @@ object Markdown {
 
       object Factory extends NodeRendererFactory {
         def create(options: DataHolder) = new NodeRenderer {
+          import scala.collection.JavaConverters._
+
           def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
             new NodeRenderingHandler(classOf[WikiLink], PrimLinkRenderer)).asJava
         }
@@ -152,7 +153,7 @@ object Markdown {
     def extend(builder: HtmlRenderer.Builder, rendererType: String) =
       if (rendererType == "HTML")
         builder.nodeRendererFactory(QuestionRenderer.Factory)
-    
+
     object QuestionRenderer extends CustomNodeRenderer[AsideBlock] {
       override def render(node: AsideBlock, context: NodeRendererContext, html: HtmlWriter) = {
         html.attr("class", "question")
@@ -163,6 +164,8 @@ object Markdown {
 
       object Factory extends NodeRendererFactory {
         def create(options: DataHolder) = new NodeRenderer {
+          import scala.collection.JavaConverters._
+
           def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
             new NodeRenderingHandler(classOf[AsideBlock], QuestionRenderer)).asJava
         }

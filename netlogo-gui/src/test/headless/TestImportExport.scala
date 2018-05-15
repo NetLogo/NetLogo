@@ -6,7 +6,7 @@ import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Perspective, Version }
 import org.nlogo.workspace.Checksummer
 import org.nlogo.util.SlowTest
-import scala.collection.JavaConverters._
+
 class TestImportExport extends FunSuite with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
@@ -242,6 +242,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   test("testImportSubject", SlowTest.Tag) {
+    import scala.collection.JavaConverters._
+
     val filename = getUniqueFilename()
     workspace.initForTesting(10)
     testCommand("export-world \"" + filename + "\"")

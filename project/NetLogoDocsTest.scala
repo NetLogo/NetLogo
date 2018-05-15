@@ -6,7 +6,6 @@ import java.net.{ HttpURLConnection, URI, URLDecoder }
 import java.nio.file.{ Files, Paths }
 import java.util.{ HashMap => JHashMap }
 
-import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 object NetLogoDocsTest {
@@ -28,6 +27,7 @@ object NetLogoDocsTest {
     val testedLinks = new JHashMap[String, JBoolean]
 
     val fileToLines = docsRoot.listFiles filter (_.getName.endsWith(".html")) map { file: File =>
+      import scala.collection.JavaConverters._
       file.getName -> Files.readAllLines(file.toPath).asScala
     } toMap;
 

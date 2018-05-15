@@ -12,11 +12,10 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigParse
 
 import org.nlogo.workspace.ModelsLibrary
 
-import scala.collection.JavaConverters._
-
-
 object ModelsLibraryIndexReader {
   def readInfoMap: Map[String, String] = {
+    import scala.collection.JavaConverters._
+
     val parsingConfiguration = ConfigParseOptions.defaults.setSyntax(ConfigSyntax.CONF)
     val index = ConfigFactory.parseFile(new File(ModelsLibrary.modelsRoot, "index.conf"), parsingConfiguration)
     val indexItems: JList[_ <: Config] =
