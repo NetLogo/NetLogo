@@ -37,11 +37,12 @@ class LibrariesTab(list: ListModel[LibraryInfo]) extends JPanel(new BorderLayout
     add(sidebar, BorderLayout.EAST)
     add(filterField, BorderLayout.NORTH)
 
-    libraryList.setSelectedIndex(0)
     libraryList.addListSelectionListener(_ =>
       if (!libraryList.isSelectionEmpty)
         info.setText("<html>" + libraryList.getSelectedValue.longDescription))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, libraryList.getSelectedValue.homepage.toURI))
+
+    libraryList.setSelectedIndex(0)
   }
 
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
