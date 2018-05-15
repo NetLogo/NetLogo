@@ -10,7 +10,15 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon }
 import org.nlogo.swing.Utils.icon
 
+object LibrariesTab {
+  val itemHTMLTemplate = """<html>
+    |<h3 style="margin: -10px 0">%s
+    |<p color="#AAAAAA">%s""".stripMargin
+}
+
 class LibrariesTab(list: ListModel[LibraryInfo]) extends JPanel(new BorderLayout) {
+  import LibrariesTab._
+
   locally {
     implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
@@ -53,7 +61,7 @@ class LibrariesTab(list: ListModel[LibraryInfo]) extends JPanel(new BorderLayout
       val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
       originalComponent match {
         case label: JLabel => {
-          label.setText("""<html><h3 style="margin: -10px 0">""" + value.name + """<p color="#AAAAAA">""" + value.shortDescription)
+          label.setText(itemHTMLTemplate.format(value.name, value.shortDescription))
           label.setIcon(statusIcon(value.status))
           label.setIconTextGap(0)
           label
