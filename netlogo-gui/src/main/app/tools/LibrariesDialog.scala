@@ -12,7 +12,7 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   locally {
     val tabs = new JTabbedPane
     manager.listModels.foreach { case (name, contents) =>
-      tabs.addTab(name.capitalize, new LibrariesTab(contents))
+      tabs.addTab(I18N.gui.get("tools.libraries.categories." + name), new LibrariesTab(contents))
     }
     add(tabs)
     setSize(500, 300)

@@ -444,6 +444,7 @@ tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
 tools.libraries = Extensions & Include Files
+tools.libraries.categories.extensions = Extensions
 tools.libraries.install = Install
 tools.libraries.homepage = Homepage
 tools.libraries.updateAll = Update All
