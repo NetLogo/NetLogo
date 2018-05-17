@@ -33,8 +33,9 @@ class LibrariesTab(list: ListModel[LibraryInfo]) extends JPanel(new BorderLayout
     val sidebar = new JPanel(new BorderLayout)
 
     val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-    libraryButtonsPanel.add(new JButton(I18N.gui("install")))
+    val installButton  = new JButton(I18N.gui("install"))
     val homepageButton = new JButton(I18N.gui("homepage"))
+    libraryButtonsPanel.add(installButton)
     libraryButtonsPanel.add(homepageButton)
 
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
@@ -48,13 +49,24 @@ class LibrariesTab(list: ListModel[LibraryInfo]) extends JPanel(new BorderLayout
     add(sidebar, BorderLayout.EAST)
     add(filterField, BorderLayout.NORTH)
 
-    libraryList.addListSelectionListener(_ =>
-      if (!libraryList.isSelectionEmpty)
-        info.setText("<html>" + libraryList.getSelectedValue.longDescription))
+    libraryList.addListSelectionListener(_ => updateSidebar(libraryList.getSelectedIndices.length))
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, libraryList.getSelectedValue.homepage.toURI))
+    homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
+
+    def selectedValue = libraryList.getSelectedValue
+
+    def updateSidebar(numSelected: Int): Unit = {
+      val infoText = if (numSelected == 1) "<html>" + selectedValue.longDescription else null
+      info.setText(infoText)
+      installButton.setEnabled(numSelected > 0)
+      homepageButton.setEnabled(numSelected == 1)
+      val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
+      installButton.setToolTipText(installToolTip)
+      val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
+      homepageButton.setToolTipText(homepageToolTip)
+    }
   }
 
   private def filterFn(info: LibraryInfo, text: String) =
