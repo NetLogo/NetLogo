@@ -4,20 +4,24 @@ package org.nlogo.app
 
 import java.awt.Frame
 import java.awt.event.ActionEvent
+import java.net.{ HttpURLConnection, URL }
+import java.nio.file.{ Files, Paths, StandardCopyOption }
 import javax.swing.{ AbstractAction, JDialog }
+
+import net.lingala.zip4j.core.ZipFile
 
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.tools.{ LibrariesDialog, LibraryManager, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.workspace.AbstractWorkspaceScala
+import org.nlogo.workspace.{ AbstractWorkspaceScala, ExtensionManager }
 import org.nlogo.window.{ ColorDialog, LinkRoot }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
-  def createDialog(): JDialog
+  protected def createDialog(): JDialog
 
   lazy protected val createdDialog = createDialog
 
@@ -44,7 +48,28 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, new LibraryManager("extensions"))
+  def createDialog() = {
+    val categories = Map("extensions" -> installExtension _)
+    new LibrariesDialog(frame, new LibraryManager(categories))
+  }
+
+  private def installExtension(name: String, url: URL): Unit = {
+    val conn = url.openConnection.asInstanceOf[HttpURLConnection]
+    if (conn.getResponseCode == 200) {
+      val urlPath = url.getPath.stripSuffix("/")
+      if (urlPath.endsWith(".zip")) {
+        val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
+        val zipPath = Files.createTempFile(basename, ".zip")
+        Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
+        new ZipFile(zipPath.toFile).extractAll(ExtensionManager.extensionPath)
+        Files.delete(zipPath)
+      } else {
+        val extDir = Paths.get(ExtensionManager.extensionPath, name)
+        Files.createDirectory(extDir)
+        Files.copy(conn.getInputStream, extDir.resolve(name + ".jar"), StandardCopyOption.REPLACE_EXISTING)
+      }
+    }
+  }
 }
 
 class OpenColorDialog(frame: Frame)

@@ -15,20 +15,23 @@ object LibraryManager {
   private val configFilename = "libraries.conf"
 }
 
-class LibraryManager(categories: String*) {
+class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
   import LibraryManager._
 
-  private val lists = categories.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
+  private val categoryNames = categories.keys
+  private val lists = categoryNames.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
   val listModels: Map[String, ListModel[LibraryInfo]] = lists
 
   updateLists()
   new MetadataFetcher().execute()
 
+  def installer(categoryName: String) = categories(categoryName)
+
   private def updateLists(): Unit = {
     val configFile = new File(configFilename)
     if (configFile.exists) {
       val config = ConfigFactory.parseFile(configFile)
-      categories.foreach(c => updateList(config, c, lists(c)))
+      categoryNames.foreach(c => updateList(config, c, lists(c)))
     }
   }
 

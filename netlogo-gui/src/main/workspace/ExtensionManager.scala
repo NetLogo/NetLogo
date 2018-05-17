@@ -145,8 +145,8 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def importExtension(extName: String, errors: ErrorSource): Unit = {
     try {
       val (fileURL, loader) = loaders.foldLeft(Option.empty[(URL, ExtensionLoader)]) {
-        case (None,             ldr) => ldr.locateExtension(extName).map((_, ldr))
-        case (location@Some(_), _)   => location
+        case (None,           ldr) => ldr.locateExtension(extName).map((_, ldr))
+        case (location@Some(_), _) => location
       }.getOrElse(throw new ExtensionManagerException(ExtensionNotFound(extName)))
 
       val data = loader.extensionData(extName, fileURL)
