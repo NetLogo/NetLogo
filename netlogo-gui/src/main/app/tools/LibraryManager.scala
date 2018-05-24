@@ -5,6 +5,9 @@ package org.nlogo.app.tools
 import java.io.File
 import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
+import java.security.{ DigestInputStream, MessageDigest }
+import java.util.Arrays
+import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ DefaultListModel, ListModel, SwingWorker }
 
 import com.typesafe.config.{ Config, ConfigFactory }
@@ -13,6 +16,8 @@ import org.nlogo.api.APIVersion
 
 object LibraryManager {
   private val configFilename = "libraries.conf"
+  private val prefs = JavaPreferences.userNodeForPackage(getClass)
+  private val hashKey = "metadata-md5"
 }
 
 class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
@@ -57,13 +62,24 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
   }
 
   private class MetadataFetcher extends SwingWorker[Any, Any] {
+    private var changed = false
+
     override def doInBackground(): Unit = {
+      val md = MessageDigest.getInstance("MD5")
       val metadataURL = s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename"
       val conn = new URL(metadataURL).openConnection.asInstanceOf[HttpURLConnection]
-      if (conn.getResponseCode == 200)
-        Files.copy(conn.getInputStream, Paths.get(configFilename), StandardCopyOption.REPLACE_EXISTING)
+      if (conn.getResponseCode == 200) {
+        val response = new DigestInputStream(conn.getInputStream, md)
+        Files.copy(response, Paths.get(configFilename), StandardCopyOption.REPLACE_EXISTING)
+      }
+      val localHash = prefs.getByteArray(hashKey, null)
+      val newHash = md.digest
+      if (!Arrays.equals(localHash, newHash)) {
+        prefs.putByteArray(hashKey, newHash)
+        changed = true
+      }
     }
 
-    override def done(): Unit = updateLists()
+    override def done(): Unit = if (changed) updateLists()
   }
 }
