@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, ActionListener, ItemEvent, ItemListener }
-import java.lang.OutOfMemoryError
 import java.nio.file.Path
 
 import javax.swing.{ JButton, JCheckBox, JComponent }
@@ -55,37 +54,21 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
                                         |$eventTrace""".stripMargin
 }
 
-object RuntimeErrorDialog {
-  val PleaseReportText = I18N.gui.get("error.dialog.pleaseReport")
+class ErrorDialogManager(owner: Component) {
+  private val debuggingInfo = DebuggingInfo("", "", "", "", "")
+  private val errorInfo = ErrorInfo(null)
+  private val unknownDialog = new UnknownErrorDialog(owner)
+  private val logoDialog    = new LogoExceptionDialog(owner)
+  private val memoryDialog  = new OutOfMemoryDialog(owner)
 
-  private var debuggingInfo = DebuggingInfo("", "", "", "", "")
-  private var errorInfo = ErrorInfo(null)
-  private var unknownDialog: Option[UnknownErrorDialog]  = Option.empty[UnknownErrorDialog]
-  private var logoDialog:    Option[LogoExceptionDialog] = Option.empty[LogoExceptionDialog]
-  private var memoryDialog:  Option[OutOfMemoryDialog]   = Option.empty[OutOfMemoryDialog]
-
-  def init(owner: Component): Unit = {
-    debuggingInfo.className = owner.getClass.getName
-
-    unknownDialog = Some(new UnknownErrorDialog(owner))
-    logoDialog    = Some(new LogoExceptionDialog(owner))
-    memoryDialog  = Some(new OutOfMemoryDialog(owner))
-  }
+  debuggingInfo.className = owner.getClass.getName
 
   def setModelName(name: String): Unit = {
     debuggingInfo.modelName = name
   }
 
-  def deactivate(): Unit = {
-    unknownDialog = None
-    logoDialog    = None
-    memoryDialog  = None
-    debuggingInfo = DebuggingInfo("", "", "", "", "")
-    errorInfo = ErrorInfo(null)
-  }
-
   def alreadyVisible: Boolean = {
-    Seq(unknownDialog, logoDialog, memoryDialog).flatten.exists(_.isVisible)
+    Seq(unknownDialog, logoDialog, memoryDialog).exists(_.isVisible)
   }
 
   def show(context: Context, instruction: Instruction, thread: Thread, throwable: Throwable): Unit = {
@@ -96,16 +79,13 @@ object RuntimeErrorDialog {
       errorInfo.context     = Option(context)
       errorInfo.instruction = Option(instruction)
       throwable match {
-        case l: LogoException             => logoDialog.foreach(_.doShow(errorInfo, debuggingInfo))
-        case _ if errorInfo.isOutOfMemory => memoryDialog.foreach(_.doShow())
-        case _                            => unknownDialog.foreach(_.doShow("Internal Error", errorInfo, debuggingInfo))
+        case l: LogoException             => logoDialog.doShow(errorInfo, debuggingInfo)
+        case _ if errorInfo.isOutOfMemory => memoryDialog.doShow()
+        case _                            => unknownDialog.doShow("Internal Error", errorInfo, debuggingInfo)
       }
   }
 
-  def suppressJavaExceptionDialogs: Boolean = {
-    unknownDialog.map(_.suppressJavaExceptionDialogs).getOrElse(false)
-  }
-
+  def suppressJavaExceptionDialogs: Boolean = unknownDialog.suppressJavaExceptionDialogs
 
   // This was added to work around https://bugs.openjdk.java.net/browse/JDK-8198809,
   // which appears only in Java 8u162 and should be resolved in 8u172.
@@ -129,8 +109,6 @@ object RuntimeErrorDialog {
   }
 }
 
-import RuntimeErrorDialog._
-
 trait CopyButton {
   def copy(): Unit
 
@@ -140,7 +118,13 @@ trait CopyButton {
   })
 }
 
-trait RuntimeErrorDialog {
+object ErrorDialog {
+  val PleaseReportText = I18N.gui.get("error.dialog.pleaseReport")
+}
+
+import ErrorDialog._
+
+trait ErrorDialog {
   protected var textWithDetails: String    = ""
   protected var textWithoutDetails: String = ""
 
@@ -183,7 +167,7 @@ trait RuntimeErrorDialog {
   protected def showText(text: String, rows: Int, columns: Int): Unit
 }
 
-class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
+class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog with CopyButton {
   private lazy val suppressButton   = new JButton(I18N.gui.get("error.dialog.suppress"))
 
   private var dialogTitle: String = ""
@@ -234,7 +218,7 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui
     doShow(dialogTitle, text, rows, columns)
 }
 
-class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog with CopyButton {
+class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog with CopyButton {
   private val dialogTitle: String = I18N.gui.get("common.messages.error.runtimeError")
 
   def doShow(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
@@ -262,7 +246,7 @@ class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gu
     doShow(dialogTitle, text, rows, columns)
 }
 
-class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with RuntimeErrorDialog {
+class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog {
   private val dialogTitle: String = I18N.gui.get("error.dialog.outOfMemory.title")
   private val ErrorText = I18N.gui.get("error.dialog.outOfMemory")
 

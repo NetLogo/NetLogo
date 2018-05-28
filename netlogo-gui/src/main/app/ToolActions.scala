@@ -63,10 +63,12 @@ with MenuAction {
         Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
         new ZipFile(zipPath.toFile).extractAll(ExtensionManager.extensionPath)
         Files.delete(zipPath)
-      } else {
+      } else if (urlPath.endsWith(".jar")) {
         val extDir = Paths.get(ExtensionManager.extensionPath, name)
         Files.createDirectory(extDir)
         Files.copy(conn.getInputStream, extDir.resolve(name + ".jar"), StandardCopyOption.REPLACE_EXISTING)
+      } else {
+        //throw exception
       }
     }
   }

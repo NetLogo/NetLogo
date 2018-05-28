@@ -12,7 +12,7 @@ import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
-  ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, RuntimeErrorDialog }
+  ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, ErrorDialogManager }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.fileformat
@@ -43,11 +43,12 @@ with ControlSet {
   val listenerManager = new NetLogoListenerManager
 
   org.nlogo.workspace.AbstractWorkspace.isApplet(isApplet)
-  RuntimeErrorDialog.init(this)
+
+  val errorDialogManager = new ErrorDialogManager(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
   protected val world = if(Version.is3D) new World3D() else new World2D()
-  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, this)
+  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, errorDialogManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
   protected val liteEditorFactory = new DefaultEditorFactory(workspace)
 
@@ -113,7 +114,7 @@ with ControlSet {
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
           override def run() {
-            RuntimeErrorDialog.show(null, null, thread, throwable)
+            errorDialogManager.show(null, null, thread, throwable)
           }})
     }
     catch {
@@ -211,7 +212,7 @@ with ControlSet {
     // from, but in the applet case 1) you can't write files and 2) we have special code for the
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
-    RuntimeErrorDialog.setModelName(uri.getPath.split("/").last)
+    errorDialogManager.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
     val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
       workspace, fileformat.defaultAutoConvertables) _
