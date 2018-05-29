@@ -56,9 +56,11 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
 class ErrorDialogManager(owner: Component) {
   private val debuggingInfo = DebuggingInfo("", "", "", "", "")
   private val errorInfo = ErrorInfo(null)
-  private val unknownDialog = new UnknownErrorDialog(owner)
-  private val logoDialog    = new LogoExceptionDialog(owner)
-  private val memoryDialog  = new OutOfMemoryDialog(owner)
+  private val dialogs = Seq(
+    classOf[LogoException]    -> new LogoExceptionDialog(owner),
+    classOf[OutOfMemoryError] -> new OutOfMemoryDialog(owner),
+    classOf[Throwable]        -> new UnknownErrorDialog(owner)
+  )
 
   debuggingInfo.className = owner.getClass.getName
 
@@ -67,7 +69,7 @@ class ErrorDialogManager(owner: Component) {
   }
 
   def alreadyVisible: Boolean = {
-    Seq(unknownDialog, logoDialog, memoryDialog).exists(_.isVisible)
+    dialogs.map(_._2).exists(_.isVisible)
   }
 
   def show(context: Context, instruction: Instruction, thread: Thread, throwable: Throwable): Unit = {
@@ -77,11 +79,10 @@ class ErrorDialogManager(owner: Component) {
       errorInfo.throwable   = throwable
       errorInfo.context     = Option(context)
       errorInfo.instruction = Option(instruction)
-      throwable match {
-        case l: LogoException             => logoDialog.doShow(errorInfo, debuggingInfo)
-        case _ if errorInfo.isOutOfMemory => memoryDialog.doShow()
-        case _                            => unknownDialog.doShow(errorInfo, debuggingInfo)
-      }
+      val dialog = dialogs.collectFirst {
+        case (exType, d) if exType.isInstance(throwable) => d
+      }.get
+      dialog.show(errorInfo, debuggingInfo)
   }
 
   // This was added to work around https://bugs.openjdk.java.net/browse/JDK-8198809,
@@ -119,6 +120,8 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
   protected var message = ""
   protected var details = ""
 
+  def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo)
+
   protected def doShow(showDetails: Boolean): Unit = {
     val text = if (showDetails) message + "\n\n" + details else message
     val lines = text.split('\n')
@@ -137,7 +140,7 @@ extends ErrorDialog(owner, "Internal Error") {
 
   message = I18N.gui.get("error.dialog.pleaseReport")
 
-  def doShow(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = if (!suppressed) {
+  override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = if (!suppressed) {
     details = debugInfo.detailedInformation
     doShow(true)
   }
@@ -160,7 +163,7 @@ extends ErrorDialog(owner, I18N.gui.get("common.messages.error.runtimeError")) {
     b
   }
 
-  def doShow(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
+  override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
     message = errorInfo.errorMessage.getOrElse("")
     details = debugInfo.detailedInformation
     doShow(checkbox.isSelected)
@@ -173,7 +176,7 @@ class OutOfMemoryDialog(owner: Component)
 extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
   message = I18N.gui.get("error.dialog.outOfMemory")
 
-  def doShow(): Unit = {
+  override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
     doShow(false)
   }
 
