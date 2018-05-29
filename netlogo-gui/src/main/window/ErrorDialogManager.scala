@@ -85,8 +85,6 @@ class ErrorDialogManager(owner: Component) {
       }
   }
 
-  def suppressJavaExceptionDialogs: Boolean = unknownDialog.suppressJavaExceptionDialogs
-
   // This was added to work around https://bugs.openjdk.java.net/browse/JDK-8198809,
   // which appears only in Java 8u162 and should be resolved in 8u172.
   // In general, this method should be used as a safety valve for non-fatal exceptions which
@@ -168,14 +166,16 @@ trait ErrorDialog {
 }
 
 class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog with CopyButton {
-  private lazy val suppressButton   = new JButton(I18N.gui.get("error.dialog.suppress"))
+  private lazy val suppressButton = new JButton(I18N.gui.get("error.dialog.suppress"))
 
   private var dialogTitle: String = ""
   private var errorHeader: String = ""
 
-  var suppressJavaExceptionDialogs: Boolean = false
+  private var suppressed = false
 
   def doShow(showTitle: String, errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
+    if (suppressed)
+      return
     dialogTitle = showTitle
     // we don't need bug reports on known issues like OutOfMemoryError - ST 4/29/10
     errorHeader =
@@ -198,7 +198,7 @@ class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui
   override def makeButtons(): Seq[JComponent] = {
     suppressButton.addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent): Unit = {
-        suppressJavaExceptionDialogs = true
+        suppressed = true
         setVisible(false)
       }
     })
