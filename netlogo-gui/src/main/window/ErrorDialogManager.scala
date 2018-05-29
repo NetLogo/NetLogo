@@ -3,10 +3,9 @@
 package org.nlogo.window
 
 import java.awt.Component
-import java.awt.event.{ ActionEvent, ActionListener, ItemEvent, ItemListener }
-import java.nio.file.Path
+import javax.swing.text.JTextComponent
 
-import javax.swing.{ JButton, JCheckBox, JComponent }
+import javax.swing.{ JButton, JCheckBox }
 
 import org.nlogo.core.I18N
 import org.nlogo.api.{ LogoException, Version }
@@ -81,7 +80,7 @@ class ErrorDialogManager(owner: Component) {
       throwable match {
         case l: LogoException             => logoDialog.doShow(errorInfo, debuggingInfo)
         case _ if errorInfo.isOutOfMemory => memoryDialog.doShow()
-        case _                            => unknownDialog.doShow("Internal Error", errorInfo, debuggingInfo)
+        case _                            => unknownDialog.doShow(errorInfo, debuggingInfo)
       }
   }
 
@@ -107,165 +106,81 @@ class ErrorDialogManager(owner: Component) {
   }
 }
 
-trait CopyButton {
-  def copy(): Unit
-
-  lazy val copyButton: JButton = new JButton(I18N.gui.get("menu.edit.copy"))
-  copyButton.addActionListener(new ActionListener() {
-    def actionPerformed(e: ActionEvent): Unit = { copy() }
-  })
+class CopyButton(textComp: JTextComponent) extends JButton(I18N.gui.get("menu.edit.copy")) {
+  addActionListener { _ =>
+    textComp.select(0, textComp.getText.length)
+    textComp.copy()
+    textComp.setCaretPosition(0)
+  }
 }
 
-object ErrorDialog {
-  val PleaseReportText = I18N.gui.get("error.dialog.pleaseReport")
+abstract class ErrorDialog(owner: Component, dialogTitle: String)
+extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
+  protected var message = ""
+  protected var details = ""
+
+  protected def doShow(showDetails: Boolean): Unit = {
+    val text = if (showDetails) message + "\n\n" + details else message
+    val lines = text.split('\n')
+    val maxColumns = lines.maxBy(_.length).length
+
+    val padding = 2
+    val rows = lines.length.max(5).min(15)
+    val columns = (maxColumns + padding).min(70)
+    doShow(dialogTitle, text, rows, columns)
+  }
 }
 
-import ErrorDialog._
+class UnknownErrorDialog(owner: Component)
+extends ErrorDialog(owner, "Internal Error") {
+  private var suppressed = false
 
-trait ErrorDialog {
-  protected var textWithDetails: String    = ""
-  protected var textWithoutDetails: String = ""
+  message = I18N.gui.get("error.dialog.pleaseReport")
 
-  protected lazy val checkbox = {
+  def doShow(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = if (!suppressed) {
+    details = debugInfo.detailedInformation
+    doShow(true)
+  }
+
+  override def makeButtons = {
+    val suppressButton = new JButton(I18N.gui.get("error.dialog.suppress"))
+    suppressButton.addActionListener { _ =>
+      suppressed = true
+      setVisible(false)
+    }
+    super.makeButtons ++ Seq(new CopyButton(textArea), suppressButton)
+  }
+}
+
+class LogoExceptionDialog(owner: Component)
+extends ErrorDialog(owner, I18N.gui.get("common.messages.error.runtimeError")) {
+  private lazy val checkbox = {
     val b = new JCheckBox(I18N.gui.get("error.dialog.showInternals"))
-    b.addItemListener(new ItemListener() {
-      def itemStateChanged(e: ItemEvent): Unit = {
-        showJavaDetails(b.isSelected)
-      }
-    })
+    b.addItemListener(_ => doShow(b.isSelected))
     b
   }
 
-  protected def showJavaDetails(showDetails: Boolean): Unit = {
-    var lines = 1
-    var lineBegin = 0
-    var longestLine = 0
-    val text =
-        if (showDetails) textWithDetails else textWithoutDetails
-
-    var i = 0
-    while (i < text.length) {
-      text.charAt(i) match {
-        case '\n' | '\r' =>
-          lines += 1
-          longestLine = longestLine max (i - lineBegin)
-          lineBegin = i
-        case _ =>
-      }
-      i += 1
-    }
-
-    longestLine += 2 // pad
-    lines = lines.max(5).min(15)
-    longestLine = longestLine.min(70)
-
-    showText(text, lines, longestLine)
+  def doShow(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
+    message = errorInfo.errorMessage.getOrElse("")
+    details = debugInfo.detailedInformation
+    doShow(checkbox.isSelected)
   }
 
-  protected def showText(text: String, rows: Int, columns: Int): Unit
+  override def makeButtons = super.makeButtons ++ Seq(new CopyButton(textArea), checkbox)
 }
 
-class UnknownErrorDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog with CopyButton {
-  private lazy val suppressButton = new JButton(I18N.gui.get("error.dialog.suppress"))
-
-  private var dialogTitle: String = ""
-  private var errorHeader: String = ""
-
-  private var suppressed = false
-
-  def doShow(showTitle: String, errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
-    if (suppressed)
-      return
-    dialogTitle = showTitle
-    // we don't need bug reports on known issues like OutOfMemoryError - ST 4/29/10
-    errorHeader =
-      if (! (errorInfo.ordinaryError || errorInfo.hasKnownCause)) PleaseReportText
-      else ""
-    // only has context if the exception occured inside running Logo code (and not, for example, in the GUI)
-    suppressButton.setVisible(! (errorInfo.ordinaryError || errorInfo.hasContext))
-    buildTexts(errorInfo, debuggingInfo)
-    checkbox.setVisible(errorInfo.ordinaryError)
-    showJavaDetails(! errorInfo.ordinaryError || checkbox.isSelected)
-  }
-
-  override def copy(): Unit = {
-    val beginIndex = textArea.getText.indexOf(errorHeader) + errorHeader.length
-    textArea.select(beginIndex, textArea.getText.length)
-    textArea.copy()
-    textArea.setCaretPosition(0)
-  }
-
-  override def makeButtons(): Seq[JComponent] = {
-    suppressButton.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        suppressed = true
-        setVisible(false)
-      }
-    })
-    super.makeButtons() ++ Seq(copyButton, checkbox, suppressButton)
-  }
-
-  private def buildTexts(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
-    val detailedInformation =
-      s"$errorHeader\n${debuggingInfo.detailedInformation}"
-    textWithoutDetails = errorInfo.errorMessage.getOrElse("")
-    textWithDetails = errorInfo.errorMessage
-      .map(_ + "\n\n" + detailedInformation)
-      .getOrElse(detailedInformation)
-  }
-
-  override protected def showText(text: String, rows: Int, columns: Int): Unit =
-    doShow(dialogTitle, text, rows, columns)
-}
-
-class LogoExceptionDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog with CopyButton {
-  private val dialogTitle: String = I18N.gui.get("common.messages.error.runtimeError")
-
-  def doShow(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
-    buildTexts(errorInfo, debuggingInfo)
-    showJavaDetails(checkbox.isSelected)
-  }
-
-  override def copy(): Unit = {
-    textArea.select(0, textArea.getText.length)
-    textArea.copy()
-    textArea.setCaretPosition(0)
-  }
-
-  override def makeButtons(): Seq[JComponent] =
-    super.makeButtons() ++ Seq(copyButton, checkbox)
-
-  private def buildTexts(errorInfo: ErrorInfo, debuggingInfo: DebuggingInfo): Unit = {
-    textWithoutDetails = errorInfo.errorMessage.getOrElse("")
-    textWithDetails    = errorInfo.errorMessage
-      .map(_ + "\n\n" + debuggingInfo.detailedInformation)
-      .getOrElse(debuggingInfo.detailedInformation)
-  }
-
-  override protected def showText(text: String, rows: Int, columns: Int): Unit =
-    doShow(dialogTitle, text, rows, columns)
-}
-
-class OutOfMemoryDialog(owner: Component) extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) with ErrorDialog {
-  private val dialogTitle: String = I18N.gui.get("error.dialog.outOfMemory.title")
-  private val ErrorText = I18N.gui.get("error.dialog.outOfMemory")
-
-  override def makeButtons(): Seq[JComponent] = {
-    val openFAQ = new JButton(I18N.gui.get("error.dialog.openFAQ"))
-    val baseFaqUrl: Path = BrowserLauncher.docPath("faq.html")
-    openFAQ.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent): Unit = {
-        BrowserLauncher.openPath(owner, baseFaqUrl, "howbig")
-      }
-    })
-    super.makeButtons() :+ openFAQ
-  }
+class OutOfMemoryDialog(owner: Component)
+extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
+  message = I18N.gui.get("error.dialog.outOfMemory")
 
   def doShow(): Unit = {
-    textWithDetails = ErrorText
-    showJavaDetails(true)
+    doShow(false)
   }
 
-  override protected def showText(text: String, rows: Int, columns: Int): Unit =
-    doShow(dialogTitle, text, rows, columns)
+  override def makeButtons = {
+    val openFAQ = new JButton(I18N.gui.get("error.dialog.openFAQ"))
+    val baseFaqUrl = BrowserLauncher.docPath("faq.html")
+    openFAQ.addActionListener(_ => BrowserLauncher.openPath(owner, baseFaqUrl, "howbig"))
+    super.makeButtons :+ openFAQ
+  }
 }
