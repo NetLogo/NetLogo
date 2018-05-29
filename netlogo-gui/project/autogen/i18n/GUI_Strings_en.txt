@@ -598,6 +598,7 @@ view.resize.hubnet.prompt = Kick clients?
 view.resize.hubnet.kick = Kick clients
 view.resize.hubnet.dontkick = Don't kick
 
+error.dialog.unknown = Internal Error
 error.dialog.pleaseReport = \
 NetLogo is unable to supply you with more details about this error.  Please report the problem \n \
 at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, and paste the \n\

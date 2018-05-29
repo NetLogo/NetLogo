@@ -135,7 +135,7 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
 }
 
 class UnknownErrorDialog(owner: Component)
-extends ErrorDialog(owner, "Internal Error") {
+extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
   private var suppressed = false
 
   message = I18N.gui.get("error.dialog.pleaseReport")
