@@ -24,7 +24,6 @@ common.buttons.yes = Yes
 common.buttons.no = No
 
 common.messages.error = Error
-common.messages.error.runtimeError = Runtime Error
 common.messages.warning = Warning
 
 common.menus.empty = <empty>
@@ -598,6 +597,7 @@ view.resize.hubnet.prompt = Kick clients?
 view.resize.hubnet.kick = Kick clients
 view.resize.hubnet.dontkick = Don't kick
 
+error.dialog.logo = Runtime Error
 error.dialog.unknown = Internal Error
 error.dialog.pleaseReport = \
 NetLogo is unable to supply you with more details about this error.  Please report the problem \n \

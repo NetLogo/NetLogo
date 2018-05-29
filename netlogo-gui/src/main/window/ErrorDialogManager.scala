@@ -156,7 +156,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
 }
 
 class LogoExceptionDialog(owner: Component)
-extends ErrorDialog(owner, I18N.gui.get("common.messages.error.runtimeError")) {
+extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
   private lazy val checkbox = {
     val b = new JCheckBox(I18N.gui.get("error.dialog.showInternals"))
     b.addItemListener(_ => doShow(b.isSelected))
