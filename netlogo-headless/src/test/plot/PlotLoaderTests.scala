@@ -4,7 +4,7 @@ package org.nlogo.plot
 
 import org.scalatest.FunSuite
 import org.nlogo.api.DummyLogoThunkFactory
-import org.nlogo.core.{ Femto, LiteralParser }
+import org.nlogo.core.{ Pen, Femto, LiteralParser }
 import org.nlogo.core.model.{PlotReader, PenReader}
 
 class PlotLoaderTests extends TestPlotLoaderHelper{
@@ -13,23 +13,35 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
   private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   test("easy pen") {
-    assertResult("Pen(sheep,1.0,0,-13345367,true,,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true", literalParser).toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,,)") {
+      val pen = Pen(display = "sheep", interval = 1.0, mode = 0, color = -13345367, inLegend = true)
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
   test("pen with spaces in name") {
-    assertResult("Pen(grass / 4,1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"grass / 4\" 1.0 0 -10899396 true", literalParser).toString)
+    assertResult("Pen(grass / 4,1.0,0,-10899396,true,,)") {
+      val pen = Pen(display = "grass / 4", interval = 1.0, mode = 0, color = -10899396, inLegend = true)
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
   test("pen with adjacent spaces in name") {
-    assertResult("Pen(  grass  /  4    ,1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"  grass  /  4    \" 1.0 0 -10899396 true", literalParser).toString)
+    assertResult("Pen(  grass  /  4    ,1.0,0,-10899396,true,,)") {
+      val pen = Pen(display = "  grass  /  4    ", interval = 1.0, mode = 0, color = -10899396, inLegend = true)
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
   test("pen with double quotes in name") {
-    assertResult("Pen(\"\"\",1.0,0,-10899396,true,,)")(
-      PenReader.parse("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true", literalParser).toString)
+    assertResult("""Pen(foo("bar"),1.0,0,-10899396,true,,)""") {
+      val pen = Pen(display = """foo("bar")""", interval = 1.0, mode = 0, color = -10899396, inLegend = true)
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
   test("a bunch of white space before code is ok.") {
@@ -43,8 +55,19 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
   }
 
   test("pen with simple command code") {
-    assertResult("Pen(sheep,1.0,0,-13345367,true,crt 1,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"", literalParser).toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,crt 1,)") {
+      val pen = Pen(display = "sheep", interval = 1.0, mode = 0, color = -13345367, inLegend = true, setupCode = "crt 1")
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
+  }
+
+  test("pen with simple update code") {
+    assertResult("Pen(sheep,1.0,0,-13345367,true,,crt 1)") {
+      val pen = Pen(display = "sheep", interval = 1.0, mode = 0, color = -13345367, inLegend = true, updateCode = "crt 1")
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
   test("pen with no x and y axis code") {
@@ -58,8 +81,11 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
   }
 
   test("pen with multi-line code") {
-    assertResult("Pen(sheep,1.0,0,-13345367,true,foo\nbar,)")(
-      PenReader.parse("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"", literalParser).toString)
+    assertResult("Pen(sheep,1.0,0,-13345367,true,foo\nbar,)") {
+      val pen = Pen(display = "sheep", interval = 1.0, mode = 0, color = -13345367, inLegend = true, setupCode = "foo\nbar")
+      val formatted = PenReader.format(pen)
+      PenReader.parse(formatted, literalParser).toString
+    }
   }
 
     // PlotLoader.parsePlot
