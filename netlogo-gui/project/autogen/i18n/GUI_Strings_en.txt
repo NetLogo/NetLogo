@@ -599,6 +599,10 @@ view.resize.hubnet.dontkick = Don't kick
 
 error.dialog.logo = Runtime Error
 error.dialog.unknown = Internal Error
+error.dialog.librariesMetadata = Metadata Loading Error
+error.dialog.librariesMetadata.message = We had a problem parsing the libraries metadata.  Please report the problem \n\
+at https://github.com/NetLogo/NetLogo-Libraries/issues, or to bugs@ccl.northwestern.edu, and paste the \n\
+contents of this window into your report.
 error.dialog.pleaseReport = \
 NetLogo is unable to supply you with more details about this error.  Please report the problem \n \
 at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, and paste the \n\

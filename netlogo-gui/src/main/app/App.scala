@@ -11,7 +11,8 @@ import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, PreviewCommandsEditor }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview,
+  LibraryManagerErrorDialog, MetadataLoadingException, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
@@ -429,7 +430,8 @@ class App extends
     // crucial point is for the dialogs within the manager to only be created
     // here). Creating ErrorDialogManager before `tabs.init` somehow prevents
     // the Code tab from receiving SwitchedTabsEvent and handling it. -- EL 2018-06-13
-    errorDialogManager = new ErrorDialogManager(frame)
+    errorDialogManager = new ErrorDialogManager(frame,
+      classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame))
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)

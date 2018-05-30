@@ -53,10 +53,10 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
                                         |$eventTrace""".stripMargin
 }
 
-class ErrorDialogManager(owner: Component) {
+class ErrorDialogManager(owner: Component, additionalDialogs: (Class[_ <: Throwable], ErrorDialog)*) {
   private val debuggingInfo = DebuggingInfo("", "", "", "", "")
   private val errorInfo = ErrorInfo(null)
-  private val dialogs = Seq(
+  private val dialogs = additionalDialogs ++ Seq(
     classOf[LogoException]    -> new LogoExceptionDialog(owner),
     classOf[OutOfMemoryError] -> new OutOfMemoryDialog(owner),
     classOf[Throwable]        -> new UnknownErrorDialog(owner)

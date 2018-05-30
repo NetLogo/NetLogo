@@ -10,7 +10,7 @@ import java.util.Arrays
 import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ DefaultListModel, ListModel, SwingWorker }
 
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{ Config, ConfigException, ConfigFactory }
 
 import org.nlogo.api.APIVersion
 
@@ -27,7 +27,10 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
   private val lists = categoryNames.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
   val listModels: Map[String, ListModel[LibraryInfo]] = lists
 
+  private var initialLoading = true
+
   updateLists()
+  initialLoading = false
   new MetadataFetcher().execute()
 
   def installer(categoryName: String) = categories(categoryName)
@@ -41,7 +44,7 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
   }
 
   private def updateList(config: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
-    if (config.hasPath(category)) {
+    try {
       import scala.collection.JavaConverters._
 
       val configList = config.getConfigList(category).asScala
@@ -58,6 +61,14 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
         listModel.addElement(
           LibraryInfo(name, shortDesc, longDesc, homepage, downloadURL, status))
       }
+    } catch {
+      case ex: ConfigException =>
+        if (initialLoading)
+          // In case only the local file got messed up somehow. This line
+          // ensures that we update the GUI according to the newly downloaded file
+          prefs.put(hashKey, "")
+        else
+          throw new MetadataLoadingException(ex)
     }
   }
 
@@ -83,3 +94,5 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
     override def done(): Unit = if (changed) updateLists()
   }
 }
+
+class MetadataLoadingException(cause: Throwable = null) extends RuntimeException(cause)
