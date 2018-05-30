@@ -261,7 +261,7 @@ object PenReader {
         inLegend = inLegend.toBoolean, setupCode = unescapeString(setup), updateCode = unescapeString(update))
   }
 
-  def format(pen: Pen): String = quoted(pen.display) + " " + pen.interval + " " + pen.mode + " " + pen.color + " " + pen.inLegend + " " +
+  def format(pen: Pen): String = quoted(escapeString(pen.display)) + " " + pen.interval + " " + pen.mode + " " + pen.color + " " + pen.inLegend + " " +
     quoted(escapeString(pen.setupCode)) + " " + quoted(escapeString(pen.updateCode))
 }
 
