@@ -31,9 +31,11 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
 
   updateLists()
   initialLoading = false
-  new MetadataFetcher().execute()
+  updateMetadataFromGithub()
 
   def installer(categoryName: String) = categories(categoryName)
+
+  def updateMetadataFromGithub() = new MetadataFetcher().execute()
 
   private def updateLists(): Unit = {
     val configFile = new File(configFilename)

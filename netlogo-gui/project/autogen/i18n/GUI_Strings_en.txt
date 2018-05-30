@@ -447,6 +447,7 @@ tools.libraries.categories.extensions = Extensions
 tools.libraries.install = Install
 tools.libraries.homepage = Homepage
 tools.libraries.updateAll = Update All
+tools.libraries.checkForUpdates = Check For Updates
 
 tools.agentMonitor.view = View
 tools.agentMonitor.properties = Properties
