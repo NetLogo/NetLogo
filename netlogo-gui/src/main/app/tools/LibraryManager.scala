@@ -3,21 +3,17 @@
 package org.nlogo.app.tools
 
 import java.io.File
-import java.net.{ HttpURLConnection, URL }
-import java.nio.file.{ Files, Paths, StandardCopyOption }
-import java.security.{ DigestInputStream, MessageDigest }
-import java.util.Arrays
-import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ DefaultListModel, ListModel, SwingWorker }
+import java.net.URL
+import javax.swing.{ DefaultListModel, ListModel }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory }
 
 import org.nlogo.api.APIVersion
+import org.nlogo.swing.SwingUpdater
 
 object LibraryManager {
-  private val configFilename = "libraries.conf"
-  private val prefs = JavaPreferences.userNodeForPackage(getClass)
-  private val hashKey = "metadata-md5"
+  private val ConfigFilename = "libraries.conf"
+  private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$ConfigFilename")
 }
 
 class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
@@ -27,18 +23,18 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
   private val lists = categoryNames.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
   val listModels: Map[String, ListModel[LibraryInfo]] = lists
 
+  private val metadataFetcher = new SwingUpdater(MetadataURL, updateLists _)
   private var initialLoading = true
 
-  updateLists()
+  updateLists(new File(ConfigFilename))
   initialLoading = false
   updateMetadataFromGithub()
 
   def installer(categoryName: String) = categories(categoryName)
 
-  def updateMetadataFromGithub() = new MetadataFetcher().execute()
+  def updateMetadataFromGithub() = metadataFetcher.reload()
 
-  private def updateLists(): Unit = {
-    val configFile = new File(configFilename)
+  private def updateLists(configFile: File): Unit = {
     if (configFile.exists) {
       val config = ConfigFactory.parseFile(configFile)
       categoryNames.foreach(c => updateList(config, c, lists(c)))
@@ -66,34 +62,11 @@ class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
     } catch {
       case ex: ConfigException =>
         if (initialLoading)
-          // In case only the local file got messed up somehow. This line
-          // ensures that we update the GUI according to the newly downloaded file
-          prefs.put(hashKey, "")
+          // In case only the local copy got messed up somehow -- EL 2018-06-02
+          metadataFetcher.invalidateCache()
         else
           throw new MetadataLoadingException(ex)
     }
-  }
-
-  private class MetadataFetcher extends SwingWorker[Any, Any] {
-    private var changed = false
-
-    override def doInBackground(): Unit = {
-      val md = MessageDigest.getInstance("MD5")
-      val metadataURL = s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$configFilename"
-      val conn = new URL(metadataURL).openConnection.asInstanceOf[HttpURLConnection]
-      if (conn.getResponseCode == 200) {
-        val response = new DigestInputStream(conn.getInputStream, md)
-        Files.copy(response, Paths.get(configFilename), StandardCopyOption.REPLACE_EXISTING)
-      }
-      val localHash = prefs.getByteArray(hashKey, null)
-      val newHash = md.digest
-      if (!Arrays.equals(localHash, newHash)) {
-        prefs.putByteArray(hashKey, newHash)
-        changed = true
-      }
-    }
-
-    override def done(): Unit = if (changed) updateLists()
   }
 }
 
