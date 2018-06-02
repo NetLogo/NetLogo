@@ -3,6 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
+import java.net.URL
 import javax.swing.{ BorderFactory, JButton, JDialog, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
@@ -15,9 +16,11 @@ object LibrariesDialog {
       BorderFactory.createEmptyBorder(10, 10, 10, 10)))
 }
 
-class LibrariesDialog(parent: Frame, manager: LibraryManager)
+class LibrariesDialog(parent: Frame, categories: Map[String, (String, URL) => Unit])
 extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   import LibrariesDialog._
+
+  val manager = new LibraryManager(categories)
 
   locally {
     val tabs = new JTabbedPane

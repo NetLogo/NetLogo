@@ -12,7 +12,7 @@ import net.lingala.zip4j.core.ZipFile
 
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.tools.{ LibrariesDialog, LibraryManager, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExtensionManager }
@@ -50,7 +50,7 @@ with MenuAction {
 
   def createDialog() = {
     val categories = Map("extensions" -> installExtension _)
-    new LibrariesDialog(frame, new LibraryManager(categories))
+    new LibrariesDialog(frame, categories)
   }
 
   private def installExtension(name: String, url: URL): Unit = {
