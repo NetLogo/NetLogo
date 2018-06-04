@@ -66,6 +66,7 @@ object I18N {
     private val englishBundle = getBundle(Locale.US)
     def getBundle(locale: Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key: String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
+    def apply(key: String, args: AnyRef*)(implicit prefix: Prefix) = getN(prefix.name + "." + key, args: _*)
     override def get(key: String) = getN(key)
     override def getN(key: String, args: AnyRef*) = {
       def getFromBundle(bundle: ResourceBundle): Option[String] =

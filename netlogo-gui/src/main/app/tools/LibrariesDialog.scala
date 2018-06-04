@@ -4,7 +4,7 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
 import java.net.URL
-import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane }
+import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane, SwingWorker }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.ProgressListener
@@ -34,8 +34,12 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   })
 
   locally {
-    manager.listModels.foreach { case (name, contents) =>
-      tabs.addTab(I18N.gui("categories." + name), new LibrariesTab(contents, manager.installer(name)))
+    manager.listModels.foreach { case (category, contents) =>
+      tabs.addTab(I18N.gui("categories." + category),
+        new LibrariesTab(contents, (lib, url) => {
+          status.setText(I18N.gui("installing", lib))
+          new Installer(category, lib, url).execute()
+        }))
     }
 
     bottomPanel.setBorder(BottomPanelBorder)
@@ -48,5 +52,10 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     add(tabs, BorderLayout.CENTER)
     add(bottomPanel, BorderLayout.SOUTH)
     setSize(500, 300)
+  }
+
+  class Installer(name: String, libName: String, url: URL) extends SwingWorker[Any, Any] {
+    override def doInBackground() = manager.installer(name)(libName, url)
+    override def done() = status.setText(null)
   }
 }
