@@ -9,21 +9,21 @@ import javax.swing.{ DefaultListModel, ListModel }
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory }
 
 import org.nlogo.api.APIVersion
-import org.nlogo.swing.SwingUpdater
+import org.nlogo.swing.{ ProgressListener, SwingUpdater }
 
 object LibraryManager {
   private val ConfigFilename = "libraries.conf"
   private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$ConfigFilename")
 }
 
-class LibraryManager(categories: Map[String, (String, URL) => Unit]) {
+class LibraryManager(categories: Map[String, (String, URL) => Unit], progressListener: ProgressListener) {
   import LibraryManager._
 
   private val categoryNames = categories.keys
   private val lists = categoryNames.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
   val listModels: Map[String, ListModel[LibraryInfo]] = lists
 
-  private val metadataFetcher = new SwingUpdater(MetadataURL, updateLists _)
+  private val metadataFetcher = new SwingUpdater(MetadataURL, updateLists _, progressListener)
   private var initialLoading = true
 
   updateLists(new File(ConfigFilename))

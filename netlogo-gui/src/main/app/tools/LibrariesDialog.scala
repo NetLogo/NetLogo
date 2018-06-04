@@ -4,9 +4,10 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
 import java.net.URL
-import javax.swing.{ BorderFactory, JButton, JDialog, JPanel, JTabbedPane }
+import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.ProgressListener
 
 object LibrariesDialog {
   private val BottomPanelBorder = BorderFactory.createCompoundBorder(
@@ -20,18 +21,26 @@ class LibrariesDialog(parent: Frame, categories: Map[String, (String, URL) => Un
 extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   import LibrariesDialog._
 
-  val manager = new LibraryManager(categories)
+  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
+
+  val tabs = new JTabbedPane
+  val bottomPanel = new JPanel(new BorderLayout)
+  val checkForUpdates = new JButton(I18N.gui("checkForUpdates"))
+  val status = new JLabel
+
+  val manager = new LibraryManager(categories, new ProgressListener {
+    override def start()  = status.setText(I18N.gui("checkingForUpdates"))
+    override def finish() = status.setText(null)
+  })
 
   locally {
-    val tabs = new JTabbedPane
     manager.listModels.foreach { case (name, contents) =>
-      tabs.addTab(I18N.gui.get("tools.libraries.categories." + name), new LibrariesTab(contents, manager.installer(name)))
+      tabs.addTab(I18N.gui("categories." + name), new LibrariesTab(contents, manager.installer(name)))
     }
 
-    val bottomPanel = new JPanel(new BorderLayout)
-    val checkForUpdates = new JButton(I18N.gui.get("tools.libraries.checkForUpdates"))
     bottomPanel.setBorder(BottomPanelBorder)
     bottomPanel.add(checkForUpdates, BorderLayout.EAST)
+    bottomPanel.add(status, BorderLayout.CENTER)
 
     checkForUpdates.addActionListener(_ => manager.updateMetadataFromGithub())
 

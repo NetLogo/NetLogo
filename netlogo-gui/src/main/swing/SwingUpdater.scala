@@ -22,7 +22,7 @@ object SwingUpdater {
  *
  *  Basenames for resources used with this class must be unique.
  */
-class SwingUpdater(url: URL, updateGUI: File => Unit) {
+class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: ProgressListener) {
   import SwingUpdater._
 
   private val basename = {
@@ -32,7 +32,10 @@ class SwingUpdater(url: URL, updateGUI: File => Unit) {
   private val hashKey = basename + "-md5"
 
   /** Downloads the URL and update the GUI if the hash is different */
-  def reload() = new Worker().execute()
+  def reload() = {
+    progressListener.start()
+    new Worker().execute()
+  }
 
   /** Ensures the next reload updates the GUI */
   def invalidateCache() = prefs.put(hashKey, "")
@@ -59,7 +62,9 @@ class SwingUpdater(url: URL, updateGUI: File => Unit) {
       try get() catch { // propagate any exception produced on `doInBackground`
         case ex: ExecutionException => throw ex.getCause
       }
-      if (changed) updateGUI(new File(basename))
+      if (changed)
+        updateGUI(new File(basename))
+      progressListener.finish()
     }
   }
 }
