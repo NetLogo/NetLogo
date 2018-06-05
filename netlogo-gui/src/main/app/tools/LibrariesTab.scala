@@ -77,6 +77,7 @@ extends JPanel(new BorderLayout) {
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
     private val noIcon = new EmptyIcon(32, 32)
     private val upToDateIcon = icon("/images/check.gif", 32, 32)
+    private val canUpdateIcon = icon("/images/update.gif", 32, 32)
 
     override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
       val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
@@ -92,8 +93,9 @@ extends JPanel(new BorderLayout) {
     }
 
     private def statusIcon(status: LibraryStatus) = status match {
-      case LibraryStatus.UpToDate => upToDateIcon
-      case _ => noIcon
+      case LibraryStatus.UpToDate   => upToDateIcon
+      case LibraryStatus.CanUpdate  => canUpdateIcon
+      case LibraryStatus.CanInstall => noIcon
     }
   }
 }
