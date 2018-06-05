@@ -3,7 +3,6 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, GridLayout }
-import java.net.URL
 import javax.swing.{ JButton, JLabel, JList, JPanel, JScrollPane, JTextField,
   ListCellRenderer, ListModel }
 
@@ -17,7 +16,7 @@ object LibrariesTab {
     |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(list: ListModel[LibraryInfo], install: (String, URL) => Unit)
+class LibrariesTab(list: ListModel[LibraryInfo], install: LibraryInfo => Unit)
 extends JPanel(new BorderLayout) {
   import LibrariesTab._
 
@@ -53,7 +52,7 @@ extends JPanel(new BorderLayout) {
 
     libraryList.addListSelectionListener(_ => updateSidebar(libraryList.getSelectedIndices.length))
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener(_ => install(selectedValue.name, selectedValue.downloadURL))
+    installButton.addActionListener(_ => install(selectedValue))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)

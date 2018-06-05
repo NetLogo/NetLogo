@@ -16,7 +16,7 @@ object LibraryManager {
   private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$ConfigFilename")
 }
 
-class LibraryManager(categories: Map[String, (String, URL) => Unit], progressListener: ProgressListener) {
+class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListener: ProgressListener) {
   import LibraryManager._
 
   private val categoryNames = categories.keys

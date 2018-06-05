@@ -3,7 +3,6 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
-import java.net.URL
 import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane, SwingWorker }
 
 import org.nlogo.core.I18N
@@ -17,7 +16,7 @@ object LibrariesDialog {
       BorderFactory.createEmptyBorder(10, 10, 10, 10)))
 }
 
-class LibrariesDialog(parent: Frame, categories: Map[String, (String, URL) => Unit])
+class LibrariesDialog(parent: Frame, categories: Map[String, LibraryInfo => Unit])
 extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   import LibrariesDialog._
 
@@ -36,9 +35,9 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   locally {
     manager.listModels.foreach { case (category, contents) =>
       tabs.addTab(I18N.gui("categories." + category),
-        new LibrariesTab(contents, (lib, url) => {
-          status.setText(I18N.gui("installing", lib))
-          new Installer(category, lib, url).execute()
+        new LibrariesTab(contents, lib => {
+          status.setText(I18N.gui("installing", lib.name))
+          new Installer(category, lib).execute()
         }))
     }
 
@@ -54,8 +53,8 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     setSize(500, 400)
   }
 
-  class Installer(name: String, libName: String, url: URL) extends SwingWorker[Any, Any] {
-    override def doInBackground() = manager.installer(name)(libName, url)
+  class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
+    override def doInBackground() = manager.installer(category)(lib)
     override def done() = status.setText(null)
   }
 }
