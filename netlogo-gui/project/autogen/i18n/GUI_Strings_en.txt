@@ -445,6 +445,7 @@ tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code
 tools.libraries = Extensions & Include Files
 tools.libraries.categories.extensions = Extensions
 tools.libraries.install = Install
+tools.libraries.update = Update
 tools.libraries.homepage = Homepage
 tools.libraries.updateAll = Update All
 tools.libraries.checkForUpdates = Check For Updates

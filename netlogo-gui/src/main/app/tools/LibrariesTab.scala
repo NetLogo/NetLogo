@@ -62,8 +62,16 @@ extends JPanel(new BorderLayout) {
     def updateSidebar(numSelected: Int): Unit = {
       val infoText = if (numSelected == 1) "<html>" + selectedValue.longDescription else null
       info.setText(infoText)
-      installButton.setEnabled(numSelected > 0)
+      val installText =
+        if (numSelected > 0 && selectedValue.status == LibraryStatus.CanUpdate)
+          I18N.gui("update")
+        else
+          I18N.gui("install")
+      installButton.setText(installText)
+
+      installButton.setEnabled(numSelected > 0 && selectedValue.status != LibraryStatus.UpToDate)
       homepageButton.setEnabled(numSelected == 1)
+
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
       installButton.setToolTipText(installToolTip)
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
