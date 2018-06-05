@@ -12,7 +12,7 @@ import net.lingala.zip4j.core.ZipFile
 
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.tools.{ LibrariesDialog, LibraryInfo, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, LibraryInfo, LibraryManager, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExtensionManager }
@@ -65,11 +65,13 @@ with MenuAction {
         Files.delete(zipPath)
       } else if (urlPath.endsWith(".jar")) {
         val extDir = Paths.get(ExtensionManager.extensionPath, ext.codeName)
-        Files.createDirectory(extDir)
+        if (!Files.isDirectory(extDir))
+          Files.createDirectory(extDir)
         Files.copy(conn.getInputStream, extDir.resolve(ext.codeName + ".jar"), StandardCopyOption.REPLACE_EXISTING)
       } else {
         //throw exception
       }
+      LibraryManager.updateInstalledVersion("extensions", ext)
     }
   }
 }

@@ -9,6 +9,7 @@ case class LibraryInfo(
   codeName: String,
   shortDescription: String,
   longDescription: String,
+  version: String,
   homepage: URL,
   downloadURL: URL,
   status: LibraryStatus) {
