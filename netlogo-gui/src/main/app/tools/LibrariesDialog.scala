@@ -55,6 +55,9 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
 
   class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
     override def doInBackground() = manager.installer(category)(lib)
-    override def onComplete() = status.setText(null)
+    override def onComplete() = {
+      manager.reloadMetadata()
+      status.setText(null)
+    }
   }
 }

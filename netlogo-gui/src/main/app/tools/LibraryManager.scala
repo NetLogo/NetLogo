@@ -39,12 +39,13 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
   if (!Files.exists(Paths.get(InstalledLibrariesConf)))
     Files.createFile(Paths.get(InstalledLibrariesConf))
 
-  updateLists(new File(LibrariesConf))
+  reloadMetadata()
   initialLoading = false
   updateMetadataFromGithub()
 
   def installer(categoryName: String) = categories(categoryName)
 
+  def reloadMetadata() = updateLists(new File(LibrariesConf))
   def updateMetadataFromGithub() = metadataFetcher.reload()
 
   private def updateLists(configFile: File): Unit = {
