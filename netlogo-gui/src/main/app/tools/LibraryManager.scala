@@ -50,6 +50,7 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
       listModel.ensureCapacity(configList.length)
       configList foreach { c =>
         val name        = c.getString("name")
+        val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
         val shortDesc   = c.getString("shortDescription")
         val longDesc    = c.getString("longDescription")
         val homepage    = new URL(c.getString("homepage"))
@@ -57,7 +58,7 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
         val status = LibraryStatus.CanInstall
 
         listModel.addElement(
-          LibraryInfo(name, shortDesc, longDesc, homepage, downloadURL, status))
+          LibraryInfo(name, codeName, shortDesc, longDesc, homepage, downloadURL, status))
       }
     } catch {
       case ex: ConfigException =>

@@ -6,6 +6,7 @@ import java.net.URL
 
 case class LibraryInfo(
   name: String,
+  codeName: String,
   shortDescription: String,
   longDescription: String,
   homepage: URL,
