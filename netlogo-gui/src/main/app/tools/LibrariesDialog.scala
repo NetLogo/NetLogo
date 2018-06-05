@@ -3,10 +3,10 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
-import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane, SwingWorker }
+import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.ProgressListener
+import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
 object LibrariesDialog {
   private val BottomPanelBorder = BorderFactory.createCompoundBorder(
@@ -55,6 +55,6 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
 
   class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
     override def doInBackground() = manager.installer(category)(lib)
-    override def done() = status.setText(null)
+    override def onComplete() = status.setText(null)
   }
 }

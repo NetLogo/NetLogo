@@ -7,9 +7,7 @@ import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
 import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
-import java.util.concurrent.ExecutionException
 import java.util.prefs.Preferences
-import javax.swing.SwingWorker
 
 object SwingUpdater {
   private val prefs = Preferences.userNodeForPackage(getClass)
@@ -58,10 +56,7 @@ class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: Progress
       }
     }
 
-    override def done(): Unit = {
-      try get() catch { // propagate any exception produced on `doInBackground`
-        case ex: ExecutionException => throw ex.getCause
-      }
+    override def onComplete(): Unit = {
       if (changed)
         updateGUI(new File(basename))
       progressListener.finish()
