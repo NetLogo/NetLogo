@@ -50,7 +50,7 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     setLayout(new BorderLayout)
     add(tabs, BorderLayout.CENTER)
     add(bottomPanel, BorderLayout.SOUTH)
-    setSize(500, 400)
+    setSize(550, 400)
   }
 
   class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {

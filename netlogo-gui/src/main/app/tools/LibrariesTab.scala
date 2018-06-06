@@ -39,7 +39,7 @@ extends JPanel(new BorderLayout) {
     libraryButtonsPanel.add(installButton)
     libraryButtonsPanel.add(homepageButton)
 
-    val info = new JTextArea(2, 15)
+    val info = new JTextArea(2, 20)
     info.setLineWrap(true)
     info.setWrapStyleWord(true)
     info.setBackground(new Color(0,0,0,0))
