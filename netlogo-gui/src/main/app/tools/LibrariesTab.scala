@@ -20,12 +20,13 @@ class LibrariesTab(list: ListModel[LibraryInfo], install: LibraryInfo => Unit)
 extends JPanel(new BorderLayout) {
   import LibrariesTab._
 
+  private val listModel = new FilterableListModel(list, filterFn)
+
   locally {
     import org.nlogo.swing.Implicits.thunk2documentListener
 
     implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
-    val listModel = new FilterableListModel(list, filterFn)
     val libraryList = new JList[LibraryInfo](listModel)
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
 
@@ -47,9 +48,10 @@ extends JPanel(new BorderLayout) {
     val infoScroll = new JScrollPane(info)
     infoScroll.setViewportBorder(null)
     infoScroll.setBorder(null)
+    val updateAllButton = new JButton(I18N.gui("updateAll"))
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
     sidebar.add(infoScroll, BorderLayout.CENTER)
-    sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
+    sidebar.add(updateAllButton, BorderLayout.SOUTH)
 
     add(new JScrollPane(libraryList), BorderLayout.CENTER)
     add(sidebar, BorderLayout.EAST)
@@ -59,6 +61,7 @@ extends JPanel(new BorderLayout) {
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
     installButton.addActionListener(_ => install(selectedValue))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
+    updateAllButton.addActionListener(_ => updateAll())
 
     libraryList.setSelectedIndex(0)
 
@@ -82,6 +85,14 @@ extends JPanel(new BorderLayout) {
       installButton.setToolTipText(installToolTip)
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
       homepageButton.setToolTipText(homepageToolTip)
+    }
+  }
+
+  private def updateAll() = {
+    (0 until listModel.getSize).foreach { i =>
+      val lib = listModel.getElementAt(i)
+      if (lib.status == LibraryStatus.CanUpdate)
+        install(lib)
     }
   }
 
