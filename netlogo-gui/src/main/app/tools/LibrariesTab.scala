@@ -2,9 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension, GridLayout }
+import java.awt.{ BorderLayout, Color, GridLayout }
 import javax.swing.{ JButton, JLabel, JList, JPanel, JScrollPane, JTextField,
-  ListCellRenderer, ListModel }
+  JTextArea, ListCellRenderer, ListModel }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel }
@@ -39,11 +39,16 @@ extends JPanel(new BorderLayout) {
     libraryButtonsPanel.add(installButton)
     libraryButtonsPanel.add(homepageButton)
 
+    val info = new JTextArea(2, 15)
+    info.setLineWrap(true)
+    info.setWrapStyleWord(true)
+    info.setBackground(new Color(0,0,0,0))
+    info.setEditable(false)
+    val infoScroll = new JScrollPane(info)
+    infoScroll.setViewportBorder(null)
+    infoScroll.setBorder(null)
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
-    val info = new JLabel
-    info.setMaximumSize(new Dimension(200, super.getMaximumSize.height))
-    info.setPreferredSize(new Dimension(200, super.getPreferredSize.height))
-    sidebar.add(info, BorderLayout.CENTER)
+    sidebar.add(infoScroll, BorderLayout.CENTER)
     sidebar.add(new JButton(I18N.gui("updateAll")), BorderLayout.SOUTH)
 
     add(new JScrollPane(libraryList), BorderLayout.CENTER)
@@ -60,8 +65,9 @@ extends JPanel(new BorderLayout) {
     def selectedValue = libraryList.getSelectedValue
 
     def updateSidebar(numSelected: Int): Unit = {
-      val infoText = if (numSelected == 1) "<html>" + selectedValue.longDescription else null
+      val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
+      info.select(0,0)
       val installText =
         if (numSelected > 0 && selectedValue.status == LibraryStatus.CanUpdate)
           I18N.gui("update")
