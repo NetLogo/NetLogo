@@ -11,8 +11,6 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.ToolBarMenu
 
-import scala.util.matching.Regex
-
 class ProceduresMenu(target: ProceduresMenuTarget)
         extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
   override def populate(menu: JPopupMenu) {
@@ -98,19 +96,39 @@ class ProceduresMenu(target: ProceduresMenuTarget)
   }
 
   private def repopulate(menu: JPopupMenu, filterField: JTextField, items: Seq[JMenuItem]): Unit = {
-    val query = Regex.quote(filterField.getText)
-    val caseSensitive = if (query == query.toLowerCase) "" else "(?i)"
-    val pattern = caseSensitive + filterField.getText.split("").mkString(".*", ".*", ".*")
+    val query = filterField.getText
 
-    // If the filterField is removed and readded, it will lose focus on every keypress in Windows and Linux. So we just
-    // remove the menu items (which makes sense anyway).
+    // If the filterField is removed and re-added (as would happen if we completely cleared the menu), it loses focus on
+    // every keypress in Windows and Linux. So we just remove the menu items (which makes sense anyway).
     // - BCH 1/31/2018
-    val curItems = menu.getSubElements.collect{case it: JMenuItem => it}
-    curItems.foreach(menu.remove)
-    val visibleItems = items.filter(_.getText matches pattern)
+
+    // This will include a <none> item if it's there
+    menu.getSubElements.collect{case (it: JMenuItem) => it}.foreach(menu.remove)
+    val visibleItems =
+      if (query.isEmpty) items // So they aren't sorted
+      else items.zip(items.map(it => fuzzyMatch(query, it.getText))) // score
+        .filter(_._2 >= 0) // filter non-matches
+        .sortWith { case ((it1, score1), (it2, score2)) => // sort
+        score1 < score2 || (score1 == score2 && it1.getText.length < it2.getText.length)
+      }.map(_._1)
     if (visibleItems.isEmpty)
       menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })
     else
       visibleItems.foreach(menu.add)
+  }
+
+  private def fuzzyMatch(query: String, target: String): Int = {
+    var i = 0
+    var j = 0
+    var score = 0
+    while (i < query.length && j < target.length) {
+      if (query(i) == target(j)) {
+        i += 1
+      } else {
+        score += 1
+      }
+      j += 1
+    }
+    if (i < query.length) -1 else score
   }
 }
