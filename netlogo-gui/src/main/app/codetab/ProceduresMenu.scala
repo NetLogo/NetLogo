@@ -106,29 +106,45 @@ class ProceduresMenu(target: ProceduresMenuTarget)
     menu.getSubElements.collect{case (it: JMenuItem) => it}.foreach(menu.remove)
     val visibleItems =
       if (query.isEmpty) items // So they aren't sorted
-      else items.zip(items.map(it => fuzzyMatch(query, it.getText))) // score
-        .filter(_._2 >= 0) // filter non-matches
-        .sortWith { case ((it1, score1), (it2, score2)) => // sort
-        score1 < score2 || (score1 == score2 && it1.getText.length < it2.getText.length)
-      }.map(_._1)
+      else items.zip(items.map(it => fuzzyMatch(query, it.getText, lastMatch = true))) // score
+        .collect{case (it, Some(score)) => (it, score)}
+        .sortBy(-_._2)
+        .map(_._1)
     if (visibleItems.isEmpty)
       menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })
     else
       visibleItems.foreach(menu.add)
   }
 
-  private def fuzzyMatch(query: String, target: String): Int = {
-    var i = 0
-    var j = 0
-    var score = 0
-    while (i < query.length && j < target.length) {
-      if (query(i) == target(j)) {
-        i += 1
-      } else {
-        score += 1
+  /**
+    * Scores how well the query matches the target. The score is the number of subsequent character matches.
+    * For example, fuzzyMatch("bcdfg", "abcdefg") == Some(3) with subsequent matches being "bc", "cd", and "fg".
+    * Matching first character is also counted as a subsequent match so that
+    * fuzzyMatch("ab", "abc") > fuzzyMatch("ab", "cab") since people often start out typing at the beginning of words.
+    *
+    * Note that this could easily be optimized with memoization or dynamic programming, but I didn't think it was worth
+    * it for this use case since query strings will typically be quite short. -- BCH 6/8/2018
+    * @param query The characters to search for.
+    * @param target The string to search in.
+    * @param lastMatch Whether or not the last comparison was a match. Starts true to give a match at the first
+    *                  character a bonus.
+    * @return The number of subsequent matching characters or None if the query contains characters not in the target.
+    */
+  private def fuzzyMatch(query: String, target: String, lastMatch: Boolean = true): Option[Int] = {
+    if (query.isEmpty) {
+      Some(0)
+    } else if (target.isEmpty) {
+      None
+    } else {
+      val noMatchScore = fuzzyMatch(query, target.tail, lastMatch = false)
+      val matchScore = if (query.head == target.head)
+        fuzzyMatch(query.tail, target.tail).map(_ + (if(lastMatch) 1 else 0))
+      else None
+      (noMatchScore, matchScore) match {
+        case (None, None) => None
+        case (Some(nms), Some(ms)) => Some(nms max ms)
+        case _ => noMatchScore orElse matchScore
       }
-      j += 1
     }
-    if (i < query.length) -1 else score
   }
 }
