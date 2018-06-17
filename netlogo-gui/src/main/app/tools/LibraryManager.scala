@@ -53,6 +53,8 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
       val config = ConfigFactory.parseFile(configFile)
       val installedLibsConf = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
       categoryNames.foreach(c => updateList(config, installedLibsConf, c, mutableListModels(c)))
+    } else {
+      metadataFetcher.invalidateCache()
     }
   }
 
