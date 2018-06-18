@@ -68,19 +68,20 @@ extends JPanel(new BorderLayout) {
     libraryList.setSelectedIndex(0)
 
     def selectedValue = libraryList.getSelectedValue
+    def selectedValues = {
+      import scala.collection.JavaConverters._
+
+      libraryList.getSelectedValuesList.asScala
+    }
+    def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
     def updateSidebar(numSelected: Int): Unit = {
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
       info.select(0,0)
-      val installText =
-        if (numSelected > 0 && selectedValue.status == LibraryStatus.CanUpdate)
-          I18N.gui("update")
-        else
-          I18N.gui("install")
-      installButton.setText(installText)
+      installButton.setText(installButtonText)
 
-      installButton.setEnabled(numSelected > 0 && selectedValue.status != LibraryStatus.UpToDate)
+      installButton.setEnabled(actionableLibraries.length > 0)
       homepageButton.setEnabled(numSelected == 1)
 
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
@@ -88,6 +89,14 @@ extends JPanel(new BorderLayout) {
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
       homepageButton.setToolTipText(homepageToolTip)
     }
+
+    def installButtonText: String =
+      if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall))
+        I18N.gui("install")
+      else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate))
+        I18N.gui("update")
+      else
+        I18N.gui("update") + " / " + I18N.gui("install")
   }
 
   private def updateAll() = {
