@@ -53,6 +53,11 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     setSize(550, 400)
   }
 
+  override def setVisible(v: Boolean) = {
+    super.setVisible(v)
+    if (v) manager.updateMetadataFromGithub()
+  }
+
   class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
     override def doInBackground() = manager.installer(category)(lib)
     override def onComplete() = {

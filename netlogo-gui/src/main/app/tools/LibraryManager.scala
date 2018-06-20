@@ -41,7 +41,6 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
 
   reloadMetadata()
   initialLoading = false
-  updateMetadataFromGithub()
 
   def installer(categoryName: String) = categories(categoryName)
 
