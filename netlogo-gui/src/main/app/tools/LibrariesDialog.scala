@@ -2,8 +2,8 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Color, Dimension, Frame }
-import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JTabbedPane }
+import java.awt.{ BorderLayout, Color, Frame }
+import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
@@ -23,10 +23,9 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
   val tabs = new JTabbedPane
-  val bottomPanel = new JPanel
-  val status = new JLabel {
-    override def getPreferredSize = new Dimension(super.getPreferredSize.width, getFontMetrics(getFont).getHeight)
-  }
+  val bottomPanel = new JPanel(new BorderLayout)
+  val status = new JLabel
+  val updateAllButton = new JButton(I18N.gui("updateAll"))
 
   val manager = new LibraryManager(categories, new ProgressListener {
     override def start()  = status.setText(I18N.gui("checkingForUpdates"))
@@ -43,7 +42,10 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
     }
 
     bottomPanel.setBorder(BottomPanelBorder)
-    bottomPanel.add(status)
+    bottomPanel.add(status, BorderLayout.CENTER)
+    bottomPanel.add(updateAllButton, BorderLayout.EAST)
+
+    updateAllButton.addActionListener(_ => tabs.getSelectedComponent.asInstanceOf[LibrariesTab].updateAll())
 
     setLayout(new BorderLayout)
     add(tabs, BorderLayout.CENTER)

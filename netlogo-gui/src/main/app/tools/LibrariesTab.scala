@@ -50,10 +50,8 @@ extends JPanel(new BorderLayout) {
     infoScroll.getViewport.setOpaque(false)
     infoScroll.setViewportBorder(null)
     infoScroll.setBorder(null)
-    val updateAllButton = new JButton(I18N.gui("updateAll"))
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
     sidebar.add(infoScroll, BorderLayout.CENTER)
-    sidebar.add(updateAllButton, BorderLayout.SOUTH)
 
     add(new JScrollPane(libraryList), BorderLayout.CENTER)
     add(sidebar, BorderLayout.EAST)
@@ -63,7 +61,6 @@ extends JPanel(new BorderLayout) {
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
     installButton.addActionListener(_ => install(selectedValue))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
-    updateAllButton.addActionListener(_ => updateAll())
 
     libraryList.setSelectedIndex(0)
 
@@ -99,7 +96,7 @@ extends JPanel(new BorderLayout) {
         I18N.gui("update") + " / " + I18N.gui("install")
   }
 
-  private def updateAll() = {
+  def updateAll() = {
     (0 until listModel.getSize).foreach { i =>
       val lib = listModel.getElementAt(i)
       if (lib.status == LibraryStatus.CanUpdate)
