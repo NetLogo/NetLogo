@@ -61,10 +61,10 @@ with MenuAction {
         val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
         val zipPath = Files.createTempFile(basename, ".zip")
         Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
-        new ZipFile(zipPath.toFile).extractAll(ExtensionManager.extensionPath)
+        new ZipFile(zipPath.toFile).extractAll(ExtensionManager.extensionsPath)
         Files.delete(zipPath)
       } else if (urlPath.endsWith(".jar")) {
-        val extDir = Paths.get(ExtensionManager.extensionPath, ext.codeName)
+        val extDir = Paths.get(ExtensionManager.extensionsPath, ext.codeName)
         if (!Files.isDirectory(extDir))
           Files.createDirectory(extDir)
         Files.copy(conn.getInputStream, extDir.resolve(ext.codeName + ".jar"), StandardCopyOption.REPLACE_EXISTING)

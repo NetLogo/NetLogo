@@ -2,18 +2,17 @@
 //
 package org.nlogo.workspace
 
-import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
-import java.net.URL
-
-import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
-
-import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
-
-import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.io.{ Closeable, IOException, PrintWriter }
+import java.lang.{ ClassLoader, Iterable => JIterable }
+import java.net.URL
 import java.util.{ List => JList }
 
 import scala.collection.JavaConverters._
+
+import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
+import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
+import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
+import org.nlogo.util.Utils
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -60,8 +59,11 @@ import scala.collection.JavaConverters._
 object ExtensionManager {
   val EXTENSION_NOT_FOUND: String = "Can't find extension: "
 
-  def extensionPath: String =
-    System.getProperty("netlogo.extensions.dir", "extensions");
+  def extensionsPath: String =
+    System.getProperty("netlogo.extensions.dir", "extensions")
+
+  def userExtensionsPath: String =
+    System.getProperty("netlogo.extensions.perUserDir", Utils.perUserFile("extensions"))
 
   case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], modified: Long)
 

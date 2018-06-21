@@ -29,6 +29,21 @@ object Utils {
 
   ///
 
+  def perUserFile(file: String): String = {
+    val os = System.getProperty("os.name").toUpperCase
+    val appData =
+      if (os.contains("WIN"))
+        System.getenv("APPDATA") + "\\NetLogo"
+      else if (os.contains("MAC"))
+        System.getProperty("user.home") + "/Library/Application Support/NetLogo"
+      else
+        System.getProperty("user.home") + "/.netlogo"
+
+    appData + File.separator + file
+  }
+
+  ///
+
   @deprecated("use FileIO.getResourceLines instead", "6.0-M6")
   def getResourceLines(path: String): Iterator[String] = {
     val in = new java.io.BufferedReader(
