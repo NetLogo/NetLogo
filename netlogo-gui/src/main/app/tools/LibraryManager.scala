@@ -19,16 +19,20 @@ object LibraryManager {
   val LibrariesConf = Utils.perUserFile(LibrariesConfBasename)
   val InstalledLibrariesConf = Utils.perUserFile("installed-libraries.conf")
 
-  def updateInstalledVersion(category: String, lib: LibraryInfo) = {
+  def updateInstalledVersion(category: String, lib: LibraryInfo, uninstall: Boolean = false) = {
     val config = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
-    val updatedConfig = config.withValue(
-      s"$category.${lib.codeName}.installedVersion", ConfigValueFactory.fromAnyRef(lib.version))
+    val updatedConfig =
+      if (uninstall)
+        config.withoutPath(s"$category.${lib.codeName}")
+      else
+        config.withValue(
+          s"$category.${lib.codeName}.installedVersion", ConfigValueFactory.fromAnyRef(lib.version))
     val options = ConfigRenderOptions.defaults.setOriginComments(false)
     FileIO.writeFile(LibraryManager.InstalledLibrariesConf, updatedConfig.root.render(options), false)
   }
 }
 
-class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListener: ProgressListener) {
+class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progressListener: ProgressListener) {
   import LibraryManager._
 
   private val categoryNames = categories.keys
@@ -44,7 +48,8 @@ class LibraryManager(categories: Map[String, LibraryInfo => Unit], progressListe
   reloadMetadata()
   initialLoading = false
 
-  def installer(categoryName: String) = categories(categoryName)
+  def installer(categoryName: String)   = categories(categoryName).install _
+  def uninstaller(categoryName: String) = categories(categoryName).uninstall _
 
   def reloadMetadata() = updateLists(new File(LibrariesConf))
   def updateMetadataFromGithub() = metadataFetcher.reload()

@@ -4,15 +4,17 @@ package org.nlogo.app
 
 import java.awt.Frame
 import java.awt.event.ActionEvent
+import java.io.IOException
 import java.net.HttpURLConnection
-import java.nio.file.{ Files, Paths, StandardCopyOption }
+import java.nio.file.{ Files, FileVisitResult, Path, Paths, SimpleFileVisitor, StandardCopyOption }
+import java.nio.file.attribute.BasicFileAttributes
 import javax.swing.{ AbstractAction, JDialog }
 
 import net.lingala.zip4j.core.ZipFile
 
 import org.nlogo.api.AggregateManagerInterface
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.tools.{ LibrariesDialog, LibraryInfo, LibraryManager, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesCategoryInstaller, LibrariesDialog, LibraryInfo, LibraryManager, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExtensionManager }
@@ -49,29 +51,43 @@ with MenuAction {
   group    = ToolsSettingsGroup
 
   def createDialog() = {
-    val categories = Map("extensions" -> installExtension _)
+    val categories = Map("extensions" -> ExtensionsInstaller)
     new LibrariesDialog(frame, categories)
   }
 
-  private def installExtension(ext: LibraryInfo): Unit = {
-    val conn = ext.downloadURL.openConnection.asInstanceOf[HttpURLConnection]
-    if (conn.getResponseCode == 200) {
-      val urlPath = ext.downloadURL.getPath.stripSuffix("/")
-      if (urlPath.endsWith(".zip")) {
-        val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
-        val zipPath = Files.createTempFile(basename, ".zip")
-        Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
-        new ZipFile(zipPath.toFile).extractAll(ExtensionManager.userExtensionsPath)
-        Files.delete(zipPath)
-      } else if (urlPath.endsWith(".jar")) {
-        val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
-        if (!Files.isDirectory(extDir))
-          Files.createDirectory(extDir)
-        Files.copy(conn.getInputStream, extDir.resolve(ext.codeName + ".jar"), StandardCopyOption.REPLACE_EXISTING)
-      } else {
-        //throw exception
+  private object ExtensionsInstaller extends LibrariesCategoryInstaller {
+    def install(ext: LibraryInfo): Unit = {
+      val conn = ext.downloadURL.openConnection.asInstanceOf[HttpURLConnection]
+      if (conn.getResponseCode == 200) {
+        val urlPath = ext.downloadURL.getPath.stripSuffix("/")
+        if (urlPath.endsWith(".zip")) {
+          val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
+          val zipPath = Files.createTempFile(basename, ".zip")
+          Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
+          new ZipFile(zipPath.toFile).extractAll(ExtensionManager.userExtensionsPath)
+          Files.delete(zipPath)
+        } else if (urlPath.endsWith(".jar")) {
+          val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
+          if (!Files.isDirectory(extDir))
+            Files.createDirectory(extDir)
+          Files.copy(conn.getInputStream, extDir.resolve(ext.codeName + ".jar"), StandardCopyOption.REPLACE_EXISTING)
+        } else {
+          //throw exception
+        }
+        LibraryManager.updateInstalledVersion("extensions", ext)
       }
-      LibraryManager.updateInstalledVersion("extensions", ext)
+    }
+
+    def uninstall(ext: LibraryInfo): Unit = {
+      Files.walkFileTree(Paths.get(ExtensionManager.userExtensionsPath, ext.codeName), new SimpleFileVisitor[Path] {
+        override def visitFile(file: Path, attrs: BasicFileAttributes) = delete(file)
+        override def postVisitDirectory(dir: Path, ex: IOException) = delete(dir)
+        private def delete(path: Path) = {
+          Files.delete(path)
+          FileVisitResult.CONTINUE
+        }
+      })
+      LibraryManager.updateInstalledVersion("extensions", ext, uninstall = true)
     }
   }
 }

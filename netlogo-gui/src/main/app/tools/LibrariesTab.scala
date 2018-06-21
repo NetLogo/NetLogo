@@ -16,7 +16,7 @@ object LibrariesTab {
     |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(list: ListModel[LibraryInfo], install: LibraryInfo => Unit)
+class LibrariesTab(list: ListModel[LibraryInfo], install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit)
 extends JPanel(new BorderLayout) {
   import LibrariesTab._
 

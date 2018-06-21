@@ -16,7 +16,7 @@ object LibrariesDialog {
       BorderFactory.createEmptyBorder(10, 10, 10, 10)))
 }
 
-class LibrariesDialog(parent: Frame, categories: Map[String, LibraryInfo => Unit])
+class LibrariesDialog(parent: Frame, categories: Map[String, LibrariesCategoryInstaller])
 extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   import LibrariesDialog._
 
@@ -35,10 +35,15 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   locally {
     manager.listModels.foreach { case (category, contents) =>
       tabs.addTab(I18N.gui("categories." + category),
-        new LibrariesTab(contents, lib => {
-          status.setText(I18N.gui("installing", lib.name))
-          new Installer(category, lib).execute()
-        }))
+        new LibrariesTab(contents,
+          lib => {
+            status.setText(I18N.gui("installing", lib.name))
+            new Installer(category, lib).execute()
+          },
+          lib => {
+            status.setText(I18N.gui("uninstalling", lib.name))
+            new Uninstaller(category, lib).execute()
+          }))
     }
 
     bottomPanel.setBorder(BottomPanelBorder)
@@ -60,6 +65,14 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
 
   class Installer(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
     override def doInBackground() = manager.installer(category)(lib)
+    override def onComplete() = {
+      manager.reloadMetadata()
+      status.setText(null)
+    }
+  }
+
+  class Uninstaller(category: String, lib: LibraryInfo) extends SwingWorker[Any, Any] {
+    override def doInBackground() = manager.uninstaller(category)(lib)
     override def onComplete() = {
       manager.reloadMetadata()
       status.setText(null)
