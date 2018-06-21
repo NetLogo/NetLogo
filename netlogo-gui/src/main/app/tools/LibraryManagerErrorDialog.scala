@@ -13,7 +13,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.librariesMetadata")) {
   message = I18N.gui.get("error.dialog.librariesMetadata.message")
 
   override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
-    details = FileIO.fileToString("libraries.conf") + "\n\n" + debugInfo.detailedInformation
+    details = FileIO.fileToString(LibraryManager.LibrariesConf) + "\n\n" + debugInfo.detailedInformation
     doShow(true)
   }
 }

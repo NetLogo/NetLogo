@@ -11,11 +11,13 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRende
 
 import org.nlogo.api.{ APIVersion, FileIO }
 import org.nlogo.swing.{ ProgressListener, SwingUpdater }
+import org.nlogo.util.Utils
 
 object LibraryManager {
-  private val LibrariesConf = "libraries.conf"
-  private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$LibrariesConf")
-  private val InstalledLibrariesConf = "installed-libraries.conf"
+  private val LibrariesConfBasename = "libraries.conf"
+  private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$LibrariesConfBasename")
+  val LibrariesConf = Utils.perUserFile(LibrariesConfBasename)
+  val InstalledLibrariesConf = Utils.perUserFile("installed-libraries.conf")
 
   def updateInstalledVersion(category: String, lib: LibraryInfo) = {
     val config = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
