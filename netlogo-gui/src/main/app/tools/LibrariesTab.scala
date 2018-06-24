@@ -7,7 +7,7 @@ import javax.swing.{ JButton, JLabel, JList, JPanel, JScrollPane, JTextField,
   JTextArea, ListCellRenderer, ListModel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel }
+import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, SwingWorker }
 import org.nlogo.swing.Utils.icon
 
 object LibrariesTab {
@@ -16,7 +16,9 @@ object LibrariesTab {
     |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(list: ListModel[LibraryInfo], install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit)
+class LibrariesTab(list: ListModel[LibraryInfo],
+  install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit,
+  updateStatus: String => Unit, updateLists: () => Unit)
 extends JPanel(new BorderLayout) {
   import LibrariesTab._
 
@@ -63,8 +65,14 @@ extends JPanel(new BorderLayout) {
 
     libraryList.addListSelectionListener(_ => updateSidebar(libraryList.getSelectedIndices.length))
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener(_ => install(selectedValue))
-    uninstallButton.addActionListener(_ => uninstall(selectedValue))
+    installButton.addActionListener(_ => {
+      updateStatus(I18N.gui("installing", selectedValue.name))
+      new Worker(install, selectedValue).execute()
+    })
+    uninstallButton.addActionListener(_ => {
+      updateStatus(I18N.gui("uninstalling", selectedValue.name))
+      new Worker(uninstall, selectedValue).execute()
+    })
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
@@ -146,6 +154,14 @@ extends JPanel(new BorderLayout) {
       case LibraryStatus.UpToDate   => upToDateIcon
       case LibraryStatus.CanUpdate  => canUpdateIcon
       case LibraryStatus.CanInstall => noIcon
+    }
+  }
+
+  private class Worker(fn: LibraryInfo => Unit, lib: LibraryInfo) extends SwingWorker[Any, Any] {
+    override def doInBackground() = fn(lib)
+    override def onComplete() = {
+      updateLists()
+      updateStatus(null)
     }
   }
 }
