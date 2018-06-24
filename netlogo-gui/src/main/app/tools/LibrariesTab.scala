@@ -33,11 +33,15 @@ extends JPanel(new BorderLayout) {
     val filterField = new JTextField
 
     val sidebar = new JPanel(new BorderLayout)
-
     val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-    val installButton  = new JButton(I18N.gui("install"))
+    val installationPanel = new JPanel(new GridLayout(1,2, 2,2))
+
+    val installButton = new JButton(I18N.gui("install"))
+    val uninstallButton = new JButton(I18N.gui("uninstall"))
+    installationPanel.add(installButton)
+
     val homepageButton = new JButton(I18N.gui("homepage"))
-    libraryButtonsPanel.add(installButton)
+    libraryButtonsPanel.add(installationPanel)
     libraryButtonsPanel.add(homepageButton)
 
     val info = new JTextArea(2, 20)
@@ -60,6 +64,7 @@ extends JPanel(new BorderLayout) {
     libraryList.addListSelectionListener(_ => updateSidebar(libraryList.getSelectedIndices.length))
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
     installButton.addActionListener(_ => install(selectedValue))
+    uninstallButton.addActionListener(_ => uninstall(selectedValue))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
@@ -85,6 +90,18 @@ extends JPanel(new BorderLayout) {
       installButton.setToolTipText(installToolTip)
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
       homepageButton.setToolTipText(homepageToolTip)
+
+      updateInstallationPanel()
+    }
+
+    def updateInstallationPanel() = {
+      installationPanel.removeAll()
+      if (selectedValues.length == 0 || selectedValues.exists(_.status != LibraryStatus.UpToDate))
+        installationPanel.add(installButton)
+      if (selectedValues.exists(_.status != LibraryStatus.CanInstall))
+        installationPanel.add(uninstallButton)
+      installationPanel.revalidate()
+      installationPanel.repaint()
     }
 
     def installButtonText: String =
