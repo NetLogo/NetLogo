@@ -19,7 +19,7 @@ object LibraryManager {
   val LibrariesConf = Utils.perUserFile(LibrariesConfBasename)
   val InstalledLibrariesConf = Utils.perUserFile("installed-libraries.conf")
 
-  def updateInstalledVersion(category: String, lib: LibraryInfo, uninstall: Boolean = false) = {
+  def updateInstalledVersion(category: String, lib: LibraryInfo, uninstall: Boolean = false) = synchronized {
     val config = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
     val updatedConfig =
       if (uninstall)

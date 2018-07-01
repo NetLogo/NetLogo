@@ -35,7 +35,7 @@ extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
   locally {
     manager.listModels.foreach { case (category, contents) =>
       tabs.addTab(I18N.gui("categories." + category),
-        new LibrariesTab(contents,
+        new LibrariesTab(category, contents,
           manager.installer(category), manager.uninstaller(category),
           status.setText, manager.reloadMetadata _))
     }

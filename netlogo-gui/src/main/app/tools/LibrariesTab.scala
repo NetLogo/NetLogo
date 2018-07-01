@@ -16,18 +16,18 @@ object LibrariesTab {
     |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(list: ListModel[LibraryInfo],
+class LibrariesTab(category: String, list: ListModel[LibraryInfo],
   install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit,
   updateStatus: String => Unit, updateLists: () => Unit)
 extends JPanel(new BorderLayout) {
   import LibrariesTab._
 
+  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
+
   private val listModel = new FilterableListModel(list, filterFn)
 
   locally {
     import org.nlogo.swing.Implicits.thunk2documentListener
-
-    implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
     val libraryList = new JList[LibraryInfo](listModel)
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
@@ -63,20 +63,34 @@ extends JPanel(new BorderLayout) {
     add(sidebar, BorderLayout.EAST)
     add(filterField, BorderLayout.NORTH)
 
-    libraryList.addListSelectionListener(_ => updateSidebar(libraryList.getSelectedIndices.length))
+    libraryList.addListSelectionListener(_ => updateSidebar())
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener(_ => {
-      updateStatus(I18N.gui("installing", selectedValue.name))
-      new Worker(install, selectedValue).execute()
-    })
-    uninstallButton.addActionListener(_ => {
-      updateStatus(I18N.gui("uninstalling", selectedValue.name))
-      new Worker(uninstall, selectedValue).execute()
-    })
+    installButton.addActionListener { _ =>
+      if (numSelected == 1) {
+        updateSingleOperationStatus("installing", selectedValue.name)
+        new Worker("installing", install, selectedValue, multiple = false).execute()
+      } else {
+        numOperatedLibs = numSelected
+        updateMultipleOperationStatus("installing")
+        selectedValues.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
+      }
+    }
+    uninstallButton.addActionListener { _ =>
+      if (numSelected == 1) {
+        updateSingleOperationStatus("uninstalling", selectedValue.name)
+        new Worker("unintalling", uninstall, selectedValue, multiple = false).execute()
+      } else {
+        updateMultipleOperationStatus("uninstalling")
+        val forUninstall = selectedValues.filter(_.status != LibraryStatus.CanInstall)
+        numOperatedLibs = forUninstall.length
+        forUninstall.map(new Worker("uninstalling", uninstall, _, multiple = true)).foreach(_.execute)
+      }
+    }
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
 
+    def numSelected = libraryList.getSelectedIndices.length
     def selectedValue = libraryList.getSelectedValue
     def selectedValues = {
       import scala.collection.JavaConverters._
@@ -85,7 +99,7 @@ extends JPanel(new BorderLayout) {
     }
     def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
-    def updateSidebar(numSelected: Int): Unit = {
+    def updateSidebar(): Unit = {
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
       info.select(0,0)
@@ -132,6 +146,13 @@ extends JPanel(new BorderLayout) {
   private def filterFn(info: LibraryInfo, text: String) =
     (info.name + info.shortDescription).toLowerCase.contains(text.toLowerCase)
 
+  private var numOperatedLibs = 0
+  private def updateMultipleOperationStatus(operation: String) =
+    updateStatus(I18N.gui(operation + "Multiple", Int.box(numOperatedLibs), category.toLowerCase))
+
+  private def updateSingleOperationStatus(operation: String, libName: String) =
+    updateStatus(I18N.gui(operation, libName))
+
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
     private val noIcon = new EmptyIcon(32, 32)
     private val upToDateIcon = icon("/images/check.gif", 32, 32)
@@ -157,11 +178,17 @@ extends JPanel(new BorderLayout) {
     }
   }
 
-  private class Worker(fn: LibraryInfo => Unit, lib: LibraryInfo) extends SwingWorker[Any, Any] {
+  private class Worker(operation: String, fn: LibraryInfo => Unit, lib: LibraryInfo, multiple: Boolean) extends SwingWorker[Any, Any] {
     override def doInBackground() = fn(lib)
     override def onComplete() = {
       updateLists()
-      updateStatus(null)
+      if (multiple && numOperatedLibs > 1) {
+        // This happens (gets queued) on the EDT, so there are no shared-state threading issues -- EL 2018-07-01
+        numOperatedLibs -= 1
+        updateMultipleOperationStatus(operation)
+      } else {
+        updateStatus(null)
+      }
     }
   }
 }
