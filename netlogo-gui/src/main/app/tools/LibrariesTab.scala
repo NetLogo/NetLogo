@@ -136,11 +136,13 @@ extends JPanel(new BorderLayout) {
   }
 
   def updateAll() = {
-    (0 until listModel.getSize).foreach { i =>
-      val lib = listModel.getElementAt(i)
-      if (lib.status == LibraryStatus.CanUpdate)
-        install(lib)
-    }
+    val libsToUpdate =
+      (0 until listModel.getSize)
+        .map(listModel.getElementAt)
+        .filter(_.status == LibraryStatus.CanUpdate)
+    numOperatedLibs = libsToUpdate.length
+    updateMultipleOperationStatus("installing")
+    libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
   }
 
   private def filterFn(info: LibraryInfo, text: String) =
