@@ -10,7 +10,7 @@ import javax.swing.{ DefaultListModel, ListModel }
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRenderOptions, ConfigValueFactory }
 
 import org.nlogo.api.{ APIVersion, FileIO }
-import org.nlogo.swing.{ ProgressListener, SwingUpdater }
+import org.nlogo.swing.ProgressListener
 import org.nlogo.util.Utils
 
 object LibraryManager {

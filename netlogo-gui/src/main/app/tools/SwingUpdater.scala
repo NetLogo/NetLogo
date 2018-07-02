@@ -1,18 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.swing
+package org.nlogo.app.tools
 
 import java.io.File
 import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
 import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
-import java.util.prefs.Preferences
+import java.util.prefs.{ Preferences => JPreferences }
 
+import org.nlogo.swing.{ ProgressListener, SwingWorker }
 import org.nlogo.util.Utils.perUserFile
 
 object SwingUpdater {
-  private val prefs = Preferences.userNodeForPackage(getClass)
+  private val prefs = JPreferences.userNodeForPackage(getClass)
 }
 
 /** SwingUpdater can update GUI based on a remote resource.
