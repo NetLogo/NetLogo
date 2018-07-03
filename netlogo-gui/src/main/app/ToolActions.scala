@@ -60,20 +60,14 @@ with MenuAction {
       val conn = ext.downloadURL.openConnection.asInstanceOf[HttpURLConnection]
       if (conn.getResponseCode == 200) {
         val urlPath = ext.downloadURL.getPath.stripSuffix("/")
-        if (urlPath.endsWith(".zip")) {
-          val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
-          val zipPath = Files.createTempFile(basename, ".zip")
-          Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
-          new ZipFile(zipPath.toFile).extractAll(ExtensionManager.userExtensionsPath)
-          Files.delete(zipPath)
-        } else if (urlPath.endsWith(".jar")) {
-          val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
-          if (!Files.isDirectory(extDir))
-            Files.createDirectory(extDir)
-          Files.copy(conn.getInputStream, extDir.resolve(ext.codeName + ".jar"), StandardCopyOption.REPLACE_EXISTING)
-        } else {
-          //throw exception
-        }
+        val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
+        val zipPath = Files.createTempFile(basename, ".zip")
+        Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
+        val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
+        if (!Files.isDirectory(extDir))
+          Files.createDirectory(extDir)
+        new ZipFile(zipPath.toFile).extractAll(extDir.toString)
+        Files.delete(zipPath)
         LibraryManager.updateInstalledVersion("extensions", ext)
       }
     }
