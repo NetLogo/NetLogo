@@ -63,7 +63,7 @@ object ExtensionManager {
     System.getProperty("netlogo.extensions.dir", "extensions")
 
   def userExtensionsPath: String =
-    System.getProperty("netlogo.extensions.perUserDir", Utils.perUserFile("extensions"))
+    System.getProperty("netlogo.extensions.perUserDir", Utils.perUserDir("extensions"))
 
   case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], modified: Long)
 

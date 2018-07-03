@@ -3,7 +3,7 @@
 package org.nlogo.util
 
 import java.io.File
-import java.nio.file.Files
+import java.nio.file.{ Files, Paths }
 
 object Utils {
 
@@ -29,7 +29,21 @@ object Utils {
 
   ///
 
-  def perUserFile(file: String): String = {
+  def perUserFile(file: String, createNecessaryDirs: Boolean = true): String = {
+    val res = perUserPath(file)
+    if (createNecessaryDirs)
+      Files.createDirectories(Paths.get(res).getParent)
+    res
+  }
+
+  def perUserDir(dir: String, create: Boolean = true): String = {
+    val res = perUserPath(dir)
+    if (create)
+      Files.createDirectories(Paths.get(res))
+    res
+  }
+
+  private def perUserPath(path: String): String = {
     val os = System.getProperty("os.name").toUpperCase
     val appData =
       if (os.contains("WIN"))
@@ -39,7 +53,7 @@ object Utils {
       else
         System.getProperty("user.home") + "/.netlogo"
 
-    appData + File.separator + file
+    appData + File.separator + path
   }
 
   ///
