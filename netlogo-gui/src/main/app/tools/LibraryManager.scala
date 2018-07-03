@@ -56,49 +56,49 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
 
   private def updateLists(configFile: File): Unit = {
     if (configFile.exists) {
-      val config = ConfigFactory.parseFile(configFile)
-      val installedLibsConf = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
-      categoryNames.foreach(c => updateList(config, installedLibsConf, c, mutableListModels(c)))
+      try {
+        val config = ConfigFactory.parseFile(configFile)
+        val installedLibsConf = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
+        categoryNames.foreach(c => updateList(config, installedLibsConf, c, mutableListModels(c)))
+      } catch {
+        case ex: ConfigException =>
+          if (initialLoading)
+            // In case only the local copy got messed up somehow -- EL 2018-06-02
+            metadataFetcher.invalidateCache()
+          else
+            throw new MetadataLoadingException(ex)
+      }
     } else {
       metadataFetcher.invalidateCache()
     }
   }
 
   private def updateList(config: Config, installedLibsConf: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
-    try {
-      import scala.collection.JavaConverters._
+    import scala.collection.JavaConverters._
 
-      val configList = config.getConfigList(category).asScala
-      listModel.clear()
-      listModel.ensureCapacity(configList.length)
-      configList foreach { c =>
-        val name        = c.getString("name")
-        val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
-        val shortDesc   = c.getString("shortDescription")
-        val longDesc    = c.getString("longDescription")
-        val version     = c.getString("version")
-        val homepage    = new URL(c.getString("homepage"))
-        val downloadURL = new URL(c.getString("downloadURL"))
+    val configList = config.getConfigList(category).asScala
+    listModel.clear()
+    listModel.ensureCapacity(configList.length)
+    configList foreach { c =>
+      val name        = c.getString("name")
+      val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
+      val shortDesc   = c.getString("shortDescription")
+      val longDesc    = c.getString("longDescription")
+      val version     = c.getString("version")
+      val homepage    = new URL(c.getString("homepage"))
+      val downloadURL = new URL(c.getString("downloadURL"))
 
-        val installedVersionPath = s"$category.$codeName.installedVersion"
-        val status =
-          if (!installedLibsConf.hasPath(installedVersionPath))
-            LibraryStatus.CanInstall
-          else if (installedLibsConf.getString(installedVersionPath) == version)
-            LibraryStatus.UpToDate
-          else
-            LibraryStatus.CanUpdate
-
-        listModel.addElement(
-          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, status))
-      }
-    } catch {
-      case ex: ConfigException =>
-        if (initialLoading)
-          // In case only the local copy got messed up somehow -- EL 2018-06-02
-          metadataFetcher.invalidateCache()
+      val installedVersionPath = s"$category.$codeName.installedVersion"
+      val status =
+        if (!installedLibsConf.hasPath(installedVersionPath))
+          LibraryStatus.CanInstall
+        else if (installedLibsConf.getString(installedVersionPath) == version)
+          LibraryStatus.UpToDate
         else
-          throw new MetadataLoadingException(ex)
+          LibraryStatus.CanUpdate
+
+      listModel.addElement(
+        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, status))
     }
   }
 }
