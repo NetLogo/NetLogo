@@ -155,7 +155,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "2.6.0",
-      "com.typesafe" % "config" % "1.3.1"
+      "com.typesafe" % "config" % "1.3.1",
+      "net.lingala.zip4j" % "zip4j" % "1.3.2"
     ),
     all := {},
     all := {

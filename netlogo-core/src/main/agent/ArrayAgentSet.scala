@@ -5,7 +5,6 @@ package org.nlogo.agent
 import
   org.nlogo.{ api, core },
   org.nlogo.api.MersenneTwisterFast
-import collection.JavaConverters._
 
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and
@@ -62,6 +61,8 @@ extends IndexedAgentSet(kind, printName) {
 
   // assumes we've already checked for equal counts - ST 7/6/06
   override def containsSameAgents(otherSet: api.AgentSet) = {
+    import scala.collection.JavaConverters._
+
     val set = collection.mutable.HashSet[api.Agent]()
     val iter = iterator
     while (iter.hasNext)

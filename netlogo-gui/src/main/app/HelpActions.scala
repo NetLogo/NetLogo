@@ -15,10 +15,10 @@ import org.nlogo.swing.{ BrowserLauncher, UserAction },
   UserAction._
 
 class LocalBrowseAction(name: String, path: Path)
-  extends AbstractAction(name)
-  with MenuAction {
-    category = HelpCategory
-    group    = HelpWebGroup
+extends AbstractAction(name)
+with MenuAction {
+  category = HelpCategory
+  group    = HelpWebGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val launchComponent = e.getSource match {
@@ -30,10 +30,10 @@ class LocalBrowseAction(name: String, path: Path)
 }
 
 class RemoteBrowseAction(name: String, uri: URI)
-  extends AbstractAction(name)
-  with MenuAction {
-    category = HelpCategory
-    group    = HelpWebGroup
+extends AbstractAction(name)
+with MenuAction {
+  category = HelpCategory
+  group    = HelpWebGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val launchComponent = e.getSource match {
@@ -63,10 +63,10 @@ object HelpActions {
 }
 
 class ShowAboutWindow(frame: Frame)
-  extends AbstractAction(I18N.gui.getN("menu.help.aboutVersion", Version.versionDropZeroPatch))
-  with MenuAction {
-    category = HelpCategory
-    group    = HelpAboutGroup
+extends AbstractAction(I18N.gui.getN("menu.help.aboutVersion", Version.versionDropZeroPatch))
+with MenuAction {
+  category = HelpCategory
+  group    = HelpAboutGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
     println(e.getSource)

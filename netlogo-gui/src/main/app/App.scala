@@ -1,7 +1,6 @@
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo(UTF8)
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
-
 
 import javax.swing.{ JOptionPane, JMenu }
 import java.awt.event.ActionEvent
@@ -12,7 +11,8 @@ import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, Preferences, PreferencesDialog, PreviewCommandsEditor }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview,
+  LibraryManagerErrorDialog, MetadataLoadingException, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
@@ -159,7 +159,7 @@ object App{
     // exceptions because we're doing too much on the main thread.
         // Hey, it's important to make a good first impression.
     //   - ST 8/19/03
-    org.nlogo.awt.EventQueue.invokeAndWait(()=>app.finishStartup(appHandler))
+    org.nlogo.awt.EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
   }
 
   private def processCommandLineArguments(args: Array[String]) {
@@ -259,12 +259,12 @@ class App extends
   def tabs = _tabs
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
-  var monitorManager:AgentMonitorManager = null
+  var monitorManager: AgentMonitorManager = null
   var aggregateManager: AggregateManagerInterface = null
   var dirtyMonitor: DirtyMonitor = null
-  var colorDialog: ColorDialog = null
-  var labManager:LabManagerInterface = null
+  var labManager: LabManagerInterface = null
   var recentFilesMenu: RecentFilesMenu = null
+  private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
@@ -288,6 +288,7 @@ class App extends
 
     org.nlogo.swing.Utils.setSystemLookAndFeel()
 
+    org.nlogo.api.Exceptions.setHandler(this)
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
       def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
     })
@@ -318,6 +319,7 @@ class App extends
       pico.getComponent(classOf[HubNetManagerFactory]),
       pico.getComponent(classOf[ExternalFileManager]),
       listenerManager,
+      errorDialogManager,
       controlSet) {
       val compiler = pico.getComponent(classOf[PresentationCompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
@@ -375,11 +377,8 @@ class App extends
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
-    org.nlogo.api.Exceptions.setHandler(this)
-
     if(loggingName != null)
      startLogging(loggingName)
-
   }
 
   private def finishStartup(appHandler: Object) {
@@ -388,6 +387,7 @@ class App extends
       val modelSaver = pico.getComponent(classOf[ModelSaver])
       modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
     }
+
     pico.add(classOf[ModelingCommonsInterface],
           "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
@@ -426,10 +426,15 @@ class App extends
 
     tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
 
+    // For some reason this has to be instantiated after `tabs.init` (the
+    // crucial point is for the dialogs within the manager to only be created
+    // here). Creating ErrorDialogManager before `tabs.init` somehow prevents
+    // the Code tab from receiving SwitchedTabsEvent and handling it. -- EL 2018-06-13
+    errorDialogManager = new ErrorDialogManager(frame,
+      classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame))
+
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
-
-    org.nlogo.window.RuntimeErrorDialog.init(frame)
 
     // OK, this is a little kludgy.  First we pack so everything
     // is realized, and all addNotify() methods are called.  But
@@ -453,7 +458,7 @@ class App extends
 
     Splash.endSplash()
     frame.setVisible(true)
-    if(isMac){
+    if (isMac) {
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
     }
   }
@@ -571,13 +576,13 @@ class App extends
     new ZoomedEvent(0).raise(this)
   }
 
-  lazy val openPreferencesDialog =
-    new ShowPreferencesDialog(new PreferencesDialog(frame,
-      Preferences.Language, new Preferences.LineNumbers(tabs), Preferences.IncludedFilesMenu))
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabs)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openColorDialog = new OpenColorDialog(frame)
+
+  lazy val openLibrariesDialog = new OpenLibrariesDialog(frame)
 
   lazy val allActions: Seq[javax.swing.Action] = {
     // If we're running in the mac wrapper, it takes care of displaying these
@@ -587,7 +592,8 @@ class App extends
 
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
-    val generalActions    = Seq[javax.swing.Action](
+    val generalActions = Seq[javax.swing.Action](
+      openLibrariesDialog,
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
@@ -635,7 +641,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AppEvent){
+  def handle(e: AppEvent) {
     import AppEventType._
     e.`type` match {
       case RELOAD => reload()
@@ -709,7 +715,7 @@ class App extends
    */
   def handle(e: ModelSavedEvent): Unit = {
     workspace.modelSaved(e.modelPath)
-    org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
+    errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(modelTitle)
       workspace.hubNetManager.foreach { manager =>
@@ -723,7 +729,7 @@ class App extends
    */
   def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
-    RuntimeErrorDialog.setModelName(modelName)
+    errorDialogManager.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
@@ -734,7 +740,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:BeforeLoadEvent) {
+  def handle(e: BeforeLoadEvent) {
     wasAtPreferredSizeBeforeLoadBegan =
             preferredSizeAtLoadEndTime == null ||
             frame.getSize == preferredSizeAtLoadEndTime ||
@@ -754,7 +760,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:LoadEndEvent){
+  def handle(e: LoadEndEvent) {
     turtleShapesManager.reset()
     linkShapesManager.reset()
     workspace.view.repaint()
@@ -782,7 +788,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
+  def handle(e: AboutToQuitEvent) { if(logger != null) logger.close() }
 
   private def frameTitle(filename: String, dirty: Boolean) = {
     val title =
@@ -814,12 +820,12 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(t:Throwable): Unit = {
+  def handle(t: Throwable): Unit = {
     try {
       val logo = t.isInstanceOf[LogoException]
       if (! logo) {
         t.printStackTrace(System.err)
-        if (RuntimeErrorDialog.suppressJavaExceptionDialogs || RuntimeErrorDialog.safeToIgnore(t)) {
+        if (errorDialogManager.safeToIgnore(t)) {
           return
         }
       }
@@ -834,11 +840,10 @@ class App extends
       // problem.  We could write our own stack trace printer (easily)
       // that actually prints to stdout but I'm not really sure that's
       // important. ev 2/25/08
-      if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
+      if (!errorDialogManager.alreadyVisible)
         org.nlogo.awt.EventQueue.invokeLater(() =>
-            RuntimeErrorDialog.show(null, null, Thread.currentThread, t))
-    }
-    catch {
+          errorDialogManager.show(null, null, Thread.currentThread, t))
+    } catch {
       case e2: RuntimeException => e2.printStackTrace(System.err)
     }
   }

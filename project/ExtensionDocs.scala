@@ -42,12 +42,12 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
     val renderedPage =
       renderMarkdown(extensionName)(Documenter.documentAll(finalConfig, primitives, documentationConf.getParent))
     val res = Files.write(targetFile, renderedPage.getBytes("UTF-8"))
-    
+
     val imagesCopy = Path.allSubpaths(extensionsDirectory / extensionName / "images").map {
       case (f, p) => (f, targetFile.getParent.toFile / "images" / p)
     }
     FileActions.copyAll(imagesCopy)
-    
+
     res
   }
 

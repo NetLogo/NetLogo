@@ -1,6 +1,5 @@
 import sbt._
 import org.jsoup.Jsoup
-import scala.collection.JavaConverters._
 import org.apache.commons.lang3.StringEscapeUtils
 import scala.util.matching.Regex, Regex.Match
 
@@ -28,6 +27,8 @@ object PrimIndex {
   }
 
   def generate(dictFile: File, target: File, templateFile: File, indexFile: File): Unit = {
+    import scala.collection.JavaConverters._
+
     val html = IO.read(dictFile)
 
     val doc = Jsoup.parse(html)

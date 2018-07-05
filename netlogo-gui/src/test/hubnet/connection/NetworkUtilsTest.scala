@@ -6,8 +6,6 @@ import java.net.{ Inet4Address, NetworkInterface }
 
 import org.scalatest.FunSuite
 
-import scala.collection.JavaConverters._
-
 class NetworkUtilsTest extends FunSuite {
   test("findViableInterfaces should not return empty") {
     assert(! NetworkUtils.findViableInterfaces.isEmpty)
@@ -31,6 +29,8 @@ class NetworkUtilsTest extends FunSuite {
   }
 
   test("an interface can be recalled after it has been remembered") {
+    import scala.collection.JavaConverters._
+
     NetworkUtils.forgetNetworkInterface()
     val ni = NetworkInterface.getNetworkInterfaces.asScala.next()
     NetworkUtils.rememberNetworkInterface(ni)

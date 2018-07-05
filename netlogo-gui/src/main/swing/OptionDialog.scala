@@ -5,8 +5,6 @@ package org.nlogo.swing
 import java.awt.{ Component, Frame }
 import javax.swing.{ JComboBox, JOptionPane }
 
-import scala.collection.JavaConverters._
-
 import org.nlogo.awt.{ Hierarchy, LineBreaker }
 
 class OptionDialog[T <: AnyRef](owner: Frame, title: String, message: String, choices: Array[T], i18n: String => String)
@@ -25,6 +23,8 @@ extends UserDialog(owner, title, i18n) {
 
 object OptionDialog {
   def showMessage(owner: Component, title: String, message: String, options: Array[_ <: Object]): Int = {
+    import scala.collection.JavaConverters._
+
     val brokenLines = LineBreaker.breakLines(message,
       owner.getFontMetrics(owner.getFont), UserDialog.DIALOG_WIDTH)
     showCustom(owner, title, brokenLines.asScala.mkString("\n"), options)

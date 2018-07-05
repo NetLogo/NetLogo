@@ -1,8 +1,6 @@
 import sbt._
 import sbt.File
 
-import scala.collection.JavaConverters._
-
 trait SubApplication {
   def name:          String
   def shortName:     String = "NetLogo"
@@ -12,7 +10,8 @@ trait SubApplication {
   def jvmArguments:  Seq[String]
   def jvmProperties(platformName: String): Map[String, String] = Map()
   def additionalArtifacts(config: File): Seq[File] = Seq()
-  def configurationVariables(platformName: String): Map[String, AnyRef] =
+  def configurationVariables(platformName: String): Map[String, AnyRef] = {
+    import scala.collection.JavaConverters._
     Map(
       "appName"        -> name,
       "appShortName"   -> shortName,
@@ -20,6 +19,7 @@ trait SubApplication {
       "maxMemory"      -> maxMemory,
       "additionalArgs" -> jvmArguments.asJava
       )
+  }
   def iconName: String = "NetLogo"
   def maxMemory: String = "1024m"
   def allIcons: Seq[String] = Seq(iconName)

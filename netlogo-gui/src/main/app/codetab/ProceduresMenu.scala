@@ -2,8 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.event.{KeyAdapter, KeyEvent}
-import javax.swing.event.{DocumentEvent, DocumentListener}
+import java.awt.event.KeyEvent
 import javax.swing.{JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities}
 
 import org.nlogo.awt.EventQueue
@@ -12,7 +11,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.swing.ToolBarMenu
 
 class ProceduresMenu(target: ProceduresMenuTarget)
-        extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
+extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
   override def populate(menu: JPopupMenu) {
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
@@ -24,7 +23,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
       val item = new JMenuItem(proc)
       val namePos = procsTable(proc).identifier.start
       val end  = procsTable(proc).endKeyword.end
-      item.addActionListener{() =>
+      item.addActionListener { _ =>
         // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
         // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
         target.select(end, end)
@@ -36,54 +35,46 @@ class ProceduresMenu(target: ProceduresMenuTarget)
     }
 
     val filterField = new JTextField
-    filterField.getDocument.addDocumentListener(new DocumentListener {
-      override def removeUpdate(e: DocumentEvent): Unit = changedUpdate(e)
-      override def insertUpdate(e: DocumentEvent): Unit = changedUpdate(e)
-      override def changedUpdate(e: DocumentEvent): Unit = {
-        repopulate(menu, filterField, items)
-        menu.getSubElements.collectFirst {
-          case it: JMenuItem => MenuSelectionManager.defaultManager.setSelectedPath(Array(menu, it))
+    filterField.getDocument.addDocumentListener(() => {
+      repopulate(menu, filterField, items)
+      menu.getSubElements.collectFirst {
+        case it: JMenuItem => MenuSelectionManager.defaultManager.setSelectedPath(Array(menu, it))
+        case _ =>
+      }
+
+      // Changing the number of items changes the desired size of the menu
+      // -BCH 1/29/2018
+      menu.validate() // recalculate correct size
+      menu.setSize(menu.getPreferredSize) // resize to that size
+      // Resize the popup to match. On Mac, the popup has is in its own undecorated window, so we resize root. On
+      // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
+      // -BCH 1/29/2018
+      Option(
+        if (System.getProperty("os.name").startsWith("Mac")) SwingUtilities.getRoot(menu)
+        else menu.getParent
+      ).foreach(r => r.setSize(r.getPreferredSize))
+    })
+
+    filterField.addKeyListener { e: KeyEvent =>
+      // Although it seems like you should just be able to do:
+      // MenuSelectionManager.defaultManager().processKeyEvent(e)
+      // here and have arrow keys and enter work, this is not the case.
+      // Instead, we have to pass through the keyboard events to the menu itself to make arrow keys work.
+      // We have to explicitly simulate the click on enter for enter to work.
+      // I decided to pass through ALL keys instead of just the keys we care about because we can't guarantee that
+      // menu manipulation keys are the same on all systems (nor that I know about all of them).
+      // Furthermore, there are no detrimental effects of passing on the keyboard events. -BCH 1/29/2018
+      menu.dispatchEvent(e)
+      if (e.getKeyCode == KeyEvent.VK_ENTER) {
+        val path = MenuSelectionManager.defaultManager().getSelectedPath
+        if (path.nonEmpty) path.last match {
+          case it: JMenuItem if it.isArmed =>
+            it.doClick()
+            menu.setVisible(false)
           case _ =>
         }
-
-        // Changing the number of items changes the desired size of the menu
-        // -BCH 1/29/2018
-        menu.validate() // recalculate correct size
-        menu.setSize(menu.getPreferredSize) // resize to that size
-        // Resize the popup to match. On Mac, the popup has is in its own undecorated window, so we resize root. On
-        // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
-        // -BCH 1/29/2018
-        Option(
-          if (System.getProperty("os.name").startsWith("Mac")) SwingUtilities.getRoot(menu)
-          else menu.getParent
-        ).foreach(r => r.setSize(r.getPreferredSize))
       }
-    })
-
-    filterField.addKeyListener(new KeyAdapter {
-      override def keyReleased(e: KeyEvent): Unit = keyPressed(e)
-      override def keyTyped(e: KeyEvent): Unit = keyPressed(e)
-      override def keyPressed(e: KeyEvent): Unit = {
-        // Although it seems like you should just be able to do:
-        // MenuSelectionManager.defaultManager().processKeyEvent(e)
-        // here and have arrow keys and enter work, this is not the case.
-        // Instead, we have to pass through the keyboard events to the menu itself to make arrow keys work.
-        // We have to explicitly simulate the click on enter for enter to work.
-        // I decided to pass through ALL keys instead of just the keys we care about because we can't guarantee that
-        // menu manipulation keys are the same on all systems (nor that I know about all of them).
-        // Furthermore, there are no detrimental effects of passing on the keyboard events. -BCH 1/29/2018
-        menu.dispatchEvent(e)
-        if (e.getKeyCode == KeyEvent.VK_ENTER) {
-          val path = MenuSelectionManager.defaultManager().getSelectedPath
-          if (path.nonEmpty) path.last match {
-            case it: JMenuItem if it.isArmed =>
-              it.doClick()
-              menu.setVisible(false)
-            case _ =>
-          }
-        }
-      }
-    })
+    }
 
     menu.add(filterField)
     repopulate(menu, filterField, items)

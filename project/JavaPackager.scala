@@ -6,7 +6,6 @@ import java.nio.file.FileSystems
 import java.io.File
 import java.util.jar.Attributes.Name._
 import scala.sys.process.Process
-import scala.collection.JavaConverters._
 
 object JavaPackager {
   def mainArtifactSettings: Seq[Setting[_]] =
@@ -59,6 +58,8 @@ object JavaPackager {
   }
 
   def windowsJavaPackagers: Seq[File] = {
+    import scala.collection.JavaConverters._
+
     val fs = FileSystems.getDefault
     fs.getRootDirectories.asScala.toSeq.flatMap(r =>
         Seq(fs.getPath(r.toString, "Program Files", "Java"),

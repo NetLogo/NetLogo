@@ -6,8 +6,6 @@ import org.nlogo.core.ExtensionObject
 import org.nlogo.core,
   core.{ Dump => CDump, LogoList, Nobody }
 
-import scala.collection.JavaConverters._
-
 object Dump extends CDump {
 
   val csv = new CSV({
@@ -88,6 +86,8 @@ object Dump extends CDump {
         buf.toString
       }
     else {
+      import scala.collection.JavaConverters._
+
       val buf = new StringBuilder
       buf += '{'
       buf ++=

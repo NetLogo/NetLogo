@@ -23,8 +23,8 @@ class StartupDialog(parent: Frame,
   override def getName = nameField.getText
   def isDiscoverySelected = discoveryCheckBox.isSelected
 
-  private val okButton = new JButton("Start"){ addActionListener(() => StartupDialog.this.setVisible(false)) }
-  nameField.addActionListener(() => okButton.doClick())
+  private val okButton = new JButton("Start") { addActionListener(_ => StartupDialog.this.setVisible(false)) }
+  nameField.addActionListener(_ => okButton.doClick())
 
   private def choiceToString(choice: (NetworkInterface, InetAddress)) =
     choice match {

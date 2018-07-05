@@ -24,7 +24,6 @@ common.buttons.yes = Yes
 common.buttons.no = No
 
 common.messages.error = Error
-common.messages.error.runtimeError = Runtime Error
 common.messages.warning = Warning
 
 common.menus.empty = <empty>
@@ -98,6 +97,7 @@ menu.edit.convertToNetLogoSix = Convert from 5.3.1 to 6.0
 
 menu.tools = Tools
 menu.tools.preferences = Preferences…
+menu.tools.extensionsAndIncludeFiles = Extensions & Include Files…
 menu.tools.halt = Halt
 menu.tools.globalsMonitor = Globals Monitor
 menu.tools.turtleMonitor = Turtle Monitor
@@ -442,6 +442,20 @@ tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 
+tools.libraries = Extensions & Include Files
+tools.libraries.categories.extensions = Extensions
+tools.libraries.install = Install
+tools.libraries.uninstall = Uninstall
+tools.libraries.update = Update
+tools.libraries.homepage = Homepage
+tools.libraries.updateAll = Update All
+tools.libraries.checkForUpdates = Check For Updates
+tools.libraries.checkingForUpdates = Checking for updates…
+tools.libraries.installing = Installing {0}…
+tools.libraries.installingMultiple = Installing {0} {1}…
+tools.libraries.uninstalling = Uninstalling {0}…
+tools.libraries.uninstallingMultiple = Uninstalling {0} {1}…
+
 tools.agentMonitor.view = View
 tools.agentMonitor.properties = Properties
 
@@ -591,6 +605,12 @@ view.resize.hubnet.prompt = Kick clients?
 view.resize.hubnet.kick = Kick clients
 view.resize.hubnet.dontkick = Don't kick
 
+error.dialog.logo = Runtime Error
+error.dialog.unknown = Internal Error
+error.dialog.librariesMetadata = Metadata Loading Error
+error.dialog.librariesMetadata.message = We had a problem parsing the libraries metadata.  Please report the problem \n\
+at https://github.com/NetLogo/NetLogo-Libraries/issues, or to bugs@ccl.northwestern.edu, and paste the \n\
+contents of this window into your report.
 error.dialog.pleaseReport = \
 NetLogo is unable to supply you with more details about this error.  Please report the problem \n \
 at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, and paste the \n\

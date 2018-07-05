@@ -26,6 +26,6 @@ object AllStoredValues {
         case _ =>
           Iterator.empty
       })
-    agents.flatMap{a => Iterator(a) ++ a.variables.iterator.flatMap(contents)}
+    agents.flatMap {a => Iterator(a) ++ a.variables.iterator.flatMap(contents)}
   }
 }

@@ -3,11 +3,9 @@ package org.nlogo.agent
 import
   org.nlogo.core.{ AgentKind, Program }
 
-import
-  scala.collection.JavaConverters._
-
 object Realloc {
   def realloc(world: AgentManagement with CompilationManagement, oldProgram: Program, newProgram: Program): Unit = {
+    import scala.collection.JavaConverters._
     // remove agentsets for breeds that no longer exist, if any
     for(name <- world.breeds.keySet.asScala.toList)
       if(!newProgram.breeds.contains(name))

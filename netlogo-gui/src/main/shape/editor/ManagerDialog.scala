@@ -5,7 +5,7 @@ package org.nlogo.shape.editor
 import java.awt.{Font, Component}
 import java.awt.event.MouseEvent
 import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout,
-  JPanel, JLabel, JDialog, JButton, JOptionPane}
+  JPanel, JLabel, JDialog, JButton, JOptionPane }
 import javax.swing.event.{ListSelectionEvent, MouseInputAdapter, ListSelectionListener}
 
 import java.nio.file.Paths
@@ -13,7 +13,7 @@ import java.nio.file.Paths
 import org.nlogo.api.ModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.Implicits._
+import org.nlogo.swing.Implicits.thunk2action
 
 import scala.util.{ Failure, Success }
 import scala.reflect.ClassTag
@@ -44,11 +44,11 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   def importButtons: Seq[Component] = Seq(modelImportButton)
 
   // Create the buttons
-  lazy val modelImportButton = new JButton(I18N.gui("importFromModel")) {addActionListener(() => importFromModel())}
-  lazy val editButton = new JButton(I18N.gui("edit")) {addActionListener(() => editShape())}
-  lazy val newButton = new JButton(I18N.gui("new")) {addActionListener(() => newShape())}
+  lazy val modelImportButton = new JButton(I18N.gui("importFromModel")) {addActionListener(_ => importFromModel())}
+  lazy val editButton = new JButton(I18N.gui("edit")) {addActionListener(_ => editShape())}
+  lazy val newButton = new JButton(I18N.gui("new")) {addActionListener(_ => newShape())}
   lazy val deleteButton = new JButton(I18N.gui("delete")) {
-    addActionListener(() => {
+    addActionListener(_ => {
       ManagerDialog.this.shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
@@ -61,14 +61,14 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     setEnabled(false)
   }
 
-  lazy val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(() => duplicateShape())}
+  lazy val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(_ => duplicateShape())}
 
   lazy val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
     setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
 
   locally {
-    shapesList.addMouseListener(new MouseInputAdapter() {
+    shapesList.addMouseListener(new MouseInputAdapter {
       // Listen for double-clicks, and edit the selected shape
       override def mouseClicked(e: MouseEvent) {if (e.getClickCount() > 1) editShape()}
     })
@@ -83,10 +83,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     getContentPane().add(scrollPane, java.awt.BorderLayout.CENTER)
     // make a panel to hold the two rows of buttons
 
-    getContentPane().add(new JPanel() {
+    getContentPane().add(new JPanel {
       setLayout(new org.nlogo.awt.ColumnLayout(3, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
       // Setup the first row of buttons
-      add(new JPanel() {
+      add(new JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
         add(Box.createHorizontalGlue())
         add(Box.createHorizontalStrut(20))
@@ -101,7 +101,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
         add(Box.createHorizontalGlue())
       })
       // Setup the second row of buttons
-      add(new JPanel() {
+      add(new JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
         add(Box.createHorizontalGlue())
         add(Box.createHorizontalStrut(20))

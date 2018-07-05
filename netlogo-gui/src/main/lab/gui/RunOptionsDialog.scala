@@ -6,7 +6,6 @@ import org.nlogo.api.{Editable, Property}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.window.EditDialogFactoryInterface
 import Supervisor.RunOptions
-import collection.JavaConverters._
 import java.util.prefs.Preferences
 
 class RunOptionsDialog(parent: java.awt.Dialog,
@@ -40,7 +39,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Runtime.getRuntime.availableProcessors
     val classDisplayName = "Run options"
-    val propertySet =
+    val propertySet = {
+      import scala.collection.JavaConverters._
       List(
         Property("spreadsheet", Property.Boolean, "Spreadsheet output"),
         Property("table", Property.Boolean, "Table output"),
@@ -49,6 +49,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
                  "<html>If more than one, some runs happen invisibly in the background." +
                  "<br>Defaults to one per processor core.</html>")).asJava
+    }
     def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None

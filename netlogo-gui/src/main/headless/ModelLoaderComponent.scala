@@ -3,13 +3,10 @@
 package org.nlogo.headless
 
 import org.nlogo.api.{ ModelLoader, ComponentSerialization, ConfigurableModelLoader }
-
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
-
-import scala.collection.JavaConverters._
 
 class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
   import org.nlogo.fileformat, fileformat.NLogoFormat
@@ -19,6 +16,8 @@ class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoa
   def verify(x$1: PicoContainer): Unit = {}
 
   def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
+    import scala.collection.JavaConverters._
+
     val compiler =
       container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)

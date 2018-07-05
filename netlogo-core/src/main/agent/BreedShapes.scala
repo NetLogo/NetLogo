@@ -2,15 +2,13 @@
 
 package org.nlogo.agent
 
-// this class uses a concurrent map because it will be accessed
-// from both the Job and the event thread. RG 4/21/16
-import scala.collection.JavaConverters._
-
 import org.nlogo.core.{ AllShapesReplaced, Breed, Shape, ShapeList, ShapeEvent, ShapeRemoved, ShapeListTracker }
 
 import java.util.{ Map => JMap }
 import java.util.concurrent.ConcurrentHashMap
 
+// this class uses a concurrent map because it will be accessed
+// from both the Job and the event thread. RG 4/21/16
 class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   private val shapes = new ConcurrentHashMap[String, String]()
 
@@ -42,6 +40,8 @@ class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   }
 
   def setUpBreedShapes(clear: Boolean, breedsOrNull: JMap[String, _ <: AgentSet]): Unit = {
+    import scala.collection.JavaConverters._
+
     if (clear) {
       shapes.clear()
     }

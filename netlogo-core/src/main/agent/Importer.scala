@@ -11,7 +11,6 @@ import org.nlogo.{ api, core },
   api.{PlotState, PlotInterface, ImporterUser}
 
 import collection.immutable.ListMap
-import collection.JavaConverters._
 import ImporterJ.Junk
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
@@ -59,8 +58,10 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
           vars(Link.VAR_END1), vars(Link.VAR_END2))
   }
 
-  def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] =
+  def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] = {
+    import scala.collection.JavaConverters._
     breeds.values.flatMap(_.owns).toSeq.asJava
+  }
 
   /// plots
 

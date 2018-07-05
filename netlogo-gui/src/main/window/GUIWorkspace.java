@@ -68,6 +68,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
   public final NetLogoListenerManager listenerManager;
+  private final ErrorDialogManager errorDialogManager;
 
   private PeriodicUpdater periodicUpdater;
   private javax.swing.Timer repaintTimer;
@@ -79,11 +80,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                       org.nlogo.workspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager,
+                      ErrorDialogManager errorDialogManager,
                       ControlSet controlSet) {
     super(world, hubNetManagerFactory, frame, externalFileManager, controlSet);
     this.kioskLevel = kioskLevel;
     this.linkParent = linkParent;
     this.listenerManager = listenerManager;
+    this.errorDialogManager = errorDialogManager;
     hubNetControlCenterAction.setEnabled(false);
 
     viewWidget = new ViewWidget(this);
@@ -1039,7 +1042,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
             public void run() {
-              RuntimeErrorDialog$.MODULE$.show(context, instruction, thread, ex);
+              errorDialogManager.show(context, instruction, thread, ex);
             }
           });
     }

@@ -27,10 +27,10 @@ abstract class GUIWorkspaceScala(
   protected val frame:  Frame,
   externalFileManager:  ExternalFileManager,
   controlSet:           ControlSet)
-  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
-  with ExportPlotEvent.Handler
-  with ExportWidgetEvent.Handler
-  with LoadModelEvent.Handler {
+extends AbstractWorkspaceScala(world, hubNetManagerFactory)
+with ExportPlotEvent.Handler
+with ExportWidgetEvent.Handler
+with LoadModelEvent.Handler {
 
   def view: View
 

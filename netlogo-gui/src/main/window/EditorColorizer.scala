@@ -6,7 +6,6 @@ import org.nlogo.core.{ Token, TokenType }
 import java.awt.Color
 import org.nlogo.api.CompilerServices
 import org.nlogo.editor.Colorizer
-import collection.JavaConverters._
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
@@ -52,6 +51,8 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   // colorization, so we don't need to bother with the TYPE_KEYWORD hack for "breed" here.
   // - ST 7/11/06
   def getCharacterTokenTypes(line: String): java.util.List[TokenType] = {
+    import scala.collection.JavaConverters._
+
     val result = new Array[TokenType](line.size)
     val tokens = tokenizeForColorization(line)
     for {tok <- tokens; j <- tok.start until tok.end}

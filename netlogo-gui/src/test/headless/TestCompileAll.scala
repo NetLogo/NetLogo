@@ -29,7 +29,7 @@ class TestCompileAll extends FunSuite with SlowTest {
       .exists(path.contains)
 
   val modelPaths =
-    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionPath))
+    (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionsPath))
       .map(new java.io.File(_).getCanonicalPath()).distinct // workaround for https://github.com/NetLogo/NetLogo/issues/765
       .filterNot(excludeModel)
 

@@ -6,7 +6,6 @@ package org.nlogo.swing
 
 import java.awt.{ Frame, GraphicsEnvironment, Point, Rectangle, Window }
 import java.util.{ List => JList }
-import collection.JavaConverters._
 
 object Tiler {
 
@@ -91,6 +90,7 @@ object Tiler {
   }
 
   private def emptyLocation(otherWindows: JList[Window], window: Window, x: Int, y: Int): Boolean = {
+    import scala.collection.JavaConverters._
     for(otherWindow <- otherWindows.asScala)
       if (window != otherWindow && overlap(otherWindow, window, x, y))
         return false

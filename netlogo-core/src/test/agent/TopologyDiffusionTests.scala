@@ -4,14 +4,15 @@ package org.nlogo.agent
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ MersenneTwisterFast, WorldType }
-import collection.JavaConverters._
 
 class TopologyDiffusionTests extends FunSuite {
 
   val random = new MersenneTwisterFast
 
   for(worldType <- WorldType.all; x <- List(0, 1, 2, 3, 10, 100); y <- List(0, 1, 2, 3, 10, 100)){
-    test("diffuse, worldType: " + worldType + ", worldSize: " + ((x, y))){
+    test("diffuse, worldType: " + worldType + ", worldSize: " + ((x, y))) {
+      import scala.collection.JavaConverters._
+
       val world = new World2D
       world.changeTopology(worldType.xWrap, worldType.yWrap)
       world.createPatches(-x, x, -y, y)

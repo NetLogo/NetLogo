@@ -8,11 +8,10 @@ import javax.swing.{ JComponent, JMenuItem, JPopupMenu }
 
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.Implicits._
 
 class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener {
 
-  locally{
+  locally {
     setOpaque(false)
     addMouseListener(this)
     Fonts.adjustDefaultFont(this)
@@ -31,11 +30,11 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
       val popMenu = new JPopupMenu("Ask who?")
       def addItem(name: String, clazz: AgentKind) {
         popMenu.add(new JMenuItem(name) {
-          addActionListener(() => {
+          addActionListener { _ =>
             commandLine.agentKind(clazz)
             LinePrompt.this.repaint()
             commandLine.requestFocus()
-          })
+          }
         })
       }
       addItem(I18N.gui.get("common.observer"), AgentKind.Observer)

@@ -1,11 +1,11 @@
 import sbt._, io.Using
 
-import scala.collection.JavaConverters._
-
 import com.github.mustachejava._
 
 object Mustache {
   def apply(sourceFile: File, destFile: File, variables: Map[String, AnyRef], rootFile: Option[File] = None): Unit = {
+    import scala.collection.JavaConverters._
+
     val mf = rootFile.map(new DefaultMustacheFactory(_)).getOrElse(new DefaultMustacheFactory)
     val mustache = IO.reader(sourceFile)(mf.compile(_, sourceFile.getName))
     Using.fileWriter()(destFile) { wrtr => mustache.execute(wrtr, variables.asJava) }

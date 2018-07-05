@@ -9,8 +9,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.agent.ImportPatchColors
 import org.nlogo.api.LocalFile
 import org.nlogo.plot.Plot
-import org.nlogo.swing.{ Implicits, UserAction },
-  Implicits.thunk2runnable,
+import org.nlogo.swing.UserAction,
   UserAction.{ FileCategory, FileExportSubcategory, FileImportSubcategory, MenuAction }
 import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace, PlotWidgetExport },
   WindowEvents.{ ExportPlotEvent }
@@ -42,8 +41,8 @@ object FileActions {
   }
 
   class ExportGraphicsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png"))
-    with MenuAction {
+  extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png"))
+  with MenuAction {
       category    = FileCategory
       subcategory = FileExportSubcategory
       rank        = 3
@@ -56,9 +55,9 @@ object FileActions {
   }
 
   class ExportOutputAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
+  extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
     { exportPath => workspace.exportOutput(exportPath) })
-    with MenuAction {
+  with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 5
@@ -79,14 +78,14 @@ object FileActions {
     }
 
     def inModalDialog(filenameAndPlot: (String, Plot), closeDialog: () => Unit): Unit = {
-      new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(filenameAndPlot._2), filenameAndPlot._1, closeDialog)
+      new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(filenameAndPlot._2), filenameAndPlot._1, () => closeDialog())
         .raise(parent)
     }
   }
 
   class ExportAllPlotsAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv"))
-    with MenuAction {
+  extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv"))
+  with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 2
@@ -100,14 +99,14 @@ object FileActions {
     }
 
     def inModalDialog(filename: String, closeDialog: () => Unit): Unit = {
-      new ExportPlotEvent(PlotWidgetExport.ExportAllPlots, filename, closeDialog)
+      new ExportPlotEvent(PlotWidgetExport.ExportAllPlots, filename, () => closeDialog())
         .raise(parent)
     }
   }
 
   class ExportInterfaceAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png"))
-    with MenuAction {
+  extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png"))
+  with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 4

@@ -10,11 +10,10 @@ import java.net.URI
 import org.nlogo.util.SysInfo
 import org.nlogo.api.{ FileIO, APIVersion, Version }
 import org.nlogo.swing.{ BrowserLauncher, RichAction }
-import org.nlogo.swing.Implicits._
 import org.nlogo.swing.Utils.icon
 
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
-  private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
+  private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
   private val system: JTextArea = new JTextArea() {
     setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setLineWrap(true)
