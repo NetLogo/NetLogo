@@ -95,3 +95,53 @@ PatchColSortOrder_2D
   O> resize-world -5 5 -5 5
   O> random-seed 0
   [pycor] of patches with [pxcor = 1] => [0 5 2 4 -1 1 -2 -4 3 -3 -5]
+
+PatchTowards_2D
+  P> sprout 1
+  max ([towards one-of patches with [myself != self]]       of patches)  < 360 => true
+  min ([towards one-of patches with [myself != self]]       of patches) >=   0 => true
+  max ([towards one-of turtles with [myself != patch-here]] of patches)  < 360 => true
+  min ([towards one-of turtles with [myself != patch-here]] of patches) >=   0 => true
+  [towards patch  0  1] of patch 0 0 => 0
+  [towards patch  1  1] of patch 0 0 => 45
+  [towards patch  1  0] of patch 0 0 => 90
+  [towards patch  1 -1] of patch 0 0 => 135
+  [towards patch  0 -1] of patch 0 0 => 180
+  [towards patch -1 -1] of patch 0 0 => 225
+  [towards patch -1  0] of patch 0 0 => 270
+  [towards patch -1  1] of patch 0 0 => 315
+  [towards patch  0  1] of patch 0 0 => 0
+
+PatchTowards_3D
+  P> sprout 1
+  max ([towards one-of patches with [pxcor != [pxcor] of myself and pycor != [pycor] of myself]] of patches)  < 360 => true
+  min ([towards one-of patches with [pxcor != [pxcor] of myself and pycor != [pycor] of myself]] of patches) >=   0 => true
+  max ([towards one-of turtles with [ xcor != [pxcor] of myself and  ycor != [pycor] of myself]] of patches)  < 360 => true
+  min ([towards one-of turtles with [ xcor != [pxcor] of myself and  ycor != [pycor] of myself]] of patches) >=   0 => true
+  [towards patch  0  1  0] of patch 0 0 0 => 0
+  [towards patch  1  1  0] of patch 0 0 0 => 45
+  [towards patch  1  0  0] of patch 0 0 0 => 90
+  [towards patch  1 -1  0] of patch 0 0 0 => 135
+  [towards patch  0 -1  0] of patch 0 0 0 => 180
+  [towards patch -1 -1  0] of patch 0 0 0 => 225
+  [towards patch -1  0  0] of patch 0 0 0 => 270
+  [towards patch -1  1  0] of patch 0 0 0 => 315
+  [towards patch  0  1  0] of patch 0 0 0 => 0
+  [towards patch  0  1 -1] of patch 0 0 0 => 0
+  [towards patch  1  1 -1] of patch 0 0 0 => 45
+  [towards patch  1  0 -1] of patch 0 0 0 => 90
+  [towards patch  1 -1 -1] of patch 0 0 0 => 135
+  [towards patch  0 -1 -1] of patch 0 0 0 => 180
+  [towards patch -1 -1 -1] of patch 0 0 0 => 225
+  [towards patch -1  0 -1] of patch 0 0 0 => 270
+  [towards patch -1  1 -1] of patch 0 0 0 => 315
+  [towards patch  0  1 -1] of patch 0 0 0 => 0
+  [towards patch  0  1  1] of patch 0 0 0 => 0
+  [towards patch  1  1  1] of patch 0 0 0 => 45
+  [towards patch  1  0  1] of patch 0 0 0 => 90
+  [towards patch  1 -1  1] of patch 0 0 0 => 135
+  [towards patch  0 -1  1] of patch 0 0 0 => 180
+  [towards patch -1 -1  1] of patch 0 0 0 => 225
+  [towards patch -1  0  1] of patch 0 0 0 => 270
+  [towards patch -1  1  1] of patch 0 0 0 => 315
+  [towards patch  0  1  1] of patch 0 0 0 => 0
