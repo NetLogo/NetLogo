@@ -3,8 +3,8 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, GridLayout }
-import javax.swing.{ JButton, JLabel, JList, JPanel, JScrollPane, JTextField,
-  JTextArea, ListCellRenderer, ListModel }
+import javax.swing.{ BorderFactory, JButton, JLabel, JList, JPanel, JScrollPane,
+  JTextField, JTextArea, ListCellRenderer, ListModel }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, SwingWorker }
@@ -55,7 +55,7 @@ extends JPanel(new BorderLayout) {
     val infoScroll = new JScrollPane(info)
     infoScroll.getViewport.setOpaque(false)
     infoScroll.setViewportBorder(null)
-    infoScroll.setBorder(null)
+    infoScroll.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5))
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
     sidebar.add(infoScroll, BorderLayout.CENTER)
 
