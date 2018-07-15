@@ -3,11 +3,12 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, GridLayout }
-import javax.swing.{ BorderFactory, JButton, JLabel, JList, JPanel, JScrollPane,
-  JTextField, JTextArea, ListCellRenderer, ListModel }
+import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JPanel,
+  JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, SwingWorker }
+import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel,
+  RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon
 
 object LibrariesTab {
@@ -135,7 +136,7 @@ extends JPanel(new BorderLayout) {
         I18N.gui("update") + " / " + I18N.gui("install")
   }
 
-  def updateAll() = {
+  val updateAllAction: Action = RichAction(I18N.gui("updateAll")) { _ =>
     val libsToUpdate =
       (0 until listModel.getSize)
         .map(listModel.getElementAt)

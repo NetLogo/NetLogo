@@ -23,7 +23,7 @@ extends ToolDialog(parent, "libraries") {
   private lazy val tabs = new JTabbedPane
   private lazy val bottomPanel = new JPanel(new BorderLayout)
   private lazy val status = new JLabel
-  private lazy val updateAllButton = new JButton(I18N.gui("updateAll"))
+  private lazy val updateAllButton = new JButton
 
   private lazy val manager = new LibraryManager(categories, new ProgressListener {
     override def start()  = status.setText(I18N.gui("checkingForUpdates"))
@@ -42,13 +42,18 @@ extends ToolDialog(parent, "libraries") {
     bottomPanel.add(status, BorderLayout.CENTER)
     bottomPanel.add(updateAllButton, BorderLayout.EAST)
 
-    updateAllButton.addActionListener(_ => tabs.getSelectedComponent.asInstanceOf[LibrariesTab].updateAll())
+    tabs.addChangeListener(_ => updateAllButton.setAction(currentUpdateAllAction))
+
+    updateAllButton.setAction(currentUpdateAllAction)
 
     setLayout(new BorderLayout)
     add(tabs, BorderLayout.CENTER)
     add(bottomPanel, BorderLayout.SOUTH)
     setSize(550, 400)
   }
+
+  private def currentUpdateAllAction =
+    tabs.getSelectedComponent.asInstanceOf[LibrariesTab].updateAllAction
 
   override def setVisible(v: Boolean) = {
     super.setVisible(v)
