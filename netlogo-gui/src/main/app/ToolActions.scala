@@ -28,6 +28,7 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
   lazy protected val createdDialog = createDialog
 
   override def actionPerformed(e: ActionEvent): Unit = {
+    createdDialog.toFront()
     createdDialog.setVisible(true)
   }
 }
