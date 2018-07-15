@@ -3,7 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
-import javax.swing.{ BorderFactory, JButton, JDialog, JLabel, JPanel, JTabbedPane }
+import javax.swing.{ BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.ProgressListener
@@ -17,22 +17,20 @@ object LibrariesDialog {
 }
 
 class LibrariesDialog(parent: Frame, categories: Map[String, LibrariesCategoryInstaller])
-extends JDialog(parent, I18N.gui.get("tools.libraries"), false) {
+extends ToolDialog(parent, "libraries") {
   import LibrariesDialog._
 
-  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
+  private lazy val tabs = new JTabbedPane
+  private lazy val bottomPanel = new JPanel(new BorderLayout)
+  private lazy val status = new JLabel
+  private lazy val updateAllButton = new JButton(I18N.gui("updateAll"))
 
-  val tabs = new JTabbedPane
-  val bottomPanel = new JPanel(new BorderLayout)
-  val status = new JLabel
-  val updateAllButton = new JButton(I18N.gui("updateAll"))
-
-  val manager = new LibraryManager(categories, new ProgressListener {
+  private lazy val manager = new LibraryManager(categories, new ProgressListener {
     override def start()  = status.setText(I18N.gui("checkingForUpdates"))
     override def finish() = status.setText(null)
   })
 
-  locally {
+  protected override def initGUI() = {
     manager.listModels.foreach { case (category, contents) =>
       tabs.addTab(I18N.gui("categories." + category),
         new LibrariesTab(category, contents,
