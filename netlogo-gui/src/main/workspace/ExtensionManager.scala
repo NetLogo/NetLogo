@@ -9,10 +9,9 @@ import java.util.{ List => JList }
 
 import scala.collection.JavaConverters._
 
-import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
+import org.nlogo.api.{ ClassManager, Dump, ExtensionException, FileIO, ImportErrorHandler, Reporter }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
-import org.nlogo.util.Utils
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -63,7 +62,7 @@ object ExtensionManager {
     System.getProperty("netlogo.extensions.dir", "extensions")
 
   def userExtensionsPath: String =
-    System.getProperty("netlogo.extensions.perUserDir", Utils.perUserDir("extensions"))
+    System.getProperty("netlogo.extensions.perUserDir", FileIO.perUserDir("extensions"))
 
   case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], modified: Long)
 
