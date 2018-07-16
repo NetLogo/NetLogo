@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import java.awt.image.BufferedImage
 import java.io.{ FileOutputStream, File }
-import java.nio.file.{ InvalidPathException, Path, Paths }
+import java.nio.file.{ Files, InvalidPathException, Path, Paths }
 import javax.imageio.ImageIO
 
 import org.nlogo.core.FileMode
@@ -122,6 +122,33 @@ object FileIO {
       file.close(true)
     }
     finally file.close(false)
+  }
+
+  def perUserFile(file: String, createNecessaryDirs: Boolean = true): String = {
+    val res = perUserPath(file)
+    if (createNecessaryDirs)
+      Files.createDirectories(Paths.get(res).getParent)
+    res
+  }
+
+  def perUserDir(dir: String, create: Boolean = true): String = {
+    val res = perUserPath(dir)
+    if (create)
+      Files.createDirectories(Paths.get(res))
+    res
+  }
+
+  private def perUserPath(path: String): String = {
+    val os = System.getProperty("os.name").toUpperCase
+    val appData =
+      if (os.contains("WIN"))
+        System.getenv("APPDATA") + "\\NetLogo"
+      else if (os.contains("MAC"))
+        System.getProperty("user.home") + "/Library/Application Support/NetLogo"
+      else
+        System.getProperty("user.home") + "/.netlogo"
+
+    appData + File.separator + path
   }
 
   def resolvePath(name: String): Option[Path] = resolvePath(name, None)

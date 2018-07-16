@@ -9,8 +9,8 @@ import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
 import java.util.prefs.{ Preferences => JPreferences }
 
+import org.nlogo.api.FileIO
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
-import org.nlogo.util.Utils.perUserFile
 
 object SwingUpdater {
   private val prefs = JPreferences.userNodeForPackage(getClass)
@@ -49,7 +49,7 @@ class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: Progress
       val conn = url.openConnection.asInstanceOf[HttpURLConnection]
       if (conn.getResponseCode == 200) {
         val response = new DigestInputStream(conn.getInputStream, md)
-        Files.copy(response, Paths.get(perUserFile(basename)), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(response, Paths.get(FileIO.perUserFile(basename)), StandardCopyOption.REPLACE_EXISTING)
       }
       val localHash = prefs.getByteArray(hashKey, null)
       val newHash = md.digest
@@ -61,7 +61,7 @@ class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: Progress
 
     override def onComplete(): Unit = {
       if (changed)
-        updateGUI(new File(perUserFile(basename)))
+        updateGUI(new File(FileIO.perUserFile(basename)))
       progressListener.finish()
     }
   }
