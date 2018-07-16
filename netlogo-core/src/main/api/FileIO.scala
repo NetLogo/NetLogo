@@ -139,6 +139,8 @@ object FileIO {
   }
 
   private def perUserPath(path: String): String = {
+    val minorVersionRegex = """(\d+\.\d+).*""".r
+    val minorVersionRegex(version) = Version.version.stripPrefix("NetLogo ").stripPrefix("3D ")
     val os = System.getProperty("os.name").toUpperCase
     val appData =
       if (os.contains("WIN"))
@@ -148,7 +150,7 @@ object FileIO {
       else
         System.getProperty("user.home") + "/.netlogo"
 
-    appData + File.separator + path
+    appData + File.separator + version + File.separator + path
   }
 
   def resolvePath(name: String): Option[Path] = resolvePath(name, None)
