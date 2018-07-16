@@ -44,7 +44,7 @@ with MenuAction {
     Preferences.IncludedFilesMenu)
 }
 
-class OpenLibrariesDialog(frame: Frame)
+class OpenLibrariesDialog(frame: Frame, extensionManager: ExtensionManager)
 extends ShowDialogAction(I18N.gui.get("menu.tools.extensionsAndIncludeFiles"))
 with MenuAction {
   category = ToolsCategory
@@ -66,6 +66,8 @@ with MenuAction {
         val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
         if (!Files.isDirectory(extDir))
           Files.createDirectory(extDir)
+        else
+          extensionManager.reset()
         new ZipFile(zipPath.toFile).extractAll(extDir.toString)
         Files.delete(zipPath)
         LibraryManager.updateInstalledVersion("extensions", ext)
