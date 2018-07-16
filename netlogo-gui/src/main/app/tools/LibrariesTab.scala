@@ -5,6 +5,7 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Color, GridLayout }
 import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JPanel,
   JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
+import javax.swing.event.{ ListDataEvent, ListDataListener }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel,
@@ -26,6 +27,16 @@ extends JPanel(new BorderLayout) {
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
   private val listModel = new FilterableListModel(list, filterFn)
+
+  val updateAllAction: Action = RichAction(I18N.gui("updateAll")) { _ =>
+    val libsToUpdate =
+      (0 until listModel.getSize)
+        .map(listModel.getElementAt)
+        .filter(_.status == LibraryStatus.CanUpdate)
+    numOperatedLibs = libsToUpdate.length
+    updateMultipleOperationStatus("installing")
+    libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
+  }
 
   locally {
     import org.nlogo.swing.Implicits.thunk2documentListener
@@ -64,6 +75,13 @@ extends JPanel(new BorderLayout) {
     add(sidebar, BorderLayout.EAST)
     add(filterField, BorderLayout.NORTH)
 
+    list.addListDataListener(new ListDataListener {
+      def intervalAdded(e: ListDataEvent) =
+        if (canUpdateInRange(list, e.getIndex0, e.getIndex1))
+          updateAllAction.setEnabled(true)
+      def intervalRemoved(e: ListDataEvent) = updateAllAction.setEnabled(canUpdate(list))
+      def contentsChanged(e: ListDataEvent) = updateAllAction.setEnabled(canUpdate(list))
+    })
     libraryList.addListSelectionListener(_ => updateSidebar())
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
     installButton.addActionListener { _ =>
@@ -90,6 +108,7 @@ extends JPanel(new BorderLayout) {
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
+    updateAllAction.setEnabled(canUpdate(list))
 
     def numSelected = libraryList.getSelectedIndices.length
     def selectedValue = libraryList.getSelectedValue
@@ -99,6 +118,12 @@ extends JPanel(new BorderLayout) {
       libraryList.getSelectedValuesList.asScala
     }
     def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
+
+    def canUpdate(model: ListModel[LibraryInfo]) = canUpdateInRange(model, 0, model.getSize - 1)
+    def canUpdateInRange(model: ListModel[LibraryInfo], index0: Int, index1: Int) =
+      (index0 to index1)
+        .map(model.getElementAt)
+        .exists(_.status == LibraryStatus.CanUpdate)
 
     def updateSidebar(): Unit = {
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
@@ -134,16 +159,6 @@ extends JPanel(new BorderLayout) {
         I18N.gui("update")
       else
         I18N.gui("update") + " / " + I18N.gui("install")
-  }
-
-  val updateAllAction: Action = RichAction(I18N.gui("updateAll")) { _ =>
-    val libsToUpdate =
-      (0 until listModel.getSize)
-        .map(listModel.getElementAt)
-        .filter(_.status == LibraryStatus.CanUpdate)
-    numOperatedLibs = libsToUpdate.length
-    updateMultipleOperationStatus("installing")
-    libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
   }
 
   private def filterFn(info: LibraryInfo, text: String) =
