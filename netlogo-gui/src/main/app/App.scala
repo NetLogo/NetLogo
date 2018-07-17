@@ -243,6 +243,7 @@ class App extends
     ModelSavedEvent.Handler with
     ModelSections with
     AppEvents.SwitchedTabsEvent.Handler with
+    AppEvents.OpenLibrariesDialogEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
     Controllable {
@@ -709,6 +710,12 @@ class App extends
       }
     frame.setTitle(title)
   }
+
+  /**
+   * Internal use only.
+   */
+  def handle(e: AppEvents.OpenLibrariesDialogEvent): Unit =
+    openLibrariesDialog.actionPerformed(null)
 
   /**
    * Internal use only.
