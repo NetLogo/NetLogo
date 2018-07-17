@@ -76,14 +76,16 @@ with MenuAction {
     }
 
     def uninstall(ext: LibraryInfo): Unit = {
-      Files.walkFileTree(Paths.get(ExtensionManager.userExtensionsPath, ext.codeName), new SimpleFileVisitor[Path] {
-        override def visitFile(file: Path, attrs: BasicFileAttributes) = delete(file)
-        override def postVisitDirectory(dir: Path, ex: IOException) = delete(dir)
-        private def delete(path: Path) = {
-          Files.delete(path)
-          FileVisitResult.CONTINUE
-        }
-      })
+      val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
+      if (Files.exists(extDir))
+        Files.walkFileTree(extDir, new SimpleFileVisitor[Path] {
+          override def visitFile(file: Path, attrs: BasicFileAttributes) = delete(file)
+          override def postVisitDirectory(dir: Path, ex: IOException) = delete(dir)
+          private def delete(path: Path) = {
+            Files.delete(path)
+            FileVisitResult.CONTINUE
+          }
+        })
       LibraryManager.updateInstalledVersion("extensions", ext, uninstall = true)
     }
   }
