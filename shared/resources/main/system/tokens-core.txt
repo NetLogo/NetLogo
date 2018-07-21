@@ -230,7 +230,6 @@ R any? _any
 R approximate-hsb etc._approximatehsb
 R approximate-rgb etc._approximatergb
 R asin etc._asin
-R at-most etc._atmost
 R at-points etc._atpoints
 R atan etc._atan
 R autoplot? etc._autoplot
@@ -428,6 +427,7 @@ R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-here etc._turtleshere
 R turtles-on etc._turtleson
+R up-to-n-of etc._uptonof
 R user-directory etc._userdirectory
 R user-file etc._userfile
 R user-input etc._userinput

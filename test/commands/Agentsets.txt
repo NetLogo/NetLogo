@@ -45,6 +45,15 @@ Agentsets3
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
+  count (up-to-n-of 0 turtles) => 0
+  count (up-to-n-of 1 turtles) => 0
+  count (up-to-n-of -1 turtles) => ERROR First input to UP-TO-N-OF can't be negative.
+  count (up-to-n-of 50 patches) => 50
+  count (up-to-n-of 50 patches) => 50
+  count (up-to-n-of 50 patches) => 50
+  count (up-to-n-of 50 patches) => 50
+  (word up-to-n-of (count patches) patches) => "patches"
+  (word up-to-n-of (1 + count patches) patches) => "patches"
 
 Agentsets4_2D
   globals [ glob1 ]
