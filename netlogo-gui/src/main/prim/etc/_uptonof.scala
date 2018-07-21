@@ -4,7 +4,7 @@ import org.nlogo.agent.AgentSet
 import org.nlogo.core.{I18N, LogoList, Syntax}
 import org.nlogo.nvm.{ArgumentTypeException, Context, Reporter, RuntimePrimitiveException}
 
-class _atmost extends Reporter {
+class _uptonof extends Reporter {
   override def report(ctx: Context): AnyRef = {
     val n = argEvalIntValue(ctx, 0)
     if (n < 0)
