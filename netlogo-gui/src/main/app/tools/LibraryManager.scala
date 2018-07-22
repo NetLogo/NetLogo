@@ -15,6 +15,7 @@ import org.nlogo.swing.ProgressListener
 object LibraryManager {
   private val LibrariesConfBasename = "libraries.conf"
   private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$LibrariesConfBasename")
+  private val BundledLibrariesConfig = ConfigFactory.parseResources("system/bundled-libraries.conf")
   val LibrariesConf = FileIO.perUserFile(LibrariesConfBasename)
   val InstalledLibrariesConf = FileIO.perUserFile("installed-libraries.conf")
 
@@ -57,7 +58,9 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
     if (configFile.exists) {
       try {
         val config = ConfigFactory.parseFile(configFile)
-        val installedLibsConf = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
+        val installedLibsConf =
+          ConfigFactory.parseFile(new File(InstalledLibrariesConf))
+            .withFallback(BundledLibrariesConfig)
         categoryNames.foreach(c => updateList(config, installedLibsConf, c, mutableListModels(c)))
       } catch {
         case ex: ConfigException =>
