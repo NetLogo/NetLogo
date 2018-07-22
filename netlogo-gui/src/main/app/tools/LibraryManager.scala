@@ -23,10 +23,10 @@ object LibraryManager {
     val config = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
     val updatedConfig =
       if (uninstall)
-        config.withoutPath(s"$category.${lib.codeName}")
+        config.withoutPath(s"""$category."${lib.codeName}"""")
       else
         config.withValue(
-          s"$category.${lib.codeName}.installedVersion", ConfigValueFactory.fromAnyRef(lib.version))
+          s"""$category."${lib.codeName}".installedVersion""", ConfigValueFactory.fromAnyRef(lib.version))
     val options = ConfigRenderOptions.defaults.setOriginComments(false)
     FileIO.writeFile(LibraryManager.InstalledLibrariesConf, updatedConfig.root.render(options), false)
   }
@@ -90,7 +90,7 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
       val homepage    = new URL(c.getString("homepage"))
       val downloadURL = new URL(c.getString("downloadURL"))
 
-      val installedVersionPath = s"$category.$codeName.installedVersion"
+      val installedVersionPath = s"""$category."$codeName".installedVersion"""
       val status =
         if (!installedLibsConf.hasPath(installedVersionPath))
           LibraryStatus.CanInstall
