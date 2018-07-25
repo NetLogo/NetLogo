@@ -89,9 +89,10 @@ extends JPanel(new BorderLayout) {
         updateSingleOperationStatus("installing", selectedValue.name)
         new Worker("installing", install, selectedValue, multiple = false).execute()
       } else {
-        numOperatedLibs = numSelected
+        val forInstall = selectedValues.filter(_.status != LibraryStatus.UpToDate)
+        numOperatedLibs = forInstall.length
         updateMultipleOperationStatus("installing")
-        selectedValues.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
+        forInstall.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
       }
     }
     uninstallButton.addActionListener { _ =>
@@ -99,9 +100,9 @@ extends JPanel(new BorderLayout) {
         updateSingleOperationStatus("uninstalling", selectedValue.name)
         new Worker("unintalling", uninstall, selectedValue, multiple = false).execute()
       } else {
-        updateMultipleOperationStatus("uninstalling")
-        val forUninstall = selectedValues.filter(_.status != LibraryStatus.CanInstall)
+        val forUninstall = selectedValues.filter(lib => lib.status != LibraryStatus.CanInstall && !lib.bundled)
         numOperatedLibs = forUninstall.length
+        updateMultipleOperationStatus("uninstalling")
         forUninstall.map(new Worker("uninstalling", uninstall, _, multiple = true)).foreach(_.execute)
       }
     }
