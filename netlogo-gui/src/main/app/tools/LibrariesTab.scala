@@ -132,6 +132,7 @@ extends JPanel(new BorderLayout) {
       installButton.setText(installButtonText)
 
       installButton.setEnabled(actionableLibraries.length > 0)
+      uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
       homepageButton.setEnabled(numSelected == 1)
 
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null

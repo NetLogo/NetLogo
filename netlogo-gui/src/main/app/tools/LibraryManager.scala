@@ -91,6 +91,7 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
       val downloadURL = new URL(c.getString("downloadURL"))
 
       val installedVersionPath = s"""$category."$codeName".installedVersion"""
+      val bundled = BundledLibrariesConfig.hasPath(installedVersionPath)
       val status =
         if (!installedLibsConf.hasPath(installedVersionPath))
           LibraryStatus.CanInstall
@@ -100,7 +101,7 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
           LibraryStatus.CanUpdate
 
       listModel.addElement(
-        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, status))
+        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status))
     }
   }
 }
