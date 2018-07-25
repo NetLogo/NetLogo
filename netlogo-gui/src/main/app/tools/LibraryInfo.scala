@@ -12,6 +12,7 @@ case class LibraryInfo(
   version: String,
   homepage: URL,
   downloadURL: URL,
+  bundled: Boolean,
   status: LibraryStatus) {
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality
