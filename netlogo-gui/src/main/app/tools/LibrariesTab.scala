@@ -27,6 +27,7 @@ extends JPanel(new BorderLayout) {
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
   private val listModel = new FilterableListModel(list, filterFn)
+  private val libraryList = new JList[LibraryInfo](listModel)
 
   val updateAllAction: Action = RichAction(I18N.gui("updateAll")) { _ =>
     val libsToUpdate =
@@ -41,7 +42,6 @@ extends JPanel(new BorderLayout) {
   locally {
     import org.nlogo.swing.Implicits.thunk2documentListener
 
-    val libraryList = new JList[LibraryInfo](listModel)
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
 
     val filterField = new JTextField
@@ -84,40 +84,15 @@ extends JPanel(new BorderLayout) {
     })
     libraryList.addListSelectionListener(_ => updateSidebar())
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener { _ =>
-      if (numSelected == 1) {
-        updateSingleOperationStatus("installing", selectedValue.name)
-        new Worker("installing", install, selectedValue, multiple = false).execute()
-      } else {
-        val forInstall = selectedValues.filter(_.status != LibraryStatus.UpToDate)
-        numOperatedLibs = forInstall.length
-        updateMultipleOperationStatus("installing")
-        forInstall.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
-      }
-    }
-    uninstallButton.addActionListener { _ =>
-      if (numSelected == 1) {
-        updateSingleOperationStatus("uninstalling", selectedValue.name)
-        new Worker("unintalling", uninstall, selectedValue, multiple = false).execute()
-      } else {
-        val forUninstall = selectedValues.filter(lib => lib.status != LibraryStatus.CanInstall && !lib.bundled)
-        numOperatedLibs = forUninstall.length
-        updateMultipleOperationStatus("uninstalling")
-        forUninstall.map(new Worker("uninstalling", uninstall, _, multiple = true)).foreach(_.execute)
-      }
-    }
+    installButton.addActionListener(_ => operate("installing", install,
+      lib => lib.status != LibraryStatus.UpToDate))
+    uninstallButton.addActionListener(_ => operate("uninstalling", uninstall,
+      lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     libraryList.setSelectedIndex(0)
     updateAllAction.setEnabled(canUpdate(list))
 
-    def numSelected = libraryList.getSelectedIndices.length
-    def selectedValue = libraryList.getSelectedValue
-    def selectedValues = {
-      import scala.collection.JavaConverters._
-
-      libraryList.getSelectedValuesList.asScala
-    }
     def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
     def canUpdate(model: ListModel[LibraryInfo]) = canUpdateInRange(model, 0, model.getSize - 1)
@@ -163,8 +138,28 @@ extends JPanel(new BorderLayout) {
         I18N.gui("update") + " / " + I18N.gui("install")
   }
 
+  private def numSelected = libraryList.getSelectedIndices.length
+  private def selectedValue = libraryList.getSelectedValue
+  private def selectedValues = {
+    import scala.collection.JavaConverters._
+
+    libraryList.getSelectedValuesList.asScala
+  }
+
   private def filterFn(info: LibraryInfo, text: String) =
     (info.name + info.shortDescription).toLowerCase.contains(text.toLowerCase)
+
+  private def operate(operation: String, fn: LibraryInfo => Unit, toBeOperated: LibraryInfo => Boolean) = {
+    if (numSelected == 1) {
+      updateSingleOperationStatus(operation, selectedValue.name)
+      new Worker(operation, fn, selectedValue, multiple = false).execute()
+    } else {
+      val libs = selectedValues.filter(toBeOperated)
+      numOperatedLibs = libs.length
+      updateMultipleOperationStatus(operation)
+      libs.map(new Worker(operation, fn, _, multiple = true)).foreach(_.execute)
+    }
+  }
 
   private var numOperatedLibs = 0
   private def updateMultipleOperationStatus(operation: String) =
