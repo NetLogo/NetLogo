@@ -288,6 +288,9 @@ class App extends
 
     org.nlogo.swing.Utils.setSystemLookAndFeel()
 
+    errorDialogManager = new ErrorDialogManager(frame,
+      Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
+
     org.nlogo.api.Exceptions.setHandler(this)
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
       def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
@@ -425,13 +428,6 @@ class App extends
     frame.addLinkComponent(viewManager)
 
     tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
-
-    // For some reason this has to be instantiated after `tabs.init` (the
-    // crucial point is for the dialogs within the manager to only be created
-    // here). Creating ErrorDialogManager before `tabs.init` somehow prevents
-    // the Code tab from receiving SwitchedTabsEvent and handling it. -- EL 2018-06-13
-    errorDialogManager = new ErrorDialogManager(frame,
-      classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame))
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
