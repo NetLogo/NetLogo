@@ -53,10 +53,15 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
                                         |$eventTrace""".stripMargin
 }
 
-class ErrorDialogManager(owner: Component, additionalDialogs: (Class[_ <: Throwable], ErrorDialog)*) {
+// For some reason the dialogs have to be instantiated after `tabs.init`. Creating
+// them before `tabs.init` somehow prevents the Code tab from receiving
+// SwitchedTabsEvent and handling it. This is why `dialogs` is a lazy val and
+// `additionalDialogs` is passed by name -- EL 2018-07-27
+
+class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: Throwable], ErrorDialog] = Map()) {
   private val debuggingInfo = DebuggingInfo("", "", "", "", "")
   private val errorInfo = ErrorInfo(null)
-  private val dialogs = additionalDialogs ++ Seq(
+  private lazy val dialogs = additionalDialogs.toSeq ++ Seq(
     classOf[LogoException]    -> new LogoExceptionDialog(owner),
     classOf[OutOfMemoryError] -> new OutOfMemoryDialog(owner),
     classOf[Throwable]        -> new UnknownErrorDialog(owner)
