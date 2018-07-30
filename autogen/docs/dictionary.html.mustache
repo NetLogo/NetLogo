@@ -316,6 +316,7 @@ Go figure! - ST 12/2/04
       <a href="#turtles-at">turtles-at</a>
       <a href="#turtles-here">turtles-here</a>
       <a href="#turtles-on">turtles-on</a>
+      <a href="#up-to-n-of">up-to-n-of</a>
       <a href="#with">with</a>
       <a href="#with-max">with-max</a>
       <a href="#with-min">with-min</a>
@@ -566,6 +567,7 @@ Go figure! - ST 12/2/04
       <a href="#sort-by">sort-by</a>
       <a href="#sort-on">sort-on</a>
       <a href="#subliststring">sublist</a>
+      <a href="#up-to-n-of">up-to-n-of</a>
       <!-- ======================================== -->
     <h3>
       String
@@ -5155,7 +5157,9 @@ ask n-of 50 patches [ set pcolor green ]
 ;; 50 randomly chosen patches turn green
 </pre>
         <p>
-          See also <a href="#one-of">one-of</a>.
+          See also <a href="#one-of">one-of</a> and <a href="#up-to-n-of">up-to-n-of</a>,
+          a version that does not error with a <i>size</i> greater than
+          the size of the input.
         </div>
       <div class="dict_entry" id="n-values">
         <h3>
@@ -5463,7 +5467,7 @@ show one-of mylist
 ;; prints a value randomly chosen from the list
 </pre>
       <p>
-        See also <a href="#n-of">n-of</a>.
+        See also <a href="#n-of">n-of</a>, <a href="#up-to-n-of">up-to-n-of</a>.
       </div>
     <div class="dict_entry" id="or">
       <h3>
@@ -8278,6 +8282,34 @@ ask turtle 0 [ show sort my-links ]
         See the <a href="programming.html#tie">Tie</a> section of the
         Programming Guide for more details.
       </div>
+      <div class="dict_entry" id="up-to-n-of">
+        <h3>
+          <a>up-to-n-of<span class="since">6.1</span></a>
+        </h3>
+        <h4>
+          <span class="prim_example">up-to-n-of <i>size</i> <i>agentset</i></span>
+          <span class="prim_example">up-to-n-of <i>size</i> <i>list</i></span>
+        </h4>
+        <p>
+          From an agentset, reports an agentset of size <i>size</i>
+          randomly chosen from the input set, with no repeats.  If the
+          input does not have enough agents to satisfy the <i>size</i>,
+          reports the entire agentset.
+        <p>
+          From a list, reports a list of size <i>size</i> randomly chosen
+          from the input set, with no repeats. The items in the result
+          appear in the same order that they appeared in the input list.
+          (If you want them in random order, use shuffle on the result.)
+          If the input does not have enough items to satisfy the
+          <i>size</i>, reports the entire list.
+        <pre>
+          ask up-to-n-of 50 patches [ set pcolor green ]
+          ;; 50 randomly chosen patches turn green
+          ;; if less than 50 patches exist, they all turn green
+        </pre>
+        <p>
+          See also <a href="#n-of">n-of</a>, <a href="#one-of">one-of</a>.
+        </div>
     <div class="dict_entry" id="update-plots">
       <h3>
         <a>update-plots<span class="since">5.0</span></a>
