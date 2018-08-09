@@ -48,7 +48,7 @@
 	url = https://github.com/NetLogo/Arduino-Extension/
 [submodule "extensions/cf"]
 	path = extensions/cf
-	url = https://github.com/qiemem/ControlFlowExtension
+	url = https://github.com/NetLogo/ControlFlowExtension
 [submodule "extensions/vid"]
 	path = extensions/vid
 	url = https://github.com/NetLogo/vid.git
