@@ -2,12 +2,12 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ CommandRunnable}
-import org.nlogo.core.{ Color, Syntax }
-import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
+import org.nlogo.api.CommandRunnable
+import org.nlogo.core.{Color, Syntax}
+import org.nlogo.core.{I18N, LogoList}
+import org.nlogo.nvm.{Command, Context, Instruction, Reporter}
 import org.nlogo.nvm.RuntimePrimitiveException
-import org.nlogo.plot.PlotManager
+import org.nlogo.plot.{PlotManager, PlotPen}
 
 //
 // base classes
@@ -179,15 +179,15 @@ class _histogram extends PlotCommand {
   override def perform(context: Context) {
     val list = argEvalList(context, 0)
     val pen = currentPen(context)
+    pen.mode = PlotPen.BAR_MODE
     pen.plotListenerReset(false)
     if(pen.interval <= 0)
       throw new RuntimePrimitiveException(context, this,
         "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
     val plot = currentPlot(context)
-    plot.beginHistogram(pen)
-    for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
-      plot.nextHistogramValue(d)
-    plot.endHistogram(pen)
+    plot.makeHistogram(pen, list.collect{
+      case d: java.lang.Double => d.doubleValue
+    })
     plot.makeDirty()
     context.ip = next
   }
