@@ -42,6 +42,9 @@ extends ToolDialog(parent, "libraries") {
     bottomPanel.add(status, BorderLayout.CENTER)
     bottomPanel.add(updateAllButton, BorderLayout.EAST)
 
+    // TODO: Once modules are added, this line must be removed -- EL 2018-08-13
+    tabs.setLayout(new java.awt.CardLayout)
+
     tabs.addChangeListener(_ => updateAllButton.setAction(currentUpdateAllAction))
 
     updateAllButton.setAction(currentUpdateAllAction)
