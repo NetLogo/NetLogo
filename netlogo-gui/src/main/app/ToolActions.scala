@@ -46,7 +46,7 @@ with MenuAction {
 }
 
 class OpenLibrariesDialog(frame: Frame, extensionManager: ExtensionManager)
-extends ShowDialogAction(I18N.gui.get("menu.tools.extensionsAndIncludeFiles"))
+extends ShowDialogAction(I18N.gui.get("menu.tools.extensions"))
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
