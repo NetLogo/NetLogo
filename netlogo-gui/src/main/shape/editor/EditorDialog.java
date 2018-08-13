@@ -69,7 +69,7 @@ strictfp class EditorDialog
     shape.addObserver(this);
     shapeView = new ShapeView(this, shape);
     shape.addObserver(shapeView);
-    setResizable(false);
+    setResizable(true);
     AbstractAction closingAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         if (!originalShape.toString().equals(getCurrentShape().toString()) &&
@@ -454,11 +454,11 @@ strictfp class EditorDialog
     }
 
     // LAYOUT
-    javax.swing.JPanel graphicPanel, previewPanel, buttonPanel, drawingPanel;
+    javax.swing.JPanel bottomPanel, previewPanel, buttonPanel;
     int borderWidth = 10;
 
     // preview panel
-    // includes the three preview panes
+    // includes the five preview panes
     previewPanel = new javax.swing.JPanel();
     previewPanel.setLayout
         (new javax.swing.BoxLayout
@@ -466,36 +466,22 @@ strictfp class EditorDialog
     for (int i = 0; i < previews.length; i++) {
       previewPanel.add(previews[i]);
     }
-
-    // graphic panel
-    // includes the shape view and the preview panel
-    graphicPanel = new javax.swing.JPanel();
-    graphicPanel.setLayout
-        (new javax.swing.BoxLayout
-            (graphicPanel, javax.swing.BoxLayout.Y_AXIS));
-    graphicPanel.add(shapeView);
-    graphicPanel.add(previewPanel);
-
-    // drawing panel
-    // includes the main tool bar and the graphic panel
-    drawingPanel = new javax.swing.JPanel();
-    drawingPanel.setLayout
-        (new javax.swing.BoxLayout
-            (drawingPanel, javax.swing.BoxLayout.X_AXIS));
-    drawingPanel.add
-        (javax.swing.Box.createHorizontalStrut(borderWidth));
-    drawingPanel.add(leftPanel);
-    drawingPanel.add(javax.swing.Box.createHorizontalStrut(15));
-    drawingPanel.add(graphicPanel);
-    drawingPanel.add(javax.swing.Box.createHorizontalStrut(15));
-    drawingPanel.add(rightPanel);
-    drawingPanel.add
-        (javax.swing.Box.createHorizontalStrut(borderWidth));
+	    
 
     // button panel
     // includes the cancel, done
     buttonPanel = new org.nlogo.swing.ButtonPanel
         (new javax.swing.JButton[]{done, cancel});
+		
+	// bottom panel
+    // includes the button panel and the preview panel
+    bottomPanel = new javax.swing.JPanel();
+    bottomPanel.setLayout
+        (new javax.swing.BoxLayout
+            (bottomPanel, javax.swing.BoxLayout.Y_AXIS));
+								
+    bottomPanel.add(previewPanel);
+	bottomPanel.add(buttonPanel);
 
     // name panel
     javax.swing.JLabel nameLabel = new javax.swing.JLabel("Name");
@@ -514,18 +500,11 @@ strictfp class EditorDialog
         (javax.swing.Box.createHorizontalStrut(borderWidth));
 
     // Add everything to the content pane
-    getContentPane()
-        .setLayout(new javax.swing.BoxLayout
-            (getContentPane(), javax.swing.BoxLayout.Y_AXIS));
-    getContentPane().add
-        (javax.swing.Box.createVerticalStrut(borderWidth));
-    getContentPane().add(namePanel);
-    getContentPane().add(javax.swing.Box.createVerticalStrut(15));
-    getContentPane().add(drawingPanel);
-    getContentPane().add(javax.swing.Box.createVerticalStrut(15));
-    getContentPane().add(buttonPanel);
-    getContentPane().add
-        (javax.swing.Box.createVerticalStrut(borderWidth));
+    getContentPane().add(namePanel,java.awt.BorderLayout.NORTH);
+	getContentPane().add(leftPanel,java.awt.BorderLayout.WEST);
+    getContentPane().add(shapeView,java.awt.BorderLayout.CENTER);
+	getContentPane().add(rightPanel,java.awt.BorderLayout.EAST);
+    getContentPane().add(bottomPanel,java.awt.BorderLayout.SOUTH);
 
     nameText.setText(shape.name());
     shapeRotatable = shape.isRotatable();
