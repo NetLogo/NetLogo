@@ -199,6 +199,9 @@ ListItem3
 ListItem4
   item 1 [1 []] => []
 
+ListItem5
+  item 1.5 [1 3 5] => 3
+
 ListLast1
   last [] => ERROR List is empty.
 
@@ -304,6 +307,9 @@ ListRemoveItem5
 ListRemoveItem6
   remove-item 0 [] => ERROR Can't find element 0 of the list [], which is only of length 0.
 
+ListRemoveItem7
+  remove-item 1.5 [1 2 3] => [1 3]
+
 ListRemDups1
   remove-duplicates [2 7 4 7 "Bob" 7] => [2 7 4 "Bob"]
 
@@ -327,6 +333,9 @@ ListReplItem3
 
 ListReplItem4
   replace-item 0 [[[]]] [] => [[]]
+
+ListReplItem5
+  replace-item 1.5 [1 2 3] 4 => [1 4 3]
 
 ListReverse1
   reverse [] => []
@@ -391,6 +400,9 @@ ListSubList11
 ListSubList12
   sublist [0 1] 10 15 => ERROR 15 is greater than the length of the input list (2).
 
+ListSubList13
+  sublist [1 2 3] 0.5 1.5 => [1]
+
 ListMultiOps1
   first sublist [9 8 7] 1 2 => 8
 
@@ -399,4 +411,3 @@ ListMultiOps2
 
 ListMultiOps3
   last butlast [9 8 7] => 8
-
