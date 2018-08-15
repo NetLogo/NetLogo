@@ -7,7 +7,6 @@ import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion }
-import SbtSubdirectory.runSubdirectoryCommand
 import Running.makeMainTask
 import java.nio.file.Paths
 import java.nio.file.Files
