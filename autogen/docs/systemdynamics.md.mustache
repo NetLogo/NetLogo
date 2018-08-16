@@ -243,7 +243,7 @@ Let's create a model of Wolf-Sheep Predation with the System Dynamics Modeler.
 
 > - Open a new model in NetLogo.
 > - Launch the System Dynamics Modeler in the Tools menu.
->   ![[tutorial1.gif]]
+>   ![[tutorial1.png]]
 
 Our model will have a population of wolves and a population of sheep.
 Let's start with the sheep. First, create a Stock that holds a
@@ -309,12 +309,12 @@ a plot to watch the changes in sheep population.
 
 > - Select the main NetLogo window
 > - In the Code tab, write:
->   
+>
 >         to setup
 >           ca
 >           system-dynamics-setup
 >         end
-> 
+>
 >         to go
 >           system-dynamics-go
 >           system-dynamics-do-plot
@@ -348,16 +348,16 @@ which eat sheep.
 >   Sheep stock.
 > - Fill in the names of the diagram elements so it looks like this:
 >   ![[tutorial10.jpg]]
-> 
->     where  
->     initial-value of `wolves` is `30`,  
->     `wolf-deaths` is `wolves * wolf-death-rate`,  
->     `wolf-death-rate` is `0.15`,  
->     `predator-efficiency` is `.8`,  
->     `wolf-births` is `wolves * predator-efficiency * predation-rate * sheep`,  
->     `predation-rate` is `3.0E-4`,  
+>
+>     where
+>     initial-value of `wolves` is `30`,
+>     `wolf-deaths` is `wolves * wolf-death-rate`,
+>     `wolf-death-rate` is `0.15`,
+>     `predator-efficiency` is `.8`,
+>     `wolf-births` is `wolves * predator-efficiency * predation-rate * sheep`,
+>     `predation-rate` is `3.0E-4`,
 >     and `sheep-deaths` is `sheep * predation-rate * wolves`.
-> 
+>
 > - Adjust the `dt` of the system dynamics model by selecting "Edit" next to
 >   `dt` in the toolbar of the system dynamics modeler. In the dialog that
 >   appears, enter `0.01`.
@@ -373,4 +373,3 @@ Now we're really done.
 
 You see a plot of the populations that looks like this:
 ![[tutorial11.gif]]
-
