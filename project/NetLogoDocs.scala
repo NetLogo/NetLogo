@@ -12,39 +12,40 @@ class NetLogoDocs(
 
   // keys are file name (without extension), values are page title
   val markdownComponents = Map(
-    "whatis"           -> "What is NetLogo?",
-    "versions"         -> "What's new?",
-    "requirements"     -> "System Requirements",
-    "contact"          -> "Contacting Us",
-    "sample"           -> "Sample Model: Party",
-    "tutorial1"        -> "Tutorial #1: Models",
-    "tutorial2"        -> "Tutorial #2: Commands",
-    "tutorial3"        -> "Tutorial #3: Procedures",
-    "interface"        -> "Interface Guide",
-    "interfacetab"     -> "Interface Tab Guide",
-    "codetab"          -> "Code Tab Guide",
-    "programming"      -> "Programming Guide",
-    "transition"       -> "Transition Guide",
-    "shapes"           -> "Shapes Editor Guide",
-    "behaviorspace"    -> "BehaviorSpace Guide",
-    "systemdynamics"   -> "System Dynamics Guide",
-    "hubnet"           -> "HubNet Guide",
-    "hubnet-authoring" -> "HubNet Authoring Guide",
-    "modelingcommons"  -> "Modeling Commons Guide",
-    "logging"          -> "Logging",
-    "controlling"      -> "Controlling Guide",
-    "mathematica"      -> "Mathematica Link",
-    "extensions"       -> "Extensions Guide",
-    "faq"              -> "FAQ (Frequently Asked Questions)")
+    "whatis"            -> "What is NetLogo?",
+    "versions"          -> "What's new?",
+    "requirements"      -> "System Requirements",
+    "contact"           -> "Contacting Us",
+    "sample"            -> "Sample Model: Party",
+    "tutorial1"         -> "Tutorial #1: Models",
+    "tutorial2"         -> "Tutorial #2: Commands",
+    "tutorial3"         -> "Tutorial #3: Procedures",
+    "interface"         -> "Interface Guide",
+    "interfacetab"      -> "Interface Tab Guide",
+    "codetab"           -> "Code Tab Guide",
+    "programming"       -> "Programming Guide",
+    "transition"        -> "Transition Guide",
+    "extension-manager" -> "Extension Manager Guide",
+    "shapes"            -> "Shapes Editor Guide",
+    "behaviorspace"     -> "BehaviorSpace Guide",
+    "systemdynamics"    -> "System Dynamics Guide",
+    "hubnet"            -> "HubNet Guide",
+    "hubnet-authoring"  -> "HubNet Authoring Guide",
+    "modelingcommons"   -> "Modeling Commons Guide",
+    "logging"           -> "Logging",
+    "controlling"       -> "Controlling Guide",
+    "mathematica"       -> "Mathematica Link",
+    "extensions"        -> "Extensions Guide",
+    "faq"               -> "FAQ (Frequently Asked Questions)")
 
   def manualComponents(base: File, extensions: Seq[String]): Seq[File] = {
     val allComponents = Seq(
       "whatis", "copyright", "versions", "requirements", "contact",
       "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
-      "interfacetab", "infotab", "codetab", "programming", "transition", "shapes",
-      "behaviorspace", "systemdynamics", "hubnet", "hubnet-authoring",
-      "modelingcommons", "logging", "controlling", "mathematica", "3d",
-      "extensions") ++ extensions ++ Seq("faq", "dictionary")
+      "interfacetab", "infotab", "codetab", "programming", "transition",
+      "extension-manager", "shapes", "behaviorspace", "systemdynamics",
+      "hubnet", "hubnet-authoring", "modelingcommons", "logging", "controlling",
+      "mathematica", "3d", "extensions") ++ extensions ++ Seq("faq", "dictionary")
 
     allComponents.map(n => (base / s"$n.html"))
   }
