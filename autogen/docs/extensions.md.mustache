@@ -23,23 +23,23 @@ NetLogo will look for extensions in several places:
 1. In the folder of the current model.
 2. The extensions folder located under the user's home:
 
-   - On Mac OS X: `Library/Application Support/NetLogo`
-   - On Windows: `AppData\NetLogo`
-   - On Linux: `.netlogo`
+    - On Mac OS X: `Library/Application Support/NetLogo`
+    - On Windows: `AppData\NetLogo`
+    - On Linux: `.netlogo`
 
-   These folders are split up to to subdirectories, for each minor version of
-   NetLogo (i.e., the third number in the version doesn't count). Inside the
-   appropriate one you'll find an `extensions` folder.
+    These folders are split up to to subdirectories, for each minor version of
+    NetLogo (i.e., the third number in the version doesn't count). Inside the
+    appropriate one you'll find an `extensions` folder.
 
 3. The extensions folder located with the NetLogo installation. For typical NetLogo installations:
 
-   - On Mac OS X: `/Applications/NetLogo {{version}}/extensions`
-   - On 64-bit Windows with 64-bit NetLogo or 32-bit Windows with 32-bit
-     NetLogo: `C:\Program Files\NetLogo {{version}}\app\extensions`
-   - On 64-bit Windows with 32-bit NetLogo:
-     `C:\Program Files (x86)\NetLogo {{version}}\app\extensions`
-   - On Linux: the `app/extensions` subdirectory of the NetLogo directory
-     extracted from the installation `.tgz`
+    - On Mac OS X: `/Applications/NetLogo {{version}}/extensions`
+    - On 64-bit Windows with 64-bit NetLogo or 32-bit Windows with 32-bit
+      NetLogo: `C:\Program Files\NetLogo {{version}}\app\extensions`
+    - On 64-bit Windows with 32-bit NetLogo:
+      `C:\Program Files (x86)\NetLogo {{version}}\app\extensions`
+    - On Linux: the `app/extensions` subdirectory of the NetLogo directory
+      extracted from the installation `.tgz`
 
 Each NetLogo extension consists of a folder with the same name as the extension, entirely in lower case. This folder must contain a JAR file with the same name as the folder. For example, the `sound` extension is stored in a folder called `sound` with a file inside called `sound.jar`.
 
