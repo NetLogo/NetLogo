@@ -3,8 +3,9 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, GridLayout }
-import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JPanel,
-  JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
+import java.io.IOException
+import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JOptionPane,
+  JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ ListDataEvent, ListDataListener }
 
 import org.nlogo.core.I18N
@@ -84,7 +85,7 @@ extends JPanel(new BorderLayout) {
     })
     libraryList.addListSelectionListener(_ => updateSidebar())
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener(_ => operate("installing", install,
+    installButton.addActionListener(_ => operate("installing", wrappedInstall,
       lib => lib.status != LibraryStatus.UpToDate))
     uninstallButton.addActionListener(_ => operate("uninstalling", uninstall,
       lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
@@ -145,6 +146,15 @@ extends JPanel(new BorderLayout) {
 
     libraryList.getSelectedValuesList.asScala
   }
+
+  private def wrappedInstall(lib: LibraryInfo) =
+    try {
+      install(lib)
+    } catch {
+      case ex: IOException => JOptionPane.showMessageDialog(this,
+        I18N.gui("downloadFailed", lib.downloadURL), I18N.gui.get("common.messages.error"),
+        JOptionPane.ERROR_MESSAGE)
+    }
 
   private def filterFn(info: LibraryInfo, text: String) =
     (info.name + info.shortDescription).toLowerCase.contains(text.toLowerCase)

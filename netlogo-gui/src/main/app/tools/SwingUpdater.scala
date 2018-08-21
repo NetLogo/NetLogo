@@ -2,14 +2,14 @@
 
 package org.nlogo.app.tools
 
-import java.io.File
+import java.io.{ File, IOException }
 import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
 import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
 import java.util.prefs.{ Preferences => JPreferences }
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ Exceptions, FileIO }
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
 object SwingUpdater {
@@ -44,7 +44,7 @@ class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: Progress
   private class Worker extends SwingWorker[Any, Any] {
     private var changed = false
 
-    override def doInBackground(): Unit = {
+    override def doInBackground(): Unit = Exceptions.ignoring(classOf[IOException]) {
       val md = MessageDigest.getInstance("MD5")
       val conn = url.openConnection.asInstanceOf[HttpURLConnection]
       if (conn.getResponseCode == 200) {
