@@ -7,7 +7,7 @@ package back
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below
 // - ST 2/22/08
 
-import org.nlogo.core.{ SourceLocation, Token, TokenType }
+import org.nlogo.core.{ CompilerException, SourceLocation, Token, TokenType, TypeNames }
 import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
 import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
@@ -83,9 +83,23 @@ private[compile] class Assembler {
       })
     }
     def block() { block(stmt.args.size - 1) }
-    def block(pos: Int) { assembleStatements(stmt.args(pos).asInstanceOf[CommandBlock].statements) }
+    def block(pos: Int): Unit = stmt.args(pos) match {
+      case block: CommandBlock => assembleStatements(block.statements)
+      case arg => throw new CompilerException(
+        s"${stmt.command.displayName} expected a command block here but got ${TypeNames.aName(arg.reportedType())}.",
+        arg.start, arg.end, arg.filename
+      )
+    }
+
     def argCount = stmt.args.size
-    def arg(i: Int) = stmt.args(i).asInstanceOf[ReporterApp].reporter
+
+    def arg(i: Int) = stmt.args(i) match {
+      case rep: ReporterApp => rep.reporter
+      case arg => throw new CompilerException(
+        s"${stmt.command.displayName} expected a reporter here but got a block.", arg.start, arg.end, arg.filename
+      )
+    }
+
     def removeArg(i: Int) {
       stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
     }
