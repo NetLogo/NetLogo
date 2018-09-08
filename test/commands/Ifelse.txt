@@ -1,0 +1,17 @@
+# The following tests were originated from the CF extension to test variadicity of ifelse
+
+ifelse-takes-first-true
+  O> (ifelse false [ crt 1 ] true [ crt 2 ] true [ crt 4 ] [ crt 8 ])
+  count turtles => 2
+
+ifelse-falls-through-to-else-block
+  O> (ifelse false [ crt 1 ] false [ crt 2 ] [ crt 4 ])
+  count turtles => 4
+
+ifelse-optional-else
+  O> (ifelse false [ crt 1 ] false [ crt 2 ])
+  count turtles => 0
+
+ifelse-gives-type-errors-in-variadic-position
+  O> (ifelse false [ ] false false [ ]) => COMPILER ERROR IFELSE expected a command block here but got a TRUE/FALSE.
+  O> (ifelse false [ ] [ ] [ ]) => COMPILER ERROR IFELSE expected a reporter here but got a block.

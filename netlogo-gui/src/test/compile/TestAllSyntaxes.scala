@@ -95,7 +95,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_hubnetmessagetag ,string,OTPL,None,10,0,0
                      |_hubnetmessagewaiting ,TRUE/FALSE,OTPL,None,10,0,0
                      |_hubnetoutqsize ,number,OTPL,None,10,0,0
-                     |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,None,10,3,3
+                     |_ifelsevalue TRUE/FALSE/reporter block/TRUE/FALSE or reporter block,anything,OTPL,None,3,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,12,2,2
                      |_inconenowrap agentset,number/number,agentset,-T--,None,12,2,2
                      |_inlinkfrom agent,agent,-T--,None,10,1,1
@@ -397,7 +397,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_hubnetwaitforclients number/number,OTPL,None,0,2,2
                     |_hubnetwaitformessages number/number,OTPL,None,0,2,2
                     |_if TRUE/FALSE/command block,OTPL,None,0,2,2
-                    |_ifelse TRUE/FALSE/command block/command block,OTPL,None,0,3,3
+                    |_ifelse TRUE/FALSE/TRUE/FALSE or command block/command block,OTPL,None,0,3,2
                     |_ignore anything,OTPL,None,0,1,1
                     |_importdrawing string,O---,None,0,1,1
                     |_importpatchcolors string,O---,None,0,1,1
