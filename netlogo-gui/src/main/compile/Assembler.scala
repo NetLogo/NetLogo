@@ -6,10 +6,12 @@ package org.nlogo.compile
 // and an explanation of each method in the AssemblerAssistant interface, which is implemented below
 // - ST 2/22/08
 
-import org.nlogo.core.{ SourceLocation, Token, TokenType }
-import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant }
-import org.nlogo.prim.{ _call, _done, _fastrecurse, _goto, _return, _returnreport }
-import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
+import org.nlogo.compile.api.{CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements}
+import org.nlogo.core.{SourceLocation, Token, TokenType}
+import org.nlogo.nvm.{AssemblerAssistant, Command, CustomAssembled}
+import org.nlogo.prim.{_call, _done, _fastrecurse, _goto, _return, _returnreport}
+
+import scala.collection.mutable.{Buffer, Map => MMap}
 
 /**
  * fills the code array of the Procedure object with Commands.
@@ -54,28 +56,30 @@ private class Assembler {
   /// (without being privy to implementation details)
   private class Assistant(stmt: Statement) extends AssemblerAssistant {
     private var branchMark = -1
-    private var gotoMark = -1
-    private var storedGoto: Option[_goto] = None
+
+    // Label -> (Position, Command)
+    private val goTos: MMap[Int, Buffer[(Int, _goto)]] = MMap.empty[Int, Buffer[(Int, _goto)]]
+    // Label -> Position
+    private val labels: MMap[Int, Int] = MMap.empty[Int, Int]
+
     def add(cmd: Command) {
       if (cmd eq stmt.command)
         if (branchMark == -1) branchMark = code.size
         else stmt.command.offset = branchMark - code.size
       code += cmd
     }
-    def goTo() {
-      if (gotoMark == -1) {
-        storedGoto = Some(new _goto(-99999)) // we'll fix in comeFrom()
-        add(storedGoto.get)
-        gotoMark = code.size
-      } else add(new _goto(gotoMark - code.size))
+    def goTo(label: Int = 0): Unit = {
+      val pos = code.size
+      val gt = new _goto // Will set offset in a moment or when `comeFrom` is called
+      goTos.getOrElseUpdate(label, Buffer.empty[(Int, _goto)]).append(pos -> gt)
+      labels.get(label).foreach(l => gt.offset = l - pos)
+      add(gt)
     }
-    def comeFrom() {
-      storedGoto match {
-        case Some(g) =>
-          g.offset = code.size - gotoMark + 1
-          storedGoto = None
-        case None => gotoMark = code.size
-      }
+    def comeFrom(label: Int = 0): Unit = {
+      labels(label) = code.size
+      goTos.get(label).foreach(_.foreach { case (pos, gt) =>
+          gt.offset = code.size - pos
+      })
     }
     def block() { block(stmt.args.size - 1) }
     def block(pos: Int) { assembleStatements(stmt.args(pos).asInstanceOf[CommandBlock].statements) }
@@ -92,5 +96,6 @@ private class Assembler {
       if (branchMark == -1) throw new IllegalStateException
       else code.size - branchMark
     def done() { code += new _done }
+    def next: Int = code.size
   }
 }

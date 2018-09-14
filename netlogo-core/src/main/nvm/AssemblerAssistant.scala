@@ -48,9 +48,10 @@ package org.nlogo.nvm
 // Reporter arguments can be accessed and manipulated via argCount(), arg(), and removeArg().
 //
 // Calling goTo() adds a _goto command.  The target of the command is the location where comeFrom()
-// is called.  (Intercal fans will enjoy the name of the latter method.)  At present only one goto
-// is permitted; if we ever write a prim needing multiple gotos, these methods would have to take
-// label names.
+// is called.  (Intercal fans will enjoy the name of the latter method.) You can add integer labels
+// for goTo()s to jump to specific comeFrom()s. If no label is provided, label 0 will be used.
+// Multiple goTo()s can use the same label, but only one comeFrom() can use a particular label, with
+// the last comeFrom() taking precedence. (Labels added by BCH on 9/14/2018)
 //
 // Most commands don't use goTo() because the compiler allows commands to include an implicit goto.
 // The location jumped to is the "branch target"; the "offset" is the distance from the original
@@ -71,8 +72,15 @@ trait AssemblerAssistant {
   def argCount: Int
   def arg(i: Int): Reporter
   def removeArg(i: Int)
-  def goTo()
-  def comeFrom()
+  def goTo(): Unit = goTo(0)
+  def goTo(label: Int)
+  def comeFrom(): Unit = comeFrom(0)
+  def comeFrom(label: Int)
   def resume()
   def offset(): Int
+
+  /**
+    * @return The ip of the next instruction. Useful for when you need to calculate offsets manually.
+    */
+  def next: Int
 }
