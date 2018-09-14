@@ -12,6 +12,8 @@ import org.nlogo.nvm.{ Command, CustomAssembled, AssemblerAssistant }
 import org.nlogo.prim.{ _call, _done, _recursefast, _goto, _return, _returnreport }
 import org.nlogo.compile.api.{ CommandBlock, ProcedureDefinition, ReporterApp, Statement, Statements }
 
+import scala.collection.mutable.{Buffer, Map => MMap}
+
 /**
  * fills the code array of the Procedure object with Commands.
  */
@@ -55,42 +57,37 @@ private[compile] class Assembler {
   /// (without being privy to implementation details)
   private class Assistant(stmt: Statement) extends AssemblerAssistant {
     private var branchMark = -1
-    private var gotoMark = -1
-    private var storedGoto: Option[_goto] = None
+
+    // Label -> (Position, Command)
+    private val goTos: MMap[Int, Buffer[(Int, _goto)]] = MMap.empty[Int, Buffer[(Int, _goto)]]
+    // Label -> Position
+    private val labels: MMap[Int, Int] = MMap.empty[Int, Int]
+
     def add(cmd: Command) {
       if (cmd eq stmt.command)
         if (branchMark == -1) branchMark = code.size
         else stmt.command.offset = branchMark - code.size
       code += cmd
     }
-    def goTo() {
-      if (gotoMark == -1) {
-        storedGoto = Some(new _goto) // we'll set the offset in comeFrom()
-        add(storedGoto.get)
-        gotoMark = code.size
-      } else {
-        val g = new _goto
-        g.offset = gotoMark - code.size
-        add(g)
-      }
+    def goTo(label: Int = 0): Unit = {
+      val pos = code.size
+      val gt = new _goto // Will be fixed in a moment or when `comeFrom` is called
+      goTos.getOrElseUpdate(label, Buffer.empty[(Int, _goto)]).append(pos -> gt)
+      labels.get(label).foreach(l => gt.offset = l - pos)
+      add(gt)
     }
-    def comeFrom() {
-      storedGoto match {
-        case Some(g) =>
-          g.offset = code.size - gotoMark + 1
-          storedGoto = None
-        case None => gotoMark = code.size
-      }
+    def comeFrom(label: Int = 0): Unit = {
+      labels(label) = code.size
+      goTos.get(label).foreach(_.foreach { case (pos, gt) =>
+        gt.offset = code.size - pos
+      })
     }
     def block() { block(stmt.args.size - 1) }
-    def block(pos: Int) {
-      assembleStatements(stmt.args(pos).asInstanceOf[CommandBlock].statements)
-    }
+    def block(pos: Int) { assembleStatements(stmt.args(pos).asInstanceOf[CommandBlock].statements) }
     def argCount = stmt.args.size
     def arg(i: Int) = stmt.args(i).asInstanceOf[ReporterApp].reporter
     def removeArg(i: Int) {
-      stmt.command.args =
-        (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
+      stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
     }
     def resume() {
       if (branchMark == -1) branchMark = code.size
@@ -100,5 +97,6 @@ private[compile] class Assembler {
       if (branchMark == -1) throw new IllegalStateException
       else code.size - branchMark
     def done() { code += new _done }
+    def next: Int = code.size
   }
 }
