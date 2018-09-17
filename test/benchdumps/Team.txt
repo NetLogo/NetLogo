@@ -689,6 +689,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
 [1]_asm_procedurecolorcollaborations_ifelse_2 "ifelse new-collaboration? [ ifelse [ incumbent? ] of end1 and [ incumbent? ] of end2 [ set color yellow ] [ ifelse [ incumbent? ] of end1 or [ incumbent? ] of end2 [ set color green ] [ set color blue ] ] ] [ set color red ]" boolean => void
       _linkvariable:NEW-COLLABORATION? "new-collaboration?" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -753,6 +755,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           _linkvariable:END2 "end2" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -1146,6 +1150,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
          L9
           RETURN
 [4]_asm_procedurecolorcollaborations_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -1160,6 +1165,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           _linkvariable:END2 "end2" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L8 org/nlogo/api/AgentException
@@ -1553,6 +1560,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
          L9
           RETURN
 [7]_asm_procedurecolorcollaborations_goto_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -1621,6 +1629,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
          L9
           RETURN
 [9]_asm_procedurecolorcollaborations_goto_10 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 11
@@ -4256,6 +4265,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          L5
           RETURN
 [15]_asm_procedurefindallcomponents_goto_18 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_5
@@ -5533,7 +5543,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurepickteammembers_repeatlocal_1 "repeat team-size ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ] [ ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ] ]" double => void
+[1]_asm_procedurepickteammembers_repeatlocal_1 "repeat team-size (ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ]) [ ask new-team-member set in-team? true set downtime 0 set size 1.8 [ set color ifelse-value incumbent? [ yellow + 2 ] [ blue + 1 ] ] ]" double => void
       _observervariable:TEAM-SIZE "team-size" => Object
           // parameter final  context
           // parameter final  arg0
@@ -5583,11 +5593,13 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L5
           RETURN
-[2]_asm_procedurepickteammembers_ifelse_2 "ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ]" boolean => void
+[2]_asm_procedurepickteammembers_ifelse_2 "(ifelse random-float 100.0 >= p make-newcomer [ set new-team-member newcomer ] [ ifelse random-float 100.0 < q and any? turtles with [ in-team? and any? link-neighbors with [ not in-team? ] ] [ set new-team-member one-of turtles with [ not in-team? and any? link-neighbors with [ in-team? ] ] ] [ set new-team-member one-of turtles with [ not in-team? ] ] ])" boolean => void
       _greaterorequal "random-float 100.0 >= p" double,Object => boolean
         _randomfloat "random-float 100.0" double => double
           _constdouble:100.0 "100.0" => double
         _observervariable:P "p" => Object
+          // parameter final  context
+          // parameter final  cond
          L0
           LDC 100.0
          L1
@@ -5709,6 +5721,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          L2
           RETURN
 [5]_asm_procedurepickteammembers_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 10
@@ -5951,6 +5964,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                FRAME SAME1 java/lang/Boolean
                 ARETURN
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           LDC 100.0
          L1
@@ -6405,6 +6420,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          L7
           RETURN
 [8]_asm_procedurepickteammembers_goto_12 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 10

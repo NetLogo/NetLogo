@@ -1804,7 +1804,7 @@ procedure COLORIZE:[]{-TP-}:
           // parameter final  context
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1

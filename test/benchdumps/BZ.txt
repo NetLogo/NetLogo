@@ -211,11 +211,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           RETURN
 
 procedure FIND-NEW-STATE:[A B S]{-TP-}:
-[0]_asm_procedurefindnewstate_ifelse_0 "ifelse state = n [ set new-state 0 ] let count neighbors with [ state > 0 and state < n ] let count neighbors with [ state = n ] ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ] [ if new-state > n [ set new-state n ] ]" boolean => void
+[0]_asm_procedurefindnewstate_ifelse_0 "(ifelse state = n [ set new-state 0 ] let count neighbors with [ state > 0 and state < n ] let count neighbors with [ state = n ] (ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ]) [ if new-state > n [ set new-state n ] ])" boolean => void
       _equal "state = n" Object,Object => boolean
         _patchvariable:STATE "state" => Object
         _observervariable:N "n" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -298,6 +300,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L6
           RETURN
 [2]_asm_procedurefindnewstate_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 12
@@ -800,11 +803,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[5]_asm_procedurefindnewstate_ifelse_7 "ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ]" boolean => void
+[5]_asm_procedurefindnewstate_ifelse_7 "(ifelse state = 0 [ set new-state int a / k1 + int b / k2 ] let state + sum [ state ] of neighbors [ set new-state int s / a + b + 1 + g ])" boolean => void
       _equal "state = 0" Object,double => boolean
         _patchvariable:STATE "state" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1086,6 +1091,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L28
           RETURN
 [7]_asm_procedurefindnewstate_goto_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 10

@@ -318,7 +318,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
       _observervariable:BUMPY? "bumpy?" => Object
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -365,7 +365,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
       _observervariable:HILL? "hill?" => Object
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -1715,7 +1715,7 @@ procedure RECOLOR:[]{-TP-}:
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0

@@ -1479,11 +1479,11 @@ procedure SETUP-FOOD:[]{-TP-}:
           RETURN
 
 procedure UPDATE-DISPLAY:[]{-TP-}:
-[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse nest? [ set pcolor violet ] [ ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ] ]" boolean => void
+[0]_asm_procedureupdatedisplay_ifelse_0 "ifelse nest? [ set pcolor violet ] [ (ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ]) ]" boolean => void
       _patchvariable:NEST? "nest?" => Object
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -1585,7 +1585,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureupdatedisplay_ifelse_3 "ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ]" boolean => void
+[3]_asm_procedureupdatedisplay_ifelse_3 "(ifelse food > 0 if food-source-number = 1 [ set pcolor cyan ] if food-source-number = 2 [ set pcolor sky ] [ if food-source-number = 3 [ set pcolor blue ] ] [ set pcolor scale-color green chemical 0.1 5 ])" boolean => void
       _greaterthan "food > 0" Object,double => boolean
         _patchvariable:FOOD "food" => Object
         _constdouble:0.0 "0" => double
@@ -1595,7 +1595,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2520,7 +2520,7 @@ procedure GO:[]{O---}:
           RETURN
 
 procedure GO-TURTLES:[]{-T--}:
-[0]_asm_proceduregoturtles_if_0 "if who < ticks [ ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ] ]" boolean => void
+[0]_asm_proceduregoturtles_if_0 "if who < ticks [ (ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ]) ]" boolean => void
       _lessthan "who < ticks" double,double => boolean
         _turtlevariabledouble:WHO "who" => double
         _ticks "ticks" => double
@@ -2585,11 +2585,11 @@ procedure GO-TURTLES:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
-[1]_asm_proceduregoturtles_ifelse_1 "ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ]" boolean => void
+[1]_asm_proceduregoturtles_ifelse_1 "(ifelse carrying-food? set color orange + 1 [ return-to-nest ] set color red [ look-for-food ])" boolean => void
       _turtlevariable:CARRYING-FOOD? "carrying-food?" => Object
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3017,11 +3017,11 @@ procedure GO-PATCHES:[]{-TP-}:
           RETURN
 
 procedure RETURN-TO-NEST:[]{-T--}:
-[0]_asm_procedurereturntonest_ifelse_0 "ifelse nest? set carrying-food? false rt 180 [ fd 1 ] set chemical chemical + drop-size set drop-size drop-size - 1.5 if drop-size < 1 [ set drop-size 1 ] uphill-nest-scent wiggle [ fd 1 ]" boolean => void
+[0]_asm_procedurereturntonest_ifelse_0 "(ifelse nest? set carrying-food? false rt 180 [ fd 1 ] set chemical chemical + drop-size set drop-size drop-size - 1.5 if drop-size < 1 [ set drop-size 1 ] uphill-nest-scent wiggle [ fd 1 ])" boolean => void
       _patchvariable:NEST? "nest?" => Object
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3927,7 +3927,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[6]_asm_procedurelookforfood_ifelse_6 "ifelse chemical > 2 [ fd 1 ] [ ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ] ]" boolean => void
+[6]_asm_procedurelookforfood_ifelse_6 "ifelse chemical > 2 [ fd 1 ] [ (ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ]) ]" boolean => void
       _greaterthan "chemical > 2" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:2.0 "2" => double
@@ -3937,7 +3937,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -4057,7 +4057,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_procedurelookforfood_ifelse_9 "ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ]" boolean => void
+[9]_asm_procedurelookforfood_ifelse_9 "(ifelse chemical < 0.05 wiggle [ fd 1 ] uphill-chemical [ fd 1 ])" boolean => void
       _lessthan "chemical < 0.05" Object,double => boolean
         _patchvariable:CHEMICAL "chemical" => Object
         _constdouble:0.05 "0.05" => double
@@ -4067,7 +4067,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -4809,7 +4809,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           // parameter final  o1
           // parameter final  o2
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5548,7 +5548,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           // parameter final  o1
           // parameter final  o2
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

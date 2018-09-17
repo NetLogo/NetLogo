@@ -1136,6 +1136,8 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
         _randomconst:100 "random 100" => double
         _observervariable:GAIN-RESISTANCE-CHANCE "gain-resistance-chance" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -1230,6 +1232,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
          L1
           RETURN
 [4]_asm_proceduredoviruschecks_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 6
@@ -2656,6 +2659,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
          L13
           RETURN
 [1]_asm_proceduresetupspatiallyclusterednetwork_goto_1 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8

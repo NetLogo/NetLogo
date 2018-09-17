@@ -3262,6 +3262,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           _procedurevariable:MAX-WEALTH "max-wealth" => Object
           _constdouble:3.0 "3" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3457,6 +3459,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
          L9
           RETURN
 [4]_asm_procedurerecolorturtles_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -3472,6 +3475,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
             _constdouble:2.0 "2" => double
           _constdouble:3.0 "3" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3678,6 +3683,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
          L9
           RETURN
 [7]_asm_procedurerecolorturtles_goto_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9

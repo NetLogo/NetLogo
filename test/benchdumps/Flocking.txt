@@ -1693,7 +1693,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ] ]" boolean => void
+[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ (ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]) ]" boolean => void
       _any "any? flockmates" AgentSet => boolean
         _turtlevariable:FLOCKMATES "flockmates" => Object
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -1782,11 +1782,13 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]" boolean => void
+[3]_asm_procedureflock_ifelse_3 "(ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ])" boolean => void
       _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
         _distance "distance nearest-neighbor" Agent => double
           _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
         _observervariable:MINIMUM-SEPARATION "minimum-separation" => Object
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -1961,6 +1963,7 @@ procedure FLOCK:[]{-T--}:
          L1
           RETURN
 [5]_asm_procedureflock_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8
@@ -2141,6 +2144,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
         _constdouble:180.0 "180" => double
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -2389,6 +2394,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME
           RETURN
 [2]_asm_proceduremysubtractheadings_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7
@@ -2401,6 +2407,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
         _procedurevariable:H2 "h2" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2685,6 +2693,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
          FRAME SAME
           RETURN
 [5]_asm_proceduremysubtractheadings_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7
@@ -3281,6 +3290,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
         _procedurevariable:MAX-TURN "max-turn" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -3392,6 +3403,8 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
         _procedurevariable:TURN "turn" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3503,6 +3516,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L5
           RETURN
 [3]_asm_procedureturnatmost_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_5
@@ -3553,6 +3567,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L5
           RETURN
 [5]_asm_procedureturnatmost_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7

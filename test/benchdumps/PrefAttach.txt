@@ -527,6 +527,8 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
         _procedurevariable:TOTAL "total" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -677,6 +679,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L2
           RETURN
 [7]_asm_procedurefindpartner_goto_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9

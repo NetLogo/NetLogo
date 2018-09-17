@@ -216,6 +216,8 @@ procedure COLORIZE:[]{-TP-}:
         _patchvariable:N "n" => Object
         _constdouble:3.0 "3" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -439,6 +441,7 @@ procedure COLORIZE:[]{-TP-}:
          L15
           RETURN
 [2]_asm_procedurecolorize_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -845,6 +848,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
          L1
           RETURN
 [6]_asm_procedurego_goto_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 19

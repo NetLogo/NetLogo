@@ -207,6 +207,8 @@ reporter procedure APPLY:[INPUT]{OTPL}:
              L4
              FRAME FULL [org/nlogo/prim/_asm_procedureapply_first_1 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
               ARETURN
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureapply_ifelse_0.keptinstr2 : Lorg/nlogo/prim/etc/_isnumber;
@@ -353,6 +355,7 @@ reporter procedure APPLY:[INPUT]{OTPL}:
          FRAME SAME
           RETURN
 [2]_asm_procedureapply_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -3468,6 +3471,8 @@ procedure RECOLOR:[]{-T--}:
       _greaterthan "activation > 0.5" Object,double => boolean
         _turtlevariable:ACTIVATION "activation" => Object
         _constdouble:0.5 "0.5" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3612,6 +3617,7 @@ procedure RECOLOR:[]{-T--}:
          L9
           RETURN
 [2]_asm_procedurerecolor_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4

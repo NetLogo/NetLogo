@@ -4056,7 +4056,7 @@ procedure DEATH:[]{-T--}:
           RETURN
 
 procedure GROW-GRASS:[]{-TP-}:
-[0]_asm_proceduregrowgrass_if_0 "if pcolor = brown [ ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ] ]" boolean => void
+[0]_asm_proceduregrowgrass_if_0 "if pcolor = brown [ (ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ]) ]" boolean => void
       _equal "pcolor = brown" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:35.0 "brown" => double
@@ -4134,14 +4134,14 @@ procedure GROW-GRASS:[]{-TP-}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L12
           RETURN
-[1]_asm_proceduregrowgrass_ifelse_1 "ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ]" boolean => void
+[1]_asm_proceduregrowgrass_ifelse_1 "(ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ])" boolean => void
       _lessorequal "countdown <= 0" Object,double => boolean
         _patchvariable:COUNTDOWN "countdown" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1

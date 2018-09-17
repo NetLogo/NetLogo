@@ -2861,6 +2861,8 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
              FRAME SAME1 java/lang/Boolean
               ARETURN
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecalculateticklength_ifelse_0.world : Lorg/nlogo/agent/World;
@@ -3061,6 +3063,7 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
          L13
           RETURN
 [2]_asm_procedurecalculateticklength_goto_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -7929,6 +7932,8 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
       _any "any? trace-patches" AgentSet => boolean
         _procedurevariable:TRACE-PATCHES "trace-patches" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -8358,6 +8363,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
          L1
           RETURN
 [7]_asm_procedurefadepatches_goto_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -9221,6 +9227,8 @@ procedure GO:[OLD-CLOCK]{O---}:
       _any "any? particles" AgentSet => boolean
         _breed:PARTICLES "particles" => AgentSet
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ifelse_18.world : Lorg/nlogo/agent/World;
@@ -9396,6 +9404,7 @@ procedure GO:[OLD-CLOCK]{O---}:
          L13
           RETURN
 [20]_asm_procedurego_goto_21 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 22
@@ -10141,6 +10150,8 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           _procedurevariable:THE-LIST "the-list" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -10324,6 +10335,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
          FRAME SAME
           RETURN
 [2]_asm_procedurelastn_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -13107,6 +13119,8 @@ procedure RECOLOR:[]{-T--}:
         _breedvariable:SPEED "speed" => Object
         _constdouble:5.0 "0.5 * 10" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -13251,6 +13265,7 @@ procedure RECOLOR:[]{-T--}:
          L9
           RETURN
 [2]_asm_procedurerecolor_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7
@@ -13262,6 +13277,8 @@ procedure RECOLOR:[]{-T--}:
         _breedvariable:SPEED "speed" => Object
         _constdouble:15.0 "1.5 * 10" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -13406,6 +13423,7 @@ procedure RECOLOR:[]{-T--}:
          L9
           RETURN
 [5]_asm_procedurerecolor_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7

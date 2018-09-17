@@ -845,7 +845,7 @@ procedure GO:[]{-T--}:
           RETURN
 
 procedure SEARCH-FOR-CHIP:[]{-T--}:
-[0]_asm_proceduresearchforchip_ifelse_0 "ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ]" boolean => void
+[0]_asm_proceduresearchforchip_ifelse_0 "(ifelse pcolor = yellow set pcolor black set color orange [ jump 20 ] wiggle [ search-for-chip ])" boolean => void
       _equal "pcolor = yellow" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:45.0 "yellow" => double
@@ -855,7 +855,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1236,7 +1236,7 @@ procedure FIND-NEW-PILE:[]{-T--}:
           RETURN
 
 procedure FIND-EMPTY-SPOT:[]{-T--}:
-[0]_asm_procedurefindemptyspot_ifelse_0 "ifelse pcolor = black set pcolor yellow set color white [ get-away ] set heading random 360 fd 1 [ find-empty-spot ]" boolean => void
+[0]_asm_procedurefindemptyspot_ifelse_0 "(ifelse pcolor = black set pcolor yellow set color white [ get-away ] set heading random 360 fd 1 [ find-empty-spot ])" boolean => void
       _equal "pcolor = black" Object,double => boolean
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:0.0 "black" => double
@@ -1246,7 +1246,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1

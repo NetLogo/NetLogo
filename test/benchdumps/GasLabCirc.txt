@@ -4660,6 +4660,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
         _procedurevariable:X-SPEED "x-speed" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4806,6 +4808,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L11
           RETURN
 [17]_asm_procedurecheckforwallcollision_goto_17 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 19
@@ -4965,6 +4968,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
         _procedurevariable:X-SPEED "x-speed" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5111,6 +5116,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L11
           RETURN
 [24]_asm_procedurecheckforwallcollision_goto_24 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 26
@@ -5270,6 +5276,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
         _procedurevariable:Y-SPEED "y-speed" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5416,6 +5424,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L11
           RETURN
 [31]_asm_procedurecheckforwallcollision_goto_31 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 33
@@ -5575,6 +5584,8 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
         _procedurevariable:Y-SPEED "y-speed" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5721,6 +5732,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
          L11
           RETURN
 [38]_asm_procedurecheckforwallcollision_goto_38 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 40
@@ -9503,13 +9515,13 @@ reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           ATHROW
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2 set colliding-particles filter [ [collision] ->
+[0]_asm_procedurego_ifelse_0 "(ifelse is-turtle? colliding-particle-2 set colliding-particles filter [ [collision] ->
       item 1 collision != colliding-particle-1 and
       item 2 collision != colliding-particle-1 and
       item 1 collision != colliding-particle-2 and
       item 2 collision != colliding-particle-2] colliding-particles ask colliding-particle-2 [ check-for-wall-collision ] [ ask colliding-particle-2 [ check-for-particle-collision ] ] [ set colliding-particles filter [ [collision] ->
       item 1 collision != colliding-particle-1 and
-      item 2 collision != colliding-particle-1] colliding-particles ]" boolean => void
+      item 2 collision != colliding-particle-1] colliding-particles ])" boolean => void
       _isturtle "is-turtle? colliding-particle-2"
         _asm_procedurego_observervariable_1 "colliding-particle-2" => Object
              L0
@@ -9520,6 +9532,8 @@ procedure GO:[]{O---}:
               INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
              L1
               ARETURN
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ifelse_0.keptinstr2 : Lorg/nlogo/prim/etc/_isturtle;
@@ -10590,6 +10604,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [8]_asm_procedurego_goto_11 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 10
@@ -14071,6 +14086,8 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           _procedurevariable:AVG-SPEED "avg-speed" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -14251,6 +14268,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
          L9
           RETURN
 [3]_asm_procedurerecolorbanded_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8
@@ -14265,6 +14283,8 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           _procedurevariable:AVG-SPEED "avg-speed" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -14445,6 +14465,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
          L9
           RETURN
 [6]_asm_procedurerecolorbanded_goto_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8
@@ -14621,6 +14642,8 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           _procedurevariable:AVG-SPEED "avg-speed" => Object
           // parameter final  context
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -14938,6 +14961,7 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
          L26
           RETURN
 [3]_asm_procedurerecolorshaded_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_5
@@ -16418,7 +16442,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[9]_asm_proceduresortcollisions_if_11 "if dt > 0 [ ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ] ]" boolean => void
+[9]_asm_proceduresortcollisions_if_11 "if dt > 0 [ (ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ]) ]" boolean => void
       _greaterthan "dt > 0" Object,double => boolean
         _procedurevariable:DT "dt" => Object
         _constdouble:0.0 "0" => double
@@ -16491,13 +16515,15 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[10]_asm_proceduresortcollisions_ifelse_12 "ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ]" boolean => void
+[10]_asm_proceduresortcollisions_ifelse_12 "(ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ])" boolean => void
       _lessorequal "dt - ticks <= 1" double,double => boolean
         _minus "dt - ticks" double,double => double
           _procedurevariable:DT "dt" => Object
           _ticks "ticks" => double
         _constdouble:1.0 "1" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -17033,6 +17059,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
          L13
           RETURN
 [14]_asm_proceduresortcollisions_goto_16 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 16
@@ -17477,6 +17504,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
          L1
           RETURN
 [4]_asm_proceduretesttimereversal_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 6
@@ -17657,6 +17685,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
          L1
           RETURN
 [9]_asm_proceduretesttimereversal_goto_8 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 11
