@@ -2816,7 +2816,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           // parameter final  context
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3031,7 +3031,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           // parameter final  arg1
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0

@@ -811,6 +811,8 @@ procedure RECOLOR:[]{-TP-}:
         _patchvariable:SPIN "spin" => Object
         _constdouble:1.0 "1" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -901,6 +903,7 @@ procedure RECOLOR:[]{-TP-}:
          L6
           RETURN
 [2]_asm_procedurerecolor_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -1013,6 +1016,8 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
         _procedurevariable:INITIAL-MAGNETIZATION "initial-magnetization" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1121,6 +1126,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
          L8
           RETURN
 [5]_asm_proceduresetup_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7

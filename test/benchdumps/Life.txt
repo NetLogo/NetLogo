@@ -650,6 +650,8 @@ procedure GO:[]{O---}:
         _patchvariable:LIVE-NEIGHBORS "live-neighbors" => Object
         _constdouble:3.0 "3" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -726,6 +728,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [6]_asm_procedurego_goto_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -895,6 +898,8 @@ procedure SETUP-RANDOM:[]{O---}:
         _randomfloat "random-float 1.0" double => double
           _constdouble:1.0 "1.0" => double
         _observervariable:INITIAL-DENSITY "initial-density" => Object
+          // parameter final  context
+          // parameter final  cond
          L0
           DCONST_1
          L1
@@ -995,6 +1000,7 @@ procedure SETUP-RANDOM:[]{O---}:
          L1
           RETURN
 [5]_asm_proceduresetuprandom_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 7

@@ -3195,6 +3195,8 @@ procedure RECOLOR:[]{-TP-}:
         _not "not show-water?" boolean => boolean
           _observervariable:SHOW-WATER? "show-water?" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -3492,6 +3494,7 @@ procedure RECOLOR:[]{-TP-}:
          L23
           RETURN
 [2]_asm_procedurerecolor_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -3860,6 +3863,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [4]_asm_proceduresetup_ifelse_2 "ifelse bumpy? [ ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ] ] [ set elevation 100 ]" boolean => void
       _observervariable:BUMPY? "bumpy?" => Object
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -3904,6 +3909,8 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           RETURN
 [5]_asm_proceduresetup_ifelse_3 "ifelse hill? [ set elevation -100 * distancexy 0 0 / max-pxcor + 100 + random 100 ] [ set elevation random 125 ]" boolean => void
       _observervariable:HILL? "hill?" => Object
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -4081,6 +4088,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L17
           RETURN
 [7]_asm_proceduresetup_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 9
@@ -4132,6 +4140,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L6
           RETURN
 [9]_asm_proceduresetup_goto_7 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 11

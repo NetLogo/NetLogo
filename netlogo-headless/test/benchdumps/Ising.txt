@@ -295,7 +295,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1655,7 +1655,7 @@ procedure RECOLOR:[]{-TP-}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1

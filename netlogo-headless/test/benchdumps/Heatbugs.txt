@@ -1870,7 +1870,7 @@ procedure STEP:[TARGET]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[1]_asm_procedurestep_ifelse_1 "ifelse unhappiness = 0 [ set temp temp + output-heat ] let find-target if patch-here != target or random-move-chance > random 100 [ bug-move target ] [ set temp temp + output-heat ]" boolean => void
+[1]_asm_procedurestep_ifelse_1 "(ifelse unhappiness = 0 [ set temp temp + output-heat ] let find-target if patch-here != target or random-move-chance > random 100 [ bug-move target ] [ set temp temp + output-heat ])" boolean => void
       _equal "unhappiness = 0" Object,double => boolean
         _turtlevariable:UNHAPPINESS "unhappiness" => Object
         _constdouble:0.0 "0" => double
@@ -1880,7 +1880,7 @@ procedure STEP:[TARGET]{-T--}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2451,7 +2451,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           // parameter final  o1
           // parameter final  o2
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0

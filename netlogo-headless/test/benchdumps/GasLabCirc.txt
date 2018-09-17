@@ -926,13 +926,13 @@ procedure REBUILD-COLLISION-LIST:[]{OTPL}:
           RETURN
 
 procedure GO:[]{O---}:
-[0]_asm_procedurego_ifelse_0 "ifelse is-turtle? colliding-particle-2 set colliding-particles filter [ [collision] ->
+[0]_asm_procedurego_ifelse_0 "(ifelse is-turtle? colliding-particle-2 set colliding-particles filter [ [collision] ->
       item 1 collision != colliding-particle-1 and
       item 2 collision != colliding-particle-1 and
       item 1 collision != colliding-particle-2 and
       item 2 collision != colliding-particle-2] colliding-particles ask colliding-particle-2 [ check-for-wall-collision ] [ ask colliding-particle-2 [ check-for-particle-collision ] ] [ set colliding-particles filter [ [collision] ->
       item 1 collision != colliding-particle-1 and
-      item 2 collision != colliding-particle-1] colliding-particles ]" boolean => void
+      item 2 collision != colliding-particle-1] colliding-particles ])" boolean => void
       _isturtle "is-turtle? colliding-particle-2"
         _asm_procedurego_observervariable_1 "colliding-particle-2" => Object
               // parameter final  context
@@ -945,7 +945,7 @@ procedure GO:[]{O---}:
              L1
               ARETURN
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ifelse_0.keptinstr2 : Lorg/nlogo/prim/etc/_isturtle;
@@ -6813,7 +6813,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7155,7 +7155,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7497,7 +7497,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -7839,7 +7839,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -8874,7 +8874,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[9]_asm_proceduresortcollisions_if_17 "if dt > 0 [ ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ] ]" boolean => void
+[9]_asm_proceduresortcollisions_if_17 "if dt > 0 [ (ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ]) ]" boolean => void
       _greaterthan "dt > 0" Object,double => boolean
         _procedurevariable:DT "dt" => Object
         _constdouble:0.0 "0" => double
@@ -8961,7 +8961,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L10
           RETURN
-[10]_asm_proceduresortcollisions_ifelse_18 "ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ]" boolean => void
+[10]_asm_proceduresortcollisions_ifelse_18 "(ifelse dt - ticks <= 1 set tick-length dt - ticks set colliding-particle-1 item 1 winner [ set colliding-particle-2 item 2 winner ] [ set tick-length 1 ])" boolean => void
       _lessorequal "dt - ticks <= 1" double,double => boolean
         _minus "dt - ticks" double,double => double
           _procedurevariable:DT "dt" => Object
@@ -8973,7 +8973,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           // parameter final  d1
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -13552,7 +13552,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -13760,7 +13760,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -14061,7 +14061,7 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0

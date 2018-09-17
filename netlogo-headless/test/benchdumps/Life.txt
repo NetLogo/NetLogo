@@ -289,7 +289,7 @@ procedure SETUP-RANDOM:[]{O---}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           DCONST_1
          L1
@@ -936,7 +936,7 @@ procedure GO:[]{O---}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1

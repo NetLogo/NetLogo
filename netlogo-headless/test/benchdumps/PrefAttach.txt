@@ -1237,7 +1237,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           // parameter final  o1
           // parameter final  o2
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

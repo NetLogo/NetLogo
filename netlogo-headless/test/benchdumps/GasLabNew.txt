@@ -2614,7 +2614,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ifelse_18.world : Lorg/nlogo/agent/World;
@@ -3644,7 +3644,7 @@ procedure CALCULATE-TICK-LENGTH:[]{OTPL}:
           // parameter final  sourceSet
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecalculateticklength_ifelse_0.world : Lorg/nlogo/agent/World;
@@ -10862,7 +10862,7 @@ procedure RECOLOR:[]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -11031,7 +11031,7 @@ procedure RECOLOR:[]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -11526,7 +11526,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -15776,7 +15776,7 @@ reporter procedure LAST-N:[N THE-LIST]{OTPL}:
           // parameter final  context
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

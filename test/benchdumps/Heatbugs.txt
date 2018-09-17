@@ -353,6 +353,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
          L3
           RETURN
 [4]_asm_procedurebugmove_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 10
@@ -686,6 +687,8 @@ reporter procedure FIND-TARGET:[]{-T--}:
         _patchvariable:TEMP "temp" => Object
         _turtlevariable:IDEAL-TEMP "ideal-temp" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -962,6 +965,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
          FRAME SAME
           RETURN
 [2]_asm_procedurefindtarget_goto_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -2674,10 +2678,12 @@ procedure STEP:[TARGET]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L20
           RETURN
-[1]_asm_procedurestep_ifelse_1 "ifelse unhappiness = 0 [ set temp temp + output-heat ] let find-target if patch-here != target or random-move-chance > random 100 [ bug-move target ] [ set temp temp + output-heat ]" boolean => void
+[1]_asm_procedurestep_ifelse_1 "(ifelse unhappiness = 0 [ set temp temp + output-heat ] let find-target if patch-here != target or random-move-chance > random 100 [ bug-move target ] [ set temp temp + output-heat ])" boolean => void
       _equal "unhappiness = 0" Object,double => boolean
         _turtlevariable:UNHAPPINESS "unhappiness" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2864,6 +2870,7 @@ procedure STEP:[TARGET]{-T--}:
          L18
           RETURN
 [3]_asm_procedurestep_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8

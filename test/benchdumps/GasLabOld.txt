@@ -7489,6 +7489,8 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           _constdouble:0.5 "0.5" => double
           _observervariable:INITSPEED "initspeed" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
@@ -7886,6 +7888,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
          L1
           RETURN
 [4]_asm_procedurerecolorturtle_goto_4 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 13
@@ -7900,6 +7903,8 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           _constdouble:1.5 "1.5" => double
           _observervariable:INITSPEED "initspeed" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
           TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
@@ -8297,6 +8302,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
          L1
           RETURN
 [9]_asm_procedurerecolorturtle_goto_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 13
@@ -8761,6 +8767,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _greaterorequal "v1t >= 0" Object,double => boolean
           _turtlevariable:V1T "v1t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -9161,6 +9169,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L32
           RETURN
 [3]_asm_proceduresetnewspeedandheadings_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 12
@@ -9175,6 +9184,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _lessthan "v1t < 0" Object,double => boolean
           _turtlevariable:V1T "v1t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -9588,6 +9599,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L34
           RETURN
 [6]_asm_proceduresetnewspeedandheadings_goto_6 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 12
@@ -9602,6 +9614,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _lessthan "v1t < 0" Object,double => boolean
           _turtlevariable:V1T "v1t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -10015,6 +10029,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L34
           RETURN
 [9]_asm_proceduresetnewspeedandheadings_goto_9 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 12
@@ -10849,6 +10864,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _greaterorequal "v2t >= 0" Object,double => boolean
           _turtlevariable:V2T "v2t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -11249,6 +11266,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L32
           RETURN
 [18]_asm_proceduresetnewspeedandheadings_goto_18 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 27
@@ -11263,6 +11281,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _lessthan "v2t < 0" Object,double => boolean
           _turtlevariable:V2T "v2t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -11676,6 +11696,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L34
           RETURN
 [21]_asm_proceduresetnewspeedandheadings_goto_21 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 27
@@ -11690,6 +11711,8 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
         _lessthan "v2t < 0" Object,double => boolean
           _turtlevariable:V2T "v2t" => Object
           _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L0
@@ -12103,6 +12126,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
          L34
           RETURN
 [24]_asm_proceduresetnewspeedandheadings_goto_24 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 27

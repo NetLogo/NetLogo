@@ -1483,7 +1483,7 @@ procedure GO:[]{O---}:
           // parameter final  arg0
           // parameter final  d1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -2273,7 +2273,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurepercentburned_ifelse_0.world : Lorg/nlogo/agent/World;

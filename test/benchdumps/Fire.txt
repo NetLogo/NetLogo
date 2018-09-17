@@ -916,6 +916,8 @@ procedure GO:[]{O---}:
         _patchvariable:PCOLOR "pcolor" => Object
         _constdouble:55.0 "green" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -1204,6 +1206,7 @@ procedure GO:[]{O---}:
          L11
           RETURN
 [12]_asm_procedurego_goto_13 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 15
@@ -1387,6 +1390,8 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
       _greaterthan "initial-trees > 0" Object,double => boolean
         _observervariable:INITIAL-TREES "initial-trees" => Object
         _constdouble:0.0 "0" => double
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurepercentburned_ifelse_0.world : Lorg/nlogo/agent/World;
@@ -1623,6 +1628,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
          FRAME SAME
           RETURN
 [2]_asm_procedurepercentburned_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4

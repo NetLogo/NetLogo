@@ -233,6 +233,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
         _procedurevariable:POWER-OF-TWO "power-of-two" => Object
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -415,6 +417,7 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
          FRAME SAME
           RETURN
 [2]_asm_procedurebindigit_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -1605,6 +1608,8 @@ procedure COLOR-PATCH:[]{-TP-}:
 [0]_asm_procedurecolorpatch_ifelse_0 "ifelse on? [ set pcolor foreground ] [ set pcolor background ]" boolean => void
       _patchvariable:ON? "on?" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -1699,6 +1704,7 @@ procedure COLOR-PATCH:[]{-TP-}:
          L6
           RETURN
 [2]_asm_procedurecolorpatch_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -4729,7 +4735,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/nvm/Context.stop ()V
          L3
           RETURN
-[2]_asm_procedurego_if_2 "if row = min-pycor [ ifelse auto-continue? display [ setup-continue ] [ stop ] ]" boolean => void
+[2]_asm_procedurego_if_2 "if row = min-pycor [ (ifelse auto-continue? display [ setup-continue ] [ stop ]) ]" boolean => void
       _equal "row = min-pycor" Object,double => boolean
         _observervariable:ROW "row" => Object
         _minpycor "min-pycor" => double
@@ -4778,8 +4784,10 @@ procedure GO:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[3]_asm_procedurego_ifelse_3 "ifelse auto-continue? display [ setup-continue ] [ stop ]" boolean => void
+[3]_asm_procedurego_ifelse_3 "(ifelse auto-continue? display [ setup-continue ] [ stop ])" boolean => void
       _observervariable:AUTO-CONTINUE? "auto-continue?" => Object
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 0
@@ -4844,6 +4852,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [6]_asm_procedurego_goto_5 => void
+          // parameter final  context
          L0
           ALOAD 1
           BIPUSH 8
@@ -5773,6 +5782,8 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
 [0]_asm_procedureprintblock_ifelse_0 "ifelse state [ set color foreground ] [ set color background ]" boolean => void
       _procedurevariable:STATE "state" => Object
           // parameter final  context
+          // parameter final  context
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -5880,6 +5891,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
          L9
           RETURN
 [2]_asm_procedureprintblock_goto_2 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_4
@@ -6144,6 +6156,8 @@ procedure REFRESH-RULES:[]{OTPL}:
       _equal "rule = old-rule" Object,Object => boolean
         _observervariable:RULE "rule" => Object
         _observervariable:OLD-RULE "old-rule" => Object
+          // parameter final  context
+          // parameter final  cond
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerefreshrules_ifelse_0.world : Lorg/nlogo/agent/World;
@@ -6296,6 +6310,7 @@ procedure REFRESH-RULES:[]{OTPL}:
          L6
           RETURN
 [3]_asm_procedurerefreshrules_goto_3 => void
+          // parameter final  context
          L0
           ALOAD 1
           ICONST_5

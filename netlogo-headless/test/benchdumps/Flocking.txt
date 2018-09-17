@@ -568,7 +568,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ] ]" boolean => void
+[1]_asm_procedureflock_if_1 "if any? flockmates find-nearest-neighbor [ (ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]) ]" boolean => void
       _any "any? flockmates" AgentSet => boolean
         _turtlevariable:FLOCKMATES "flockmates" => Object
           // parameter final  context
@@ -662,7 +662,7 @@ procedure FLOCK:[]{-T--}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedureflock_ifelse_3 "ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ]" boolean => void
+[3]_asm_procedureflock_ifelse_3 "(ifelse distance nearest-neighbor < minimum-separation [ separate ] align [ cohere ])" boolean => void
       _lessthan "distance nearest-neighbor < minimum-separation" double,Object => boolean
         _distance "distance nearest-neighbor" Agent => double
           _turtlevariable:NEAREST-NEIGHBOR "nearest-neighbor" => Object
@@ -673,7 +673,7 @@ procedure FLOCK:[]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L0
@@ -2820,7 +2820,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
           ALOAD 1
@@ -2948,7 +2948,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           // parameter final  arg0
           // parameter final  arg1
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3202,7 +3202,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           // parameter final  d
           // parameter final  context
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
@@ -3466,7 +3466,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           // parameter final  o1
           // parameter final  o2
           // parameter final  context
-          // parameter final  arg0
+          // parameter final  cond
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
