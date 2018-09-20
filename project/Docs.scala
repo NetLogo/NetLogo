@@ -53,7 +53,6 @@ object Docs {
         "arduino"  -> "Arduino",
         "array"    -> "Array",
         "bitmap"   -> "Bitmap",
-        "cf"       -> "Control Flow",
         "csv"      -> "CSV",
         "gis"      -> "GIS",
         "gogo"     -> "GoGo",
