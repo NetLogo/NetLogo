@@ -3612,26 +3612,52 @@ if xcor &gt; 0[ set color blue ]
         <a>ifelse<span class="since">1.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">ifelse <i>reporter</i> [ <i>commands1</i> ] [ <i>commands2</i> ]</span>
+        <span class="prim_example">ifelse <i>reporter1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
+        <span class="prim_example">(ifelse <i>reporter1</i> [ <i>commands1</i> ] <i>reporter2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])</span>
       </h4>
       <p>
-        Reporter must report a boolean (true or false) value.
+        The <i>reporter</i>s must report boolean (true or false) values.
       <p>
-        If <i>reporter</i> reports true, runs <i>commands1</i>.
+        For the first <i>reporter</i> that reports true, runs the <i>commands</i> that follow.
       <p>
-        If <i>reporter</i> reports false, runs <i>commands2</i>.
+        If no <i>reporter</i> reports true, runs <i>elsecommands</i> or does nothing if
+        <i>elsecommands</i> is not given.  When using only one <i>reporter</i>
+        you do not need to surround the entire <i>ifelse</i> primitive and its blocks in parentheses.
+        <pre>
+  ask patches
+    [ ifelse pxcor &gt; 0
+        [ set pcolor blue ]
+        [ set pcolor red ] ]
+  ;; the left half of the world turns red and
+  ;; the right half turns blue
+  </pre>
       <p>
-        The reporter may report a different value for different agents, so
-        some agents may run <i>commands1</i> while others run
-        <i>commands2</i>.
+        The reporters may report a different value for different agents, so
+        some agents may run different command blocks.  When using more than one <i>reporter</i> you
+        must surround the whole <i>ifelse<i> primitive and its blocks in parentheses.
       <pre>
-ask patches
-  [ ifelse pxcor &gt; 0
-      [ set pcolor blue ]
-      [ set pcolor red ] ]
-;; the left half of the world turns red and
-;; the right half turns blue
-</pre>
+        ask patches [
+          let choice random 4
+          (ifelse
+            choice = 0 [
+              set pcolor red
+              set plabel "r"
+            ]
+            choice = 1 [
+              set pcolor blue
+              set plabel "b"
+            ]
+            choice = 2 [
+              set pcolor green
+              set plabel "g"
+            ]
+            ; elsecommands
+            [
+              set pcolor yellow
+              set plabel "y"
+          ])
+        ]
+      </pre>
       <p>
         See also <a href="#if">if</a>, <a href="#ifelse-value">ifelse-value</a>.
       </div>
@@ -3640,16 +3666,19 @@ ask patches
         <a>ifelse-value<span class="since">2.0</span></a>
       </h3>
       <h4>
-        <span class="prim_example">ifelse-value <i>reporter</i> [<i>reporter1</i>] [<i>reporter2</i>]</span>
+        <span class="prim_example">ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
+        <span class="prim_example">(ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] <i>tfreporter2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])</span>
       </h4>
       <p>
-        Reporter must report a boolean (true or false) value.
+        The <i>tfreporter</i>s must report boolean (true or false) values.
       <p>
-        If <i>reporter</i> reports true, the result is the value of
-        <i>reporter1</i>.
+        For the first <i>tfreporter</i> that reports true, runs the
+        <i>reporter</i> that follows and reports that result.  When using only one <i>tfreporter1<i>
+        you do not need to surround the entire <i>ifelse-value</i> primitive and its blocks in parentheses.
       <p>
-        If <i>reporter</i> reports false, the result is the value of
-        <i>reporter2</i>.
+        If all <i>tfreporter</i>s report false, the result is the value of
+        <i>elsereporter</i>.  You may leave out the <i>elsereporter</i>, but
+        if all <i>tfreporter</i>s report false then a runtime error will occur.
       <p>
         This can be used when a conditional is needed in the context of a
         reporter, where commands (such as <a href="#ifelse">ifelse</a>) are
@@ -3666,6 +3695,29 @@ show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
   [1 3 2 5 3 8 3 2 1]
 =&gt; 8
 </pre>
+      <p>
+        When using more than one <i>tfreporter</i> you
+        must surround the whole <i>ifelse-value<i> primitive and its blocks in parentheses.
+      <pre>
+        ask patches [
+          let choice random 4
+          set pcolor (ifelse-value
+            choice = 0 [ red ]
+            choice = 1 [ blue ]
+            choice = 2 [ green ]
+                       [ yellow ])
+        ]
+      <p>
+        A runtime error can occur if there is no <i>elsereporter</i>.
+      <pre>
+        ask patches [
+          let x = 2
+          set pcolor (ifelse-value
+            x = 0 [ red ]
+            x = 1 [ blue ]
+            ; no final else reporter is given, and x is 2 so there will be a runtime error
+          )
+      </pre>
       <p>
         See also <a href="#if">if</a>, <a href="#ifelse">ifelse</a>.
       </div>

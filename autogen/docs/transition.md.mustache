@@ -13,6 +13,16 @@ complete details on differences between versions.
 
 [TOC]
 
+## Changes for NetLogo 6.1.0
+
+### CF Extension Removal
+
+The CF extension is no longer bundled with NetLogo.  The multi-conditional
+`cf:ifelse` and `cf:ifelse-value` primitives are now now supported directly
+in NetLogo without an extension by [[ifelse]] and [[ifelse-value]].  Simply
+remove the `cf:` from the primitives in your models and they should work
+as they did before with CF.
+
 ## Changes for NetLogo 6.0.3
 
 ### Arduino Extension Changes
@@ -1041,4 +1051,3 @@ random patch. An even more concise way to put a turtle on the center of a random
 patch is:
 
     move-to one-of patches
-
