@@ -40,6 +40,7 @@ pipeline {
         sh "./sbt netlogo/test:slow"
         sh "./sbt threed netlogo/test:slow"
         sh "./sbt netlogo/test:extensionTests"
+        sh "./sbt headless/test:slow"
         junit 'netlogo-*/target/test-reports/*.xml'
       }
     }
