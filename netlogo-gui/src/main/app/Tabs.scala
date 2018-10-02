@@ -273,6 +273,7 @@ class Tabs(val workspace:       GUIWorkspace,
     category    = UserAction.FileCategory
     group       = UserAction.FileSaveGroup
     rank        = 1
+    accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withAlt = true)
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
