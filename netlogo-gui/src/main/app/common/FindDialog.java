@@ -58,7 +58,7 @@ public strictfp class FindDialog
       putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
       putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
       putValue(Action.ACCELERATOR_KEY,
-          UserAction.KeyBindings$.MODULE$.keystroke('F', true, false));
+          UserAction.KeyBindings$.MODULE$.keystroke('F', true, false, false));
       setEnabled(false);
     }
 
@@ -89,7 +89,7 @@ public strictfp class FindDialog
       putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
       putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
       putValue(Action.ACCELERATOR_KEY,
-          UserAction.KeyBindings$.MODULE$.keystroke('G', true, false));
+          UserAction.KeyBindings$.MODULE$.keystroke('G', true, false, false));
       setEnabled(false);
     }
 
