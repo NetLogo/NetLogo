@@ -51,6 +51,11 @@ case class _beep() extends Command {
   override def syntax =
     Syntax.commandSyntax()
 }
+case class _behaviorspaceexperimentname() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      ret = Syntax.StringType)
+}
 case class _behaviorspacerunnumber() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
