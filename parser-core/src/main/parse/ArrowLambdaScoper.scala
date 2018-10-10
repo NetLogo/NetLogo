@@ -2,16 +2,16 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Fail, Token, TokenType }, Fail.exception
-import
-  org.nlogo.core.prim.{ Lambda, _lambdavariable, _unknownidentifier },
-    Lambda.Arguments
+import org.nlogo.core.{Fail, Token, TokenType}
+import Fail.exception
+import org.nlogo.core.prim.{Lambda, _lambdavariable, _unknownidentifier}
+import Lambda.Arguments
 
 import scala.annotation.tailrec
 
 object ArrowLambdaScoper {
   def apply(toks: Seq[Token], usedNames: SymbolTable): Option[(Arguments, Seq[Token], SymbolTable)] = {
-    if (toks.exists(_.text == "->")
+    if (hasArrow(toks)
       && toks.headOption.exists(_.tpe == TokenType.OpenBracket)
       && toks.lastOption.exists(_.tpe == TokenType.CloseBracket)) {
         val unbracketedToks = toks.drop(1).dropRight(1)
@@ -26,6 +26,15 @@ object ArrowLambdaScoper {
             (args, body, syms)
         }
     } else None
+  }
+
+  @tailrec
+  def hasArrow(toks: Seq[Token], depth: Int = 0): Boolean = toks match {
+    case Token(_, TokenType.OpenBracket, _) +: tail => hasArrow(tail, depth + 1)
+    case Token(_, TokenType.CloseBracket, _) +: tail => hasArrow(tail, depth - 1)
+    case Token("->", _, _) +: _ if depth == 1 => true
+    case _ +: tail => hasArrow(tail, depth)
+    case Seq() => false
   }
 
   def gatherArguments(toks: Seq[Token], usedNames: SymbolTable): Option[(Arguments, Seq[Token], SymbolTable)] = {
