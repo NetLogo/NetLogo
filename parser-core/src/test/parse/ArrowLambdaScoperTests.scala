@@ -68,7 +68,7 @@ class ArrowLambdaScoperTests extends FunSuite {
   }
 
   test("a block with an arrow in the argument list errors") {
-    intercept[CompilerException] { scope(Seq(`[`, `[`, `->`, `]`, `]`)) }
+    intercept[CompilerException] { scope(Seq(`[`, `[`, `->`, `]`, `->`, `]`)) }
   }
 
   test("a block with multiple arguments without brackets errors") {
