@@ -86,6 +86,9 @@ class TestLiteralParser extends FunSuite {
   test("parseLiteralList2b") { assertResult("[[1] [2] [3]]")(dumpObject(toLiteralList("[[1] [2] [3]]"))) }
   test("parseLiteralList3") { assertResult("[[1 2 3]]")(dumpObject(toLiteralList("[[1 2 3]]"))) }
   test("parseLiteralList4") { assertResult("[1 hi true]")(dumpObject(toLiteralList("[1 \"hi\" true]"))) }
+  test("list literal: no lambdas") {
+    testError("[[->]]", "Expected a literal value.")
+  }
 
   test("agent and agentset literals surrounded by brackets") {
     val result = toLiteral("{agent-parseable}")
@@ -104,4 +107,5 @@ class TestLiteralParser extends FunSuite {
     val result = toLiteral(input)
     assertResult("PARSEDEXTENSIONOBJECT")(result)
   }
+
 }
