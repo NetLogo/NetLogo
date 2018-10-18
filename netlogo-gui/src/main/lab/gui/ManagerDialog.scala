@@ -42,7 +42,10 @@ private class ManagerDialog(manager:       LabManager,
     // Listen for double-clicks, and edit the selected protocol
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
-        if(e.getClickCount > 1) edit() } })
+        if(e.getClickCount > 1 && jlist.getSelectedIndices.length > 0) {
+          edit()
+        }
+      } })
     jlist.setCellRenderer(new ProtocolRenderer())
     // Setup the first row of buttons
     val buttonPanel = new JPanel
