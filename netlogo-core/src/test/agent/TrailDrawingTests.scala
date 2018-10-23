@@ -104,6 +104,21 @@ class TrailDrawingTests extends FunSuite {
     assertResult(LineSeg(0.0, 0.0, 4.0, -4.0, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(0))
   } }
 
+  test("draws three trails with setxy and wrapping") { new HelperBig {
+    turtle.penMode(Turtle.PEN_UP)
+    turtle.xandycor(3.75, 3.5)
+    assert(turtle.xcor == 3.75)
+    assert(turtle.ycor == 3.5)
+    turtle.penMode(Turtle.PEN_DOWN)
+    turtle.xandycor(turtle.shortestPathX(-3.75), turtle.shortestPathY(-3))
+    assert(drawer.lines.length == 3)
+    assertResult(Seq(
+      LineSeg(3.75, 3.5, 4.35, 4.5, Double.box(0.0), 1.0, Turtle.PEN_DOWN),
+      LineSeg(4.35, -4.5, 4.5, -4.249999999999999, Double.box(0.0), 1.0, Turtle.PEN_DOWN),
+      LineSeg(-4.5, -4.249999999999999, -3.750000000000001, -2.999999999999999, Double.box(0.0), 1.0, Turtle.PEN_DOWN)
+    ))(drawer.lines)
+  } }
+
   test("draws three trails when turtle crosses world boundary twice") { new Helper {
     turtle.heading(319)
     turtle.jump(1)

@@ -108,11 +108,25 @@ public strictfp class Turtle2D
   }
 
   void drawLine(double x0, double y0, double x1, double y1) {
-    if (penMode() != PEN_UP) {
-      Object color = variables()[VAR_COLOR];
-      double size = penSize();
-      String mode = penMode();
-      Trail[] lines = PenLineMaker.translate(x0, y0, x1, y1);
+    if (penMode() != PEN_UP && (x0 != x1 || y0 != y1)) {
+      Object color    = variables()[VAR_COLOR];
+      double size     = penSize();
+      String mode     = penMode();
+      double minPxcor = world().minPxcor() - 0.5;
+      double maxPxcor = world().maxPxcor() + 0.5;
+      double minPycor = world().minPycor() - 0.5;
+      double maxPycor = world().maxPycor() + 0.5;
+
+      Trail[] lines;
+      if ((minPxcor < x0 && x0 < maxPxcor) && (minPxcor < x1 && x1 < maxPxcor) && (minPycor < y0 && y0 < maxPycor) && (minPycor < y1 && y1 < maxPycor)) {
+        lines = PenLineMaker.translate(x0, y0, x1, y1);
+      } else {
+        double jumpDist = StrictMath.sqrt(StrictMath.pow(x0 - x1, 2) + StrictMath.pow(y0 - y1, 2));
+        double dx       = x1 - x0;
+        double dy       = y1 - y0;
+        double jumpHead = world().topology().towardsWrap(dx, dy);
+        lines           = PenLineMaker.jumpLine(x0, y0, jumpHead, jumpDist, minPxcor, maxPxcor, minPycor, maxPycor);
+      }
       for (Trail line : lines) {
         ((World2D) _world).drawLine(line.x1(), line.y1(), line.x2(), line.y2(), color, size, mode);
       }
