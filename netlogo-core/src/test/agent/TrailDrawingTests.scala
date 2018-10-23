@@ -64,7 +64,7 @@ class TrailDrawingTests extends FunSuite {
 
   trait HelperBig {
     val drawer = new DummyTrailDrawer()
-    val world = makeWorld(new WorldDimensions(4, 4, -4, -4))
+    val world = makeWorld(new WorldDimensions(-4, 4, -4, 4))
     world.trailDrawer(drawer)
     val turtle = makeTurtle(world, Array(0, 0))
     turtle.penMode(Turtle.PEN_DOWN)
@@ -96,7 +96,7 @@ class TrailDrawingTests extends FunSuite {
   } }
 
   test("draws one trail with face then moveTo") { new HelperBig {
-    val target = world.getPatchAt(-2, 1)
+    val target = world.getPatchAt(-5, 5)
     turtle.moveToPatchCenter()
     turtle.face(target, true)
     turtle.moveTo(target)
