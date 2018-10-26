@@ -350,6 +350,25 @@ TurtleDiesWhileIteratingOverFilteredAgentset
   O> ask turtles with [true] [ let t (turtle random 10) if (t != nobody) [ ask t [die] ] ]
   [who] of turtles => [1 5 9 2 0]
 
+TurtleSetIsntSpecialSet1
+  globals [ my-pals ]
+  O> set my-pals (turtle-set turtles)
+  O> create-turtles 1
+  count turtles => 1
+  count my-pals => 0
+  O> ask my-pals [ die ]
+  count turtles => 1
+
+TurtleSetIsntSpecialSet2
+  globals [ my-ghouls ]
+  breed [ ghouls ghoul ]
+  O> set my-ghouls (turtle-set ghouls)
+  O> create-ghouls 1
+  count ghouls => 1
+  count my-ghouls => 0
+  O> ask my-ghouls [ die ]
+  count ghouls => 1
+
 SelfUpdatesCorrectlyAfterException
   to-report selfish-self let my-who who carefully [ ask other turtles [ error "Derp" ] ] [ ] report who end
   O> crt 2
