@@ -4,6 +4,7 @@ package org.nlogo.parse
 
 import org.scalatest.FunSuite
 import org.nlogo.core
+import org.nlogo.core.{CompilerException}
 import org.nlogo.core.SourceLocation
 
 // This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
@@ -205,9 +206,18 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   }
 
   /// duplicate name tests
+  def frontEndError(src: String, error: String) = {
+    val e = intercept[CompilerException] {
+        FrontEnd.findIncludes(src)
+      }
+      assertResult(error)(e.getMessage.takeWhile(_ != ','))
+  }
 
   test("findIncludes lists all includes when there is a valid includes statement") {
     assertResult(Seq())(FrontEnd.findIncludes(""))
+    assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes ;; comment\n;; com2\n [\"foo.nls\"]"))
+    frontEndError("__includes \"foo.nls\"]", "Missing open bracket in structureParser")
+    assertResult(Seq())(FrontEnd.findIncludes("__includes [ ]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] to foo show \"bar\" end"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] foo \"bar\" end"))

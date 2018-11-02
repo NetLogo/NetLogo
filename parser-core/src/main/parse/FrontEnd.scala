@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core,
   core.{AstTransformer, CompilationOperand, Dialect, Femto,
-    ExtensionManager, FrontEndInterface,
+    ExtensionManager, FrontEndInterface, CompilerException,
     TokenizerInterface }
 
 object FrontEnd extends FrontEnd {
@@ -52,7 +52,7 @@ trait FrontEndMain extends NetLogoParser {
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
   }
-
+  @throws(classOf[CompilerException])
   def findIncludes(source: String): Seq[String] = {
     val tokens = tokenizer.tokenizeString(source)
     StructureParser.findIncludes(tokens)
