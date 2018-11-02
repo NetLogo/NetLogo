@@ -148,6 +148,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     frontEnd.findProcedurePositions(source, Some(dialect))
 
   // used for includes menu
+  @throws(classOf[CompilerException])
   def findIncludes(sourceFileName: String, source: String,
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)

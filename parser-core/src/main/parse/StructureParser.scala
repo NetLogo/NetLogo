@@ -21,7 +21,7 @@ package org.nlogo.parse
 import
   org.nlogo.core,
     core.{ CompilationOperand, ErrorSource, CompilationEnvironment,
-    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, StructureResults},
+    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, StructureResults, CompilerException},
       FrontEndInterface.ProceduresMap,
     core.Fail._
 
@@ -138,7 +138,7 @@ object StructureParser {
 
     splitOnProcedureStarts(tokens, Seq()).flatMap(procedureSyntax).toMap
   }
-
+  @throws(classOf[CompilerException])
   def findIncludes(tokens: Iterator[Token]): Seq[String] = {
     val includesPositionedTokens =
       tokens.dropWhile(! _.text.equalsIgnoreCase("__includes"))
@@ -146,10 +146,11 @@ object StructureParser {
       Seq()
     else {
       includesPositionedTokens.next
-      if (includesPositionedTokens.next.tpe != core.TokenType.OpenBracket)
-        Seq()
+      val includesWithoutComments = includesPositionedTokens.filter(_.tpe != core.TokenType.Comment)
+      if (includesWithoutComments.next.tpe != core.TokenType.OpenBracket)
+        exception("Missing open bracket in structureParser", tokens.next)
       else
-        includesPositionedTokens
+        includesWithoutComments
           .takeWhile(_.tpe != core.TokenType.CloseBracket)
           .filter(_.tpe == core.TokenType.Literal)
           .map(_.value)
