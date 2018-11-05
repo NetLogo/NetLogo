@@ -216,7 +216,7 @@ class FrontEndTests extends FunSuite with BaseParserTest {
   test("findIncludes lists all includes when there is a valid includes statement") {
     assertResult(Seq())(FrontEnd.findIncludes(""))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes ;; comment\n;; com2\n [\"foo.nls\"]"))
-    frontEndError("__includes \"foo.nls\"]", "Missing open bracket in structureParser")
+    frontEndError("__includes \"foo.nls\"]", "Did not find expected open bracket for __includes declaration")
     assertResult(Seq())(FrontEnd.findIncludes("__includes [ ]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] to foo show \"bar\" end"))
