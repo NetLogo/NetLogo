@@ -148,7 +148,7 @@ object StructureParser {
       includesPositionedTokens.next
       val includesWithoutComments = includesPositionedTokens.filter(_.tpe != core.TokenType.Comment)
       if (includesWithoutComments.next.tpe != core.TokenType.OpenBracket)
-        exception("Missing open bracket in structureParser", tokens.next)
+        exception("Did not find expected open bracket for __includes declaration", tokens.next)
       else
         includesWithoutComments
           .takeWhile(_.tpe != core.TokenType.CloseBracket)
