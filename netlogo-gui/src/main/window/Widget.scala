@@ -43,6 +43,7 @@ abstract class Widget extends JPanel {
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
 
   def model: WidgetModel
+  def reAdd(): Unit = { }
   def load(widget: WidgetModel): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false

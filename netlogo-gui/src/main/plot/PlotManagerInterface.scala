@@ -6,6 +6,7 @@ import org.nlogo.core.CompilerException
 
 trait PlotManagerInterface {
   def nextName:String
+  def addPlot(plot: Plot) : Unit
   def newPlot(name:String): Plot
   def compilePlot(plot:Plot): List[CompilerException]
   def forgetPlot(plot:Plot): Unit
@@ -19,6 +20,7 @@ trait PlotManagerInterface {
 class DummyPlotManager extends PlotManagerInterface{
   private val names = Iterator.from(1).map("plot " + _)
   def nextName: String = names.next()
+  def addPlot(plot: Plot): Unit = {}
   def newPlot(name:String): Plot = new Plot(name)
   def compilePlot(plot:Plot): List[CompilerException] = Nil
   def forgetPlot(plot:Plot): Unit = {}
