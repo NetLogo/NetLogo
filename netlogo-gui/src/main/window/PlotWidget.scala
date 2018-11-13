@@ -35,6 +35,9 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
   override def hasContextMenu = true
   override def exportable = true
   override def getDefaultExportName = plotName + ".csv"
+  override def reAdd(): Unit = {
+    plotManager.addPlot(plot)
+  }
 
   override def exportGraphics: BufferedImage = {
     val image = new BufferedImage(getWidth, getHeight, BufferedImage.TYPE_INT_ARGB)

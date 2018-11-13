@@ -44,6 +44,36 @@ class PlotManagerTests extends SimplePlotTest {
     assertResult(None)(manager.currentPlot)
   }
 
+    test("More Current Plot") {
+    val manager = newPlotManager()
+    val plot = manager.newPlot("test")
+    val numberofplots = manager.plots.length
+    assertResult(1)(manager.getPlotNames.length)
+    assertResult(Some(plot))(manager.currentPlot)
+    manager.currentPlot = Some(plot)
+    assertResult(Some(plot))(manager.currentPlot)
+    manager.forgetPlot(plot)
+    assertResult(None)(manager.currentPlot)
+    manager.addPlot(plot)
+    assertResult(numberofplots)(manager.plots.length)
+    assertResult(Some(plot))(manager.currentPlot)
+    manager.currentPlot = Some(plot)
+    assertResult(Some(plot))(manager.currentPlot)
+  }
+
+  test("Add Plot") {
+    val manager = newPlotManager()
+    val plot = manager.newPlot("test")
+    val numberofplots = manager.plots.length
+    assertResult(1)(manager.getPlotNames.length)
+    assertResult(Some(plot))(manager.currentPlot)
+    manager.forgetPlot(plot)
+    assertResult(None)(manager.currentPlot)
+    manager.addPlot(plot)
+    assertResult(numberofplots)(manager.plots.length)
+    manager.currentPlot = Some(plot)
+  }
+
   test("Get Plot") {
     val manager = newPlotManager()
     val plot = manager.newPlot("Test1")

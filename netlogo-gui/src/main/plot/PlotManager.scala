@@ -22,6 +22,12 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   // needed for backwards comp with pre 5.0 plotting style.
   var currentPlot: Option[Plot] = None
 
+  def addPlot(plot: Plot) : Unit = {
+    _plots += plot
+    compilePlot(plot)
+    currentPlot = Some(plot)
+  }
+
   // plot creation
   def newPlot(name:String) = {
     val plot = new Plot(name)
