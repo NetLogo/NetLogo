@@ -44,7 +44,7 @@ class PlotManagerTests extends SimplePlotTest {
     assertResult(None)(manager.currentPlot)
   }
 
-    test("More Current Plot") {
+  test("More Current Plot") {
     val manager = newPlotManager()
     val plot = manager.newPlot("test")
     val numberofplots = manager.plots.length
