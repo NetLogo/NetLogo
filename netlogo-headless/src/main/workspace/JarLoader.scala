@@ -80,7 +80,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
   }
 
   private def potentialPaths(path: String): Seq[File] = {
-    val paths = Seq(new File(ExtensionManager.extensionPath + java.io.File.separator + path))
+    val paths = Seq(new File(ExtensionManager.extensionsPath + java.io.File.separator + path))
     Try(new File(workspace.attachModelDir(path))).toOption.map(_ +: paths).getOrElse(paths)
   }
 
