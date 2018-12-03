@@ -48,7 +48,8 @@ trait Color {
   // also keep a cache of reverse lookups from rgb values to NetLogo color numbers, for the benefit
   // of import-pcolors
   protected val rgbMap = {
-    val map = collection.mutable.HashMap[Double, Double]()
+    // Use a *linked* hash map, so Tortoise can reproduce this behavior. --JAB (12/3/18)
+    val map = collection.mutable.LinkedHashMap[Double, Double]()
     for (c <- 0 until MaxColor * 10) {
       val color = c / 10.0
       map(getARGBbyPremodulatedColorNumber(color)) = color

@@ -89,6 +89,9 @@ RGB4
 RGB5
   length remove-duplicates map extract-rgb n-values 1400 [[x] -> x / 10] => 1400
 
+RGB6
+  approximate-rgb 83 72 54 => 32.9
+
 BaseColors
   base-colors = n-values 14 [[x] -> x * 10 + 5] => true
 
