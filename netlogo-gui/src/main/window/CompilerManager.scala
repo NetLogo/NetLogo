@@ -171,12 +171,12 @@ class CompilerManager(val workspace: AbstractWorkspace,
     // this method again. - ST 7/7/06
     if (!isLoading) {
       val proceed = compileProcedures()
-      if (proceed) {
-        world.realloc()
-        world.rememberOldProgram()
-        setGlobalVariables() // also updates constraints
-        compileWidgets()
-      } else {
+      world.realloc()            // reallocates widgets
+      world.rememberOldProgram() // updates world dialect, which is
+                                 // important for 3D to 2D and vice versa
+      setGlobalVariables() // updates constraints
+      compileWidgets()     // update the widget once the compile is done
+      if (!proceed) {
         // even if compilation of the procedure tab fails, we still want to mark our
         // constraints as out of date, so that any existing dynamic constraints are
         // thrown away since they're compiled against the old program -- CLB
