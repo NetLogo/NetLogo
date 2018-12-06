@@ -8,7 +8,7 @@ import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
-import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent, WidgetAddedEvent }
+import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent, WidgetAddedEvent, CompileAllEvent }
 
 class CompilerManagerTests extends FunSuite {
   def loadWidgets(ws: Seq[JobOwner],
@@ -46,6 +46,7 @@ class CompilerManagerTests extends FunSuite {
 
   trait Helper {
     var widgets: Seq[JobOwner] = Seq.empty[JobOwner]
+    var globalWidgets: Seq[InterfaceGlobalWidget] = Seq.empty[InterfaceGlobalWidget]
     var source: String = "globals [ a b c ] to foo fd 1 end"
     var events = Seq.empty[Event]
     lazy val workspace = newWorkspace
@@ -59,6 +60,7 @@ class CompilerManagerTests extends FunSuite {
         compilerManager.handle(new CompileMoreSourceEvent(w))
         w match {
           case ig: DummyIGWidget => compilerManager.handle(new WidgetAddedEvent(ig))
+          case te: DummyTeSliderWidget => compilerManager.handle(new WidgetAddedEvent(te))
           case _ =>
         }
       }
@@ -139,6 +141,93 @@ class CompilerManagerTests extends FunSuite {
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
     compilerManager.handle(updateIGValue)
     assert(widget.value == Double.box(10))
+  } }
+
+  test("sets an updating interface global widget to the value of the same-named (ig)") { new Helper {
+    val widget = new DummyIGWidget("", Double.box(0))
+    widgets = Seq(widget)
+    source = "globals [ig]"
+    loadWidgets()
+    workspace.world.setObserverVariableByName("ig", Double.box(10))
+    val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
+    compilerManager.handle(updateIGValue)
+    assert(widget.value == Double.box(10))
+  } }
+
+ test("sets an updating interface global widget to the value of the same-named (te)") { new Helper {
+    val widget = new DummyTeSliderWidget("", Double.box(0))
+    widgets = Seq(widget)
+    source = "globals [te]"
+    loadWidgets()
+    workspace.world.setObserverVariableByName("te", Double.box(10))
+    val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
+    compilerManager.handle(updateIGValue)
+    assert(widget.value == Double.box(10))
+ } }
+
+ test("sets a widget to value 0 and 20 and the environment should change after compiling") { new Helper {
+    val widget = new DummyTeSliderWidget("", Double.box(20))
+    widgets = Seq(widget)
+    source = "globals [te]"
+    loadWidgets()
+    widget.value = Double.box(0)
+    compilerManager.handle(new CompileAllEvent)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+    widget.value = Double.box(20)
+    compilerManager.handle(new CompileAllEvent)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+ } }
+
+ test("sets a widget to value 20 and the environment should change after compiling (snd)") { new Helper {
+    val widget = new DummyTeSliderWidget("", Double.box(0))
+    widgets = Seq(widget)
+    source = "globals [te]"
+    loadWidgets()
+    widget.value = Double.box(20)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+    compilerManager.handle(new CompileAllEvent)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+ } }
+
+ test("sets a widget to value 0 and 20 and the environment should change after interface with no name change or updating") { new Helper {
+    val widget = new DummyTeSliderWidget("", Double.box(20))
+    widgets = Seq(widget)
+    source = "globals [te]"
+    loadWidgets()
+    val updateIGValue = new InterfaceGlobalEvent(widget, false, false, false, false)
+    widget.value = Double.box(0)
+    compilerManager.handle(updateIGValue)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+    widget.value = Double.box(20)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+    compilerManager.handle(updateIGValue)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+ } }
+
+ test("sets a widget to value 0 and 20 and the environment should change after interface with name changes") { new Helper {
+    val widget = new DummyTeSliderWidget("", Double.box(20))
+    widgets = Seq(widget)
+    source = "globals [te]"
+    loadWidgets()
+    val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
+    widget.value = Double.box(0)
+    compilerManager.handle(updateIGValue)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    widget.value = Double.box(30)
+    compilerManager.handle(updateIGValue)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    compilerManager.handle(new CompileAllEvent)
+    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+ } }
+
+ test("sets a widgets variable to contain a sequence of IGWidget and TeSliderWidget")
+ { new Helper {
+    val widget = new DummyIGWidget("")
+    val sWidget = new DummyTeSliderWidget("")
+    widgets = Seq(widget, sWidget)
+    loadWidgets()
+    assert(compilerManager.widgets.contains(widget))
+    assert(compilerManager.widgets.contains(sWidget))
   } }
 
   test("handles an interface global event where the value has changed by setting the global to the value of the widget") { new Helper {
@@ -244,4 +333,19 @@ class DummyIGWidget(source: String, var value: AnyRef = Double.box(0)) extends D
     case a: AnyRef => value = a
   }
   def valueObject: AnyRef = value
+}
+
+class DummyTeSliderWidget(source: String, var value: AnyRef = Double.box(0)) extends DummyWidget(source) with InterfaceGlobalWidget {
+  def name: String = "te"
+  def updateConstraints(): Unit = { }
+  def valueObject(x: AnyRef): Unit = x match {
+    case a: AnyRef => value = a
+  }
+  var increment = 1.0
+  var maximum = 100.0
+  var minimum = 0.0
+  def valueObject: AnyRef = value
+  def min( d: Double ){ increment = d}
+  def max( d: Double ){ maximum = d }
+  def inc( d: Double ){ increment = d }
 }
