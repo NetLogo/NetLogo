@@ -12,6 +12,10 @@ object PlotConverter {
   def allPlotNames(model: Model): Seq[String] =
     model.plots.flatMap(_.display).filterNot(_.isEmpty)
 
+  def allLocalPenNames(model: Model): Seq[Seq[String]] =
+    model.plots.map(_.pens.toSeq)
+      .map(_.map(_.display))
+
   def allPenNames(model: Model): Seq[String] =
     model.plots.flatMap(_.pens).collect {
       case pen: Pen => pen
@@ -100,7 +104,7 @@ class PlotConverter(
 
       override def apply(model: Model, modelPath: Path): ConversionResult = {
         val plotRenames = determineRenames(allPlotNames(model))
-        val penRenames = determineRenames(allPenNames(model))
+        val penRenames = allLocalPenNames(model).flatMap(determineRenames(_))
         if (plotRenames.isEmpty && penRenames.isEmpty) {
           super.apply(model, modelPath)
         } else {
