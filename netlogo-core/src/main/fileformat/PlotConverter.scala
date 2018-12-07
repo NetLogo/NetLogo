@@ -5,23 +5,23 @@ package org.nlogo.fileformat
 import java.nio.file.Path
 
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager,
-  LiteralParser, Model, Plot, Pen, SourceRewriter }
+  LiteralParser, Model, Plot, SourceRewriter }
 import org.nlogo.api.AutoConvertable
 
 object PlotConverter {
   def allPlotNames(model: Model): Seq[String] =
     model.plots.flatMap(_.display).filterNot(_.isEmpty)
 
-  def allPenNames(model: Model): Seq[String] =
-    model.plots.flatMap(_.pens).collect {
-      case pen: Pen => pen
-    }.map(_.display)
+  def allKeyedPenNames(model: Model): Seq[(String, Seq[String])] = {
+    model.plots
+      .map((plot: Plot) => (plot.display.getOrElse(""), plot.pens.toSeq.map(_.display)))
+      .filterNot(_._1.isEmpty)
+  }
 
-  private def determineRenames(names: Seq[String]): Seq[(String, String)] = {
-    names.groupBy(_.toUpperCase)
-      .toSeq
+  private[fileformat] def mapRenameDecision(groupedNames: Seq[(String, Seq[String])]):  Seq[(String, String)] = {
+    groupedNames
       .map {
-        case (upper, originals) => upper -> originals.distinct
+        case (upper, originals) => upper -> originals
       }
       .flatMap {
         case (upper, originals) if originals.length > 1 =>
@@ -29,10 +29,27 @@ object PlotConverter {
           val sortedOriginals = originals.sorted.reverse
           sortedOriginals.zipWithIndex.map {
             case (original, index) if index == 0 => (original, original)
-            case (original, index) => (original, s"${original}_${index}")
+            case (original, index) => {
+              var new_name = s"${original}_${index}"
+              var new_index = index
+              while(groupedNames.map(_._1).contains(new_name.toUpperCase)){
+                new_index = new_index + 1
+                new_name  = s"${original}_${new_index}"
+              }
+              (original, s"${original}_${new_index}")
+            }
           }
         case _ => Seq.empty[(String, String)]
       }
+  }
+
+  private[fileformat] def determineMapRenames(names: Seq[(String, Seq[String])]): Seq[(String, Seq[(String, String)])] = {
+    names.map(plotAndPens =>
+        (plotAndPens._1, mapRenameDecision(plotAndPens._2.groupBy(_.toUpperCase).toSeq))).filterNot(_._2.isEmpty)
+  }
+
+  private[fileformat] def determineRenames(names: Seq[String]): Seq[(String, String)] = {
+    mapRenameDecision(names.groupBy(_.toUpperCase).toSeq)
   }
 
   private def clarifyProcedureBody(renamePairs: Seq[(String, String)]): String = {
@@ -75,12 +92,11 @@ object PlotConverter {
     val penConversions =
       buildConversionSet("Make pens case-insensitive",
         "_clarify-duplicate-plot-pen-name",
-        determineRenames(allPenNames(model)),
+        determineMapRenames(allKeyedPenNames(model)).map(_._2).flatten.distinct,
         "set-current-plot-pen")
 
     plotConversions ++ penConversions
   }
-
 }
 
 class PlotConverter(
@@ -100,30 +116,36 @@ class PlotConverter(
 
       override def apply(model: Model, modelPath: Path): ConversionResult = {
         val plotRenames = determineRenames(allPlotNames(model))
-        val penRenames = determineRenames(allPenNames(model))
-        if (plotRenames.isEmpty && penRenames.isEmpty) {
-          super.apply(model, modelPath)
-        } else {
-          val conversion = super.apply(model, modelPath)
-          conversion.updateModel(convertPlotAndPenNames(conversion.model, plotRenames.toMap, penRenames.toMap))
+        val penRenames: Seq[(String, Seq[(String,String)])] = determineMapRenames(allKeyedPenNames(model))
+        (plotRenames, penRenames) match {
+          case (Seq(), Seq()) => super.apply(model,modelPath)
+          case _ => { val conversion = super.apply(model, modelPath)
+            val convertPandPN: Model = convertPlotAndPenNames(conversion.model, plotRenames.toMap, penRenames.toMap)
+            conversion.updateModel(convertPandPN)
+          }
         }
       }
 
-      private def convertPlotAndPenNames(
-        model:       Model,
-        plotRenames: Map[String, String],
-        penRenames:  Map[String, String]): Model = {
-          val updatedWidgets = model.widgets.map {
-            case p: Plot =>
-              val newDisplay = p.display.map(currentName => plotRenames.getOrElse(currentName, currentName))
-              val newPens = p.pens.map {
-                pen =>
-                  val newPenName = penRenames.getOrElse(pen.display, pen.display)
-                  pen.copy(display = newPenName)
-              }
-              p.copy(display = newDisplay, pens = newPens)
-            case w => w
-          }
-          model.copy(widgets = updatedWidgets)
+   private def convertPlotAndPenNames( // you need to create a pipeline
+        model:       Model,               // Seq[Seq[String]] -> Seq[(String, String)] -> Complete
+        plotRenames: Map[String, String], // Apply each set of changes to its corresponding list
+        penRenames:  Map[String, Seq[(String, String)]]): Model = { // I need penRenames with list of list
+                                                     // List[Map[String,String]], possibly
+                                                     // this would need to be generated as we go
+       val updatedWidgets = model.widgets.map{
+         case p: Plot => {
+           val newDisplay = p.display.map(currentName => plotRenames.getOrElse(currentName, currentName))
+           val localRenames = penRenames.getOrElse((p.display.getOrElse("")), Seq()).toMap
+           val newPens = p.pens.map {
+             pen =>
+             val newPenName = localRenames.getOrElse(pen.display, pen.display)
+             pen.copy(display = newPenName)
+
+           }
+           p.copy(display = newDisplay, pens = newPens)
+         }
+         case w => w
+       }
+       model.copy(widgets = updatedWidgets)
     }
 }
