@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import java.io.InputStream
 import java.nio.file.Paths
 
 // Note that in the Scaladoc we distribute, this class is included, but Workspace and
@@ -298,6 +299,9 @@ with org.nlogo.api.ViewSettings {
   override def stopInspectingDeadAgents(): Unit = { }
   override def getAndCreateDrawing =
     renderer.trailDrawer.getAndCreateDrawing(true)
+  override def importDrawing(is: InputStream): Unit = {
+    renderer.trailDrawer.importDrawing(is)
+  }
   override def importDrawing(file: org.nlogo.core.File) {
     renderer.trailDrawer.importDrawing(file)
   }

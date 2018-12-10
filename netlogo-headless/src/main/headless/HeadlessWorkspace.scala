@@ -16,6 +16,7 @@ import
     nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
 
+import java.io.InputStream
 import java.nio.file.Paths
 
 import scala.io.Codec
@@ -195,6 +196,9 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
   override def getAndCreateDrawing =
     drawingActionBroker.getAndCreateDrawing(true)
+  override def importDrawing(is: InputStream): Unit = {
+    drawingActionBroker.importDrawing(is)
+  }
   override def importDrawing(file: File) {
     drawingActionBroker.importDrawing(file)
   }

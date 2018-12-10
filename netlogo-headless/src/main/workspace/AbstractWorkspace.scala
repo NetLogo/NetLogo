@@ -5,7 +5,7 @@ package org.nlogo.workspace
 // omg. rat's nest. - ST 5/3/13
 
 import
-  java.io.{ IOException, PrintWriter }
+  java.io.{ InputStream, IOException, PrintWriter }
 
 import
   java.nio.file.{ Paths => NioPaths }
@@ -631,7 +631,12 @@ object AbstractWorkspaceTraits {
     }
 
     @throws(classOf[java.io.IOException])
-    def importDrawing(file: File)
+    def importDrawing(file: File): Unit = {
+      importDrawing(file.getInputStream)
+    }
+
+    @throws(classOf[java.io.IOException])
+    def importDrawing(is: InputStream): Unit
 
     @throws(classOf[java.io.IOException])
     def doImport(importer: BufferedReaderImporter) {

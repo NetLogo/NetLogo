@@ -2,6 +2,7 @@
 
 package org.nlogo.workspace;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -313,8 +314,11 @@ public abstract strictfp class AbstractWorkspace
         });
   }
 
-  protected abstract void importDrawing(org.nlogo.core.File file)
-      throws java.io.IOException;
+  protected void importDrawing(org.nlogo.core.File file) throws java.io.IOException {
+    importDrawing(file.getInputStream());
+  }
+
+  protected abstract void importDrawing(InputStream is) throws java.io.IOException;
 
   // overridden in subclasses - ST 9/8/03, 3/1/11
   public void doImport(BufferedReaderImporter importer)
