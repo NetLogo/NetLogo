@@ -276,18 +276,18 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
       val originalModel = Model(code = originalSource, widgets = List(View(), originalPlotOne, originalPlotTwo))
       val clarifyBody =
            """|  let name-map [["dup" "dup"] ["DUP" "DUP_1"]]
-              |  let replacement filter [ rename -> first rename = name] name-map
+              |  let replacement filter [ rename -> first rename = name ] name-map
               |  let reported-name name
               |  if not empty? replacement [
-              |    set reported-name item 1 replacement
+              |    set reported-name item 1 (item 0 replacement)
               |  ]
               |  report reported-name""".stripMargin
       val clarifyPenBody =
-        """|  let name-map [["duppen" "duppen"] ["DUPPEN" "DUPPEN_1"]]
-           |  let replacement filter [ rename -> first rename = name] name-map
+        """|  let name-map [[ "dup" "duppen" "duppen" ] [ "dup" "DUPPEN" "DUPPEN_1" ]]
+           |  let replacement filter [ rename -> first rename = plot-name and item 1 rename = name ] name-map
            |  let reported-name name
            |  if not empty? replacement [
-           |    set reported-name item 1 replacement
+           |    set reported-name item 2 (item 0 replacement)
            |  ]
            |  report reported-name""".stripMargin
 
@@ -308,6 +308,62 @@ class ModelConverterTests extends FunSuite with ConversionHelper {
         updateCode = "set-current-plot-pen _clarify-duplicate-plot-pen-name \"DUPPEN\"",
         pens = List(Pen("duppen"), Pen("DUPPEN_1")))
       val expectedPlotTwo = Plot(Some("DUP_1"))
+      val expectedModel = Model(code = expectedSource, widgets = List(View(), expectedPlotOne, expectedPlotTwo))
+      // Using ModelConverter only gets us halfway there, since we will also need to change the widgets
+      val result = plotConverter(originalModel, modelPath).model
+      assertResult(expectedModel.code)(result.code)
+      assertResult(expectedModel.widgets.collect { case p: Plot => p })(result.widgets.collect { case p: Plot => p })
+    }
+
+    test("conditionally converts plot and plot pen names: plot-name only") {
+      val originalSource =
+        """|to foo
+           |  set-current-plot "dup"
+           |  set-current-plot-pen "duppen"
+           |end""".stripMargin
+      val originalPlotOne = Plot(Some("dup"),
+        updateCode = "set-current-plot-pen \"DUPPEN\"",
+        pens = List(Pen("duppen"), Pen("DUPPEN")))
+      val originalPlotTwo = Plot(Some("DUP"),
+        updateCode = "set-current-plot-pen \"DUPPEN\"",
+        pens = List(Pen("duppen"), Pen("DUPPEN"), Pen("DUpPEN_1")))
+      val originalModel = Model(code = originalSource, widgets = List(View(), originalPlotOne, originalPlotTwo))
+      val clarifyBody =
+           """|  let name-map [["dup" "dup"] ["DUP" "DUP_1"]]
+              |  let replacement filter [ rename -> first rename = name ] name-map
+              |  let reported-name name
+              |  if not empty? replacement [
+              |    set reported-name item 1 (item 0 replacement)
+              |  ]
+              |  report reported-name""".stripMargin
+      val clarifyPenBody =
+        """|  let name-map [[ "dup" "duppen" "duppen" ] [ "dup" "DUPPEN" "DUPPEN_1" ] [ "DUP_1" "duppen" "duppen" ] [ "DUP_1" "DUPPEN" "DUPPEN_2" ]]
+           |  let replacement filter [ rename -> first rename = plot-name and item 1 rename = name ] name-map
+           |  let reported-name name
+           |  if not empty? replacement [
+           |    set reported-name item 2 (item 0 replacement)
+           |  ]
+           |  report reported-name""".stripMargin
+
+      val expectedSource =
+       s"""|to foo
+           |  set-current-plot _clarify-duplicate-plot-name "dup"
+           |  set-current-plot-pen _clarify-duplicate-plot-pen-name "duppen"
+           |end
+           |
+           |to-report _clarify-duplicate-plot-name [ name ]
+           |${clarifyBody}
+           |end
+           |
+           |to-report _clarify-duplicate-plot-pen-name [ name ]
+           |${clarifyPenBody}
+           |end""".stripMargin
+      val expectedPlotOne = Plot(Some("dup"),
+        updateCode = "set-current-plot-pen _clarify-duplicate-plot-pen-name \"DUPPEN\"",
+        pens = List(Pen("duppen"), Pen("DUPPEN_1")))
+      val expectedPlotTwo = Plot(Some("DUP_1"),
+        updateCode = "set-current-plot-pen _clarify-duplicate-plot-pen-name \"DUPPEN\"",
+        pens = List(Pen("duppen"), Pen("DUPPEN_2"), Pen("DUpPEN_1")))
       val expectedModel = Model(code = expectedSource, widgets = List(View(), expectedPlotOne, expectedPlotTwo))
       // Using ModelConverter only gets us halfway there, since we will also need to change the widgets
       val result = plotConverter(originalModel, modelPath).model
