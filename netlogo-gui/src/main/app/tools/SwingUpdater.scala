@@ -12,57 +12,64 @@ import java.util.prefs.{ Preferences => JPreferences }
 import org.nlogo.api.{ Exceptions, FileIO }
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
-object SwingUpdater {
-  private val prefs = JPreferences.userNodeForPackage(getClass)
-}
-
 /** SwingUpdater can update GUI based on a remote resource.
  *
  *  This class keeps a local copy of the file. Whenever the file's hash changes
  *  the GUI is updated with the new file.
  *
- *  Basenames for resources used with this class must be unique.
+ *  URLs for resources used with this class must be unique.
  */
-class SwingUpdater(url: URL, updateGUI: File => Unit, progressListener: ProgressListener) {
-  import SwingUpdater._
+object SwingUpdater {
 
-  private val basename = {
+  private val prefs = JPreferences.userNodeForPackage(getClass)
+
+  private def urlToHash(url: URL): String = {
     val noTrailingSlash = url.toString.stripSuffix("/")
     noTrailingSlash.substring(noTrailingSlash.lastIndexOf('/') + 1)
   }
-  private val hashKey = basename + "-md5"
 
-  /** Downloads the URL and update the GUI if the hash is different */
-  def reload() = {
-    progressListener.start()
-    new Worker().execute()
-  }
+  private def urlToFullHash(url: URL): String = s"${urlToHash(url)}-md5"
 
   /** Ensures the next reload updates the GUI */
-  def invalidateCache() = prefs.put(hashKey, "")
+  def invalidateCache(url: URL) = prefs.put(urlToFullHash(url), "")
 
-  private class Worker extends SwingWorker[Any, Any] {
-    private var changed = false
+  /** Downloads the URL and update the GUI if the hash is different */
+  def reload(progressListener: ProgressListener)(url: URL, updateGUI: File => Unit) = {
 
-    override def doInBackground(): Unit = Exceptions.ignoring(classOf[IOException]) {
-      val md = MessageDigest.getInstance("MD5")
-      val conn = url.openConnection.asInstanceOf[HttpURLConnection]
-      if (conn.getResponseCode == 200) {
-        val response = new DigestInputStream(conn.getInputStream, md)
-        Files.copy(response, Paths.get(FileIO.perUserFile(basename)), StandardCopyOption.REPLACE_EXISTING)
+    progressListener.start()
+
+    (new SwingWorker[Any, Any] {
+
+      private var changed = false
+
+      override def doInBackground(): Unit = Exceptions.ignoring(classOf[IOException]) {
+
+        val md   = MessageDigest.getInstance("MD5")
+        val conn = url.openConnection.asInstanceOf[HttpURLConnection]
+
+        if (conn.getResponseCode == 200) {
+          val response = new DigestInputStream(conn.getInputStream, md)
+          Files.copy(response, Paths.get(FileIO.perUserFile(urlToHash(url))), StandardCopyOption.REPLACE_EXISTING)
+        }
+
+        val localHash = prefs.getByteArray(urlToFullHash(url), null)
+        val newHash   = md.digest
+
+        if (!Arrays.equals(localHash, newHash)) {
+          prefs.putByteArray(urlToFullHash(url), newHash)
+          changed = true
+        }
+
       }
-      val localHash = prefs.getByteArray(hashKey, null)
-      val newHash = md.digest
-      if (!Arrays.equals(localHash, newHash)) {
-        prefs.putByteArray(hashKey, newHash)
-        changed = true
-      }
-    }
 
-    override def onComplete(): Unit = {
-      if (changed)
-        updateGUI(new File(FileIO.perUserFile(basename)))
-      progressListener.finish()
-    }
+      override def onComplete(): Unit = {
+        if (changed)
+          updateGUI(new File(FileIO.perUserFile(urlToHash(url))))
+        progressListener.finish()
+      }
+
+    }).execute()
+
   }
+
 }

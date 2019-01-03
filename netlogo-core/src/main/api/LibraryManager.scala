@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.tools
+package org.nlogo.api
 
 import java.io.File
 import java.net.URL
@@ -9,16 +9,15 @@ import javax.swing.{ DefaultListModel, ListModel }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRenderOptions, ConfigValueFactory }
 
-import org.nlogo.api.{ APIVersion, FileIO }
-import org.nlogo.swing.ProgressListener
-import org.nlogo.workspace.ExtensionManager
-
-class LibraryManager(extManager: ExtensionManager, progressListener: ProgressListener) {
+class LibraryManager(
+  extManager:     ExtensionManager
+, fetchMeta:      (URL, (File) => Unit) => Unit
+, invalidateMeta: (URL) => Unit
+) {
 
   private val allLibsName        = "libraries.conf"
   private val metadataURL        = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
   private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
-  private val metadataFetcher    = new SwingUpdater(metadataURL, updateLists _, progressListener)
   private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
   private val extInstaller       = new ExtensionInstaller(extManager)
   private val extList            = new DefaultListModel[LibraryInfo]
@@ -45,8 +44,9 @@ class LibraryManager(extManager: ExtensionManager, progressListener: ProgressLis
     updateInstalledVersion("extensions", ext, uninstall = true)
   }
 
-  def reloadMetadata() = updateLists(new File(allLibsName))
-  def updateMetadataFromRemote() = metadataFetcher.reload()
+  def reloadMetadata(): Unit = updateLists(new File(allLibsName))
+
+  def updateMetadataFromRemote(): Unit = fetchMeta(metadataURL, updateLists _)
 
   private def updateLists(configFile: File): Unit = {
     if (configFile.exists) {
@@ -63,12 +63,12 @@ class LibraryManager(extManager: ExtensionManager, progressListener: ProgressLis
         case ex: ConfigException =>
           if (initialLoading)
             // In case only the local copy got messed up somehow -- EL 2018-06-02
-            metadataFetcher.invalidateCache()
+            invalidateMeta(metadataURL)
           else
             throw new MetadataLoadingException(ex)
       }
     } else {
-      metadataFetcher.invalidateCache()
+      invalidateMeta(metadataURL)
     }
   }
 

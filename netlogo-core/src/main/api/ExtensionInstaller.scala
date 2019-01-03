@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.tools
+package org.nlogo.api
 
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -9,9 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import net.lingala.zip4j.core.ZipFile
 
-import org.nlogo.workspace.ExtensionManager
-
-class ExtensionInstaller(extensionManager: ExtensionManager) {
+private[api] class ExtensionInstaller(extensionManager: ExtensionManager) {
 
   def install(ext: LibraryInfo): Unit = {
 

@@ -11,8 +11,7 @@ import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
-import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview,
-  LibraryManagerErrorDialog, MetadataLoadingException, PreviewCommandsEditor }
+import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }

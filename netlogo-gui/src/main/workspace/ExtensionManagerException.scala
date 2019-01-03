@@ -1,12 +1,14 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.workspace
 
+import org.nlogo.api.{ ExtensionManager => APIEM }
+
 object ExtensionManagerException {
   sealed trait Cause {
     def message: String = "An error occurred in ExtensionManager"
   }
   case class ExtensionNotFound(extName: String) extends Cause {
-    override def message: String = ExtensionManager.EXTENSION_NOT_FOUND + extName
+    override def message: String = APIEM.extensionNotFoundStr + extName
   }
   case class NoExtensionName(extName: String) extends Cause {
     override def message: String = s"Bad extension '$extName': Can't find extension name in Manifest."

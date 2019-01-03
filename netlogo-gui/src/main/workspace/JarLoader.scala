@@ -8,7 +8,7 @@ import java.io.{ File, FileNotFoundException, IOException }
 import ExtensionManager.ExtensionData
 import ExtensionManagerException._
 
-import org.nlogo.api.ClassManager
+import org.nlogo.api.{ ClassManager, ExtensionManager => APIEM }
 
 import scala.util.{ Success, Try }
 
@@ -75,8 +75,8 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
   private[workspace] def resolvePathAsURL(path: String): Option[URL] = {
     val potentialFiles = Seq(
         Try(new File(workspace.attachModelDir(path))),
-        Try(new File(ExtensionManager.userExtensionsPath + File.separator + path)),
-        Try(new File(ExtensionManager.extensionsPath + File.separator + path))
+        Try(new File(s"${APIEM.userExtensionsPath}${File.separator}$path")),
+        Try(new File(s"${APIEM.extensionsPath}${File.separator}$path"))
       ).collect { case Success(v) => v }
 
     val pathsToTry: Seq[Try[URL]] = Try(new URL(path)) +:

@@ -2,14 +2,13 @@
 
 package org.nlogo.app
 
-import
-  javax.swing.JOptionPane,
-  java.net.URI,
-  org.nlogo.workspace.ExtensionManager,
-  org.nlogo.window.Events.CompiledEvent,
-  org.nlogo.swing.BrowserLauncher.openURI,
-  org.nlogo.core.I18N
-  
+import java.net.URI
+import javax.swing.JOptionPane
+
+import org.nlogo.api.ExtensionManager
+import org.nlogo.core.I18N
+import org.nlogo.swing.BrowserLauncher.openURI
+import org.nlogo.window.Events.CompiledEvent
 
 // A helpful personal assistant who listens for "extension not found" compiler errors and offers to
 // take you to the extension download page.
@@ -32,7 +31,6 @@ extends CompiledEvent.Handler {
       javax.swing.JOptionPane.YES_NO_OPTION)
 
   def isTrigger(e: CompiledEvent): Boolean =
-    Option(e.error).exists(_.getMessage.startsWith(
-      ExtensionManager.EXTENSION_NOT_FOUND))
+    Option(e.error).exists(_.getMessage.startsWith(ExtensionManager.extensionNotFoundStr))
 
 }

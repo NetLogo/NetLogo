@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.tools
+package org.nlogo.api
 
 import java.net.URL
 
@@ -23,6 +23,7 @@ case class LibraryInfo(
     case l: LibraryInfo => toString == l.toString
     case _ => false
   }
+
 }
 
 sealed trait LibraryStatus

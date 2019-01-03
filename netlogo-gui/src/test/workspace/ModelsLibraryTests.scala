@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import java.io.File
 
-import org.nlogo.api.Version
+import org.nlogo.api.{ ExtensionManager => APIEM, Version }
 
 import org.scalatest.FunSuite
 
@@ -16,7 +16,7 @@ class ModelsLibraryTests extends FunSuite {
     assert(! ModelsLibrary.needsModelScan)
   }
   test("getModelPathsAtRoot returns a list of all model paths in the given directory") {
-    assert(ModelsLibrary.getModelPathsAtRoot(ExtensionManager.extensionsPath).length > 10)
+    assert(ModelsLibrary.getModelPathsAtRoot(APIEM.extensionsPath).length > 10)
   }
   test("findModelsBySubstring returns a single model if it matches the name exactly") {
     assert(ModelsLibrary.findModelsBySubstring("ants").size == 1)

@@ -5,6 +5,7 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Color, Frame }
 import javax.swing.{ Action, BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
 
+import org.nlogo.api.LibraryManager
 import org.nlogo.core.I18N
 import org.nlogo.swing.ProgressListener
 import org.nlogo.workspace.ExtensionManager
@@ -25,11 +26,18 @@ class LibrariesDialog(parent: Frame, extManager: ExtensionManager) extends ToolD
   private lazy val status          = new JLabel
   private lazy val updateAllButton = new JButton
 
-  private lazy val manager =
-    new LibraryManager(extManager, new ProgressListener {
-      override def start()  = status.setText(I18N.gui("checkingForUpdates"))
-      override def finish() = status.setText(null)
-    })
+
+  private lazy val manager = {
+
+    val listener =
+      new ProgressListener {
+        override def start()  = status.setText(I18N.gui("checkingForUpdates"))
+        override def finish() = status.setText(null)
+      }
+
+    new LibraryManager(extManager, SwingUpdater.reload(listener), SwingUpdater.invalidateCache _)
+
+  }
 
   protected override def initGUI(): Unit = {
 

@@ -2,8 +2,8 @@
 
 package org.nlogo.workspace
 
+import org.nlogo.api.{ ExtensionManager => APIEM, ExtensionException }
 import org.nlogo.core.TokenType
-import org.nlogo.api.ExtensionException
 import ExtensionManager.ExtensionLoader
 
 import org.scalatest.{ BeforeAndAfter, FunSuite }
@@ -90,7 +90,7 @@ class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
       intercept[ErrorSourceException] {
         loadingManager.importExtension("notfound", errorSource)
       }
-      assert(errorMessage == ExtensionManager.EXTENSION_NOT_FOUND + "notfound")
+      assert(errorMessage == s"${APIEM.extensionNotFoundStr}notfound")
     }
   }
 

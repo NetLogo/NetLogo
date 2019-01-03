@@ -10,6 +10,7 @@ import javax.swing.event.{ ListDataEvent, ListDataListener }
 
 import scala.collection.mutable.Buffer
 
+import org.nlogo.api.{ LibraryInfo, LibraryStatus }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon

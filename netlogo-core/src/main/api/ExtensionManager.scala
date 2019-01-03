@@ -39,4 +39,17 @@ trait ExtensionManager extends CoreManager {
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String
+
+}
+
+object ExtensionManager {
+
+  val extensionNotFoundStr: String = "Can't find extension: "
+
+  def extensionsPath: String =
+    System.getProperty("netlogo.extensions.dir", "extensions")
+
+  def userExtensionsPath: String =
+    System.getProperty("netlogo.extensions.perUserDir", FileIO.perUserDir("extensions"))
+
 }
