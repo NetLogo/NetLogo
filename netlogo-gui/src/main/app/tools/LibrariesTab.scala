@@ -8,54 +8,59 @@ import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JOptionPane,
   JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ ListDataEvent, ListDataListener }
 
+import scala.collection.mutable.Buffer
+
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel,
-  RichAction, SwingWorker }
+import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon
 
 object LibrariesTab {
-  val itemHTMLTemplate = """<html>
-    |<h3 style="margin: -10px 0">%s
-    |<p color="#AAAAAA">%s""".stripMargin
+  val itemHTMLTemplate =
+    """<html>
+      |<h3 style="margin: -10px 0">%s
+      |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(category: String, list: ListModel[LibraryInfo],
-  install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit,
-  updateStatus: String => Unit, updateLists: () => Unit)
-extends JPanel(new BorderLayout) {
+class LibrariesTab(
+  category: String            , list: ListModel[LibraryInfo]
+, install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit
+, updateStatus: String => Unit, updateLists: () => Unit
+) extends JPanel(new BorderLayout) {
+
   import LibrariesTab._
 
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
-  private val listModel = new FilterableListModel(list, filterFn)
+  private val listModel   = new FilterableListModel(list, containsLib)
   private val libraryList = new JList[LibraryInfo](listModel)
 
-  val updateAllAction: Action = RichAction(I18N.gui("updateAll")) { _ =>
-    val libsToUpdate =
-      (0 until listModel.getSize)
-        .map(listModel.getElementAt)
-        .filter(_.status == LibraryStatus.CanUpdate)
-    numOperatedLibs = libsToUpdate.length
-    updateMultipleOperationStatus("installing")
-    libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
-  }
+  val updateAllAction: Action =
+    RichAction(I18N.gui("updateAll")) { _ =>
+      val libsToUpdate =
+        (0 until listModel.getSize).
+          map(listModel.getElementAt).
+          filter(_.status == LibraryStatus.CanUpdate)
+      numOperatedLibs = libsToUpdate.length
+      updateMultipleOperationStatus("installing")
+      libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
+    }
 
   locally {
+
     import org.nlogo.swing.Implicits.thunk2documentListener
 
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
 
     val filterField = new JTextField
 
-    val sidebar = new JPanel(new BorderLayout)
+    val sidebar             = new JPanel(new BorderLayout)
     val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-    val installationPanel = new JPanel(new GridLayout(1,2, 2,2))
+    val installationPanel   = new JPanel(new GridLayout(1,2, 2,2))
 
-    val installButton = new JButton(I18N.gui("install"))
-    val uninstallButton = new JButton(I18N.gui("uninstall"))
-    installationPanel.add(installButton)
-
+    val installButton  = new JButton(I18N.gui("install"))
     val homepageButton = new JButton(I18N.gui("homepage"))
+
+    installationPanel.add(installButton)
     libraryButtonsPanel.add(installationPanel)
     libraryButtonsPanel.add(homepageButton)
 
@@ -65,33 +70,46 @@ extends JPanel(new BorderLayout) {
     info.setBackground(new Color(0,0,0,0))
     info.setOpaque(false)
     info.setEditable(false)
+
     val infoScroll = new JScrollPane(info)
     infoScroll.getViewport.setOpaque(false)
     infoScroll.setViewportBorder(null)
     infoScroll.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5))
+
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
-    sidebar.add(infoScroll, BorderLayout.CENTER)
+    sidebar.add(         infoScroll, BorderLayout.CENTER)
 
     add(new JScrollPane(libraryList), BorderLayout.CENTER)
-    add(sidebar, BorderLayout.EAST)
-    add(filterField, BorderLayout.NORTH)
+    add(                     sidebar, BorderLayout.EAST)
+    add(                 filterField, BorderLayout.NORTH)
 
-    list.addListDataListener(new ListDataListener {
-      def intervalAdded(e: ListDataEvent) =
-        if (canUpdateInRange(list, e.getIndex0, e.getIndex1))
-          updateAllAction.setEnabled(true)
-      def intervalRemoved(e: ListDataEvent) = updateAllAction.setEnabled(canUpdate(list))
-      def contentsChanged(e: ListDataEvent) = updateAllAction.setEnabled(canUpdate(list))
-    })
-    libraryList.addListSelectionListener(_ => updateSidebar())
-    filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-    installButton.addActionListener(_ => operate("installing", wrappedInstall,
-      lib => lib.status != LibraryStatus.UpToDate))
-    uninstallButton.addActionListener(_ => operate("uninstalling", uninstall,
+    val uninstallButton = new JButton(I18N.gui("uninstall"))
+    uninstallButton.addActionListener(_ => perform("uninstalling", uninstall,
       lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
+
+    list.addListDataListener(
+      new ListDataListener {
+
+        override def intervalAdded(e: ListDataEvent): Unit =
+          if (canUpdateInRange(list, e.getIndex0, e.getIndex1))
+            updateAllAction.setEnabled(true)
+
+        override def intervalRemoved(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(list))
+        override def contentsChanged(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(list))
+
+      }
+    )
+
+    libraryList.addListSelectionListener(_ => updateSidebar())
+    libraryList.setSelectedIndex(0)
+
+    filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
+
+    installButton.addActionListener(_ => perform("installing", wrappedInstall,
+      lib => lib.status != LibraryStatus.UpToDate))
+
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
-    libraryList.setSelectedIndex(0)
     updateAllAction.setEnabled(canUpdate(list))
 
     def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
@@ -103,31 +121,38 @@ extends JPanel(new BorderLayout) {
         .exists(_.status == LibraryStatus.CanUpdate)
 
     def updateSidebar(): Unit = {
+
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
       info.select(0,0)
-      installButton.setText(installButtonText)
 
+      installButton.setText(installButtonText)
       installButton.setEnabled(actionableLibraries.length > 0)
+
       uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
       homepageButton.setEnabled(numSelected == 1)
 
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
       installButton.setToolTipText(installToolTip)
+
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
       homepageButton.setToolTipText(homepageToolTip)
 
       updateInstallationPanel()
+
     }
 
     def updateInstallationPanel() = {
+
       installationPanel.removeAll()
       if (selectedValues.length == 0 || selectedValues.exists(_.status != LibraryStatus.UpToDate))
         installationPanel.add(installButton)
       if (selectedValues.exists(_.status != LibraryStatus.CanInstall))
         installationPanel.add(uninstallButton)
+
       installationPanel.revalidate()
       installationPanel.repaint()
+
     }
 
     def installButtonText: String =
@@ -139,11 +164,11 @@ extends JPanel(new BorderLayout) {
         I18N.gui("update") + " / " + I18N.gui("install")
   }
 
-  private def numSelected = libraryList.getSelectedIndices.length
-  private def selectedValue = libraryList.getSelectedValue
-  private def selectedValues = {
-    import scala.collection.JavaConverters._
+  private def numSelected:   Int         = libraryList.getSelectedIndices.length
+  private def selectedValue: LibraryInfo = libraryList.getSelectedValue
 
+  private def selectedValues: Buffer[LibraryInfo] = {
+    import scala.collection.JavaConverters._
     libraryList.getSelectedValuesList.asScala
   }
 
@@ -151,23 +176,27 @@ extends JPanel(new BorderLayout) {
     try {
       install(lib)
     } catch {
-      case ex: IOException => JOptionPane.showMessageDialog(this,
-        I18N.gui("downloadFailed", lib.downloadURL), I18N.gui.get("common.messages.error"),
-        JOptionPane.ERROR_MESSAGE)
+      case ex: IOException =>
+        JOptionPane.showMessageDialog(
+          this
+        , I18N.gui("downloadFailed", lib.downloadURL)
+        , I18N.gui.get("common.messages.error")
+        , JOptionPane.ERROR_MESSAGE
+        )
     }
 
-  private def filterFn(info: LibraryInfo, text: String) =
-    (info.name + info.shortDescription).toLowerCase.contains(text.toLowerCase)
+  private def containsLib(info: LibraryInfo, text: String): Boolean =
+    s"${info.name}${info.shortDescription}".toLowerCase.contains(text.toLowerCase)
 
-  private def operate(operation: String, fn: LibraryInfo => Unit, toBeOperated: LibraryInfo => Boolean) = {
+  private def perform(opName: String, fn: LibraryInfo => Unit, checkIsTarget: LibraryInfo => Boolean) = {
     if (numSelected == 1) {
-      updateSingleOperationStatus(operation, selectedValue.name)
-      new Worker(operation, fn, selectedValue, multiple = false).execute()
+      updateSingleOperationStatus(opName, selectedValue.name)
+      new Worker(opName, fn, selectedValue, multiple = false).execute()
     } else {
-      val libs = selectedValues.filter(toBeOperated)
+      val libs = selectedValues.filter(checkIsTarget)
       numOperatedLibs = libs.length
-      updateMultipleOperationStatus(operation)
-      libs.map(new Worker(operation, fn, _, multiple = true)).foreach(_.execute)
+      updateMultipleOperationStatus(opName)
+      libs.map(new Worker(opName, fn, _, multiple = true)).foreach(_.execute)
     }
   }
 
@@ -179,8 +208,9 @@ extends JPanel(new BorderLayout) {
     updateStatus(I18N.gui(operation, libName))
 
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
-    private val noIcon = new EmptyIcon(32, 32)
-    private val upToDateIcon = icon("/images/check.gif", 32, 32)
+
+    private val noIcon        = new EmptyIcon(32, 32)
+    private val upToDateIcon  = icon("/images/check.gif", 32, 32)
     private val canUpdateIcon = icon("/images/update.gif", 32, 32)
 
     override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
@@ -216,4 +246,5 @@ extends JPanel(new BorderLayout) {
       }
     }
   }
+
 }

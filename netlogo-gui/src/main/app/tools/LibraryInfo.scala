@@ -29,6 +29,6 @@ sealed trait LibraryStatus
 
 object LibraryStatus {
   case object CanInstall extends LibraryStatus
-  case object CanUpdate extends LibraryStatus
-  case object UpToDate extends LibraryStatus
+  case object CanUpdate  extends LibraryStatus
+  case object UpToDate   extends LibraryStatus
 }

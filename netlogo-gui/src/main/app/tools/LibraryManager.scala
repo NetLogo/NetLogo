@@ -11,57 +11,54 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRende
 
 import org.nlogo.api.{ APIVersion, FileIO }
 import org.nlogo.swing.ProgressListener
+import org.nlogo.workspace.ExtensionManager
 
-object LibraryManager {
-  private val LibrariesConfBasename = "libraries.conf"
-  private val MetadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$LibrariesConfBasename")
-  private val BundledLibrariesConfig = ConfigFactory.parseResources("system/bundled-libraries.conf")
-  val LibrariesConf = FileIO.perUserFile(LibrariesConfBasename)
-  val InstalledLibrariesConf = FileIO.perUserFile("installed-libraries.conf")
+class LibraryManager(extManager: ExtensionManager, progressListener: ProgressListener) {
 
-  def updateInstalledVersion(category: String, lib: LibraryInfo, uninstall: Boolean = false) = synchronized {
-    val config = ConfigFactory.parseFile(new File(InstalledLibrariesConf))
-    val updatedConfig =
-      if (uninstall)
-        config.withoutPath(s"""$category."${lib.codeName}"""")
-      else
-        config.withValue(
-          s"""$category."${lib.codeName}".installedVersion""", ConfigValueFactory.fromAnyRef(lib.version))
-    val options = ConfigRenderOptions.defaults.setOriginComments(false)
-    FileIO.writeFile(LibraryManager.InstalledLibrariesConf, updatedConfig.root.render(options), false)
-  }
-}
+  private val allLibsName        = "libraries.conf"
+  private val metadataURL        = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
+  private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
+  private val metadataFetcher    = new SwingUpdater(metadataURL, updateLists _, progressListener)
+  private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
+  private val extInstaller       = new ExtensionInstaller(extManager)
+  private val extList            = new DefaultListModel[LibraryInfo]
 
-class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progressListener: ProgressListener) {
-  import LibraryManager._
+  val allLibsPath = FileIO.perUserFile(allLibsName)
 
-  private val categoryNames = categories.keys
-  private val mutableListModels = categoryNames.map(c => c -> new DefaultListModel[LibraryInfo]).toMap
-  val listModels: Map[String, ListModel[LibraryInfo]] = mutableListModels
+  private var initialLoading  = true
 
-  private val metadataFetcher = new SwingUpdater(MetadataURL, updateLists _, progressListener)
-  private var initialLoading = true
-
-  if (!Files.exists(Paths.get(InstalledLibrariesConf)))
-    Files.createFile(Paths.get(InstalledLibrariesConf))
+  if (!Files.exists(Paths.get(userInstalledsPath)))
+    Files.createFile(Paths.get(userInstalledsPath))
 
   reloadMetadata()
   initialLoading = false
 
-  def installer(categoryName: String)   = categories(categoryName).install _
-  def uninstaller(categoryName: String) = categories(categoryName).uninstall _
+  def getExtList: ListModel[LibraryInfo] = extList
 
-  def reloadMetadata() = updateLists(new File(LibrariesConf))
-  def updateMetadataFromGithub() = metadataFetcher.reload()
+  def installExtension(ext: LibraryInfo): Unit = {
+    extInstaller.install(ext)
+    updateInstalledVersion("extensions", ext)
+  }
+
+  def uninstallExtension(ext: LibraryInfo): Unit = {
+    extInstaller.uninstall(ext)
+    updateInstalledVersion("extensions", ext, uninstall = true)
+  }
+
+  def reloadMetadata() = updateLists(new File(allLibsName))
+  def updateMetadataFromRemote() = metadataFetcher.reload()
 
   private def updateLists(configFile: File): Unit = {
     if (configFile.exists) {
       try {
+
         val config = ConfigFactory.parseFile(configFile)
         val installedLibsConf =
-          ConfigFactory.parseFile(new File(InstalledLibrariesConf))
-            .withFallback(BundledLibrariesConfig)
-        categoryNames.foreach(c => updateList(config, installedLibsConf, c, mutableListModels(c)))
+          ConfigFactory.parseFile(new File(userInstalledsPath))
+            .withFallback(bundledsConfig)
+
+        updateList(config, installedLibsConf, "extensions", extList)
+
       } catch {
         case ex: ConfigException =>
           if (initialLoading)
@@ -76,12 +73,16 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
   }
 
   private def updateList(config: Config, installedLibsConf: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
+
     import scala.collection.JavaConverters._
 
     val configList = config.getConfigList(category).asScala
+
     listModel.clear()
     listModel.ensureCapacity(configList.length)
+
     configList foreach { c =>
+
       val name        = c.getString("name")
       val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
       val shortDesc   = c.getString("shortDescription")
@@ -91,7 +92,8 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
       val downloadURL = new URL(c.getString("downloadURL"))
 
       val installedVersionPath = s"""$category."$codeName".installedVersion"""
-      val bundled = BundledLibrariesConfig.hasPath(installedVersionPath)
+      val bundled              = bundledsConfig.hasPath(installedVersionPath)
+
       val status =
         if (!installedLibsConf.hasPath(installedVersionPath))
           LibraryStatus.CanInstall
@@ -101,9 +103,32 @@ class LibraryManager(categories: Map[String, LibrariesCategoryInstaller], progre
           LibraryStatus.CanUpdate
 
       listModel.addElement(
-        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status))
+        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status)
+      )
+
     }
+
   }
+
+  private def updateInstalledVersion(category: String, lib: LibraryInfo, uninstall: Boolean = false) = synchronized {
+
+    val userInstalleds = ConfigFactory.parseFile(new File(userInstalledsPath))
+
+    val updatedInstalleds =
+      if (uninstall)
+        userInstalleds.withoutPath(s"""$category."${lib.codeName}"""")
+      else
+        userInstalleds.withValue(
+          s"""$category."${lib.codeName}".installedVersion"""
+        , ConfigValueFactory.fromAnyRef(lib.version)
+        )
+
+    val renderOpts    = ConfigRenderOptions.defaults.setOriginComments(false)
+    val newInstalleds = updatedInstalleds.root.render(renderOpts)
+    FileIO.writeFile(userInstalledsPath, newInstalleds, false)
+
+  }
+
 }
 
-class MetadataLoadingException(cause: Throwable = null) extends RuntimeException(cause)
+class MetadataLoadingException(cause: Throwable) extends RuntimeException(cause)

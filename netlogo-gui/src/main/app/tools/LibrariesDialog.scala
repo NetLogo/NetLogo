@@ -3,42 +3,46 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
-import javax.swing.{ BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
+import javax.swing.{ Action, BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.ProgressListener
+import org.nlogo.workspace.ExtensionManager
 
-object LibrariesDialog {
-  private val BottomPanelBorder = BorderFactory.createCompoundBorder(
-    BorderFactory.createEmptyBorder(5, 0, 0, 0),
+class LibrariesDialog(parent: Frame, extManager: ExtensionManager) extends ToolDialog(parent, "libraries") {
+
+  private lazy val bottomPanelBorder =
     BorderFactory.createCompoundBorder(
-      BorderFactory.createMatteBorder(2, 0, 0, 0, Color.LIGHT_GRAY),
-      BorderFactory.createEmptyBorder(10, 10, 10, 10)))
-}
+      BorderFactory.createEmptyBorder(5, 0, 0, 0),
+      BorderFactory.createCompoundBorder(
+        BorderFactory.createMatteBorder(2, 0, 0, 0, Color.LIGHT_GRAY),
+        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+      )
+    )
 
-class LibrariesDialog(parent: Frame, categories: Map[String, LibrariesCategoryInstaller])
-extends ToolDialog(parent, "libraries") {
-  import LibrariesDialog._
-
-  private lazy val tabs = new JTabbedPane
-  private lazy val bottomPanel = new JPanel(new BorderLayout)
-  private lazy val status = new JLabel
+  private lazy val tabs            = new JTabbedPane
+  private lazy val bottomPanel     = new JPanel(new BorderLayout)
+  private lazy val status          = new JLabel
   private lazy val updateAllButton = new JButton
 
-  private lazy val manager = new LibraryManager(categories, new ProgressListener {
-    override def start()  = status.setText(I18N.gui("checkingForUpdates"))
-    override def finish() = status.setText(null)
-  })
+  private lazy val manager =
+    new LibraryManager(extManager, new ProgressListener {
+      override def start()  = status.setText(I18N.gui("checkingForUpdates"))
+      override def finish() = status.setText(null)
+    })
 
-  protected override def initGUI() = {
-    manager.listModels.foreach { case (category, contents) =>
-      tabs.addTab(I18N.gui("categories." + category),
-        new LibrariesTab(category, contents,
-          manager.installer(category), manager.uninstaller(category),
-          status.setText, manager.reloadMetadata _))
+  protected override def initGUI(): Unit = {
+
+    {
+      val category = "extensions"
+      val contents = manager.getExtList
+      val tab =
+        new LibrariesTab( category, contents, manager.installExtension
+                        , manager.uninstallExtension, status.setText, manager.reloadMetadata _)
+      tabs.addTab(I18N.gui(s"categories.$category"), tab)
     }
 
-    bottomPanel.setBorder(BottomPanelBorder)
+    bottomPanel.setBorder(bottomPanelBorder)
     bottomPanel.add(status, BorderLayout.CENTER)
     bottomPanel.add(updateAllButton, BorderLayout.EAST)
 
@@ -53,13 +57,15 @@ extends ToolDialog(parent, "libraries") {
     add(tabs, BorderLayout.CENTER)
     add(bottomPanel, BorderLayout.SOUTH)
     setSize(550, 400)
+
   }
 
-  private def currentUpdateAllAction =
+  private def currentUpdateAllAction(): Action =
     tabs.getSelectedComponent.asInstanceOf[LibrariesTab].updateAllAction
 
-  override def setVisible(v: Boolean) = {
-    super.setVisible(v)
-    if (v) manager.updateMetadataFromGithub()
+  override def setVisible(isVisible: Boolean): Unit = {
+    super.setVisible(isVisible)
+    if (isVisible) manager.updateMetadataFromRemote()
   }
+
 }
