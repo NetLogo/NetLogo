@@ -178,8 +178,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       newWb.y -= yGridSnap
     }
 
-    if (newWb.x + newWb.width < WidgetWrapper.BORDER_E * 2)
-      x += WidgetWrapper.BORDER_E * 2 - (newWb.x + newWb.width)
+    if (newWb.x < WidgetWrapper.BORDER_E)
+      x += WidgetWrapper.BORDER_E - newWb.x
     if (newWb.y < WidgetWrapper.BORDER_N)
       y += WidgetWrapper.BORDER_N - newWb.y
     if (newWb.x + 2 * WidgetWrapper.BORDER_W > b.width)
