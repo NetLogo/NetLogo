@@ -410,13 +410,13 @@ public strictfp class WidgetWrapper
          so the widget can resize based on the position of the cursor. Interestingly, the
          x and y can be negative since the difference is calculated from the coordinates.
          Also, the bounds.x and bounds.width refer to the original bounds before resizing began
-         and will be updated through the new rectangle initialized below. 01/09/19.
+         and will be updated through the new rectangle initialized below. CBR 01/09/19.
        */
     java.awt.Rectangle bounds = new java.awt.Rectangle(originalBounds);
     switch (mouseMode()) {
       case NW:
         y = StrictMath.max(y, BORDER_N - bounds.y);
-        x = StrictMath.max(x, 2 * BORDER_E - bounds.x);
+        x = StrictMath.max(x, BORDER_E - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         bounds.y += y;
@@ -424,29 +424,29 @@ public strictfp class WidgetWrapper
         break;
       case NE:
         y = StrictMath.max(y, BORDER_N - bounds.y);
-        x = StrictMath.max(x, 2 * BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
         bounds.width += x;
         bounds.y += y;
         bounds.height -= y;
         break;
       case SW:
-        x = StrictMath.max(x, 2 * BORDER_E - bounds.x);
+        x = StrictMath.max(x, BORDER_E - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         bounds.height += y;
         break;
       case W:
-        x = StrictMath.max(x, 2 + BORDER_E - bounds.x);
+        x = StrictMath.max(x, BORDER_E - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         break;
       case SE:
-        x = StrictMath.max(x, 2 * BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
         bounds.width += x;
         bounds.height += y;
         break;
       case E:
-        x = StrictMath.max(x, 2 * BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
         bounds.width += x;
         break;
       case S:
