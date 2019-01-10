@@ -34,6 +34,9 @@ class LibraryManager(
 
   def getExtList: ListModel[LibraryInfo] = extList
 
+  override def lookupExtension(name: String, version: String): Option[LibraryInfo] =
+    extList.find(ext => ext.codeName == name)
+
   def installExtension(ext: LibraryInfo): Unit = {
     extInstaller.install(ext)
     updateInstalledVersion("extensions", ext)
