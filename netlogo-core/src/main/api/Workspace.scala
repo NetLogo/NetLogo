@@ -10,6 +10,7 @@ trait Workspace extends ImporterUser with LiteralParser with RandomServices
 with ViewSettings with Controllable {
   def world: World
   def getExtensionManager: ExtensionManager
+  def getLibraryManager:   LibraryManager
   def getCompilationEnvironment: CompilationEnvironment
   def waitFor(runnable: CommandRunnable)
   def waitForResult[T](runnable: ReporterRunnable[T]): T

@@ -4,25 +4,21 @@ package org.nlogo.api
 
 import java.io.File
 import java.net.URL
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{ Files, Path, Paths }
 import javax.swing.{ DefaultListModel, ListModel }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRenderOptions, ConfigValueFactory }
 
-class LibraryManager(
-  extManager:     ExtensionManager
-, fetchMeta:      (URL, (File) => Unit) => Unit
-, invalidateMeta: (URL) => Unit
-) {
+class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) {
 
   private val allLibsName        = "libraries.conf"
-  private val metadataURL        = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
   private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
   private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
-  private val extInstaller       = new ExtensionInstaller(extManager)
+  private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
   private val extList            = new DefaultListModel[LibraryInfo]
 
   val allLibsPath = FileIO.perUserFile(allLibsName)
+  val metadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
 
   private var initialLoading  = true
 
@@ -35,7 +31,7 @@ class LibraryManager(
   def getExtList: ListModel[LibraryInfo] = extList
 
   override def lookupExtension(name: String, version: String): Option[LibraryInfo] =
-    extList.find(ext => ext.codeName == name)
+    extList.toArray.asInstanceOf[Array[LibraryInfo]].find(ext => ext.codeName == name)
 
   def installExtension(ext: LibraryInfo): Unit = {
     extInstaller.install(ext)
@@ -49,9 +45,7 @@ class LibraryManager(
 
   def reloadMetadata(): Unit = updateLists(new File(allLibsName))
 
-  def updateMetadataFromRemote(): Unit = fetchMeta(metadataURL, updateLists _)
-
-  private def updateLists(configFile: File): Unit = {
+  def updateLists(configFile: File): Unit = {
     if (configFile.exists) {
       try {
 
@@ -66,12 +60,12 @@ class LibraryManager(
         case ex: ConfigException =>
           if (initialLoading)
             // In case only the local copy got messed up somehow -- EL 2018-06-02
-            invalidateMeta(metadataURL)
+            LibraryDownloader.invalidateCache(metadataURL)
           else
             throw new MetadataLoadingException(ex)
       }
     } else {
-      invalidateMeta(metadataURL)
+      LibraryDownloader.invalidateCache(metadataURL)
     }
   }
 

@@ -6,7 +6,7 @@ object ExtensionManagerException {
     def message: String = "An error occurred in ExtensionManager"
   }
   case class ExtensionNotFound(extName: String) extends Cause {
-    override def message: String = ExtensionManager.EXTENSION_NOT_FOUND + extName
+    override def message: String = ExtensionManager.extensionNotFoundStr + extName
   }
   case object NoExtensionName extends Cause {
     override def message: String = "Bad extension: Can't find extension name in Manifest."

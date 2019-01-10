@@ -59,7 +59,7 @@ import scala.collection.JavaConverters._
  *                       ---
  */
 object ExtensionManager {
-  val EXTENSION_NOT_FOUND: String = "Can't find extension: "
+  val extensionNotFoundStr: String = "Can't find extension: "
 
   def extensionsPath: String =
     System.getProperty("netlogo.extensions.dir", "extensions");

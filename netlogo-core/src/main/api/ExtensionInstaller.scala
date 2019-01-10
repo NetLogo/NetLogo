@@ -4,12 +4,12 @@ package org.nlogo.api
 
 import java.io.IOException
 import java.net.HttpURLConnection
-import java.nio.file.{ Files, FileVisitResult, Path, Paths, SimpleFileVisitor, StandardCopyOption }
+import java.nio.file.{ Files, FileVisitResult, Path, SimpleFileVisitor, StandardCopyOption }
 import java.nio.file.attribute.BasicFileAttributes
 
 import net.lingala.zip4j.core.ZipFile
 
-private[api] class ExtensionInstaller(extensionManager: ExtensionManager) {
+private[api] class ExtensionInstaller(userExtPath: Path, unloadExtensions: () => Unit) {
 
   def install(ext: LibraryInfo): Unit = {
 
@@ -22,11 +22,11 @@ private[api] class ExtensionInstaller(extensionManager: ExtensionManager) {
       val zipPath  = Files.createTempFile(basename, ".zip")
       Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
 
-      val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
+      val extDir = userExtPath.resolve(ext.codeName)
       if (!Files.isDirectory(extDir))
         Files.createDirectory(extDir)
       else
-        extensionManager.reset()
+        unloadExtensions()
 
       new ZipFile(zipPath.toFile).extractAll(extDir.toString)
       Files.delete(zipPath)
@@ -37,7 +37,7 @@ private[api] class ExtensionInstaller(extensionManager: ExtensionManager) {
 
   def uninstall(ext: LibraryInfo): Unit = {
 
-    val extDir = Paths.get(ExtensionManager.userExtensionsPath, ext.codeName)
+    val extDir = userExtPath.resolve(ext.codeName)
 
     if (Files.exists(extDir))
 

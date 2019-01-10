@@ -6,12 +6,12 @@ import java.awt.Frame
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog }
 
-import org.nlogo.api.AggregateManagerInterface
+import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.workspace.{ AbstractWorkspaceScala, ExtensionManager }
+import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.window.{ ColorDialog, LinkRoot }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
@@ -39,14 +39,14 @@ with MenuAction {
     Preferences.IncludedFilesMenu)
 }
 
-class OpenLibrariesDialog(frame: Frame, extensionManager: ExtensionManager)
+class OpenLibrariesDialog(frame: Frame, libManager: LibraryManager)
 extends ShowDialogAction(I18N.gui.get("menu.tools.extensions"))
 with MenuAction {
 
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, extensionManager)
+  def createDialog() = new LibrariesDialog(frame, libManager)
 
 }
 

@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, FileIO, HubNetInterface,
+import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager,
   OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
 import org.nlogo.core.{ Model, View, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
@@ -34,6 +34,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with ExtendableWorkspaceMethods with Exporting
   with Plotting {
 
+  private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset _)
+
   def isHeadless: Boolean
 
   def compilerTestingMode: Boolean
@@ -43,6 +45,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   // used by `_every`
   val lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]] =
     new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]()
+
+  override def getLibraryManager = libraryManager
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException

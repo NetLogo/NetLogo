@@ -3,14 +3,14 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, Frame }
+import java.io.File
 import javax.swing.{ Action, BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
 
-import org.nlogo.api.LibraryManager
+import org.nlogo.api.{ FileIO, LibraryDownloader, LibraryManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.ProgressListener
-import org.nlogo.workspace.ExtensionManager
+import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
-class LibrariesDialog(parent: Frame, extManager: ExtensionManager) extends ToolDialog(parent, "libraries") {
+class LibrariesDialog(parent: Frame, manager: LibraryManager) extends ToolDialog(parent, "libraries") {
 
   private lazy val bottomPanelBorder =
     BorderFactory.createCompoundBorder(
@@ -25,19 +25,6 @@ class LibrariesDialog(parent: Frame, extManager: ExtensionManager) extends ToolD
   private lazy val bottomPanel     = new JPanel(new BorderLayout)
   private lazy val status          = new JLabel
   private lazy val updateAllButton = new JButton
-
-
-  private lazy val manager = {
-
-    val listener =
-      new ProgressListener {
-        override def start()  = status.setText(I18N.gui("checkingForUpdates"))
-        override def finish() = status.setText(null)
-      }
-
-    new LibraryManager(extManager, SwingUpdater.reload(listener), SwingUpdater.invalidateCache _)
-
-  }
 
   protected override def initGUI(): Unit = {
 
@@ -73,7 +60,35 @@ class LibrariesDialog(parent: Frame, extManager: ExtensionManager) extends ToolD
 
   override def setVisible(isVisible: Boolean): Unit = {
     super.setVisible(isVisible)
-    if (isVisible) manager.updateMetadataFromRemote()
+    if (isVisible) {
+
+      val listener =
+        new ProgressListener {
+          override def start()  = status.setText(I18N.gui("checkingForUpdates"))
+          override def finish() = status.setText(null)
+        }
+
+      listener.start()
+
+      (new SwingWorker[Any, Any] {
+
+        private var changed = false
+
+        override def doInBackground(): Unit = {
+          LibraryDownloader(manager.metadataURL, (_: File) => { changed = true })
+        }
+
+        override def onComplete(): Unit = {
+          if (changed) {
+            val hash = LibraryDownloader.urlToHash(manager.metadataURL)
+            manager.updateLists(new File(FileIO.perUserFile(hash)))
+          }
+          listener.finish()
+        }
+
+      }).execute()
+
+    }
   }
 
 }

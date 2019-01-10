@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.ExtensionObject
+import java.nio.file.{ Path, Paths }
 
 import org.nlogo.core.{ ExtensionObject, ExtensionManager => CoreManager }
 
@@ -46,10 +46,10 @@ object ExtensionManager {
 
   val extensionNotFoundStr: String = "Can't find extension: "
 
-  def extensionsPath: String =
-    System.getProperty("netlogo.extensions.dir", "extensions")
+  def extensionsPath: Path =
+    Paths.get(System.getProperty("netlogo.extensions.dir", "extensions"))
 
-  def userExtensionsPath: String =
-    System.getProperty("netlogo.extensions.perUserDir", FileIO.perUserDir("extensions"))
+  def userExtensionsPath: Path =
+    Paths.get(System.getProperty("netlogo.extensions.perUserDir", FileIO.perUserDir("extensions")))
 
 }

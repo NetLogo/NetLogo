@@ -16,7 +16,7 @@ class ModelsLibraryTests extends FunSuite {
     assert(! ModelsLibrary.needsModelScan)
   }
   test("getModelPathsAtRoot returns a list of all model paths in the given directory") {
-    assert(ModelsLibrary.getModelPathsAtRoot(APIEM.extensionsPath).length > 10)
+    assert(ModelsLibrary.getModelPathsAtRoot(APIEM.extensionsPath.toString).length > 10)
   }
   test("findModelsBySubstring returns a single model if it matches the name exactly") {
     assert(ModelsLibrary.findModelsBySubstring("ants").size == 1)
