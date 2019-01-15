@@ -7,23 +7,27 @@ import java.nio.file.{ Files, Paths }
 import org.nlogo.api.NetLogoLegacyDialect
 
 import org.nlogo.core.{ Dialect, DummyCompilationEnvironment, DummyExtensionManager,
-  Femto, LiteralParser, Model, SourceRewriter }
+  DummyLibraryManager, Femto, LiteralParser, Model, SourceRewriter }
 
 trait ConversionHelper {
+
   val compilationEnvironment = FooCompilationEnvironment
-  val extensionManager = VidExtensionManager
-  val canTestConversions = NetLogoLegacyDialect.isAvailable
-  val tempDir = Files.createTempDirectory("ConversionTest")
-  val modelPath = Files.createTempFile(tempDir, "ConversionTest", ".nlogo") // this is only used for includes file testing
+  val extensionManager       = VidExtensionManager
+  val libManager             = new DummyLibraryManager
+  val canTestConversions     = NetLogoLegacyDialect.isAvailable
+  val tempDir                = Files.createTempDirectory("ConversionTest")
+  val modelPath              = Files.createTempFile(tempDir, "ConversionTest", ".nlogo") // this is only used for includes file testing
 
   val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) =
-    new ModelConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, defaultAutoConvertables, conversions)
+    new ModelConverter( VidExtensionManager, libManager, FooCompilationEnvironment
+                      , literalParser, NetLogoLegacyDialect, defaultAutoConvertables, conversions)
 
   def plotConverter =
-    new PlotConverter(VidExtensionManager, FooCompilationEnvironment, literalParser, NetLogoLegacyDialect, defaultAutoConvertables)
+    new PlotConverter( VidExtensionManager, libManager, FooCompilationEnvironment
+                     , literalParser, NetLogoLegacyDialect, defaultAutoConvertables)
 
   def tryConvert(model: Model, conversions: ConversionSet*): ConversionResult =
     converter(_ => conversions)(model, modelPath)

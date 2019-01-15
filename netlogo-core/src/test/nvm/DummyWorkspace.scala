@@ -64,7 +64,7 @@ class DummyWorkspace extends Workspace {
   override def lastRunTimes = unsupported
   override def completedActivations = unsupported
   override def compiler = unsupported
-  override def open(modelPath: String) = unsupported
+  override def open(modelPath: String, shouldAutoInstallLibs: Boolean) = unsupported
   override def dispose() { }
   override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
@@ -124,7 +124,7 @@ class DummyWorkspace extends Workspace {
   def benchmark(minTime: Int,maxTime: Int): Unit = unsupported
   def compilerTestingMode: Boolean = unsupported
   def graphicsChecksum: String = unsupported
-  def openModel(model: org.nlogo.core.Model): Unit = unsupported
+  def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported
   def warningMessage(message: String): Boolean = unsupported
   def worldChecksum: String = unsupported

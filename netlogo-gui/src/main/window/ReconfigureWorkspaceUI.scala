@@ -15,14 +15,15 @@ import scala.util.Try
 
 object ReconfigureWorkspaceUI {
   def apply(linkParent: Container, uri: URI, modelType: ModelType, model: Model,
-    compilerServices: CompilerServices): Unit = {
-      new Loader(linkParent).loadHelper(uri, modelType, model, compilerServices)
+    compilerServices: CompilerServices, shouldAutoInstallLibs: Boolean = false): Unit = {
+      new Loader(linkParent).loadHelper(uri, modelType, model, compilerServices, shouldAutoInstallLibs)
   }
 
   private case class Loader(linkParent: Container) extends org.nlogo.window.Event.LinkChild {
     def getLinkParent = linkParent
 
-    def loadHelper(modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices) {
+    def loadHelper( modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices
+                  , shouldAutoInstallLibs: Boolean = false) {
       val uriOption = Try(Paths.get(modelURI)).toOption
         .filterNot(p => p.getFileName.toString.startsWith("empty.nlogo"))
         .filter(p => Files.isRegularFile(p))
@@ -32,7 +33,7 @@ object ReconfigureWorkspaceUI {
         new LoadBeginEvent())
 
       val loadSectionEvents = List(
-        new LoadModelEvent(model),
+        new LoadModelEvent(model, shouldAutoInstallLibs),
         new LoadWidgetsEvent(model.widgets))
 
       val afterEvents = List(new LoadEndEvent(), new AfterLoadEvent())

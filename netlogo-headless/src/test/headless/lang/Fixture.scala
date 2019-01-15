@@ -117,7 +117,7 @@ class Fixture(name: String) extends AbstractFixture {
 
   override def checkCompile(model: Model, compile: Compile) =
     try {
-      open(model)
+      openModel(model)
       if (compile.result.isInstanceOf[CompileError])
         fail("no CompilerException occurred")
     } catch catcher(s"compile: ${model.code}", compile.result)
@@ -151,8 +151,10 @@ class Fixture(name: String) extends AbstractFixture {
     runCommand(Command(command, core.AgentKind.Observer, result))
 
   // more convenience
-  def open(path: String) =
-    workspace.open(path)
-  def open(model: Model) =
-    workspace.openModel(model)
+  override def open(path: String, shouldAutoInstallLibs: Boolean = false) =
+    workspace.open(path, shouldAutoInstallLibs)
+
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false) =
+    workspace.openModel(model, shouldAutoInstallLibs)
+
 }

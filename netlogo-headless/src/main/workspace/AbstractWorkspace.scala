@@ -16,8 +16,8 @@ import
 import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
-  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions,
-    JobOwner, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
+  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, JobOwner,
+    LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
@@ -375,6 +375,7 @@ object AbstractWorkspaceTraits {
   }
 
   trait Extensions { this: AbstractWorkspace =>
+
     private val _extensionManager: ExtensionManager =
       new ExtensionManager(this, new JarLoader(this));
     override def getExtensionManager =
@@ -385,6 +386,11 @@ object AbstractWorkspaceTraits {
     override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) {
       _extensionManager.importExtensionData(name, data, handler)
     }
+
+    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset _)
+
+    override def getLibraryManager = libraryManager
+
   }
 
   trait Checksums { this: AbstractWorkspace =>

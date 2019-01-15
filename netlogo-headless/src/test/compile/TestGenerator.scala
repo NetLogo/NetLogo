@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Version }
+import org.nlogo.api.{ DummyExtensionManager, DummyLibraryManager, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.nlogo.nvm.{ CompilerFlags, Optimizations, Procedure }, Procedure.NoProcedures
 
@@ -18,6 +18,7 @@ class TestGenerator extends FunSuite {
       "to foo " + preamble + source + "\nend", None,
       program, NoProcedures,
       new DummyExtensionManager,
+      new DummyLibraryManager,
       new DummyCompilationEnvironment,
       CompilerFlags(optimizations = Optimizations.headlessOptimizations)).head.code.head
   def disassembleCommand(source: String): String =
@@ -142,7 +143,9 @@ class TestGenerator extends FunSuite {
           |to-report move
           |  report all? agents-here [true] or all? agents-here [false]
           |end
-        """.stripMargin, Program.empty(), new DummyExtensionManager, new DummyCompilationEnvironment
+        """.stripMargin
+      , Program.empty(), new DummyExtensionManager, new DummyLibraryManager
+      , new DummyCompilationEnvironment, false
       )
     }
 }

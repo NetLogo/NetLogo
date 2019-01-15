@@ -55,7 +55,12 @@ object BehaviorSpaceCoordinator {
     val allAutoConvertables = fileformat.defaultAutoConvertables :+
       Femto.scalaSingleton[org.nlogo.api.AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
     val converter =
-      fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, literalParser, allAutoConvertables) _
+      fileformat.converter(
+        workspace.getExtensionManager
+      , workspace.getLibraryManager
+      , workspace.getCompilationEnvironment
+      , literalParser
+      , allAutoConvertables) _
     val loader = fileformat.standardLoader(literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 

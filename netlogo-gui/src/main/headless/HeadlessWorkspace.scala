@@ -196,7 +196,7 @@ with org.nlogo.api.ViewSettings {
       else NetLogoLegacyDialect
     val newProgram = Program.fromDialect(dialect)
     val results = compiler.compileProgram(source, newProgram,
-      getExtensionManager, getCompilationEnvironment)
+      getExtensionManager, getLibraryManager, getCompilationEnvironment, false)
     procedures = results.proceduresMap
     codeBits.clear()
     init()
@@ -497,13 +497,13 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[java.io.IOException])
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  override def open(path: String) {
+  override def open(path: String, shouldAutoInstallLibs: Boolean = false) {
     try {
       val m = loader.readModel(Paths.get(path).toUri).get
       setModelPath(path)
       setModelType(ModelType.Normal)
       fileManager.handleModelChange()
-      openModel(m)
+      openModel(m, shouldAutoInstallLibs)
     }
     catch {
       case ex: CompilerException =>
@@ -532,11 +532,11 @@ with org.nlogo.api.ViewSettings {
    *               in the same format as it would be stored in a file.
    */
   def openFromSource(source: String, extension: String) {
-    loader.readModel(source, extension).foreach(openModel)
+    loader.readModel(source, extension).foreach(m => openModel(m, false))
   }
 
-  def openModel(model: Model): Unit = {
-    new HeadlessModelOpener(this).openFromModel(model)
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit = {
+    new HeadlessModelOpener(this).openFromModel(model, shouldAutoInstallLibs)
   }
 
   /**

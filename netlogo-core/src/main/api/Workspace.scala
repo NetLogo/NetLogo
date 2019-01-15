@@ -59,8 +59,8 @@ with ViewSettings with Controllable {
   @throws(classOf[IOException])
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def open(modelPath: String): Unit
-  def openModel(model: Model)
+  def open(modelPath: String, shouldAutoInstallLibs: Boolean = false): Unit
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit
   def mouseDown: Boolean = false
   def mouseInside: Boolean = false
   def mouseXCor: Double = 0

@@ -2,18 +2,18 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager,
-  OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
-import org.nlogo.core.{ Model, View, Widget => CoreWidget, WorldDimensions }
-import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
-import org.nlogo.nvm.RuntimePrimitiveException
-
-import collection.mutable.WeakHashMap
 import java.io.IOException
 import java.nio.file.Paths
 
+import scala.collection.mutable.WeakHashMap
 import scala.util.Try
+
+import org.nlogo.agent.{ World, Agent, OutputObject }
+import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager,
+  LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
+import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
+import org.nlogo.nvm.RuntimePrimitiveException
 
 import AbstractWorkspaceTraits._
 
@@ -95,6 +95,12 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     auxRNG.setSeed(seed)
     plotRNG.setSeed(seed)
   }
+
+  // called from an "other" thread (neither event thread nor job thread)
+  @throws(classOf[CompilerException])
+  @throws(classOf[IOException])
+  @throws(classOf[LogoException])
+  def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit
 
   @throws(classOf[IOException])
   def getSource(filename: String): String = {

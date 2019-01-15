@@ -47,8 +47,9 @@ object Adapters {
       val allAutoConvertables =
         fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable]).asScala
 
-      fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, allAutoConvertables)(
-        container.getComponent(classOf[Dialect]))
+      fileformat.converter( workspace.getExtensionManager, workspace.getLibraryManager
+                          , workspace.getCompilationEnvironment, workspace, allAutoConvertables)(
+                            container.getComponent(classOf[Dialect]))
     }
   }
 }

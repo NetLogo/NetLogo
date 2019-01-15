@@ -5,35 +5,39 @@ package org.nlogo.api
 import java.io.File
 import java.net.URL
 import java.nio.file.{ Files, Path, Paths }
-import javax.swing.{ DefaultListModel, ListModel }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRenderOptions, ConfigValueFactory }
 
-class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) {
+import org.nlogo.core.LibraryInfo
+import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
+import org.nlogo.core.LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
+
+class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends CoreLibraryManager {
+
+  private type InfoChangeCallback = Seq[LibraryInfo] => Unit
 
   private val allLibsName        = "libraries.conf"
   private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
   private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
   private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
-  private val extList            = new DefaultListModel[LibraryInfo]
+
+  private var libraries           = Seq[       LibraryInfo]()
+  private var infoChangeCallbacks = Seq[InfoChangeCallback]()
 
   val allLibsPath = FileIO.perUserFile(allLibsName)
   val metadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
 
-  private var initialLoading  = true
-
   if (!Files.exists(Paths.get(userInstalledsPath)))
     Files.createFile(Paths.get(userInstalledsPath))
 
-  reloadMetadata()
-  initialLoading = false
+  reloadMetadata(true)
 
-  def getExtList: ListModel[LibraryInfo] = extList
+  def getExtensionInfos = libraries
 
   override def lookupExtension(name: String, version: String): Option[LibraryInfo] =
-    extList.toArray.asInstanceOf[Array[LibraryInfo]].find(ext => ext.codeName == name)
+    libraries.find(ext => ext.codeName == name)
 
-  def installExtension(ext: LibraryInfo): Unit = {
+  override def installExtension(ext: LibraryInfo): Unit = {
     extInstaller.install(ext)
     updateInstalledVersion("extensions", ext)
   }
@@ -43,22 +47,28 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) {
     updateInstalledVersion("extensions", ext, uninstall = true)
   }
 
-  def reloadMetadata(): Unit = updateLists(new File(allLibsName))
+  override def reloadMetadata(): Unit = reloadMetadata(false)
 
-  def updateLists(configFile: File): Unit = {
+  def reloadMetadata(isFirstLoad: Boolean = false): Unit =
+    updateLists(new File(allLibsName), isFirstLoad)
+
+  def onLibInfoChange(callback: InfoChangeCallback): Unit = {
+    infoChangeCallbacks = infoChangeCallbacks :+ callback
+  }
+
+  def updateLists(configFile: File, isFirstLoad: Boolean = false): Unit = {
     if (configFile.exists) {
       try {
 
         val config = ConfigFactory.parseFile(configFile)
         val installedLibsConf =
-          ConfigFactory.parseFile(new File(userInstalledsPath))
-            .withFallback(bundledsConfig)
+          ConfigFactory.parseFile(new File(userInstalledsPath)).withFallback(bundledsConfig)
 
-        updateList(config, installedLibsConf, "extensions", extList)
+        updateList(config, installedLibsConf, "extensions")
 
       } catch {
         case ex: ConfigException =>
-          if (initialLoading)
+          if (isFirstLoad)
             // In case only the local copy got messed up somehow -- EL 2018-06-02
             LibraryDownloader.invalidateCache(metadataURL)
           else
@@ -69,41 +79,38 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) {
     }
   }
 
-  private def updateList(config: Config, installedLibsConf: Config, category: String, listModel: DefaultListModel[LibraryInfo]) = {
+  private def updateList(config: Config, installedLibsConf: Config, category: String) = {
 
     import scala.collection.JavaConverters._
 
-    val configList = config.getConfigList(category).asScala
+    libraries =
+      config.getConfigList(category).asScala.map {
+        c =>
 
-    listModel.clear()
-    listModel.ensureCapacity(configList.length)
+          val name        = c.getString("name")
+          val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
+          val shortDesc   = c.getString("shortDescription")
+          val longDesc    = c.getString("longDescription")
+          val version     = c.getString("version")
+          val homepage    = new URL(c.getString("homepage"))
+          val downloadURL = new URL(c.getString("downloadURL"))
 
-    configList foreach { c =>
+          val installedVersionPath = s"""$category."$codeName".installedVersion"""
+          val bundled              = bundledsConfig.hasPath(installedVersionPath)
 
-      val name        = c.getString("name")
-      val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
-      val shortDesc   = c.getString("shortDescription")
-      val longDesc    = c.getString("longDescription")
-      val version     = c.getString("version")
-      val homepage    = new URL(c.getString("homepage"))
-      val downloadURL = new URL(c.getString("downloadURL"))
+          val status =
+            if (!installedLibsConf.hasPath(installedVersionPath))
+              CanInstall
+            else if (installedLibsConf.getString(installedVersionPath) == version)
+              UpToDate
+            else
+              CanUpdate
 
-      val installedVersionPath = s"""$category."$codeName".installedVersion"""
-      val bundled              = bundledsConfig.hasPath(installedVersionPath)
+          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status)
 
-      val status =
-        if (!installedLibsConf.hasPath(installedVersionPath))
-          LibraryStatus.CanInstall
-        else if (installedLibsConf.getString(installedVersionPath) == version)
-          LibraryStatus.UpToDate
-        else
-          LibraryStatus.CanUpdate
+      }
 
-      listModel.addElement(
-        LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status)
-      )
-
-    }
+    infoChangeCallbacks.foreach(_.apply(libraries))
 
   }
 
@@ -127,5 +134,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) {
   }
 
 }
+
+class DummyLibraryManager extends LibraryManager(ExtensionManager.userExtensionsPath, () => ())
 
 class MetadataLoadingException(cause: Throwable) extends RuntimeException(cause)

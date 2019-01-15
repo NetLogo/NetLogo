@@ -40,7 +40,7 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
 
   test("watchers can delete themselves") { implicit fixture =>
     import fixture._
-    open(Model(declarations))
+    openModel(Model(declarations))
     val watcher = new SelfDestroyer
     When("a variable has a self destructive watcher")
     workspace.world.addWatcher("MY-GLOBAL", watcher)

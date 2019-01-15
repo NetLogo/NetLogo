@@ -8,7 +8,7 @@ import
 import
 org.nlogo.{core, agent, api, nvm},
     agent.OutputObject,
-    api.{ ExtensionManager => APIExtensionManager, SourceOwner },
+    api.{ ExtensionManager => APIExtensionManager, LibraryManager => APILibraryManager, SourceOwner },
     core.{ CompilerException, CompilerUtilitiesInterface, CompilationEnvironment,
            File, FileMode, FrontEndInterface, LiteralImportHandler, Program},
     nvm.{Procedure, CompilerFlags, CompilerInterface, CompilerResults, Reporter},
@@ -296,11 +296,16 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
     override def compileProgram(source: String,
                                 program: Program,
                                 extensionManager: APIExtensionManager,
+                                libManager: APILibraryManager,
                                 compilationEnvironment: CompilationEnvironment,
+                                shouldAutoInstallLibs: Boolean,
                                 flags: CompilerFlags): CompilerResults = ???
 
     @throws(classOf[CompilerException])
-    override def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: APIExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = ???
+    override def compileProgram( source: String, additionalSources: Seq[SourceOwner], program: Program
+                               , extensionManager: APIExtensionManager, libManager: APILibraryManager
+                               , compilationEnv: CompilationEnvironment, shouldAutoInstallLibs: Boolean
+                               ): CompilerResults = ???
 
     override def makeLiteralReporter(value: AnyRef): Reporter = ???
 
@@ -309,6 +314,7 @@ class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
                                  program: Program,
                                  oldProcedures: Procedure.ProceduresMap,
                                  extensionManager: APIExtensionManager,
+                                 libManager: APILibraryManager,
                                  compilationEnvironment: CompilationEnvironment,
                                  flags: CompilerFlags): CompilerResults = ???
 

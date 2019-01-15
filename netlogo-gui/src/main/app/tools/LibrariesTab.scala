@@ -4,14 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Color, GridLayout }
 import java.io.IOException
-import javax.swing.{ Action, BorderFactory, JButton, JLabel, JList, JOptionPane,
+import javax.swing.{ Action, BorderFactory, DefaultListModel, JButton, JLabel, JList, JOptionPane,
   JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ ListDataEvent, ListDataListener }
 
 import scala.collection.mutable.Buffer
 
-import org.nlogo.api.{ LibraryInfo, LibraryStatus }
-import org.nlogo.core.I18N
+import org.nlogo.api.LibraryManager
+import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon
 
@@ -22,17 +22,28 @@ object LibrariesTab {
       |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(
-  category: String            , list: ListModel[LibraryInfo]
-, install: LibraryInfo => Unit, uninstall: LibraryInfo => Unit
-, updateStatus: String => Unit, updateLists: () => Unit
-) extends JPanel(new BorderLayout) {
+class LibrariesTab(category: String, manager: LibraryManager, updateStatus: String => Unit)
+extends JPanel(new BorderLayout) {
 
   import LibrariesTab._
 
+  private val libraries   = manager.getExtensionInfos
+  private val install     = manager.installExtension _
+  private val uninstall   = manager.uninstallExtension _
+  private val updateLists = () => manager.reloadMetadata()
+
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
-  private val listModel   = new FilterableListModel(list, containsLib)
+  private val baseListModel = new DefaultListModel[LibraryInfo]
+  libraries.toArray.foreach(elem => baseListModel.addElement(elem))
+
+  manager.onLibInfoChange {
+    libs =>
+      baseListModel.clear()
+      libs.foreach(elem => baseListModel.addElement(elem))
+  }
+
+  private val listModel   = new FilterableListModel(baseListModel, containsLib)
   private val libraryList = new JList[LibraryInfo](listModel)
 
   val updateAllAction: Action =
@@ -88,15 +99,15 @@ class LibrariesTab(
     uninstallButton.addActionListener(_ => perform("uninstalling", uninstall,
       lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
 
-    list.addListDataListener(
+    listModel.addListDataListener(
       new ListDataListener {
 
         override def intervalAdded(e: ListDataEvent): Unit =
-          if (canUpdateInRange(list, e.getIndex0, e.getIndex1))
+          if (canUpdateInRange(listModel, e.getIndex0, e.getIndex1))
             updateAllAction.setEnabled(true)
 
-        override def intervalRemoved(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(list))
-        override def contentsChanged(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(list))
+        override def intervalRemoved(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(listModel))
+        override def contentsChanged(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(listModel))
 
       }
     )
@@ -111,7 +122,7 @@ class LibrariesTab(
 
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
-    updateAllAction.setEnabled(canUpdate(list))
+    updateAllAction.setEnabled(canUpdate(listModel))
 
     def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 

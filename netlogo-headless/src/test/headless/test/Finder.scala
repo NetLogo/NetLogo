@@ -111,7 +111,7 @@ trait Finder extends FunSuite  {
         assert(! (t.entries.exists(_.isInstanceOf[Declaration]) && t.entries.exists(_.isInstanceOf[Open])))
 
         if (! nonDecls.exists(e => e.isInstanceOf[Compile] || e.isInstanceOf[Open]))
-          fixture.open(new Model(
+          fixture.openModel(new Model(
             code = decls,
             widgets = StandardWidgets))
         nonDecls.foreach{

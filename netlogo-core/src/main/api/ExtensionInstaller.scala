@@ -9,6 +9,8 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import net.lingala.zip4j.core.ZipFile
 
+import org.nlogo.core.LibraryInfo
+
 private[api] class ExtensionInstaller(userExtPath: Path, unloadExtensions: () => Unit) {
 
   def install(ext: LibraryInfo): Unit = {

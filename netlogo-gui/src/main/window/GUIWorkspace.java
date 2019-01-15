@@ -389,12 +389,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   // called from an "other" thread (neither event thread nor job thread)
   @Override
-  public void open(final String path) {
+  public void open(final String path, boolean shouldAutoInstallLibs) {
     try {
       org.nlogo.awt.EventQueue.invokeAndWait
           (new Runnable() {
             public void run() {
-              new org.nlogo.window.Events.OpenModelEvent(path)
+              new org.nlogo.window.Events.OpenModelEvent(path, shouldAutoInstallLibs)
                   .raise(GUIWorkspace.this);
             }
           });
@@ -410,7 +410,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   @Override
-  public void openModel(org.nlogo.core.Model model) {
+  public void openModel(org.nlogo.core.Model model, boolean shouldAutoInstallLibs) {
     throw new UnsupportedOperationException();
   }
 

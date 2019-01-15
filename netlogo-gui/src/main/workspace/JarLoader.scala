@@ -10,7 +10,7 @@ import ExtensionManagerException._
 
 import org.nlogo.api.{ ClassManager, ExtensionManager => APIEM }
 
-import scala.util.{ Success, Try }
+import scala.util.Try
 
 class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.ExtensionLoader {
 

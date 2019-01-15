@@ -30,7 +30,7 @@ extends AbstractWorkspaceScala(
   override def stopInspectingDeadAgents() = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
-  override def open(path: String) = unsupported
+  override def open(path: String, shouldAutoInstallLibs: Boolean = false) = unsupported
   override def openString(modelContents: String) = unsupported
   override def magicOpen(name: String) = unsupported
   override def clearOutput(): Unit = unsupported
@@ -67,6 +67,6 @@ extends AbstractWorkspaceScala(
   override def deleteLogFiles(): Unit = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
 
-  def openModel(model: org.nlogo.core.Model): Unit = unsupported
+  def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean = false): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported
 }

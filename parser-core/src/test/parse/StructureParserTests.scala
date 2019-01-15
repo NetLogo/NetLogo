@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  CompilerException, Femto, StructureResults}
+  DummyLibraryManager, CompilerException, Femto, StructureResults}
 import org.scalatest.FunSuite
 
 import org.nlogo._
@@ -235,7 +235,8 @@ class StructureParserTests extends FunSuite {
   def compileAll(src: String): StructureResults = {
     StructureParser.parseSources(
       tokenizer,
-      CompilationOperand(Map("" -> src), new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false),
+      CompilationOperand( Map("" -> src), new DummyExtensionManager, new DummyLibraryManager
+                        , new DummyCompilationEnvironment, subprogram = false),
       (_, name) => if (name == "foo.nls") Some(("foo.nls", "")) else None)
   }
 
@@ -266,7 +267,8 @@ class StructureParserTests extends FunSuite {
     )
     val results =
       StructureParser.parseSources(
-        tokenizer, CompilationOperand(sources, new DummyExtensionManager, new DummyCompilationEnvironment, subprogram = false))
+        tokenizer, CompilationOperand( sources, new DummyExtensionManager, new DummyLibraryManager
+                                     , new DummyCompilationEnvironment, subprogram = false))
     assert(results.procedures.contains("FOO") && results.procedures.contains("BAR"))
   }
 }

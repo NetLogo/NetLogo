@@ -372,12 +372,13 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * Opens a model stored in a file.
    *
    * @param path the path (absolute or relative) of the NetLogo model to open.
+   * @param shouldAutoInstallLibs whether or not missing libraries (extensions) should be automatically installed
    */
   @throws(classOf[java.io.IOException])
-  override def open(path: String) {
+  override def open(path: String, shouldAutoInstallLibs: Boolean = false) {
     setModelPath(path)
     val modelContents = FileIO.fileToString(path)(Codec.UTF8)
-    try loader.readModel(Paths.get(path).toUri).foreach(openModel)
+    try loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
     catch {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
@@ -393,9 +394,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * Can only be called once per instance of HeadlessWorkspace
    *
    * @param source The complete model, including widgets and so forth, as created from core.Model()
+   * @param shouldAutoInstallLibs whether or not missing libraries (extensions) should be automatically installed
    */
-  def openModel(model: Model = Model()) {
-    new HeadlessModelOpener(this).openFromModel(model)
+  override def openModel(model: Model = Model(), shouldAutoInstallLibs: Boolean = false): Unit = {
+    new HeadlessModelOpener(this).openFromModel(model, shouldAutoInstallLibs)
   }
 
   /**

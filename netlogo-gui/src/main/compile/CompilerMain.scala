@@ -7,7 +7,7 @@ package org.nlogo.compile
 // big exception to that principle, though, which is that the ExtensionManager gets side-effected in
 // StructureParser. - ST 2/21/08, 1/21/09
 
-import org.nlogo.api.{ ExtensionManager, Version }
+import org.nlogo.api.{ ExtensionManager, LibraryManager, Version }
 import org.nlogo.compile.api.{ Backifier => BackifierInterface, CommandMunger, DefaultAstVisitor,
   FrontMiddleBridgeInterface, MiddleEndInterface, Optimizations, ProcedureDefinition, ReporterMunger }
 import org.nlogo.core.{ Dialect, Program }
@@ -35,11 +35,13 @@ private[compile] object CompilerMain {
     subprogram:       Boolean,
     oldProcedures:    ListMap[String, Procedure],
     extensionManager: ExtensionManager,
+    libManager:       LibraryManager,
     compilationEnv:   CompilationEnvironment): (ListMap[String, Procedure], Program) = {
 
     val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
     val (topLevelDefs, feStructureResults) =
-      frontEnd.frontEnd(CompilationOperand(sources, extensionManager, compilationEnv, program, oldProceduresListMap, subprogram, displayName))
+      frontEnd.frontEnd(CompilationOperand( sources, extensionManager, libManager, compilationEnv, program
+                                          , oldProceduresListMap, subprogram, displayName))
 
     val bridged = bridge(feStructureResults, oldProcedures, topLevelDefs, backifier(feStructureResults.program, extensionManager))
 

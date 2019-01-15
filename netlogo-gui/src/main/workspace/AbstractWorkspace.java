@@ -14,7 +14,6 @@ import org.nlogo.core.CompilerException;
 import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
 import org.nlogo.core.File;
-import org.nlogo.core.CompilerException;
 import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
@@ -199,10 +198,6 @@ public abstract strictfp class AbstractWorkspace
   public void updateMode(UpdateMode updateMode) {
     this.updateMode = updateMode;
   }
-
-  // called from an "other" thread (neither event thread nor job thread)
-  public abstract void open(String path)
-      throws java.io.IOException, CompilerException, LogoException;
 
   public abstract void openString(String modelContents)
       throws CompilerException, LogoException;

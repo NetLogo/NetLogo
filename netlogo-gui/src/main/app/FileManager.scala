@@ -247,7 +247,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   val controller = new FileController(parent, workspace)
 
   def handle(e: OpenModelEvent): Unit = {
-    openFromPath(e.path, ModelType.Library)
+    openFromPath(e.path, ModelType.Library, e.shouldAutoInstallLibs)
   }
 
   def handle(e: LoadModelEvent): Unit = {
@@ -272,12 +272,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
   /**
    * opens a model from a file path.
    */
-  def openFromPath(path: String, modelType: ModelType): Unit = {
-    openFromURI(new File(path).toURI, modelType)
+  def openFromPath(path: String, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
+    openFromURI(new File(path).toURI, modelType, shouldAutoInstallLibs)
   }
 
-  def openFromURI(uri: URI, modelType: ModelType): Unit = {
-    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType))
+  def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
+    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType, shouldAutoInstallLibs))
   }
 
   private def openModelURI(uri: URI): (OpenModel.Controller) => Option[Model] =
@@ -298,8 +298,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
     openFromModel(model, uri, modelType)
   }
 
-  private def runLoad(linkParent: Container, uri: URI, model: Model, modelType: ModelType): Unit = {
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace)
+  private def runLoad( linkParent: Container, uri: URI, model: Model, modelType: ModelType
+                     , shouldAutoInstallLibs: Boolean): Unit = {
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs)
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
@@ -353,14 +354,15 @@ class FileManager(workspace: AbstractWorkspaceScala,
     }
   }
 
-  private def openFromModel(model: Model, uri: URI, modelType: ModelType): Unit = {
+  private def openFromModel( model: Model, uri: URI, modelType: ModelType
+                           , shouldAutoInstallLibs: Boolean = false): Unit = {
     if (firstLoad) {
       firstLoad = false
-      runLoad(parent, uri, model, modelType)
+      runLoad(parent, uri, model, modelType, shouldAutoInstallLibs)
     } else {
       val loader = new Runnable {
         override def run(): Unit = {
-          runLoad(parent, uri, model, modelType)
+          runLoad(parent, uri, model, modelType, shouldAutoInstallLibs)
         }
       }
       ModalProgressTask.onUIThread(

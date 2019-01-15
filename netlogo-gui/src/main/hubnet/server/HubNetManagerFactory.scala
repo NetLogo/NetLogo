@@ -8,7 +8,11 @@ import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 
 class HeadlessHubNetManagerFactory extends HubNetManagerFactory {
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface = {
-    val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment, workspace, fileformat.defaultAutoConvertables) _
+    val converter = fileformat.converter( workspace.getExtensionManager
+                                        , workspace.getLibraryManager
+                                        , workspace.getCompilationEnvironment
+                                        , workspace
+                                        , fileformat.defaultAutoConvertables) _
     new HeadlessHubNetManager(workspace, fileformat.standardLoader(workspace), converter(workspace.world.program.dialect))
   }
 }

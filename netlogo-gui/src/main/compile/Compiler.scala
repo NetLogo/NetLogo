@@ -5,7 +5,7 @@ package org.nlogo.compile
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token }
 import org.nlogo.api.{ SourceOwner, World }
 import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure }
-import org.nlogo.api.ExtensionManager
+import org.nlogo.api.{ ExtensionManager, LibraryManager }
 
 import scala.collection.immutable.ListMap
 
@@ -31,9 +31,11 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
+  def compileProgram( source: String, program: Program, extensionManager: ExtensionManager
+                    , libManager: LibraryManager, compilationEnv: CompilationEnvironment): CompilerResults = {
     val (procedures, newProgram) =
-      CompilerMain.compile(Map("" -> source), None, program, false, noProcedures, extensionManager, compilationEnv)
+      CompilerMain.compile( Map("" -> source), None, program, false, noProcedures
+                          , extensionManager, libManager, compilationEnv)
 
     new CompilerResults(procedures, newProgram)
   }
@@ -41,13 +43,15 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   // used to compile the Code tab with additional sources
   // (like system dynamics modeler)
   @throws(classOf[CompilerException])
-  def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
+  def compileProgram( source: String, additionalSources: Seq[SourceOwner], program: Program
+                    , extensionManager: ExtensionManager, libManager: LibraryManager
+                    , compilationEnv: CompilationEnvironment, shouldAutoInstallLibs: Boolean): CompilerResults = {
     val sources =
       Map("" -> source) ++ additionalSources.map(additionalSource =>
           additionalSource.classDisplayName -> additionalSource.innerSource).toMap
 
     val (procedures, newProgram) =
-      CompilerMain.compile(sources, None, program, false, noProcedures, extensionManager, compilationEnv)
+      CompilerMain.compile(sources, None, program, false, noProcedures, extensionManager, libManager, compilationEnv)
 
     new CompilerResults(procedures, newProgram)
   }
@@ -57,9 +61,11 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     source:                 String,
     program:                Program,
     extensionManager:       ExtensionManager,
+    libManager:             LibraryManager,
     compilationEnvironment: CompilationEnvironment,
+    shouldAutoInstallLibs:  Boolean,
     flags:                  CompilerFlags): CompilerResults = {
-      compileProgram(source, Seq(), program, extensionManager, compilationEnvironment)
+      compileProgram(source, Seq(), program, extensionManager, libManager, compilationEnvironment, shouldAutoInstallLibs)
   }
 
   def makeLiteralReporter(value: AnyRef): org.nlogo.nvm.Reporter =
@@ -73,9 +79,11 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     program:          Program,
     oldProcedures:    ProceduresMap,
     extensionManager: ExtensionManager,
+    libManager:       LibraryManager,
     compilationEnv:   CompilationEnvironment): CompilerResults = {
     val (procedures, newProgram) =
-      CompilerMain.compile(Map("" -> source),displayName,program,true,oldProcedures,extensionManager,compilationEnv)
+      CompilerMain.compile( Map("" -> source), displayName, program, true
+                          , oldProcedures, extensionManager, libManager, compilationEnv)
     new CompilerResults(procedures, newProgram)
   }
 
@@ -86,9 +94,10 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     program:                Program,
     oldProcedures:          Procedure.ProceduresMap,
     extensionManager:       ExtensionManager,
+    libManager:             LibraryManager,
     compilationEnvironment: CompilationEnvironment,
     flags:                  CompilerFlags): CompilerResults = {
-      compileMoreCode(source, displayName, program, oldProcedures, extensionManager, compilationEnvironment)
+      compileMoreCode(source, displayName, program, oldProcedures, extensionManager, libManager, compilationEnvironment)
   }
 
   // these two used by input boxes

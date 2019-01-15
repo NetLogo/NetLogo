@@ -12,7 +12,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("Boolean Constraint Constructor") { implicit fixture =>
     import fixture._
-    open(Model(widgets =
+    openModel(Model(widgets =
       List(View(), Switch(variable=Some("on?"), display=Some("on?"), on=true),
         Switch(variable=Some("off?"), display=Some("on?"), on=false))))
     testReporter("on?", "true")
@@ -34,7 +34,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("Chooser Constraint") { implicit fixture =>
     import fixture._
-    open(Model(widgets = List(
+    openModel(Model(widgets = List(
       View(),
       Chooser(display = Some("foo"), variable = Some("foo"), choices = List(1, 2, 3, 4, 5).map(Double.box(_)).map(ChooseableDouble(_)),
         currentChoice = 0),
@@ -59,7 +59,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("InputBox Constraint Loading") { implicit fixture =>
     import fixture._
-    open(Model(widgets = List(
+    openModel(Model(widgets = List(
       View(),
       InputBox(variable=Some("number"),
         boxedValue = NumericInput(5d, NumericInput.NumberLabel)),
@@ -121,7 +121,7 @@ class TestConstraintModels extends FixtureSuite {
 
   test("Slider Constraints") { implicit fixture =>
     import fixture._
-    open(Model(widgets = List(View(), Slider(display=Some("x-loc"), variable=Some("x-loc"), min="0", max="100", default=10, step="1"))))
+    openModel(Model(widgets = List(View(), Slider(display=Some("x-loc"), variable=Some("x-loc"), min="0", max="100", default=10, step="1"))))
     testReporter("x-loc", "10")
     testCommand(("set x-loc 20"))
     testReporter("x-loc", "20")

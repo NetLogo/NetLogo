@@ -22,7 +22,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromModel(model: Model) {
+  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false) {
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.setOpenModel(model)
@@ -46,7 +46,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       val newProg = Program.fromDialect(dialect).copy(interfaceGlobals = model.interfaceGlobals)
-      ws.compiler.compileProgram(code, additionalSources, newProg, ws.getExtensionManager, ws.getCompilationEnvironment)
+      ws.compiler.compileProgram( code, additionalSources, newProg, ws.getExtensionManager
+                                , ws.getLibraryManager, ws.getCompilationEnvironment, shouldAutoInstallLibs)
     }
     ws.procedures = results.proceduresMap
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)

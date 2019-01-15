@@ -26,7 +26,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       case c => c.toString
     }
 
-  def openFromModel(model: Model) {
+  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false) {
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setOpenModel(model)
 
@@ -45,7 +45,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       val code = model.code
       ws.compiler.compileProgram(
         code, Program.empty.copy(interfaceGlobals = model.interfaceGlobals),
-        ws.getExtensionManager, ws.compilationEnvironment, ws.flags)
+        ws.getExtensionManager, ws.getLibraryManager, ws.compilationEnvironment,
+        shouldAutoInstallLibs, ws.flags)
     }
     ws.procedures = results.proceduresMap
     ws.clearRunCache()

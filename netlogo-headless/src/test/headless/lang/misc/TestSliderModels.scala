@@ -17,7 +17,7 @@ class TestSliderModels extends FixtureSuite {
 
   test("simple slider test") { implicit fixture =>
     import fixture._
-    open(model)
+    openModel(model)
     testReporter("density", "57")
     testCommand("set density 63")
     testReporter("density", "63")

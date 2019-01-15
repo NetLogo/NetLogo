@@ -12,8 +12,8 @@ trait AbstractFixture {
   def defaultView: core.View
   def declare(code: String): Unit = declare(Model(code = code, widgets = List(defaultView)))
   def declare(model: Model = Model(widgets = List(defaultView)))
-  def open(path: String)
-  def open(model: Model)
+  def open(path: String, shouldAutoInstallLibs: Boolean = false)
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false)
   def checkCompile(model: Model, compile: Compile)
   def runCommand(command: Command, mode: TestMode)
   def runReporter(reporter: Reporter, mode: TestMode)

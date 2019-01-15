@@ -42,7 +42,7 @@ class TestStackTraces extends FixtureSuite {
 
   test("error inside run") { implicit fixture =>
     import fixture._
-    open(Model(code))
+    openModel(Model(code))
     intercept[LogoException] {testCommand("__ignore runresult \"foo\"")}
     val expected =
       """|boom!
@@ -57,7 +57,7 @@ class TestStackTraces extends FixtureSuite {
   // ticket #1170
   test("error inside runresult") { implicit fixture =>
     import fixture._
-    open(Model(code))
+    openModel(Model(code))
     intercept[LogoException] {testCommand("run \"__ignore foo\"")}
     val expected =
       """|boom!
@@ -71,7 +71,7 @@ class TestStackTraces extends FixtureSuite {
 
   test("stack overflow - command") { implicit fixture =>
     import fixture._
-    open(Model(code))
+    openModel(Model(code))
     intercept[LogoException] {testCommand("overflow-run")}
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)
@@ -83,7 +83,7 @@ class TestStackTraces extends FixtureSuite {
 
   test("stack overflow - reporter") { implicit fixture =>
     import fixture._
-    open(Model(code))
+    openModel(Model(code))
     intercept[LogoException] {testCommand("show overflow")}
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)
@@ -96,7 +96,7 @@ class TestStackTraces extends FixtureSuite {
 
   test("stack overflow - foreach") { implicit fixture =>
     import fixture._
-    open(Model(code))
+    openModel(Model(code))
     intercept[LogoException] {testCommand("overflow-foreach")}
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)

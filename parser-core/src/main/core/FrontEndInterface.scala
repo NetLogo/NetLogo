@@ -19,13 +19,15 @@ case class ProcedureSyntax(declarationKeyword: Token, identifier: Token, endKeyw
 case class CompilationOperand(
   sources: Map[String, String],
   extensionManager: ExtensionManager,
+  libraryManager: LibraryManager,
   compilationEnvironment: CompilationEnvironment,
   containingProgram: Program = Program.empty,
   oldProcedures: ProceduresMap = NoProcedures,
   subprogram: Boolean = true,
   // displayName is only used by reporters in slider widgets.
   // I would like to eliminate it, but not right now.
-  displayName: Option[String] = None)
+  displayName: Option[String] = None,
+  shouldAutoInstallLibs: Boolean = false)
 
 trait FrontEndInterface {
   def frontEnd(
@@ -35,9 +37,14 @@ trait FrontEndInterface {
         subprogram: Boolean = true,
         oldProcedures: ProceduresMap = NoProcedures,
         extensionManager: ExtensionManager = new DummyExtensionManager,
-        compilationEnvironment: CompilationEnvironment = new DummyCompilationEnvironment)
+        libraryManager: LibraryManager = new DummyLibraryManager,
+        compilationEnvironment: CompilationEnvironment = new DummyCompilationEnvironment,
+        shouldAutoInstallLibs: Boolean = false)
       : FrontEndInterface.FrontEndResults = {
-    frontEnd(CompilationOperand(Map("" -> source), extensionManager, compilationEnvironment, program, oldProcedures, subprogram, displayName))
+    frontEnd(
+      CompilationOperand( Map("" -> source), extensionManager, libraryManager, compilationEnvironment
+                        , program, oldProcedures, subprogram, displayName, shouldAutoInstallLibs)
+    )
   }
 
   def frontEnd(compilationOperand: CompilationOperand): FrontEndInterface.FrontEndResults

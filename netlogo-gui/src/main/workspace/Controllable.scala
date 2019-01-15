@@ -23,6 +23,6 @@ trait Controllable {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   @throws(classOf[java.io.IOException])
-  def open(path: String)
+  def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit
 
 }

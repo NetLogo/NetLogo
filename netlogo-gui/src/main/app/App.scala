@@ -850,8 +850,8 @@ class App extends
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
   @throws(classOf[java.io.IOException])
-  def open(path: String) {
-    dispatchThreadOrBust(fileManager.openFromPath(path, ModelType.Normal))
+  override def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit = {
+    dispatchThreadOrBust(fileManager.openFromPath(path, ModelType.Normal, shouldAutoInstallLibs))
   }
 
   /**

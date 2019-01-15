@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.{ api, core },
-  api.{ ExtensionManager => ApiExtensionManager, SourceOwner, Version, World },
+  api.{ ExtensionManager => ApiExtensionManager, LibraryManager, SourceOwner, Version, World },
   core.{ CompilerException, CompilationEnvironment, CompilerUtilitiesInterface, Dialect, FrontEndInterface, ProcedureSyntax,
     Program, Token }
 
@@ -15,13 +15,17 @@ trait CompilerInterface {
   import Procedure.ProceduresMap
   def frontEnd: FrontEndInterface
   def utilities: CompilerUtilitiesInterface
-  def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager,
-    compilationEnvironment: CompilationEnvironment, flags: CompilerFlags = CompilerFlags()): CompilerResults
-  def compileMoreCode(source: String, displayName: Option[String], program: Program,
-    oldProcedures: ProceduresMap, extensionManager: ApiExtensionManager, compilationEnvironment: CompilationEnvironment,
+  def compileProgram(source: String, program: Program, extensionManager: ApiExtensionManager, libManager: LibraryManager,
+    compilationEnvironment: CompilationEnvironment, shouldAutoInstallLibs: Boolean,
     flags: CompilerFlags = CompilerFlags()): CompilerResults
+  def compileMoreCode(source: String, displayName: Option[String], program: Program
+  , oldProcedures: ProceduresMap, extensionManager: ApiExtensionManager, libManager: LibraryManager
+  , compilationEnvironment: CompilationEnvironment
+  , flags: CompilerFlags = CompilerFlags()): CompilerResults
   @throws(classOf[CompilerException])
-  def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults
+  def compileProgram( source: String, additionalSources: Seq[SourceOwner], program: Program
+                    , extensionManager: ApiExtensionManager, libManager: LibraryManager
+                    , compilationEnv: CompilationEnvironment, shouldAutoInstallLibs: Boolean): CompilerResults
   def makeLiteralReporter(value: AnyRef): Reporter
 }
 

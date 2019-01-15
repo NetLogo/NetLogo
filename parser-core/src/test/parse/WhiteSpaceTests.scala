@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment,
-  DummyExtensionManager, Femto, NetLogoCore, Program, TokenizerInterface }
+  DummyExtensionManager, DummyLibraryManager, Femto, NetLogoCore, Program, TokenizerInterface }
 
 import AstPath._
 
@@ -21,6 +21,7 @@ class WhiteSpaceTests extends FunSuite with NetLogoParser {
     val compilationOperand = new CompilationOperand(
       sources,
       new DummyExtensionManager(),
+      new DummyLibraryManager,
       new DummyCompilationEnvironment(),
       Program.fromDialect(NetLogoCore),
       subprogram = false)

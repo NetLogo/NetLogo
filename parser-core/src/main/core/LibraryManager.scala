@@ -1,6 +1,18 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.core
+
+trait LibraryManager {
+  def installExtension(info: LibraryInfo): Unit
+  def lookupExtension(name: String, version: String): Option[LibraryInfo]
+  def reloadMetadata(): Unit
+}
+
+class DummyLibraryManager extends LibraryManager {
+  def installExtension(info: LibraryInfo): Unit = {}
+  def lookupExtension(name: String, version: String): Option[LibraryInfo] = None
+  def reloadMetadata(): Unit = {}
+}
 
 import java.net.URL
 

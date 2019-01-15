@@ -26,8 +26,8 @@ extends AbstractWorkspace(new World2D)
   override def inspectAgent(kind: core.AgentKind, agent: Agent, radius: Double): Unit = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
-  override def open(path: String) = unsupported
-  override def openModel(model: Model) = unsupported
+  override def open(path: String, shouldAutoInstallLibs: Boolean) = unsupported
+  override def openModel(model: Model, shouldAutoInstallLibs: Boolean) = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported

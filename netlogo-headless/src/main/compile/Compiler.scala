@@ -3,7 +3,7 @@
 package org.nlogo.compile
 
 import org.nlogo.{ api => nlogoApi, core, nvm },
-  nlogoApi.{ ExtensionManager, SourceOwner },
+  nlogoApi.{ ExtensionManager, LibraryManager, SourceOwner },
   core.{ CompilationEnvironment, CompilationOperand, CompilerUtilitiesInterface, Femto, FrontEndInterface, NetLogoCore, Program },
   nvm.{ CompilerFlags, CompilerResults, Optimizations => NvmOptimizations, Procedure },
     Procedure.{ ProceduresMap, NoProcedures }
@@ -18,35 +18,42 @@ import org.nlogo.compile.api.{ BackEndInterface,
 
 object Compiler extends nvm.CompilerInterface {
 
-  val frontEnd = Femto.scalaSingleton[FrontEndInterface](
+  override val frontEnd = Femto.scalaSingleton[FrontEndInterface](
     "org.nlogo.parse.FrontEnd")
-  val utilities = Femto.scalaSingleton[CompilerUtilitiesInterface](
+  override val utilities = Femto.scalaSingleton[CompilerUtilitiesInterface](
     "org.nlogo.parse.CompilerUtilities")
+
   val bridge = Femto.scalaSingleton[FrontMiddleBridgeInterface](
     "org.nlogo.compile.middle.FrontMiddleBridge")
   val middleEnd = Femto.scalaSingleton[MiddleEndInterface](
     "org.nlogo.compile.middle.MiddleEnd")
   val backEnd = Femto.scalaSingleton[BackEndInterface](
     "org.nlogo.compile.back.BackEnd")
-  def backifier(program: Program, extensionManager: nlogoApi.ExtensionManager) =
+  def backifier(program: Program, extensionManager: ExtensionManager) =
     new Backifier(program, extensionManager)
 
   // used to compile the Code tab, including declarations
-  def compileProgram(source: String, program: Program, extensionManager: nlogoApi.ExtensionManager,
-    compilationEnvironment: CompilationEnvironment, flags: nvm.CompilerFlags): nvm.CompilerResults =
-    compile(source, None, program, false, NoProcedures, extensionManager, compilationEnvironment, flags)
+  override def compileProgram(source: String, program: Program, extensionManager: ExtensionManager,
+    libManager: LibraryManager, compilationEnvironment: CompilationEnvironment,
+    shouldAutoInstallLibs: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults =
+    compile( source, None, program, false, NoProcedures, extensionManager
+           , libManager, compilationEnvironment, shouldAutoInstallLibs, flags)
 
   // used to compile a single procedures only, from outside the Code tab
-  def compileMoreCode(source: String, displayName: Option[String], program: Program,
-      oldProcedures: ProceduresMap, extensionManager: nlogoApi.ExtensionManager,
-      compilationEnvironment: CompilationEnvironment, flags: nvm.CompilerFlags): nvm.CompilerResults =
-    compile(source, displayName, program, true, oldProcedures, extensionManager, compilationEnvironment, flags)
+  override def compileMoreCode(source: String, displayName: Option[String], program: Program,
+      oldProcedures: ProceduresMap, extensionManager: ExtensionManager,
+      libManager: LibraryManager, compilationEnvironment: CompilationEnvironment,
+      flags: nvm.CompilerFlags): nvm.CompilerResults =
+    compile( source, displayName, program, true, oldProcedures, extensionManager, libManager
+           , compilationEnvironment, false, flags)
 
   private def compile(source: String, displayName: Option[String], oldProgram: Program, subprogram: Boolean,
-      oldProcedures: ProceduresMap, extensionManager: nlogoApi.ExtensionManager,
-      compilationEnvironment: CompilationEnvironment, flags: nvm.CompilerFlags): nvm.CompilerResults = {
+      oldProcedures: ProceduresMap, extensionManager: ExtensionManager,
+      libManager: LibraryManager, compilationEnvironment: CompilationEnvironment,
+      shouldAutoInstallLibs: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults = {
     val (topLevelDefs, structureResults) =
-      frontEnd.frontEnd(source, displayName, oldProgram, subprogram, oldProcedures, extensionManager, compilationEnvironment)
+      frontEnd.frontEnd( source, displayName, oldProgram, subprogram, oldProcedures
+                       , extensionManager, libManager, compilationEnvironment, shouldAutoInstallLibs)
     val bridged = bridge(structureResults, oldProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
     val allDefs = middleEnd.middleEnd(
       bridged,
@@ -60,11 +67,18 @@ object Compiler extends nvm.CompilerInterface {
   val defaultCompilerFlags =
     CompilerFlags(optimizations = NvmOptimizations.headlessOptimizations)
 
-  def compileProgram(source: String, additionalSources: Seq[SourceOwner], program: Program, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): CompilerResults = {
+  override def compileProgram( source: String, additionalSources: Seq[SourceOwner], program: Program
+                             , extensionManager: ExtensionManager, libManager: LibraryManager
+                             , compilationEnv: CompilationEnvironment, shouldAutoInstallLibs: Boolean
+                             ): CompilerResults = {
     val allSources =
       Map("" -> source) ++ additionalSources.map(additionalSource => additionalSource.classDisplayName -> additionalSource.innerSource).toMap
     val (topLevelDefs, structureResults) =
-      frontEnd.frontEnd(CompilationOperand(allSources, extensionManager, compilationEnv, program, Procedure.NoProcedures, subprogram = false))
+      frontEnd.frontEnd(
+        CompilationOperand( allSources, extensionManager, libManager, compilationEnv, program
+                          , Procedure.NoProcedures, subprogram = false
+                          , shouldAutoInstallLibs = shouldAutoInstallLibs)
+      )
     val bridged = bridge(structureResults, Procedure.NoProcedures, topLevelDefs, backifier(structureResults.program, extensionManager))
     val allDefs = middleEnd.middleEnd(
       bridged,
@@ -88,6 +102,6 @@ object Compiler extends nvm.CompilerInterface {
     else
       Optimizations.none
 
-  def makeLiteralReporter(value: AnyRef): nvm.Reporter =
+  override def makeLiteralReporter(value: AnyRef): nvm.Reporter =
     Literals.makeLiteralReporter(value)
 }

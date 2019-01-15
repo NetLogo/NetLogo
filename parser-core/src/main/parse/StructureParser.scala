@@ -18,18 +18,16 @@ package org.nlogo.parse
 // will be discovered as we parse, through __include declarations.  (Included files might themselves
 // include further files.)
 
-import
-  org.nlogo.core,
-    core.{ CompilationOperand, ErrorSource, CompilationEnvironment,
-    I18N, FrontEndInterface, ProcedureSyntax, Program, Token, StructureResults, CompilerException},
-      FrontEndInterface.ProceduresMap,
-    core.Fail._
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
+import org.nlogo.core.Fail._
+import org.nlogo.core.FrontEndInterface.ProceduresMap
+import org.nlogo.core.LibraryStatus.CanInstall
 
 object StructureParser {
   val IncludeFilesEndInNLS = "Included files must end with .nls"
 
   /// main entry point.  handles gritty extensions stuff and includes stuff.
-  def parseSources(tokenizer: core.TokenizerInterface, compilationData: CompilationOperand,
+  def parseSources(tokenizer: TokenizerInterface, compilationData: CompilationOperand,
     includeFile: (CompilationEnvironment, String) => Option[(String, String)] = IncludeFile.apply _): StructureResults = {
       import compilationData.{ compilationEnvironment, displayName, oldProcedures, subprogram, sources, containingProgram => program }
       parsingWithExtensions(compilationData) {
@@ -58,7 +56,8 @@ object StructureParser {
       }
   }
 
-  private def parsingWithExtensions(compilationData: CompilationOperand)(results: => StructureResults): StructureResults = {
+  private def parsingWithExtensions(compilationData: CompilationOperand)
+                                   (results: => StructureResults): StructureResults = {
     if (compilationData.subprogram)
       results
     else {
@@ -66,9 +65,14 @@ object StructureParser {
 
       val r = results
 
-      for (token <- r.extensions)
-        compilationData.extensionManager.importExtension(
-          token.text.toLowerCase, new ErrorSource(token))
+      for (token <- r.extensions) {
+        val text = token.text.toLowerCase
+        if (compilationData.shouldAutoInstallLibs) {
+          val lm = compilationData.libraryManager
+          lm.lookupExtension(text, "").filter(_.status == CanInstall).foreach(lm.installExtension _)
+        }
+        compilationData.extensionManager.importExtension(text, new ErrorSource(token))
+      }
 
       compilationData.extensionManager.finishFullCompilation()
 
@@ -76,10 +80,10 @@ object StructureParser {
     }
   }
 
-  private def parseOne(tokenizer: core.TokenizerInterface, structureParser: StructureParser, source: String, filename: String, oldResults: StructureResults): StructureResults = {
+  private def parseOne(tokenizer: TokenizerInterface, structureParser: StructureParser, source: String, filename: String, oldResults: StructureResults): StructureResults = {
       val tokens =
         tokenizer.tokenizeString(source, filename)
-          .filter(_.tpe != core.TokenType.Comment)
+          .filter(_.tpe != TokenType.Comment)
           .map(Namer0)
       structureParser.parse(tokens, oldResults)
     }
@@ -111,7 +115,7 @@ object StructureParser {
     import scala.annotation.tailrec
     def procedureSyntax(tokens: Seq[Token]): Option[(String, ProcedureSyntax)] = {
       val ident = tokens(1)
-      if (ident.tpe == core.TokenType.Ident)
+      if (ident.tpe == TokenType.Ident)
         Some((ident.text, ProcedureSyntax(tokens.head, ident, tokens.last)))
       else
         None
@@ -120,7 +124,7 @@ object StructureParser {
     @tailrec
     def splitOnProcedureStarts(tokens:       Seq[Token],
                               existingProcs: Seq[Seq[Token]]): Seq[Seq[Token]] = {
-      if (tokens.isEmpty || tokens.head.tpe == core.TokenType.Eof)
+      if (tokens.isEmpty || tokens.head.tpe == TokenType.Eof)
         existingProcs
       else {
         val headValue = tokens.head.value
@@ -146,13 +150,13 @@ object StructureParser {
       Seq()
     else {
       includesPositionedTokens.next
-      val includesWithoutComments = includesPositionedTokens.filter(_.tpe != core.TokenType.Comment)
-      if (includesWithoutComments.next.tpe != core.TokenType.OpenBracket)
+      val includesWithoutComments = includesPositionedTokens.filter(_.tpe != TokenType.Comment)
+      if (includesWithoutComments.next.tpe != TokenType.OpenBracket)
         exception("Did not find expected open bracket for __includes declaration", tokens.next)
       else
         includesWithoutComments
-          .takeWhile(_.tpe != core.TokenType.CloseBracket)
-          .filter(_.tpe == core.TokenType.Literal)
+          .takeWhile(_.tpe != TokenType.CloseBracket)
+          .filter(_.tpe == TokenType.Literal)
           .map(_.value)
           .collect {
             case s: String => s

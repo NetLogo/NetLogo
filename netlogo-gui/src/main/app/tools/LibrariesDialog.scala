@@ -28,14 +28,9 @@ class LibrariesDialog(parent: Frame, manager: LibraryManager) extends ToolDialog
 
   protected override def initGUI(): Unit = {
 
-    {
-      val category = "extensions"
-      val contents = manager.getExtList
-      val tab =
-        new LibrariesTab( category, contents, manager.installExtension
-                        , manager.uninstallExtension, status.setText, manager.reloadMetadata _)
-      tabs.addTab(I18N.gui(s"categories.$category"), tab)
-    }
+    val category = "extensions"
+    val tab      = new LibrariesTab("extensions", manager, status.setText)
+    tabs.addTab(I18N.gui(s"categories.$category"), tab)
 
     bottomPanel.setBorder(bottomPanelBorder)
     bottomPanel.add(status, BorderLayout.CENTER)

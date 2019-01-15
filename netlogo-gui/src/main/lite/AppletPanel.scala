@@ -214,8 +214,13 @@ with ControlSet {
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     errorDialogManager.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
-    val converter = fileformat.converter(workspace.getExtensionManager, workspace.getCompilationEnvironment,
-      workspace, fileformat.defaultAutoConvertables) _
+    val converter =
+      fileformat.converter(
+        workspace.getExtensionManager
+      , workspace.getLibraryManager
+      , workspace.getCompilationEnvironment
+      , workspace
+      , fileformat.defaultAutoConvertables) _
     val loader = fileformat.standardLoader(workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))

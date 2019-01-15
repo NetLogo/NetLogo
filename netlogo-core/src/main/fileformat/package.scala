@@ -5,7 +5,7 @@ package org.nlogo
 import java.nio.file.Path
 
 import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
-import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, Model, LiteralParser }
+import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, LibraryManager, LiteralParser, Model }
 import org.nlogo.core.model.WidgetReader
 
 package object fileformat {
@@ -26,14 +26,15 @@ package object fileformat {
 
   def converter(
     extensionManager:       ExtensionManager,
+    libManager:             LibraryManager,
     compilationEnvironment: CompilationEnvironment,
     literalParser:          LiteralParser,
     conversionSections:     Seq[AutoConvertable])
   (dialect:               Dialect): ModelConversion = {
     new ChainConverter(
       Seq(
-        ModelConverter(extensionManager, compilationEnvironment, literalParser, dialect, conversionSections),
-        new PlotConverter(extensionManager, compilationEnvironment, literalParser, dialect, conversionSections)
+        ModelConverter(extensionManager, libManager, compilationEnvironment, literalParser, dialect, conversionSections),
+        new PlotConverter(extensionManager, libManager, compilationEnvironment, literalParser, dialect, conversionSections)
       )
     )
   }
