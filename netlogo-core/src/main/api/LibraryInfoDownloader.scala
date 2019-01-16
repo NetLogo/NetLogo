@@ -9,7 +9,7 @@ import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
 import java.util.prefs.{ Preferences => JPreferences }
 
-object LibraryDownloader {
+object LibraryInfoDownloader {
 
   private val prefs = JPreferences.userNodeForPackage(getClass)
 

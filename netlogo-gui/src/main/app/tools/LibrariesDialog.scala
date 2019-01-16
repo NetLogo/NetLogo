@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Color, Frame }
 import java.io.File
 import javax.swing.{ Action, BorderFactory, JButton, JLabel, JPanel, JTabbedPane }
 
-import org.nlogo.api.{ FileIO, LibraryDownloader, LibraryManager }
+import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
@@ -70,12 +70,12 @@ class LibrariesDialog(parent: Frame, manager: LibraryManager) extends ToolDialog
         private var changed = false
 
         override def doInBackground(): Unit = {
-          LibraryDownloader(manager.metadataURL, (_: File) => { changed = true })
+          LibraryInfoDownloader(manager.metadataURL, (_: File) => { changed = true })
         }
 
         override def onComplete(): Unit = {
           if (changed) {
-            val hash = LibraryDownloader.urlToHash(manager.metadataURL)
+            val hash = LibraryInfoDownloader.urlToHash(manager.metadataURL)
             manager.updateLists(new File(FileIO.perUserFile(hash)))
           }
           listener.finish()

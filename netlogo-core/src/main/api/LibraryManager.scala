@@ -70,12 +70,12 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
         case ex: ConfigException =>
           if (isFirstLoad)
             // In case only the local copy got messed up somehow -- EL 2018-06-02
-            LibraryDownloader.invalidateCache(metadataURL)
+            LibraryInfoDownloader.invalidateCache(metadataURL)
           else
             throw new MetadataLoadingException(ex)
       }
     } else {
-      LibraryDownloader.invalidateCache(metadataURL)
+      LibraryInfoDownloader.invalidateCache(metadataURL)
     }
   }
 
