@@ -50,7 +50,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
   def reloadMetadata(isFirstLoad: Boolean = false): Unit =
-    updateLists(new File(allLibsName), isFirstLoad)
+    updateLists(new File(allLibsPath), isFirstLoad)
 
   def onLibInfoChange(callback: InfoChangeCallback): Unit = {
     infoChangeCallbacks = infoChangeCallbacks :+ callback
