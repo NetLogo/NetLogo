@@ -67,6 +67,12 @@ Run8
   runresult glob1 => 5
   [runresult glob1] of one-of patches => 5
 
+Run9
+  globals [ glob1 ]
+  to process [my-var myVar] let zoo 7 error runresult "glob1 + my-var + myVar + zoo + 1" end
+  O> set glob1 1
+  O> process 3 5 => ERROR 17
+
 While
   O> random-seed 272
   O> crt 10
