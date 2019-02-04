@@ -91,12 +91,12 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
     }
 
     def WrappingInXAndY: Rule1[View => View] = rule { (BooleanDigit ~ NewLine ~ BooleanDigit ~ NewLine) ~> ((wrapsInX: Boolean, wrapsInY: Boolean) =>
-      dimensionTransform(_.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY))(_))
+      dimensionTransform(dim => dim.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY))(_))
     }
 
     def WrappingInZ: Rule1[View => View] = rule {
       (BooleanDigit ~ NewLine) ~> ((allowed: Boolean) =>
-          dimensionTransform(_.copyThreeD(wrappingAllowedInZ = allowed))(_))
+          dimensionTransform(dim => dim.copyThreeD(wrappingAllowedInZ = allowed))(_))
     }
 
     def GraphicsWindow: Rule0 = rule { "GRAPHICS-WINDOW" }

@@ -31,7 +31,7 @@ resolvers += Resolver.url(
     url("http://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
         Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.21")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.26")
 
 addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.3")
 
