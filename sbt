@@ -47,8 +47,8 @@ BOOT=xsbt.boot.Boot
 GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-1.1.1.jar
-URL='http://central.maven.org/maven2/org/scala-sbt/sbt-launch/1.1.1/sbt-launch-1.1.1.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-1.2.8.jar
+URL='http://central.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.8/sbt-launch-1.2.8.jar'
 
 if [ ! -f $BUILD_NUMBER ] ; then
   JAVA_OPTS="-Dsbt.log.noformat=true"
