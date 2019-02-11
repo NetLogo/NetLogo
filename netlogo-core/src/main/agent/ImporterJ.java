@@ -199,36 +199,54 @@ public abstract strictfp class ImporterJ
   void importDrawing()
       throws java.io.IOException {
     if (hasMoreLines(false)) {
+
       Double patchSize = Double.valueOf(nextLine()[0]);
       importerUser.patchSize(patchSize.doubleValue());
       importerUser.resizeView();
       needToResize = false;
 
-      int width = (int) (patchSize.doubleValue() * world.worldWidth());
-      int height = (int) (patchSize.doubleValue() * world.worldHeight());
+      hasMoreLines(false);
+      String[] tempLine = nextLine();
+      String nextie     = tempLine[0];
 
-      StringBuilder colorString = new StringBuilder(width * height * 32);
+      if (nextie.matches("data:image/.*;base64,.*")) {
+        world.trailDrawer().importDrawingBase64(nextie);
+        hasMoreLines(false);
+      } else { // Otherwise, let's try the pre-6.1 format... --JAB (2/12/19)
 
-      try {
-        while (hasMoreLines(false)) {
-          String[] line = nextLine();
-          for (int i = 0; i < line.length; i++) {
-            colorString.append(stringReader.readFromString(line[i].replaceAll(",", "")));
+        int width  = (int) (patchSize.doubleValue() * world.worldWidth ());
+        int height = (int) (patchSize.doubleValue() * world.worldHeight());
+
+        StringBuilder colorString = new StringBuilder(width * height * 32);
+
+        try {
+
+          for (int i = 0; i < tempLine.length; i++) {
+            colorString.append(stringReader.readFromString(tempLine[i].replaceAll(",", "")));
           }
-        }
 
-        int[] colors = fromHexString(colorString.toString());
+          while (hasMoreLines(false)) {
+            String[] line = nextLine();
+            for (int i = 0; i < line.length; i++) {
+              colorString.append(stringReader.readFromString(line[i].replaceAll(",", "")));
+            }
+          }
 
-        if (colors.length != (width * height * 4)) {
+          int[] colors = fromHexString(colorString.toString());
+
+          if (colors.length != (width * height * 4)) {
+            throw new InvalidDataException
+                ("The data was not the correct length for the size of the world");
+          }
+
+          world.trailDrawer().setColors(colors, width, height);
+        } catch (StringReaderException e) {
           throw new InvalidDataException
-              ("The data was not the correct length for the size of the world");
+              ("invalid drawing data: drawing will not be imported");
         }
 
-        world.trailDrawer().setColors(colors, width, height);
-      } catch (StringReaderException e) {
-        throw new InvalidDataException
-            ("invalid drawing data: drawing will not be imported");
       }
+
     }
   }
 

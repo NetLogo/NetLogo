@@ -299,8 +299,8 @@ with org.nlogo.api.ViewSettings {
   override def stopInspectingDeadAgents(): Unit = { }
   override def getAndCreateDrawing =
     renderer.trailDrawer.getAndCreateDrawing(true)
-  override def importDrawing(is: InputStream): Unit = {
-    renderer.trailDrawer.importDrawing(is)
+  override def importDrawing(is: InputStream, mimeTypeOpt: Option[String] = None): Unit = {
+    renderer.trailDrawer.importDrawing(is, mimeTypeOpt)
   }
   override def importDrawing(file: org.nlogo.core.File) {
     renderer.trailDrawer.importDrawing(file)

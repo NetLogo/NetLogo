@@ -33,9 +33,10 @@ class TrailDrawingTests extends FunSuite {
     @throws(classOf[java.io.IOException])
     def readImage(is: java.io.InputStream) = ???
     @throws(classOf[java.io.IOException])
-    def importDrawing(is: java.io.InputStream) = ???
+    def importDrawing(is: java.io.InputStream, mimeType: Option[String] = None) = ???
     @throws(classOf[java.io.IOException])
     def importDrawing(file: org.nlogo.core.File) = ???
+    def importDrawingBase64(base64: String) = ???
     def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage = ???
     def clearDrawing() = ???
     def exportDrawingToCSV(writer: java.io.PrintWriter) = ???

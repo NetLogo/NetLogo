@@ -313,7 +313,11 @@ public abstract strictfp class AbstractWorkspace
     importDrawing(file.getInputStream());
   }
 
-  protected abstract void importDrawing(InputStream is) throws java.io.IOException;
+  protected void importDrawing(InputStream is) throws java.io.IOException {
+    importDrawing(is, scala.Option.apply(null));
+  }
+
+  protected abstract void importDrawing(InputStream is, scala.Option<String> mimeTypeOpt) throws java.io.IOException;
 
   // overridden in subclasses - ST 9/8/03, 3/1/11
   public void doImport(BufferedReaderImporter importer)

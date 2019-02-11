@@ -193,15 +193,27 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   @Override
+  public void importDrawing(java.io.InputStream is, scala.Option<String> mimeType)
+      throws java.io.IOException {
+    view.renderer.trailDrawer().importDrawing(is, mimeType);
+  }
+
+  @Override
   public void importDrawing(java.io.InputStream is)
       throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(is);
+    importDrawing(is, scala.Option.apply(null));
   }
 
   @Override
   public void importDrawing(org.nlogo.core.File file)
       throws java.io.IOException {
     view.renderer.trailDrawer().importDrawing(file);
+  }
+
+  @Override
+  public void importDrawingBase64(String base64)
+      throws java.io.IOException {
+    view.renderer.trailDrawer().importDrawingBase64(base64);
   }
 
   public void exportDrawing(String filename, String format)

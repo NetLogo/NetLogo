@@ -19,11 +19,11 @@ object DrawingAction {
   // I've added some fields that match up to with how NetLogo Web will handle these stamping events.
   // --JAB (3/18/15)
   case class StampImage(imageBytes: Array[Byte], stamp: AgentStamp)      extends DrawingAction
-  case class SetColors(colors: Array[Int])                               extends DrawingAction
+  case class SetColors(base64: String)                                   extends DrawingAction
   case class SendPixels(dirty: Boolean)                                  extends DrawingAction
   case class ReadImage(imageBytes: Array[Byte])                          extends DrawingAction
   case class CreateDrawing(dirty: Boolean)                               extends DrawingAction
-  case class ImportDrawing(filePath: String)                             extends DrawingAction // TODO: store actual image
+  case class ImportDrawing(imageBase64: String)                          extends DrawingAction
   case object ClearDrawing                                               extends DrawingAction
   case object RescaleDrawing                                             extends DrawingAction
   case object MarkClean                                                  extends DrawingAction

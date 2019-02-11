@@ -3,6 +3,10 @@
 package org.nlogo.drawing
 
 import java.awt.image.BufferedImage
+import java.io.{ ByteArrayOutputStream, InputStream, PrintWriter }
+import java.nio.file.{ Files, Paths }
+import java.util.Base64
+import javax.imageio.ImageIO
 
 import org.nlogo.api
 import DrawingAction._
@@ -25,7 +29,22 @@ class DrawingActionBroker(
     publish(DrawLine(x1, y1, x2, y2, color, size, mode))
   }
 
-  override def setColors(colors: Array[Int], width: Int, height: Int) { publish(SetColors(colors)) }
+  override def setColors(colors: Array[Int], width: Int, height: Int): Unit = {
+
+    val image  = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    image.setRGB(0, 0, width, height, colors, 0, width)
+
+    val baos = new ByteArrayOutputStream
+    ImageIO.write(image, "png", baos)
+    baos.flush()
+    val bytes = baos.toByteArray
+    baos.close()
+
+    val base64 = bytesToBase64(bytes, "image/png")
+    publish(SetColors(base64))
+
+  }
+
   override def sendPixels(dirty: Boolean) { publish(SendPixels(dirty)) }
 
   override def stamp(agent: api.Agent, erase: Boolean) {
@@ -70,13 +89,35 @@ class DrawingActionBroker(
     getDrawing.asInstanceOf[BufferedImage]
   }
 
-  override def importDrawing(file: File): Unit =
-    publish(ImportDrawing(file.getPath))
+  override def importDrawing(file: File): Unit = {
+    val mimeType = Files.probeContentType(Paths.get(file.getAbsolutePath))
+    importDrawing(file.getInputStream, Option(mimeType))
+  }
 
-  override def importDrawing(is: java.io.InputStream): Unit =
-    trailDrawer.importDrawing(is) // TODO: serialize image into action for both importDrawing methods
+  override def importDrawing(is: InputStream, mimeTypeOpt: Option[String] = None): Unit = {
 
-  override def readImage(inputStream: java.io.InputStream): Unit =
+    val buffer = new ByteArrayOutputStream
+    val data   = new Array[Byte](1024)
+
+    var justRead = is.read(data, 0, data.length)
+    while (justRead != -1) {
+      buffer.write(data, 0, justRead)
+      justRead = is.read(data, 0, data.length)
+    }
+
+    buffer.flush()
+
+    val mimeType = mimeTypeOpt.getOrElse("unknown")
+    val base64   = bytesToBase64(buffer.toByteArray, mimeType)
+
+    importDrawingBase64(base64)
+
+  }
+
+  override def importDrawingBase64(base64: String): Unit =
+    publish(ImportDrawing(base64))
+
+  override def readImage(inputStream: InputStream): Unit =
     readImage(javax.imageio.ImageIO.read(inputStream))
 
   override def readImage(image: BufferedImage): Unit =
@@ -93,11 +134,15 @@ class DrawingActionBroker(
   override def isBlank: Boolean = trailDrawer.isBlank
 
   // This one does have side effects, but we don't want to record it. Or do we?
-  override def exportDrawingToCSV(writer: java.io.PrintWriter) {
+  override def exportDrawingToCSV(writer: PrintWriter) {
     trailDrawer.exportDrawingToCSV(writer)
   }
 
   /** Converts a BufferedImage to a ReadImage drawing action. */
   private def imageToAction(image: BufferedImage): ReadImage =
     ReadImage(imageToBytes(image))
+
+  private def bytesToBase64(bytes: Array[Byte], contentType: String): String =
+    s"data:$contentType;base64,${Base64.getEncoder().encodeToString(bytes)}"
+
 }

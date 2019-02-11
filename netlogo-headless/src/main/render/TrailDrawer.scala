@@ -7,7 +7,8 @@ import java.awt.color.ColorSpace
 import java.awt.geom.AffineTransform
 import java.awt.image.{ AffineTransformOp, BufferedImage }
 import java.lang.{ Double => JDouble }
-import java.io.{ InputStream, IOException, PrintWriter }
+import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, InputStream, IOException, PrintWriter }
+import java.util.Base64
 import javax.imageio.{ IIOException, ImageIO }
 
 import org.nlogo.api.{ Color, Dump, Graphics2DWrapper, World }
@@ -17,17 +18,37 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   extends TrailDrawerJ(world, turtleDrawer, linkDrawer) {
 
   def exportDrawingToCSV(writer: PrintWriter): Unit = {
+
     if (!drawingBlank) {
-      writer.println(Dump.csv.encode("DRAWING"))
-      writer.println(Dump.csv.encode(JDouble.toString(world.patchSize)))
-      val colorString = org.nlogo.util.HexString.toHexString(colors)
-      Dump.csv.stringToCSV(writer, colorString)
+
+      val patchSize = JDouble.toString(world.patchSize)
+
+      val baos = new ByteArrayOutputStream
+      ImageIO.write(drawingImage, "png", baos)
+      baos.flush()
+      val bytes = baos.toByteArray
+      baos.close()
+
+      val base64 = s"data:image/png;base64,${Base64.getEncoder.encodeToString(bytes)}"
+
+      Seq("DRAWING", patchSize, base64).foreach(line => writer.println(Dump.csv.encode(line)))
+
     }
+
     writer.println()
+
   }
 
   @throws(classOf[IOException])
-  override def importDrawing(is: InputStream): Unit = {
+  override def importDrawingBase64(base64: String): Unit = {
+    val pair        = base64.split(",")
+    val bytes       = Base64.getDecoder.decode(pair(1))
+    val contentType = pair(0).replaceFirst("^data:", "").replaceFirst(";base64$", "")
+    importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
+  }
+
+  @throws(classOf[IOException])
+  override def importDrawing(is: InputStream, mimeType: Option[String] = None): Unit = {
 
     if (drawingImage == null)
       setUpDrawingImage()

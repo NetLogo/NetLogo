@@ -16,9 +16,11 @@ trait TrailDrawerInterface extends DrawingInterface {
   @throws(classOf[java.io.IOException])
   def readImage(is: java.io.InputStream)
   @throws(classOf[java.io.IOException])
-  def importDrawing(is: java.io.InputStream)
+  def importDrawing(is: java.io.InputStream, mimeTypeOpt: Option[String] = None)
   @throws(classOf[java.io.IOException])
   def importDrawing(file: File)
+  @throws(classOf[java.io.IOException])
+  def importDrawingBase64(base64: String)
   def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage
   def clearDrawing()
   def exportDrawingToCSV(writer: java.io.PrintWriter)

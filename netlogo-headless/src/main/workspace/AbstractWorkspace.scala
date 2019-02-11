@@ -4,14 +4,12 @@ package org.nlogo.workspace
 
 // omg. rat's nest. - ST 5/3/13
 
-import
-  java.io.{ InputStream, IOException, PrintWriter }
+import java.io.{ ByteArrayInputStream, InputStream, IOException, PrintWriter }
+import java.util.Base64
 
-import
-  java.nio.file.{ Paths => NioPaths }
+import java.nio.file.{ Paths => NioPaths }
 
-import
-  scala.collection.mutable.WeakHashMap
+import scala.collection.mutable.WeakHashMap
 
 import
   org.nlogo.{ agent, api, core, nvm, plot },
@@ -626,6 +624,14 @@ object AbstractWorkspaceTraits {
       }
 
     @throws(classOf[java.io.IOException])
+    def importDrawingBase64(base64: String): Unit = {
+      val MimeRegex = "data:(.*);base64".r
+      val Array(MimeRegex(contentType), byteString) = base64.split(",")
+      val bytes = Base64.getDecoder.decode(byteString)
+      importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
+    }
+
+    @throws(classOf[java.io.IOException])
     def importDrawing(filename: String) {
       doImport(
         new FileImporter(filename) {
@@ -642,7 +648,7 @@ object AbstractWorkspaceTraits {
     }
 
     @throws(classOf[java.io.IOException])
-    def importDrawing(is: InputStream): Unit
+    def importDrawing(is: InputStream, mimeTypeOpt: Option[String] = None): Unit
 
     @throws(classOf[java.io.IOException])
     def doImport(importer: BufferedReaderImporter) {

@@ -2,8 +2,10 @@
 
 package org.nlogo.workspace
 
+import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.file.Paths
+import java.util.Base64
 
 import scala.collection.mutable.WeakHashMap
 import scala.util.Try
@@ -123,6 +125,14 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
       val source = org.nlogo.api.FileIO.reader2String(sourceFile.reader)
       source.replaceAll("\r\n", "\n")
     }
+  }
+
+  @throws(classOf[java.io.IOException])
+  def importDrawingBase64(base64: String): Unit = {
+    val MimeRegex = "data:(.*);base64".r
+    val Array(MimeRegex(contentType), byteString) = base64.split(",")
+    val bytes = Base64.getDecoder.decode(byteString)
+    importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
   }
 
   override def getCompilationEnvironment = {
