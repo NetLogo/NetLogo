@@ -72,18 +72,12 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
     else
       id
 
-  private[workspace] def resolvePathAsURL(path: String): Option[URL] = {
-    val potentialFiles = Seq(
-        Try(new File(workspace.attachModelDir(path))),
-        Try(new File(s"${APIEM.userExtensionsPath}${File.separator}$path")),
-        Try(new File(s"${APIEM.extensionsPath}${File.separator}$path"))
-      ).collect { case Success(v) => v }
-
-    val pathsToTry: Seq[Try[URL]] = Try(new URL(path)) +:
-      potentialFiles.filter(f => f.exists).map(f => Try(f.toURI.toURL))
-
-    pathsToTry.collectFirst { case Success(url) => url }
-  }
+  private[workspace] def resolvePathAsURL(path: String): Option[URL] =
+    Seq(
+      workspace.attachModelDir(path),
+      s"${APIEM.extensionsPath}${File.separator}$path",
+      s"${APIEM.userExtensionsPath}${File.separator}$path"
+    ).map(new File(_)).filter(_.exists).map(_.toURI.toURL).headOption
 
   private def getAdditionalJars(folder: File): Seq[URL] =
     if (folder.exists && folder.isDirectory)
