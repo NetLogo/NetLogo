@@ -813,8 +813,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void setColors(int[] colors) {
-    view.renderer.trailDrawer().setColors(colors);
+  public void setColors(int[] colors, int width, int height) {
+    view.renderer.trailDrawer().setColors(colors, width, height);
   }
 
   public Object getDrawing() {

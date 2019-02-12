@@ -90,7 +90,7 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
     }
   }
 
-  def setColors(colors: Array[Int]): Unit = {
+  def setColors(colors: Array[Int], width: Int, height: Int): Unit = {
 
     setUpDrawingImage()
 

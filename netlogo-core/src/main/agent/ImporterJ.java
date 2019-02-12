@@ -224,7 +224,7 @@ public abstract strictfp class ImporterJ
               ("The data was not the correct length for the size of the world");
         }
 
-        world.trailDrawer().setColors(colors);
+        world.trailDrawer().setColors(colors, width, height);
       } catch (StringReaderException e) {
         throw new InvalidDataException
             ("invalid drawing data: drawing will not be imported");

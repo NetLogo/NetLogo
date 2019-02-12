@@ -23,7 +23,7 @@ class TrailDrawingTests extends FunSuite {
     def isBlank: Boolean = ???
     def markClean(): Unit = ???
     def markDirty(): Unit = ???
-    def setColors(colors: Array[Int]) = ???
+    def setColors(colors: Array[Int], width: Int, height: Int) = ???
     def getDrawing: AnyRef = ???
     def sendPixels: Boolean = ???
     def sendPixels(dirty: Boolean) = ???

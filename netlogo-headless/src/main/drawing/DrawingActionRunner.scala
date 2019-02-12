@@ -13,7 +13,10 @@ class DrawingActionRunner(
     case DrawLine(x1, y1, x2, y2, penColor, penSize, penMode) =>
       trailDrawer.drawLine(x1, y1, x2, y2, penColor, penSize, penMode)
     case SetColors(colors) =>
-      trailDrawer.setColors(colors)
+      val image  = ImageIO.read(new ByteArrayInputStream(bytes))
+      val width  = image.getWidth
+      val height = image.getHeight
+      trailDrawer.setColors(colors, width, height)
     case SendPixels(dirty) =>
       trailDrawer.sendPixels(dirty)
     case ReadImage(imageBytes) =>

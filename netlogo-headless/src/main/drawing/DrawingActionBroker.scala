@@ -25,7 +25,7 @@ class DrawingActionBroker(
     publish(DrawLine(x1, y1, x2, y2, color, size, mode))
   }
 
-  override def setColors(colors: Array[Int]) { publish(SetColors(colors)) }
+  override def setColors(colors: Array[Int], width: Int, height: Int) { publish(SetColors(colors)) }
   override def sendPixels(dirty: Boolean) { publish(SendPixels(dirty)) }
 
   override def stamp(agent: api.Agent, erase: Boolean) {
