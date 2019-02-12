@@ -2,6 +2,8 @@
 
 package org.nlogo.drawing
 
+import java.awt.image.BufferedImage
+
 import org.nlogo.api
 import DrawingAction._
 
@@ -36,7 +38,7 @@ class DrawingActionBroker(
      * do for now. NP 2013-02-04.
      */
     trailDrawer.stamp(agent, erase)
-    val image = trailDrawer.getDrawing.asInstanceOf[java.awt.image.BufferedImage]
+    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
     val bytes = imageToBytes(image)
 
     val stamp =
@@ -63,9 +65,9 @@ class DrawingActionBroker(
   override def markClean() { publish(MarkClean) }
   override def markDirty() { publish(MarkDirty) }
 
-  override def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage = {
+  override def getAndCreateDrawing(dirty: Boolean): BufferedImage = {
     publish(CreateDrawing(dirty))
-    getDrawing.asInstanceOf[java.awt.image.BufferedImage]
+    getDrawing.asInstanceOf[BufferedImage]
   }
 
   override def importDrawing(file: File): Unit =
@@ -77,7 +79,7 @@ class DrawingActionBroker(
   override def readImage(inputStream: java.io.InputStream): Unit =
     readImage(javax.imageio.ImageIO.read(inputStream))
 
-  override def readImage(image: java.awt.image.BufferedImage): Unit =
+  override def readImage(image: BufferedImage): Unit =
     publish(imageToAction(image))
 
   // The following methods should be side-effect free. Thus, they
@@ -95,7 +97,7 @@ class DrawingActionBroker(
     trailDrawer.exportDrawingToCSV(writer)
   }
 
-  /** Converts a java.awt.image.BufferedImage to a ReadImage drawing action. */
-  private def imageToAction(image: java.awt.image.BufferedImage): ReadImage =
+  /** Converts a BufferedImage to a ReadImage drawing action. */
+  private def imageToAction(image: BufferedImage): ReadImage =
     ReadImage(imageToBytes(image))
 }
