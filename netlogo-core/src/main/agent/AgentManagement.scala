@@ -17,7 +17,7 @@ trait AgentManagement
   extends TurtleManagement
   with LinkManagement
   with ObserverManagement
-  with WorldKernel { this: CoreWorld =>
+  with WorldKernel { this: CoreWorld with GrossWorldState =>
 
   def program: Program
   def patches: IndexedAgentSet
@@ -132,6 +132,7 @@ trait AgentManagement
       patch.labelColor(Color.BoxedWhite)
       patch.clearProgramVariables()
     }
+    patchesAllBlack(true)
   }
 
   def setUpShapes(clearOld: Boolean): Unit = {

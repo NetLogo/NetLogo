@@ -151,4 +151,30 @@ class WorldTests extends FunSuite with AbstractTestWorld {
     val link = world.linkManager.createLink(t1, t2, world.links)
     assert(link.id == 0)
   }
+
+  test("test patchesAllBlack") {
+
+    val world = makeWorld(worldRectangle, Program.empty)
+    assert(world.patchesAllBlack)
+
+    world.clearPatches()
+    assert(world.patchesAllBlack)
+
+    world.getPatchAt(0, 0).pcolor(15)
+    assert(!world.patchesAllBlack)
+
+    world.clearPatches()
+    assert(world.patchesAllBlack)
+
+    world.getPatchAt(0, 0).pcolor(15)
+    assert(!world.patchesAllBlack)
+
+    world.clearAll()
+    assert(world.patchesAllBlack)
+
+    world.getPatchAt(0, 0).pcolor(15)
+    assert(!world.patchesAllBlack)
+
+  }
+
 }
