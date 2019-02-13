@@ -154,6 +154,8 @@ class WorldTests extends FunSuite with AbstractTestWorld {
 
   test("test patchesAllBlack") {
 
+    import org.nlogo.core.LogoList
+
     val world = makeWorld(worldRectangle, Program.empty)
     assert(world.patchesAllBlack)
 
@@ -174,6 +176,11 @@ class WorldTests extends FunSuite with AbstractTestWorld {
 
     world.getPatchAt(0, 0).pcolor(15)
     assert(!world.patchesAllBlack)
+
+    world.clearPatches()
+    val vector = Vector(10, 20, 30).map(x => Double.box(x))
+    world.getPatchAt(0, 0).pcolor(LogoList.fromVector(vector))
+    assert(world.patchesAllBlack)
 
   }
 

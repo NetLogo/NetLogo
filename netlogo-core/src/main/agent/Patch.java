@@ -396,11 +396,16 @@ public strictfp class Patch
 
     if (!(_variables[varIndex] instanceof LogoList) || !rgb.equals(_variables[varIndex])) {
       _variables[varIndex] = rgb;
-      _world.patchColors()[(int) _id] = Color.getRGBInt(((Double) rgb.get(0)).intValue(),
-          ((Double) rgb.get(1)).intValue(),
-          ((Double) rgb.get(2)).intValue());
+      int red   = ((Double) rgb.get(0)).intValue();
+      int green = ((Double) rgb.get(1)).intValue();
+      int blue  = ((Double) rgb.get(2)).intValue();
+      _world.patchColors()[(int) _id] = Color.getRGBInt(red, green, blue);
       _world.markPatchColorsDirty();
-      _world.patchesAllBlack(false);
+      if (!((red   % 10 == 0) &&
+            (green % 10 == 0) &&
+            (blue  % 10 == 0))) {
+        _world.patchesAllBlack(false);
+      }
       if(rgb.size() > 3) {
         _world.mayHavePartiallyTransparentObjects(true);
       }
