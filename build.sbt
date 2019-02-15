@@ -1,4 +1,6 @@
-import org.scalajs.sbtplugin.cross.{ CrossProject, CrossType }
+import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
+import sbtcrossproject.Platform
+
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
@@ -270,13 +272,16 @@ lazy val macros = (project in file("macros")).
   settings(scalastyleSettings: _*).
   settings(libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value)
 
-lazy val parser = CrossProject("parser", file("."),
-  new CrossType {
+lazy val parser = crossProject(JSPlatform, JVMPlatform).
+  crossType(new CrossType {
     override def projectDir(crossBase: File, projectType: String): File =
       crossBase / s"parser-$projectType"
+    override def projectDir(crossBase: File, platform: Platform): File =
+      projectDir(crossBase, if (platform == JSPlatform) "js" else "jvm")
     override def sharedSrcDir(projectBase: File, conf: String): Option[File] =
       Some(projectBase / "parser-core" / "src" / conf)
   }).
+  in(file(".")).
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
@@ -297,10 +302,10 @@ lazy val parser = CrossProject("parser", file("."),
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-lang.modules"   %%%! "scala-parser-combinators" % "1.0.5",
-          "org.scalatest"  %%%! "scalatest" % "3.0.0" % "test",
+          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.0.5",
+          "org.scalatest"  %%% "scalatest" % "3.0.0" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%%! "scalacheck" % "1.13.4" % "test"
+          "org.scalacheck" %%% "scalacheck" % "1.13.4" % "test",
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
