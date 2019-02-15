@@ -32,6 +32,10 @@ object FileIO {
     io.Source.fromFile(path)(codec).mkString
 
   @throws(classOf[java.io.IOException])
+  def fileToString(path: String, encoding: String) =
+    io.Source.fromFile(path, encoding).mkString
+
+  @throws(classOf[java.io.IOException])
   def url2String(sampleURL: String): String = {
     if(sampleURL.startsWith("/"))
       getResourceAsString(sampleURL)

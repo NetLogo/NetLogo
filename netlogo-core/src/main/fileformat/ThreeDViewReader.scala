@@ -50,7 +50,7 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
     }
 
     def PatchSize: Rule1[View => View] = rule { (DoubleValue ~ NewLine) ~> ((size: Double) =>
-      dimensionTransform(_.copyThreeD(patchSize = size))(_))
+      dimensionTransform(wd => wd.copyThreeD(patchSize = size))(_))
     }
 
     def PCors: Rule1[View => View] = rule {
@@ -90,13 +90,18 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
           ((v: View) => v.copy(left = dims(0), top = dims(1), right = dims(2), bottom = dims(3))))
     }
 
-    def WrappingInXAndY: Rule1[View => View] = rule { (BooleanDigit ~ NewLine ~ BooleanDigit ~ NewLine) ~> ((wrapsInX: Boolean, wrapsInY: Boolean) =>
-      dimensionTransform(_.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY))(_))
+    def WrappingInXAndY: Rule1[View => View] = rule {
+      (BooleanDigit ~ NewLine ~ BooleanDigit ~ NewLine) ~> (
+        (wrapsInX: Boolean, wrapsInY: Boolean) => (view: View) =>
+          dimensionTransform(wd => wd.copyThreeD(wrappingAllowedInX = wrapsInX, wrappingAllowedInY = wrapsInY))(view)
+      )
     }
 
     def WrappingInZ: Rule1[View => View] = rule {
-      (BooleanDigit ~ NewLine) ~> ((allowed: Boolean) =>
-          dimensionTransform(_.copyThreeD(wrappingAllowedInZ = allowed))(_))
+      (BooleanDigit ~ NewLine) ~> (
+        (allowed: Boolean) => (view: View) =>
+          dimensionTransform(wd => wd.copyThreeD(wrappingAllowedInZ = allowed))(view)
+      )
     }
 
     def GraphicsWindow: Rule0 = rule { "GRAPHICS-WINDOW" }
