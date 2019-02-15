@@ -17,21 +17,21 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
    def applyView(s: View, f: View => View) = f(s)
     def ThreeDViewWidget: Rule1[View] = rule {
       push(View(dimensions = new WorldDimensions3D(0, 0, 0, 0, 0, 0))) ~
-      GraphicsWindow       ~  NewLine ~
-      ViewDimensions       ~> (applyView _) ~
-      2.times(IgnoredLine) ~
-      PatchSize            ~> (applyView _) ~
-      IgnoredLine          ~
-      FontSize             ~> (applyView _) ~
-      4.times(IgnoredLine) ~
-      WrappingInXAndY      ~> (applyView _) ~
-      IgnoredLine          ~
-      PCors                ~> (applyView _) ~
-      WrappingInZ          ~> (applyView _) ~
-      UpdateModeView       ~> (applyView _) ~
-      ShowTickCounter      ~> (applyView _) ~
-      TickCounterLabel     ~> (applyView _) ~
-      FrameRate            ~> (applyView _)
+      GraphicsWindow       ~  NewLine ~        // "GRAPHICS-WINDOW"
+      ViewDimensions       ~> (applyView _) ~  // 4 int lines
+      2.times(IgnoredLine) ~                   // 2 nonsense lines
+      PatchSize            ~> (applyView _) ~  // 1 float line
+      IgnoredLine          ~                   // 1 nonsense line
+      FontSize             ~> (applyView _) ~  // 1 int line
+      4.times(IgnoredLine) ~                   // 4 nonsense lines
+      WrappingInXAndY      ~> (applyView _) ~  // 2 boolean lines
+      IgnoredLine          ~                   // 1 nonsense line
+      PCors                ~> (applyView _) ~  // 6 int lines
+      WrappingInZ          ~> (applyView _) ~  // 1 boolean line
+      UpdateModeView       ~> (applyView _) ~  // 1 boolean line
+      ShowTickCounter      ~> (applyView _) ~  // 1 boolean line
+      TickCounterLabel     ~> (applyView _) ~  // 1 string line
+      FrameRate            ~> (applyView _)    // 1 float line
     }
 
     def dimensionTransform[B <: WorldDimensions3D](f: WorldDimensions3D => WorldDimensions3D)(v: View): View = {
