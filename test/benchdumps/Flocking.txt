@@ -1151,7 +1151,8 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 0
           NEW java/lang/StringBuilder
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+          LDC 75
+          INVOKESPECIAL java/lang/StringBuilder.<init> (I)V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
