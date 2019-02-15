@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import java.io.{ File, FileOutputStream, IOException }
-import java.net.{ URL, URLClassLoader }
+import java.net.URLClassLoader
 import java.util.jar.{ JarOutputStream, Manifest => JarManifest }
 import java.util.zip.ZipEntry
 
@@ -146,10 +146,6 @@ class JarLoaderTests extends FunSuite with BeforeAndAfter {
 
   test("extensionClassManager raises an ExtensionManagerException if the class isn't a ClassManager") {
     intercept[ExtensionManagerException] { getClassManager("NotAClassManager") }
-  }
-
-  test("resolvePathAsURL resolves URLs as URLs ") {
-    assert(jarLoader.resolvePathAsURL("file:///tmp").get == new URL("file:/tmp"))
   }
 
   test("resolvePathAsURL resolves paths with slashes relative to the model location") {
