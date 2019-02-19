@@ -65,3 +65,6 @@
 [submodule "behaviorsearch"]
 	path = behaviorsearch
 	url = https://github.com/NetLogo/behaviorsearch.git
+[submodule "extensions/py"]
+	path = extensions/py
+	url = https://github.com/NetLogo/Python-Extension

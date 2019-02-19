@@ -215,7 +215,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
     dumpClassName                := "org.nlogo.headless.misc.Dump",
-    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "sound", "vid", "view2.5d"),
+    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "vid", "view2.5d"),
     all := { val _ = (
       (packageBin in Compile).value,
       (packageBin in Test).value,
