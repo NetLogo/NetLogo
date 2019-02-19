@@ -16,6 +16,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'git submodule foreach git reset --hard'
+        sh 'git submodule foreach git clean -xdf'
         sh 'git submodule update --init'
         sh "./sbt update"
         sh "./sbt all"
