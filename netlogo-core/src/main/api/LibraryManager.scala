@@ -57,26 +57,29 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   }
 
   def updateLists(configFile: File, isFirstLoad: Boolean = false): Unit = {
-    if (configFile.exists) {
-      try {
 
-        val config = ConfigFactory.parseFile(configFile)
-        val installedLibsConf =
-          ConfigFactory.parseFile(new File(userInstalledsPath)).withFallback(bundledsConfig)
-
-        updateList(config, installedLibsConf, "extensions")
-
-      } catch {
-        case ex: ConfigException =>
-          if (isFirstLoad)
-            // In case only the local copy got messed up somehow -- EL 2018-06-02
-            LibraryInfoDownloader.invalidateCache(metadataURL)
-          else
-            throw new MetadataLoadingException(ex)
-      }
-    } else {
+    if (!configFile.exists) {
       LibraryInfoDownloader.invalidateCache(metadataURL)
+      LibraryInfoDownloader(metadataURL)
     }
+
+    try {
+
+      val config = ConfigFactory.parseFile(configFile)
+      val installedLibsConf =
+        ConfigFactory.parseFile(new File(userInstalledsPath)).withFallback(bundledsConfig)
+
+      updateList(config, installedLibsConf, "extensions")
+
+    } catch {
+      case ex: ConfigException =>
+        if (isFirstLoad)
+          // In case only the local copy got messed up somehow -- EL 2018-06-02
+          LibraryInfoDownloader.invalidateCache(metadataURL)
+        else
+          throw new MetadataLoadingException(ex)
+    }
+
   }
 
   private def updateList(config: Config, installedLibsConf: Config, category: String) = {
