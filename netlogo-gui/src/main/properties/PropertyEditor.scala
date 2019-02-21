@@ -2,6 +2,8 @@
 
 package org.nlogo.properties
 
+import org.nlogo.api.CompilerServices
+
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
                                  val handlesOwnErrors: Boolean = false)
          extends javax.swing.JPanel
@@ -18,6 +20,7 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
 
   def get: Option[T]
   def set(value: T): Unit
+  def fieldCheck(compiler: CompilerServices, value: AnyRef): Boolean = true
   def apply() { get.foreach(accessor.set) }
 
   def getConstraints = {

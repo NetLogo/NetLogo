@@ -1,12 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
 import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
-import java.awt.{GridBagConstraints,Window}
-import org.nlogo.api.{ Dump, CompilerServices, Editable, Property}
+import java.awt.{ GridBagConstraints, Window }
+import org.nlogo.api.{ Dump, CompilerServices, Editable, Property }
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -79,9 +78,10 @@ class ProtocolEditable(protocol: LabProtocol,
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String) {
-      javax.swing.JOptionPane.showMessageDialog(
-        window, "Invalid spec for varying variables. Error:\n" + message,
-       "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
+      if(!java.awt.GraphicsEnvironment.isHeadless)
+        javax.swing.JOptionPane.showMessageDialog(
+          window, "Invalid spec for varying variables. Error:\n" + message,
+         "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
