@@ -111,6 +111,42 @@ class NLogoFormatConversionTest extends FunSuite with ConversionHelper {
       assert(rereadModel.code.contains("extensions [vid]"))
     }
 
+    test("carries out conversions between files") {
+      val sectionsMap = collection.immutable.Map("org.nlogo.modelsection.version" -> Array[String]("NetLogo 3D 6.0.4"))
+      val nlogoformatTwod = new NLogoFormat
+      val nlogoformatThreed = new NLogoThreeDFormat
+      val expectedTwodResult =
+        """@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |NetLogo 6.0.4
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@""".trim.stripMargin
+      val expectedThreedResult = 
+        """@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |NetLogo 3D 6.0.4
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@
+          |@#$#@#$#@""".trim.stripMargin
+
+      assert(nlogoformatTwod.sectionsToSource(sectionsMap).get.trim == expectedTwodResult)
+      assert(nlogoformatThreed.sectionsToSource(sectionsMap).get.trim != expectedTwodResult)
+      assert(nlogoformatThreed.sectionsToSource(sectionsMap).get.trim == expectedThreedResult)
+    }
+
     test("returns a failure for a model needing conversion which doesn't compile") {
       val m = Model(code = "to foo hsb")
       val conversions = AutoConversionList.conversions.map(_._2)
@@ -156,7 +192,8 @@ class VersionComponentTest extends NLogoFormatTest[String] {
   val correctArityFormat = Version.version.replaceAll(" 3D", "")
   val wrongArityVersion = Version.version.replaceAll("NetLogo", "NetLogo 3D")
 
-  testErrorsOnDeserialization("wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
+  testOnDeserializationAndWrongArity(
+    "wrong arity", Array[String](wrongArityVersion), wrongArityVersion)
   testErrorsOnDeserialization("empty version section to empty version", Array[String](), "")
   // up to the other components to error if they detect a problem
   testDeserializes("unknown version", Array[String]("NetLogo 4D 8.9"), "NetLogo 4D 8.9")

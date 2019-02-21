@@ -79,6 +79,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
         val sectionLines = sections.getOrElse(name, Array[String]())
         if (sectionLines.isEmpty)
           "\n"
+        else if (name == "org.nlogo.modelsection.version"){
+          if(!is3DFormat) sectionLines.map(_.replace("3D ", "")).mkString("\n", "\n", "\n")
+          else sectionLines.mkString("\n", "\n", "\n")
+        }
         else if (sectionLines.head.isEmpty || sectionLines.head.startsWith("\n") || name == "org.nlogo.modelsection.code")
           sectionLines.mkString("", "\n", "\n")
         else
@@ -145,8 +149,9 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
       val versionString = s.mkString.trim
-      if (versionString.startsWith("NetLogo") &&
-        Version.is3D(versionString) == is3DFormat)
+      if(versionString.startsWith("NetLogo 3D") && Version.is3D(versionString) && !is3DFormat)
+        Success(m.copy(version = versionString.replace("3D ","")))
+      else if (versionString.startsWith("NetLogo") && Version.is3D(versionString) == is3DFormat)
         Success(m.copy(version = versionString))
       else {
         val errorString =

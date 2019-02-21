@@ -51,6 +51,15 @@ trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
     }
   }
 
+  def testOnDeserializationAndWrongArity(
+    description: String, serializedVersion: A, error: String): Unit = {
+    test(s"errors when deserializing $description") {
+      val s = subject
+      val m = s.deserialize(serializedVersion)(new Model())
+      assert(!m.isFailure)
+    }
+  }
+
   def testErrorsOnDeserialization(description: String, serializedVersion: A, error: String): Unit = {
     test(s"errors when deserializing $description") {
       val s = subject
