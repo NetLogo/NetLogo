@@ -4,7 +4,7 @@ package org.nlogo.drawing
 
 import java.awt.image.BufferedImage
 import java.io.{ ByteArrayOutputStream, InputStream, PrintWriter }
-import java.nio.file.{ Files, Paths }
+import java.nio.file.Paths
 import java.util.Base64
 import javax.imageio.ImageIO
 
@@ -90,7 +90,7 @@ class DrawingActionBroker(
   }
 
   override def importDrawing(file: File): Unit = {
-    val mimeType = Files.probeContentType(Paths.get(file.getAbsolutePath))
+    val mimeType = Paths.get(file.getAbsolutePath).toUri.toURL.openConnection().getContentType
     importDrawing(file.getInputStream, Option(mimeType))
   }
 
