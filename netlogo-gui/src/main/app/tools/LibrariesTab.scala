@@ -91,9 +91,14 @@ extends JPanel(new BorderLayout) {
     sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
     sidebar.add(         infoScroll, BorderLayout.CENTER)
 
+    val magIcon  = new JLabel(icon("/images/magnify.gif", 20, 32))
+    val topPanel = new JPanel(new BorderLayout)
+    topPanel.add(filterField, BorderLayout.CENTER)
+    topPanel.add(    magIcon, BorderLayout.WEST)
+
     add(new JScrollPane(libraryList), BorderLayout.CENTER)
     add(                     sidebar, BorderLayout.EAST)
-    add(                 filterField, BorderLayout.NORTH)
+    add(                    topPanel, BorderLayout.NORTH)
 
     val uninstallButton = new JButton(I18N.gui("uninstall"))
     uninstallButton.addActionListener(_ => perform("uninstalling", uninstall,
