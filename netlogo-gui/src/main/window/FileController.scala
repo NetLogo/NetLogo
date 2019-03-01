@@ -103,10 +103,13 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean = {
     try {
-      if (arity == 2)
-        checkWithUserBeforeOpening3DModelin2D(version)
-      else
-        checkWithUserBeforeOpening2DModelin3D()
+      arity match {
+        case 2 if version.contains("3D") => checkWithUserBeforeOpening2DModelWith3DSection()
+        case 2 => checkWithUserBeforeOpening2DModelin3D()
+        case 3 if !version.contains("3D") => checkWithUserBeforeOpening3DModelWith2DSection()
+        case 3 => checkWithUserBeforeOpening3DModelin2D(version)
+        case _ => throw new UserCancelException
+      }
       true
     } catch {
       case ex: UserCancelException => false
@@ -149,6 +152,22 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
     val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version)
+    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+      throw new UserCancelException()
+    }
+  }
+
+  @throws(classOf[UserCancelException])
+  def checkWithUserBeforeOpening3DModelWith2DSection(): Unit = {
+    val message = I18N.gui.getN("file.open.warn.inthreed.openthreedconflict", Version.version)
+    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+      throw new UserCancelException()
+    }
+  }
+
+  @throws(classOf[UserCancelException])
+  def checkWithUserBeforeOpening2DModelWith3DSection(): Unit = {
+    val message = I18N.gui.getN("file.open.warn.intwod.opentwodconflict", Version.version)
     if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
       throw new UserCancelException()
     }

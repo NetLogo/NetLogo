@@ -46,12 +46,13 @@ trait OpenModel[OpenParameter] {
         controller.invalidModel(uri)
         None
       } else {
+        val nlogoFormat = loader.uriFormat(uri).get.name
         readModel(loader, openParam) match {
           case Success(model) =>
             if (! model.version.startsWith("NetLogo")) {
               controller.invalidModelVersion(uri, model.version)
               None
-            } else if (shouldCancelOpeningModel(model, controller, currentVersion))
+            } else if (shouldCancelOpeningModel(model, controller, currentVersion, nlogoFormat))
               None
             else
               modelConverter(model, Paths.get(uri)) match {
@@ -66,9 +67,9 @@ trait OpenModel[OpenParameter] {
       }
   }
 
-  private def shouldCancelOpeningModel(model: Model, controller: Controller, currentVersion: Version): Boolean = {
-    val modelArity = if (Version.is3D(model.version)) 3 else 2
-    val modelArityDiffers = Version.is3D(model.version) != currentVersion.is3D
+  private def shouldCancelOpeningModel(model: Model, controller: Controller, currentVersion: Version, format: String): Boolean = {
+    val modelArity = if (format.contains("3d")) 3 else 2
+    val modelArityDiffers = Version.is3D(model.version) != currentVersion.is3D || Version.is3D(model.version) != format.contains("3d") || currentVersion.is3D != format.contains("3d")
     if (modelArityDiffers)
       ! controller.shouldOpenModelOfDifferingArity(modelArity, model.version)
     else if (! currentVersion.knownVersion(model.version))

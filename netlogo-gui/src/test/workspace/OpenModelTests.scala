@@ -57,7 +57,7 @@ class OpenModelTests extends FunSuite {
     override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
     userContinuesOpen()
     assert(openedModel.isDefined)
-    assert(controller.notifiedModelArity == 3)
+    assert(controller.notifiedModelArity == 2)
     assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
     assert(! controller.notifiedVersionUnknown)
   } }
@@ -66,7 +66,7 @@ class OpenModelTests extends FunSuite {
     override def modelChanges = _.copy(version = "NetLogo 3D 6.0")
     userCancelsOpen()
     assert(openedModel.isEmpty)
-    assert(controller.notifiedModelArity   == 3)
+    assert(controller.notifiedModelArity   == 2)
     assert(controller.notifiedModelVersion == "NetLogo 3D 6.0")
   } }
 

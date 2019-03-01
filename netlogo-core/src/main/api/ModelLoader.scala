@@ -50,7 +50,7 @@ object ModelLoader {
 trait ModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
-  protected def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
+  def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
     ModelLoader.getURIExtension(uri)
       .flatMap(extension => formats.find(_.name == extension))
 

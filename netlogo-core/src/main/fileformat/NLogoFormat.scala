@@ -149,8 +149,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
       val versionString = s.mkString.trim
-      if(versionString.startsWith("NetLogo 3D") && Version.is3D(versionString) && !is3DFormat)
-        Success(m.copy(version = versionString.replace("3D ","")))
+      if(!versionString.startsWith("NetLogo 3D") && versionString.startsWith("NetLogo") && is3DFormat)
+        Success(m.copy(version = versionString))
+      else if(versionString.startsWith("NetLogo 3D") && Version.is3D(versionString) && !is3DFormat)
+        Success(m.copy(version = versionString))
       else if (versionString.startsWith("NetLogo") && Version.is3D(versionString) == is3DFormat)
         Success(m.copy(version = versionString))
       else {

@@ -227,6 +227,12 @@ file.open.warn.intwod.openthreed = You are attempting to open a model \
   that was created in a 3D version of NetLogo.  \
   (This is {0}; the model was created in {1}.) \
   NetLogo can try to open the model, but it may or may not work.
+file.open.warn.intwod.opentwodconflict = You are attempting to open a 2D model \
+  with a 3D section header in {0}.  \
+  NetLogo can try to open the model, but it may or may not work.
+file.open.warn.inthreed.openthreedconflict = You are attempting to open a 3D model \
+  with a 2D section header in {0}.  \
+  NetLogo can try to open the model, but it may or may not work.
 file.open.warn.inthreed.opentwod = You are attempting to open \
   a 2D model in {0}. You might need to make changes before it will work in 3D.
 file.open.warn.autoconversion.model.title = Error Converting Model
