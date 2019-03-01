@@ -89,7 +89,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
         c =>
 
           val name        = c.getString("name")
-          val codeName    = if (c.hasPath("codeName")) c.getString("codeName") else name.toLowerCase
+          val codeName    = c.getString("codeName")
           val shortDesc   = c.getString("shortDescription")
           val longDesc    = c.getString("longDescription")
           val version     = c.getString("version")
