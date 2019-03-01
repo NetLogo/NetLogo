@@ -49,19 +49,17 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
-  def reloadMetadata(isFirstLoad: Boolean = false): Unit =
+  def reloadMetadata(isFirstLoad: Boolean = false): Unit = {
+    LibraryInfoDownloader.invalidateCache(metadataURL)
+    LibraryInfoDownloader(metadataURL)
     updateLists(new File(allLibsPath), isFirstLoad)
+  }
 
   def onLibInfoChange(callback: InfoChangeCallback): Unit = {
     infoChangeCallbacks = infoChangeCallbacks :+ callback
   }
 
   def updateLists(configFile: File, isFirstLoad: Boolean = false): Unit = {
-
-    if (!configFile.exists) {
-      LibraryInfoDownloader.invalidateCache(metadataURL)
-      LibraryInfoDownloader(metadataURL)
-    }
 
     try {
 
