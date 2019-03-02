@@ -227,7 +227,7 @@ extends JPanel(new BorderLayout) {
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
 
     private val noIcon        = new EmptyIcon(32, 32)
-    private val upToDateIcon  = icon("/images/check.gif", 32, 32)
+    private val upToDateIcon  = icon("/images/nice-checkmark.png", 32, 32)
     private val canUpdateIcon = icon("/images/update.gif", 32, 32)
 
     override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
