@@ -577,7 +577,7 @@ class App extends
 
   lazy val openColorDialog = new OpenColorDialog(frame)
 
-  lazy val openLibrariesDialog = new OpenLibrariesDialog(frame, workspace.getLibraryManager)
+  lazy val openLibrariesDialog = new OpenLibrariesDialog(frame, workspace.getLibraryManager, () => compile())
 
   lazy val allActions: Seq[javax.swing.Action] = {
     // If we're running in the mac wrapper, it takes care of displaying these
