@@ -57,26 +57,28 @@ extends JPanel(new BorderLayout) {
       runAllWorkersAndThen("installing", install, libsToUpdate, multiple = true)(() => recompile())
     }
 
+  private val filterField = new JTextField
+
+  private val sidebar             = new JPanel(new BorderLayout)
+  private val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
+  private val installationPanel   = new JPanel(new GridLayout(1,2, 2,2))
+
+  private val installButton  = new JButton(I18N.gui("install"))
+  private val homepageButton = new JButton(I18N.gui("homepage"))
+  private val uninstallButton = new JButton(I18N.gui("uninstall"))
+
+  private val info = new JTextArea(2, 20)
+
   locally {
 
     import org.nlogo.swing.Implicits.thunk2documentListener
 
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
 
-    val filterField = new JTextField
-
-    val sidebar             = new JPanel(new BorderLayout)
-    val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
-    val installationPanel   = new JPanel(new GridLayout(1,2, 2,2))
-
-    val installButton  = new JButton(I18N.gui("install"))
-    val homepageButton = new JButton(I18N.gui("homepage"))
-
     installationPanel.add(installButton)
     libraryButtonsPanel.add(installationPanel)
     libraryButtonsPanel.add(homepageButton)
 
-    val info = new JTextArea(2, 20)
     info.setLineWrap(true)
     info.setWrapStyleWord(true)
     info.setBackground(new Color(0,0,0,0))
@@ -100,7 +102,6 @@ extends JPanel(new BorderLayout) {
     add(                     sidebar, BorderLayout.EAST)
     add(                    topPanel, BorderLayout.NORTH)
 
-    val uninstallButton = new JButton(I18N.gui("uninstall"))
     uninstallButton.addActionListener(_ => perform("uninstalling", uninstall,
       lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
 
@@ -129,56 +130,58 @@ extends JPanel(new BorderLayout) {
 
     updateAllAction.setEnabled(canUpdate(listModel))
 
-    def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
-
     def canUpdate(model: ListModel[LibraryInfo]) = canUpdateInRange(model, 0, model.getSize - 1)
     def canUpdateInRange(model: ListModel[LibraryInfo], index0: Int, index1: Int) =
       (index0 to index1)
         .map(model.getElementAt)
         .exists(_.status == LibraryStatus.CanUpdate)
 
-    def updateSidebar(): Unit = {
+  }
 
-      val infoText = if (numSelected == 1) selectedValue.longDescription else null
-      info.setText(infoText)
-      info.select(0,0)
+  private def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
-      installButton.setText(installButtonText)
-      installButton.setEnabled(actionableLibraries.length > 0)
+  private def updateSidebar(): Unit = {
 
-      uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
-      homepageButton.setEnabled(numSelected == 1)
+    val infoText = if (numSelected == 1) selectedValue.longDescription else null
+    info.setText(infoText)
+    info.select(0,0)
 
-      val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
-      installButton.setToolTipText(installToolTip)
+    installButton.setText(installButtonText)
+    installButton.setEnabled(actionableLibraries.length > 0)
 
-      val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
-      homepageButton.setToolTipText(homepageToolTip)
+    uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
+    homepageButton.setEnabled(numSelected == 1)
 
-      updateInstallationPanel()
+    val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
+    installButton.setToolTipText(installToolTip)
 
-    }
+    val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
+    homepageButton.setToolTipText(homepageToolTip)
 
-    def updateInstallationPanel() = {
+    updateInstallationPanel()
 
-      installationPanel.removeAll()
+  }
+
+  private def updateInstallationPanel() = {
+
+    installationPanel.removeAll()
       if (selectedValues.length == 0 || selectedValues.exists(_.status != LibraryStatus.UpToDate))
         installationPanel.add(installButton)
       if (selectedValues.exists(_.status != LibraryStatus.CanInstall))
         installationPanel.add(uninstallButton)
 
-      installationPanel.revalidate()
-      installationPanel.repaint()
+    installationPanel.revalidate()
+    installationPanel.repaint()
 
-    }
+  }
 
-    def installButtonText: String =
-      if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall))
-        I18N.gui("install")
-      else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate))
-        I18N.gui("update")
-      else
-        I18N.gui("update") + " / " + I18N.gui("install")
+  private def installButtonText: String =
+    if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall))
+      I18N.gui("install")
+    else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate))
+      I18N.gui("update")
+    else
+      I18N.gui("update") + " / " + I18N.gui("install")
   }
 
   private def numSelected:   Int         = libraryList.getSelectedIndices.length
