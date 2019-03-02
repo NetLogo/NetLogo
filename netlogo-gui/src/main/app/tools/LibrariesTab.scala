@@ -253,6 +253,7 @@ extends JPanel(new BorderLayout) {
   private class Worker(operation: String, fn: LibraryInfo => Unit, lib: LibraryInfo, multiple: Boolean) extends SwingWorker[Any, Any] {
     override def doInBackground() = fn(lib)
     override def onComplete() = {
+      val indices = libraryList.getSelectedIndices
       updateLists()
       if (multiple && numOperatedLibs > 1) {
         // This happens (gets queued) on the EDT, so there are no shared-state threading issues -- EL 2018-07-01
@@ -261,6 +262,7 @@ extends JPanel(new BorderLayout) {
       } else {
         updateStatus(null)
       }
+      libraryList.setSelectedIndices(indices)
     }
   }
 
