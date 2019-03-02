@@ -10,7 +10,7 @@ import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
-class LibrariesDialog(parent: Frame, manager: LibraryManager) extends ToolDialog(parent, "libraries") {
+class LibrariesDialog(parent: Frame, manager: LibraryManager, recompile: () => Unit) extends ToolDialog(parent, "libraries") {
 
   private lazy val bottomPanelBorder =
     BorderFactory.createCompoundBorder(
@@ -29,7 +29,7 @@ class LibrariesDialog(parent: Frame, manager: LibraryManager) extends ToolDialog
   protected override def initGUI(): Unit = {
 
     val category = "extensions"
-    val tab      = new LibrariesTab("extensions", manager, status.setText)
+    val tab      = new LibrariesTab("extensions", manager, status.setText, recompile)
     tabs.addTab(I18N.gui(s"categories.$category"), tab)
 
     bottomPanel.setBorder(bottomPanelBorder)

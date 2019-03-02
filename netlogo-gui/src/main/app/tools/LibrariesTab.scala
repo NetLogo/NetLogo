@@ -22,7 +22,7 @@ object LibrariesTab {
       |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(category: String, manager: LibraryManager, updateStatus: String => Unit)
+class LibrariesTab(category: String, manager: LibraryManager, updateStatus: String => Unit, recompile: () => Unit)
 extends JPanel(new BorderLayout) {
 
   import LibrariesTab._
@@ -54,7 +54,7 @@ extends JPanel(new BorderLayout) {
           filter(_.status == LibraryStatus.CanUpdate)
       numOperatedLibs = libsToUpdate.length
       updateMultipleOperationStatus("installing")
-      libsToUpdate.map(new Worker("installing", install, _, multiple = true)).foreach(_.execute)
+      runAllWorkersAndThen("installing", install, libsToUpdate, multiple = true)(() => recompile())
     }
 
   locally {
@@ -208,12 +208,12 @@ extends JPanel(new BorderLayout) {
   private def perform(opName: String, fn: LibraryInfo => Unit, checkIsTarget: LibraryInfo => Boolean) = {
     if (numSelected == 1) {
       updateSingleOperationStatus(opName, selectedValue.name)
-      new Worker(opName, fn, selectedValue, multiple = false).execute()
+      new Worker(opName, fn, selectedValue, multiple = false, recompile).execute()
     } else {
       val libs = selectedValues.filter(checkIsTarget)
       numOperatedLibs = libs.length
       updateMultipleOperationStatus(opName)
-      libs.map(new Worker(opName, fn, _, multiple = true)).foreach(_.execute)
+      runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => recompile())
     }
   }
 
@@ -250,7 +250,9 @@ extends JPanel(new BorderLayout) {
     }
   }
 
-  private class Worker(operation: String, fn: LibraryInfo => Unit, lib: LibraryInfo, multiple: Boolean) extends SwingWorker[Any, Any] {
+  private class Worker( operation: String, fn: LibraryInfo => Unit
+                      , lib: LibraryInfo, multiple: Boolean
+                      , callback: () => Unit = () => ()) extends SwingWorker[Any, Any] {
     override def doInBackground() = fn(lib)
     override def onComplete() = {
       val indices = libraryList.getSelectedIndices
@@ -263,7 +265,25 @@ extends JPanel(new BorderLayout) {
         updateStatus(null)
       }
       libraryList.setSelectedIndices(indices)
+      callback()
     }
+  }
+
+  // Intended as JavaScript's `Promise.all` --JAB (3/2/19)
+  private def runAllWorkersAndThen(operation: String, task: LibraryInfo => Unit, libs: Seq[LibraryInfo], multiple: Boolean)
+                                  (callback: () => Unit): Unit = {
+
+    var numRemaining = numOperatedLibs
+    val cb = {
+      () =>
+        numRemaining -= 1
+        if (numRemaining == 0) {
+          callback()
+        }
+    }
+
+    libs.map(new Worker(operation, task, _, multiple = true, cb)).foreach(_.execute)
+
   }
 
 }
