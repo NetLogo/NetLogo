@@ -46,15 +46,23 @@ extends JPanel(new BorderLayout) {
   private val listModel   = new FilterableListModel(baseListModel, containsLib)
   private val libraryList = new JList[LibraryInfo](listModel)
 
+  private var actionIsInProgress = false
+
   val updateAllAction: Action =
     RichAction(I18N.gui("updateAll")) { _ =>
+
+      updateAllAction.setEnabled(false)
+
       val libsToUpdate =
         (0 until listModel.getSize).
           map(listModel.getElementAt).
           filter(_.status == LibraryStatus.CanUpdate)
+
       numOperatedLibs = libsToUpdate.length
       updateMultipleOperationStatus("installing")
-      runAllWorkersAndThen("installing", install, libsToUpdate, multiple = true)(() => recompile())
+
+      runAllWorkersAndThen("installing", install, libsToUpdate, multiple = true)(() => finishManagement())
+
     }
 
   private val filterField = new JTextField
@@ -165,10 +173,12 @@ extends JPanel(new BorderLayout) {
   private def updateInstallationPanel() = {
 
     installationPanel.removeAll()
+    if (!actionIsInProgress) {
       if (selectedValues.length == 0 || selectedValues.exists(_.status != LibraryStatus.UpToDate))
         installationPanel.add(installButton)
       if (selectedValues.exists(_.status != LibraryStatus.CanInstall))
         installationPanel.add(uninstallButton)
+    }
 
     installationPanel.revalidate()
     installationPanel.repaint()
@@ -182,6 +192,10 @@ extends JPanel(new BorderLayout) {
       I18N.gui("update")
     else
       I18N.gui("update") + " / " + I18N.gui("install")
+
+  private def finishManagement(): Unit = {
+    updateSidebar()
+    recompile()
   }
 
   private def numSelected:   Int         = libraryList.getSelectedIndices.length
@@ -211,12 +225,13 @@ extends JPanel(new BorderLayout) {
   private def perform(opName: String, fn: LibraryInfo => Unit, checkIsTarget: LibraryInfo => Boolean) = {
     if (numSelected == 1) {
       updateSingleOperationStatus(opName, selectedValue.name)
-      new Worker(opName, fn, selectedValue, multiple = false, recompile).execute()
+      actionIsInProgress = true
+      new Worker(opName, fn, selectedValue, multiple = false, { () => actionIsInProgress = false; finishManagement() }).execute()
     } else {
       val libs = selectedValues.filter(checkIsTarget)
       numOperatedLibs = libs.length
       updateMultipleOperationStatus(opName)
-      runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => recompile())
+      runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => finishManagement())
     }
   }
 
@@ -256,6 +271,9 @@ extends JPanel(new BorderLayout) {
   private class Worker( operation: String, fn: LibraryInfo => Unit
                       , lib: LibraryInfo, multiple: Boolean
                       , callback: () => Unit = () => ()) extends SwingWorker[Any, Any] {
+
+    updateSidebar()
+
     override def doInBackground() = fn(lib)
     override def onComplete() = {
       val indices = libraryList.getSelectedIndices
@@ -270,6 +288,7 @@ extends JPanel(new BorderLayout) {
       libraryList.setSelectedIndices(indices)
       callback()
     }
+
   }
 
   // Intended as JavaScript's `Promise.all` --JAB (3/2/19)
@@ -281,10 +300,12 @@ extends JPanel(new BorderLayout) {
       () =>
         numRemaining -= 1
         if (numRemaining == 0) {
+          actionIsInProgress = false
           callback()
         }
     }
 
+    actionIsInProgress = true
     libs.map(new Worker(operation, task, _, multiple = true, cb)).foreach(_.execute)
 
   }
