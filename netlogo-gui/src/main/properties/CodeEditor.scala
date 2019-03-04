@@ -9,8 +9,6 @@ import org.nlogo.awt.RowLayout
 import org.nlogo.window.EditorAreaErrorLabel
 
 import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL_SCROLLBAR_ALWAYS}
-import org.nlogo.core.{ LogoList }
-import org.nlogo.api.{ CompilerServices, RefValueSet, SteppedValueSet, Dump, RefEnumeratedValueSet }
 import java.awt.BorderLayout
 import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
 import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
@@ -89,44 +87,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
     }
-
   }
-
-  def translate(valueList: String, compiler: CompilerServices): List[RefValueSet] =
-    get match {
-      case Some(valueList) =>
-        val list =
-            compiler.readFromString("[" + valueList + "]").asInstanceOf[LogoList]
-        for (o <- list.toList) yield {
-          o.asInstanceOf[LogoList].toList match {
-            case List(variableName: String, more: LogoList) =>
-              more.toList match {
-                case List(first: java.lang.Double,
-                          step: java.lang.Double,
-                          last: java.lang.Double) =>
-                  new SteppedValueSet(variableName,
-                                      BigDecimal(Dump.number(first)),
-                                      BigDecimal(Dump.number(step)),
-                                      BigDecimal(Dump.number(last)))
-                case _ =>
-                  return List()
-              }
-            case List(variableName: String, more@_*) =>
-              if(more.isEmpty) return List()
-              new RefEnumeratedValueSet(variableName, more.toList)
-            case _ =>
-              return List()
-          }}
-      case _ => List[RefValueSet]()
-    }
-
-  def determineValidField(valueList: List[RefValueSet]): Option[Int] = {
-    Some(valueList.map(_.toList.size).foldLeft(1)((accum, n) =>
-             (accum: Int) match {
-               case acc  if acc > 0 && Int.MaxValue / acc >= n =>
-                 accum * n
-               case _ => return None
-             }))}
   override def get = Option(editor.getText)
   override def set(value: String) {
     editor setText value
@@ -134,15 +95,6 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     editor.select(0, 0)
     accessor.error.foreach{ errorLabel.setError(_, accessor.target.sourceOffset) }
   }
-  override def fieldCheck(compiler: CompilerServices, value: AnyRef): Boolean =
-    if(accessor.displayName.contains("Vary variable"))
-      determineValidField(translate(editor.getText, compiler)) match {
-        case Some(x) =>
-          val reps = value.asInstanceOf[Int]
-          (reps > 0 && Int.MaxValue / reps >= x) || reps == 0
-        case None => false
-      }
-    else true
   override def requestFocus() { editor.requestFocus() }
   private def rowLayout(rows:Int) = new RowLayout(rows, LEFT_ALIGNMENT, TOP_ALIGNMENT)
   override def getConstraints = {
