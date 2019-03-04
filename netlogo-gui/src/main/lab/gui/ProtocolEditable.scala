@@ -1,4 +1,5 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
@@ -109,11 +110,52 @@ class ProtocolEditable(protocol: LabProtocol,
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
-              if(more.isEmpty) {complain("Expected a value for variable " + variableName); return None}
+              if(more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
               new RefEnumeratedValueSet(variableName, more.toList)
             case _ =>
               complain("Invalid format"); return None
           }}
       }))
+  }
+
+  override def invalidSettings: Seq[(String,String)] = {
+    val list =
+        try { worldLock.synchronized {
+          compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
+        } }
+      catch{ case ex: CompilerException =>  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
+    var totalCombinations = 1
+    list.toList.foreach{
+      case element =>
+        element.asInstanceOf[LogoList].toList match {
+          case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
+          case List(variableName: String, more: LogoList) =>
+            more.toList match {
+              case List(first: java.lang.Double,
+                        step: java.lang.Double,
+                        last: java.lang.Double)
+                  if last > first && step > 0  =>
+                if(Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                  val multiplier: Int = ((last - first) / step + 1).toInt
+                  totalCombinations = totalCombinations * (if(multiplier == 0) 1 else multiplier)
+                } else
+                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment",s"[ $first $step $last ]"))
+              case _ =>
+                return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid"))
+            }
+         case List(variableName: String, more@_*) =>
+            if(more.isEmpty){
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field",s"$variableName"))
+            }
+            if( Int.MaxValue / totalCombinations > more.toList.size )
+              totalCombinations = totalCombinations * more.toList.size
+            else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist"))
+          case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
+        }
+    }
+    if( Int.MaxValue / repetitions >= totalCombinations )
+      Seq.empty[(String,String)]
+    else
+      Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
   }
 }

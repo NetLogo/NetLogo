@@ -129,18 +129,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   }
 
   def valid() = {
-    var repetitions = 0
-    val display = propertyEditors.exists(_.accessor.displayName.contains("Repetitions"))
-    if(display)
-      repetitions =
-        (propertyEditors
-          .find(_.accessor.displayName.contains("Repetitions"))) match {
-          case Some(repEditor) => repEditor.get match {
-            case Some(x) => x.asInstanceOf[Int]
-            case None => 0
-          }
-          case _ => 0
-        }
     def valid(editor: PropertyEditor[_]) = {
       // plot editor handles its errors when you press the ok button.
       // that calls into editor.get. if there is an error, plot editor
@@ -148,14 +136,12 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // so do not inline the call to editor.get. it will cause
       // the error to pop up twice. - JC 4/9/10
       val value = editor.get
-      val fieldCheck = editor.fieldCheck(compiler, repetitions.asInstanceOf[AnyRef])
-      if(!value.isDefined && !editor.handlesOwnErrors || value.isDefined && !fieldCheck){
+      if(!value.isDefined && !editor.handlesOwnErrors)
         OptionDialog.showMessage(this,
           I18N.gui.get("edit.general.invalidSettings"),
           I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
           Array(I18N.gui.get("common.buttons.ok")))
-      }
-      value.isDefined && fieldCheck
+      value.isDefined
     }
     propertyEditors.forall(valid) && targetValid()
   }
@@ -185,7 +171,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   private def targetValid(): Boolean = {
     propertyEditors.foreach(_.apply)
     val isValid = target.invalidSettings.isEmpty
-    if (!isValid) {
+    if (! isValid) {
       val allInvalidations =
         target.invalidSettings.map {
           case (name, error) =>

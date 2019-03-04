@@ -31,4 +31,17 @@ class ProtocolEditableTests extends FunSuite {
       assert(protocol == editedProtocol)
     }
   }
+
+  test("protocol error on overflow") {
+    val workspace = new DummyCompilerServices {
+      override def readFromString(s: String): AnyRef =
+        compiler.readFromString(s)
+    }
+    val protocolLines = FileIO.fileToString("test/lab/protocolsFailure.xml").lines.toArray
+    val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
+    protocols.foreach { protocol =>
+      val validSetting = new ProtocolEditable(protocol, null, workspace, new AnyRef).invalidSettings
+      assert(List(("Protocol","The following values are invalid: NetLogo Variables")) == validSetting)
+    }
+  }
 }
