@@ -449,6 +449,7 @@ tools.libraries.install = Install
 tools.libraries.uninstall = Uninstall
 tools.libraries.update = Update
 tools.libraries.homepage = Homepage
+tools.libraries.addToCodeTab = Add to Code Tab
 tools.libraries.updateAll = Update All
 tools.libraries.checkForUpdates = Check for Updates
 tools.libraries.checkingForUpdates = Checking for updates…

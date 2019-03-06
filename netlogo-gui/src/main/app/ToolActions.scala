@@ -39,14 +39,14 @@ with MenuAction {
     Preferences.IncludedFilesMenu)
 }
 
-class OpenLibrariesDialog(frame: Frame, libManager: LibraryManager, recompile: () => Unit)
-extends ShowDialogAction(I18N.gui.get("menu.tools.extensions"))
-with MenuAction {
+class OpenLibrariesDialog( frame: Frame, libManager: LibraryManager
+                         , recompile: () => Unit, updateSource: ((String) => String) => Unit
+                         ) extends ShowDialogAction(I18N.gui.get("menu.tools.extensions")) with MenuAction {
 
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, libManager, recompile)
+  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource)
 
 }
 
