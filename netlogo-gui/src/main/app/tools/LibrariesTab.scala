@@ -2,11 +2,13 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Color, GridLayout }
+import java.awt.{ BorderLayout, Color, Component, Dimension, FlowLayout, GridLayout }
+import java.awt.font.TextAttribute
 import java.io.IOException
-import javax.swing.{ Action, BorderFactory, DefaultListModel, JButton, JLabel, JList, JOptionPane,
+import javax.swing.{ Action, BorderFactory, Box, DefaultListModel, JButton, JLabel, JList, JOptionPane,
   JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ ListDataEvent, ListDataListener }
+import java.util.Collections
 
 import scala.collection.mutable.Buffer
 
@@ -67,7 +69,7 @@ extends JPanel(new BorderLayout) {
 
   private val filterField = new JTextField
 
-  private val sidebar             = new JPanel(new BorderLayout)
+  private val sidebar             = Box.createVerticalBox()
   private val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
   private val installationPanel   = new JPanel(new GridLayout(1,2, 2,2))
 
@@ -77,15 +79,39 @@ extends JPanel(new BorderLayout) {
 
   private val info = new JTextArea(2, 20)
 
+  private val installedVersion = new JLabel
+  private val    latestVersion = new JLabel
+
   locally {
 
     import org.nlogo.swing.Implicits.thunk2documentListener
 
+    def embolden(l: JLabel) =
+      l.setFont(l.getFont.deriveFont(Collections.singletonMap(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)))
+
     libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
 
-    installationPanel.add(installButton)
+    installationPanel  .add(installButton)
     libraryButtonsPanel.add(installationPanel)
     libraryButtonsPanel.add(homepageButton)
+
+    val installedVersionLabel = new JLabel(s"${I18N.gui("installedVersion")}: ")
+    val    latestVersionLabel = new JLabel(s"${I18N.gui("latestVersion")}: "   )
+
+    embolden(installedVersionLabel)
+    embolden(latestVersionLabel)
+
+    val ivPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
+    ivPanel.add(installedVersionLabel)
+    ivPanel.add(installedVersion)
+    ivPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
+
+    val lvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
+    lvPanel.add(latestVersionLabel)
+    lvPanel.add(latestVersion)
+    lvPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
+
+    libraryButtonsPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
 
     info.setLineWrap(true)
     info.setWrapStyleWord(true)
@@ -98,8 +124,18 @@ extends JPanel(new BorderLayout) {
     infoScroll.setViewportBorder(null)
     infoScroll.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5))
 
-    sidebar.add(libraryButtonsPanel, BorderLayout.NORTH)
-    sidebar.add(         infoScroll, BorderLayout.CENTER)
+    libraryButtonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
+    ivPanel            .setAlignmentX(Component.LEFT_ALIGNMENT)
+    lvPanel            .setAlignmentX(Component.LEFT_ALIGNMENT)
+    infoScroll         .setAlignmentX(Component.LEFT_ALIGNMENT)
+
+    val d = new Dimension(5, 5)
+    sidebar.add(libraryButtonsPanel)
+    sidebar.add(new Box.Filler(d, d, d))
+    sidebar.add(ivPanel)
+    sidebar.add(lvPanel)
+    sidebar.add(new Box.Filler(d, d, d))
+    sidebar.add(infoScroll)
 
     val magIcon  = new JLabel(icon("/images/magnify.gif", 20, 32))
     val topPanel = new JPanel(new BorderLayout)
@@ -149,6 +185,9 @@ extends JPanel(new BorderLayout) {
   private def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
   private def updateSidebar(): Unit = {
+
+    installedVersion.setText(selectedValue.installedVersionOpt.getOrElse("N/A"))
+    latestVersion   .setText(selectedValue.version)
 
     val infoText = if (numSelected == 1) selectedValue.longDescription else null
     info.setText(infoText)
