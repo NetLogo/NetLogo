@@ -41,7 +41,7 @@ class ProtocolEditableTests extends FunSuite {
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
     protocols.foreach { protocol =>
       val validSetting = new ProtocolEditable(protocol, null, workspace, new AnyRef).invalidSettings
-      assert(List(("Protocol","The following values are invalid: NetLogo Variables")) == validSetting)
+      assert(List(("Variable","Increment list exceeds the number of possible runs [ 0.0 1.0 100.0 ]")) == validSetting)
     }
   }
 }
