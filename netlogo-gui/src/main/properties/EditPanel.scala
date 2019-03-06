@@ -189,7 +189,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         I18N.gui.get("edit.general.invalidSettings"),
         invalidMessage,
         Array(I18N.gui.get("common.buttons.ok")))
-      revertProperties()
     }
     isValid
   }
