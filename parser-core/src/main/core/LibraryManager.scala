@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
+
 trait LibraryManager {
   def installExtension(info: LibraryInfo): Unit
   def lookupExtension(name: String, version: String): Option[LibraryInfo]
@@ -25,7 +27,17 @@ case class LibraryInfo(
   homepage: URL,
   downloadURL: URL,
   bundled: Boolean,
-  status: LibraryStatus) {
+  installedVersionOpt: Option[String]
+  ) {
+
+  def status: LibraryStatus =
+    installedVersionOpt.map {
+      iv =>
+        if (iv == version)
+          UpToDate
+        else
+          CanUpdate
+    }.getOrElse(CanInstall)
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality
   // for URLs (which is what the case class would do otherwise), results in
