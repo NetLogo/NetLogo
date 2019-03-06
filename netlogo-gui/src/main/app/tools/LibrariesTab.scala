@@ -186,26 +186,30 @@ extends JPanel(new BorderLayout) {
 
   private def updateSidebar(): Unit = {
 
-    installedVersion.setText(selectedValue.installedVersionOpt.getOrElse("N/A"))
-    latestVersion   .setText(selectedValue.version)
+    if (selectedValue != null) { // It's `null` when the download fails --JAB (3/6/19)
 
-    val infoText = if (numSelected == 1) selectedValue.longDescription else null
-    info.setText(infoText)
-    info.select(0,0)
+      installedVersion.setText(selectedValue.installedVersionOpt.getOrElse("N/A"))
+      latestVersion   .setText(selectedValue.version)
 
-    installButton.setText(installButtonText)
-    installButton.setEnabled(actionableLibraries.length > 0)
+      val infoText = if (numSelected == 1) selectedValue.longDescription else null
+      info.setText(infoText)
+      info.select(0,0)
 
-    uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
-    homepageButton.setEnabled(numSelected == 1)
+      installButton.setText(installButtonText)
+      installButton.setEnabled(actionableLibraries.length > 0)
 
-    val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
-    installButton.setToolTipText(installToolTip)
+      uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
+      homepageButton.setEnabled(numSelected == 1)
 
-    val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
-    homepageButton.setToolTipText(homepageToolTip)
+      val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null
+      installButton.setToolTipText(installToolTip)
 
-    updateInstallationPanel()
+      val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
+      homepageButton.setToolTipText(homepageToolTip)
+
+      updateInstallationPanel()
+
+    }
 
   }
 
