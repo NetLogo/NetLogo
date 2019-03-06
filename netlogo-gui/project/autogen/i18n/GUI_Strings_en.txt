@@ -459,6 +459,8 @@ tools.libraries.uninstallingMultiple = Uninstalling {0} {1}…
 tools.libraries.downloadFailed = We couldn''t download {0}. \n\
 Check your Internet connectivity. If you think the URL is incorrect or unreachable, \n\
 please report to us at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, with details.
+tools.libraries.installedVersion = Installed Version
+tools.libraries.latestVersion = Latest Version
 
 tools.agentMonitor.view = View
 tools.agentMonitor.properties = Properties
