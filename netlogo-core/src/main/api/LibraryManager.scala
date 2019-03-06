@@ -10,7 +10,6 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRende
 
 import org.nlogo.core.LibraryInfo
 import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
-import org.nlogo.core.LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
 
 class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends CoreLibraryManager {
 
@@ -98,16 +97,13 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
           val bundled              = bundledsConfig.hasPath(installedVersionPath)
-
-          val status =
+          val installedVersion     =
             if (!installedLibsConf.hasPath(installedVersionPath))
-              CanInstall
-            else if (installedLibsConf.getString(installedVersionPath) == version)
-              UpToDate
+              None
             else
-              CanUpdate
+              Option(installedLibsConf.getString(installedVersionPath))
 
-          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, status)
+          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion)
 
       }
 
