@@ -24,8 +24,10 @@ object LibrariesTab {
       |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab(category: String, manager: LibraryManager, updateStatus: String => Unit, recompile: () => Unit)
-extends JPanel(new BorderLayout) {
+class LibrariesTab( category: String, manager: LibraryManager
+                  , updateStatus: String => Unit, recompile: () => Unit
+                  , updateSource: ((String) => String) => Unit
+                  ) extends JPanel(new BorderLayout) {
 
   import LibrariesTab._
 
@@ -70,12 +72,13 @@ extends JPanel(new BorderLayout) {
   private val filterField = new JTextField
 
   private val sidebar             = Box.createVerticalBox()
-  private val libraryButtonsPanel = new JPanel(new GridLayout(2,1, 2,2))
+  private val libraryButtonsPanel = new JPanel(new GridLayout(3,1, 2,2))
   private val installationPanel   = new JPanel(new GridLayout(1,2, 2,2))
 
-  private val installButton  = new JButton(I18N.gui("install"))
-  private val homepageButton = new JButton(I18N.gui("homepage"))
-  private val uninstallButton = new JButton(I18N.gui("uninstall"))
+  private val installButton      = new JButton(I18N.gui("install"))
+  private val addToCodeTabButton = new JButton(I18N.gui("addToCodeTab"))
+  private val homepageButton     = new JButton(I18N.gui("homepage"))
+  private val uninstallButton    = new JButton(I18N.gui("uninstall"))
 
   private val info = new JTextArea(2, 20)
 
@@ -93,6 +96,7 @@ extends JPanel(new BorderLayout) {
 
     installationPanel  .add(installButton)
     libraryButtonsPanel.add(installationPanel)
+    libraryButtonsPanel.add(addToCodeTabButton)
     libraryButtonsPanel.add(homepageButton)
 
     val installedVersionLabel = new JLabel(s"${I18N.gui("installedVersion")}: ")
@@ -170,6 +174,11 @@ extends JPanel(new BorderLayout) {
     installButton.addActionListener(_ => perform("installing", wrappedInstall,
       lib => lib.status != LibraryStatus.UpToDate))
 
+    addToCodeTabButton.addActionListener(_ => {
+      updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
+      recompile()
+    })
+
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
     updateAllAction.setEnabled(canUpdate(listModel))
@@ -194,6 +203,8 @@ extends JPanel(new BorderLayout) {
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
       info.select(0,0)
+
+      addToCodeTabButton.setEnabled(selectedValues.forall(_.status != LibraryStatus.CanInstall))
 
       installButton.setText(installButtonText)
       installButton.setEnabled(actionableLibraries.length > 0)
@@ -350,6 +361,24 @@ extends JPanel(new BorderLayout) {
 
     actionIsInProgress = true
     libs.map(new Worker(operation, task, _, multiple = true, cb)).foreach(_.execute)
+
+  }
+
+  private def addExtsToSource(source: String, requiredExts: Set[String]): String = {
+
+    // We have to be careful here.  I'd love to do clever things, but the extensions
+    // directive can be multiline and have comments in it.  --JAB (3/6/19)
+    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions(?:\s*(?:;.*?\n)\s*)*\[)(.*?\].*)""".r
+
+    val newExtsBasis = requiredExts.toSeq.sorted.mkString(" ")
+
+    source match {
+      case ExtRegex(prefix, extDirective, suffix) =>
+        val newExtsStr = if (newExtsBasis.length > 0) s"$newExtsBasis " else ""
+        s"$prefix$extDirective$newExtsStr$suffix"
+      case _ =>
+        s"extensions [$newExtsBasis]\n$source"
+    }
 
   }
 
