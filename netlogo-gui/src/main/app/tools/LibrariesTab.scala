@@ -7,7 +7,8 @@ import java.awt.font.TextAttribute
 import java.io.IOException
 import javax.swing.{ Action, BorderFactory, Box, DefaultListModel, JButton, JLabel, JList, JOptionPane,
   JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
-import javax.swing.event.{ ListDataEvent, ListDataListener }
+import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
+
 import java.util.Collections
 
 import scala.collection.mutable.Buffer
@@ -190,6 +191,14 @@ class LibrariesTab( category: String, manager: LibraryManager
         .exists(_.status == LibraryStatus.CanUpdate)
 
   }
+
+  this.addAncestorListener(new AncestorListener {
+    override def ancestorAdded  (e: AncestorEvent): Unit = {}
+    override def ancestorMoved  (e: AncestorEvent): Unit = {}
+    override def ancestorRemoved(e: AncestorEvent): Unit = {
+      libraryList.setSelectedIndex(0)
+    }
+  })
 
   private def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
 
