@@ -21,7 +21,7 @@ abstract class BundledDirectory(val sourceDir: File) {
 }
 
 class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
-  val directoryName = "extensions"
+  val directoryName = s"extensions${File.separator}.bundled"
 
   override def fileMappings: Seq[(File, String)] = {
     sourceDir.listFiles.filter(_.isDirectory)

@@ -35,8 +35,9 @@ NetLogo will look for extensions in several places:
     - On Mac OS X: `Library/Application Support/NetLogo`
     - On Windows: `AppData\NetLogo`
     - On Linux: `.netlogo`
+4. The `.bundled` subfolder of the `extensions` folder mentioned in Item 2 (for example, `/Applications/NetLogo {{version}}/extensions/.bundled` on Mac OS X).
 
-The easiest way to install new extensions is to use the Extension Manager. If an extension you want to use is not available through the Extension Manager, you will have to manually download it and place it into a location described by Item 1 or Item 2 above.  Manually modifying the contents of Item 3 above is not supported.
+The easiest way to install new extensions is to use the Extension Manager. If an extension you want to use is not available through the Extension Manager, you will have to manually download it and place it into a location described by Item 1 or Item 2 above.  Manually modifying the contents of Item 3 and Item 4 above is not supported.
 
 Each NetLogo extension consists of a folder with the same name as the extension, entirely in lower case. This folder must contain a JAR file with the same name as the folder. For example, the `sound` extension is stored in a folder called `sound` with a file inside called `sound.jar`.
 
