@@ -202,8 +202,16 @@ tabs.code.rightclick.quickhelp.notfound = {0} could not be found in the NetLogo 
    Would you like to open the full NetLogo Dictionary?
 tabs.code.rightclick.collapse = Toggle Folds in Selection
 tabs.code.checkButton = Check
+tabs.code.extension.installable.title = Install Extension?
+tabs.code.extension.installable.message = You do not have the "{0}" extension installed, but NetLogo can download it for you.\n \
+Would you like NetLogo to automatically install "{0}" version {1}?
 tabs.code.extension.notfound.title = Extension not found
-tabs.code.extension.notfound.message = Go to download site for NetLogo extensions?
+tabs.code.extension.notfound.message = Unknown extension: {0}\n\n \
+Would you like to look for extensions in the Extension Manager?\n\n \
+(If your desired extension is not listed in the Extension Manager, you\n \
+will need to manually download and install the extension in order to\n \
+use it.  See the "Extensions Guide" page of the NetLogo User Manual\n \
+for more information.)
 tabs.code.procedures = Procedures
 tabs.code.procedures.none = none
 tabs.code.includedFiles = Included Files
