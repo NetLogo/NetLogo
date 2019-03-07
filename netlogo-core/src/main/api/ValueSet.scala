@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 sealed trait BaseValueSet {
+  val length: Int
   def variableName: String
 }
 
@@ -16,11 +17,13 @@ case class EnumeratedValueSet(variableName: String,
                          values: List[Any])
   extends ValueSet
 {
+  val length = values.length
   def iterator = values.iterator
 }
 
 case class RefEnumeratedValueSet(variableName: String, values: List[AnyRef])
   extends RefValueSet {
+    val length = values.length
     def iterator = values.iterator
   }
 
@@ -31,6 +34,7 @@ case class SteppedValueSet(variableName: String,
                       lastValue: BigDecimal)
   extends RefValueSet
 {
+  val length = (((lastValue - firstValue) / step) + BigDecimal(1)).toInt
   def iterator =
     Iterator.from(0)
       .map(firstValue + step * _)
