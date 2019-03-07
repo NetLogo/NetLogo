@@ -128,6 +128,8 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
     val newInstalleds = updatedInstalleds.root.render(renderOpts)
     FileIO.writeFile(userInstalledsPath, newInstalleds, false)
 
+    updateLists(new File(allLibsPath), false)
+
   }
 
 }
