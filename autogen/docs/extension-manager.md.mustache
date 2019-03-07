@@ -1,18 +1,16 @@
 {{> header.html}}
 
-Extension Manager is a tool with which you can discover and manage your set of [NetLogo extensions](extensions.html). Extensions provide additional primitives not built-in to the language. These primitives allow you to do all kinds of things, from using more sophisticated data structures to capturing video from a webcam. With the Extension Manager you can search for extensions that will statisfy your needs, and install them in one click. You can also receive updates for your extensions whenever they are available, to always have the latest features and bug-fixes they offer.
+The Extension Manager is a tool for discovering and managing [extensions](extensions.html). Extensions provide additional NetLogo language primitives that can be used in NetLogo models, for doing any of a wide variety of things, from programming with more sophisticated data structures (like networks and tables) to capturing video from a webcam. With the Extension Manager, you can easily browse through dozens of extensions and install them instantly. You can also update extensions whenever a new version is available, to ensure that you have the latest features and bug fixes.
 
 ## Interface
 
 The Extension Manager can be shown by choosing "Extensions…" from the Tools menu.
 ![[screenshot.png]]
 
-On the left you can see a list of the extensions. Extensions that are already installed and are up-to-date have a green checkmark next to them. Extensions that are installed but have a newer version available are marked with an orange arrow. Extensions that are not installed are not marked. When an extension is selected, the right side will have a more detailed description of the extension and above it, various operations that can be invoked on it: install/update/uninstall (depending on its situation), and a button to open a browser with the homepage of the extension where you're likely to find a listing of all primitives it provides and maybe examples of usage.
+On the left side of the Extension Manager window, you can see a list of all available extensions. Extensions that are already installed and up-to-date have a green checkmark next to them. Extensions that are installed but have a newer version available are marked with an orange arrow. Extensions that are not installed have no indicator.
 
-Note that you can select multiple extensions and act on them all at once.
+When an extension is selected, the text on the right side provides a detailed description of the extension.  Above the description are buttons for various context-sensitive operations, such as installing, updating, and uninstalling. The "Add to Code Tab" button will add the extension to the list of your model's extensions (for example, changing the line of code `extensions [array table]` to `extensions [array table web]` when used for the Web extension).  The "Homepage" button will open documentation in your web browser, which will provide you with information about the extension, a list of its primitives, and how to use them.
 
-On the bottom you have a button to update all extensions to their latest versions.
+Along the bottom of the Extension Manager window is a button that will allow you to instantly update all of your extensions to their latest versions (if any updates are available).  And, at the top of the window, there is a text box that can be used to filter down the list of extensions based on what you type.
 
-You can type some text at the top to filter the list of extensions based on a text they contain in their name or descriptions.
-
-The Extension Manager checks for extension updates whenever you open it.
+Note that you can also select multiple extensions in the list with your operating system's standard keys for performing multi-item selections (e.g. Ctrl, Shift, Command).  This feature can be used to, for example, install multiple extensions all at once.
