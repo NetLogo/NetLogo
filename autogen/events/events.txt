@@ -3,6 +3,7 @@
 app.common.WidgetSelected - org.nlogo.window.Widget widget - boolean selected
 app.common.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
 app.common.IndenterChanged - boolean isSmart
+app.common.OpenLibrariesDialog
 
 # org.nlogo.window package
 

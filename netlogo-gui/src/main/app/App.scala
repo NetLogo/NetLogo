@@ -242,6 +242,7 @@ class App extends
     ModelSavedEvent.Handler with
     ModelSections with
     AppEvents.SwitchedTabsEvent.Handler with
+    AppEvents.OpenLibrariesDialogEvent.Handler with
     AboutToQuitEvent.Handler with
     ZoomedEvent.Handler with
     Controllable {
@@ -365,7 +366,15 @@ class App extends
 
     frame.addLinkComponent(workspace)
 
-    frame.addLinkComponent(new ExtensionAssistant(frame))
+    frame.addLinkComponent({
+      val libMan = workspace.getLibraryManager
+      new ExtensionAssistant(
+        frame
+      , libMan.getExtensionInfos.map(_.codeName).toSet
+      , (name) => libMan.lookupExtension(name, "").fold("N/A")(_.version)
+      , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compile() }
+      )
+    })
 
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)
@@ -709,6 +718,12 @@ class App extends
       }
     frame.setTitle(title)
   }
+
+  /**
+   * Internal use only.
+   */
+  def handle(e: AppEvents.OpenLibrariesDialogEvent): Unit =
+    openLibrariesDialog.actionPerformed(null)
 
   /**
    * Internal use only.
