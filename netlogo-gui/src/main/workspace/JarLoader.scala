@@ -76,7 +76,8 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
     Seq(
       workspace.attachModelDir(path),
       s"${APIEM.extensionsPath}${File.separator}$path",
-      s"${APIEM.userExtensionsPath}${File.separator}$path"
+      s"${APIEM.userExtensionsPath}${File.separator}$path",
+      s"${APIEM.extensionsPath}${File.separator}.bundled${File.separator}$path"
     ).map(new File(_)).filter(_.exists).map(_.toURI.toURL).headOption
 
   private def getAdditionalJars(folder: File): Seq[URL] =
