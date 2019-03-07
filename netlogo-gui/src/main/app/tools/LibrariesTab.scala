@@ -81,7 +81,7 @@ class LibrariesTab( category: String, manager: LibraryManager
   private val homepageButton     = new JButton(I18N.gui("homepage"))
   private val uninstallButton    = new JButton(I18N.gui("uninstall"))
 
-  private val info = new JTextArea(2, 20)
+  private val info = new JTextArea(2, 28)
 
   private val installedVersion = new JLabel
   private val    latestVersion = new JLabel

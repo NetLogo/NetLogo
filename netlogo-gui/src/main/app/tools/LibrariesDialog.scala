@@ -48,7 +48,7 @@ class LibrariesDialog( parent: Frame, manager: LibraryManager
     setLayout(new BorderLayout)
     add(tabs, BorderLayout.CENTER)
     add(bottomPanel, BorderLayout.SOUTH)
-    setSize(550, 400)
+    setSize(650, 400)
 
   }
 
