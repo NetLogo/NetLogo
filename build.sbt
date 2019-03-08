@@ -18,7 +18,8 @@ lazy val commonSettings = Seq(
   javaSource in Test    := baseDirectory.value / "src" / "test",
   onLoadMessage         := "",
   testTempDirectory     := (baseDirectory.value.getParentFile / "tmp").getAbsoluteFile,
-  ivyLoggingLevel       := UpdateLogging.Quiet
+  ivyLoggingLevel       := UpdateLogging.Quiet,
+  scalacOptions in Compile in console := scalacOptions.value.filterNot(_ == "-Xlint")
 )
 
 // These settings are common to all builds involving scala
