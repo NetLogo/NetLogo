@@ -466,6 +466,12 @@ tools.libraries.uninstall = Uninstall
 tools.libraries.update = Update
 tools.libraries.homepage = Homepage
 tools.libraries.addToCodeTab = Add to Code Tab
+tools.libraries.showLibPaths = View Conflicting Libraries
+tools.libraries.libPathsExplanation = The below extensions will override any extension with the same name that is\n\
+installed through the Extension Manager.  If you wish to use a version of\n\
+the extension downloaded through the Extension Manager instead, you must\n\
+first remove the files at the specified location.\n\n\
+See the "Extensions Guide" and the "Extension Manager" pages of the NetLogo User Manual for more information.
 tools.libraries.updateAll = Update All
 tools.libraries.checkForUpdates = Check for Updates
 tools.libraries.checkingForUpdates = Checking for updates…

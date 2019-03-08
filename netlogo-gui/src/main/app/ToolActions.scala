@@ -4,6 +4,7 @@ package org.nlogo.app
 
 import java.awt.Frame
 import java.awt.event.ActionEvent
+import java.nio.file.Path
 import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
@@ -39,14 +40,17 @@ with MenuAction {
     Preferences.IncludedFilesMenu)
 }
 
-class OpenLibrariesDialog( frame: Frame, libManager: LibraryManager
-                         , recompile: () => Unit, updateSource: ((String) => String) => Unit
+class OpenLibrariesDialog( frame:              Frame
+                         , libManager:         LibraryManager
+                         , recompile:          () => Unit
+                         , updateSource:       ((String) => String) => Unit
+                         , getExtPathMappings: () => Map[String, Path]
                          ) extends ShowDialogAction(I18N.gui.get("menu.tools.extensions")) with MenuAction {
 
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource)
+  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource, getExtPathMappings)
 
 }
 
