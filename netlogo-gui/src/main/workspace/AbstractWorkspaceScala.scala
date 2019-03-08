@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.nio.file.Paths
+import java.nio.file.{ Path, Paths }
 import java.util.Base64
 
 import scala.collection.mutable.WeakHashMap
@@ -34,7 +34,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Traceable with HubNetManager
   with Components
   with ExtendableWorkspaceMethods with Exporting
-  with Plotting {
+  with Plotting
+  with Extensions {
 
   private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset _)
 
@@ -321,4 +322,14 @@ object AbstractWorkspaceTraits {
     def getHubNetManager: Option[HubNetInterface] =
       getComponent(classOf[HubNetInterface])
   }
+
+  trait Extensions { self: AbstractWorkspaceScala =>
+    def getExtensionPathMappings(): Map[String, Path] =
+      (for (path <- Option(getModelPath).toSeq.map(mp => Paths.get(mp).getParent) ++ Seq(APIEM.extensionsPath);
+            dir  <- path.toFile.listFiles.filter(_.isDirectory);
+            jar  <- dir.listFiles.find(_.getName == s"${dir.getName}.jar").toSeq)
+       yield (dir.getName, Paths.get(jar.getCanonicalFile.toURI))
+      ).toMap
+  }
+
 }

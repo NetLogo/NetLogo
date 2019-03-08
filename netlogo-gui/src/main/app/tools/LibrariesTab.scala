@@ -5,6 +5,7 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Color, Component, Dimension, FlowLayout, GridLayout }
 import java.awt.font.TextAttribute
 import java.io.IOException
+import java.nio.file.Path
 import javax.swing.{ Action, BorderFactory, Box, DefaultListModel, JButton, JLabel, JList, JOptionPane,
   JPanel, JScrollPane, JTextField, JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
@@ -25,9 +26,12 @@ object LibrariesTab {
       |<p color="#AAAAAA">%s""".stripMargin
 }
 
-class LibrariesTab( category: String, manager: LibraryManager
-                  , updateStatus: String => Unit, recompile: () => Unit
-                  , updateSource: ((String) => String) => Unit
+class LibrariesTab( category:           String
+                  , manager:            LibraryManager
+                  , updateStatus:       String => Unit
+                  , recompile:          () => Unit
+                  , updateSource:       ((String) => String) => Unit
+                  , getExtPathMappings: () => Map[String, Path]
                   ) extends JPanel(new BorderLayout) {
 
   import LibrariesTab._
@@ -309,6 +313,7 @@ class LibrariesTab( category: String, manager: LibraryManager
 
     private val noIcon        = new EmptyIcon(32, 32)
     private val upToDateIcon  = icon("/images/nice-checkmark.png", 32, 32)
+    private val warningIcon   = icon("/images/exclamation.png", 32, 32)
     private val canUpdateIcon = icon("/images/update.gif", 32, 32)
 
     override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
@@ -316,7 +321,7 @@ class LibrariesTab( category: String, manager: LibraryManager
       originalComponent match {
         case label: JLabel => {
           label.setText(itemHTMLTemplate.format(value.name, value.shortDescription))
-          label.setIcon(statusIcon(value.status))
+          label.setIcon(statusIcon(value.status, value.codeName))
           label.setIconTextGap(0)
           label
         }
@@ -324,11 +329,15 @@ class LibrariesTab( category: String, manager: LibraryManager
       }
     }
 
-    private def statusIcon(status: LibraryStatus) = status match {
-      case LibraryStatus.UpToDate   => upToDateIcon
-      case LibraryStatus.CanUpdate  => canUpdateIcon
-      case LibraryStatus.CanInstall => noIcon
-    }
+    private def statusIcon(status: LibraryStatus, extName: String) =
+      if (!getExtPathMappings().contains(extName))
+        status match {
+          case LibraryStatus.UpToDate   => upToDateIcon
+          case LibraryStatus.CanUpdate  => canUpdateIcon
+          case LibraryStatus.CanInstall => noIcon
+        }
+      else
+        warningIcon
   }
 
   private class Worker( operation: String, fn: LibraryInfo => Unit

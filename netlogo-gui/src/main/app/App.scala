@@ -590,7 +590,8 @@ class App extends
     val updateSource =
       (transform: (String) => String) =>
         tabs.codeTab.innerSource = transform(tabs.codeTab.innerSource)
-    new OpenLibrariesDialog(frame, workspace.getLibraryManager, () => compile(), updateSource)
+    new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
+                           , updateSource, () => workspace.getExtensionPathMappings())
   }
 
   lazy val allActions: Seq[javax.swing.Action] = {
