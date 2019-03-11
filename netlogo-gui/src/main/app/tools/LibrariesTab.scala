@@ -15,6 +15,7 @@ import java.util.Collections
 import scala.collection.mutable.Buffer
 
 import org.nlogo.api.LibraryManager
+import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon
@@ -44,12 +45,16 @@ class LibrariesTab( category:           String
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
   private val baseListModel = new DefaultListModel[LibraryInfo]
-  libraries.toArray.foreach(elem => baseListModel.addElement(elem))
+
+  EventQueue.invokeLater { () => libraries.toArray.foreach(elem => baseListModel.addElement(elem)) }
 
   manager.onLibInfoChange {
     libs =>
-      baseListModel.clear()
-      libs.foreach(elem => baseListModel.addElement(elem))
+      EventQueue.invokeLater {
+        () =>
+          baseListModel.clear()
+          libs.foreach(elem => baseListModel.addElement(elem))
+      }
   }
 
   private val listModel   = new FilterableListModel(baseListModel, containsLib)
