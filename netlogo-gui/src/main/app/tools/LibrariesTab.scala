@@ -201,6 +201,7 @@ class LibrariesTab( category:           String
     override def ancestorMoved  (e: AncestorEvent): Unit = {}
     override def ancestorRemoved(e: AncestorEvent): Unit = {
       libraryList.setSelectedIndex(0)
+      filterField.setText("")
     }
   })
 
