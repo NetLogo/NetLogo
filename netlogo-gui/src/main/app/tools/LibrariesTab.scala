@@ -54,6 +54,7 @@ class LibrariesTab( category:           String
         () =>
           baseListModel.clear()
           libs.foreach(elem => baseListModel.addElement(elem))
+          updateSidebar()
       }
   }
 
