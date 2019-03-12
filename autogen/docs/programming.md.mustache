@@ -551,27 +551,27 @@ And here are some more complex things you can do:
 
 - Pick a random agent from the set using [[one-of]]. For example, we can make a
   randomly chosen turtle turn green:
-  
+
         ask one-of turtles [ set color green ]
-  
+
     Or tell a randomly chosen patch to [[sprout]] a new turtle:
-  
+
         ask one-of patches [ sprout 1 ]
-  
+
 - Use the [[max-one-of]] or
   [[min-one-of]] reporters to find out which agent
   is the most or least along some scale. For example, to remove the richest
   turtle, you could say
-  
+
         ask max-one-of turtles [sum assets] [ die ]
-  
+
 - Make a histogram of the agentset using the [[histogram]] command (in
   combination with [[of]]).
 - Use [[of]] to make a list of values, one for each agent in the agentset. Then
   use one of NetLogo's list primitives to do something with the list. (See the
   "Lists" section [below](#lists).) For example, to find out how rich turtles
   are on the average, you could say
-  
+
         show mean [sum assets] of turtles
 
 - Use [[turtle-set]], [[patch-set]] and [[link-set]] reporters to make new
@@ -2843,12 +2843,12 @@ definitions:
     <th>NetLogo
   <tr>
     <td>
-<pre>to square :x  
-output :x * :x  
+<pre>to square :x
+output :x * :x
 end</pre>
     <td>
-<pre>to-report square [x]  
-report x * x  
+<pre>to-report square [x]
+report x * x
 end</pre>
 </table>
 
