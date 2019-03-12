@@ -408,6 +408,10 @@ The same goes for patches, links, and the observer, except that you cannot
 [[ask]] the observer. Any code that is not inside any [[ask]] is by default
 observer code.
 
+Because agentset members are always read in a random order, when [[ask]] is used with
+an agentset each agent will take its turn in a random order. See [Agentsets](programming.html#agentsets)
+for more information.
+
 Here's an example of the use of [[ask]] in a NetLogo procedure:
 
     to setup

@@ -1063,7 +1063,11 @@ show 5 * (6 + 6) / 3
         <span class="prim_example">ask <i>agent</i> [<i>commands</i>]</span>
       </h4>
       <p>
-        The specified agent or agentset runs the given commands.
+        The specified agent or agentset runs the given commands.  Because
+        agentset members are always read in a random order, when ask is
+        used with an agentset each agent will take its turn in a random
+        order.  See <a href="programming.html#agentsets">Agentsets</a>
+        for more information.
       <pre>
 ask turtles [ fd 1 ]
   ;; all turtles move forward one step
