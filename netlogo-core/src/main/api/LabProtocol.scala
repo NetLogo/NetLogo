@@ -14,7 +14,7 @@ case class LabProtocol(name: String,
                     metrics: List[String],
                     valueSets: List[RefValueSet])
 {
-  val countRuns = repetitions * valueSets.foldLeft(1)((accum,elt) => accum * elt.length.toInt)
+  def countRuns = repetitions * valueSets.map(_.length.toInt).product
 
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
