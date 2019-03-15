@@ -23,6 +23,26 @@ in NetLogo without an extension by [[ifelse]] and [[ifelse-value]].  Simply
 remove the `cf:` from the primitives in your models and they should work
 as they did before with CF.
 
+### `ifelse-value` Precedence Change with Infix Operators
+
+In previous versions, `ifelse-value` expressions would be parsed before
+infix expressions they were a part of, like `+` or `-`.  Now `ifelse-value`
+has a lower precedence to let it work with a variable number of clauses.
+
+This used to work, but will now complain about finding a block or list where
+it wanted a number, since the `+` is parsed before the `ifelse-value`:
+
+```
+ifelse-value (true) [10] [3] + ifelse-value (false) [5] [7]
+```
+
+Now you just need to wrap your `ifelse-value` in parenthesis to tell NetLogo that
+you want to add the separate expressions:
+
+```
+(ifelse-value (true) [10] [3]) + (ifelse-value (false) [5] [7])
+```
+
 ## Changes for NetLogo 6.0.3
 
 ### Arduino Extension Changes
