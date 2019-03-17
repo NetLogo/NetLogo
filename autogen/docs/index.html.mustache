@@ -6,11 +6,25 @@
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-#id { width: 300px; }
+#index { width: 20%; }
+#entry { width: 80%; }
+table, iframe { width: 99%; }
+body, table { width: 100%; }
+table { border-collapse: collapse; }
+* { height: 100%; margin: 0; padding: 0; }
+body {height: 99%; }
 </style>
 </head>
 <body>
-<iframe src="headings.html" name="index" id="index"></iframe>
-<iframe src="whatis.html" name="entry" id="entry"></iframe>
+<table>
+<tr>
+<td id="index">
+<iframe src="headings.html"></iframe>
+</td>
+<td id="entry">
+<iframe src="whatis.html"></iframe>
+</td>
+</tr>
+</table>
 </body>
 </html>
