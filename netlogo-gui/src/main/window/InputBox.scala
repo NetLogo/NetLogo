@@ -558,6 +558,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
       NumericInput(num.doubleValue, NumericInput.NumberLabel)
     }
+    override def multiline = false
     override def enableMultiline = false
     override def defaultValue = org.nlogo.agent.World.Zero
   }
