@@ -19,6 +19,8 @@ trait ComponentSerialization[A, B <: ModelFormat[A, B]] {
 trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
   def name: String
 
+  def isCompatible(source: String): Boolean
+  def isCompatible(location: URI): Boolean
   def sections(location: URI): Try[Map[String, Section]]
   def writeSections(sections: Map[String, Section], location: URI): Try[URI]
   def sectionsToSource(sections: Map[String, Section]): Try[String]

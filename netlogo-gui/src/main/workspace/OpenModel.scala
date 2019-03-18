@@ -40,7 +40,7 @@ trait OpenModel[OpenParameter] {
     currentVersion: Version): Option[Model] = {
       val isValidURI = Option(uri)
         .flatMap(ModelLoader.getURIExtension)
-        .map(ext => loader.formats.map(_.name).contains(ext))
+        .map(ext => true)
         .getOrElse(false)
       if (! isValidURI) {
         controller.invalidModel(uri)

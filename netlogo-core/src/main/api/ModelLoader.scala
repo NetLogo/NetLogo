@@ -11,6 +11,9 @@ import scala.reflect.ClassTag
 class FormatterPair[A, B <: ModelFormat[A, B]](
   val modelFormat: B,
   val serializers: Seq[ComponentSerialization[A, B]])(implicit aTag: ClassTag[A]) {
+
+    def isCompatible(source: String) = modelFormat.isCompatible(source)
+    def isCompatible(uri: java.net.URI) = modelFormat.isCompatible(uri)
     def serializationClass = aTag.runtimeClass
     def formatClass = modelFormat.getClass
 
@@ -51,8 +54,7 @@ trait ModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
   protected def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
-    ModelLoader.getURIExtension(uri)
-      .flatMap(extension => formats.find(_.name == extension))
+    formats.find(_.isCompatible(uri))
 
   def readModel(uri: URI): Try[Model] = {
     val format = uriFormat(uri)

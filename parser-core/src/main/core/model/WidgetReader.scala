@@ -125,6 +125,7 @@ object WidgetReader {
       case Some(reader) => reader.parse(lines, parser).convertSource(conversion)
       case None =>
         throw new RuntimeException(
+          s"Dimensions provided don't match the NetLogo file reader\n" +
           s"Couldn't find corresponding reader for ${lines.head}")
     }
   }

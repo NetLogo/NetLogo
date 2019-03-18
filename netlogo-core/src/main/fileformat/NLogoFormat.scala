@@ -30,6 +30,22 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   val SeparatorRegex = "(?m)^@#\\$#@#\\$#@$"
 
   def widgetReaders: Map[String, WidgetReader]
+  override def isCompatible(location: URI): Boolean =
+    sections(location) match {
+      case Success(sections) =>
+        sections("org.nlogo.modelsection.version")
+          .find(!_.contains("NetLogo 3D"))
+          .flatMap(_ => Some(true)).getOrElse(false)
+      case Failure(ex) => false
+    }
+  override def isCompatible(source: String): Boolean =
+    sectionsFromSource(source) match {
+      case Success(sections) =>
+        sections("org.nlogo.modelsection.version")
+          .find(!_.contains("NetLogo 3D"))
+          .flatMap(_ => Some(true)).getOrElse(false)
+      case Failure(ex) => false
+    }
 
   def sections(location: URI) =
     Try {
