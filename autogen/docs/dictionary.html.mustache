@@ -904,7 +904,7 @@ show abs 5
         </p>
         <pre>
 if all? turtles [color = red]
-[ show &quot;every turtle is red!&quot; ]
+  [ show &quot;every turtle is red!&quot; ]
 </pre>
         <p>
           See also <a href="#any">any?</a>.
@@ -927,8 +927,8 @@ if all? turtles [color = red]
         </p>
         <pre>
 if (pxcor &gt; 0) and (pycor &gt; 0)
-[ set pcolor blue ]  ;; the upper-right quadrant of
-;; patches turn blue
+  [ set pcolor blue ]  ;; the upper-right quadrant of
+                       ;; patches turn blue
 </pre>
       </div>
       <div class="dict_entry" id="any">
@@ -947,7 +947,7 @@ if (pxcor &gt; 0) and (pycor &gt; 0)
         </p>
         <pre>
 if any? turtles with [color = red]
-[ show &quot;at least one turtle is red!&quot; ]
+  [ show &quot;at least one turtle is red!&quot; ]
 </pre>
         <p>
           Note: nobody is not an agentset. You only get nobody back in
@@ -1119,11 +1119,11 @@ show 5 * (6 + 6) / 3
         </p>
         <pre>
 ask turtles [ fd 1 ]
-;; all turtles move forward one step
+  ;; all turtles move forward one step
 ask patches [ set pcolor red ]
-;; all patches turn red
+  ;; all patches turn red
 ask turtle 4 [ rt 90 ]
-;; only the turtle with id 4 turns right
+  ;; only the turtle with id 4 turns right
 </pre>
         <p>
           Note: only the observer can ask all turtles or all patches. This
@@ -1187,9 +1187,9 @@ ask turtle 4 [ rt 90 ]
         </p>
         <pre>
 ask turtles at-points [[2 4] [1 2] [10 15]]
-[ fd 1 ]  ;; only the turtles on the patches at the
-;; coordinates (2,4), (1,2) and (10,15),
-;; relative to the caller, move
+  [ fd 1 ]  ;; only the turtles on the patches at the
+            ;; coordinates (2,4), (1,2) and (10,15),
+            ;; relative to the caller, move
 </pre>
       </div>
       <div class="dict_entry" id="atan">
@@ -1234,7 +1234,7 @@ crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
         </p>
         <pre>
 to-report heading-to-angle [ h ]
-report (90 - h) mod 360
+  report (90 - h) mod 360
 end
 </pre>
       </div>
@@ -1338,9 +1338,9 @@ ask turtles [ set color one-of remove gray base-colors ]
         <pre>
 beep                       ;; emits one beep
 repeat 3 [ beep ]          ;; emits 3 beeps at once,
-;; so you only hear one sound
+                           ;; so you only hear one sound
 repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
-;; separated by 1/10th of a second
+                           ;; separated by 1/10th of a second
 </pre>
         <p>
           When running headless, this command has no effect.
@@ -1390,7 +1390,7 @@ repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
 crt 2
 ask turtle 0 [ create-link-with turtle 1 ]
 ask link 0 1 [
-ask both-ends [ set color red ] ;; turtles 0 and 1 both turn red
+  ask both-ends [ set color red ] ;; turtles 0 and 1 both turn red
 ]
 </pre>
       </div>
@@ -1463,13 +1463,13 @@ if breed = roads [ set color gray ]
 breed [mice mouse]
 breed [frogs frog]
 to setup
-clear-all
-create-mice 50
-ask mice [ set color white ]
-create-frogs 50
-ask frogs [ set color green ]
-show [breed] of one-of mice    ;; prints mice
-show [breed] of one-of frogs   ;; prints frogs
+  clear-all
+  create-mice 50
+  ask mice [ set color white ]
+  create-frogs 50
+  ask frogs [ set color green ]
+  show [breed] of one-of mice    ;; prints mice
+  show [breed] of one-of frogs   ;; prints frogs
 end
 
 show mouse 1
@@ -1914,17 +1914,17 @@ cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
       </p>
       <pre>
 to setup
-clear-all
-create-turtles 5
-;; turtle 1 creates links with all other turtles
-;; the link between the turtle and itself is ignored
-ask turtle 0 [ create-links-with other turtles ]
-show count links ;; shows 4
-;; this does nothing since the link already exists
-ask turtle 0 [ create-link-with turtle 1 ]
-show count links ;; shows 4 since the previous link already existed
-ask turtle 2 [ create-link-with turtle 1 ]
-show count links ;; shows 5
+  clear-all
+  create-turtles 5
+  ;; turtle 1 creates links with all other turtles
+  ;; the link between the turtle and itself is ignored
+  ask turtle 0 [ create-links-with other turtles ]
+  show count links ;; shows 4
+  ;; this does nothing since the link already exists
+  ask turtle 0 [ create-link-with turtle 1 ]
+  show count links ;; shows 4 since the previous link already existed
+  ask turtle 2 [ create-link-with turtle 1 ]
+  show count links ;; shows 5
 end
 </pre>
       <pre>
@@ -1932,16 +1932,16 @@ directed-link-breed [red-links red-link]
 undirected-link-breed [blue-links blue-link]
 
 to setup
-clear-all
-create-turtles 5
-;; create links in both directions between turtle 0
-;; and all other turtles
-ask turtle 0 [ create-red-links-to other turtles ]
-ask turtle 0 [ create-red-links-from other turtles ]
-show count links ;; shows 8
-;; now create undirected links between turtle 0 and other turtles
-ask turtle 0 [ create-blue-links-with other turtles ]
-show count links ;; shows 12
+  clear-all
+  create-turtles 5
+  ;; create links in both directions between turtle 0
+  ;; and all other turtles
+  ask turtle 0 [ create-red-links-to other turtles ]
+  ask turtle 0 [ create-red-links-from other turtles ]
+  show count links ;; shows 8
+  ;; now create undirected links between turtle 0 and other turtles
+  ask turtle 0 [ create-blue-links-with other turtles ]
+  show count links ;; shows 12
 end
 </pre>
     </div>
@@ -1979,9 +1979,9 @@ crt 100 [ fd 10 ]     ;; makes a randomly spaced circle
 breed [canaries canary]
 breed [snakes snake]
 to setup
-clear-all
-create-canaries 50 [ set color yellow ]
-create-snakes 50 [ set color green ]
+  clear-all
+  create-canaries 50 [ set color yellow ]
+  create-snakes 50 [ set color green ]
 end
 </pre>
       <p>
@@ -2176,12 +2176,12 @@ diffuse4 chemical 0.5
 directed-link-breed [streets street]
 directed-link-breed [highways highway]
 to setup
-clear-all
-crt 2
-;; create a link from turtle 0 to turtle 1
-ask turtle 0 [ create-street-to turtle 1 ]
-;; create a link from turtle 1 to turtle 0
-ask turtle 0 [ create-highway-from turtle 1 ]
+  clear-all
+  crt 2
+  ;; create a link from turtle 0 to turtle 1
+  ask turtle 0 [ create-street-to turtle 1 ]
+  ;; create a link from turtle 1 to turtle 0
+  ask turtle 0 [ create-highway-from turtle 1 ]
 end
 
 ask turtle 0 [ show one-of my-in-links ]
@@ -2281,7 +2281,7 @@ ask turtles [ show max-one-of turtles [distance myself] ]
         </p>
         <pre>
 if (distancexy 0 0) &gt; 10
-[ set color green ]
+  [ set color green ]
 ;; all turtles more than 10 units from
 ;; the center of the world turn green.
 </pre>
@@ -3102,7 +3102,7 @@ print file-read-line
         <pre>
 file-open &quot;locations.txt&quot;
 ask turtles
-[ file-write xcor file-write ycor ]
+  [ file-write xcor file-write ycor ]
 </pre>
         <p>
           See also <a href="#file-print">file-print</a>, <a href="#file-show">file-show</a>,
@@ -3250,12 +3250,12 @@ foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round x) ]
         </p>
         <pre>
 (foreach [1 2 3] [2 4 6]
-[ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
+   [ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
 =&gt; &quot;the sum is: 3&quot;
 =&gt; &quot;the sum is: 6&quot;
 =&gt; &quot;the sum is: 9&quot;
 (foreach list (turtle 1) (turtle 2) [3 4]
-[ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
+  [ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
 ;; turtle 1 moves forward 3 patches
 ;; turtle 2 moves forward 4 patches
 </pre>
@@ -3986,9 +3986,9 @@ if xcor &gt; 0[ set color blue ]
         </p>
         <pre>
 ask patches
-[ ifelse pxcor &gt; 0
-[ set pcolor blue ]
-[ set pcolor red ] ]
+  [ ifelse pxcor &gt; 0
+      [ set pcolor blue ]
+      [ set pcolor red ] ]
 ;; the left half of the world turns red and
 ;; the right half turns blue
 </pre>
@@ -3999,25 +3999,25 @@ ask patches
         </p>
         <pre>
 ask patches [
-let choice random 4
-(ifelse
-choice = 0 [
-set pcolor red
-set plabel "r"
-]
-choice = 1 [
-set pcolor blue
-set plabel "b"
-]
-choice = 2 [
-set pcolor green
-set plabel "g"
-]
-; elsecommands
-[
-set pcolor yellow
-set plabel "y"
-])
+  let choice random 4
+  (ifelse
+    choice = 0 [
+      set pcolor red
+      set plabel "r"
+    ]
+    choice = 1 [
+      set pcolor blue
+      set plabel "b"
+    ]
+    choice = 2 [
+      set pcolor green
+      set plabel "g"
+    ]
+    ; elsecommands
+    [
+      set pcolor yellow
+      set plabel "y"
+  ])
 ]
 </pre>
         <p>
@@ -4052,14 +4052,14 @@ set plabel "y"
         </p>
         <pre>
 ask patches [
-set pcolor ifelse-value (pxcor &gt; 0) [blue] [red]
+  set pcolor ifelse-value (pxcor &gt; 0) [blue] [red]
 ]
 ;; the left half of the world turns red and
 ;; the right half turns blue
 show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
 =&gt; [0 0 0 0 0 1 1 1 1 1]
 show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
-[1 3 2 5 3 8 3 2 1]
+  [1 3 2 5 3 8 3 2 1]
 =&gt; 8
 </pre>
         <p>
@@ -4068,12 +4068,12 @@ show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
         </p>
         <pre>
 ask patches [
-let choice random 4
-set pcolor (ifelse-value
-choice = 0 [ red ]
-choice = 1 [ blue ]
-choice = 2 [ green ]
-[ yellow ])
+  let choice random 4
+  set pcolor (ifelse-value
+    choice = 0 [ red ]
+    choice = 1 [ blue ]
+    choice = 2 [ green ]
+               [ yellow ])
 ]
 </pre>
         <p>
@@ -4081,12 +4081,12 @@ choice = 2 [ green ]
         </p>
         <pre>
 ask patches [
-let x = 2
-set pcolor (ifelse-value
-x = 0 [ red ]
-x = 1 [ blue ]
-; no final else reporter is given, and x is 2 so there will be a runtime error
-)
+  let x = 2
+  set pcolor (ifelse-value
+    x = 0 [ red ]
+    x = 1 [ blue ]
+    ; no final else reporter is given, and x is 2 so there will be a runtime error
+  )
 </pre>
         <p>
           See also <a href="#if">if</a>, <a href="#ifelse">ifelse</a>.
@@ -4238,8 +4238,8 @@ x = 1 [ blue ]
         </p>
         <pre>
 ask turtles
-[ ask patches in-cone 3 60
-[ set pcolor red ] ]
+  [ ask patches in-cone 3 60
+      [ set pcolor red ] ]
 ;; each turtle makes a red &quot;splotch&quot; of patches in a 60 degree
 ;; cone of radius 3 ahead of itself
 </pre>
@@ -4263,13 +4263,13 @@ ask turtles
         <pre>
 crt 2
 ask turtle 0 [
-create-link-to turtle 1
-show in-link-neighbor? turtle 1  ;; prints false
-show out-link-neighbor? turtle 1 ;; prints true
+  create-link-to turtle 1
+  show in-link-neighbor? turtle 1  ;; prints false
+  show out-link-neighbor? turtle 1 ;; prints true
 ]
 ask turtle 1 [
-show in-link-neighbor? turtle 0  ;; prints true
-show out-link-neighbor? turtle 0 ;; prints false
+  show in-link-neighbor? turtle 0  ;; prints true
+  show out-link-neighbor? turtle 0 ;; prints false
 ]
 </pre>
       </div>
@@ -4367,8 +4367,8 @@ __includes [ &quot;utils1.nls&quot; &quot;utils2.nls&quot; ]
         </p>
         <pre>
 ask turtles
-[ ask patches in-radius 3
-[ set pcolor red ] ]
+  [ ask patches in-radius 3
+      [ set pcolor red ] ]
 ;; each turtle makes a red &quot;splotch&quot; around itself
 </pre>
       </div>
@@ -4665,19 +4665,19 @@ layout-circle sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles 10
       </p>
       <pre>
 to make-a-tree
-set-default-shape turtles &quot;circle&quot;
-crt 6
-ask turtle 0 [
-create-link-with turtle 1
-create-link-with turtle 2
-create-link-with turtle 3
-]
-ask turtle 1 [
-create-link-with turtle 4
-create-link-with turtle 5
-]
-; do a radial tree layout, centered on turtle 0
-layout-radial turtles links (turtle 0)
+  set-default-shape turtles &quot;circle&quot;
+  crt 6
+  ask turtle 0 [
+    create-link-with turtle 1
+    create-link-with turtle 2
+    create-link-with turtle 3
+  ]
+  ask turtle 1 [
+    create-link-with turtle 4
+    create-link-with turtle 5
+  ]
+  ; do a radial tree layout, centered on turtle 0
+  layout-radial turtles links (turtle 0)
 end
 </pre>
     </div>
@@ -4727,17 +4727,17 @@ end
       </p>
       <pre>
 to make-a-triangle
-set-default-shape turtles &quot;circle&quot;
-crt 3
-ask turtle 0
-[
-create-links-with other turtles
-]
-ask turtle 1
-[
-create-link-with turtle 2
-]
-repeat 30 [ layout-spring turtles links 0.2 5 1 ] ;; lays the nodes in a triangle
+  set-default-shape turtles &quot;circle&quot;
+  crt 3
+  ask turtle 0
+  [
+    create-links-with other turtles
+  ]
+  ask turtle 1
+  [
+    create-link-with turtle 2
+  ]
+  repeat 30 [ layout-spring turtles links 0.2 5 1 ] ;; lays the nodes in a triangle
 end
 </pre>
     </div>
@@ -4773,22 +4773,22 @@ end
       </p>
       <pre>
 to make-a-tree
-set-default-shape turtles &quot;circle&quot;
-crt 6
-ask turtle 0 [
-create-link-with turtle 1
-create-link-with turtle 2
-create-link-with turtle 3
-]
-ask turtle 1 [
-create-link-with turtle 4
-create-link-with turtle 5
-]
-; place all the turtles with just one
-; neighbor on the perimeter of a circle
-; and then place the remaining turtles inside
-; this circle, spread between their neighbors.
-repeat 10 [ layout-tutte (turtles with [link-neighbors = 1]) links 12 ]
+  set-default-shape turtles &quot;circle&quot;
+  crt 6
+  ask turtle 0 [
+    create-link-with turtle 1
+    create-link-with turtle 2
+    create-link-with turtle 3
+  ]
+  ask turtle 1 [
+    create-link-with turtle 4
+    create-link-with turtle 5
+  ]
+  ; place all the turtles with just one
+  ; neighbor on the perimeter of a circle
+  ; and then place the remaining turtles inside
+  ; this circle, spread between their neighbors.
+  repeat 10 [ layout-tutte (turtles with [link-neighbors = 1]) links 12 ]
 end
 </pre>
     </div>
@@ -4840,7 +4840,7 @@ end
       <pre>
 let prey one-of sheep-here
 if prey != nobody
-[ ask prey [ die ] ]
+  [ ask prey [ die ] ]
 </pre>
     </div>
     <div class="dict_entry" id="link">
@@ -5055,12 +5055,14 @@ show log 64 2
           exits through use of the <a href="#stop">stop</a> or
           <a href="#report">report</a> commands.
         </p>
-        <pre>to move-to-world-edge  ;; turtle procedure
-          loop [
-          if not can-move? 1 [ stop ]
-          fd 1
-          ]
-          end</pre>
+        <pre>
+to move-to-world-edge  ;; turtle procedure
+  loop [
+    if not can-move? 1 [ stop ]
+    fd 1
+  ]
+end
+</pre>
         <p>In this example, <code>stop</code> exits not just the loop,
           but the entire procedure.
         </p>
@@ -5225,7 +5227,7 @@ show max-n-of 5 patches with [pycor = 0] [pxcor]
         </p>
         <pre>
 crt 100 [ setxy random-float max-pxcor
-random-float max-pycor ]
+                random-float max-pycor ]
 ;; distributes 100 turtles randomly in the
 ;; first quadrant
 </pre>
@@ -5402,7 +5404,7 @@ show min-one-of turtles [xcor + ycor]
         </p>
         <pre>
 crt 100 [ setxy random-float min-pxcor
-random-float min-pycor ]
+                random-float min-pycor ]
 ;; distributes 100 turtles randomly in the
 ;; third quadrant
 </pre>
@@ -5518,7 +5520,7 @@ show modes [pxcor] of turtles
         <pre>
 ;; to make the mouse &quot;draw&quot; in red:
 if mouse-down?
-[ ask patch mouse-xcor mouse-ycor [ set pcolor red ] ]
+  [ ask patch mouse-xcor mouse-ycor [ set pcolor red ] ]
 </pre>
       </div>
       <div class="dict_entry" id="move-to">
@@ -5577,13 +5579,13 @@ move-to max-one-of turtles [size]
 crt 5
 ask turtle 0
 [
-create-links-with other turtles
-show my-links ;; prints the agentset containing all links
-;; (since all the links we created were with turtle 0 )
+  create-links-with other turtles
+  show my-links ;; prints the agentset containing all links
+                ;; (since all the links we created were with turtle 0 )
 ]
 ask turtle 1
 [
-show my-links ;; shows an agentset containing the link 0 1
+  show my-links ;; shows an agentset containing the link 0 1
 ]
 end
 </pre>
@@ -5610,12 +5612,12 @@ end
 crt 5
 ask turtle 0
 [
-create-links-to other turtles
-show my-in-links ;; shows an empty agentset
+  create-links-to other turtles
+  show my-in-links ;; shows an empty agentset
 ]
 ask turtle 1
 [
-show my-in-links ;; shows an agentset containing the link 0 1
+  show my-in-links ;; shows an agentset containing the link 0 1
 ]
 </pre>
       </div>
@@ -5639,12 +5641,12 @@ show my-in-links ;; shows an agentset containing the link 0 1
 crt 5
 ask turtle 0
 [
-create-links-to other turtles
-show my-out-links ;; shows agentset containing all the links
+  create-links-to other turtles
+  show my-out-links ;; shows agentset containing all the links
 ]
 ask turtle 1
 [
-show my-out-links ;; shows an empty agentset
+  show my-out-links ;; shows an empty agentset
 ]
 </pre>
       </div>
@@ -5678,8 +5680,8 @@ show my-out-links ;; shows an empty agentset
         </p>
         <pre>
 ask turtles
-[ ask patches in-radius 3
-[ set pcolor [color] of myself ] ]
+  [ ask patches in-radius 3
+      [ set pcolor [color] of myself ] ]
 ;; each turtle makes a colored &quot;splotch&quot; around itself
 </pre>
         <p>
@@ -5773,12 +5775,12 @@ show n-values 5 [ x -&gt; x * x ]
         </p>
         <pre>
 show sum [count turtles-here] of neighbors
-;; prints the total number of turtles on the eight
-;; patches around this turtle or patch
+  ;; prints the total number of turtles on the eight
+  ;; patches around this turtle or patch
 show count turtles-on neighbors
-;; a shorter way to say the same thing
+  ;; a shorter way to say the same thing
 ask neighbors4 [ set pcolor red ]
-;; turns the four neighboring patches red
+  ;; turns the four neighboring patches red
 </pre>
       </div>
       <div class="dict_entry" id="link-neighbors">
@@ -5800,12 +5802,12 @@ ask neighbors4 [ set pcolor red ]
 crt 3
 ask turtle 0
 [
-create-links-with other turtles
-ask link-neighbors [ set color red ] ;; turtles 1 and 2 turn red
+  create-links-with other turtles
+  ask link-neighbors [ set color red ] ;; turtles 1 and 2 turn red
 ]
 ask turtle 1
 [
-ask link-neighbors [ set color blue ] ;; turtle 0 turns blue
+  ask link-neighbors [ set color blue ] ;; turtle 0 turns blue
 ]
 end
 </pre>
@@ -5828,12 +5830,12 @@ end
 crt 2
 ask turtle 0
 [
-create-link-with turtle 1
-show link-neighbor? turtle 1  ;; prints true
+  create-link-with turtle 1
+  show link-neighbor? turtle 1  ;; prints true
 ]
 ask turtle 1
 [
-show link-neighbor? turtle 0     ;; prints true
+  show link-neighbor? turtle 0     ;; prints true
 ]
 </pre>
       </div>
@@ -5941,7 +5943,7 @@ show netlogo-version
         <pre>
 set target one-of other turtles-here
 if target != nobody
-[ ask target [ set color red ] ]
+  [ ask target [ set color red ] ]
 </pre>
       </div>
       <div class="dict_entry" id="no-links">
@@ -6051,7 +6053,7 @@ show sort [who * who] of turtles
 ask one-of patches [ set pcolor green ]
 ;; a random patch turns green
 ask patches with [any? turtles-here]
-[ show one-of turtles-here ]
+  [ show one-of turtles-here ]
 ;; for each patch containing turtles, prints one of
 ;; those turtles
 
@@ -6152,13 +6154,13 @@ ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
         <pre>
 crt 2
 ask turtle 0 [
-create-link-to turtle 1
-show in-link-neighbor? turtle 1  ;; prints false
-show out-link-neighbor? turtle 1 ;; prints true
+  create-link-to turtle 1
+  show in-link-neighbor? turtle 1  ;; prints false
+  show out-link-neighbor? turtle 1 ;; prints true
 ]
 ask turtle 1 [
-show in-link-neighbor? turtle 0  ;; prints true
-show out-link-neighbor? turtle 0 ;; prints false
+  show in-link-neighbor? turtle 0  ;; prints true
+  show out-link-neighbor? turtle 0 ;; prints false
 ]
 </pre>
       </div>
@@ -6181,13 +6183,13 @@ show out-link-neighbor? turtle 0 ;; prints false
 crt 4
 ask turtle 0
 [
-create-links-to other turtles
-ask out-link-neighbors [ set color pink ] ;; turtles 1-3 turn pink
+  create-links-to other turtles
+  ask out-link-neighbors [ set color pink ] ;; turtles 1-3 turn pink
 ]
 ask turtle 1
 [
-ask out-link-neighbors [ set color orange ]  ;; no turtles change colors
-;; since turtle 1 only has in-links
+  ask out-link-neighbors [ set color orange ]  ;; no turtles change colors
+                                               ;; since turtle 1 only has in-links
 ]
 end
 </pre>
@@ -6212,12 +6214,12 @@ end
         <pre>
 crt 2
 ask turtle 0 [
-create-link-to turtle 1
-show out-link-to turtle 1 ;; shows link 0 1
+  create-link-to turtle 1
+  show out-link-to turtle 1 ;; shows link 0 1
 ]
 ask turtle 1
 [
-show out-link-to turtle 0 ;; shows nobody
+  show out-link-to turtle 0 ;; shows nobody
 ]
 </pre>
         <p>
@@ -6959,8 +6961,8 @@ show random-poisson 3.4
         </p>
         <pre>
 ask turtles [
-;; move each turtle to the center of a random patch
-setxy random-pxcor random-pycor
+  ;; move each turtle to the center of a random patch
+  setxy random-pxcor random-pycor
 ]
 </pre>
         <p>
@@ -7018,8 +7020,8 @@ show random 100
         </p>
         <pre>
 ask turtles [
-;; move each turtle to a random point
-setxy random-xcor random-ycor
+  ;; move each turtle to a random point
+  setxy random-xcor random-ycor
 ]
 </pre>
         <p>
@@ -7129,9 +7131,9 @@ show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fp
         <pre>
 ;; find the longest string in a list
 to-report longest-string [strings]
-report reduce
-[ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
-strings
+  report reduce
+    [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
+    strings
 end
 
 show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
@@ -7139,8 +7141,8 @@ show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
 
 ;; count the number of occurrences of an item in a list
 to-report occurrences [x the-list]
-report reduce
-[ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
+  report reduce
+    [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
 end
 
 show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
@@ -7148,7 +7150,7 @@ show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
 
 ;; evaluate the polynomial, with given coefficients, at x
 to-report evaluate-polynomial [coefficients x]
-report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
+  report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
 end
 
 ;; evaluate 3x^2 + 2x + 1 at x = 4

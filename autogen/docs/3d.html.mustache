@@ -577,8 +577,8 @@ end-shape
         <pre>
 ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
 [ fd 1 ]  ;; only the turtles on the patches at the
-;; distances (2,4,0), (1,2,1) and (10,15,10),
-;; relative to the caller, move
+          ;; distances (2,4,0), (1,2,1) and (10,15,10),
+          ;; relative to the caller, move
 </pre>
       </div>
       <div class="dict_entry" id="distance-3d">
@@ -610,7 +610,7 @@ ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
         </p>
         <pre>
 if (distancexyz 0 0 0) &lt; 10
-[ set color green ]
+  [ set color green ]
 ;; all turtles less than 10 units from
 ;; the center of the screen turn green.
 </pre>
@@ -758,10 +758,10 @@ ask link 0 1 [ print link-pitch ]
         </p>
         <pre>
 show sum values-from neighbors [count turtles-here]
-;; prints the total number of turtles on the twenty-six
-;; patches around this turtle or patch
+  ;; prints the total number of turtles on the twenty-six
+  ;; patches around this turtle or patch
 ask neighbors6 [ set pcolor red ]
-;; turns the six neighboring patches red
+  ;; turns the six neighboring patches red
 </pre>
       </div>
       <div class="dict_entry" id="orbit-cmds">
@@ -948,8 +948,8 @@ set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
         </p>
         <pre>
 ask turtles [
-;; move each turtle to the center of a random patch
-setxyz random-pxcor random-pycor random-pzcor
+  ;; move each turtle to the center of a random patch
+  setxyz random-pxcor random-pycor random-pzcor
 ]
 </pre>
         <p>
@@ -973,8 +973,8 @@ setxyz random-pxcor random-pycor random-pzcor
         </p>
         <pre>
 ask turtles [
-;; move each turtle to a random point
-setxyz random-xcor random-ycor random-zcor
+  ;; move each turtle to a random point
+  setxyz random-xcor random-ycor random-zcor
 ]
 </pre>
         <p>
