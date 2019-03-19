@@ -151,56 +151,56 @@
         should be as follows:
       </p>
       <pre>
-        number of shapes in file
-        name of first shape
-        type of surface ( quads or tris )
-        surface1
-        surface2
-        .
-        .
-        .
-        stop
-        type of surface
-        surfaceA
-        .
-        .
-        .
-        stop
-        end-shape
-      </pre>
+number of shapes in file
+name of first shape
+type of surface ( quads or tris )
+surface1
+surface2
+.
+.
+.
+stop
+type of surface
+surfaceA
+.
+.
+.
+stop
+end-shape
+</pre>
       <p>
         Each surface is defined by a unit normal vector and the vertices
         listed in clockwise order, tris should have three vertices and quads
         should have four.
       </p>
       <pre>
-        normal: xn yn zn
-        x1 y1 z1
-        x2 y2 z2
-        x3 y3 z3
-        x4 y4 z4
-      </pre>
+normal: xn yn zn
+x1 y1 z1
+x2 y2 z2
+x3 y3 z3
+x4 y4 z4
+</pre>
       <p>
         A file declaring just a two dimensional, patch-sized, square in the
         xy-plane centered at the origin would look like this:
       </p>
       <pre>
-        1
-        square
-        quads
-        normal: 0 0 1
-        0.15 0.15 0
-        -0.15 0.15 0
-        -0.15 -0.15 0
-        0.15 -0.15 0
-        normal: 0 0 -1
-        0.15 0.15 0
-        0.15 -0.15 0
-        -0.15 -0.15 0
-        -0.15 0.15 0
-        stop
-        end-shape
-      </pre>
+1
+square
+quads
+normal: 0 0 1
+0.15 0.15 0
+-0.15 0.15 0
+-0.15 -0.15 0
+0.15 -0.15 0
+normal: 0 0 -1
+0.15 0.15 0
+0.15 -0.15 0
+-0.15 -0.15 0
+-0.15 0.15 0
+stop
+end-shape
+</pre>
     </div>
     <div id="tutorial">
       <h2>
@@ -575,11 +575,11 @@
           under the turtle.
         </p>
         <pre>
-          ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
-          [ fd 1 ]  ;; only the turtles on the patches at the
-          ;; distances (2,4,0), (1,2,1) and (10,15,10),
-          ;; relative to the caller, move
-        </pre>
+ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
+[ fd 1 ]  ;; only the turtles on the patches at the
+;; distances (2,4,0), (1,2,1) and (10,15,10),
+;; relative to the caller, move
+</pre>
       </div>
       <div class="dict_entry" id="distance-3d">
         <h3>
@@ -609,11 +609,11 @@
           distance.
         </p>
         <pre>
-          if (distancexyz 0 0 0) &lt; 10
-          [ set color green ]
-          ;; all turtles less than 10 units from
-          ;; the center of the screen turn green.
-        </pre>
+if (distancexyz 0 0 0) &lt; 10
+[ set color green ]
+;; all turtles less than 10 units from
+;; the center of the screen turn green.
+</pre>
       </div>
       <div class="dict_entry" id="dz">
         <h3>
@@ -688,9 +688,9 @@
           Reports the pitch from end1 to end2 of this link.
         </p>
         <pre>
-          ask link 0 1 [ print link-pitch ]
-          ;; prints [[towards-pitch other-end] of end1] of link 0 1
-        </pre>
+ask link 0 1 [ print link-pitch ]
+;; prints [[towards-pitch other-end] of end1] of link 0 1
+</pre>
         <p>
           See also <a href="dictionary.html#link-heading">link-heading</a>,
           <a href="#pitch">pitch</a>
@@ -757,12 +757,12 @@
           (neighbors) or 6 surrounding patches (neighbors6).
         </p>
         <pre>
-          show sum values-from neighbors [count turtles-here]
-          ;; prints the total number of turtles on the twenty-six
-          ;; patches around this turtle or patch
-          ask neighbors6 [ set pcolor red ]
-          ;; turns the six neighboring patches red
-        </pre>
+show sum values-from neighbors [count turtles-here]
+;; prints the total number of turtles on the twenty-six
+;; patches around this turtle or patch
+ask neighbors6 [ set pcolor red ]
+;; turns the six neighboring patches red
+</pre>
       </div>
       <div class="dict_entry" id="orbit-cmds">
         <h3>
@@ -826,9 +826,9 @@
           must be integers.
         </p>
         <pre>
-          ask (patch 3 -4 2) [ set pcolor green ]
-          ;; patch with pxcor of 3 and pycor of -4 and pzcor of 2 turns green
-        </pre>
+ask (patch 3 -4 2) [ set pcolor green ]
+;; patch with pxcor of 3 and pycor of -4 and pzcor of 2 turns green
+</pre>
         <p>
           See also <a href="dictionary.html#patch">patch</a>
         </p>
@@ -850,9 +850,9 @@
           caller.
         </p>
         <pre>
-          ask patch-at 1 -1 1 [ set pcolor green ]
-          ;; turns the patch just southeast and up from the caller green
-        </pre>
+ask patch-at 1 -1 1 [ set pcolor green ]
+;; turns the patch just southeast and up from the caller green
+</pre>
       </div>
       <div class="dict_entry" id="patch-at-heading-pitch-and-distance">
         <h3>
@@ -873,9 +873,9 @@
           taken into account.)
         </p>
         <pre>
-          ask patch-at-heading-pitch-and-distance 0 90 1 [ set pcolor green ]
-          ;; turns the patch directly above the caller green.
-        </pre>
+ask patch-at-heading-pitch-and-distance 0 90 1 [ set pcolor green ]
+;; turns the patch directly above the caller green.
+</pre>
       </div>
       <div class="dict_entry" id="pitch">
         <h3>
@@ -902,10 +902,10 @@
           Example:
         </p>
         <pre>
-          ;; assume roll and heading are 0
-          set pitch 45      ;; turtle is now north and up
-          set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
-        </pre>
+;; assume roll and heading are 0
+set pitch 45      ;; turtle is now north and up
+set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
+</pre>
         <p>
           See also <a href="dictionary.html#heading">heading</a>, <a href="#roll">roll</a>, <a href="#tilt-cmds">tilt-up</a>, <a href="#tilt-cmds">tilt-down</a>, <a href="#right">right</a>, <a href="#left">left</a>
         </p>
@@ -947,11 +947,11 @@
           inclusive.
         </p>
         <pre>
-          ask turtles [
-          ;; move each turtle to the center of a random patch
-          setxyz random-pxcor random-pycor random-pzcor
-          ]
-        </pre>
+ask turtles [
+;; move each turtle to the center of a random patch
+setxyz random-pxcor random-pycor random-pzcor
+]
+</pre>
         <p>
           See also <a href="dictionary.html#random-pcor">random-pxcor</a>, <a href="dictionary.html#random-pcor">random-pycor</a>.
         </p>
@@ -972,11 +972,11 @@
           max-pzcor + 0.5 (exclusive).
         </p>
         <pre>
-          ask turtles [
-          ;; move each turtle to a random point
-          setxyz random-xcor random-ycor random-zcor
-          ]
-        </pre>
+ask turtles [
+;; move each turtle to a random point
+setxyz random-xcor random-ycor random-zcor
+]
+</pre>
         <p>
           See also <a href="dictionary.html#random-cor">random-xcor</a>,
           <a href="dictionary.html#random-cor">random-ycor</a>.
@@ -1022,9 +1022,9 @@
           Example:
         </p>
         <pre>
-          set roll 45      ;; turtle rotated right
-          set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
-        </pre>
+set roll 45      ;; turtle rotated right
+set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
+</pre>
         <p>
           See also <a href="dictionary.html#heading">heading</a>, <a href="#pitch">pitch</a>, <a href="#roll-left">roll-left</a>, <a href="#roll-right">roll-right</a>.
         </p>
@@ -1077,9 +1077,9 @@
             z</code>, except it happens in one time step instead of three.
         </p>
         <pre>
-          setxyz 0 0 0
-          ;; agent moves to the middle of the center patch
-        </pre>See also <a href="#face-3d">face</a>
+setxyz 0 0 0
+;; agent moves to the middle of the center patch
+</pre>See also <a href="#face-3d">face</a>
       </div>
       <div class="dict_entry" id="tilt-cmds">
         <h3>
@@ -1178,10 +1178,10 @@
           turtle).
         </p>
         <pre>
-          ;; suppose I have 40 turtles at the origin
-          show [count turtles-at 0 0 0] of turtle 0
-          =&gt; 40
-        </pre>
+;; suppose I have 40 turtles at the origin
+show [count turtles-at 0 0 0] of turtle 0
+=&gt; 40
+</pre>
       </div>
       <div class="dict_entry" id="world-depth">
         <h3>

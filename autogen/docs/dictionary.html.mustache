@@ -864,11 +864,11 @@
           Reports the absolute value of <i>number</i>.
         </p>
         <pre>
-          show abs -7
-          =&gt; 7
-          show abs 5
-          =&gt; 5
-        </pre>
+show abs -7
+=&gt; 7
+show abs 5
+=&gt; 5
+</pre>
       </div>
       <div class="dict_entry" id="acos">
         <h3>
@@ -903,9 +903,9 @@
           true or false), otherwise an error occurs.
         </p>
         <pre>
-          if all? turtles [color = red]
-          [ show &quot;every turtle is red!&quot; ]
-        </pre>
+if all? turtles [color = red]
+[ show &quot;every turtle is red!&quot; ]
+</pre>
         <p>
           See also <a href="#any">any?</a>.
         </p>
@@ -926,10 +926,10 @@
           will not be run (since it can't affect the result).
         </p>
         <pre>
-          if (pxcor &gt; 0) and (pycor &gt; 0)
-          [ set pcolor blue ]  ;; the upper-right quadrant of
-          ;; patches turn blue
-        </pre>
+if (pxcor &gt; 0) and (pycor &gt; 0)
+[ set pcolor blue ]  ;; the upper-right quadrant of
+;; patches turn blue
+</pre>
       </div>
       <div class="dict_entry" id="any">
         <h3>
@@ -946,9 +946,9 @@
           efficient (and arguably more readable).
         </p>
         <pre>
-          if any? turtles with [color = red]
-          [ show &quot;at least one turtle is red!&quot; ]
-        </pre>
+if any? turtles with [color = red]
+[ show &quot;at least one turtle is red!&quot; ]
+</pre>
         <p>
           Note: nobody is not an agentset. You only get nobody back in
           situations where you were expecting a single agent, not a whole
@@ -979,11 +979,11 @@
           color space does not include all possible colors.
         </p>
         <pre>
-          show approximate-hsb 0 0 0
-          =&gt; 0  ;; (black)
-          show approximate-hsb 180 57.143 76.863
-          =&gt; 85 ;; (cyan)
-        </pre>
+show approximate-hsb 0 0 0
+=&gt; 0  ;; (black)
+show approximate-hsb 180 57.143 76.863
+=&gt; 85 ;; (cyan)
+</pre>
         <p>
           See also <a href="#extract-hsb">extract-hsb</a>, <a href="#approximate-rgb">approximate-rgb</a>, <a href="#extract-rgb">extract-rgb</a>.
         </p>
@@ -1010,11 +1010,11 @@
           difficult to characterize in RGB terms.)
         </p>
         <pre>
-          show approximate-rgb 0 0 0
-          =&gt; 0  ;; black
-          show approximate-rgb 0 255 255
-          =&gt; 85.2 ;; cyan
-        </pre>
+show approximate-rgb 0 0 0
+=&gt; 0  ;; black
+show approximate-rgb 0 255 255
+=&gt; 85.2 ;; cyan
+</pre>
         <p>
           See also <a href="#extract-rgb">extract-rgb</a>, <a href="#approximate-hsb">approximate-hsb</a>, and <a href="#extract-hsb">extract-hsb</a>.
         </p>
@@ -1076,11 +1076,11 @@
           should add parentheses.
         </p>
         <pre>
-          show 5 * 6 + 6 / 3
-          =&gt; 32
-          show 5 * (6 + 6) / 3
-          =&gt; 20
-        </pre>
+show 5 * 6 + 6 / 3
+=&gt; 32
+show 5 * (6 + 6) / 3
+=&gt; 20
+</pre>
         <p>
           Many extension objects may be tested for equality and inequality
           using = and !=.
@@ -1118,13 +1118,13 @@
           for more information.
         </p>
         <pre>
-          ask turtles [ fd 1 ]
-          ;; all turtles move forward one step
-          ask patches [ set pcolor red ]
-          ;; all patches turn red
-          ask turtle 4 [ rt 90 ]
-          ;; only the turtle with id 4 turns right
-        </pre>
+ask turtles [ fd 1 ]
+;; all turtles move forward one step
+ask patches [ set pcolor red ]
+;; all patches turn red
+ask turtle 4 [ rt 90 ]
+;; only the turtle with id 4 turns right
+</pre>
         <p>
           Note: only the observer can ask all turtles or all patches. This
           prevents you from inadvertently having all turtles ask all turtles
@@ -1186,11 +1186,11 @@
           under the turtle.
         </p>
         <pre>
-          ask turtles at-points [[2 4] [1 2] [10 15]]
-          [ fd 1 ]  ;; only the turtles on the patches at the
-          ;; coordinates (2,4), (1,2) and (10,15),
-          ;; relative to the caller, move
-        </pre>
+ask turtles at-points [[2 4] [1 2] [10 15]]
+[ fd 1 ]  ;; only the turtles on the patches at the
+;; coordinates (2,4), (1,2) and (10,15),
+;; relative to the caller, move
+</pre>
       </div>
       <div class="dict_entry" id="atan">
         <h3>
@@ -1216,13 +1216,13 @@
           reports 270; if x is zero, you get an error.
         </p>
         <pre>
-          show atan 1 -1
-          =&gt; 135
-          show atan -1 1
-          =&gt; 315
-          crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
-          =&gt; 30
-        </pre>
+show atan 1 -1
+=&gt; 135
+show atan -1 1
+=&gt; 315
+crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
+=&gt; 30
+</pre>
         <p>
           In the final example, note that the result of <code>atan</code> equals
           the turtle's heading.
@@ -1233,10 +1233,10 @@
           helpful:
         </p>
         <pre>
-          to-report heading-to-angle [ h ]
-          report (90 - h) mod 360
-          end
-        </pre>
+to-report heading-to-angle [ h ]
+report (90 - h) mod 360
+end
+</pre>
       </div>
       <div class="dict_entry" id="autoplot">
         <h3>
@@ -1312,13 +1312,13 @@
           Reports a list of the 14 basic NetLogo hues.
         </p>
         <pre>
-          print base-colors
-          =&gt; [5 15 25 35 45 55 65 75 85 95 105 115 125 135]
-          ask turtles [ set color one-of base-colors ]
-          ;; each turtle turns a random base color
-          ask turtles [ set color one-of remove gray base-colors ]
-          ;; each turtle turns a random base color except for gray
-        </pre>
+print base-colors
+=&gt; [5 15 25 35 45 55 65 75 85 95 105 115 125 135]
+ask turtles [ set color one-of base-colors ]
+;; each turtle turns a random base color
+ask turtles [ set color one-of remove gray base-colors ]
+;; each turtle turns a random base color except for gray
+</pre>
       </div>
       <div class="dict_entry" id="beep">
         <h3>
@@ -1336,12 +1336,12 @@
           Example:
         </p>
         <pre>
-          beep                       ;; emits one beep
-          repeat 3 [ beep ]          ;; emits 3 beeps at once,
-          ;; so you only hear one sound
-          repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
-          ;; separated by 1/10th of a second
-        </pre>
+beep                       ;; emits one beep
+repeat 3 [ beep ]          ;; emits 3 beeps at once,
+;; so you only hear one sound
+repeat 3 [ beep wait 0.1 ] ;; produces 3 beeps in succession,
+;; separated by 1/10th of a second
+</pre>
         <p>
           When running headless, this command has no effect.
         </p>
@@ -1387,12 +1387,12 @@
           Reports the agentset of the 2 nodes connected by this link.
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [ create-link-with turtle 1 ]
-          ask link 0 1 [
-          ask both-ends [ set color red ] ;; turtles 0 and 1 both turn red
-          ]
-        </pre>
+crt 2
+ask turtle 0 [ create-link-with turtle 1 ]
+ask link 0 1 [
+ask both-ends [ set color red ] ;; turtles 0 and 1 both turn red
+]
+</pre>
       </div>
       <div class="dict_entry" id="breedvar">
         <h3>
@@ -1421,18 +1421,18 @@
           Example:
         </p>
         <pre>
-          breed [cats cat]
-          breed [dogs dog]
-          ;; turtle code:
-          if breed = cats [ show &quot;meow!&quot; ]
-          set breed dogs
-          show &quot;woof!&quot;
-        </pre>
+breed [cats cat]
+breed [dogs dog]
+;; turtle code:
+if breed = cats [ show &quot;meow!&quot; ]
+set breed dogs
+show &quot;woof!&quot;
+</pre>
         <pre>
-          directed-link-breed [ roads road ]
-          ;; link code
-          if breed = roads [ set color gray ]
-        </pre>
+directed-link-breed [ roads road ]
+;; link code
+if breed = roads [ set color gray ]
+</pre>
       </div>
       <div class="dict_entry" id="breed">
         <h3>
@@ -1460,25 +1460,25 @@
           commands to only the turtles of a particular breed.
         </p>
         <pre>
-          breed [mice mouse]
-          breed [frogs frog]
-          to setup
-          clear-all
-          create-mice 50
-          ask mice [ set color white ]
-          create-frogs 50
-          ask frogs [ set color green ]
-          show [breed] of one-of mice    ;; prints mice
-          show [breed] of one-of frogs   ;; prints frogs
-          end
+breed [mice mouse]
+breed [frogs frog]
+to setup
+clear-all
+create-mice 50
+ask mice [ set color white ]
+create-frogs 50
+ask frogs [ set color green ]
+show [breed] of one-of mice    ;; prints mice
+show [breed] of one-of frogs   ;; prints frogs
+end
 
-          show mouse 1
-          ;; prints (mouse 1)
-          show frog 51
-          ;; prints (frog 51)
-          show turtle 51
-          ;; prints (frog 51)
-        </pre>
+show mouse 1
+;; prints (mouse 1)
+show frog 51
+;; prints (frog 51)
+show turtle 51
+;; prints (frog 51)
+</pre>
         <p>
           See also <a href="#globals">globals</a>, <a href="#patches-own">patches-own</a>, <a href="#turtles-own">turtles-own</a>, <a href="#turtles-own"><i>&lt;breeds&gt;</i>-own</a>, <a href="#create-turtles">create-<i>&lt;breeds&gt;</i></a>, <a href="#turtles-at"><i>&lt;breeds&gt;</i>-at</a>, <a href="#turtles-here"><i>&lt;breeds&gt;</i>-here</a>.
         </p>
@@ -1508,16 +1508,16 @@
           the first or last character of the original string.
         </p>
         <pre>
-          ;; mylist is [2 4 6 5 8 12]
-          set mylist but-first mylist
-          ;; mylist is now [4 6 5 8 12]
-          set mylist but-last mylist
-          ;; mylist is now [4 6 5 8]
-          show but-first &quot;string&quot;
-          ;; prints &quot;tring&quot;
-          show but-last &quot;string&quot;
-          ;; prints &quot;strin&quot;
-        </pre><!-- ======================================== -->
+;; mylist is [2 4 6 5 8 12]
+set mylist but-first mylist
+;; mylist is now [4 6 5 8 12]
+set mylist but-last mylist
+;; mylist is now [4 6 5 8]
+show but-first &quot;string&quot;
+;; prints &quot;tring&quot;
+show but-last &quot;string&quot;
+;; prints &quot;strin&quot;
+</pre><!-- ======================================== -->
       </div>
     </div>
     <h2 id="C">
@@ -1542,7 +1542,7 @@
         </p>
         <pre>
           patch-ahead <i>distance</i> != nobody
-        </pre>
+</pre>
       </div>
       <div class="dict_entry" id="carefully">
         <h3>
@@ -1562,11 +1562,11 @@
           out what error was suppressed in <i>commands1</i>. See <a href="#error-message">error-message</a>.
         </p>
         <pre>
-          carefully [ print one-of [1 2 3] ] [ print error-message ]
-          =&gt; 3
-          observer&gt; carefully [ print one-of [] ] [ print error-message ]
-          =&gt; ONE-OF got an empty list as input.
-        </pre>
+carefully [ print one-of [1 2 3] ] [ print error-message ]
+=&gt; 3
+observer&gt; carefully [ print one-of [] ] [ print error-message ]
+=&gt; ONE-OF got an empty list as input.
+</pre>
       </div>
       <div class="dict_entry" id="ceiling">
         <h3>
@@ -1580,11 +1580,11 @@
           <i>number</i>.
         </p>
         <pre>
-          show ceiling 4.5
-          =&gt; 5
-          show ceiling -4.5
-          =&gt; -4
-        </pre>
+show ceiling 4.5
+=&gt; 5
+show ceiling -4.5
+=&gt; -4
+</pre>
         <p>
           See also <a href="#floor">floor</a>, <a href="#round">round</a>,
           <a href="#precision">precision</a>.
@@ -1788,9 +1788,9 @@
         in degrees.
       </p>
       <pre>
-        show cos 180
-        =&gt; -1
-      </pre>
+show cos 180
+=&gt; -1
+</pre>
     </div>
     <div class="dict_entry" id="count">
       <h3>
@@ -1803,11 +1803,11 @@
         Reports the number of agents in the given agentset.
       </p>
       <pre>
-        show count turtles
-        ;; prints the total number of turtles
-        show count patches with [pcolor = red]
-        ;; prints the total number of red patches
-      </pre>
+show count turtles
+;; prints the total number of turtles
+show count patches with [pcolor = red]
+;; prints the total number of red patches
+</pre>
     </div>
     <div class="dict_entry" id="create-ordered-turtles">
       <h3>
@@ -1837,8 +1837,8 @@
         run one at a time, in random order.)
       </p>
       <pre>
-        cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
-      </pre>
+cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
+</pre>
     </div>
     <div class="dict_entry" id="create-link">
       <h3>
@@ -1913,37 +1913,37 @@
         to itself you get a runtime error.
       </p>
       <pre>
-        to setup
-        clear-all
-        create-turtles 5
-        ;; turtle 1 creates links with all other turtles
-        ;; the link between the turtle and itself is ignored
-        ask turtle 0 [ create-links-with other turtles ]
-        show count links ;; shows 4
-        ;; this does nothing since the link already exists
-        ask turtle 0 [ create-link-with turtle 1 ]
-        show count links ;; shows 4 since the previous link already existed
-        ask turtle 2 [ create-link-with turtle 1 ]
-        show count links ;; shows 5
-        end
-      </pre>
+to setup
+clear-all
+create-turtles 5
+;; turtle 1 creates links with all other turtles
+;; the link between the turtle and itself is ignored
+ask turtle 0 [ create-links-with other turtles ]
+show count links ;; shows 4
+;; this does nothing since the link already exists
+ask turtle 0 [ create-link-with turtle 1 ]
+show count links ;; shows 4 since the previous link already existed
+ask turtle 2 [ create-link-with turtle 1 ]
+show count links ;; shows 5
+end
+</pre>
       <pre>
-        directed-link-breed [red-links red-link]
-        undirected-link-breed [blue-links blue-link]
+directed-link-breed [red-links red-link]
+undirected-link-breed [blue-links blue-link]
 
-        to setup
-        clear-all
-        create-turtles 5
-        ;; create links in both directions between turtle 0
-        ;; and all other turtles
-        ask turtle 0 [ create-red-links-to other turtles ]
-        ask turtle 0 [ create-red-links-from other turtles ]
-        show count links ;; shows 8
-        ;; now create undirected links between turtle 0 and other turtles
-        ask turtle 0 [ create-blue-links-with other turtles ]
-        show count links ;; shows 12
-        end
-      </pre>
+to setup
+clear-all
+create-turtles 5
+;; create links in both directions between turtle 0
+;; and all other turtles
+ask turtle 0 [ create-red-links-to other turtles ]
+ask turtle 0 [ create-red-links-from other turtles ]
+show count links ;; shows 8
+;; now create undirected links between turtle 0 and other turtles
+ask turtle 0 [ create-blue-links-with other turtles ]
+show count links ;; shows 12
+end
+</pre>
     </div>
     <div class="dict_entry" id="create-turtles">
       <h3>
@@ -1973,17 +1973,17 @@
         run one at a time, in random order.)
       </p>
       <pre>
-        crt 100 [ fd 10 ]     ;; makes a randomly spaced circle
-      </pre>
+crt 100 [ fd 10 ]     ;; makes a randomly spaced circle
+</pre>
       <pre>
-        breed [canaries canary]
-        breed [snakes snake]
-        to setup
-        clear-all
-        create-canaries 50 [ set color yellow ]
-        create-snakes 50 [ set color green ]
-        end
-      </pre>
+breed [canaries canary]
+breed [snakes snake]
+to setup
+clear-all
+create-canaries 50 [ set color yellow ]
+create-snakes 50 [ set color green ]
+end
+</pre>
       <p>
         See also <a href="#hatch">hatch</a>, <a href="#sprout">sprout</a>.
       </p>
@@ -2044,9 +2044,9 @@
           capabilities of the underlying Java Virtual Machine.)
         </p>
         <pre>
-          show date-and-time
-          =&gt; &quot;01:19:36.685 PM 19-Sep-2002&quot;
-        </pre>
+show date-and-time
+=&gt; &quot;01:19:36.685 PM 19-Sep-2002&quot;
+</pre>
       </div>
       <div class="dict_entry" id="die">
         <h3>
@@ -2060,11 +2060,11 @@
           The turtle or link dies.
         </p>
         <pre>
-          if xcor &gt; 20 [ die ]
-          ;; all turtles with xcor greater than 20 die
-          ask links with [color = blue] [ die ]
-          ;; all the blue links will die
-        </pre>
+if xcor &gt; 20 [ die ]
+;; all turtles with xcor greater than 20 die
+ask links with [color = blue] [ die ]
+;; all the blue links will die
+</pre>
         <p>
           A dead agent ceases to exist. The effects of this include:
         </p>
@@ -2116,12 +2116,12 @@
           the patches at once -- patch commands act on individual patches.)
         </p>
         <pre>
-          diffuse chemical 0.5
-          ;; each patch diffuses 50% of its variable
-          ;; chemical to its neighboring 8 patches. Thus,
-          ;; each patch gets 1/8 of 50% of the chemical
-          ;; from each neighboring patch.)
-        </pre>
+diffuse chemical 0.5
+;; each patch diffuses 50% of its variable
+;; chemical to its neighboring 8 patches. Thus,
+;; each patch gets 1/8 of 50% of the chemical
+;; from each neighboring patch.)
+</pre>
       </div>
       <div class="dict_entry" id="diffuse4">
         <h3>
@@ -2136,12 +2136,12 @@
           the north, south, east, and west), not to the diagonal neighbors.
         </p>
         <pre>
-          diffuse4 chemical 0.5
-          ;; each patch diffuses 50% of its variable
-          ;; chemical to its neighboring 4 patches. Thus,
-          ;; each patch gets 1/4 of 50% of the chemical
-          ;; from each neighboring patch.)
-        </pre>
+diffuse4 chemical 0.5
+;; each patch diffuses 50% of its variable
+;; chemical to its neighboring 4 patches. Thus,
+;; each patch gets 1/4 of 50% of the chemical
+;; from each neighboring patch.)
+</pre>
       </div>
       <div class="dict_entry" id="directed-link-breed">
         <h3>
@@ -2173,22 +2173,22 @@
           commands to only the links of a particular breed.
         </p>
         <pre>
-          directed-link-breed [streets street]
-          directed-link-breed [highways highway]
-          to setup
-          clear-all
-          crt 2
-          ;; create a link from turtle 0 to turtle 1
-          ask turtle 0 [ create-street-to turtle 1 ]
-          ;; create a link from turtle 1 to turtle 0
-          ask turtle 0 [ create-highway-from turtle 1 ]
-          end
+directed-link-breed [streets street]
+directed-link-breed [highways highway]
+to setup
+clear-all
+crt 2
+;; create a link from turtle 0 to turtle 1
+ask turtle 0 [ create-street-to turtle 1 ]
+;; create a link from turtle 1 to turtle 0
+ask turtle 0 [ create-highway-from turtle 1 ]
+end
 
-          ask turtle 0 [ show one-of my-in-links ]
-          ;; prints (street 0 1)
-          ask turtle 0 [ show one-of my-out-links ]
-          ;; prints (highway 1 0)
-        </pre>
+ask turtle 0 [ show one-of my-in-links ]
+;; prints (street 0 1)
+ask turtle 0 [ show one-of my-out-links ]
+;; prints (highway 1 0)
+</pre>
         <p>
           See also <a href="#breed">breed</a>, <a href="#undirected-link-breed">undirected-link-breed</a>
         </p>
@@ -2210,13 +2210,13 @@
           updates were suspended by that command, they will resume.
         </p>
         <pre>
-          no-display
-          ask turtles [ jump 10 set color blue set size 5 ]
-          display
-          ;; turtles move, change color, and grow, with none of
-          ;; their intermediate states visible to the user, only
-          ;; their final state
-        </pre>
+no-display
+ask turtles [ jump 10 set color blue set size 5 ]
+display
+;; turtles move, change color, and grow, with none of
+;; their intermediate states visible to the user, only
+;; their final state
+</pre>
         <p>
           Even if no-display was not used, &quot;display&quot; can still be
           useful, because ordinarily NetLogo is free to skip some view
@@ -2225,12 +2225,12 @@
           changes have taken place in the world are visible to the user.
         </p>
         <pre>
-          ask turtles [ set color red ]
-          display
-          ask turtles [ set color blue]
-          ;; turtles turn red, then blue; use of &quot;display&quot; forces
-          ;; red turtles to appear briefly
-        </pre>
+ask turtles [ set color red ]
+display
+ask turtles [ set color blue]
+;; turtles turn red, then blue; use of &quot;display&quot; forces
+;; red turtles to appear briefly
+</pre>
         <p>
           Note that display and no-display operate independently of the
           switch in the view control strip that freezes the view.
@@ -2257,9 +2257,9 @@
           wrapped distance is shorter.
         </p>
         <pre>
-          ask turtles [ show max-one-of turtles [distance myself] ]
-          ;; each turtle prints the turtle farthest from itself
-        </pre>
+ask turtles [ show max-one-of turtles [distance myself] ]
+;; each turtle prints the turtle farthest from itself
+</pre>
       </div>
       <div class="dict_entry" id="distancexy">
         <h3>
@@ -2280,11 +2280,11 @@
           distance is shorter.
         </p>
         <pre>
-          if (distancexy 0 0) &gt; 10
-          [ set color green ]
-          ;; all turtles more than 10 units from
-          ;; the center of the world turn green.
-        </pre>
+if (distancexy 0 0) &gt; 10
+[ set color green ]
+;; all turtles more than 10 units from
+;; the center of the world turn green.
+</pre>
       </div>
       <div class="dict_entry" id="downhill">
         <h3>
@@ -2318,7 +2318,7 @@
           face p
           move-to p
           ]
-        </pre>
+</pre>
         <p>
           Note that the turtle always ends up on a patch center and has a
           heading that is a multiple of 45 (downhill) or 90 (downhill4).
@@ -2402,12 +2402,12 @@
           lower who number. You cannot set end1.
         </p>
         <pre>
-          crt 2
-          ask turtle 0
-          [ create-link-to turtle 1 ]
-          ask links
-          [ show end1 ] ;; shows turtle 0
-        </pre>
+crt 2
+ask turtle 0
+[ create-link-to turtle 1 ]
+ask links
+[ show end1 ] ;; shows turtle 0
+</pre>
       </div>
       <div class="dict_entry" id="end2">
         <h3>
@@ -2424,12 +2424,12 @@
           the higher who number. You cannot set end2.
         </p>
         <pre>
-          crt 2
-          ask turtle 1
-          [ create-link-with turtle 0 ]
-          ask links
-          [ show end2 ] ;; shows turtle 1
-        </pre>
+crt 2
+ask turtle 1
+[ create-link-with turtle 0 ]
+ask links
+[ show end2 ] ;; shows turtle 1
+</pre>
       </div>
       <div class="dict_entry" id="error">
         <h3>
@@ -2495,11 +2495,11 @@
           below.
         </p>
         <pre>
-          every 0.5 [ ask turtles [ fd 1 ] ]
-          ;; twice a second the turtles will move forward 1
-          every 2 [ set index index + 1 ]
-          ;; every 2 seconds index is incremented
-        </pre>
+every 0.5 [ ask turtles [ fd 1 ] ]
+;; twice a second the turtles will move forward 1
+every 2 [ set index index + 1 ]
+;; every 2 seconds index is incremented
+</pre>
         <p>
           See also <a href="#wait">wait</a>.
         </p>
@@ -2594,26 +2594,26 @@
           directly from NetLogo's File menu.
         </p>
         <pre>
-          export-world &quot;fire.csv&quot;
-          ;; exports the state of the model to the file fire.csv
-          ;; located in the NetLogo folder
-          export-plot &quot;Temperature&quot; &quot;c:/My Documents/plot.csv&quot;
-          ;; exports the plot named
-          ;; &quot;Temperature&quot; to the file plot.csv located in
-          ;; the C:\My Documents folder
-          export-all-plots &quot;c:/My Documents/plots.csv&quot;
-          ;; exports all plots to the file plots.csv
-          ;; located in the C:\My Documents folder
-        </pre>
+export-world &quot;fire.csv&quot;
+;; exports the state of the model to the file fire.csv
+;; located in the NetLogo folder
+export-plot &quot;Temperature&quot; &quot;c:/My Documents/plot.csv&quot;
+;; exports the plot named
+;; &quot;Temperature&quot; to the file plot.csv located in
+;; the C:\My Documents folder
+export-all-plots &quot;c:/My Documents/plots.csv&quot;
+;; exports all plots to the file plots.csv
+;; located in the C:\My Documents folder
+</pre>
         <p>
           If the file already exists, it is overwritten. To avoid this you
           may wish to use some method of generating fresh names. Examples:
         </p>
         <pre>
-          export-world user-new-file
-          export-world (word &quot;results &quot; date-and-time &quot;.csv&quot;) ;; Colon characters in the time cause errors on Windows
-          export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
-        </pre>
+export-world user-new-file
+export-world (word &quot;results &quot; date-and-time &quot;.csv&quot;) ;; Colon characters in the time cause errors on Windows
+export-world (word &quot;results &quot; random-float 1.0 &quot;.csv&quot;)
+</pre>
       </div>
       <div class="dict_entry" id="extensions">
         <h3>
@@ -2647,13 +2647,13 @@
           of red, green, and blue.
         </p>
         <pre>
-          show extract-hsb cyan
-          =&gt; [180 57.143 76.863]
-          show extract-hsb red
-          =&gt; [3.103 80.93 84.314]
-          show extract-hsb [255 0 0]
-          =&gt; [0 100 100]
-        </pre>
+show extract-hsb cyan
+=&gt; [180 57.143 76.863]
+show extract-hsb red
+=&gt; [3.103 80.93 84.314]
+show extract-hsb [255 0 0]
+=&gt; [0 100 100]
+</pre>
         <p>
           See also <a href="#approximate-hsb">approximate-hsb</a>, <a href="#approximate-rgb">approximate-rgb</a>, <a href="#extract-rgb">extract-rgb</a>.
         </p>
@@ -2672,11 +2672,11 @@
           itself.
         </p>
         <pre>
-          show extract-rgb red
-          =&gt; [215 50 41]
-          show extract-rgb cyan
-          =&gt; [84 196 196]
-        </pre>
+show extract-rgb red
+=&gt; [215 50 41]
+show extract-rgb cyan
+=&gt; [84 196 196]
+</pre>
         <p>
           See also <a href="#approximate-rgb">approximate-rgb</a>, <a href="#approximate-hsb">approximate-hsb</a>, <a href="#extract-hsb">extract-hsb</a>.
         </p>
@@ -2740,14 +2740,14 @@
           the current file (that was opened previously with <a href="#file-open">file-open</a>). Otherwise, reports false.
         </p>
         <pre>
-          file-open &quot;my-file.txt&quot;
-          print file-at-end?
-          =&gt; false ;; Can still read in more characters
-          print file-read-line
-          =&gt; This is the last line in file
-          print file-at-end?
-          =&gt; true ;; We reached the end of the file
-        </pre>
+file-open &quot;my-file.txt&quot;
+print file-at-end?
+=&gt; false ;; Can still read in more characters
+print file-read-line
+=&gt; This is the last line in file
+print file-at-end?
+=&gt; true ;; We reached the end of the file
+</pre>
         <p>
           See also <a href="#file-open">file-open</a>, <a href="#file-close-all">file-close-all</a>.
         </p>
@@ -2888,13 +2888,13 @@
           to the model's directory.
         </p>
         <pre>
-          file-open &quot;my-file-in.txt&quot;
-          print file-read-line
-          =&gt; First line in file ;; File is in reading mode
-          file-open &quot;C:\\NetLogo\\my-file-out.txt&quot;
-          ;; assuming Windows machine
-          file-print &quot;Hello World&quot; ;; File is in writing mode
-        </pre>
+file-open &quot;my-file-in.txt&quot;
+print file-read-line
+=&gt; First line in file ;; File is in reading mode
+file-open &quot;C:\\NetLogo\\my-file-out.txt&quot;
+;; assuming Windows machine
+file-print &quot;Hello World&quot; ;; File is in writing mode
+</pre>
         <p>
           Opening a file does not close previously opened files. You can use
           <code>file-open</code> to switch back and forth between multiple open
@@ -2956,14 +2956,14 @@
           of the file.
         </p>
         <pre>
-          file-open &quot;my-file.data&quot;
-          print file-read + 5
-          ;; Next value is the number 1
-          =&gt; 6
-          print length file-read
-          ;; Next value is the list [1 2 3 4]
-          =&gt; 4
-        </pre>
+file-open &quot;my-file.data&quot;
+print file-read + 5
+;; Next value is the number 1
+=&gt; 6
+print length file-read
+;; Next value is the list [1 2 3 4]
+=&gt; 4
+</pre>
         <p>
           See also <a href="#file-open">file-open</a> and <a href="#file-write">file-write</a>.
         </p>
@@ -2991,11 +2991,11 @@
           of the file.
         </p>
         <pre>
-          file-open &quot;my-file.txt&quot;
-          print file-read-characters 5
-          ;; Current line in file is &quot;Hello World&quot;
-          =&gt; Hello
-        </pre>
+file-open &quot;my-file.txt&quot;
+print file-read-characters 5
+;; Current line in file is &quot;Hello World&quot;
+=&gt; Hello
+</pre>
         <p>
           See also <a href="#file-open">file-open</a>.
         </p>
@@ -3020,10 +3020,10 @@
           of the file.
         </p>
         <pre>
-          file-open &quot;my-file.txt&quot;
-          print file-read-line
-          =&gt; Hello World
-        </pre>
+file-open &quot;my-file.txt&quot;
+print file-read-line
+=&gt; Hello World
+</pre>
         <p>
           See also <a href="#file-open">file-open</a>.
         </p>
@@ -3100,10 +3100,10 @@
           be called before this command can be used.
         </p>
         <pre>
-          file-open &quot;locations.txt&quot;
-          ask turtles
-          [ file-write xcor file-write ycor ]
-        </pre>
+file-open &quot;locations.txt&quot;
+ask turtles
+[ file-write xcor file-write ycor ]
+</pre>
         <p>
           See also <a href="#file-print">file-print</a>, <a href="#file-show">file-show</a>,
           <a href="#file-type">file-type</a>,
@@ -3124,13 +3124,13 @@
           name of a reporter.
         </p>
         <pre>
-          show filter is-number? [1 &quot;2&quot; 3]
-          =&gt; [1 3]
-          show filter [ i -&gt; i &lt; 3 ] [1 3 2]
-          =&gt; [1 2]
-          show filter [ s -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
-          =&gt; [&quot;hi&quot; &quot;everyone&quot;]
-        </pre>
+show filter is-number? [1 &quot;2&quot; 3]
+=&gt; [1 3]
+show filter [ i -&gt; i &lt; 3 ] [1 3 2]
+=&gt; [1 2]
+show filter [ s -&gt; first s != &quot;t&quot; ] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
+=&gt; [&quot;hi&quot; &quot;everyone&quot;]
+</pre>
         <p>
           See also <a href="#map">map</a>, <a href="#reduce">reduce</a>,
           <a href="#arrow">-> (anonymous procedure)</a>.
@@ -3163,11 +3163,11 @@
           Reports the largest integer less than or equal to <i>number</i>.
         </p>
         <pre>
-          show floor 4.5
-          =&gt; 4
-          show floor -4.5
-          =&gt; -5
-        </pre>
+show floor 4.5
+=&gt; 4
+show floor -4.5
+=&gt; -5
+</pre>
         <p>
           See also <a href="#ceiling">ceiling</a>, <a href="#round">round</a>, <a href="#precision">precision</a>.
         </p>
@@ -3230,15 +3230,15 @@
           created with <a href="#arrow">-&gt;</a>.
         </p>
         <pre>
-          foreach [1.1 2.2 2.6] show
-          =&gt; 1.1
-          =&gt; 2.2
-          =&gt; 2.6
-          foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round x) ]
-          =&gt; 1.1 -&gt; 1
-          =&gt; 2.2 -&gt; 2
-          =&gt; 2.6 -&gt; 3
-        </pre>
+foreach [1.1 2.2 2.6] show
+=&gt; 1.1
+=&gt; 2.2
+=&gt; 2.6
+foreach [1.1 2.2 2.6] [ x -&gt; show (word x &quot; -&gt; &quot; round x) ]
+=&gt; 1.1 -&gt; 1
+=&gt; 2.2 -&gt; 2
+=&gt; 2.6 -&gt; 3
+</pre>
         <p>
           With multiple lists, runs <i>command</i> for each group of items
           from each list.
@@ -3249,16 +3249,16 @@
           Some examples make this clearer:
         </p>
         <pre>
-          (foreach [1 2 3] [2 4 6]
-          [ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
-          =&gt; &quot;the sum is: 3&quot;
-          =&gt; &quot;the sum is: 6&quot;
-          =&gt; &quot;the sum is: 9&quot;
-          (foreach list (turtle 1) (turtle 2) [3 4]
-          [ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
-          ;; turtle 1 moves forward 3 patches
-          ;; turtle 2 moves forward 4 patches
-        </pre>
+(foreach [1 2 3] [2 4 6]
+[ [a b] -&gt; show word &quot;the sum is: &quot; (a + b) ])
+=&gt; &quot;the sum is: 3&quot;
+=&gt; &quot;the sum is: 6&quot;
+=&gt; &quot;the sum is: 9&quot;
+(foreach list (turtle 1) (turtle 2) [3 4]
+[ [the-turtle num-steps] -&gt; ask the-turtle [ fd num-steps ] ])
+;; turtle 1 moves forward 3 patches
+;; turtle 2 moves forward 4 patches
+</pre>
         <p>
           See also <a href="#map">map</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
         </p>
@@ -3302,10 +3302,10 @@
           list.
         </p>
         <pre>
-          ;; suppose mylist is [5 7 10]
-          set mylist fput 2 mylist
-          ;; mylist is now [2 5 7 10]
-        </pre>
+;; suppose mylist is [5 7 10]
+set mylist fput 2 mylist
+;; mylist is now [2 5 7 10]
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="G">
@@ -3365,13 +3365,13 @@
           turtles are the same breed as their parent.
         </p>
         <pre>
-          hatch 1 [ lt 45 fd 1 ]
-          ;; this turtle creates one new turtle,
-          ;; and the child turns and moves away
-          hatch-sheep 1 [ set color black ]
-          ;; this turtle creates a new turtle
-          ;; of the sheep breed
-        </pre>
+hatch 1 [ lt 45 fd 1 ]
+;; this turtle creates one new turtle,
+;; and the child turns and moves away
+hatch-sheep 1 [ set color black ]
+;; this turtle creates a new turtle
+;; of the sheep breed
+</pre>
         <p>
           See also <a href="#create-turtles">create-turtles</a>, <a href="#sprout">sprout</a>.
         </p>
@@ -3398,9 +3398,9 @@
           Example:
         </p>
         <pre>
-          set heading 45      ;; turtle is now facing northeast
-          set heading heading + 10 ;; same effect as &quot;rt 10&quot;
-        </pre>
+set heading 45      ;; turtle is now facing northeast
+set heading heading + 10 ;; same effect as &quot;rt 10&quot;
+</pre>
       </div>
       <div class="dict_entry" id="hidden">
         <h3>
@@ -3424,10 +3424,10 @@
           Example:
         </p>
         <pre>
-          set hidden? not hidden?
-          ;; if turtle was showing, it hides, and if it was hiding,
-          ;; it reappears
-        </pre>
+set hidden? not hidden?
+;; if turtle was showing, it hides, and if it was hiding,
+;; it reappears
+</pre>
       </div>
       <div class="dict_entry" id="hide-link">
         <h3>
@@ -3508,10 +3508,10 @@
           fall outside of the histogram's range.
         </p>
         <pre>
-          histogram [color] of turtles
-          ;; draws a histogram showing how many turtles there are
-          ;; of each color
-        </pre>
+histogram [color] of turtles
+;; draws a histogram showing how many turtles there are
+;; of each color
+</pre>
       </div>
       <div class="dict_entry" id="home">
         <h3>
@@ -3900,8 +3900,8 @@
           turtle:
         </p>
         <pre>
-          ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
-        </pre>
+ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
+</pre>
         <p>
           In this example assume that there is a turtles-own variable
           client-name which is associated with a logged in client, and all
@@ -3957,10 +3957,10 @@
           some agents may run <i>commands</i> and others don't.
         </p>
         <pre>
-          if xcor &gt; 0[ set color blue ]
-          ;; turtles in the right half of the world
-          ;; turn blue
-        </pre>
+if xcor &gt; 0[ set color blue ]
+;; turtles in the right half of the world
+;; turn blue
+</pre>
         <p>
           See also <a href="#ifelse">ifelse</a>, <a href="#ifelse-value">ifelse-value</a>.
         </p>
@@ -3985,41 +3985,41 @@
           you do not need to surround the entire <i>ifelse</i> primitive and its blocks in parentheses.
         </p>
         <pre>
-          ask patches
-          [ ifelse pxcor &gt; 0
-          [ set pcolor blue ]
-          [ set pcolor red ] ]
-          ;; the left half of the world turns red and
-          ;; the right half turns blue
-        </pre>
+ask patches
+[ ifelse pxcor &gt; 0
+[ set pcolor blue ]
+[ set pcolor red ] ]
+;; the left half of the world turns red and
+;; the right half turns blue
+</pre>
         <p>
           The reporters may report a different value for different agents, so
           some agents may run different command blocks.  When using more than one <i>reporter</i> you
           must surround the whole <i>ifelse</i> primitive and its blocks in parentheses.
         </p>
         <pre>
-          ask patches [
-          let choice random 4
-          (ifelse
-          choice = 0 [
-          set pcolor red
-          set plabel "r"
-          ]
-          choice = 1 [
-          set pcolor blue
-          set plabel "b"
-          ]
-          choice = 2 [
-          set pcolor green
-          set plabel "g"
-          ]
-          ; elsecommands
-          [
-          set pcolor yellow
-          set plabel "y"
-          ])
-          ]
-        </pre>
+ask patches [
+let choice random 4
+(ifelse
+choice = 0 [
+set pcolor red
+set plabel "r"
+]
+choice = 1 [
+set pcolor blue
+set plabel "b"
+]
+choice = 2 [
+set pcolor green
+set plabel "g"
+]
+; elsecommands
+[
+set pcolor yellow
+set plabel "y"
+])
+]
+</pre>
         <p>
           See also <a href="#if">if</a>, <a href="#ifelse-value">ifelse-value</a>.
         </p>
@@ -4051,43 +4051,43 @@
           not allowed.
         </p>
         <pre>
-          ask patches [
-          set pcolor ifelse-value (pxcor &gt; 0) [blue] [red]
-          ]
-          ;; the left half of the world turns red and
-          ;; the right half turns blue
-          show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
-          =&gt; [0 0 0 0 0 1 1 1 1 1]
-          show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
-          [1 3 2 5 3 8 3 2 1]
-          =&gt; 8
-        </pre>
+ask patches [
+set pcolor ifelse-value (pxcor &gt; 0) [blue] [red]
+]
+;; the left half of the world turns red and
+;; the right half turns blue
+show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
+=&gt; [0 0 0 0 0 1 1 1 1 1]
+show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
+[1 3 2 5 3 8 3 2 1]
+=&gt; 8
+</pre>
         <p>
           When using more than one <i>tfreporter</i> you
           must surround the whole <i>ifelse-value</i> primitive and its blocks in parentheses.
         </p>
         <pre>
-          ask patches [
-          let choice random 4
-          set pcolor (ifelse-value
-          choice = 0 [ red ]
-          choice = 1 [ blue ]
-          choice = 2 [ green ]
-          [ yellow ])
-          ]
-        </pre>
+ask patches [
+let choice random 4
+set pcolor (ifelse-value
+choice = 0 [ red ]
+choice = 1 [ blue ]
+choice = 2 [ green ]
+[ yellow ])
+]
+</pre>
         <p>
           A runtime error can occur if there is no <i>elsereporter</i>.
         </p>
         <pre>
-          ask patches [
-          let x = 2
-          set pcolor (ifelse-value
-          x = 0 [ red ]
-          x = 1 [ blue ]
-          ; no final else reporter is given, and x is 2 so there will be a runtime error
-          )
-        </pre>
+ask patches [
+let x = 2
+set pcolor (ifelse-value
+x = 0 [ red ]
+x = 1 [ blue ]
+; no final else reporter is given, and x is 2 so there will be a runtime error
+)
+</pre>
         <p>
           See also <a href="#if">if</a>, <a href="#ifelse">ifelse</a>.
         </p>
@@ -4237,12 +4237,12 @@
           The distance to a patch is measured from the center of the patch.
         </p>
         <pre>
-          ask turtles
-          [ ask patches in-cone 3 60
-          [ set pcolor red ] ]
-          ;; each turtle makes a red &quot;splotch&quot; of patches in a 60 degree
-          ;; cone of radius 3 ahead of itself
-        </pre>
+ask turtles
+[ ask patches in-cone 3 60
+[ set pcolor red ] ]
+;; each turtle makes a red &quot;splotch&quot; of patches in a 60 degree
+;; cone of radius 3 ahead of itself
+</pre>
       </div>
       <div class="dict_entry" id="in-link-neighbor">
         <h3>
@@ -4261,17 +4261,17 @@
           <i>turtle</i> to the caller?"
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [
-          create-link-to turtle 1
-          show in-link-neighbor? turtle 1  ;; prints false
-          show out-link-neighbor? turtle 1 ;; prints true
-          ]
-          ask turtle 1 [
-          show in-link-neighbor? turtle 0  ;; prints true
-          show out-link-neighbor? turtle 0 ;; prints false
-          ]
-        </pre>
+crt 2
+ask turtle 0 [
+create-link-to turtle 1
+show in-link-neighbor? turtle 1  ;; prints false
+show out-link-neighbor? turtle 1 ;; prints true
+]
+ask turtle 1 [
+show in-link-neighbor? turtle 0  ;; prints true
+show out-link-neighbor? turtle 0 ;; prints false
+]
+</pre>
       </div>
       <div class="dict_entry" id="in-link-neighbors">
         <h3>
@@ -4290,10 +4290,10 @@
           turtles that can get to the caller using a link."
         </p>
         <pre>
-          crt 4
-          ask turtle 0 [ create-links-to other turtles ]
-          ask turtle 1 [ ask in-link-neighbors [ set color blue ] ] ;; turtle 0 turns blue
-        </pre>
+crt 4
+ask turtle 0 [ create-links-to other turtles ]
+ask turtle 1 [ ask in-link-neighbors [ set color blue ] ] ;; turtle 0 turns blue
+</pre>
       </div>
       <div class="dict_entry" id="in-link-from">
         <h3>
@@ -4313,11 +4313,11 @@
           to travel from <i>turtle</i> to the caller."
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [ create-link-to turtle 1 ]
-          ask turtle 1 [ show in-link-from turtle 0 ] ;; shows link 0 1
-          ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
-        </pre>
+crt 2
+ask turtle 0 [ create-link-to turtle 1 ]
+ask turtle 1 [ show in-link-from turtle 0 ] ;; shows link 0 1
+ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
+</pre>
         <p>
           See also: <a href="#out-link-to">out-link-to</a> <a href="#link-with">link-with</a>
         </p>
@@ -4339,14 +4339,14 @@
           The file names must be strings, for example:
         </p>
         <pre>
-          __includes [ &quot;utils.nls&quot; ]
-        </pre>
+__includes [ &quot;utils.nls&quot; ]
+</pre>
         <p>
           Or, for multiple files:
         </p>
         <pre>
-          __includes [ &quot;utils1.nls&quot; &quot;utils2.nls&quot; ]
-        </pre>
+__includes [ &quot;utils1.nls&quot; &quot;utils2.nls&quot; ]
+</pre>
       </div>
       <div class="dict_entry" id="in-radius">
         <h3>
@@ -4366,11 +4366,11 @@
           the patch.
         </p>
         <pre>
-          ask turtles
-          [ ask patches in-radius 3
-          [ set pcolor red ] ]
-          ;; each turtle makes a red &quot;splotch&quot; around itself
-        </pre>
+ask turtles
+[ ask patches in-radius 3
+[ set pcolor red ] ]
+;; each turtle makes a red &quot;splotch&quot; around itself
+</pre>
       </div>
 
       <div class="dict_entry" id="insert-item">
@@ -4391,11 +4391,11 @@
           are inserted at <i>index</i>.
         </p>
         <pre>
-          show insert-item 2 [2 7 4 5] 15
-          =&gt; [2 7 15 4 5]
-          show insert-item 2 &quot;cat&quot; &quot;re&quot;
-          =&gt; &quot;caret&quot;
-        </pre>
+show insert-item 2 [2 7 4 5] 15
+=&gt; [2 7 15 4 5]
+show insert-item 2 &quot;cat&quot; &quot;re&quot;
+=&gt; &quot;caret&quot;
+</pre>
       </div>
 
 
@@ -4410,12 +4410,12 @@
           Opens an agent monitor for the given agent (turtle or patch).
         </p>
         <pre>
-          inspect patch 2 4
-          ;; an agent monitor opens for that patch
-          inspect one-of sheep
-          ;; an agent monitor opens for a random turtle from
-          ;; the &quot;sheep&quot; breed
-        </pre>
+inspect patch 2 4
+;; an agent monitor opens for that patch
+inspect one-of sheep
+;; an agent monitor opens for a random turtle from
+;; the &quot;sheep&quot; breed
+</pre>
         <p>
           See <a href="#stop-inspecting">stop-inspecting</a> and <a href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>
         </p>
@@ -4432,11 +4432,11 @@
           discarded.
         </p>
         <pre>
-          show int 4.7
-          =&gt; 4
-          show int -3.5
-          =&gt; -3
-        </pre>
+show int 4.7
+=&gt; 4
+show int -3.5
+=&gt; -3
+</pre>
       </div>
       <div class="dict_entry" id="is-of-type">
         <h3>
@@ -4502,12 +4502,12 @@
           0, the second item is item 1, and so on.)
         </p>
         <pre>
-          ;; suppose mylist is [2 4 6 8 10]
-          show item 2 mylist
-          =&gt; 6
-          show item 3 &quot;my-shoe&quot;
-          =&gt; &quot;s&quot;
-        </pre>
+;; suppose mylist is [2 4 6 8 10]
+show item 2 mylist
+=&gt; 6
+show item 3 &quot;my-shoe&quot;
+=&gt; &quot;s&quot;
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="J">
@@ -4559,12 +4559,12 @@
         Example:
       </p>
       <pre>
-        ask turtles [ set label who ]
-        ;; all the turtles now are labeled with their
-        ;; who numbers
-        ask turtles [ set label &quot;&quot; ]
-        ;; all turtles now are not labeled
-      </pre>
+ask turtles [ set label who ]
+;; all the turtles now are labeled with their
+;; who numbers
+ask turtles [ set label &quot;&quot; ]
+;; all turtles now are not labeled
+</pre>
     </div>
     <div class="dict_entry" id="label-color">
       <h3>
@@ -4589,9 +4589,9 @@
         Example:
       </p>
       <pre>
-        ask turtles [ set label-color red ]
-        ;; all the turtles now have red labels
-      </pre>
+ask turtles [ set label-color red ]
+;; all the turtles now have red labels
+</pre>
     </div>
     <div class="dict_entry" id="last">
       <h3>
@@ -4633,13 +4633,13 @@
         non-turtles in the list are ignored.)
       </p>
       <pre>
-        ;; in random order
-        layout-circle turtles 10
-        ;; in order by who number
-        layout-circle sort turtles 10
-        ;; in order by size
-        layout-circle sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles 10
-      </pre>
+;; in random order
+layout-circle turtles 10
+;; in order by who number
+layout-circle sort turtles 10
+;; in order by size
+layout-circle sort-by [ [a b] -&gt; [size] of a &lt; [size] of b ] turtles 10
+</pre>
     </div>
     <div class="dict_entry" id="layout-radial">
       <h3>
@@ -4664,22 +4664,22 @@
         not always be pretty.
       </p>
       <pre>
-        to make-a-tree
-        set-default-shape turtles &quot;circle&quot;
-        crt 6
-        ask turtle 0 [
-        create-link-with turtle 1
-        create-link-with turtle 2
-        create-link-with turtle 3
-        ]
-        ask turtle 1 [
-        create-link-with turtle 4
-        create-link-with turtle 5
-        ]
-        ; do a radial tree layout, centered on turtle 0
-        layout-radial turtles links (turtle 0)
-        end
-      </pre>
+to make-a-tree
+set-default-shape turtles &quot;circle&quot;
+crt 6
+ask turtle 0 [
+create-link-with turtle 1
+create-link-with turtle 2
+create-link-with turtle 3
+]
+ask turtle 1 [
+create-link-with turtle 4
+create-link-with turtle 5
+]
+; do a radial tree layout, centered on turtle 0
+layout-radial turtles links (turtle 0)
+end
+</pre>
     </div>
     <div class="dict_entry" id="layout-spring">
       <h3>
@@ -4726,20 +4726,20 @@
         <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.13.8444" target="_blank">here</a>.
       </p>
       <pre>
-        to make-a-triangle
-        set-default-shape turtles &quot;circle&quot;
-        crt 3
-        ask turtle 0
-        [
-        create-links-with other turtles
-        ]
-        ask turtle 1
-        [
-        create-link-with turtle 2
-        ]
-        repeat 30 [ layout-spring turtles links 0.2 5 1 ] ;; lays the nodes in a triangle
-        end
-      </pre>
+to make-a-triangle
+set-default-shape turtles &quot;circle&quot;
+crt 3
+ask turtle 0
+[
+create-links-with other turtles
+]
+ask turtle 1
+[
+create-link-with turtle 2
+]
+repeat 30 [ layout-spring turtles links 0.2 5 1 ] ;; lays the nodes in a triangle
+end
+</pre>
     </div>
     <div class="dict_entry" id="layout-tutte">
       <h3>
@@ -4772,25 +4772,25 @@
         who proposed it as a method for graph layout.
       </p>
       <pre>
-        to make-a-tree
-        set-default-shape turtles &quot;circle&quot;
-        crt 6
-        ask turtle 0 [
-        create-link-with turtle 1
-        create-link-with turtle 2
-        create-link-with turtle 3
-        ]
-        ask turtle 1 [
-        create-link-with turtle 4
-        create-link-with turtle 5
-        ]
-        ; place all the turtles with just one
-        ; neighbor on the perimeter of a circle
-        ; and then place the remaining turtles inside
-        ; this circle, spread between their neighbors.
-        repeat 10 [ layout-tutte (turtles with [link-neighbors = 1]) links 12 ]
-        end
-      </pre>
+to make-a-tree
+set-default-shape turtles &quot;circle&quot;
+crt 6
+ask turtle 0 [
+create-link-with turtle 1
+create-link-with turtle 2
+create-link-with turtle 3
+]
+ask turtle 1 [
+create-link-with turtle 4
+create-link-with turtle 5
+]
+; place all the turtles with just one
+; neighbor on the perimeter of a circle
+; and then place the remaining turtles inside
+; this circle, spread between their neighbors.
+repeat 10 [ layout-tutte (turtles with [link-neighbors = 1]) links 12 ]
+end
+</pre>
     </div>
     <div class="dict_entry" id="left">
       <h3>
@@ -4838,10 +4838,10 @@
         Example:
       </p>
       <pre>
-        let prey one-of sheep-here
-        if prey != nobody
-        [ ask prey [ die ] ]
-      </pre>
+let prey one-of sheep-here
+if prey != nobody
+[ ask prey [ die ] ]
+</pre>
     </div>
     <div class="dict_entry" id="link">
       <h3>
@@ -4858,11 +4858,11 @@
         the endpoints.
       </p>
       <pre>
-        ask link 0 1 [ set color green ]
-        ;; unbreeded link connecting turtle 0 and turtle 1 will turn green
-        ask directed-link 0 1 [ set color red ]
-        ;; directed link connecting turtle 0 and turtle 1 will turn red
-      </pre>
+ask link 0 1 [ set color green ]
+;; unbreeded link connecting turtle 0 and turtle 1 will turn green
+ask directed-link 0 1 [ set color red ]
+;; directed link connecting turtle 0 and turtle 1 will turn red
+</pre>
       <p>
         See also <a href="#patch-at">patch-at</a>.
       </p>
@@ -4881,9 +4881,9 @@
         if the endpoints are at the same location.
       </p>
       <pre>
-        ask link 0 1 [ print link-heading ]
-        ;; prints [[towards other-end] of end1] of link 0 1
-      </pre>
+ask link 0 1 [ print link-heading ]
+;; prints [[towards other-end] of end1] of link 0 1
+</pre>
       <p>
         See also <a href="#link-length">link-length</a>
       </p>
@@ -4900,9 +4900,9 @@
         Reports the distance between the endpoints of the link.
       </p>
       <pre>
-        ask link 0 1 [ print link-length ]
-        ;; prints [[distance other-end] of end1] of link 0 1
-      </pre>
+ask link 0 1 [ print link-length ]
+;; prints [[distance other-end] of end1] of link 0 1
+</pre>
       <p>
         See also <a href="#link-heading">link-heading</a>
       </p>
@@ -4921,9 +4921,9 @@
         nobody, or lists (or nested lists) containing any of the above.
       </p>
       <pre>
-        link-set self
-        link-set [my-links] of nodes with [color = red]
-      </pre>
+link-set self
+link-set [my-links] of nodes with [color = red]
+</pre>
       <p>
         See also <a href="#turtle-set">turtle-set</a>, <a href="#patch-set">patch-set</a>.
       </p>
@@ -4944,9 +4944,9 @@
         <a href="shapes.html">Link Shapes Editor</a>.
       </p>
       <pre>
-        show link-shapes
-        =&gt; [&quot;default&quot;]
-      </pre>
+show link-shapes
+=&gt; [&quot;default&quot;]
+</pre>
     </div>
     <div class="dict_entry" id="links">
       <h3>
@@ -4959,9 +4959,9 @@
         Reports the agentset consisting of all links. This is a special agentset that can grow as links are added to the world, see <a href="programming.html#special-agentsets">the programming guide for more info</a>.
       </p>
       <pre>
-        show count links
-        ;; prints the number of links
-      </pre>
+show count links
+;; prints the number of links
+</pre>
     </div>
     <div class="dict_entry" id="links-own">
       <h3>
@@ -4983,12 +4983,12 @@
         list the same variable.)
       </p>
       <pre>
-        undirected-link-breed [sidewalks sidewalk]
-        directed-link-breed [streets street]
-        links-own [traffic]   ;; applies to all breeds
-        sidewalks-own [pedestrians]
-        streets-own [cars bikes]
-      </pre>
+undirected-link-breed [sidewalks sidewalk]
+directed-link-breed [streets street]
+links-own [traffic]   ;; applies to all breeds
+sidewalks-own [pedestrians]
+streets-own [cars bikes]
+</pre>
       <div class="dict_entry" id="list">
         <h3>
           <a>list<span class="since">1.0</span></a>
@@ -5002,13 +5002,13 @@
           any type, produced by any kind of reporter.
         </p>
         <pre>
-          show list (random 10) (random 10)
-          =&gt; [4 9]  ;; or similar list
-          show (list 5)
-          =&gt; [5]
-          show (list (random 10) 1 2 3 (random 10))
-          =&gt; [4 1 2 3 9]  ;; or similar list
-        </pre>
+show list (random 10) (random 10)
+=&gt; [4 9]  ;; or similar list
+show (list 5)
+=&gt; [5]
+show (list (random 10) 1 2 3 (random 10))
+=&gt; [4 1 2 3 9]  ;; or similar list
+</pre>
       </div>
       <div class="dict_entry" id="ln">
         <h3>
@@ -5036,9 +5036,9 @@
           Reports the logarithm of <i>number</i> in base <i>base</i>.
         </p>
         <pre>
-          show log 64 2
-          =&gt; 6
-        </pre>
+show log 64 2
+=&gt; 6
+</pre>
         <p>
           See also <a href="#ln">ln</a>.
         </p>
@@ -5082,10 +5082,10 @@
           Adds <i>value</i> to the end of a list and reports the new list.
         </p>
         <pre>
-          ;; suppose mylist is [2 7 10 &quot;Bob&quot;]
-          set mylist lput 42 mylist
-          ;; mylist now is [2 7 10 &quot;Bob&quot; 42]
-        </pre>
+;; suppose mylist is [2 7 10 &quot;Bob&quot;]
+set mylist lput 42 mylist
+;; mylist now is [2 7 10 &quot;Bob&quot; 42]
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="M">
@@ -5106,11 +5106,11 @@
           <i>reporter</i> may be an anonymous reporter or the name of a reporter.
         </p>
         <pre>
-          show map round [1.1 2.2 2.7]
-          =&gt; [1 2 3]
-          show map [ i -&gt; i * i ] [1 2 3]
-          =&gt; [1 4 9]
-        </pre>
+show map round [1.1 2.2 2.7]
+=&gt; [1 2 3]
+show map [ i -&gt; i * i ] [1 2 3]
+=&gt; [1 4 9]
+</pre>
         <p>
           With multiple lists, the given reporter is run for each group of
           items from each list. So, it is run once for the first items,
@@ -5121,11 +5121,11 @@
           Some examples make this clearer:
         </p>
         <pre>
-          show (map + [1 2 3] [2 4 6])
-          =&gt; [3 6 9]
-          show (map [ [a b c] -&gt; a + b = c ] [1 2 3] [2 4 6] [3 5 9])
-          =&gt; [true false true]
-        </pre>
+show (map + [1 2 3] [2 4 6])
+=&gt; [3 6 9]
+show (map [ [a b c] -&gt; a + b = c ] [1 2 3] [2 4 6] [3 5 9])
+=&gt; [true false true]
+</pre>
         <p>
           See also <a href="#foreach">foreach</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>.
         </p>
@@ -5142,14 +5142,14 @@
           types of items.
         </p>
         <pre>
-          show max [xcor] of turtles
-          ;; prints the x coordinate of the turtle which is
-          ;; farthest right in the world
-          show max list a b
-          ;; prints the larger of the two variables a and b
-          show max (list a b c)
-          ;; prints the largest of the three variables a, b, and c
-        </pre>
+show max [xcor] of turtles
+;; prints the x coordinate of the turtle which is
+;; farthest right in the world
+show max list a b
+;; prints the larger of the two variables a and b
+show max (list a b c)
+;; prints the largest of the three variables a, b, and c
+</pre>
       </div>
       <div class="dict_entry" id="max-n-of">
         <h3>
@@ -5168,13 +5168,13 @@
           the resulting agentset too large, the tie is broken randomly.
         </p>
         <pre>
-          ;; assume the world is 11 x 11
-          show max-n-of 5 patches [pxcor]
-          ;; shows 5 patches with pxcor = max-pxcor
-          show max-n-of 5 patches with [pycor = 0] [pxcor]
-          ;; shows an agentset containing:
-          ;; (patch 1 0) (patch 2 0) (patch 3 0) (patch 4 0) (patch 5 0)
-        </pre>
+;; assume the world is 11 x 11
+show max-n-of 5 patches [pxcor]
+;; shows 5 patches with pxcor = max-pxcor
+show max-n-of 5 patches with [pycor = 0] [pxcor]
+;; shows an agentset containing:
+;; (patch 1 0) (patch 2 0) (patch 3 0) (patch 4 0) (patch 5 0)
+</pre>
         <p>
           See also <a href="#max-one-of">max-one-of</a>, <a href="#with-max">with-max</a>.
         </p>
@@ -5195,7 +5195,7 @@
         <pre>
           show max-one-of patches [count turtles-here]
           <br/>;; prints the first patch with the most turtles on it
-        </pre>
+</pre>
         <p>
           See also <a href="#max-n-of">max-n-of</a>, <a href="#with-max">with-max</a>.
         </p>
@@ -5224,11 +5224,11 @@
           -- these are reporters which cannot be set.
         </p>
         <pre>
-          crt 100 [ setxy random-float max-pxcor
-          random-float max-pycor ]
-          ;; distributes 100 turtles randomly in the
-          ;; first quadrant
-        </pre>
+crt 100 [ setxy random-float max-pxcor
+random-float max-pycor ]
+;; distributes 100 turtles randomly in the
+;; first quadrant
+</pre>
         <p>
           See also <a href="#min-pcor">min-pxcor</a>, <a href="#min-pcor">min-pycor</a>, <a href="#world-dim">world-width</a>, and <a href="#world-dim">world-height</a>
         </p>
@@ -5246,9 +5246,9 @@
           the sum of the items divided by the total number of items.
         </p>
         <pre>
-          show mean [xcor] of turtles
-          ;; prints the average of all the turtles' x coordinates
-        </pre>
+show mean [xcor] of turtles
+;; prints the average of all the turtles' x coordinates
+</pre>
       </div>
       <div class="dict_entry" id="median">
         <h3>
@@ -5265,9 +5265,9 @@
           of the two.)
         </p>
         <pre>
-          show median [xcor] of turtles
-          ;; prints the median of all the turtles' x coordinates
-        </pre>
+show median [xcor] of turtles
+;; prints the median of all the turtles' x coordinates
+</pre>
       </div>
       <div class="dict_entry" id="member">
         <h3>
@@ -5292,17 +5292,17 @@
           the given agentset, otherwise reports false.
         </p>
         <pre>
-          show member? 2 [1 2 3]
-          =&gt; true
-          show member? 4 [1 2 3]
-          =&gt; false
-          show member? &quot;bat&quot; &quot;abate&quot;
-          =&gt; true
-          show member? turtle 0 turtles
-          =&gt; true
-          show member? turtle 0 patches
-          =&gt; false
-        </pre>
+show member? 2 [1 2 3]
+=&gt; true
+show member? 4 [1 2 3]
+=&gt; false
+show member? &quot;bat&quot; &quot;abate&quot;
+=&gt; true
+show member? turtle 0 turtles
+=&gt; true
+show member? turtle 0 patches
+=&gt; false
+</pre>
         <p>
           See also <a href="#position">position</a>.
         </p>
@@ -5319,13 +5319,13 @@
           types of items.
         </p>
         <pre>
-          show min [xcor] of turtles
-          ;; prints the lowest x-coordinate of all the turtles
-          show min list a b
-          ;; prints the smaller of the two variables a and b
-          show min (list a b c)
-          ;; prints the smallest of the three variables a, b, and c
-        </pre>
+show min [xcor] of turtles
+;; prints the lowest x-coordinate of all the turtles
+show min list a b
+;; prints the smaller of the two variables a and b
+show min (list a b c)
+;; prints the smallest of the three variables a, b, and c
+</pre>
       </div>
       <div class="dict_entry" id="min-n-of">
         <h3>
@@ -5344,13 +5344,13 @@
           the resulting agentset too large, the tie is broken randomly.
         </p>
         <pre>
-          ;; assume the world is 11 x 11
-          show min-n-of 5 patches [pxcor]
-          ;; shows 5 patches with pxcor = min-pxcor
-          show min-n-of 5 patches with [pycor = 0] [pxcor]
-          ;; shows an agentset containing:
-          ;; (patch -5 0) (patch -4 0) (patch -3 0) (patch -2 0) (patch -1 0)
-        </pre>
+;; assume the world is 11 x 11
+show min-n-of 5 patches [pxcor]
+;; shows 5 patches with pxcor = min-pxcor
+show min-n-of 5 patches with [pycor = 0] [pxcor]
+;; shows an agentset containing:
+;; (patch -5 0) (patch -4 0) (patch -3 0) (patch -2 0) (patch -1 0)
+</pre>
         <p>
           See also <a href="#min-one-of">min-one-of</a>, <a href="#with-min">with-min</a>.
         </p>
@@ -5369,10 +5369,10 @@
           all such agents use with-min instead.
         </p>
         <pre>
-          show min-one-of turtles [xcor + ycor]
-          ;; reports the first turtle with the smallest sum of
-          ;; coordinates
-        </pre>
+show min-one-of turtles [xcor + ycor]
+;; reports the first turtle with the smallest sum of
+;; coordinates
+</pre>
         <p>
           See also <a href="#with-min">with-min</a>, <a href="#min-n-of">min-n-of</a>.
         </p>
@@ -5401,11 +5401,11 @@
           -- these are reporters which cannot be set.
         </p>
         <pre>
-          crt 100 [ setxy random-float min-pxcor
-          random-float min-pycor ]
-          ;; distributes 100 turtles randomly in the
-          ;; third quadrant
-        </pre>
+crt 100 [ setxy random-float min-pxcor
+random-float min-pycor ]
+;; distributes 100 turtles randomly in the
+;; third quadrant
+</pre>
         <p>
           See also <a href="#max-pcor">max-pxcor</a>, <a href="#max-pcor">max-pycor</a>, <a href="#world-dim">world-width</a>, and <a href="#world-dim">world-height</a>
         </p>
@@ -5424,17 +5424,17 @@
         </p>
         <pre>
           <i>number1</i> - (floor (<i>number1</i> / <i>number2</i>)) * <i>number2</i>
-        </pre>
+</pre>
         <p>
           Note that mod is &quot;infix&quot;, that is, it comes between its
           two inputs.
         </p>
         <pre>
-          show 62 mod 5
-          =&gt; 2
-          show -8 mod 3
-          =&gt; 1
-        </pre>
+show 62 mod 5
+=&gt; 2
+show -8 mod 3
+=&gt; 1
+</pre>
         <p>
           See also <a href="#remainder">remainder</a>. mod and remainder
           behave the same for positive numbers, but differently for
@@ -5458,16 +5458,16 @@
           If the input is an empty list, reports an empty list.
         </p>
         <pre>
-          show modes [1 2 2 3 4]
-          =&gt; [2]
-          show modes [1 2 2 3 3 4]
-          =&gt; [2 3]
-          show modes [ [1 2 [3]] [1 2 [3]] [2 3 4] ]
-          =&gt; [[1 2 [3]]]
-          show modes [pxcor] of turtles
-          ;; shows which columns of patches have the most
-          ;; turtles on them
-        </pre>
+show modes [1 2 2 3 4]
+=&gt; [2]
+show modes [1 2 2 3 3 4]
+=&gt; [2 3]
+show modes [ [1 2 [3]] [1 2 [3]] [2 3 4] ]
+=&gt; [[1 2 [3]]]
+show modes [pxcor] of turtles
+;; shows which columns of patches have the most
+;; turtles on them
+</pre>
       </div>
       <div class="dict_entry" id="mouse-down">
         <h3>
@@ -5516,10 +5516,10 @@
           from the last time it was inside.
         </p>
         <pre>
-          ;; to make the mouse &quot;draw&quot; in red:
-          if mouse-down?
-          [ ask patch mouse-xcor mouse-ycor [ set pcolor red ] ]
-        </pre>
+;; to make the mouse &quot;draw&quot; in red:
+if mouse-down?
+[ ask patch mouse-xcor mouse-ycor [ set pcolor red ] ]
+</pre>
       </div>
       <div class="dict_entry" id="move-to">
         <h3>
@@ -5538,13 +5538,13 @@
           the center of that patch.)
         </p>
         <pre>
-          move-to turtle 5
-          ;; turtle moves to same point as turtle 5
-          move-to one-of patches
-          ;; turtle moves to the center of a random patch
-          move-to max-one-of turtles [size]
-          ;; turtle moves to same point as biggest turtle
-        </pre>
+move-to turtle 5
+;; turtle moves to same point as turtle 5
+move-to one-of patches
+;; turtle moves to the center of a random patch
+move-to max-one-of turtles [size]
+;; turtle moves to same point as biggest turtle
+</pre>
         <p>
           Note that the turtle's heading is unaltered. You may want to
           use the <a href="#face">face</a> command first to orient the
@@ -5574,19 +5574,19 @@
           links).
         </p>
         <pre>
-          crt 5
-          ask turtle 0
-          [
-          create-links-with other turtles
-          show my-links ;; prints the agentset containing all links
-          ;; (since all the links we created were with turtle 0 )
-          ]
-          ask turtle 1
-          [
-          show my-links ;; shows an agentset containing the link 0 1
-          ]
-          end
-        </pre>
+crt 5
+ask turtle 0
+[
+create-links-with other turtles
+show my-links ;; prints the agentset containing all links
+;; (since all the links we created were with turtle 0 )
+]
+ask turtle 1
+[
+show my-links ;; shows an agentset containing the link 0 1
+]
+end
+</pre>
         If you only want the undirected links connected to a node, you
         can do <code>my-links with [ not is-directed-link? self ]</code>.
       </div>
@@ -5607,17 +5607,17 @@
           that you can use to travel <i>to</i> this node".
         </p>
         <pre>
-          crt 5
-          ask turtle 0
-          [
-          create-links-to other turtles
-          show my-in-links ;; shows an empty agentset
-          ]
-          ask turtle 1
-          [
-          show my-in-links ;; shows an agentset containing the link 0 1
-          ]
-        </pre>
+crt 5
+ask turtle 0
+[
+create-links-to other turtles
+show my-in-links ;; shows an empty agentset
+]
+ask turtle 1
+[
+show my-in-links ;; shows an agentset containing the link 0 1
+]
+</pre>
       </div>
       <div class="dict_entry" id="my-out-links">
         <h3>
@@ -5636,17 +5636,17 @@
           <i>from</i> this node".
         </p>
         <pre>
-          crt 5
-          ask turtle 0
-          [
-          create-links-to other turtles
-          show my-out-links ;; shows agentset containing all the links
-          ]
-          ask turtle 1
-          [
-          show my-out-links ;; shows an empty agentset
-          ]
-        </pre>
+crt 5
+ask turtle 0
+[
+create-links-to other turtles
+show my-out-links ;; shows agentset containing all the links
+]
+ask turtle 1
+[
+show my-out-links ;; shows an empty agentset
+]
+</pre>
       </div>
       <div class="dict_entry" id="myself">
         <h3>
@@ -5677,11 +5677,11 @@
           with-max, min-one-of, max-one-of, min-n-of, max-n-of.
         </p>
         <pre>
-          ask turtles
-          [ ask patches in-radius 3
-          [ set pcolor [color] of myself ] ]
-          ;; each turtle makes a colored &quot;splotch&quot; around itself
-        </pre>
+ask turtles
+[ ask patches in-radius 3
+[ set pcolor [color] of myself ] ]
+;; each turtle makes a colored &quot;splotch&quot; around itself
+</pre>
         <p>
           See the &quot;Myself Example&quot; code example for more
           examples.
@@ -5718,9 +5718,9 @@
           input.
         </p>
         <pre>
-          ask n-of 50 patches [ set pcolor green ]
-          ;; 50 randomly chosen patches turn green
-        </pre>
+ask n-of 50 patches [ set pcolor green ]
+;; 50 randomly chosen patches turn green
+</pre>
         <p>
           See also <a href="#one-of">one-of</a> and <a href="#up-to-n-of">up-to-n-of</a>,
           a version that does not error with a <i>size</i> greater than
@@ -5744,15 +5744,15 @@
           item currently being computed, starting from zero.
         </p>
         <pre>
-          show n-values 5 [1]
-          =&gt; [1 1 1 1 1]
-          show n-values 5 [ i -&gt; i ]
-          =&gt; [0 1 2 3 4]
-          show n-values 3 turtle
-          =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-          show n-values 5 [ x -&gt; x * x ]
-          =&gt; [0 1 4 9 16]
-        </pre>
+show n-values 5 [1]
+=&gt; [1 1 1 1 1]
+show n-values 5 [ i -&gt; i ]
+=&gt; [0 1 2 3 4]
+show n-values 3 turtle
+=&gt; [(turtle 0) (turtle 1) (turtle 2)]
+show n-values 5 [ x -&gt; x * x ]
+=&gt; [0 1 4 9 16]
+</pre>
         <p>
           See also <a href="#reduce">reduce</a>, <a href="#filter">filter</a>, <a href="#arrow">-&gt; (anonymous procedure)</a>, <a href="#range">range</a>.
         </p>
@@ -5772,14 +5772,14 @@
           (neighbors) or 4 surrounding patches (neighbors4).
         </p>
         <pre>
-          show sum [count turtles-here] of neighbors
-          ;; prints the total number of turtles on the eight
-          ;; patches around this turtle or patch
-          show count turtles-on neighbors
-          ;; a shorter way to say the same thing
-          ask neighbors4 [ set pcolor red ]
-          ;; turns the four neighboring patches red
-        </pre>
+show sum [count turtles-here] of neighbors
+;; prints the total number of turtles on the eight
+;; patches around this turtle or patch
+show count turtles-on neighbors
+;; a shorter way to say the same thing
+ask neighbors4 [ set pcolor red ]
+;; turns the four neighboring patches red
+</pre>
       </div>
       <div class="dict_entry" id="link-neighbors">
         <h3>
@@ -5797,18 +5797,18 @@
           connected to this turtle.
         </p>
         <pre>
-          crt 3
-          ask turtle 0
-          [
-          create-links-with other turtles
-          ask link-neighbors [ set color red ] ;; turtles 1 and 2 turn red
-          ]
-          ask turtle 1
-          [
-          ask link-neighbors [ set color blue ] ;; turtle 0 turns blue
-          ]
-          end
-        </pre>
+crt 3
+ask turtle 0
+[
+create-links-with other turtles
+ask link-neighbors [ set color red ] ;; turtles 1 and 2 turn red
+]
+ask turtle 1
+[
+ask link-neighbors [ set color blue ] ;; turtle 0 turns blue
+]
+end
+</pre>
       </div>
       <div class="dict_entry" id="link-neighbor">
         <h3>
@@ -5825,17 +5825,17 @@
           incoming or outgoing) between <i>turtle</i> and the caller.
         </p>
         <pre>
-          crt 2
-          ask turtle 0
-          [
-          create-link-with turtle 1
-          show link-neighbor? turtle 1  ;; prints true
-          ]
-          ask turtle 1
-          [
-          show link-neighbor? turtle 0     ;; prints true
-          ]
-        </pre>
+crt 2
+ask turtle 0
+[
+create-link-with turtle 1
+show link-neighbor? turtle 1  ;; prints true
+]
+ask turtle 1
+[
+show link-neighbor? turtle 0     ;; prints true
+]
+</pre>
       </div>
       <div class="dict_entry" id="netlogo-version">
         <h3>
@@ -5849,9 +5849,9 @@
           are running.
         </p>
         <pre>
-          show netlogo-version
-          =&gt; &quot;{{version}}&quot;
-        </pre>
+show netlogo-version
+=&gt; &quot;{{version}}&quot;
+</pre>
       </div>
       <div class="dict_entry" id="netlogo-web">
         <h3>
@@ -5939,10 +5939,10 @@
           not a whole agentset.
         </p>
         <pre>
-          set target one-of other turtles-here
-          if target != nobody
-          [ ask target [ set color red ] ]
-        </pre>
+set target one-of other turtles-here
+if target != nobody
+[ ask target [ set color red ] ]
+</pre>
       </div>
       <div class="dict_entry" id="no-links">
         <h3>
@@ -5977,8 +5977,8 @@
           Reports true if <i>boolean</i> is false, otherwise reports false.
         </p>
         <pre>
-          if not any? turtles [ crt 10 ]
-        </pre>
+if not any? turtles [ crt 10 ]
+</pre>
       </div>
       <div class="dict_entry" id="no-turtles">
         <h3>
@@ -6009,27 +6009,27 @@
           (turtle or patch).
         </p>
         <pre>
-          show [pxcor] of patch 3 5
-          ;; prints 3
-          show [pxcor] of one-of patches
-          ;; prints the value of a random patch's pxcor variable
-          show [who * who] of turtle 5
-          =&gt; 25
-          show [count turtles in-radius 3] of patch 0 0
-          ;; prints the number of turtles located within a
-          ;; three-patch radius of the origin
-        </pre>
+show [pxcor] of patch 3 5
+;; prints 3
+show [pxcor] of one-of patches
+;; prints the value of a random patch's pxcor variable
+show [who * who] of turtle 5
+=&gt; 25
+show [count turtles in-radius 3] of patch 0 0
+;; prints the number of turtles located within a
+;; three-patch radius of the origin
+</pre>
         <p>
           For an agentset, reports a list that contains the value of the
           reporter for each agent in the agentset (in random order).
         </p>
         <pre>
-          crt 4
-          show sort [who] of turtles
-          =&gt; [0 1 2 3]
-          show sort [who * who] of turtles
-          =&gt; [0 1 4 9]
-        </pre>
+crt 4
+show sort [who] of turtles
+=&gt; [0 1 2 3]
+show sort [who * who] of turtles
+=&gt; [0 1 4 9]
+</pre>
       </div>
       <div class="dict_entry" id="one-of">
         <h3>
@@ -6048,17 +6048,17 @@
           list to be empty.
         </p>
         <pre>
-          ask one-of patches [ set pcolor green ]
-          ;; a random patch turns green
-          ask patches with [any? turtles-here]
-          [ show one-of turtles-here ]
-          ;; for each patch containing turtles, prints one of
-          ;; those turtles
+ask one-of patches [ set pcolor green ]
+;; a random patch turns green
+ask patches with [any? turtles-here]
+[ show one-of turtles-here ]
+;; for each patch containing turtles, prints one of
+;; those turtles
 
-          ;; suppose mylist is [1 2 3 4 5 6]
-          show one-of mylist
-          ;; prints a value randomly chosen from the list
-        </pre>
+;; suppose mylist is [1 2 3 4 5 6]
+show one-of mylist
+;; prints a value randomly chosen from the list
+</pre>
         <p>
           See also <a href="#n-of">n-of</a>, <a href="#up-to-n-of">up-to-n-of</a>.
         </p>
@@ -6079,9 +6079,9 @@
           not be run (since it can't affect the result).
         </p>
         <pre>
-          if (pxcor &gt; 0) or (pycor &gt; 0) [ set pcolor red ]
-          ;; patches turn red except in lower-left quadrant
-        </pre>
+if (pxcor &gt; 0) or (pycor &gt; 0) [ set pcolor red ]
+;; patches turn red except in lower-left quadrant
+</pre>
       </div>
       <div class="dict_entry" id="other">
         <h3>
@@ -6096,11 +6096,11 @@
           omits this agent.
         </p>
         <pre>
-          show count turtles-here
-          =&gt; 10
-          show count other turtles-here
-          =&gt; 9
-        </pre>
+show count turtles-here
+=&gt; 10
+show count other turtles-here
+=&gt; 9
+</pre>
       </div>
       <div class="dict_entry" id="other-end">
         <h3>
@@ -6123,11 +6123,11 @@
           the following examples should help:
         </p>
         <pre>
-          ask turtle 0 [ create-link-with turtle 1 ]
-          ask turtle 0 [ ask link 0 1 [ show other-end ] ] ;; prints turtle 1
-          ask turtle 1 [ ask link 0 1 [ show other-end ] ] ;; prints turtle 0
-          ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
-        </pre>
+ask turtle 0 [ create-link-with turtle 1 ]
+ask turtle 0 [ ask link 0 1 [ show other-end ] ] ;; prints turtle 1
+ask turtle 1 [ ask link 0 1 [ show other-end ] ] ;; prints turtle 0
+ask link 0 1 [ ask turtle 0 [ show other-end ] ] ;; prints turtle 1
+</pre>
         <p>
           As these examples hopefully make plain, the &quot;other&quot; end
           is the end that is neither asking nor being asked.
@@ -6150,17 +6150,17 @@
           to <i>turtle</i> using a link?"
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [
-          create-link-to turtle 1
-          show in-link-neighbor? turtle 1  ;; prints false
-          show out-link-neighbor? turtle 1 ;; prints true
-          ]
-          ask turtle 1 [
-          show in-link-neighbor? turtle 0  ;; prints true
-          show out-link-neighbor? turtle 0 ;; prints false
-          ]
-        </pre>
+crt 2
+ask turtle 0 [
+create-link-to turtle 1
+show in-link-neighbor? turtle 1  ;; prints false
+show out-link-neighbor? turtle 1 ;; prints true
+]
+ask turtle 1 [
+show in-link-neighbor? turtle 0  ;; prints true
+show out-link-neighbor? turtle 0 ;; prints false
+]
+</pre>
       </div>
       <div class="dict_entry" id="out-link-neighbors">
         <h3>
@@ -6178,19 +6178,19 @@
           of this as "who can I get to from the caller using a link?"
         </p>
         <pre>
-          crt 4
-          ask turtle 0
-          [
-          create-links-to other turtles
-          ask out-link-neighbors [ set color pink ] ;; turtles 1-3 turn pink
-          ]
-          ask turtle 1
-          [
-          ask out-link-neighbors [ set color orange ]  ;; no turtles change colors
-          ;; since turtle 1 only has in-links
-          ]
-          end
-        </pre>
+crt 4
+ask turtle 0
+[
+create-links-to other turtles
+ask out-link-neighbors [ set color pink ] ;; turtles 1-3 turn pink
+]
+ask turtle 1
+[
+ask out-link-neighbors [ set color orange ]  ;; no turtles change colors
+;; since turtle 1 only has in-links
+]
+end
+</pre>
       </div>
       <div class="dict_entry" id="out-link-to">
         <h3>
@@ -6210,16 +6210,16 @@
           to travel from the caller to <i>turtle</i>."
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [
-          create-link-to turtle 1
-          show out-link-to turtle 1 ;; shows link 0 1
-          ]
-          ask turtle 1
-          [
-          show out-link-to turtle 0 ;; shows nobody
-          ]
-        </pre>
+crt 2
+ask turtle 0 [
+create-link-to turtle 1
+show out-link-to turtle 1 ;; shows link 0 1
+]
+ask turtle 1
+[
+show out-link-to turtle 0 ;; shows nobody
+]
+</pre>
         <p>
           See also: <a href="#in-link-from">in-link-from</a> <a href="#link-with">link-with</a>
         </p>
@@ -6273,16 +6273,16 @@
           the given coordinates are outside the world, reports nobody.
         </p>
         <pre>
-          ask patch 3 -4 [ set pcolor green ]
-          ;; patch with pxcor of 3 and pycor of -4 turns green
-          show patch 1.2 3.7
-          ;; prints (patch 1 4); note rounding
-          show patch 18 19
-          ;; supposing min-pxcor and min-pycor are -17
-          ;; and max-pxcor and max-pycor are 17,
-          ;; in a wrapping topology, prints (patch -17 -16);
-          ;; in a non-wrapping topology, prints nobody
-        </pre>
+ask patch 3 -4 [ set pcolor green ]
+;; patch with pxcor of 3 and pycor of -4 turns green
+show patch 1.2 3.7
+;; prints (patch 1 4); note rounding
+show patch 18 19
+;; supposing min-pxcor and min-pycor are -17
+;; and max-pxcor and max-pycor are 17,
+;; in a wrapping topology, prints (patch -17 -16);
+;; in a non-wrapping topology, prints nobody
+</pre>
         <p>
           See also <a href="#patch-at">patch-at</a>.
         </p>
@@ -6302,11 +6302,11 @@
           it is outside the world.
         </p>
         <pre>
-          ask patch-ahead 1 [ set pcolor green ]
-          ;; turns the patch 1 in front of this turtle
-          ;;   green; note that this might be the same patch
-          ;;   the turtle is standing on
-        </pre>
+ask patch-ahead 1 [ set pcolor green ]
+;; turns the patch 1 in front of this turtle
+;;   green; note that this might be the same patch
+;;   the turtle is standing on
+</pre>
         <p>
           See also <a href="#patch-at">patch-at</a>, <a href="#patch-lr-and-ahead">patch-left-and-ahead</a>, <a href="#patch-lr-and-ahead">patch-right-and-ahead</a>, <a href="#patch-at-heading-and-distance">patch-at-heading-and-distance</a>.
         </p>
@@ -6328,10 +6328,10 @@
           beyond a non-wrapping world boundary.
         </p>
         <pre>
-          ask patch-at 1 -1 [ set pcolor green ]
-          ;; if caller is a turtle or patch, turns the
-          ;;   patch just southeast of the caller green
-        </pre>
+ask patch-at 1 -1 [ set pcolor green ]
+;; if caller is a turtle or patch, turns the
+;;   patch just southeast of the caller green
+</pre>
         <p>
           See also <a href="#patch">patch</a>, <a href="#patch-ahead">patch-ahead</a>, <a href="#patch-lr-and-ahead">patch-left-and-ahead</a>, <a href="#patch-lr-and-ahead">patch-right-and-ahead</a>, <a href="#patch-at-heading-and-distance">patch-at-heading-and-distance</a>.
         </p>
@@ -6353,9 +6353,9 @@
           because it is outside the world.
         </p>
         <pre>
-          ask patch-at-heading-and-distance -90 1 [ set pcolor green ]
-          ;; turns the patch 1 to the west of this patch green
-        </pre>
+ask patch-at-heading-and-distance -90 1 [ set pcolor green ]
+;; turns the patch 1 to the west of this patch green
+</pre>
         <p>
           See also <a href="#patch">patch</a>, <a href="#patch-at">patch-at</a>, <a href="#patch-lr-and-ahead">patch-left-and-ahead</a>, <a href="#patch-lr-and-ahead">patch-right-and-ahead</a>.
         </p>
@@ -6398,12 +6398,12 @@
           patch-at-heading-and-distance instead.)
         </p>
         <pre>
-          ask patch-right-and-ahead 30 1 [ set pcolor green ]
-          ;; this turtle &quot;looks&quot; 30 degrees right of its
-          ;;   current heading at the patch 1 unit away, and turns
-          ;;   that patch green; note that this might be the same
-          ;;   patch the turtle is standing on
-        </pre>
+ask patch-right-and-ahead 30 1 [ set pcolor green ]
+;; this turtle &quot;looks&quot; 30 degrees right of its
+;;   current heading at the patch 1 unit away, and turns
+;;   that patch green; note that this might be the same
+;;   patch the turtle is standing on
+</pre>
         <p>
           See also <a href="#patch">patch</a>, <a href="#patch-at">patch-at</a>, <a href="#patch-at-heading-and-distance">patch-at-heading-and-distance</a>.
         </p>
@@ -6423,15 +6423,15 @@
           above.
         </p>
         <pre>
-          patch-set self
-          patch-set patch-here
-          (patch-set self neighbors)
-          (patch-set patch-here neighbors)
-          (patch-set patch 0 0 patch 1 3 patch 4 -2)
-          (patch-set patch-at -1 1 patch-at 0 1 patch-at 1 1)
-          patch-set [patch-here] of turtles
-          patch-set [neighbors] of turtles
-        </pre>
+patch-set self
+patch-set patch-here
+(patch-set self neighbors)
+(patch-set patch-here neighbors)
+(patch-set patch 0 0 patch 1 3 patch 4 -2)
+(patch-set patch-at -1 1 patch-at 0 1 patch-at 1 1)
+patch-set [patch-here] of turtles
+patch-set [neighbors] of turtles
+</pre>
         <p>
           See also <a href="#turtle-set">turtle-set</a>, <a href="#link-set">link-set</a>.
         </p>
@@ -6740,14 +6740,14 @@
           Note: The positions are numbered beginning with 0, not with 1.
         </p>
         <pre>
-          ;; suppose mylist is [2 7 4 7 &quot;Bob&quot;]
-          show position 7 mylist
-          =&gt; 1
-          show position 10 mylist
-          =&gt; false
-          show position &quot;in&quot; &quot;string&quot;
-          =&gt; 3
-        </pre>
+;; suppose mylist is [2 7 4 7 &quot;Bob&quot;]
+show position 7 mylist
+=&gt; 1
+show position 10 mylist
+=&gt; false
+show position &quot;in&quot; &quot;string&quot;
+=&gt; 3
+</pre>
         <p>
           See also <a href="#member">member?</a>.
         </p>
@@ -6767,11 +6767,11 @@
           of the decimal point.
         </p>
         <pre>
-          show precision 1.23456789 3
-          =&gt; 1.235
-          show precision 3834 -3
-          =&gt; 4000
-        </pre>
+show precision 1.23456789 3
+=&gt; 1.235
+show precision 3834 -3
+=&gt; 4000
+</pre>
         <p>
           See also <a href="#round">round</a>, <a href="#ceiling">ceiling</a>, <a href="#floor">floor</a>.
         </p>
@@ -6853,13 +6853,13 @@
           must now use <a href="#random-float">random-float</a> instead.
         </p>
         <pre>
-          show random 3
-          ;; prints 0, 1,  or 2
-          show random -3
-          ;; prints 0, -1, or -2
-          show random 3.5
-          ;; prints 0, 1, 2, or 3
-        </pre>
+show random 3
+;; prints 0, 1,  or 2
+show random -3
+;; prints 0, -1, or -2
+show random 3.5
+;; prints 0, 1, 2, or 3
+</pre>
         <p>
           See also <a href="#random-float">random-float</a>.
         </p>
@@ -6885,13 +6885,13 @@
           If <i>number</i> is zero, the result is always 0.
         </p>
         <pre>
-          show random-float 3
-          ;; prints a number at least 0 but less than 3,
-          ;; for example 2.589444906014774
-          show random-float 2.5
-          ;; prints a number at least 0 but less than 2.5,
-          ;; for example 1.0897423196760796
-        </pre>
+show random-float 3
+;; prints a number at least 0 but less than 3,
+;; for example 2.589444906014774
+show random-float 2.5
+;; prints a number at least 0 but less than 2.5,
+;; for example 1.0897423196760796
+</pre>
       </div>
       <div class="dict_entry" id="random-reporters">
         <h3>
@@ -6932,17 +6932,17 @@
           random-poisson reports a Poisson-distributed random integer.
         </p>
         <pre>
-          show random-exponential 2
-          ;; prints an exponentially distributed random floating
-          ;; point number with a mean of 2
-          show random-normal 10.1 5.2
-          ;; prints a normally distributed random floating point
-          ;; number with a mean of 10.1 and a standard deviation
-          ;; of 5.2
-          show random-poisson 3.4
-          ;; prints a Poisson-distributed random integer with a
-          ;; mean of 3.4
-        </pre>
+show random-exponential 2
+;; prints an exponentially distributed random floating
+;; point number with a mean of 2
+show random-normal 10.1 5.2
+;; prints a normally distributed random floating point
+;; number with a mean of 10.1 and a standard deviation
+;; of 5.2
+show random-poisson 3.4
+;; prints a Poisson-distributed random integer with a
+;; mean of 3.4
+</pre>
       </div>
       <div class="dict_entry" id="random-pcor">
         <h3>
@@ -6958,11 +6958,11 @@
           max-pxcor (or -y) inclusive.
         </p>
         <pre>
-          ask turtles [
-          ;; move each turtle to the center of a random patch
-          setxy random-pxcor random-pycor
-          ]
-        </pre>
+ask turtles [
+;; move each turtle to the center of a random patch
+setxy random-pxcor random-pycor
+]
+</pre>
         <p>
           See also <a href="#random-cor">random-xcor</a>, <a href="#random-cor">random-ycor</a>.
         </p>
@@ -6986,17 +6986,17 @@
           section of the Programming Guide for more details.
         </p>
         <pre>
-          random-seed 47822
-          show random 100
-          =&gt; 50
-          show random 100
-          =&gt; 35
-          random-seed 47822
-          show random 100
-          =&gt; 50
-          show random 100
-          =&gt; 35
-        </pre>
+random-seed 47822
+show random 100
+=&gt; 50
+show random 100
+=&gt; 35
+random-seed 47822
+show random 100
+=&gt; 50
+show random 100
+=&gt; 35
+</pre>
       </div>
       <div class="dict_entry" id="random-cor">
         <h3>
@@ -7017,11 +7017,11 @@
           for -x.
         </p>
         <pre>
-          ask turtles [
-          ;; move each turtle to a random point
-          setxy random-xcor random-ycor
-          ]
-        </pre>
+ask turtles [
+;; move each turtle to a random point
+setxy random-xcor random-ycor
+]
+</pre>
         <p>
           See also <a href="#random-pcor">random-pxcor</a>, <a href="#random-pcor">random-pycor</a>.
         </p>
@@ -7041,15 +7041,15 @@
           <i>step</i> defaults to 1.
         </p>
         <pre>
-          show range 5
-          =&gt; [0 1 2 3 4]
-          show (range 2 5)
-          =&gt; [2 3 4]
-          show (range 2 5 0.5)
-          =&gt; [2 2.5 3 3.5 4 4.5]
-          show (range 10 0 -1)
-          =&gt; [10 9 8 7 6 5 4 3 2 1]
-        </pre>
+show range 5
+=&gt; [0 1 2 3 4]
+show (range 2 5)
+=&gt; [2 3 4]
+show (range 2 5 0.5)
+=&gt; [2 2.5 3 3.5 4 4.5]
+show (range 10 0 -1)
+=&gt; [10 9 8 7 6 5 4 3 2 1]
+</pre>
         <p>
           See also <a href="#n-values">n-values</a>
         </p>
@@ -7072,14 +7072,14 @@
           primitive for converting the user's input into usable form.
         </p>
         <pre>
-          show read-from-string &quot;3&quot; + read-from-string &quot;5&quot;
-          =&gt; 8
-          show length read-from-string &quot;[1 2 3]&quot;
-          =&gt; 3
-          crt read-from-string user-input &quot;Make how many turtles?&quot;
-          ;; the number of turtles input by the user
-          ;; are created
-        </pre>
+show read-from-string &quot;3&quot; + read-from-string &quot;5&quot;
+=&gt; 8
+show length read-from-string &quot;[1 2 3]&quot;
+=&gt; 3
+crt read-from-string user-input &quot;Make how many turtles?&quot;
+;; the number of turtles input by the user
+;; are created
+</pre>
       </div>
       <div class="dict_entry" id="reduce">
         <h3>
@@ -7108,53 +7108,53 @@
           this primitive:
         </p>
         <pre>
-          show reduce + [1 2 3]
-          =&gt; 6
-          show reduce - [1 2 3]
-          =&gt; -4
-          show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far ] [1 2 3]
-          =&gt; 2
-          show reduce [ [result-so-far ignored-item] -&gt; result-so-far ] [1 2 3]
-          =&gt; 1
-          show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
-          =&gt; 3
-          show reduce sentence [[1 2] [3 [4]] 5]
-          =&gt; [1 2 3 [4] 5]
-          show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fput [] [1 2 3 4 5])
-          =&gt; [5 4 3 2 1]
-        </pre>
+show reduce + [1 2 3]
+=&gt; 6
+show reduce - [1 2 3]
+=&gt; -4
+show reduce [ [result-so-far next-item] -&gt; next-item - result-so-far ] [1 2 3]
+=&gt; 2
+show reduce [ [result-so-far ignored-item] -&gt; result-so-far ] [1 2 3]
+=&gt; 1
+show reduce [ [ignored next-item] -&gt; next-item ] [1 2 3]
+=&gt; 3
+show reduce sentence [[1 2] [3 [4]] 5]
+=&gt; [1 2 3 [4] 5]
+show reduce [ [result-so-far next-item] -&gt; fput next-item result-so-far ] (fput [] [1 2 3 4 5])
+=&gt; [5 4 3 2 1]
+</pre>
         <p>
           Here are some more useful examples:
         </p>
         <pre>
-          ;; find the longest string in a list
-          to-report longest-string [strings]
-          report reduce
-          [ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
-          strings
-          end
+;; find the longest string in a list
+to-report longest-string [strings]
+report reduce
+[ [longest-so-far next-string] -&gt; ifelse-value (length longest-so-far &gt;= length next-string) [longest-so-far] [next-string] ]
+strings
+end
 
-          show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
-          =&gt; &quot;there&quot;
+show longest-string [&quot;hi&quot; &quot;there&quot; &quot;!&quot;]
+=&gt; &quot;there&quot;
 
-          ;; count the number of occurrences of an item in a list
-          to-report occurrences [x the-list]
-          report reduce
-          [ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
-          end
+;; count the number of occurrences of an item in a list
+to-report occurrences [x the-list]
+report reduce
+[ [occurrence-count next-item] -&gt; ifelse-value (next-item = x) [occurrence-count + 1] [occurrence-count] ] (fput 0 the-list)
+end
 
-          show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
-          =&gt; 6
+show occurrences 1 [1 2 1 3 1 2 3 1 1 4 5 1]
+=&gt; 6
 
-          ;; evaluate the polynomial, with given coefficients, at x
-          to-report evaluate-polynomial [coefficients x]
-          report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
-          end
+;; evaluate the polynomial, with given coefficients, at x
+to-report evaluate-polynomial [coefficients x]
+report reduce [ [value coefficient] -&gt; (x * value) + coefficient ] coefficients
+end
 
-          ;; evaluate 3x^2 + 2x + 1 at x = 4
-          show evaluate-polynomial [3 2 1] 4
-          =&gt; 57
-        </pre>
+;; evaluate 3x^2 + 2x + 1 at x = 4
+show evaluate-polynomial [3 2 1] 4
+=&gt; 57
+</pre>
         <p>
           See also <a href="#filter">filter</a>, <a href="#arrow">-&gt; (anonymous procedure</a>.
         </p>
@@ -7172,13 +7172,13 @@
         </p>
         <pre>
           <i>number1</i> - (int (<i>number1</i> / <i>number2</i>)) * <i>number2</i>
-        </pre>
+</pre>
         <pre>
-          show remainder 62 5
-          =&gt; 2
-          show remainder -8 3
-          =&gt; -2
-        </pre>
+show remainder 62 5
+=&gt; 2
+show remainder -8 3
+=&gt; -2
+</pre>
         <p>
           See also <a href="#mod">mod</a>. mod and remainder behave the same
           for positive numbers, but differently for negative numbers.
@@ -7201,12 +7201,12 @@
           appearances of <i>string1</i> as a substring removed.
         </p>
         <pre>
-          set mylist [2 7 4 7 &quot;Bob&quot;]
-          set mylist remove 7 mylist
-          ;; mylist is now [2 4 &quot;Bob&quot;]
-          show remove &quot;to&quot; &quot;phototonic&quot;
-          =&gt; &quot;phonic&quot;
-        </pre>
+set mylist [2 7 4 7 &quot;Bob&quot;]
+set mylist remove 7 mylist
+;; mylist is now [2 4 &quot;Bob&quot;]
+show remove &quot;to&quot; &quot;phototonic&quot;
+=&gt; &quot;phonic&quot;
+</pre>
       </div>
       <div class="dict_entry" id="remove-duplicates">
         <h3>
@@ -7220,10 +7220,10 @@
           first of each item remains in place.
         </p>
         <pre>
-          set mylist [2 7 4 7 &quot;Bob&quot; 7]
-          set mylist remove-duplicates mylist
-          ;; mylist is now [2 7 4 &quot;Bob&quot;]
-        </pre>
+set mylist [2 7 4 7 &quot;Bob&quot; 7]
+set mylist remove-duplicates mylist
+;; mylist is now [2 7 4 &quot;Bob&quot;]
+</pre>
       </div>
       <div class="dict_entry" id="remove-item">
         <h3>
@@ -7246,12 +7246,12 @@
           0, the second item is item 1, and so on.)
         </p>
         <pre>
-          set mylist [2 7 4 7 &quot;Bob&quot;]
-          set mylist remove-item 2 mylist
-          ;; mylist is now [2 7 7 &quot;Bob&quot;]
-          show remove-item 2 &quot;string&quot;
-          =&gt; &quot;sting&quot;
-        </pre>
+set mylist [2 7 4 7 &quot;Bob&quot;]
+set mylist remove-item 2 mylist
+;; mylist is now [2 7 7 &quot;Bob&quot;]
+show remove-item 2 &quot;string&quot;
+=&gt; &quot;sting&quot;
+</pre>
       </div>
       <div class="dict_entry" id="repeat">
         <h3>
@@ -7265,10 +7265,10 @@
         </p>
         <pre>
 
-          pd repeat 36 [ fd 1 rt 10 ]
-          ;; the turtle draws a circle
+pd repeat 36 [ fd 1 rt 10 ]
+;; the turtle draws a circle
 
-        </pre>
+</pre>
       </div>
       <div class="dict_entry" id="replace-item">
         <h3>
@@ -7289,11 +7289,11 @@
           removed and the contents of <i>string2</i> spliced in instead.
         </p>
         <pre>
-          show replace-item 2 [2 7 4 5] 15
-          =&gt; [2 7 15 5]
-          show replace-item 1 &quot;cat&quot; &quot;are&quot;
-          =&gt; &quot;caret&quot;
-        </pre>
+show replace-item 2 [2 7 4 5] 15
+=&gt; [2 7 15 5]
+show replace-item 1 &quot;cat&quot; &quot;are&quot;
+=&gt; &quot;caret&quot;
+</pre>
       </div>
       <div class="dict_entry" id="report">
         <h3>
@@ -7400,13 +7400,13 @@
           Reports a reversed copy of the given list or string.
         </p>
         <pre>
-          show mylist
-          ;; mylist is [2 7 4 &quot;Bob&quot;]
-          set mylist reverse mylist
-          ;; mylist now is [&quot;Bob&quot; 4 7 2]
-          show reverse &quot;live&quot;
-          =&gt; &quot;evil&quot;
-        </pre>
+show mylist
+;; mylist is [2 7 4 &quot;Bob&quot;]
+set mylist reverse mylist
+;; mylist now is [&quot;Bob&quot; 4 7 2]
+show reverse &quot;live&quot;
+=&gt; &quot;evil&quot;
+</pre>
       </div>
       <div class="dict_entry" id="rgb">
         <h3>
@@ -7514,13 +7514,13 @@
           towards the positive numbers.
         </p>
         <pre>
-          show round 4.2
-          =&gt; 4
-          show round 4.5
-          =&gt; 5
-          show round -4.5
-          =&gt; -4
-        </pre>
+show round 4.2
+=&gt; 4
+show round 4.5
+=&gt; 5
+show round -4.5
+=&gt; -4
+</pre>
         <p>
           See also <a href="#precision">precision</a>, <a href="#ceiling">ceiling</a>, <a href="#floor">floor</a>.
         </p>
@@ -7570,12 +7570,12 @@
           if you surround the entire call with parentheses. For example:
         </p>
         <pre>
-          (run [ [turtle-count step-count] -&gt; crt turtle-count [ fd step-count ] ] 10 5)
-          ;; creates 10 turtles and move them forward 5 steps
-          show (runresult [ [a b] -&gt; a + b ] 10 5)
-          =&gt; 15
-          ;; adds 10 and 5
-        </pre>
+(run [ [turtle-count step-count] -&gt; crt turtle-count [ fd step-count ] ] 10 5)
+;; creates 10 turtles and move them forward 5 steps
+show (runresult [ [a b] -&gt; a + b ] 10 5)
+=&gt; 15
+;; adds 10 and 5
+</pre>
         <p>
           See also <a href="#foreach">foreach</a>, <a href="#arrow">-> (anonymous procedure)</a>.
         </p>
@@ -7614,10 +7614,10 @@
           2 are equivalent, and the same spectrum of colors will be used.
         </p>
         <pre>
-          ask turtles [ set color scale-color red age 0 50 ]
-          ;; colors each turtle a shade of red proportional
-          ;; to its value for the age variable
-        </pre>
+ask turtles [ set color scale-color red age 0 50 ]
+;; colors each turtle a shade of red proportional
+;; to its value for the age variable
+</pre>
       </div>
       <div class="dict_entry" id="self">
         <h3>
@@ -7677,19 +7677,19 @@
           a sublist. Examples make this clearer:
         </p>
         <pre>
-          show sentence 1 2
-          =&gt; [1 2]
-          show sentence [1 2] 3
-          =&gt; [1 2 3]
-          show sentence 1 [2 3]
-          =&gt; [1 2 3]
-          show sentence [1 2] [3 4]
-          =&gt; [1 2 3 4]
-          show sentence [[1 2]] [[3 4]]
-          =&gt; [[1 2] [3 4]]
-          show (sentence [1 2] 3 [4 5] (3 + 3) 7)
-          =&gt; [1 2 3 4 5 6 7]
-        </pre>
+show sentence 1 2
+=&gt; [1 2]
+show sentence [1 2] 3
+=&gt; [1 2 3]
+show sentence 1 [2 3]
+=&gt; [1 2 3]
+show sentence [1 2] [3 4]
+=&gt; [1 2 3 4]
+show sentence [[1 2]] [[3 4]]
+=&gt; [[1 2] [3 4]]
+show (sentence [1 2] 3 [4 5] (3 + 3) 7)
+=&gt; [1 2 3 4 5 6 7]
+</pre>
       </div>
       <div class="dict_entry" id="set">
         <h3>
@@ -7739,11 +7739,11 @@
           The change is temporary and is not saved with the model.
         </p>
         <pre>
-          set-current-directory &quot;C:\\NetLogo&quot;
-          ;; Assume it is a Windows Machine
-          file-open &quot;my-file.txt&quot;
-          ;; Opens file &quot;C:\\NetLogo\\my-file.txt&quot;
-        </pre>
+set-current-directory &quot;C:\\NetLogo&quot;
+;; Assume it is a Windows Machine
+file-open &quot;my-file.txt&quot;
+;; Opens file &quot;C:\\NetLogo\\my-file.txt&quot;
+</pre>
       </div>
       <div class="dict_entry" id="set-current-plot">
         <h3>
@@ -7804,20 +7804,20 @@
           stuck with their breed's default shape.
         </p>
         <pre>
-          create-turtles 1 ;; new turtle's shape is &quot;default&quot;
-          create-cats 1    ;; new turtle's shape is &quot;default&quot;
+create-turtles 1 ;; new turtle's shape is &quot;default&quot;
+create-cats 1    ;; new turtle's shape is &quot;default&quot;
 
-          set-default-shape turtles &quot;circle&quot;
-          create-turtles 1 ;; new turtle's shape is &quot;circle&quot;
-          create-cats 1    ;; new turtle's shape is &quot;circle&quot;
+set-default-shape turtles &quot;circle&quot;
+create-turtles 1 ;; new turtle's shape is &quot;circle&quot;
+create-cats 1    ;; new turtle's shape is &quot;circle&quot;
 
-          set-default-shape cats &quot;cat&quot;
-          set-default-shape dogs &quot;dog&quot;
-          create-cats 1   ;; new turtle's shape is &quot;cat&quot;
-          ask cats [ set breed dogs ]
-          ;; all cats become dogs, and automatically
-          ;; change their shape to &quot;dog&quot;
-        </pre>
+set-default-shape cats &quot;cat&quot;
+set-default-shape dogs &quot;dog&quot;
+create-cats 1   ;; new turtle's shape is &quot;cat&quot;
+ask cats [ set breed dogs ]
+;; all cats become dogs, and automatically
+;; change their shape to &quot;dog&quot;
+</pre>
         <p>
           See also <a href="#shape">shape</a>.
         </p>
@@ -8020,13 +8020,13 @@
           the center of patch (-16, -16).
         </p>
         <pre>
-          setxy 0 0
-          ;; turtle moves to the middle of the center patch
-          setxy random-xcor random-ycor
-          ;; turtle moves to a random point
-          setxy random-pxcor random-pycor
-          ;; turtle moves to the center of a random patch
-        </pre>
+setxy 0 0
+;; turtle moves to the middle of the center patch
+setxy random-xcor random-ycor
+;; turtle moves to a random point
+setxy random-pxcor random-pycor
+;; turtle moves to the center of a random patch
+</pre>
         <p>
           See also <a href="#move-to">move-to</a>.
         </p>
@@ -8043,13 +8043,13 @@
           otherwise.
         </p>
         <pre>
-          show shade-of? blue red
-          =&gt; false
-          show shade-of? blue (blue + 1)
-          =&gt; true
-          show shade-of? gray white
-          =&gt; true
-        </pre>
+show shade-of? blue red
+=&gt; false
+show shade-of? blue (blue + 1)
+=&gt; true
+show shade-of? gray white
+=&gt; true
+</pre>
       </div>
       <div class="dict_entry" id="shape">
         <h3>
@@ -8077,7 +8077,7 @@
           ask links [ set shape &quot;link 1&quot; ]
           ;; assumes you have made a &quot;link 1&quot; shape in
           ;; the Link Shapes Editor
-        </pre>
+</pre>
         <p>
           See also <a href="#set-default-shape">set-default-shape</a>,
           <a href="#shapes">shapes</a>.
@@ -8099,10 +8099,10 @@
           from other models, in the <a href="shapes.html">Shapes Editor</a>.
         </p>
         <pre>
-          show shapes
-          =&gt; [&quot;default&quot; &quot;airplane&quot; &quot;arrow&quot; &quot;box&quot; &quot;bug&quot; ...
-          ask turtles [ set shape one-of shapes ]
-        </pre>
+show shapes
+=&gt; [&quot;default&quot; &quot;airplane&quot; &quot;arrow&quot; &quot;box&quot; &quot;bug&quot; ...
+ask turtles [ set shape one-of shapes ]
+</pre>
       </div>
       <div class="dict_entry" id="show">
         <h3>
@@ -8174,11 +8174,11 @@
           in randomized order.
         </p>
         <pre>
-          show shuffle [1 2 3 4 5]
-          =&gt; [5 2 4 1 3]
-          show shuffle [1 2 3 4 5]
-          =&gt; [1 3 5 2 4]
-        </pre>
+show shuffle [1 2 3 4 5]
+=&gt; [5 2 4 1 3]
+show shuffle [1 2 3 4 5]
+=&gt; [1 3 5 2 4]
+</pre>
       </div>
       <div class="dict_entry" id="sin">
         <h3>
@@ -8192,9 +8192,9 @@
           degrees.
         </p>
         <pre>
-          show sin 270
-          =&gt; -1
-        </pre>
+show sin 270
+=&gt; -1
+</pre>
       </div>
       <div class="dict_entry" id="size">
         <h3>
@@ -8245,32 +8245,32 @@
           number).
         </p>
         <pre>
-          show sort [3 1 4 2]
-          =&gt; [1 2 3 4]
-          show sort [2 1 "a"]
-          =&gt; [1 2]
-          show sort (list "a" "c" "b" (patch 0 0))
-          =&gt; ["a" "b" "c"]
-          show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
-          =&gt; [(patch 0 1) (patch 0 0) (patch 1 0)]
+show sort [3 1 4 2]
+=&gt; [1 2 3 4]
+show sort [2 1 "a"]
+=&gt; [1 2]
+show sort (list "a" "c" "b" (patch 0 0))
+=&gt; ["a" "b" "c"]
+show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
+=&gt; [(patch 0 1) (patch 0 0) (patch 1 0)]
 
-          ;; label patches with numbers in left-to-right, top-to-bottom order
-          let n 0
-          foreach sort patches [ the-patch -&gt;
-          ask the-patch [
-          set plabel n
-          set n n + 1
-          ]
-          ]
+;; label patches with numbers in left-to-right, top-to-bottom order
+let n 0
+foreach sort patches [ the-patch -&gt;
+ask the-patch [
+set plabel n
+set n n + 1
+]
+]
 
-          ;; some additional examples to clarify behavior in strange cases
-          show sort (list patch 0 0 patch 0 1 patch 1 0 turtle 0 turtle 1) ; turtles are always sorted lower than patches
-          =&gt; [(turtle 0) (turtle 1) (patch 0 1) (patch 0 0) (patch 1 0)]
-          show sort (list nobody false true) ; booleans and nobody cannot be sorted
-          =&gt; []
-          show sort (list [1 2 3] turtles) ; lists and agentsets are not included if they are inside a list passed to sort
-          =&gt; []
-        </pre>
+;; some additional examples to clarify behavior in strange cases
+show sort (list patch 0 0 patch 0 1 patch 1 0 turtle 0 turtle 1) ; turtles are always sorted lower than patches
+=&gt; [(turtle 0) (turtle 1) (patch 0 1) (patch 0 0) (patch 1 0)]
+show sort (list nobody false true) ; booleans and nobody cannot be sorted
+=&gt; []
+show sort (list [1 2 3] turtles) ; lists and agentsets are not included if they are inside a list passed to sort
+=&gt; []
+</pre>
         <p>
           See also <a href="#sort-by">sort-by</a>, <a href="#sort-on">sort-on</a>.
         </p>
@@ -8304,13 +8304,13 @@
           input is an agentset, ties are broken randomly.
         </p>
         <pre>
-          show sort-by &lt; [3 1 4 2]
-          =&gt; [1 2 3 4]
-          show sort-by &gt; [3 1 4 2]
-          =&gt; [4 3 2 1]
-          show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2 ] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
-          =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
-        </pre>
+show sort-by &lt; [3 1 4 2]
+=&gt; [1 2 3 4]
+show sort-by &gt; [3 1 4 2]
+=&gt; [4 3 2 1]
+show sort-by [ [string1 string2] -&gt; length string1 &lt; length string2 ] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
+=&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
+</pre>
         <p>
           See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>, <a href="#arrow">-> (anonymous procedure)</a>.
         </p>
@@ -8331,16 +8331,16 @@
           same type.
         </p>
         <pre>
-          crt 3
-          show sort-on [who] turtles
-          =&gt; [(turtle 0) (turtle 1) (turtle 2)]
-          show sort-on [(- who)] turtles
-          =&gt; [(turtle 2) (turtle 1) (turtle 0)]
-          foreach sort-on [size] turtles
-          [ the-turtle -&gt; ask the-turtle [ do-something ] ]
-          ;; turtles run &quot;do-something&quot; one at a time, in
-          ;; ascending order by size
-        </pre>
+crt 3
+show sort-on [who] turtles
+=&gt; [(turtle 0) (turtle 1) (turtle 2)]
+show sort-on [(- who)] turtles
+=&gt; [(turtle 2) (turtle 1) (turtle 0)]
+foreach sort-on [size] turtles
+[ the-turtle -&gt; ask the-turtle [ do-something ] ]
+;; turtles run &quot;do-something&quot; one at a time, in
+;; ascending order by size
+</pre>
         <p>
           See also <a href="#sort">sort</a>, <a href="#sort-by">sort-by</a>.
         </p>
@@ -8367,11 +8367,11 @@
           are created as members of the given breed.
         </p>
         <pre>
-          sprout 5
-          sprout-wolves 10
-          sprout 1 [ set color red ]
-          sprout-sheep 1 [ set color black ]
-        </pre>
+sprout 5
+sprout-wolves 10
+sprout 1 [ set color red ]
+sprout-sheep 1 [ set color black ]
+</pre>
         <p>
           See also <a href="#create-turtles">create-turtles</a>, <a href="#hatch">hatch</a>.
         </p>
@@ -8438,12 +8438,12 @@
           Bessel's correction.)
         </p>
         <pre>
-          show standard-deviation [1 2 3 4 5 6]
-          =&gt; 1.8708286933869707
-          show standard-deviation [energy] of turtles
-          ;; prints the standard deviation of the variable &quot;energy&quot;
-          ;; from all the turtles
-        </pre>
+show standard-deviation [1 2 3 4 5 6]
+=&gt; 1.8708286933869707
+show standard-deviation [energy] of turtles
+;; prints the standard deviation of the variable &quot;energy&quot;
+;; from all the turtles
+</pre>
       </div>
       <div class="dict_entry" id="startup">
         <h3>
@@ -8458,10 +8458,10 @@
           model is first loaded in the NetLogo application.
         </p>
         <pre>
-          to startup
-          setup
-          end
-        </pre>
+to startup
+setup
+end
+</pre>
         <p>
           <code>startup</code> does not run when a model is run headless from the
           command line, or by parallel BehaviorSpace.
@@ -8480,9 +8480,9 @@
           procedure or construct stops, not all execution for the agent.
         </p>
         <pre>
-          if not any? turtles [ stop ]
-          ;; exits if there are no more turtles
-        </pre>
+if not any? turtles [ stop ]
+;; exits if there are no more turtles
+</pre>
         <p>
           Note: <code>stop</code> can also be used to stop a forever button. See
           <a href="programming.html#buttons">Buttons</a> in the
@@ -8507,11 +8507,11 @@
           nothing.
         </p>
         <pre>
-          stop-inspecting patch 2 4
-          ;; the agent monitor for that patch closes
-          ask sheep [ stop-inspecting self ]
-          ;; close all agent monitors for sheep
-        </pre>
+stop-inspecting patch 2 4
+;; the agent monitor for that patch closes
+ask sheep [ stop-inspecting self ]
+;; close all agent monitors for sheep
+</pre>
         <p>
           See <a href="#inspect">inspect</a> and <a href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>.
         </p>
@@ -8561,11 +8561,11 @@
           Note: The positions are numbered beginning with 0, not with 1.
         </p>
         <pre>
-          show sublist [99 88 77 66] 1 3
-          =&gt; [88 77]
-          show substring &quot;apartment&quot; 1 5
-          =&gt; &quot;part&quot;
-        </pre>
+show sublist [99 88 77 66] 1 3
+=&gt; [88 77]
+show substring &quot;apartment&quot; 1 5
+=&gt; &quot;part&quot;
+</pre>
       </div>
       <div class="dict_entry" id="subtract-headings">
         <h3>
@@ -8589,19 +8589,19 @@
           between 5 degrees and 355 degrees is 10 degrees, not -350 degrees.
         </p>
         <pre>
-          show subtract-headings 80 60
-          =&gt; 20
-          show subtract-headings 60 80
-          =&gt; -20
-          show subtract-headings 5 355
-          =&gt; 10
-          show subtract-headings 355 5
-          =&gt; -10
-          show subtract-headings 180 0
-          =&gt; 180
-          show subtract-headings 0 180
-          =&gt; 180
-        </pre>
+show subtract-headings 80 60
+=&gt; 20
+show subtract-headings 60 80
+=&gt; -20
+show subtract-headings 5 355
+=&gt; 10
+show subtract-headings 355 5
+=&gt; -10
+show subtract-headings 180 0
+=&gt; 180
+show subtract-headings 0 180
+=&gt; 180
+</pre>
       </div>
       <div class="dict_entry" id="sum">
         <h3>
@@ -8614,10 +8614,10 @@
           Reports the sum of the items in the list.
         </p>
         <pre>
-          show sum [energy] of turtles
-          ;; prints the total of the variable &quot;energy&quot;
-          ;; from all the turtles
-        </pre>
+show sum [energy] of turtles
+;; prints the total of the variable &quot;energy&quot;
+;; from all the turtles
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="T">
@@ -8764,10 +8764,10 @@
           If the link dies, the tie relation is removed.
         </p>
         <pre>
-          crt 2 [ fd 3 ]
-          ;; creates a link and ties turtle 1 to turtle 0
-          ask turtle 0 [ create-link-to turtle 1 [ tie ] ]
-        </pre>
+crt 2 [ fd 3 ]
+;; creates a link and ties turtle 1 to turtle 0
+ask turtle 0 [ create-link-to turtle 1 [ tie ] ]
+</pre>
         <p>
           See also <a href="#untie">untie</a>
         </p>
@@ -8826,15 +8826,15 @@
           Used to begin a command procedure.
         </p>
         <pre>
-          to setup
-          clear-all
-          crt 500
-          end
+to setup
+clear-all
+crt 500
+end
 
-          to circle [radius]
-          crt 100 [ fd radius ]
-          end
-        </pre>
+to circle [radius]
+crt 100 [ fd radius ]
+end
+</pre>
       </div>
       <div class="dict_entry" id="to-report">
         <h3>
@@ -8852,20 +8852,20 @@
           value for the procedure. See <a href="#report">report</a>.
         </p>
         <pre>
-          to-report average [a b]
-          report (a + b) / 2
-          end
+to-report average [a b]
+report (a + b) / 2
+end
 
-          to-report absolute-value [number]
-          ifelse number &gt;= 0
-          [ report number ]
-          [ report (- number) ]
-          end
+to-report absolute-value [number]
+ifelse number &gt;= 0
+[ report number ]
+[ report (- number) ]
+end
 
-          to-report first-turtle?
-          report who = 0  ;; reports true or false
-          end
-        </pre>
+to-report first-turtle?
+report who = 0  ;; reports true or false
+end
+</pre>
       </div>
       <div class="dict_entry" id="towards">
         <h3>
@@ -8888,9 +8888,9 @@
           on the same location, will cause a runtime error.
         </p>
         <pre>
-          set heading towards turtle 1
-          ;; same as &quot;face turtle 1&quot;
-        </pre>
+set heading towards turtle 1
+;; same as &quot;face turtle 1&quot;
+</pre>
         <p>
           See also <a href="#face">face</a>.
         </p>
@@ -8933,9 +8933,9 @@
           turtles you may also use the single breed form to refer to them.
         </p>
         <pre>
-          ask turtle 5 [ set color red ]
-          ;; turtle with who number 5 turns red
-        </pre>
+ask turtle 5 [ set color red ]
+;; turtle with who number 5 turns red
+</pre>
       </div>
       <div class="dict_entry" id="turtle-set">
         <h3>
@@ -8952,11 +8952,11 @@
           above.
         </p>
         <pre>
-          turtle-set self
-          (turtle-set self turtles-on neighbors)
-          (turtle-set turtle 0 turtle 2 turtle 9)
-          (turtle-set frogs mice)
-        </pre>
+turtle-set self
+(turtle-set self turtles-on neighbors)
+(turtle-set turtle 0 turtle 2 turtle 9)
+(turtle-set frogs mice)
+</pre>
         <p>
           See also <a href="#patch-set">patch-set</a>, <a href="#link-set">link-set</a>.
         </p>
@@ -8972,9 +8972,9 @@
           Reports the agentset consisting of all turtles. This is a special agentset that can grow as turtles are added to the world, see <a href="programming.html#special-agentsets">the programming guide for more info</a>.
         </p>
         <pre>
-          show count turtles
-          ;; prints the number of turtles
-        </pre>
+show count turtles
+;; prints the number of turtles
+</pre>
       </div>
       <div class="dict_entry" id="turtles-at">
         <h3>
@@ -8991,10 +8991,10 @@
           caller is a turtle.)
         </p>
         <pre>
-          create-turtles 5 [ setxy 2 3 ]
-          show count [turtles-at 1 1] of patch 1 2
-          =&gt; 5
-        </pre>
+create-turtles 5 [ setxy 2 3 ]
+show count [turtles-at 1 1] of patch 1 2
+=&gt; 5
+</pre>
         <p>
           If the name of a breed is substituted for &quot;turtles&quot;, then
           only turtles of that breed are included.
@@ -9014,22 +9014,22 @@
           patch (including the caller itself if it's a turtle).
         </p>
         <pre>
-          crt 10
-          ask turtle 0 [ show count turtles-here ]
-          =&gt; 10
-        </pre>
+crt 10
+ask turtle 0 [ show count turtles-here ]
+=&gt; 10
+</pre>
         <p>
           If the name of a breed is substituted for &quot;turtles&quot;, then
           only turtles of that breed are included.
         </p>
         <pre>
-          breed [cats cat]
-          breed [dogs dog]
-          create-cats 5
-          create-dogs 1
-          ask dogs [ show count cats-here ]
-          =&gt; 5
-        </pre>
+breed [cats cat]
+breed [dogs dog]
+create-cats 5
+create-dogs 1
+ask dogs [ show count cats-here ]
+=&gt; 5
+</pre>
       </div>
       <div class="dict_entry" id="turtles-on">
         <h3>
@@ -9048,16 +9048,16 @@
           turtle or turtles.
         </p>
         <pre>
-          ask turtles [
-          if not any? turtles-on patch-ahead 1
-          [ fd 1 ]
-          ]
-          ask turtles [
-          if not any? turtles-on neighbors [
-          die-of-loneliness
-          ]
-          ]
-        </pre>
+ask turtles [
+if not any? turtles-on patch-ahead 1
+[ fd 1 ]
+]
+ask turtles [
+if not any? turtles-on neighbors [
+die-of-loneliness
+]
+]
+</pre>
         <p>
           If the name of a breed is substituted for &quot;turtles&quot;, then
           only turtles of that breed are included.
@@ -9083,14 +9083,14 @@
           breed may list the same variable.)
         </p>
         <pre>
-          breed [cats cat ]
-          breed [dogs dog]
-          breed [hamsters hamster]
-          turtles-own [eyes legs]   ;; applies to all breeds
-          cats-own [fur kittens]
-          hamsters-own [fur cage]
-          dogs-own [hair puppies]
-        </pre>
+breed [cats cat ]
+breed [dogs dog]
+breed [hamsters hamster]
+turtles-own [eyes legs]   ;; applies to all breeds
+cats-own [fur kittens]
+hamsters-own [fur cage]
+dogs-own [hair puppies]
+</pre>
         <p>
           See also <a href="#globals">globals</a>, <a href="#patches-own">patches-own</a>, <a href="#breed">breed</a>,
           <a href="#turtles-own"><i>&lt;breeds&gt;</i>-own</a>.
@@ -9112,9 +9112,9 @@
           This agent is <i>not</i> printed before the value. unlike <a href="#show">show</a>.
         </p>
         <pre>
-          type 3 type &quot; &quot; print 4
-          =&gt; 3 4
-        </pre>
+type 3 type &quot; &quot; print 4
+=&gt; 3 4
+</pre>
         <p>
           See also <a href="#print">print</a>, <a href="#show">show</a>,
           <a href="#write">write</a>, <a href="#output-cmds">output-type</a>, and
@@ -9155,18 +9155,18 @@
           commands to only the links of a particular breed.
         </p>
         <pre>
-          undirected-link-breed [streets street]
-          undirected-link-breed [highways highway]
-          to setup
-          clear-all
-          crt 2
-          ask turtle 0 [ create-street-with turtle 1 ]
-          ask turtle 0 [ create-highway-with turtle 1 ]
-          end
+undirected-link-breed [streets street]
+undirected-link-breed [highways highway]
+to setup
+clear-all
+crt 2
+ask turtle 0 [ create-street-with turtle 1 ]
+ask turtle 0 [ create-highway-with turtle 1 ]
+end
 
-          ask turtle 0 [ show sort my-links ]
-          ;; prints [(street 0 1) (highway 0 1)]
-        </pre>
+ask turtle 0 [ show sort my-links ]
+;; prints [(street 0 1) (highway 0 1)]
+</pre>
         <p>
           See also <a href="#breed">breed</a>, <a href="#directed-link-breed">directed-link-breed</a>
         </p>
@@ -9216,10 +9216,10 @@
           <i>size</i>, reports the entire list.
         </p>
         <pre>
-          ask up-to-n-of 50 patches [ set pcolor green ]
-          ;; 50 randomly chosen patches turn green
-          ;; if less than 50 patches exist, they all turn green
-        </pre>
+ask up-to-n-of 50 patches [ set pcolor green ]
+;; 50 randomly chosen patches turn green
+;; if less than 50 patches exist, they all turn green
+</pre>
         <p>
           See also <a href="#n-of">n-of</a>, <a href="#one-of">one-of</a>.
         </p>
@@ -9280,7 +9280,7 @@
           face p
           move-to p
           ]
-        </pre>
+</pre>
         <p>
           Note that the turtle always ends up on a patch center and has a
           heading that is a multiple of 45 (uphill) or 90 (uphill4).
@@ -9305,9 +9305,9 @@
           cancels.
         </p>
         <pre>
-          set-current-directory user-directory
-          ;; Assumes the user will choose a directory
-        </pre>
+set-current-directory user-directory
+;; Assumes the user will choose a directory
+</pre>
       </div>
       <div class="dict_entry" id="user-file">
         <h3>
@@ -9325,9 +9325,9 @@
           user cancels.
         </p>
         <pre>
-          file-open user-file
-          ;; Assumes the user will choose a file
-        </pre>
+file-open user-file
+;; Assumes the user will choose a file
+</pre>
       </div>
       <div class="dict_entry" id="user-new-file">
         <h3>
@@ -9342,9 +9342,9 @@
           file path or false if the user cancels.
         </p>
         <pre>
-          file-open user-new-file
-          ;; Assumes the user will choose a file
-        </pre>
+file-open user-new-file
+;; Assumes the user will choose a file
+</pre>
         <p>
           Note that this reporter doesn't actually create the file;
           normally you would create the file using <code>file-open</code>, as in
@@ -9372,8 +9372,8 @@
           <i>value</i> may be of any type, but is typically a string.
         </p>
         <pre>
-          show user-input &quot;What is your name?&quot;
-        </pre>
+show user-input &quot;What is your name?&quot;
+</pre>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
           Programming Guide for additional details.
@@ -9393,8 +9393,8 @@
           <i>value</i> may be of any type, but is typically a string.
         </p>
         <pre>
-          user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
-        </pre>
+user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
+</pre>
         <p>
           Note that if a user closes the <code>user-message</code> dialog
           with the &quot;X&quot; in the corner, the behavior will be the same as if they had clicked &quot;OK&quot;.
@@ -9423,9 +9423,9 @@
           <i>value</i> may be of any type, but is typically a string.
         </p>
         <pre>
-          if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
-          [ setup ]
-        </pre>
+if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
+[ setup ]
+</pre>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
           Programming Guide for additional details.
@@ -9446,9 +9446,9 @@
           <i>value</i> may be of any type, but is typically a string.
         </p>
         <pre>
-          if user-yes-or-no? &quot;Set up the model?&quot;
-          [ setup ]
-        </pre>
+if user-yes-or-no? &quot;Set up the model?&quot;
+[ setup ]
+</pre>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
           Programming Guide for additional details.
@@ -9481,9 +9481,9 @@
           numbers in the list.
         </p>
         <pre>
-          show variance [2 7 4 3 5]
-          =&gt; 3.7
-        </pre>
+show variance [2 7 4 3 5]
+=&gt; 3.7
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="W">
@@ -9504,8 +9504,8 @@
           given amount, but might wait slightly more.
         </p>
         <pre>
-          repeat 10 [ fd 1 wait 0.5 ]
-        </pre>
+repeat 10 [ fd 1 wait 0.5 ]
+</pre>
         <p>
           While the agent is waiting, no other agents can do anything.
           Everything stops until the agent is done.
@@ -9576,11 +9576,11 @@
           than other agents.
         </p>
         <pre>
-          while [any? other turtles-here]
-          [ fd 1 ]
-          ;; turtle moves until it finds a patch that has
-          ;; no other turtles on it
-        </pre>
+while [any? other turtles-here]
+[ fd 1 ]
+;; turtle moves until it finds a patch that has
+;; no other turtles on it
+</pre>
       </div>
       <div class="dict_entry" id="who">
         <h3>
@@ -9605,16 +9605,16 @@
           Example:
         </p>
         <pre>
-          show [who] of turtles with [color = red]
-          ;; prints a list of the who numbers of all red turtles
-          ;; in the Command Center, in random order
-          crt 100
-          [ ifelse who &lt; 50
-          [ set color red ]
-          [ set color blue ] ]
-          ;; turtles 0 through 49 are red, turtles 50
-          ;; through 99 are blue
-        </pre>
+show [who] of turtles with [color = red]
+;; prints a list of the who numbers of all red turtles
+;; in the Command Center, in random order
+crt 100
+[ ifelse who &lt; 50
+[ set color red ]
+[ set color blue ] ]
+;; turtles 0 through 49 are red, turtles 50
+;; through 99 are blue
+</pre>
         <p>
           You can use the turtle reporter to retrieve a turtle with a given
           who number. See also <a href="#turtle">turtle</a>.
@@ -9624,14 +9624,14 @@
           have the same who number, even if they are different breeds:
         </p>
         <pre>
-          clear-turtles
-          create-frogs 1
-          create-mice 1
-          ask turtles [ print who ]
-          ;; prints (in some random order):
-          ;; (frog 0): 0
-          ;; (mouse 1): 1
-        </pre>
+clear-turtles
+create-frogs 1
+create-mice 1
+ask turtles [ print who ]
+;; prints (in some random order):
+;; (frog 0): 0
+;; (mouse 1): 1
+</pre>
         <p>
           Even though we only have one mouse, it is <code>mouse 1</code> not
           <code>mouse 0</code>, because the who number 0 was already taken by the
@@ -9653,9 +9653,9 @@
           the given condition.
         </p>
         <pre>
-          show count patches with [pcolor = red]
-          ;; prints the number of red patches
-        </pre>
+show count patches with [pcolor = red]
+;; prints the number of red patches
+</pre>
       </div>
       <div class="dict_entry" id="link-with">
         <h3>
@@ -9673,12 +9673,12 @@
           nobody. If more than one such link exists, reports a random one.
         </p>
         <pre>
-          crt 2
-          ask turtle 0 [
-          create-link-with turtle 1
-          show link-with turtle 1 ;; prints link 0 1
-          ]
-        </pre>
+crt 2
+ask turtle 0 [
+create-link-with turtle 1
+show link-with turtle 1 ;; prints link 0 1
+]
+</pre>
         <p>
           See also: <a href="#in-link-from">in-link-from</a>, <a href="#out-link-to">out-link-to</a>
         </p>
@@ -9697,9 +9697,9 @@
           the maximum value of the given reporter.
         </p>
         <pre>
-          show count patches with-max [pxcor]
-          ;; prints the number of patches on the right edge
-        </pre>
+show count patches with-max [pxcor]
+;; prints the number of patches on the right edge
+</pre>
         <p>
           See also <a href="#max-one-of">max-one-of</a>, <a href="#max-n-of">max-n-of</a>.
         </p>
@@ -9718,9 +9718,9 @@
           have the minimum value of the given reporter.
         </p>
         <pre>
-          show count patches with-min [pycor]
-          ;; prints the number of patches on the bottom edge
-        </pre>
+show count patches with-min [pycor]
+;; prints the number of patches on the bottom edge
+</pre>
         <p>
           See also <a href="#min-one-of">min-one-of</a>, <a href="#min-n-of">min-n-of</a>.
         </p>
@@ -9741,13 +9741,13 @@
           Example:
         </p>
         <pre>
-          ;; Run #1:
-          random-seed 50 setup repeat 10 [ go ]
-          ;; Run #2:
-          random-seed 50 setup
-          with-local-randomness [ watch one-of turtles ]
-          repeat 10 [ go ]
-        </pre>
+;; Run #1:
+random-seed 50 setup repeat 10 [ go ]
+;; Run #2:
+random-seed 50 setup
+with-local-randomness [ watch one-of turtles ]
+repeat 10 [ go ]
+</pre>
         <p>
           Since <code>one-of</code> is used inside
           <code>with-local-randomness</code>, both runs will be identical.
@@ -9764,12 +9764,12 @@
           state is the same both before the commands run and afterwards.
         </p>
         <pre>
-          random-seed 10
-          with-local-randomness [ print n-values 10 [random 10] ]
-          ;; prints [8 9 8 4 2 4 5 4 7 9]
-          print n-values 10 [random 10]
-          ;; prints [8 9 8 4 2 4 5 4 7 9]
-        </pre>
+random-seed 10
+with-local-randomness [ print n-values 10 [random 10] ]
+;; prints [8 9 8 4 2 4 5 4 7 9]
+print n-values 10 [random 10]
+;; prints [8 9 8 4 2 4 5 4 7 9]
+</pre>
       </div>
       <div class="dict_entry" id="without-interruption">
         <h3>
@@ -9809,20 +9809,20 @@
           string.
         </p>
         <pre>
-          show word &quot;tur&quot; &quot;tle&quot;
-          =&gt; &quot;turtle&quot;
-          word &quot;a&quot; 6
-          =&gt; &quot;a6&quot;
-          set directory &quot;c:\\foo\\fish\\&quot;
-          show word directory &quot;bar.txt&quot;
-          =&gt; &quot;c:\foo\fish\bar.txt&quot;
-          show word [1 54 8] &quot;fishy&quot;
-          =&gt; &quot;[1 54 8]fishy&quot;
-          show (word 3)
-          =&gt; &quot;3&quot;
-          show (word &quot;a&quot; &quot;b&quot; &quot;c&quot; 1 23)
-          =&gt; &quot;abc123&quot;
-        </pre>
+show word &quot;tur&quot; &quot;tle&quot;
+=&gt; &quot;turtle&quot;
+word &quot;a&quot; 6
+=&gt; &quot;a6&quot;
+set directory &quot;c:\\foo\\fish\\&quot;
+show word directory &quot;bar.txt&quot;
+=&gt; &quot;c:\foo\fish\bar.txt&quot;
+show word [1 54 8] &quot;fishy&quot;
+=&gt; &quot;[1 54 8]fishy&quot;
+show (word 3)
+=&gt; &quot;3&quot;
+show (word &quot;a&quot; &quot;b&quot; &quot;c&quot; 1 23)
+=&gt; &quot;abc123&quot;
+</pre>
       </div>
       <div class="dict_entry" id="world-dim">
         <h3>
@@ -9867,11 +9867,11 @@
           variable.)
         </p>
         <pre>
-          show wrap-color 150
-          =&gt; 10
-          show wrap-color -10
-          =&gt; 130
-        </pre>
+show wrap-color 150
+=&gt; 10
+show wrap-color -10
+=&gt; 130
+</pre>
       </div>
       <div class="dict_entry" id="write">
         <h3>
@@ -9891,9 +9891,9 @@
           and is prepended with a space.
         </p>
         <pre>
-          write &quot;hello world&quot;
-          =&gt;  &quot;hello world&quot;
-        </pre>
+write &quot;hello world&quot;
+=&gt;  &quot;hello world&quot;
+</pre>
         <p>
           See also <a href="#print">print</a>, <a href="#show">show</a>,
           <a href="#type">type</a>, <a href="#output-cmds">output-write</a>,
@@ -9939,10 +9939,10 @@
           but not when both are true.
         </p>
         <pre>
-          if (pxcor &gt; 0) xor (pycor &gt; 0)
-          [ set pcolor blue ]
-          ;; upper-left and lower-right quadrants turn blue
-        </pre>
+if (pxcor &gt; 0) xor (pycor &gt; 0)
+[ set pcolor blue ]
+;; upper-left and lower-right quadrants turn blue
+</pre>
       </div><!-- ======================================== -->
     </div>
     <h2 id="Y">
