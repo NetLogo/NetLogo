@@ -10,9 +10,9 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 import sys.process.Process
 import java.io.File
 
-for{path <- Process("find docs -name *.html").lines
+for{path <- Process("find autogen/docs -name *.html.mustache").lineStream
     if !path.startsWith("docs/scaladoc/")
-    lines = (Process(new File(path)) #> "aspell -H -p ./dist/docwords.txt list").lines
+    lines = (Process(new File(path)) #> "aspell -H -p ./dist/docwords.txt list").lineStream
     if lines.nonEmpty}
 {
   println(path)
