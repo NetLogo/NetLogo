@@ -7815,8 +7815,8 @@ set-default-shape cats &quot;cat&quot;
 set-default-shape dogs &quot;dog&quot;
 create-cats 1   ;; new turtle's shape is &quot;cat&quot;
 ask cats [ set breed dogs ]
-;; all cats become dogs, and automatically
-;; change their shape to &quot;dog&quot;
+  ;; all cats become dogs, and automatically
+  ;; change their shape to &quot;dog&quot;
 </pre>
         <p>
           See also <a href="#shape">shape</a>.
@@ -8257,10 +8257,10 @@ show sort (list (patch 0 0) (patch 0 1) (patch 1 0))
 ;; label patches with numbers in left-to-right, top-to-bottom order
 let n 0
 foreach sort patches [ the-patch -&gt;
-ask the-patch [
-set plabel n
-set n n + 1
-]
+  ask the-patch [
+    set plabel n
+    set n n + 1
+  ]
 ]
 
 ;; some additional examples to clarify behavior in strange cases
@@ -8337,7 +8337,7 @@ show sort-on [who] turtles
 show sort-on [(- who)] turtles
 =&gt; [(turtle 2) (turtle 1) (turtle 0)]
 foreach sort-on [size] turtles
-[ the-turtle -&gt; ask the-turtle [ do-something ] ]
+  [ the-turtle -&gt; ask the-turtle [ do-something ] ]
 ;; turtles run &quot;do-something&quot; one at a time, in
 ;; ascending order by size
 </pre>
@@ -8459,7 +8459,7 @@ show standard-deviation [energy] of turtles
         </p>
         <pre>
 to startup
-setup
+  setup
 end
 </pre>
         <p>
@@ -8827,12 +8827,12 @@ ask turtle 0 [ create-link-to turtle 1 [ tie ] ]
         </p>
         <pre>
 to setup
-clear-all
-crt 500
+  clear-all
+  crt 500
 end
 
 to circle [radius]
-crt 100 [ fd radius ]
+  crt 100 [ fd radius ]
 end
 </pre>
       </div>
@@ -8853,17 +8853,17 @@ end
         </p>
         <pre>
 to-report average [a b]
-report (a + b) / 2
+  report (a + b) / 2
 end
 
 to-report absolute-value [number]
-ifelse number &gt;= 0
-[ report number ]
-[ report (- number) ]
+  ifelse number &gt;= 0
+    [ report number ]
+    [ report (- number) ]
 end
 
 to-report first-turtle?
-report who = 0  ;; reports true or false
+  report who = 0  ;; reports true or false
 end
 </pre>
       </div>
@@ -9049,13 +9049,13 @@ ask dogs [ show count cats-here ]
         </p>
         <pre>
 ask turtles [
-if not any? turtles-on patch-ahead 1
-[ fd 1 ]
+  if not any? turtles-on patch-ahead 1
+    [ fd 1 ]
 ]
 ask turtles [
-if not any? turtles-on neighbors [
-die-of-loneliness
-]
+  if not any? turtles-on neighbors [
+    die-of-loneliness
+  ]
 ]
 </pre>
         <p>
@@ -9158,10 +9158,10 @@ type 3 type &quot; &quot; print 4
 undirected-link-breed [streets street]
 undirected-link-breed [highways highway]
 to setup
-clear-all
-crt 2
-ask turtle 0 [ create-street-with turtle 1 ]
-ask turtle 0 [ create-highway-with turtle 1 ]
+  clear-all
+  crt 2
+  ask turtle 0 [ create-street-with turtle 1 ]
+  ask turtle 0 [ create-highway-with turtle 1 ]
 end
 
 ask turtle 0 [ show sort my-links ]
@@ -9424,7 +9424,7 @@ user-message (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
         </p>
         <pre>
 if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; &quot;no&quot;]
-[ setup ]
+  [ setup ]
 </pre>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
@@ -9447,7 +9447,7 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
         </p>
         <pre>
 if user-yes-or-no? &quot;Set up the model?&quot;
-[ setup ]
+  [ setup ]
 </pre>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
@@ -9577,7 +9577,7 @@ repeat 10 [ fd 1 wait 0.5 ]
         </p>
         <pre>
 while [any? other turtles-here]
-[ fd 1 ]
+  [ fd 1 ]
 ;; turtle moves until it finds a patch that has
 ;; no other turtles on it
 </pre>
@@ -9609,9 +9609,9 @@ show [who] of turtles with [color = red]
 ;; prints a list of the who numbers of all red turtles
 ;; in the Command Center, in random order
 crt 100
-[ ifelse who &lt; 50
-[ set color red ]
-[ set color blue ] ]
+  [ ifelse who &lt; 50
+      [ set color red ]
+      [ set color blue ] ]
 ;; turtles 0 through 49 are red, turtles 50
 ;; through 99 are blue
 </pre>
@@ -9675,8 +9675,8 @@ show count patches with [pcolor = red]
         <pre>
 crt 2
 ask turtle 0 [
-create-link-with turtle 1
-show link-with turtle 1 ;; prints link 0 1
+  create-link-with turtle 1
+  show link-with turtle 1 ;; prints link 0 1
 ]
 </pre>
         <p>
@@ -9940,7 +9940,7 @@ write &quot;hello world&quot;
         </p>
         <pre>
 if (pxcor &gt; 0) xor (pycor &gt; 0)
-[ set pcolor blue ]
+  [ set pcolor blue ]
 ;; upper-left and lower-right quadrants turn blue
 </pre>
       </div><!-- ======================================== -->
