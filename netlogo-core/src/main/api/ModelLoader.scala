@@ -79,18 +79,27 @@ trait ModelLoader {
   def save(model: Model, uri: URI): Try[URI] = {
     def is3d(s: String): String = if(s.contains("3D")) "nlogo3d" else "nlogo"
     val format = formats.find(_.name == is3d(model.version))
-      .getOrElse(throw new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
-    format.save(model, uri)
+    format match {
+      case None =>
+        Failure(new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
+      case Some(formatter) => formatter.save(model, uri)
+    }
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {
-    val format = formats.find(_.name == extension)
-      .getOrElse(throw new Exception("Unable to get source for NetLogo model in format: " + extension))
-    format.sourceString(model)
+    def is3d(s: String): String = if(s.contains("3D")) "nlogo3d" else "nlogo"
+    val format = formats.find(_.name == is3d(model.version))
+    format match {
+      case None =>
+        Failure(new Exception(
+          "Unable to get source for NetLogo model in format: " + extension))
+      case Some(formatter) => formatter.sourceString(model)
+    }
   }
 
   def emptyModel(extension: String): Model = {
-    val format = formats.find(_.name == extension)
+    val default = if(extension == "nlogo3d") extension else "nlogo"
+    val format = formats.find(_.name == default)
       .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
     format.emptyModel
   }
