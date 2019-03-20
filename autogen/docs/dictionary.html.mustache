@@ -4774,7 +4774,7 @@ end
       <pre>
 to make-a-tree
   set-default-shape turtles &quot;circle&quot;
-  crt 6
+  crt 8
   ask turtle 0 [
     create-link-with turtle 1
     create-link-with turtle 2
@@ -4783,12 +4783,14 @@ to make-a-tree
   ask turtle 1 [
     create-link-with turtle 4
     create-link-with turtle 5
+    create-link-with turtle 6
+    create-link-with turtle 7
   ]
   ; place all the turtles with just one
   ; neighbor on the perimeter of a circle
   ; and then place the remaining turtles inside
   ; this circle, spread between their neighbors.
-  repeat 10 [ layout-tutte (turtles with [link-neighbors = 1]) links 12 ]
+  repeat 10 [ layout-tutte (turtles with [count link-neighbors > 1]) links 8 ]
 end
 </pre>
     </div>
