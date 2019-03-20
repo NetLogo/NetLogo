@@ -1,14 +1,30 @@
 <!DOCTYPE html>
-<title>
-  NetLogo {{version}} User Manual
-</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<frameset cols="260,*">
-  <frame src="headings.html" name="index" id="index">
-  <!--  <frameset rows="100,*" cols="*" frameborder="no">
-    <frame scrolling="NO" src="header.html">
-    <frame name="entry" src="whatis.html">
-  </frameset> -->
-  <frame src="whatis.html" name="entry" id="entry">
-</frameset>
-
+<html lang="en">
+  <head>
+    <title>
+      NetLogo {{version}} User Manual
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+      #index { width: 20%; }
+      #entry { width: 80%; }
+      iframe { width: 99%; }
+      body, table { width: 100%; }
+      table { border-collapse: collapse; }
+      * { height: 100%; margin: 0; padding: 0; }
+      body {height: 99%; }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td id="index">
+          <iframe src="headings.html"></iframe>
+        </td>
+        <td id="entry">
+          <iframe name="entry" src="whatis.html"></iframe>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
