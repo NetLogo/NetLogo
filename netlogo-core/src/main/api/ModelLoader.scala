@@ -5,7 +5,7 @@ import java.net.URI
 
 import org.nlogo.core.Model
 
-import scala.util.Try
+import scala.util.{ Failure, Try }
 import scala.reflect.ClassTag
 
 class FormatterPair[A, B <: ModelFormat[A, B]](
@@ -53,32 +53,39 @@ object ModelLoader {
 trait ModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
-  protected def uriFormat(uri: URI): Option[FormatterPair[_, _]] =
+  def uriCompatible(uri: URI): Option[FormatterPair[_, _]] =
     formats.find(_.isCompatible(uri))
 
   def readModel(uri: URI): Try[Model] = {
-    val format = uriFormat(uri)
-      .getOrElse(throw new Exception("Unable to open NetLogo model " + uri.getPath))
-    format.load(uri)
+    val format = uriCompatible(uri)
+    format match {
+      case None =>
+        Failure(new Exception(
+          s"Unable to open model with current format: ${uri.getPath}"))
+      case Some(formatter) => formatter.load(uri)
+    }
   }
 
   def readModel(source: String, extension: String): Try[Model] = {
-    val format =
-      formats.find(_.name == extension)
-        .getOrElse(throw new Exception("Unable to open model with extension: " + extension))
-    format.load(source)
+    val format = formats.find(_.isCompatible(source))
+    format match {
+      case None =>
+        Failure(new Exception(
+          s"Unable to open model with current format: $extension"))
+      case Some(formatter) => formatter.load(source)
+    }
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
-    val format = uriFormat(uri)
+    def is3d(s: String): String = if(s.contains("3D")) "nlogo3d" else "nlogo"
+    val format = formats.find(_.name == is3d(model.version))
       .getOrElse(throw new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
     format.save(model, uri)
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {
-    val format =
-      formats.find(_.name == extension)
-        .getOrElse(throw new Exception("Unable to get source for NetLogo model in format: " + extension))
+    val format = formats.find(_.name == extension)
+      .getOrElse(throw new Exception("Unable to get source for NetLogo model in format: " + extension))
     format.sourceString(model)
   }
 

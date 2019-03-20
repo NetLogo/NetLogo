@@ -42,7 +42,7 @@ trait SaveModel {
     controller.chooseFilePath(modelType) match {
       case res@Some(uri) =>
         val extension = ModelLoader.getURIExtension(uri)
-        if (extension.exists(ext => loader.formats.map(_.name).contains(ext)))
+        if (extension.isDefined)
           res
         else {
           controller.warnInvalidFileFormat(extension.getOrElse(""))

@@ -103,7 +103,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   def shouldOpenModelOfDifferingArity(arity: Int, version: String): Boolean = {
     try {
-      if (arity == 2)
+      if (arity == 3)
         checkWithUserBeforeOpening3DModelin2D(version)
       else
         checkWithUserBeforeOpening2DModelin3D()
