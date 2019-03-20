@@ -17,7 +17,7 @@ class NLogoFormat
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
   val is3DFormat = false
-  val NetLogoRegex = """(^NetLogo\s+\(\s*no version\s*\)|^NetLogo\s+\d+(?![a-zA-Z]))""".r
+  val NetLogoRegex = """(^NetLogo \(no version\)|^NetLogo \d+\..*)"""
   def name: String = "nlogo"
   def widgetReaders: Map[String, WidgetReader] = Map()
 
@@ -25,7 +25,7 @@ class NLogoFormat
     sections(location) match {
       case Success(sections) =>
         sections("org.nlogo.modelsection.version")
-          .find(NetLogoRegex.findFirstIn(_).isDefined)
+          .find(_.matches(NetLogoRegex))
           .flatMap(_ => Some(true)).getOrElse(false)
       case Failure(ex) => false
     }
@@ -33,12 +33,12 @@ class NLogoFormat
     sectionsFromSource(source) match {
       case Success(sections) =>
         sections("org.nlogo.modelsection.version")
-          .find(NetLogoRegex.findFirstIn(_).isDefined)
+          .find(_.matches(NetLogoRegex))
           .flatMap(_ => Some(true)).getOrElse(false)
       case Failure(ex) => false
     }
   override def isCompatible(model: Model): Boolean =
-    NetLogoRegex.findFirstIn(model.version).isDefined
+    model.version.matches(NetLogoRegex)
 }
 
 class NLogoFormatException(m: String) extends RuntimeException(m)
