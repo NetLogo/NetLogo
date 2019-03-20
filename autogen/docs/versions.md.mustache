@@ -9,6 +9,134 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.1.0 (March 2019)
+
+## Feature Changes
+
+- An extensions library for installing and updating extensions, available under the Tools menu.  The extensions library allows installing many 3rd-party extensions, as well as updating the bundled extensions between NetLogo releases, all without having to manually find extensions, manage downloads, or place files outside of the NetLogo application.
+- The primitives `ifelse` and `ifelse-value` now take a varying number of clauses, making selecting a single case from a variety of options much simpler.
+- Added a new primitive, `up-to-n-of`, which gives as many items from a list as possible up to some limit, without causing an error if it cannot get all of them (unlike `n-of`).
+- Added new hotkeys: Command-U for "Show Usage" of a term, Command-E for "Jump to Declaration" of a procedure, and Command-Alt-S for "Save All" when using included NetLogo code files.
+- Multiline input widgets are now directly editable on the interface tab.
+- Runtime optimizations for the `in-radius` and `in-cone` primitives.
+
+## Bugfixes
+
+- When a model that has a compile-time error is saved, its sliders will not reset their values to 0 when it is reloaded.
+- The procedures search dropdown on the Code tab gives better results with inexact search terms.
+- Plot pen names with quotes in them are properly stored and loaded.
+- Plot pen names are now case-insensitive, just like other items in NetLogo.
+- When a plot is deleted and the action is undone, the plot continues to work afterward.
+- Widgets can no longer be re-sized to be completely outside the interface tab.
+- Code comments can be used as normal within an `__includes` keyword file list.
+- The error message for getting the `mean` of an empty list should now make more sense.
+- Double-clicking an empty experiment list in BehaviorSpace will not cause an error.
+- Anonymous procedures can be given in the conditional reporter blocks of `ifelse-value`.
+- Slight changes to how color values are calculated, for smoother interoperability with NetLogo Web.
+
+## Extension Changes
+
+- The Python extension, `py`, is now bundled with NetLogo.  If you have Python installed on your computer, you can use it from inside a NetLogo model.
+- The Control Flow extension, `cf`, has been removed from NetLogo in favor of the new variadic `ifelse` and `ifelse-value` behavior.  The `cf` extension is still available from the extensions library if needed for any existing models.
+- The CSV extension, `csv`, had some minor documentation updates.
+- The GoGo board extension, `gogo`, should work more reliably on Windows 10.
+- The Network extension, `nw`, now loads data in a predictable order when imported, and it correctly handles preferential attachment.
+- The Table extension, `table`, had some minor documentation updates.
+- The View 2.5D extension, `view2.5d`, now does not throw an error when trying to use a turtle-based view.
+
+## Documentation Changes
+
+- Clarify what `clear-ticks` is meant to do.
+- Clarify that `clear-globals` doesn't affect interface globals.
+- Fixed various formatting errors and typos.
+
+## Model Changes
+
+New Curricular models:
+
+- PNoM Curriculum
+	- PNoM 1 Diffusion Sandbox
+	- PNoM 2 Diffusion Sensor Sandbox
+	- PNoM 3 Virtual Syringe
+	- PNoM 4 Virtual Syringe Force Graph
+	- PNoM 5 Virtual Syringe Temperature Graph
+	- PNoM 6 Particle Sandbox Gravity
+	- PNoM 7 Particle Sandbox Intermolecular
+
+Sample Model Updates:
+
+- Raindrops 3D: Remove unused procedure.
+- Perceptron: Fix weight visualization bug.
+- Tumor: Prevent `ask nobody` bug when using the `kill` buttons more than once.
+- Reactor X-Section: Fix typo and extend manual rod depth.
+- Rock Paper Scissors: Minor Info tab updates.
+- Sandpile: Minor Info tab updates.
+- SmoothLife: Allows NLW compatibility by skipping some plot drawing.
+- Wolf Sheep Predation: Fix typos in Code tab.
+
+Code Example Updates:
+
+- LS Parent Example: Change button display name to avoid confusion with `setup` button.
+- Mouse Drag Multiple Example: The model has been rewritten to be NLW compatible.
+- Mouse Drag One Example: The model has been updated to be NLW compatible
+
+With the introduction of the new variadic `ifelse` and `ifelse-value` primitives, the Models Library has been updated to reflect this new functionality. These updates are divided into three major sections.
+
+Add parens to `ifelse-value` expressions that are arguments of infix operator
+
+- Sample Models:
+    - Robby the Robot
+
+Remove unnecessary parentheses from `ifelse-value` invocations for models that use `ifelse-value` with a simple infix conditional: `>`, `<`, `<=`, `>=`, and `=`. This results in changes to the following models:
+
+- Code Examples:
+    - Beatbox
+    - HSB and RGB Example
+    - NW General Examples
+
+- Curricular Models:
+    - BEAGLE: DNA Protein Synthesis, DNA Replication Fork
+    - ModelSim: Bacteria Food Hunt
+    - NIELS: Current in a Wire HubNet
+    - ProbLab: 4 Blocks, 4 Block Stalagmites, 4 Block Two Stalagmites, Histo Blocks
+
+- HubNet Activities:
+    - Predator Prey Game HubNet
+    - Root Beer Game HubNet
+
+- Sample Models:
+    - Artificial Neural Net - Multilayer
+    - Bidding Market
+    - DLA Alternate Linear
+    - DLA Alternate
+    - Echo
+    - Language Change
+    - Minority Game
+    - Simple Genetic Algorithm
+    - Traffic 2 Lanes
+
+Remove now unnecessary parens from calls to `ifelse-value` with more complex conditionals:
+
+- Sample Models:
+    - Artificial Neural Net - Perceptron
+    - Blood Sugar Regulation
+    - Hotelling's Law
+    - Signaling Game
+    - Tabonuco Yagrumo
+    - Tabonuco Yagrumo Hybrid
+    - Vision Evolution
+
+- HubNet Activities:
+    - Minority Game HubNet
+    - Prisoners Dilemma HubNet
+
+- IABM Textbook:
+    - Traffic Basic Adaptive Individuals
+
+- Curricular Models:
+    - GenEvo 1 Genetic Switch
+    - Lattice Land - Explore
+
 ## Version 6.0.4 (June 2018)
 
 ### Feature Changes
