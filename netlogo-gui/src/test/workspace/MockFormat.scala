@@ -14,6 +14,7 @@ class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat
   def name: String = if(model.version.contains("3D")) "nlogo3d" else "nlogo"
   def isCompatible(source: String) = true
   def isCompatible(uri: java.net.URI) = true
+  def isCompatible(model: Model) = true
   override def baseModel = model
   def sections(location: java.net.URI): Try[Map[String, String]] =
     error.map(Failure.apply).getOrElse(Success(Map[String, String]()))

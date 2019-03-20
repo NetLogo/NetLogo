@@ -21,6 +21,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
 
   def isCompatible(source: String): Boolean
   def isCompatible(location: URI): Boolean
+  def isCompatible(model: Model): Boolean
   def sections(location: URI): Try[Map[String, Section]]
   def writeSections(sections: Map[String, Section], location: URI): Try[URI]
   def sectionsToSource(sections: Map[String, Section]): Try[String]

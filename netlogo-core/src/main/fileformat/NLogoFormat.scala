@@ -16,9 +16,29 @@ import scala.io.{ Codec, Source }, Codec.UTF8
 class NLogoFormat
   extends ModelFormat[Array[String], NLogoFormat]
   with AbstractNLogoFormat[NLogoFormat] {
-    val is3DFormat = false
-    def name: String = "nlogo"
-    def widgetReaders: Map[String, WidgetReader] = Map()
+  val is3DFormat = false
+  val NetLogoRegex = """(^NetLogo\s+\(\s*no version\s*\)|^NetLogo\s+\d+(?![a-zA-Z]))""".r
+  def name: String = "nlogo"
+  def widgetReaders: Map[String, WidgetReader] = Map()
+
+  override def isCompatible(location: URI): Boolean =
+    sections(location) match {
+      case Success(sections) =>
+        sections("org.nlogo.modelsection.version")
+          .find(NetLogoRegex.findFirstIn(_).isDefined)
+          .flatMap(_ => Some(true)).getOrElse(false)
+      case Failure(ex) => false
+    }
+  override def isCompatible(source: String): Boolean =
+    sectionsFromSource(source) match {
+      case Success(sections) =>
+        sections("org.nlogo.modelsection.version")
+          .find(NetLogoRegex.findFirstIn(_).isDefined)
+          .flatMap(_ => Some(true)).getOrElse(false)
+      case Failure(ex) => false
+    }
+  override def isCompatible(model: Model): Boolean =
+    NetLogoRegex.findFirstIn(model.version).isDefined
 }
 
 class NLogoFormatException(m: String) extends RuntimeException(m)
@@ -30,22 +50,6 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   val SeparatorRegex = "(?m)^@#\\$#@#\\$#@$"
 
   def widgetReaders: Map[String, WidgetReader]
-  override def isCompatible(location: URI): Boolean =
-    sections(location) match {
-      case Success(sections) =>
-        sections("org.nlogo.modelsection.version")
-          .find(!_.contains("NetLogo 3D"))
-          .flatMap(_ => Some(true)).getOrElse(false)
-      case Failure(ex) => false
-    }
-  override def isCompatible(source: String): Boolean =
-    sectionsFromSource(source) match {
-      case Success(sections) =>
-        sections("org.nlogo.modelsection.version")
-          .find(!_.contains("NetLogo 3D"))
-          .flatMap(_ => Some(true)).getOrElse(false)
-      case Failure(ex) => false
-    }
 
   def sections(location: URI) =
     Try {

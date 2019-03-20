@@ -14,6 +14,7 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def isCompatible(source: String) = modelFormat.isCompatible(source)
     def isCompatible(uri: java.net.URI) = modelFormat.isCompatible(uri)
+    def isCompatible(model: Model) = modelFormat.isCompatible(model)
     def serializationClass = aTag.runtimeClass
     def formatClass = modelFormat.getClass
 
@@ -77,8 +78,7 @@ trait ModelLoader {
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
-    def is3d(s: String): String = if(s.contains("3D")) "nlogo3d" else "nlogo"
-    val format = formats.find(_.name == is3d(model.version))
+    val format = formats.find(_.isCompatible(model))
     format match {
       case None =>
         Failure(new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
@@ -87,8 +87,7 @@ trait ModelLoader {
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {
-    def is3d(s: String): String = if(s.contains("3D")) "nlogo3d" else "nlogo"
-    val format = formats.find(_.name == is3d(model.version))
+    val format = formats.find(_.isCompatible(model))
     format match {
       case None =>
         Failure(new Exception(
@@ -98,8 +97,7 @@ trait ModelLoader {
   }
 
   def emptyModel(extension: String): Model = {
-    val default = if(extension == "nlogo3d") extension else "nlogo"
-    val format = formats.find(_.name == default)
+    val format = formats.find(_.name == extension)
       .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
     format.emptyModel
   }
