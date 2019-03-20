@@ -1,5 +1,6 @@
+NetLogo 6.1.0-RC1
+March 20, 2019
 NetLogo 6.0.4
-June 4, 2018
 NetLogo 6.0.3
 NetLogo 6.0.2
 NetLogo 6.0.1

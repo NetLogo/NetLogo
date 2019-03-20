@@ -113,9 +113,17 @@ trait Version {
   def compatibleVersion(modelVersion: String) =
     compareVersions(version, modelVersion)
 
-  def compareVersions(appVersion: String, modelVersion: String) =
-    modelVersion == noVersion ||
-      versionNumber(modelVersion).startsWith(versionNumber(appVersion))
+  def compareVersions(appVersion: String, modelVersion: String): Boolean = {
+    val modelNum = versionNumber(modelVersion)
+    val appNum   = versionNumber(appVersion)
+    return (modelVersion == noVersion ||
+      modelNum.startsWith(appNum) ||
+      compatibleOverrides.getOrElse(appNum, Seq()).contains(modelNum))
+  }
+
+  private def compatibleOverrides = Map(
+    "6.1" -> Seq("6.0")
+  )
 
   private def versionNumber(v: String) =
     if (v.startsWith("NetLogo 3D Preview"))
