@@ -96,20 +96,20 @@ extends DefaultAstVisitor {
       case l: _let =>
         // Using "__let" instead of "let" to indicates that this is a let we don't want converted
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
-        if (localEligibility.getOrElse(l.let, false)) {
-          procedure.foreach { proc =>
-            convertSetToLocal(stmt,  newProcedureVar(proc.args.size, l.let, None))
-            alteredLets(proc).put(l.let, proc.args.size)
-            proc.localsCount += 1
-            proc.size += 1
-            proc.args :+= l.let.name
+        procedure.foreach { proc =>
+          lookupLet(l.let, proc) match {
+            case Some(localIndex) =>
+              convertSetToLocal(stmt, newProcedureVar(localIndex, l.let, None))
+            case None =>
+              if (localEligibility.getOrElse(l.let, false)) {
+                convertSetToLocal(stmt, newProcedureVar(proc.args.size, l.let, None))
+                alteredLets(proc).put(l.let, proc.args.size)
+                proc.localsCount += 1
+                proc.size += 1
+                proc.args :+= l.let.name
+              }
           }
-        } else for {
-          proc <- procedure
-          localIndex <- lookupLet(l.let, proc)
-          } {
-            convertSetToLocal(stmt, newProcedureVar(localIndex, l.let, None))
-          }
+        }
         super.visitStatement(stmt)
       case _ => super.visitStatement(stmt)
     }

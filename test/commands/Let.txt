@@ -172,3 +172,7 @@ LetSameNameAsBreedVariable
 LetWithinIfNextToAsk
   to-report test if true [ let x 1 ] let res 0 ask one-of patches [ let x 2 set res x ] report res end
   test => 2
+
+LetDoubleSameName
+  to-report test ifelse true [ let x 0 ] [ let x 0 ] run "" report 0 end
+  test => 0
