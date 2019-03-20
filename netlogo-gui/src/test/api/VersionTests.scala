@@ -9,31 +9,31 @@ class VersionTests extends FunSuite {
   /// update this section every time the version changes -- ev 11/7/07
   if (!is3D) test("currentVersion2D") {
     // these differ from the current version in suffix only
-    assert(compatibleVersion("NetLogo 6.0"))
-    assert(compatibleVersion("NetLogo 6.0RC1"))
-    assert(compatibleVersion("NetLogo 6.0beta1"))
-    assert(compatibleVersion("NetLogo 6.0pre1"))
-    assert(compatibleVersion("NetLogo 6.0alpha1"))
-    assert(compatibleVersion("NetLogo 6.0.1"))
-    assert(compatibleVersion("NetLogo 6.0.1weirdversion"))
-    assert(compatibleVersion("NetLogo 6.0weirdversion"))
+    assert(compatibleVersion("NetLogo 6.1"))
+    assert(compatibleVersion("NetLogo 6.1RC1"))
+    assert(compatibleVersion("NetLogo 6.1beta1"))
+    assert(compatibleVersion("NetLogo 6.1pre1"))
+    assert(compatibleVersion("NetLogo 6.1alpha1"))
+    assert(compatibleVersion("NetLogo 6.1.1"))
+    assert(compatibleVersion("NetLogo 6.1.1weirdversion"))
+    assert(compatibleVersion("NetLogo 6.1weirdversion"))
   }
   else test("currentVersion3D") {
-    assert(compatibleVersion("NetLogo 3D 6.0"))
+    assert(compatibleVersion("NetLogo 3D 6.1"))
     assert(!compatibleVersion("NetLogo 3D 5.0"))
     assert(!compatibleVersion("NetLogo 3D Preview 5"))
     assert(!compatibleVersion("NetLogo 3D Preview 4"))
   }
   test("futureMinor") {
     // these differ from the current version by minor version only
-    assert(compatibleVersion("NetLogo 6.0"))
-    assert(compatibleVersion("NetLogo 6.0RC1"))
-    assert(compatibleVersion("NetLogo 6.0beta1"))
-    assert(compatibleVersion("NetLogo 6.0pre1"))
-    assert(compatibleVersion("NetLogo 6.0alpha1"))
-    assert(compatibleVersion("NetLogo 6.0.1"))
-    assert(compatibleVersion("NetLogo 6.0.1weirdversion"))
-    assert(compatibleVersion("NetLogo 6.0weirdversion"))
+    assert(!compatibleVersion("NetLogo 6.2"))
+    assert(!compatibleVersion("NetLogo 6.2RC1"))
+    assert(!compatibleVersion("NetLogo 6.2beta1"))
+    assert(!compatibleVersion("NetLogo 6.2pre1"))
+    assert(!compatibleVersion("NetLogo 6.2alpha1"))
+    assert(!compatibleVersion("NetLogo 6.2.1"))
+    assert(!compatibleVersion("NetLogo 6.2.1weirdversion"))
+    assert(!compatibleVersion("NetLogo 6.2weirdversion"))
   }
   // these don't need to be changed very often; they should always
   // pass properly since we're long past these versions -- ev
