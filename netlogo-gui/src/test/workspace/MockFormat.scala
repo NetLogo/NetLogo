@@ -11,7 +11,9 @@ import scala.util.{ Failure, Success, Try }
 
 class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat[String, MockFormat] {
   type Section = String
-  def name: String = "test"
+  def name: String = if(model.version.contains("3D")) "nlogo3d" else "nlogo"
+  def isCompatible(source: String) = true
+  def isCompatible(uri: java.net.URI) = true
   override def baseModel = model
   def sections(location: java.net.URI): Try[Map[String, String]] =
     error.map(Failure.apply).getOrElse(Success(Map[String, String]()))

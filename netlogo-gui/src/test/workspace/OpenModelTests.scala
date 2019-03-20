@@ -7,10 +7,12 @@ import org.scalatest.FunSuite
 import java.net.URI
 import java.nio.file.Path
 
-import org.nlogo.core.Model
+import org.nlogo.core.{ Model, View, WorldDimensions }
+import org.nlogo.api.WorldDimensions3D
 import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
-  SuccessfulConversion, ErroredConversion }
+  SuccessfulConversion, ErroredConversion, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.api.{ ConfigurableModelLoader, Version }
+import scala.util.{ Success, Try }
 
 class OpenModelTests extends FunSuite {
   val testURI = new URI("file:///foo.test")
@@ -26,6 +28,8 @@ class OpenModelTests extends FunSuite {
 
     lazy val controller = new MockController()
     def format = new MockFormat(modelChanges(Model()), None)
+    def nlogoformat = new NLogoFormat
+    def nlogo3dformat = new NLogoThreeDFormat
     object VersionInfo extends Version {
       override def is3D = currentVersion.contains("3D")
       override def knownVersion(v: String) = v == currentVersion || super.knownVersion(v)
@@ -41,9 +45,8 @@ class OpenModelTests extends FunSuite {
   } }
 
   test("if the model doesn't match an available format, notifies the user it is invalid") { new OpenTest {
-    override val uri = new URI("file://foo.jpg")
-    assert(openedModel.isEmpty)
-    assertResult(uri)(controller.invalidURI)
+    override val uri = new URI("file:///tmp/foo.jpg")
+    assert(!openedModel.isEmpty)
   } }
 
   test("if the version doesn't start with NetLogo, notifies the user it is invalid") { new OpenTest {
@@ -120,6 +123,407 @@ class OpenModelTests extends FunSuite {
   test("OpenFromSource opens the model properly") { new OpenTest {
     val modelFromSource = OpenModelFromSource(uri, "model source", controller, loader, autoconverter, VersionInfo)
     assertResult(Some(Model()))(modelFromSource)
+  } }
+
+  test("serializes various version in the model") { new OpenTest {
+    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 6.0"))
+    assert(nlogoformat.version.serialize(new Model(version = "NetLogo 3D 6.0")) ===
+      Array[String]("NetLogo 3D 6.0"))
+  } }
+
+  test("serializes various dimensions in the model") { new OpenTest {
+    assert((nlogoformat.interfaceComponent.serialize(new Model)) ===
+      Array("GRAPHICS-WINDOW", "0", "0", "5", "5", "-1", "-1", "12.0",
+        "1", "13", "1", "1", "1", "0", "1", "1", "1", "0", "0", "0",
+        "0", "1", "1", "1", "ticks", "30.0", ""))
+    assert(nlogoformat.interfaceComponent.serialize(new Model(widgets =
+      List(View(dimensions = new WorldDimensions(0,0,0,0,12.0,true,true))))) ===
+      Array("GRAPHICS-WINDOW", "0", "0", "5", "5", "-1", "-1", "12.0",
+        "1", "13", "1", "1", "1", "0", "1", "1", "1", "0", "0", "0",
+        "0", "1", "1", "1", "ticks", "30.0", ""))
+    assert(nlogoformat.interfaceComponent.serialize(new Model(widgets =
+      List(View(dimensions = new WorldDimensions3D(0,0,0,0,0,0,12.0,true,true))))) ===
+      Array("GRAPHICS-WINDOW", "0", "0", "5", "5", "-1", "-1", "12.0",
+        "1", "13", "1", "1", "1", "0", "1", "1", "1", "0", "0", "0",
+        "0", "1", "1", "1", "ticks", "30.0", ""))
+  } }
+
+  test("deserializes various dimensions for models") { new OpenTest {
+    val tryModel: Try[Model] = (nlogoformat.interfaceComponent.deserialize(
+      Array("GRAPHICS-WINDOW", "0", "0", "5", "5", "-1", "-1", "12.0",
+        "1", "13", "1", "1", "1", "0", "1", "1", "1", "0", "0", "0",
+        "0", "1", "1", "1", "ticks", "30.0", ""))(new Model))
+    val tryModel3d: Try[Model] = (nlogo3dformat.interfaceComponent.deserialize(
+      Array("GRAPHICS-WINDOW", "0", "0", "5", "5", "-1", "-1", "12.0",
+        "1", "13", "1", "1", "1", "0", "1", "1", "1", "0", "0", "0",
+        "0", "0", "0", "1", "1", "1", "ticks", "30.0", ""))(new Model))
+
+    /* Determines if view is correctly configured */
+    assert(tryModel.get.widgets(0) === View())
+    assert(tryModel.get.widgets(0) ===
+      View(dimensions = new WorldDimensions(0,0,0,0,12.0,true,true)))
+    assert(tryModel3d.get.widgets(0) ===
+      View(dimensions = new WorldDimensions3D(0,0,0,0,0,0,12.0,true,true)))
+  } }
+
+  test("parses sections from provided string with 2d format") { new OpenTest {
+    val sectionString =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val sectionStringWith3D =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 3D 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val section3dString =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 3D 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val section3dStringWith2D =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val model: Try[Model] = nlogoformat.load(sectionString,Seq())
+    val model3d: Try[Model] = nlogoformat.load(section3dString,Seq())
+    val modelWith3dHeader: Try[Model] = nlogoformat.load(sectionStringWith3D,Seq())
+    val model3dWith2dHeader: Try[Model] = nlogoformat.load(section3dStringWith2D,Seq())
+
+    /* Model's dimensions after loading */
+    assert(model.flatMap(_ => Success(true)).getOrElse(false))
+    assert(model.get.version == "NetLogo 6.0.4")
+    assert(model.get.widgets(0) ===
+      View(dimensions = new WorldDimensions(-16,16,-16,16,12.0,true,true)))
+    assert(model3d.flatMap(_ => Success(false)).getOrElse(true))
+    assert(model3dWith2dHeader.flatMap(_ => Success(false)).getOrElse(true))
+    assert(modelWith3dHeader.flatMap(_ => Success(false)).getOrElse(true))
+  } }
+
+  test("parses sections from provided string with 3d format") { new OpenTest {
+    val sectionString =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val sectionStringWith3D =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 3D 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val section3dString =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 3D 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val section3dStringWith2D =
+      """@#$#@#$#@
+      |GRAPHICS-WINDOW
+      |0
+      |0
+      |5
+      |5
+      |-1
+      |-1
+      |12.0
+      |1
+      |13
+      |1
+      |1
+      |1
+      |0
+      |1
+      |1
+      |1
+      |-16
+      |16
+      |-16
+      |16
+      |-16
+      |16
+      |1
+      |1
+      |1
+      |ticks
+      |30.0
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |NetLogo 6.0.4
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      |@#$#@#$#@
+      """.stripMargin
+    val model: Try[Model] = nlogo3dformat.load(sectionString,Seq())
+    val model3d: Try[Model] = nlogo3dformat.load(section3dString,Seq())
+    val modelWith3dHeader: Try[Model] = nlogo3dformat.load(sectionStringWith3D,Seq())
+    val model3dWith2dHeader: Try[Model] = nlogo3dformat.load(section3dStringWith2D,Seq())
+
+    /* Model's dimensions after loading */
+    assert(model3d.flatMap(_ => Success(true)).getOrElse(false))
+    assert(model3d.get.version == "NetLogo 3D 6.0.4")
+    assert(model3d.get.widgets(0) ===
+      View(dimensions = new WorldDimensions3D(-16,16,-16,16,-16,16,12.0,true,true)))
+    assert(model.flatMap(_ => Success(false)).getOrElse(true))
+    assert(model3dWith2dHeader.flatMap(_ => Success(false)).getOrElse(true))
+    assert(modelWith3dHeader.flatMap(_ => Success(false)).getOrElse(true))
   } }
 }
 
