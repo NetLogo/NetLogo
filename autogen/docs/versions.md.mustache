@@ -13,10 +13,13 @@ For help running models made in old versions, see the
 
 ## Feature Changes
 
-- An extensions library for installing and updating extensions, available under the Tools menu.  The extensions library allows installing many 3rd-party extensions, as well as updating the bundled extensions between NetLogo releases, all without having to manually find extensions, manage downloads, or place files outside of the NetLogo application.
+The premier feature for this release is an **extensions manager** for installing and updating extensions, which is available under the Tools menu.  Using extensions with NetLogo could be a painful process: manually finding them, downloading them, and getting them correctly installed in the NetLogo application.  The extensions manager addresses these issues by automating the installation of many 3rd-party extensions, and the updating of the bundled extensions between NetLogo releases.  All done easily from within the application.  In fact, if you open a model that requires an extension you don’t have installed that it knows about, the extension manager will ask if you’d like to download and install it right on the spot, without any extra effort
+
+Other new features include:
+
 - The primitives `ifelse` and `ifelse-value` now take a varying number of clauses, making selecting a single case from a variety of options much simpler.
 - Added a new primitive, `up-to-n-of`, which gives as many items from a list as possible up to some limit, without causing an error if it cannot get all of them (unlike `n-of`).
-- Added new hotkeys: Command-U for "Show Usage" of a term, Command-E for "Jump to Declaration" of a procedure, and Command-Alt-S for "Save All" when using included NetLogo code files.
+- Added new hotkeys: Command-U for "Show Usage" of a term, Command-E for "Jump to Declaration" of a procedure, and Command-Option-S for "Save All" when using included NetLogo code files.  Or Ctrl-U, Ctrl-E, Ctrl-Alt-S for Windows and Linux users.
 - Multiline input widgets are now directly editable on the interface tab.
 - Runtime optimizations for the `in-radius` and `in-cone` primitives.
 
@@ -51,7 +54,6 @@ For help running models made in old versions, see the
 - Fixed various formatting errors and typos.
 
 ## Model Changes
-
 New Curricular models:
 
 - PNoM Curriculum
@@ -80,14 +82,13 @@ Code Example Updates:
 - Mouse Drag Multiple Example: The model has been rewritten to be NLW compatible.
 - Mouse Drag One Example: The model has been updated to be NLW compatible
 
-With the introduction of the new variadic `ifelse` and `ifelse-value` primitives, the Models Library has been updated to reflect this new functionality. These updates are divided into three major sections.
+With the introduction of the new variadic `ifelse` and `ifelse-value` primitives, the Models Library has been updated to reflect this new functionality. These updates are divided into three major sections:
 
-Add parens to `ifelse-value` expressions that are arguments of infix operator
+- Add parens to `ifelse-value` expressions that are arguments of infix operator.
+- Remove unnecessary parentheses from `ifelse-value` invocations for models that use `ifelse-value` with a simple infix conditional: `>`, `<`, `<=`, `>=`, and `=`. This results in changes to the following models.
+- Remove now unnecessary parens from calls to `ifelse-value` with more complex conditionals.
 
-- Sample Models:
-    - Robby the Robot
-
-Remove unnecessary parentheses from `ifelse-value` invocations for models that use `ifelse-value` with a simple infix conditional: `>`, `<`, `<=`, `>=`, and `=`. This results in changes to the following models:
+And here are the models affected by these changes:
 
 - Code Examples:
     - Beatbox
@@ -96,46 +97,39 @@ Remove unnecessary parentheses from `ifelse-value` invocations for models that u
 
 - Curricular Models:
     - BEAGLE: DNA Protein Synthesis, DNA Replication Fork
+    - GenEvo 1 Genetic Switch
+    - Lattice Land - Explore
     - ModelSim: Bacteria Food Hunt
     - NIELS: Current in a Wire HubNet
     - ProbLab: 4 Blocks, 4 Block Stalagmites, 4 Block Two Stalagmites, Histo Blocks
 
 - HubNet Activities:
-    - Predator Prey Game HubNet
-    - Root Beer Game HubNet
-
-- Sample Models:
-    - Artificial Neural Net - Multilayer
-    - Bidding Market
-    - DLA Alternate Linear
-    - DLA Alternate
-    - Echo
-    - Language Change
-    - Minority Game
-    - Simple Genetic Algorithm
-    - Traffic 2 Lanes
-
-Remove now unnecessary parens from calls to `ifelse-value` with more complex conditionals:
-
-- Sample Models:
-    - Artificial Neural Net - Perceptron
-    - Blood Sugar Regulation
-    - Hotelling's Law
-    - Signaling Game
-    - Tabonuco Yagrumo
-    - Tabonuco Yagrumo Hybrid
-    - Vision Evolution
-
-- HubNet Activities:
     - Minority Game HubNet
+    - Predator Prey Game HubNet
     - Prisoners Dilemma HubNet
+    - Root Beer Game HubNet
 
 - IABM Textbook:
     - Traffic Basic Adaptive Individuals
 
-- Curricular Models:
-    - GenEvo 1 Genetic Switch
-    - Lattice Land - Explore
+- Sample Models:
+    - Artificial Neural Net - Multilayer
+    - Artificial Neural Net - Perceptron
+    - Bidding Market
+    - Blood Sugar Regulation
+    - DLA Alternate Linear
+    - DLA Alternate
+    - Echo
+    - Hotelling's Law
+    - Language Change
+    - Minority Game
+    - Robby the Robot
+    - Signaling Game
+    - Simple Genetic Algorithm
+    - Tabonuco Yagrumo
+    - Tabonuco Yagrumo Hybrid
+    - Traffic 2 Lanes
+    - Vision Evolution
 
 ## Version 6.0.4 (June 2018)
 
