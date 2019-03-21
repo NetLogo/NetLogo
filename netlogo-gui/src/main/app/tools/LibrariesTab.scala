@@ -194,6 +194,8 @@ class LibrariesTab( category:           String
 
     updateAllAction.setEnabled(canUpdate(listModel))
 
+    updateSidebar()
+
     def canUpdate(model: ListModel[LibraryInfo]) = canUpdateInRange(model, 0, model.getSize - 1)
     def canUpdateInRange(model: ListModel[LibraryInfo], index0: Int, index1: Int) =
       (index0 to index1)
@@ -222,7 +224,7 @@ class LibrariesTab( category:           String
 
       val infoText = if (numSelected == 1) selectedValue.longDescription else null
       info.setText(infoText)
-      info.select(0,0)
+      info.select(0, 0)
 
       addToCodeTabButton.setEnabled(selectedValues.forall(_.status != LibraryStatus.CanInstall))
 
@@ -240,6 +242,10 @@ class LibrariesTab( category:           String
 
       updateInstallationPanel()
 
+    } else {
+      Seq(installButton, uninstallButton, addToCodeTabButton, homepageButton).foreach(_.setEnabled(false))
+      info.setText("")
+      info.select(0, 0)
     }
 
   }
