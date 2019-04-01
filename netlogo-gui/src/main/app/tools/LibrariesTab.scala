@@ -25,6 +25,25 @@ object LibrariesTab {
     """<html>
       |<h3 style="margin: -10px 0">%s
       |<p color="#AAAAAA">%s""".stripMargin
+
+  def addExtsToSource(source: String, requiredExts: Set[String]): String = {
+
+    // We have to be careful here.  I'd love to do clever things, but the extensions
+    // directive can be multiline and have comments in it.  --JAB (3/6/19)
+    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions\s*(?:;?.*)\[)(.*?\].*)""".r
+
+    val newExtsBasis = requiredExts.toSeq.sorted.mkString(" ")
+
+    source match {
+      case ExtRegex(prefix, extDirective, suffix) =>
+        val newExtsStr = if (newExtsBasis.length > 0) s"$newExtsBasis " else ""
+        s"$prefix$extDirective$newExtsStr$suffix"
+      case _ =>
+        s"extensions [$newExtsBasis]\n$source"
+    }
+
+  }
+
 }
 
 class LibrariesTab( category:           String
@@ -392,24 +411,6 @@ class LibrariesTab( category:           String
 
     actionIsInProgress = true
     libs.map(new Worker(operation, task, _, multiple = true, cb)).foreach(_.execute)
-
-  }
-
-  private def addExtsToSource(source: String, requiredExts: Set[String]): String = {
-
-    // We have to be careful here.  I'd love to do clever things, but the extensions
-    // directive can be multiline and have comments in it.  --JAB (3/6/19)
-    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions\s*(?:;?.*)\[)(.*?\].*)""".r
-
-    val newExtsBasis = requiredExts.toSeq.sorted.mkString(" ")
-
-    source match {
-      case ExtRegex(prefix, extDirective, suffix) =>
-        val newExtsStr = if (newExtsBasis.length > 0) s"$newExtsBasis " else ""
-        s"$prefix$extDirective$newExtsStr$suffix"
-      case _ =>
-        s"extensions [$newExtsBasis]\n$source"
-    }
 
   }
 
