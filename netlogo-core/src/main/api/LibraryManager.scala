@@ -15,6 +15,8 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   private type InfoChangeCallback = Seq[LibraryInfo] => Unit
 
+  private val libsLocationSite   = "https://ccl.northwestern.edu/netlogo/config"
+  private val libsLocation       = "libraries-location.conf"
   private val allLibsName        = "libraries.conf"
   private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
   private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
@@ -24,12 +26,25 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   private var infoChangeCallbacks = Seq[InfoChangeCallback]()
 
   val allLibsPath = FileIO.perUserFile(allLibsName)
-  val metadataURL = new URL(s"https://raw.githubusercontent.com/NetLogo/NetLogo-Libraries/${APIVersion.version}/$allLibsName")
+  val metadataURL = getMetadataURL()
 
   if (!Files.exists(Paths.get(userInstalledsPath)))
     Files.createFile(Paths.get(userInstalledsPath))
 
   reloadMetadata(true)
+
+  private def getMetadataURL(): URL = {
+    val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
+    LibraryInfoDownloader(locationURL)
+    val locationPath   = FileIO.perUserFile(libsLocation)
+    val locationConfig = ConfigFactory.parseFile(new File(locationPath))
+    val location       = try {
+      locationConfig.getString("location")
+    } catch {
+      case ex: ConfigException => bundledsConfig.getString("fallback-libraries-location")
+    }
+    new URL(s"$location/${APIVersion.version}/$allLibsName")
+  }
 
   def getExtensionInfos = libraries
 
