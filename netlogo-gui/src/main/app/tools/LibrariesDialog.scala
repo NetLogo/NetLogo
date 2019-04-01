@@ -5,7 +5,7 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Color, FlowLayout, Frame }
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ Action, BorderFactory, JButton, JLabel, JOptionPane, JPanel, JTabbedPane }
+import javax.swing.{ Action, BorderFactory, JButton, JLabel, JOptionPane, JPanel }
 
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
@@ -27,27 +27,23 @@ class LibrariesDialog( parent:             Frame
       )
     )
 
-  private lazy val tabs            = new JTabbedPane
+  // `tabs` can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
+  // -JeremyB April 2019
+  private lazy val tabs            = new JPanel(new BorderLayout)
   private lazy val bottomPanel     = new JPanel(new BorderLayout)
   private lazy val status          = new JLabel
   private lazy val buttonPanel     = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
   private lazy val libPathsButton  = new JButton(I18N.gui("showLibPaths"))
   private lazy val updateAllButton = new JButton
+  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, updateSource, getExtPathMappings)
 
   protected override def initGUI(): Unit = {
 
-    val category = "extensions"
-    val tab      = new LibrariesTab("extensions", manager, status.setText, recompile, updateSource, getExtPathMappings)
-    tabs.addTab(I18N.gui(s"categories.$category"), tab)
+    tabs.add(tab)
 
     bottomPanel.setBorder(bottomPanelBorder)
     bottomPanel.add(status, BorderLayout.CENTER)
     bottomPanel.add(buttonPanel, BorderLayout.EAST)
-
-    // TODO: Once modules are added, this line must be removed -- EL 2018-08-13
-    tabs.setLayout(new java.awt.CardLayout)
-
-    tabs.addChangeListener(_ => updateAllButton.setAction(currentUpdateAllAction))
 
     libPathsButton.addActionListener {
       _ =>
@@ -68,7 +64,7 @@ class LibrariesDialog( parent:             Frame
   }
 
   private def currentUpdateAllAction(): Action =
-    tabs.getSelectedComponent.asInstanceOf[LibrariesTab].updateAllAction
+    tab.updateAllAction
 
   override def setVisible(isVisible: Boolean): Unit = {
     super.setVisible(isVisible)
