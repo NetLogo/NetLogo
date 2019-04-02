@@ -11,27 +11,12 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRende
 import org.nlogo.core.LibraryInfo
 import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
 
-class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends CoreLibraryManager {
-
-  private type InfoChangeCallback = Seq[LibraryInfo] => Unit
-
-  private val libsLocationSite   = "https://ccl.northwestern.edu/netlogo/config"
-  private val libsLocation       = "libraries-location.conf"
-  private val allLibsName        = "libraries.conf"
-  private val bundledsConfig     = ConfigFactory.parseResources("system/bundled-libraries.conf")
-  private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
-  private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
-
-  private var libraries           = Seq[       LibraryInfo]()
-  private var infoChangeCallbacks = Seq[InfoChangeCallback]()
-
-  val allLibsPath = FileIO.perUserFile(allLibsName)
-  val metadataURL = getMetadataURL()
-
-  if (!Files.exists(Paths.get(userInstalledsPath)))
-    Files.createFile(Paths.get(userInstalledsPath))
-
-  reloadMetadata(true)
+object LibraryManager {
+  private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
+  private val libsLocation     = "libraries-location.conf"
+  private val allLibsName      = "libraries.conf"
+  private val bundledsConfig   = ConfigFactory.parseResources("system/bundled-libraries.conf")
+  private val metadataURL      = getMetadataURL()
 
   private def getMetadataURL(): URL = {
     val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
@@ -45,6 +30,40 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
     }
     new URL(s"$location/${APIVersion.version}/$allLibsName")
   }
+
+  private var loadedOnce = false
+
+  private def reloadMetadata(isFirstLoad: Boolean): Unit = {
+    // If not first load (user clicked a button) or metadata not loaded once, load it!
+    // This is an attempt to avoid multiple redundant remote fetches during test runs.
+    // -JeremyB April 2019
+    if (!isFirstLoad || !loadedOnce) {
+      LibraryInfoDownloader.invalidateCache(metadataURL)
+      LibraryInfoDownloader(metadataURL)
+      loadedOnce = true
+    }
+  }
+}
+
+class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends CoreLibraryManager {
+
+  import LibraryManager.{ allLibsName, bundledsConfig }
+
+  private type InfoChangeCallback = Seq[LibraryInfo] => Unit
+
+  private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
+  private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
+
+  private var libraries           = Seq[       LibraryInfo]()
+  private var infoChangeCallbacks = Seq[InfoChangeCallback]()
+
+  val allLibsPath = FileIO.perUserFile(allLibsName)
+  val metadataURL = LibraryManager.metadataURL
+
+  if (!Files.exists(Paths.get(userInstalledsPath)))
+    Files.createFile(Paths.get(userInstalledsPath))
+
+  reloadMetadata(true)
 
   def getExtensionInfos = libraries
 
@@ -64,8 +83,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
   def reloadMetadata(isFirstLoad: Boolean = false): Unit = {
-    LibraryInfoDownloader.invalidateCache(metadataURL)
-    LibraryInfoDownloader(metadataURL)
+    LibraryManager.reloadMetadata(isFirstLoad)
     updateLists(new File(allLibsPath), isFirstLoad)
   }
 
