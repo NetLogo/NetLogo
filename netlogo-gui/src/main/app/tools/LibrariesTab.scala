@@ -30,7 +30,7 @@ object LibrariesTab {
 
     // We have to be careful here.  I'd love to do clever things, but the extensions
     // directive can be multiline and have comments in it.  --JAB (3/6/19)
-    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions\s*(?:;?.*)\[)(.*?\].*)""".r
+    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions\s*(?:;?.*?\n)?\[)(.*?\].*)""".r
 
     val newExtsBasis = requiredExts.toSeq.sorted.mkString(" ")
 

@@ -17,21 +17,71 @@ class LibrariesTabTests extends FunSuite {
   test("adds new extensions statement to code without one already") {
     val source = "to go end"
     val requiredExts = Set("fetch")
-    val expected = "extensions [fetch]\nto go end"
+    val expected =
+      """extensions [fetch]
+        |to go end""".stripMargin
     assertResult(expected)(addExtsToSource(source, requiredExts))
   }
 
   test("adds extensions to existing simple extensions statement") {
-    val source = "extensions [array]\nto go end"
+    val source =
+      """extensions [array]
+        |to go end""".stripMargin
     val requiredExts = Set("fetch", "import-a")
-    val expected = "extensions [fetch import-a array]\nto go end"
+    val expected =
+      """extensions [fetch import-a array]
+        |to go end""".stripMargin
     assertResult(expected)(addExtsToSource(source, requiredExts))
   }
 
   test("adds extensions to existing complex extensions statement") {
-    val source = "; ignore\n   extensions ;ignore [\n;ignore\n[;ignore\narray ;ignore ]\n]\n;ignore\nto go end"
+    val source =
+      """; ignore
+        |   extensions ;ignore [
+        |;ignore
+        |[;ignore
+        |array ;ignore ]
+        |]
+        |;ignore
+        |to go end""".stripMargin
     val requiredExts = Set("fetch", "import-a")
-    val expected = "; ignore\n   extensions ;ignore [\n;ignore\n[fetch import-a ;ignore\narray ;ignore ]\n]\n;ignore\nto go end"
+    val expected =
+      """; ignore
+        |   extensions ;ignore [
+        |;ignore
+        |[fetch import-a ;ignore
+        |array ;ignore ]
+        |]
+        |;ignore
+        |to go end""".stripMargin
     assertResult(expected)(addExtsToSource(source, requiredExts))
   }
+
+  test("adds extensions to complex statement with other blocks in code") {
+    val source =
+      """; ignore
+        |extensions ; ignore [
+        |; ignore
+        |[ ; ignore
+        |  array ; ignore ]
+        |]
+        |; ignore
+        |to go
+        |  show []
+        |end""".stripMargin
+    val requiredExts = Set("fetch", "import-a")
+    val expected =
+      """; ignore
+        |extensions ; ignore [
+        |; ignore
+        |[fetch import-a  ; ignore
+        |  array ; ignore ]
+        |]
+        |; ignore
+        |to go
+        |  show []
+        |end""".stripMargin
+    assertResult(expected)(addExtsToSource(source, requiredExts))
+  }
+
 }
