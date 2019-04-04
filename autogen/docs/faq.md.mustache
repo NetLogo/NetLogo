@@ -792,6 +792,23 @@ large. If you want 0, 0.1, 0.2, ..., 0.9, and 1 to all be equally likely, an
 alternative is to write `random 11 / 10`; this gives all 11 answers with equal
 probability.)
 
+### Why is the number value in my monitor widget changing even though nothing is happening in my model?
+
+This is caused by a combination of a few things:
+
+1. NetLogo's use of floating point numbers, which can produce small accuracy issues.  See [**Floating point accuracy** in the NetLogo programming guide](programming.html#math).
+2. Agentsets such as `turtles` are [always returned in a random order](programming.html#agentsets).
+3. Monitors re-run their reporter calculation constantly, even when you are not running any model code with a forever button or through the command center.
+
+So the monitor constantly re-runs its `mean [xcor] of turtles` reporter, but the `turtles` agentset gives the turtles in a random order, and so the floating-point inaccuracies for `mean` will accumulate in a slightly different way each time due to the order differences.  The end result is you see very slightly different numbers flashing through the monitor widget while nothing is happening.
+
+You see the same problem doing `sum [xcor] of turtles`, `variance [xcor] of turtles`, or `standard-deviation [xcor] of turtles` - anytime you're reducing a bunch of floating point numbers from an agentset into a single value.  You can also see the problem running your reporter code directly in the command center repeatedly, without a monitor widget at all.
+
+The fixes are straightforward:
+
+- Sort your numbers before you calculate:  `mean sort [xcor] of turtles`, `sum sort [xcor] of turtles`, `variance sort [xcor] of turtles`.  If the numbers are in the same order you'll still have small floating-point inaccuracies, but they'll be the the same every time so you won't see the values change.  This is probably the best solution, but it can be slow if you have a really large agentset.
+- Change the `Decimal places` setting of your monitors to a number where you don't notice the changing values.  Since the differences in results should be small, this is usually possible.
+
 ### How can I keep two turtles from occupying the same patch?
 
 See One Turtle Per Patch Example, in the Code Examples section of the Models
