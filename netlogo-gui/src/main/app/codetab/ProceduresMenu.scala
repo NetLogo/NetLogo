@@ -52,7 +52,11 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
       Option(
         if (System.getProperty("os.name").startsWith("Mac")) SwingUtilities.getRoot(menu)
         else menu.getParent
-      ).foreach(r => r.setSize(r.getPreferredSize))
+      ).foreach(r => {
+        r.setSize(r.getPreferredSize)
+        r.validate()
+        r.repaint()
+      })
     })
 
     filterField.addKeyListener { e: KeyEvent =>
