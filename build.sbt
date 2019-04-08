@@ -290,7 +290,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   settings(
     isSnapshot := false,
     name := "parser",
-    version := "0.3.0-RC1",
+    version := "0.3.0-RC2",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
