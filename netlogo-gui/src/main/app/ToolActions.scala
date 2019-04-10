@@ -37,7 +37,9 @@ with MenuAction {
   override def createDialog = new PreferencesDialog(frame,
     Preferences.Language,
     new Preferences.LineNumbers(tabs),
-    Preferences.IncludedFilesMenu)
+    Preferences.IncludedFilesMenu,
+    Preferences.ProceduresMenuSortOrder
+  )
 }
 
 class OpenLibrariesDialog( frame:              Frame
