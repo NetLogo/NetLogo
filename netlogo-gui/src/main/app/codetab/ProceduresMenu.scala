@@ -4,6 +4,8 @@ package org.nlogo.app.codetab
 
 import java.awt.event.KeyEvent
 import javax.swing.{JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities}
+import java.text.Collator
+import java.util.prefs.{ Preferences => JavaPreferences }
 
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
@@ -12,12 +14,30 @@ import org.nlogo.swing.ToolBarMenu
 
 class ProceduresMenu(target: ProceduresMenuTarget)
 extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
+
+  // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
+  private lazy val ordering = {
+    val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
+    Ordering.comparatorToOrdering(Collator.getInstance(locale))
+  }
+
   override def populate(menu: JPopupMenu) {
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
     }
-    // Procedures, sorted by appearance in code
-    val procs = procsTable.keys.toSeq.sortBy(procsTable(_).identifier.start)
+
+    val procs = {
+      val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
+      val AlphaSort = I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
+      val sort: Seq[String] => Seq[String] =
+        prefs.get("proceduresMenuSortOrder", "default") match {
+          // Sort procedures by alphabetical order if requested in preferences
+          case AlphaSort => _.sorted(ordering)
+          // Otherwise, sort procedures by order of appearance in the code tab
+          case default => _.sortBy(procsTable(_).identifier.start)
+        }
+      sort(procsTable.keys.toSeq)
+    }
 
     val items = procs.map { proc =>
       val item = new JMenuItem(proc)

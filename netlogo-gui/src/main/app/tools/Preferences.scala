@@ -63,4 +63,26 @@ object Preferences {
       prefs.put("includedFilesMenu", component.isSelected.toString)
     }
   }
+
+  object ProceduresMenuSortOrder extends Preference {
+    val i18nKey = "proceduresMenuSortOrder"
+
+    val options = Array(
+      I18N.gui.get("tools.preferences.proceduresSortByOrderOfAppearance"),
+      I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
+    )
+
+    val component = new JComboBox(options)
+    val restartRequired = false
+
+    def load(prefs: JavaPreferences) = {
+      val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
+      component.setSelectedItem(sortOrder)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      val chosenSortOrder = component.getSelectedItem.asInstanceOf[String]
+      prefs.put("proceduresMenuSortOrder", chosenSortOrder)
+    }
+  }
 }

@@ -458,6 +458,9 @@ tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
+tools.preferences.proceduresMenuSortOrder = Sort order of procedures menu (in Code tab):
+tools.preferences.proceduresSortAlphabetical = Alphabetical
+tools.preferences.proceduresSortByOrderOfAppearance = Order of appearance
 
 tools.libraries = Extensions
 tools.libraries.categories.extensions = Extensions
