@@ -2965,6 +2965,12 @@ print length file-read
 =&gt; 4
 </pre>
         <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to read the contents of a file with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/Fetch-Extension#readme">fetch:user-file-async</a>.
+        </p>
+        <p>
           See also <a href="#file-open">file-open</a> and <a href="#file-write">file-write</a>.
         </p>
       </div>
@@ -4117,6 +4123,12 @@ ask patches [
           PNG. If the image format supports transparency (alpha), that
           information will be imported as well.
         </p>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to import a drawing with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/ImportA-Extension#readme">import-a:drawing</a>.
+        </p>
       </div>
       <div class="dict_entry" id="import-pcolors">
         <h3>
@@ -4148,6 +4160,12 @@ ask patches [
           fully transparent pixels will be ignored. (Partially transparent
           pixels will be treated as opaque.)
         </p>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to import patch colors with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/ImportA-Extension#readme">import-a:pcolors</a>.
+        </p>
       </div>
       <div class="dict_entry" id="import-pcolors-rgb">
         <h3>
@@ -4170,6 +4188,12 @@ ask patches [
           PNG. If the image format supports transparency (alpha), then all
           fully transparent pixels will be ignored. (Partially transparent
           pixels will be treated as opaque.)
+        </p>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to import patch colors with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/ImportA-Extension#readme">import-a:pcolors-rgb</a>.
         </p>
       </div>
       <div class="dict_entry" id="import-world">
@@ -4210,6 +4234,12 @@ ask patches [
           model's location, you may include the full path to the file you
           wish to import. See <a href="#export-cmds">export-world</a> for an
           example.
+        </p>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to import a world with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/ImportA-Extension#readme">import-a:world</a>.
         </p>
       </div>
       <div class="dict_entry" id="in-cone">
@@ -7089,6 +7119,12 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
 ;; the number of turtles input by the user
 ;; are created
 </pre>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to read user input with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/Dialog-Extension#readme">dialog:user-input</a>.
+        </p>
       </div>
       <div class="dict_entry" id="reduce">
         <h3>
@@ -9373,6 +9409,12 @@ file-open user-new-file
           cause the file to be replaced. To do that you would use
           <code>file-delete</code>.
         </p>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to read the contents of a file with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/Fetch-Extension#readme">fetch:user-file-async</a>.
+        </p>
       </div>
       <div class="dict_entry" id="user-input">
         <h3>
@@ -9444,6 +9486,12 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
   [ setup ]
 </pre>
         <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to read a chooser value from the user with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/Dialog-Extension#readme">dialog:user-one-of</a>.
+        </p>
+        <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
           Programming Guide for additional details.
         </p>
@@ -9466,6 +9514,13 @@ if &quot;yes&quot; = user-one-of &quot;Set up the model?&quot; [&quot;yes&quot; 
 if user-yes-or-no? &quot;Set up the model?&quot;
   [ setup ]
 </pre>
+        <p>
+          Note: This primitive is not compatible with NetLogo Web.  If you
+          wish to read a <i>true</i> or <i>false</i> value from the user
+          with the same code and the
+          same behavior in both NetLogo and NetLogo Web, see
+          <a href="https://github.com/NetLogo/Dialog-Extension#readme">dialog:user-yes-or-no?</a>.
+        </p>
         <p>
           See the <a href="programming.html#user-interaction-primitives">User Interaction Primitives section</a> of the
           Programming Guide for additional details.
