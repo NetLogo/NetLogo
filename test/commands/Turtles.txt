@@ -199,6 +199,12 @@ ForwardToBoundary2_2D
   O> cro 1 [ fd (max-pycor * 10) + 0.1 bk max-pycor ]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
 
+NegativeMovement
+  O> crt 1 [ set heading 0 ]
+  O> ask turtles [ left -100 fd -1 ]
+  O> ask turtles [ bk -1 right -100 ]
+  [(list xcor ycor heading)] of turtle 0 => [0 0 0]
+
 HatchInheritShape
   O> crt 1
   T> set shape "circle"

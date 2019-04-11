@@ -20,6 +20,15 @@ OptimizedSubtraction1
   O> ask glob1 [ set pcolor 132 - pcolor ]
   [pcolor] of glob1 => 126
 
+UnaryMinux
+  globals [ x ]
+  O> set x (- -1)
+  x => 1
+  O> set x (- x)
+  x => -1
+  O> set x (- (x - 100))
+  x => 101
+
 SqrtDoubleEvaluation
   globals [ glob1 glob2 ]
   O> random-seed 0
