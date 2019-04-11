@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import java.io.File
 import java.net.URL
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{ Files, FileAlreadyExistsException, Path, Paths }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRenderOptions, ConfigValueFactory }
 
@@ -61,7 +61,13 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   val metadataURL = LibraryManager.metadataURL
 
   if (!Files.exists(Paths.get(userInstalledsPath)))
-    Files.createFile(Paths.get(userInstalledsPath))
+    // Concurrency during testing can cause the above check to be true but the exception to still be thrown,
+    // so ignore it if it happens. -Jeremy B April 2019
+    try {
+      Files.createFile(Paths.get(userInstalledsPath))
+    } catch {
+      case _: FileAlreadyExistsException =>
+    }
 
   reloadMetadata(true)
 
