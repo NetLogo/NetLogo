@@ -152,6 +152,19 @@ class AstRewriterTests extends FunSuite {
     assertResult("extensions []\nglobals [x] to bar end")(addExtension("globals [x] to bar end", ""))
   }
 
+  test("remove extension") {
+    assertResult("")(removeExtension("extensions [abc]", "abc"))
+    assertResult("extensions [ abc ]")(removeExtension("extensions [ abc def ]", "def"))
+    assertResult("extensions [ def ]")(removeExtension("extensions [ abc def ]", "abc"))
+    assertResult("extensions [ abc ghi ]")(removeExtension("extensions [ abc def ghi ]", "def"))
+    assertResult("")(removeExtension("extensions [\n  abc\n]", "abc"))
+    assertResult("extensions [\n  abc\n]")(removeExtension("extensions [\n  abc\n  def\n]", "def"))
+    assertResult("extensions [\n  def\n]")(removeExtension("extensions [\n  abc\n  def\n]", "abc"))
+
+    assertResult("extensions []")(removeExtension("extensions []", "abc"))
+    assertResult("extensions [ def ]")(removeExtension("extensions [ def ]", "abc"))
+  }
+
   test("add global") {
     assertResult("globals [foo]")(addGlobal("", "foo"))
     assertResult("globals [foo]\nto bar end")(addGlobal("to bar end", "foo"))
@@ -190,6 +203,9 @@ class AstRewriterTests extends FunSuite {
     val added = rewriter(source).addExtension(extension)
     added.trim
   }
+
+  def removeExtension(source:String, extension: String): String =
+    rewriter(source).removeExtension(extension).trim
 
   def addGlobal(source: String, global: String): String = {
     val added = rewriter(source).addGlobal(global)

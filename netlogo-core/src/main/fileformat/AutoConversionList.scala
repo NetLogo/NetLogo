@@ -66,6 +66,16 @@ object AutoConversionList {
     },
     "NetLogo 6.0-BETA2" -> {
       changeAllCode("rename range to _range", Seq(_.replaceToken("range", "_range")), Seq("range"))
+    },
+    "NetLogo 6.1" -> {
+      changeAllCode("remove CF extension; replace with build-in primitives",
+        Seq(
+          _.removeExtension("cf"),
+          _.replaceToken("cf:ifelse", "ifelse"),
+          _.replaceToken("cf:ifelse-value", "ifelse-value"),
+        ),
+        Seq("cf")
+      )
     }
-    )
+  )
 }
