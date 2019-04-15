@@ -5,6 +5,7 @@ package org.nlogo.core
 trait SourceRewriter {
   def addGlobal(global: String): String
   def addExtension(extension: String): String
+  def removeExtension(extension: String): String
   def addReporterProcedure(name: String, args: Seq[String], body: String): String
   def remove(commandName: String): String
   def replaceToken(originalToken: String, replaceToken:String): String
