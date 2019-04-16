@@ -463,8 +463,9 @@ the turtle with that who number. The [[patch]] primitive reporter takes values
 for pxcor and pycor and reports the patch with those coordinates. The [[link]]
 primitive takes two inputs, the who numbers of the two turtles it connects. And
 the [[patch-at]] primitive reporter takes *offsets*: distances, in the x and y
-directions, *from* the first agent. In the example above, the turtle with who
-number 0 is asked to get the patch east (and no patches north) of itself.
+directions, *from* the first agent. In the example `setup` procedure above, the
+turtle with who number 0 is asked to get the patch east (and no patches north)
+of itself like this: `ask turtle 0 [ ask patch-at 1 0 [ set pcolor red ] ]`.
 
 You can also select a subset of turtles, or a subset of patches, or a subset of
 links and ask them to do something. This involves using **agentsets**. The next
