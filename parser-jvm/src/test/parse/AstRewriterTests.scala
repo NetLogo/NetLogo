@@ -160,9 +160,12 @@ class AstRewriterTests extends FunSuite {
     assertResult("")(removeExtension("extensions [\n  abc\n]", "abc"))
     assertResult("extensions [\n  abc\n]")(removeExtension("extensions [\n  abc\n  def\n]", "def"))
     assertResult("extensions [\n  def\n]")(removeExtension("extensions [\n  abc\n  def\n]", "abc"))
+    assertResult("extensions [abc]")(removeExtension("extensions [def abc]", "def"))
+    assertResult("to go end")(removeExtension("extensions [abc]\nto go end", "abc"))
 
     assertResult("extensions []")(removeExtension("extensions []", "abc"))
     assertResult("extensions [ def ]")(removeExtension("extensions [ def ]", "abc"))
+    assertResult("to go end")(removeExtension("to go end", "abc"))
   }
 
   test("add global") {

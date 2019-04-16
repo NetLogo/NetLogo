@@ -69,31 +69,34 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     val tokens = tokenizer.tokenizeString(source).toStream
     val buf = new StringBuilder(source)
 
-    def extensions(tokens: Stream[Token]): Seq[Token] = tokens match {
-      case Token(_, Ident, "EXTENSIONS") #:: Token(_, OpenBracket, _) #:: rest => {
-        val (exts, after) = rest.span(_.tpe == Ident)
-        tokens.take(2) ++ exts ++ after.take(1)
-      }
-      case _ #:: rest   => extensions(rest)
-      case Stream.Empty => Seq.empty[Token]
-    }
+    val (beforeExtensions, rest) = tokens.span(t => t.value != "EXTENSIONS" && t.tpe == Ident)
+    val endIndex = rest.indexWhere(_.tpe == CloseBracket)
+    val extensions = tokens.take(endIndex + 1)
+    val afterExtensions = tokens.drop(endIndex + 1)
 
-    extensions(tokens) match {
+    extensions.toList match {
       case extKeyword +: Token(_, OpenBracket, _)
             +: Token(_, Ident, extName)
             +: (close @ Token(_, CloseBracket, _))
             +: Nil if extName == extValue =>
         // eat empty lines
-        val end = (close.end until source.length).find(_ == '\n').getOrElse(source.length)
-        buf.replace(extKeyword.start, end, "")
+        if (beforeExtensions.nonEmpty) {
+          buf.replace(beforeExtensions.last.end, close.end, "")
+        } else if (afterExtensions.nonEmpty) {
+          buf.replace(extKeyword.start, afterExtensions.head.start, "")
+        } else {
+          buf.replace(extKeyword.start, close.end, "")
+        }
       case extSection =>
-        extSection.span(_.value != extValue) match {
-          case (_ :+ precedingToken, extToken +: _) =>
-            // This basically preserves formatting exactly. So
-            // extensions [ abc def ] => extensions [ abc ]
-            // extensions [abc def] => extension [abc]
-            // It just makes whatever comes after the extension come after the preceding extension instead.
+        extSection.span(t => t.value != extValue || t.tpe != Ident) match {
+          case (_ :+ (precedingToken @ Token(_, Ident, _)), extToken +: _) =>
+            // Preceding token is an extension. Make whatever comes after the extension come after the preceding
+            // extension instead.
             buf.replace(precedingToken.end, extToken.end, "")
+          case (_, extToken +: followingToken +: _) =>
+            // The token before this one isn't an extension. In a valid file, it must be an open bracket.
+            // So preserve spacing before the extension, and move the next token over to where this one starts
+            buf.replace(extToken.start, followingToken.start, "")
           case _ => // not found
         }
     }
