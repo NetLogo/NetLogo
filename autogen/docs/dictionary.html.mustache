@@ -1836,6 +1836,10 @@ show count patches with [pcolor = red]
         heading, or whatever. (The new turtles are created all at once then
         run one at a time, in random order.)
       </p>
+      <p>
+        If <i>number</i> is fractional, it will be rounded down to
+        the nearest integer (4.5 becomes 4, 10.9 becomes 10).
+      </p>
       <pre>
 cro 100 [ fd 10 ]  ;; makes an evenly spaced circle
 </pre>
@@ -1971,6 +1975,10 @@ end
         them. This is useful for giving the new turtles a different color,
         heading, or whatever. (The new turtles are created all at once then
         run one at a time, in random order.)
+      </p>
+      <p>
+        If <i>number</i> is fractional, it will be rounded down to
+        the nearest integer (4.5 becomes 4, 10.9 becomes 10).
       </p>
       <pre>
 crt 100 [ fd 10 ]     ;; makes a randomly spaced circle
@@ -4531,6 +4539,10 @@ show int -3.5
           Note that the indices begin from 0, not 1. (The first item is item
           0, the second item is item 1, and so on.)
         </p>
+        <p>
+          If <i>index</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
+        </p>
         <pre>
 ;; suppose mylist is [2 4 6 8 10]
 show item 2 mylist
@@ -5756,6 +5768,10 @@ ask turtles
           It is an error for <i>size</i> to be greater than the size of the
           input.
         </p>
+        <p>
+          If <i>size</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
+        </p>
         <pre>
 ask n-of 50 patches [ set pcolor green ]
 ;; 50 randomly chosen patches turn green
@@ -5781,6 +5797,10 @@ ask n-of 50 patches [ set pcolor green ]
         <p>
           If the reporter accepts inputs, the input will be the number of the
           item currently being computed, starting from zero.
+        </p>
+        <p>
+          If <i>size</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
         </p>
         <pre>
 show n-values 5 [1]
@@ -7290,6 +7310,10 @@ set mylist remove-duplicates mylist
           Note that the indices begin from 0, not 1. (The first item is item
           0, the second item is item 1, and so on.)
         </p>
+        <p>
+          If <i>index</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
+        </p>
         <pre>
 set mylist [2 7 4 7 &quot;Bob&quot;]
 set mylist remove-item 2 mylist
@@ -7330,6 +7354,10 @@ pd repeat 36 [ fd 1 rt 10 ]
         <p>
           Likewise for a string, but the given character of <i>string1</i>
           removed and the contents of <i>string2</i> spliced in instead.
+        </p>
+        <p>
+          If <i>index</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
         </p>
         <pre>
 show replace-item 2 [2 7 4 5] 15
@@ -7426,6 +7454,10 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
           Retaining references to old patches or patch sets is inadvisable
           and may subsequently cause runtime errors or other unexpected
           behavior.
+        </p>
+        <p>
+          If any coordinate is fractional, it will be rounded to
+          the nearest integer towards zero (4.5 becomes 4, 10.9 becomes 10, -2.9 becomes -2).
         </p>
         <p>
           See also <a href="#set-patch-size">set-patch-size</a>.
@@ -8409,6 +8441,10 @@ foreach sort-on [size] turtles
           If the sprout-<i>&lt;breeds&gt;</i> form is used, the new turtles
           are created as members of the given breed.
         </p>
+        <p>
+          If <i>number</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
+        </p>
         <pre>
 sprout 5
 sprout-wolves 10
@@ -8604,6 +8640,10 @@ ask sheep [ stop-inspecting self ]
         <p>
           Reports just a section of the given list or string, ranging between
           the first position (inclusive) and the second position (exclusive).
+        </p>
+        <p>
+          If either <i>position</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
         </p>
         <p>
           Note: The positions are numbered beginning with 0, not with 1.
@@ -9267,6 +9307,10 @@ ask turtle 0 [ show sort my-links ]
           (If you want them in random order, use shuffle on the result.)
           If the input does not have enough items to satisfy the
           <i>size</i>, reports the entire list.
+        </p>
+        <p>
+          If <i>size</i> is fractional, it will be rounded down to
+          the nearest integer (4.5 becomes 4, 10.9 becomes 10).
         </p>
         <pre>
 ask up-to-n-of 50 patches [ set pcolor green ]
