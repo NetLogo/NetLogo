@@ -416,7 +416,7 @@ public strictfp class WidgetWrapper
     switch (mouseMode()) {
       case NW:
         y = StrictMath.max(y, BORDER_N - bounds.y);
-        x = StrictMath.max(x, BORDER_E - bounds.x);
+        x = StrictMath.max(x, - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         bounds.y += y;
@@ -424,29 +424,29 @@ public strictfp class WidgetWrapper
         break;
       case NE:
         y = StrictMath.max(y, BORDER_N - bounds.y);
-        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, - (bounds.x + bounds.width));
         bounds.width += x;
         bounds.y += y;
         bounds.height -= y;
         break;
       case SW:
-        x = StrictMath.max(x, BORDER_E - bounds.x);
+        x = StrictMath.max(x, - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         bounds.height += y;
         break;
       case W:
-        x = StrictMath.max(x, BORDER_E - bounds.x);
+        x = StrictMath.max(x, - bounds.x);
         bounds.x += x;
         bounds.width -= x;
         break;
       case SE:
-        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, - (bounds.x + bounds.width));
         bounds.width += x;
         bounds.height += y;
         break;
       case E:
-        x = StrictMath.max(x, BORDER_E - (bounds.x + bounds.width));
+        x = StrictMath.max(x, - (bounds.x + bounds.width));
         bounds.width += x;
         break;
       case S:
