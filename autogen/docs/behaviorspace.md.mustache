@@ -38,9 +38,9 @@ multi-dimension parameter space does your model perform best?
 
 For example, suppose you want speedy synchronization from the agents in the
 Fireflies model. The model has four sliders -- number, cycle-length,
-flash-length and number-flashes -- that have approximately 2000, 100, 10 and 3
+flash-length and flashes-to-reset -- that have approximately 2000, 100, 10 and 3
 possible values, respectively. That means there are 2000 * 100 * 10 * 3 =
-600,000 possible combinations of slider values! Trying combinations one at a
+6,000,000 possible combinations of slider values! Trying combinations one at a
 time is hardly an efficient way to learn which one will evoke the speediest
 synchronization.
 
@@ -158,8 +158,8 @@ population of turtles rose and fell during each run, you would enter:
 You can enter one reporter, or several, or none at all. If you enter several,
 each reporter must be on a line by itself, for example:
 
-> `count frogs`  
-> `count mice`  
+> `count frogs`
+> `count mice`
 > `count birds`
 
 If you don't enter any reporters, the runs will still take place. This is useful
@@ -345,7 +345,7 @@ world dimensions, you must specify all four.
 **Note:** The remainder of this guide uses `netlogo-headless.sh` to refer to the
 NetLogo Headless launch script. If you are using Windows, please substitute
 `netlogo-headless.bat` for `netlogo-headless.sh` in each example.
-    
+
 #### Examples
 
 It is easiest if you create your experiment setup ahead of time in the GUI, so
@@ -452,7 +452,7 @@ Note that you should supply a 3D model and there are also 3D arguments
 
 The next section has information on how to create standalone experiment setup
 files using XML.
-    
+
 ### Setting up experiments in XML
 
 We don't yet have detailed documentation on authoring experiment setups in XML,
@@ -531,4 +531,3 @@ The API lets you run BehaviorSpace experiments from Java code, or, you can write
 custom code that controls NetLogo more directly to do BehaviorSpace-like things.
 See the [Controlling](controlling.html) section of the User Manual for further
 details on both possibilities.
-
