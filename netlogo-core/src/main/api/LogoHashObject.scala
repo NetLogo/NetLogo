@@ -2,7 +2,9 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ LogoList , Nobody }
+import org.nlogo.core.{LogoList, Nobody}
+
+import scala.util.hashing.MurmurHash3
 
 /* The "general contract" between Object.hashCode() and Object.equals(..) is for any Objects a & b,
    a.hashCode() == b.hashCode() must be true when a.equals(b)/b.equals(a) and vice versa.
@@ -57,8 +59,7 @@ class LogoHashObject(val sourceObject: AnyRef) {
 
       case set: AgentSet =>
         import collection.JavaConverters._
-        set.agents.asScala.foldLeft(1){(result, next) =>
-          31 * result + new LogoHashObject(next).hashCode}
+        MurmurHash3.unorderedHash(set.agents.asScala.map(new LogoHashObject(_)))
 
       case _ =>
         sourceObject.hashCode
