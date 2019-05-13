@@ -9,16 +9,18 @@ For help running models made in old versions, see the
 
 [TOC]
 
-## Version 6.1.0 (March 2019)
+## Version 6.1.0 (May 2019)
 
 ## Feature Changes
 
-The premier feature for this release is an **extensions manager** for installing and updating extensions, which is available under the Tools menu.  Using extensions with NetLogo could be a painful process: manually finding them, downloading them, and getting them correctly installed in the NetLogo application.  The extensions manager addresses these issues by automating the installation of many 3rd-party extensions, and the updating of the bundled extensions between NetLogo releases.  All done easily from within the application.  In fact, if you open a model that requires an extension you don’t have installed that it knows about, the extension manager will ask if you’d like to download and install it right on the spot, without any extra effort
+The premier feature for this release is an **Extension Manager** for installing and updating extensions, which is available under the Tools menu.  Using extensions with NetLogo could be a painful process: manually finding them, downloading them, and getting them correctly installed in the NetLogo application.  The extensions manager addresses these issues by automating the installation of many 3rd-party extensions, and the updating of the bundled extensions between NetLogo releases.  All done easily from within the application.  In fact, if you open a model that requires an extension you don’t have installed that it knows about, the extension manager will ask if you’d like to download and install it right on the spot, without any extra effort
+
+We welcome external contributions to the extensions library!  If you have developed a NetLogo extension and want to make it available to NetLogo users in the Extension Manager, see these instructions:  https://github.com/NetLogo/NetLogo-Libraries#submitting-pull-requests
 
 Other new features include:
 
 - The primitives `ifelse` and `ifelse-value` now take a varying number of clauses, making selecting a single case from a variety of options much simpler.
-- Added a new primitive, `up-to-n-of`, which gives as many items from a list as possible up to some limit, without causing an error if it cannot get all of them (unlike `n-of`).
+- Added a new primitive, `up-to-n-of`, which gives as many items from a list as possible up to some limit, without causing an error if it cannot get all of them.  Previously, to safely use `n-of` when you were unsure of the number of agents in an agentset would require some verbose code like `ask n-of (ifelse-value (count turtles-here < 10) [count turtles-here] [10]) turtles-here [ fd 10 ]`, but now you can simple write `ask up-to-n-of turtles-here [ fd 10 ]` to get the same effect.
 - Added new hotkeys: Command-U for "Show Usage" of a term, Command-E for "Jump to Declaration" of a procedure, and Command-Option-S for "Save All" when using included NetLogo code files.  Or Ctrl-U, Ctrl-E, Ctrl-Alt-S for Windows and Linux users.
 - Multiline input widgets are now directly editable on the interface tab.
 - Runtime optimizations for the `in-radius` and `in-cone` primitives.
@@ -30,10 +32,12 @@ Other new features include:
 - Plot pen names with quotes in them are properly stored and loaded.
 - Plot pen names are now case-insensitive, just like other items in NetLogo.
 - When a plot is deleted and the action is undone, the plot continues to work afterward.
+- 2D NetLogo models saved in NetLogo 3D can be opened back into 3D, or de-converted by re-opening in NetLogo 2D.
 - Widgets can no longer be re-sized to be completely outside the interface tab.
 - Code comments can be used as normal within an `__includes` keyword file list.
 - The error message for getting the `mean` of an empty list should now make more sense.
 - Double-clicking an empty experiment list in BehaviorSpace will not cause an error.
+- BehaviorSpace experiments are better about warning when there are astronomical numbers of run combinations.
 - Anonymous procedures can be given in the conditional reporter blocks of `ifelse-value`.
 - Slight changes to how color values are calculated, for smoother interoperability with NetLogo Web.
 
@@ -49,38 +53,70 @@ Other new features include:
 
 ## Documentation Changes
 
+- Added documentation around using primitives like `mean` and `variance` along with agentsets producing slightly different results due to floating point arithmetic.
+- Add an extension authoring introduction page with links to the technical documentation.
 - Clarify what `clear-ticks` is meant to do.
 - Clarify that `clear-globals` doesn't affect interface globals.
 - Fixed various formatting errors and typos.
 
 ## Model Changes
+
+New Sample Models:
+
+- Ant Adaptation
+- Braess' Paradox
+
+New Code Examples:
+
+- `py` Extension
+    - Python Basic Example
+    - Python Flocking Clusters
+
 New Curricular models:
 
 - PNoM Curriculum
-	- PNoM 1 Diffusion Sandbox
-	- PNoM 2 Diffusion Sensor Sandbox
-	- PNoM 3 Virtual Syringe
-	- PNoM 4 Virtual Syringe Force Graph
-	- PNoM 5 Virtual Syringe Temperature Graph
-	- PNoM 6 Particle Sandbox Gravity
-	- PNoM 7 Particle Sandbox Intermolecular
+    - PNoM 1 Diffusion Sandbox
+    - PNoM 2 Diffusion Sensor Sandbox
+    - PNoM 3 Virtual Syringe
+    - PNoM 4 Virtual Syringe Force Graph
+    - PNoM 5 Virtual Syringe Temperature Graph
+    - PNoM 6 Particle Sandbox Gravity
+    - PNoM 7 Particle Sandbox Intermolecular
 
 Sample Model Updates:
 
-- Raindrops 3D: Remove unused procedure.
+- Acids & Bases Models: Dissociations now result in random headings for resulting particles.
+- Mandelbrot: Exposed `max-iterations` parameter and updated Info Tab.
+- Peppered Moths: Increase size of `moth` agents.
 - Perceptron: Fix weight visualization bug.
-- Tumor: Prevent `ask nobody` bug when using the `kill` buttons more than once.
+- Raindrops3D: Remove unused procedure.
 - Reactor X-Section: Fix typo and extend manual rod depth.
 - Rock Paper Scissors: Minor Info tab updates.
 - Sandpile: Minor Info tab updates.
+- Simple Kinetics 1,2: Dissociations now result in random headings for resulting particles.
 - SmoothLife: Allows NLW compatibility by skipping some plot drawing.
+- Tumor: Prevent `ask nobody` bug when using
 - Wolf Sheep Predation: Fix typos in Code tab.
+
+IABM Model Updates:
+
+- Segregation Simple Models (Simple & Extensions 1 - 3): Reworded comment in Code tab.
 
 Code Example Updates:
 
 - LS Parent Example: Change button display name to avoid confusion with `setup` button.
 - Mouse Drag Multiple Example: The model has been rewritten to be NLW compatible.
 - Mouse Drag One Example: The model has been updated to be NLW compatible
+
+We've introduced a new subfolder in the `Sample Models/Social Science` folder: `Economics`. With this new folder, several models have been moved. The following models are now in the `Social Science/Economics` folder:
+
+- Bidding Market
+- Hotelling's Law
+- Oil Cartel HubNet
+- Sugarscape
+- Bank Reserves
+- Cash Flow
+- Wealth Distribution
 
 With the introduction of the new variadic `ifelse` and `ifelse-value` primitives, the Models Library has been updated to reflect this new functionality. These updates are divided into three major sections:
 
