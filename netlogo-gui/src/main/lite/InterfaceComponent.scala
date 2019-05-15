@@ -170,14 +170,6 @@ with Event.LinkChild {
   }
 
   /**
-   * @param writer to writer the contents of the export world feature
-   */
-  def exportWorld(writer: java.io.PrintWriter) {
-    workspace.exportWorld(writer)
-    writer.flush()
-  }
-
-  /**
    * returns a graphical image of the current contents of the plot with the given name. This image
    * can be saved to disk, displayed to the user later, etc.
    *
