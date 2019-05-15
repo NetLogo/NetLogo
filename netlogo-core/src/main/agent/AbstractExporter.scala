@@ -26,12 +26,18 @@ object AbstractExporter {
     println()
   }
 
+  def exportWithHeader(writer: PrintWriter, tpe: String, modelFileName: String, extraHeader: String)
+                      (exportBody: (PrintWriter) => Unit): Unit = {
+    exportHeader(writer, tpe, modelFileName, extraHeader)
+    exportBody(writer)
+  }
+
 }
 
 abstract class AbstractExporter(filename: String) {
 
   @throws(classOf[IOException])
-  def export(writer: java.io.PrintWriter) // abstract
+  def export(writer: PrintWriter) // abstract
 
   @throws(classOf[IOException])
   def export(tpe: String, modelFileName: String, extraHeader: String) {
@@ -39,8 +45,7 @@ abstract class AbstractExporter(filename: String) {
     try {
       file.open(FileMode.Write)
       val writer = file.getPrintWriter
-      AbstractExporter.exportHeader(writer, tpe, modelFileName, extraHeader)
-      export(writer)
+      AbstractExporter.exportWithHeader(writer, tpe, modelFileName, extraHeader)(export)
     }
     finally ignoring(classOf[IOException]) {
       file.close(false)
