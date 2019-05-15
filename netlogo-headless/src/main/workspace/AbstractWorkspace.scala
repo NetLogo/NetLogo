@@ -215,16 +215,18 @@ object AbstractWorkspaceTraits {
     @throws(classOf[IOException])
     def exportWorld(filename: String) {
       new AbstractExporter(filename) {
-        def export(writer:PrintWriter){
-          world.exportWorld(writer,true)
-          exportDrawingToCSV(writer)
-          exportOutputAreaToCSV(writer)
-          exportPlotsToCSV(writer)
-          getExtensionManager.exportWorld(writer)
-        } }.export("world",getModelFileName,"")
+        def export(writer: PrintWriter): Unit = {
+          exportWorldNoMeta(writer)
+        }
+      }.export("world", getModelFileName, "")
     }
 
-    def exportWorld(writer:PrintWriter){
+    @throws(classOf[IOException])
+    def exportWorld(writer: PrintWriter): Unit = {
+      AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
+    }
+
+    private def exportWorldNoMeta(writer: PrintWriter): Unit = {
       world.exportWorld(writer,true)
       exportDrawingToCSV(writer)
       exportOutputAreaToCSV(writer)

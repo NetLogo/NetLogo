@@ -7,6 +7,7 @@ import org.nlogo.api.{ PreviewCommands, Workspace }
 import org.nlogo.api.HexString
 
 object Checksummer {
+
   def initModelForChecksumming(workspace: Workspace) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     val commands = workspace.previewCommands match {
@@ -15,24 +16,32 @@ object Checksummer {
     }
     workspace.command("random-seed 0\n" + commands)
   }
+
   def calculateWorldChecksum(workspace: Workspace): String =
-    calculateChecksum(workspace.exportWorld _)
+    calculateChecksum(workspace.exportWorld _, stripMetaSection)
+
   def calculateGraphicsChecksum(workspace: Workspace): String =
     calculateChecksum{writer =>
       val raster = workspace.renderer.exportView(workspace)
       raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int])
         .foreach(writer.println)
     }
-  def calculateChecksum(fn: PrintWriter => Unit): String = {
+
+  def calculateChecksum(fn: PrintWriter => Unit, transformer: (String) => String = identity): String = {
     val output = {
       val outputStream = new java.io.ByteArrayOutputStream
       val writer = new java.io.PrintWriter(outputStream)
       fn(writer)
       writer.close()
       outputStream.close()
-      outputStream.toString.replaceAll("\r\n", "\n")  // avoid platform differences
+      val cleansed = outputStream.toString.replaceAll("\r\n", "\n")  // avoid platform differences
+      transformer(cleansed)
     }
     val digester = java.security.MessageDigest.getInstance("SHA")
     HexString.toHexString(digester.digest(output.getBytes))
   }
+
+  private def stripMetaSection(exportStr: String): String =
+    exportStr.drop(exportStr.indexOf("\n\n") + 2)
+
 }

@@ -15,16 +15,18 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   @throws(classOf[IOException])
   def exportWorld(filename: String) {
     new AbstractExporter(filename) {
-      def export(writer:PrintWriter){
-        world.exportWorld(writer,true)
-        exportDrawingToCSV(writer)
-        exportOutputAreaToCSV(writer)
-        exportPlotsToCSV(writer)
-        extensionManager.exportWorld(writer)
-    } }.export("world",modelFileName,"")
+      def export(writer: PrintWriter): Unit = {
+        exportWorldNoMeta(writer)
+      }
+    }.export("world", modelFileName, "")
   }
 
-  def exportWorld(writer:PrintWriter) {
+  @throws(classOf[IOException])
+  def exportWorld(writer: PrintWriter): Unit = {
+    AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
+  }
+
+  private def exportWorldNoMeta(writer: PrintWriter): Unit = {
     world.exportWorld(writer,true)
     exportDrawingToCSV(writer)
     exportOutputAreaToCSV(writer)
