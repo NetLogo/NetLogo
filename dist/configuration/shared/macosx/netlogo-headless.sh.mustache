@@ -13,18 +13,16 @@ fi;
 # -XX:+UseParallelGC    The parallel collector maximizes throughput
 # -Dfile.encoding=UTF-8 ensure Unicode characters in model files are compatible cross-platform
 JVM_OPTS=(-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8)
-OPTS_INDEX=2
 
 ARGS=()
-INDEX=0
 
 for arg in "$@"; do
   if [[ "$arg" == "--3D" ]]; then
-    JVM_OPTS[OPTS_INDEX++]="-Dorg.nlogo.is3d=true"
+    JVM_OPTS+=("-Dorg.nlogo.is3d=true")
   elif [[ "$arg" == -D* ]]; then
-    JVM_OPTS[OPTS_INDEX++]="$arg"
+    JVM_OPTS+=("$arg")
   else
-    ARGS[INDEX++]="$arg"
+    ARGS+=("$arg")
   fi
 done
 
