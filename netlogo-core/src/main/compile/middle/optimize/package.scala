@@ -334,4 +334,20 @@ package optimize {
       }
     }
   }
+  // _equal(_count, _constdouble: 0.0) => _not(_any(*))
+  object NotAny extends RewritingReporterMunger {
+    val clazz = classOf[_equal]
+    def munge(root: Match) {
+      val count = root.matchOneArg(classOf[_count])
+      if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
+           .primitiveValue == 0)
+      {
+        val oldRoot = root.node.asInstanceOf[ReporterApp]
+        root.strip()
+        root.replace(classOf[_not])
+        val any = root.addArg(classOf[_any], oldRoot)
+        any.graftArg(count.matchArg(0))
+      }
+    }
+  }
 }

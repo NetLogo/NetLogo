@@ -33,7 +33,8 @@ object Optimizations {
         "Nsum4",       // optimizes summing neighbor4 values
         "PatchAt",     // optimizes patch at offsets
         "RandomConst", // inlines const argument to random
-        "With"))       // optimizes "with" to patch-col / patch-row
+        "With",        // optimizes "with" to patch-col / patch-row
+        "NotAny"))     // optimizes agentset counting when it is empty
 
   val standardOptimizations =
     fdOptimizations ++

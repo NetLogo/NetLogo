@@ -303,4 +303,14 @@ class OptimizerTests extends AbstractOptimizerTest {
     assertResult("_countotherwith[_turtles[], [_constboolean:true[]]]")(
       compileReporter("count other turtles with [true]"))
   } }
+  test("notAny1") { new OptTest {
+    withReporterOptimization("NotAny")
+    assertResult("_not[_any[_patches[]]]")(
+      compileReporter("count patches = 0"))
+  } }
+  test("notAny2") { new OptTest {
+    withReporterOptimization("NotAny")
+    assertResult("_not[_any[_patches[]]]")(
+      compileReporter("0 = count patches"))
+  } }
 }
