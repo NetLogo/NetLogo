@@ -2418,17 +2418,14 @@ procedure GO:[]{O---}:
           RETURN
 [21]_tick "tick"
 [22]_asm_procedurego_if_21 "if count turtles = 0 [ stop ]" boolean => void
-      _equal "count turtles = 0" double,double => boolean
-        _count "count turtles" AgentSet => double
+      _not "count turtles = 0" boolean => boolean
+        _any "count turtles = 0" AgentSet => boolean
           _turtles "turtles" => AgentSet
-        _constdouble:0.0 "0" => double
           // parameter final  context
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
-          // parameter final  context
-          // parameter final  d0
-          // parameter final  d1
+          // parameter final  arg0
           // parameter final  context
           // parameter final  arg0
          L0
@@ -2438,21 +2435,22 @@ procedure GO:[]{O---}:
          L1
           ASTORE 2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-          I2D
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
+          IFNE L2
+          ICONST_1
+          GOTO L3
          L2
-          DCONST_0
+         FRAME APPEND [org/nlogo/agent/TreeAgentSet]
+          ICONST_0
          L3
-          DSTORE 4
-          DSTORE 2
-          DLOAD 2
-          DLOAD 4
-          DCMPL
+         FRAME SAME1 I
+          ISTORE 2
+          ILOAD 2
           IFNE L4
           ICONST_1
           GOTO L5
          L4
-         FRAME APPEND [D D]
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I] []
           ICONST_0
          L5
          FRAME SAME1 I
@@ -2463,10 +2461,10 @@ procedure GO:[]{O---}:
           BIPUSH 23
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I T D] [org/nlogo/nvm/Context]
+         FRAME SAME1 org/nlogo/nvm/Context
           BIPUSH 24
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I T D] [org/nlogo/nvm/Context I]
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L8
           RETURN
