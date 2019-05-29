@@ -16,6 +16,8 @@ class World3D extends World
   with org.nlogo.api.World3D
   with CompilationManagement {
 
+  def is3d: Boolean = true
+
   val drawing: Drawing3D = new Drawing3D(this)
 
   override val protractor: Protractor3D = new Protractor3D(this)

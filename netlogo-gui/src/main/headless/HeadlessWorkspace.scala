@@ -30,16 +30,19 @@ object HeadlessWorkspace {
    * Makes a new instance of NetLogo capable of running a model "headless", with no GUI.
    */
   def newInstance: HeadlessWorkspace =
-    newInstance(classOf[HeadlessWorkspace])
+    newInstance(classOf[HeadlessWorkspace],false)
+
+  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace],is3d)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace],is3d: Boolean = false): HeadlessWorkspace = {
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
+    //pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
+    pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
-    if (Version.is3D)
+    if (is3d)//(Version.is3D)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
@@ -51,10 +54,16 @@ object HeadlessWorkspace {
     pico.getComponent(subclass)
   }
 
-  def newLab: LabInterface = {
+  /**
+    * the newLab by default uses the [[Version.is3D]]
+    * @return
+    */
+  def newLab: LabInterface = newLab(Version.is3D)
+
+  def newLab(is3d: Boolean): LabInterface = {
     val pico = new Pico
     pico.add("org.nlogo.compile.Compiler")
-    if (Version.is3D)
+    if (is3d)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
@@ -135,6 +144,9 @@ with org.nlogo.api.ViewSettings {
    */
   override def isHeadless = true
 
+
+  def is3d: Boolean = _world.is3d
+
   /**
    * Internal use only.
    */
@@ -169,7 +181,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(worldSize: Int, modelString: String) {
-    if (Version.is3D)
+    if (is3d) //(Version.is3D)
       initForTesting(new WorldDimensions3D(
           -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
           modelString)
@@ -192,7 +204,7 @@ with org.nlogo.api.ViewSettings {
     world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     val dialect =
-      if (Version.is3D) NetLogoThreeDDialect
+      if (is3d) NetLogoThreeDDialect//(Version.is3D) NetLogoThreeDDialect
       else NetLogoLegacyDialect
     val newProgram = Program.fromDialect(dialect)
     val results = compiler.compileProgram(source, newProgram,

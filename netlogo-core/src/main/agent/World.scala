@@ -128,6 +128,7 @@ abstract class World
     reader: java.io.BufferedReader): Unit
   def sprout(patch: Patch, breed: AgentSet): Turtle
   def copy(): World
+  def is3d: Boolean
 }
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
@@ -136,6 +137,8 @@ abstract class World
 // methods like distance() and towards() take a boolean argument "wrap";
 // it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
 class World2D extends World with CompilationManagement {
+
+  def is3d: Boolean = false
 
   val protractor: Protractor = new Protractor(this)
 

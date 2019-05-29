@@ -64,4 +64,5 @@ trait World {
   @throws(classOf[AgentException])
   def setObserverVariableByName(variableName: String, value: AnyRef)
   def timer: Timer
+  def is3d: Boolean
 }
