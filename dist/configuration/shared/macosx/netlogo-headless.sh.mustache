@@ -38,4 +38,4 @@ CLASSPATH=`echo $CLASSPATH | sed 's/://'`
 # -classpath ....         specify jars
 # org.nlogo.headless.Main specify we want headless, not GUI
 # "${ARGS[0]}"            pass along any additional arguments
-$JAVA "${JVM_OPTS[@]}" -Dnetlogo.extensions.dir="${BASE_DIR}/extensions" -classpath "$CLASSPATH" org.nlogo.headless.Main "${ARGS[@]}"
+"$JAVA" "${JVM_OPTS[@]}" -Dnetlogo.extensions.dir="${BASE_DIR}/extensions" -classpath "$CLASSPATH" org.nlogo.headless.Main "${ARGS[@]}"
