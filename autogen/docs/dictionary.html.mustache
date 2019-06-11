@@ -3985,7 +3985,7 @@ if xcor &gt; 0[ set color blue ]
         </h3>
         <h4>
           <span class="prim_example">ifelse <i>reporter1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
-          <span class="prim_example">(ifelse <i>reporter1</i> [ <i>commands1</i> ] <i>reporter2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])</span>
+          <span class="prim_example">(ifelse <i>reporter1</i> [ <i>commands1</i> ] <i>reporter2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
           The <i>reporter</i>s must report boolean (true or false) values.
@@ -4010,6 +4010,7 @@ ask patches
           The reporters may report a different value for different agents, so
           some agents may run different command blocks.  When using more than one <i>reporter</i> you
           must surround the whole <i>ifelse</i> primitive and its blocks in parentheses.
+          This functionality was added in NetLogo 6.1.
         </p>
         <pre>
 ask patches [
@@ -4044,7 +4045,7 @@ ask patches [
         </h3>
         <h4>
           <span class="prim_example">ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
-          <span class="prim_example">(ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] <i>tfreporter2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])</span>
+          <span class="prim_example">(ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] <i>tfreporter2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
           The <i>tfreporter</i>s must report boolean (true or false) values.
@@ -4079,6 +4080,7 @@ show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
         <p>
           When using more than one <i>tfreporter</i> you
           must surround the whole <i>ifelse-value</i> primitive and its blocks in parentheses.
+          This functionality was added in NetLogo 6.1.
         </p>
         <pre>
 ask patches [
