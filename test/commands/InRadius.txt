@@ -482,3 +482,31 @@ InRadiusLargeRadius5_3D
   [ count patches in-radius 14 ] of patch 0 min-pycor 0 => 1728
   [ count turtles in-radius 1 ] of patch -11 -11 -11 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor 0 => 10
+
+InRadius_Unwrapped_OppositeCorners1
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy -48 -48 ]
+  O> create-turtles 1 [ setxy 48 48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-radius 100.5 ]
+  count links => 0
+  [ count other turtles in-radius 1 ] of turtle 0 => 0
+  [ count other turtles in-radius 2 ] of turtle 0 => 0
+  [ count other turtles in-radius 30 ] of turtle 0 => 0
+  [ count other turtles in-radius 95 ] of turtle 0 => 0
+  [ count other turtles in-radius 96 ] of turtle 0 => 0
+
+InRadius_Unwrapped_OppositeCorners2
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy 48 -48 ]
+  O> create-turtles 1 [ setxy -48 48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-radius 100.5 ]
+  count links => 0
+  [ count other turtles in-radius 1 ] of turtle 0 => 0
+  [ count other turtles in-radius 2 ] of turtle 0 => 0
+  [ count other turtles in-radius 30 ] of turtle 0 => 0
+  [ count other turtles in-radius 95 ] of turtle 0 => 0
+  [ count other turtles in-radius 96 ] of turtle 0 => 0

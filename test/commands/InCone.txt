@@ -571,3 +571,31 @@ InConeBreeds_2D
   count [carrots in-cone 1 0] of turtle 0 => 0
   count [turtles in-cone 1 0] of turtle 0 => 3
   count [other turtles in-cone 1 0] of turtle 0 => 2
+
+InCone_Unwrapped_OppositeCorners1
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy -48 -48 set heading 225 ]
+  O> create-turtles 1 [ setxy 48 48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-cone 100 60 ]
+  count links => 0
+  [ count other turtles in-cone 1 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 2 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 30 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 95 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 96 60 ] of turtle 0 => 0
+
+InCone_Unwrapped_OppositeCorners2
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy -48 48 set heading 315 ]
+  O> create-turtles 1 [ setxy 48 -48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-cone 100 60 ]
+  count links => 0
+  [ count other turtles in-cone 1 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 2 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 30 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 95 60 ] of turtle 0 => 0
+  [ count other turtles in-cone 96 60 ] of turtle 0 => 0

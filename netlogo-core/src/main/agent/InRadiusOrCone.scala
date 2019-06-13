@@ -66,11 +66,11 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
         val patch = patches(i)
 
         dx = Math.abs(patch.pxcor - patchX)
-        if (dx > worldWidth2)
+        if (world.topology.xWraps && dx > worldWidth2)
           dx = worldWidth - dx
 
         dy = Math.abs(patch.pycor - patchY)
-        if (dy > worldHeight2)
+        if (world.topology.yWraps && dy > worldHeight2)
           dy = worldHeight - dy
 
         gRoot = world.rootsTable.gridRoot(dx * dx + dy * dy)
