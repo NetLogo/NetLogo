@@ -171,17 +171,18 @@ class CompilerManager(val workspace: AbstractWorkspace,
     // this method again. - ST 7/7/06
     if (!isLoading) {
       val proceed = compileProcedures()
-      world.realloc()
-      world.rememberOldProgram()
-      setGlobalVariables()
       // After every, failing or passing, compilation process, NetLogo needs to remember
       // the state of all the widgets in the interface tab when loading for the first time.
       // This is normally done by reallocating the widgets, updating the dialog
       // (in the case of 2D <-> 3D), updating the constraints, and compiling the widgets
       // source code. -- CBR 12/07/2018
       if (proceed) {
+        world.realloc()
+        world.rememberOldProgram()
+        setGlobalVariables()
         compileWidgets()
       } else {
+        setGlobalVariables()
         // even if compilation of the procedure tab fails, we still want to mark our
         // constraints as out of date, so that any existing dynamic constraints are
         // thrown away since they're compiled against the old program -- CLB
