@@ -2,7 +2,7 @@ import sbt._
 import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
-import Docs.{ allDocs, docsRoot, manualPDF }
+import Docs.{ allDocs, docsRoot, htmlDocs, manualPDF }
 import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
@@ -36,6 +36,7 @@ object NetLogoPackaging {
   lazy val packagingMainJar        = taskKey[File]("Main jar to use when packaging")
   lazy val subApplications         = settingKey[Seq[SubApplication]]("map of names to sub-application")
   lazy val uploadWebsite           = inputKey[Unit]("upload the web download pages to the ccl server")
+  lazy val uploadDocs              = inputKey[Unit]("Upload the web docs pages only to the CCL server")
   lazy val webTarget               = settingKey[File]("location of finished website")
 
   def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
@@ -158,6 +159,16 @@ object NetLogoPackaging {
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
+    },
+    uploadDocs := {
+      val user = System.getenv("USER")
+      val host = "ccl.northwestern.edu"
+      val sourceDir = netLogoRoot.value / "docs"
+      val targetDir = "/usr/local/www/netlogo"
+      (htmlDocs in netlogo).value
+      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", sourceDir.getPath, s"${user}@${host}:${targetDir}"), "rsync docs")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}"), "ssh - change release permissions")
     },
     packagingClasspath := {
       val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
