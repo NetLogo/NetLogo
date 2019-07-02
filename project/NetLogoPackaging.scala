@@ -2,7 +2,7 @@ import sbt._
 import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
-import Docs.{ allDocs, docsRoot, htmlDocs, manualPDF }
+import Docs.{ allDocs, docsRoot, extensionDocs, htmlDocs, manualPDF }
 import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
@@ -164,7 +164,7 @@ object NetLogoPackaging {
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
       val sourceDir = netLogoRoot.value / "docs"
-      val targetDir = "/usr/local/www/netlogo"
+      val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
       (htmlDocs in netlogo).value
       RunProcess(Seq("rsync", "-av", "--inplace", "--progress", sourceDir.getPath, s"${user}@${host}:${targetDir}"), "rsync docs")
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}"), "ssh - change release group")
