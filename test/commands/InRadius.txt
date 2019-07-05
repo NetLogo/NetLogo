@@ -510,3 +510,14 @@ InRadius_Unwrapped_OppositeCorners2
   [ count other turtles in-radius 30 ] of turtle 0 => 0
   [ count other turtles in-radius 95 ] of turtle 0 => 0
   [ count other turtles in-radius 96 ] of turtle 0 => 0
+
+InRadius_With_Changing_World
+  O> resize-world -16 16 -16 16
+  O> __change-topology true true
+  O> create-turtles 2 [ fd 15 ]
+  O> ask one-of turtles [ ask turtles in-radius 100 [ set color blue ] ]
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 2 [ fd 15 ]
+  O> ask one-of turtles [ ask turtles in-radius 100 [ set color green ] ]
+  count turtles with [ color = green ] => 2

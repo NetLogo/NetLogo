@@ -284,7 +284,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
 
   @scala.inline
   private def initPatches(): Unit = {
-    if (patches eq null) {
+    if ((patches eq null) || patches.length != world.patches.count) {
       patches = new Array[Patch](world.patches.count)
     }
   }
