@@ -521,3 +521,75 @@ InRadius_With_Changing_World
   O> create-turtles 2 [ fd 15 ]
   O> ask one-of turtles [ ask turtles in-radius 100 [ set color green ] ]
   count turtles with [ color = green ] => 2
+
+InRadius_Wrapping_Checks_Wide
+  O> resize-world -6 6 -4 4
+  O> __change-topology true true
+  count [ patches in-radius 5 ] of (patch -3 2) => 79
+  count [ patches in-radius 5 ] of (patch 3 2) => 79
+  count [ patches in-radius 5 ] of (patch 3 -2) => 79
+  count [ patches in-radius 5 ] of (patch -3 -2) => 79
+  O> __change-topology true false
+  count [ patches in-radius 5 ] of (patch -3 2) => 64
+  count [ patches in-radius 5 ] of (patch 3 2) => 64
+  count [ patches in-radius 5 ] of (patch 3 -2) => 64
+  count [ patches in-radius 5 ] of (patch -3 -2) => 64
+  O> __change-topology false true
+  count [ patches in-radius 5 ] of (patch -3 2) => 71
+  count [ patches in-radius 5 ] of (patch 3 2) => 71
+  count [ patches in-radius 5 ] of (patch 3 -2) => 71
+  count [ patches in-radius 5 ] of (patch -3 -2) => 71
+  O> __change-topology false false
+  count [ patches in-radius 5 ] of (patch -3 2) => 57
+  count [ patches in-radius 5 ] of (patch 3 2) => 57
+  count [ patches in-radius 5 ] of (patch 3 -2) => 57
+  count [ patches in-radius 5 ] of (patch -3 -2) => 57
+
+InRadius_Wrapping_Checks_Tall
+  O> resize-world -4 4 -6 6
+  O> __change-topology true true
+  count [ patches in-radius 5 ] of (patch -2 3) => 79
+  count [ patches in-radius 5 ] of (patch 2 3) => 79
+  count [ patches in-radius 5 ] of (patch 2 -3) => 79
+  count [ patches in-radius 5 ] of (patch -2 -3) => 79
+  O> __change-topology true false
+  count [ patches in-radius 5 ] of (patch -2 3) => 71
+  count [ patches in-radius 5 ] of (patch 2 3) => 71
+  count [ patches in-radius 5 ] of (patch 2 -3) => 71
+  count [ patches in-radius 5 ] of (patch -2 -3) => 71
+  O> __change-topology false true
+  count [ patches in-radius 5 ] of (patch -2 3) => 64
+  count [ patches in-radius 5 ] of (patch 2 3) => 64
+  count [ patches in-radius 5 ] of (patch 2 -3) => 64
+  count [ patches in-radius 5 ] of (patch -2 -3) => 64
+  O> __change-topology false false
+  count [ patches in-radius 5 ] of (patch -2 3) => 57
+  count [ patches in-radius 5 ] of (patch 2 3) => 57
+  count [ patches in-radius 5 ] of (patch 2 -3) => 57
+  count [ patches in-radius 5 ] of (patch -2 -3) => 57
+
+# In an attempt to verify in general if there are any problems with `in-radius`,
+# we run a bunch of world topology combinations with a bunch of random agents
+# and radii against the naive/slow NetLogo code implementation.
+# -Jeremy B July 15th
+
+InRadius_Sanity_Patches
+  globals [ radius p wrap-x wrap-y test-count ]
+  to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), patch: " p ", radius: " radius) ] end
+  to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end
+  to run-test [ test-patch r ] set test-count (test-count + 1) set p test-patch set radius r assert [ patches in-radius radius = temp-in-radius patches radius ] of test-patch end
+  to run-tests repeat 100 [ foreach [ 0.5 1 1.5 2 2.5 9 20 22 48 99 100 ] [ r -> run-test one-of patches r ] ] end
+  to set-world [x y wx wy] set wrap-x wx set wrap-y wy resize-world (-1 * x) x (-1 * y) y __change-topology wrap-x wrap-y end
+  O> assert [ patches in-radius 5 = temp-in-radius patches 5 ] of patch 0 0
+  O> foreach [true false] [ wx -> foreach [true false] [ wy -> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> set-world x y wx wy run-tests ] ] ] ]
+  test-count => 70400
+
+InRadius_Sanity_Turtles
+  globals [ radius t wrap-x wrap-y test-count ]
+  to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), turtle: " t " at (" [xcor] of t ", " [ycor] of t "), radius: " radius) ] end
+  to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end
+  to run-test [ test-turtle r ] set test-count (test-count + 1) set t test-turtle set radius r assert [ turtles in-radius radius = temp-in-radius turtles radius ] of test-turtle end
+  to run-tests repeat 100 [ foreach [ 0.5 1 1.5 2 2.5 9 20 22 48 99 100 ] [ r -> run-test (one-of turtles) r ] ] end
+  to set-world [x y wx wy] set wrap-x wx set wrap-y wy resize-world (-1 * x) x (-1 * y) y __change-topology wrap-x wrap-y clear-turtles create-turtles 100 [ set xcor random-xcor set ycor random-ycor ] end
+  O> foreach [true false] [ wx -> foreach [true false] [ wy -> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> set-world x y wx wy run-tests ] ] ] ]
+  test-count => 70400
