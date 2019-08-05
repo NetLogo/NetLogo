@@ -1722,49 +1722,42 @@ procedure GO:[]{O---}:
           RETURN
 [21]_tick "tick"
 [22]_asm_procedurego_if_21 "if count turtles = 0 [ stop ]" boolean => void
-      _equal "count turtles = 0" double,double => boolean
-        _count "count turtles" AgentSet => double
-          _turtles "turtles" => AgentSet
+      _optimizecount "count turtles = 0" AgentSet,double => boolean
+        _turtles "turtles" => AgentSet
         _constdouble:0.0 "0" => double
           // parameter final  context
+          // parameter final  context
+          // parameter final  sourceSet
+          // parameter final  checkValue
          L0
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_if_21.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
          L1
+          DCONST_0
+         L2
+          DSTORE 3
           ASTORE 2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-          I2D
-         L2
-          DCONST_0
+          DLOAD 3
+          D2I
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_if_21.kept2_operator : Lscala/Function2;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.checkCount (ILscala/Function2;)Z
          L3
-          DSTORE 4
-          DSTORE 2
-          DLOAD 2
-          DLOAD 4
-          DCMPL
-          IFNE L4
-          ICONST_1
-          GOTO L5
-         L4
-         FRAME APPEND [D D]
-          ICONST_0
-         L5
-         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L6
+          IFEQ L4
           BIPUSH 23
-          GOTO L7
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I T D] [org/nlogo/nvm/Context]
+          GOTO L5
+         L4
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 24
-         L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I T D] [org/nlogo/nvm/Context I]
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_21 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L8
+         L6
           RETURN
 [23]_asm_procedurego_stop_22 "stop" => void
          L0
