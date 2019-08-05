@@ -28,6 +28,10 @@ extends AgentSet(kind, printName) {
 
   override def isEmpty = _agents.isEmpty
 
+  override def checkCount(checkValue: Int, check: (Int, Int) => Boolean): Boolean = {
+    check(count, checkValue)
+  }
+
   // Assumes we've already checked that the counts are equal. - ST 7/6/06
   override def containsSameAgents(otherSet: api.AgentSet): Boolean = {
     val iter = otherSet.agents.iterator
