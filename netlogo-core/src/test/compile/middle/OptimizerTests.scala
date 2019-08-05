@@ -303,4 +303,44 @@ class OptimizerTests extends AbstractOptimizerTest {
     assertResult("_countotherwith[_turtles[], [_constboolean:true[]]]")(
       compileReporter("count other turtles with [true]"))
   } }
+  test("hasEqual1") { new OptTest {
+    withReporterOptimization("HasEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches = 10"))
+  } }
+  test("hasEqual2") { new OptTest {
+    withReporterOptimization("HasEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 = count patches"))
+  } }
+  test("hasGreaterThan1") { new OptTest {
+    withReporterOptimization("HasGreaterThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches > 10"))
+  } }
+  test("hasGreaterThan2") { new OptTest {
+    withReporterOptimization("HasGreaterThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 > count patches"))
+  } }
+  test("hasLessThan1") { new OptTest {
+    withReporterOptimization("HasLessThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches < 10"))
+  } }
+  test("hasLessThan2") { new OptTest {
+    withReporterOptimization("HasLessThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 < count patches"))
+  } }
+  test("hasNotEqual1") { new OptTest {
+    withReporterOptimization("HasNotEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches != 10"))
+  } }
+  test("hasNotEqual2") { new OptTest {
+    withReporterOptimization("HasNotEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 != count patches"))
+  } }
 }

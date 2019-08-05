@@ -57,6 +57,22 @@ extends IndexedAgentSet(kind, printName) {
       result
     }
 
+  override def checkCount(checkValue: Int, check: (Int, Int) => Boolean): Boolean = {
+    if (!kind.mortal)
+      check(arraySize, checkValue)
+    else {
+      var totalCount = 0
+      val iter = iterator
+      while (iter.hasNext) {
+        iter.next()
+        totalCount += 1
+        if (totalCount > checkValue)
+          check(totalCount, checkValue)
+      }
+      check(totalCount, checkValue)
+    }
+  }
+
   /// equality
 
   // assumes we've already checked for equal counts - ST 7/6/06
