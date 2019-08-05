@@ -869,17 +869,14 @@ procedure SETUP:[_repeatlocal:0]{O---}:
 [18]_asm_proceduresetup_ask_16 "ask patches with [ count neighbors != 8 ] set drain? true [ set elevation -10000000 ]" AgentSet => void
       _with "patches with [ count neighbors != 8 ]" AgentSet,Reporter => AgentSet
         _patches "patches" => AgentSet
-        _asm_proceduresetup_notequal_17 "count neighbors != 8" double,double => boolean
-          _count "count neighbors" AgentSet => double
-            _neighbors "neighbors" => AgentSet
+        _asm_proceduresetup_optimizecount_17 "count neighbors != 8" AgentSet,double => boolean
+          _neighbors "neighbors" => AgentSet
           _constdouble:8.0 "8" => double
               // parameter final  context
               // parameter final  context
-              // parameter final  arg0
               // parameter final  context
-              // parameter final  context
-              // parameter final  d0
-              // parameter final  d1
+              // parameter final  sourceSet
+              // parameter final  checkValue
              L0
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -909,37 +906,28 @@ procedure SETUP:[_repeatlocal:0]{O---}:
               INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
               ATHROW
              L2
-             FRAME FULL [org/nlogo/prim/_asm_proceduresetup_notequal_17 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
+             FRAME FULL [org/nlogo/prim/_asm_proceduresetup_optimizecount_17 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/IndexedAgentSet;
              L4
+              LDC 8.0
+             L5
+              DSTORE 3
               ASTORE 2
               ALOAD 2
-              INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
-              I2D
-             L5
-              LDC 8.0
+              DLOAD 3
+              D2I
+              ALOAD 0
+              GETFIELD org/nlogo/prim/_asm_proceduresetup_optimizecount_17.kept1_operator : Lscala/Function2;
+              INVOKEVIRTUAL org/nlogo/agent/AgentSet.checkCount (ILscala/Function2;)Z
              L6
-              DSTORE 4
-              DSTORE 2
-              DLOAD 2
-              DLOAD 4
-              DCMPL
               IFEQ L7
-              ICONST_1
+              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
               GOTO L8
              L7
-             FRAME FULL [org/nlogo/prim/_asm_proceduresetup_notequal_17 org/nlogo/nvm/Context D D] []
-              ICONST_0
-             L8
-             FRAME SAME1 I
-              IFEQ L9
-              GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L10
-             L9
-             FRAME SAME
+             FRAME FULL [org/nlogo/prim/_asm_proceduresetup_optimizecount_17 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet D] []
               GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L10
+             L8
              FRAME SAME1 java/lang/Boolean
               ARETURN
           // parameter final  context
