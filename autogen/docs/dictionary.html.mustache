@@ -915,14 +915,14 @@ if all? turtles [color = red]
           <a>and<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example"><i>condition1</i> and <i>condition2</i></span>
+          <span class="prim_example"><i>boolean1</i> and <i>boolean2</i></span>
         </h4>
         <p>
-          Reports true if both <i>condition1</i> and <i>condition2</i> are
-          true.
+          Reports true if both <i>boolean1</i> and <i>boolean2</i> are
+          true.  Otherwise reports false.
         </p>
         <p>
-          Note that if <i>condition1</i> is false, then <i>condition2</i>
+          Note that if <i>boolean1</i> is false, then <i>boolean2</i>
           will not be run (since it can't affect the result).
         </p>
         <pre>
@@ -3958,22 +3958,25 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
           <a>if<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">if <i>condition</i> [ <i>commands</i> ]</span>
+          <span class="prim_example">if <i>boolean</i> [ <i>commands</i> ]</span>
         </h4>
         <p>
-          Reporter must report a boolean (true or false) value.
+          If <i>boolean</i> reports true then the <i>commands</i> are run, otherwise the
+          commands are not run if <i>boolean</i> reports false.
         </p>
         <p>
-          If <i>condition</i> reports true, runs <i>commands</i>.
+          If <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <p>
-          The reporter may report a different value for different agents, so
+          The <i>boolean</i> may report a different value for different agents when used with a primitive like <a href="#ask">ask</a>, so
           some agents may run <i>commands</i> and others don't.
         </p>
         <pre>
-if xcor &gt; 0[ set color blue ]
-;; turtles in the right half of the world
-;; turn blue
+ask turtles [
+  if xcor &gt; 0 [ set color blue ]
+  ;; turtles in the right half of the world
+  ;; turn blue
+]
 </pre>
         <p>
           See also <a href="#ifelse">ifelse</a>, <a href="#ifelse-value">ifelse-value</a>.
@@ -3984,19 +3987,19 @@ if xcor &gt; 0[ set color blue ]
           <a>ifelse<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">ifelse <i>reporter1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
-          <span class="prim_example">(ifelse <i>reporter1</i> [ <i>commands1</i> ] <i>reporter2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])<span class="since">6.1</span></span>
+          <span class="prim_example">ifelse <i>boolean1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
+          <span class="prim_example">(ifelse <i>boolean1</i> [ <i>commands1</i> ] <i>boolean2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
-          The <i>reporter</i>s must report boolean (true or false) values.
+          For the first <i>boolean</i> that reports true, runs the <i>commands</i> that follow.
         </p>
         <p>
-          For the first <i>reporter</i> that reports true, runs the <i>commands</i> that follow.
-        </p>
-        <p>
-          If no <i>reporter</i> reports true, runs <i>elsecommands</i> or does nothing if
-          <i>elsecommands</i> is not given.  When using only one <i>reporter</i>
+          If no <i>boolean</i> reports true, runs <i>elsecommands</i> or does nothing if
+          <i>elsecommands</i> is not given.  When using only one <i>boolean</i>
           you do not need to surround the entire <i>ifelse</i> primitive and its blocks in parentheses.
+        </p>
+        <p>
+          If a <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <pre>
 ask patches
@@ -4008,7 +4011,7 @@ ask patches
 </pre>
         <p>
           The reporters may report a different value for different agents, so
-          some agents may run different command blocks.  When using more than one <i>reporter</i> you
+          some agents may run different command blocks.  When using more than one <i>boolean</i> you
           must surround the whole <i>ifelse</i> primitive and its blocks in parentheses.
           This functionality was added in NetLogo 6.1.
         </p>
@@ -4044,21 +4047,21 @@ ask patches [
           <a>ifelse-value<span class="since">2.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
-          <span class="prim_example">(ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] <i>tfreporter2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])<span class="since">6.1</span></span>
+          <span class="prim_example">ifelse-value <i>boolean1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
+          <span class="prim_example">(ifelse-value <i>boolean1</i> [ <i>reporter1</i> ] <i>boolean1</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
-          The <i>tfreporter</i>s must report boolean (true or false) values.
-        </p>
-        <p>
-          For the first <i>tfreporter</i> that reports true, runs the
-          <i>reporter</i> that follows and reports that result.  When using only one <i>tfreporter1</i>
+          For the first <i>boolean</i> that reports true, runs the
+          <i>reporter</i> that follows and reports that result.  When using only one <i>boolean</i>
           you do not need to surround the entire <i>ifelse-value</i> primitive and its blocks in parentheses.
         </p>
         <p>
-          If all <i>tfreporter</i>s report false, the result is the value of
+          If all <i>boolean</i>s report false, the result is the value of
           <i>elsereporter</i>.  You may leave out the <i>elsereporter</i>, but
-          if all <i>tfreporter</i>s report false then a runtime error will occur.
+          if all <i>boolean</i>s report false then a runtime error will occur.
+        </p>
+        <p>
+          If a <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <p>
           This can be used when a conditional is needed in the context of a
@@ -4078,7 +4081,7 @@ show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
 =&gt; 8
 </pre>
         <p>
-          When using more than one <i>tfreporter</i> you
+          When using more than one <i>boolean</i> you
           must surround the whole <i>ifelse-value</i> primitive and its blocks in parentheses.
           This functionality was added in NetLogo 6.1.
         </p>
@@ -6132,11 +6135,11 @@ show one-of mylist
           <span class="prim_example"><i>boolean1</i> or <i>boolean2</i></span>
         </h4>
         <p>
-          Reports true if either <i>boolean1</i> or <i>boolean2</i>, or both,
-          is true.
+          Reports true if <i>boolean1</i> is true, <i>boolean2</i> is true, or both
+          are true.  Otherwise returns false if both <i>boolean</i>s are false.
         </p>
         <p>
-          Note that if <i>condition1</i> is true, then <i>condition2</i> will
+          Note that if <i>boolean1</i> is true, then <i>boolean2</i> will
           not be run (since it can't affect the result).
         </p>
         <pre>
@@ -10059,7 +10062,7 @@ write &quot;hello world&quot;
         </h4>
         <p>
           Reports true if either <i>boolean1</i> or <i>boolean2</i> is true,
-          but not when both are true.
+          but not when both are true.  Otherwise returns false.
         </p>
         <pre>
 if (pxcor &gt; 0) xor (pycor &gt; 0)
