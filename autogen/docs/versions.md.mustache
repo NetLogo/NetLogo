@@ -1,17 +1,59 @@
 {{> header.html}}
 
-The following is a condensed history.
-[Detailed release notes](https://github.com/NetLogo/NetLogo/wiki/Release-notes)
-are on GitHub.
-
 For help running models made in old versions, see the
 [Transition Guide](transition.html).
 
 [TOC]
 
+## Version 6.1.1 (August 2019)
+
+### Bugfixes
+
+- The `remove-duplicates` primitive will now operate properly on lists of agentsets, considering agentsets duplicates if they contain exactly the same agents.
+- Many fixes to the `in-radius` primitive, which could report incorrect values when used with a radius that's a large percentage of an unwrapped world width or cause runtime errors when world sizes changed or when the radius wrapped around the world back to itself.
+- Corrected issues with code tab compile errors causing unexpected behavior or runtime errors in the interface tab, especially when a model had breeded links.
+- You can now use the same `let` variable name in different command blocks inside a procedure.
+- The `netlogo-headless.sh` scripts for macOS and Linux had issues with running the 3D command switch and properly wrapping the Java executable  in quotes in case it contains spaces.
+
+### Features
+
+- Runtime speed optimizations when using the `count` primitive on turtle or link agentssets with a comparison operator like `>` or `=`.
+
+### Extension Changes
+
+- The Python extension on Windows will no longer give permissions errors when trying to create it's config file, moved the file to a per-user directory.
+- The Python extension will no longer produce a confusing deprecation warning when used with Python 3.7.
+- Moved the storage location for the R extension config files to a per-user directory and updated documentation around getting it working.  This issue mostly affected Windows users.
+- The Mathematica-Link add-on now works correctly with NetLogo 6.1.0 and 6.1.1.
+
+### Documentation Changes
+
+- Clarified the file location search order for extensions with the new extension manager.
+- Standardized the language used in the conditional primitives (`if`, `ifelse`, `ifelse-value`) and the boolean operators (`and`, `not`, `or`, `xor`).
+- Use correct arrow syntax in the `ifelse-value` code example.
+- Added notes to `ifelse` and `ifelse-value` that the multi-conditional behavior was newly added in version 6.1.
+
+### Model Changes
+
+New Sample Models:
+
+* CRISPR Models
+  1. CRISPR Bacterium
+  2. CRISPR Bacterium LevelSpace
+  3. CRISPR Ecosystem
+  4. CRISPR Ecosystem LevelSpace
+
+Sample Model Updates:
+
+* Ant Adaptation: Minor Info tab updates.
+
+Curricular Model Updates:
+
+* PNoM Models: Minor Info tab updates.
+
 ## Version 6.1.0 (May 2019)
 
-## Feature Changes
+### Feature Changes
 
 The premier feature for this release is an **Extension Manager** for installing and updating extensions, which is available under the Tools menu.  Using extensions with NetLogo could be a painful process: manually finding them, downloading them, and getting them correctly installed in the NetLogo application.  The extensions manager addresses these issues by automating the installation of many 3rd-party extensions, and the updating of the bundled extensions between NetLogo releases.  All done easily from within the application.  In fact, if you open a model that requires an extension you don’t have installed that it knows about, the Extension Manager will ask if you’d like to download and install it right on the spot, without any extra effort
 
@@ -25,7 +67,7 @@ Other new features include:
 - Multiline input widgets are now directly editable on the interface tab.
 - Runtime optimizations for the `in-radius` and `in-cone` primitives.
 
-## Bugfixes
+### Bugfixes
 
 - When a model that has a compile-time error is saved, its sliders will not reset their values to 0 when it is reloaded.
 - The procedures search dropdown on the Code tab gives better results with inexact search terms.
@@ -41,7 +83,7 @@ Other new features include:
 - Anonymous procedures can be given in the conditional reporter blocks of `ifelse-value`.
 - Slight changes to how color values are calculated, for smoother interoperability with NetLogo Web.
 
-## Extension Changes
+### Extension Changes
 
 - The Python extension, `py`, is now bundled with NetLogo.  If you have Python installed on your computer, you can use it from inside a NetLogo model.
 - The Control Flow extension, `cf`, has been removed from NetLogo in favor of the new variadic `ifelse` and `ifelse-value` behavior.  The `cf` extension is still available from the extensions library if needed for any existing models.
@@ -51,7 +93,7 @@ Other new features include:
 - The Table extension, `table`, had some minor documentation updates.
 - The View 2.5D extension, `view2.5d`, now does not throw an error when trying to use a turtle-based view.
 
-## Documentation Changes
+### Documentation Changes
 
 - Added documentation around using primitives like `mean` and `variance` along with agentsets producing slightly different results due to floating point arithmetic.
 - Add an extension authoring introduction page with links to the technical documentation.
@@ -59,7 +101,7 @@ Other new features include:
 - Clarify that `clear-globals` doesn't affect interface globals.
 - Fixed various formatting errors and typos.
 
-## Model Changes
+### Model Changes
 
 New Sample Models:
 
