@@ -87,7 +87,7 @@ object NetLogoPackaging {
       (allDocs in netlogo).value
       (allPreviews in netlogo).toTask("").value
       resaveModels.value
-      RunProcess(Seq("./sbt", "package"), mathematicaRoot.value, s"package mathematica link")
+      RunProcess(Seq("sbt", "package"), mathematicaRoot.value, s"package mathematica link")
       (packageBin in Compile in behaviorsearchProject).value
     },
     resaveModels := {
