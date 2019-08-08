@@ -51,7 +51,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
           additionalSource.classDisplayName -> additionalSource.innerSource).toMap
 
     val (procedures, newProgram) =
-      CompilerMain.compile(sources, None, program, false, noProcedures, extensionManager, libManager, compilationEnv)
+      CompilerMain.compile(sources, None, program, false, noProcedures, extensionManager, libManager, compilationEnv, shouldAutoInstallLibs)
 
     new CompilerResults(procedures, newProgram)
   }
