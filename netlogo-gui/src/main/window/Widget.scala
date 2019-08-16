@@ -9,7 +9,7 @@ import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.window.Events.{ WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent }
+import org.nlogo.window.Events.WidgetEditedEvent
 
 object Widget {
   trait LoadHelper {
@@ -158,7 +158,6 @@ abstract class Widget extends JPanel {
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
       org.nlogo.window.Event.rehash()
-      new WidgetRemovedEvent(this).raise(this)
     }
     super.removeNotify()
   }
@@ -167,7 +166,6 @@ abstract class Widget extends JPanel {
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
     org.nlogo.window.Event.rehash()
-    new WidgetAddedEvent(this).raise(this)
   }
 
   implicit class RichStringOption(s: Option[String]) {
