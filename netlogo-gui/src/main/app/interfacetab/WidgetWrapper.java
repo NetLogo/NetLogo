@@ -5,6 +5,8 @@ package org.nlogo.app.interfacetab;
 import org.nlogo.core.I18N;
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
+import org.nlogo.window.Events.WidgetAddedEvent;
+import org.nlogo.window.Events.WidgetRemovedEvent;
 import scala.Option;
 
 import java.awt.Dimension;
@@ -329,6 +331,20 @@ public strictfp class WidgetWrapper
     }
     glass.setBounds(0, 0, getWidth(), getHeight());
     glass.setVisible(selected());
+  }
+
+  @Override
+  public void removeNotify() {
+    if (java.awt.EventQueue.isDispatchThread()) {
+      new WidgetRemovedEvent(widget).raise(this);
+    }
+    super.removeNotify();
+  }
+
+  @Override
+  public void addNotify() {
+    super.addNotify();
+    new WidgetAddedEvent(widget).raise(this);
   }
 
   private final Widget widget;
