@@ -35,6 +35,7 @@ object NetLogoBuild {
     })
 
   def includeInPackaging(project: Project): Seq[Setting[_]] =
+    Seq(sources in Compile ++= (sources in (project, Compile)).value) ++
     Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       mappings in Compile ++= {
         val existingMappings = (mappings in Compile).value.map(_._2)
