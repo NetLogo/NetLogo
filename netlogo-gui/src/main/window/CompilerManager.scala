@@ -235,7 +235,12 @@ class CompilerManager(val workspace: AbstractWorkspace,
   private def setGlobalVariables(): Unit = {
     globalWidgets.foreach { widget =>
       try {
-        world.setObserverVariableByName(widget.name, widget.valueObject)
+        // we could do `world.setObserverVariableByName()`, but since compilation may have failed we cannot rely on the
+        // variable names existing - Jeremy B August 2019
+        val index = world.observerOwnsIndexOf(widget.name.toUpperCase)
+        if (index != -1) {
+          world.observer.setVariable(index, widget.valueObject)
+        }
       } catch {
         case ex@(_: AgentException | _: LogoException) =>
           throw new IllegalStateException(ex)
