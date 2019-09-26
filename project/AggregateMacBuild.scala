@@ -185,9 +185,9 @@ object PackageMacAggregate {
     RunProcess(Seq("codesign", "-s", CodesigningIdentity) ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
 
     val dmgArgs = Seq("hdiutil", "create",
-        "-quiet", s"$buildName.dmg",
+        s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "450m",
+        "-size", "600m",
         "-fs", "HFS+",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
