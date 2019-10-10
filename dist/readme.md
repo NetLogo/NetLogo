@@ -70,6 +70,9 @@ and DRL-1640201. Additional support came from the Spencer Foundation,
 Texas Instruments, the Brady Fund, the Murphy fund,
 and the Northwestern Institute on Complex Systems.
 
+For development of the View 2.5D NetLogo Extension, we acknowledge financial
+support from Joshua M. Epstein's NIH Director's Pioneer Award (DP1).
+
 ## License
 
 NetLogo
@@ -282,7 +285,7 @@ MASON Open Source License. The copyright for that code is as follows:
 > or combinations.
 >
 > In return you agree to the following conditions:
-> 
+>
 > If you redistribute all or any portion of the source code of this
 > software or related data, it must retain the above copyright notice
 > and this license and disclaimer. If you redistribute all or any
@@ -992,7 +995,7 @@ distributed under the following license:
 For Java bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
 
-> Copyright (c) 2000-2011 INRIA, France Telecom  
+> Copyright (c) 2000-2011 INRIA, France Telecom
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without
