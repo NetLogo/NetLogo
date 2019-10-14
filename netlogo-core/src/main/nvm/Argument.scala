@@ -71,6 +71,15 @@ class Argument(context: Context, arg: Reporter) extends api.Argument {
     }
 
   @throws(classOf[ExtensionException])
+  def getDouble: java.lang.Double =
+    unsafeGet match {
+      case d: java.lang.Double => d
+      case x =>
+        throw new ExtensionException(
+          getExceptionMessage(Syntax.NumberType, x))
+    }
+
+  @throws(classOf[ExtensionException])
   def getDoubleValue: Double =
     unsafeGet match {
       case d: java.lang.Double => d.doubleValue
