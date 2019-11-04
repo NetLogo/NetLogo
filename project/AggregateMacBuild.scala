@@ -197,6 +197,8 @@ object PackageMacAggregate {
     FileActions.createDirectory(webDirectory)
     FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)
 
+    println("\n**Note**: The NetLogo macOS packaging and signing is complete, but you must **notarize** the .dmg file if you intend to distribute it.\n")
+
     webDirectory / dmgName
   }
 }
