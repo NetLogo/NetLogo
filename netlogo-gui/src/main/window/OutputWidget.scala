@@ -59,7 +59,10 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   def handle(e:org.nlogo.window.Events.ExportWorldEvent){
     import org.nlogo.api.Dump
     e.writer.println(Dump.csv.encode("OUTPUT"))
-    Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
+    if (outputArea.carriageReturnMissing)
+      Dump.csv.stringToCSV(e.writer, s"${outputArea.text.getText()}\n")
+    else
+      Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
   }
 
   override def load(model: WidgetModel): AnyRef = {

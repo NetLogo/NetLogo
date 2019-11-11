@@ -54,6 +54,8 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
 
   def valueText = text.getText
 
+  def carriageReturnMissing: Boolean = addCarriageReturn
+
   def fontSize: Int =
     text.getFont.getSize
 
