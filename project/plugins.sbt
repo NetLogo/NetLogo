@@ -76,3 +76,5 @@ libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
   )
 }
+
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.0")
