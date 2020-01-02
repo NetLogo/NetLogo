@@ -4,7 +4,7 @@
 
 ## Release notes
 
-See our [online release notes](https://github.com/NetLogo/NetLogo/wiki/Release-notes).
+See our [online release notes](http://ccl.northwestern.edu/netlogo/docs/versions.html).
 
 ## Upgrading
 
@@ -25,10 +25,16 @@ add-ons, and more.
 
 Choose NetLogo from the Start menu.
 
-### Mac
+### macOS
 
-Double click on the NetLogo icon in the NetLogo folder.  (You may wish
-to drag this icon to the dock for easy access.)
+First, make sure **Allow apps downloaded from:** is set to **App Store
+and identified developers** in the macOS [Security and Privacy
+settings General tab](https://support.apple.com/en-us/HT202491).
+Then double click on the NetLogo icon in the NetLogo folder.
+You may wish to drag this icon to the dock for easy access.
+
+If NetLogo does not open on macOS Catalina
+(10.15) or later, see [this known issue for a workaround](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-catalina-mojave-high-sierra-and-sierra).
 
 ### Linux et al
 
