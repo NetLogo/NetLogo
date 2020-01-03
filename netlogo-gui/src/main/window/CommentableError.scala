@@ -44,4 +44,12 @@ class CommentableError(val editorArea: AbstractEditorArea) {
     errorLabel.zoom(zoomFactor)
   }
 
+  def setVisible(isVisible: Boolean) {
+    component.setVisible(isVisible)
+  }
+
+  def setText(text: String) {
+    errorLabel.setText(text)
+  }
+
 }
