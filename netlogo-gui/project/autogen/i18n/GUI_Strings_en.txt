@@ -580,6 +580,8 @@ tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
 
 tools.loggingMode.enterName = Enter your name:
 tools.loggingMode.fileDoesNotExist = The file {0} does not exist.
+tools.loggingMode.errorComment.button = Log a comment
+tools.loggingMode.errorComment.label = What is your comment about the error?
 
 tools.magicModelMatcher = Magic Model Matcher
 tools.magicModelMathcer.mustChoose = You must choose!
