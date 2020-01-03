@@ -16,7 +16,7 @@ import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.Utils.icon
 import org.nlogo.swing.{PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction, Printable => NlogoPrintable}
-import org.nlogo.window.{EditorAreaErrorLabel, ProceduresInterface, Zoomable, Events => WindowEvents}
+import org.nlogo.window.{CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents}
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -69,7 +69,7 @@ with MenuTab {
 
   override def zoomTarget = text
 
-  val errorLabel = new EditorAreaErrorLabel(text)
+  val errorLabel = new CommentableError(text)
   val toolBar = getToolBar
   val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
@@ -81,7 +81,7 @@ with MenuTab {
     add(toolBar, BorderLayout.NORTH)
     val codePanel = new JPanel(new BorderLayout) {
       add(scrollableEditor, BorderLayout.CENTER)
-      add(errorLabel, BorderLayout.NORTH)
+      add(errorLabel.component, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
   }
