@@ -49,7 +49,8 @@ object App{
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
-  private var loggingName: String = null
+  private var loggingConfigPath: String = null
+  private var loggingDir: String = null
 
   /**
    * Should be called once at startup to create the application and
@@ -203,13 +204,8 @@ object App{
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--logging") loggingName = nextToken()
-      else if (token == "--log-directory") {
-        if (logger != null) logger.changeLogDirectory(nextToken())
-        else JOptionPane.showConfirmDialog(null,
-          "You need to initialize the logger using the --logging options before specifying a directory.",
-          "NetLogo", JOptionPane.DEFAULT_OPTION)
-      }
+      else if (token == "--logging") loggingConfigPath = nextToken()
+      else if (token == "--log-directory") loggingDir = nextToken()
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -247,7 +243,7 @@ class App extends
     ZoomedEvent.Handler with
     Controllable {
 
-  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
+  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir }
 
   val frame = new AppFrame
 
@@ -388,8 +384,17 @@ class App extends
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
-    if(loggingName != null)
-     startLogging(loggingName)
+    if (loggingConfigPath != null) {
+      startLogging(loggingConfigPath)
+    }
+    if (loggingDir != null) {
+      if (logger != null)
+        logger.changeLogDirectory(loggingDir)
+      else JOptionPane.showConfirmDialog(null,
+        "You need to initialize the logger using the --logging options before specifying a directory.",
+        "NetLogo", JOptionPane.DEFAULT_OPTION)
+    }
+
   }
 
   private def finishStartup(appHandler: Object) {
@@ -467,19 +472,19 @@ class App extends
     }
   }
 
-  def startLogging(properties:String) {
-    if(new java.io.File(properties).exists) {
+  def startLogging(loggingConfigPath: String) {
+    if(new java.io.File(loggingConfigPath).exists) {
       val username =
         JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.enterName"), "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       if(username != null){
         logger = new Logger(username)
         listenerManager.addListener(logger)
-        Logger.configure(properties)
+        Logger.configure(loggingConfigPath)
         org.nlogo.api.Version.startLogging()
       }
     }
-    else JOptionPane.showConfirmDialog(null, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", properties),
+    else JOptionPane.showConfirmDialog(null, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
       "NetLogo", JOptionPane.DEFAULT_OPTION)
   }
 
