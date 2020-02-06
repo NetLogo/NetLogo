@@ -1267,6 +1267,9 @@ end
           plotted values in the current plot, regardless of the current plot
           ranges.
         </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
+        </p>
       </div><!-- ======================================== -->
     </div>
     <h2 id="B">
@@ -1713,6 +1716,9 @@ show ceiling -4.5
       <p>
         See also <a href="#clear-all-plots">clear-all-plots</a>.
       </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
     </div>
     <div class="dict_entry" id="clear-ticks">
       <h3>
@@ -2027,6 +2033,9 @@ end
         <li>Mode: 0 (line mode)</li>
         <li>Interval: 1</li>
       </ul>
+      <p>
+        This command will produce a runtime error if the current plot has not been set.
+      </p>
       <p>
         See: <a href="#clear-plot">clear-plot</a>, <a href="#clear-all-plots">clear-all-plots</a>, and <a href="#set-current-plot-pen">set-current-plot-pen</a>.
       </p>
@@ -3526,6 +3535,10 @@ histogram [color] of turtles
 ;; draws a histogram showing how many turtles there are
 ;; of each color
 </pre>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
         <p>
           See also <a href="#set-histogram-num-bars">set-histogram-num-bars</a>, <a href="#set-plot-pen-interval">set-plot-pen-interval</a>, <a href="#set-plot--range">set-plot-x-range</a>.
         </p>
@@ -6698,6 +6711,9 @@ patch-set [neighbors] of turtles
           <i>number</i>. (The first time the command is used on a plot, the
           point plotted has an x-value of 0.)
         </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plot-name">
         <h3>
@@ -6708,6 +6724,9 @@ patch-set [neighbors] of turtles
         </h4>
         <p>
           Reports the name of the current plot (a string)
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-pen-exists">
@@ -6720,6 +6739,9 @@ patch-set [neighbors] of turtles
         <p>
           Reports true if a plot pen with the given name is defined in the
           current plot. Otherwise reports false.
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-pen-switch-status">
@@ -6735,6 +6757,10 @@ patch-set [neighbors] of turtles
           Puts down (or up) the current plot-pen, so that it draws (or
           doesn't). (By default, all pens are down initially.)
         </p>
+        <p>
+         These commands will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plot-pen-reset">
         <h3>
@@ -6749,6 +6775,10 @@ patch-set [neighbors] of turtles
           mode, and interval are reset to the default values from the plot
           Edit dialog.
         </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plotxy">
         <h3>
@@ -6761,6 +6791,9 @@ patch-set [neighbors] of turtles
           Moves the current plot pen to the point with coordinates
           (<i>number1</i>, <i>number2</i>). If the pen is down, a line, bar,
           or point will be drawn (depending on the pen's mode).
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-cor-max-or-min">
@@ -6784,6 +6817,9 @@ patch-set [neighbors] of turtles
           These values can be set with the commands set-plot-x-range and
           set-plot-y-range. (Their default values are set from the plot Edit
           dialog.)
+        </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="position">
@@ -7850,7 +7886,7 @@ file-open &quot;my-file.txt&quot;
         <p>
           The current plot's current pen is set to the pen named
           <i>penname</i> (a string). If no such pen exists in the current
-          plot, a runtime error occurs.
+          plot, a runtime error occurs. If the current plot has not been set, a runtime error occurs.
         </p>
       </div>
       <div class="dict_entry" id="set-default-shape">
@@ -7920,6 +7956,10 @@ ask cats [ set breed dogs ]
         <p>
           See also <a href="#histogram">histogram</a>.
         </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="set-line-thickness">
         <h3>
@@ -7982,6 +8022,9 @@ ask cats [ set breed dogs ]
           <b>Note:</b> Plot backgrounds do not support transparency.
           If a list is used to set the color, the alpha component will be ignored.
         </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-color">
         <h3>
@@ -7993,6 +8036,10 @@ ask cats [ set breed dogs ]
         <p>
           Sets the color of the current plot pen to <i>color</i>.
         </p>
+      <p>
+        This command will produce a runtime error if either the current plot or the current
+        pen has not been set.
+      </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-interval">
         <h3>
@@ -8005,6 +8052,10 @@ ask cats [ set breed dogs ]
           Tells the current plot pen to move a distance of <i>number</i> in
           the x direction during each use of the plot command. (The plot pen
           interval also affects the behavior of the histogram command.)
+        </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
         </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-mode">
@@ -8032,6 +8083,10 @@ ask cats [ set breed dogs ]
         </ul>
         <p>
           The default mode for new pens is 0 (line mode).
+        </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
         </p>
       </div>
       <div class="dict_entry" id="setup-plots">
@@ -8075,6 +8130,9 @@ ask cats [ set breed dogs ]
           The change is temporary and is not saved with the model. When the
           plot is cleared, the ranges will revert to their default values as
           set in the plot's Edit dialog.
+        </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="setxy">
