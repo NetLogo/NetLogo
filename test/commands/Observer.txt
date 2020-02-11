@@ -7,7 +7,7 @@ ClearGlobals
   glob1 => 0
   count turtles => 10
 
-ClearPatches
+ClearPatches_2D
   patches-own [ apples ]
   O> ask patches [ set apples one-of [ true 200 "hello" ] set plabel "test" set pcolor 139 ]
   count patches with [ apples != 0 ] => 121
@@ -28,7 +28,7 @@ ClearTurtles
   count mice => 0
   count frogs => 0
 
-ClearAll
+ClearAll_2D
   globals [ glob1 ]
   breed [ mice mouse ]
   breed [ frogs frog ]
