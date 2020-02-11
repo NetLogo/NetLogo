@@ -483,7 +483,7 @@ InRadiusLargeRadius5_3D
   [ count turtles in-radius 1 ] of patch -11 -11 -11 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor 0 => 10
 
-InRadius_Unwrapped_OppositeCorners1
+InRadius_Unwrapped_OppositeCorners1_2D
   O> resize-world -50 50 -50 50
   O> __change-topology false false
   O> create-turtles 1 [ setxy -48 -48 ]
@@ -497,7 +497,7 @@ InRadius_Unwrapped_OppositeCorners1
   [ count other turtles in-radius 95 ] of turtle 0 => 0
   [ count other turtles in-radius 96 ] of turtle 0 => 0
 
-InRadius_Unwrapped_OppositeCorners2
+InRadius_Unwrapped_OppositeCorners2_2D
   O> resize-world -50 50 -50 50
   O> __change-topology false false
   O> create-turtles 1 [ setxy 48 -48 ]
@@ -511,7 +511,7 @@ InRadius_Unwrapped_OppositeCorners2
   [ count other turtles in-radius 95 ] of turtle 0 => 0
   [ count other turtles in-radius 96 ] of turtle 0 => 0
 
-InRadius_With_Changing_World
+InRadius_With_Changing_World_2D
   O> resize-world -16 16 -16 16
   O> __change-topology true true
   O> create-turtles 2 [ fd 15 ]
@@ -522,7 +522,7 @@ InRadius_With_Changing_World
   O> ask one-of turtles [ ask turtles in-radius 100 [ set color green ] ]
   count turtles with [ color = green ] => 2
 
-InRadius_Wrapping_Checks_Wide
+InRadius_Wrapping_Checks_Wide_2D
   O> resize-world -6 6 -4 4
   O> __change-topology true true
   count [ patches in-radius 5 ] of (patch -3 2) => 79
@@ -545,7 +545,7 @@ InRadius_Wrapping_Checks_Wide
   count [ patches in-radius 5 ] of (patch 3 -2) => 57
   count [ patches in-radius 5 ] of (patch -3 -2) => 57
 
-InRadius_Wrapping_Checks_Tall
+InRadius_Wrapping_Checks_Tall_2D
   O> resize-world -4 4 -6 6
   O> __change-topology true true
   count [ patches in-radius 5 ] of (patch -2 3) => 79
@@ -573,7 +573,7 @@ InRadius_Wrapping_Checks_Tall
 # and radii against the naive/slow NetLogo code implementation.
 # -Jeremy B July 15th
 
-InRadius_Sanity_Patches
+InRadius_Sanity_Patches_2D
   globals [ radius p wrap-x wrap-y test-count ]
   to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), patch: " p ", radius: " radius) ] end
   to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end
@@ -584,7 +584,7 @@ InRadius_Sanity_Patches
   O> foreach [true false] [ wx -> foreach [true false] [ wy -> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> set-world x y wx wy run-tests ] ] ] ]
   test-count => 70400
 
-InRadius_Sanity_Turtles
+InRadius_Sanity_Turtles_2D
   globals [ radius t wrap-x wrap-y test-count ]
   to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), turtle: " t " at (" [xcor] of t ", " [ycor] of t "), radius: " radius) ] end
   to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end

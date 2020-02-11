@@ -165,11 +165,17 @@ Incone360DiffTestForPatches_3D
   O> ask turtle 0 [ask patches in-cone 4 150 [set pcolor red]]
   [pcolor] of patch 1 2 0 = red => true
 
-InconeManyTurtlesCountingTorus
+InconeManyTurtlesCountingTorus_2D
   O> __change-topology true true
   P> sprout 1 [ set heading 0 ]
   length remove-duplicates [count patches in-cone 10 30] of turtles => 1
   remove-duplicates [count turtles in-cone 10 30] of turtles => [27]
+
+InconeManyTurtlesCountingTorus_3D
+  O> __change-topology true true
+  P> sprout 1 [ set heading 0 ]
+  length remove-duplicates [count patches in-cone 10 30] of turtles => 1
+  remove-duplicates [count turtles in-cone 10 30] of turtles => [67]
 
 InconeManyTurtlesCounting_2D
   P> sprout 1 [ set heading 0 ]
@@ -572,7 +578,7 @@ InConeBreeds_2D
   count [turtles in-cone 1 0] of turtle 0 => 3
   count [other turtles in-cone 1 0] of turtle 0 => 2
 
-InCone_Unwrapped_OppositeCorners1
+InCone_Unwrapped_OppositeCorners1_2D
   O> resize-world -50 50 -50 50
   O> __change-topology false false
   O> create-turtles 1 [ setxy -48 -48 set heading 225 ]
@@ -586,7 +592,7 @@ InCone_Unwrapped_OppositeCorners1
   [ count other turtles in-cone 95 60 ] of turtle 0 => 0
   [ count other turtles in-cone 96 60 ] of turtle 0 => 0
 
-InCone_Unwrapped_OppositeCorners2
+InCone_Unwrapped_OppositeCorners2_2D
   O> resize-world -50 50 -50 50
   O> __change-topology false false
   O> create-turtles 1 [ setxy -48 48 set heading 315 ]
