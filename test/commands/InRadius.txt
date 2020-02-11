@@ -584,6 +584,17 @@ InRadius_Sanity_Patches_2D
   O> foreach [true false] [ wx -> foreach [true false] [ wy -> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> set-world x y wx wy run-tests ] ] ] ]
   test-count => 70400
 
+InRadius_Sanity_Patches_3D
+  globals [ radius p test-count ]
+  to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", max-pzcor: " max-pzcor ",  patch: " p ", radius: " radius) ] end
+  to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end
+  to run-test [ test-patch r ] set test-count (test-count + 1) set p test-patch set radius r assert [ patches in-radius radius = temp-in-radius patches radius ] of test-patch end
+  to run-tests repeat 25 [ foreach [ 1 2 9 22 48 99 100 ] [ r -> run-test one-of patches r ] ] end
+  to set-world [x y z] resize-world (-1 * x) x (-1 * y) y (-1 * z) z end
+  O> assert [ patches in-radius 5 = temp-in-radius patches 5 ] of patch 0 0 0
+  O> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> foreach [1 2 10 50] [ z -> set-world x y z run-tests ] ] ]
+  test-count => 11200
+
 InRadius_Sanity_Turtles_2D
   globals [ radius t wrap-x wrap-y test-count ]
   to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), turtle: " t " at (" [xcor] of t ", " [ycor] of t "), radius: " radius) ] end
@@ -592,4 +603,14 @@ InRadius_Sanity_Turtles_2D
   to run-tests repeat 100 [ foreach [ 0.5 1 1.5 2 2.5 9 20 22 48 99 100 ] [ r -> run-test (one-of turtles) r ] ] end
   to set-world [x y wx wy] set wrap-x wx set wrap-y wy resize-world (-1 * x) x (-1 * y) y __change-topology wrap-x wrap-y clear-turtles create-turtles 100 [ set xcor random-xcor set ycor random-ycor ] end
   O> foreach [true false] [ wx -> foreach [true false] [ wy -> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> set-world x y wx wy run-tests ] ] ] ]
+  test-count => 70400
+
+InRadius_Sanity_Turtles_3D
+  globals [ radius t test-count ]
+  to assert [ expression ] if ( not expression ) [ error (word "Assertion failed, max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", turtle: " t " at (" [xcor] of t ", " [ycor] of t ", " [zcor] of t "), radius: " radius) ] end
+  to-report temp-in-radius [agentset r] report (agentset with [ distance myself <= r ]) end
+  to run-test [ test-turtle r ] set test-count (test-count + 1) set t test-turtle set radius r assert [ turtles in-radius radius = temp-in-radius turtles radius ] of test-turtle end
+  to run-tests repeat 100 [ foreach [ 0.5 1 1.5 2 2.5 9 20 22 48 99 100 ] [ r -> run-test (one-of turtles) r ] ] end
+  to set-world [x y z] resize-world (-1 * x) x (-1 * y) y (-1 * z) z clear-turtles create-turtles 100 [ set xcor random-xcor set ycor random-ycor set zcor random-zcor ] end
+  O> foreach [1 2 10 50] [ x -> foreach [1 2 10 50] [ y -> foreach [1 2 10 50] [ z -> set-world x y z run-tests ] ] ]
   test-count => 70400
