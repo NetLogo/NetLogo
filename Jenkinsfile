@@ -36,6 +36,7 @@ pipeline {
         sh "./sbt headless/test:fast"
         sh "./sbt netlogo/test:medium"
         sh "./sbt nogen netlogo/test:medium"
+        sh "./sbt threed netlogo/test:medium"
         sh "./sbt headless/test:medium"
         sh "./sbt nogen headless/test:medium"
         sh "./sbt netlogo/test:slow"
