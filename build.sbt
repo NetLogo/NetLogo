@@ -141,6 +141,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
     threed := { System.setProperty("org.nlogo.is3d", "true") },
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
+    noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.0.4",
       "org.picocontainer" % "picocontainer" % "2.13.6",
@@ -175,6 +176,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
 lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
+lazy val noopt = TaskKey[Unit]("noopt", "disable compiler optimizations")
 
 lazy val headless = (project in file ("netlogo-headless")).
   dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
