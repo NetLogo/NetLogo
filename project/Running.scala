@@ -21,6 +21,9 @@ object Running {
      else Seq()) ++
     (if(System.getProperty("org.nlogo.noGenerator") == "true")
       Seq("-Dorg.nlogo.noGenerator=true")
+     else Seq()) ++
+    (if(System.getProperty("org.nlogo.noOptimizer") == "true")
+      Seq("-Dorg.nlogo.noOptimizer=true")
      else Seq())
     )
 
