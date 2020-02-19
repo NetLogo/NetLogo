@@ -93,6 +93,7 @@ package optimize {
   object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
     def munge(root: Match) {
+      if (org.nlogo.api.Version.is3D) return
       root.matchArg(0, classOf[_patches])
       val arg1 = root.matchArg(1).matchReporterBlock().matchit(classOf[_equal])
       val pcor = arg1.matchOneArg(classOf[_patchvariabledouble])
@@ -367,7 +368,7 @@ package optimize {
     def munge(root: Match) {
       val count = root.matchOneArg(classOf[_count])
       val constDouble = root.matchOtherArg(count, classOf[_constdouble])
-      if (root.matchArg(0).reporter.isInstanceOf[_constdouble]) 
+      if (root.matchArg(0).reporter.isInstanceOf[_constdouble])
         root.replace(new _optimizecount((a: Int, b: Int) => a > b))
       else
         root.replace(new _optimizecount((a: Int, b: Int) => a < b))
