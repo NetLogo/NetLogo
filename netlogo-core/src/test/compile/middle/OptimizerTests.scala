@@ -89,56 +89,58 @@ class OptimizerTests extends AbstractOptimizerTest {
     assertResult("_patchsw[]")(compileReporter("patch-at -1 -1"))
   } }
 
-  test("PatchColumn1") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_constdouble:5.0[]]")(
-      compileReporter("patches with [pxcor = 5]"))
-  } }
-  test("PatchColumn2") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_constdouble:5.0[]]")(
-      compileReporter("patches with [5 = pxcor]"))
-  } }
-  test("PatchColumn3") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_observervariable:0[]]")(
-      compileReporter("patches with [pxcor = glob1]"))
-  } }
-  test("PatchColumn4") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_procedurevariable:X[]]")(
-      compileReporter("patches with [pxcor = x]"))
-  } }
+// The PatchColumnN and PatchRowN tests are for 2D optimizations, not 3D
+  if(!org.nlogo.api.Version.is3D) {
+    test("PatchColumn1") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_constdouble:5.0[]]")(
+        compileReporter("patches with [pxcor = 5]"))
+    } }
+    test("PatchColumn2") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_constdouble:5.0[]]")(
+        compileReporter("patches with [5 = pxcor]"))
+    } }
+    test("PatchColumn3") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_observervariable:0[]]")(
+        compileReporter("patches with [pxcor = glob1]"))
+    } }
+    test("PatchColumn4") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_procedurevariable:X[]]")(
+        compileReporter("patches with [pxcor = x]"))
+    } }
 
-  test("PatchRow1") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_constdouble:6.0[]]")(
-      compileReporter("patches with [pycor = 6]"))
-  } }
-  test("PatchRow2") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_constdouble:6.0[]]")(
-      compileReporter("patches with [6 = pycor]"))
-  } }
-  test("PatchRow3") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_observervariable:0[]]")(
-      compileReporter("patches with [pycor = glob1]"))
-  } }
-  test("PatchRow4") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_procedurevariable:X[]]")(
-      compileReporter("patches with [pycor = x]"))
-  } }
-
+    test("PatchRow1") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_constdouble:6.0[]]")(
+        compileReporter("patches with [pycor = 6]"))
+    } }
+    test("PatchRow2") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_constdouble:6.0[]]")(
+        compileReporter("patches with [6 = pycor]"))
+    } }
+    test("PatchRow3") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_observervariable:0[]]")(
+        compileReporter("patches with [pycor = glob1]"))
+    } }
+    test("PatchRow4") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_procedurevariable:X[]]")(
+        compileReporter("patches with [pycor = x]"))
+    } }
+  }
   test("HatchFast1") { new OptTest {
     withCommandOptimization("HatchFast")
     assertResult("_hatchfast:[_constdouble:5.0[]]")(
