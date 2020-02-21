@@ -93,6 +93,7 @@ package optimize {
   object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
     def munge(root: Match) {
+      // This optimization works only in 2D AAB Feb-21-2020
       if (org.nlogo.api.Version.is3D) return
       root.matchArg(0, classOf[_patches])
       val arg1 = root.matchArg(1).matchReporterBlock().matchit(classOf[_equal])
