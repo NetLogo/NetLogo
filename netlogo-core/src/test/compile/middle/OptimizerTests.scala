@@ -90,6 +90,7 @@ class OptimizerTests extends AbstractOptimizerTest {
   } }
 
 // The PatchColumnN and PatchRowN tests are for 2D optimizations, not 3D
+// AAB Feb-21-2020
   if(!org.nlogo.api.Version.is3D) {
     test("PatchColumn1") { new OptTest {
       withReporterOptimization("PatchVariableDouble")
