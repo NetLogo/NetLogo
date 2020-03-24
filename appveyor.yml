@@ -4,8 +4,11 @@ cache:
   - packages
 
 install:
- - choco install sbt
+ - choco install sbt -ia "INSTALLDIR=""C:\sbt"""
+ - SET PATH=C:\sbt\bin;%JAVA_HOME%\bin;%PATH%
+ - java -version
  - sbt version
 
 build_script:
+ - sbt update
  - sbt all
