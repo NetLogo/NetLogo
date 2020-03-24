@@ -5,6 +5,7 @@ cache:
 
 install:
  - choco install sbt
+ - sbt version
 
 build_script:
  - sbt all
