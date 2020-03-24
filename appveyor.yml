@@ -7,7 +7,6 @@ install:
  - choco install sbt -ia "INSTALLDIR=""C:\sbt"""
  - SET PATH=C:\sbt\bin;%JAVA_HOME%\bin;%PATH%
  - java -version
- - sbt version
 
 build_script:
  - sbt update
