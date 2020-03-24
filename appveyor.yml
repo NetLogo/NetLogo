@@ -1,5 +1,8 @@
 image: Visual Studio 2019
 
+install:
+ - choco install sbt
+
 build_script:
  - ./sbt update
  - ./sbt all
