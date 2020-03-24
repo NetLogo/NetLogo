@@ -4,5 +4,5 @@ install:
  - choco install sbt
 
 build_script:
- - ./sbt update
- - ./sbt all
+ - sbt.bat
+ - sbt.bat all
