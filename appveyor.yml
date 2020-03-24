@@ -1,0 +1,5 @@
+image: Visual Studio 2019
+
+script:
+ - ./sbt update
+ - ./sbt all
