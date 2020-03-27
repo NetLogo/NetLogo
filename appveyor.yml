@@ -11,3 +11,7 @@ install:
 build_script:
  - sbt update
  - sbt all
+
+artifacts:
+ - path: '**\NetLogo*.exe'
+ - path: '**\NetLogo*.dll'
