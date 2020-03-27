@@ -18,5 +18,12 @@ build_script:
  - sbt all
 
 artifacts:
- - path: '**\NetLogo*.exe'
- - path: '**\NetLogo*.dll'
+ - path: '**\*netlogo*.exe'
+ - path: '**\*netlogo*.dll'
+ - path: '**\netlogo.*'
+ - path: project
+ - path: netlogo
+
+on_finish:
+ - tree
+ - tree /F
