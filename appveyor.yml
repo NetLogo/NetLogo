@@ -21,11 +21,12 @@ install:
 build_script:
  - sbt update
  - sbt all
- - sbt netlogo/run
+ - sbt netlogo
 
 artifacts:
  - path: '**\*netlogo*.exe'
  - path: '**\*netlogo*.dll'
+ - path: '**\*netlogo*.jar'
  - path: '**\netlogo.*'
  - path: project
  - path: netlogo
