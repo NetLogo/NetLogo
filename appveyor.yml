@@ -21,7 +21,7 @@ install:
 build_script:
  - sbt update
  - sbt all
- - sbt netlogo
+ - sbt netlogo/run
 
 artifacts:
  - path: '**\*netlogo*.exe'
@@ -30,7 +30,3 @@ artifacts:
  - path: '**\netlogo.*'
  - path: project
  - path: netlogo
-
-on_finish:
- - tree
- - tree /F
