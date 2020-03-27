@@ -16,6 +16,7 @@ install:
 build_script:
  - sbt update
  - sbt all
+ - sbt netlogo/run
 
 artifacts:
  - path: '**\*netlogo*.exe'
