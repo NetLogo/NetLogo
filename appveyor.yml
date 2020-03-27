@@ -3,9 +3,14 @@ environment:
   JAVA_OPTS: -Xmx3072m -server
   
 cache:
-  - C:\ProgramData\chocolatey\bin -> appveyor.yml
-  - C:\ProgramData\chocolatey\lib -> appveyor.yml
-  - C:\Users\appveyor\.sbt -> appveyor.yml
+  - C:\ProgramData\chocolatey\bin
+  - C:\ProgramData\chocolatey\lib
+  - C:\Users\appveyor\.sbt
+
+skip_commits:
+  files:
+    - '.gitignore'
+    - 'Jenkinsfile'
 
 install:
  - git submodule update --init
