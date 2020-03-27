@@ -3,7 +3,7 @@ environment:
   JAVA_OPTS: -Xmx3072m -server
 
 install:
- - git submodule update
+ - git submodule update --init
  - choco install sbt -ia "INSTALLDIR=""C:\sbt""" --version 1.2.8
  - SET PATH=C:\sbt\bin;%JAVA_HOME%\bin;%PATH%
  - java -version
