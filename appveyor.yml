@@ -30,3 +30,4 @@ artifacts:
  - path: '**\netlogo.*'
  - path: project
  - path: netlogo
+ - path: netlogo-gui
