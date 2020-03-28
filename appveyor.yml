@@ -2,10 +2,10 @@ image: Visual Studio 2019
 environment:
   JAVA_OPTS: -Xmx3072m -server
   
-cache:
-  - C:\ProgramData\chocolatey\bin
-  - C:\ProgramData\chocolatey\lib
-  - C:\Users\appveyor\.sbt
+#cache:
+#  - C:\ProgramData\chocolatey\bin
+#  - C:\ProgramData\chocolatey\lib
+#  - C:\Users\appveyor\.sbt
 
 skip_commits:
   files:
