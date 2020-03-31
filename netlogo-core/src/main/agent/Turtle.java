@@ -117,7 +117,7 @@ public abstract strictfp class Turtle
 
   // The observant reader will notice that the abstract methods are
   // primarily those which depend on the world arity (2D/3D).
-  public abstract Turtle hatch();
+  public abstract Turtle hatch(TreeAgentSet breed);
   public abstract Patch getPatchAtOffsets(double dx, double dy) throws AgentException;
   public abstract Patch getPatchAtHeadingAndDistance(double delta, double distance) throws AgentException;
   public abstract void jump(double distance) throws AgentException;
@@ -131,22 +131,8 @@ public abstract strictfp class Turtle
   abstract void drawLine(double x0, double y0, double x1, double y1);
   abstract Turtle makeTurtle(World world);
 
-  public Turtle hatch(TreeAgentSet breed) {
-    Turtle child = makeTurtle(_world);
-    child.heading = heading;
-    child.xcor = xcor;
-    child.ycor = ycor;
-    child.setVariables(_variables.clone());
-    child.setId(_world.newTurtleId());
-    _world.turtles().add(child);
-    if (breed != getBreed()) {
-      child.setBreed(breed);
-    }
-    if (breed != _world.turtles()) {
-      breed.add(child);
-    }
-    child.getPatchHere().addTurtle(child);
-    return child;
+  public Turtle hatch() {
+    return hatch(getBreed());
   }
 
   public void die() {
