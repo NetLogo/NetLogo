@@ -16,6 +16,10 @@ ForeachWithDone
   to foo foreach [ 1 2 3 ] __done end
   COMPILE> COMPILER ERROR FOREACH expected at least 2 inputs, a list and an anonymous command.
 
+ForeachMultiListEarlyExit
+  to-report not-so-early-exit (foreach ["apples" "oranges"] [0 0] [ [x y] -> if x = "oranges" [ report x ] ]) end
+  not-so-early-exit => "oranges"
+
 Run1
   O> run "crt 10"
   count turtles => 10
