@@ -1,23 +1,34 @@
 #!/bin/sh
-exec $SCALA_HOME/bin/scala -nocompdaemon -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
+exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
-import sys.process.Process
-import collection.mutable.{ HashMap, ListBuffer, HashSet }
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
 
+import sys.process.Process
+import java.io.File
+import collection.mutable.{ HashMap, ListBuffer, HashSet }
+import Ordering.Double.TotalOrdering
 val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
 val home = System.getenv("HOME")
 
+// This script is run in the NetLogo directory. However the benchmarking class
+// HeadlessBenchmarker is run by sbt from the NetLogo/bin directory.
+// In particular it looks for the benchmark models in
+// "../models/test/benchmarks/" For compatibility this script must execute
+// the command "java -classpath " + classpath + ... +
+//  "org.nlogo.headless.HeadlessBenchmarker " + ... from NetLogo/bin
+// Therefore the classpath must be relative to NetLogo/bin aab April 2020
 val classpath =
-  Seq("netlogo-gui/target/classes",
-      "parser-jvm/target/classes",
-      "shared/target/classes",
-      "netlogo-gui/resources",
-      home + ".ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
+  Seq("../netlogo-gui/target/classes",
+      "../parser-jvm/target/classes",
+      "../shared/target/classes",
+      "../netlogo-gui/resources",
+      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.10.jar",
+      home + "/.ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
       home + "/.ivy2/local/org.nlogo/xml-lib_2.12/0.0.1/jars/xml-lib_2.12.jar",
-      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.2.jar",
+      home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.3.1.jar",
       home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.0.5.jar",
       home + "/.ivy2/cache/org.scala-lang.modules/scala-xml_2.12/bundles/scala-xml_2.12-1.0.6.jar",
       home + "/.ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
@@ -28,8 +39,10 @@ val classpath =
       home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.13.6.jar")
 
     .mkString(":")
-Process("java -classpath " + classpath + " org.nlogo.headless.Main --fullversion")
-  .lineStream.foreach(println)
+// Since the classpath is relative to the bin directory, this must be run there
+Process("java -classpath " + classpath + " org.nlogo.headless.Main --fullversion",
+  cwd = new File("bin"))
+  .lazyLines.foreach(println)
 
 // 4.0 & 4.1 numbers from my home iMac on Sep. 13 2011, running Mac OS X Lion.
 // quad-core 2.8 GHz Intel Core i5, memory 4 GB 1333 Mhz DDR3 - ST 9/13/11
@@ -50,17 +63,18 @@ val allNames: List[String] = {
   val nameArgs = args.takeWhile(!_.head.isDigit).toList
   if(!nameArgs.isEmpty) nameArgs
   else Process("find models/test/benchmarks -name *.nlogo -maxdepth 1")
-         .lineStream.map(_.split("/").last.split(" ").head).toList
+         .lazyLines.map(_.split("/").last.split(" ").head).toList
 }
 allNames.foreach(name => results += (name -> new ListBuffer[Double]))
 val width = allNames.map(_.size).max
 
-def outputLines(name: String): Stream[String] =
+def outputLines(name: String): LazyList[String] =
   Process("java -XX:+UseParallelGC -classpath " + classpath +
           " org.nlogo.headless.HeadlessBenchmarker " +
-          name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", ""))
-    .lineStream
-def record(name: String, line: String) {
+          name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", ""),
+        cwd = new File("bin"))
+    .lazyLines
+def record(name: String, line: String) : Unit = {
   val Match = ("@@@ " + name + """ Benchmark: (\d+\.\d+)( \(hit time limit\))?""").r
   val Match(num, warning) = line
   if (warning == null)
@@ -68,10 +82,11 @@ def record(name: String, line: String) {
   results(name) += num.toDouble
 }
 
-def printResults() {
+def printResults() : Unit = {
   val stringWriter = new java.io.StringWriter
   val pw = new java.io.PrintWriter(stringWriter)
   pw.println()
+
   for(name <- allNames; numbers = results(name); if !numbers.isEmpty) {
     val min = numbers.min
     pw.print(("%" + width + "s  %7.3f").format(name, min))
@@ -108,7 +123,7 @@ def printResults() {
   try { fpw.write(output) } finally { fpw.close() }
 }
 
-def runIt(name: String) {
+def runIt(name: String) : Unit = {
   for(out <- outputLines(name))
     if(!out.startsWith("@@@@@@"))
       if(out.startsWith("@@@ ")) { println(out); record(name, out) }
@@ -116,7 +131,7 @@ def runIt(name: String) {
   printResults()
 }
 
-def cleanUp() {
+def cleanUp() : Unit = {
   // remove files created by ImportWorld Benchmark
   for {
     files <- Option(new java.io.File("models/test/benchmarks/").listFiles)

@@ -23,6 +23,7 @@ Arduino
 Arnan
 ArrayBlockingQueue
 ArrayIndexOutOfBoundsException
+Atlassian
 Authors's
 Automata
 Autoplot
@@ -34,6 +35,7 @@ BMP
 Bagwell
 Bakshy
 Balan
+Bartosz
 BehaviorSpace
 BehaviorSpace's
 Bessel's
@@ -50,6 +52,7 @@ CWindow
 Cabasa
 Catalin
 Charang
+Chatrooms
 Chiff
 ClassFormatError
 ClassManager
@@ -61,6 +64,7 @@ Codec
 Coevolution
 ColorBrewer
 CommandLineThread
+Config
 Conformal
 Contrabass
 Ctrl
@@ -103,6 +107,8 @@ Farol
 FileAppender
 FireGL
 Firefox
+Firyn
+Flexmark
 Forrest
 Fretless
 Fruchterman
@@ -111,15 +117,16 @@ GEOGCS
 GIF
 GIS
 GPL
+GPLv
 GPS
 GTK
 GasLab
 GeForce
 GeneralExamples
 Geospatial
-GetCapabilities
 Gephi
 Gephi's
+GetCapabilities
 GetMap
 GitHub
 Gluegen
@@ -167,6 +174,7 @@ JARs
 JCodec
 JDK
 JHotDraw
+JNA
 JOGL
 JPG
 JPanel
@@ -195,6 +203,7 @@ Lambert
 Lausanne
 Lecuyer
 Lego
+Lightbend
 ListType
 Liviu
 LogFactory
@@ -210,6 +219,7 @@ MacFarlane
 MacOS
 MacStarLogo
 Macs
+Mailinglist
 Makefile
 Markup
 Martinusen
@@ -223,6 +233,7 @@ Microsystems
 Mousetraps
 MovieEncoder
 Mozilla
+Myltsev
 NIELS
 NLCommand
 NLLoadModel
@@ -272,6 +283,7 @@ Predation's
 PrimitiveManager
 PrintWriter
 ProbLab
+Pty
 QTCap
 QTJ
 QTJNative
@@ -288,6 +300,7 @@ REPORTME
 REPP
 RGB
 RGBA
+RSyntaxTextArea
 RXTX
 Radeon
 Randelshofer
@@ -342,6 +355,7 @@ Taiko
 Telecom
 Tetris
 TextEdit
+Thiele
 Tiark
 Timbale
 Tutte
@@ -409,6 +423,7 @@ artisticlicense
 asc
 ascii
 asin
+async
 atan
 attr
 authorable
@@ -484,6 +499,7 @@ concnst
 cond
 congruential
 conrate
+containedPrims
 convolve
 convolved
 copyleft
@@ -505,6 +521,7 @@ dataset's
 datasets
 dd
 ddoffscreen
+derivate
 det
 dev
 devel
@@ -519,6 +536,7 @@ distancexyz
 dll
 doc
 docs
+documentedExtensions
 dongle
 doto
 ds
@@ -533,6 +551,8 @@ edudesign
 eigenvector
 eigenvectors
 else's
+elsecommands
+elsereporter
 em
 en
 enumeratedValueSet
@@ -605,6 +625,7 @@ imageio
 indenter
 indep
 indices
+infoTabModelHTML
 init
 inquirelearning
 instantiation
@@ -620,6 +641,7 @@ javatester
 javax
 jgm
 jnilib
+jogamp
 jogl
 jpg
 jre
@@ -640,8 +662,8 @@ licensors
 lin
 linR
 lincnst
-linkset
 link's
+linkset
 linslpe
 linux
 listn
@@ -664,6 +686,7 @@ mathematica
 maxint
 maxnum
 md
+mediastream
 menubar
 mercator
 merchantability
@@ -681,7 +704,6 @@ multicast
 multiuser
 mutability
 myDensity
-myfile
 myfile
 mylist
 myworld
@@ -799,7 +821,6 @@ runReporter
 runnable
 runresult
 runtime
-runtime
 runtimes
 sandpile
 sawtooth
@@ -820,7 +841,6 @@ setxy
 setxyz
 sh
 shapefile
-shapefiles
 shapefiles
 shp
 sim
@@ -899,6 +919,7 @@ unusably
 url
 usbmodem
 util
+utils
 uucp
 valuen
 var

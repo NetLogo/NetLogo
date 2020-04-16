@@ -1,11 +1,13 @@
 #!/bin/sh
-exec scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 // Check for problems with plain text files including:
 // 1) No newline at end of file
 // 2) Tab characters
 // 3) Carriage return characters
+
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
 
 import sys.process.Process
 import collection.mutable.Buffer
@@ -15,6 +17,7 @@ def ignore(path: String) =
   path.contains("/src_managed/") ||
   path.contains("/tmp/") ||
   path.endsWith("Lexer.java") ||
+  path.endsWith("net-logo-web.html") ||
   path.startsWith("./.idea/") ||
   path.startsWith("./docs/scaladoc/") ||
   path.startsWith("./dist/i18n/")
@@ -29,7 +32,7 @@ val directories =
     "parser-js", "parser-jvm", "test")
 
 def paths =
-  Process("find" + directories.mkString(" ", " ", " ") + "! -ipath */target/* -and " + extensions.map("-name *." + _).mkString("( ", " -or ", " )")).lineStream
+  Process("find" + directories.mkString(" ", " ", " ") + "! -ipath */target/* -and " + extensions.map("-name *." + _).mkString("( ", " -or ", " )")).lazyLines
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString

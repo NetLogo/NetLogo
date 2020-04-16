@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
 // finds spelling mistakes in the User Manual (because yea, verily,
@@ -7,12 +7,15 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 
 // installing aspell: brew install aspell --lang=en
 
+
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
+
 import sys.process.Process
 import java.io.File
 
-for{path <- Process("find autogen/docs -name *.html.mustache").lineStream
+for{path <- Process("find autogen/docs -name *.html.mustache").lazyLines
     if !path.startsWith("docs/scaladoc/")
-    lines = (Process(new File(path)) #> "aspell -H -p ./dist/docwords.txt list").lineStream
+    lines = (Process(new File(path)) #> "aspell -H -p ./dist/docwords.txt list").lazyLines
     if lines.nonEmpty}
 {
   println(path)

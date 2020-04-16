@@ -545,4 +545,4 @@ error.dialog.outOfMemory = \
 Seu modelo é muito grande para ser executado com a quantidade de memória disponível para o Netlogo!\n\
 Para mais informações consulte a seção "How big can my model be?" no FAQ do manual do usuário.\n\
 Aviso: você pode ver resultados estranhos se continuar a executar o modelo sem reiniciar o NetLogo.\n
-error.dialog.openFAQ = Abrir FAQ
+error.dialog.openFAQ = Abrir FAQ \n
