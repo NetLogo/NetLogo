@@ -2,11 +2,16 @@
 exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
+
 import sys.process.Process
 import java.io.File
 import collection.mutable.{ HashMap, ListBuffer, HashSet }
 import Ordering.Double.TotalOrdering
+<<<<<<< HEAD
 
+=======
+>>>>>>> a7cd2e90344ca0b84e0b876712639fe83b055264
 val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 

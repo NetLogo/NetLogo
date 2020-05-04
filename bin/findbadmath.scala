@@ -5,6 +5,8 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
 // that we never ever use Math, only StrictMath.
 
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
+
 import sys.process.Process
 
 def withoutComments(lines: Seq[String]): Seq[String] = {

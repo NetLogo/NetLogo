@@ -4,6 +4,8 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 
 /// count lines of code in NetLogo source tree
 
+// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
+
 import sys.process.Process
 
 val format = "%25s: %6d unique, %6d total  (%3d%% Scala)\n"
