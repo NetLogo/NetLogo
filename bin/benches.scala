@@ -124,7 +124,7 @@ def printResults(): Unit = {
   try { fpw.write(output) } finally { fpw.close() }
 }
 
-def runIt(name: String) : Unit = {
+def runIt(name: String): Unit = {
   for(out <- outputLines(name))
     if(!out.startsWith("@@@@@@"))
       if(out.startsWith("@@@ ")) { println(out); record(name, out) }
@@ -132,7 +132,7 @@ def runIt(name: String) : Unit = {
   printResults()
 }
 
-def cleanUp() : Unit = {
+def cleanUp(): Unit = {
   // remove files created by ImportWorld Benchmark
   for {
     files <- Option(new java.io.File("models/test/benchmarks/").listFiles)
