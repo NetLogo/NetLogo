@@ -2,8 +2,6 @@
 exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
-// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
-
 import sys.process.Process
 import java.io.File
 import collection.mutable.{ HashMap, ListBuffer, HashSet }

@@ -4,6 +4,7 @@ exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 
 import sys.process.Process
 import java.io.File
+
 val home = System.getenv("HOME")
 
 // it might be better to move this into sbt where we wouldn't need to
