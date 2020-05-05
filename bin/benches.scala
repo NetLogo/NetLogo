@@ -83,7 +83,7 @@ def record(name: String, line: String) : Unit = {
   results(name) += num.toDouble
 }
 
-def printResults() : Unit = {
+def printResults(): Unit = {
   val stringWriter = new java.io.StringWriter
   val pw = new java.io.PrintWriter(stringWriter)
   pw.println()
