@@ -7,9 +7,6 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 
 // installing aspell: brew install aspell --lang=en
 
-
-// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
-
 import sys.process.Process
 import java.io.File
 

@@ -7,8 +7,6 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 // 2) Tab characters
 // 3) Carriage return characters
 
-// April 2020 - AAB - remove deprecated -nocompdaemon, use lazyLines
-
 import sys.process.Process
 import collection.mutable.Buffer
 
