@@ -21,7 +21,7 @@ object NativeLibs {
 
   lazy val nativeLibsTask =
     nativeLibs := {
-        val baseURL = "http://ccl-artifacts.s3.amazonaws.com/"
+        val baseURL = "https://s3.amazonaws.com/ccl-artifacts/"
         val joglNatives = baseDirectory.value / "natives"
         val joglTmp = baseDirectory.value / "jogl-2.3.2.zip"
         val joglUrl = new URL(baseURL + "jogl-2.3.2.zip")

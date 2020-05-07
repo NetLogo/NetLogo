@@ -10,7 +10,7 @@ object Scaladoc {
   val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
       file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") ->
-      url("http://docs.oracle.com/javase/8/docs/api")),
+      url("https://docs.oracle.com/javase/8/docs/api")),
     // automagically link scaladoc with appropriate library docs
     autoAPIMappings := true,
     scalacOptions in (Compile, doc) ++= {

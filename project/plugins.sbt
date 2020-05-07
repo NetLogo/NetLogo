@@ -1,6 +1,6 @@
 scalacOptions += "-deprecation"
 
-resolvers += "Typesafe Public Repo" at "http://repo.typesafe.com/typesafe/releases"
+resolvers += "Typesafe Public Repo" at "https://repo.typesafe.com/typesafe/releases"
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
 
@@ -22,13 +22,13 @@ libraryDependencies +=
 
 libraryDependencies +=
   "classycle" % "classycle" % "1.4.2" from
-    "http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/classycle-1.4.2.jar"
+    "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 resolvers += Resolver.url(
   "bintray-sbt-plugin-releases",
-    url("http://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
+    url("https://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
         Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0")
@@ -41,14 +41,14 @@ libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.6.0"
 
 resolvers += Resolver.url(
   "publish-versioned-plugin-releases",
-    url("http://dl.bintray.com/content/netlogo/publish-versioned"))(
+    url("https://dl.bintray.com/content/netlogo/publish-versioned"))(
         Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.nlogo" % "publish-versioned-plugin" % "2.1")
 
 resolvers += Resolver.url(
   "NetLogo-JVM",
-  url("http://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
+  url("https://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
     Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.8.0")

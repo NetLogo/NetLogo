@@ -6,7 +6,7 @@ object NetLogoBuild {
   lazy val all = TaskKey[Unit]("all", "build everything!!!")
 
   def cclArtifacts(path: String): String =
-    s"http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/$path"
+    s"https://s3.amazonaws.com/ccl-artifacts/$path"
 
   val autogenRoot = taskKey[File]("source root for autogeneration files")
 
