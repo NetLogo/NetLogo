@@ -72,7 +72,7 @@ AskWithCarefullyWithRunresult
   to careful-run [t] ask turtles [ carefully [ show runresult t ] [] ] end
   O> crt 2 careful-run [[] -> 1 / zero]
 
-NestedAsksMaintainOrder
+NestedAsksMaintainOrder_2D
   globals [ check-list ]
   O> resize-world -4 4 -4 4
   O> random-seed 123456
