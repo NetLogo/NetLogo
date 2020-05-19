@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import javax.swing.{ JOptionPane, JMenu }
+import javax.swing.{ JOptionPane, JMenu, JFrame }
 import java.awt.event.ActionEvent
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
@@ -473,9 +473,11 @@ class App extends
   }
 
   def startLogging(loggingConfigPath: String) {
+    val jf = new JFrame()
+    jf.setAlwaysOnTop(true)
     if(new java.io.File(loggingConfigPath).exists) {
       val username =
-        JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.enterName"), "",
+        JOptionPane.showInputDialog(jf, I18N.gui.get("tools.loggingMode.enterName"), "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       if(username != null){
         logger = new Logger(username)
@@ -484,7 +486,7 @@ class App extends
         org.nlogo.api.Version.startLogging()
       }
     }
-    else JOptionPane.showConfirmDialog(null, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
+    else JOptionPane.showConfirmDialog(jf, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
       "NetLogo", JOptionPane.DEFAULT_OPTION)
   }
 
