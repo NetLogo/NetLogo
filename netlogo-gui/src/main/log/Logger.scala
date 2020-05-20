@@ -106,7 +106,7 @@ object Logger extends APILogger {
 
 class Logger(studentName: String) extends LoggingListener {
 
-  var logDirectory = System.getProperty("java.io.tmpdir")
+  var logDirectory = System.getProperty("user.home")
 
   def configure(reader: java.io.Reader) {
     val configurator = new DOMConfigurator
