@@ -4,6 +4,7 @@ package org.nlogo.app
 
 import javax.swing.{ JOptionPane, JMenu, JFrame }
 import java.awt.event.ActionEvent
+import java.util.prefs.{ Preferences => JavaPreferences }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
@@ -383,8 +384,9 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
-
-    if (loggingConfigPath != null) {
+    val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
+    if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean ){
+      if (loggingConfigPath == null) { loggingConfigPath = "netlogo_logging.xml"}
       startLogging(loggingConfigPath)
     }
     if (loggingDir != null) {

@@ -31,6 +31,8 @@ object NetLogoCoreApp extends SubApplication {
   override def jvmOptions    = Seq()
   override def jvmArguments  = Seq()
   override def allIcons: Seq[String] = Seq(iconName) :+ "Model"
+  override def additionalArtifacts(config: File): Seq[File] =
+    Seq(config / "NetLogo Logging" / "netlogo_logging.xml", config / "NetLogo Logging" / "netlogo_logging.dtd")
 }
 
 object NetLogoThreeDApp extends SubApplication {
