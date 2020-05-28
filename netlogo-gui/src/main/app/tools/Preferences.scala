@@ -49,6 +49,21 @@ object Preferences {
     }
   }
 
+  object IsLoggingEnabled extends Preference {
+    val i18nKey = "loggingEnabled"
+    val component = new JCheckBox
+    val restartRequired = true
+
+    def load(prefs: JavaPreferences) = {
+      val loggingEnabled = prefs.get("loggingEnabled", "false").toBoolean
+      component.setSelected(loggingEnabled)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put("loggingEnabled", component.isSelected.toString)
+    }
+  }
+
   object IncludedFilesMenu extends Preference {
     val i18nKey = "includedFilesMenu"
     val component = new JCheckBox
