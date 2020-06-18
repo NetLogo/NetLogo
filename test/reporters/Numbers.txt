@@ -256,6 +256,10 @@ Max5
 Max6
   max [373 37 373733 337.0 37] => 373733
 
+MaxWithStrings
+  max [ "art" 0 2 4 10 ] => 10
+  max [ "art" "sports" "music" ] => ERROR Can't find the maximum of a list with no numbers: [art sports music]
+
 Min1
   min [] => ERROR Can't find the minimum of a list with no numbers: []
 
@@ -273,6 +277,10 @@ Min5
 
 Min6
   min [373 37 373733 337.0 37] => 37
+
+MinWithStrings
+  min [ "art" 0 2 4 10 ] => 0
+  min [ "art" "sports" "music" ] => ERROR Can't find the minimum of a list with no numbers: [art sports music]
 
 Mean1
   mean [] => ERROR Can't find the mean of a list with no numbers: [].
@@ -301,6 +309,10 @@ StdDev3
 StdDev4
   standard-deviation [1] => ERROR Can't find the standard deviation of a list without at least two numbers: [1]
 
+StdDevWithStrings
+  standard-deviation [1 "dance" 2 "music" 3 4 5 "sports" 6] => 1.8708286933869707
+  standard-deviation ["sports" "music" "dance"] => ERROR Can't find the standard deviation of a list without at least two numbers: [sports music dance]
+
 Variance1
   variance [] => ERROR Can't find the variance of a list without at least two numbers: [].
 
@@ -313,6 +325,10 @@ Variance3
 Variance4
   variance [2 7 4 3 5] => 3.7
 
+VarianceWithStrings
+  variance [2 "sports" 7 "music" 4 3 "dance" 5] => 3.7
+  variance ["sports" "music" "dance"] => ERROR Can't find the variance of a list without at least two numbers: [sports music dance].
+
 Sum1
   sum [] => 0
 
@@ -321,6 +337,10 @@ Sum2
 
 Sum3
   sum [1 2 3.0] => 6
+
+SumWithStrings
+  sum ["go-home" 5 "go-grocery" 1 "go-park" 1 "go-bar" 1 "wander" 1] => 9
+  sum ["go-home" "go-grocery" "go-park" "go-bar" "wander"] => 0
 
 Tan1
   tan 0 => 0
@@ -369,6 +389,10 @@ Median10
 
 Median11
   median [1 2.0 4 5.0] => 3
+
+MedianWithStrings
+  median [1 "sports" 2.0 "music" 4 5.0 "dance"] => 3
+  median ["sports" "music" "dance"] => ERROR Can't find the median of a list with no numbers: [sports music dance].
 
 Mod1
   62 mod 5 => 2
@@ -564,4 +588,3 @@ SubHeadingsF13
 
 SubHeadingsF14
   subtract-headings 355.0 5.0 => -10
-
