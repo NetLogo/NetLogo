@@ -57,6 +57,10 @@ AskConcurrentDoesntWorkOnSingleAgent
   O> crt 1 [ set glob1 self ]
   O> ask-concurrent glob1 [ set pcolor red ] => ERROR ASK-CONCURRENT expected input to be an agentset but got the turtle (turtle 0) instead.
 
+AskNobody
+  O> ask Nobody [set color blue] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
+  O> ask one-of patches with [pcolor = blue] [set pcolor red] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
+
 AskAllTurtles
   O> crt 1
   O> ask one-of patches [ ask turtles [ die ] ] => ERROR Only the observer can ASK the set of all turtles.
