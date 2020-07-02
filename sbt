@@ -9,7 +9,7 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
   JH=`cygpath -up "\Java\jdk1.8.0_31"`
 else
   CURR_DIR=`dirname $0`
-  if [ `uname -s` = Linux ] ; then
+  if [[ `uname -s` = Linux && -z $JENKINS_URL ]] ; then
     HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java-8|1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
     if [ -e "$HIGHEST_PRIORITY_JAVA_8" ] ; then
       export JAVA_HOME="${HIGHEST_PRIORITY_JAVA_8%/bin/javac}"
@@ -20,8 +20,6 @@ else
   else
     if [ `uname -s` = Darwin ] ; then
       export JAVA_HOME=`/usr/libexec/java_home -F -v1.8*`
-    else
-      export JAVA_HOME=/usr
     fi
   fi
   JH=$JAVA_HOME
