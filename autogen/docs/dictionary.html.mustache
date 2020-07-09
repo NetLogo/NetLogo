@@ -5309,8 +5309,12 @@ crt 100 [ setxy random-float max-pxcor
         </h4>
         <p>
           Reports the statistical mean of the numeric items in the given
-          list. Errors on non-numeric items. The mean is the average, i.e.,
+          list. Ignores non-numeric items. The mean is the average, i.e.,
           the sum of the items divided by the total number of items.
+        </p>
+        <p>
+          In NetLogo 6.1.1 and earlier, mean would error when finding
+          non-number values in the given list.
         </p>
         <pre>
 show mean [xcor] of turtles

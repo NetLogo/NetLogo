@@ -90,8 +90,6 @@ object LocalizationReport {
             Some("The > operator can only be used on two numbers, two strings, or two agents of the same type, but not on a turtle and a patch.")),
   (KeyAndArgs("org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers", "[]"),
             Some("Can't find the maximum of a list with no numbers: []")),
-  (KeyAndArgs("org.nlogo.prim._mean.cantFindMeanOfNonNumbers", "true", "TRUE/FALSE"),
-            Some("Can't find the mean of a list that contains non-numbers : true is a TRUE/FALSE.")),
   (KeyAndArgs("org.nlogo.prim._min.cantFindMinOfListWithNoNumbers", "[]"),
             Some("Can't find the minimum of a list with no numbers: []")),
   (KeyAndArgs("org.nlogo.prim._greaterorequal.cannotCompareParameters", "a turtle", "a patch"),

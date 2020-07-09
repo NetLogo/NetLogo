@@ -297,6 +297,10 @@ Mean4
 Mean5
   mean [1 2.0 3] => 2
 
+MeanWithStrings
+  mean [1 "dance" 2 "music" 3 4 5 "sports" 6] => 3.5
+  mean ["sports" "music" "dance"] => ERROR Can't find the mean of a list with no numbers: [sports music dance].
+
 StdDev1
   standard-deviation [1 2 3 4 5 6] => 1.8708286933869707
 
