@@ -1,8 +1,10 @@
 import sbt._
+import sbt.io.Using
 
 import java.io.File
-import java.nio.file.{ Files, Path }
+import java.nio.file.{ Files, Path => JPath }
 import java.io.IOException
+import java.util.jar.Manifest
 
 import NetLogoPackaging.RunProcess
 
@@ -95,6 +97,30 @@ object PackageMacAggregate {
 
   }
 
+  // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
+  val appSigningOptions = Seq("--options", "runtime")
+
+  def signJarLibs(jarFile: File, libsToSign: Seq[String]): Unit = {
+    val tmpDir = IO.createTemporaryDirectory
+    println(tmpDir)
+    IO.unzip(jarFile, tmpDir)
+
+    val libPaths = libsToSign.map( (libToSign) => (tmpDir / libToSign).toString )
+    runCodeSign(appSigningOptions, libPaths, "jar libraries")
+
+    val manifest = Using.fileInputStream(tmpDir / "META-INF" / "MANIFEST.MF") { is =>
+      new Manifest(is)
+    }
+    IO.delete(tmpDir / "META-INF")
+    IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest)
+
+    IO.delete(tmpDir)
+  }
+
+  def runCodeSign(extraArgs: Seq[String], paths: Seq[String], taskName: String, workingDirectory: Option[File] = None): Unit = {
+    RunProcess(Seq("codesign", "-v", "--force", "--sign", CodesigningIdentity) ++ extraArgs ++ paths, workingDirectory, s"codesign of $taskName")
+  }
+
   def apply(
     aggregateTarget:        File,
     commonConfig:           CommonConfiguration,
@@ -182,7 +208,27 @@ object PackageMacAggregate {
 
     val dmgName = buildName + ".dmg"
 
-    RunProcess(Seq("codesign", "-f", "-s", CodesigningIdentity) ++ orderedFilesToBeSigned.map(_.toString), "codesigning")
+    // In theory instead of hardcoding these we could search all jars for any libs that
+    // aren't signed or are signed incorrectly.  But Apple will do that search for us
+    // when we submit for notarization and these libraries don't change that often.
+    // -Jeremy B July 2020
+    val jarLibsToSign = Map(
+      ("extensions/.bundled/gogo/hid4java.jar", Seq("darwin/libhidapi.dylib")),
+      ("extensions/.bundled/nw/gephi-toolkit-0.8.2-all.jar", Seq("native/Mac/i386/libsqlitejdbc.jnilib", "native/Mac/x86_64/libsqlitejdbc.jnilib")),
+      ("Java/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
+    )
+    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(aggregateMacDir / jarPath, libsToSign) }
+
+    // It's odd that we have to do this, but it works so I'm not going to worry about it.
+    // We should try to remove it once we're on a more modern JDK version and the package
+    // and notarization tools have better adapted to Apple's requirements.
+    // More info:  https://github.com/AdoptOpenJDK/openjdk-support/issues/97
+    // -Jeremy B July 2020
+    val extraLibsToSign = Seq(
+      "JRE/Contents/MacOS/libjli.dylib"
+    ).map((p) => (aggregateMacDir / p).toString)
+
+    runCodeSign(appSigningOptions, orderedFilesToBeSigned.map(_.toString) ++ extraLibsToSign, "app bundles")
 
     val dmgArgs = Seq("hdiutil", "create",
         s"$buildName.dmg",
@@ -190,9 +236,9 @@ object PackageMacAggregate {
         "-size", "600m",
         "-fs", "HFS+",
         "-volname", buildName, "-ov")
-    RunProcess(dmgArgs, aggregateTarget, "dmg packaging")
+    RunProcess(dmgArgs, aggregateTarget, "disk image (dmg) packaging")
 
-    RunProcess(Seq("codesign", "-f", "-s", CodesigningIdentity) :+ dmgName, aggregateTarget, "codesigning dmg")
+    runCodeSign(Seq(), Seq(dmgName), "disk image (dmg)", Some(aggregateTarget))
 
     FileActions.createDirectory(webDirectory)
     FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)
