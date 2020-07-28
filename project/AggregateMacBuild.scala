@@ -97,16 +97,13 @@ object PackageMacAggregate {
 
   }
 
-  // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
-  val appSigningOptions = Seq("--options", "runtime")
-
-  def signJarLibs(jarFile: File, libsToSign: Seq[String]): Unit = {
+  def signJarLibs(jarFile: File, options: Seq[String], libsToSign: Seq[String]): Unit = {
     val tmpDir = IO.createTemporaryDirectory
     println(tmpDir)
     IO.unzip(jarFile, tmpDir)
 
     val libPaths = libsToSign.map( (libToSign) => (tmpDir / libToSign).toString )
-    runCodeSign(appSigningOptions, libPaths, "jar libraries")
+    runCodeSign(options, libPaths, "jar libraries")
 
     val manifest = Using.fileInputStream(tmpDir / "META-INF" / "MANIFEST.MF") { is =>
       new Manifest(is)
@@ -117,8 +114,8 @@ object PackageMacAggregate {
     IO.delete(tmpDir)
   }
 
-  def runCodeSign(extraArgs: Seq[String], paths: Seq[String], taskName: String, workingDirectory: Option[File] = None): Unit = {
-    RunProcess(Seq("codesign", "-v", "--force", "--sign", CodesigningIdentity) ++ extraArgs ++ paths, workingDirectory, s"codesign of $taskName")
+  def runCodeSign(options: Seq[String], paths: Seq[String], taskName: String, workingDirectory: Option[File] = None): Unit = {
+    RunProcess(Seq("codesign", "-v", "--force", "--sign", CodesigningIdentity) ++ options ++ paths, workingDirectory, s"codesign of $taskName")
   }
 
   def apply(
@@ -208,6 +205,9 @@ object PackageMacAggregate {
 
     val dmgName = buildName + ".dmg"
 
+    // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
+    val appSigningOptions = Seq("--options", "runtime", "--entitlements", (commonConfig.configRoot / "shared" / "macosx" / "entitlements.xml").toString)
+
     // In theory instead of hardcoding these we could search all jars for any libs that
     // aren't signed or are signed incorrectly.  But Apple will do that search for us
     // when we submit for notarization and these libraries don't change that often.
@@ -217,7 +217,7 @@ object PackageMacAggregate {
       ("extensions/.bundled/nw/gephi-toolkit-0.8.2-all.jar", Seq("native/Mac/i386/libsqlitejdbc.jnilib", "native/Mac/x86_64/libsqlitejdbc.jnilib")),
       ("Java/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
     )
-    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(aggregateMacDir / jarPath, libsToSign) }
+    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(aggregateMacDir / jarPath, appSigningOptions, libsToSign) }
 
     // It's odd that we have to do this, but it works so I'm not going to worry about it.
     // We should try to remove it once we're on a more modern JDK version and the package
