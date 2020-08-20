@@ -149,6 +149,7 @@ object App{
     pico.add("org.nlogo.app.interfacetab.CommandCenter")
     pico.add("org.nlogo.app.interfacetab.InterfaceTab")
     pico.addComponent(classOf[Tabs])
+    pico.addComponent(classOf[MainCodeTabPanel])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
@@ -253,7 +254,11 @@ class App extends
   def workspace = _workspace
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
+  private var _mainCodeTabPanel: MainCodeTabPanel = null
+  private var _tabManager : AppTabManager= null
   def tabs = _tabs
+  def mainCodeTabPanel = _mainCodeTabPanel
+  def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
   var monitorManager: AgentMonitorManager = null
@@ -378,11 +383,15 @@ class App extends
 
     _tabs = pico.getComponent(classOf[Tabs])
     controlSet.tabs = Some(_tabs)
+    _mainCodeTabPanel = pico.getComponent(classOf[MainCodeTabPanel])
+    _tabManager = new AppTabManager(_tabs, _mainCodeTabPanel)
+    _mainCodeTabPanel.setTabManager(_tabManager)
+    _tabs.setTabManager(_tabManager)
 
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, mainCodeTabPanel.codeTab))
     frame.addLinkComponent(listenerManager)
     val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
@@ -451,6 +460,7 @@ class App extends
 
     tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
 
+    mainCodeTabPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
 
@@ -479,6 +489,7 @@ class App extends
     if (isMac) {
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
     }
+    frame.addLinkComponent(mainCodeTabPanel.getCodeTabContainer)
   }
 
   def startLogging(loggingConfigPath: String) {
@@ -605,7 +616,7 @@ class App extends
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        tabs.codeTab.innerSource = transform(tabs.codeTab.innerSource)
+        mainCodeTabPanel.codeTab.innerSource = transform(mainCodeTabPanel.codeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
@@ -1015,7 +1026,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(mainCodeTabPanel.codeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1023,7 +1034,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource = source) }
+  def setProcedures(source:String) { dispatchThreadOrBust(mainCodeTabPanel.codeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1169,7 +1180,7 @@ class App extends
   }
 
   def procedureSource:  String =
-    tabs.codeTab.innerSource
+    mainCodeTabPanel.codeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
     tabs.interfaceTab.iP.getWidgetsForSaving
   }

@@ -172,8 +172,14 @@ public abstract strictfp class Event {
 
       // step 2: using event class as key, get list of handlers.
       // if no such list in cache, create one.
+      // for events in the || clauses below, some relevant handlers are
+      // not yet created when the lists are first built, and hence need
+      // to be recomputed. It would be better to only recompute once.
       List<Handler> handlersV = events.get(eventClass);
-      if (null == handlersV) {
+      if (null == handlersV ||
+        eventClass.toString().equals("class org.nlogo.window.Events$CompiledEvent") ||
+        eventClass.toString().equals("class org.nlogo.window.Events$LoadModelEvent") ||
+        eventClass.toString().equals("class org.nlogo.app.common.Events$SwitchedTabsEvent")) {
         // findHandlers does the grunt work of actually
         // walking the component hierarchy looking for
         // handlers
