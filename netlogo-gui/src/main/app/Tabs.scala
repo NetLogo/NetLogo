@@ -111,9 +111,10 @@ class Tabs(workspace:           GUIWorkspace,
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
-  def handle(e: AboutToCloseFilesEvent) =
-    OfferSaveExternalsDialog.offer(externalFileTabs.asInstanceOf[Set[TemporaryCodeTab]] filter (_.saveNeeded) ,
-    this)
+  def handle(e: AboutToCloseFilesEvent) = {
+    OfferSaveExternalsDialog.offer( collection.immutable.Set( externalFileTabs.toSeq: _*).asInstanceOf[Set[TemporaryCodeTab]]
+    filter (_.saveNeeded) , this)
+  }
 
   def handle(e: LoadBeginEvent) = {
     setSelectedComponent(interfaceTab)
@@ -179,7 +180,7 @@ class Tabs(workspace:           GUIWorkspace,
       // I don't really know why this is necessary when you delete a slider (by using the menu
       // item *not* the button) which causes an error in the Code tab the focus gets lost,
       // so request the focus by a known component 7/18/07
-      codeTab.requestFocus()
+      requestFocus()
       case file: ExternalFileInterface =>
         val filename = file.getFileName
         var tab = getTabWithFilename(Right(filename))
