@@ -149,7 +149,6 @@ object App{
     pico.add("org.nlogo.app.interfacetab.CommandCenter")
     pico.add("org.nlogo.app.interfacetab.InterfaceTab")
     pico.addComponent(classOf[Tabs])
-    // aab pico.addComponent(classOf[MainCodeTabPanel])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
@@ -256,6 +255,7 @@ class App extends
   private var _tabs: Tabs = null
   private var _mainCodeTabPanel: MainCodeTabPanel = null
   private var _tabManager : AppTabManager= null
+  private val popOutCodeTab = false
   def tabs = _tabs
   def mainCodeTabPanel = _mainCodeTabPanel
   def tabManager = _tabManager
@@ -383,19 +383,25 @@ class App extends
 
     _tabs = pico.getComponent(classOf[Tabs])
     controlSet.tabs = Some(_tabs)
-    _mainCodeTabPanel = new MainCodeTabPanel(workspace,
-                      tabs.interfaceTab,
-                      tabs.externalFileManager,
-                      tabs.codeTab,
-                      tabs.externalFileTabs)
-    _tabManager = new AppTabManager(_tabs, Some(_mainCodeTabPanel))
-    _mainCodeTabPanel.setTabManager(_tabManager)
+    if (popOutCodeTab) {
+      _mainCodeTabPanel = new MainCodeTabPanel(workspace,
+                        tabs.interfaceTab,
+                        tabs.externalFileManager,
+                        tabs.codeTab,
+                        tabs.externalFileTabs)
+
+      _tabManager = new AppTabManager(_tabs, Some(_mainCodeTabPanel))
+      _mainCodeTabPanel.setTabManager(_tabManager)
+    } else {
+      _tabManager = new AppTabManager(_tabs, None)
+    }
+
     _tabs.setTabManager(_tabManager)
 
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, world, mainCodeTabPanel.codeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
     val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
@@ -463,8 +469,10 @@ class App extends
     frame.addLinkComponent(viewManager)
 
     tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+    if (popOutCodeTab) {
+      mainCodeTabPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+    }
 
-    mainCodeTabPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
 
@@ -493,7 +501,9 @@ class App extends
     if (isMac) {
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
     }
-    frame.addLinkComponent(mainCodeTabPanel.getCodeTabContainer)
+    if (popOutCodeTab) {
+      frame.addLinkComponent(mainCodeTabPanel.getCodeTabContainer)
+    }
   }
 
   def startLogging(loggingConfigPath: String) {
@@ -620,7 +630,7 @@ class App extends
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        mainCodeTabPanel.codeTab.innerSource = transform(mainCodeTabPanel.codeTab.innerSource)
+        tabs.codeTab.innerSource = transform(tabs.codeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
@@ -1030,7 +1040,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(mainCodeTabPanel.codeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1038,7 +1048,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(mainCodeTabPanel.codeTab.innerSource = source) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1184,7 +1194,7 @@ class App extends
   }
 
   def procedureSource:  String =
-    mainCodeTabPanel.codeTab.innerSource
+    tabs.codeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
     tabs.interfaceTab.iP.getWidgetsForSaving
   }

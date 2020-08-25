@@ -63,9 +63,23 @@ class Tabs(workspace:           GUIWorkspace,
   val codeTab = new MainCodeTab(workspace, this, menu)
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
+  def getCodeTab = codeTab
+  
+  // set a default that will be overwritten in init
+  var popOutCodeTab : Boolean = _
+
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
+
+    if (tabManager.getMainCodeTabOwner.equals(this)) {
+      println("adding codeTab")
+      popOutCodeTab = false
+      addTab(I18N.gui.get("tabs.code"), codeTab)
+    } else {
+      popOutCodeTab = true
+    }
+
     for((name, tab) <- moreTabs)
       addTab(name, tab)
 

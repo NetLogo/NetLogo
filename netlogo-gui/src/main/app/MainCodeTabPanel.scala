@@ -37,9 +37,7 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   def getCodeTabContainer = codeTabContainer
 
-  //val codeTab = new MainCodeTab(workspace, this, menu)
-
-  def getCodeTab = codeTab
+  def getCodeTab = codeTab  // aab this might not be needed
 
   currentTab = codeTab
 

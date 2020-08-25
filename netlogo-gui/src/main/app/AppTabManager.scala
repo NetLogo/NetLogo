@@ -24,9 +24,10 @@ class AppTabManager( val appTabs:          AbstractTabs,
       case None           => appTabs
       case Some(theValue) => theValue
     }
+    // aab this might not be needed
 
-  def getCodeTab = getMainCodeTabOwner.asInstanceOf[MainCodeTabPanel].getCodeTab
   def getAppsTab = appTabs.asInstanceOf[Tabs]
+  def getCodeTab = getAppsTab.getCodeTab
   private var currentTab: Component = appTabs.interfaceTab
 
   def getCodeTabOwner(tab: CodeTab): AbstractTabs = {
