@@ -53,6 +53,8 @@ abstract class AbstractTabs(val workspace:       GUIWorkspace,
   def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
+//  def forAllCodeTabs = tabManager.forAllCodeTabs(_)
+
   override def processMouseMotionEvent(e: MouseEvent) {
     // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
     // components on windows and linux (but not Mac) in java 6 it never did this before and I don't

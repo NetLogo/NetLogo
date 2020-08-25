@@ -149,7 +149,7 @@ object App{
     pico.add("org.nlogo.app.interfacetab.CommandCenter")
     pico.add("org.nlogo.app.interfacetab.InterfaceTab")
     pico.addComponent(classOf[Tabs])
-    pico.addComponent(classOf[MainCodeTabPanel])
+    // aab pico.addComponent(classOf[MainCodeTabPanel])
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
@@ -383,7 +383,10 @@ class App extends
 
     _tabs = pico.getComponent(classOf[Tabs])
     controlSet.tabs = Some(_tabs)
-    _mainCodeTabPanel = pico.getComponent(classOf[MainCodeTabPanel])
+    _mainCodeTabPanel = new MainCodeTabPanel(workspace,
+                      tabs.interfaceTab,
+                      pico.getComponent(classOf[ExternalFileManager]),
+                      _tabs.codeTab)
     _tabManager = new AppTabManager(_tabs, _mainCodeTabPanel)
     _mainCodeTabPanel.setTabManager(_tabManager)
     _tabs.setTabManager(_tabManager)

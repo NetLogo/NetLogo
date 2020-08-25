@@ -6,7 +6,7 @@ import java.awt.{ Color, Component }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JTabbedPane }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-
+// aab import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 
 import org.nlogo.app.common.{ TabsInterface }, TabsInterface.Filename
@@ -20,9 +20,8 @@ import org.nlogo.window.Event.LinkParent
 class MainCodeTabPanel(workspace:           GUIWorkspace,
                        interfaceTab:        InterfaceTab,
                        externalFileManager: ExternalFileManager,
-                       private var menu:    MenuBar)
+                       val codeTab:         MainCodeTab)
   extends AbstractTabs(workspace, interfaceTab, externalFileManager)
-  with TabsInterface
   with ChangeListener
   with LinkParent
   with org.nlogo.window.LinkRoot {
@@ -40,21 +39,23 @@ class MainCodeTabPanel(workspace:           GUIWorkspace,
 
   def getCodeTabContainer = codeTabContainer
 
-  val codeTab = new MainCodeTab(workspace, this, menu)
+  //val codeTab = new MainCodeTab(workspace, this, menu)
 
   def getCodeTab = codeTab
 
   currentTab = codeTab
 
   var externalFileTabs = Set.empty[TemporaryCodeTab]
+  // mutable object ?
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
     addTab(I18N.gui.get("tabs.code"), codeTab)
     initManagerMonitor(manager, monitor)
   }
 
-  def forAllCodeTabs(fn: CodeTab => Unit) =
-    (externalFileTabs.asInstanceOf[Set[CodeTab]] + codeTab) foreach fn
+
+ def forAllCodeTabs(fn: CodeTab => Unit) =
+  (externalFileTabs.asInstanceOf[Set[CodeTab]] + codeTab) foreach fn
 
   def handle(e: CompiledEvent) = {
     val errorColor = Color.RED
