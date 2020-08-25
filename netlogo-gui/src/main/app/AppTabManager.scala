@@ -9,24 +9,32 @@ import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
 // classes Tabs and MainCodeTabPanel that are the JTabbedPanes that contain them.
 
 class AppTabManager( val appTabs:          AbstractTabs,
-                     val mainCodeTabPanel: AbstractTabs) {
+                     var mainCodeTabPanel: Option[AbstractTabs]) {
+
+
 
   def getAppTabs = appTabs
-  def getMainCodeTabPanel = mainCodeTabPanel
-  def getMainCodeTabOwner = mainCodeTabPanel
-  appTabs.setName("AppTabs")
-  mainCodeTabPanel.setName("MainCodeTabPanel")
+  // aab def getMainCodeTabPanel = mainCodeTabPanel
+  def setMainCodeTabPanel(_mainCodeTabPanel: Option[AbstractTabs]): Unit = {
+    mainCodeTabPanel = _mainCodeTabPanel
+  }
+
+  def getMainCodeTabOwner() =
+    mainCodeTabPanel match {
+      case None           => appTabs
+      case Some(theValue) => theValue
+    }
 
   def getCodeTab = getMainCodeTabOwner.asInstanceOf[MainCodeTabPanel].getCodeTab
   def getAppsTab = appTabs.asInstanceOf[Tabs]
   private var currentTab: Component = appTabs.interfaceTab
 
   def getCodeTabOwner(tab: CodeTab): AbstractTabs = {
-    if (tab.isInstanceOf[MainCodeTab]) mainCodeTabPanel else appTabs
+    if (tab.isInstanceOf[CodeTab]) getMainCodeTabOwner else appTabs
   }
 
   def getTabOwner(tab: Component): AbstractTabs = {
-    if (tab.isInstanceOf[MainCodeTab]) mainCodeTabPanel else appTabs
+    if (tab.isInstanceOf[MainCodeTab]) getMainCodeTabOwner else appTabs
   }
 
   def setSelectedCodeTab(tab: CodeTab): Unit = {

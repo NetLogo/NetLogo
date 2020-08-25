@@ -388,7 +388,7 @@ class App extends
                       tabs.externalFileManager,
                       tabs.codeTab,
                       tabs.externalFileTabs)
-    _tabManager = new AppTabManager(_tabs, _mainCodeTabPanel)
+    _tabManager = new AppTabManager(_tabs, Some(_mainCodeTabPanel))
     _mainCodeTabPanel.setTabManager(_tabManager)
     _tabs.setTabManager(_tabManager)
 
