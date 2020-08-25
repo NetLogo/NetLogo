@@ -12,9 +12,9 @@ import org.nlogo.window.{ GUIWorkspace }
 
 // AbstractTabs contains functionality common to Tabs and MainCodeTabPanel
 
-abstract class AbstractTabs(val workspace:       GUIWorkspace,
-                            val interfaceTab:    InterfaceTab,
-                            externalFileManager: ExternalFileManager)
+abstract class AbstractTabs(val workspace:           GUIWorkspace,
+                            val interfaceTab:        InterfaceTab,
+                            val externalFileManager: ExternalFileManager)
   extends JTabbedPane(SwingConstants.TOP) {
 
   locally {

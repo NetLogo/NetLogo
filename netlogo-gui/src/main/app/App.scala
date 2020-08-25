@@ -385,8 +385,9 @@ class App extends
     controlSet.tabs = Some(_tabs)
     _mainCodeTabPanel = new MainCodeTabPanel(workspace,
                       tabs.interfaceTab,
-                      pico.getComponent(classOf[ExternalFileManager]),
-                      _tabs.codeTab)
+                      tabs.externalFileManager,
+                      tabs.codeTab,
+                      tabs.externalFileTabs)
     _tabManager = new AppTabManager(_tabs, _mainCodeTabPanel)
     _mainCodeTabPanel.setTabManager(_tabManager)
     _tabs.setTabManager(_tabManager)

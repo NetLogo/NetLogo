@@ -6,6 +6,8 @@ import java.awt.{ Color, Component }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JTabbedPane }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
+
+import scala.collection.mutable
 // aab import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 
@@ -17,10 +19,11 @@ import org.nlogo.window.Events._
 import org.nlogo.window.{ GUIWorkspace }
 import org.nlogo.window.Event.LinkParent
 
-class MainCodeTabPanel(workspace:           GUIWorkspace,
-                       interfaceTab:        InterfaceTab,
-                       externalFileManager: ExternalFileManager,
-                       val codeTab:         MainCodeTab)
+class MainCodeTabPanel(workspace:             GUIWorkspace,
+                       interfaceTab:          InterfaceTab,
+                       externalFileManager:   ExternalFileManager,
+                       val codeTab:           MainCodeTab,
+                       val externalFileTabs:  mutable.Set[TemporaryCodeTab])
   extends AbstractTabs(workspace, interfaceTab, externalFileManager)
   with ChangeListener
   with LinkParent
@@ -44,9 +47,6 @@ class MainCodeTabPanel(workspace:           GUIWorkspace,
   def getCodeTab = codeTab
 
   currentTab = codeTab
-
-  var externalFileTabs = Set.empty[TemporaryCodeTab]
-  // mutable object ?
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
     addTab(I18N.gui.get("tabs.code"), codeTab)

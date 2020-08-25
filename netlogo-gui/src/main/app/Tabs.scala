@@ -8,6 +8,8 @@ import java.awt.print.PrinterAbortException
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ AbstractAction, Action, JFrame }
 
+import scala.collection.mutable
+
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface, Events => AppEvents },
@@ -59,7 +61,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val codeTab = new MainCodeTab(workspace, this, menu)
-  var externalFileTabs = Set.empty[TemporaryCodeTab]
+  val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
@@ -110,7 +112,8 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def handle(e: AboutToCloseFilesEvent) =
-    OfferSaveExternalsDialog.offer(externalFileTabs filter (_.saveNeeded), this)
+    OfferSaveExternalsDialog.offer(externalFileTabs.asInstanceOf[Set[TemporaryCodeTab]] filter (_.saveNeeded) ,
+    this)
 
   def handle(e: LoadBeginEvent) = {
     setSelectedComponent(interfaceTab)
