@@ -145,11 +145,21 @@ class Tabs(workspace:           GUIWorkspace,
 
   def handle(e: CompiledEvent) = {
     val errorColor = Color.RED
+
+    def clearErrors() = {
+      def clearForeground(tab: Component) = {
+        tabManager.getTabOwner(tab).setForegroundAt(
+          tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+        }
+        forAllCodeTabs(clearForeground)
+      }
+
     def recolorTab(component: Component, hasError: Boolean): Unit = {
       tabManager.getTabOwner(component).setForegroundAt(
         tabManager.getTabOwner(component).indexOfComponent(component),
         if(hasError) errorColor else null)
     }
+
     def recolorInterfaceTab() = {
       if (e.error != null) setSelectedIndex(0)
       recolorTab(interfaceTab, e.error != null)
@@ -157,6 +167,19 @@ class Tabs(workspace:           GUIWorkspace,
 
     // recolor tabs
     e.sourceOwner match {
+      case `codeTab` =>
+      // on null error, clear all errors, as we only get one event for all the files
+      if (e.error == null) {
+        clearErrors()
+      }
+      else {
+        tabManager.setSelectedCodeTab(codeTab)
+        recolorTab(codeTab, true)
+      }
+      // I don't really know why this is necessary when you delete a slider (by using the menu
+      // item *not* the button) which causes an error in the Code tab the focus gets lost,
+      // so request the focus by a known component 7/18/07
+      codeTab.requestFocus()
       case file: ExternalFileInterface =>
         val filename = file.getFileName
         var tab = getTabWithFilename(Right(filename))
@@ -225,7 +248,7 @@ class Tabs(workspace:           GUIWorkspace,
     }
 
   def forAllCodeTabs(fn: CodeTab => Unit) =
-    (externalFileTabs.asInstanceOf[Set[CodeTab]] + codeTab) foreach fn
+    (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + codeTab) foreach fn
 
   def lineNumbersVisible = codeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
