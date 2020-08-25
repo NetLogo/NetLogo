@@ -446,6 +446,18 @@ Precision11
 Precision12
   precision 1 2 + 3 => 4
 
+Precision13
+  precision 2 1.3523843 => 2
+
+Precision14
+  precision 2 -0.5 => 2
+
+Precision15
+  precision 2 -1 => 0
+
+Precision16
+  precision 2 -1.5 => 0
+
 NegPrecision1
   precision -375 -3 => 0
 
