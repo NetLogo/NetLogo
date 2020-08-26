@@ -37,12 +37,11 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   def getCodeTabContainer = codeTabContainer
 
-  def getCodeTab = codeTab  // aab this might not be needed
-
   currentTab = codeTab
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
     addTab(I18N.gui.get("tabs.code"), codeTab)
+    setSelectedComponent(codeTab)
     initManagerMonitor(manager, monitor)
   }
 
@@ -55,6 +54,9 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   def stateChanged(e: ChangeEvent) = {
     currentTab = getSelectedComponent
+    if (currentTab == null) {
+      currentTab = codeTab
+    }
     tabManager.setCurrentTab(currentTab)
     currentTab.requestFocus()
   }

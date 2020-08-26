@@ -255,7 +255,7 @@ class App extends
   private var _tabs: Tabs = null
   private var _mainCodeTabPanel: MainCodeTabPanel = null
   private var _tabManager : AppTabManager= null
-  private val popOutCodeTab = false
+  private val popOutCodeTab = true
   def tabs = _tabs
   def mainCodeTabPanel = _mainCodeTabPanel
   def tabManager = _tabManager

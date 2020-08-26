@@ -2,6 +2,8 @@
 
 package org.nlogo.app
 
+// aab import java.awt.event.{ MouseAdapter, MouseEvent }
+// aab import java.awt.event.MouseAdapter
 import java.awt.{ Color, Component }
 import java.awt.event.{ ActionEvent, MouseEvent, WindowAdapter, WindowEvent}
 import java.awt.print.PrinterAbortException
@@ -64,7 +66,7 @@ class Tabs(workspace:           GUIWorkspace,
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
   def getCodeTab = codeTab
-  
+
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
 
@@ -73,7 +75,6 @@ class Tabs(workspace:           GUIWorkspace,
     addTab(I18N.gui.get("tabs.info"), infoTab)
 
     if (tabManager.getMainCodeTabOwner.equals(this)) {
-      println("adding codeTab")
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), codeTab)
     } else {
@@ -124,6 +125,14 @@ class Tabs(workspace:           GUIWorkspace,
 
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
+
+  // this.addMouseListener(new MouseAdapter() {
+  //   override def mouseClicked(me: MouseEvent) {
+  //     if (me.getClickCount() == 2) {
+  //       tabManager.switchToSeparateCodeWindow
+  //     }
+  //   }
+  // })
 
   def handle(e: AboutToCloseFilesEvent) = {
     OfferSaveExternalsDialog.offer( collection.immutable.Set( externalFileTabs.toSeq: _*).asInstanceOf[Set[TemporaryCodeTab]]
