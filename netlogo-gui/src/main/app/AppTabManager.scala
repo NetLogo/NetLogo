@@ -52,11 +52,30 @@ class AppTabManager( val appTabs:          Tabs,
   def getCurrentTab(): Component = {
     currentTab
   }
+  def switchToTabsCodeTab(): Unit = {
+    // nothing to do if code tab is already part of Tabs
+    val codeTabOwner = getCodeTabOwner _
+    if (codeTabOwner.isInstanceOf[Tabs]) {
+      println("nothing doing")
+      return
+    } else {
+      println("switchToTabsCodeTab")
+    }
+  }
 
   def switchToSeparateCodeWindow(): Unit = {
     // nothing to do if code tab is already separate
     val codeTabOwner = getCodeTabOwner _
-    if (codeTabOwner.isInstanceOf[MainCodeTabPanel]) return
+    // can invert condition and not use return
+    if (codeTabOwner.isInstanceOf[MainCodeTabPanel]) {
+      println("nothing doing")
+      return
+    } else {
+      println("switchToSeparateCodeWindow")
+    }
+
+
+    if (false) {
     val actualMainCodeTabPanel = new MainCodeTabPanel(getAppsTab.workspace,
       getAppsTab.interfaceTab,
       getAppsTab.externalFileManager,
@@ -68,5 +87,6 @@ class AppTabManager( val appTabs:          Tabs,
     // add mouse listener, which should be not set when
     // there is no code tab
     actualMainCodeTabPanel.init(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
+  }
   }
 }

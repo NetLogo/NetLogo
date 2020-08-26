@@ -2,7 +2,7 @@
 package org.nlogo.app
 
 import java.awt.{ Component }
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ JTabbedPane }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
@@ -47,8 +47,26 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent) {
-      val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
-      tabManager.setCurrentTab(currentTab)
+      if (me.getClickCount() == 1) {
+        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        tabManager.setCurrentTab(currentTab)
+      }
+      if (me.getClickCount() == 2) {
+        tabManager.switchToTabsCodeTab
+      }
+    }
+  })
+
+  codeTabContainer.addWindowListener(new WindowAdapter() {
+    override def windowClosing(e: WindowEvent) {
+      tabManager.switchToTabsCodeTab
+    }
+  })
+
+  codeTabContainer.addWindowFocusListener(new WindowAdapter() {
+    override def  windowGainedFocus(e: WindowEvent) {
+      // println("WindowFocusListener method called: windowGainedFocus.")
+      // maybe add focus to text area
     }
   })
 

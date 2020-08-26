@@ -3,7 +3,7 @@
 package org.nlogo.app
 import java.awt.{ Component }
 import java.awt.event.{ MouseEvent }
-import javax.swing.{ JTabbedPane, SwingConstants }
+import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager }
@@ -30,6 +30,7 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     }
   }
 
+  val jframe = workspace.getFrame.asInstanceOf[JFrame]
   var tabManager: AppTabManager = null
 
   def setTabManager( myTabManager: AppTabManager ) {

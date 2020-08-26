@@ -2,13 +2,12 @@
 
 package org.nlogo.app
 
-// aab import java.awt.event.{ MouseAdapter, MouseEvent }
-// aab import java.awt.event.MouseAdapter
+
 import java.awt.{ Color, Component }
-import java.awt.event.{ ActionEvent, MouseEvent, WindowAdapter, WindowEvent}
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.awt.print.PrinterAbortException
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ AbstractAction, Action, JFrame }
+import javax.swing.{ AbstractAction, Action }
 
 import scala.collection.mutable
 
@@ -40,8 +39,6 @@ class Tabs(workspace:           GUIWorkspace,
   with ExternalFileSavedEvent.Handler {
 
   addChangeListener(this)
-
-  val frame = workspace.getFrame
 
   def getTabs = this
 
@@ -92,7 +89,7 @@ class Tabs(workspace:           GUIWorkspace,
     saveModelActions foreach menu.offerAction
   }
 
-  frame.asInstanceOf[JFrame].addWindowFocusListener(new WindowAdapter() {
+  jframe.addWindowFocusListener(new WindowAdapter() {
     override def windowGainedFocus(e: WindowEvent) {
       val currentTab = getTabs.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
@@ -126,13 +123,13 @@ class Tabs(workspace:           GUIWorkspace,
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
-  // this.addMouseListener(new MouseAdapter() {
-  //   override def mouseClicked(me: MouseEvent) {
-  //     if (me.getClickCount() == 2) {
-  //       tabManager.switchToSeparateCodeWindow
-  //     }
-  //   }
-  // })
+  this.addMouseListener(new MouseAdapter() {
+    override def mouseClicked(me: MouseEvent) {
+      if (me.getClickCount() == 2) {
+        tabManager.switchToSeparateCodeWindow
+      }
+    }
+  })
 
   def handle(e: AboutToCloseFilesEvent) = {
     OfferSaveExternalsDialog.offer( collection.immutable.Set( externalFileTabs.toSeq: _*).asInstanceOf[Set[TemporaryCodeTab]]
