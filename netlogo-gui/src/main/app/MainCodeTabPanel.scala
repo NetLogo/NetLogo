@@ -59,6 +59,8 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   codeTabContainer.addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
+      tabManager.getAppTabs.add(I18N.gui.get("tabs.code"), codeTab)
+      tabManager.setMainCodeTabPanel(None)
       tabManager.switchToTabsCodeTab
     }
   })

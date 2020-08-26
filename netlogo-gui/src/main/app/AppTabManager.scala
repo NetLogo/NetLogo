@@ -11,12 +11,8 @@ import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
 class AppTabManager( val appTabs:          Tabs,
                      var mainCodeTabPanel: Option[MainCodeTabPanel]) {
 
-//class AppTabManager( val appTabs:          AbstractTabs,
-//                    var mainCodeTabPanel: Option[AbstractTabs]) {
-
-
   def getAppTabs = appTabs
-  // aab def getMainCodeTabPanel = mainCodeTabPanel
+
   def setMainCodeTabPanel(_mainCodeTabPanel: Option[MainCodeTabPanel]): Unit = {
     mainCodeTabPanel = _mainCodeTabPanel
   }
@@ -28,7 +24,6 @@ class AppTabManager( val appTabs:          Tabs,
     }
     // aab this might not be needed
 
-  // aab def getAppsTab = appTabs.asInstanceOf[Tabs]
   def getAppsTab = appTabs
   def getCodeTab = appTabs.getCodeTab
   private var currentTab: Component = appTabs.interfaceTab
@@ -76,17 +71,17 @@ class AppTabManager( val appTabs:          Tabs,
 
 
     if (false) {
-    val actualMainCodeTabPanel = new MainCodeTabPanel(getAppsTab.workspace,
-      getAppsTab.interfaceTab,
-      getAppsTab.externalFileManager,
-      getAppsTab.codeTab,
-      getAppsTab.externalFileTabs)
-    mainCodeTabPanel = Some(actualMainCodeTabPanel)
-    actualMainCodeTabPanel.setTabManager(this)
+      val actualMainCodeTabPanel = new MainCodeTabPanel(getAppsTab.workspace,
+        getAppsTab.interfaceTab,
+        getAppsTab.externalFileManager,
+        getAppsTab.codeTab,
+        getAppsTab.externalFileTabs)
+        mainCodeTabPanel = Some(actualMainCodeTabPanel)
+        actualMainCodeTabPanel.setTabManager(this)
 
-    // add mouse listener, which should be not set when
-    // there is no code tab
-    actualMainCodeTabPanel.init(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
-  }
+        // add mouse listener, which should be not set when
+        // there is no code tab
+        actualMainCodeTabPanel.init(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
+      }
   }
 }
