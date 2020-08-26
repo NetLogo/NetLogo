@@ -52,7 +52,7 @@ object App{
   private var commandLineURL: String = null
   private var loggingConfigPath: String = null
   private var loggingDir: String = null
-
+  private var popOutCodeTab = false
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -207,6 +207,7 @@ object App{
       else if (token == "--builddate") printAndExit(Version.buildDate)
       else if (token == "--logging") loggingConfigPath = nextToken()
       else if (token == "--log-directory") loggingDir = nextToken()
+      else if (token == "--codetab-window") popOutCodeTab = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -244,7 +245,7 @@ class App extends
     ZoomedEvent.Handler with
     Controllable {
 
-  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir }
+  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
 
   val frame = new AppFrame
 
@@ -255,7 +256,6 @@ class App extends
   private var _tabs: Tabs = null
   private var _mainCodeTabPanel: MainCodeTabPanel = null
   private var _tabManager : AppTabManager= null
-  private val popOutCodeTab = true
   def tabs = _tabs
   def mainCodeTabPanel = _mainCodeTabPanel
   def tabManager = _tabManager
