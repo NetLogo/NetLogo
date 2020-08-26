@@ -52,7 +52,11 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
         tabManager.setCurrentTab(currentTab)
       }
       if (me.getClickCount() == 2) {
+        tabManager.getAppTabs.add(I18N.gui.get("tabs.code"), codeTab)
+        tabManager.setMainCodeTabPanel(None)
         tabManager.switchToTabsCodeTab
+        codeTabContainer.dispose
+        //tabManager.switchToTabsCodeTab
       }
     }
   })

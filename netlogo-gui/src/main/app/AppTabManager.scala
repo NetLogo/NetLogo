@@ -3,6 +3,7 @@
 package org.nlogo.app
 import java.awt.Component
 
+import org.nlogo.core.I18N
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
 
 // The class AppTabManager handles relationships between tabs (JPanels) and the two
@@ -66,11 +67,6 @@ class AppTabManager( val appTabs:          Tabs,
       println("nothing doing")
       return
     } else {
-      println("switchToSeparateCodeWindow")
-    }
-
-
-    if (false) {
       val actualMainCodeTabPanel = new MainCodeTabPanel(getAppsTab.workspace,
         getAppsTab.interfaceTab,
         getAppsTab.externalFileManager,
@@ -78,10 +74,10 @@ class AppTabManager( val appTabs:          Tabs,
         getAppsTab.externalFileTabs)
         mainCodeTabPanel = Some(actualMainCodeTabPanel)
         actualMainCodeTabPanel.setTabManager(this)
-
+        actualMainCodeTabPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
+        actualMainCodeTabPanel.initManagerMonitor(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
         // add mouse listener, which should be not set when
         // there is no code tab
-        actualMainCodeTabPanel.init(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
       }
   }
 }
