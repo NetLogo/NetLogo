@@ -13,8 +13,12 @@ object Parser {
         case (some, rest) =>
           LanguageTest(suiteName, xs.head.trim, some.map{_.trim}.map(parse)) :: split(rest)
       }
+    val multiLine =
+      s.split("/\n")
+        .map(_.trim)
+        .mkString(" ")
     val lines =
-      s.split("\n")
+      multiLine.split("\n")
         .filter(!_.trim.startsWith("#"))
         .filter(!_.trim.isEmpty)
     split(lines.toList)
