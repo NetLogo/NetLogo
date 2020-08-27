@@ -32,9 +32,9 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
   // CodeTabContainer that contains MainCodeTabPanel that contains
   // the MainCodeTab
   val frame = workspace.getFrame
-
+  this.requestFocusInWindow
   val codeTabContainer = new CodeTabContainer(frame, this)
-
+  val mainCodeTabPanel = this
   def getCodeTabContainer = codeTabContainer
 
   currentTab = codeTab
@@ -50,11 +50,11 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
       if (me.getClickCount() == 1) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         tabManager.setCurrentTab(currentTab)
+        currentTab.requestFocus()
       }
       if (me.getClickCount() == 2) {
         tabManager.getAppTabs.add(I18N.gui.get("tabs.code"), codeTab)
         tabManager.setMainCodeTabPanel(None)
-        tabManager.switchToTabsCodeTab
         codeTabContainer.dispose
         //tabManager.switchToTabsCodeTab
       }

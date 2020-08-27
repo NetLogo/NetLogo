@@ -76,6 +76,8 @@ class AppTabManager( val appTabs:          Tabs,
         actualMainCodeTabPanel.setTabManager(this)
         actualMainCodeTabPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
         actualMainCodeTabPanel.initManagerMonitor(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
+        actualMainCodeTabPanel.codeTabContainer.requestFocus()
+        getAppsTab.codeTab.requestFocus()
         // add mouse listener, which should be not set when
         // there is no code tab
       }
