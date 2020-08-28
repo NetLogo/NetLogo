@@ -15966,7 +15966,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
 reporter procedure OVERLAPPING?:[]{-T--}:
 [0]_asm_procedureoverlapping_report_0 "report any? other particles in-radius size + largest-particle-size / 2 with [ distance myself < size + [ size ] of myself / 2 ]" Object => void
       _anyotherwith "any? other particles in-radius size + largest-particle-size / 2 with [ distance myself < size + [ size ] of myself / 2 ]" AgentSet,Reporter => boolean
-        _inradiusboundingbox "particles in-radius size + largest-particle-size / 2"
+        _inradius "particles in-radius size + largest-particle-size / 2"
           _asm_procedureoverlapping_breed_1 "particles" => AgentSet
                 // parameter final  context
                L0
@@ -16299,9 +16299,9 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           // parameter final  reporterBlock
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureoverlapping_report_0.keptinstr3 : Lorg/nlogo/prim/_inradiusboundingbox;
+          GETFIELD org/nlogo/prim/_asm_procedureoverlapping_report_0.keptinstr3 : Lorg/nlogo/prim/_inradius;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_inradiusboundingbox.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/_inradius.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L2
           ASTORE 2
          L0

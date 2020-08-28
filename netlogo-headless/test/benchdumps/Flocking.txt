@@ -941,7 +941,7 @@ procedure FLOCK:[]{-T--}:
 procedure FIND-FLOCKMATES:[]{-T--}:
 [0]_asm_procedurefindflockmates_setturtlevariable_0 "set flockmates other turtles in-radius vision" Object => void
       _other "other turtles in-radius vision" AgentSet => AgentSet
-        _inradiusboundingbox "turtles in-radius vision"
+        _inradius "turtles in-radius vision"
           _asm_procedurefindflockmates_turtles_1 "turtles" => AgentSet
                 // parameter final  context
                L0
@@ -967,9 +967,9 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.keptinstr3 : Lorg/nlogo/prim/_inradiusboundingbox;
+          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.keptinstr3 : Lorg/nlogo/prim/_inradius;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/_inradiusboundingbox.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/_inradius.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L5
           ASTORE 2
          L0
