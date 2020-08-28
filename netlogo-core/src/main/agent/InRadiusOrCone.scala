@@ -10,10 +10,6 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private[this] var patches: Array[Patch] = null // world.patches is not defined when this class is initiated
   private[this] var end: Int = 0
 
-  override def inRadiusSimple(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean) = {
-    InRadiusSimple.apply(world)(agent, sourceSet, radius, wrap)
-  }
-
   override def inRadius(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent] = {
     val (worldWidth, worldHeight) = (world.worldWidth, world.worldHeight)
     val result = new ArrayList[Agent]

@@ -17,11 +17,6 @@ public strictfp class InRadiusOrCone3D
     this.world = world;
   }
 
-  public List<Agent> inRadiusSimple(Agent agent, AgentSet sourceSet,
-      double radius, boolean wrap) {
-    return inRadius(agent, sourceSet, radius, wrap);
-  }
-
   @Override
   public List<Agent> inRadius(Agent agent, AgentSet sourceSet,
                               double radius, boolean wrap) {
