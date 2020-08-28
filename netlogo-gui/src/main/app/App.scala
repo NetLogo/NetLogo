@@ -52,7 +52,7 @@ object App{
   private var commandLineURL: String = null
   private var loggingConfigPath: String = null
   private var loggingDir: String = null
-  private var popOutCodeTab = false
+  private var popOutCodeTab = true
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
