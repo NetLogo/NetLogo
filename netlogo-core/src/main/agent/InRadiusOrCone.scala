@@ -379,7 +379,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
 
     val x = StrictMath.round(X).toInt
     val y = StrictMath.round(Y).toInt
-    val r = if (x != X || y != Y) R.toInt + 1 else R.toInt
+    val r = R.toInt + 1
 
     val regionIterator = world.topology.getRegion(x, y, r).iterator
     var length, curr = 0
