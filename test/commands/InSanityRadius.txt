@@ -98,7 +98,8 @@ InSanityRadius_Patches_3D
     foreach [1 2 10 50] [ y -> /
       foreach [1 2 10 50] [ z -> /
         set seed new-seed /
-        set-world x y z run-tests /
+        set-world x y z /
+        run-tests /
       ] /
     ] /
   ]
@@ -219,8 +220,162 @@ InSanityRadius_Turtles_3D
     foreach [1 2 10 50] [ y -> /
       foreach [1 2 10 50] [ z -> /
         set seed new-seed /
-        set-world x y z run-tests /
+        set-world x y z /
+        run-tests /
       ] /
     ] /
   ]
   test-count => 83200
+
+InSanityRadius_TurtleBreeds_2D
+  globals [ seed radius a wrap-x wrap-y test-count ]
+  breed [ mice mouse ]
+  breed [ frogs frog ]
+
+  to assert [ expression ] /
+    if ( not expression ) [ /
+      let agent-text ifelse-value is-turtle? a [ /
+        (word "turtle: " a " at (" [xcor] of a ", " [ycor] of a ")")/
+      ] [ /
+        (word "patch: " a " at (" [pxcor] of a ", " [pycor] of a ")")/
+      ] /
+      error (word "Assertion failed, seed: " seed ", max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", wrap (X,Y): (" wrap-x "," wrap-y "), " agent-text ", radius: " radius) /
+    ] /
+  end
+
+  to-report temp-in-radius [agentset r] /
+    report (agentset with [ distance myself <= r ]) /
+  end
+
+  to run-test [ test-agent r ] /
+    set test-count (test-count + 1) /
+    set a test-agent /
+    set radius r /
+    let core-turtles [ turtles in-radius radius ] of test-agent /
+    let check-turtles [ temp-in-radius turtles radius ] of test-agent /
+    assert core-turtles = check-turtles /
+    let core-mice [ mice in-radius radius ] of test-agent /
+    let check-mice [ temp-in-radius mice radius ] of test-agent /
+    assert core-mice = check-mice /
+    let core-frogs [ frogs in-radius radius ] of test-agent /
+    let check-frogs [ temp-in-radius frogs radius ] of test-agent /
+    assert core-frogs = check-frogs /
+    let core-patches [ patches in-radius radius ] of test-agent /
+    let check-patches [ temp-in-radius patches radius ] of test-agent /
+    assert core-patches = check-patches /
+  end
+
+  to run-tests /
+    repeat 10 [ /
+      foreach [ 0.5 1 1.5 2 2.5 2.75 9 9.25 20 22 48 99 100 ] [ r -> /
+        run-test (one-of turtles) r /
+        run-test (one-of mice) r /
+        run-test (one-of frogs) r /
+        run-test (one-of patches) r /
+      ] /
+    ] /
+  end
+
+  to set-world [x y wx wy] /
+    random-seed seed /
+    set wrap-x wx /
+    set wrap-y wy /
+    resize-world (-1 * x) x (-1 * y) y /
+    __change-topology wrap-x wrap-y /
+    clear-turtles /
+    create-mice 50 [ /
+      set xcor random-xcor /
+      set ycor random-ycor /
+    ] /
+    create-frogs 50 [ /
+      set xcor random-xcor /
+      set ycor random-ycor /
+    ] /
+  end
+
+  O> foreach [true false] [ wx -> /
+    foreach [true false] [ wy -> /
+      foreach [1 2 10 50] [ x -> /
+        foreach [1 2 10 50] [ y -> /
+          set seed new-seed /
+          set-world x y wx wy /
+          run-tests /
+        ] /
+      ] /
+    ] /
+  ]
+  test-count => 33280
+
+InSanityRadius_TurtleBreeds_3D
+  globals [ seed radius a test-count ]
+  breed [ mice mouse ]
+  breed [ frogs frog ]
+
+  to assert [ expression ] /
+    if ( not expression ) [ /
+      let agent-text ifelse-value is-turtle? a [ /
+        (word "turtle: " a " at (" [xcor] of a ", " [ycor] of a ")")/
+      ] [ /
+        (word "patch: " a " at (" [pxcor] of a ", " [pycor] of a ")")/
+      ] /
+      error (word "Assertion failed, seed: " seed ", max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", max-pzcor: (" max-pzcor ", " agent-text ", radius: " radius) /
+    ] /
+  end
+
+  to-report temp-in-radius [agentset r] /
+    report (agentset with [ distance myself <= r ]) /
+  end
+
+  to run-test [ test-agent r ] /
+    set test-count (test-count + 1) /
+    set a test-agent /
+    set radius r /
+    let core-turtles [ turtles in-radius radius ] of test-agent /
+    let check-turtles [ temp-in-radius turtles radius ] of test-agent /
+    assert core-turtles = check-turtles /
+    let core-mice [ mice in-radius radius ] of test-agent /
+    let check-mice [ temp-in-radius mice radius ] of test-agent /
+    assert core-mice = check-mice /
+    let core-frogs [ frogs in-radius radius ] of test-agent /
+    let check-frogs [ temp-in-radius frogs radius ] of test-agent /
+    assert core-frogs = check-frogs /
+    let core-patches [ patches in-radius radius ] of test-agent /
+    let check-patches [ temp-in-radius patches radius ] of test-agent /
+    assert core-patches = check-patches /
+  end
+
+  to run-tests /
+    repeat 10 [ /
+      foreach [ 0.5 1 1.5 2 2.5 2.75 9 9.25 20 22 48 99 100 ] [ r -> /
+        run-test (one-of turtles) r /
+        run-test (one-of mice) r /
+        run-test (one-of frogs) r /
+        run-test (one-of patches) r /
+      ] /
+    ] /
+  end
+
+  to set-world [x y z] /
+    random-seed seed /
+    resize-world (-1 * x) x (-1 * y) y (-1 * z) z/
+    clear-turtles /
+    create-mice 50 [ /
+      set xcor random-xcor /
+      set ycor random-ycor /
+    ] /
+    create-frogs 50 [ /
+      set xcor random-xcor /
+      set ycor random-ycor /
+    ] /
+  end
+
+  O> foreach [1 2 10 50] [ x -> /
+    foreach [1 2 10 50] [ y -> /
+      foreach [1 2 10 50] [ z -> /
+        set seed new-seed /
+        set-world x y z /
+        run-tests /
+      ] /
+    ] /
+  ]
+  test-count => 33280
