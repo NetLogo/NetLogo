@@ -141,10 +141,11 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     // x offset from -m to m and y offset from -n to n.
     val offsets = new ArrayList[(Int, Int)]
     var x = -m
+    val looseRadius = StrictMath.ceil(radius).toInt + 1
     while (x <= m) {
       var y = -n
       while (y <= n) {
-        if (closestPointIsInRadius(startTurtle.xcor, startTurtle.ycor, x, y, radius)) {
+        if (closestPointIsInRadius(startTurtle.xcor, startTurtle.ycor, x, y, looseRadius)) {
           offsets.add((x, y))
         }
         y += 1

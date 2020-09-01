@@ -605,3 +605,14 @@ InCone_Unwrapped_OppositeCorners2_2D
   [ count other turtles in-cone 30 60 ] of turtle 0 => 0
   [ count other turtles in-cone 95 60 ] of turtle 0 => 0
   [ count other turtles in-cone 96 60 ] of turtle 0 => 0
+
+InCone_Tortoise_1_2D
+  breed [mice mouse]
+  breed [frogs frog]
+  O> clear-all
+  O> resize-world -4 3 -2 6
+  O> __change-topology true true
+  O> random-seed 0
+  O> create-mice 50 [ setxy random-xcor random-ycor set color grey ]
+  O> create-frogs 50 [ setxy random-xcor random-ycor set color grey ]
+  [[who] of (turtles in-cone 4 128)] of turtle 88 => [9 73 6 75 23 88 13 76 11 87 34 48 37 33 14 44 60 94 72 71 4 69 58 57 64 24]
