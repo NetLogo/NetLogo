@@ -568,6 +568,14 @@ InRadius_Wrapping_Checks_Tall_2D
   count [ patches in-radius 5 ] of (patch 2 -3) => 57
   count [ patches in-radius 5 ] of (patch -2 -3) => 57
 
+InRadius_Zero
+  O> create-turtles 1
+  count [ patches in-radius 0 ] of (turtle 0) => 1
+  O> ask turtle 0 [ fd 0.1 ]
+  count [ patches in-radius 0 ] of (turtle 0) => 0
+  O> ask turtle 0 [ hatch 1 ]
+  count [ turtles in-radius 0 ] of (turtle 0) => 2
+
 # These were for working specific issues discovered from Tortoise, but they can't hurt to leave here.
 # Jeremy B August 2020
 
