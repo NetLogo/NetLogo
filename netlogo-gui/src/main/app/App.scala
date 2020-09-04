@@ -41,6 +41,19 @@ import scala.io.Codec
  * for example code.
  */
 object App{
+    def printSwingObject(obj: Object, description: String): Unit = {
+      val some = Option(obj)
+      some match {
+        case None           => println(description + "<null>")
+        case Some(theValue) =>  {
+          val pattern = """(^.*)\[(.*$)""".r
+          val pattern(name, _) = obj.toString
+          val shortName = name.split("\\.").last
+          println(description + System.identityHashCode(obj) +
+          ", " + shortName)
+        }
+      }
+    }
 
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
@@ -52,7 +65,7 @@ object App{
   private var commandLineURL: String = null
   private var loggingConfigPath: String = null
   private var loggingDir: String = null
-  private var popOutCodeTab = true
+  private var popOutCodeTab = false
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -751,8 +764,9 @@ class App extends
     if (e.newTab == tabs.interfaceTab) {
       monitorManager.showAll()
       frame.toFront()
-    } else if (e.oldTab == tabs.interfaceTab)
+    } else if (e.oldTab == tabs.interfaceTab) {
       monitorManager.hideAll()
+    }
 
     val title = e.newTab match {
         case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)

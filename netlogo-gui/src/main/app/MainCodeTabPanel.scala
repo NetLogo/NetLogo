@@ -32,9 +32,10 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
   // CodeTabContainer that contains MainCodeTabPanel that contains
   // the MainCodeTab
   val frame = workspace.getFrame
-  this.requestFocusInWindow
+  //aab? this.requestFocusInWindow
   val codeTabContainer = new CodeTabContainer(frame, this)
   val mainCodeTabPanel = this
+
   def getCodeTabContainer = codeTabContainer
 
   currentTab = codeTab
@@ -53,26 +54,31 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
         currentTab.requestFocus()
       }
       if (me.getClickCount() == 2) {
-        tabManager.getAppTabs.add(I18N.gui.get("tabs.code"), codeTab)
-        tabManager.setMainCodeTabPanel(None)
-        codeTabContainer.dispose
-        //tabManager.switchToTabsCodeTab
+        tabManager.switchToTabsCodeTab
       }
     }
   })
 
   codeTabContainer.addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
-      tabManager.getAppTabs.add(I18N.gui.get("tabs.code"), codeTab)
-      tabManager.setMainCodeTabPanel(None)
       tabManager.switchToTabsCodeTab
     }
   })
 
   codeTabContainer.addWindowFocusListener(new WindowAdapter() {
     override def  windowGainedFocus(e: WindowEvent) {
-      // println("WindowFocusListener method called: windowGainedFocus.")
+      //println("WindowFocusListener method called: windowGainedFocus.")
       // maybe add focus to text area
+      val currentTab = mainCodeTabPanel.getSelectedComponent
+      println("mainCodeTabPanel, WindowFocusListener, dirty " + tabManager.getCodeTab.dirty)
+      org.nlogo.app.App.printSwingObject(currentTab, "currentTab ")
+      println("...")
+      tabManager.setCurrentTab(currentTab)
+      // don't want to go to browser, come back and then compile
+      // will need to consider case with included FileSaveGroup
+      // if (tabManager.getCodeTab.dirty) {
+      //   new AppEvents.SwitchedTabsEvent(tabManager.getCodeTab, currentTab).raise(getTabs)
+      // }
     }
   })
 

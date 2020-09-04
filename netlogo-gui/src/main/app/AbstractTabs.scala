@@ -38,7 +38,7 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
   }
 
   def getTabManager() = tabManager
-
+  def getAppFrame() = workspace.getFrame.asInstanceOf[AppFrame]
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
   var currentTab: Component = interfaceTab

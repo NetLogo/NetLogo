@@ -13,8 +13,9 @@ class AppTabManager( val appTabs:          Tabs,
                      var mainCodeTabPanel: Option[MainCodeTabPanel]) {
 
   def getAppTabs = appTabs
-
+  val frame = getAppsTab.workspace.getFrame
   def setMainCodeTabPanel(_mainCodeTabPanel: Option[MainCodeTabPanel]): Unit = {
+
     mainCodeTabPanel = _mainCodeTabPanel
   }
 
@@ -29,11 +30,12 @@ class AppTabManager( val appTabs:          Tabs,
   def getCodeTab = appTabs.getCodeTab
   private var currentTab: Component = appTabs.interfaceTab
 
-  def getCodeTabOwner(tab: CodeTab): AbstractTabs = {
-    if (tab.isInstanceOf[CodeTab]) getMainCodeTabOwner else appTabs
+  def getTabOwner(tab: Component): AbstractTabs = {
+    if (tab.isInstanceOf[MainCodeTab]) getMainCodeTabOwner else appTabs
   }
 
-  def getTabOwner(tab: Component): AbstractTabs = {
+  // this will need work when move temp code tabs
+  def getCodeTabOwner(tab: Component): AbstractTabs = {
     if (tab.isInstanceOf[MainCodeTab]) getMainCodeTabOwner else appTabs
   }
 
@@ -48,36 +50,44 @@ class AppTabManager( val appTabs:          Tabs,
   def getCurrentTab(): Component = {
     currentTab
   }
+  
   def switchToTabsCodeTab(): Unit = {
     // nothing to do if code tab is already part of Tabs
-    val codeTabOwner = getCodeTabOwner _
-    if (codeTabOwner.isInstanceOf[Tabs]) {
-      println("nothing doing")
-      return
-    } else {
-      println("switchToTabsCodeTab")
+    val codeTabOwner = getMainCodeTabOwner
+    if (!codeTabOwner.isInstanceOf[Tabs]) {
+      getAppTabs.add(I18N.gui.get("tabs.code"), getAppTabs.codeTab)
+      mainCodeTabPanel match {
+        case Some(theValue) => theValue.getCodeTabContainer.dispose
+        case None           =>
+      }
+      setMainCodeTabPanel(None)
+      getAppTabs.codeTab.requestFocus
+      // need to remove component, because will no longer exist
+      // aab fix this appTabs.getAppFrame.removeLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
     }
   }
 
   def switchToSeparateCodeWindow(): Unit = {
-    // nothing to do if code tab is already separate
-    val codeTabOwner = getCodeTabOwner _
-    // can invert condition and not use return
-    if (codeTabOwner.isInstanceOf[MainCodeTabPanel]) {
-      println("nothing doing")
-      return
-    } else {
+    val codeTabOwner = getMainCodeTabOwner
+    // Only act if code tab is part of the Tabs panel.
+    // Otherwise it is already detached.
+    if (codeTabOwner.isInstanceOf[Tabs]) {
       val actualMainCodeTabPanel = new MainCodeTabPanel(getAppsTab.workspace,
         getAppsTab.interfaceTab,
         getAppsTab.externalFileManager,
         getAppsTab.codeTab,
         getAppsTab.externalFileTabs)
+
         mainCodeTabPanel = Some(actualMainCodeTabPanel)
         actualMainCodeTabPanel.setTabManager(this)
         actualMainCodeTabPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
-        actualMainCodeTabPanel.initManagerMonitor(getAppsTab.fileManager, getAppsTab.dirtyMonitor)
-        actualMainCodeTabPanel.codeTabContainer.requestFocus()
-        getAppsTab.codeTab.requestFocus()
+        actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
+        getAppsTab.setSelectedComponent(appTabs.interfaceTab)
+        // only need to do this if previous tab was interface tab
+        appTabs.interfaceTab.getMonitorManager.hideAll()
+        appTabs.getAppFrame.addLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
+        //actualMainCodeTabPanel.codeTabContainer.requestFocus()
+        //getAppsTab.codeTab.requestFocusInWindow()
         // add mouse listener, which should be not set when
         // there is no code tab
       }
