@@ -2,8 +2,9 @@
 
 package org.nlogo.app
 
-import javax.swing.{ JOptionPane, JMenu }
+import javax.swing.{ JOptionPane, JMenu, JFrame }
 import java.awt.event.ActionEvent
+import java.util.prefs.{ Preferences }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
@@ -383,8 +384,9 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
-
-    if (loggingConfigPath != null) {
+    val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+    if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
+      if (loggingConfigPath == null) { loggingConfigPath = "netlogo_logging.xml"}
       startLogging(loggingConfigPath)
     }
     if (loggingDir != null) {
@@ -473,9 +475,11 @@ class App extends
   }
 
   def startLogging(loggingConfigPath: String) {
+    val jf = new JFrame()
+    jf.setAlwaysOnTop(true)
     if(new java.io.File(loggingConfigPath).exists) {
       val username =
-        JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.enterName"), "",
+        JOptionPane.showInputDialog(jf, I18N.gui.get("tools.loggingMode.enterName"), "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       if(username != null){
         logger = new Logger(username)
@@ -484,7 +488,7 @@ class App extends
         org.nlogo.api.Version.startLogging()
       }
     }
-    else JOptionPane.showConfirmDialog(null, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
+    else JOptionPane.showConfirmDialog(jf, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
       "NetLogo", JOptionPane.DEFAULT_OPTION)
   }
 

@@ -456,6 +456,7 @@ edit.hubnet.view.height = Height (pixels)
 tools.preferences = NetLogo Preferences
 tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
+tools.preferences.loggingEnabled = Enable Logging:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 tools.preferences.proceduresMenuSortOrder = Sort order of procedures menu (in Code tab):

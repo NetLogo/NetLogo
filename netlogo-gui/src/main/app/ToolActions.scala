@@ -37,6 +37,7 @@ with MenuAction {
   override def createDialog = new PreferencesDialog(frame,
     Preferences.Language,
     new Preferences.LineNumbers(tabs),
+    Preferences.IsLoggingEnabled,
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder
   )
