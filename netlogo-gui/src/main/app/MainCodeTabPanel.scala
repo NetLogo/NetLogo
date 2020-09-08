@@ -67,12 +67,8 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   codeTabContainer.addWindowFocusListener(new WindowAdapter() {
     override def  windowGainedFocus(e: WindowEvent) {
-      //println("WindowFocusListener method called: windowGainedFocus.")
       // maybe add focus to text area
       val currentTab = mainCodeTabPanel.getSelectedComponent
-      println("mainCodeTabPanel, WindowFocusListener, dirty " + tabManager.getCodeTab.dirty)
-      org.nlogo.app.App.printSwingObject(currentTab, "currentTab ")
-      println("...")
       tabManager.setCurrentTab(currentTab)
       // don't want to go to browser, come back and then compile
       // will need to consider case with included FileSaveGroup

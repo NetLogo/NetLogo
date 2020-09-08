@@ -88,20 +88,23 @@ with MenuTab {
 
   def getToolBar = new ToolBar {
     override def addControls() {
-      val proceduresMenu = new ProceduresMenu(CodeTab.this)
-      this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
-      this.getActionMap.put("procmenu", proceduresMenu.getAction)
+      if (!org.nlogo.app.App.controlsAdded) {
+        val proceduresMenu = new ProceduresMenu(CodeTab.this)
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+          .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
+        this.getActionMap.put("procmenu", proceduresMenu.getAction)
 
-      add(new ToolBarActionButton(FindDialog.FIND_ACTION))
-      add(new ToolBarActionButton(CompileAction))
-      add(new ToolBar.Separator)
-      add(proceduresMenu)
-      add(new IncludedFilesMenu(getIncludesTable, tabs))
-      val additionalComps = getAdditionalToolBarComponents
-      if (additionalComps.nonEmpty) {
+        add(new ToolBarActionButton(FindDialog.FIND_ACTION))
+        add(new ToolBarActionButton(CompileAction))
         add(new ToolBar.Separator)
-        additionalComps foreach add
+        add(proceduresMenu)
+        add(new IncludedFilesMenu(getIncludesTable, tabs))
+        val additionalComps = getAdditionalToolBarComponents
+        if (additionalComps.nonEmpty) {
+          add(new ToolBar.Separator)
+          additionalComps foreach add
+        }
+        org.nlogo.app.App.controlsAdded = true
       }
     }
   }
