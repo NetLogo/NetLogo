@@ -119,7 +119,6 @@ class Tabs(workspace:           GUIWorkspace,
     }
 
     currentTab.requestFocus()
-
     new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
