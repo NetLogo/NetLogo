@@ -38,6 +38,8 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
 
   def getCodeTabContainer = codeTabContainer
 
+  codeTabContainer.setTitle("Code Tab Window")
+  
   currentTab = codeTab
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {

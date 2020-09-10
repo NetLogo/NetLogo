@@ -50,7 +50,7 @@ class AppTabManager( val appTabs:          Tabs,
   def getCurrentTab(): Component = {
     currentTab
   }
-  
+
   def switchToTabsCodeTab(): Unit = {
     // nothing to do if code tab is already part of Tabs
     val codeTabOwner = getMainCodeTabOwner
@@ -83,11 +83,7 @@ class AppTabManager( val appTabs:          Tabs,
         actualMainCodeTabPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
         actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
         getAppsTab.setSelectedComponent(appTabs.interfaceTab)
-        // only need to do this if previous tab was interface tab
-        appTabs.interfaceTab.getMonitorManager.hideAll()
         appTabs.getAppFrame.addLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
-        //actualMainCodeTabPanel.codeTabContainer.requestFocus()
-        //getAppsTab.codeTab.requestFocusInWindow()
         // add mouse listener, which should be not set when
         // there is no code tab
       }
