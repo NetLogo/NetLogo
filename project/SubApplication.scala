@@ -43,15 +43,6 @@ object NetLogoThreeDApp extends SubApplication {
   override def allIcons: Seq[String] = Seq(iconName) :+ "Model"
 }
 
-object NetLogoLoggingApp extends SubApplication {
-  override def name          = "NetLogo Logging"
-  override def jarName       = "NetLogo"
-  override def jvmOptions    = Seq()
-  override def jvmArguments  = Seq("--logging", "netlogo_logging.xml")
-  override def additionalArtifacts(config: File): Seq[File] =
-    Seq(config / "NetLogo Logging" / "netlogo_logging.xml", config / "NetLogo Logging" / "netlogo_logging.dtd")
-}
-
 object HubNetClientApp extends SubApplication {
   override def name          = "HubNet Client"
   override def mainClass     = "org.nlogo.hubnet.client.App$"

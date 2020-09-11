@@ -80,7 +80,7 @@ object NetLogoPackaging {
     configRoot      := baseDirectory.value / "configuration",
     localSiteTarget := target.value / marketingVersion.value,
     aggregateJDKParser := Def.toSParser(jdkParser),
-    subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, NetLogoLoggingApp, HubNetClientApp, BehaviorsearchApp),
+    subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, HubNetClientApp, BehaviorsearchApp),
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
     buildNetLogo := {
       (all in netlogo).value
@@ -292,9 +292,8 @@ object NetLogoPackaging {
         "iconFile"            -> "NetLogo.icns",
         "packageID"           -> "APPLnLo1"
       )
-      val appSpecificConfig = Map(
+      val appSpecificConfig: Map[SubApplication, Map[String, String]] = Map(
         NetLogoCoreApp    -> nlAppConfig,
-        NetLogoLoggingApp -> nlAppConfig,
         NetLogoThreeDApp  -> Map(
           "fileAssociation"  -> "nlogo3d",
           "bundleIdentifier" -> "org.nlogo.NetLogo3D",
