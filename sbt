@@ -10,7 +10,7 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 else
   CURR_DIR=`dirname $0`
   if [[ `uname -s` = Linux && -z $JENKINS_URL ]] ; then
-    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java-8|1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
+    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java8|java-8|java1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
     if [ -e "$HIGHEST_PRIORITY_JAVA_8" ] ; then
       export JAVA_HOME="${HIGHEST_PRIORITY_JAVA_8%/bin/javac}"
     elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.8" >> /dev/null ; then
