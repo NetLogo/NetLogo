@@ -386,7 +386,14 @@ class App extends
     frame.addLinkComponent(listenerManager)
     val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
-      if (loggingConfigPath == null) { loggingConfigPath = "netlogo_logging.xml"}
+      if (loggingConfigPath == null) {
+        val prefsConfigFile = prefs.get("loggingConfigFile", "")
+        loggingConfigPath = if (prefsConfigFile != null && prefsConfigFile.trim() != "") {
+          prefsConfigFile
+        } else {
+          "netlogo_logging.xml"
+        }
+      }
       startLogging(loggingConfigPath)
     }
     if (loggingDir != null) {
