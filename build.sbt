@@ -162,7 +162,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.typesafe" % "config" % "1.3.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.2"
     ),
-    all := {},
+    all := {
+      IO.copyFile(
+        file(".") / "dist" / "configuration" / "NetLogo Logging" / "netlogo_logging.xml",
+        baseDirectory.value / "netlogo_logging.xml"
+      )
+    },
     all := {
       all.dependsOn(
         htmlDocs,

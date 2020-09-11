@@ -30,6 +30,7 @@ tmp/
 /docs/
 /netlogo-gui/docs/
 /netlogo-gui/NetLogo User Manual.pdf
+/netlogo-gui/netlogo_logging.xml
 
 # Eclipse
 /.classpath
