@@ -21,18 +21,21 @@ There is a NetLogo preference to enable logging:
 
 The setting will remain in effect until it is unchecked and NetLogo is restarted again.
 
+You can also specify the **Logging configuration file:** to use in the NetLogo **Preferences** as well.  If you leave
+this value blank, then a default configuration file will be used (see below for more information).
+
 ### Starting with the command line
 
-You can also enable logging by using a command line switch on Windows and Linux.  This also lets you specify the
-location of the logging settings file to use.
+You can also enable logging and specify the configuration file to use by using a command line switch on Windows
+and Linux.
 
 Let's assume you are running on Linux and you have NetLogo installed in a `NetLogo 6.1.1` directory in your
 home folder.  To enable logging, invoke the `NetLogo` executable like so:
 
     ~/NetLogo\ 6.1.1/NetLogo --logging ~/NetLogo\ 6.1.1/app/netlogo_logging.xml
 
-You can replace `netlogo_logging.xml` with any valid log4j XML configuration file,
-which will be discussed in more detail later.
+You can replace the path to `netlogo_logging.xml` with any valid log4j XML configuration file (see below for more
+information).
 
 ## Using logging
 
@@ -177,7 +180,7 @@ name. So, for example, the logger `GLOBALS` would actually be
 
 ### How to configure the logging output
 
-The default logging configuration (netlogo_logging.xml) looks something like
+The default logging configuration (`netlogo_logging.xml`) looks something like
 this:
 
 NetLogo defines 8 loggers, all descend directly from the root logger, which
