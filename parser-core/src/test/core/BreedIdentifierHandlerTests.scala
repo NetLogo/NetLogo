@@ -15,10 +15,10 @@ class BreedIdentifierHandlerTests extends FunSuite {
   def tester(handler: BreedIdentifierHandler.BreedPrimSpec, code: String, tokenString: String): (String, String, TokenType) = {
     val program =
       Program.empty.copy(
-        breeds = ListMap("FROGS" -> Breed("FROGS", "FROG")),
+        breeds = ListMap("FROGS" -> Breed("FROGS", "FROG", "frogs", "frog")),
         linkBreeds = ListMap(
-          "AS" -> Breed("AS", "A", isDirected = true),
-          "BS" -> Breed("BS", "B", isDirected = false)))
+          "AS" -> Breed("AS", "A", "as", "a", isDirected = true),
+          "BS" -> Breed("BS", "B", "bs", "b", isDirected = false)))
     handler.process(
       tokenizer.tokenizeString(code).find(_.text.equalsIgnoreCase(tokenString)).orNull,
       program)

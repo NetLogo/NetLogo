@@ -194,7 +194,7 @@ class FakeWorld(state: State) extends api.World {
   def program = {
     def makeBreedMap(breedsVar: Int) =
       worldVar[collection.immutable.Seq[String]](breedsVar).map(breedName =>
-        breedName -> Breed(breedName, "", Seq(), false)
+        breedName -> Breed(breedName, "", breedName, "", Seq(), false)
       ).foldLeft(ListMap.empty[String, Breed])((lm, kv) => lm + kv)
     Program.empty.copy(
       breeds = makeBreedMap(TurtleBreeds.id),
