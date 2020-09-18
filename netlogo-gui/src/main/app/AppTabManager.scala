@@ -26,15 +26,18 @@ class AppTabManager( val appTabs:          Tabs,
     }
     // aab this might not be needed
 
+  def isCodeTabSeparate =
+    !getMainCodeTabOwner.isInstanceOf[Tabs]
+
   def getAppsTab = appTabs
   def getCodeTab = appTabs.getCodeTab
   private var currentTab: Component = appTabs.interfaceTab
+  // this will need work when move temp code tabs
 
   def getTabOwner(tab: Component): AbstractTabs = {
     if (tab.isInstanceOf[MainCodeTab]) getMainCodeTabOwner else appTabs
   }
 
-  // this will need work when move temp code tabs
   def getCodeTabOwner(tab: Component): AbstractTabs = {
     if (tab.isInstanceOf[MainCodeTab]) getMainCodeTabOwner else appTabs
   }
