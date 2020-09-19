@@ -2154,10 +2154,21 @@ procedure GO:[OLD-CLOCK]{O---}:
           LDC "PARTICLES"
           INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/TreeAgentSet;
           ASTORE 7
-          ALOAD 7
           ALOAD 6
-          INVOKEVIRTUAL org/nlogo/agent/TreeAgentSet.contains (Lorg/nlogo/api/Agent;)Z
-          IFNE L5
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/TreeAgentSet;
+          DUP
+          IFNONNULL L5
+          POP
+          ALOAD 7
+          IFNULL L6
+          GOTO L7
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context D J org/nlogo/agent/Turtle org/nlogo/agent/TreeAgentSet] [org/nlogo/agent/TreeAgentSet]
+          ALOAD 7
+          INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
+          IFNE L6
+         L7
+         FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2178,27 +2189,27 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L5
-         FRAME APPEND [org/nlogo/agent/TreeAgentSet]
+         L6
+         FRAME SAME
           ALOAD 6
          L4
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context D J org/nlogo/agent/Turtle] [java/lang/Object]
           ASTORE 2
           ALOAD 2
           INSTANCEOF org/nlogo/agent/AgentSet
-          IFEQ L6
+          IFEQ L8
           ALOAD 2
           CHECKCAST org/nlogo/agent/AgentSet
           ASTORE 4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           INSTANCEOF org/nlogo/agent/Observer
-          IFNE L7
+          IFNE L9
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_11.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
-          IF_ACMPNE L8
+          IF_ACMPNE L10
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2209,13 +2220,13 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L8
+         L10
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/AgentSet T org/nlogo/agent/Turtle] []
           ALOAD 4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurego_ask_11.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
-          IF_ACMPNE L7
+          IF_ACMPNE L9
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2226,16 +2237,16 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L7
+         L9
          FRAME SAME
           ALOAD 4
           ASTORE 3
-          GOTO L9
-         L6
+          GOTO L11
+         L8
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context java/lang/Object T J org/nlogo/agent/Turtle] []
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L10
+          IFEQ L12
           ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 5
@@ -2243,7 +2254,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
-          IFNE L11
+          IFNE L13
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2263,14 +2274,14 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L11
+         L13
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context java/lang/Object T T org/nlogo/agent/Agent org/nlogo/agent/Turtle] []
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
           ASTORE 3
-          GOTO L9
-         L10
+          GOTO L11
+         L12
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context java/lang/Object T J org/nlogo/agent/Turtle] []
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -2285,7 +2296,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L9
+         L11
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_11 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet T T org/nlogo/agent/Turtle] []
           ALOAD 1
           ALOAD 3
@@ -2294,7 +2305,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ALOAD 1
           BIPUSH 15
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L14
           RETURN
 [12]_asm_procedurego_setpatchvariable_12 "set pcolor gray" Object => void
       _constdouble:5.0 "gray" => Double
