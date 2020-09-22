@@ -6,7 +6,7 @@ import java.awt.event.{ MouseEvent }
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
-import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager }
+import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
 
@@ -32,21 +32,40 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
 
   val jframe = workspace.getFrame.asInstanceOf[JFrame]
   var tabManager: AppTabManager = null
-
-  def setTabManager( myTabManager: AppTabManager ) {
+  def setTabManager( myTabManager: AppTabManager ) : Unit = {
     tabManager = myTabManager
   }
 
+  def getCodeTab():MainCodeTab
   def getTabManager() = tabManager
   def getAppFrame() = workspace.getFrame.asInstanceOf[AppFrame]
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
   var currentTab: Component = interfaceTab
 
-  def initManagerMonitor(manager: FileManager, monitor: DirtyMonitor) {
+  def initManagerMonitor(manager: FileManager, monitor: DirtyMonitor): Unit =  {
     fileManager = manager
     dirtyMonitor = monitor
     assert(fileManager != null && dirtyMonitor != null)
+  }
+
+//  @throws (classOf[IndexOutOfBoundsException])
+  def setSelectedIndexAdjusted(index: Int): Unit =  {
+    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
+    if (index >= 2) {
+      println("tabIndex " + tabIndex )
+      App.printSwingObject(tabOwner, "tabOwner ")
+    }
+    //         actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
+
+    getCodeTab.requestFocus
+    tabOwner.setSelectedIndex(tabIndex)
+    //tabOwner.setSelectedComponent(tabOwner.getComponentAt(tabIndex))
+  }
+
+  def getTitleAtAdjusted(index: Int): String =  {
+    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
+    tabOwner.getTitleAt(tabIndex)
   }
 
   override def requestFocus() = currentTab.requestFocus()

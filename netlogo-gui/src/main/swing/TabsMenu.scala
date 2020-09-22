@@ -7,20 +7,23 @@ package org.nlogo.swing
 import java.awt.event.ActionEvent
 import javax.swing.{ Action, AbstractAction, JTabbedPane }
 import UserAction._
+import org.nlogo.app.AbstractTabs
 
 object TabsMenu {
   def tabAction(tabs: JTabbedPane, index: Int): Action =
-    new AbstractAction(tabs.getTitleAt(index)) with MenuAction {
+    new AbstractAction() with MenuAction {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
+      this.putValue(Action.NAME, tabs.asInstanceOf[AbstractTabs].getTitleAtAdjusted(index));
       override def actionPerformed(e: ActionEvent) {
-        tabs.setSelectedIndex(index)
+        tabs.asInstanceOf[AbstractTabs].setSelectedIndexAdjusted(index)
       }
     }
 
   def tabActions(tabs: JTabbedPane): Seq[Action] =
-    for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
+    //for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
+    for (i <- 0 until 3) yield tabAction(tabs, i)
 }
 
 class TabsMenu(name: String, initialActions: Seq[Action]) extends Menu(name) {

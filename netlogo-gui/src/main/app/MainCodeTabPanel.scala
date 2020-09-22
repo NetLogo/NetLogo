@@ -36,10 +36,11 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
   val codeTabContainer = new CodeTabContainer(frame, this)
   val mainCodeTabPanel = this
 
+  override def getCodeTab(): MainCodeTab = codeTab
   def getCodeTabContainer = codeTabContainer
 
   codeTabContainer.setTitle("Code Tab Window")
-  
+
   currentTab = codeTab
 
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {

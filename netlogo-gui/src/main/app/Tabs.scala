@@ -52,17 +52,20 @@ class Tabs(workspace:           GUIWorkspace,
     menu = newMenu
   }
 
+  val codeTab = new MainCodeTab(workspace, this, menu)
+
   def permanentMenuActions =
     tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
 
-  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
+//  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
+  var tabActions: Seq[Action] = Seq.empty[Action]
   lazy val saveModelActions = fileManager.saveModelActions(this)
 
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val codeTab = new MainCodeTab(workspace, this, menu)
+  val stableCodeTab = codeTab
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
-  def getCodeTab = codeTab
+  override def getCodeTab(): MainCodeTab = codeTab
 
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
@@ -187,7 +190,7 @@ class Tabs(workspace:           GUIWorkspace,
 
     // recolor tabs
     e.sourceOwner match {
-      case `codeTab` =>
+      case `stableCodeTab` =>
       // on null error, clear all errors, as we only get one event for all the files
       if (e.error == null) {
         clearErrors()
