@@ -49,12 +49,22 @@ class AppTabManager( val appTabs:          Tabs,
     getCodeTabOwner(tab).setSelectedComponent(tab)
   }
 
+  def setSelectedAppTab(index: Int): Unit = {
+    appTabs.setSelectedIndex(index)
+  }
   def setCurrentTab(tab: Component): Unit = {
     currentTab = tab
   }
 
   def getCurrentTab(): Component = {
     currentTab
+  }
+  def getTotalTabCount(): Int = {
+    val appTabCount = appTabs.getTabCount
+    mainCodeTabPanel match {
+      case None           => appTabCount
+      case Some(thePanel) => appTabCount + thePanel.getTabCount
+    }
   }
   // will need to throw some Exceptions
 
@@ -98,39 +108,19 @@ class AppTabManager( val appTabs:          Tabs,
     var tabOwner = appTabs.asInstanceOf[AbstractTabs]
     val appTabCount = appTabs.getTabCount
     var tabIndex = origTabIndx
-    if (origTabIndx >= 2) {
-      println("computeIndexPlus, appTabCount " + appTabCount)
-    }
+
     // if the origTabIndx is too large for the appTabs,
     // check if it can refer to the a separate code tab
     if (origTabIndx >= appTabCount) {
       mainCodeTabPanel match {
-        case None           => {
-          println ("no mainCodeTabPanel match")
-          throw new IndexOutOfBoundsException
-        }
+        case None           => throw new IndexOutOfBoundsException
         case Some(thePanel) => {
-          if (origTabIndx >= 2) {
-            App.printSwingObject(thePanel, "thePanel ")
-            println("tab count " + thePanel.getTabCount)
-          }
           // origTabIndx could be too large for the two Panels combined
           if (origTabIndx >= appTabCount + thePanel.getTabCount) {
             throw new IndexOutOfBoundsException
           }
           tabOwner = getMainCodeTabOwner
           tabIndex =  origTabIndx - appTabCount
-          if (origTabIndx >= 2) {
-            println("tabIndex " + tabIndex )
-            App.printSwingObject(tabOwner, "tabOwner ")
-            try {
-              //throw new Exception("my exception")
-            }
-            catch {
-             case e: Exception =>
-               //e.printStackTrace()
-            }
-          }
         }
       }
     }

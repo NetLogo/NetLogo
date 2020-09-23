@@ -52,15 +52,9 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
 //  @throws (classOf[IndexOutOfBoundsException])
   def setSelectedIndexAdjusted(index: Int): Unit =  {
     val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
-    if (index >= 2) {
-      println("tabIndex " + tabIndex )
-      App.printSwingObject(tabOwner, "tabOwner ")
-    }
-    //         actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
 
     getCodeTab.requestFocus
     tabOwner.setSelectedIndex(tabIndex)
-    //tabOwner.setSelectedComponent(tabOwner.getComponentAt(tabIndex))
   }
 
   def getTitleAtAdjusted(index: Int): String =  {

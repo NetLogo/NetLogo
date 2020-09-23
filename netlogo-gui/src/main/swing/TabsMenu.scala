@@ -21,9 +21,11 @@ object TabsMenu {
       }
     }
 
-  def tabActions(tabs: JTabbedPane): Seq[Action] =
-    //for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
-    for (i <- 0 until 3) yield tabAction(tabs, i)
+  def tabActions(tabs: JTabbedPane): Seq[Action] = {
+    val totalTabCount = tabs.asInstanceOf[AbstractTabs].getTabManager.getTotalTabCount
+    for (i <- 0 until totalTabCount) yield tabAction(tabs, i)
+  }
+
 }
 
 class TabsMenu(name: String, initialActions: Seq[Action]) extends Menu(name) {
