@@ -180,7 +180,7 @@ InSanityRadius_Turtles_3D
 
   to assert [ expression ] /
     if ( not expression ) [ /
-      error (word "Assertion failed, seed: " seed ", max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", turtle: " t " at (" [xcor] of t ", " [ycor] of t ", " [zcor] of t "), radius: " radius) /
+      error (word "Assertion failed, seed: " seed ", max-pxcor: " max-pxcor ", max-pycor: " max-pycor ", max-pzcor: " max-pzcor ", turtle: " t " at (" [xcor] of t ", " [ycor] of t ", " [zcor] of t "), radius: " radius) /
     ] /
   end
 
