@@ -594,3 +594,16 @@ InRadius2_Tortoise_2D
     report targets with [ distance myself < radius ] /
   end
   [(in-radius-nl turtles 2.822502957111528) = (turtles in-radius 2.822502957111528)] of patch -4 6 => true
+
+# These tests are from failures in the InSanityRadius tests, placed here for easier debugging.
+# -Jeremy B September 2020
+
+InRadius1_Sanity_3D
+  O> random-seed -1388674027
+  O> resize-world -10 10 -2 2 -10 10
+  O> create-turtles 100 [ /
+    set xcor random-xcor /
+    set ycor random-ycor /
+    set zcor random-zcor /
+  ]
+  word sort [other turtles in-radius 2] of turtle 37 => "[(turtle 54) (turtle 83) (turtle 93) (turtle 95)]"
