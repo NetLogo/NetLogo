@@ -48,6 +48,7 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), codeTab)
     initManagerMonitor(manager, monitor)
     tabManager.setSeparateCodeTabBindings(this)
+    tabManager.addDeleteCodeTabButton(this)
   }
 
   this.addMouseListener(new MouseAdapter() {

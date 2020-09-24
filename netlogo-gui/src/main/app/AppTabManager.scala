@@ -2,7 +2,6 @@
 
 package org.nlogo.app
 import java.awt.Component
-
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent }
 
@@ -193,7 +192,10 @@ class AppTabManager( val appTabs:          Tabs,
         getAppsTab.codeTab,
         getAppsTab.externalFileTabs)
 
+        // aab maybe some of this should be in an init method shared with
+        // MainCodeTabPanel
         mainCodeTabPanel = Some(actualMainCodeTabPanel)
+        addDeleteCodeTabButton(actualMainCodeTabPanel)
         actualMainCodeTabPanel.setTabManager(this)
         actualMainCodeTabPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
         actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
@@ -282,7 +284,10 @@ class AppTabManager( val appTabs:          Tabs,
   object Empty extends AbstractAction("Empty") {
     def actionPerformed(e: ActionEvent) {
       // If index is already selected, unselect it
-
     }
+  }
+
+  def addDeleteCodeTabButton(actualMainCodeTabPanel: MainCodeTabPanel ): Unit = {
+    actualMainCodeTabPanel.getCodeTabContainer.getKillPopOut.addActionListener(KillSeparateCodeTab)
   }
 }
