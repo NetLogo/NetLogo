@@ -90,6 +90,7 @@ class Tabs(workspace:           GUIWorkspace,
     assert(fileManager != null && dirtyMonitor != null)
 
     saveModelActions foreach menu.offerAction
+    tabManager.setAppCodeTabBindings
   }
 
   jframe.addWindowFocusListener(new WindowAdapter() {

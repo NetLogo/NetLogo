@@ -2,11 +2,13 @@
 
 package org.nlogo.app
 import java.awt.Component
-import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction }
+
+import java.awt.event.{ ActionEvent, KeyEvent }
+import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent }
 
 import org.nlogo.core.I18N
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
+import org.nlogo.swing.{ UserAction }
 
 // The class AppTabManager handles relationships between tabs (JPanels) and the two
 // classes Tabs and MainCodeTabPanel that are the JTabbedPanes that contain them.
@@ -15,7 +17,6 @@ class AppTabManager( val appTabs:          Tabs,
                      var mainCodeTabPanel: Option[MainCodeTabPanel]) {
 
   def getAppTabs = appTabs
-  val frame = getAppsTab.workspace.getFrame
 
   def setMainCodeTabPanel(_mainCodeTabPanel: Option[MainCodeTabPanel]): Unit = {
     mainCodeTabPanel = _mainCodeTabPanel
@@ -26,7 +27,6 @@ class AppTabManager( val appTabs:          Tabs,
       case None           => appTabs
       case Some(theValue) => theValue
     }
-    // aab this might not be needed
 
   def isCodeTabSeparate =
     !getMainCodeTabOwner.isInstanceOf[Tabs]
@@ -73,33 +73,6 @@ class AppTabManager( val appTabs:          Tabs,
       case Some(thePanel) => appTabCount + thePanel.getTabCount
     }
   }
-
-  object SwitchFocusAction1 extends AbstractAction("Toggle") {
-    def actionPerformed(e: ActionEvent) {
-      // If index is already selected, unselect it
-      val index = 0
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == index) {
-        setSelectedAppTab(-1)
-      }
-      setSelectedAppTab(index)
-    }
-  }
-
-  object SwitchFocusAction2 extends AbstractAction("Toggle") {
-    def actionPerformed(e: ActionEvent) {
-      // If index is already selected, unselect it
-      val index = 1
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == index) {
-        setSelectedAppTab(-1)
-      }
-      setSelectedAppTab(index)
-    }
-  }
-
-
-  // will need to throw some Exceptions
 
   // Before the detachable code tab capability was added
   // the integers associated with tabs in the menu and the keyboard shortcuts
@@ -180,7 +153,6 @@ class AppTabManager( val appTabs:          Tabs,
       }
     }
     (tabOwner, tabIndex)
-    //(tabOwner.asInstanceOf[AbstractTabs], tabIndex)
   }
 
   // Input: origTabIndx - index a tab would have if there were no separate code tab.
@@ -227,8 +199,90 @@ class AppTabManager( val appTabs:          Tabs,
         actualMainCodeTabPanel.setSelectedComponent(getAppsTab.codeTab)
         getAppsTab.setSelectedComponent(appTabs.interfaceTab)
         appTabs.getAppFrame.addLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
+        setSeparateCodeTabBindings(actualMainCodeTabPanel)
         // add mouse listener, which should be not set when
         // there is no code tab
       }
+  }
+
+  def addComponentKeys(component: JComponent, key: Int, action: Action, actionName: String): Unit = {
+    val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = component.getActionMap();
+    var mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
+    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = true)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
+    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = false, withAlt = true)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
+  }
+
+  def addCodeTabContainerKeys(actualMainCodeTabPanel: MainCodeTabPanel, key: Int, action: Action, actionName: String): Unit = {
+    val contentPane = actualMainCodeTabPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+    addComponentKeys(contentPane, key, action, actionName)
+  }
+
+  def addAppFrameKeys(key: Int, action: Action, actionName: String): Unit = {
+    val contentPane = getAppsTab.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+    addComponentKeys(contentPane, key, action, actionName)
+  }
+
+  def setAppCodeTabBindings(): Unit = {
+    addAppFrameKeys(KeyEvent.VK_9, KillSeparateCodeTab, "popInCodeTab")
+    addAppFrameKeys(KeyEvent.VK_8, CreateSeparateCodeTab, "popOutCodeTab")
+    addAppFrameKeys(KeyEvent.VK_CLOSE_BRACKET, KillSeparateCodeTab, "popInCodeTab")
+    addAppFrameKeys(KeyEvent.VK_OPEN_BRACKET, CreateSeparateCodeTab, "popOutCodeTab")
+  }
+
+  def setSeparateCodeTabBindings(actualMainCodeTabPanel: MainCodeTabPanel): Unit = {
+    addCodeTabContainerKeys(actualMainCodeTabPanel, KeyEvent.VK_1, SwitchFocusAction1, "switchFocus1")
+    addCodeTabContainerKeys(actualMainCodeTabPanel, KeyEvent.VK_2, SwitchFocusAction2, "switchFocus2")
+    addCodeTabContainerKeys(actualMainCodeTabPanel, KeyEvent.VK_9, KillSeparateCodeTab, "popInCodeTab")
+    addCodeTabContainerKeys(actualMainCodeTabPanel, KeyEvent.VK_CLOSE_BRACKET, KillSeparateCodeTab, "popInCodeTab")
+  }
+
+  object SwitchFocusAction1 extends AbstractAction("Toggle1") {
+    def actionPerformed(e: ActionEvent) {
+      // If index is already selected, unselect it
+      val index = 0
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == index) {
+        setSelectedAppTab(-1)
+      }
+      setSelectedAppTab(index)
+    }
+  }
+
+  object SwitchFocusAction2 extends AbstractAction("Toggle2") {
+    def actionPerformed(e: ActionEvent) {
+      // If index is already selected, unselect it
+      val index = 1
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == index) {
+        setSelectedAppTab(-1)
+      }
+      setSelectedAppTab(index)
+    }
+  }
+
+  object KillSeparateCodeTab extends AbstractAction("PopCodeTabIn") {
+    def actionPerformed(e: ActionEvent) {
+      switchToTabsCodeTab
+    }
+  }
+
+  object CreateSeparateCodeTab extends AbstractAction("PopCodeTabOut") {
+    def actionPerformed(e: ActionEvent) {
+      switchToSeparateCodeWindow
+    }
+  }
+
+  object Empty extends AbstractAction("Empty") {
+    def actionPerformed(e: ActionEvent) {
+      // If index is already selected, unselect it
+
+    }
   }
 }
