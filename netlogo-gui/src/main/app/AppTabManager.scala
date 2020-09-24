@@ -2,6 +2,8 @@
 
 package org.nlogo.app
 import java.awt.Component
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
@@ -52,6 +54,11 @@ class AppTabManager( val appTabs:          Tabs,
   def setSelectedAppTab(index: Int): Unit = {
     appTabs.setSelectedIndex(index)
   }
+
+  def getSelectedAppTabComponent() = appTabs.getSelectedComponent
+
+  def getSelectedAppTabIndex() = appTabs.getSelectedIndex
+
   def setCurrentTab(tab: Component): Unit = {
     currentTab = tab
   }
@@ -66,6 +73,32 @@ class AppTabManager( val appTabs:          Tabs,
       case Some(thePanel) => appTabCount + thePanel.getTabCount
     }
   }
+
+  object SwitchFocusAction1 extends AbstractAction("Toggle") {
+    def actionPerformed(e: ActionEvent) {
+      // If index is already selected, unselect it
+      val index = 0
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == index) {
+        setSelectedAppTab(-1)
+      }
+      setSelectedAppTab(index)
+    }
+  }
+
+  object SwitchFocusAction2 extends AbstractAction("Toggle") {
+    def actionPerformed(e: ActionEvent) {
+      // If index is already selected, unselect it
+      val index = 1
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == index) {
+        setSelectedAppTab(-1)
+      }
+      setSelectedAppTab(index)
+    }
+  }
+
+
   // will need to throw some Exceptions
 
   // Before the detachable code tab capability was added

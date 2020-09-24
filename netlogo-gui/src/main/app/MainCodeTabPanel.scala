@@ -1,9 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.app
+import java.awt.event.{ KeyEvent }
+import javax.swing.{ Action, ActionMap, InputMap, JComponent }
+import javax.swing.{ JPanel, JTabbedPane}
 
 import java.awt.{ Component }
 import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ JTabbedPane }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import scala.collection.mutable
@@ -11,6 +13,7 @@ import scala.collection.mutable
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
+import org.nlogo.swing.{ UserAction }
 import org.nlogo.window.{ GUIWorkspace }
 import org.nlogo.window.Event.LinkParent
 
@@ -47,6 +50,8 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), codeTab)
     setSelectedComponent(codeTab)
     initManagerMonitor(manager, monitor)
+    addCodeTabContainerKeys(KeyEvent.VK_1, tabManager.SwitchFocusAction1, "switchFocus1")
+    addCodeTabContainerKeys(KeyEvent.VK_2, tabManager.SwitchFocusAction2, "switchFocus2")
   }
 
   this.addMouseListener(new MouseAdapter() {
@@ -88,5 +93,24 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
     }
     tabManager.setCurrentTab(currentTab)
     currentTab.requestFocus()
+  }
+
+  def addCodeTabContainerKeys(key: Int, action: Action, actionName: String): Unit = {
+    val contentPane = codeTabContainer.getContentPane.asInstanceOf[JPanel]
+
+    //val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_FOCUSED)
+    val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    //val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+
+    val actionMap: ActionMap = contentPane.getActionMap();
+    var mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
+    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = true)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
+    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = false, withAlt = true)
+    inputMap.put(mapKey, actionName)
+    actionMap.put(actionName, action)
   }
 }

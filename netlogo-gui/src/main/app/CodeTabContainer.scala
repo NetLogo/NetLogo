@@ -15,4 +15,17 @@ class CodeTabContainer(owner:          Frame,
     this.setLocationRelativeTo(null)
     this.setVisible(true)
     def getLinkParent: Frame = owner // for Event.LinkChild
+
+    // val contentPane = this.getContentPane.asInstanceOf[JPanel]
+    //
+    // //val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_FOCUSED)
+    // val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    // //val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    //
+    // val actionMap: ActionMap = contentPane.getActionMap();
+    // val SWITCH_FOCUS1 = "switchFocus1"
+    //
+    // val key = KeyStroke.getKeyStroke(KeyEvent.VK_1, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())
+    // inputMap.put(key, SWITCH_FOCUS1)
+    // actionMap.put(SWITCH_FOCUS1, SwitchFocusAction)
   }

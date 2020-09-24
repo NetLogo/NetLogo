@@ -103,26 +103,27 @@ class Tabs(workspace:           GUIWorkspace,
     })
 
   def stateChanged(e: ChangeEvent) = {
-    val previousTab = tabManager.getCurrentTab
-    currentTab = getSelectedComponent
-    tabManager.setCurrentTab(currentTab)
+    if (tabManager.getSelectedAppTabIndex != -1) {
+      val previousTab = tabManager.getCurrentTab
+      currentTab = getSelectedComponent
+      tabManager.setCurrentTab(currentTab)
 
-    previousTab match {
-      case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
-      case _ =>
+      previousTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
+        case _ =>
+      }
+      currentTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
+        case _ =>
+      }
+      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
+        case (true, false) => saveModelActions foreach menu.offerAction
+        case (false, true) => saveModelActions foreach menu.revokeAction
+        case _             =>
+      }
+      currentTab.requestFocus()
+      new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
-    currentTab match {
-      case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
-      case _ =>
-    }
-    (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-      case (true, false) => saveModelActions foreach menu.offerAction
-      case (false, true) => saveModelActions foreach menu.revokeAction
-      case _             =>
-    }
-
-    currentTab.requestFocus()
-    new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
   }
 
   this.addMouseListener(new MouseAdapter() {
