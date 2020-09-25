@@ -369,7 +369,7 @@ class App extends
         frame
       , libMan.getExtensionInfos.map(_.codeName).toSet
       , (name) => libMan.lookupExtension(name, "").fold("N/A")(_.version)
-      , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compile() }
+      , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compileLater() }
       )
     })
 
@@ -1031,6 +1031,14 @@ class App extends
    * @see #setProcedures
    */
   def compile(){ dispatchThreadOrBust(new CompileAllEvent().raise(this)) }
+
+  /**
+   * Recompiles the model after any other events in progress have finished.  Useful if you interrupt
+   * a failed compile to ask the user about a workaround to try, like with a missing extension installation
+   * from the library.
+   * @see #compile
+   */
+  def compileLater(){ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
 
   /**
    * Switches tabs.
