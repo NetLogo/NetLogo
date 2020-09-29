@@ -6,6 +6,7 @@ import java.awt.Component
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
+import org.nlogo.app.AbstractTabs
 import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
@@ -18,7 +19,7 @@ class MainCodeTab(workspace: GUIWorkspace, tabs: TabsInterface, editorMenu: Edit
 extends CodeTab(workspace, tabs)
 with WindowEvents.LoadModelEvent.Handler
 {
-
+  val mainCodeTab = this
   var tabbing: JCheckBox = null
   val smartTabAction: Action = new SmartTabAction
 
@@ -27,6 +28,15 @@ with WindowEvents.LoadModelEvent.Handler
       setIndenter(tabbing.isSelected)
       new AppEvents.IndenterChangedEvent(tabbing.isSelected)
         .raise(MainCodeTab.this)
+    }
+  }
+
+  var popping: JCheckBox = null
+  val codeTabPopOutAction: Action = new CodeTabPopOutAction
+
+  private class CodeTabPopOutAction extends AbstractAction("Code Tab in separate window") {
+    def actionPerformed(e: ActionEvent) {
+      mainCodeTab.getParent.asInstanceOf[AbstractTabs].getTabManager.getCodeTabSeparationState(popping.isSelected)
     }
   }
 
@@ -41,7 +51,9 @@ with WindowEvents.LoadModelEvent.Handler
     tabbing.setSelected(true)
     // hack, to get it to realize it's really checked. ~Forrest (10/23/2007)
     smartTabAction.actionPerformed(null)
-    Seq(tabbing)
+    popping = new JCheckBox(codeTabPopOutAction)
+    popping.setSelected(true)
+    Seq(tabbing, popping)
   }
 
   override def dirty_=(b: Boolean) = {

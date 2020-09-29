@@ -77,6 +77,7 @@ class Tabs(workspace:           GUIWorkspace,
     if (tabManager.getMainCodeTabOwner.equals(this)) {
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), codeTab)
+      // aab reset code tab check box
     } else {
       popOutCodeTab = true
     }
@@ -104,6 +105,11 @@ class Tabs(workspace:           GUIWorkspace,
     })
 
   def stateChanged(e: ChangeEvent) = {
+    // Because there can be a separate code tab window, it is
+    // sometime necessary to deselect a tab by setting the selected
+    // tab index of the parent JTabbedPane to -1
+    // In that case do nothing. The correct action will happen when
+    // the selected index is reset.
     if (tabManager.getSelectedAppTabIndex != -1) {
       val previousTab = tabManager.getCurrentTab
       currentTab = getSelectedComponent

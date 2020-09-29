@@ -41,19 +41,20 @@ import scala.io.Codec
  * for example code.
  */
 object App{
-    def printSwingObject(obj: Object, description: String): Unit = {
-      val some = Option(obj)
-      some match {
-        case None           => println(description + "<null>")
-        case Some(theValue) =>  {
-          val pattern = """(^.*)\[(.*$)""".r
-          val pattern(name, _) = obj.toString
-          val shortName = name.split("\\.").last
-          println(description + System.identityHashCode(obj) +
-          ", " + shortName)
-        }
+  def printSwingObject(obj: Object, description: String): Unit = {
+    val some = Option(obj)
+    some match {
+      case None           => println(description + "<null>")
+      case Some(theValue) =>  {
+        val pattern = """(^.*)\[(.*$)""".r
+        val pattern(name, _) = obj.toString
+        val shortName = name.split("\\.").last
+        println(description + System.identityHashCode(obj) +
+        ", " + shortName)
       }
     }
+  }
+
   var controlsAdded = false
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
@@ -259,7 +260,7 @@ class App extends
     Controllable {
 
   import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
-
+println("popOutCodeTab " + popOutCodeTab)
   val frame = new AppFrame
 
   // all these guys get set in the locally block

@@ -58,9 +58,6 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
         tabManager.setCurrentTab(currentTab)
         currentTab.requestFocus()
       }
-      if (me.getClickCount() == 2) {
-        tabManager.switchToTabsCodeTab
-      }
     }
   })
 

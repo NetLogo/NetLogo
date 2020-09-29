@@ -207,6 +207,14 @@ class AppTabManager( val appTabs:          Tabs,
       }
   }
 
+  def getCodeTabSeparationState(isSeparate: Boolean): Unit = {
+    if (isSeparate) {
+      switchToSeparateCodeWindow
+    } else {
+      switchToTabsCodeTab
+    }
+  }
+
   def addComponentKeys(component: JComponent, key: Int, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();
@@ -245,6 +253,7 @@ class AppTabManager( val appTabs:          Tabs,
     addCodeTabContainerKeys(actualMainCodeTabPanel, KeyEvent.VK_CLOSE_BRACKET, KillSeparateCodeTab, "popInCodeTab")
   }
 
+// these objects could also be private classes
   object SwitchFocusAction1 extends AbstractAction("Toggle1") {
     def actionPerformed(e: ActionEvent) {
       // If index is already selected, unselect it
@@ -288,6 +297,6 @@ class AppTabManager( val appTabs:          Tabs,
   }
 
   def addDeleteCodeTabButton(actualMainCodeTabPanel: MainCodeTabPanel ): Unit = {
-    actualMainCodeTabPanel.getCodeTabContainer.getKillPopOut.addActionListener(KillSeparateCodeTab)
+    actualMainCodeTabPanel.getCodeTabContainer.getReattachPopOut.addActionListener(KillSeparateCodeTab)
   }
 }

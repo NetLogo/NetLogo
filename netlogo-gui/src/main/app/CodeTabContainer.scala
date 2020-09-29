@@ -9,11 +9,11 @@ import org.nlogo.window.Event.LinkChild
 class CodeTabContainer(owner:          Frame,
                        codeTabbedPane: JTabbedPane) extends JDialog(owner)
     with LinkChild    {
-    val killPopOut = new javax.swing.JButton("Kill PopOut")
+    val reattachPopOut = new javax.swing.JButton("Reattach PopOut")
     val northPanel = new JPanel
     def getNorthPanel = northPanel
-    def getKillPopOut =killPopOut
-    northPanel.add(killPopOut)
+    def getReattachPopOut = reattachPopOut
+    northPanel.add(reattachPopOut)
     this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
     this.add(northPanel, BorderLayout.NORTH)
     this.add(codeTabbedPane, BorderLayout.CENTER)
