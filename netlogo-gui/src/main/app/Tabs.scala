@@ -135,7 +135,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent) {
-      if (me.getClickCount() == 2) {
+      if (me.getClickCount() == 1 && me.isControlDown()) {
         tabManager.switchToSeparateCodeWindow
       }
     }
