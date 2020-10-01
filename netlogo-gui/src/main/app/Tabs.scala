@@ -135,7 +135,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent) {
-      if (me.getClickCount() == 1 && me.isControlDown()) {
+      if (me.getClickCount() == 1 && me.isControlDown) {
         tabManager.switchToSeparateCodeWindow
       }
     }
@@ -259,10 +259,15 @@ class Tabs(workspace:           GUIWorkspace,
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, codeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
-    addTab(tab.filenameForDisplay, tab)
+    getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
+    println("new tab index: " + getCodeTabsOwner.indexOfComponent(tab))
     addMenuItem(getTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
-    setSelectedComponent(tab)
+    App.printSwingObject(this, "the AppTabs")
+    App.printSwingObject(getCodeTabsOwner, "addNewTab, , getCodeTabsOwner ")
+    App.printSwingObject(tab, "new tab: ")
+    tabManager.printAllTabs
+    setPanelsSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet
     // visible.  There might be a more swing appropriate way to do this but I can't figure it out
     // (if you know it feel free to fix) ev 7/24/07
@@ -271,7 +276,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   def closeExternalFile(filename: Filename): Unit =
     getTabWithFilename(filename) foreach { tab =>
-      val index = getIndexOfComponent(tab)
+      val index = getIndexOfCodeTab(tab)
       remove(tab)
       removeMenuItem(index)
       externalFileTabs -= tab

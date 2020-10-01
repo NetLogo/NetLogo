@@ -17,7 +17,7 @@ object TabsMenu {
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
       this.putValue(Action.NAME, tabs.asInstanceOf[AbstractTabs].getTitleAtAdjusted(index));
       override def actionPerformed(e: ActionEvent) {
-        tabs.asInstanceOf[AbstractTabs].setSelectedIndexAdjusted(index)
+        tabs.asInstanceOf[AbstractTabs].setSelectedIndexPanels(index)
       }
     }
 

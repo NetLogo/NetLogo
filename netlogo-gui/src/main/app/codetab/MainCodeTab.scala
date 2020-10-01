@@ -36,7 +36,7 @@ with WindowEvents.LoadModelEvent.Handler
 
   private class CodeTabPopOutAction extends AbstractAction("Code Tab in separate window") {
     def actionPerformed(e: ActionEvent) {
-      mainCodeTab.getParent.asInstanceOf[AbstractTabs].getTabManager.getCodeTabSeparationState(popping.isSelected)
+      mainCodeTab.getParent.asInstanceOf[AbstractTabs].getTabManager.implementCodeTabSeparationState(popping.isSelected)
     }
   }
 

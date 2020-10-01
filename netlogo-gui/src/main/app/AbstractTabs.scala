@@ -6,6 +6,7 @@ import java.awt.event.{ MouseEvent }
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
+// aab import org.nlogo.app.codetab.{ }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
@@ -50,12 +51,17 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     assert(fileManager != null && dirtyMonitor != null)
   }
 
-//  @throws (classOf[IndexOutOfBoundsException])
-  def setSelectedIndexAdjusted(index: Int): Unit =  {
-    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
+  override def processMouseMotionEvent(e: MouseEvent) {
+    // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
+    // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
+    // see any reason why it needs to. It's causing flickering in the info tabs on the affected
+    // platforms ev 2/2/09
+  }
 
-    getCodeTab.requestFocus
-    tabOwner.setSelectedIndex(tabIndex)
+  override def requestFocus() = currentTab.requestFocus()
+
+  def getCodeTabsOwner(): JTabbedPane = {
+    getTabManager.getMainCodeTabOwner.asInstanceOf[JTabbedPane]
   }
 
   def getTitleAtAdjusted(index: Int): String =  {
@@ -63,17 +69,31 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     tabOwner.getTitleAt(tabIndex)
   }
 
-  override def requestFocus() = currentTab.requestFocus()
+//  @throws (classOf[IndexOutOfBoundsException])
+  def setSelectedIndexPanels(index: Int): Unit =  {
+    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
+    // aab getCodeTab.requestFocus
+    tabOwner.setSelectedIndex(tabIndex)
+  }
 
-  def getIndexOfComponent(tab: CodeTab): Int =
-    (0 until getTabCount).find(n => getComponentAt(n) == tab).get
+  def setPanelsSelectedComponent(tab: Component): Unit = {
+    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexOfTab(tab)
+    App.printSwingObject(tab, "setPanelsSelectedComponent, tab")
+    println("tabIndex, " + tabIndex)
+    App.printSwingObject(tabOwner, "setPanelsSelectedComponent, tabOwner")
+    // aab getCodeTab.requestFocus
+    tabOwner.setSelectedComponent(tab)
+  }
 
+  def getIndexOfCodeTab(tab: CodeTab): Int = {
+    val indx = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
+    indx
+  }
+
+
+    // def getIndexOfComponent(tab: Component): Int =
+    //   (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 //  def forAllCodeTabs = tabManager.forAllCodeTabs(_)
 
-  override def processMouseMotionEvent(e: MouseEvent) {
-    // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
-    // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
-    // see any reason why it needs to. It's causing flickering in the info tabs on the affected
-    // platforms ev 2/2/09
-  }
+
 }
