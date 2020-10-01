@@ -176,11 +176,17 @@ object PackageMacAggregate {
           .map(jar => "Java/" + jar.getName)
           .sorted
           .mkString(File.pathSeparator))
-    val targetFile = aggregateMacDir / "netlogo-headless.sh"
-    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
-      targetFile, variables + headlessClasspath)
 
-    targetFile.setExecutable(true)
+    val headlessFile = aggregateMacDir / "netlogo-headless.sh"
+    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
+      headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
+    headlessFile.setExecutable(true)
+
+    val guiFile = aggregateMacDir / "netlogo-gui.sh"
+    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
+      guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
+    guiFile.setExecutable(true)
+
     // build and sign
     (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
 

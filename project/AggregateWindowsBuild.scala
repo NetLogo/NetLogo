@@ -197,10 +197,15 @@ object PackageWinAggregate {
           .take(1)
           .mkString(""))
 
-    val targetFile = aggregateWinDir / "netlogo-headless.bat"
+    val headlessFile = aggregateWinDir / "netlogo-headless.bat"
     Mustache(commonConfig.configRoot / "shared" / "windows" / "netlogo-headless.bat.mustache",
-      targetFile, variables + headlessClasspath)
-    targetFile.setExecutable(true)
+      headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
+    headlessFile.setExecutable(true)
+
+    val guiFile = aggregateWinDir / "netlogo-gui.bat"
+    Mustache(commonConfig.configRoot / "shared" / "windows" / "netlogo-headless.bat.mustache",
+      guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
+    guiFile.setExecutable(true)
 
     val uuidArchiveFileName =
       variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"

@@ -89,16 +89,23 @@ object PackageLinuxAggregate {
             .sorted
             .mkString(File.pathSeparator))
 
-      val targetFile = aggregateLinuxDir / "netlogo-headless.sh"
-      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
-        targetFile, variables + headlessClasspath)
       val permissions = {
         import PosixFilePermission._
         import scala.collection.JavaConverters._
         Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
       }
-      Files.setPosixFilePermissions(targetFile.toPath, permissions)
-      targetFile.setExecutable(true)
+
+      val headlessFile = aggregateLinuxDir / "netlogo-headless.sh"
+      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
+        headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
+      Files.setPosixFilePermissions(headlessFile.toPath, permissions)
+      headlessFile.setExecutable(true)
+
+      val guiFile = aggregateLinuxDir / "netlogo-gui.sh"
+      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
+        guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
+      Files.setPosixFilePermissions(guiFile.toPath, permissions)
+      guiFile.setExecutable(true)
 
       val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
       val tarBuildDir = aggregateLinuxDir.getParentFile
