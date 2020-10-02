@@ -11,7 +11,7 @@ import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
 
-// AbstractTabs contains functionality common to Tabs and MainCodeTabPanel
+// AbstractTabs contains functionality common to Tabs and CodeTabsPanel
 
 abstract class AbstractTabs(val workspace:           GUIWorkspace,
                             val interfaceTab:        InterfaceTab,

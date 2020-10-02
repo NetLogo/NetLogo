@@ -15,7 +15,7 @@ import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
 import org.nlogo.window.Event.LinkParent
 
-class MainCodeTabPanel(workspace:             GUIWorkspace,
+class CodeTabsPanel(workspace:             GUIWorkspace,
                        interfaceTab:          InterfaceTab,
                        externalFileManager:   ExternalFileManager,
                        val codeTab:           MainCodeTab,
@@ -30,12 +30,12 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
   }
 
   // frame is the App's AppFrame, (treated as a java.awt.Frame), which is the container for the
-  // CodeTabContainer that contains MainCodeTabPanel that contains
+  // CodeTabContainer that contains CodeTabsPanel that contains
   // the MainCodeTab
   val frame = workspace.getFrame
   //aab? this.requestFocusInWindow
   val codeTabContainer = new CodeTabContainer(frame, this)
-  val mainCodeTabPanel = this
+  val codeTabsPanel = this
 
   override def getCodeTab(): MainCodeTab = codeTab
   def getCodeTabContainer = codeTabContainer
@@ -73,7 +73,7 @@ class MainCodeTabPanel(workspace:             GUIWorkspace,
   codeTabContainer.addWindowFocusListener(new WindowAdapter() {
     override def  windowGainedFocus(e: WindowEvent) {
       // maybe add focus to text area
-      val currentTab = mainCodeTabPanel.getSelectedComponent
+      val currentTab = codeTabsPanel.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
       // don't want to go to browser, come back and then compile
       // will need to consider case with included FileSaveGroup

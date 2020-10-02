@@ -11,10 +11,10 @@ import org.nlogo.app.codetab.{ CodeTab } // aab MainCodeTab
 import org.nlogo.swing.{ UserAction }
 
 // The class AppTabManager handles relationships between tabs (JPanels) and the two
-// classes Tabs and MainCodeTabPanel that are the JTabbedPanes that contain them.
+// classes Tabs and CodeTabsPanel that are the JTabbedPanes that contain them.
 
 class AppTabManager( val appTabsPanel:          Tabs,
-                     var codeTabsPanelOption: Option[MainCodeTabPanel]) {
+                     var codeTabsPanelOption: Option[CodeTabsPanel]) {
 
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively
@@ -25,7 +25,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // other code tabs can come in an out of existence, and are hence
   // represented by a scala Option, which has value 'None' when code tabs
   // are in the Application window and JTabbedPane
-  def setCodeTabsPanelOption(_codeTabsPanelOption: Option[MainCodeTabPanel]): Unit = {
+  def setCodeTabsPanelOption(_codeTabsPanelOption: Option[CodeTabsPanel]): Unit = {
     codeTabsPanelOption = _codeTabsPanelOption
   }
 
@@ -92,10 +92,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // Besides using the menu item, the user can also use the corresponding
   // keyboard shortcut. For example Ctrl 3 to access the code tab.
   // When the code tab detaches, the same number must be converted into
-  // an index into the MainCodeTabPanel.
+  // an index into the CodeTabsPanel.
   // The following terminology will be useful.
   // appTabsPanel = application JTabbedPane (Tabs)
-  // codeTabsPanel = MainCodeTabPanel when it exists
+  // codeTabsPanel = CodeTabsPanel when it exists
   // nAppTabsPanel = the number of tabs in appTabsPanel at the moment
   // origTabIndx = the index of a tab in appTabsPanel when there is no codeTabsPanel
   // codeTabIndx = the index of a tab in codeTabsPanel (if it exists)
@@ -202,7 +202,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       setCodeTabsPanelOption(None)
       getAppTabsPanel.codeTab.requestFocus
       // need to remove component, because will no longer exist
-      // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
+      // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
     }
   }
 
@@ -211,14 +211,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
     // Only act if code tab is part of the Tabs panel.
     // Otherwise it is already detached.
     if (codeTabOwner.isInstanceOf[Tabs]) {
-      val codeTabsPanel = new MainCodeTabPanel(getAppTabsPanel.workspace,
+      val codeTabsPanel = new CodeTabsPanel(getAppTabsPanel.workspace,
         getAppTabsPanel.interfaceTab,
         getAppTabsPanel.externalFileManager,
         getAppTabsPanel.codeTab,
         getAppTabsPanel.externalFileTabs)
 
         // aab maybe some of this should be in an init method shared with
-        // MainCodeTabPanel
+        // CodeTabsPanel
         codeTabsPanelOption = Some(codeTabsPanel)
         addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
@@ -254,7 +254,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     actionMap.put(actionName, action)
   }
 
-  def addCodeTabContainerKeys(codeTabsPanel: MainCodeTabPanel, key: Int, action: Action, actionName: String): Unit = {
+  def addCodeTabContainerKeys(codeTabsPanel: CodeTabsPanel, key: Int, action: Action, actionName: String): Unit = {
     val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
     addComponentKeys(contentPane, key, action, actionName)
   }
@@ -271,7 +271,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     addAppFrameKeys(KeyEvent.VK_OPEN_BRACKET, CreateSeparateCodeTab, "popOutCodeTab")
   }
 
-  def setSeparateCodeTabBindings(codeTabsPanel: MainCodeTabPanel): Unit = {
+  def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
     addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_1, SwitchFocusAction1, "switchFocus1")
     addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_2, SwitchFocusAction2, "switchFocus2")
     addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_9, KillSeparateCodeTab, "popInCodeTab")
@@ -321,7 +321,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  def addDeleteCodeTabButton(codeTabsPanel: MainCodeTabPanel ): Unit = {
+  def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
     codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(KillSeparateCodeTab)
   }
 }

@@ -268,10 +268,10 @@ println("popOutCodeTab " + popOutCodeTab)
   def workspace = _workspace
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
-  private var _mainCodeTabPanel: MainCodeTabPanel = null
+  private var _codeTabsPanel: CodeTabsPanel = null
   private var _tabManager : AppTabManager= null
   def tabs = _tabs
-  def mainCodeTabPanel = _mainCodeTabPanel
+  def codeTabsPanel = _codeTabsPanel
   def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
@@ -398,14 +398,14 @@ println("popOutCodeTab " + popOutCodeTab)
     _tabs = pico.getComponent(classOf[Tabs])
     controlSet.tabs = Some(_tabs)
     if (popOutCodeTab) {
-      _mainCodeTabPanel = new MainCodeTabPanel(workspace,
+      _codeTabsPanel = new CodeTabsPanel(workspace,
                         tabs.interfaceTab,
                         tabs.externalFileManager,
                         tabs.codeTab,
                         tabs.externalFileTabs)
 
-      _tabManager = new AppTabManager(_tabs, Some(_mainCodeTabPanel))
-      _mainCodeTabPanel.setTabManager(_tabManager)
+      _tabManager = new AppTabManager(_tabs, Some(_codeTabsPanel))
+      _codeTabsPanel.setTabManager(_tabManager)
     } else {
       _tabManager = new AppTabManager(_tabs, None)
     }
@@ -483,7 +483,7 @@ println("popOutCodeTab " + popOutCodeTab)
     frame.addLinkComponent(viewManager)
 
     if (popOutCodeTab) {
-      mainCodeTabPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+      codeTabsPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
     }
 
     tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
@@ -517,7 +517,7 @@ println("popOutCodeTab " + popOutCodeTab)
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
     }
     if (popOutCodeTab) {
-      frame.addLinkComponent(mainCodeTabPanel.getCodeTabContainer)
+      frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
     }
   }
 
