@@ -2,7 +2,6 @@
 
 package org.nlogo.app
 
-
 import java.awt.{ Color, Component }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.awt.print.PrinterAbortException
@@ -74,7 +73,7 @@ class Tabs(workspace:           GUIWorkspace,
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
 
-    if (tabManager.getMainCodeTabOwner.equals(this)) {
+    if (tabManager.getCodeTabsOwner.equals(this)) {
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), codeTab)
       // aab reset code tab check box
@@ -263,10 +262,10 @@ class Tabs(workspace:           GUIWorkspace,
     println("new tab index: " + getCodeTabsOwner.indexOfComponent(tab))
     addMenuItem(getTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
-    App.printSwingObject(this, "the AppTabs")
-    App.printSwingObject(getCodeTabsOwner, "addNewTab, , getCodeTabsOwner ")
+    App.printSwingObject(this, "The AppTabs: ")
+    App.printSwingObject(getCodeTabsOwner, "addNewTab, getCodeTabsOwner ")
     App.printSwingObject(tab, "new tab: ")
-    tabManager.printAllTabs
+
     setPanelsSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet
     // visible.  There might be a more swing appropriate way to do this but I can't figure it out

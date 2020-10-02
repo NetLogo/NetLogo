@@ -61,7 +61,7 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
   override def requestFocus() = currentTab.requestFocus()
 
   def getCodeTabsOwner(): JTabbedPane = {
-    getTabManager.getMainCodeTabOwner.asInstanceOf[JTabbedPane]
+    getTabManager.getCodeTabsOwner.asInstanceOf[JTabbedPane]
   }
 
   def getTitleAtAdjusted(index: Int): String =  {
@@ -78,9 +78,10 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
 
   def setPanelsSelectedComponent(tab: Component): Unit = {
     val (tabOwner, tabIndex) = getTabManager.ownerAndIndexOfTab(tab)
-    App.printSwingObject(tab, "setPanelsSelectedComponent, tab")
+    getTabManager.printAllTabs
+    App.printSwingObject(tab, "setPanelsSelectedComponent, tab: ")
     println("tabIndex, " + tabIndex)
-    App.printSwingObject(tabOwner, "setPanelsSelectedComponent, tabOwner")
+    App.printSwingObject(tabOwner, "setPanelsSelectedComponent, tabOwner: ")
     // aab getCodeTab.requestFocus
     tabOwner.setSelectedComponent(tab)
   }

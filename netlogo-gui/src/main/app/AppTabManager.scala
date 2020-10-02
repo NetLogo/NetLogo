@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
+
 import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane }
@@ -15,34 +16,42 @@ import org.nlogo.swing.{ UserAction }
 class AppTabManager( val appTabsPanel:          Tabs,
                      var codeTabsPanelOption: Option[MainCodeTabPanel]) {
 
-  def getAppTabPanel = appTabsPanel
+  // The appTabsPanel and the main code tab are unique unchanging entities
+  // of class Tabs and MainCodeTab respectively
+  def getAppTabsPanel = appTabsPanel
+  def getCodeTab = appTabsPanel.getCodeTab
 
-  def setCodeTabPanel(_codeTabsPanelOption: Option[MainCodeTabPanel]): Unit = {
+  // The separate window and JTabbedPane containing the main code tab and
+  // other code tabs can come in an out of existence, and are hence
+  // represented by a scala Option, which has value 'None' when code tabs
+  // are in the Application window and JTabbedPane
+  def setCodeTabsPanelOption(_codeTabsPanelOption: Option[MainCodeTabPanel]): Unit = {
     codeTabsPanelOption = _codeTabsPanelOption
   }
 
-  def getMainCodeTabOwner =
+  // might want access to these owner methods to be only in the app package
+  def getCodeTabsOwner = {
     codeTabsPanelOption match {
       case None           => appTabsPanel
       case Some(theValue) => theValue
     }
+  }
 
-  def isCodeTabSeparate =
-    !getMainCodeTabOwner.isInstanceOf[Tabs]
-
-  def isCodeTabAttached =
-    getMainCodeTabOwner.isInstanceOf[Tabs]
-
-  def getAppsTab = appTabsPanel
-  def getCodeTab = appTabsPanel.getCodeTab
-  private var currentTab: Component = appTabsPanel.interfaceTab
+  def getAppTabsOwner = { appTabsPanel }
 
   def getTabOwner(tab: Component): AbstractTabs = {
-    if (tab.isInstanceOf[CodeTab]) getMainCodeTabOwner else appTabsPanel
+    if (tab.isInstanceOf[CodeTab]) getCodeTabsOwner else appTabsPanel
+  }
+
+  def isCodeTabSeparate = {
+    codeTabsPanelOption match {
+      case None           => true
+      case Some(theValue) => false
+    }
   }
 
   def setSelectedCodeTab(tab: CodeTab): Unit = {
-    getMainCodeTabOwner.setSelectedComponent(tab)
+    getCodeTabsOwner.setSelectedComponent(tab)
   }
 
   def setSelectedAppTab(index: Int): Unit = {
@@ -53,20 +62,21 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def getSelectedAppTabIndex() = appTabsPanel.getSelectedIndex
 
-  def setCurrentTab(tab: Component): Unit = {
-    currentTab = tab
-  }
-
-  def getCurrentTab(): Component = {
-    currentTab
-  }
-
   def getTotalTabCount(): Int = {
     val appTabCount = appTabsPanel.getTabCount
     codeTabsPanelOption match {
       case None           => appTabCount
       case Some(thePanel) => appTabCount + thePanel.getTabCount
     }
+  }
+  private var currentTab: Component = { appTabsPanel.interfaceTab }
+
+  def getCurrentTab(): Component = {
+    currentTab
+  }
+
+  def setCurrentTab(tab: Component): Unit = {
+    currentTab = tab
   }
 
   // Before the detachable code tab capability was added
@@ -86,14 +96,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // The following terminology will be useful.
   // appTabsPanel = application JTabbedPane (Tabs)
   // codeTabsPanel = MainCodeTabPanel when it exists
-  // nAppTabPanel = the number of tabs in appTabsPanel at the moment
+  // nAppTabsPanel = the number of tabs in appTabsPanel at the moment
   // origTabIndx = the index of a tab in appTabsPanel when there is no codeTabsPanel
   // codeTabIndx = the index of a tab in codeTabsPanel (if it exists)
   // When the codetab is not detached
   // origTabIndx is an index in appTabsPanel
   // When the codetab is detached
-  // for origTabIndx < nAppTabPanel: origTabIndx is an index in appTabsPanel
-  // origTabIndx >= nAppTabPanel: codeTabIndx = origTabIndx - nAppTabPanel is an index in codeTabsPanel
+  // for origTabIndx < nAppTabsPanel: origTabIndx is an index in appTabsPanel
+  // origTabIndx >= nAppTabsPanel: codeTabIndx = origTabIndx - nAppTabsPanel is an index in codeTabsPanel
 
   // Input: origTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
@@ -120,7 +130,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
           if (origTabIndx >= appTabCount + thePanel.getTabCount) {
             throw new IndexOutOfBoundsException
           }
-          tabOwner = getMainCodeTabOwner
+          tabOwner = getCodeTabsOwner
           tabIndex =  origTabIndx - appTabCount
         }
       }
@@ -135,12 +145,12 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // Returns (null, -1) if there is no tab owner for this tab component.
   def ownerAndIndexOfTab(tab: Component): (AbstractTabs, Int) = {
     var tabOwner = null.asInstanceOf[AbstractTabs]
-    var tabIndex = appTabsPanel.indexOfTabComponent(tab)
+    var tabIndex = appTabsPanel.indexOfComponent(tab)
     if (tabIndex != -1) {
       tabOwner = appTabsPanel
     } else {
       codeTabsPanelOption match {
-        case Some(thePanel) => tabIndex = thePanel.indexOfTabComponent(tab)
+        case Some(thePanel) => tabIndex = thePanel.indexOfComponent(tab)
           if (tabIndex != -1) {
             tabOwner = thePanel
           }
@@ -151,7 +161,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def printAllTabs(): Unit = {
-    println("AppTabPanel count " + appTabsPanel.getTabCount)
+    println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
     printTabsOfTabsPanel(appTabsPanel)
     codeTabsPanelOption match {
       case Some(thePanel) => {
@@ -160,6 +170,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       }
       case None           => println("No CodeTabs ")
     }
+    println("")
   }
 
   def printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
@@ -175,45 +186,45 @@ class AppTabManager( val appTabsPanel:          Tabs,
   @throws (classOf[IndexOutOfBoundsException])
   def getTabComponentPlus(origTabIndx: Int): (AbstractTabs, Component) = {
     val (tabOwner, tabIndex) = computeIndexPlus(origTabIndx)
-    val tabComponent = tabOwner.getTabComponentAt(tabIndex)
+    val tabComponent = tabOwner.getComponentAt(tabIndex)
     (tabOwner, tabComponent)
   }
 
   def switchToTabsCodeTab(): Unit = {
     // nothing to do if code tab is already part of Tabs
-    val codeTabOwner = getMainCodeTabOwner
+    val codeTabOwner = getCodeTabsOwner
     if (!codeTabOwner.isInstanceOf[Tabs]) {
-      getAppTabPanel.add(I18N.gui.get("tabs.code"), getAppTabPanel.codeTab)
+      getAppTabsPanel.add(I18N.gui.get("tabs.code"), getAppTabsPanel.codeTab)
       codeTabsPanelOption match {
         case Some(theValue) => theValue.getCodeTabContainer.dispose
         case None           =>
       }
-      setCodeTabPanel(None)
-      getAppTabPanel.codeTab.requestFocus
+      setCodeTabsPanelOption(None)
+      getAppTabsPanel.codeTab.requestFocus
       // need to remove component, because will no longer exist
       // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualMainCodeTabPanel.getCodeTabContainer)
     }
   }
 
   def switchToSeparateCodeWindow(): Unit = {
-    val codeTabOwner = getMainCodeTabOwner
+    val codeTabOwner = getCodeTabsOwner
     // Only act if code tab is part of the Tabs panel.
     // Otherwise it is already detached.
     if (codeTabOwner.isInstanceOf[Tabs]) {
-      val codeTabsPanel = new MainCodeTabPanel(getAppsTab.workspace,
-        getAppsTab.interfaceTab,
-        getAppsTab.externalFileManager,
-        getAppsTab.codeTab,
-        getAppsTab.externalFileTabs)
+      val codeTabsPanel = new MainCodeTabPanel(getAppTabsPanel.workspace,
+        getAppTabsPanel.interfaceTab,
+        getAppTabsPanel.externalFileManager,
+        getAppTabsPanel.codeTab,
+        getAppTabsPanel.externalFileTabs)
 
         // aab maybe some of this should be in an init method shared with
         // MainCodeTabPanel
         codeTabsPanelOption = Some(codeTabsPanel)
         addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
-        codeTabsPanel.add(I18N.gui.get("tabs.code"), getAppsTab.codeTab)
-        codeTabsPanel.setSelectedComponent(getAppsTab.codeTab)
-        getAppsTab.setSelectedComponent(appTabsPanel.interfaceTab)
+        codeTabsPanel.add(I18N.gui.get("tabs.code"), getAppTabsPanel.codeTab)
+        codeTabsPanel.setSelectedComponent(getAppTabsPanel.codeTab)
+        getAppTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
         setSeparateCodeTabBindings(codeTabsPanel)
         // add mouse listener, which should be not set when
@@ -249,7 +260,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def addAppFrameKeys(key: Int, action: Action, actionName: String): Unit = {
-    val contentPane = getAppsTab.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+    val contentPane = getAppTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
     addComponentKeys(contentPane, key, action, actionName)
   }
 
