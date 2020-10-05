@@ -222,19 +222,19 @@ class AppTabManager( val appTabsPanel:          Tabs,
         codeTabsPanelOption = Some(codeTabsPanel)
         addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
-
-        //codeTabsPanel.add(I18N.gui.get("tabs.code"), appTabsPanel.codeTab)
         // iterate starting at last tab so that indexing remains valid when
         // tabs are removed (add to codeTabsPanel)
         //val startIndex:Int = appTabsPanel.getTabCount - 1
         for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
-          println("index: " + n)
-          // Tabs are read in reverse order, use index 0 to restore original order
-          codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
-           appTabsPanel.getIconAt(n),
-           appTabsPanel.getComponentAt(n),
-           appTabsPanel.getToolTipTextAt(n),
-           0)
+          val tabComponent = appTabsPanel.getComponentAt(n)
+          if (tabComponent.isInstanceOf[CodeTab]) {
+            // Tabs are read in reverse order, use index 0 to restore original order
+            codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
+             appTabsPanel.getIconAt(n),
+             tabComponent,
+             appTabsPanel.getToolTipTextAt(n),
+             0)
+          }
         }
         codeTabsPanel.setSelectedComponent(appTabsPanel.codeTab)
         appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
