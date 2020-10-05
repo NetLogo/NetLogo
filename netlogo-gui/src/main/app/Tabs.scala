@@ -259,12 +259,8 @@ class Tabs(workspace:           GUIWorkspace,
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
-    println("new tab index: " + getCodeTabsOwner.indexOfComponent(tab))
     addMenuItem(getTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
-    App.printSwingObject(this, "The AppTabs: ")
-    App.printSwingObject(getCodeTabsOwner, "addNewTab, getCodeTabsOwner ")
-    App.printSwingObject(tab, "new tab: ")
 
     setPanelsSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet

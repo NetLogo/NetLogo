@@ -78,10 +78,6 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
 
   def setPanelsSelectedComponent(tab: Component): Unit = {
     val (tabOwner, tabIndex) = getTabManager.ownerAndIndexOfTab(tab)
-    getTabManager.printAllTabs
-    App.printSwingObject(tab, "setPanelsSelectedComponent, tab: ")
-    println("tabIndex, " + tabIndex)
-    App.printSwingObject(tabOwner, "setPanelsSelectedComponent, tabOwner: ")
     // aab getCodeTab.requestFocus
     tabOwner.setSelectedComponent(tab)
   }

@@ -6,7 +6,6 @@ import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane }
 
-import org.nlogo.core.I18N
 import org.nlogo.app.codetab.{ CodeTab } // aab MainCodeTab
 import org.nlogo.swing.{ UserAction }
 
@@ -45,8 +44,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def isCodeTabSeparate = {
     codeTabsPanelOption match {
-      case None           => true
-      case Some(theValue) => false
+      case None           => false
+      case Some(theValue) => true
     }
   }
 
@@ -191,40 +190,54 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def switchToTabsCodeTab(): Unit = {
-    // nothing to do if code tab is already part of Tabs
-    val codeTabOwner = getCodeTabsOwner
-    if (!codeTabOwner.isInstanceOf[Tabs]) {
-      getAppTabsPanel.add(I18N.gui.get("tabs.code"), getAppTabsPanel.codeTab)
-      codeTabsPanelOption match {
-        case Some(theValue) => theValue.getCodeTabContainer.dispose
-        case None           =>
-      }
-      setCodeTabsPanelOption(None)
-      getAppTabsPanel.codeTab.requestFocus
+    // nothing to do if CodeTabsPanel does not exist
+
+    codeTabsPanelOption match {
+      case None                =>
+      case Some(codeTabsPanel) => {
+        for (n <- 0 until codeTabsPanel.getTabCount) {
+          appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
+        }
+        codeTabsPanel.getCodeTabContainer.dispose
+        setCodeTabsPanelOption(None)
+        appTabsPanel.codeTab.requestFocus
       // need to remove component, because will no longer exist
       // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
+      } // end case where work was done
     }
   }
 
   def switchToSeparateCodeWindow(): Unit = {
-    val codeTabOwner = getCodeTabsOwner
     // Only act if code tab is part of the Tabs panel.
     // Otherwise it is already detached.
-    if (codeTabOwner.isInstanceOf[Tabs]) {
-      val codeTabsPanel = new CodeTabsPanel(getAppTabsPanel.workspace,
-        getAppTabsPanel.interfaceTab,
-        getAppTabsPanel.externalFileManager,
-        getAppTabsPanel.codeTab,
-        getAppTabsPanel.externalFileTabs)
+    if (!isCodeTabSeparate) {
+      val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
+        appTabsPanel.interfaceTab,
+        appTabsPanel.externalFileManager,
+        appTabsPanel.codeTab,
+        appTabsPanel.externalFileTabs)
 
         // aab maybe some of this should be in an init method shared with
         // CodeTabsPanel
         codeTabsPanelOption = Some(codeTabsPanel)
         addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
-        codeTabsPanel.add(I18N.gui.get("tabs.code"), getAppTabsPanel.codeTab)
-        codeTabsPanel.setSelectedComponent(getAppTabsPanel.codeTab)
-        getAppTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
+
+        //codeTabsPanel.add(I18N.gui.get("tabs.code"), appTabsPanel.codeTab)
+        // iterate starting at last tab so that indexing remains valid when
+        // tabs are removed (add to codeTabsPanel)
+        //val startIndex:Int = appTabsPanel.getTabCount - 1
+        for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
+          println("index: " + n)
+          // Tabs are read in reverse order, use index 0 to restore original order
+          codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
+           appTabsPanel.getIconAt(n),
+           appTabsPanel.getComponentAt(n),
+           appTabsPanel.getToolTipTextAt(n),
+           0)
+        }
+        codeTabsPanel.setSelectedComponent(appTabsPanel.codeTab)
+        appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
         setSeparateCodeTabBindings(codeTabsPanel)
         // add mouse listener, which should be not set when
@@ -260,7 +273,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def addAppFrameKeys(key: Int, action: Action, actionName: String): Unit = {
-    val contentPane = getAppTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
     addComponentKeys(contentPane, key, action, actionName)
   }
 
