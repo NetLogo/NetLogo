@@ -6,7 +6,6 @@ import java.awt.event.{ MouseEvent }
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
-// aab import org.nlogo.app.codetab.{ }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
@@ -31,19 +30,19 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     }
   }
 
-  val jframe = workspace.getFrame.asInstanceOf[JFrame]
-  var tabManager: AppTabManager = null
+  val jframe = { workspace.getFrame.asInstanceOf[JFrame] }
+  var tabManager: AppTabManager = { null }
   def setTabManager( myTabManager: AppTabManager ) : Unit = {
     tabManager = myTabManager
   }
 
-  def getCodeTab():MainCodeTab
-  def getTabManager() = tabManager
-  def getAppFrame() = workspace.getFrame.asInstanceOf[AppFrame]
-  def getAppJFrame() = jframe
-  var fileManager: FileManager = null
-  var dirtyMonitor: DirtyMonitor = null
-  var currentTab: Component = interfaceTab
+  def getCodeTab(): MainCodeTab // abstract
+  def getTabManager() = { tabManager }
+  def getAppFrame() = { workspace.getFrame.asInstanceOf[AppFrame] }
+  def getAppJFrame() = { jframe }
+  var fileManager: FileManager = { null }
+  var dirtyMonitor: DirtyMonitor = { null }
+  var currentTab: Component = { interfaceTab }
 
   def initManagerMonitor(manager: FileManager, monitor: DirtyMonitor): Unit =  {
     fileManager = manager
@@ -58,7 +57,7 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     // platforms ev 2/2/09
   }
 
-  override def requestFocus() = currentTab.requestFocus()
+  override def requestFocus() = { currentTab.requestFocus() }
 
   def getCodeTabsOwner(): JTabbedPane = {
     getTabManager.getCodeTabsOwner.asInstanceOf[JTabbedPane]
@@ -86,11 +85,4 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     val indx = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
     indx
   }
-
-
-    // def getIndexOfComponent(tab: Component): Int =
-    //   (0 until getTabCount).find(n => getComponentAt(n) == tab).get
-//  def forAllCodeTabs = tabManager.forAllCodeTabs(_)
-
-
 }

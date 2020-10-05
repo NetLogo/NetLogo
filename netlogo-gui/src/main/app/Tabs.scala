@@ -53,8 +53,9 @@ class Tabs(workspace:           GUIWorkspace,
 
   val codeTab = new MainCodeTab(workspace, this, menu)
 
-  def permanentMenuActions =
+  def permanentMenuActions = {
     tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
+  }
 
 //  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
   var tabActions: Seq[Action] = Seq.empty[Action]
@@ -64,7 +65,7 @@ class Tabs(workspace:           GUIWorkspace,
   val stableCodeTab = codeTab
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
-  override def getCodeTab(): MainCodeTab = codeTab
+  override def getCodeTab(): MainCodeTab = { codeTab }
 
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
@@ -153,18 +154,19 @@ class Tabs(workspace:           GUIWorkspace,
     }
   }
 
-  def handle(e: RuntimeErrorEvent) =
-     if(!e.jobOwner.isInstanceOf[MonitorWidget])
-        e.sourceOwner match {
-          case file: ExternalFileInterface =>
-            val filename = file.getFileName
-            val tab = getTabWithFilename(Right(filename)).getOrElse {
-              openExternalFile(filename)
-              getTabWithFilename(Right(filename)).get
-            }
-            highlightRuntimeError(tab, e)
-          case _ =>
+  def handle(e: RuntimeErrorEvent) = {
+   if(!e.jobOwner.isInstanceOf[MonitorWidget])
+    e.sourceOwner match {
+      case file: ExternalFileInterface =>
+        val filename = file.getFileName
+        val tab = getTabWithFilename(Right(filename)).getOrElse {
+          openExternalFile(filename)
+          getTabWithFilename(Right(filename)).get
         }
+        highlightRuntimeError(tab, e)
+      case _ =>
+    }
+  }
 
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedComponent(tab)
@@ -180,9 +182,9 @@ class Tabs(workspace:           GUIWorkspace,
       def clearForeground(tab: Component) = {
         tabManager.getTabOwner(tab).setForegroundAt(
           tabManager.getTabOwner(tab).indexOfComponent(tab), null)
-        }
-        forAllCodeTabs(clearForeground)
       }
+      forAllCodeTabs(clearForeground)
+    }
 
     def recolorTab(component: Component, hasError: Boolean): Unit = {
       tabManager.getTabOwner(component).setForegroundAt(
@@ -229,30 +231,34 @@ class Tabs(workspace:           GUIWorkspace,
     }
   }
 
-  def handle(e: ExternalFileSavedEvent) =
+  def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)) foreach { tab =>
       val index = tabManager.getTabOwner(tab).indexOfComponent(tab)
       setTitleAt(index, tab.filenameForDisplay)
       tabActions(index).putValue(Action.NAME, e.path)
     }
+  }
 
   def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
 
-  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
+  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] = {
     externalFileTabs find (_.filename == filename)
+  }
 
   private var _externalFileNum = 1
   private def externalFileNum() = {
     _externalFileNum += 1
     _externalFileNum - 1
   }
+
   def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
 
-  def openExternalFile(filename: String) =
+  def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) => setSelectedComponent(tab)
       case _ => addNewTab(Right(filename))
     }
+  }
 
   def addNewTab(name: Filename) = {
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, codeTab.smartTabbingEnabled)
@@ -269,7 +275,7 @@ class Tabs(workspace:           GUIWorkspace,
     EventQueue.invokeLater( () => requestFocus() )
   }
 
-  def closeExternalFile(filename: Filename): Unit =
+  def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) foreach { tab =>
       val index = getIndexOfCodeTab(tab)
       remove(tab)
@@ -277,10 +283,11 @@ class Tabs(workspace:           GUIWorkspace,
       externalFileTabs -= tab
       if (externalFileTabs.isEmpty) menu.revokeAction(SaveAllAction)
     }
+  }
 
-  def forAllCodeTabs(fn: CodeTab => Unit) =
+  def forAllCodeTabs(fn: CodeTab => Unit) = {
     (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + codeTab) foreach fn
-
+  }
   def lineNumbersVisible = codeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
 

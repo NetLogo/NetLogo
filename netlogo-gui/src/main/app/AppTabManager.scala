@@ -17,8 +17,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively
-  def getAppTabsPanel = appTabsPanel
-  def getCodeTab = appTabsPanel.getCodeTab
+  def getAppTabsPanel = { appTabsPanel }
+  def getCodeTab = { appTabsPanel.getCodeTab }
 
   // The separate window and JTabbedPane containing the main code tab and
   // other code tabs can come in an out of existence, and are hence
@@ -57,9 +57,9 @@ class AppTabManager( val appTabsPanel:          Tabs,
     appTabsPanel.setSelectedIndex(index)
   }
 
-  def getSelectedAppTabComponent() = appTabsPanel.getSelectedComponent
+  def getSelectedAppTabComponent() = { appTabsPanel.getSelectedComponent }
 
-  def getSelectedAppTabIndex() = appTabsPanel.getSelectedIndex
+  def getSelectedAppTabIndex() = { appTabsPanel.getSelectedIndex }
 
   def getTotalTabCount(): Int = {
     val appTabCount = appTabsPanel.getTabCount
@@ -68,6 +68,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       case Some(thePanel) => appTabCount + thePanel.getTabCount
     }
   }
+
   private var currentTab: Component = { appTabsPanel.interfaceTab }
 
   def getCurrentTab(): Component = {
