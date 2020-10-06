@@ -260,7 +260,6 @@ class App extends
     Controllable {
 
   import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
-println("popOutCodeTab " + popOutCodeTab)
   val frame = new AppFrame
 
   // all these guys get set in the locally block

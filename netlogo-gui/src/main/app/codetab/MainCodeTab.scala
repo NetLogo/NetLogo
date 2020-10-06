@@ -52,8 +52,8 @@ with WindowEvents.LoadModelEvent.Handler
     tabbing.setSelected(true)
     // hack, to get it to realize it's really checked. ~Forrest (10/23/2007)
     smartTabAction.actionPerformed(null)
+    // The state of the check box is set in Tabs.handle(e: AfterLoadEvent)
     poppingCheckBox = new JCheckBox(codeTabPopOutAction)
-    poppingCheckBox.setSelected(true)
     Seq(tabbing, poppingCheckBox)
   }
 

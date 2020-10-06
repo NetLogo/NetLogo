@@ -112,7 +112,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // This method allows for the possibility that the appTabsPanel has no tabs,
   // although this should not occur in practice
   @throws (classOf[IndexOutOfBoundsException])
-  def computeIndexPlus(origTabIndx: Int): (AbstractTabs, Int) = {
+  def ownerAndIndexFromTotalIndex(origTabIndx: Int): (AbstractTabs, Int) = {
     if (origTabIndx < 0) {
       throw new IndexOutOfBoundsException
     }
@@ -185,7 +185,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // tabComponent = the tab in tabOwner referenced by origTabIndx.
   @throws (classOf[IndexOutOfBoundsException])
   def getTabComponentPlus(origTabIndx: Int): (AbstractTabs, Component) = {
-    val (tabOwner, tabIndex) = computeIndexPlus(origTabIndx)
+    val (tabOwner, tabIndex) = ownerAndIndexFromTotalIndex(origTabIndx)
     val tabComponent = tabOwner.getComponentAt(tabIndex)
     (tabOwner, tabComponent)
   }
@@ -279,17 +279,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def setAppCodeTabBindings(): Unit = {
-    addAppFrameKeys(KeyEvent.VK_9, KillSeparateCodeTab, "popInCodeTab")
-    addAppFrameKeys(KeyEvent.VK_8, CreateSeparateCodeTab, "popOutCodeTab")
-    addAppFrameKeys(KeyEvent.VK_CLOSE_BRACKET, KillSeparateCodeTab, "popInCodeTab")
+    //addAppFrameKeys(KeyEvent.VK_CLOSE_BRACKET, RemoveSeparateCodeTab, "popInCodeTab")
     addAppFrameKeys(KeyEvent.VK_OPEN_BRACKET, CreateSeparateCodeTab, "popOutCodeTab")
   }
 
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
-    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_1, SwitchFocusAction1, "switchFocus1")
-    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_2, SwitchFocusAction2, "switchFocus2")
-    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_9, KillSeparateCodeTab, "popInCodeTab")
-    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_CLOSE_BRACKET, KillSeparateCodeTab, "popInCodeTab")
+    //addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_1, SwitchFocusAction1, "switchFocus1")
+    //addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_2, SwitchFocusAction2, "switchFocus2")
+    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_CLOSE_BRACKET, RemoveSeparateCodeTab, "popInCodeTab")
   }
 
 // these objects could also be private classes
@@ -317,7 +314,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  object KillSeparateCodeTab extends AbstractAction("PopCodeTabIn") {
+  object RemoveSeparateCodeTab extends AbstractAction("PopCodeTabIn") {
     def actionPerformed(e: ActionEvent) {
       switchToTabsCodeTab
     }
@@ -336,6 +333,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
-    codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(KillSeparateCodeTab)
+    codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
   }
 }

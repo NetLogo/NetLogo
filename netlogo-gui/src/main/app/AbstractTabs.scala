@@ -64,21 +64,38 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
   }
 
   def getTitleAtAdjusted(index: Int): String =  {
-    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
+    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
     tabOwner.getTitleAt(tabIndex)
   }
 
 //  @throws (classOf[IndexOutOfBoundsException])
   def setSelectedIndexPanels(index: Int): Unit =  {
-    val (tabOwner, tabIndex) = getTabManager.computeIndexPlus(index)
-    // aab getCodeTab.requestFocus
-    tabOwner.setSelectedIndex(tabIndex)
+    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
+    App.printSwingObject(tabOwner, "setSelectedIndexPanels ")
+    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
+      tabOwner.requestFocus
+      tabOwner.setSelectedIndex(tabIndex)
+    } else {
+      val selectedIndex = getTabManager.getSelectedAppTabIndex
+      if (selectedIndex == tabIndex) {
+        getTabManager.setSelectedAppTab(-1)
+      }
+        getTabManager.setSelectedAppTab(tabIndex)
+      }
   }
 
   def setPanelsSelectedComponent(tab: Component): Unit = {
     val (tabOwner, tabIndex) = getTabManager.ownerAndIndexOfTab(tab)
-    // aab getCodeTab.requestFocus
-    tabOwner.setSelectedComponent(tab)
+    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
+      tabOwner.requestFocus
+      tabOwner.setSelectedIndex(tabIndex)
+    } else {
+      val selectedIndex = getTabManager.getSelectedAppTabIndex
+      if (selectedIndex == tabIndex) {
+        getTabManager.setSelectedAppTab(-1)
+      }
+        getTabManager.setSelectedAppTab(tabIndex)
+      }
   }
 
   def getIndexOfCodeTab(tab: CodeTab): Int = {
