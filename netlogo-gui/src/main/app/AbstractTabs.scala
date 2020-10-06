@@ -85,4 +85,5 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     val indx = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
     indx
   }
+
 }

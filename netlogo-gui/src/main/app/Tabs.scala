@@ -75,7 +75,6 @@ class Tabs(workspace:           GUIWorkspace,
     if (tabManager.getCodeTabsOwner.equals(this)) {
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), codeTab)
-      // aab reset code tab check box
     } else {
       popOutCodeTab = true
     }
@@ -309,7 +308,10 @@ class Tabs(workspace:           GUIWorkspace,
     // platforms ev 2/2/09
   }
 
-  def handle(e: AfterLoadEvent) = requestFocus()
+  def handle(e: AfterLoadEvent) = {
+    codeTab.getPoppingCheckBox.setSelected(popOutCodeTab)
+    requestFocus()
+  }
 
 
   object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), this)
