@@ -6,7 +6,7 @@ import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane }
 
-import org.nlogo.app.codetab.{ CodeTab } // aab MainCodeTab
+import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.swing.{ UserAction }
 
 // The class AppTabManager handles relationships between tabs (JPanels) and the two

@@ -57,10 +57,8 @@ class Tabs(workspace:           GUIWorkspace,
     tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
   }
 
-//  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
   var tabActions: Seq[Action] = Seq.empty[Action]
   lazy val saveModelActions = fileManager.saveModelActions(this)
-
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val stableCodeTab = codeTab
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
@@ -82,8 +80,9 @@ class Tabs(workspace:           GUIWorkspace,
       popOutCodeTab = true
     }
 
-    for((name, tab) <- moreTabs)
+    for((name, tab) <- moreTabs) {
       addTab(name, tab)
+    }
 
     tabActions = TabsMenu.tabActions(this)
     fileManager = manager
@@ -265,7 +264,7 @@ class Tabs(workspace:           GUIWorkspace,
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
-    addMenuItem(getTabCount - 1, tab.filenameForDisplay)
+    addMenuItem(tabManager.getTotalTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
 
     setPanelsSelectedComponent(tab)
