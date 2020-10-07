@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane }
+import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.swing.{ UserAction }
@@ -190,6 +190,30 @@ class AppTabManager( val appTabsPanel:          Tabs,
     (tabOwner, tabComponent)
   }
 
+  object RemoveSeparateCodeTab extends AbstractAction("PopCodeTabIn") {
+    def actionPerformed(e: ActionEvent) {
+      switchToTabsCodeTab
+    }
+  }
+
+  object CreateSeparateCodeTab extends AbstractAction("PopCodeTabOut") {
+    def actionPerformed(e: ActionEvent) {
+      switchToSeparateCodeWindow
+    }
+  }
+
+  def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
+    codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
+  }
+
+  def implementCodeTabSeparationState(isSeparate: Boolean): Unit = {
+    if (isSeparate) {
+      switchToSeparateCodeWindow
+    } else {
+      switchToTabsCodeTab
+    }
+  }
+
   def switchToTabsCodeTab(): Unit = {
     // nothing to do if CodeTabsPanel does not exist
 
@@ -246,93 +270,33 @@ class AppTabManager( val appTabsPanel:          Tabs,
       }
   }
 
-  def implementCodeTabSeparationState(isSeparate: Boolean): Unit = {
-    if (isSeparate) {
-      switchToSeparateCodeWindow
-    } else {
-      switchToTabsCodeTab
-    }
-  }
-
-  def addComponentKeys(component: JComponent, key: Int, action: Action, actionName: String): Unit = {
+  def addComponentKeyStroke(component: JComponent, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();
-    var mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
-    inputMap.put(mapKey, actionName)
-    actionMap.put(actionName, action)
-    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = true)
-    inputMap.put(mapKey, actionName)
-    actionMap.put(actionName, action)
-    mapKey = UserAction.KeyBindings.keystroke(key, withMenu = false, withAlt = true)
     inputMap.put(mapKey, actionName)
     actionMap.put(actionName, action)
   }
 
-  def addCodeTabContainerKeys(codeTabsPanel: CodeTabsPanel, key: Int, action: Action, actionName: String): Unit = {
+  def addCodeTabContainerKeyStroke(codeTabsPanel: CodeTabsPanel, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
-    addComponentKeys(contentPane, key, action, actionName)
+    addComponentKeyStroke(contentPane, mapKey, action, actionName)
   }
 
-  def addAppFrameKeys(key: Int, action: Action, actionName: String): Unit = {
+  def addAppFrameKeyStroke(mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
-    addComponentKeys(contentPane, key, action, actionName)
+    addComponentKeyStroke(contentPane, mapKey, action, actionName)
+  }
+
+  def intKeyToMenuKeystroke(key: Int): KeyStroke = {
+    UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
   }
 
   def setAppCodeTabBindings(): Unit = {
-    //addAppFrameKeys(KeyEvent.VK_CLOSE_BRACKET, RemoveSeparateCodeTab, "popInCodeTab")
-    addAppFrameKeys(KeyEvent.VK_OPEN_BRACKET, CreateSeparateCodeTab, "popOutCodeTab")
+    addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), CreateSeparateCodeTab, "popOutCodeTab")
   }
 
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
-    //addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_1, SwitchFocusAction1, "switchFocus1")
-    //addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_2, SwitchFocusAction2, "switchFocus2")
-    addCodeTabContainerKeys(codeTabsPanel, KeyEvent.VK_CLOSE_BRACKET, RemoveSeparateCodeTab, "popInCodeTab")
+    addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RemoveSeparateCodeTab, "popInCodeTab")
   }
 
-// these objects could also be private classes
-  object SwitchFocusAction1 extends AbstractAction("Toggle1") {
-    def actionPerformed(e: ActionEvent) {
-      // If index is already selected, unselect it
-      val index = 0
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == index) {
-        setSelectedAppTab(-1)
-      }
-      setSelectedAppTab(index)
-    }
-  }
-
-  object SwitchFocusAction2 extends AbstractAction("Toggle2") {
-    def actionPerformed(e: ActionEvent) {
-      // If index is already selected, unselect it
-      val index = 1
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == index) {
-        setSelectedAppTab(-1)
-      }
-      setSelectedAppTab(index)
-    }
-  }
-
-  object RemoveSeparateCodeTab extends AbstractAction("PopCodeTabIn") {
-    def actionPerformed(e: ActionEvent) {
-      switchToTabsCodeTab
-    }
-  }
-
-  object CreateSeparateCodeTab extends AbstractAction("PopCodeTabOut") {
-    def actionPerformed(e: ActionEvent) {
-      switchToSeparateCodeWindow
-    }
-  }
-
-  object Empty extends AbstractAction("Empty") {
-    def actionPerformed(e: ActionEvent) {
-      // If index is already selected, unselect it
-    }
-  }
-
-  def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
-    codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
-  }
 }
