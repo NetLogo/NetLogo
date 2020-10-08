@@ -49,7 +49,6 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), codeTab)
     initManagerMonitor(manager, monitor)
     tabManager.setSeparateCodeTabBindings(this)
-    //tabManager.addDeleteCodeTabButton(this)
 
     // make this a method
 
@@ -77,7 +76,10 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
         currentTab.requestFocus()
       }
       if (me.getClickCount() == 1 && me.isControlDown) {
-        tabManager.switchToTabsCodeTab
+        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        if (currentTab.isInstanceOf[MainCodeTab]) {
+          tabManager.switchToTabsCodeTab
+        }
       }
     }
   })

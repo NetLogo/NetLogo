@@ -6,7 +6,7 @@ import java.awt.{ Color, Component }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.awt.print.PrinterAbortException
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ AbstractAction, Action }
+import javax.swing.{ AbstractAction, Action, JTabbedPane }
 
 import scala.collection.mutable
 
@@ -39,7 +39,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   addChangeListener(this)
 
-  def getTabs = this
+  def getTabs = { this }
 
   def setMenu(newMenu: MenuBar): Unit = {
     val menuItems = permanentMenuActions ++ (currentTab match {
@@ -68,7 +68,7 @@ class Tabs(workspace:           GUIWorkspace,
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
 
-  def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
+  def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
 
@@ -132,9 +132,12 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   this.addMouseListener(new MouseAdapter() {
-    override def mouseClicked(me: MouseEvent) {
+    override def mouseClicked(me: MouseEvent): Unit =  {
       if (me.getClickCount() == 1 && me.isControlDown) {
-        tabManager.switchToSeparateCodeWindow
+        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        if (currentTab.isInstanceOf[MainCodeTab]) {
+          tabManager.switchToSeparateCodeWindow
+        }
       }
     }
   })
@@ -166,7 +169,7 @@ class Tabs(workspace:           GUIWorkspace,
     }
   }
 
-  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
+  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) = {
     setSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
@@ -176,7 +179,7 @@ class Tabs(workspace:           GUIWorkspace,
   def handle(e: CompiledEvent) = {
     val errorColor = Color.RED
 
-    def clearErrors() = {
+    def clearErrors(): Unit = {
       def clearForeground(tab: Component) = {
         tabManager.getTabOwner(tab).setForegroundAt(
           tabManager.getTabOwner(tab).indexOfComponent(tab), null)
@@ -190,7 +193,7 @@ class Tabs(workspace:           GUIWorkspace,
         if(hasError) errorColor else null)
     }
 
-    def recolorInterfaceTab() = {
+    def recolorInterfaceTab(): Unit = {
       if (e.error != null) setSelectedIndex(0)
       recolorTab(interfaceTab, e.error != null)
     }
@@ -237,7 +240,7 @@ class Tabs(workspace:           GUIWorkspace,
     }
   }
 
-  def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
+  def getSource(filename: String): String = { getTabWithFilename(Right(filename)).map(_.innerSource).orNull }
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] = {
     externalFileTabs find (_.filename == filename)
@@ -249,7 +252,7 @@ class Tabs(workspace:           GUIWorkspace,
     _externalFileNum - 1
   }
 
-  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
+  def newExternalFile() = { addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer))) }
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
@@ -286,8 +289,8 @@ class Tabs(workspace:           GUIWorkspace,
   def forAllCodeTabs(fn: CodeTab => Unit) = {
     (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + codeTab) foreach fn
   }
-  def lineNumbersVisible = codeTab.lineNumbersVisible
-  def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
+  def lineNumbersVisible = { codeTab.lineNumbersVisible }
+  def lineNumbersVisible_=(visible: Boolean) = { forAllCodeTabs(_.lineNumbersVisible = visible) }
 
   def removeMenuItem(index: Int) {
     tabActions.foreach(action => menu.revokeAction(action))

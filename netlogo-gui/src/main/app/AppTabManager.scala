@@ -200,11 +200,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-//aab actually addListenerReattachCodeWindowButton
-  // def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
-  //   codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
-  // }
-
   def implementCodeTabSeparationState(isSeparate: Boolean): Unit = {
     if (isSeparate) {
       switchToSeparateCodeWindow
@@ -245,7 +240,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
         // aab maybe some of this should be in an init method shared with
         // CodeTabsPanel
         codeTabsPanelOption = Some(codeTabsPanel)
-        // aab do we want this button? addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
 
         // Move tabs from appTabsPanel to codeTabsPanel.
