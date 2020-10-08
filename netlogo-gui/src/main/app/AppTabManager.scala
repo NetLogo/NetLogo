@@ -200,9 +200,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
-    codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
-  }
+//aab actually addListenerReattachCodeWindowButton
+  // def addDeleteCodeTabButton(codeTabsPanel: CodeTabsPanel ): Unit = {
+  //   codeTabsPanel.getCodeTabContainer.getReattachPopOut.addActionListener(RemoveSeparateCodeTab)
+  // }
 
   def implementCodeTabSeparationState(isSeparate: Boolean): Unit = {
     if (isSeparate) {
@@ -223,6 +224,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
         }
         codeTabsPanel.getCodeTabContainer.dispose
         setCodeTabsPanelOption(None)
+        appTabsPanel.codeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.codeTab.requestFocus
       // need to remove component, because will no longer exist
       // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
@@ -243,7 +245,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
         // aab maybe some of this should be in an init method shared with
         // CodeTabsPanel
         codeTabsPanelOption = Some(codeTabsPanel)
-        addDeleteCodeTabButton(codeTabsPanel)
+        // aab do we want this button? addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
 
         // Move tabs from appTabsPanel to codeTabsPanel.
@@ -279,6 +281,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
             }
           }
         })
+        appTabsPanel.codeTab.getPoppingCheckBox.setSelected(true)
         codeTabsPanel.setSelectedComponent(appTabsPanel.codeTab)
         appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
