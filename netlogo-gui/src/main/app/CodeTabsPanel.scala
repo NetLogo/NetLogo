@@ -4,7 +4,7 @@ package org.nlogo.app
 import java.awt.{ Component }
 import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 
-import javax.swing.{ JTabbedPane }
+import javax.swing.{ Action, JTabbedPane, KeyStroke }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import scala.collection.mutable
@@ -12,6 +12,7 @@ import scala.collection.mutable
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
+import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ GUIWorkspace }
 import org.nlogo.window.Event.LinkParent
 
@@ -49,6 +50,23 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     initManagerMonitor(manager, monitor)
     tabManager.setSeparateCodeTabBindings(this)
     //tabManager.addDeleteCodeTabButton(this)
+
+    // make this a method
+
+    // Add keystrokes for actions from TabsMenu to the codeTabsPanel
+    TabsMenu.tabActions(tabManager).foreach(action => {
+      // Add the accelerator key if any to the input map and action map
+      action.asInstanceOf[MenuAction].accelerator match {
+        case None                =>
+        case Some(accKey: KeyStroke) =>  {
+          val actionName = action.getValue(Action.NAME) match {
+            case s: String => s
+            case _         => accKey.toString
+          }
+          tabManager.addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
+        }
+      }
+    })
   }
 
   this.addMouseListener(new MouseAdapter() {
