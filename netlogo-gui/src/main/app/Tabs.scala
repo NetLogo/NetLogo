@@ -83,7 +83,7 @@ class Tabs(workspace:           GUIWorkspace,
       addTab(name, tab)
     }
 
-    tabActions = TabsMenu.tabActions(this)
+    tabActions = TabsMenu.tabActions(tabManager)
     fileManager = manager
     dirtyMonitor = monitor
     assert(fileManager != null && dirtyMonitor != null)
@@ -291,12 +291,12 @@ class Tabs(workspace:           GUIWorkspace,
 
   def removeMenuItem(index: Int) {
     tabActions.foreach(action => menu.revokeAction(action))
-    tabActions = TabsMenu.tabActions(this)
+    tabActions = TabsMenu.tabActions(tabManager)
     tabActions.foreach(action => menu.offerAction(action))
   }
 
   def addMenuItem(i: Int, name: String) {
-    val newAction = TabsMenu.tabAction(this, i)
+    val newAction = TabsMenu.tabAction(tabManager, i)
     tabActions = tabActions :+ newAction
     menu.offerAction(newAction)
   }

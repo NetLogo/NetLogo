@@ -68,7 +68,6 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     tabOwner.getTitleAt(tabIndex)
   }
 
-//  @throws (classOf[IndexOutOfBoundsException])
   def setSelectedIndexPanels(index: Int): Unit =  {
     val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {

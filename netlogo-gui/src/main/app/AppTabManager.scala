@@ -111,7 +111,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // tabIndex = the index of the tab in tabOwner.
   // This method allows for the possibility that the appTabsPanel has no tabs,
   // although this should not occur in practice
-  @throws (classOf[IndexOutOfBoundsException])
   def ownerAndIndexFromTotalIndex(origTabIndx: Int): (AbstractTabs, Int) = {
     if (origTabIndx < 0) {
       throw new IndexOutOfBoundsException
@@ -183,7 +182,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // Returns (tabOwner, tabComponent)
   // tabOwner = the AbstractTabs containing the indexed tab.
   // tabComponent = the tab in tabOwner referenced by origTabIndx.
-  @throws (classOf[IndexOutOfBoundsException])
   def getTabComponentPlus(origTabIndx: Int): (AbstractTabs, Component) = {
     val (tabOwner, tabIndex) = ownerAndIndexFromTotalIndex(origTabIndx)
     val tabComponent = tabOwner.getComponentAt(tabIndex)
@@ -268,11 +266,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
         // aab add code here
 
         // Add keystrokes for actions from TabsMenu to the codeTabsPanel
-        TabsMenu.tabActions(appTabsPanel).foreach(action => {
+        TabsMenu.tabActions(this).foreach(action => {
           // Add the accelerator key if any to the input map and action map
           action.asInstanceOf[MenuAction].accelerator match {
             case None                =>
-            case Some(accKey) =>  {
+            case Some(accKey: KeyStroke) =>  {
               val actionName = action.getValue(Action.NAME) match {
                 case s: String => s
                 case _         => accKey.toString
