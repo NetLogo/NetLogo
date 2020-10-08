@@ -38,14 +38,14 @@ display of the agents in the model) is empty (all black). To begin the model,
 you will first need to set it up.
 
 > - Press the "setup" button.
-> 
+>
 > | What do you see appear in the view?
-> 
+>
 > - Press the "go" button to start the simulation.
-> 
+>
 > | As the model is running, what is happening to the wolf and sheep
 > | populations?
-> 
+>
 > - Press the "go" button to stop the model.
 
 ## Controlling the Model: Buttons
@@ -80,7 +80,7 @@ middle of an action, and as the result the model could get confused.)
 
 > - If you like, experiment with the "setup" and "go" buttons in the Wolf Sheep
 >   Predation model.
-> 
+>
 > | Do you ever get different results if you run the model several times with
 > | the same settings?
 
@@ -105,15 +105,15 @@ so infrequently that the model appears to have slowed down. It hasn't, as you
 can see by watching the tick counter race ahead. Only the frequency of view
 updates has lessened.
 
-## Adjusting Settings: Sliders and Switches
+## Adjusting Settings: Choosers, Sliders, and Switches
 
 A model's settings let you explore different scenarios or hypotheses. Altering
 the settings and then running the model to see how it reacts can give you a
 deeper understanding of the phenomena being modeled.
 
-Switches and sliders give you access to a model's settings. Here are the
-switches and sliders in Wolf Sheep Predation:
-![[controllers.gif]]
+Choosers, switches, and sliders give you access to a model's settings. Here are
+the choosers, switches, and sliders in Wolf Sheep Predation:
+![[controllers.png]]
 
 Let's experiment with their effect on the behavior of the model.
 
@@ -121,28 +121,28 @@ Let's experiment with their effect on the behavior of the model.
 > - Press "setup" and "go" and let the model run for about 100 ticks. (The tick
 >   count is shown above the view.)
 > - Stop the model by pressing the "go" button.
-> 
+>
 > | What happened to the sheep over time?
-> 
+>
 > Let's take a look and see what would happen to the sheep if we change a
 > setting.
-> 
-> - Turn the "grass?" switch on.
+>
+> - Change the "model-version" chooser from "sheep-wolves" to "sheep-wolves-grass".
 > - Press "setup" and "go" and let the model run for a similar amount of time as
 >   before.
-> 
-> | What did the switch do? Was the outcome the same as your previous run?
+>
+> | What did the chooser do? Was the outcome the same as your previous run?
 
-Turning the "grass?" switch on affected the outcome of the model. With the
-switch off, the amount of grass available always stayed the same. This is not a
-realistic look at the predator-prey relationship; so by setting and turning on a
-grass regrowth rate, we were able to model all three factors: sheep, wolf and
-grass populations.
+Changing the "model-version" dropdown to "sheep-wolves-grass" affected the outcome
+of the model. With the chooser set to "sheep-wolves", the amount of grass available
+always stayed the same. This is not a realistic look at the predator-prey
+relationship; so by setting and turning on a grass regrowth rate, we were able to
+model all three factors: sheep, wolf, and grass populations.
 
 Another type of setting is called a slider.
 
-Besides switches, a model may also have sliders. While a switch has only two
-values, on and off, a slider has a whole range of numeric values. For example,
+Besides choosers, a model may also have sliders. While choosers have a short list
+of preset options, a slider has a whole range of numeric values. For example,
 the "initial-number-sheep" slider has a minimum value of 0 and a maximum value
 of 250. The model could run with 0 sheep or it could run with 250 sheep, or
 anywhere in between. Try this out and see what happens. As you move the marker
@@ -150,7 +150,7 @@ from the minimum to the maximum value, the number on the right side of the
 slider changes; this is the number the slider is currently set to.
 
 > Let's investigate Wolf Sheep Predation's sliders.
-> 
+>
 > - Change from the Interface to the Info tab to learn what each of this models'
 >   sliders represents.
 
@@ -161,33 +161,45 @@ might want to just start experimenting, then look at the Info tab later.
 
 > | What would happen to the sheep population if there were more sheep and less
 > | wolves initially?
-> 
-> - Turn the "grass?" switch off.
+>
+> - Change the "model-version" chooser from "sheep-wolves-grass" to "sheep-wolves".
 > - Set the "initial-number-sheep" slider to 100.
 > - Set the "initial-number-wolves" slider to 20.
 > - Press "setup" and then "go".
 > - Let the model run for about 100 ticks.
-> 
+>
 > Try running the model several times with these settings.
 > | What happened to the sheep population?
-> 
-> | Did this outcome surprise you? What other sliders or switches can be
+>
+> | Did this outcome surprise you? What other sliders can be
 > | adjusted to help out the sheep population?
-> 
+>
 > - Set "initial-number-sheep" to 80 and "initial-number-wolves" to 50. (This is
 >   close to how they were when you first opened the model.)
 > - Set "sheep-reproduce" to 10.0%.
 > - Press "setup" and then "go".
 > - Let the model run for about 100 time ticks.
-> 
+>
 > | What happened to the wolves in this run?
 
-When you open a model, all the sliders and switches are on a default setting. If
-you open a new model or exit the program, your changed settings will not be
-saved, unless you choose to save them.
+One more type of widget is called a switch.  A switch has only two values, on and off.
 
-(Note: in addition to sliders and switches, some models have choosers and input
-boxes. The Wolf Sheep Predation doesn't have any of these, though.)
+> There is a switch in this model called "show-energy?"
+>
+> - Click "show-energy?" to check the box next to it and then click "setup" and "go".
+>
+> | How did the appearance of the wolves in the world view change?
+>
+> - Uncheck the "show-energy?" switch while the model is still running.
+>
+> | What happened to the energy labels you saw before?
+
+When you open a model, all the choosers, sliders, and switches are on a default
+setting. If you open a new model or exit the program, your changed settings will
+not be saved, unless you choose to save them.
+
+(Note: in addition to choosers, sliders, and switches, some models have input
+boxes. The Wolf Sheep Predation doesn't have any of those, though.)
 
 ## Gathering Information: Plots and Monitors
 
@@ -232,19 +244,19 @@ In the Interface tab, you'll see a toolbar of controls. Some of these control
 aspects of the view.
 
 > Let's experiment with the effect of these controls.
-> 
+>
 > - Press "setup" and then "go" to start the model running.
 > - As the model runs, move the speed slider to the left.
-> 
+>
 > | What happens?
-> 
+>
 > This slider is helpful if a model is running too fast for you to see what's
 > going on in detail.
-> 
+>
 > - Move the speed slider to the middle.
 > - Try moving the speed slider to the right.
 > - Now try checking and unchecking the "view updates" checkbox.
-> 
+>
 > | What happens?
 
 Fast forwarding the model and turning off view updates are useful if you're
@@ -266,36 +278,36 @@ There are more model settings than there's room for in the toolbar. The
 "Settings..." button lets you get to the rest of the settings.
 
 > - Press the "Settings..." button in the toolbar.
-> 
+>
 > A dialog will open containing all the settings for the view:
 > ![[edit-view-properties.gif]]
 > | What are the current settings for min-pxcor, max-pxcor, min-pycor,
 > | max-pycor, and patch size?
-> 
+>
 > - Press "cancel" to make this window go away without changing the settings.
 > - Place your mouse pointer next to, but still outside of, the view.
-> 
+>
 > You will notice that the pointer turns into a crosshair.
-> 
+>
 > - Hold down the mouse button and drag the crosshair over the view.
-> 
+>
 > The view is now selected, which you know because it is now surrounded by a
 > gray border.
-> 
+>
 > - Drag one of the square black "handles". The handles are found on the edges
 >   and at the corners of the view.
 > - Unselect the view by clicking anywhere in the white background of the
 >   Interface tab.
 > - Press the "Settings..." button again and look at the settings.
-> 
+>
 > | What numbers changed?
-> 
+>
 > | What numbers didn't change?
 
 The NetLogo world is a two dimensional grid of "patches". Patches are the
-individual squares in the grid. In Wolf Sheep Predation, when the "grass?"
-switch is on the individual patches are easily seen, because some are green,
-others brown.
+individual squares in the grid. In Wolf Sheep Predation, when the "model-version"
+is set to "sheep-wolves-grass" the individual patches are easily seen, because
+some are green, others brown.
 
 Think of the patches as being like square tiles in a room with a tile floor. By
 default, exactly in the middle of the room is a tile labeled (0,0); meaning that
@@ -305,7 +317,7 @@ that will help us locate objects within the room:
 ![[coords.gif]]
 
 > | How many tiles away is the (0,0) tile from the right side of the room?
-> 
+>
 > | How many tiles away is the (0,0) tile from the left side of the room?
 
 In NetLogo, the number of tiles from right to left is called world-width. And
@@ -326,16 +338,16 @@ world.
 > - Using the Settings dialog that is still open, change max-pxcor to 30 and
 >   max-pycor value to 10. Notice that min-pxcor and min-pycor change too.
 >   That's because by default the origin (0,0) is in the center of the world.
-> 
+>
 > | What happened to the shape of the view?
-> 
+>
 > - Press the "setup" button.
-> 
+>
 > Now you can see the new patches you have created.
-> 
+>
 > - Edit the view by pressing the "Settings..." button again.
 > - Change the patch size to 20 and press "OK".
-> 
+>
 > | What happened to the size of the view? Did its shape change?
 
 Editing the view also lets you change other settings. Feel free to experiment
@@ -388,4 +400,3 @@ modeling language.
 
 In [Tutorial #3: Procedures](tutorial3.html) you can learn how to alter and
 extend existing models and build new ones.
-
