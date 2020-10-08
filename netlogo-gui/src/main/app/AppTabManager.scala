@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
-import org.nlogo.swing.{ UserAction }
+import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 
 // The class AppTabManager handles relationships between tabs (JPanels) and the two
 // classes Tabs and CodeTabsPanel that are the JTabbedPanes that contain them.
@@ -247,7 +247,9 @@ class AppTabManager( val appTabsPanel:          Tabs,
         codeTabsPanelOption = Some(codeTabsPanel)
         addDeleteCodeTabButton(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
-        // iterate starting at last tab so that indexing remains valid when
+
+        // Move tabs from appTabsPanel to codeTabsPanel.
+        // Iterate starting at last tab so that indexing remains valid when
         // tabs are removed (add to codeTabsPanel)
         //val startIndex:Int = appTabsPanel.getTabCount - 1
         for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
@@ -261,6 +263,24 @@ class AppTabManager( val appTabsPanel:          Tabs,
              0)
           }
         }
+
+        // Might need to reorder the TabsMenu
+        // aab add code here
+
+        // Add keystrokes for actions from TabsMenu to the codeTabsPanel
+        TabsMenu.tabActions(appTabsPanel).foreach(action => {
+          // Add the accelerator key if any to the input map and action map
+          action.asInstanceOf[MenuAction].accelerator match {
+            case None                =>
+            case Some(accKey) =>  {
+              val actionName = action.getValue(Action.NAME) match {
+                case s: String => s
+                case _         => accKey.toString
+              }
+              addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
+            }
+          }
+        })
         codeTabsPanel.setSelectedComponent(appTabsPanel.codeTab)
         appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)

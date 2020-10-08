@@ -71,7 +71,6 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
 //  @throws (classOf[IndexOutOfBoundsException])
   def setSelectedIndexPanels(index: Int): Unit =  {
     val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
-    App.printSwingObject(tabOwner, "setSelectedIndexPanels ")
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       tabOwner.requestFocus
       tabOwner.setSelectedIndex(tabIndex)
