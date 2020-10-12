@@ -19,6 +19,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
 import org.nlogo.swing.Utils.icon
+import org.nlogo.workspace.ModelsLibrary
 
 object LibrariesTab {
   val itemHTMLTemplate =
@@ -295,6 +296,7 @@ class LibrariesTab( category:           String
   private def finishManagement(): Unit = {
     updateSidebar()
     recompile()
+    ModelsLibrary.rootNode = None
   }
 
   private def numSelected:   Int         = libraryList.getSelectedIndices.length
