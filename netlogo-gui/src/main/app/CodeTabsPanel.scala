@@ -1,7 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.app
 
-import java.awt.{ Component }
 import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 
 import javax.swing.{ Action, JTabbedPane, KeyStroke }
@@ -10,6 +9,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 import scala.collection.mutable
 
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
@@ -45,12 +45,10 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   currentTab = codeTab
 
-  def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
+  def init(manager: FileManager, monitor: DirtyMonitor) {
     addTab(I18N.gui.get("tabs.code"), codeTab)
     initManagerMonitor(manager, monitor)
     tabManager.setSeparateCodeTabBindings(this)
-
-    // make this a method
 
     // Add keystrokes for actions from TabsMenu to the codeTabsPanel
     TabsMenu.tabActions(tabManager).foreach(action => {
@@ -95,20 +93,21 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
       // maybe add focus to text area
       val currentTab = codeTabsPanel.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
-      // don't want to go to browser, come back and then compile
-      // will need to consider case with included FileSaveGroup
-      // if (tabManager.getCodeTab.dirty) {
-      //   new AppEvents.SwitchedTabsEvent(tabManager.getCodeTab, currentTab).raise(getTabs)
-      // }
     }
   })
 
   def stateChanged(e: ChangeEvent) = {
-    currentTab = getSelectedComponent
-    if (currentTab == null) {
-      currentTab = codeTab
+    // for explanation see comment in Tabs.stateChanged
+    if (tabManager.getSelectedAppTabIndex != -1) {
+      val previousTab = tabManager.getCurrentTab
+      currentTab = getSelectedComponent
+      // Could happen in the case the CodeTabPanel has only the MainCodeTab
+      if (currentTab == null) {
+        currentTab = codeTab
+      }
+      tabManager.setCurrentTab(currentTab)
+      currentTab.requestFocus()
+      new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
-    tabManager.setCurrentTab(currentTab)
-    currentTab.requestFocus()
   }
 }

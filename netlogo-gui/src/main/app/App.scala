@@ -461,7 +461,7 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    val titler = (file: Option[String]) => file map externalFileTitle getOrElse modelTitle
+    val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle }
     pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
       new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
       new ConstantParameter(titler))
@@ -482,10 +482,11 @@ class App extends
     frame.addLinkComponent(viewManager)
 
     if (popOutCodeTab) {
-      codeTabsPanel.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+      codeTabsPanel.init(fileManager, dirtyMonitor)
     }
 
-    tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+    //tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+    tabs.init(fileManager, dirtyMonitor)
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
@@ -774,6 +775,12 @@ class App extends
         case _                     => modelTitle
       }
     frame.setTitle(title)
+    tabManager.codeTabsPanelOption match {
+      case None           =>
+      case Some(thePanel) =>  {
+        thePanel.codeTabContainer.setTitle(title)
+      }
+    }
   }
 
   /**
@@ -803,6 +810,10 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
+    tabManager.codeTabsPanelOption match {
+      case None           =>
+      case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle)
+    }
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
@@ -1079,16 +1090,6 @@ class App extends
    * @see #compile
    */
   def compileLater(){ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
-
-  /**
-   * Switches tabs.
-   * @param number which tab to switch to.  0 is the Interface tab,
-   *        1 the Info tab, 2 the Code tab, 3 the
-   *        Errors tab.
-   */
-  def selectTab(number:Int){  // zero-indexed
-    dispatchThreadOrBust(tabs.setSelectedIndex(number))
-  }
 
   /**
    * Not currently supported.  For now, use <code>command</code>
