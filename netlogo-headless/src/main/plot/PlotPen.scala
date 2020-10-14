@@ -2,7 +2,8 @@
 
 package org.nlogo.plot
 
-import org.nlogo.core.{ PlotPenInterface, PlotPenState }
+import org.nlogo.api.PlotPenInterface
+import org.nlogo.core.PlotPenState
 
 class PlotPen(
   val temporary: Boolean,

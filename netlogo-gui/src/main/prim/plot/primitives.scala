@@ -63,10 +63,10 @@ class _setcurrentplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
-    if (plot == null)
+    if (plot == None)
       throw new RuntimePrimitiveException(context, this,
         "no such plot: \"" + name + "\"")
-    plotManager.currentPlot = Some(plot)
+    plotManager.currentPlot = plot
     context.ip = next
   }
 }

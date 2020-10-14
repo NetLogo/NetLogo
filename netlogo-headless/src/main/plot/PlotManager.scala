@@ -4,7 +4,7 @@ package org.nlogo.plot
 
 import org.nlogo.core.CompilerException
 
-import org.nlogo.api.{ PlotAction, LogoThunkFactory, CommandLogoThunk, ActionBroker }
+import org.nlogo.api.{ ActionBroker, CommandLogoThunk, LogoThunkFactory, PlotAction, PlotInterface }
 
 import scala.collection.mutable
 import scala.util.{ Failure, Success, Try }
@@ -48,6 +48,7 @@ class PlotManager(factory: LogoThunkFactory)
 
   def hasPlot(name: String): Boolean = getPlot(name).isDefined
   def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
+  def maybeGetPlot(name: String): Option[PlotInterface] = getPlot(name)
 
   def getPlotPen(plotName: String, penName: String) =
     getPlot(plotName).flatMap(_.getPen(penName))

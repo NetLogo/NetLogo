@@ -3,11 +3,11 @@
 package org.nlogo.plot
 
 import
-  org.nlogo.core.{ Color, ColorConstants, PlotPenInterface },
+  org.nlogo.core.{ Color, ColorConstants },
     ColorConstants.White
 
 import
-  org.nlogo.api.{ PlotAction, PlotInterface, PlotState }
+  org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
 
 import
   java.io.{ Serializable => JSerializable }

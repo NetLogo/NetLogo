@@ -35,5 +35,6 @@ class DummyPlotManager extends PlotManagerInterface {
   override def setCurrentPlot(name: String) { }
   override def hasPlot(name: String) = false
   override def getPlot(name: String) = None
+  override def maybeGetPlot(name: String) = None
   override def getPlotNames = Seq()
 }

@@ -46,7 +46,7 @@ class DummyPlotWidget(plot:Plot, plotManager: PlotManager) extends AbstractPlotW
   }
 
   override def savePens(s: StringBuilder): Unit = {
-    val p: Plot = plotManager.getPlot(plot.name)
+    val p: Plot = plotManager.getPlot(plot.name).getOrElse(throw new Exception("existing plot not found?"))
     for(pen <- p.pens){
       if (!pen.temporary) {
         s.append("\"" + org.nlogo.api.StringUtils.escapeString(pen.name) + "\" " +

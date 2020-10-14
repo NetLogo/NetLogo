@@ -2,10 +2,10 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.CSV
+import org.nlogo.api.{ CSV, PlotInterface, PlotPointInterface }
 import collection.mutable.Buffer
 
-class PlotExporter(private val plot: Plot, private val csv: CSV) {
+class PlotExporter(private val plot: PlotInterface, private val csv: CSV) {
   def export(writer: java.io.PrintWriter) {
     exportIntro(writer)
     exportPens(writer)
@@ -20,14 +20,14 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
       "legend open?",
       "number of pens")))
     writer.println(csv.dataRow(Array(
-      double2Double(plot.xMin),
-      double2Double(plot.xMax),
-      double2Double(plot.yMin),
-      double2Double(plot.yMax),
-      boolean2Boolean(plot.autoPlotOn),
+      Double.box(plot.state.xMin),
+      Double.box(plot.state.xMax),
+      Double.box(plot.state.yMin),
+      Double.box(plot.state.yMax),
+      Boolean.box(plot.state.autoPlotOn),
       plot.currentPen.map(_.name).getOrElse(""),
-      boolean2Boolean(plot.legendIsOpen),
-      int2Integer(plot.pens.size))))
+      Boolean.box(plot.legendIsOpen),
+      Int.box(plot.pens.size))))
     writer.println()
   }
 
@@ -39,11 +39,11 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     for (pen <- plot.pens) {
       writer.println(csv.dataRow(Array(
         pen.name,
-        boolean2Boolean(pen.isDown),
-        int2Integer(pen.mode),
-        double2Double(pen.interval),
-        org.nlogo.api.Color.argbToColor(pen.color),
-        double2Double(pen.x))))
+        Boolean.box(pen.state.isDown),
+        Int.box(pen.state.mode),
+        Double.box(pen.state.interval),
+        org.nlogo.api.Color.argbToColor(pen.state.color),
+        Double.box(pen.state.x))))
     }
     writer.println()
   }
@@ -67,16 +67,14 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     // Output data rows
     // Get pen data lists, put them in a list,
     // and transpose that list into a 2 dimensional array
-    val penDataListsList = Buffer[Seq[PlotPoint]]()
+    val penDataListsList = Buffer[Seq[PlotPointInterface]]()
     var maxPenDataListSize = 0
     for (pen <- plot.pens) {
-      var penDataList = pen.points
-      if (penDataList == null)
-        penDataList = Buffer()
+      val penDataList = Option(pen.points).getOrElse(Vector())
       maxPenDataListSize = maxPenDataListSize max penDataList.size
       penDataListsList += penDataList
     }
-    val outColumnsArray:Array[Array[PlotPoint]] = Array.ofDim(maxPenDataListSize, numPens)
+    val outColumnsArray:Array[Array[PlotPointInterface]] = Array.ofDim(maxPenDataListSize, numPens)
     for (i <- 0 until numPens) {
       val penDataList = penDataListsList(i)
       val penDataListSize = penDataList.size

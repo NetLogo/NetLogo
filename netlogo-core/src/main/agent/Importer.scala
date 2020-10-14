@@ -7,8 +7,8 @@ package org.nlogo.agent
 // methods from ImporterJ to here. - ST 7/11/12
 
 import org.nlogo.{ api, core },
-  core.{PlotPenState, PlotPenInterface, Breed, AgentKind, AgentVariables},
-  api.{PlotState, PlotInterface, ImporterUser}
+  core.{ AgentKind, AgentVariables, Breed, PlotPenState },
+  api.{ ImporterUser, PlotInterface, PlotPenInterface, PlotState }
 
 import collection.immutable.ListMap
 import ImporterJ.Junk
