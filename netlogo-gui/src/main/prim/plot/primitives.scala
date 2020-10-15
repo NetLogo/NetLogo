@@ -208,7 +208,7 @@ class _exportplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
-    if (plotManager.getPlot(name) == null) {
+    if (plotManager.getPlot(name) == None) {
       throw new RuntimePrimitiveException(context, this, "no such plot: \"" + name + "\"")
     }
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04

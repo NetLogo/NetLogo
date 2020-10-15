@@ -44,18 +44,17 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot
   }
 
-  // possible null return
   def getPlot(name: String): Option[Plot] = _plots.find(_.name.equalsIgnoreCase(name))
 
   // used for letting the user choose which plot to export
   def getPlotNames: Seq[String] = _plots.map(_.name)
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
+  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == None).get
 
   // these are for api compatibility - Jeremy B Octover 2020
   def hasPlot(name: String): Boolean = _plots.exists(_.name == name)
   def maybeGetPlot(name: String): Option[PlotInterface] = getPlot(name)
   def publish(action: PlotAction): Unit = ???
-  def setCurrentPlot(name: String): Unit = getPlot(name)
+  def setCurrentPlot(name: String): Unit = currentPlot = getPlot(name)
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None
