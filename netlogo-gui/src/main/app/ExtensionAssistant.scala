@@ -5,7 +5,7 @@ package org.nlogo.app
 import java.awt.Component
 import javax.swing.JOptionPane
 
-import org.nlogo.api.ExtensionManager
+import org.nlogo.api.{ ExtensionManager, LibraryManager }
 import org.nlogo.app.common.Events.OpenLibrariesDialogEvent
 import org.nlogo.core.I18N
 import org.nlogo.window.Events.CompiledEvent
@@ -20,7 +20,7 @@ class ExtensionAssistant( parent: Component
                         ) extends CompiledEvent.Handler {
 
   def handle(e: CompiledEvent) {
-    if (Option(e.error).exists(_.getMessage.startsWith(ExtensionManager.extensionNotFoundStr))) {
+    if (LibraryManager.enabled && Option(e.error).exists(_.getMessage.startsWith(ExtensionManager.extensionNotFoundStr))) {
       val missingExtName = e.error.getMessage.stripPrefix(ExtensionManager.extensionNotFoundStr)
       if (extExists(missingExtName)) {
         val missingExtVersion = lookupExtVersion(missingExtName)

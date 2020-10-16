@@ -189,10 +189,13 @@ class LibrariesTab( category:           String
 
         override def intervalAdded(e: ListDataEvent): Unit =
           if (canUpdateInRange(listModel, e.getIndex0, e.getIndex1))
-            updateAllAction.setEnabled(true)
+            updateAllAction.setEnabled(LibraryManager.enabled && true)
 
-        override def intervalRemoved(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(listModel))
-        override def contentsChanged(e: ListDataEvent): Unit = updateAllAction.setEnabled(canUpdate(listModel))
+        override def intervalRemoved(e: ListDataEvent): Unit =
+          updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
+
+        override def contentsChanged(e: ListDataEvent): Unit =
+          updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
 
       }
     )
@@ -212,7 +215,7 @@ class LibrariesTab( category:           String
 
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
-    updateAllAction.setEnabled(canUpdate(listModel))
+    updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
 
     updateSidebar()
 
@@ -249,9 +252,9 @@ class LibrariesTab( category:           String
       addToCodeTabButton.setEnabled(selectedValues.forall(_.status != LibraryStatus.CanInstall))
 
       installButton.setText(installButtonText)
-      installButton.setEnabled(actionableLibraries.length > 0)
+      installButton.setEnabled(LibraryManager.enabled && actionableLibraries.length > 0)
 
-      uninstallButton.setEnabled(selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
+      uninstallButton.setEnabled(LibraryManager.enabled && selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
       homepageButton.setEnabled(numSelected == 1)
 
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null

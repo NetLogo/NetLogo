@@ -24,6 +24,9 @@ object Running {
      else Seq()) ++
     (if(System.getProperty("org.nlogo.noOptimizer") == "true")
       Seq("-Dorg.nlogo.noOptimizer=true")
+     else Seq()) ++
+    (if(System.getProperty("netlogo.libraries.disabled") == "true")
+      Seq("-Dnetlogo.libraries.disabled=true")
      else Seq())
     )
 
