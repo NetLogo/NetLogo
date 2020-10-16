@@ -88,7 +88,10 @@ with MenuTab {
 
   def getToolBar = new ToolBar {
     override def addControls() {
-      if (!org.nlogo.app.App.controlsAdded) {
+      // Only want to add toolbar items once
+      // This method gets called when the code tab pops in or pops out
+      // because org.nlogo.swing.ToolBar overrides addNotify.
+      if (this.getActionMap.get("procmenu") == null) {
         val proceduresMenu = new ProceduresMenu(CodeTab.this)
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
           .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
@@ -104,7 +107,6 @@ with MenuTab {
           add(new ToolBar.Separator)
           additionalComps foreach add
         }
-        org.nlogo.app.App.controlsAdded = true
       }
     }
   }
@@ -139,8 +141,14 @@ with MenuTab {
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent) = if (dirty && e.oldTab == this) compile()
-
+  def handle(e: AppEvents.SwitchedTabsEvent) = {
+    //println("code tab - SwitchedTabsEvent, dirty: " + dirty)
+    //println("event: " + e)
+    if (dirty && e.oldTab == this) {
+      //println("compiling")
+      compile()
+    }
+  }
   private var originalFontSize = -1
   override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)

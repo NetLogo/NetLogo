@@ -55,7 +55,6 @@ object App{
     }
   }
 
-  var controlsAdded = false
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
