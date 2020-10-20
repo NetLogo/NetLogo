@@ -97,8 +97,18 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
   }
 
   def getIndexOfCodeTab(tab: CodeTab): Int = {
-    val indx = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
-    indx
+    val index = getCodeTabsOwner.indexOfComponent(tab)
+    println(index)
+    index + getTabManager.getAppTabsOwner.getTabCount
   }
 
+  /**
+    * Removes the specified Component from the Tabs or CodeTabsPanel JTabbedPane
+    *
+    * @param component The Component to remove.
+    */
+   def removeTab(tab: Component): Unit = {
+    val (tabOwner, _) = getTabManager.ownerAndIndexOfTab(tab)
+    tabOwner.remove(tab)
+  }
 }

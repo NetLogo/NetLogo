@@ -279,7 +279,7 @@ class Tabs(workspace:           GUIWorkspace,
   def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) foreach { tab =>
       val index = getIndexOfCodeTab(tab)
-      remove(tab)
+      removeTab(tab)
       removeMenuItem(index)
       externalFileTabs -= tab
       if (externalFileTabs.isEmpty) menu.revokeAction(SaveAllAction)
