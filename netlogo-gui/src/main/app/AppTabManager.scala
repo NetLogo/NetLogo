@@ -46,7 +46,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def getAppTabsOwner = { appTabsPanel }
 
-  def getTabOwner(tab: Component): AbstractTabs = {
+  def getTabOwner(tab: Component): AbstractTabsPanel = {
     if (tab.isInstanceOf[CodeTab]) getCodeTabsOwner else appTabsPanel
   }
 
@@ -59,8 +59,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Generally the term "CodeTab" in method names refers to
   // any that is of class CodeTab. The term "MainCodeTab"
-  // is often used refer more specifically. However, earlier code
-  // may refer to the MainCodeTab as CodeTab.
+  // is usually used refer more specifically to the unique main code tab.
   def setSelectedCodeTab(tab: CodeTab): Unit = {
     getCodeTabsOwner.setSelectedComponent(tab)
   }
@@ -75,6 +74,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def getSelectedAppTabIndex() = { appTabsPanel.getSelectedIndex }
 
+  // Sum of the number of App Tabs and Code Tabs, regardless of
+  // where they are contained.
+  // The word Combined in a method name generally indicates that Tabs entity
+  // and possible CodeTabsPanel entity are being dealt with in a combined way,
+  // that is not visible to the code user.
   def getCombinedTabCount(): Int = {
     val appTabCount = appTabsPanel.getTabCount
     codeTabsPanelOption match {
@@ -121,15 +125,15 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
-  // tabOwner = the AbstractTabs containing the indexed tab.
+  // tabOwner = the AbstractTabsPanel containing the indexed tab.
   // tabIndex = the index of the tab in tabOwner.
   // This method allows for the possibility that the appTabsPanel has no tabs,
   // although this should not occur in practice
-  def ownerAndIndexFromCombinedIndex(combinedTabIndx: Int): (AbstractTabs, Int) = {
+  def ownerAndIndexFromCombinedIndex(combinedTabIndx: Int): (AbstractTabsPanel, Int) = {
     if (combinedTabIndx < 0) {
       throw new IndexOutOfBoundsException
     }
-    var tabOwner = appTabsPanel.asInstanceOf[AbstractTabs]
+    var tabOwner = appTabsPanel.asInstanceOf[AbstractTabsPanel]
     val appTabCount = appTabsPanel.getTabCount
     var tabIndex = combinedTabIndx
 
@@ -153,11 +157,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Input: tab - a tab component
   // Returns (tabOwner, tabIndex)
-  // where tabOwner is the AbstractTabs containing the specified component
+  // where tabOwner is the AbstractTabsPanel containing the specified component
   // tabIndex = the index of the tab in tabOwner.
   // Returns (null, -1) if there is no tab owner for this tab component.
-  def ownerAndIndexOfTab(tab: Component): (AbstractTabs, Int) = {
-    var tabOwner = null.asInstanceOf[AbstractTabs]
+  def ownerAndIndexOfTab(tab: Component): (AbstractTabsPanel, Int) = {
+    var tabOwner = null.asInstanceOf[AbstractTabsPanel]
     var tabIndex = appTabsPanel.indexOfComponent(tab)
     if (tabIndex != -1) {
       tabOwner = appTabsPanel
@@ -194,9 +198,9 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabComponent)
-  // tabOwner = the AbstractTabs containing the indexed tab.
+  // tabOwner = the AbstractTabsPanel containing the indexed tab.
   // tabComponent = the tab in tabOwner referenced by combinedTabIndx.
-  def getTabAtCombinedTabIndx(combinedTabIndx: Int): (AbstractTabs, Component) = {
+  def getTabAtCombinedTabIndx(combinedTabIndx: Int): (AbstractTabsPanel, Component) = {
     val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(combinedTabIndx)
     val tabComponent = tabOwner.getComponentAt(tabIndex)
     (tabOwner, tabComponent)

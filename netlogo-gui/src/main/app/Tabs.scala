@@ -27,7 +27,7 @@ class Tabs(workspace:           GUIWorkspace,
            interfaceTab:        InterfaceTab,
            externalFileManager: ExternalFileManager,
            private var menu:    MenuBar)
-  extends AbstractTabs(workspace, interfaceTab, externalFileManager)
+  extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with TabsInterface with ChangeListener with LinkParent
   with org.nlogo.window.LinkRoot
   with AboutToCloseFilesEvent.Handler

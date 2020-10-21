@@ -16,12 +16,18 @@ import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ GUIWorkspace }
 import org.nlogo.window.Event.LinkParent
 
+// When a separate code tab window is created, an instance of this class owns the CodeTabs.
+// When there is no separate code tab window, no such instance exists, and all
+// CodeTabs belong to Tabs. [ Thinking of Tabs as AppTabsPanel makes the parallels between
+// CodeTabsPanel and Tabs clearer - both are JTabbedPanes that contain and manage tabs.]
+// CodeTabsPanel and Tabs are both instances of AbstractTabsPanel, which implements their shared behavior.
+
 class CodeTabsPanel(workspace:             GUIWorkspace,
                        interfaceTab:          InterfaceTab,
                        externalFileManager:   ExternalFileManager,
                        val mainCodeTab:           MainCodeTab,
                        val externalFileTabs:  mutable.Set[TemporaryCodeTab])
-  extends AbstractTabs(workspace, interfaceTab, externalFileManager)
+  extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with ChangeListener
   with LinkParent
   with org.nlogo.window.LinkRoot {

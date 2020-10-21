@@ -7,7 +7,7 @@ package org.nlogo.swing
 import java.awt.event.ActionEvent
 import javax.swing.{ Action, AbstractAction }
 import UserAction._
-import org.nlogo.app.{ AbstractTabs, AppTabManager }
+import org.nlogo.app.{ AbstractTabsPanel, AppTabManager }
 
 object TabsMenu {
   def tabAction(tabMgr: AppTabManager, index: Int): Action =
@@ -15,9 +15,9 @@ object TabsMenu {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      this.putValue(Action.NAME, tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabs].getTitleAtCombinedIndex(index));
+      this.putValue(Action.NAME, tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].getTitleAtCombinedIndex(index));
       override def actionPerformed(e: ActionEvent) {
-        tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabs].setSelectedIndexPanels(index)
+        tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].setSelectedIndexPanels(index)
       }
     }
 
