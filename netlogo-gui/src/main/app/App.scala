@@ -399,7 +399,7 @@ class App extends
       _codeTabsPanel = new CodeTabsPanel(workspace,
                         tabs.interfaceTab,
                         tabs.externalFileManager,
-                        tabs.codeTab,
+                        tabs.mainCodeTab,
                         tabs.externalFileTabs)
 
       _tabManager = new AppTabManager(_tabs, Some(_codeTabsPanel))
@@ -413,7 +413,7 @@ class App extends
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
     val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
@@ -644,7 +644,7 @@ class App extends
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        tabs.codeTab.innerSource = transform(tabs.codeTab.innerSource)
+        tabs.mainCodeTab.innerSource = transform(tabs.mainCodeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
@@ -1065,7 +1065,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.mainCodeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1073,7 +1073,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource = source) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.mainCodeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1209,7 +1209,7 @@ class App extends
   }
 
   def procedureSource:  String =
-    tabs.codeTab.innerSource
+    tabs.mainCodeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
     tabs.interfaceTab.iP.getWidgetsForSaving
   }

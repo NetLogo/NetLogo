@@ -19,7 +19,7 @@ import org.nlogo.window.Event.LinkParent
 class CodeTabsPanel(workspace:             GUIWorkspace,
                        interfaceTab:          InterfaceTab,
                        externalFileManager:   ExternalFileManager,
-                       val codeTab:           MainCodeTab,
+                       val mainCodeTab:           MainCodeTab,
                        val externalFileTabs:  mutable.Set[TemporaryCodeTab])
   extends AbstractTabs(workspace, interfaceTab, externalFileManager)
   with ChangeListener
@@ -38,15 +38,15 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
 
-  override def getMainCodeTab(): MainCodeTab = { codeTab }
+  override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }
 
   codeTabContainer.setTitle("Code Tab Window")
 
-  currentTab = codeTab
+  currentTab = mainCodeTab
 
   def init(manager: FileManager, monitor: DirtyMonitor) {
-    addTab(I18N.gui.get("tabs.code"), codeTab)
+    addTab(I18N.gui.get("tabs.code"), mainCodeTab)
     initManagerMonitor(manager, monitor)
     tabManager.setSeparateCodeTabBindings(this)
 
@@ -103,7 +103,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
       currentTab = getSelectedComponent
       // Could happen in the case the CodeTabPanel has only the MainCodeTab
       if (currentTab == null) {
-        currentTab = codeTab
+        currentTab = mainCodeTab
       }
       tabManager.setCurrentTab(currentTab)
       currentTab.requestFocus()

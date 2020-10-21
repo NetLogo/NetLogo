@@ -51,19 +51,19 @@ class Tabs(workspace:           GUIWorkspace,
     menu = newMenu
   }
 
-  val codeTab = new MainCodeTab(workspace, this, menu)
+  val mainCodeTab = new MainCodeTab(workspace, this, menu)
 
   def permanentMenuActions = {
-    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
+    tabActions ++ mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
   }
 
   var tabActions: Seq[Action] = Seq.empty[Action]
   lazy val saveModelActions = fileManager.saveModelActions(this)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val stableCodeTab = codeTab
+  val stableCodeTab = mainCodeTab
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
-  override def getMainCodeTab(): MainCodeTab = { codeTab }
+  override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
 
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
@@ -74,7 +74,7 @@ class Tabs(workspace:           GUIWorkspace,
 
     if (tabManager.getCodeTabsOwner.equals(this)) {
       popOutCodeTab = false
-      addTab(I18N.gui.get("tabs.code"), codeTab)
+      addTab(I18N.gui.get("tabs.code"), mainCodeTab)
     } else {
       popOutCodeTab = true
     }
@@ -206,8 +206,8 @@ class Tabs(workspace:           GUIWorkspace,
         clearErrors()
       }
       else {
-        tabManager.setSelectedCodeTab(codeTab)
-        recolorTab(codeTab, true)
+        tabManager.setSelectedCodeTab(mainCodeTab)
+        recolorTab(mainCodeTab, true)
       }
       // I don't really know why this is necessary when you delete a slider (by using the menu
       // item *not* the button) which causes an error in the Code tab the focus gets lost,
@@ -262,7 +262,7 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def addNewTab(name: Filename) = {
-    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, codeTab.smartTabbingEnabled)
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, mainCodeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
@@ -287,9 +287,9 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def forAllCodeTabs(fn: CodeTab => Unit) = {
-    (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + codeTab) foreach fn
+    (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + mainCodeTab) foreach fn
   }
-  def lineNumbersVisible = { codeTab.lineNumbersVisible }
+  def lineNumbersVisible = { mainCodeTab.lineNumbersVisible }
   def lineNumbersVisible_=(visible: Boolean) = { forAllCodeTabs(_.lineNumbersVisible = visible) }
 
   def removeMenuItem(index: Int) {
@@ -312,7 +312,7 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def handle(e: AfterLoadEvent) = {
-    codeTab.getPoppingCheckBox.setSelected(popOutCodeTab)
+    mainCodeTab.getPoppingCheckBox.setSelected(popOutCodeTab)
     requestFocus()
   }
 

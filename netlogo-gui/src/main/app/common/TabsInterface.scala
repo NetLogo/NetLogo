@@ -17,7 +17,7 @@ trait TabsInterface {
 
   val interfaceTab: Component
   val infoTab: Component
-  val codeTab: Component
+  val mainCodeTab: Component
 
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit

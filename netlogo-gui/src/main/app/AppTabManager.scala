@@ -233,8 +233,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
         }
         codeTabsPanel.getCodeTabContainer.dispose
         setCodeTabsPanelOption(None)
-        appTabsPanel.codeTab.getPoppingCheckBox.setSelected(false)
-        appTabsPanel.codeTab.requestFocus
+        appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
+        appTabsPanel.mainCodeTab.requestFocus
       // need to remove component, because will no longer exist
       // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
       } // end case where work was done
@@ -248,7 +248,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
         appTabsPanel.interfaceTab,
         appTabsPanel.externalFileManager,
-        appTabsPanel.codeTab,
+        appTabsPanel.mainCodeTab,
         appTabsPanel.externalFileTabs)
 
         // aab maybe some of this should be in an init method shared with
@@ -289,8 +289,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
             }
           }
         })
-        appTabsPanel.codeTab.getPoppingCheckBox.setSelected(true)
-        codeTabsPanel.setSelectedComponent(appTabsPanel.codeTab)
+        appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
+        codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
         appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
         setSeparateCodeTabBindings(codeTabsPanel)
