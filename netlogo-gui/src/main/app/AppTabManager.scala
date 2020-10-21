@@ -97,31 +97,30 @@ class AppTabManager( val appTabsPanel:          Tabs,
     currentTab = tab
   }
 
-  // Before the detachable code tab capability was added
-  // the integers associated with tabs in the menu and the keyboard shortcuts
-  // were directly connected to an index in JTabbedPane (usually an instance of the class Tabs ),
-  // The tabs menu refers to tabs as TabTitle Command-Key index + 1
-  // For example
-  // Interface Ctrl 1
-  // Tab Ctrl 2
-  // Code Ctrl 3
-  // File1.nls Ctrl 4
-  // New File 1 Ctrl 5
-  // Besides using the menu item, the user can also use the corresponding
-  // keyboard shortcut. For example Ctrl 3 to access the code tab.
-  // When the code tab detaches, the same number must be converted into
-  // an index into the CodeTabsPanel.
-  // The following terminology will be useful.
-  // appTabsPanel = application JTabbedPane (Tabs)
-  // codeTabsPanel = CodeTabsPanel when it exists
-  // nAppTabsPanel = the number of tabs in appTabsPanel at the moment
-  // combinedTabIndx = the index of a tab in appTabsPanel when there is no codeTabsPanel
-  // codeTabIndx = the index of a tab in codeTabsPanel (if it exists)
-  // When the codetab is not detached
-  // combinedTabIndx is an index in appTabsPanel
-  // When the codetab is detached
-  // for combinedTabIndx < nAppTabsPanel: combinedTabIndx is an index in appTabsPanel
-  // combinedTabIndx >= nAppTabsPanel: codeTabIndx = combinedTabIndx - nAppTabsPanel is an index in codeTabsPanel
+  // AAB - not sure where is the best place for this info. Other classes
+  // should probably refer to it.
+
+  // In order to support the option of a separate code window, NetLogo internal
+  // code enforces constraints on tab order.
+  // Users should manipulate tabs they choose to add (in extensions for example)
+  // using only the publically available methods in the last section of AbstractTabsPanel.
+
+  // Understanding the constraints on tab order is useful for understanding the
+  // code controlling tabs.
+  // When there is no separate code window, all tabs belong to Tabs
+  // (the value of appTabsPanel in AppTabManager)
+  // The tab order is non-CodeTabs followed by CodeTabs.
+  // The non-CodeTab order is InterfaceTab, InfoTab, any user-created non-CodeTabs.
+  // The MainCodeTab is always the first CodeTab, the other CodeTabs are the
+  // TemporaryCodeTab which is used for included files, and the
+  // ExtendedCodeTab which is for use outside the NetLogo code base.
+  //
+  // When a separate code window exists, all the CodeTabs belong to the CodeTabsPanel.
+  // They retain the same relative order they would if they all belonged to Tabs.
+  //
+  // The terms CombinedIndex or combinedTabIndx refers to the index a tab would have
+  // if there were no separate code window.
+
 
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
@@ -177,6 +176,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     (tabOwner, tabIndex)
   }
 
+  // Useful for debugging
   def printAllTabs(): Unit = {
     println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
     printTabsOfTabsPanel(appTabsPanel)
@@ -190,6 +190,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     println("")
   }
 
+  // Useful for debugging
   def printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
     for (n <- 0 until pane.getTabCount) {
       App.printSwingObject(pane.getComponentAt(n), "")
@@ -206,6 +207,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     (tabOwner, tabComponent)
   }
 
+  // Actions are created for use by the TabsMenu, and by accelerator keys
   object RejoinCodeTabsAction extends AbstractAction("PopCodeTabIn") {
     def actionPerformed(e: ActionEvent) {
       switchToNoSeparateCodeWindow
@@ -218,6 +220,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
+  // Dispatcher to create or end the use of a separate code window
+  // Do nothing if already in desired state
   def switchToSpecifiedCodeWindowState(isSeparate: Boolean): Unit = {
     if (isSeparate) {
       switchToSeparateCodeWindow
@@ -226,12 +230,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
+  // Do the work to go back to the no separate code window state
   def switchToNoSeparateCodeWindow(): Unit = {
     // nothing to do if CodeTabsPanel does not exist
 
     codeTabsPanelOption match {
-      case None                =>
+      case None                => // nothing to do
       case Some(codeTabsPanel) => {
+        // Move the tabs to the AppTabsPanel (Tabs), retaining order
         for (n <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
         }
@@ -239,12 +245,13 @@ class AppTabManager( val appTabsPanel:          Tabs,
         setCodeTabsPanelOption(None)
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
-      // need to remove component, because will no longer exist
+      // need to remove link component, because will no longer exist
       // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
       } // end case where work was done
     }
   }
 
+  // Do the work to go back to the separate code window state
   def switchToSeparateCodeWindow(): Unit = {
     // Only act if code tab is part of the Tabs panel.
     // Otherwise it is already detached.
@@ -255,8 +262,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab,
         appTabsPanel.externalFileTabs)
 
-        // aab maybe some of this should be in an init method shared with
-        // CodeTabsPanel
         codeTabsPanelOption = Some(codeTabsPanel)
         codeTabsPanel.setTabManager(this)
 
@@ -275,9 +280,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
              0)
           }
         }
-
-        // Might need to reorder the TabsMenu
-        // aab add code here
 
         // Add keystrokes for actions from TabsMenu to the codeTabsPanel
         TabsMenu.tabActions(this).foreach(action => {
@@ -298,11 +300,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
         appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
         appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
         setSeparateCodeTabBindings(codeTabsPanel)
-        // add mouse listener, which should be not set when
-        // there is no code tab
       }
   }
 
+  // Add KeyStroke for Action to the InputMap and ActionMap of a JComponent
   def addComponentKeyStroke(component: JComponent, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();
@@ -310,11 +311,13 @@ class AppTabManager( val appTabsPanel:          Tabs,
     actionMap.put(actionName, action)
   }
 
+  // Add KeyStroke for Action to separate code window
   def addCodeTabContainerKeyStroke(codeTabsPanel: CodeTabsPanel, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
     addComponentKeyStroke(contentPane, mapKey, action, actionName)
   }
 
+  // Add KeyStroke for Action to main NetLogo window
   def addAppFrameKeyStroke(mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
     addComponentKeyStroke(contentPane, mapKey, action, actionName)
@@ -324,10 +327,12 @@ class AppTabManager( val appTabsPanel:          Tabs,
     UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
   }
 
+  // accelerator bindings for the main NetLogo window
   def setAppCodeTabBindings(): Unit = {
     addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), SeparateCodeTabsAction, "popOutCodeTab")
   }
 
+  // accelerator bindings for the separate code tab window
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
     addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
   }

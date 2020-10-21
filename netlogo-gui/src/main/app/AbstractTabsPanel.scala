@@ -111,10 +111,13 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     index + tabManager.getAppTabsOwner.getTabCount
   }
 
+  // Begin methods intended for use outside of NetLogo code, e.g
+  // for use in extensions
+
   /**
-    * Removes the specified Component from the Tabs or CodeTabsPanel JTabbedPane
+    * Removes the specified Component from the appropriate JTabbedPane
     *
-    * @param component The Component to remove.
+    * @param tab The Component to remove.
     */
    def removeTab(tab: Component): Unit = {
     val (tabOwner, _) = tabManager.ownerAndIndexOfTab(tab)
@@ -123,6 +126,12 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     }
   }
 
+  /**
+    * Replaces the specified ExtendedCodeTab with another ExtendedCodeTab in its JTabbedPane
+    *
+    * @param oldTab The tab to be removed
+    * @param newTab The tab to replace it with
+    */
   def replaceTab(oldTab: ExtendedCodeTab, newTab: ExtendedCodeTab): Unit = {
     val (tabOwner, tabIndex) = tabManager.ownerAndIndexOfTab(oldTab)
     if (tabOwner != null) {
@@ -130,7 +139,15 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     }
   }
 
-  def addNewTab(tab: Component, title: String = "", icon: javax.swing.Icon = null, tip: String = ""): Unit = {
+  /**
+   * This method adds a tab to the appropriate JTabbedPane.
+   *
+   * @param tab the Component to add
+   * @param title the title of the tab; may be <code>null</code>
+   * @param icon the icon for the tab; may be <code>null</code>
+   * @param tip the associated tooltip
+   */
+  def addNewTab(tab: Component, title: String = null, icon: javax.swing.Icon = null, tip: String = null): Unit = {
       // improve error handling
       if (tab == null) { throw new Exception }
       val codeTabsOwner = tabManager.getCodeTabsOwner
