@@ -175,6 +175,8 @@ public abstract strictfp class Event {
       // for events in the || clauses below, some relevant handlers are
       // not yet created when the lists are first built, and hence need
       // to be recomputed. It would be better to only recompute once.
+      // It may be possible to remove these tests by adding Event.rehash() to
+      // code involved with separate code windows. AAB 10/2020
       List<Handler> handlersV = events.get(eventClass);
       if (null == handlersV ||
         eventClass.toString().equals("class org.nlogo.window.Events$CompiledEvent") ||

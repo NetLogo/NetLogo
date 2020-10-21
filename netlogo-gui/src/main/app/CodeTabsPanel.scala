@@ -36,11 +36,11 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     addChangeListener(this)
   }
 
-  // frame is the App's AppFrame, (treated as a java.awt.Frame), which is the container for the
-  // CodeTabContainer that contains CodeTabsPanel that contains
-  // the MainCodeTab
+  // frame is the App's AppFrame, (treated as a java.awt.Frame)
   val frame = workspace.getFrame
-  //aab? this.requestFocusInWindow
+
+  // CodeTabContainer contains the CodeTabsPanel and is owned by frame
+  // It is currently implemented as a JDialog
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
 
@@ -51,12 +51,18 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   currentTab = mainCodeTab
 
+  // Because of the order in which elements of the NetLogo application come into being
+  // the CodeTabsPanel cannot be fully built when it is first instantiated.
+  // These steps are complete by the init method.
   def init(manager: FileManager, monitor: DirtyMonitor) {
     addTab(I18N.gui.get("tabs.code"), mainCodeTab)
     initManagerMonitor(manager, monitor)
+
+    // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window
     tabManager.setSeparateCodeTabBindings(this)
 
     // Add keystrokes for actions from TabsMenu to the codeTabsPanel
+    // because keystrokes are interpreted by the window that has focus.
     TabsMenu.tabActions(tabManager).foreach(action => {
       // Add the accelerator key if any to the input map and action map
       action.asInstanceOf[MenuAction].accelerator match {
@@ -74,11 +80,14 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent) {
+      // A single mouse click switches focus to a tab
       if (me.getClickCount() == 1) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         tabManager.setCurrentTab(currentTab)
         currentTab.requestFocus()
       }
+      // A single mouse control-click on the MainCodeTab in a separate window
+      // closes the code window, and takes care of the bookkeeping.
       if (me.getClickCount() == 1 && me.isControlDown) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         if (currentTab.isInstanceOf[MainCodeTab]) {
@@ -88,31 +97,34 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     }
   })
 
+  // If the user closes the code window, take care of the bookkeeping.
   codeTabContainer.addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       tabManager.switchToNoSeparateCodeWindow
     }
   })
 
+  // If focus returns to the code tab window, make its currentTab
+  // be selected
   codeTabContainer.addWindowFocusListener(new WindowAdapter() {
     override def  windowGainedFocus(e: WindowEvent) {
-      // maybe add focus to text area
       val currentTab = codeTabsPanel.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
     }
   })
 
   def stateChanged(e: ChangeEvent) = {
-    // for explanation see comment in Tabs.stateChanged
+    // for explanation of index -1, see comment in Tabs.stateChanged
     if (tabManager.getSelectedAppTabIndex != -1) {
       val previousTab = tabManager.getCurrentTab
       currentTab = getSelectedComponent
-      // Could happen in the case the CodeTabPanel has only the MainCodeTab
+      // currentTab could be null in the case where the CodeTabPanel has only the MainCodeTab
       if (currentTab == null) {
         currentTab = mainCodeTab
       }
       tabManager.setCurrentTab(currentTab)
       currentTab.requestFocus()
+      // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }

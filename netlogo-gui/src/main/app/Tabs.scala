@@ -23,6 +23,11 @@ import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
+// This used to be the only class whose instance 'owned' the InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs.
+// Now when there is a separate code window, that work is shared by CodeTabsPanel for the CodeTabs.
+// As a result, functionality common to Tabs and CodeTabsPanel is now in the class AbstractTabsPanel.
+// The role of Tabs would be better served by the name AppTabsPanel.
+
 class Tabs(workspace:           GUIWorkspace,
            interfaceTab:        InterfaceTab,
            externalFileManager: ExternalFileManager,
@@ -65,13 +70,20 @@ class Tabs(workspace:           GUIWorkspace,
 
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
 
-  // set a default that will be overwritten in init
+  // The value of popOutCodeTab is set in the init method
   var popOutCodeTab : Boolean = _
 
+  // Because of the order in which elements of the NetLogo application come into being
+  // Tabs cannot be fully built when it is first instantiated.
+  // These steps are complete by the init method.
+
+  // the moreTabs argument was there for PlugIns, and remains only
+  // to allow easier testing of scenerios with novel tabs.
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
 
+    // If there is not separate code tab, the MainCodeTab belongs to Tabs
     if (tabManager.getCodeTabsOwner.equals(this)) {
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), mainCodeTab)
@@ -89,6 +101,8 @@ class Tabs(workspace:           GUIWorkspace,
     assert(fileManager != null && dirtyMonitor != null)
 
     saveModelActions foreach menu.offerAction
+
+    // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window
     tabManager.setAppCodeTabBindings
   }
 
@@ -97,6 +111,7 @@ class Tabs(workspace:           GUIWorkspace,
       val currentTab = getTabs.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
       if (tabManager.getMainCodeTab.dirty) {
+        // The SwitchedTabsEvent can lead to compilation
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
       }
     }
@@ -121,6 +136,7 @@ class Tabs(workspace:           GUIWorkspace,
         case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
         case _ =>
       }
+      // The correctness of this logic needs investigation - AAB 10/2020
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
         case (true, false) => saveModelActions foreach menu.offerAction
         case (false, true) => saveModelActions foreach menu.revokeAction
@@ -133,6 +149,8 @@ class Tabs(workspace:           GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent): Unit =  {
+      // A single mouse control-click on the MainCodeTab in a separate window
+      // opens the code window, and takes care of the bookkeeping.
       if (me.getClickCount() == 1 && me.isControlDown) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         if (currentTab.isInstanceOf[MainCodeTab]) {

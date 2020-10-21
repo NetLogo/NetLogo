@@ -141,14 +141,8 @@ with MenuTab {
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent) = {
-    //println("code tab - SwitchedTabsEvent, dirty: " + dirty)
-    //println("event: " + e)
-    if (dirty && e.oldTab == this) {
-      //println("compiling")
-      compile()
-    }
-  }
+  def handle(e: AppEvents.SwitchedTabsEvent) = if (dirty && e.oldTab == this) compile()
+
   private var originalFontSize = -1
   override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)
