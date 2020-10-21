@@ -6,7 +6,7 @@ import java.awt.event.{ MouseEvent }
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
-import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, ExtendedCodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
 
@@ -60,46 +60,55 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
   override def requestFocus() = { currentTab.requestFocus() }
 
   def getCodeTabsOwner(): JTabbedPane = {
-    getTabManager.getCodeTabsOwner.asInstanceOf[JTabbedPane]
+    tabManager.getCodeTabsOwner.asInstanceOf[JTabbedPane]
   }
 
-  def getTitleAtAdjusted(index: Int): String =  {
-    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
+  def getTitleAtCombinedIndex(index: Int): String =  {
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
     tabOwner.getTitleAt(tabIndex)
   }
 
+  def getComponentAtCombinedIndex(index: Int): Component =  {
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
+    tabOwner.getComponentAt(tabIndex)
+  }
+
+  def setComponentAtCombinedIndex(index: Int, tab: Component): Unit = {
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
+    tabOwner.setComponentAt(tabIndex, tab)
+  }
+
   def setSelectedIndexPanels(index: Int): Unit =  {
-    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexFromTotalIndex(index)
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       tabOwner.requestFocus
       tabOwner.setSelectedIndex(tabIndex)
     } else {
-      val selectedIndex = getTabManager.getSelectedAppTabIndex
+      val selectedIndex = tabManager.getSelectedAppTabIndex
       if (selectedIndex == tabIndex) {
-        getTabManager.setSelectedAppTab(-1)
+        tabManager.setSelectedAppTab(-1)
       }
-        getTabManager.setSelectedAppTab(tabIndex)
+        tabManager.setSelectedAppTab(tabIndex)
       }
   }
 
   def setPanelsSelectedComponent(tab: Component): Unit = {
-    val (tabOwner, tabIndex) = getTabManager.ownerAndIndexOfTab(tab)
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexOfTab(tab)
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       tabOwner.requestFocus
       tabOwner.setSelectedIndex(tabIndex)
     } else {
-      val selectedIndex = getTabManager.getSelectedAppTabIndex
+      val selectedIndex = tabManager.getSelectedAppTabIndex
       if (selectedIndex == tabIndex) {
-        getTabManager.setSelectedAppTab(-1)
+        tabManager.setSelectedAppTab(-1)
       }
-        getTabManager.setSelectedAppTab(tabIndex)
+        tabManager.setSelectedAppTab(tabIndex)
       }
   }
 
   def getIndexOfCodeTab(tab: CodeTab): Int = {
     val index = getCodeTabsOwner.indexOfComponent(tab)
-    println(index)
-    index + getTabManager.getAppTabsOwner.getTabCount
+    index + tabManager.getAppTabsOwner.getTabCount
   }
 
   /**
@@ -108,7 +117,42 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     * @param component The Component to remove.
     */
    def removeTab(tab: Component): Unit = {
-    val (tabOwner, _) = getTabManager.ownerAndIndexOfTab(tab)
-    tabOwner.remove(tab)
+    val (tabOwner, _) = tabManager.ownerAndIndexOfTab(tab)
+    if (tabOwner != null) {
+      tabOwner.remove(tab)
+    }
+  }
+
+  def replaceTab(oldTab: ExtendedCodeTab, newTab: ExtendedCodeTab): Unit = {
+    val (tabOwner, tabIndex) = tabManager.ownerAndIndexOfTab(oldTab)
+    if (tabOwner != null) {
+      tabOwner.setComponentAt(tabIndex, newTab)
+    }
+  }
+
+  def addNewTab(tab: Component, title: String = "", icon: javax.swing.Icon = null, tip: String = ""): Unit = {
+      // improve error handling
+      if (tab == null) { throw new Exception }
+      val codeTabsOwner = tabManager.getCodeTabsOwner
+      if (tab.isInstanceOf[CodeTab]) {
+        // if it is a code tab, it goes at the end of JTabbedPane that owns CodeTabs
+        codeTabsOwner.insertTab(title, icon, tab, tip, codeTabsOwner.getTabCount)
+      } else {
+        val appTabsPanel = tabManager.getAppTabsPanel
+        if (codeTabsOwner.isInstanceOf[CodeTabsPanel]) {
+          // If there is a separate CodeTab Window, the tab it goes at the end of Apps JTabbedPane
+          appTabsPanel.insertTab(title, icon, tab, tip, appTabsPanel.getTabCount)
+        } else {
+          // Otherwise the tab goes after the other non-code-tabs, right before the
+          // MainCodeTab
+          val index = appTabsPanel.indexOfComponent(getCodeTab)
+          // shouldn't fail ? error handling
+          appTabsPanel.insertTab(title, icon, tab, tip, index)
+        }
+      }
+    }
+
+  override def getTabCount(): Int = {
+    tabManager.getCombinedTabCount
   }
 }

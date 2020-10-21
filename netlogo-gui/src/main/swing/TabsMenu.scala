@@ -15,14 +15,14 @@ object TabsMenu {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      this.putValue(Action.NAME, tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabs].getTitleAtAdjusted(index));
+      this.putValue(Action.NAME, tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabs].getTitleAtCombinedIndex(index));
       override def actionPerformed(e: ActionEvent) {
         tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabs].setSelectedIndexPanels(index)
       }
     }
 
   def tabActions(tabMgr: AppTabManager): Seq[Action] = {
-    val totalTabCount = tabMgr.getTotalTabCount
+    val totalTabCount = tabMgr.getCombinedTabCount
     for (i <- 0 until totalTabCount) yield tabAction(tabMgr, i)
   }
 

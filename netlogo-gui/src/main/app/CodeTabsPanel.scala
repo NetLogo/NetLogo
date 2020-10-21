@@ -76,7 +76,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
       if (me.getClickCount() == 1 && me.isControlDown) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         if (currentTab.isInstanceOf[MainCodeTab]) {
-          tabManager.switchToTabsCodeTab
+          tabManager.switchToNoSeparateCodeWindow
         }
       }
     }
@@ -84,7 +84,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   codeTabContainer.addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
-      tabManager.switchToTabsCodeTab
+      tabManager.switchToNoSeparateCodeWindow
     }
   })
 

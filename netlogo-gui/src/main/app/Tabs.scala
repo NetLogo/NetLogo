@@ -266,7 +266,7 @@ class Tabs(workspace:           GUIWorkspace,
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
     getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
-    addMenuItem(tabManager.getTotalTabCount - 1, tab.filenameForDisplay)
+    addMenuItem(tabManager.getCombinedTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
 
     setPanelsSelectedComponent(tab)

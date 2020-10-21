@@ -37,7 +37,7 @@ with WindowEvents.LoadModelEvent.Handler
   def getPoppingCheckBox = { poppingCheckBox }
   private class CodeTabPopOutAction extends AbstractAction("Code Tab in separate window") {
     def actionPerformed(e: ActionEvent) {
-      mainCodeTab.getParent.asInstanceOf[AbstractTabs].getTabManager.implementCodeTabSeparationState(poppingCheckBox.isSelected)
+      mainCodeTab.getParent.asInstanceOf[AbstractTabs].getTabManager.switchToSpecifiedCodeWindowState(poppingCheckBox.isSelected)
     }
   }
 
