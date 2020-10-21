@@ -9,8 +9,15 @@ import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JT
 import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 
-// The class AppTabManager handles relationships between tabs (JPanels) and the two
-// classes Tabs and CodeTabsPanel that are the JTabbedPanes that contain them.
+// The class AppTabManager handles relationships between tabs (the
+// InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs )
+// and their containing classes - Tabs and CodeTabsPanel.
+// When the MainCodeTab is in a separate window the CodeTabsPanel exists
+// and contains all the CodeTabs, while the other tabs belong to Tabs
+// (Tabs and CodeTabsPanel both being JTabbedPanes).
+// Otherwise all the tabs belong to Tabs.
+// AppTabManager uses the variable codeTabsPanelOption of type Option[CodeTabsPanel]
+// to deal with the fact that CodeTabsPanel is instatiated only some of the time.
 
 class AppTabManager( val appTabsPanel:          Tabs,
                      var codeTabsPanelOption: Option[CodeTabsPanel]) {
@@ -18,7 +25,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively
   def getAppTabsPanel = { appTabsPanel }
-  def getCodeTab = { appTabsPanel.getCodeTab }
+  def getMainCodeTab = { appTabsPanel.getMainCodeTab }
 
   // The separate window and JTabbedPane containing the main code tab and
   // other code tabs can come in an out of existence, and are hence
@@ -29,6 +36,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   // might want access to these owner methods to be only in the app package
+  // Need to carefully decide which methods are private
   def getCodeTabsOwner = {
     codeTabsPanelOption match {
       case None           => appTabsPanel
@@ -49,10 +57,16 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
+  // Generally the term "CodeTab" in method names refers to
+  // any that is of class CodeTab. The term "MainCodeTab"
+  // is often used refer more specifically. However, earlier code
+  // may refer to the MainCodeTab as CodeTab.
   def setSelectedCodeTab(tab: CodeTab): Unit = {
     getCodeTabsOwner.setSelectedComponent(tab)
   }
 
+  // Generally the term "AppTab" in method names refers to
+  // any tab in Tabs that is not of class CodeTab
   def setSelectedAppTab(index: Int): Unit = {
     appTabsPanel.setSelectedIndex(index)
   }

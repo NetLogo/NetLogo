@@ -30,19 +30,19 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
     }
   }
 
-  val jframe = { workspace.getFrame.asInstanceOf[JFrame] }
-  var tabManager: AppTabManager = { null }
+  val jframe =  workspace.getFrame.asInstanceOf[JFrame]
+  var tabManager: AppTabManager = null
   def setTabManager( myTabManager: AppTabManager ) : Unit = {
     tabManager = myTabManager
   }
 
-  def getCodeTab(): MainCodeTab // abstract
+  def getMainCodeTab(): MainCodeTab // abstract
   def getTabManager() = { tabManager }
   def getAppFrame() = { workspace.getFrame.asInstanceOf[AppFrame] }
   def getAppJFrame() = { jframe }
-  var fileManager: FileManager = { null }
-  var dirtyMonitor: DirtyMonitor = { null }
-  var currentTab: Component = { interfaceTab }
+  var fileManager: FileManager = null
+  var dirtyMonitor: DirtyMonitor = null
+  var currentTab: Component = interfaceTab
 
   def initManagerMonitor(manager: FileManager, monitor: DirtyMonitor): Unit =  {
     fileManager = manager
@@ -145,14 +145,14 @@ abstract class AbstractTabs(val workspace:           GUIWorkspace,
         } else {
           // Otherwise the tab goes after the other non-code-tabs, right before the
           // MainCodeTab
-          val index = appTabsPanel.indexOfComponent(getCodeTab)
+          val index = appTabsPanel.indexOfComponent(getMainCodeTab)
           // shouldn't fail ? error handling
           appTabsPanel.insertTab(title, icon, tab, tip, index)
         }
       }
     }
 
-  override def getTabCount(): Int = {
+  def getTotalTabCount(): Int = {
     tabManager.getCombinedTabCount
   }
 }

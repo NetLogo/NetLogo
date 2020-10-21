@@ -63,7 +63,7 @@ class Tabs(workspace:           GUIWorkspace,
   val stableCodeTab = codeTab
   val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
-  override def getCodeTab(): MainCodeTab = { codeTab }
+  override def getMainCodeTab(): MainCodeTab = { codeTab }
 
   // set a default that will be overwritten in init
   var popOutCodeTab : Boolean = _
@@ -96,8 +96,8 @@ class Tabs(workspace:           GUIWorkspace,
     override def windowGainedFocus(e: WindowEvent) {
       val currentTab = getTabs.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
-      if (tabManager.getCodeTab.dirty) {
-         new AppEvents.SwitchedTabsEvent(tabManager.getCodeTab, currentTab).raise(getTabs)
+      if (tabManager.getMainCodeTab.dirty) {
+         new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
       }
     }
     })
