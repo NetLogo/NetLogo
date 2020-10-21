@@ -20,7 +20,7 @@ import org.nlogo.window.Event.LinkParent
 // When there is no separate code tab window, no such instance exists, and all
 // CodeTabs belong to Tabs. [ Thinking of Tabs as AppTabsPanel makes the parallels between
 // CodeTabsPanel and Tabs clearer - both are JTabbedPanes that contain and manage tabs.]
-// CodeTabsPanel and Tabs are both instances of AbstractTabsPanel, which implements their shared behavior.
+// CodeTabsPanel and Tabs are both instances of AbstractTabsPanel, which implements their shared behavior. AAB 10/2020
 
 class CodeTabsPanel(workspace:             GUIWorkspace,
                        interfaceTab:          InterfaceTab,
@@ -36,11 +36,11 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     addChangeListener(this)
   }
 
-  // frame is the App's AppFrame, (treated as a java.awt.Frame)
+  // frame is the App's AppFrame, (treated as a java.awt.Frame) AAB 10/2020
   val frame = workspace.getFrame
 
   // CodeTabContainer contains the CodeTabsPanel and is owned by frame
-  // It is currently implemented as a JDialog
+  // It is currently implemented as a JDialog. AAB 10/2020
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
 
@@ -53,18 +53,18 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   // Because of the order in which elements of the NetLogo application come into being
   // the CodeTabsPanel cannot be fully built when it is first instantiated.
-  // These steps are complete by the init method.
+  // These steps are complete by the init method. AAB 10/2020
   def init(manager: FileManager, monitor: DirtyMonitor) {
     addTab(I18N.gui.get("tabs.code"), mainCodeTab)
     initManagerMonitor(manager, monitor)
 
-    // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window
+    // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window. AAB 10/2020
     tabManager.setSeparateCodeTabBindings(this)
 
     // Add keystrokes for actions from TabsMenu to the codeTabsPanel
-    // because keystrokes are interpreted by the window that has focus.
+    // because keystrokes are interpreted by the window that has focus. AAB 10/2020
     TabsMenu.tabActions(tabManager).foreach(action => {
-      // Add the accelerator key if any to the input map and action map
+      // Add the accelerator key if any to the input map and action map. AAB 10/2020
       action.asInstanceOf[MenuAction].accelerator match {
         case None                =>
         case Some(accKey: KeyStroke) =>  {
@@ -80,14 +80,14 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent) {
-      // A single mouse click switches focus to a tab
+      // A single mouse click switches focus to a tab. AAB 10/2020
       if (me.getClickCount() == 1) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         tabManager.setCurrentTab(currentTab)
         currentTab.requestFocus()
       }
       // A single mouse control-click on the MainCodeTab in a separate window
-      // closes the code window, and takes care of the bookkeeping.
+      // closes the code window, and takes care of the bookkeeping. AAB 10/2020
       if (me.getClickCount() == 1 && me.isControlDown) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         if (currentTab.isInstanceOf[MainCodeTab]) {
@@ -97,7 +97,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     }
   })
 
-  // If the user closes the code window, take care of the bookkeeping.
+  // If the user closes the code window, take care of the bookkeeping. AAB 10/2020
   codeTabContainer.addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       tabManager.switchToNoSeparateCodeWindow
@@ -105,7 +105,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   })
 
   // If focus returns to the code tab window, make its currentTab
-  // be selected
+  // be selected. AAB 10/2020
   codeTabContainer.addWindowFocusListener(new WindowAdapter() {
     override def  windowGainedFocus(e: WindowEvent) {
       val currentTab = codeTabsPanel.getSelectedComponent
@@ -114,17 +114,17 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   })
 
   def stateChanged(e: ChangeEvent) = {
-    // for explanation of index -1, see comment in Tabs.stateChanged
+    // for explanation of index -1, see comment in Tabs.stateChanged. AAB 10/2020
     if (tabManager.getSelectedAppTabIndex != -1) {
       val previousTab = tabManager.getCurrentTab
       currentTab = getSelectedComponent
-      // currentTab could be null in the case where the CodeTabPanel has only the MainCodeTab
+      // currentTab could be null in the case where the CodeTabPanel has only the MainCodeTab. AAB 10/2020
       if (currentTab == null) {
         currentTab = mainCodeTab
       }
       tabManager.setCurrentTab(currentTab)
       currentTab.requestFocus()
-      // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab
+      // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }

@@ -10,20 +10,20 @@ import UserAction._
 import org.nlogo.app.{ AbstractTabsPanel, AppTabManager }
 
 object TabsMenu {
-  def tabAction(tabMgr: AppTabManager, index: Int): Action =
+  def tabAction(tabManager: AppTabManager, index: Int): Action =
     new AbstractAction() with MenuAction {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      this.putValue(Action.NAME, tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].getTitleAtCombinedIndex(index));
+      this.putValue(Action.NAME, tabManager.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].getTitleAtCombinedIndex(index));
       override def actionPerformed(e: ActionEvent) {
-        tabMgr.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].setSelectedIndexPanels(index)
+        tabManager.getAppTabsPanel.setSelectedIndexPanels(index)
       }
     }
 
-  def tabActions(tabMgr: AppTabManager): Seq[Action] = {
-    val totalTabCount = tabMgr.getCombinedTabCount
-    for (i <- 0 until totalTabCount) yield tabAction(tabMgr, i)
+  def tabActions(tabManager: AppTabManager): Seq[Action] = {
+    val totalTabCount = tabManager.getCombinedTabCount
+    for (i <- 0 until totalTabCount) yield tabAction(tabManager, i)
   }
 
 }
@@ -36,6 +36,6 @@ class TabsMenu(name: String, initialActions: Seq[Action]) extends Menu(name) {
   def this(name: String) =
     this(name, Seq())
 
-  def this(name: String, tabMgr: AppTabManager) =
-    this(name, TabsMenu.tabActions(tabMgr))
+  def this(name: String, tabManager: AppTabManager) =
+    this(name, TabsMenu.tabActions(tabManager))
 }

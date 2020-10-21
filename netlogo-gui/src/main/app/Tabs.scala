@@ -26,7 +26,7 @@ import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget,
 // This used to be the only class whose instance 'owned' the InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs.
 // Now when there is a separate code window, that work is shared by CodeTabsPanel for the CodeTabs.
 // As a result, functionality common to Tabs and CodeTabsPanel is now in the class AbstractTabsPanel.
-// The role of Tabs would be better served by the name AppTabsPanel.
+// The role of Tabs would be better served by the name AppTabsPanel. AAB 10/2020
 
 class Tabs(workspace:           GUIWorkspace,
            interfaceTab:        InterfaceTab,
@@ -75,15 +75,15 @@ class Tabs(workspace:           GUIWorkspace,
 
   // Because of the order in which elements of the NetLogo application come into being
   // Tabs cannot be fully built when it is first instantiated.
-  // These steps are complete by the init method.
+  // These steps are complete by the init method. . AAB 10/2020
 
   // the moreTabs argument was there for PlugIns, and remains only
-  // to allow easier testing of scenerios with novel tabs.
+  // to allow easier testing of scenerios with novel tabs. . AAB 10/2020
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
 
-    // If there is not separate code tab, the MainCodeTab belongs to Tabs
+    // If there is not separate code tab, the MainCodeTab belongs to Tabs. AAB 10/2020
     if (tabManager.getCodeTabsOwner.equals(this)) {
       popOutCodeTab = false
       addTab(I18N.gui.get("tabs.code"), mainCodeTab)
@@ -102,7 +102,7 @@ class Tabs(workspace:           GUIWorkspace,
 
     saveModelActions foreach menu.offerAction
 
-    // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window
+    // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window. AAB 10/2020
     tabManager.setAppCodeTabBindings
   }
 
@@ -111,7 +111,7 @@ class Tabs(workspace:           GUIWorkspace,
       val currentTab = getTabs.getSelectedComponent
       tabManager.setCurrentTab(currentTab)
       if (tabManager.getMainCodeTab.dirty) {
-        // The SwitchedTabsEvent can lead to compilation
+        // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
       }
     }
@@ -122,7 +122,7 @@ class Tabs(workspace:           GUIWorkspace,
     // sometime necessary to deselect a tab by setting the selected
     // tab index of the parent JTabbedPane to -1
     // In that case do nothing. The correct action will happen when
-    // the selected index is reset.
+    // the selected index is reset. AAB 10/2020
     if (tabManager.getSelectedAppTabIndex != -1) {
       val previousTab = tabManager.getCurrentTab
       currentTab = getSelectedComponent
@@ -136,7 +136,7 @@ class Tabs(workspace:           GUIWorkspace,
         case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
         case _ =>
       }
-      // The correctness of this logic needs investigation - AAB 10/2020
+      // TODO: The correctness of this logic needs investigation - AAB 10/2020
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
         case (true, false) => saveModelActions foreach menu.offerAction
         case (false, true) => saveModelActions foreach menu.revokeAction
@@ -150,7 +150,7 @@ class Tabs(workspace:           GUIWorkspace,
   this.addMouseListener(new MouseAdapter() {
     override def mouseClicked(me: MouseEvent): Unit =  {
       // A single mouse control-click on the MainCodeTab in a separate window
-      // opens the code window, and takes care of the bookkeeping.
+      // opens the code window, and takes care of the bookkeeping. AAB 10/2020
       if (me.getClickCount() == 1 && me.isControlDown) {
         val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
         if (currentTab.isInstanceOf[MainCodeTab]) {
@@ -219,7 +219,7 @@ class Tabs(workspace:           GUIWorkspace,
     // recolor tabs
     e.sourceOwner match {
       case `stableCodeTab` =>
-      // on null error, clear all errors, as we only get one event for all the files
+      // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
       if (e.error == null) {
         clearErrors()
       }

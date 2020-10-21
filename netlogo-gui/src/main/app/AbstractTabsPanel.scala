@@ -10,11 +10,11 @@ import org.nlogo.app.codetab.{ CodeTab, ExtendedCodeTab, ExternalFileManager, Ma
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.{ GUIWorkspace }
 
-// AbstractTabsPanel contains functionality common to Tabs and CodeTabsPanel
+// AbstractTabsPanel contains functionality common to Tabs and CodeTabsPanel. AAB 10/2020
 
 abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
-                            val interfaceTab:        InterfaceTab,
-                            val externalFileManager: ExternalFileManager)
+                                 val interfaceTab:        InterfaceTab,
+                                 val externalFileManager: ExternalFileManager)
   extends JTabbedPane(SwingConstants.TOP) {
 
   locally {

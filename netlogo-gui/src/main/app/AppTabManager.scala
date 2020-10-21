@@ -18,25 +18,47 @@ import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 // Otherwise all the tabs belong to Tabs.
 // AppTabManager uses the variable codeTabsPanelOption of type Option[CodeTabsPanel]
 // to deal with the fact that CodeTabsPanel is instatiated only some of the time.
+// AAB 10/2020
+
+// In order to support the option of a separate code window, NetLogo internal
+// code enforces constraints on tab order.
+// Users should manipulate tabs they choose to add (in extensions for example)
+// using only the publically available methods in the last section of AbstractTabsPanel. AAB 10/2020
+
+// Understanding the constraints on tab order is useful for understanding the
+// code controlling tabs.
+// When there is no separate code window, all tabs belong to Tabs
+// (the value of appTabsPanel in AppTabManager)
+// The tab order is non-CodeTabs followed by CodeTabs.
+// The non-CodeTab order is InterfaceTab, InfoTab, any user-created non-CodeTabs.
+// The MainCodeTab is always the first CodeTab, the other CodeTabs are the
+// TemporaryCodeTab which is used for included files, and the
+// ExtendedCodeTab which is for use outside the NetLogo code base.
+//
+// When a separate code window exists, all the CodeTabs belong to the CodeTabsPanel.
+// They retain the same relative order they would if they all belonged to Tabs.
+//
+// The terms CombinedIndex or combinedTabIndx refers to the index a tab would have
+// if there were no separate code window. AAB 10/2020
 
 class AppTabManager( val appTabsPanel:          Tabs,
                      var codeTabsPanelOption: Option[CodeTabsPanel]) {
 
   // The appTabsPanel and the main code tab are unique unchanging entities
-  // of class Tabs and MainCodeTab respectively
+  // of class Tabs and MainCodeTab respectively. AAB 10/2020
   def getAppTabsPanel = { appTabsPanel }
   def getMainCodeTab = { appTabsPanel.getMainCodeTab }
 
   // The separate window and JTabbedPane containing the main code tab and
   // other code tabs can come in an out of existence, and are hence
   // represented by a scala Option, which has value 'None' when code tabs
-  // are in the Application window and JTabbedPane
+  // are in the Application window and JTabbedPane. AAB 10/2020
   def setCodeTabsPanelOption(_codeTabsPanelOption: Option[CodeTabsPanel]): Unit = {
     codeTabsPanelOption = _codeTabsPanelOption
   }
 
   // might want access to these owner methods to be only in the app package
-  // Need to carefully decide which methods are private
+  // Need to carefully decide which methods are private. AAB 10/2020
   def getCodeTabsOwner = {
     codeTabsPanelOption match {
       case None           => appTabsPanel
@@ -59,18 +81,16 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Generally the term "CodeTab" in method names refers to
   // any that is of class CodeTab. The term "MainCodeTab"
-  // is usually used refer more specifically to the unique main code tab.
+  // is usually used refer more specifically to the unique main code tab. AAB 10/2020
   def setSelectedCodeTab(tab: CodeTab): Unit = {
     getCodeTabsOwner.setSelectedComponent(tab)
   }
 
   // Generally the term "AppTab" in method names refers to
-  // any tab in Tabs that is not of class CodeTab
+  // any tab in Tabs that is not of class CodeTab AAB 10/2020
   def setSelectedAppTab(index: Int): Unit = {
     appTabsPanel.setSelectedIndex(index)
   }
-
-  def getSelectedAppTabComponent() = { appTabsPanel.getSelectedComponent }
 
   def getSelectedAppTabIndex() = { appTabsPanel.getSelectedIndex }
 
@@ -78,7 +98,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // where they are contained.
   // The word Combined in a method name generally indicates that Tabs entity
   // and possible CodeTabsPanel entity are being dealt with in a combined way,
-  // that is not visible to the code user.
+  // that is not visible to the code user. AAB 10/2020
   def getCombinedTabCount(): Int = {
     val appTabCount = appTabsPanel.getTabCount
     codeTabsPanelOption match {
@@ -97,31 +117,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
     currentTab = tab
   }
 
-  // AAB - not sure where is the best place for this info. Other classes
-  // should probably refer to it.
-
-  // In order to support the option of a separate code window, NetLogo internal
-  // code enforces constraints on tab order.
-  // Users should manipulate tabs they choose to add (in extensions for example)
-  // using only the publically available methods in the last section of AbstractTabsPanel.
-
-  // Understanding the constraints on tab order is useful for understanding the
-  // code controlling tabs.
-  // When there is no separate code window, all tabs belong to Tabs
-  // (the value of appTabsPanel in AppTabManager)
-  // The tab order is non-CodeTabs followed by CodeTabs.
-  // The non-CodeTab order is InterfaceTab, InfoTab, any user-created non-CodeTabs.
-  // The MainCodeTab is always the first CodeTab, the other CodeTabs are the
-  // TemporaryCodeTab which is used for included files, and the
-  // ExtendedCodeTab which is for use outside the NetLogo code base.
-  //
-  // When a separate code window exists, all the CodeTabs belong to the CodeTabsPanel.
-  // They retain the same relative order they would if they all belonged to Tabs.
-  //
-  // The terms CombinedIndex or combinedTabIndx refers to the index a tab would have
-  // if there were no separate code window.
-
-
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
   // tabOwner = the AbstractTabsPanel containing the indexed tab.
@@ -137,12 +132,12 @@ class AppTabManager( val appTabsPanel:          Tabs,
     var tabIndex = combinedTabIndx
 
     // if the combinedTabIndx is too large for the appTabsPanel,
-    // check if it can refer to the a separate code tab
+    // check if it can refer to the a separate code tab. AAB 10/2020
     if (combinedTabIndx >= appTabCount) {
       codeTabsPanelOption match {
         case None           => throw new IndexOutOfBoundsException
         case Some(thePanel) => {
-          // combinedTabIndx could be too large for the two Panels combined
+          // combinedTabIndx could be too large for the two Panels combined. AAB 10/2020
           if (combinedTabIndx >= appTabCount + thePanel.getTabCount) {
             throw new IndexOutOfBoundsException
           }
@@ -230,14 +225,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  // Do the work to go back to the no separate code window state
+  // Does the work needed to go back to the no separate code window state
   def switchToNoSeparateCodeWindow(): Unit = {
-    // nothing to do if CodeTabsPanel does not exist
+    // nothing to do if CodeTabsPanel does not exist. AAB 10/2020
 
     codeTabsPanelOption match {
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
-        // Move the tabs to the AppTabsPanel (Tabs), retaining order
+        // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
         for (n <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
         }
@@ -245,16 +240,16 @@ class AppTabManager( val appTabsPanel:          Tabs,
         setCodeTabsPanelOption(None)
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
-      // need to remove link component, because will no longer exist
-      // aab fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
-      } // end case where work was done
+      // TODO: remove link component, because will no longer exist
+      // TODO: fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
+      } // end case where work was done. AAB 10/2020
     }
   }
 
-  // Do the work to go back to the separate code window state
+  // Does the work needed to go back to the separate code window state
   def switchToSeparateCodeWindow(): Unit = {
     // Only act if code tab is part of the Tabs panel.
-    // Otherwise it is already detached.
+    // Otherwise it is already detached. AAB 10/2020
     if (!isCodeTabSeparate) {
       val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
         appTabsPanel.interfaceTab,
@@ -268,11 +263,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
         // Move tabs from appTabsPanel to codeTabsPanel.
         // Iterate starting at last tab so that indexing remains valid when
         // tabs are removed (add to codeTabsPanel)
-        //val startIndex:Int = appTabsPanel.getTabCount - 1
+        //val startIndex:Int = appTabsPanel.getTabCount - 1. AAB 10/2020
         for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
           val tabComponent = appTabsPanel.getComponentAt(n)
           if (tabComponent.isInstanceOf[CodeTab]) {
-            // Tabs are read in reverse order, use index 0 to restore original order
+            // Tabs are read in reverse order, use index 0 to restore original order. AAB 10/2020
             codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
              appTabsPanel.getIconAt(n),
              tabComponent,
@@ -281,9 +276,9 @@ class AppTabManager( val appTabsPanel:          Tabs,
           }
         }
 
-        // Add keystrokes for actions from TabsMenu to the codeTabsPanel
+        // Add keystrokes for actions from TabsMenu to the codeTabsPanel. AAB 10/2020
         TabsMenu.tabActions(this).foreach(action => {
-          // Add the accelerator key if any to the input map and action map
+          // Add the accelerator key if any to the input map and action map. AAB 10/2020
           action.asInstanceOf[MenuAction].accelerator match {
             case None                =>
             case Some(accKey: KeyStroke) =>  {

@@ -13,7 +13,7 @@ import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-// AAB 10/2020 todo: the original org.nlogo.swing.TabsMenu (from hexy)
+// AAB 10/2020 TODO: the original org.nlogo.swing.TabsMenu (from hexy)
 // needs to become org.nlogo.sdm.gui TabsMenu
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -100,7 +100,7 @@ class AggregateModelEditor(
       menuBar.add(zoomMenu)
     }
 
-    // aab menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
+    // TODO: AAB 2020 menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
 
     if (isOSX) {
       val helpMenu = menuBarFactory.createHelpMenu
