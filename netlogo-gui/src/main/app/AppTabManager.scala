@@ -42,7 +42,7 @@ import org.nlogo.swing.UserAction, UserAction.MenuAction
 // if there were no separate code window. AAB 10/2020
 
 class AppTabManager( val appTabsPanel:          Tabs,
-                     var codeTabsPanelOption: Option[CodeTabsPanel]) {
+                     var codeTabsPanelOption:   Option[CodeTabsPanel]) {
 
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020
@@ -220,8 +220,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
       // Move tabs from appTabsPanel to codeTabsPanel.
       // Iterate starting at last tab so that indexing remains valid when
-      // tabs are removed (add to codeTabsPanel)
-      //val startIndex:Int = appTabsPanel.getTabCount - 1. AAB 10/2020
+      // tabs are removed (add to codeTabsPanel), AAB 10/2020
       for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
         val tabComponent = appTabsPanel.getComponentAt(n)
         if (tabComponent.isInstanceOf[CodeTab]) {

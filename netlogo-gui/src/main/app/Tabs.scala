@@ -70,9 +70,6 @@ class Tabs(workspace:           GUIWorkspace,
 
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
 
-  // The value of popOutCodeTab is set in the init method
-  var popOutCodeTab : Boolean = _
-
   // Because of the order in which elements of the NetLogo application come into being
   // Tabs cannot be fully built when it is first instantiated.
   // These steps are complete by the init method. . AAB 10/2020

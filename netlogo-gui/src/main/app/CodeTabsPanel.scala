@@ -25,7 +25,7 @@ import org.nlogo.window.Event.LinkParent
 class CodeTabsPanel(workspace:             GUIWorkspace,
                     interfaceTab:          InterfaceTab,
                     externalFileManager:   ExternalFileManager,
-                    val mainCodeTab:           MainCodeTab,
+                    val mainCodeTab:       MainCodeTab,
                     val externalFileTabs:  mutable.Set[TemporaryCodeTab])
   extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with ChangeListener
@@ -66,7 +66,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     TabsMenu.tabActions(tabManager).foreach(action => {
       // Add the accelerator key if any to the input map and action map. AAB 10/2020
       action.asInstanceOf[MenuAction].accelerator match {
-        case None                =>
+        case None                    =>
         case Some(accKey: KeyStroke) =>  {
           val actionName = action.getValue(Action.NAME) match {
             case s: String => s
