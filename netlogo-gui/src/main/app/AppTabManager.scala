@@ -200,8 +200,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
         setCodeTabsPanelOption(None)
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
-      // TODO: remove link component, because will no longer exist
-      // TODO: fix this appTabsPanel.getAppFrame.removeLinkComponent(actualCodeTabsPanel.getCodeTabContainer)
+        appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
       } // end case where work was done. AAB 10/2020
     }
   }
