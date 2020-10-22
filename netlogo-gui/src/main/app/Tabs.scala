@@ -128,7 +128,8 @@ class Tabs(workspace:           GUIWorkspace,
         case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
         case _ =>
       }
-      // TODO: The correctness of this logic needs investigation - AAB 10/2020
+      // TODO: The correctness of this (pre-existing) logic needs investigation, may be related failure to ask to save a file in 
+      // Bug on closing NetLogo Window? #1832 - AAB 10/2020
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
         case (true, false) => saveModelActions foreach menu.offerAction
         case (false, true) => saveModelActions foreach menu.revokeAction
