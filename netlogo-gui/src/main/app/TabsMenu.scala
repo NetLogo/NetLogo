@@ -1,13 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.swing
+package org.nlogo.app
 
 // TODO i18n lot of work needed here...
 
 import java.awt.event.ActionEvent
 import javax.swing.{ Action, AbstractAction }
-import UserAction._
-import org.nlogo.app.{ AbstractTabsPanel, AppTabManager }
+
+import org.nlogo.swing.UserAction._
 
 object TabsMenu {
   def tabAction(tabManager: AppTabManager, index: Int): Action =
@@ -28,7 +28,7 @@ object TabsMenu {
 
 }
 
-class TabsMenu(name: String, initialActions: Seq[Action]) extends Menu(name) {
+class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.swing.Menu(name) {
   setMnemonic('A')
 
   initialActions.foreach(offerAction)

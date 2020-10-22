@@ -6,7 +6,7 @@ import javax.swing.{ Action, JMenuBar }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
-import org.nlogo.swing.{ TabsMenu, UserAction },
+import org.nlogo.swing.UserAction,
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
 
 class MenuBar(isApplicationWide: Boolean)
@@ -60,4 +60,3 @@ class MenuBar(isApplicationWide: Boolean)
     categoryMenus.get(categoryKey).foreach(_.revokeAction(action))
   }
 }
-

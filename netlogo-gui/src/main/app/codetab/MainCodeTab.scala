@@ -6,7 +6,7 @@ import java.awt.Component
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
-import org.nlogo.app.{ AbstractTabsPanel }
+import org.nlogo.app.AbstractTabsPanel
 import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu

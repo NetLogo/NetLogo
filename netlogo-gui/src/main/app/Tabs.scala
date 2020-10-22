@@ -18,7 +18,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable, PrinterManager, TabsMenu, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ Printable, PrinterManager, UserAction }, UserAction.MenuAction
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }

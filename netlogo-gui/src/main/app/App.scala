@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import javax.swing.{ JOptionPane, JMenu, JFrame }
 import java.awt.event.ActionEvent
-import java.util.prefs.{ Preferences }
+import java.util.prefs.Preferences
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
@@ -227,7 +227,7 @@ object App{
       }
     }
   }
-  
+
   def __printSwingObject(obj: Object, description: String): Unit = {
     val some = Option(obj)
     some match {

@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
-import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.UserAction, UserAction.MenuAction
 
 // The class AppTabManager handles relationships between tabs (the
 // InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs )
@@ -309,7 +309,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // Useful for debugging
   def __printTabsMenuActions():Unit = {
     println("Actions:")
-    org.nlogo.swing.TabsMenu.tabActions(this).foreach(action => {
+    org.nlogo.app.TabsMenu.tabActions(this).foreach(action => {
       action.asInstanceOf[org.nlogo.swing.UserAction.MenuAction].accelerator match {
         case None                =>
         case Some(accKey: javax.swing.KeyStroke) =>  {

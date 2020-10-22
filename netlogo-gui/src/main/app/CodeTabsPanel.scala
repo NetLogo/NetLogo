@@ -12,8 +12,8 @@ import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTa
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
-import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ GUIWorkspace }
+import org.nlogo.swing.UserAction, UserAction.MenuAction
+import org.nlogo.window.GUIWorkspace
 import org.nlogo.window.Event.LinkParent
 
 // When a separate code tab window is created, an instance of this class owns the CodeTabs.

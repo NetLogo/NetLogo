@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import org.nlogo.app.{ Tabs }
+import org.nlogo.app.Tabs
 import org.nlogo.workspace.AbstractWorkspace
 
 // This class should be instantiated by extensions such as ls that

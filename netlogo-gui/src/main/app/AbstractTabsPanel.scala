@@ -1,14 +1,14 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
-import java.awt.{ Component }
-import java.awt.event.{ MouseEvent }
+import java.awt.Component
+import java.awt.event.MouseEvent
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
 import org.nlogo.app.codetab.{ CodeTab, ExtendedCodeTab, ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
-import org.nlogo.window.{ GUIWorkspace }
+import org.nlogo.window.GUIWorkspace
 
 // AbstractTabsPanel contains functionality common to Tabs and CodeTabsPanel. AAB 10/2020
 
