@@ -82,14 +82,9 @@ class Tabs(workspace:           GUIWorkspace,
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
-
-    // If there is not separate code tab, the MainCodeTab belongs to Tabs. AAB 10/2020
-    if (tabManager.getCodeTabsOwner.equals(this)) {
-      popOutCodeTab = false
-      addTab(I18N.gui.get("tabs.code"), mainCodeTab)
-    } else {
-      popOutCodeTab = true
-    }
+    addTab(I18N.gui.get("tabs.code"), mainCodeTab)
+    // If there is not separate code tab, the MainCodeTab belongs to Tabs.
+    // Otherwise it will get transferred by CodeTabsPanel.init AAB 10/2020
 
     for((name, tab) <- moreTabs) {
       addTab(name, tab)
@@ -330,10 +325,9 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def handle(e: AfterLoadEvent) = {
-    mainCodeTab.getPoppingCheckBox.setSelected(popOutCodeTab)
+    mainCodeTab.getPoppingCheckBox.setSelected(tabManager.isCodeTabSeparate)
     requestFocus()
   }
-
 
   object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), this)
   with MenuAction {

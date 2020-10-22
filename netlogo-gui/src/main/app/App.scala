@@ -480,12 +480,11 @@ class App extends
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)
 
+    tabs.init(fileManager, dirtyMonitor)
+
     if (popOutCodeTab) {
       codeTabsPanel.init(fileManager, dirtyMonitor)
     }
-
-    //tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
-    tabs.init(fileManager, dirtyMonitor)
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)

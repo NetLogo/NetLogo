@@ -192,6 +192,24 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
+  // Print the names of all the current TabsMenu Actions
+  // Useful for debugging
+  def printTabsMenuActions():Unit = {
+    println("Actions:")
+    org.nlogo.swing.TabsMenu.tabActions(this).foreach(action => {
+      action.asInstanceOf[org.nlogo.swing.UserAction.MenuAction].accelerator match {
+        case None                =>
+        case Some(accKey: javax.swing.KeyStroke) =>  {
+          val actionName = action.getValue(javax.swing.Action.NAME) match {
+            case s: String => s
+            case _         => accKey.toString
+          }
+          println("  " + actionName + ": " + accKey)
+        }
+      }
+    })
+  }
+
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabComponent)
   // tabOwner = the AbstractTabsPanel containing the indexed tab.
