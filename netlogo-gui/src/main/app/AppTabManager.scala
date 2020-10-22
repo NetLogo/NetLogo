@@ -38,7 +38,7 @@ import org.nlogo.swing.{ TabsMenu, UserAction }, UserAction.MenuAction
 // When a separate code window exists, all the CodeTabs belong to the CodeTabsPanel.
 // They retain the same relative order they would if they all belonged to Tabs.
 //
-// The terms CombinedIndex or combinedTabIndx refers to the index a tab would have
+// The terms CombinedIndex or combinedTabIndex refers to the index a tab would have
 // if there were no separate code window. AAB 10/2020
 
 class AppTabManager( val appTabsPanel:          Tabs,
@@ -72,12 +72,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     if (tab.isInstanceOf[CodeTab]) getCodeTabsOwner else appTabsPanel
   }
 
-  def isCodeTabSeparate = {
-    codeTabsPanelOption match {
-      case None           => false
-      case Some(theValue) => true
-    }
-  }
+  def isCodeTabSeparate = { codeTabsPanelOption.isDefined }
 
   // Generally the term "CodeTab" in method names refers to
   // any that is of class CodeTab. The term "MainCodeTab"
@@ -117,36 +112,34 @@ class AppTabManager( val appTabsPanel:          Tabs,
     currentTab = tab
   }
 
-  // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
+  // Input: combinedTabIndex - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
   // tabOwner = the AbstractTabsPanel containing the indexed tab.
   // tabIndex = the index of the tab in tabOwner.
   // This method allows for the possibility that the appTabsPanel has no tabs,
   // although this should not occur in practice
-  def ownerAndIndexFromCombinedIndex(combinedTabIndx: Int): (AbstractTabsPanel, Int) = {
-    if (combinedTabIndx < 0) {
+  def ownerAndIndexFromCombinedIndex(combinedTabIndex: Int): (AbstractTabsPanel, Int) = {
+    if (combinedTabIndex < 0) {
       throw new IndexOutOfBoundsException
     }
-    var tabOwner = appTabsPanel.asInstanceOf[AbstractTabsPanel]
     val appTabCount = appTabsPanel.getTabCount
-    var tabIndex = combinedTabIndx
 
-    // if the combinedTabIndx is too large for the appTabsPanel,
+    // if the combinedTabIndex is too large for the appTabsPanel,
     // check if it can refer to the a separate code tab. AAB 10/2020
-    if (combinedTabIndx >= appTabCount) {
+    if (combinedTabIndex >= appTabCount) {
       codeTabsPanelOption match {
         case None           => throw new IndexOutOfBoundsException
         case Some(thePanel) => {
-          // combinedTabIndx could be too large for the two Panels combined. AAB 10/2020
-          if (combinedTabIndx >= appTabCount + thePanel.getTabCount) {
+          // combinedTabIndex could be too large for the two Panels combined. AAB 10/2020
+          if (combinedTabIndex >= appTabCount + thePanel.getTabCount) {
             throw new IndexOutOfBoundsException
           }
-          tabOwner = getCodeTabsOwner
-          tabIndex =  combinedTabIndx - appTabCount
+          return(getCodeTabsOwner, combinedTabIndex - appTabCount)
         }
       }
+    } else {
+      return(appTabsPanel, combinedTabIndex)
     }
-    (tabOwner, tabIndex)
   }
 
   // Input: tab - a tab component
@@ -155,33 +148,23 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // tabIndex = the index of the tab in tabOwner.
   // Returns (null, -1) if there is no tab owner for this tab component.
   def ownerAndIndexOfTab(tab: Component): (AbstractTabsPanel, Int) = {
-    var tabOwner = null.asInstanceOf[AbstractTabsPanel]
-    var tabIndex = appTabsPanel.indexOfComponent(tab)
+    val tabIndex = appTabsPanel.indexOfComponent(tab)
     if (tabIndex != -1) {
-      tabOwner = appTabsPanel
+      return(appTabsPanel, tabIndex)
     } else {
       codeTabsPanelOption match {
-        case Some(thePanel) => tabIndex = thePanel.indexOfComponent(tab)
-          if (tabIndex != -1) {
-            tabOwner = thePanel
+        case Some(thePanel) =>
+          val aTabIndex = thePanel.indexOfComponent(tab)
+          if (aTabIndex != -1) {
+            return(thePanel, aTabIndex)
           }
         case None           =>
       }
     }
-    (tabOwner, tabIndex)
+    (null.asInstanceOf[AbstractTabsPanel], -1)
   }
 
-  // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
-  // Returns (tabOwner, tabComponent)
-  // tabOwner = the AbstractTabsPanel containing the indexed tab.
-  // tabComponent = the tab in tabOwner referenced by combinedTabIndx.
-  def getTabAtCombinedTabIndx(combinedTabIndx: Int): (AbstractTabsPanel, Component) = {
-    val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(combinedTabIndx)
-    val tabComponent = tabOwner.getComponentAt(tabIndex)
-    (tabOwner, tabComponent)
-  }
-
-  // Actions are created for use by the TabsMenu, and by accelerator keys
+  // Actions are created for use by the TabsMenu, and by accelerator keys AAB 10/2020
   object RejoinCodeTabsAction extends AbstractAction("PopCodeTabIn") {
     def actionPerformed(e: ActionEvent) {
       switchToNoSeparateCodeWindow
@@ -194,8 +177,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  // Dispatcher to create or end the use of a separate code window
-  // Do nothing if already in desired state
   def switchToSpecifiedCodeWindowState(isSeparate: Boolean): Unit = {
     if (isSeparate) {
       switchToSeparateCodeWindow
@@ -212,7 +193,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
         // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
-        for (n <- 0 until codeTabsPanel.getTabCount) {
+        for (_ <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
         }
         codeTabsPanel.getCodeTabContainer.dispose
@@ -227,8 +208,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Does the work needed to go back to the separate code window state
   def switchToSeparateCodeWindow(): Unit = {
-    // Only act if code tab is part of the Tabs panel.
-    // Otherwise it is already detached. AAB 10/2020
     if (!isCodeTabSeparate) {
       val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
         appTabsPanel.interfaceTab,
@@ -236,48 +215,47 @@ class AppTabManager( val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab,
         appTabsPanel.externalFileTabs)
 
-        codeTabsPanelOption = Some(codeTabsPanel)
-        codeTabsPanel.setTabManager(this)
+      codeTabsPanelOption = Some(codeTabsPanel)
+      codeTabsPanel.setTabManager(this)
 
-        // Move tabs from appTabsPanel to codeTabsPanel.
-        // Iterate starting at last tab so that indexing remains valid when
-        // tabs are removed (add to codeTabsPanel)
-        //val startIndex:Int = appTabsPanel.getTabCount - 1. AAB 10/2020
-        for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
-          val tabComponent = appTabsPanel.getComponentAt(n)
-          if (tabComponent.isInstanceOf[CodeTab]) {
-            // Tabs are read in reverse order, use index 0 to restore original order. AAB 10/2020
-            codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
-             appTabsPanel.getIconAt(n),
-             tabComponent,
-             appTabsPanel.getToolTipTextAt(n),
-             0)
+      // Move tabs from appTabsPanel to codeTabsPanel.
+      // Iterate starting at last tab so that indexing remains valid when
+      // tabs are removed (add to codeTabsPanel)
+      //val startIndex:Int = appTabsPanel.getTabCount - 1. AAB 10/2020
+      for (n <- appTabsPanel.getTabCount - 1 to 0 by -1 ) {
+        val tabComponent = appTabsPanel.getComponentAt(n)
+        if (tabComponent.isInstanceOf[CodeTab]) {
+          // Tabs are read in reverse order, use index 0 to restore original order. AAB 10/2020
+          codeTabsPanel.insertTab(appTabsPanel.getTitleAt(n),
+           appTabsPanel.getIconAt(n),
+           tabComponent,
+           appTabsPanel.getToolTipTextAt(n),
+           0)
+        }
+      }
+
+      // Add keystrokes for actions from TabsMenu to the codeTabsPanel. AAB 10/2020
+      TabsMenu.tabActions(this).foreach(action => {
+        // Add the accelerator key if any to the input map and action map. AAB 10/2020
+        action.asInstanceOf[MenuAction].accelerator match {
+          case None                =>
+          case Some(accKey: KeyStroke) =>  {
+            val actionName = action.getValue(Action.NAME) match {
+              case s: String => s
+              case _         => accKey.toString
+            }
+            addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
           }
         }
-
-        // Add keystrokes for actions from TabsMenu to the codeTabsPanel. AAB 10/2020
-        TabsMenu.tabActions(this).foreach(action => {
-          // Add the accelerator key if any to the input map and action map. AAB 10/2020
-          action.asInstanceOf[MenuAction].accelerator match {
-            case None                =>
-            case Some(accKey: KeyStroke) =>  {
-              val actionName = action.getValue(Action.NAME) match {
-                case s: String => s
-                case _         => accKey.toString
-              }
-              addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
-            }
-          }
-        })
-        appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
-        codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
-        appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
-        appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
-        setSeparateCodeTabBindings(codeTabsPanel)
-      }
+      })
+      appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
+      codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
+      appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
+      appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
+      setSeparateCodeTabBindings(codeTabsPanel)
+    }
   }
 
-  // Add KeyStroke for Action to the InputMap and ActionMap of a JComponent
   def addComponentKeyStroke(component: JComponent, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();
@@ -285,13 +263,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
     actionMap.put(actionName, action)
   }
 
-  // Add KeyStroke for Action to separate code window
   def addCodeTabContainerKeyStroke(codeTabsPanel: CodeTabsPanel, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
     addComponentKeyStroke(contentPane, mapKey, action, actionName)
   }
 
-  // Add KeyStroke for Action to main NetLogo window
   def addAppFrameKeyStroke(mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
     addComponentKeyStroke(contentPane, mapKey, action, actionName)
@@ -301,12 +277,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
     UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
   }
 
-  // accelerator bindings for the main NetLogo window
   def setAppCodeTabBindings(): Unit = {
     addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), SeparateCodeTabsAction, "popOutCodeTab")
   }
 
-  // accelerator bindings for the separate code tab window
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
     addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
   }

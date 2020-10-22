@@ -23,10 +23,10 @@ import org.nlogo.window.Event.LinkParent
 // CodeTabsPanel and Tabs are both instances of AbstractTabsPanel, which implements their shared behavior. AAB 10/2020
 
 class CodeTabsPanel(workspace:             GUIWorkspace,
-                       interfaceTab:          InterfaceTab,
-                       externalFileManager:   ExternalFileManager,
-                       val mainCodeTab:           MainCodeTab,
-                       val externalFileTabs:  mutable.Set[TemporaryCodeTab])
+                    interfaceTab:          InterfaceTab,
+                    externalFileManager:   ExternalFileManager,
+                    val mainCodeTab:           MainCodeTab,
+                    val externalFileTabs:  mutable.Set[TemporaryCodeTab])
   extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with ChangeListener
   with LinkParent

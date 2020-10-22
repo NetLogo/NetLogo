@@ -90,7 +90,7 @@ with MenuTab {
     override def addControls() {
       // Only want to add toolbar items once
       // This method gets called when the code tab pops in or pops out
-      // because org.nlogo.swing.ToolBar overrides addNotify.
+      // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
       if (this.getActionMap.get("procmenu") == null) {
         val proceduresMenu = new ProceduresMenu(CodeTab.this)
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
