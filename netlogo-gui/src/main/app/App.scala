@@ -41,20 +41,6 @@ import scala.io.Codec
  * for example code.
  */
 object App{
-  def printSwingObject(obj: Object, description: String): Unit = {
-    val some = Option(obj)
-    some match {
-      case None           => println(description + "<null>")
-      case Some(theValue) =>  {
-        val pattern = """(^.*)\[(.*$)""".r
-        val pattern(name, _) = obj.toString
-        val shortName = name.split("\\.").last
-        println(description + System.identityHashCode(obj) +
-        ", " + shortName)
-      }
-    }
-  }
-
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -238,6 +224,20 @@ object App{
         if (!modelFile.exists())
           throw new IllegalStateException(I18N.gui.getN("file.open.error.notFound", token))
         commandLineModel = modelFile.getAbsolutePath()
+      }
+    }
+  }
+  
+  def __printSwingObject(obj: Object, description: String): Unit = {
+    val some = Option(obj)
+    some match {
+      case None           => println(description + "<null>")
+      case Some(theValue) =>  {
+        val pattern = """(^.*)\[(.*$)""".r
+        val pattern(name, _) = obj.toString
+        val shortName = name.split("\\.").last
+        println(description + System.identityHashCode(obj) +
+        ", " + shortName)
       }
     }
   }

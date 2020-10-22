@@ -171,45 +171,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
     (tabOwner, tabIndex)
   }
 
-  // Useful for debugging
-  def printAllTabs(): Unit = {
-    println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
-    printTabsOfTabsPanel(appTabsPanel)
-    codeTabsPanelOption match {
-      case Some(thePanel) => {
-        println("CodeTabs count " + thePanel.getTabCount)
-        printTabsOfTabsPanel(thePanel)
-      }
-      case None           => println("No CodeTabs ")
-    }
-    println("")
-  }
-
-  // Useful for debugging
-  def printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
-    for (n <- 0 until pane.getTabCount) {
-      App.printSwingObject(pane.getComponentAt(n), "")
-    }
-  }
-
-  // Print the names of all the current TabsMenu Actions
-  // Useful for debugging
-  def printTabsMenuActions():Unit = {
-    println("Actions:")
-    org.nlogo.swing.TabsMenu.tabActions(this).foreach(action => {
-      action.asInstanceOf[org.nlogo.swing.UserAction.MenuAction].accelerator match {
-        case None                =>
-        case Some(accKey: javax.swing.KeyStroke) =>  {
-          val actionName = action.getValue(javax.swing.Action.NAME) match {
-            case s: String => s
-            case _         => accKey.toString
-          }
-          println("  " + actionName + ": " + accKey)
-        }
-      }
-    })
-  }
-
   // Input: combinedTabIndx - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabComponent)
   // tabOwner = the AbstractTabsPanel containing the indexed tab.
@@ -348,6 +309,44 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // accelerator bindings for the separate code tab window
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
     addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
+  }
+  // Useful for debugging
+  def __printAllTabs(): Unit = {
+    println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
+    __printTabsOfTabsPanel(appTabsPanel)
+    codeTabsPanelOption match {
+      case Some(thePanel) => {
+        println("CodeTabs count " + thePanel.getTabCount)
+        __printTabsOfTabsPanel(thePanel)
+      }
+      case None           => println("No CodeTabs ")
+    }
+    println("")
+  }
+
+  // Useful for debugging
+  def __printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
+    for (n <- 0 until pane.getTabCount) {
+      App.__printSwingObject(pane.getComponentAt(n), "")
+    }
+  }
+
+  // Print the names of all the current TabsMenu Actions
+  // Useful for debugging
+  def __printTabsMenuActions():Unit = {
+    println("Actions:")
+    org.nlogo.swing.TabsMenu.tabActions(this).foreach(action => {
+      action.asInstanceOf[org.nlogo.swing.UserAction.MenuAction].accelerator match {
+        case None                =>
+        case Some(accKey: javax.swing.KeyStroke) =>  {
+          val actionName = action.getValue(javax.swing.Action.NAME) match {
+            case s: String => s
+            case _         => accKey.toString
+          }
+          println("  " + actionName + ": " + accKey)
+        }
+      }
+    })
   }
 
 }
