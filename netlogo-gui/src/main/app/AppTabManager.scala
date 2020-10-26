@@ -98,7 +98,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
     val appTabCount = appTabsPanel.getTabCount
     codeTabsPanelOption match {
       case None           => appTabCount
-      case Some(thePanel) => appTabCount + thePanel.getTabCount
+      case Some(codeTabsPanel) => appTabCount + codeTabsPanel.getTabCount
     }
   }
 
@@ -129,9 +129,9 @@ class AppTabManager( val appTabsPanel:          Tabs,
     if (combinedTabIndex >= appTabCount) {
       codeTabsPanelOption match {
         case None           => throw new IndexOutOfBoundsException
-        case Some(thePanel) => {
+        case Some(codeTabsPanel) => {
           // combinedTabIndex could be too large for the two Panels combined. AAB 10/2020
-          if (combinedTabIndex >= appTabCount + thePanel.getTabCount) {
+          if (combinedTabIndex >= appTabCount + codeTabsPanel.getTabCount) {
             throw new IndexOutOfBoundsException
           }
           return(getCodeTabsOwner, combinedTabIndex - appTabCount)
@@ -153,10 +153,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
       return(appTabsPanel, tabIndex)
     } else {
       codeTabsPanelOption match {
-        case Some(thePanel) =>
-          val aTabIndex = thePanel.indexOfComponent(tab)
+        case Some(codeTabsPanel) =>
+          val aTabIndex = codeTabsPanel.indexOfComponent(tab)
           if (aTabIndex != -1) {
-            return(thePanel, aTabIndex)
+            return(codeTabsPanel, aTabIndex)
           }
         case None           =>
       }
@@ -282,21 +282,24 @@ class AppTabManager( val appTabsPanel:          Tabs,
   def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
     addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
   }
-  // Useful for debugging
+
+  // The following methods with the prefix "__" may be useful for debugging.
+
+  // Prints list of tabs in App Window and Separate Code Window (If any.)
   def __printAllTabs(): Unit = {
     println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
     __printTabsOfTabsPanel(appTabsPanel)
     codeTabsPanelOption match {
-      case Some(thePanel) => {
-        println("CodeTabs count " + thePanel.getTabCount)
-        __printTabsOfTabsPanel(thePanel)
+      case Some(codeTabsPanel) => {
+        println("CodeTabs count " + codeTabsPanel.getTabCount)
+        __printTabsOfTabsPanel(codeTabsPanel)
       }
       case None           => println("No CodeTabs ")
     }
     println("")
   }
 
-  // Useful for debugging
+  // Prints list of tabs in a JTabbedPane
   def __printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
     for (n <- 0 until pane.getTabCount) {
       App.__printSwingObject(pane.getComponentAt(n), "")
@@ -304,7 +307,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
   }
 
   // Print the names of all the current TabsMenu Actions
-  // Useful for debugging
   def __printTabsMenuActions():Unit = {
     println("Actions:")
     org.nlogo.app.TabsMenu.tabActions(this).foreach(action => {
@@ -321,4 +323,64 @@ class AppTabManager( val appTabsPanel:          Tabs,
     })
   }
 
+  // Prints InputMap for App Window
+  def __printAppFrameInputMap(): Unit = {
+    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+    __printInputMap(contentPane)
+  }
+
+  // Prints InputMap for Separate Code Window (If any.)
+  def __printSeparateCodeFrameInputMap(): Unit = {
+    codeTabsPanelOption match {
+      case None           => println("No Separate Code Window.")
+      case Some(codeTabsPanel) => {
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        __printInputMap(contentPane)
+      }
+    }
+  }
+
+  // Prints InputMap for specified JComponent.
+  def __printInputMap(component: JComponent): Unit = {
+    val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    println("Input Map")
+    for (key <- inputMap.allKeys) {
+      println(key + ": " + inputMap.get(key))
+    }
+    println(" ")
+  }
+
+  // Prints InputMap and ActionMap for App Window
+  def __printAppFrameInputActionMaps(): Unit = {
+    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+    __printInputActionMaps(contentPane)
+  }
+
+  // Prints InputMap and ActionMap for Separate Code Window (If any.)
+  def __printSeparateCodeFrameInputActionMaps(): Unit = {
+    codeTabsPanelOption match {
+      case None           => println("No Separate Code Window.")
+      case Some(codeTabsPanel) => {
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        __printInputActionMaps(contentPane)
+      }
+    }
+  }
+
+  // Prints InputMap and ActionMap for specified JComponent.
+  def __printInputActionMaps(component: JComponent): Unit = {
+    val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = component.getActionMap();
+    println("Input Map")
+    for (key <- inputMap.allKeys) {
+      println(key + ": " + inputMap.get(key))
+    }
+    println(" ")
+    println("Action Map")
+    for (key <- actionMap.allKeys) {
+      println(key + ": " + actionMap.get(key))
+    }
+    println(" ")
+    println(" ")
+  }
 }
