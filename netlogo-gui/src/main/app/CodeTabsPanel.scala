@@ -3,7 +3,7 @@ package org.nlogo.app
 
 import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 
-import javax.swing.{ Action, JTabbedPane, KeyStroke }
+import javax.swing.JTabbedPane
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import scala.collection.mutable
@@ -12,9 +12,10 @@ import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTa
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
-import org.nlogo.swing.UserAction, UserAction.MenuAction
 import org.nlogo.window.GUIWorkspace
+import org.nlogo.window.Event
 import org.nlogo.window.Event.LinkParent
+import org.nlogo.window.Events._
 
 // When a separate code tab window is created, an instance of this class owns the CodeTabs.
 // When there is no separate code tab window, no such instance exists, and all
@@ -29,6 +30,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
                     val externalFileTabs:  mutable.Set[TemporaryCodeTab])
   extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with ChangeListener
+  with AfterLoadEvent.Handler
   with LinkParent
   with org.nlogo.window.LinkRoot {
 
@@ -60,22 +62,13 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
 
     // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window. AAB 10/2020
     tabManager.setSeparateCodeTabBindings(this)
+    getAppFrame.addLinkComponent(getCodeTabContainer)
+    Event.rehash()
+  }
 
-    // Add keystrokes for actions from TabsMenu to the codeTabsPanel
-    // because keystrokes are interpreted by the window that has focus. AAB 10/2020
-    TabsMenu.tabActions(tabManager).foreach(action => {
-      // Add the accelerator key if any to the input map and action map. AAB 10/2020
-      action.asInstanceOf[MenuAction].accelerator match {
-        case None                    =>
-        case Some(accKey: KeyStroke) =>  {
-          val actionName = action.getValue(Action.NAME) match {
-            case s: String => s
-            case _         => accKey.toString
-          }
-          tabManager.addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
-        }
-      }
-    })
+  def handle(e: AfterLoadEvent) = {
+    // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
+    tabManager.copyAppMenuBarAccelerators
   }
 
   this.addMouseListener(new MouseAdapter() {

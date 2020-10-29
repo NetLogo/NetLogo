@@ -7,7 +7,8 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
-import org.nlogo.swing.UserAction, UserAction.MenuAction
+import org.nlogo.swing.UserAction
+import org.nlogo.window.Event
 
 // The class AppTabManager handles relationships between tabs (the
 // InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs )
@@ -201,6 +202,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
         appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
+        Event.rehash()
       } // end case where work was done. AAB 10/2020
     }
   }
@@ -232,28 +234,50 @@ class AppTabManager( val appTabsPanel:          Tabs,
         }
       }
 
-      // Add keystrokes for actions from TabsMenu to the codeTabsPanel. AAB 10/2020
-      TabsMenu.tabActions(this).foreach(action => {
-        // Add the accelerator key if any to the input map and action map. AAB 10/2020
-        action.asInstanceOf[MenuAction].accelerator match {
-          case None                =>
-          case Some(accKey: KeyStroke) =>  {
-            val actionName = action.getValue(Action.NAME) match {
-              case s: String => s
-              case _         => accKey.toString
-            }
-            addCodeTabContainerKeyStroke(codeTabsPanel, accKey, action, actionName)
-          }
-        }
-      })
+      // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
+      copyAppMenuBarAccelerators
+
       appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
       codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
       appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       setSeparateCodeTabBindings(codeTabsPanel)
+      Event.rehash()
     }
   }
 
+  // Copy Accelerators from the Application Menu Bar to the code tab getCodeTabContainer
+  def copyAppMenuBarAccelerators(): Unit = {
+    codeTabsPanelOption match {
+      case None                => // nothing to do
+      case Some(codeTabsPanel) => {
+        copyMenuBarAccelerators(appTabsPanel.getAppJFrame.getJMenuBar, codeTabsPanel)
+      }
+    }
+  }
+
+  // For a MenuBar - copy Accelerators
+  def copyMenuBarAccelerators(menuBar: javax.swing.JMenuBar,  codeTabsPanel: CodeTabsPanel): Unit = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        copyMenuAccelerators(item, codeTabsPanel)
+      }
+    }
+  }
+
+  // For a Menu - copy Menu Items Accelerators
+  def copyMenuAccelerators(menu: javax.swing.JMenu, codeTabsPanel: CodeTabsPanel): Unit = {
+    for (i <- 0 until menu.getItemCount) {
+      val  item = menu.getItem(i)
+      if (item != null && item.getAccelerator != null) {
+        addCodeTabContainerKeyStroke(codeTabsPanel, item.getAccelerator, item.getAction, item.getActionCommand)
+      }
+      if (item.isInstanceOf[javax.swing.JMenu]) {
+        copyMenuAccelerators(item.asInstanceOf[javax.swing.JMenu], codeTabsPanel)
+      }
+    }
+  }
   def addComponentKeyStroke(component: JComponent, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();
@@ -389,8 +413,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
     for (i <- 0 until menu.getItemCount) {
       val  item = menu.getItem(i)
       if (item != null) {
-        println(indent(level * 2) + item.getText());
-        val accelerator = item.getAccelerator()
+        println(indent(level * 2) + item.getText)
+        val accelerator = item.getAccelerator
         if (accelerator != null) {
           println(indent(level * 4) + "Accelerator: " + accelerator);
         }
@@ -413,7 +437,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       val  item = menuBar.getMenu(i)
       if (item != null) {
         println(item.getText() + " Menu");
-          __printMenuItems(item, 1);
+        __printMenuItems(item, 1);
       } else {
         println("null Item");
       }
@@ -427,4 +451,31 @@ class AppTabManager( val appTabsPanel:          Tabs,
     __printMenuBar(menuBar)
   }
 
+  // Print Accelerators from the Application Menu Bar
+  def __printAppMenuBarAccelerators(): Unit = {
+    __printMenuBarAccelerators(appTabsPanel.getAppJFrame.getJMenuBar)
+  }
+
+  // For a MenuBar - print Accelerators
+  def __printMenuBarAccelerators(menuBar: javax.swing.JMenuBar): Unit = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        __printMenuAccelerators(item)
+      }
+    }
+  }
+
+  // For a Menu - print Menu Items Accelerators
+  def __printMenuAccelerators(menu: javax.swing.JMenu): Unit = {
+    for (i <- 0 until menu.getItemCount) {
+      val  item = menu.getItem(i)
+      if (item != null && item.getAccelerator != null) {
+        println(item.getActionCommand + ": " + item.getAccelerator)
+      }
+      if (item.isInstanceOf[javax.swing.JMenu]) {
+        __printMenuAccelerators(item.asInstanceOf[javax.swing.JMenu])
+      }
+    }
+  }
 }
