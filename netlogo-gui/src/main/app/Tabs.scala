@@ -179,7 +179,7 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) = {
-    setSelectedComponent(tab)
+    setPanelsSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
     EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length) )
@@ -245,7 +245,7 @@ class Tabs(workspace:           GUIWorkspace,
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
-        if (e.error != null) setSelectedComponent(tab.get)
+        if (e.error != null) setPanelsSelectedComponent(tab.get)
         recolorTab(tab.get, e.error != null)
         requestFocus()
       case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
@@ -280,7 +280,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
-      case Some(tab) => setSelectedComponent(tab)
+      case Some(tab) => setPanelsSelectedComponent(tab)
       case _ => addNewTab(Right(filename))
     }
   }
