@@ -383,4 +383,48 @@ class AppTabManager( val appTabsPanel:          Tabs,
     println(" ")
     println(" ")
   }
+
+  // For a Menu - prints Menu Items and their Accelerators
+  def __printMenuItems(menu: javax.swing.JMenu, level: Int): Unit = {
+    for (i <- 0 until menu.getItemCount) {
+      val  item = menu.getItem(i)
+      if (item != null) {
+        println(indent(level * 2) + item.getText());
+        val accelerator = item.getAccelerator()
+        if (accelerator != null) {
+          println(indent(level * 4) + "Accelerator: " + accelerator);
+        }
+        if (item.isInstanceOf[javax.swing.JMenu]) {
+          __printMenuItems(item.asInstanceOf[javax.swing.JMenu], level + 1);
+        }
+      } else {
+        println(indent(level * 2) + "Separater");
+      }
+    }
+  }
+
+  // Creates a string consisting of the specified number of spaces
+  def indent(n: Int): String =
+    List.fill(n)(' ').mkString
+
+  // For a MenuBar - Prints Menus
+  def __printMenuBar(menuBar: javax.swing.JMenuBar): Unit = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        println(item.getText() + " Menu");
+          __printMenuItems(item, 1);
+      } else {
+        println("null Item");
+      }
+    }
+  }
+
+  // Prints the Application Menu Bar
+  def __printAppMenuBar(): Unit = {
+    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
+    App.__printSwingObject(menuBar, "menu bar")
+    __printMenuBar(menuBar)
+  }
+
 }
