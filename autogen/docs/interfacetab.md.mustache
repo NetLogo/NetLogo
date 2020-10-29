@@ -445,8 +445,11 @@ Many of the fields are fairly self-explanatory, such as the name of the plot,
 labels for the x and y axes, ranges for the axes, and the "Show legend?"
 checkbox.
 
-If Auto Scale? is checked the x and y changes will automatically readjust as
-points are added to the plot if they are outside the current range.
+If Auto Scale? is checked the x and y axes will automatically readjust as
+points are added to the plot using `plot` or `plotxy` if the points are
+outside the current range.  If Auto Scale? is on and you use `histogram`,
+the y axis will automatically readjust for points outside the current range,
+but the x axis will be left unchanged.
 
 Under "Plot setup commands" and "Plot update commands" you can enter commands
 that will automatically be run at appropriate times. Click the little triangle
@@ -532,4 +535,3 @@ You can close an agent monitor by clicking the box in the upper left corner, or
 by pressing the Esc key. If you hold down shift while you click the box all open
 agent monitors will close or you can close all the agent monitors using the
 "Close All Monitors" option in the Tools Menu.
-

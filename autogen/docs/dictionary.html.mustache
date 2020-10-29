@@ -1263,12 +1263,23 @@ end
           This pair of commands is used to control the NetLogo feature of
           auto-plotting in the current plot. Auto-plotting will automatically
           update the x and y axes of the plot whenever the current pen
-          exceeds these boundaries. It is useful when wanting to show all
-          plotted values in the current plot, regardless of the current plot
-          ranges.
+          exceeds these boundaries when adding a new point with <code>plot</code>
+          or <code>plotxy</code>.  When using <code>histogram</code> to plot
+          values, only the y axis will automatically update its ranges, the x
+          axis will be unchanged.
+          Each plot has an auto-plotting setting called
+          <i>Auto Scale?</i> in the user interface that determines if the plot
+          will enable auto-plotting when the model starts.
+          Auto-plotting is useful when wanting to show all plotted values in
+          the current plot, regardless of the current plot ranges.
         </p>
         <p>
           These commands will produce a runtime error if the current plot has not been set.
+        </p>
+        <p>
+          See also <a href="#plot">plot</a>, <a href="#plotxy">plotxy</a>, and
+          <a href="#histogram">histogram</a>, and also the
+          <a href="interfacetab.html#plots">Plots section of the Interface Tab guide</a>.
         </p>
       </div><!-- ======================================== -->
     </div>
