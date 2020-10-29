@@ -88,9 +88,7 @@ class Tabs(workspace:           GUIWorkspace,
     }
 
     tabActions = TabsMenu.tabActions(tabManager)
-    fileManager = manager
-    dirtyMonitor = monitor
-    assert(fileManager != null && dirtyMonitor != null)
+    initManagerMonitor(manager, monitor)
 
     saveModelActions foreach menu.offerAction
 
@@ -192,16 +190,31 @@ class Tabs(workspace:           GUIWorkspace,
 
     def clearErrors(): Unit = {
       def clearForeground(tab: Component) = {
-        tabManager.getTabOwner(tab).setForegroundAt(
-          tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+        // In the case where the code tab has not been compiled,
+        // is in a separate window, if one exits the separate window,
+        // if the code compiles correctly setting the foreground throws
+        // an exception because of a problem getting tab's bounds.
+        // Perhaps this is related to the fact that the tab has just
+        // moved from the CodeTabsPanel to Tabs. AAB 10/2020
+        try {
+          tabManager.getTabOwner(tab).setForegroundAt(
+            tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+        } catch {
+          case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+        }
       }
       forAllCodeTabs(clearForeground)
     }
 
     def recolorTab(component: Component, hasError: Boolean): Unit = {
-      tabManager.getTabOwner(component).setForegroundAt(
-        tabManager.getTabOwner(component).indexOfComponent(component),
-        if(hasError) errorColor else null)
+      // Use try as in clearErrors, just in case AAB 10/2020
+      try {
+        tabManager.getTabOwner(component).setForegroundAt(
+          tabManager.getTabOwner(component).indexOfComponent(component),
+          if(hasError) errorColor else null)
+      } catch {
+        case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+      }
     }
 
     def recolorInterfaceTab(): Unit = {

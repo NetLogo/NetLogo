@@ -193,12 +193,12 @@ class AppTabManager( val appTabsPanel:          Tabs,
     codeTabsPanelOption match {
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
+        setCodeTabsPanelOption(None)
         // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
         for (_ <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
         }
         codeTabsPanel.getCodeTabContainer.dispose
-        setCodeTabsPanelOption(None)
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
         appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
