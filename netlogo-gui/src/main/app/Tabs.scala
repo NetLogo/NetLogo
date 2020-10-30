@@ -117,7 +117,6 @@ class Tabs(workspace:           GUIWorkspace,
       val previousTab = tabManager.getCurrentTab
       currentTab = getSelectedComponent
       tabManager.setCurrentTab(currentTab)
-
       previousTab match {
         case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
         case _ =>
@@ -126,11 +125,21 @@ class Tabs(workspace:           GUIWorkspace,
         case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
         case _ =>
       }
-      // TODO: The correctness of this (pre-existing) logic needs investigation, may be related to failure to ask to save a file in
-      // Bug on closing NetLogo Window? #1832 - AAB 10/2020
+
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-        case (true, false) => saveModelActions foreach menu.offerAction
-        case (false, true) => saveModelActions foreach menu.revokeAction
+        // In the case of a separate code tab, the offerAction was adding addtional
+        // Save and SaveAs... menu items. Adding menu.revokeAction beforehand solves
+        // the problem, but if someone has time to go deeper into this, consider taking
+        // a look at org.nlogo.swing.Menu.offerAction to see why the redundancy is allowed. AAB 10/2020
+        case (true, false) => {
+          saveModelActions foreach {
+            menu.revokeAction(_)
+            menu.offerAction(_)
+          }
+        }
+        case (false, true) => {
+          saveModelActions foreach menu.revokeAction
+        }
         case _             =>
       }
       currentTab.requestFocus()
@@ -276,7 +285,9 @@ class Tabs(workspace:           GUIWorkspace,
     _externalFileNum - 1
   }
 
-  def newExternalFile() = { addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer))) }
+  def newExternalFile() = {
+    addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
+  }
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {

@@ -215,10 +215,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
         appTabsPanel.externalFileManager,
         appTabsPanel.mainCodeTab,
         appTabsPanel.externalFileTabs)
-
       codeTabsPanelOption = Some(codeTabsPanel)
       codeTabsPanel.setTabManager(this)
-
       // Move tabs from appTabsPanel to codeTabsPanel.
       // Iterate starting at last tab so that indexing remains valid when
       // tabs are removed (add to codeTabsPanel), AAB 10/2020
@@ -234,14 +232,13 @@ class AppTabManager( val appTabsPanel:          Tabs,
         }
       }
 
-      // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
-      copyAppMenuBarAccelerators
-
       appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
       codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
       appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       setSeparateCodeTabBindings(codeTabsPanel)
+      // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
+      copyAppMenuBarAccelerators
       Event.rehash()
     }
   }
@@ -436,10 +433,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
     for (i <- 0 until menuBar.getMenuCount) {
       val  item = menuBar.getMenu(i)
       if (item != null) {
-        println(item.getText() + " Menu");
-        __printMenuItems(item, 1);
+        println(item.getText() + " Menu")
+        __printMenuItems(item, 1)
       } else {
-        println("null Item");
+        println("null Item")
       }
     }
   }
@@ -451,9 +448,49 @@ class AppTabManager( val appTabsPanel:          Tabs,
     __printMenuBar(menuBar)
   }
 
+  // For a MenuBar - Prints Named Menu
+  def __printMenuByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        if (item.getText() == menuName) {
+          println(menuName + " Menu")
+          __printMenuItems(item, 1)
+          return
+        }
+      }
+    }
+    println(menuName + " Menu not found")
+  }
+
+  def __printAppMenuByName(menuName: String): Unit = {
+    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
+    __printMenuByName(menuName, menuBar)
+  }
+
   // Print Accelerators from the Application Menu Bar
   def __printAppMenuBarAccelerators(): Unit = {
     __printMenuBarAccelerators(appTabsPanel.getAppJFrame.getJMenuBar)
+  }
+
+  // For a MenuBar - Print Accelerators of Named Menu
+  def __printMenuAcceleratorsByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        if (item.getText() == menuName) {
+          println(menuName + " Menu")
+          __printMenuAccelerators(item)
+          return
+        }
+      }
+    }
+    println(menuName + " Menu not found")
+  }
+
+  def __printAppMenuAcceleratorsByName(menuName: String): Unit = {
+    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
+    __printMenuAcceleratorsByName(menuName, menuBar)
   }
 
   // For a MenuBar - print Accelerators

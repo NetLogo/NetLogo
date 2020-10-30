@@ -73,7 +73,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         rank = 0
 
         @throws(classOf[UserCancelException])
-        override def action(): Unit = save(saveAs)
+        override def action(): Unit = {
+          save(saveAs)
+        }
       }
     }
     Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++
