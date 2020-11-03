@@ -25,7 +25,7 @@ class PlotExportControls(plotManager: PlotManager) {
       if (plotnum < 0)
         None
       else
-        plotManager.getPlot(plotNames(plotnum))
+        plotManager.maybeGetPlot(plotNames(plotnum))
     }
   }
 

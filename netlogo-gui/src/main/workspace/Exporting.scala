@@ -42,7 +42,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
     plotManager.getPlotNames.foreach { name =>
       new PlotExporter(
         plotManager
-          .getPlot(name)
+          .maybeGetPlot(name)
           .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
       , Dump.csv
       ).export(writer)
@@ -57,7 +57,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         exportInterfaceGlobals(writer)
         new PlotExporter(
           plotManager
-            .getPlot(plotName)
+            .maybeGetPlot(plotName)
             .getOrElse(throw new Exception("plot with given name not found..."))
         , Dump.csv
         ).export(writer)
@@ -83,7 +83,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         plotManager.getPlotNames.foreach { name =>
           new PlotExporter(
             plotManager
-              .getPlot(name)
+              .maybeGetPlot(name)
               .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
           , Dump.csv
           ).export(writer)

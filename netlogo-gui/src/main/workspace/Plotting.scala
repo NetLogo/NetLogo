@@ -14,7 +14,7 @@ trait Plotting { this: AbstractWorkspace =>
 
   // methods used when importing plots
   def currentPlot(plot: String) {
-    plotManager.currentPlot = plotManager.getPlot(plot)
+    plotManager.currentPlot = plotManager.maybeGetPlot(plot)
   }
 
   def getPlot(plot: String): PlotInterface =

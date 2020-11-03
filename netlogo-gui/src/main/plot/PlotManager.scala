@@ -3,7 +3,7 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{ CommandLogoThunk, HaltSignal, LogoThunkFactory, PlotAction, PlotInterface, MersenneTwisterFast }
+import org.nlogo.api.{ CommandLogoThunk, HaltSignal, LogoThunkFactory, PlotAction, MersenneTwisterFast }
 import org.nlogo.core.CompilerException
 import scala.util.{ Failure, Success, Try }
 
@@ -44,17 +44,18 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot
   }
 
-  def getPlot(name: String): Option[Plot] = _plots.find(_.name.equalsIgnoreCase(name))
+  @deprecated("Use `maybeGetPlot()`", "6.1.2")
+  def getPlot(name: String): Plot = _plots.find(_.name.equalsIgnoreCase(name)).orNull
 
   // used for letting the user choose which plot to export
   def getPlotNames: Seq[String] = _plots.map(_.name)
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == None).get
+  def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_) == None).get
 
   // these are for api compatibility - Jeremy B Octover 2020
   def hasPlot(name: String): Boolean = _plots.exists(_.name == name)
-  def maybeGetPlot(name: String): Option[PlotInterface] = getPlot(name)
+  def maybeGetPlot(name: String): Option[Plot] = _plots.find(_.name.equalsIgnoreCase(name))
   def publish(action: PlotAction): Unit = ???
-  def setCurrentPlot(name: String): Unit = currentPlot = getPlot(name)
+  def setCurrentPlot(name: String): Unit = currentPlot = maybeGetPlot(name)
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None
