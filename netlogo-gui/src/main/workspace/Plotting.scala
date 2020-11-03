@@ -10,7 +10,8 @@ trait Plotting { this: AbstractWorkspace =>
 
   val plotRNG = new MersenneTwisterFast()
 
-  val plotManager = new PlotManager(this, plotRNG)
+  val realPlotManager = new PlotManager(this, plotRNG)
+  val plotManager     = realPlotManager
 
   // methods used when importing plots
   def currentPlot(plot: String) {

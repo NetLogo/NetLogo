@@ -15,7 +15,7 @@ import org.nlogo.plot.PlotManager
 
 trait Helpers extends Instruction {
   def plotManager =
-    workspace.plotManager.asInstanceOf[PlotManager]
+    workspace.realPlotManager.asInstanceOf[PlotManager]
   def currentPlot(context: Context) =
     plotManager.currentPlot.getOrElse(
       throw new RuntimePrimitiveException(

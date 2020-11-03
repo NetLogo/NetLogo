@@ -5,7 +5,10 @@ package org.nlogo.plot
 import org.nlogo.api.{ CSV, PlotInterface, PlotPointInterface }
 import collection.mutable.Buffer
 
-class PlotExporter(private val plot: PlotInterface, private val csv: CSV) {
+// This would be called just `PlotExporter` but we need to leave the class with
+// that name and a similar constructor in place in GUI for deprecation.
+// -Jeremy B November 2020
+class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
   def export(writer: java.io.PrintWriter) {
     exportIntro(writer)
     exportPens(writer)

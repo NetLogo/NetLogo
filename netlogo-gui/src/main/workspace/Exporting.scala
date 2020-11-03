@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.AbstractExporter
 import org.nlogo.api.Dump
-import org.nlogo.plot.PlotExporter
+import org.nlogo.plot.CorePlotExporter
 import java.io.{IOException,PrintWriter}
 
 trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
@@ -40,7 +40,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
       Dump.csv.encode(
         plotManager.currentPlot.map(_.name).getOrElse("")))
     plotManager.getPlotNames.foreach { name =>
-      new PlotExporter(
+      new CorePlotExporter(
         plotManager
           .maybeGetPlot(name)
           .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
@@ -55,7 +55,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {
         exportInterfaceGlobals(writer)
-        new PlotExporter(
+        new CorePlotExporter(
           plotManager
             .maybeGetPlot(plotName)
             .getOrElse(throw new Exception("plot with given name not found..."))
@@ -81,7 +81,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
         exportInterfaceGlobals(writer)
 
         plotManager.getPlotNames.foreach { name =>
-          new PlotExporter(
+          new CorePlotExporter(
             plotManager
               .maybeGetPlot(name)
               .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))

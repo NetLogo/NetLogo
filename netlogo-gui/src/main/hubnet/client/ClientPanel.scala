@@ -11,7 +11,7 @@ import javax.swing.JPanel
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory, CompilerServices }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
-import org.nlogo.plot.{ PlotExporter, Plot, PlotManager }
+import org.nlogo.plot.{ CorePlotExporter, Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
 import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
 import org.nlogo.hubnet.protocol._
@@ -98,7 +98,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
            .foreach({ filename =>
              try new AbstractExporter(filename) {
                override def export(writer: PrintWriter) {
-                 new PlotExporter(plot, Dump.csv).export(writer)
+                 new CorePlotExporter(plot, Dump.csv).export(writer)
                }
              }.export("plot", "HubNet Client", "")
              catch {

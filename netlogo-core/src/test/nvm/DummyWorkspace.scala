@@ -46,6 +46,7 @@ class DummyWorkspace extends Workspace {
   override def getModelFileName = unsupported
   override def fileManager = unsupported
   override def plotManager = unsupported
+  override def realPlotManager = unsupported
   override def attachModelDir(filePath: String) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet, waitForCompletion: Boolean) = unsupported
   override def compileCommands(source: String) = unsupported

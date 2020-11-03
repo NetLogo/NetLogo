@@ -13,7 +13,7 @@ import org.nlogo.{ core, api, nvm },
 
 trait PlotHelpers extends Instruction {
   def plotManager =
-    workspace.plotManager.asInstanceOf[PlotManagerInterface]
+    workspace.realPlotManager.asInstanceOf[PlotManagerInterface]
   def currentPlotState(context: Context) =
     currentPlot(context).state
   def currentPlot(context: Context): PlotInterface =

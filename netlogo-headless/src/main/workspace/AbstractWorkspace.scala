@@ -20,7 +20,7 @@ import
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
-  plot.{ PlotExporter, PlotManager }
+  plot.{ CorePlotExporter, PlotManager }
 
 import AbstractWorkspaceTraits._
 
@@ -183,7 +183,8 @@ object AbstractWorkspaceTraits {
 
   trait Plotting { this: AbstractWorkspace with Evaluating =>
 
-    val plotManager = new PlotManager(this)
+    val realPlotManager = new PlotManager(this)
+    val plotManager     = realPlotManager
 
     // methods used when importing plots
     def currentPlot(plot: String) {
@@ -240,7 +241,7 @@ object AbstractWorkspaceTraits {
         Dump.csv.encode(
           plotManager.currentPlot.map(_.name).getOrElse("")))
       plotManager.getPlotNames.foreach { name =>
-        new PlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
+        new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
         writer.println()
       }
     }
@@ -250,7 +251,7 @@ object AbstractWorkspaceTraits {
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
-          new PlotExporter(plotManager.maybeGetPlot(plotName).orNull, Dump.csv).export(writer)
+          new CorePlotExporter(plotManager.maybeGetPlot(plotName).orNull, Dump.csv).export(writer)
         }
       }.export("plot",getModelFileName,"")
     }
@@ -262,7 +263,7 @@ object AbstractWorkspaceTraits {
           exportInterfaceGlobals(writer)
 
           plotManager.getPlotNames.foreach { name =>
-            new PlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
+            new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
             writer.println()
           }
         }
