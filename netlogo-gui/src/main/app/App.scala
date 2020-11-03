@@ -228,12 +228,12 @@ object App{
     }
   }
 
-  def __printSwingObject(obj: Object, description: String): Unit = {
+  def __printSwingObject(obj: java.awt.Component, description: String): Unit = {
     val some = Option(obj)
     some match {
       case None           => println(description + "<null>")
       case Some(theValue) =>  {
-        val pattern = """(^.*)\[(.*$)""".r
+        val pattern = """(^[^\[]*)\[(.*$)""".r
         val pattern(name, _) = obj.toString
         val shortName = name.split("\\.").last
         println(description + System.identityHashCode(obj) +

@@ -306,6 +306,19 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // The following methods with the prefix "__" may be useful for debugging.
 
+  // For a MenuBar - Get Named Menu
+  def __getMenuByName(menuName: String, menuBar: javax.swing.JMenuBar): Option[javax.swing.JMenu] = {
+    for (i <- 0 until menuBar.getMenuCount) {
+      val  item = menuBar.getMenu(i)
+      if (item != null) {
+        if (item.getText() == menuName) {
+          return Some(item)
+        }
+      }
+    }
+    None
+  }
+
   // Prints list of tabs in App Window and Separate Code Window (If any.)
   def __printAllTabs(): Unit = {
     println("\nAppTabsPanel count " + appTabsPanel.getTabCount)
@@ -450,17 +463,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // For a MenuBar - Prints Named Menu
   def __printMenuByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
-      if (item != null) {
-        if (item.getText() == menuName) {
-          println(menuName + " Menu")
-          __printMenuItems(item, 1)
-          return
-        }
-      }
-    }
-    println(menuName + " Menu not found")
+    __getMenuByName(menuName, menuBar).fold(println(menuName + " Menu not found"))( {
+      println(menuName + " Menu")
+      __printMenuItems(_, 1)
+    })
   }
 
   def __printAppMenuByName(menuName: String): Unit = {
@@ -475,17 +481,13 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // For a MenuBar - Print Accelerators of Named Menu
   def __printMenuAcceleratorsByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
-      if (item != null) {
-        if (item.getText() == menuName) {
+    __getMenuByName(menuName, menuBar)  match {
+        case None                => println(menuName + " Menu not found")
+        case Some(menu) =>  {
           println(menuName + " Menu")
-          __printMenuAccelerators(item)
-          return
+          __printMenuAccelerators(menu)
         }
       }
-    }
-    println(menuName + " Menu not found")
   }
 
   def __printAppMenuAcceleratorsByName(menuName: String): Unit = {
