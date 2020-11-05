@@ -482,12 +482,12 @@ class AppTabManager( val appTabsPanel:          Tabs,
   // For a MenuBar - Print Accelerators of Named Menu
   def __printMenuAcceleratorsByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
     __getMenuByName(menuName, menuBar)  match {
-        case None                => println(menuName + " Menu not found")
-        case Some(menu) =>  {
-          println(menuName + " Menu")
-          __printMenuAccelerators(menu)
-        }
+      case None                => println(menuName + " Menu not found")
+      case Some(menu) =>  {
+        println(menuName + " Menu")
+        __printMenuAccelerators(menu)
       }
+    }
   }
 
   def __printAppMenuAcceleratorsByName(menuName: String): Unit = {

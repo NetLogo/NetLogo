@@ -67,6 +67,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
       with MenuAction {
+        println("temp code tab, saveAction")
         category    = UserAction.FileCategory
         group       = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
@@ -74,7 +75,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
+          println("overwritten saveas action")
           save(saveAs)
+          tabs.asInstanceOf[org.nlogo.app.AbstractTabsPanel].getTabManager.__printAppMenuAcceleratorsByName("Tabs")
         }
       }
     }
