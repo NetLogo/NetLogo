@@ -162,9 +162,17 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
     if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
-      parserTokenizer.tokenizeString(source)
-        .find(t => t.text.equalsIgnoreCase("__includes"))
-        .map(_ => Map.empty[String, String])
+      // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
+      // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
+      // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
+      // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
+      if (!FrontEndInterface.hasIncludes(source)) {
+        None
+      } else {
+        parserTokenizer.tokenizeString(source)
+          .find(t => t.text.equalsIgnoreCase("__includes"))
+          .map(_ => Map.empty[String, String])
+      }
     } else
       Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
   }

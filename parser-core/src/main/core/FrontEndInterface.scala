@@ -12,6 +12,14 @@ object FrontEndInterface {
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 
+  def hasIncludes(source: String): Boolean = {
+    val includesRegEx = """(?m)^\s*__includes""".r
+    includesRegEx.findFirstMatchIn(source) match {
+      case Some(_) => true
+      case None    => false
+    }
+  }
+
 }
 
 case class ProcedureSyntax(declarationKeyword: Token, identifier: Token, endKeyword: Token)
@@ -61,4 +69,3 @@ trait FrontEndInterface {
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[Token]
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
 }
-
