@@ -182,6 +182,8 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     val (tabOwner, tabIndex) = tabManager.ownerAndIndexOfTab(oldTab)
     if (tabOwner != null) {
       tabOwner.setComponentAt(tabIndex, newTab)
+    } else {
+      throw new Exception("The old code tab does not belong to a Tabs Panel")
     }
   }
 

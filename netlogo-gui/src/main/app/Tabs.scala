@@ -46,6 +46,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   def getTabs = { this }
 
+  def asAbstractTabsPanel = { this.asInstanceOf[AbstractTabsPanel] }
   def setMenu(newMenu: MenuBar): Unit = {
     val menuItems = permanentMenuActions ++ (currentTab match {
       case mt: MenuTab => mt.activeMenuActions

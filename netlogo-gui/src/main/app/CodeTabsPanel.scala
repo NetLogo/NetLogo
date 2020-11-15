@@ -46,6 +46,8 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
 
+  def asAbstractTabsPanel = { this.asInstanceOf[AbstractTabsPanel] }
+  
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }
 
