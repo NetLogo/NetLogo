@@ -9,7 +9,7 @@ import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.window.Events.WidgetEditedEvent
+import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -158,6 +158,7 @@ abstract class Widget extends JPanel {
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
       org.nlogo.window.Event.rehash()
+      raiseWidgetRemoved()
     }
     super.removeNotify()
   }
@@ -166,6 +167,18 @@ abstract class Widget extends JPanel {
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
     org.nlogo.window.Event.rehash()
+    raiseWidgetAdded()
+  }
+
+  // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
+  // classes are not "actual" widgets they just use the UI functionality of this class, and changes to those items
+  // (monitors, command lines, etc) should not cause things like marking the model as "dirty".
+  // -Jeremy B November 2020
+  def raiseWidgetRemoved(): Unit = {
+    new WidgetRemovedEvent(this).raise(this)
+  }
+  def raiseWidgetAdded(): Unit = {
+    new WidgetAddedEvent(this).raise(this)
   }
 
   implicit class RichStringOption(s: Option[String]) {

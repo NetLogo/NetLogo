@@ -273,4 +273,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def model: CoreWidget = {
     throw new UnsupportedOperationException()
   }
+
+  // this isn't an actual widget, so make sure we don't cause any widget-related code to run. -Jeremy B November 2020
+  override def raiseWidgetRemoved(): Unit = {}
+  override def raiseWidgetAdded(): Unit = {}
+
 }
