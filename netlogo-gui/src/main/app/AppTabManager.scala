@@ -275,6 +275,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
       }
     }
   }
+
   def addComponentKeyStroke(component: JComponent, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
     val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     val actionMap: ActionMap = component.getActionMap();

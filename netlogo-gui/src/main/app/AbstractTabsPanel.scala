@@ -111,6 +111,7 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     index + tabManager.getAppTabsOwner.getTabCount
   }
 
+
   // Begin methods intended for use outside of NetLogo code, e.g
   // for use in extensions. AAB 10/2020.
 
@@ -126,12 +127,14 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
    * @param icon the icon for the tab; may be <code>null</code>
    * @param tip the associated tooltip
    */
+//  def addNewTab(tab: Component, title: String = null, addMenuItem: Boolean = false, icon: javax.swing.Icon = null, tip: String = null): Unit = {
   def addNewTab(tab: Component, title: String = null, icon: javax.swing.Icon = null, tip: String = null): Unit = {
       if (tab == null) { throw new Exception("Tab component may not be null.") }
       val codeTabsOwner = tabManager.getCodeTabsOwner
       if (tab.isInstanceOf[CodeTab]) {
         // if it is a code tab, it goes at the end of JTabbedPane that owns CodeTabs. AAB 10/2020
         codeTabsOwner.insertTab(title, icon, tab, tip, codeTabsOwner.getTabCount)
+        //  addMenuItem(tabManager.getCombinedTabCount - 1, title)
       } else {
         val appTabsPanel = tabManager.getAppTabsPanel
         if (codeTabsOwner.isInstanceOf[CodeTabsPanel]) {
