@@ -19,7 +19,7 @@ else
     fi
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.8*`
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.8`
     fi
   fi
   JH=$JAVA_HOME
