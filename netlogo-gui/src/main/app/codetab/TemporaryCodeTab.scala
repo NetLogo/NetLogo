@@ -76,10 +76,14 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
           save(saveAs)
+          // There is an unsolved problem here or in Tabs.scala
+          // control-S becomes bound to save file (rather than save model) for included files.
+          // This accelerator and its action need to be added to the separate code tab, when
+          // it exists. The code below does not solve the problem. AAB Nov 2020
+          val tabManager = tabs.asInstanceOf[AbstractTabsPanel].getTabManager
+          tabManager.removeCodeTabContainerAccelerators
+          tabManager.copyMenuBarAccelerators
         }
-        val tabManager = tabs.asInstanceOf[AbstractTabsPanel].getTabManager
-        tabManager.removeCodeTabContainerAccelerators
-        tabManager.copyMenuBarAccelerators
       }
     }
     Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++

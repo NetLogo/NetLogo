@@ -287,22 +287,23 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def newExternalFile() = {
-    addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
+    addNewNLSTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
   }
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) => setPanelsSelectedComponent(tab)
-      case _ => addNewTab(Right(filename))
+      case _ => addNewNLSTab(Right(filename))
     }
   }
 
-  def addNewTab(name: Filename) = {
+  def addNewNLSTab(name: Filename) = {
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, mainCodeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
-    getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
-    addMenuItem(tabManager.getCombinedTabCount - 1, tab.filenameForDisplay)
+    addNewTab(tab, tab.filenameForDisplay)
+//    getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
+//    addMenuItem(tabManager.getCombinedTabCount - 1, tab.filenameForDisplay)
     Event.rehash()
 
     setPanelsSelectedComponent(tab)
@@ -314,11 +315,14 @@ class Tabs(workspace:           GUIWorkspace,
 
   def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) foreach { tab =>
-      val index = getIndexOfCodeTab(tab)
       removeTab(tab)
-      removeMenuItem(index)
       externalFileTabs -= tab
-      if (externalFileTabs.isEmpty) menu.revokeAction(SaveAllAction)
+      if (externalFileTabs.isEmpty) {
+        menu.revokeAction(SaveAllAction)
+        // Could change to remove and copy only FileMenu accelerators - AAB Nov 2020
+        tabManager.removeCodeTabContainerAccelerators
+        tabManager.copyMenuBarAccelerators
+      }
     }
   }
 
@@ -328,10 +332,16 @@ class Tabs(workspace:           GUIWorkspace,
   def lineNumbersVisible = { mainCodeTab.lineNumbersVisible }
   def lineNumbersVisible_=(visible: Boolean) = { forAllCodeTabs(_.lineNumbersVisible = visible) }
 
-  def removeMenuItem(index: Int) {
+  // Renamed to reflect what it actually does now.
+  // This method removes all tab entries in the TabsMenu because they come from a list of tabActions
+  // that could be outdated. It then updates the tabActions with the tabs that
+  // currently exist, and regenerates the TabsMenu.
+  // Removed argument index which was not being used - AAB Nov 2020
+  def updateTabsMenu() {
     tabActions.foreach(action => menu.revokeAction(action))
     tabActions = TabsMenu.tabActions(tabManager)
     tabActions.foreach(action => menu.offerAction(action))
+    // Could change to remove and copy only TabsMenu accelerators - AAB Nov 2020
     tabManager.removeCodeTabContainerAccelerators
     tabManager.copyMenuBarAccelerators
   }
@@ -366,6 +376,12 @@ class Tabs(workspace:           GUIWorkspace,
     override def action(): Unit = {
       fileManager.saveModel(false)
       externalFileTabs foreach (_.save(false))
+      // There is an unsolved problem here or in TemporaryCodeTab.scala
+      // control-S becomes bound to save file (rather than save model) for included files.
+      // This accelerator and its action need to be added to the separate code tab, when
+      // it exists. The code below does not solve the problem. AAB Nov 2020
+      tabManager.removeCodeTabContainerAccelerators
+      tabManager.copyMenuBarAccelerators
     }
   }
 
