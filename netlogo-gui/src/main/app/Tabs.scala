@@ -332,20 +332,15 @@ class Tabs(workspace:           GUIWorkspace,
     tabActions.foreach(action => menu.revokeAction(action))
     tabActions = TabsMenu.tabActions(tabManager)
     tabActions.foreach(action => menu.offerAction(action))
+    tabManager.removeCodeTabContainerAccelerators
+    tabManager.copyMenuBarAccelerators()
   }
 
   def addMenuItem(i: Int, name: String) {
     val newAction = TabsMenu.tabAction(tabManager, i)
     tabActions = tabActions :+ newAction
     menu.offerAction(newAction)
-    // This code adds an accelerator to select a tab by number to the separate
-    // code tab if it exists.
-    // This could be improved AAB Nov 2020
-    // One could find the actual menu item corresponding to newAction
-    // and then copy it. However that would require a linear search of
-    // the items.
-    // Given the small number of tabs we just copy all the accelerators
-    tabManager.copyAppMenuBarAccelerators
+    tabManager.copyMenuAcceleratorsByName("Tabs")
   }
 
   override def processMouseMotionEvent(e: MouseEvent) {

@@ -75,9 +75,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
-          println("overwritten saveas action")
           save(saveAs)
-          tabs.asInstanceOf[org.nlogo.app.AbstractTabsPanel].getTabManager.__printAppMenuAcceleratorsByName("Tabs")
         }
       }
     }

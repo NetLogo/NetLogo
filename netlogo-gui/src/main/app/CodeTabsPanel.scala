@@ -47,7 +47,7 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   val codeTabsPanel = this
 
   def asAbstractTabsPanel = { this.asInstanceOf[AbstractTabsPanel] }
-  
+
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }
 
@@ -63,14 +63,13 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
     initManagerMonitor(manager, monitor)
 
     // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window. AAB 10/2020
-    tabManager.setSeparateCodeTabBindings(this)
+    tabManager.setSeparateCodeTabBindings()
     getAppFrame.addLinkComponent(getCodeTabContainer)
     Event.rehash()
   }
 
   def handle(e: AfterLoadEvent) = {
-    // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
-    tabManager.copyAppMenuBarAccelerators
+    tabManager.createCodeTabAccelerators()
   }
 
   this.addMouseListener(new MouseAdapter() {

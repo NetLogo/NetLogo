@@ -75,6 +75,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def isCodeTabSeparate = { codeTabsPanelOption.isDefined }
 
+  def getAppMenuBar= { appTabsPanel.getAppJFrame.getJMenuBar }
+
+  val appContentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+
   // Generally the term "CodeTab" in method names refers to
   // any that is of class CodeTab. The term "MainCodeTab"
   // is usually used refer more specifically to the unique main code tab. AAB 10/2020
@@ -236,42 +240,60 @@ class AppTabManager( val appTabsPanel:          Tabs,
       codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
       appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
-      setSeparateCodeTabBindings(codeTabsPanel)
-      // Add keystrokes for actions from menus to the codeTabsPanel. AAB 10/2020
-      copyAppMenuBarAccelerators
+      createCodeTabAccelerators()
       Event.rehash()
+      __printAppMenuBar()
     }
   }
 
-  // Copy Accelerators from the Application Menu Bar to the code tab getCodeTabContainer
-  def copyAppMenuBarAccelerators(): Unit = {
+  // The separate code tab needs its own accelerators, plus ones from the existing menus
+  def createCodeTabAccelerators(): Unit = {
     codeTabsPanelOption match {
-      case None                => // nothing to do
+      case None                =>
       case Some(codeTabsPanel) => {
-        copyMenuBarAccelerators(appTabsPanel.getAppJFrame.getJMenuBar, codeTabsPanel)
+        setSeparateCodeTabBindings()
+        // Add keystrokes for actions from existing menus to the codeTabsPanel. AAB 10/2020
+        copyMenuBarAccelerators()
       }
     }
   }
 
   // For a MenuBar - copy Accelerators
-  def copyMenuBarAccelerators(menuBar: javax.swing.JMenuBar,  codeTabsPanel: CodeTabsPanel): Unit = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
-      if (item != null) {
-        copyMenuAccelerators(item, codeTabsPanel)
+  def copyMenuBarAccelerators(): Unit = {
+    codeTabsPanelOption match {
+      case None                =>
+      case Some(codeTabsPanel) => {
+        for (i <- 0 until getAppMenuBar.getMenuCount) {
+          val  item = getAppMenuBar.getMenu(i)
+          if (item != null) {
+            copyMenuAccelerators(item)
+          }
+        }
       }
     }
   }
 
+  def copyMenuAcceleratorsByName(menuName: String): Unit = {
+    getMenuByName(menuName) match {
+      case None       => throw new Exception("No menu named " + menuName + "exists")
+      case Some(menu) => copyMenuAccelerators(menu)
+    }
+  }
+
   // For a Menu - copy Menu Items Accelerators
-  def copyMenuAccelerators(menu: javax.swing.JMenu, codeTabsPanel: CodeTabsPanel): Unit = {
-    for (i <- 0 until menu.getItemCount) {
-      val  item = menu.getItem(i)
-      if (item != null && item.getAccelerator != null) {
-        addCodeTabContainerKeyStroke(codeTabsPanel, item.getAccelerator, item.getAction, item.getActionCommand)
-      }
-      if (item.isInstanceOf[javax.swing.JMenu]) {
-        copyMenuAccelerators(item.asInstanceOf[javax.swing.JMenu], codeTabsPanel)
+  def copyMenuAccelerators(menu: javax.swing.JMenu): Unit = {
+    codeTabsPanelOption match {
+      case None                =>
+      case Some(codeTabsPanel) => {
+        for (i <- 0 until menu.getItemCount) {
+          val  item = menu.getItem(i)
+          if (item != null && item.getAccelerator != null) {
+            addCodeTabContainerKeyStroke(item.getAccelerator, item.getAction, item.getActionCommand)
+          }
+          if (item.isInstanceOf[javax.swing.JMenu]) {
+            copyMenuAccelerators(item.asInstanceOf[javax.swing.JMenu])
+          }
+        }
       }
     }
   }
@@ -283,14 +305,31 @@ class AppTabManager( val appTabsPanel:          Tabs,
     actionMap.put(actionName, action)
   }
 
-  def addCodeTabContainerKeyStroke(codeTabsPanel: CodeTabsPanel, mapKey: KeyStroke, action: Action, actionName: String): Unit = {
-    val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
-    addComponentKeyStroke(contentPane, mapKey, action, actionName)
+  def removeCodeTabContainerAccelerators(): Unit = {
+    codeTabsPanelOption match {
+      case None                =>
+      case Some(codeTabsPanel) => {
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        val inputMap: InputMap = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        val actionMap: ActionMap = contentPane.getActionMap();
+        inputMap.clear
+        actionMap.clear
+      }
+    }
+  }
+
+  def addCodeTabContainerKeyStroke(mapKey: KeyStroke, action: Action, actionName: String): Unit = {
+    codeTabsPanelOption match {
+      case None                =>
+      case Some(codeTabsPanel) => {
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        addComponentKeyStroke(contentPane, mapKey, action, actionName)
+      }
+    }
   }
 
   def addAppFrameKeyStroke(mapKey: KeyStroke, action: Action, actionName: String): Unit = {
-    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
-    addComponentKeyStroke(contentPane, mapKey, action, actionName)
+    addComponentKeyStroke(appContentPane, mapKey, action, actionName)
   }
 
   def intKeyToMenuKeystroke(key: Int): KeyStroke = {
@@ -301,16 +340,14 @@ class AppTabManager( val appTabsPanel:          Tabs,
     addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), SeparateCodeTabsAction, "popOutCodeTab")
   }
 
-  def setSeparateCodeTabBindings(codeTabsPanel: CodeTabsPanel): Unit = {
-    addCodeTabContainerKeyStroke(codeTabsPanel, intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
+  def setSeparateCodeTabBindings(): Unit = {
+    addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
   }
 
-  // The following methods with the prefix "__" may be useful for debugging.
-
-  // For a MenuBar - Get Named Menu
-  def __getMenuByName(menuName: String, menuBar: javax.swing.JMenuBar): Option[javax.swing.JMenu] = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
+  // Get Named App Menu
+  def getMenuByName(menuName: String): Option[javax.swing.JMenu] = {
+    for (i <- 0 until getAppMenuBar.getMenuCount) {
+      val  item = getAppMenuBar.getMenu(i)
       if (item != null) {
         if (item.getText() == menuName) {
           return Some(item)
@@ -319,6 +356,8 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
     None
   }
+
+  // The following methods with the prefix "__" may be useful for debugging.
 
   // Prints list of tabs in App Window and Separate Code Window (If any.)
   def __printAllTabs(): Unit = {
@@ -360,8 +399,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Prints InputMap for App Window
   def __printAppFrameInputMap(): Unit = {
-    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
-    __printInputMap(contentPane)
+    __printInputMap(appContentPane)
   }
 
   // Prints InputMap for Separate Code Window (If any.)
@@ -387,8 +425,7 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   // Prints InputMap and ActionMap for App Window
   def __printAppFrameInputActionMaps(): Unit = {
-    val contentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
-    __printInputActionMaps(contentPane)
+    __printInputActionMaps(appContentPane)
   }
 
   // Prints InputMap and ActionMap for Separate Code Window (If any.)
@@ -442,10 +479,11 @@ class AppTabManager( val appTabsPanel:          Tabs,
   def indent(n: Int): String =
     List.fill(n)(' ').mkString
 
-  // For a MenuBar - Prints Menus
-  def __printMenuBar(menuBar: javax.swing.JMenuBar): Unit = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
+  // For App MenuBar - Prints Menus
+  def __printAppMenuBar(): Unit = {
+    App.__printSwingObject(getAppMenuBar, "menu bar")
+    for (i <- 0 until getAppMenuBar.getMenuCount) {
+      val  item = getAppMenuBar.getMenu(i)
       if (item != null) {
         println(item.getText() + " Menu")
         __printMenuItems(item, 1)
@@ -455,34 +493,17 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  // Prints the Application Menu Bar
-  def __printAppMenuBar(): Unit = {
-    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
-    App.__printSwingObject(menuBar, "menu bar")
-    __printMenuBar(menuBar)
-  }
-
-  // For a MenuBar - Prints Named Menu
-  def __printMenuByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
-    __getMenuByName(menuName, menuBar).fold(println(menuName + " Menu not found"))( {
-      println(menuName + " Menu")
+  // For App MenuBar - Prints Named Menu
+  def __printAppMenuByName(menuName: String): Unit = {
+    getMenuByName(menuName).fold(println(menuName + " Menu not found"))( {
+      println(getAppMenuBar + " Menu")
       __printMenuItems(_, 1)
     })
   }
 
-  def __printAppMenuByName(menuName: String): Unit = {
-    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
-    __printMenuByName(menuName, menuBar)
-  }
-
-  // Print Accelerators from the Application Menu Bar
-  def __printAppMenuBarAccelerators(): Unit = {
-    __printMenuBarAccelerators(appTabsPanel.getAppJFrame.getJMenuBar)
-  }
-
   // For a MenuBar - Print Accelerators of Named Menu
-  def __printMenuAcceleratorsByName(menuName: String, menuBar: javax.swing.JMenuBar): Unit = {
-    __getMenuByName(menuName, menuBar)  match {
+  def __printAppMenuAcceleratorsByName(menuName: String): Unit = {
+      getMenuByName(menuName)  match {
       case None                => println(menuName + " Menu not found")
       case Some(menu) =>  {
         println(menuName + " Menu")
@@ -491,15 +512,10 @@ class AppTabManager( val appTabsPanel:          Tabs,
     }
   }
 
-  def __printAppMenuAcceleratorsByName(menuName: String): Unit = {
-    val menuBar = appTabsPanel.getAppJFrame.getJMenuBar
-    __printMenuAcceleratorsByName(menuName, menuBar)
-  }
-
-  // For a MenuBar - print Accelerators
-  def __printMenuBarAccelerators(menuBar: javax.swing.JMenuBar): Unit = {
-    for (i <- 0 until menuBar.getMenuCount) {
-      val  item = menuBar.getMenu(i)
+  // For App MenuBar - print Accelerators
+  def __printAppMenuBarAccelerators(): Unit = {
+    for (i <- 0 until getAppMenuBar.getMenuCount) {
+      val  item = getAppMenuBar.getMenu(i)
       if (item != null) {
         __printMenuAccelerators(item)
       }
