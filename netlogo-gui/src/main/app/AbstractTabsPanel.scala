@@ -160,7 +160,7 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     * @param oldTab The tab to be removed
     * @param newTab The tab to replace it with
     *
-    * @throw Exception if one Tab is a CodeTab and the other is not.
+    * @throws Exception if one Tab is a CodeTab and the other is not.
     */
   def replaceTab(oldTab: Component, newTab: Component): Unit = {
 
