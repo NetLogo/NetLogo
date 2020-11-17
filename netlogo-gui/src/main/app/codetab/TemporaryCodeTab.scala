@@ -8,6 +8,7 @@ import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
 import org.nlogo.api.FileIO
+import org.nlogo.app.AbstractTabsPanel
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
@@ -67,7 +68,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     def saveAction(saveAs: Boolean) = {
       new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
       with MenuAction {
-        println("temp code tab, saveAction")
         category    = UserAction.FileCategory
         group       = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
@@ -77,6 +77,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         override def action(): Unit = {
           save(saveAs)
         }
+        val tabManager = tabs.asInstanceOf[AbstractTabsPanel].getTabManager
+        tabManager.removeCodeTabContainerAccelerators
+        tabManager.copyMenuBarAccelerators
       }
     }
     Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++

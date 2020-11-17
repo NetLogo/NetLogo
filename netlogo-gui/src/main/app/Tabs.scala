@@ -333,7 +333,7 @@ class Tabs(workspace:           GUIWorkspace,
     tabActions = TabsMenu.tabActions(tabManager)
     tabActions.foreach(action => menu.offerAction(action))
     tabManager.removeCodeTabContainerAccelerators
-    tabManager.copyMenuBarAccelerators()
+    tabManager.copyMenuBarAccelerators
   }
 
   def addMenuItem(i: Int, name: String) {

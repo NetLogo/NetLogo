@@ -242,7 +242,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
       Event.rehash()
-      __printAppMenuBar()
     }
   }
 
