@@ -23,11 +23,11 @@ import org.nlogo.window.Events._
 // CodeTabsPanel and Tabs clearer - both are JTabbedPanes that contain and manage tabs.]
 // CodeTabsPanel and Tabs are both instances of AbstractTabsPanel, which implements their shared behavior. AAB 10/2020
 
-class CodeTabsPanel(workspace:             GUIWorkspace,
-                    interfaceTab:          InterfaceTab,
-                    externalFileManager:   ExternalFileManager,
-                    val mainCodeTab:       MainCodeTab,
-                    val externalFileTabs:  mutable.Set[TemporaryCodeTab])
+class CodeTabsPanel(workspace:            GUIWorkspace,
+                    interfaceTab:         InterfaceTab,
+                    externalFileManager:  ExternalFileManager,
+                    val mainCodeTab:      MainCodeTab,
+                    val externalFileTabs: mutable.Set[TemporaryCodeTab])
   extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with ChangeListener
   with AfterLoadEvent.Handler
@@ -45,8 +45,6 @@ class CodeTabsPanel(workspace:             GUIWorkspace,
   // It is currently implemented as a JDialog. AAB 10/2020
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
-
-  def asAbstractTabsPanel = { this.asInstanceOf[AbstractTabsPanel] }
 
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }

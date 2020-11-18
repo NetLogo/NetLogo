@@ -42,8 +42,8 @@ import org.nlogo.window.Event
 // The terms CombinedIndex or combinedTabIndex refers to the index a tab would have
 // if there were no separate code window. AAB 10/2020
 
-class AppTabManager( val appTabsPanel:          Tabs,
-                     var codeTabsPanelOption:   Option[CodeTabsPanel]) {
+class AppTabManager(val appTabsPanel:          Tabs,
+                    var codeTabsPanelOption:   Option[CodeTabsPanel]) {
 
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020

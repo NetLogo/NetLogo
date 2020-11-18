@@ -2,8 +2,6 @@
 
 package org.nlogo.app
 
-// TODO i18n lot of work needed here...
-
 import java.awt.event.ActionEvent
 import javax.swing.{ Action, AbstractAction }
 

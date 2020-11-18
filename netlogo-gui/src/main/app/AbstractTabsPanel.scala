@@ -30,12 +30,11 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     }
   }
 
-  val jframe =  workspace.getFrame.asInstanceOf[JFrame]
+  val jframe = workspace.getFrame.asInstanceOf[JFrame]
   var tabManager: AppTabManager = null
-  def setTabManager( myTabManager: AppTabManager ) : Unit = {
+  def setTabManager(myTabManager: AppTabManager) : Unit = {
     tabManager = myTabManager
   }
-
   def getMainCodeTab(): MainCodeTab // abstract
   def getTabManager() = { tabManager }
   def getAppFrame() = { workspace.getFrame.asInstanceOf[AppFrame] }

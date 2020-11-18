@@ -46,7 +46,6 @@ class Tabs(workspace:           GUIWorkspace,
 
   def getTabs = { this }
 
-  def asAbstractTabsPanel = { this.asInstanceOf[AbstractTabsPanel] }
   def setMenu(newMenu: MenuBar): Unit = {
     val menuItems = permanentMenuActions ++ (currentTab match {
       case mt: MenuTab => mt.activeMenuActions
@@ -208,63 +207,63 @@ class Tabs(workspace:           GUIWorkspace,
         // moved from the CodeTabsPanel to Tabs. AAB 10/2020
         try {
           tabManager.getTabOwner(tab).setForegroundAt(
-          tabManager.getTabOwner(tab).indexOfComponent(tab), null)
-        } catch {
-          case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+            tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+          } catch {
+            case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+          }
+        }
+        forAllCodeTabs(clearForeground)
+      }
+
+      def recolorTab(component: Component, hasError: Boolean): Unit = {
+        // Use try as in clearErrors, just in case AAB 10/2020
+        try {
+          tabManager.getTabOwner(component).setForegroundAt(
+            tabManager.getTabOwner(component).indexOfComponent(component),
+            if(hasError) errorColor else null)
+          } catch {
+            case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+          }
+        }
+
+        def recolorInterfaceTab(): Unit = {
+          if (e.error != null) setSelectedIndex(0)
+          recolorTab(interfaceTab, e.error != null)
+        }
+
+        // recolor tabs
+        e.sourceOwner match {
+          case `stableCodeTab` =>
+          // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
+          if (e.error == null) {
+            clearErrors()
+          }
+          else {
+            tabManager.setSelectedCodeTab(mainCodeTab)
+            recolorTab(mainCodeTab, true)
+          }
+          // I don't really know why this is necessary when you delete a slider (by using the menu
+          // item *not* the button) which causes an error in the Code tab the focus gets lost,
+          // so request the focus by a known component 7/18/07
+          requestFocus()
+          case file: ExternalFileInterface =>
+          val filename = file.getFileName
+          var tab = getTabWithFilename(Right(filename))
+          if (!tab.isDefined && e.error != null) {
+            openExternalFile(filename)
+            tab = getTabWithFilename(Right(filename))
+            tab.get.handle(e) // it was late to the party, let it handle the event too
+          }
+          if (e.error != null) tabManager.setPanelsSelectedComponent(tab.get)
+          recolorTab(tab.get, e.error != null)
+          requestFocus()
+          case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
+          recolorInterfaceTab()
+          case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
+          recolorInterfaceTab()
+          case _ =>
         }
       }
-      forAllCodeTabs(clearForeground)
-    }
-
-    def recolorTab(component: Component, hasError: Boolean): Unit = {
-      // Use try as in clearErrors, just in case AAB 10/2020
-      try {
-        tabManager.getTabOwner(component).setForegroundAt(
-          tabManager.getTabOwner(component).indexOfComponent(component),
-          if(hasError) errorColor else null)
-      } catch {
-        case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
-      }
-    }
-
-    def recolorInterfaceTab(): Unit = {
-      if (e.error != null) setSelectedIndex(0)
-      recolorTab(interfaceTab, e.error != null)
-    }
-
-    // recolor tabs
-    e.sourceOwner match {
-      case `stableCodeTab` =>
-      // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
-      if (e.error == null) {
-        clearErrors()
-      }
-      else {
-        tabManager.setSelectedCodeTab(mainCodeTab)
-        recolorTab(mainCodeTab, true)
-      }
-      // I don't really know why this is necessary when you delete a slider (by using the menu
-      // item *not* the button) which causes an error in the Code tab the focus gets lost,
-      // so request the focus by a known component 7/18/07
-      requestFocus()
-      case file: ExternalFileInterface =>
-        val filename = file.getFileName
-        var tab = getTabWithFilename(Right(filename))
-        if (!tab.isDefined && e.error != null) {
-          openExternalFile(filename)
-          tab = getTabWithFilename(Right(filename))
-          tab.get.handle(e) // it was late to the party, let it handle the event too
-        }
-        if (e.error != null) tabManager.setPanelsSelectedComponent(tab.get)
-        recolorTab(tab.get, e.error != null)
-        requestFocus()
-      case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
-        recolorInterfaceTab()
-      case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
-        recolorInterfaceTab()
-      case _ =>
-    }
-  }
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)) foreach { tab =>
@@ -287,17 +286,17 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def newExternalFile() = {
-    addNewNLSTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
+    addNewExternalFileTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
   }
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) => tabManager.setPanelsSelectedComponent(tab)
-      case _ => addNewNLSTab(Right(filename))
+      case _ => addNewExternalFileTab(Right(filename))
     }
   }
 
-  def addNewNLSTab(name: Filename) = {
+  def addNewExternalFileTab(name: Filename) = {
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, mainCodeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
