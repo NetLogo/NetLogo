@@ -223,17 +223,17 @@ class Tabs(workspace:           GUIWorkspace,
             if(hasError) errorColor else null)
           } catch {
             case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
-          }
         }
+      }
 
-        def recolorInterfaceTab(): Unit = {
-          if (e.error != null) setSelectedIndex(0)
-          recolorTab(interfaceTab, e.error != null)
-        }
+      def recolorInterfaceTab(): Unit = {
+        if (e.error != null) setSelectedIndex(0)
+        recolorTab(interfaceTab, e.error != null)
+      }
 
-        // recolor tabs
-        e.sourceOwner match {
-          case `stableCodeTab` =>
+      // recolor tabs
+      e.sourceOwner match {
+        case `stableCodeTab` => {
           // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
           if (e.error == null) {
             clearErrors()
@@ -246,7 +246,8 @@ class Tabs(workspace:           GUIWorkspace,
           // item *not* the button) which causes an error in the Code tab the focus gets lost,
           // so request the focus by a known component 7/18/07
           requestFocus()
-          case file: ExternalFileInterface =>
+        }
+        case file: ExternalFileInterface => {
           val filename = file.getFileName
           var tab = getTabWithFilename(Right(filename))
           if (!tab.isDefined && e.error != null) {
@@ -254,16 +255,21 @@ class Tabs(workspace:           GUIWorkspace,
             tab = getTabWithFilename(Right(filename))
             tab.get.handle(e) // it was late to the party, let it handle the event too
           }
-          if (e.error != null) tabManager.setPanelsSelectedComponent(tab.get)
+          if (e.error != null) {
+            tabManager.setPanelsSelectedComponent(tab.get)
+          }
           recolorTab(tab.get, e.error != null)
           requestFocus()
-          case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
-          recolorInterfaceTab()
-          case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
-          recolorInterfaceTab()
-          case _ =>
         }
+        case null => { // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
+          recolorInterfaceTab()
+        }
+        case jobWidget: JobWidget if !jobWidget.isCommandCenter => {
+          recolorInterfaceTab()
+        }
+        case _ =>
       }
+    }
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)) foreach { tab =>
