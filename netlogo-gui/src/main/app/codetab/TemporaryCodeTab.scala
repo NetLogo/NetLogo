@@ -8,7 +8,6 @@ import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.AbstractTabsPanel
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
