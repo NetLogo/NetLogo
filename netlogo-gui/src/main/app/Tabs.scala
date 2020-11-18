@@ -209,8 +209,8 @@ class Tabs(workspace:           GUIWorkspace,
           tabManager.getTabOwner(tab).setForegroundAt(
             tabManager.getTabOwner(tab).indexOfComponent(tab), null)
           } catch {
-            case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
-          }
+              case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+        }
       }
       forAllCodeTabs(clearForeground)
     }
@@ -223,7 +223,7 @@ class Tabs(workspace:           GUIWorkspace,
           if(hasError) errorColor else null)
         } catch {
             case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
-        }
+      }
     }
 
     def recolorInterfaceTab(): Unit = {
@@ -379,12 +379,10 @@ class Tabs(workspace:           GUIWorkspace,
     override def action(): Unit = {
       fileManager.saveModel(false)
       externalFileTabs foreach (_.save(false))
-      // There is an unsolved problem here or in TemporaryCodeTab.scala
+      // TODO: There is an unsolved problem here or in TemporaryCodeTab.scala
       // control-S becomes bound to save file (rather than save model) for included files.
       // This accelerator and its action need to be added to the separate code tab, when
-      // it exists. The code below does not solve the problem. AAB Nov 2020
-      tabManager.removeCodeTabContainerAccelerators
-      tabManager.copyMenuBarAccelerators
+      // it exists.  AAB Nov 2020
     }
   }
 
