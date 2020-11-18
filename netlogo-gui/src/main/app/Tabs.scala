@@ -209,7 +209,7 @@ class Tabs(workspace:           GUIWorkspace,
           tabManager.getTabOwner(tab).setForegroundAt(
             tabManager.getTabOwner(tab).indexOfComponent(tab), null)
           } catch {
-              case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+            case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
         }
       }
       forAllCodeTabs(clearForeground)
@@ -222,7 +222,7 @@ class Tabs(workspace:           GUIWorkspace,
           tabManager.getTabOwner(component).indexOfComponent(component),
           if(hasError) errorColor else null)
         } catch {
-            case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+          case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
       }
     }
 
