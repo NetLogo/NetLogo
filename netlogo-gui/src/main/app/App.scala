@@ -228,17 +228,26 @@ object App{
     }
   }
 
+  def __printNonNullSwingObject(obj: java.awt.Component, description: String): Unit = {
+    val pattern = """(^[^\[]*)\[(.*$)""".r
+    val pattern(name, _) = obj.toString
+    val shortName = name.split("\\.").last
+    println(description + " " + System.identityHashCode(obj) +
+    ", " + shortName)
+  }
+
   def __printSwingObject(obj: java.awt.Component, description: String): Unit = {
-    val some = Option(obj)
+    val some = Option(obj) // Because Option(null) = None 11/2020 AAB
     some match {
-      case None           => println(description + "<null>")
-      case Some(theValue) =>  {
-        val pattern = """(^[^\[]*)\[(.*$)""".r
-        val pattern(name, _) = obj.toString
-        val shortName = name.split("\\.").last
-        println(description + System.identityHashCode(obj) +
-        ", " + shortName)
-      }
+      case None           => println(description + " <null>")
+      case Some(theValue) =>  __printNonNullSwingObject(obj, description)
+    }
+  }
+
+  def __printOptionSwingObject(obj: Option[java.awt.Component], description: String): Unit = {
+    obj match {
+      case None           => println(description + " None")
+      case Some(theObject) =>  __printNonNullSwingObject(theObject, description)
     }
   }
 }

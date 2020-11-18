@@ -94,19 +94,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
 
   def getSelectedAppTabIndex() = { appTabsPanel.getSelectedIndex }
 
-  // Sum of the number of App Tabs and Code Tabs, regardless of
-  // where they are contained.
-  // The word Combined in a method name generally indicates that Tabs entity
-  // and possible CodeTabsPanel entity are being dealt with in a combined way,
-  // that is not visible to the code user. AAB 10/2020
-  def getCombinedTabCount(): Int = {
-    val appTabCount = appTabsPanel.getTabCount
-    codeTabsPanelOption match {
-      case None           => appTabCount
-      case Some(codeTabsPanel) => appTabCount + codeTabsPanel.getTabCount
-    }
-  }
-
   private var currentTab: Component = { appTabsPanel.interfaceTab }
 
   def getCurrentTab(): Component = {
@@ -356,7 +343,175 @@ class AppTabManager( val appTabsPanel:          Tabs,
     None
   }
 
-  // The following methods with the prefix "__" may be useful for debugging.
+
+  // *** Begin official tab manipulation methods ***
+  // Code outside the org.nlogo.app and org.nlogo.app.codetab packages must
+  // use these methods when manipulating the tabs in the main NetLogo application window
+  // - the Interface and  Info tabs, and non-code tabs added by extensions, or tabs that may belong
+  // to either the  main NetLogo application window or to a separate Code tab window -
+  // - the Code tab and included file tabs , and code tabs added by extensions
+  // (for example LevelSpace).
+  // Other methods may become protected in the future, and code making
+  // use of tab indices may fail now or in the future. AAB 10/2020
+
+  /**
+   * Adds a Component to the appropriate NetLogo JTabbedPane.
+   * Also adds an entry to the Tabs Menu
+   * If a separate code window exists, a CodeTab will be added to its JTabbedPane,
+   * Otherwise the Component will be added to the Application Window JTabbedPane. AAB 10/2020.
+   * New Components appear to the right of previous Components of the same
+   * category non-CodeTabs or CodeTabs.
+   *
+   * @param tab the Component to add
+   * @param title the title of the tab; may be <code>null</code>
+   * @param icon the icon for the tab; may be <code>null</code>
+   * @param tip the associated tooltip
+   */
+  def addNewTab(tab: Component, title: String = null, icon: javax.swing.Icon = null, tip: String = null): Unit = {
+      if (tab == null) { throw new Exception("Tab component may not be null.") }
+      val codeTabsOwner = getCodeTabsOwner.asInstanceOf[JTabbedPane]
+      if (tab.isInstanceOf[CodeTab]) {
+        // If it is a code tab, it goes at the end of JTabbedPane that owns CodeTabs.
+        // It becomes the last menu item. AAB 10/2020
+        codeTabsOwner.insertTab(title, icon, tab, tip, codeTabsOwner.getTabCount)
+        appTabsPanel.addMenuItem(getTotalTabCount - 1, title)
+      } else {
+        if (codeTabsOwner.isInstanceOf[CodeTabsPanel]) {
+          // If there is a separate CodeTab Window, the the tab goes at the end of Apps JTabbedPane. AAB 10/2020
+          appTabsPanel.insertTab(title, icon, tab, tip, appTabsPanel.getTabCount)
+          appTabsPanel.addMenuItem(appTabsPanel.getTabCount - 1, title)
+        } else {
+          // Otherwise the tab goes after the other non-code-tabs, right before the
+          // MainCodeTab. AAB 10/2020
+          val index = appTabsPanel.indexOfComponent(getMainCodeTab)
+          // Shouldn't fail. Is error handling needed? AAB 10/2020
+          appTabsPanel.addMenuItem(index - 1, title)
+        }
+      }
+    }
+
+  /**
+    * Removes the specified Component from its parent JTabbedPane
+    * and remove it from the Tabs Menu
+    *
+    * @param tab The Component to remove.
+    */
+   def removeTab(tab: Component): Unit = {
+    val (tabOwner, _) = ownerAndIndexOfTab(tab)
+    if (tabOwner != null) {
+      tabOwner.remove(tab)
+      appTabsPanel.updateTabsMenu()
+    }
+  }
+
+  /**
+    * Replaces the specified Component with another Component in its parent JTabbedPane
+    * If one of the Component is an instance of CodeTab, the other Component must be as well
+    * in order to maintain the separate groupings of non-CodeTabs and CodeTabs
+    *.
+    * @param oldTab The tab to be removed
+    * @param newTab The tab to replace it with
+    *
+    * @throws Exception if one Tab is a CodeTab and the other is not.
+    */
+  def replaceTab(oldTab: Component, newTab: Component): Unit = {
+
+    if (oldTab.isInstanceOf[CodeTab] && !oldTab.isInstanceOf[CodeTab]) {
+      throw new Exception("A CodeTab must be replaced by a CodeTab")
+    }
+
+    if (!oldTab.isInstanceOf[CodeTab] && oldTab.isInstanceOf[CodeTab]) {
+      throw new Exception("A non-CodeTab must be replaced by a non-CodeTab")
+    }
+
+    val (tabOwner, tabIndex) = ownerAndIndexOfTab(oldTab)
+    if (tabOwner != null) {
+      tabOwner.setComponentAt(tabIndex, newTab)
+      appTabsPanel.updateTabsMenu
+    } else {
+      throw new Exception("The old code tab does not belong to a Tabs Panel")
+    }
+  }
+
+  /**
+    * Return the number of tabs in the Application Window JTabbedPane plus
+    * those in the separate code window (if it exists).
+    */
+  def getTotalTabCount(): Int = {
+    val appTabCount = appTabsPanel.getTabCount
+    codeTabsPanelOption match {
+      case None           => appTabCount
+      case Some(codeTabsPanel) => appTabCount + codeTabsPanel.getTabCount
+    }
+  }
+
+  /**
+   * Makes a tab component selected, whether or not separate code window exists.
+   *
+   * @param tab the Component to be selected
+   */
+  def setPanelsSelectedComponent(tab: Component): Unit = {
+    val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
+    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
+      tabOwner.requestFocus
+      tabOwner.setSelectedIndex(tabIndex)
+    } else {
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == tabIndex) {
+        setSelectedAppTab(-1)
+      }
+        setSelectedAppTab(tabIndex)
+      }
+  }
+
+  /**
+   * Gets selected non-code tab if any , whether or not separate code window exists.
+   */
+  def getSelectedNonCodeTabComponent(): Option[Component] = {
+    val index = appTabsPanel.getSelectedIndex
+    if (index == -1) {
+      return None
+    }
+    val tab = appTabsPanel.getComponentAt(index)
+    if (tab.isInstanceOf[CodeTab]) {
+      return None
+    }
+    return Some(tab)
+  }
+
+  /**
+   * Gets selected code tab if any , whether or not separate code window exists.
+   */
+   def getSelectedCodeTabComponent(): Option[Component] = {
+     codeTabsPanelOption match {
+       case None                => {
+         val index = appTabsPanel.getSelectedIndex
+         if (index == -1) {
+           return None
+         }
+         val tab = appTabsPanel.getComponentAt(index)
+         if (tab.isInstanceOf[CodeTab]) {
+           return Some(tab)
+         } else {
+           return None
+         }
+       }
+       case Some(codeTabsPanel) => {
+         val index = codeTabsPanel.getSelectedIndex
+         if (index == -1) {
+           return None
+         }
+         val tab = codeTabsPanel.getComponentAt(index)
+         // All tabs in codeTabsPanel are code tabs 11/2020 AAB
+          return Some(tab)
+       }
+     }
+   }
+
+// *** End official tab manipulation methods *** AAB 10/2020.
+
+  // *** Begin debugging tools.
+  // they begin with the prefix "__" AAB 10/2020.
 
   // Prints list of tabs in App Window and Separate Code Window (If any.)
   def __printAllTabs(): Unit = {
@@ -533,4 +688,6 @@ class AppTabManager( val appTabsPanel:          Tabs,
       }
     }
   }
+
+  // *** End debugging tools AAB 10/2020.
 }

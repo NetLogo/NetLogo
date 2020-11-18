@@ -22,7 +22,7 @@ object TabsMenu {
     }
 
   def tabActions(tabManager: AppTabManager): Seq[Action] = {
-    val totalTabCount = tabManager.getCombinedTabCount
+    val totalTabCount = tabManager.getTotalTabCount
     for (i <- 0 until totalTabCount) yield tabAction(tabManager, i)
   }
 

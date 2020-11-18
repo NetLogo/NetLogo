@@ -189,7 +189,7 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) = {
-    setPanelsSelectedComponent(tab)
+    tabManager.setPanelsSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
     EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length) )
@@ -208,7 +208,7 @@ class Tabs(workspace:           GUIWorkspace,
         // moved from the CodeTabsPanel to Tabs. AAB 10/2020
         try {
           tabManager.getTabOwner(tab).setForegroundAt(
-            tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+          tabManager.getTabOwner(tab).indexOfComponent(tab), null)
         } catch {
           case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
         }
@@ -255,7 +255,7 @@ class Tabs(workspace:           GUIWorkspace,
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
-        if (e.error != null) setPanelsSelectedComponent(tab.get)
+        if (e.error != null) tabManager.setPanelsSelectedComponent(tab.get)
         recolorTab(tab.get, e.error != null)
         requestFocus()
       case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
@@ -292,7 +292,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
-      case Some(tab) => setPanelsSelectedComponent(tab)
+      case Some(tab) => tabManager.setPanelsSelectedComponent(tab)
       case _ => addNewNLSTab(Right(filename))
     }
   }
@@ -301,12 +301,10 @@ class Tabs(workspace:           GUIWorkspace,
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, mainCodeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
-    addNewTab(tab, tab.filenameForDisplay)
-//    getCodeTabsOwner.addTab(tab.filenameForDisplay, tab)
-//    addMenuItem(tabManager.getCombinedTabCount - 1, tab.filenameForDisplay)
+    tabManager.addNewTab(tab, tab.filenameForDisplay)
     Event.rehash()
 
-    setPanelsSelectedComponent(tab)
+    tabManager.setPanelsSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet
     // visible.  There might be a more swing appropriate way to do this but I can't figure it out
     // (if you know it feel free to fix) ev 7/24/07
@@ -315,7 +313,7 @@ class Tabs(workspace:           GUIWorkspace,
 
   def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) foreach { tab =>
-      removeTab(tab)
+      tabManager.removeTab(tab)
       externalFileTabs -= tab
       if (externalFileTabs.isEmpty) {
         menu.revokeAction(SaveAllAction)
