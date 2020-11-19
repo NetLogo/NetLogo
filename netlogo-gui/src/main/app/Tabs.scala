@@ -273,9 +273,10 @@ class Tabs(workspace:           GUIWorkspace,
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)) foreach { tab =>
-      val index = tabManager.getTabOwner(tab).indexOfComponent(tab)
-      setTitleAt(index, tab.filenameForDisplay)
-      tabActions(index).putValue(Action.NAME, e.path)
+      val (tabowner, index) = tabManager.ownerAndIndexOfTab(tab)
+      tabowner.setTitleAt(index, tab.filenameForDisplay)
+      val combinedTabIndex = tabManager.combinedIndexFromOwnerAndIndex(tabowner, index)
+      tabActions(combinedTabIndex).putValue(Action.NAME, e.path)
     }
   }
 

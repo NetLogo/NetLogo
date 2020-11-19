@@ -134,6 +134,15 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
+  def combinedIndexFromOwnerAndIndex(tabOwner: AbstractTabsPanel, index: Int): Int = {
+    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
+      return(index + appTabsPanel.getTabCount)
+    } else {
+      println(appTabsPanel)
+      return(index)
+    }
+  }
+
   // Input: tab - a tab component
   // Returns (tabOwner, tabIndex)
   // where tabOwner is the AbstractTabsPanel containing the specified component
@@ -154,6 +163,40 @@ class AppTabManager(val appTabsPanel:          Tabs,
       }
     }
     (null.asInstanceOf[AbstractTabsPanel], -1)
+  }
+
+  def getTitleAtCombinedIndex(index: Int): String =  {
+    val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(index)
+    tabOwner.getTitleAt(tabIndex)
+  }
+
+  def getComponentAtCombinedIndex(index: Int): Component =  {
+    val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(index)
+    tabOwner.getComponentAt(tabIndex)
+  }
+
+  def setComponentAtCombinedIndex(index: Int, tab: Component): Unit = {
+    val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(index)
+    tabOwner.setComponentAt(tabIndex, tab)
+  }
+
+  def setPanelsSelectedIndex(index: Int): Unit =  {
+    val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(index)
+    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
+      tabOwner.requestFocus
+      tabOwner.setSelectedIndex(tabIndex)
+    } else {
+      val selectedIndex = getSelectedAppTabIndex
+      if (selectedIndex == tabIndex) {
+       setSelectedAppTab(-1)
+      }
+       setSelectedAppTab(tabIndex)
+      }
+  }
+
+  def getIndexOfCodeTab(tab: CodeTab): Int = {
+    val index = getCodeTabsOwner.indexOfComponent(tab)
+    index + getAppTabsOwner.getTabCount
   }
 
   // Actions are created for use by the TabsMenu, and by accelerator keys AAB 10/2020

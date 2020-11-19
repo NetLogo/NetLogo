@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import javax.swing.{ JFrame, JTabbedPane, SwingConstants }
 import javax.swing.plaf.ComponentUI
 
-import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab }
+import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.GUIWorkspace
 
@@ -35,8 +35,8 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
   def setTabManager(myTabManager: AppTabManager) : Unit = {
     tabManager = myTabManager
   }
-  def getMainCodeTab(): MainCodeTab // abstract
   def getTabManager() = { tabManager }
+  def getMainCodeTab(): MainCodeTab // abstract
   def getAppFrame() = { workspace.getFrame.asInstanceOf[AppFrame] }
   def getAppJFrame() = { jframe }
   var fileManager: FileManager = null
@@ -57,43 +57,4 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
   }
 
   override def requestFocus() = { currentTab.requestFocus() }
-
-  def getCodeTabsOwner(): JTabbedPane = {
-    tabManager.getCodeTabsOwner.asInstanceOf[JTabbedPane]
-  }
-
-  def getTitleAtCombinedIndex(index: Int): String =  {
-    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
-    tabOwner.getTitleAt(tabIndex)
-  }
-
-  def getComponentAtCombinedIndex(index: Int): Component =  {
-    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
-    tabOwner.getComponentAt(tabIndex)
-  }
-
-  def setComponentAtCombinedIndex(index: Int, tab: Component): Unit = {
-    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
-    tabOwner.setComponentAt(tabIndex, tab)
-  }
-
-  def setSelectedIndexPanels(index: Int): Unit =  {
-    val (tabOwner, tabIndex) = tabManager.ownerAndIndexFromCombinedIndex(index)
-    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
-      tabOwner.requestFocus
-      tabOwner.setSelectedIndex(tabIndex)
-    } else {
-      val selectedIndex = tabManager.getSelectedAppTabIndex
-      if (selectedIndex == tabIndex) {
-        tabManager.setSelectedAppTab(-1)
-      }
-        tabManager.setSelectedAppTab(tabIndex)
-      }
-  }
-
-  def getIndexOfCodeTab(tab: CodeTab): Int = {
-    val index = getCodeTabsOwner.indexOfComponent(tab)
-    index + tabManager.getAppTabsOwner.getTabCount
-  }
-
 }

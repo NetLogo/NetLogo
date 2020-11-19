@@ -13,9 +13,9 @@ object TabsMenu {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      this.putValue(Action.NAME, tabManager.getAppTabsPanel.asInstanceOf[AbstractTabsPanel].getTitleAtCombinedIndex(index));
+      this.putValue(Action.NAME, tabManager.getTitleAtCombinedIndex(index));
       override def actionPerformed(e: ActionEvent) {
-        tabManager.getAppTabsPanel.setSelectedIndexPanels(index)
+        tabManager.setPanelsSelectedIndex(index)
       }
     }
 
