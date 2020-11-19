@@ -127,19 +127,8 @@ class Tabs(workspace:           GUIWorkspace,
       }
 
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-        // In the case of a separate code tab, the offerAction was adding addtional
-        // Save and SaveAs... menu items. Adding menu.revokeAction beforehand solves
-        // the problem, but if someone has time to go deeper into this, consider taking
-        // a look at org.nlogo.swing.Menu.offerAction to see why the redundancy is allowed. AAB 10/2020
-        case (true, false) => {
-          saveModelActions foreach {
-            menu.revokeAction(_)
-            menu.offerAction(_)
-          }
-        }
-        case (false, true) => {
-          saveModelActions foreach menu.revokeAction
-        }
+        case (true, false) => saveModelActions foreach menu.offerAction
+        case (false, true) => saveModelActions foreach menu.revokeAction
         case _             =>
       }
       currentTab.requestFocus()

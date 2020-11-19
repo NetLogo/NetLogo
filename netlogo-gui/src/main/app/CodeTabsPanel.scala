@@ -9,7 +9,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 import scala.collection.mutable
 
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ Events => AppEvents }
+import org.nlogo.app.common.{ Events => AppEvents, MenuTab }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.GUIWorkspace
@@ -115,7 +115,21 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
         currentTab = mainCodeTab
       }
       tabManager.setCurrentTab(currentTab)
+      previousTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach tabManager.menuBar.revokeAction
+        case _ =>
+      }
+      currentTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach tabManager.menuBar.offerAction
+        case _ =>
+      }
+      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
+        case (true, false) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.offerAction
+        case (false, true) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.revokeAction
+        case _             =>
+      }
       currentTab.requestFocus()
+      tabManager.createCodeTabAccelerators()
       // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }

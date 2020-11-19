@@ -45,6 +45,8 @@ import org.nlogo.window.Event
 class AppTabManager(val appTabsPanel:          Tabs,
                     var codeTabsPanelOption:   Option[CodeTabsPanel]) {
 
+  var menuBar: MenuBar = null
+
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020
   def getAppTabsPanel = { appTabsPanel }
@@ -75,7 +77,9 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def isCodeTabSeparate = { codeTabsPanelOption.isDefined }
 
-  def getAppMenuBar= { appTabsPanel.getAppJFrame.getJMenuBar }
+  def getAppMenuBar: MenuBar = menuBar
+
+  def setAppMenuBar(menuBar: MenuBar): Unit = this.menuBar = menuBar
 
   val appContentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
 

@@ -694,6 +694,7 @@ class App extends
     if (menuBar != this.menuBar) {
       this.menuBar = menuBar
       tabs.setMenu(menuBar)
+      _tabManager.setAppMenuBar(menuBar)
       allActions.foreach(menuBar.offerAction)
       Option(recentFilesMenu).foreach(_.setMenu(menuBar))
     }
