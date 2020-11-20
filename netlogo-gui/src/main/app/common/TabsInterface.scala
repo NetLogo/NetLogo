@@ -25,4 +25,7 @@ trait TabsInterface {
   def newExternalFile(): Unit
   def openExternalFile(filename: String): Unit
   def closeExternalFile(filename: Filename): Unit
+
+  def setDirtyMonitorCodeWindow(): Unit
+  def switchToSpecifiedCodeWindowState(state: Boolean): Unit
 }

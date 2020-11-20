@@ -387,4 +387,11 @@ class Tabs(workspace:           GUIWorkspace,
         }
     }
   }
+
+  def setDirtyMonitorCodeWindow(): Unit = {
+    getTabManager.setDirtyMonitorCodeWindow
+  }
+  def switchToSpecifiedCodeWindowState(state: Boolean): Unit = {
+    getTabManager.switchToSpecifiedCodeWindowState(state)
+  }
 }

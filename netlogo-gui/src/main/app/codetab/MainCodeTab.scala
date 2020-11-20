@@ -6,7 +6,6 @@ import java.awt.Component
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
-import org.nlogo.app.AbstractTabsPanel
 import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
@@ -37,7 +36,7 @@ with WindowEvents.LoadModelEvent.Handler
   def getPoppingCheckBox = { poppingCheckBox }
   private class CodeTabPopOutAction extends AbstractAction("Code Tab in separate window") {
     def actionPerformed(e: ActionEvent) {
-      mainCodeTab.getParent.asInstanceOf[AbstractTabsPanel].getTabManager.switchToSpecifiedCodeWindowState(poppingCheckBox.isSelected)
+      tabs.switchToSpecifiedCodeWindowState(poppingCheckBox.isSelected)
     }
   }
 
