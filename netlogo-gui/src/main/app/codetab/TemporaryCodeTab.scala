@@ -73,7 +73,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         rank = 0
 
         @throws(classOf[UserCancelException])
-        override def action(): Unit = save(saveAs)
+        override def action(): Unit = {
+          save(saveAs)
+        }
       }
     }
     Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++
@@ -87,6 +89,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     super.dirty_=(d)
     if (d) {
       saveNeeded = true
+      tabs.setDirtyMonitorCodeWindow
       new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
     }
   }
@@ -98,6 +101,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    tabs.setDirtyMonitorCodeWindow
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 

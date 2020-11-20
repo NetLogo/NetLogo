@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import javax.swing.{ JOptionPane, JMenu, JFrame }
 import java.awt.event.ActionEvent
-import java.util.prefs.{ Preferences }
+import java.util.prefs.Preferences
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
@@ -41,7 +41,6 @@ import scala.io.Codec
  * for example code.
  */
 object App{
-
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -52,7 +51,7 @@ object App{
   private var commandLineURL: String = null
   private var loggingConfigPath: String = null
   private var loggingDir: String = null
-
+  private var popOutCodeTab = false
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -207,6 +206,7 @@ object App{
       else if (token == "--builddate") printAndExit(Version.buildDate)
       else if (token == "--logging") loggingConfigPath = nextToken()
       else if (token == "--log-directory") loggingDir = nextToken()
+      else if (token == "--codetab-window") popOutCodeTab = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -244,8 +244,7 @@ class App extends
     ZoomedEvent.Handler with
     Controllable {
 
-  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir }
-
+  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
   val frame = new AppFrame
 
   // all these guys get set in the locally block
@@ -253,7 +252,11 @@ class App extends
   def workspace = _workspace
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
+  private var _codeTabsPanel: CodeTabsPanel = null
+  private var _tabManager : AppTabManager= null
   def tabs = _tabs
+  def codeTabsPanel = _codeTabsPanel
+  def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
   var monitorManager: AgentMonitorManager = null
@@ -378,11 +381,25 @@ class App extends
 
     _tabs = pico.getComponent(classOf[Tabs])
     controlSet.tabs = Some(_tabs)
+    if (popOutCodeTab) {
+      _codeTabsPanel = new CodeTabsPanel(workspace,
+                        tabs.interfaceTab,
+                        tabs.externalFileManager,
+                        tabs.mainCodeTab,
+                        tabs.externalFileTabs)
+
+      _tabManager = new AppTabManager(_tabs, Some(_codeTabsPanel))
+      _codeTabsPanel.setTabManager(_tabManager)
+    } else {
+      _tabManager = new AppTabManager(_tabs, None)
+    }
+
+    _tabs.setTabManager(_tabManager)
 
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.codeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
     val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
@@ -429,7 +446,7 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    val titler = (file: Option[String]) => file map externalFileTitle getOrElse modelTitle
+    val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle }
     pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
       new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
       new ConstantParameter(titler))
@@ -449,7 +466,11 @@ class App extends
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)
 
-    tabs.init(fileManager, dirtyMonitor, Plugins.load(pico): _*)
+    tabs.init(fileManager, dirtyMonitor)
+
+    if (popOutCodeTab) {
+      codeTabsPanel.init(fileManager, dirtyMonitor)
+    }
 
     app.setMenuBar(menuBar)
     frame.setJMenuBar(menuBar)
@@ -478,6 +499,9 @@ class App extends
     frame.setVisible(true)
     if (isMac) {
       appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
+    }
+    if (popOutCodeTab) {
+      frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
     }
   }
 
@@ -605,7 +629,7 @@ class App extends
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        tabs.codeTab.innerSource = transform(tabs.codeTab.innerSource)
+        tabs.mainCodeTab.innerSource = transform(tabs.mainCodeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
@@ -647,6 +671,7 @@ class App extends
     if (menuBar != this.menuBar) {
       this.menuBar = menuBar
       tabs.setMenu(menuBar)
+      _tabManager.setAppMenuBar(menuBar)
       allActions.foreach(menuBar.offerAction)
       Option(recentFilesMenu).foreach(_.setMenu(menuBar))
     }
@@ -726,14 +751,21 @@ class App extends
     if (e.newTab == tabs.interfaceTab) {
       monitorManager.showAll()
       frame.toFront()
-    } else if (e.oldTab == tabs.interfaceTab)
+    } else if (e.oldTab == tabs.interfaceTab) {
       monitorManager.hideAll()
+    }
 
     val title = e.newTab match {
         case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
         case _                     => modelTitle
       }
     frame.setTitle(title)
+    tabManager.codeTabsPanelOption match {
+      case None           =>
+      case Some(thePanel) =>  {
+        thePanel.codeTabContainer.setTitle(title)
+      }
+    }
   }
 
   /**
@@ -763,6 +795,10 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
+    tabManager.codeTabsPanelOption match {
+      case None           =>
+      case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle)
+    }
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
@@ -1015,7 +1051,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.mainCodeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1023,7 +1059,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource = source) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.mainCodeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1039,16 +1075,6 @@ class App extends
    * @see #compile
    */
   def compileLater(){ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
-
-  /**
-   * Switches tabs.
-   * @param number which tab to switch to.  0 is the Interface tab,
-   *        1 the Info tab, 2 the Code tab, 3 the
-   *        Errors tab.
-   */
-  def selectTab(number:Int){  // zero-indexed
-    dispatchThreadOrBust(tabs.setSelectedIndex(number))
-  }
 
   /**
    * Not currently supported.  For now, use <code>command</code>
@@ -1169,7 +1195,7 @@ class App extends
   }
 
   def procedureSource:  String =
-    tabs.codeTab.innerSource
+    tabs.mainCodeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
     tabs.interfaceTab.iP.getWidgetsForSaving
   }

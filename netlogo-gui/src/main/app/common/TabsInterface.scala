@@ -17,7 +17,7 @@ trait TabsInterface {
 
   val interfaceTab: Component
   val infoTab: Component
-  val codeTab: Component
+  val mainCodeTab: Component
 
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
@@ -25,4 +25,7 @@ trait TabsInterface {
   def newExternalFile(): Unit
   def openExternalFile(filename: String): Unit
   def closeExternalFile(filename: Filename): Unit
+
+  def setDirtyMonitorCodeWindow(): Unit
+  def switchToSpecifiedCodeWindowState(state: Boolean): Unit
 }

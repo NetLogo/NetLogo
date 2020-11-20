@@ -3,11 +3,12 @@
 package org.nlogo.app
 
 import java.awt.{ Color, Component }
-import java.awt.event.{ ActionEvent, MouseEvent }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.awt.print.PrinterAbortException
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.plaf.ComponentUI
-import javax.swing.{ AbstractAction, Action, JTabbedPane, SwingConstants }
+import javax.swing.{ AbstractAction, Action, JTabbedPane }
+
+import scala.collection.mutable
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -17,16 +18,21 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable, PrinterManager, TabsMenu, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ Printable, PrinterManager, UserAction }, UserAction.MenuAction
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events._
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
-class Tabs(val workspace:       GUIWorkspace,
-           val interfaceTab:    InterfaceTab,
-           private var menu:    MenuBar,
-           externalFileManager: ExternalFileManager)
-  extends JTabbedPane(SwingConstants.TOP)
+// This used to be the only class whose instance 'owned' the InterfaceTab, the InfoTab, the MainCodeTab and the included files tabs.
+// Now when there is a separate code window, that work is shared by CodeTabsPanel for the CodeTabs.
+// As a result, functionality common to Tabs and CodeTabsPanel is now in the class AbstractTabsPanel.
+// The role of Tabs would be better served by the name AppTabsPanel. AAB 10/2020
+
+class Tabs(workspace:           GUIWorkspace,
+           interfaceTab:        InterfaceTab,
+           externalFileManager: ExternalFileManager,
+           private var menu:    MenuBar)
+  extends AbstractTabsPanel(workspace, interfaceTab, externalFileManager)
   with TabsInterface with ChangeListener with LinkParent
   with org.nlogo.window.LinkRoot
   with AboutToCloseFilesEvent.Handler
@@ -36,19 +42,9 @@ class Tabs(val workspace:       GUIWorkspace,
   with AfterLoadEvent.Handler
   with ExternalFileSavedEvent.Handler {
 
-  locally {
-    setOpaque(false)
-    setFocusable(false)
-    addChangeListener(this)
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      try {
-        val ui = Class.forName("org.nlogo.app.MacTabbedPaneUI").newInstance.asInstanceOf[ComponentUI]
-        setUI(ui)
-      } catch {
-        case e: ClassNotFoundException =>
-      }
-    }
-  }
+  addChangeListener(this)
+
+  def getTabs = { this }
 
   def setMenu(newMenu: MenuBar): Unit = {
     val menuItems = permanentMenuActions ++ (currentTab match {
@@ -60,61 +56,105 @@ class Tabs(val workspace:       GUIWorkspace,
     menu = newMenu
   }
 
-  def permanentMenuActions =
-    tabActions ++ codeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
+  val mainCodeTab = new MainCodeTab(workspace, this, menu)
 
-  var tabActions: Seq[Action] = TabsMenu.tabActions(this)
+  def permanentMenuActions = {
+    tabActions ++ mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions :+ PrintAction
+  }
+
+  var tabActions: Seq[Action] = Seq.empty[Action]
   lazy val saveModelActions = fileManager.saveModelActions(this)
-
-  var fileManager: FileManager = null
-  var dirtyMonitor: DirtyMonitor = null
-
   val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val codeTab = new MainCodeTab(workspace, this, menu)
-  var externalFileTabs = Set.empty[TemporaryCodeTab]
+  val stableCodeTab = mainCodeTab
+  val externalFileTabs = mutable.Set.empty[TemporaryCodeTab]
 
-  var currentTab: Component = interfaceTab
+  override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
 
-  def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *) {
+  // Because of the order in which elements of the NetLogo application come into being
+  // Tabs cannot be fully built when it is first instantiated.
+  // These steps are complete by the init method. AAB 10/2020
+
+  // the moreTabs argument was there for PlugIns, and remains only
+  // to allow easier testing of scenerios with novel tabs. AAB 10/2020
+  def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
-    addTab(I18N.gui.get("tabs.code"), codeTab)
-    for((name, tab) <- moreTabs)
-      addTab(name, tab)
+    addTab(I18N.gui.get("tabs.code"), mainCodeTab)
+    // If there is not separate code tab, the MainCodeTab belongs to Tabs.
+    // Otherwise it will get transferred by CodeTabsPanel.init AAB 10/2020
 
-    tabActions = TabsMenu.tabActions(this)
-    fileManager = manager
-    dirtyMonitor = monitor
-    assert(fileManager != null && dirtyMonitor != null)
+    for((name, tab) <- moreTabs) {
+      addTab(name, tab)
+    }
+
+    tabActions = TabsMenu.tabActions(tabManager)
+    initManagerMonitor(manager, monitor)
 
     saveModelActions foreach menu.offerAction
+
+    tabManager.setDirtyMonitor(monitor)
+
+    // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window. AAB 10/2020
+    tabManager.setAppCodeTabBindings
   }
+
+  jframe.addWindowFocusListener(new WindowAdapter() {
+    override def windowGainedFocus(e: WindowEvent) {
+      val currentTab = getTabs.getSelectedComponent
+      tabManager.setCurrentTab(currentTab)
+      if (tabManager.getMainCodeTab.dirty) {
+        // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
+         new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
+      }
+    }
+    })
 
   def stateChanged(e: ChangeEvent) = {
-    val previousTab = currentTab
-    currentTab = getSelectedComponent
-    previousTab match {
-      case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
-      case _ =>
-    }
-    currentTab match {
-      case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
-      case _ =>
-    }
-    (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-      case (true, false) => saveModelActions foreach menu.offerAction
-      case (false, true) => saveModelActions foreach menu.revokeAction
-      case _             =>
-    }
+    // Because there can be a separate code tab window, it is
+    // sometime necessary to deselect a tab by setting the selected
+    // tab index of the parent JTabbedPane to -1
+    // In that case do nothing. The correct action will happen when
+    // the selected index is reset. AAB 10/2020
+    if (tabManager.getSelectedAppTabIndex != -1) {
+      val previousTab = tabManager.getCurrentTab
+      currentTab = getSelectedComponent
+      tabManager.setCurrentTab(currentTab)
+      previousTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
+        case _ =>
+      }
+      currentTab match {
+        case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
+        case _ =>
+      }
 
-    currentTab.requestFocus()
-    new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
+      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
+        case (true, false) => saveModelActions foreach menu.offerAction
+        case (false, true) => saveModelActions foreach menu.revokeAction
+        case _             =>
+      }
+      currentTab.requestFocus()
+      new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
+    }
   }
 
-  override def requestFocus() = currentTab.requestFocus()
+  this.addMouseListener(new MouseAdapter() {
+    override def mouseClicked(me: MouseEvent): Unit =  {
+      // A single mouse control-click on the MainCodeTab in a separate window
+      // opens the code window, and takes care of the bookkeeping. AAB 10/2020
+      if (me.getClickCount() == 1 && me.isControlDown) {
+        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        if (currentTab.isInstanceOf[MainCodeTab]) {
+          tabManager.switchToSeparateCodeWindow
+        }
+      }
+    }
+  })
 
-  def handle(e: AboutToCloseFilesEvent) =
-    OfferSaveExternalsDialog.offer(externalFileTabs filter (_.saveNeeded), this)
+  def handle(e: AboutToCloseFilesEvent) = {
+    OfferSaveExternalsDialog.offer( collection.immutable.Set( externalFileTabs.toSeq: _*).asInstanceOf[Set[TemporaryCodeTab]]
+    filter (_.saveNeeded) , this)
+  }
 
   def handle(e: LoadBeginEvent) = {
     setSelectedComponent(interfaceTab)
@@ -124,23 +164,22 @@ class Tabs(val workspace:       GUIWorkspace,
     }
   }
 
-  def handle(e: RuntimeErrorEvent) =
-     if(!e.jobOwner.isInstanceOf[MonitorWidget])
-        e.sourceOwner match {
-          case `codeTab` =>
-            highlightRuntimeError(codeTab, e)
-          case file: ExternalFileInterface =>
-            val filename = file.getFileName
-            val tab = getTabWithFilename(Right(filename)).getOrElse {
-              openExternalFile(filename)
-              getTabWithFilename(Right(filename)).get
-            }
-            highlightRuntimeError(tab, e)
-          case _ =>
+  def handle(e: RuntimeErrorEvent) = {
+   if(!e.jobOwner.isInstanceOf[MonitorWidget])
+    e.sourceOwner match {
+      case file: ExternalFileInterface =>
+        val filename = file.getFileName
+        val tab = getTabWithFilename(Right(filename)).getOrElse {
+          openExternalFile(filename)
+          getTabWithFilename(Right(filename)).get
         }
+        highlightRuntimeError(tab, e)
+      case _ =>
+    }
+  }
 
-  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
-    setSelectedComponent(tab)
+  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) = {
+    tabManager.setPanelsSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
     EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length) )
@@ -148,29 +187,58 @@ class Tabs(val workspace:       GUIWorkspace,
 
   def handle(e: CompiledEvent) = {
     val errorColor = Color.RED
-    def clearErrors() = forAllCodeTabs(tab => setForegroundAt(indexOfComponent(tab), null))
-    def recolorTab(component: Component, hasError: Boolean): Unit =
-      setForegroundAt(indexOfComponent(component), if(hasError) errorColor else null)
-    def recolorInterfaceTab() = {
+
+    def clearErrors(): Unit = {
+      def clearForeground(tab: Component) = {
+        // In the case where the code tab has not been compiled,
+        // is in a separate window, if one exits the separate window,
+        // if the code compiles correctly setting the foreground throws
+        // an exception because of a problem getting tab's bounds.
+        // Perhaps this is related to the fact that the tab has just
+        // moved from the CodeTabsPanel to Tabs. AAB 10/2020
+        try {
+          tabManager.getTabOwner(tab).setForegroundAt(
+            tabManager.getTabOwner(tab).indexOfComponent(tab), null)
+        } catch {
+          case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+        }
+      }
+      forAllCodeTabs(clearForeground)
+    }
+
+    def recolorTab(component: Component, hasError: Boolean): Unit = {
+      // Use try as in clearErrors, just in case AAB 10/2020
+      try {
+        tabManager.getTabOwner(component).setForegroundAt(
+          tabManager.getTabOwner(component).indexOfComponent(component),
+          if(hasError) errorColor else null)
+      } catch {
+        case indexEx: java.lang.ArrayIndexOutOfBoundsException => Exceptions.ignore(indexEx)
+      }
+    }
+
+    def recolorInterfaceTab(): Unit = {
       if (e.error != null) setSelectedIndex(0)
       recolorTab(interfaceTab, e.error != null)
     }
 
     // recolor tabs
     e.sourceOwner match {
-      case `codeTab` =>
-        // on null error, clear all errors, as we only get one event for all the files
-        if (e.error == null)
+      case `stableCodeTab` => {
+        // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
+        if (e.error == null) {
           clearErrors()
+        }
         else {
-          setSelectedComponent(codeTab)
-          recolorTab(codeTab, true)
+          tabManager.setSelectedCodeTab(mainCodeTab)
+          recolorTab(mainCodeTab, true)
         }
         // I don't really know why this is necessary when you delete a slider (by using the menu
         // item *not* the button) which causes an error in the Code tab the focus gets lost,
         // so request the focus by a known component 7/18/07
         requestFocus()
-      case file: ExternalFileInterface =>
+      }
+      case file: ExternalFileInterface => {
         val filename = file.getFileName
         var tab = getTabWithFilename(Right(filename))
         if (!tab.isDefined && e.error != null) {
@@ -178,84 +246,106 @@ class Tabs(val workspace:       GUIWorkspace,
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
-        if (e.error != null) setSelectedComponent(tab.get)
+        if (e.error != null) {
+          tabManager.setPanelsSelectedComponent(tab.get)
+        }
         recolorTab(tab.get, e.error != null)
         requestFocus()
-      case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
+      }
+      case null => { // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
         recolorInterfaceTab()
-      case jobWidget: JobWidget if !jobWidget.isCommandCenter =>
+      }
+      case jobWidget: JobWidget if !jobWidget.isCommandCenter => {
         recolorInterfaceTab()
+      }
       case _ =>
     }
   }
 
-  def handle(e: ExternalFileSavedEvent) =
+  def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)) foreach { tab =>
-      val index = indexOfComponent(tab)
-      setTitleAt(index, tab.filenameForDisplay)
-      tabActions(index).putValue(Action.NAME, e.path)
+      val (tabowner, index) = tabManager.ownerAndIndexOfTab(tab)
+      tabowner.setTitleAt(index, tab.filenameForDisplay)
+      val combinedTabIndex = tabManager.combinedIndexFromOwnerAndIndex(tabowner, index)
+      tabActions(combinedTabIndex).putValue(Action.NAME, e.path)
     }
+  }
 
-  def getSource(filename: String): String = getTabWithFilename(Right(filename)).map(_.innerSource).orNull
+  def getSource(filename: String): String = { getTabWithFilename(Right(filename)).map(_.innerSource).orNull }
 
-  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
+  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] = {
     externalFileTabs find (_.filename == filename)
+  }
 
   private var _externalFileNum = 1
   private def externalFileNum() = {
     _externalFileNum += 1
     _externalFileNum - 1
   }
-  def newExternalFile() = addNewTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
 
-  def openExternalFile(filename: String) =
+  def newExternalFile() = {
+    addNewExternalFileTab(Left(I18N.gui.getN("tabs.external.new", externalFileNum(): Integer)))
+  }
+
+  def openExternalFile(filename: String) = {
     getTabWithFilename(Right(filename)) match {
-      case Some(tab) => setSelectedComponent(tab)
-      case _ => addNewTab(Right(filename))
+      case Some(tab) => tabManager.setPanelsSelectedComponent(tab)
+      case _ => addNewExternalFileTab(Right(filename))
     }
+  }
 
-  def addNewTab(name: Filename) = {
-    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, codeTab.smartTabbingEnabled)
+  def addNewExternalFileTab(name: Filename) = {
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction _, mainCodeTab.smartTabbingEnabled)
     if (externalFileTabs.isEmpty) menu.offerAction(SaveAllAction)
     externalFileTabs += tab
-    addTab(tab.filenameForDisplay, tab)
-    addMenuItem(getTabCount - 1, tab.filenameForDisplay)
+    tabManager.addNewTab(tab, tab.filenameForDisplay)
     Event.rehash()
-    setSelectedComponent(tab)
+
+    tabManager.setPanelsSelectedComponent(tab)
     // if I just call requestFocus the tab never gets the focus request because it's not yet
     // visible.  There might be a more swing appropriate way to do this but I can't figure it out
     // (if you know it feel free to fix) ev 7/24/07
     EventQueue.invokeLater( () => requestFocus() )
   }
 
-  def getIndexOfComponent(tab: CodeTab): Int =
-    (0 until getTabCount).find(n => getComponentAt(n) == tab).get
-
-  def closeExternalFile(filename: Filename): Unit =
+  def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) foreach { tab =>
-      val index = getIndexOfComponent(tab)
-      remove(tab)
-      removeMenuItem(index)
+      tabManager.removeTab(tab)
       externalFileTabs -= tab
-      if (externalFileTabs.isEmpty) menu.revokeAction(SaveAllAction)
+      if (externalFileTabs.isEmpty) {
+        menu.revokeAction(SaveAllAction)
+        // Could change to remove and copy only FileMenu accelerators - AAB Nov 2020
+        tabManager.removeCodeTabContainerAccelerators
+        tabManager.copyMenuBarAccelerators
+      }
     }
+  }
 
-  def forAllCodeTabs(fn: CodeTab => Unit) =
-    (externalFileTabs.asInstanceOf[Set[CodeTab]] + codeTab) foreach fn
+  def forAllCodeTabs(fn: CodeTab => Unit) = {
+    (externalFileTabs.asInstanceOf[mutable.Set[CodeTab]] + mainCodeTab) foreach fn
+  }
+  def lineNumbersVisible = { mainCodeTab.lineNumbersVisible }
+  def lineNumbersVisible_=(visible: Boolean) = { forAllCodeTabs(_.lineNumbersVisible = visible) }
 
-  def lineNumbersVisible = codeTab.lineNumbersVisible
-  def lineNumbersVisible_=(visible: Boolean) = forAllCodeTabs(_.lineNumbersVisible = visible)
-
-  def removeMenuItem(index: Int) {
+  // Renamed to reflect what it actually does now.
+  // This method removes all tab entries in the TabsMenu because they come from a list of tabActions
+  // that could be outdated. It then updates the tabActions with the tabs that
+  // currently exist, and regenerates the TabsMenu.
+  // Removed argument index which was not being used - AAB Nov 2020
+  def updateTabsMenu() {
     tabActions.foreach(action => menu.revokeAction(action))
-    tabActions = TabsMenu.tabActions(this)
+    tabActions = TabsMenu.tabActions(tabManager)
     tabActions.foreach(action => menu.offerAction(action))
+    // Could change to remove and copy only TabsMenu accelerators - AAB Nov 2020
+    tabManager.removeCodeTabContainerAccelerators
+    tabManager.copyMenuBarAccelerators
   }
 
   def addMenuItem(i: Int, name: String) {
-    val newAction = TabsMenu.tabAction(this, i)
+    val newAction = TabsMenu.tabAction(tabManager, i)
     tabActions = tabActions :+ newAction
     menu.offerAction(newAction)
+    tabManager.copyMenuAcceleratorsByName("Tabs")
   }
 
   override def processMouseMotionEvent(e: MouseEvent) {
@@ -265,8 +355,10 @@ class Tabs(val workspace:       GUIWorkspace,
     // platforms ev 2/2/09
   }
 
-  def handle(e: AfterLoadEvent) = requestFocus()
-
+  def handle(e: AfterLoadEvent) = {
+    mainCodeTab.getPoppingCheckBox.setSelected(tabManager.isCodeTabSeparate)
+    requestFocus()
+  }
 
   object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), this)
   with MenuAction {
@@ -294,5 +386,12 @@ class Tabs(val workspace:       GUIWorkspace,
           case abortEx: PrinterAbortException => Exceptions.ignore(abortEx)
         }
     }
+  }
+
+  def setDirtyMonitorCodeWindow(): Unit = {
+    getTabManager.setDirtyMonitorCodeWindow
+  }
+  def switchToSpecifiedCodeWindowState(state: Boolean): Unit = {
+    getTabManager.switchToSpecifiedCodeWindowState(state)
   }
 }
