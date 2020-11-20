@@ -72,10 +72,10 @@ class Tabs(workspace:           GUIWorkspace,
 
   // Because of the order in which elements of the NetLogo application come into being
   // Tabs cannot be fully built when it is first instantiated.
-  // These steps are complete by the init method. . AAB 10/2020
+  // These steps are complete by the init method. AAB 10/2020
 
   // the moreTabs argument was there for PlugIns, and remains only
-  // to allow easier testing of scenerios with novel tabs. . AAB 10/2020
+  // to allow easier testing of scenerios with novel tabs. AAB 10/2020
   def init(manager: FileManager, monitor: DirtyMonitor, moreTabs: (String, Component) *): Unit =  {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
@@ -91,6 +91,8 @@ class Tabs(workspace:           GUIWorkspace,
     initManagerMonitor(manager, monitor)
 
     saveModelActions foreach menu.offerAction
+
+    tabManager.setDirtyMonitor(monitor)
 
     // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window. AAB 10/2020
     tabManager.setAppCodeTabBindings
@@ -369,10 +371,6 @@ class Tabs(workspace:           GUIWorkspace,
     override def action(): Unit = {
       fileManager.saveModel(false)
       externalFileTabs foreach (_.save(false))
-      // TODO: There is an unsolved problem here or in TemporaryCodeTab.scala
-      // control-S becomes bound to save file (rather than save model) for included files.
-      // This accelerator and its action need to be added to the separate code tab, when
-      // it exists.  AAB Nov 2020
     }
   }
 

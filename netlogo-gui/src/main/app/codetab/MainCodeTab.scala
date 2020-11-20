@@ -59,7 +59,10 @@ with WindowEvents.LoadModelEvent.Handler
 
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
-    if (b) new WindowEvents.DirtyEvent(None).raise(this)
+    if (b) {
+      tabs.asInstanceOf[AbstractTabsPanel].getTabManager.setDirtyMonitorCodeWindow
+      new WindowEvents.DirtyEvent(None).raise(this)
+    }
   }
 
   def handle(e: WindowEvents.LoadModelEvent) {

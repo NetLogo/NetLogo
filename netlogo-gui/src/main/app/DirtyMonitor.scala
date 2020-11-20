@@ -38,6 +38,10 @@ with SaveModel.Controller
   private var loading = true
   private var _modelDirty = false
   private var priorTempFile = Option.empty[Path]
+  private var _codeWindow : Option[javax.swing.JDialog] = None
+  def setCodeWindow(codeWindow: Option[javax.swing.JDialog]): Unit = {
+    _codeWindow = codeWindow
+  }
 
   def modelDirty = _modelDirty && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
@@ -49,7 +53,14 @@ with SaveModel.Controller
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
     }
-    frame.setTitle(title(path))
+    _codeWindow match {
+      case None           => frame.setTitle(title(path))
+      case Some(window) => {
+        window.setTitle(title(path))
+        _codeWindow = None
+      }
+    }
+
   }
 
   def handle(e: AboutToQuitEvent) {

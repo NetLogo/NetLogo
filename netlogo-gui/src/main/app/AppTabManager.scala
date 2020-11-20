@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JTabbedPane, KeyStroke }
+import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JDialog, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.swing.UserAction
@@ -47,6 +47,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   var menuBar: MenuBar = null
 
+  var dirtyMonitor: DirtyMonitor = null
+
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020
   def getAppTabsPanel = { appTabsPanel }
@@ -77,11 +79,22 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def isCodeTabSeparate = { codeTabsPanelOption.isDefined }
 
-  def getAppMenuBar: MenuBar = menuBar
+  def getAppMenuBar: MenuBar = { menuBar }
 
-  def setAppMenuBar(menuBar: MenuBar): Unit = this.menuBar = menuBar
+  def setAppMenuBar(menuBar: MenuBar): Unit = { this.menuBar = menuBar }
+
+  def getDirtyMonitor: DirtyMonitor = { dirtyMonitor }
+
+  def setDirtyMonitor(dirtyMonitor: DirtyMonitor): Unit = { this.dirtyMonitor = dirtyMonitor }
 
   val appContentPane = appTabsPanel.getAppJFrame.getContentPane.asInstanceOf[JComponent]
+
+  def setDirtyMonitorCodeWindow(): Unit = {
+    codeTabsPanelOption match {
+      case None                => dirtyMonitor.setCodeWindow(None)
+      case Some(codeTabsPanel) => dirtyMonitor.setCodeWindow(Some(codeTabsPanel.getCodeTabContainer.asInstanceOf[JDialog]))
+    }
+  }
 
   // Generally the term "CodeTab" in method names refers to
   // any that is of class CodeTab. The term "MainCodeTab"

@@ -75,10 +75,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
           save(saveAs)
-          // TODO: There is an unsolved problem here or in Tabs.scala
-          // control-S becomes bound to save file (rather than save model) for included files.
-          // This accelerator and its action need to be added to the separate code tab, when
-          // it exists.  AAB Nov 2020
         }
       }
     }
