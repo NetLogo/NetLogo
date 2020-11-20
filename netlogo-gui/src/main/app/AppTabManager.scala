@@ -155,7 +155,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       return(index + appTabsPanel.getTabCount)
     } else {
-      println(appTabsPanel)
       return(index)
     }
   }

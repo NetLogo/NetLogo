@@ -95,7 +95,7 @@ with SaveModel.Controller
   }
 
   /// how we get clean
-  def handle(e: ModelSavedEvent) = setDirty(false)
+  def handle(e: ModelSavedEvent) = { setDirty(false) }
   def handle(e: ExternalFileSavedEvent) = setDirty(false, path = Some(e.path))
   def handle(e: BeforeLoadEvent): Unit = {
     setDirty(false)

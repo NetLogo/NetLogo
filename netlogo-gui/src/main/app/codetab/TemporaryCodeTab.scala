@@ -102,6 +102,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    tabs.asInstanceOf[AbstractTabsPanel].getTabManager.setDirtyMonitorCodeWindow
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
