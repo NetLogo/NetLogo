@@ -129,7 +129,7 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
         case _             =>
       }
       currentTab.requestFocus()
-      tabManager.createCodeTabAccelerators()
+      tabManager.createCodeTabAccelerators
       // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }

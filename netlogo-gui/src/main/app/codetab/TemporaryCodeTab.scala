@@ -8,6 +8,7 @@ import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
 import org.nlogo.api.FileIO
+import org.nlogo.app.AbstractTabsPanel
 import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
   Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
@@ -89,6 +90,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     super.dirty_=(d)
     if (d) {
       saveNeeded = true
+      tabs.asInstanceOf[AbstractTabsPanel].getTabManager.setDirtyMonitorCodeWindow
       new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
     }
   }
