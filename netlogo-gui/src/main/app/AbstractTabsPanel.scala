@@ -9,6 +9,7 @@ import javax.swing.plaf.ComponentUI
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.GUIWorkspace
+import org.nlogo.window.LinkRoot
 
 // AbstractTabsPanel contains functionality common to Tabs and CodeTabsPanel. AAB 10/2020
 
@@ -37,7 +38,7 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
   }
   def getTabManager() = { tabManager }
   def getMainCodeTab(): MainCodeTab // abstract
-  def getAppFrame() = { workspace.getFrame.asInstanceOf[AppFrame] }
+  def getAppFrame() = { workspace.getFrame.asInstanceOf[LinkRoot] }
   def getAppJFrame() = { jframe }
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
