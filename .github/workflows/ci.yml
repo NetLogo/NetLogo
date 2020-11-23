@@ -5,3 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v2
+       with:
+         submodules: recursive 
+     - run: ./sbt update
+     - run: ./sbt all
